@@ -6,14 +6,14 @@ UltimateHealth is an innovative open-source project that aims to provide a compr
 
 ## Features:
 
-From the beginner perspective, the project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
+From the beginner's perspective, the project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
 
 * Diseases-related information
 * General health-related guidance
 * Survival experiences from critical diseases
 * Backend Development
 
-Users can also listen to articles(audio features) if they prefer. The Chat Section features a guider bot that helps users solve their health-related problems.  
+Users can also listen to articles(audio features) if they prefer. The Chat Section features a guide bot that helps users solve their health-related problems.  
 
 
 Hello! Congratulations to all the GSSOC'24 contributors and mentors!🎉
@@ -36,8 +36,8 @@ cd  UltimateHealth
 **Select your preference (FrontEnd or BackEnd)**.
 
 ```
-For Frontend : git checkout ultimate_health_frontend
-For Backend :  git checkout ultimate_health_backend
+For Frontend: git checkout ultimate_health_frontend
+For Backend:  git checkout ultimate_health_backend
 ```
 
 **Install dependencies:**
