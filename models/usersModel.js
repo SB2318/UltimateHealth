@@ -5,7 +5,7 @@ const usersModel = new mongoose.Schema({
     userName: String,
     userId: String,
     userAddress: String,
-    userPhoneNumebr: String
+    userPhoneNumber: String
 });
 
 module.exports = mongoose.model('users', usersModel);
