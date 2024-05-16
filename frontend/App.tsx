@@ -25,37 +25,13 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import { PRIMARY_COLOR } from './src/Theme';
+import {PRIMARY_COLOR} from './src/Theme';
+import {NavigationContainer} from '@react-navigation/native';
+import TabNavigation from './src/navigations/TabNavigation';
 
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -64,16 +40,20 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const BarStyle = Platform.OS==="ios" ? 'dark-content' : 'light-content'
+  const BarStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content';
   return (
-    <SafeAreaView style={backgroundStyle}>
+    <View style={{flex:1,backgroundColor:backgroundStyle.backgroundColor}}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : BarStyle}
-        backgroundColor={isDarkMode ? backgroundStyle.backgroundColor : PRIMARY_COLOR}
+        backgroundColor={
+          isDarkMode ? backgroundStyle.backgroundColor : PRIMARY_COLOR
+        }
       />
+      <NavigationContainer>
+        <TabNavigation />
+      </NavigationContainer>
 
-
-      <ScrollView
+      {/* <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
         <Header />
@@ -96,8 +76,8 @@ function App(): React.JSX.Element {
           </Section>
           <LearnMoreLinks />
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </ScrollView> */}
+    </View>
   );
 }
 
@@ -105,7 +85,7 @@ const styles = StyleSheet.create({
   sectionContainer: {
     marginTop: 32,
     paddingHorizontal: 24,
-    backgroundColor:"#0CAFFF"
+    backgroundColor: '#0CAFFF',
   },
   sectionTitle: {
     fontSize: 24,
