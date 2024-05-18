@@ -101,8 +101,13 @@ module.exports.login = async (req, res) => {
       { expiresIn: '1d' }
     );
 
+
+    // Setting Cookie for 1 day
+    res.cookie('token', token, { httpOnly: true, maxAge: 86400000 }); // 1 day
+
+
     // Return the user data and the JWT token
-    res.status(200).json({ user, token });
+    res.status(200).json({ user, token, message:"Login Successfull" });
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -111,6 +116,7 @@ module.exports.login = async (req, res) => {
 
 
 module.exports.logout = (req, res) => {
+    
     // Clear the JWT token cookie
     res.clearCookie('token');
     res.json({ message: 'Logout successful' });

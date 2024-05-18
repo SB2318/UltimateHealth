@@ -3,8 +3,12 @@ const dbConnect = require("./config/database");
 const cors = require("cors");
 const userRoutes = require("./routes/usersRoutes");
 const PORT = process.env.PORT || 4000;
+const cookieParser = require("cookie-parser");
 
 const app = express();
+
+// Use the cookie-parser middleware
+app.use(cookieParser());
 
 // Connect to the Database
 dbConnect();
