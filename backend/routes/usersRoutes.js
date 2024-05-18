@@ -1,10 +1,23 @@
 const express = require('express');
-const app = express.Router();
+const router = express.Router();
 
-const UsersController = require('../controllers/usersControllers');
-const usersController = new UsersController();
+// Backend API -  http://localhost:3025/api/
 
-app.post(
-    '/',
-    usersController.saveUser
-)
+const {register,login,logout} = require("../controllers/usersControllers");
+
+
+router.get("/hello", (req, res) => {
+    console.log("Hello World Route Executed");
+    res.send("Hello World");
+});
+
+// Register New User
+router.post("/user/register", register);
+
+// Login User Route
+router.post("/user/login",login);
+
+router.post("/logout",logout);
+
+
+module.exports = router;
