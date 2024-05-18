@@ -18,6 +18,7 @@ const TabNavigation = () => {
         component={HomeScreen}
         options={{
           headerShown: false,
+          
           headerStyle: {
             backgroundColor: Colors.darker,
           },
@@ -26,10 +27,10 @@ const TabNavigation = () => {
           },
         }}
       />
-      <Tab.Screen name="Podcasts" component={PodcastsScreen} options={{}} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{}} />
+      <Tab.Screen name="Podcasts" component={PodcastsScreen} options={{headerShown: false}} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{headerShown: false}} />
     </Tab.Navigator>
   );
 };
 export default TabNavigation;
-const styles = StyleSheet.create({});
+

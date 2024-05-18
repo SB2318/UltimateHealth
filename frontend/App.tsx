@@ -6,32 +6,23 @@
  */
 
 import React from 'react';
-import type {PropsWithChildren} from 'react';
+
 import {
   Platform,
-  SafeAreaView,
-  ScrollView,
   StatusBar,
-  StyleSheet,
-  Text,
   useColorScheme,
   View,
 } from 'react-native';
 
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
+  Colors
 } from 'react-native/Libraries/NewAppScreen';
 import {PRIMARY_COLOR} from './src/Theme';
 import {NavigationContainer} from '@react-navigation/native';
+import StackNavigation from './src/navigations/StackNavigation';
 import TabNavigation from './src/navigations/TabNavigation';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -50,55 +41,13 @@ function App(): React.JSX.Element {
         }
       />
       <NavigationContainer>
-        <TabNavigation />
+        <StackNavigation />
       </NavigationContainer>
 
-      {/* <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView> */}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-    backgroundColor: '#0CAFFF',
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+
 
 export default App;

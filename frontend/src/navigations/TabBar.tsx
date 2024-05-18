@@ -86,22 +86,12 @@ const TabBar = ({state, descriptors, navigation}: any) => {
                   />
                 )}
                 {label === 'Profile' && (
-                  //   <FontAwesome
-                  //     name="user-circle"
-                  //     size={24}
-                  //     color={isFocused ? 'white' : isDarkMode?"white":"black"}
-                  //   />
-                  <Image
-                    style={{
-                      height: 34,
-                      width: 34,
-                      borderRadius: 50,
-                      resizeMode: 'cover',
-                    }}
-                    source={{
-                      uri: 'https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?size=338&ext=jpg&ga=GA1.1.2082370165.1715558400&semt=ais_user',
-                    }}
-                  />
+                     <FontAwesome
+                       name="user-circle"
+                       size={24}
+                       color={isFocused ? 'white' : isDarkMode?"white":"black"}
+                     />
+                  
                 )}
               </View>
             </Pressable>
@@ -117,9 +107,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
-    // borderRadius: 25,
-    paddingBottom: 20,
-    // marginHorizontal: width * 0.05,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius:25,
+    paddingBottom: 10,
+    backgroundColor:"red"
   },
   mainItemContainer: {
     flex: 1,
