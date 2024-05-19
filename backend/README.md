@@ -59,10 +59,33 @@ For android :
 For ios: 
 `npm run ios`
 
-For backend:
+## For Backend:
+
+Follow the steps to setup backend in your system
+
+```
+ cd backend
+```
+Create .env file if not present and add the following variables in the file
+
+```
+PORT=
+MONGODB_URL=""
+JWT_SECRET=""
+```
+**Make Sure to set the values of Environment variables before running the project**
+
+`npm run dev`
+
+Alternate Command to run the server once
 
 `node server.js`
 
+**Backend API URL**
+```
+ http://localhost:{PORT}/api/
+```
+**Make Sure to set the proper PORTAL for Backend API**
 
 **Access the application:**
 Open your web browser and navigate to (LOCAL_HOST_URL).
