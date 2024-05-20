@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { SECONDARY_COLOR } from '../Theme';
+import { ON_PRIMARY_COLOR, PRIMARY_COLOR, SECONDARY_COLOR } from '../Theme';
 import icon from '../assets/icon.png';
 
 const SplashScreen = ({ navigation }) => {
@@ -27,17 +27,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: PRIMARY_COLOR,
   },
   icon: {
-    width: 150,
-    height: 150, 
-    marginBottom: 20,
+    width: 120,
+    height: 120, 
+    borderRadius:60,
+    marginBottom: 10,
   },
   text: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: SECONDARY_COLOR,
+    color: ON_PRIMARY_COLOR,
     textAlign: 'center',
   },
 });
