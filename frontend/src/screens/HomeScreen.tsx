@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, useColorScheme } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, useColorScheme } from 'react-native'
 import React from 'react'
 import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { PRIMARY_COLOR } from '../Theme';
