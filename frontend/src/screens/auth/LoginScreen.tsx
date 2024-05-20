@@ -56,7 +56,9 @@ const LoginScreen = () => {
               placeholderTextColor="#948585"
               style={[
                 styles.inputControl,
-                {borderColor: isDarkMode ? 'white' : 'black'},
+                {borderColor: isDarkMode ? 'white' : 'black',
+                  color: isDarkMode?'white':'black',
+                },
               ]}
             />
           </View>
@@ -73,7 +75,9 @@ const LoginScreen = () => {
               secureTextEntry={true}
               style={[
                 styles.inputControl,
-                {borderColor: isDarkMode ? 'white' : 'black'},
+                {borderColor: isDarkMode ? 'white' : 'black',
+                  color: isDarkMode?'white':'black',
+                },
               ]}
             />
           </View>
@@ -100,10 +104,10 @@ const LoginScreen = () => {
                 style={[
                   styles.createAccountText,
                   {
-                    color: isDarkMode ? 'white' : '#7c7474',
+                    color: isDarkMode ? 'white' : 'black',
                   },
                 ]}>
-                Create Account
+                Create new account
               </Text>
             </TouchableOpacity>
           </View>
@@ -124,8 +128,10 @@ const styles = StyleSheet.create({
     backgroundColor: PRIMARY_COLOR,
   },
   logoContainer: {
-    marginVertical: wp(7),
+    marginBottom: wp(19),
+    marginTop: wp(5),
     flexDirection: 'row',
+    marginHorizontal:18,
     alignItems: 'center',
     marginLeft: wp(5),
   },
@@ -137,13 +143,14 @@ const styles = StyleSheet.create({
   },
   brandText: {
     color: 'white',
-    fontSize: fp(12),
+    fontSize: fp(9),
     fontWeight: '700',
   },
   formContainer: {
     flex: 1,
+    marginTop:14,
     borderTopRightRadius: wp(26),
-    paddingHorizontal: wp(5),
+    paddingHorizontal: wp(7),
     paddingTop: hp(10),
     flexDirection: 'column',
   },
@@ -160,19 +167,19 @@ const styles = StyleSheet.create({
     height: hp(6),
     fontSize: fp(4),
     fontWeight: '500',
-    color: '#948585',
+    
     borderBottomWidth: 1,
   },
   forgotPasswordContainer: {
     alignItems: 'flex-end',
-    marginBottom: 16,
+    marginVertical: 10,
   },
-  forgotPasswordText: {color: '#9c8e8e', fontWeight: '600'},
-  loginButtonContainer: {marginBottom: hp(4), alignItems: 'center'},
+  forgotPasswordText: {color: 'black', fontWeight: '600'},
+  loginButtonContainer: {marginVertical: hp(4), alignItems: 'center'},
   loginButton: {
     backgroundColor: PRIMARY_COLOR,
     paddingVertical: hp(1.5),
-    paddingHorizontal: wp(10),
+    paddingHorizontal: wp(16),
     borderRadius: 50,
   },
   loginText: {
@@ -180,9 +187,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#fff',
   },
-  createAccountContainer: {marginBottom: hp(2), alignItems: 'center'},
+  createAccountContainer: {marginVertical: hp(2), alignItems: 'center'},
   createAccountText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '700',
+    
   },
 });
