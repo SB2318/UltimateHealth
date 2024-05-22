@@ -21,6 +21,8 @@ import {PRIMARY_COLOR} from './src/Theme';
 import {NavigationContainer} from '@react-navigation/native';
 import StackNavigation from './src/navigations/StackNavigation';
 import TabNavigation from './src/navigations/TabNavigation';
+import LoginScreen from './src/screens/auth/LoginScreen';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
 
@@ -33,6 +35,7 @@ function App(): React.JSX.Element {
 
   const BarStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content';
   return (
+    <SafeAreaProvider>
     <View style={{flex:1,backgroundColor:backgroundStyle.backgroundColor}}>
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : BarStyle}
@@ -40,11 +43,14 @@ function App(): React.JSX.Element {
           isDarkMode ? backgroundStyle.backgroundColor : PRIMARY_COLOR
         }
       />
-      <NavigationContainer>
+      { <NavigationContainer>
         <StackNavigation />
-      </NavigationContainer>
-
+      </NavigationContainer> }
+  
+  {/**<LoginScreen /> */}
+      
     </View>
+    </SafeAreaProvider>
   );
 }
 
