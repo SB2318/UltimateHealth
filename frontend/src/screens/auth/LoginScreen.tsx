@@ -128,8 +128,8 @@ const styles = StyleSheet.create({
     backgroundColor: PRIMARY_COLOR,
   },
   logoContainer: {
-    marginBottom: wp(19),
-    marginTop: wp(5),
+    marginBottom: hp(5),
+    marginTop: hp(2),
     flexDirection: 'row',
     marginHorizontal:18,
     alignItems: 'center',
@@ -143,8 +143,8 @@ const styles = StyleSheet.create({
   },
   brandText: {
     color: 'white',
-    fontSize: fp(9),
-    fontWeight: '700',
+    fontSize: fp(10),
+    fontFamily:"Lobster-Regular"
   },
   formContainer: {
     flex: 1,

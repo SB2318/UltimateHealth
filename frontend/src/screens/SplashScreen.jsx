@@ -37,9 +37,10 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 22,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     color: ON_PRIMARY_COLOR,
     textAlign: 'center',
+    fontFamily:"Lobster-Regular"
   },
 });
 
