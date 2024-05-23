@@ -46,9 +46,6 @@ function App(): React.JSX.Element {
       { <NavigationContainer>
         <StackNavigation />
       </NavigationContainer> }
-  
-  {/**<LoginScreen /> */}
-      
     </View>
     </SafeAreaProvider>
   );
