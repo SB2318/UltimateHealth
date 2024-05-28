@@ -116,8 +116,9 @@ module.exports.confirmPassword = async (req, res) => {
     if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
       return res.status(400).json({ message: 'Invalid or expired OTP.' });
     }
-  
-    user.password = newPassword;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    user.password = hashedPassword;
     user.otp = null;
     user.otpExpires = null;
     await user.save();
