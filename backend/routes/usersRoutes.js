@@ -19,6 +19,13 @@ router.post("/user/register", register);
 router.post("/user/login",login);
 
 
+// Forget password
+router.post("/user/forgotpassword", forgotPassword);
+
+// verify password
+router.post("/user/verifypassword", confirmPassword);
+
+
 router.get("/user/profile", verifyToken, (req, res) => {
     const userId = req.userId;
     res.status(200).json({ message: "You are authenticated!", userId });

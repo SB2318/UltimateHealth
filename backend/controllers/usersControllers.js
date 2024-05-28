@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 require('dotenv').config();
 
 module.exports.register = async (req, res) => {
@@ -66,6 +68,62 @@ module.exports.register = async (req, res) => {
   };
 
 
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD,
+    },
+  });
+
+module.exports.forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+  
+    if (!user) {
+      return res.status(400).json({ message: 'User with this email does not exist.' });
+    }
+  
+    const otp = crypto.randomBytes(3).toString('hex');
+    const otpExpires = Date.now() + 3600000; // 1 hour
+  
+    user.otp = otp;
+    user.otpExpires = otpExpires;
+    await user.save();
+  
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: user.email,
+      subject: 'Password Reset OTP',
+      text: `Your OTP for password reset is: ${otp}`
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        return res.status(500).json({ message: 'Error sending email.' });
+      }
+      res.status(200).json({ message: 'OTP sent to your email.' });
+    });
+  };
+  
+module.exports.confirmPassword = async (req, res) => {
+    const { email, otp, newPassword } = req.body;
+    const user = await User.findOne({ email });
+  
+    if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
+      return res.status(400).json({ message: 'Invalid or expired OTP.' });
+    }
+  
+    user.password = newPassword;
+    user.otp = null;
+    user.otpExpires = null;
+    await user.save();
+  
+    res.status(200).json({ message: 'Password reset successful.' });
+  };
 
 
 
