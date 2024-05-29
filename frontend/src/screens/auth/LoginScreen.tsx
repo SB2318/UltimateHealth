@@ -120,7 +120,11 @@ const LoginScreen = ({navigation}) => {
                   {
                     color: isDarkMode ? 'white' : 'black',
                   },
-                ]}>
+                ]}
+                onPress={() => {
+                    storeItem('user', 'ok');
+                 }}
+                >
                 Create new account
               </Text>
             </TouchableOpacity>
