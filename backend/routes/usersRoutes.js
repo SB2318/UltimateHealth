@@ -4,7 +4,7 @@ const verifyToken = require("../auth/authMiddleware");
 
 // Backend API -  http://localhost:3025/api/
 
-const {register,login,logout} = require("../controllers/usersControllers");
+const {register,login,logout, sendOTPForForgotPassword, verifyOtpForForgotPassword} = require("../controllers/usersControllers");
 
 
 router.get("/hello", (req, res) => {
@@ -20,10 +20,10 @@ router.post("/user/login",login);
 
 
 // Forget password
-router.post("/user/forgotpassword", forgotPassword);
+router.post("/user/forgotpassword", sendOTPForForgotPassword);
 
 // verify password
-router.post("/user/verifypassword", confirmPassword);
+router.post("/user/verifypassword", verifyOtpForForgotPassword);
 
 
 router.get("/user/profile", verifyToken, (req, res) => {

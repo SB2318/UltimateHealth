@@ -69,7 +69,7 @@ module.exports.register = async (req, res) => {
 
 
   const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: process.env.SMTP_HOST,
     port: 465,
     secure: true,
     auth: {
@@ -78,7 +78,7 @@ module.exports.register = async (req, res) => {
     },
   });
 
-module.exports.forgotPassword = async (req, res) => {
+module.exports.sendOTPForForgotPassword = async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
   
@@ -103,13 +103,13 @@ module.exports.forgotPassword = async (req, res) => {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error('Error sending email:', error);
-        return res.status(500).json({ message: 'Error sending email.' });
+        return res.status(500).json({ message: `Error sending email.`, error:`${error}` });
       }
       res.status(200).json({ message: 'OTP sent to your email.' });
     });
   };
   
-module.exports.confirmPassword = async (req, res) => {
+module.exports.verifyOtpForForgotPassword = async (req, res) => {
     const { email, otp, newPassword } = req.body;
     const user = await User.findOne({ email });
   
