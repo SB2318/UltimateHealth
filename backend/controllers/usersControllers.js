@@ -1,56 +1,81 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/UserModel");
+const UnverifiedUser = require('../models/UnverifiedUserModel');
 const bcrypt = require("bcrypt");
 require('dotenv').config();
 const { sendVerificationEmail } = require('./emailservice');
 
 module.exports.register = async (req, res) => {
   try {
-    const { user_name, user_handle, email, isDoctor, profile_image, password, qualification, specialization, years_of_experience, contact_detail } = req.body;
+    const { user_name, user_handle, email, isDoctor, Profile_image, password, qualification, specialization, Years_of_experience, contact_detail } = req.body;
 
+    // Check for required fields
     if (!user_name || !user_handle || !email || !password) {
       return res.status(400).json({ error: "Please provide all required fields" });
     }
 
+    // Check if user already exists in User or UnverifiedUser collections
+    let existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already in use' });
+    }
+
+    existingUser = await UnverifiedUser.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Please verify your email. Verification email already sent.' });
+    }
+
+    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    // Generate a verification token
+    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    const newUser = new User({
+    // Create new unverified user
+    const newUnverifiedUser = new UnverifiedUser({
       user_name,
       user_handle,
       email,
-      isDoctor,
-      profile_image,
       password: hashedPassword,
-      contact_detail: contact_detail || {},
+      isDoctor,
+      contact_detail,
+      Profile_image,
       verificationToken,
     });
 
+    // Include doctor-specific fields if the user is a doctor
     if (isDoctor) {
-      newUser.qualification = qualification;
-      newUser.specialization = specialization;
-      newUser.Years_of_experience = years_of_experience;
+      newUnverifiedUser.qualification = qualification;
+      newUnverifiedUser.specialization = specialization;
+      newUnverifiedUser.Years_of_experience = Years_of_experience;
     }
 
-    const savedUser = await newUser.save();
+    // Save the unverified user to the database
+    await newUnverifiedUser.save();
+
+    // Send verification email
     sendVerificationEmail(email, verificationToken);
 
-    res.status(201).json({ message: "Registration successful! Please check your email to verify your account." });
+    res.status(201).json({ message: 'Registration successful. Please verify your email.' });
   } catch (error) {
-    console.error("Error creating user:", error);
+    console.error('Error during registration:', error);
+
+    // Handle validation errors
     if (error.name === 'ValidationError') {
       const validationErrors = Object.values(error.errors).map(val => val.message);
       return res.status(400).json({ errors: validationErrors });
     }
+
+    // Handle duplicate email/user handle error
     if (error.code === 11000) {
       return res.status(409).json({ error: "Email or user handle already exists" });
     }
+
+    // Handle general server errors
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 
 module.exports.login = async (req, res) => {
   try {
