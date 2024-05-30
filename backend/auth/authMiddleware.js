@@ -1,34 +1,34 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const User = require("../models/UserModel");
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
     let token;
-
-    // Check if the token is present in the cookie
+  
     if (req.cookies && req.cookies['token']) {
-        // console.log("Token found in cookies");
-        token = req.cookies['token'];
-        // console.log(req.cookies);
+      token = req.cookies['token'];
+    } else {
+      token = req.headers.authorization?.split(' ')[1];
     }
-
-    else {
-        // console.log("Token found in header");
-        // If the token is not present in the cookie, check the headers
-        token = req.headers.authorization?.split(' ')[1];
-    }
-
+  
     if (!token) {
-        return res.status(401).json({ error: 'Authorization token missing' });
+      return res.status(401).json({ error: 'Authorization token missing' });
     }
-
+  
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.userId = decoded.userId;
-        next();
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded.userId);
+  
+      if (!user || !user.isVerified) {
+        return res.status(403).json({ error: 'Email not verified' });
+      }
+  
+      req.userId = user._id;
+      next();
     } catch (err) {
-        console.error('Error verifying token:', err);
-        return res.status(403).json({ error: 'Invalid or expired token' });
+      console.error('Error verifying token:', err);
+      return res.status(403).json({ error: 'Invalid or expired token' });
     }
-};
-
-module.exports = verifyToken;
+  };
+  
+  module.exports = verifyToken;
