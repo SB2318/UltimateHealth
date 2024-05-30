@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
-const crypto = require('crypto');
 require('dotenv').config();
 
 module.exports.register = async (req, res) => {
@@ -78,6 +77,10 @@ module.exports.register = async (req, res) => {
     },
   });
 
+  function generateOTP() {
+    return Math.floor(1000 + Math.random() * 9000).toString();
+  }
+
 module.exports.sendOTPForForgotPassword = async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });
@@ -86,7 +89,7 @@ module.exports.sendOTPForForgotPassword = async (req, res) => {
       return res.status(400).json({ message: 'User with this email does not exist.' });
     }
   
-    const otp = crypto.randomBytes(3).toString('hex');
+    const otp = generateOTP();
     const otpExpires = Date.now() + 3600000; // 1 hour
   
     user.otp = otp;
@@ -105,7 +108,7 @@ module.exports.sendOTPForForgotPassword = async (req, res) => {
         console.error('Error sending email:', error);
         return res.status(500).json({ message: `Error sending email.`, error:`${error}` });
       }
-      res.status(200).json({ message: 'OTP sent to your email.' });
+      res.status(200).json({ message: 'OTP sent to your email.', otp: otp});
     });
   };
   
@@ -116,6 +119,11 @@ module.exports.verifyOtpForForgotPassword = async (req, res) => {
     if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
       return res.status(400).json({ message: 'Invalid or expired OTP.' });
     }
+    const isPasswordSame = await bcrypt.compare(newPassword, user.password);
+    if(isPasswordSame){
+      return res.status(400).json({ message: 'New password should not be same as old password.' });
+    }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     user.password = hashedPassword;
