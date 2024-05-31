@@ -93,7 +93,7 @@ cd  UltimateHealth
 ```
  git checkout develop
 ```
-If u couldn't find the 'develop' branch in your own forked repository , Please go to ![CONTRIBUTING.md] and follow the instructions.
+If u couldn't find the 'develop' branch in your own forked repository , Please go to [CONTRIBUTING.md](./CONTRIBUTING.md) and follow the instructions.
 
 ## For Frontend:
 
