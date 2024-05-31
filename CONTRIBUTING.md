@@ -31,10 +31,15 @@ We follow the "fork and pull request" workflow for accepting contributions. To c
 
 
 1.Fork the repository to your GitHub account.
+![Fork](https://github.com/Sibam-Paul/UltimateHealth/assets/158052549/62853996-aa19-4892-9ba1-89b181fe1fdf)
 
-2.Clone the forked repository to your local machine.
+2. Please be careful of this to uncheck "copy only the main"
+![Uncheck](https://github.com/Sibam-Paul/UltimateHealth/assets/158052549/35db6049-feca-4743-a18a-eef4e6bf77f7)
 
-3.For **development** related changes, checkout the **develop** branch.
+
+3.For **development** related changes,now in your forked REPO checkout to the **develop** branch.
+![image](https://github.com/Sibam-Paul/UltimateHealth/assets/158052549/4cdd3f5f-bd65-4a1f-8d3b-aadf9d710e87)
+
 
 4.Create a new branch for your changes: git checkout -b my-branch.
 
