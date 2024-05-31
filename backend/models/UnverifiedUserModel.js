@@ -2,11 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const Schema = mongoose.Schema;
 
-const userSchema = new mongoose.Schema({
-  user_id: {
-    type: Schema.Types.ObjectId,
-    auto: true
-  },
+const unverifiedUserSchema = new mongoose.Schema({
   user_name: {
     type: String,
     required: true,
@@ -60,32 +56,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  otp: {
-    type: String,
-    default: null,
-  },
-  otpExpires: {
-    type: Date,
-    default: null,
-  },
-  created_at: {
-    type: Date,
-    default: Date.now,
-  },
-  last_updated_at: {
-    type: Date,
-    default: Date.now,
-  },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
   verificationToken: {
     type: String,
-    default: null,
+    required: true,
   },
 });
 
-const User = mongoose.model('User', userSchema);
+const UnverifiedUser = mongoose.model('UnverifiedUser', unverifiedUserSchema);
 
-module.exports = User;
+module.exports = UnverifiedUser;

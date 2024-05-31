@@ -13,10 +13,21 @@ import {PRIMARY_COLOR} from '../../Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fp, hp, wp} from '../../helper/Metric';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-
-const LoginScreen = () => {
+import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {retrieveItem} from '../StorageUtils';
+const LoginScreen = ({navigation}) => {
   const inset = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === 'dark';
+
+  const storeItem = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+      navigation.navigate('TabNavigation');
+    } catch (error) {
+      console.error('Error storing item:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -56,8 +67,9 @@ const LoginScreen = () => {
               placeholderTextColor="#948585"
               style={[
                 styles.inputControl,
-                {borderColor: isDarkMode ? 'white' : 'black',
-                  color: isDarkMode?'white':'black',
+                {
+                  borderColor: isDarkMode ? 'white' : 'black',
+                  color: isDarkMode ? 'white' : 'black',
                 },
               ]}
             />
@@ -75,8 +87,9 @@ const LoginScreen = () => {
               secureTextEntry={true}
               style={[
                 styles.inputControl,
-                {borderColor: isDarkMode ? 'white' : 'black',
-                  color: isDarkMode?'white':'black',
+                {
+                  borderColor: isDarkMode ? 'white' : 'black',
+                  color: isDarkMode ? 'white' : 'black',
                 },
               ]}
             />
@@ -93,6 +106,7 @@ const LoginScreen = () => {
               style={styles.loginButton}
               onPress={() => {
                 //
+                storeItem('user', 'ok');
               }}>
               <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
@@ -106,7 +120,11 @@ const LoginScreen = () => {
                   {
                     color: isDarkMode ? 'white' : 'black',
                   },
-                ]}>
+                ]}
+                onPress={() => {
+                    storeItem('user', 'ok');
+                 }}
+                >
                 Create new account
               </Text>
             </TouchableOpacity>
@@ -131,7 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(5),
     marginTop: hp(2),
     flexDirection: 'row',
-    marginHorizontal:18,
+    marginHorizontal: 18,
     alignItems: 'center',
     marginLeft: wp(5),
   },
@@ -144,11 +162,11 @@ const styles = StyleSheet.create({
   brandText: {
     color: 'white',
     fontSize: fp(10),
-    fontFamily:"Lobster-Regular"
+    fontFamily: 'Lobster-Regular',
   },
   formContainer: {
     flex: 1,
-    marginTop:14,
+    marginTop: 14,
     borderTopRightRadius: wp(26),
     paddingHorizontal: wp(7),
     paddingTop: hp(10),
@@ -167,7 +185,7 @@ const styles = StyleSheet.create({
     height: hp(6),
     fontSize: fp(4),
     fontWeight: '500',
-    
+
     borderBottomWidth: 1,
   },
   forgotPasswordContainer: {
@@ -191,6 +209,5 @@ const styles = StyleSheet.create({
   createAccountText: {
     fontSize: 18,
     fontWeight: '700',
-    
   },
 });

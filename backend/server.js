@@ -25,6 +25,8 @@ app.get("/hello", (req, res) => {
     console.log("Hello World");
 });
 
+
+
 // Use the userRoutes
 app.use("/api", userRoutes);
 app.use("/api", specializationRoutes);
