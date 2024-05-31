@@ -2,24 +2,80 @@
 
 ## About:
 
-UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users who are looking for reliable and trustworthy information on various health-related topics.
+UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users looking for reliable and trustworthy information on various health-related topics.
 
 ## Features:
 
-From the beginner perspective, the project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
+From the beginner's perspective, the]is project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
 
 * Diseases-related information
 * General health-related guidance
 * Survival experiences from critical diseases
 * Backend Development
 
-Users can also listen to articles(audio features) if they prefer. The Chat Section features a guider bot that helps users solve their health-related problems.  
+Users can also listen to articles(audio features) if they prefer. The Chat Section features a guide bot that helps users solve health-related problems.  
 
 
 Hello! Congratulations to all the GSSOC'24 contributors and mentors!🎉
-I'm thrilled to be a part of this amazing team and I'm excited to work together to make the Ultimate Health project a huge success. Let's collaborate, learn, and grow together!
+I'm thrilled to be a part of this amazing team and excited to work together to make the Ultimate Health project a huge success. Let's collaborate, learn, and grow together!
 
 ## Getting Started:
+
+
+### Project Requirements:
+
+* Java Installed on your machine. (**Java version:**  17)
+* Android Studio installed on your machine.
+   
+###  Install JDK:
+
+To ensure that your project runs smoothly, make sure you have Java 17 installed on your system. You can follow these steps to set up Java 17:
+
+* Visit the Oracle website or the OpenJDK website to download the Java 17 JDK (Java Development Kit) for your operating system.
+* Follow the installation instructions provided for your specific operating system.
+
+### Installing JDK 17 on macOS:
+
+* Visit the Oracle JDK download page or the AdoptOpenJDK website.
+* Download the JDK 17 installer for macOS (e.g., .dmg or .pkg file).
+* Open the downloaded installer and follow the installation instructions.
+* After the installation is complete, you can verify the installation by opening a Terminal window and running the command java -version. It should display the installed JDK version.
+
+### Setting JAVA_HOME on macOS:
+
+* Open a Terminal window.
+* Determine the installation path of JDK 17. You can use the java_home command to find the path by running /usr/libexec/java_home -v 17.
+* Copy the JDK installation path.
+* Create or edit the .zshrc file in your user home directory by running nano ~/.zshrc in the Terminal.
+* Add the following line to the file, replacing <JDK_PATH> with the copied JDK installation path:
+
+  **export JAVA_HOME=<JDK_PATH>**
+* Save the file and exit the text editor.
+* Close the Terminal window and open a new one to apply the changes.
+* To verify that JAVA_HOME is set correctly, run the command echo $JAVA_HOME in the Terminal. It should display the JDK installation path.
+
+
+### Installing JDK 17 on Windows:
+
+* Visit the Oracle JDK download page or the AdoptOpenJDK website.
+* Download the JDK 17 installer for Windows (e.g., .exe file).
+* Run the downloaded installer and follow the installation instructions.
+* After the installation is complete, you can verify the installation by opening a Command Prompt window and running the command java -version. It should display the installed JDK version.
+
+
+### Setting JAVA_HOME on Windows:
+
+* Right-click on the Windows Start button and select "System".
+* In the System window, click on "Advanced System Settings" on the left sidebar.
+* Click the "Environment Variables" button.
+* Under the "System Variables" section, click "New".
+* Enter **JAVA_HOME** as the Variable name.
+* Enter the path to the JDK 17 installation directory (e.g., C:\Program Files\Java\jdk-17) as the Variable value.
+* Click "OK" to save the variable.
+* Click "OK" again to close the Environment Variables window.
+* Close and reopen any Command Prompt windows for the changes to take effect.
+* To verify that **JAVA_HOME** is set correctly, run the command ~echo %JAVA_HOME%~ in a Command Prompt window. It should display the JDK installation path.
+
 
 Follow these steps to get started with UltimateHealth:
 
@@ -33,34 +89,38 @@ cd  UltimateHealth
 ```
 
 
-**Checkout develop branch and select your preferences (backend or frontend)**.
+**Checkout the develop branch and select your preferences (backend or frontend)**.
 
 ```
  git checkout develop
 ```
 
+## For Frontend:
+
+
 **Install dependencies:**
+
 ```
 npm install --legacy-peer-deps
 ```
 
 **Configure the application: (For IOS and Backend)**
 
-Update configuration files if necessary. Ensure the Ethereum wallet connection details are set.
+Update the configuration files if necessary. Ensure the Ethereum wallet connection details are set.
 
 
 **Run the applications**.
 
 To run the frontend server use:
  
-For android :
+For android:
 `npm run android`
 
 For ios: 
 `npm run ios`
 
 ## For Backend:
-v
+
 ## MongoDB Installation
 
 1. **Install MongoDB**
@@ -76,7 +136,7 @@ v
 
 ## Setting up a Backend Server
 
-Follow the steps to setup backend in your system
+Follow the steps to set backend in your system
 
 ```
  cd backend
@@ -93,7 +153,7 @@ JWT_SECRET=""
 
 `npm install -s`
 
-**Once dependencies are installed, run the server using following command**
+**Once dependencies are installed, run the server using the following command**
 
 `npm run dev`
 
@@ -149,13 +209,13 @@ When working with a backend server running on localhost, frontend developers can
 Open your web browser and navigate to (LOCAL_HOST_URL).
 If you would like to contribute to the project, please follow the contribution guidelines.
 
-## Contribution GuideLines:
+## Contribution Guidelines:
 
 * **Checkout and make your changes for the develop branch only:** When working on your contributions, switch to the **develop** branch in your local repository. This ensures that you are working on the latest version of the codebase.
 
 * **Create pull requests only for the develop branch:** When you are ready to submit your changes, create a pull request (PR) targeting the **develop** branch. This allows the maintainers to review and merge your code into the main development branch.
 
-* **Maintain contribution guidelines:** Each project may have its own specific contribution guidelines. It's important to familiarize yourself with these guidelines before submitting your contributions. Adhering to these guidelines ensures consistency and helps maintain the quality of the codebase.
+* **Maintain contribution guidelines:** Each project may have its specific contribution guidelines. It's important to familiarize yourself with these guidelines before submitting your contributions. Adhering to these guidelines ensures consistency and helps maintain the quality of the codebase.
 
 * **Format your commit message with the issue number:** When making commits related to an issue, follow the format **Fixes: #32 in your commit message. Replace 32 with the issue number you are addressing.** This helps track and manage issues more efficiently.
 
@@ -170,3 +230,12 @@ Remember, following these guidelines will help ensure a smooth and efficient con
 ## Contact:
      
 Discord Server (Susmita Bhattacharya, user_name: susmita_)
+
+<h2 align = "center">Our Contributors ❤️</h2>
+<div align = "center">
+ <h3>Thank you for contributing to our repository</h3>
+
+![Contributors](https://contrib.rocks/image?repo=SB2318/UltimateHealth)
+
+
+</div>
