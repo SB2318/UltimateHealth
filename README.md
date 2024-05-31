@@ -102,7 +102,8 @@ To set the **ANDROID_HOME** variable for both Windows and macOS, you can follow 
 
 Please note that the exact path to the Android SDK directory may vary depending on how you installed it. Make sure to replace **/path/to/android/sdk** with the correct path on your system.
 
-Follow these steps to get started with UltimateHealth:
+
+### Follow these steps to get started with UltimateHealth:
 
 **Clone the repository:**
 
