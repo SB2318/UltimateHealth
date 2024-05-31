@@ -30,10 +30,10 @@ in case you are stuck:
 We follow the "fork and pull request" workflow for accepting contributions. To contribute to the project, please follow these steps:
 
 
-1.Fork the repository to your GitHub account.
+### 1.Fork the repository to your GitHub account.
 ![Fork](https://github.com/Sibam-Paul/UltimateHealth/assets/158052549/62853996-aa19-4892-9ba1-89b181fe1fdf)
 
-2. Please be careful of this to uncheck "copy only the main"
+### 2. Please be careful of this to uncheck "copy only the main"
 ![Uncheck](https://github.com/Sibam-Paul/UltimateHealth/assets/158052549/35db6049-feca-4743-a18a-eef4e6bf77f7)
 
 3.For **development** related changes,now in your forked REPO checkout to the **develop** branch.
