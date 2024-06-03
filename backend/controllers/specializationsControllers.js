@@ -8,20 +8,24 @@ module.exports.add = async (req, res) => {
     if (!name) {
       return res.status(400).json({ error: "Name is empty" });
     }
-    const isValidContributed_by =
-      mongoose.Types.ObjectId.isValid(contributed_by); //true
-    if (!isValidContributed_by) {
-      return res.status(400).json({ error: "Invalid Contributor ID" });
-    }
+    
+    // const isValidContributed_by =
+    //   mongoose.Types.ObjectId.isValid(contributed_by); //true
+    // if (!isValidContributed_by) {
+    //   return res.status(400).json({ error: "Invalid Contributor ID" });
+    // }
 
-    // Validate user IDs
-    const contributor = await User.find({
-      _id: contributed_by,
-      isDoctor: false,
-    });
-    if (!contributor) {
-      return res.status(400).json({ error: "User doesn't exist" });
-    }
+    // // Validate user IDs
+    // const contributor = await User.find({
+    //   _id: contributed_by,
+    //   isDoctor: false,
+    // });
+
+    // if (!contributor) {
+    //   return res.status(400).json({ error: "User doesn't exist" });
+    // }
+
+
     // Validate if each doctor_id is a valid ObjectId
     for (const id of doctor_ids) {
       if (!mongoose.Types.ObjectId.isValid(id)) {
