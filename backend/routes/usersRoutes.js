@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const verifyToken = require("../auth/authMiddleware");
+const {verifyToken} = require("../auth/authMiddleware");
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const UnverifiedUser = require("../models/UnverifiedUserModel");
@@ -9,7 +9,7 @@ const User=require("../models/UserModel")
 
 // Backend API -  http://localhost:3025/api/
 
-const {register,login,logout, sendOTPForForgotPassword, verifyOtpForForgotPassword} = require("../controllers/usersControllers");
+const {register,login,logout, sendOTPForForgotPassword, verifyOtpForForgotPassword,deleteByUser,deleteByAdmin} = require("../controllers/usersControllers");
 
 
 router.get("/hello", (req, res) => {
@@ -29,6 +29,8 @@ router.post("/user/forgotpassword", sendOTPForForgotPassword);
 
 // verify password
 router.post("/user/verifypassword", verifyOtpForForgotPassword);
+router.post('/user/deleteUser',deleteByUser);
+router.post('/admin/deleteUser',deleteByAdmin);
 
 
 router.get('/user/verify-email', async (req, res) => {

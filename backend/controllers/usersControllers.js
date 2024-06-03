@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/UserModel");
 const UnverifiedUser = require('../models/UnverifiedUserModel');
+const {verifyUser} = require('../auth/authMiddleware');
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
+const adminModel = require('../models/adminModel');
 require('dotenv').config();
 const { sendVerificationEmail } = require('./emailservice');
 
@@ -32,6 +34,7 @@ module.exports.register = async (req, res) => {
 
     // Generate a verification token
     const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    console.log("Verification token : ",verificationToken);
 
     // Create new unverified user
     const newUnverifiedUser = new UnverifiedUser({
@@ -192,3 +195,60 @@ module.exports.logout = (req, res) => {
     res.clearCookie('token');
     res.json({ message: 'Logout successful' });
   };
+
+  module.exports.deleteByUser = async(req,res)=>{
+    let token;
+    if (req.cookies && req.cookies['token']) {
+      token = req.cookies['token'];
+    } else {
+      token = req.headers.authorization?.split(' ')[1];
+    }
+  
+    if (!token) {
+      return res.status(401).json({ error: 'Authorization token missing' });
+    }
+    try {
+      const {password} = req.body;
+      const email = await verifyUser(token);
+      const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    if (!user.isVerified) {
+      return res.status(403).json({ error: 'Email not verified. Please check your email.' });
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+      console.log("email : ",email+" password  : ",password);
+      await User.deleteOne({email});
+      res.json({status:true,message:"account has been removed from database"});
+
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+
+  module.exports.deleteByAdmin = async(req,res)=>{
+    try {
+      const {adminEmail,adminPassword,userEmail}  =req.body;
+      const admin = await adminModel.findOne({adminEmail});
+      if(!admin) res.status(404).json({message:"user not found"});
+      else {
+      console.log(admin);
+      const validAdimin  = await bcrypt.compare(adminPassword,admin.adminPassword);
+      if(!validAdimin) res.status(404).json({message:"password not match"});
+      else {
+        const result = await User.deleteOne({email:userEmail});
+        res.json({messge:"user delerted sucessfully",result});
+    }
+    }
+    } catch (error) {
+      res.json({messge:error.message});
+    }
+  }
