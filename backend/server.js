@@ -2,6 +2,7 @@ const express = require('express');
 const dbConnect = require("./config/database");
 const cors = require("cors");
 const userRoutes = require("./routes/usersRoutes");
+const specializationRoutes = require("./routes/SpecializationsRoutes");
 const PORT = process.env.PORT || 4000;
 const cookieParser = require("cookie-parser");
 
@@ -28,6 +29,7 @@ app.get("/hello", (req, res) => {
 
 // Use the userRoutes
 app.use("/api", userRoutes);
+app.use("/api", specializationRoutes);
 
 // Start the server
 app.listen(PORT, () => {
