@@ -3,21 +3,17 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import React from 'react';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
-const HEIGHT = Dimensions.get('window').height;
 
 const AddIcon = () => {
   return (
-    <SafeAreaView>
-      <TouchableOpacity >
-        <Image
-          source={require('../../assets/plus.png')}
-          style={styles.plusIcon}
-        />
-      </TouchableOpacity>
+    <SafeAreaView style={styles.firstcontaner}>
+        <TouchableOpacity style={styles.circleview}>
+          <FontAwesome6 name="pen" size={20} color="white" />
+        </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -25,8 +21,15 @@ const AddIcon = () => {
 export default AddIcon;
 
 const styles = StyleSheet.create({
-  plusIcon: {
+  firstcontaner: {
+    flex: 1,
+  },
+  circleview: {
     height: 60,
     width: 60,
+    backgroundColor: 'primary',
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

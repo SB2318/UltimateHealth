@@ -51,9 +51,8 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   homePlusIconview: {
-    justifyContent: 'flex-end',
-    alignSelf: 'flex-end',
-    marginBottom: HEIGHT / 10,
+    bottom:100,
     right: 30,
+    position:'absolute'
   },
 });
