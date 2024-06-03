@@ -26,9 +26,7 @@ const ProfileScreen = () => {
           ProfileScreen
         </Text>
       </View>
-      <View style={styles.proPlusIconview}>
-        <AddIcon/>
-      </View>
+     
     </SafeAreaView>
   );
 };
@@ -46,10 +44,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
   },
-  proPlusIconview: {
-    justifyContent: 'flex-end',
-    alignSelf: 'flex-end',
-    marginBottom: HEIGHT / 10,
-    right: 30,
-  },
+ 
 });

@@ -22,9 +22,7 @@ const PodcastsScreen = () => {
       <Text style={{color:'white',fontSize:18, fontFamily:'500'}}>PodcastsScreen</Text>
       </View>
 
-      <View style={styles.podPlusIconview}>
-        <AddIcon/>
-      </View>
+     
     </SafeAreaView>
   );
 };
@@ -42,10 +40,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
   },
-  podPlusIconview: {
-    justifyContent: 'flex-end',
-    alignSelf: 'flex-end',
-    marginBottom: HEIGHT / 10,
-    right: 30,
-  },
+
 });
