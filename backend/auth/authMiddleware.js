@@ -30,5 +30,18 @@ const verifyToken = async (req, res, next) => {
       return res.status(403).json({ error: 'Invalid or expired token' });
     }
   };
+
+  const verifyUser = async(token)=>{
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded.userId);
   
-  module.exports = verifyToken;
+      if (!user || !user.isVerified) {
+        throw new Error("Token Expired please login again");
+      }
+      return decoded.email;
+    }catch(err){
+        throw err;
+      } 
+    };
+  module.exports = {verifyToken,verifyUser};
