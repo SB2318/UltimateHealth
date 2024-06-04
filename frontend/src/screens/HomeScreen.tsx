@@ -3,7 +3,7 @@ import React, {useEffect} from 'react'
 import { BackHandler } from 'react-native';
 import { handleBackButton } from '../utils/FunctionUtils';
 import { PRIMARY_COLOR } from '../Theme';
-import AddIcon from '../components/AddIcon/AddIcon';
+import AddIcon from '../components/AddIcon';
 
 
 const HomeScreen = () => {
