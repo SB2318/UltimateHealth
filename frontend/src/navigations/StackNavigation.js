@@ -3,6 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import TabNavigation from "./TabNavigation";
 import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/auth/LoginScreen'
+import NewPasswordScreen from "../screens/auth/NewPasswordScreen";
+import OtpScreen from "../screens/auth/OtpScreen";
 const Stack = createStackNavigator();
 
 const StackNavigation = () => {
@@ -23,6 +25,16 @@ const StackNavigation = () => {
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="OtpScreen"
+        component={OtpScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="NewPasswordScreen"
+        component={NewPasswordScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
