@@ -6,13 +6,14 @@ import {
 } from 'react-native';
 import React from 'react';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import { PRIMARY_COLOR } from '../../Theme';
 
 
-const AddIcon = () => {
+const AddIcon = ({callback}) => {
   return (
     <SafeAreaView style={styles.firstcontaner}>
-        <TouchableOpacity style={styles.circleview}>
-          <FontAwesome6 name="pen" size={20} color="white" />
+        <TouchableOpacity style={styles.circleview} onPress={callback}>
+          <FontAwesome6 name="pen" size={24} color={PRIMARY_COLOR} />
         </TouchableOpacity>
     </SafeAreaView>
   );
@@ -25,10 +26,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   circleview: {
-    height: 60,
-    width: 60,
-    backgroundColor: 'primary',
+    height: 58,
+    width: 58,
+    backgroundColor: 'white',
     borderRadius: 30,
+    elevation:8,
     justifyContent: 'center',
     alignItems: 'center',
   },

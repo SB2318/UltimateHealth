@@ -8,18 +8,31 @@ import {
   StatusBar,
   useColorScheme,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {PRIMARY_COLOR} from '../../Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fp, hp, wp} from '../../helper/Metric';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {retrieveItem} from '../StorageUtils';
+import {retrieveItem} from '../../utils/StorageUtils';
+import { BackHandler } from 'react-native';
+import { handleBackButton } from '../../utils/FunctionUtils';
+
 const LoginScreen = ({navigation}) => {
+
   const inset = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === 'dark';
 
+
+  useEffect(()=>{
+
+    const backHandler = 
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+
+    return () => backHandler.remove();
+  },[])
+  
   const storeItem = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
@@ -28,6 +41,7 @@ const LoginScreen = ({navigation}) => {
       console.error('Error storing item:', error);
     }
   };
+
 
   return (
     <View style={styles.container}>

@@ -5,11 +5,15 @@ import {
   useColorScheme,
   SafeAreaView,
 } from 'react-native';
-import React from 'react';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import React, {useEffect} from 'react';
+
+import { BackHandler } from 'react-native';
+import { handleBackButton } from '../utils/FunctionUtils';
+
 import { PRIMARY_COLOR } from '../Theme';
 
 const ProfileScreen = () => {
+
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
    // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -17,6 +21,16 @@ const ProfileScreen = () => {
   };
   const color = isDarkMode ? 'white' : 'black';
 
+
+  useEffect(()=>{
+
+    const backHandler = 
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+
+    return () => backHandler.remove();
+  },[])
+
+  
   return (
     <SafeAreaView style={[backgroundStyle, {flex:1,alignItems:'center',justifyContent:"center"}]}>
     <Text style={{color:'white',fontSize:18, fontFamily:'500'}}>ProfileScreen</Text>
