@@ -19,4 +19,20 @@ const HomeScreen = () => {
 
 export default HomeScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textStyle: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '500',
+  },
+  homePlusIconview: {
+    bottom:100,
+    right: 30,
+    position:'absolute'
+  },
+});
