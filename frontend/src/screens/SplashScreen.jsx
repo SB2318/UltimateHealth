@@ -5,6 +5,8 @@ import {ON_PRIMARY_COLOR, PRIMARY_COLOR, SECONDARY_COLOR} from '../Theme';
 import icon from '../assets/icon.png';
 
 const SplashScreen = ({navigation}) => {
+
+  
   const checkLoginStatus = async () => {
     try {
       const user = await AsyncStorage.getItem('user');

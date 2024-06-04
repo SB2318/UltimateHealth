@@ -8,18 +8,35 @@ import {
   StatusBar,
   useColorScheme,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR} from '../../Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fp, hp, wp} from '../../helper/Metric';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {retrieveItem} from '../StorageUtils';
+import {retrieveItem} from '../../utils/StorageUtils';
+import EmailInputModal from '../../components/EmailInputModal';
+import { BackHandler } from 'react-native';
+import { handleBackButton } from '../../utils/FunctionUtils';
+
+
+
 const LoginScreen = ({navigation}) => {
+
   const inset = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === 'dark';
+  const [emailInputVisible, setEmailInputVisible] = useState(false)
 
+
+  useEffect(()=>{
+
+    const backHandler = 
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+
+    return () => backHandler.remove();
+  },[])
+  
   const storeItem = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
@@ -28,6 +45,29 @@ const LoginScreen = ({navigation}) => {
       console.error('Error storing item:', error);
     }
   };
+
+
+  const handleForgotPassword= ()=>{
+
+    /** Forgot Password Modal visibility */
+    setEmailInputVisible(true)
+
+  }
+
+  const handleEmailInputBack = ()=>{
+
+    /** Handle Email InputDialogBackButton */
+    setEmailInputVisible(false)
+  }
+
+  const navigateToOtpScreen = ()=>{
+
+    /** Here you need to navigate into otp screen, 
+     * make sure you have add the screen inside StackNavigation Component 
+     * */
+  }
+
+
 
   return (
     <View style={styles.container}>
@@ -96,7 +136,9 @@ const LoginScreen = ({navigation}) => {
           </View>
           {/* forgot password */}
           <View style={styles.forgotPasswordContainer}>
-            <TouchableOpacity>
+
+          {/** Handle Forgot Password Click, Add Email Input Modal Here and control its visibility */}
+            <TouchableOpacity onPress={handleForgotPassword}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
           </View>
@@ -111,6 +153,13 @@ const LoginScreen = ({navigation}) => {
               <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
           </View>
+
+
+          <EmailInputModal 
+          callback={navigateToOtpScreen} 
+          visible={emailInputVisible}
+          backButtonClick={handleEmailInputBack}/>
+            
           {/* creat account button */}
           <View style={styles.createAccountContainer}>
             <TouchableOpacity>
