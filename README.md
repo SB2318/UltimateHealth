@@ -6,7 +6,7 @@ UltimateHealth is an innovative open-source project that aims to provide a compr
 
 ## Features:
 
-From the beginner's perspective, the]is project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
+From the beginner's perspective, this project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
 
 * Diseases-related information
 * General health-related guidance
