@@ -28,7 +28,17 @@ const LoginScreen = ({navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [emailInputVisible, setEmailInputVisible] = useState(false)
 
+// ISSUE : 77 Step 1:
+ // Create an useState variable which will handle secureTextEntry of password field
+  // const [secureTextEntry, setSecureTextEntry] = useState(true)
 
+  // ISSUE : 77 Step 2:
+  // Handle Eye Icon action, assume there are already an eye icon in the password field and you have to handle it's action
+  const handleSecureEntryClickEvent = ()=>{
+   // setSecureTextEntry(!secureTextEntry)
+  }
+
+  //////////////////////////////////////////////////////////////////////
   useEffect(()=>{
 
     const backHandler = 
@@ -115,8 +125,17 @@ const LoginScreen = ({navigation}) => {
             />
           </View>
           {/* password input */}
+
+          {/** Issue 77: Step 3: Here you have to modify the container, first create another container which will wrap the two field
+             TextInput and eye icon */}
+          
           <View style={styles.input}>
-            {/* <Text style={styles.inputLabel}>Password</Text> */}
+            {/* <View style={styles.containerStyle}>
+             
+            </View> */}
+
+            <View> 
+              {  /** Container Style will be the container which will contain the password input field as well as eye icon*/ } 
             <TextInput
               autoCapitalize="none"
               autoCorrect={false}
@@ -124,7 +143,7 @@ const LoginScreen = ({navigation}) => {
               keyboardType="ascii-capable"
               placeholder="Password"
               placeholderTextColor="#948585"
-              secureTextEntry={true}
+              secureTextEntry={secureTextEntry}
               style={[
                 styles.inputControl,
                 {
@@ -133,6 +152,27 @@ const LoginScreen = ({navigation}) => {
                 },
               ]}
             />
+
+            { 
+              /**
+              Issue 77 : Step 4 Take TouchableOpacity
+              <TouchableOpacity style={{
+
+              // Make sure the position is absolute, and give some top-right value and style it so that you achieve your desire design
+              }}
+              onPress ={handleSecureEntryClickEvent}
+              >
+               secureTextEntry?(
+               <Icon1/> // it will be eye-off icon from react-native-vector-icon
+               ):(
+
+               <Icon2/> // it will be eye-off icon from react-native-vector-icon
+               )
+            </TouchableOpacity>
+              // You are done, run the app  😇
+             */
+              }
+            </View>
           </View>
           {/* forgot password */}
           <View style={styles.forgotPasswordContainer}>
