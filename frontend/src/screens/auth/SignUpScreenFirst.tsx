@@ -6,10 +6,10 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
+import { Dropdown } from 'react-native-element-dropdown';
 
 const SignupPageFirst = () => {
   const [name, setName] = useState('');
@@ -18,6 +18,7 @@ const SignupPageFirst = () => {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const navigation = useNavigation();
+  const [isFocus, setIsFocus] = useState(false);
 
   const handleSubmit = () => {
     // Handle signup logic here
@@ -27,6 +28,11 @@ const SignupPageFirst = () => {
     console.log('Password:', password);
     console.log('Role:', role);
   };
+
+  const data = [
+    { label: 'General User', value: 'general' },
+    { label: 'Doctor', value: 'doctor' },
+  ];
 
   return (
     <View style={styles.container}>
@@ -94,16 +100,22 @@ const SignupPageFirst = () => {
                   </View>
               </View>
 
-              <View style={styles.picker}>
-                  <Picker
-                    selectedValue={role}
-                    onValueChange={setRole}
-                  >
-                    <Picker.Item label="Select your role" value="" />
-                    <Picker.Item label="General User" value="user" />
-                    <Picker.Item label="Doctor" value="doctor" />
-                  </Picker>
-
+              <View style={styles.field}>
+                <Dropdown
+                  style={styles.dropdown}
+                  placeholderStyle={styles.placeholderStyle}
+                  data={data}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={!isFocus ? 'Select your role' : '...'}
+                  value={role}
+                  onFocus={() => setIsFocus(true)}
+                  onBlur={() => setIsFocus(false)}
+                  onChange={item => {
+                    setRole(item.value);
+                    setIsFocus(false);
+                  }}
+                />
               </View>
 
               <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignUpScreenSecond')}>
@@ -119,31 +131,31 @@ const SignupPageFirst = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0CAFFF',
+    justifyContent: 'flex-start',
+    backgroundColor: 'white',
   },
   header: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#0CAFFF',
+    position: 'absolute',
+    width: '100%',
+    height: 170,
     paddingTop: 30,
-    paddingBottom: 30,
     alignItems: 'center',
+    backgroundColor: '#0CAFFF',
   },
   footer: {
-    flex : 4,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 30,
-    paddingVertical: 30,
-//     marginLeft: 30,
-//     marginRight: 30,
+    flex: 1,
+    width: "90%",
+    alignSelf: 'center',
+    backgroundColor: "white",
+    marginTop: 130,
+    position: 'absolute',
+    borderRadius: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
-    textAlign: 'center',
+    alignSelf: 'flex',
   },
   subtitle: {
     fontSize: 16,
@@ -153,11 +165,11 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignSelf: 'center',
-    marginTop: 10,
+    marginTop: 20,
   },
   form: {
     padding: 20,
-    paddingTop: 30,
+    paddingTop: 20,
   },
   field: {
     alignSelf: 'end',
@@ -168,7 +180,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    marginBottom: 10,
+    marginBottom: 20,
     fontSize: 15,
   },
   inputIcon: {
@@ -176,29 +188,31 @@ const styles = StyleSheet.create({
     right: 14,
     top: 12,
   },
-  picker: {
-//     height: 40,
-    borderColor: '#0CAFFF',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 10,
-    paddingTop: 0,
-    paddingBottom: 5,
-    fontSize: 10,
-  },
   button: {
     backgroundColor: '#0CAFFF',
     padding: 10,
     borderRadius: 40,
     alignItems: 'center',
     alignSelf : 'center',
-    marginTop: 60,
-    width: '50%',
+    marginTop: 20,
+    width: '60%',
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 20
+  },
+  dropdown: {
+    height: 40,
+    borderColor: '#0CAFFF',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    paddingRight: 12,
+  },
+  placeholderStyle: {
+    fontSize: 15,
   },
 });
 

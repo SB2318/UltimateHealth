@@ -33,7 +33,7 @@ const SignupPageSecond = () => {
           ...let me congratulate on the
         </Text>
         <Text style={styles.title}>
-          choice of calling which offers a combination of intellectual and
+          choice of calling which offers a
         </Text>
         <Text style={styles.title}>
           combination of intellectual and
@@ -90,7 +90,7 @@ const SignupPageSecond = () => {
               <View style={styles.field}>
                 <TextInput
                   style={styles.input}
-                  placeholder="Email (associated with hospital)"
+                  placeholder="Professional Email"
                   onChangeText={setBusinessEmail}
                   value={businessEmail}
                 />
@@ -111,7 +111,7 @@ const SignupPageSecond = () => {
                   </View>
               </View>
 
-              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('LoginScreen')}>
+              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignUpScreenFirst')}>
                 <Text style={styles.buttonText}>Register</Text>
               </TouchableOpacity>
           </View>
@@ -124,32 +124,31 @@ const SignupPageSecond = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0CAFFF',
+    justifyContent: 'flex-start',
+    backgroundColor: 'white',
   },
   header: {
-    flex: 1,
-//     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    backgroundColor: '#0CAFFF',
+    position: 'absolute',
+    width: '100%',
+    height: 250,
     paddingTop: 30,
-    paddingBottom: 30,
     alignItems: 'center',
+    backgroundColor: '#0CAFFF',
   },
   footer: {
-    flex : 3,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 30,
-    paddingVertical: 30,
-//     marginLeft: 30,
-//     marginRight: 30,
+    flex: 1,
+    width: "90%",
+    alignSelf: 'center',
+    backgroundColor: "white",
+    marginTop: 210,
+    position: 'absolute',
+    borderRadius: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
-    textAlign: 'center',
+    alignSelf: 'flex',
   },
   subtitle: {
     fontSize: 16,
@@ -159,14 +158,14 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignSelf: 'center',
-//     marginTop: 10,
+    marginTop: 20,
   },
   form: {
     padding: 20,
-    paddingTop: 30,
+    paddingTop: 20,
   },
   field: {
-    alignSelf: 'auto',
+    alignSelf: 'end',
   },
   input: {
     height: 40,
@@ -182,24 +181,14 @@ const styles = StyleSheet.create({
     right: 14,
     top: 12,
   },
-  picker: {
-//     height: 40,
-    borderColor: '#0CAFFF',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 10,
-    paddingTop: 0,
-    paddingBottom: 5,
-    fontSize: 10,
-  },
   button: {
     backgroundColor: '#0CAFFF',
     padding: 10,
     borderRadius: 40,
     alignItems: 'center',
     alignSelf : 'center',
-    marginTop: 60,
-    width: '50%',
+    marginTop: 20,
+    width: '60%',
   },
   buttonText: {
     color: '#fff',

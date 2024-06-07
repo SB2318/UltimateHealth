@@ -38,12 +38,6 @@ const HomeScreen = () => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('LoginScreen')}
-      >
-      <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
         onPress={() => navigation.navigate('SignUpScreenFirst')}
       >
       <Text style={styles.buttonText}>Sign Up</Text>
