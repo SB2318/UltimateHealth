@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
@@ -24,10 +25,16 @@ const SignupPageSecond = () => {
     console.log('Experience:', experience);
     console.log('Business Email:', businessEmail);
     console.log('Phone Number:', phone);
+
+    if (!specialization || !education || !experience || !businessEmail || !phone) {
+      alert('Please fill in all fields');
+      return;
+    }
+    navigation.navigate('LoginScreen');
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>
           ...let me congratulate on the
@@ -111,24 +118,22 @@ const SignupPageSecond = () => {
                   </View>
               </View>
 
-              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignUpScreenFirst')}>
+              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Register</Text>
               </TouchableOpacity>
           </View>
 
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
     backgroundColor: 'white',
   },
   header: {
-    position: 'absolute',
     width: '100%',
     height: 250,
     paddingTop: 30,
@@ -140,8 +145,7 @@ const styles = StyleSheet.create({
     width: "90%",
     alignSelf: 'center',
     backgroundColor: "white",
-    marginTop: 210,
-    position: 'absolute',
+    marginTop: -40,
     borderRadius: 10,
   },
   title: {

@@ -5,11 +5,13 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 import { Dropdown } from 'react-native-element-dropdown';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const SignupPageFirst = () => {
   const [name, setName] = useState('');
@@ -19,14 +21,24 @@ const SignupPageFirst = () => {
   const [role, setRole] = useState('');
   const navigation = useNavigation();
   const [isFocus, setIsFocus] = useState(false);
+  const [isSecureEntry, setIsSecureEntry] = useState(true);
 
   const handleSubmit = () => {
-    // Handle signup logic here
     console.log('Name:', name);
     console.log('Username:', username);
     console.log('Email:', email);
     console.log('Password:', password);
     console.log('Role:', role);
+    if (!name || !username || !email || !password || !role) {
+      alert('Please fill in all fields');
+      return;
+    }
+    if (role === 'general') {
+      console.log('Registering as General User');
+
+    } else {
+      navigation.navigate('SignUpScreenSecond');
+    }
   };
 
   const data = [
@@ -35,7 +47,7 @@ const SignupPageFirst = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>
           He who has health has hope and he
@@ -93,11 +105,14 @@ const SignupPageFirst = () => {
                     placeholder="Password"
                     onChangeText={setPassword}
                     value={password}
-                    secureTextEntry
+                    secureTextEntry={isSecureEntry}
                   />
-                  <View style={styles.inputIcon}>
-                    <Icon name="password" size={20} color="#000" />
-                  </View>
+                  <TouchableOpacity
+                    style={styles.inputIcon}
+                    onPress={() => setIsSecureEntry(!isSecureEntry)}
+                  >
+                    <AntDesign name={isSecureEntry ? 'eyeo' : 'eye'} size={20} color="#000" />
+                  </TouchableOpacity>
               </View>
 
               <View style={styles.field}>
@@ -118,24 +133,24 @@ const SignupPageFirst = () => {
                 />
               </View>
 
-              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('SignUpScreenSecond')}>
-                <Text style={styles.buttonText}>Continue</Text>
+              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>
+                  {role === 'general' ? 'Register' : 'Continue'}
+                </Text>
               </TouchableOpacity>
           </View>
 
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
     backgroundColor: 'white',
   },
   header: {
-    position: 'absolute',
     width: '100%',
     height: 170,
     paddingTop: 30,
@@ -147,15 +162,13 @@ const styles = StyleSheet.create({
     width: "90%",
     alignSelf: 'center',
     backgroundColor: "white",
-    marginTop: 130,
-    position: 'absolute',
+    marginTop: -40,
     borderRadius: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
-    alignSelf: 'flex',
   },
   subtitle: {
     fontSize: 16,
@@ -169,7 +182,6 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: 20,
-    paddingTop: 20,
   },
   field: {
     alignSelf: 'end',
