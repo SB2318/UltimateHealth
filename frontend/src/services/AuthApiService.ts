@@ -14,13 +14,21 @@ export class AuthApiService{
 
     /** Add Function to call login api */
 
+    // Issue 85 : Step 1: Complete the function
+
     login(params:LoginUser){
+    /**
+     *   @params : {
+     *     email: string
+     *     password: string
+     *    }
+     */
     
-        // add your code
-        let url = BASE_URL+LOGIN_API
+      return new Promise((resolve, reject)=>{
 
-      // return new promises with  postMethodCall(url,params)
-
+           // return new promises with  postMethodCall(url,params)
+           let url = BASE_URL+LOGIN_API
+      })
       // Remember this is an initial abstraction, if you faces any difficulties you can suggest your own
       // And if you familiar with it then okay
     }

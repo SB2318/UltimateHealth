@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -24,7 +24,9 @@ const SignupPageFirst = ({navigation}) => {
   const [isFocus, setIsFocus] = useState(false);
   const [isSecureEntry, setIsSecureEntry] = useState(true);
 
+  const routes = navigation.getState().routeNames;
 
+  console.log("Routes Signup: ", routes)
 
   const handleSubmit = () => {
     console.log('Name:', name);
@@ -48,6 +50,14 @@ const SignupPageFirst = ({navigation}) => {
     { label: 'General User', value: 'general' },
     { label: 'Doctor', value: 'doctor' },
   ];
+
+  useEffect(()=>{
+
+    return()=>{
+      const routes = navigation.getState().routeNames;
+  console.log("Routes Names Sign Sec", routes);
+    }
+  },[])
 
   return (
     <SafeAreaView style={styles.container}>

@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ON_PRIMARY_COLOR,PRIMARY_COLOR } from '../helper/Theme';
 import { handleBackButton } from '../helper/Utils';
-import { BackHandler } from 'react-native';
+
 
 
 const SplashScreen = ({navigation}) => {
@@ -25,8 +25,7 @@ const SplashScreen = ({navigation}) => {
 
   useEffect(() => {
 
-    const backHandler = 
-    BackHandler.addEventListener('hardwareBackPress',  handleBackButton);
+    
     const timer = setTimeout(() => {
       checkLoginStatus();
     }, 3000);
@@ -34,7 +33,7 @@ const SplashScreen = ({navigation}) => {
     return () => {
    
       clearTimeout(timer);
-      backHandler.remove()
+ 
     }
   }, [navigation]);
 

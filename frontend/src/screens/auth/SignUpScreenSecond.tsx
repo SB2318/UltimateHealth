@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -18,6 +18,8 @@ const SignupPageSecond = ({navigation}) => {
   const [businessEmail, setBusinessEmail] = useState('');
   const [phone, setPhone] = useState('');
 
+  const routes = navigation.getState().routeNames;
+  console.log("Routes Names Sign Sec", routes);
 
   const handleSubmit = () => {
     // Handle signup logic here
@@ -33,6 +35,14 @@ const SignupPageSecond = ({navigation}) => {
     }
     navigation.navigate('LoginScreen');
   };
+
+  useEffect(()=>{
+
+    return()=>{
+      const routes = navigation.getState().routeNames;
+  console.log("Routes Names Sign Sec", routes);
+    }
+  },[])
 
   return (
     <ScrollView style={styles.container}>

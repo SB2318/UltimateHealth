@@ -6,6 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
+  BackHandler,
+  Alert,
   useColorScheme,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
@@ -17,7 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { retrieveItem } from '../../helper/Utils';
 import EmailInputModal from '../../components/EmailInputModal';
-import { UserModel } from '../../models/User';
+import { UserModel,LoginUser } from '../../models/User';
 import { AuthApiService } from '../../services/AuthApiService';
 
 
@@ -29,7 +31,14 @@ const LoginScreen = ({navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [emailInputVisible, setEmailInputVisible] = useState(false)
 
-  // 
+  // ISSUE: 85  Step 2 , Create Reference and useState variable for DOM / View input elements
+  /**
+   * const emailRef= useRef(null) -> will point email input
+   * const [email, setEmail] = useState('') -> useState variable for storing input value
+   * passwordRef-> will point password input field
+   * password -> useState variable for storing input value
+   */
+
 
 // ISSUE : 77 Step 1:
  // Create an useState variable which will handle secureTextEntry of password field
@@ -42,10 +51,20 @@ const LoginScreen = ({navigation}) => {
   }
 
   //////////////////////////////////////////////////////////////////////
-  useEffect(()=>{
-
-   
-  },[])
+ 
+  useEffect(() =>
+    navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+      Alert.alert(
+        "Warning",
+        "Do you want to exit",
+        [
+          { text: "No", onPress: () => null },
+          { text: "Yes", onPress: () => BackHandler.exitApp() }
+        ],
+        { cancelable: true }
+      );
+    }), [])
   
   const storeItem = async (key, value) => {
     try {
@@ -56,6 +75,42 @@ const LoginScreen = ({navigation}) => {
     }
   };
 
+  /** ISSUE 85 : Complete the function */
+  const validateAndSubmit = ()=>{
+
+      /** Complete the function */
+      if(validate()){
+
+        /** Create a new object of service */
+        let service = new AuthApiService()
+        /** Create a new object of params */
+        let params = new LoginUser()
+        //params.email = email
+        //params.password = password
+
+        // call login method with the help of service object
+        service.login(params).then((response)=>{
+           console.log("Response", response)
+           // Store User data after stringify
+           // Navigate to home
+        })
+
+      }
+  }
+
+  /** ISSUE 85: Complete the function */
+  const validate = ()=>{
+
+    /** Validate email data */
+    /** Validate Password data */
+    /**
+     * if(validate) return true
+     * else 
+     *  return false
+     */
+
+    return true
+  }
 
   const handleForgotPassword= ()=>{
 
@@ -107,8 +162,12 @@ const LoginScreen = ({navigation}) => {
           ]}>
           {/* email input */}
           <View style={styles.input}>
-            {/* <Text style={styles.inputLabel}>Email id or username</Text> */}
-            <TextInput
+            {
+             /** ISSUE : 85, STEP:3, set email ref here for TextInput
+               <TextInput ref={emailRef} style={styles.inputLabel}></TextInput>
+              */
+            }
+            <TextInput 
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -134,6 +193,11 @@ const LoginScreen = ({navigation}) => {
              
             </View> */}
 
+{
+             /** ISSUE : 85, STEP:4, set passwordRef here for TextInput
+               <TextInput ref={passwordRef} style={styles.inputLabel}></TextInput>
+              */
+            }
             <View> 
               {  /** Container Style will be the container which will contain the password input field as well as eye icon*/ } 
             <TextInput
@@ -182,13 +246,16 @@ const LoginScreen = ({navigation}) => {
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
           </View>
+
+      
           {/* login  button */}
           <View style={styles.loginButtonContainer}>
             <TouchableOpacity
               style={styles.loginButton}
               onPress={() => {
-                //
+                    {/** ISSUE 85: Step 5 Handle Login Button Action, Complete the method */}
                 //storeItem('user', 'ok');
+                validateAndSubmit()
               }}>
               <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>

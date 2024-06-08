@@ -1,4 +1,5 @@
-import {StyleSheet, Text, View, useColorScheme, SafeAreaView} from 'react-native';
+import {StyleSheet, Text, View, 
+  useColorScheme, SafeAreaView,BackHandler, Alert} from 'react-native';
 import React, {useEffect} from 'react';
 
 
@@ -16,10 +17,19 @@ const PodcastsScreen = ({navigation}) => {
   const color = isDarkMode ? 'white' : 'black';
 
 
-  useEffect(()=>{
-
- 
-  },[])
+  useEffect(() =>
+    navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+      Alert.alert(
+        "Warning",
+        "Do you want to exit",
+        [
+          { text: "No", onPress: () => null },
+          { text: "Yes", onPress: () => BackHandler.exitApp() }
+        ],
+        { cancelable: true }
+      );
+    }), [])
 
   
   return (

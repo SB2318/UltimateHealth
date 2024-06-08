@@ -1,4 +1,5 @@
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, useColorScheme } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, 
+  View, useColorScheme,BackHandler,Alert } from 'react-native'
 import React, {useEffect} from 'react'
 
 import { PRIMARY_COLOR } from '../helper/Theme';
@@ -8,9 +9,20 @@ import AddIcon from '../components/AddIcon';
 const HomeScreen = ({navigation}) => {
 
 
-  useEffect(()=>{
-
-  },[])
+ 
+  useEffect(() =>
+    navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+      Alert.alert(
+        "Warning",
+        "Do you want to exit",
+        [
+          { text: "No", onPress: () => null },
+          { text: "Yes", onPress: () => BackHandler.exitApp() }
+        ],
+        { cancelable: true }
+      );
+    }), [])
 
     const isDarkMode = useColorScheme() === 'dark';
   
