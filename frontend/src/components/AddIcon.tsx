@@ -6,8 +6,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { PRIMARY_COLOR } from '../Theme';
-
+import { PRIMARY_COLOR } from '../helper/Theme';
 
 const AddIcon = ({callback}) => {
   return (

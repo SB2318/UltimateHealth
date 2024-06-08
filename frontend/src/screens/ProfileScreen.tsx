@@ -6,13 +6,9 @@ import {
   SafeAreaView,
 } from 'react-native';
 import React, {useEffect} from 'react';
+import { PRIMARY_COLOR } from '../helper/Theme';
 
-import { BackHandler } from 'react-native';
-import { handleBackButton } from '../utils/FunctionUtils';
-
-import { PRIMARY_COLOR } from '../Theme';
-
-const ProfileScreen = () => {
+const ProfileScreen = ({navigation}) => {
 
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
@@ -23,11 +19,6 @@ const ProfileScreen = () => {
 
 
   useEffect(()=>{
-
-    const backHandler = 
-    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-
-    return () => backHandler.remove();
   },[])
 
   

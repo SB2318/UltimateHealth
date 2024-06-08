@@ -10,11 +10,10 @@ import React from 'react';
 import {Platform, StatusBar, useColorScheme, View} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {PRIMARY_COLOR} from './src/Theme';
+import { PRIMARY_COLOR } from './src/helper/Theme';
 import {NavigationContainer} from '@react-navigation/native';
 import StackNavigation from './src/navigations/StackNavigation';
-import TabNavigation from './src/navigations/TabNavigation';
-import LoginScreen from './src/screens/auth/LoginScreen';
+
 import {
   SafeAreaProvider,
   useSafeAreaInsets,

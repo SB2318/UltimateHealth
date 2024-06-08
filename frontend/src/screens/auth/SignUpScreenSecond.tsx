@@ -8,15 +8,16 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
+import { hp } from '../../helper/Metric';
 
-const SignupPageSecond = () => {
+
+const SignupPageSecond = ({navigation}) => {
   const [specialization, setSpecialization] = useState('');
   const [education, setEducation] = useState('');
   const [experience, setExperience] = useState('');
   const [businessEmail, setBusinessEmail] = useState('');
   const [phone, setPhone] = useState('');
-  const navigation = useNavigation();
+
 
   const handleSubmit = () => {
     // Handle signup logic here
@@ -54,9 +55,7 @@ const SignupPageSecond = () => {
         <Text style={styles.subtitle}> ~ Sir William Olser.</Text>
       </View>
       <View style={styles.footer}>
-          <View style={styles.iconContainer}>
-            <Icon name="person-add" size={50} color='#0CAFFF'/>
-          </View>
+        
           <View style={styles.form}>
               <View style={styles.field}>
                   <TextInput
@@ -135,7 +134,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: 250,
+    height: hp(30),
     paddingTop: 30,
     alignItems: 'center',
     backgroundColor: '#0CAFFF',
@@ -145,14 +144,14 @@ const styles = StyleSheet.create({
     width: "90%",
     alignSelf: 'center',
     backgroundColor: "white",
-    marginTop: -40,
+    marginTop: -50,
     borderRadius: 10,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#fff',
-    alignSelf: 'flex',
+  
   },
   subtitle: {
     fontSize: 16,
@@ -166,10 +165,10 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: 20,
-    paddingTop: 20,
+    marginTop: 60,
   },
   field: {
-    alignSelf: 'end',
+    
   },
   input: {
     height: 40,

@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 const {width} = Dimensions.get('window');
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {PRIMARY_COLOR} from '../Theme';
+import { PRIMARY_COLOR } from '../helper/Theme';
+
 import Ionicons from 'react-native-vector-icons/Ionicons';
 const TabBar = ({state, descriptors, navigation}: any) => {
   const isDarkMode = useColorScheme() === 'dark';

@@ -1,24 +1,19 @@
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, useColorScheme } from 'react-native'
 import React, {useEffect} from 'react'
-import { BackHandler } from 'react-native';
-import { handleBackButton } from '../utils/FunctionUtils';
-import { PRIMARY_COLOR } from '../Theme';
-import AddIcon from '../components/AddIcon';
-import {useNavigation} from '@react-navigation/native';
 
-const HomeScreen = () => {
+import { PRIMARY_COLOR } from '../helper/Theme';
+import AddIcon from '../components/AddIcon';
+
+
+const HomeScreen = ({navigation}) => {
 
 
   useEffect(()=>{
 
-    const backHandler = 
-    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-
-    return () => backHandler.remove();
   },[])
 
     const isDarkMode = useColorScheme() === 'dark';
-    const navigation = useNavigation();
+  
 
     const backgroundStyle = {
      // backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -36,12 +31,7 @@ const HomeScreen = () => {
     <SafeAreaView style={[backgroundStyle,{flex:1,alignItems:'center',justifyContent:"center"}]}>
       <Text style={{color:'white',fontSize:18, fontFamily:'500',}}>HomeScreen</Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('SignUpScreenFirst')}
-      >
-      <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
+    
 
       <View style={styles.homePlusIconview}>
         <AddIcon callback={handleNoteIconClick}/>

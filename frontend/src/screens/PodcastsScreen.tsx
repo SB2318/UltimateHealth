@@ -1,13 +1,11 @@
 import {StyleSheet, Text, View, useColorScheme, SafeAreaView} from 'react-native';
 import React, {useEffect} from 'react';
 
-import { BackHandler } from 'react-native';
-import { handleBackButton } from '../utils/FunctionUtils';
 
-import { PRIMARY_COLOR } from '../Theme';
+import { PRIMARY_COLOR } from '../helper/Theme';
 
 
-const PodcastsScreen = () => {
+const PodcastsScreen = ({navigation}) => {
 
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -20,10 +18,7 @@ const PodcastsScreen = () => {
 
   useEffect(()=>{
 
-    const backHandler = 
-    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-
-    return () => backHandler.remove();
+ 
   },[])
 
   

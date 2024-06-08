@@ -6,22 +6,25 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {fp, hp, wp} from '../../helper/Metric';
 
-const SignupPageFirst = () => {
+const SignupPageFirst = ({navigation}) => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
-  const navigation = useNavigation();
+  
   const [isFocus, setIsFocus] = useState(false);
   const [isSecureEntry, setIsSecureEntry] = useState(true);
+
+
 
   const handleSubmit = () => {
     console.log('Name:', name);
@@ -47,7 +50,7 @@ const SignupPageFirst = () => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>
           He who has health has hope and he
@@ -57,9 +60,12 @@ const SignupPageFirst = () => {
         </Text>
         <Text style={styles.subtitle}> ~ Arabian Proverb.</Text>
       </View>
+      
       <View style={styles.footer}>
+
+      <ScrollView>
           <View style={styles.iconContainer}>
-            <Icon name="person-add" size={50} color='#0CAFFF'/>
+            <Icon name="person-add" size={70} color='#0CAFFF'/>
           </View>
           <View style={styles.form}>
               <View style={styles.field}>
@@ -138,10 +144,11 @@ const SignupPageFirst = () => {
                   {role === 'general' ? 'Register' : 'Continue'}
                 </Text>
               </TouchableOpacity>
+          
           </View>
-
+          </ScrollView>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -152,17 +159,18 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: 170,
-    paddingTop: 30,
+    height: hp(20),
+    paddingTop: 20,
     alignItems: 'center',
     backgroundColor: '#0CAFFF',
   },
   footer: {
     flex: 1,
     width: "90%",
+    paddingTop:20,
     alignSelf: 'center',
     backgroundColor: "white",
-    marginTop: -40,
+    marginTop: -50,
     borderRadius: 10,
   },
   title: {
@@ -184,7 +192,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   field: {
-    alignSelf: 'end',
+  
   },
   input: {
     height: 40,

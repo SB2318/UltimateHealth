@@ -9,18 +9,19 @@ import {
   useColorScheme,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {PRIMARY_COLOR} from '../../Theme';
+import { PRIMARY_COLOR } from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fp, hp, wp} from '../../helper/Metric';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {retrieveItem} from '../../utils/StorageUtils';
+import { retrieveItem } from '../../helper/Utils';
 import EmailInputModal from '../../components/EmailInputModal';
-import { BackHandler } from 'react-native';
-import { handleBackButton } from '../../utils/FunctionUtils';
+import { UserModel } from '../../models/User';
+import { AuthApiService } from '../../services/AuthApiService';
 
 
+// Import User Model and AUTH API SERVICE HERE, Details will be provided when work start
 
 const LoginScreen = ({navigation}) => {
 
@@ -28,9 +29,11 @@ const LoginScreen = ({navigation}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [emailInputVisible, setEmailInputVisible] = useState(false)
 
+  // 
+
 // ISSUE : 77 Step 1:
  // Create an useState variable which will handle secureTextEntry of password field
-  // const [secureTextEntry, setSecureTextEntry] = useState(true)
+   const [secureTextEntry, setSecureTextEntry] = useState(true)
 
   // ISSUE : 77 Step 2:
   // Handle Eye Icon action, assume there are already an eye icon in the password field and you have to handle it's action
@@ -41,10 +44,7 @@ const LoginScreen = ({navigation}) => {
   //////////////////////////////////////////////////////////////////////
   useEffect(()=>{
 
-    const backHandler = 
-    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-
-    return () => backHandler.remove();
+   
   },[])
   
   const storeItem = async (key, value) => {
@@ -188,7 +188,7 @@ const LoginScreen = ({navigation}) => {
               style={styles.loginButton}
               onPress={() => {
                 //
-                storeItem('user', 'ok');
+                //storeItem('user', 'ok');
               }}>
               <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
@@ -211,7 +211,8 @@ const LoginScreen = ({navigation}) => {
                   },
                 ]}
                 onPress={() => {
-                    storeItem('user', 'ok');
+                   // storeItem('user', 'ok');
+                   navigation.navigate('SignUpScreenFirst')
                  }}
                 >
                 Create new account
@@ -300,3 +301,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+
+//    emailRef.current.style.borderColor = 'red';
