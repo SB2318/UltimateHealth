@@ -2,10 +2,15 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import TabNavigation from "./TabNavigation";
 import SplashScreen from '../screens/SplashScreen';
-import LoginScreen from '../screens/auth/LoginScreen'
+import LoginScreen from '../screens/auth/LoginScreen';
+import SignUpScreenFirst from '../screens/auth/SignUpScreenFirst';
+import SignUpScreenSecond from '../screens/auth/SignUpScreenSecond'
+
 const Stack = createStackNavigator();
 
 const StackNavigation = () => {
+
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -21,6 +26,16 @@ const StackNavigation = () => {
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SignUpScreenFirst"
+        component={SignUpScreenFirst}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SignUpScreenSecond"
+        component={SignUpScreenSecond}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
