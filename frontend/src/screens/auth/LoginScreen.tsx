@@ -265,7 +265,8 @@ const LoginScreen = ({navigation}) => {
           <EmailInputModal 
           callback={navigateToOtpScreen} 
           visible={emailInputVisible}
-          backButtonClick={handleEmailInputBack}/>
+          backButtonClick={handleEmailInputBack}
+          navigator={navigation}/>
             
           {/* creat account button */}
           <View style={styles.createAccountContainer}>
