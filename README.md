@@ -148,7 +148,7 @@ To ensure that your project runs smoothly, make sure you have Java 17 installed 
 * Close and reopen any Command Prompt windows for the changes to take effect.
 * To verify that **JAVA_HOME** is set correctly, run the command echo %JAVA_HOME% in a Command Prompt window. It should display the JDK installation path.
 
-### Setting ANDROID_HOME Environment Variable:
+### Setting ANDROID_HOME Environment Variable:💥
 
 To set the **ANDROID_HOME** variable for both Windows and macOS, you can follow the instructions below:
 
@@ -323,9 +323,11 @@ If you would like to contribute to the project, please follow the contribution g
 
  <!---------------------------------------------------------------CONTRIBUTION GUIDELINES--------------------------------------------------------------------------->
 
-## :zap:Contribution Guidelines:
-
-* **Checkout and make your changes for the develop branch only:** When working on your contributions, switch to the **develop** branch in your local repository. This ensures that you are working on the latest version of the codebase.
+<details>
+ <summary><h2>:zap:Contribution Guidelines:</h2></summary>
+ 
+ 
+ * **Checkout and make your changes for the develop branch only:** When working on your contributions, switch to the **develop** branch in your local repository. This ensures that you are working on the latest version of the codebase.
 
 * **Create pull requests only for the develop branch:** When you are ready to submit your changes, create a pull request (PR) targeting the **develop** branch. This allows the maintainers to review and merge your code into the main development branch.
 
@@ -340,6 +342,8 @@ If you would like to contribute to the project, please follow the contribution g
 * **Rebase your commits and optimize file changes:** When submitting your pull request, consider rebasing your commits into one commit and optimizing your file changes. This helps keep the commit history clean and makes it easier for reviewers to understand your changes.
 
 Remember, following these guidelines will help ensure a smooth and efficient contribution process. Happy coding!
+
+</details>
 
 <hr>
 
@@ -374,11 +378,13 @@ If you encounter any issues or have any feedback or suggestions, please open an 
 </div>
 
 Please note that this project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+<hr>
 
 <!-- License -->
 <div>
 <h2><img src = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Page%20with%20Curl.png" width="35" height="35"> License</h2>
 </div>
+<hr>
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 This project is licensed under the [MIT License](./LICENSE).
