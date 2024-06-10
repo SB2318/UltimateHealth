@@ -31,6 +31,32 @@
 </table>
 </div>
 <hr>
+
+
+<!------------------------------------------------------------------------FEATURED IN------------------------------------------------------------------------------>
+
+
+## :zap: Featured In:
+ <div>
+    <h2><img src="https://github.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/blob/master/Emojis/Hand%20gestures/Flexed%20Biceps.png?raw=true" width="35" height="35" > Open Source Programs</h2>
+  </div>
+  
+<table>
+
+   <tr>
+      <th>Event Logo</th>
+      <th>Event Name</th>
+      <th>Event Description</th>
+   </tr>
+   <tr>
+      <td><img src="https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png" width="200" height="auto" loading="lazy" alt="GSSoC 24"/></td>
+      <td>GirlScript Summer of Code 2024</td>
+      <td>GirlScript Summer of Code is a three-month-long Open Source Program conducted every summer by GirlScript Foundation. It is an initiative to bring more beginners to Open-Source Software Development.</td>
+   </tr>
+
+</table>
+
+<hr>
 <!------------------------------------------------------------------------ABOUT US------------------------------------------------------------------------------>
 
 
@@ -348,16 +374,6 @@ Remember, following these guidelines will help ensure a smooth and efficient con
 
 <hr>
 
- <!-------------------------------------------------------------------OPEN SOURCE PROGRAMS-------------------------------------------------------------------------->
-  <div>
-    <h2><img src="https://github.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/blob/master/Emojis/Hand%20gestures/Flexed%20Biceps.png?raw=true" width="35" height="35" >Open Source Programs</h2>
-  </div>
-
-  This project is part of GirlScript Summer of Code. We welcome contributions from the community to help enhance UltimateHealth.
-  
-![gssoc](https://github.com/d1vyadharsh1n1/Flipkart_Clone/assets/146218077/dd4ffa29-2d52-47ad-9967-d0d6f8aff717)
-
-<hr>
 
 
 ## :zap:Our Vision:
