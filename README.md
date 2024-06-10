@@ -59,11 +59,12 @@ UltimateHealth is an innovative open-source project that aims to provide a compr
 
 <details>
   <summary><h2>Headers: :pushpin:</h2></summary>
+ <img src="https://github.com/Vi1234sh12/Face-X/blob/master/.github/Assests/isometric.png" height="290px" align="right"/>
+
  <!---------------------------------------------------------------------- CONTENTS--------------------------------------------------------------->
   <details>
     <summary><h3>Contents :computer:</h3></summary>
-    <img src="https://github.com/Vi1234sh12/Face-X/blob/master/.github/Assests/isometric.png" height="290px" align="right"/>
-
+    
    - [Features](https://github.com/SB2318/UltimateHealth#features)
    - [Technology Stack](https://github.com/SB2318/UltimateHealth#technology-stack)
    - [Project Requirements](https://github.com/SB2318/UltimateHealth#project-requirements)<br>
