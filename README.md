@@ -1,4 +1,4 @@
-
+<a id="top"></a>
 <h1 align="center">UltimateHealth</h1>
 <h3 align="center">
  
@@ -31,8 +31,6 @@
 </table>
 </div>
 <hr>
-
-
 <!------------------------------------------------------------------------FEATURED IN------------------------------------------------------------------------------>
 
 
@@ -53,17 +51,12 @@
       <td>GirlScript Summer of Code 2024</td>
       <td>GirlScript Summer of Code is a three-month-long Open Source Program conducted every summer by GirlScript Foundation. It is an initiative to bring more beginners to Open-Source Software Development.</td>
    </tr>
-
 </table>
-
 <hr>
 <!------------------------------------------------------------------------ABOUT US------------------------------------------------------------------------------>
-
-
 ## :zap:About us:
 
 UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users looking for reliable and trustworthy information on various health-related topics.
-
 <hr>
 <!------------------------------------------------------------------------TECH STACKS------------------------------------------------------------------------------>
 
@@ -77,36 +70,14 @@ UltimateHealth is an innovative open-source project that aims to provide a compr
 <a href="https://www.javatpoint.com/expressjs-tutorial"><img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/expressjs_logo_icon_169185.png" alt="expressjs" width="50" height="50" /></a>
 <a href="https://www.w3schools.com/REACT/DEFAULT.ASP"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png" alt="React.js" width="50" height="50" /></a>
 </p>
-
 <hr>
-
-
 <!---------------------------------------------------------------------- HEADERS--------------------------------------------------------------->
-
 <details>
-  <summary><h2>Headers: :pushpin:</h2></summary>
- <img src="https://github.com/Vi1234sh12/Face-X/blob/master/.github/Assests/isometric.png" height="290px" align="right"/>
-
- <!---------------------------------------------------------------------- CONTENTS--------------------------------------------------------------->
-  <details>
-    <summary><h3>Contents :computer:</h3></summary>
-    
-   - [Features](https://github.com/SB2318/UltimateHealth#features)
-   - [Technology Stack](https://github.com/SB2318/UltimateHealth#technology-stack)
-   - [Project Requirements](https://github.com/SB2318/UltimateHealth#project-requirements)<br>
-     (i)  [Install JDK](https://github.com/SB2318/UltimateHealth#install-jdk)<br>
-     (ii) [Set Up Android Development Environment](https://github.com/SB2318/UltimateHealth#setting-android_home-environment-variable)
-   - [Getting Started](https://github.com/SB2318/UltimateHealth#getting-started)<br>
-     (i)  [Frontend](https://github.com/SB2318/UltimateHealth#for-frontend)<br>
-     (ii) [Backend](https://github.com/SB2318/UltimateHealth#for-backend)
-   - [Testing Frontend with Localhost Backend Server](https://github.com/SB2318/UltimateHealth#testing-frontend-with-localhost-backend-server)
-   - [Contribution Guidelines](https://github.com/SB2318/UltimateHealth#contribution-guidelines)
-   - [Our Contributors](https://github.com/SB2318/UltimateHealth#our-contributors-%EF%B8%8F)
-     
-  </details>
-<!---------------------------------------------------------------------- FEATURES--------------------------------------------------------------->
-  <details>
-   <summary><h2>Features :crystal_ball:</h2></summary>
+  <img src="https://github.com/Vi1234sh12/Face-X/blob/master/.github/Assests/isometric.png" height="290px" align="right"/>
+  <summary><h2>:pushpin:Headers: </h2></summary>
+ <!---------------------------------------------------------------------- FEATURES--------------------------------------------------------------->
+ <details>
+   <summary><h3>Features :crystal_ball:</h3></summary>
     
 From the beginner's perspective, the project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
 
@@ -117,10 +88,11 @@ From the beginner's perspective, the project consists of three main modules: Art
 
 Users can also listen to articles (audio features) if they prefer. The Chat Section features a guide bot that helps users solve health-related problems.:sparkles:
   </details>
-  <!--------------------------------------------------------- PROJECT REQUIREMENTS---------------------------------------------------------------------------------->
+
+   <!--------------------------------------------------------- PROJECT REQUIREMENTS-------------------------------------------------------------------------------->
 
   <details>
-   <summary><h2>Project Requirements :mailbox_with_mail:</h2></summary>
+   <summary><h3>Project Requirements :mailbox_with_mail:</h3></summary>
    
    
    * Java installed on your machine. (**Java version:**  17)
@@ -200,19 +172,12 @@ To set the **ANDROID_HOME** variable for both Windows and macOS, you can follow 
 * Close the terminal window and reopen it for the changes to take effect.
 
 Please note that the exact path to the Android SDK directory may vary depending on how you installed it. Make sure to replace **/path/to/android/sdk** with the correct path on your system.
-
-   
   </details>
+<!-------------------------------------------------------------------GETTING STARTED------------------------------------------------------------------------------->
 
-</details>
-
-
-<hr>
- <!-------------------------------------------------------------------GETTING STARTED------------------------------------------------------------------------------->
-
-
-## :zap: Getting Started:
-
+  <details>
+   <summary><h3>Getting Started :zap:</h3></summary>
+   
 ### Follow these steps to get started with UltimateHealth:
 
 **Clone the repository:**
@@ -345,13 +310,17 @@ When working with a backend server running on localhost, frontend developers can
 
 **Access the application:**
 Open your web browser and navigate to (LOCAL_HOST_URL).
-If you would like to contribute to the project, please follow the contribution guidelines.
-<hr>
+If you would like to contribute to the project, please follow the contribution guidelines. 
+  </details>
 
+</details>
+
+<hr>
+    
  <!---------------------------------------------------------------CONTRIBUTION GUIDELINES--------------------------------------------------------------------------->
 
 <details>
- <summary><h2>:zap:Contribution Guidelines:</h2></summary>
+ <summary><h2>:sparkles:Contribution Guidelines:</h2></summary>
  
  
  * **Checkout and make your changes for the develop branch only:** When working on your contributions, switch to the **develop** branch in your local repository. This ensures that you are working on the latest version of the codebase.
@@ -399,17 +368,17 @@ Please note that this project is released with a [Contributor Code of Conduct](.
 
 <!-- License -->
 <div>
-<h2><img src = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Page%20with%20Curl.png" width="35" height="35"> License</h2>
+<h2><img src = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Page%20with%20Curl.png" width="35" height="35"> License:</h2>
 </div>
-<hr>
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)<br>
 This project is licensed under the [MIT License](./LICENSE).
 
 <hr>
 
 ## Contact Us:
-<div> <img src="https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico" alt="Discord Logo" width="50" height="50">Bhattacharya, user_name: susmita_</div>
+<div> <img src="https://discord.com/assets/847541504914fd33810e70a0ea73177e.ico" alt="Discord Logo" width="50" height="50"></div>
+<div>Bhattacharya, user_name: susmita_</div>
 
 <hr>
           
@@ -429,6 +398,9 @@ This project is licensed under the [MIT License](./LICENSE).
 
 <div>
   Don't forget to leave a star<img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f31f/512.webp" width="35" height="30"> for this project!
-</div>
+</div> <br>
+
+<a href="#top" style="position: fixed; bottom: 20px; right: 20px; background-color: black ; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px; font-family: Arial; font-size: 16px;">Go to Top</a>
+
 
 
