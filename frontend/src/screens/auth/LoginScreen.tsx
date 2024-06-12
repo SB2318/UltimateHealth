@@ -10,26 +10,25 @@ import {
   Alert,
   useColorScheme,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import { PRIMARY_COLOR } from '../../helper/Theme';
+import React, {useEffect, useState, useRef} from 'react';
+import {PRIMARY_COLOR} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fp, hp, wp} from '../../helper/Metric';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { retrieveItem } from '../../helper/Utils';
+import {retrieveItem} from '../../helper/Utils';
 import EmailInputModal from '../../components/EmailInputModal';
-import { UserModel,LoginUser } from '../../models/User';
-import { AuthApiService } from '../../services/AuthApiService';
-
+import {UserModel, LoginUser} from '../../models/User';
+import {AuthApiService} from '../../services/AuthApiService';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 // Import User Model and AUTH API SERVICE HERE, Details will be provided when work start
 
 const LoginScreen = ({navigation}) => {
-
   const inset = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === 'dark';
-  const [emailInputVisible, setEmailInputVisible] = useState(false)
+  const [emailInputVisible, setEmailInputVisible] = useState(false);
 
   // ISSUE: 85  Step 2 , Create Reference and useState variable for DOM / View input elements
   /**
@@ -38,34 +37,40 @@ const LoginScreen = ({navigation}) => {
    * passwordRef-> will point password input field
    * password -> useState variable for storing input value
    */
+  const emailRef = useRef(null);
+  const [email, setEmail] = useState('');
+  const passwordRef = useRef(null);
+  const [password, setPassword] = useState('');
 
-
-// ISSUE : 77 Step 1:
- // Create an useState variable which will handle secureTextEntry of password field
-   const [secureTextEntry, setSecureTextEntry] = useState(true)
+  // ISSUE : 77 Step 1:
+  // Create an useState variable which will handle secureTextEntry of password field
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
 
   // ISSUE : 77 Step 2:
   // Handle Eye Icon action, assume there are already an eye icon in the password field and you have to handle it's action
-  const handleSecureEntryClickEvent = ()=>{
-   // setSecureTextEntry(!secureTextEntry)
-  }
+  const handleSecureEntryClickEvent = () => {
+    setSecureTextEntry(!secureTextEntry);
+  };
 
   //////////////////////////////////////////////////////////////////////
- 
-  useEffect(() =>
-    navigation.addListener('beforeRemove', (e) => {
-      e.preventDefault();
-      Alert.alert(
-        "Warning",
-        "Do you want to exit",
-        [
-          { text: "No", onPress: () => null },
-          { text: "Yes", onPress: () => BackHandler.exitApp() }
-        ],
-        { cancelable: true }
-      );
-    }), [])
-  
+
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', e => {
+        e.preventDefault();
+        Alert.alert(
+          'Warning',
+          'Do you want to exit',
+          [
+            {text: 'No', onPress: () => null},
+            {text: 'Yes', onPress: () => BackHandler.exitApp()},
+          ],
+          {cancelable: true},
+        );
+      }),
+    [navigation],
+  );
+
   const storeItem = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
@@ -76,63 +81,58 @@ const LoginScreen = ({navigation}) => {
   };
 
   /** ISSUE 85 : Complete the function */
-  const validateAndSubmit = ()=>{
+  const validateAndSubmit = () => {
+    /** Complete the function */
+    if (validate()) {
+      /** Create a new object of service */
+      let service = new AuthApiService();
+      /** Create a new object of params */
+      let params = new LoginUser();
+      params.email = email;
+      params.password = password;
 
-      /** Complete the function */
-      if(validate()){
-
-        /** Create a new object of service */
-        let service = new AuthApiService()
-        /** Create a new object of params */
-        let params = new LoginUser()
-        //params.email = email
-        //params.password = password
-
-        // call login method with the help of service object
-        service.login(params).then((response)=>{
-           console.log("Response", response)
-           // Store User data after stringify
-           // Navigate to home
-        })
-
-      }
-  }
+      // call login method with the help of service object
+      service.login(params).then(response => {
+        console.log('Response', response);
+        // Store User data after stringify
+        // Navigate to home
+      });
+    }
+  };
 
   /** ISSUE 85: Complete the function */
-  const validate = ()=>{
-
+  const validate = () => {
     /** Validate email data */
     /** Validate Password data */
     /**
      * if(validate) return true
-     * else 
+     * else
      *  return false
      */
+    if (email && password) {
+      return true;
+    } else {
+      Alert.alert('Validation Error', 'Email and Password are required.');
+      return false;
+    }
+  };
 
-    return true
-  }
-
-  const handleForgotPassword= ()=>{
-
+  const handleForgotPassword = () => {
     /** Forgot Password Modal visibility */
-    setEmailInputVisible(true)
+    setEmailInputVisible(true);
+  };
 
-  }
-
-  const handleEmailInputBack = ()=>{
-
+  const handleEmailInputBack = () => {
     /** Handle Email InputDialogBackButton */
-    setEmailInputVisible(false)
-  }
+    setEmailInputVisible(false);
+  };
 
-  const navigateToOtpScreen = ()=>{
-
-    /** Here you need to navigate into otp screen, 
-     * make sure you have add the screen inside StackNavigation Component 
+  const navigateToOtpScreen = () => {
+    /** Here you need to navigate into otp screen,
+     * make sure you have add the screen inside StackNavigation Component
      * */
-  }
-
-
+    navigation.navigate('OtpScreen');
+  };
 
   return (
     <View style={styles.container}>
@@ -162,12 +162,11 @@ const LoginScreen = ({navigation}) => {
           ]}>
           {/* email input */}
           <View style={styles.input}>
-            {
-             /** ISSUE : 85, STEP:3, set email ref here for TextInput
+            {/** ISSUE : 85, STEP:3, set email ref here for TextInput
                <TextInput ref={emailRef} style={styles.inputLabel}></TextInput>
-              */
-            }
-            <TextInput 
+              */}
+            <TextInput
+              ref={emailRef}
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -181,94 +180,80 @@ const LoginScreen = ({navigation}) => {
                   color: isDarkMode ? 'white' : 'black',
                 },
               ]}
+              onChangeText={text => setEmail(text)}
+              value={email}
             />
           </View>
           {/* password input */}
 
           {/** Issue 77: Step 3: Here you have to modify the container, first create another container which will wrap the two field
              TextInput and eye icon */}
-          
+
           <View style={styles.input}>
-            {/* <View style={styles.containerStyle}>
-             
-            </View> */}
+            <View style={styles.passwordContainer}>
+              <TextInput
+                ref={passwordRef}
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                keyboardType="ascii-capable"
+                placeholder="Password"
+                placeholderTextColor="#948585"
+                secureTextEntry={secureTextEntry}
+                style={[
+                  styles.inputControl,
+                  {
+                    borderColor: isDarkMode ? 'white' : 'black',
+                    color: isDarkMode ? 'white' : 'black',
+                  },
+                ]}
+                onChangeText={text => setPassword(text)}
+                value={password}
+                underlineColorAndroid="transparent" // Add this line to remove underline
+              />
 
-{
-             /** ISSUE : 85, STEP:4, set passwordRef here for TextInput
-               <TextInput ref={passwordRef} style={styles.inputLabel}></TextInput>
-              */
-            }
-            <View> 
-              {  /** Container Style will be the container which will contain the password input field as well as eye icon*/ } 
-            <TextInput
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              keyboardType="ascii-capable"
-              placeholder="Password"
-              placeholderTextColor="#948585"
-              secureTextEntry={secureTextEntry}
-              style={[
-                styles.inputControl,
-                {
-                  borderColor: isDarkMode ? 'white' : 'black',
-                  color: isDarkMode ? 'white' : 'black',
-                },
-              ]}
-            />
-
-            { 
-              /**
-              Issue 77 : Step 4 Take TouchableOpacity
-              <TouchableOpacity style={{
-
-              // Make sure the position is absolute, and give some top-right value and style it so that you achieve your desire design
-              }}
-              onPress ={handleSecureEntryClickEvent}
-              >
-               secureTextEntry?(
-               <Icon1/> // it will be eye-off icon from react-native-vector-icon
-               ):(
-
-               <Icon2/> // it will be eye-off icon from react-native-vector-icon
-               )
-            </TouchableOpacity>
-              // You are done, run the app  😇
-             */
-              }
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={handleSecureEntryClickEvent}>
+                {secureTextEntry ? (
+                  <Icon
+                    name="eye-off"
+                    size={20}
+                    color={isDarkMode ? 'white' : 'black'}
+                  />
+                ) : (
+                  <Icon
+                    name="eye"
+                    size={20}
+                    color={isDarkMode ? 'white' : 'black'}
+                  />
+                )}
+              </TouchableOpacity>
             </View>
           </View>
+
           {/* forgot password */}
           <View style={styles.forgotPasswordContainer}>
-
-          {/** Handle Forgot Password Click, Add Email Input Modal Here and control its visibility */}
+            {/** Handle Forgot Password Click, Add Email Input Modal Here and control its visibility */}
             <TouchableOpacity onPress={handleForgotPassword}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
           </View>
-
-      
-          {/* login  button */}
+          {/* login button */}
           <View style={styles.loginButtonContainer}>
             <TouchableOpacity
               style={styles.loginButton}
-              onPress={() => {
-                    {/** ISSUE 85: Step 5 Handle Login Button Action, Complete the method */}
-                //storeItem('user', 'ok');
-                validateAndSubmit()
-              }}>
+              onPress={validateAndSubmit}>
               <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
           </View>
-
-
-          <EmailInputModal 
-          callback={navigateToOtpScreen} 
-          visible={emailInputVisible}
-          backButtonClick={handleEmailInputBack}
-          navigator={navigation}/>
-            
-          {/* creat account button */}
+          <EmailInputModal
+            callback={navigateToOtpScreen}
+            visible={emailInputVisible}
+            backButtonClick={handleEmailInputBack}
+            navigator={navigation}
+          />
+          {/* create account button */}
           <View style={styles.createAccountContainer}>
             <TouchableOpacity>
               <Text
@@ -279,10 +264,8 @@ const LoginScreen = ({navigation}) => {
                   },
                 ]}
                 onPress={() => {
-                   // storeItem('user', 'ok');
-                   navigation.navigate('SignUpScreenFirst')
-                 }}
-                >
+                  navigation.navigate('SignUpScreenFirst');
+                }}>
                 Create new account
               </Text>
             </TouchableOpacity>
@@ -339,12 +322,14 @@ const styles = StyleSheet.create({
     color: '#948585',
     marginBottom: hp(1),
   },
+
   inputControl: {
-    height: hp(6),
+    borderBottomWidth: 1,
+    width: '100%',
+    paddingRight: 40,
     fontSize: fp(4),
     fontWeight: '500',
-
-    borderBottomWidth: 1,
+    height: hp(6),
   },
   forgotPasswordContainer: {
     alignItems: 'flex-end',
@@ -368,6 +353,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
   },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 0,
+    padding: 10,
+  },
 });
-
-//    emailRef.current.style.borderColor = 'red';
