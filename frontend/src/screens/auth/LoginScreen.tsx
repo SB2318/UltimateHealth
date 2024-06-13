@@ -119,6 +119,7 @@ const LoginScreen = ({navigation}) => {
 
   const handleForgotPassword = () => {
     /** Forgot Password Modal visibility */
+    console.log("Forgot Password Click")
     setEmailInputVisible(true);
   };
 
@@ -131,6 +132,7 @@ const LoginScreen = ({navigation}) => {
     /** Here you need to navigate into otp screen,
      * make sure you have add the screen inside StackNavigation Component
      * */
+    setEmailInputVisible(false);
     navigation.navigate('OtpScreen');
   };
 
@@ -233,12 +235,16 @@ const LoginScreen = ({navigation}) => {
           </View>
 
           {/* forgot password */}
-          <View style={styles.forgotPasswordContainer}>
+         
             {/** Handle Forgot Password Click, Add Email Input Modal Here and control its visibility */}
-            <TouchableOpacity onPress={handleForgotPassword}>
+            <TouchableOpacity style={styles.forgotPasswordContainer} 
+            onPress={()=>{
+              console.log("Forgot Password Click")
+              setEmailInputVisible(!emailInputVisible);
+            }}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
-          </View>
+          
           {/* login button */}
           <View style={styles.loginButtonContainer}>
             <TouchableOpacity
@@ -251,7 +257,8 @@ const LoginScreen = ({navigation}) => {
             callback={navigateToOtpScreen}
             visible={emailInputVisible}
             backButtonClick={handleEmailInputBack}
-            navigator={navigation}
+            onDismiss={() => setEmailInputVisible(false)}
+           
           />
           {/* create account button */}
           <View style={styles.createAccountContainer}>

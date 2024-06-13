@@ -14,6 +14,10 @@ import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {fp, hp, wp} from '../../helper/Metric';
 
+import AntIcon from 'react-native-vector-icons/AntDesign'
+import { PRIMARY_COLOR } from '../../helper/Theme';
+
+
 const SignupPageFirst = ({navigation}) => {
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
@@ -61,6 +65,17 @@ const SignupPageFirst = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
+
+<TouchableOpacity 
+style={{flex:0, backgroundColor:PRIMARY_COLOR}}
+onPress={()=>{
+  navigation.navigate('LoginScreen')
+}}
+>
+<AntIcon 
+  name='arrowleft' size={35} color='white' 
+  />
+</TouchableOpacity>
       <View style={styles.header}>
         <Text style={styles.title}>
           He who has health has hope and he
@@ -169,7 +184,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: hp(20),
+    height: hp(25),
     paddingTop: 20,
     alignItems: 'center',
     backgroundColor: '#0CAFFF',

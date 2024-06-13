@@ -13,7 +13,7 @@ export default function EmailInputModal({
   visible,
   callback,
   backButtonClick,
-  navigator,
+  onDismiss
 }) {
   const [modelTitle, setModelTitle] = useState(true);
   const [email, setEmail] = useState('');
@@ -31,13 +31,15 @@ export default function EmailInputModal({
 
     if (!emailRegex.test(email)) {
       setModelTitle(false);
-      return;
+      //return;
     }
-
+   else{
     callback();
     setModelTitle(true);
     setEmail('');
-    navigator.navigate('OtpScreen');
+   }
+  
+   // navigator.navigate('OtpScreen');
   };
 
   return (
@@ -45,6 +47,7 @@ export default function EmailInputModal({
       animationType="slide"
       transparent={true}
       visible={visible}
+      onDismiss={onDismiss}
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>

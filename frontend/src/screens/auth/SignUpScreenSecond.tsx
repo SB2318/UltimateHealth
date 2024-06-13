@@ -9,6 +9,9 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { hp } from '../../helper/Metric';
+import { PRIMARY_COLOR } from '../../helper/Theme';
+
+import AntIcon from 'react-native-vector-icons/AntDesign'
 
 
 const SignupPageSecond = ({navigation}) => {
@@ -46,6 +49,18 @@ const SignupPageSecond = ({navigation}) => {
 
   return (
     <ScrollView style={styles.container}>
+
+<TouchableOpacity 
+style={{  flex:0, backgroundColor:PRIMARY_COLOR}}
+onPress={()=>{
+  navigation.navigate('LoginScreen')
+}}
+>
+<AntIcon 
+  name='arrowleft' size={35} color='white' 
+  />
+</TouchableOpacity>
+
       <View style={styles.header}>
         <Text style={styles.title}>
           ...let me congratulate on the
@@ -144,8 +159,8 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: hp(30),
-    paddingTop: 30,
+    height: hp(36),
+    paddingTop: 0,
     alignItems: 'center',
     backgroundColor: '#0CAFFF',
   },
