@@ -12,9 +12,14 @@ import { hp } from '../../helper/Metric';
 import { PRIMARY_COLOR } from '../../helper/Theme';
 
 import AntIcon from 'react-native-vector-icons/AntDesign'
+import { ContactDetail, UserModel } from '../../models/User';
+import { AuthApiService } from '../../services/AuthApiService';
 
 
-const SignupPageSecond = ({navigation}) => {
+const SignupPageSecond = ({navigation, route}) => {
+
+  const user:UserModel = route.params;
+
   const [specialization, setSpecialization] = useState('');
   const [education, setEducation] = useState('');
   const [experience, setExperience] = useState('');
@@ -35,9 +40,42 @@ const SignupPageSecond = ({navigation}) => {
     if (!specialization || !education || !experience || !businessEmail || !phone) {
       alert('Please fill in all fields');
       return;
+    }else{
+
+      // ISSUE 115: 
+      // Add Extra all details
+       user.specialization = specialization
+       let contactDetails= new ContactDetail()
+       contactDetails.phone_no = phone
+       /**
+        * 
+        *  add education, experience, businessEmail, phoneNumber in contactDetails
+        * 
+        * 
+        */
+
+       registerAsDoctor(user)
     }
-    navigation.navigate('LoginScreen');
+    // navigation.navigate('LoginScreen');
   };
+
+  // ISSUE 115:
+  
+  const registerAsDoctor = (user:UserModel)=>{
+
+    let api = new AuthApiService()
+/*
+    api.register(user).then((response:any)=>{
+
+        // Process the response
+        if(success)
+              navigation.navigate('LoginScreen');
+
+    },er=>{
+
+    })
+    */
+  }
 
   useEffect(()=>{
 

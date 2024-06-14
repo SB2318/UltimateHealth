@@ -16,6 +16,9 @@ import {fp, hp, wp} from '../../helper/Metric';
 
 import AntIcon from 'react-native-vector-icons/AntDesign'
 import { PRIMARY_COLOR } from '../../helper/Theme';
+import { UserModel } from '../../models/User';
+import { AuthApiService } from '../../services/AuthApiService';
+var validator = require("email-validator");
 
 
 const SignupPageFirst = ({navigation}) => {
@@ -42,14 +45,50 @@ const SignupPageFirst = ({navigation}) => {
       alert('Please fill in all fields');
       return;
     }
+    else if(validator.validate(email) === false){
+      alert('Email id is not valid')
+      return;
+    }
+    else if(password.length < 6){
+      alert('Password must be at least of 6 length')
+      return;
+    }
+
+    let user = new UserModel()
+    user.user_name = name
+    user.user_handle = username
+    user.email = email
+    user.password = password
+    user.isDoctor = false
+
     if (role === 'general') {
-      console.log('Registering as General User');
+      
+      registerAsGeneralUser(user)
 
     } else {
-      navigation.navigate('SignUpScreenSecond');
+      user.isDoctor = true
+      navigation.navigate('SignUpScreenSecond',{
+        user: UserModel
+      });
     }
   };
 
+
+  // ISSUE 115:
+  
+  const registerAsGeneralUser = (user:UserModel)=>{
+
+    let api = new AuthApiService()
+/*
+    api.register(user).then((response:any)=>{
+
+        // Process the response
+
+    },er=>{
+
+    })
+    */
+  }
   const data = [
     { label: 'General User', value: 'general' },
     { label: 'Doctor', value: 'doctor' },
@@ -73,7 +112,7 @@ onPress={()=>{
 }}
 >
 <AntIcon 
-  name='arrowleft' size={35} color='white' 
+  name='arrowleft' size={30} color='white' 
   />
 </TouchableOpacity>
       <View style={styles.header}>

@@ -15,6 +15,7 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",
     "@reduxjs/toolkit": "^2.2.5",
+    "email-validator": "^2.0.4",
     "react": "18.2.0",
     "react-native": "0.74.1",
     "react-native-asset": "^2.1.1",
