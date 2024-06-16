@@ -1,12 +1,12 @@
 <a id="top"></a>
 <h1 align="center">UltimateHealth</h1>
-<h3 align="center">
+<h3 align="center">    
  
 [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Roboto&size=22&duration=4995&pause=1000&color=F7F7F7&random=false&width=431&height=58&lines=Trusted+Source+for+Reliable+Health+Insights)](https://git.io/typing-svg)
 </h3>
-<p align="center">
-</p>
+
 <br/>
+
 <table align="center">
     <thead align="center">
         <tr border: 1px;>
@@ -53,19 +53,27 @@
    </tr>
 </table>
 <hr>
-<!------------------------------------------------------------------------ABOUT US------------------------------------------------------------------------------>
-## :zap:About us:
+
+
+
+<!--ABOUT US--->
+
+
+
+
+## :zap: ABOUT Us:
 
 UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users looking for reliable and trustworthy information on various health-related topics.
 <hr>
-<!------------------------------------------------------------------------TECH STACKS------------------------------------------------------------------------------>
+
+
+<!------TECH STACKS-------->
 
 <div>
 <h2><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/High%20Voltage.png" alt="High Voltage" width="35" height="35" />Tech Stack</h2>
 </div>
 
-<p>
-    <a href="https://www.w3schools.com/java/"><img src="https://i.pinimg.com/originals/79/5e/bb/795ebb5f4a470cd7242136237f61fc53.png" alt="Java" width="70" height="50" /></a>
+<p><a href="https://www.w3schools.com/java/"><img src="https://i.pinimg.com/originals/79/5e/bb/795ebb5f4a470cd7242136237f61fc53.png" alt="Java" width="70" height="50" /></a>
 <a href="https://www.w3schools.com/nodejs/"><img src="https://e7.pngegg.com/pngimages/247/558/png-clipart-node-js-javascript-express-js-npm-react-github-angle-text.png" alt="Node.js" width="50" height="50" /></a>
 <a href="https://www.javatpoint.com/expressjs-tutorial"><img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/expressjs_logo_icon_169185.png" alt="expressjs" width="50" height="50" /></a>
 <a href="https://www.w3schools.com/REACT/DEFAULT.ASP"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png" alt="React.js" width="50" height="50" /></a>
@@ -386,8 +394,9 @@ This project is licensed under the [MIT License](./LICENSE).
 <div align = "center">
  <h3>Thank you for contributing to our repository</h3>
  <h1> We appreciate your help in making UltimateHealth even better.😃</h1>
-
-![Contributors](https://contrib.rocks/image?repo=SB2318/UltimateHealth)
+<a href="https://github.com/SB2318/UltimateHealth/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=SB2318/UltimateHealth" />
+</a>
 </div>
 
 
