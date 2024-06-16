@@ -6,11 +6,9 @@
 </h3>
 
 <br/>
-
-
 <table align="center">
     <thead align="center">
-        <tr style="border: 1px;">
+        <tr border: 1px;>
             <td><b>🌟 Stars</b></td>
             <td><b>🍴 Forks</b></td>
             <td><b>🐛 Issues</b></td>
@@ -30,14 +28,17 @@
         </tr>
     </tbody>
 </table>
-
+</div>
 <hr>
+<!------------------------------------------------------------------------FEATURED IN------------------------------------------------------------------------------>
+
 
 ## :zap: Featured In:
-<div>
+
+
+ <div>
     <h2><img src="https://github.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/blob/master/Emojis/Hand%20gestures/Flexed%20Biceps.png?raw=true" width="35" height="35" > Open Source Programs</h2>
-</div>
-  
+  </div>
 <table>
    <tr>
       <th>Event Logo</th>
@@ -50,12 +51,12 @@
       <td>GirlScript Summer of Code is a three-month-long Open Source Program conducted every summer by GirlScript Foundation. It is an initiative to bring more beginners to Open-Source Software Development.</td>
    </tr>
 </table>
+<hr>
+<!--ABOUT US--->
+:zap: ABOUT Us:
+UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users looking for reliable and trustworthy information on various health-related topics.
 
 <hr>
-
-## :zap: About Us:
-
-UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users looking for reliable and trustworthy information on various health-related topics.
 
 
 <!------TECH STACKS-------->
