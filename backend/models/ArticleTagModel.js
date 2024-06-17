@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const articleSchema = new Schema({
+const articleTagSchema = new Schema({
   id: {
-    type: String,
+    type: Number,
     required: true,
     unique: true
   },
@@ -13,6 +13,6 @@ const articleSchema = new Schema({
   }
 });
 
-const Article = mongoose.model('Article', articleSchema);
+const ArticleTag = mongoose.model('ArticleTag', articleTagSchema);
 
-module.exports = Article;
+module.exports = ArticleTag;
