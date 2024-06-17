@@ -1,12 +1,24 @@
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, 
   View, useColorScheme,BackHandler,Alert } from 'react-native'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import { PRIMARY_COLOR } from '../helper/Theme';
 import AddIcon from '../components/AddIcon';
+import NoInternet from '../components/NoInternet';
+import { checkInternetConnection } from '../helper/Utils';
 
 
 const HomeScreen = ({navigation}) => {
+
+  const [isConnected, setConnected] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = checkInternetConnection(setConnected);
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
 
  
@@ -39,6 +51,10 @@ const HomeScreen = ({navigation}) => {
     const handleNoteIconClick = ()=>{
 
     }
+
+  if (!isConnected) {
+    return <NoInternet />;
+  }
   return (
     <SafeAreaView style={[backgroundStyle,{flex:1,alignItems:'center',justifyContent:"center"}]}>
       <Text style={{color:'white',fontSize:18, fontFamily:'500',}}>HomeScreen</Text>
