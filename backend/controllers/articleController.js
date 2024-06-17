@@ -1,5 +1,9 @@
-const ArticleTag = require('../models/ArticleTagModel');
+const ArticleTag = require('../models/ArticleModel');
 
+
+
+
+/**** For Article Tags */
 // Helper function to get the next id
 const getNextId = async () => {
   const tags = await ArticleTag.find().sort({ id: -1 }).limit(1);
