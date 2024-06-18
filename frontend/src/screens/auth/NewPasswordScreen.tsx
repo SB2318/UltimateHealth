@@ -5,12 +5,14 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
   Alert,
   ScrollView,
 } from 'react-native';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import feather from 'react-native-vector-icons/Feather';
 import {hp} from '../../helper/Metric';
+import AntIcon from 'react-native-vector-icons/AntDesign'
 
 export default function NewPasswordScreen({navigation}) {
   const [password, setPassword] = useState('');
@@ -37,6 +39,20 @@ export default function NewPasswordScreen({navigation}) {
   };
 
   return (
+
+    <SafeAreaView style={styles.container}>
+
+<TouchableOpacity 
+style={{marginHorizontal:16, marginTop:6}}
+onPress={()=>{
+  navigation.navigate('LoginScreen')
+}}
+>
+<AntIcon 
+  name='arrowleft' size={35} color='white' 
+  />
+</TouchableOpacity>
+
     <View style={styles.innerContainer}>
       {/* <Text style={styles.title}>New Password</Text> */}
       <View style={styles.inputContainer}>
@@ -91,19 +107,27 @@ export default function NewPasswordScreen({navigation}) {
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
     </View>
+
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+
+  container:{
+
+    flex:1,
+    backgroundColor:PRIMARY_COLOR
+  },
   innerContainer: {
     alignItems: 'center',
     padding: 20,
     borderColor: 'white',
-    borderWidth: 3,
-    backgroundColor: PRIMARY_COLOR,
+    marginTop:80,
+    backgroundColor: 'white',
     paddingHorizontal: 10,
     paddingVertical: 20,
-    paddingTop: hp(15),
+    paddingTop: hp(10),
     width: '100%',
     height: '100%',
   },
@@ -115,7 +139,7 @@ const styles = StyleSheet.create({
   // },
   inputContainer: {
     width: '90%',
-    marginBottom: 20,
+    marginVertical: 20,
   },
   error: {
     color: 'red',
@@ -129,18 +153,18 @@ const styles = StyleSheet.create({
     borderColor: 'red',
   },
   text: {
-    fontSize: 18,
-    color: 'black',
-    marginBottom: 5,
-    fontWeight: '700',
+    fontSize: 16,
+    color: '#808080',
+    marginBottom: 8,
+    fontWeight: '500',
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 4,
-    borderColor: 'white',
+    borderWidth: 1,
+    borderColor: PRIMARY_COLOR,
     backgroundColor: 'white',
-    borderRadius: 15,
+    borderRadius:8
   },
   input: {
     flex: 1,
@@ -151,7 +175,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   button: {
-    backgroundColor: 'white',
+    backgroundColor: PRIMARY_COLOR,
     padding: 15,
     borderRadius: 30,
     marginTop: 20,
@@ -159,7 +183,8 @@ const styles = StyleSheet.create({
     width: '40%',
   },
   buttonText: {
-    color: PRIMARY_COLOR,
+    color: 'white',
     fontWeight: 'bold',
+    fontSize:18
   },
 });

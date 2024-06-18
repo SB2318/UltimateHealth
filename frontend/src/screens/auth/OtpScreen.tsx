@@ -7,13 +7,17 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {hp} from '../../helper/Metric';
+import Icon from 'react-native-vector-icons/Entypo'
+import AntIcon from 'react-native-vector-icons/AntDesign'
 
 export default function OtpScreen({navigation}) {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState(false);
+  const [secureText, setSecureText] = useState(true)
 
   const handleSubmit = () => {
     if (otp.length < 4) {
@@ -24,20 +28,61 @@ export default function OtpScreen({navigation}) {
   };
 
   return (
+
+    <SafeAreaView style={styles.container}>
+
+<TouchableOpacity 
+style={{marginHorizontal:16, marginTop:6}}
+onPress={()=>{
+  navigation.goBack()
+}}
+>
+<AntIcon 
+  name='arrowleft' size={35} color='white' 
+  />
+</TouchableOpacity>
+
     <View style={styles.innerContainer}>
-      <Image source={require('../../assets/mail.png')} style={styles.logo} />
+      
+      <Icon name='mail' size={105} color= {PRIMARY_COLOR} style={styles.logo}/>
       <Text style={styles.title}>
         We have sent you OTP to your email address for verification
       </Text>
       <View style={styles.otpContainer}>
         {error && <Text style={styles.error}>Invalid OTP</Text>}
+
+        <View style={[styles.inPutContainer, error && styles.inputError]}>
         <TextInput
           style={[styles.input, error && styles.inputError]}
-          maxLength={6}
+          maxLength={10}
           keyboardType="numeric"
-          onChangeText={text => setOtp(text)}
+          secureTextEntry={secureText}
+          placeholder= {secureText?"***********":"Enter OTP here"}
+          onChangeText={(text) => {
+            setError(false)
+            setOtp(text)
+          }}
           value={otp}
         />
+        
+        <TouchableOpacity
+
+        style={{alignSelf:"center", marginHorizontal:7}}
+        onPress={()=>{
+           setSecureText(!secureText)
+        }}>
+
+          {
+          secureText?(
+
+            <AntIcon name='eye' size={22} color={PRIMARY_COLOR}/>
+          ):(
+            <AntIcon name='eyeo' size={22} color={PRIMARY_COLOR}/>
+          )
+         }
+        </TouchableOpacity>
+
+        </View>
       </View>
       <TouchableOpacity style={styles.resendContainer}>
         <Text style={styles.resendText}>Resend OTP?</Text>
@@ -46,17 +91,27 @@ export default function OtpScreen({navigation}) {
         <Text style={styles.buttonText}>Submit</Text>
       </TouchableOpacity>
     </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+
+  container:{
+
+    flex:1,
+    backgroundColor:PRIMARY_COLOR
+  },
+
   innerContainer: {
     alignItems: 'center',
     borderColor: 'white',
-    paddingTop: hp(10),
-    borderWidth: 3,
+    paddingTop: hp(4),
+    marginTop:hp(10),
+    borderTopLeftRadius:18,
+    borderTopRightRadius:18,
     //borderRadius: 30,
-    backgroundColor: PRIMARY_COLOR,
+    backgroundColor:'white',
     paddingHorizontal: 10,
     paddingVertical: 20,
     height: "100%",
@@ -65,7 +120,7 @@ const styles = StyleSheet.create({
   logo: {
     height: 105,
     width: 152,
-    marginBottom: 20,
+    marginBottom: 10,
     backgroundColor: 'white',
   },
   error: {
@@ -78,30 +133,43 @@ const styles = StyleSheet.create({
   },
   otpContainer: {
     width: '100%',
-    marginBottom: 20,
+    marginBottom: 10,
     alignItems: 'center',
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '600',
     textAlign: 'center',
-    marginVertical: 20,
-    color: 'black',
-    width: '80%',
+    marginBottom:20,
+    color: PRIMARY_COLOR,
+    width: '90%',
   },
+
+  inPutContainer:{
+     flex:0,
+     height: 50,
+     width:"85%",
+     flexDirection:"row",
+     justifyContent:"space-between",
+     borderColor: PRIMARY_COLOR,
+     borderWidth: 1,
+     alignSelf:'center',
+     borderRadius:8,
+     marginTop:20,
+     marginHorizontal:7,
+  },
+
   input: {
-    height: 60,
+    height: 50,
+    
     width: '80%',
-    fontSize: 20,
+    fontSize: 18,
     borderRadius: 7,
     borderColor: 'white',
-    backgroundColor: 'white',
-    borderWidth: 3,
-    marginTop: 10,
     marginBottom: 6,
     paddingHorizontal: 4,
     textAlign: 'left',
-    fontWeight: 'bold',
+    fontWeight: '500'
   },
   inputError: {
     borderColor: 'red',
@@ -109,22 +177,24 @@ const styles = StyleSheet.create({
   resendContainer: {
     marginBottom: 20,
     marginLeft: 'auto',
-    marginRight: '10%',
+    marginRight: '7%',
   },
   resendText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
+    color: PRIMARY_COLOR,
+    fontWeight: '500',
+    fontSize: 14,
   },
   button: {
-    backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 20,
+    backgroundColor: PRIMARY_COLOR,
+    padding: 14,
+    marginVertical:10,
+    borderRadius:18,
     alignItems: 'center',
-    width: '60%',
+    width: '70%',
   },
   buttonText: {
-    color: PRIMARY_COLOR,
+    color: 'white',
     fontWeight: 'bold',
+    fontSize:18,
   },
 });
