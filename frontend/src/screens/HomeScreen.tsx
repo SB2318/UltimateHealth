@@ -570,7 +570,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   headerSubtitle: {
-    fontSize: fp(3.4),
+    fontSize: fp(3),
     fontWeight: '600',
     color: 'white',
   },
@@ -620,7 +620,7 @@ const styles = StyleSheet.create({
     width: wp(100),
   },
   tabBar: {backgroundColor: PRIMARY_COLOR},
-  label: {color: 'white', fontWeight: 'bold', fontSize: fp(3)},
+  label: {color: 'white', fontWeight: 'bold', fontSize: fp(3.4)},
   tabStyle: {
     flexDirection: 'row',
     gap: 10,
