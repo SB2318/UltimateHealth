@@ -30,6 +30,16 @@ const LoginScreen = ({navigation}) => {
   const inset = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === 'dark';
   const [emailInputVisible, setEmailInputVisible] = useState(false)
+  const [password, setPassword] = useState("");
+  const [passwordVerify, setPasswordVerify] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailVerify, setEmailVerify] = useState(false);
+  let navigationn = useNavigation();
+  const [output, setOutput] = useState(true);
+  const [passwordMessage, setPasswordMessage] = useState(false);
+  const [emailMessage, setEmailMessage] = useState(false);
+
+  const routes = navigation.getState().routeNames;
 
   // ISSUE: 85  Step 2 , Create Reference and useState variable for DOM / View input elements
   /**
@@ -76,24 +86,68 @@ const LoginScreen = ({navigation}) => {
   };
 
   /** ISSUE 85 : Complete the function */
-  const validateAndSubmit = ()=>{
+  const validateAndSubmit = async ()=>{
+    let userData;
 
       /** Complete the function */
       if(validate()){
+        console.log("Hello");
+
+        //remove error message
+        setPasswordMessage(false);
+        setEmailMessage(false);
 
         /** Create a new object of service */
         let service = new AuthApiService()
         /** Create a new object of params */
+
+        //assign user data to params 
+        //params will contain user data
         let params = new LoginUser()
-        //params.email = email
-        //params.password = password
+        params.email = email
+        params.password = password
+
 
         // call login method with the help of service object
         service.login(params).then((response)=>{
-           console.log("Response", response)
            // Store User data after stringify
-           // Navigate to home
+           // Navigate to home   
+           userData = JSON.stringify(response);
+           console.log("UserData" + userData)
+           storeDataAndNavigateHome();
+        }).catch((error) => {
+          console.log(error)
         })
+
+        async function storeDataAndNavigateHome(){
+
+          //Store Data
+          await AsyncStorage.setItem("User", userData);
+          navigation.navigate("Home")
+        }
+
+        //Access Stored Data
+        let test = await AsyncStorage.getItem("User");
+        console.log("Stored: " + test)
+        
+
+
+      }else{
+        console.log("Verify");
+
+        //set output back to true and remove error message
+        setOutput(true);
+        setPasswordMessage(false);
+        setEmailMessage(false);
+        //Logic to Output Message to User
+        if(output && !passwordVerify)
+        {
+          setPasswordMessage(true);
+        }
+        if(output && !emailVerify)
+        {
+          setEmailMessage(true);
+        }
 
       }
   }
@@ -103,13 +157,33 @@ const LoginScreen = ({navigation}) => {
 
     /** Validate email data */
     /** Validate Password data */
-    /**
-     * if(validate) return true
-     * else 
-     *  return false
-     */
+    if(emailVerify && passwordVerify)
+    {
+      return true;
+    }else{
+      return false
+    }
+  }
+  const handlePassword= (e) =>{
+    let pass = e.nativeEvent.text;
+    setPassword(pass);
+    setPasswordVerify(false);
 
-    return true
+    //Validation
+    if(/(?=.*[a-z]).{6,}/.test(pass)){
+        setPassword(pass);
+        setPasswordVerify(true)
+    }
+  }
+  const handleEmail= (e) =>{
+    let email = e.nativeEvent.text;
+    setEmail(email);
+    setEmailVerify(false);
+    //Validation
+    if(/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(email)){
+      setEmail(email);
+      setEmailVerify(true);
+  }
   }
 
   const handleForgotPassword= ()=>{
@@ -167,7 +241,8 @@ const LoginScreen = ({navigation}) => {
                <TextInput ref={emailRef} style={styles.inputLabel}></TextInput>
               */
             }
-            <TextInput 
+            <TextInput
+            onChange={e => handleEmail(e)}
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -182,6 +257,10 @@ const LoginScreen = ({navigation}) => {
                 },
               ]}
             />
+            {
+              emailMessage ? (<Text style={{color: "red"}}>Please Enter a Valid Email</Text>) 
+              : (<Text style={{color: "red"}}></Text>)
+            }
           </View>
           {/* password input */}
 
@@ -201,6 +280,7 @@ const LoginScreen = ({navigation}) => {
             <View> 
               {  /** Container Style will be the container which will contain the password input field as well as eye icon*/ } 
             <TextInput
+            onChange={e => handlePassword(e)}
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -216,6 +296,10 @@ const LoginScreen = ({navigation}) => {
                 },
               ]}
             />
+            {
+              passwordMessage ? (<Text style={{color: "red"}}>Password must be 6 Characters Longs</Text>)
+              : (<Text style={{color: "red"}}></Text>) 
+            }
 
             { 
               /**

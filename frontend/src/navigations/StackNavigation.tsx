@@ -5,6 +5,7 @@ import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import SignUpScreenFirst from '../screens/auth/SignUpScreenFirst';
 import SignUpScreenSecond from '../screens/auth/SignUpScreenSecond'
+import HomeScreen from "../screens/HomeScreen";
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,11 @@ const StackNavigation = () => {
       <Stack.Screen
         name="SignUpScreenSecond"
         component={SignUpScreenSecond}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
