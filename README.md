@@ -1,42 +1,111 @@
 # UltimateHealth
 
+<table align="center">
+    <thead align="center">
+        <tr border: 1px;>
+            <td><b>🌟 Stars</b></td>
+            <td><b>🍴 Forks</b></td>
+            <td><b>🐛 Issues</b></td>
+            <td><b>🔔 Open PRs</b></td>
+            <td><b>🔕 Close PRs</b></td>
+            <td><b> Last Commit</b></td>
+        </tr>
+     </thead>
+    <tbody>
+         <tr>
+            <td><img alt="Stars" src="https://img.shields.io/github/stars/SB2318/UltimateHealth?style=flat&logo=github"/></td>
+             <td><img alt="Forks" src="https://img.shields.io/github/forks/SB2318/UltimateHealth?style=flat&logo=github"/></td>
+            <td><img alt="Issues" src="https://img.shields.io/github/issues/SB2318/UltimateHealth?style=flat&logo=github"/></td>
+            <td><img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/SB2318/UltimateHealth?style=flat&logo=github"/></td>
+           <td><img alt="Close Pull Requests" src="https://img.shields.io/github/issues-pr-closed/SB2318/UltimateHealth?style=flat&color=critical&logo=github"/></td>
+           <td><img alt="Close Pull Requests" src="https://img.shields.io/github/last-commit/SB2318/UltimateHealth?style=flat&color=critical&logo=github"/></td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+## Featured In
+ <div>
+    <h2><img src="https://github.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/blob/master/Emojis/Hand%20gestures/Flexed%20Biceps.png?raw=true" width="35" height="35" > Open Source Programs</h2>
+  </div>
+  
+<table>
+
+   <tr>
+      <th>Event Logo</th>
+      <th>Event Name</th>
+      <th>Event Description</th>
+   </tr>
+   <tr>
+      <td><img src="https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png" width="200" height="auto" loading="lazy" alt="GSSoC 24"/></td>
+      <td>GirlScript Summer of Code 2024</td>
+      <td>GirlScript Summer of Code is a three-month-long Open Source Program conducted every summer by GirlScript Foundation. It is an initiative to bring more beginners to Open-Source Software Development.</td>
+   </tr>
+
+</table>
+
+<hr>
+
+
 ## About:
 
 UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users looking for reliable and trustworthy information on various health-related topics.
 
+## Headers
+
+### Contents:
+- [Features](https://github.com/SB2318/UltimateHealth#features)
+- [Technology Stack](https://github.com/SB2318/UltimateHealth#technology-stack)
+- [Project Requirements](https://github.com/SB2318/UltimateHealth#project-requirements)<br>
+     (i)  [Install JDK](https://github.com/SB2318/UltimateHealth#install-jdk)<br>
+     (ii) [Set Up Android Development Environment](https://github.com/SB2318/UltimateHealth#setting-android_home-environment-variable)
+- [Getting Started](https://github.com/SB2318/UltimateHealth#getting-started)<br>
+     (i)  [Frontend](https://github.com/SB2318/UltimateHealth#for-frontend)<br>
+     (ii) [Backend](https://github.com/SB2318/UltimateHealth#for-backend)
+- [Testing Frontend with Localhost Backend Server](https://github.com/SB2318/UltimateHealth#testing-frontend-with-localhost-backend-server)
+- [Contribution Guidelines](https://github.com/SB2318/UltimateHealth#contribution-guidelines)
+- [Our Contributors](https://github.com/SB2318/UltimateHealth#our-contributors-%EF%B8%8F)
+
 ## Features:
 
-From the beginner's perspective, the]is project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
+From the beginner's perspective, the project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
 
 * Diseases-related information
 * General health-related guidance
 * Survival experiences from critical diseases
 * Backend Development
 
-Users can also listen to articles(audio features) if they prefer. The Chat Section features a guide bot that helps users solve health-related problems.  
+Users can also listen to articles (audio features) if they prefer. The Chat Section features a guide bot that helps users solve health-related problems.  
 
 
 Hello! Congratulations to all the GSSOC'24 contributors and mentors!🎉
 I'm thrilled to be a part of this amazing team and excited to work together to make the Ultimate Health project a huge success. Let's collaborate, learn, and grow together!
 
-## Getting Started:
+## Technology Stacks
+
+<p>
+    <a href="https://www.w3schools.com/java/"><img src="https://i.pinimg.com/originals/79/5e/bb/795ebb5f4a470cd7242136237f61fc53.png" alt="Java" width="70" height="50" /></a>
+<a href="https://www.w3schools.com/nodejs/"><img src="https://e7.pngegg.com/pngimages/247/558/png-clipart-node-js-javascript-express-js-npm-react-github-angle-text.png" alt="Node.js" width="50" height="50" /></a>
+<a href="https://www.javatpoint.com/expressjs-tutorial"><img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/expressjs_logo_icon_169185.png" alt="expressjs" width="50" height="50" /></a>
+<a href="https://www.w3schools.com/REACT/DEFAULT.ASP"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png" alt="React.js" width="50" height="50" /></a>
+</p>
 
 
-### Project Requirements:
+## Project Requirements:
 
-* Java Installed on your machine. (**Java version:**  17)
+* Java installed on your machine. (**Java version:**  17)
 * Android Studio installed on your machine.
    
 ###  Install JDK:
 
 To ensure that your project runs smoothly, make sure you have Java 17 installed on your system. You can follow these steps to set up Java 17:
 
-* Visit the Oracle website or the OpenJDK website to download the Java 17 JDK (Java Development Kit) for your operating system.
+* Visit the [Oracle website](https://www.oracle.com/in/java/) or the OpenJDK website to download the Java 17 JDK (Java Development Kit) for your operating system.
 * Follow the installation instructions provided for your specific operating system.
 
 ### Installing JDK 17 on macOS:
 
-* Visit the Oracle JDK download page or the AdoptOpenJDK website.
+* Visit the [Oracle JDK download page](https://www.oracle.com/in/java/technologies/downloads/#java17) or the AdoptOpenJDK website.
 * Download the JDK 17 installer for macOS (e.g., .dmg or .pkg file).
 * Open the downloaded installer and follow the installation instructions.
 * After the installation is complete, you can verify the installation by opening a Terminal window and running the command java -version. It should display the installed JDK version.
@@ -57,7 +126,7 @@ To ensure that your project runs smoothly, make sure you have Java 17 installed 
 
 ### Installing JDK 17 on Windows:
 
-* Visit the Oracle JDK download page or the AdoptOpenJDK website.
+* Visit the [Oracle JDK download page](https://www.oracle.com/in/java/technologies/downloads/#java17) or the AdoptOpenJDK website.
 * Download the JDK 17 installer for Windows (e.g., .exe file).
 * Run the downloaded installer and follow the installation instructions.
 * After the installation is complete, you can verify the installation by opening a Command Prompt window and running the command java -version. It should display the installed JDK version.
@@ -103,23 +172,27 @@ To set the **ANDROID_HOME** variable for both Windows and macOS, you can follow 
 Please note that the exact path to the Android SDK directory may vary depending on how you installed it. Make sure to replace **/path/to/android/sdk** with the correct path on your system.
 
 
+## Getting Started:
+
 ### Follow these steps to get started with UltimateHealth:
 
 **Clone the repository:**
 
 ```
 https://github.com/SB2318/UltimateHealth.git
-
-cd  UltimateHealth
+```
+**Change the directory**
 
 ```
-
+cd  UltimateHealth
+```
 
 **Checkout the develop branch and select your preferences (backend or frontend)**.
 
 ```
  git checkout develop
 ```
+### If you couldn't find the 'develop' branch in your own forked repository, please go to [CONTRIBUTING.md](./CONTRIBUTING.md) and follow the instructions written in detail.
 
 ## For Frontend:
 
@@ -260,8 +333,50 @@ Discord Server (Susmita Bhattacharya, user_name: susmita_)
 <h2 align = "center">Our Contributors ❤️</h2>
 <div align = "center">
  <h3>Thank you for contributing to our repository</h3>
+<!--
+![Contributors](https://contrib.rocks/image?repo=SB2318/UltimateHealth)<br>
+-->
+ <table>
+  <p align="center">
+  <tr>
+    <td align="center"><a href="https://github.com/SB2318"><img src="https://avatars.githubusercontent.com/u/87614560?v=4" width="120px;" alt=""/><br/><sub><b>Susmita Bhattacharya</b></sub></a></td>
+    <td align="center"><a href="https://github.com/suhanipaliwal"><img src="https://avatars.githubusercontent.com/u/161575955?v=4" width="120px;" alt=""/><br/><sub><b>Suhani Singh Paliwal</b></sub></a></td>
+    <td align="center"><a href="https://github.com/SharmaNishchay"><img src="https://avatars.githubusercontent.com/u/146124877?v=4" width="120px;" alt=""/><br/><sub><b>SharmaNischay</b></sub></a></td>
+    <td align="center"><a href="https://github.com/officeneerajsaini"><img src="https://avatars.githubusercontent.com/u/118799941?v=4" width="120px;" alt=""/><br/><sub><b>Neeraj Saini</b></sub></a></td>
+     <td align="center"><a href="https://github.com/jaickeyminj"><img src="https://avatars.githubusercontent.com/u/95216865?v=4" width="120px;" alt=""/><br/><sub><b>Jaickey Joy Minj</b></sub></a></td>  
+     <td align="center"><a href="https://github.com/Asymtode712"><img src="https://avatars.githubusercontent.com/u/115717746?v=4" width="120px;" alt=""/><br/><sub><b>Siddheya Kulkarni</b></sub></a></td> 
+ </tr>
+   
+   <tr>
+    <td align="center"><a href="https://github.com/PradnyaGaitonde"><img src="https://avatars.githubusercontent.com/u/116059908?v=4" width="120px;" alt=""/><br/><sub><b>Pradnya Gaitonde</b></sub></a></td>
+    <td align="center"><a href="https://github.com/sanmarg"><img src="https://avatars.githubusercontent.com/u/50082154?v=4" width="120px;" alt=""/><br/><sub><b>Sanmarg Sandeep Paranjpe</b></sub></a></td>
+    <td align="center"><a href="https://github.com/adrikaDwivedi"><img src="https://avatars.githubusercontent.com/u/89826992?v=4" width="120px;" alt=""/><br/><sub><b>AdrikaDwivedi</b></sub></a></td>
+    <td align="center"><a href="https://github.com/Arpcoder"><img src="https://avatars.githubusercontent.com/u/100352419?v=4" width="120px;" alt=""/><br/><sub><b>Arpna</b></sub></a></td>
+     <td align="center"><a href="https://github.com/alishasingh06"><img src="https://avatars.githubusercontent.com/u/114938485?v=4" width="120px;" alt=""/><br/><sub><b>Alisha Singh</b></sub></a></td>  
+     <td align="center"><a href="https://github.com/Sibam-Paul"><img src="https://avatars.githubusercontent.com/u/158052549?v=4" width="120px;" alt=""/><br/><sub><b>Sibam Paul</b></sub></a></td> 
+ </tr>
 
-![Contributors](https://contrib.rocks/image?repo=SB2318/UltimateHealth)
+<tr>
+    <td align="center"><a href="https://github.com/rushiii3"><img src="https://avatars.githubusercontent.com/u/105168088?v=4" width="120px;" alt=""/><br/><sub><b>HRUSHIKESH SHINDE</b></sub></a></td>
+    <td align="center"><a href="https://github.com/soham0005"><img src="https://avatars.githubusercontent.com/u/83421425?v=4" width="120px;" alt=""/><br/><sub><b>Soham Adhyapak</b></sub></a></td>
+    <td align="center"><a href="https://github.com/kylie-kiaying"><img src="https://avatars.githubusercontent.com/u/133581245?v=4" width="120px;" alt=""/><br/><sub><b>Kylie</b></sub></a></td>
+    <td align="center"><a href="https://github.com/Himanshu8850"><img src="https://avatars.githubusercontent.com/u/128601673?v=4" width="120px;" alt=""/><br/><sub><b>Himanshu Choudhary</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Hemu21"><img src="https://avatars.githubusercontent.com/u/106808387?v=4" width="120px;" alt=""/><br/><sub><b>Hemanth kumar</b></sub></a></td>  
+     <td align="center"><a href="https://github.com/nishant0708"><img src="https://avatars.githubusercontent.com/u/101548649?v=4" width="120px;" alt=""/><br/><sub><b>Nishant Kaushal</b></sub></a></td> 
+ </tr>
+
+ <tr>
+    <td align="center"><a href="https://github.com/Kamaleshbala01"><img src="https://avatars.githubusercontent.com/u/139665559?v=4" width="120px;" alt=""/><br/><sub><b>Kamalesh Bala</b></sub></a></td>
+    <td align="center"><a href="https://github.com/ParthNakum21"><img src="https://avatars.githubusercontent.com/u/134558990?v=4" width="120px;" alt=""/><br/><sub><b>Parth Nakum</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Abhigna-arsam"><img src="https://avatars.githubusercontent.com/u/125258286?v=4" width="120px;" alt=""/><br/><sub><b>Abhigna Arsam</b></sub></a></td>
+      <td align="center"><a href="https://github.com/MaryamMohamedYahya"><img src="https://avatars.githubusercontent.com/u/147263523?v=4" width="120px;" alt=""/><br/><sub><b>MaryamMohamedYahya</b></sub></a></td>
+    <td align="center"><a href="https://github.com/thevijayshankersharma"><img src="https://avatars.githubusercontent.com/u/109781385?v=4" width="120px;" alt=""/><br/><sub><b>Vijay Shanker Sharma</b></sub></a></td>
+ 
+ </tr>
+ 
+   </p>
+ </table>
+
 
 
 </div>
