@@ -5,7 +5,4 @@
 
 export class BaseModel{  
   
-    constructor(){
-        
-    }
 }
