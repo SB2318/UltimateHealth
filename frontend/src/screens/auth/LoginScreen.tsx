@@ -21,6 +21,7 @@ import { retrieveItem } from '../../helper/Utils';
 import EmailInputModal from '../../components/EmailInputModal';
 import { UserModel,LoginUser } from '../../models/User';
 import { AuthApiService } from '../../services/AuthApiService';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 // Import User Model and AUTH API SERVICE HERE, Details will be provided when work start
@@ -56,9 +57,9 @@ const LoginScreen = ({navigation}) => {
 
   // ISSUE : 77 Step 2:
   // Handle Eye Icon action, assume there are already an eye icon in the password field and you have to handle it's action
-  const handleSecureEntryClickEvent = ()=>{
-   // setSecureTextEntry(!secureTextEntry)
-  }
+  const handleSecureEntryClickEvent = () => {
+    setSecureTextEntry(!secureTextEntry);
+  };
 
   //////////////////////////////////////////////////////////////////////
  
@@ -204,6 +205,8 @@ const LoginScreen = ({navigation}) => {
     /** Here you need to navigate into otp screen, 
      * make sure you have add the screen inside StackNavigation Component 
      * */
+    setEmailInputVisible(false);
+    navigation.navigate('OtpScreen');
   }
 
 
@@ -268,68 +271,59 @@ const LoginScreen = ({navigation}) => {
              TextInput and eye icon */}
           
           <View style={styles.input}>
-            {/* <View style={styles.containerStyle}>
-             
-            </View> */}
-
-{
-             /** ISSUE : 85, STEP:4, set passwordRef here for TextInput
-               <TextInput ref={passwordRef} style={styles.inputLabel}></TextInput>
-              */
-            }
-            <View> 
-              {  /** Container Style will be the container which will contain the password input field as well as eye icon*/ } 
-            <TextInput
-            onChange={e => handlePassword(e)}
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              keyboardType="ascii-capable"
-              placeholder="Password"
-              placeholderTextColor="#948585"
-              secureTextEntry={secureTextEntry}
-              style={[
-                styles.inputControl,
-                {
-                  borderColor: isDarkMode ? 'white' : 'black',
-                  color: isDarkMode ? 'white' : 'black',
-                },
-              ]}
-            />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                
+                autoCapitalize="none"
+                autoCorrect={false}
+                clearButtonMode="while-editing"
+                keyboardType="ascii-capable"
+                placeholder="Password"
+                placeholderTextColor="#948585"
+                secureTextEntry={secureTextEntry}
+                style={[
+                  styles.inputControl,
+                  {
+                    borderColor: isDarkMode ? 'white' : 'black',
+                    color: isDarkMode ? 'white' : 'black',
+                  },
+                ]}
+                onChange={e => handlePassword(e)}
+                value={password}
+                underlineColorAndroid="transparent" // Add this line to remove underline
+              />
+            
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={handleSecureEntryClickEvent}>
+                {secureTextEntry ? (
+                  <Icon
+                    name="eye-off"
+                    size={20}
+                    color={isDarkMode ? 'white' : 'black'}
+                  />
+                ) : (
+                  <Icon
+                    name="eye"
+                    size={20}
+                    color={isDarkMode ? 'white' : 'black'}
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
             {
               passwordMessage ? (<Text style={{color: "red"}}>Password must be 6 Characters Longs</Text>)
               : (<Text style={{color: "red"}}></Text>) 
             }
-
-            { 
-              /**
-              Issue 77 : Step 4 Take TouchableOpacity
-              <TouchableOpacity style={{
-
-              // Make sure the position is absolute, and give some top-right value and style it so that you achieve your desire design
-              }}
-              onPress ={handleSecureEntryClickEvent}
-              >
-               secureTextEntry?(
-               <Icon1/> // it will be eye-off icon from react-native-vector-icon
-               ):(
-
-               <Icon2/> // it will be eye-off icon from react-native-vector-icon
-               )
-            </TouchableOpacity>
-              // You are done, run the app  😇
-             */
-              }
-            </View>
           </View>
           {/* forgot password */}
-          <View style={styles.forgotPasswordContainer}>
-
-          {/** Handle Forgot Password Click, Add Email Input Modal Here and control its visibility */}
-            <TouchableOpacity onPress={handleForgotPassword}>
+          <TouchableOpacity style={styles.forgotPasswordContainer} 
+            onPress={()=>{
+              console.log("Forgot Password Click")
+              setEmailInputVisible(!emailInputVisible);
+            }}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
-          </View>
 
       
           {/* login  button */}
@@ -349,7 +343,8 @@ const LoginScreen = ({navigation}) => {
           <EmailInputModal 
           callback={navigateToOtpScreen} 
           visible={emailInputVisible}
-          backButtonClick={handleEmailInputBack}/>
+          backButtonClick={handleEmailInputBack}
+          onDismiss={() => setEmailInputVisible(false)}/>
             
           {/* creat account button */}
           <View style={styles.createAccountContainer}>
@@ -422,12 +417,14 @@ const styles = StyleSheet.create({
     color: '#948585',
     marginBottom: hp(1),
   },
+
   inputControl: {
-    height: hp(6),
+    borderBottomWidth: 1,
+    width: '100%',
+    paddingRight: 40,
     fontSize: fp(4),
     fontWeight: '500',
-
-    borderBottomWidth: 1,
+    height: hp(6),
   },
   forgotPasswordContainer: {
     alignItems: 'flex-end',
@@ -450,6 +447,15 @@ const styles = StyleSheet.create({
   createAccountText: {
     fontSize: 18,
     fontWeight: '700',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 0,
+    padding: 10,
   },
 });
 

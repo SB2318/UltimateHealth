@@ -3,6 +3,7 @@ const dbConnect = require("./config/database");
 const cors = require("cors");
 const userRoutes = require("./routes/usersRoutes");
 const specializationRoutes = require("./routes/SpecializationsRoutes");
+const articleRoutes = require("./routes/articleRoutes");
 const PORT = process.env.PORT || 4000;
 const cookieParser = require("cookie-parser");
 
@@ -30,6 +31,8 @@ app.get("/hello", (req, res) => {
 // Use the userRoutes
 app.use("/api", userRoutes);
 app.use("/api", specializationRoutes);
+app.use("/api",articleRoutes );
+
 
 // Start the server
 app.listen(PORT, () => {

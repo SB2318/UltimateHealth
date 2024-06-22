@@ -1,4 +1,4 @@
-import { BASE_URL, LOGIN_API } from "../helper/APIUtils";
+import { BASE_URL, LOGIN_API, REGISTRATION_API } from "../helper/APIUtils";
 import { postMethodCall,postMethodCallwithToken, 
     getMethodCall,getMethodCallwithToken } from "../helper/CallAPI";
 import { LoginUser, UserModel } from "../models/User";
@@ -41,4 +41,22 @@ export class AuthApiService{
       // Remember this is an initial abstraction, if you faces any difficulties you can suggest your own
       // And if you familiar with it then okay
     }
+
+
+        /** Add Function to call register api */
+
+    // Issue 115 : Step 1: Complete the function
+
+    register(params:UserModel){
+      
+        
+        return new Promise((resolve, reject)=>{
+  
+             // return new promises with  postMethodCall(url,params)
+             let url = BASE_URL+REGISTRATION_API
+        })
+        // Remember this is an initial abstraction, if you faces any difficulties you can suggest your own
+        // And if you familiar with it then okay
+      }
+
 }
