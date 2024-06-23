@@ -59,9 +59,9 @@ module.exports.register = async (req, res) => {
     await newUnverifiedUser.save();
 
     // Send verification email
-    sendVerificationEmail(email, verificationToken);
+    // sendVerificationEmail(email, verificationToken);
 
-    res.status(201).json({ message: 'Registration successful. Please verify your email.' });
+    res.status(201).json({ message: 'Registration successful. Please verify your email.',token: verificationToken });
   } catch (error) {
     console.error('Error during registration:', error);
 
