@@ -92,7 +92,7 @@ const LoginScreen = ({navigation}) => {
 
       /** Complete the function */
       if(validate()){
-        console.log("Hello");
+        //console.log("Hello");
 
         //remove error message
         setPasswordMessage(false);
@@ -110,29 +110,21 @@ const LoginScreen = ({navigation}) => {
 
 
         // call login method with the help of service object
-        service.login(params).then((response)=>{
+        service.login(params).then((response:any)=>{
            // Store User data after stringify
-           // Navigate to home   
+           // Navigate to home 
+           console.log("Response", response)  
            userData = JSON.stringify(response);
            console.log("UserData" + userData)
-           storeDataAndNavigateHome();
+           storeDataAndNavigateHome(userData);
         }).catch((error) => {
           console.log(error)
         })
 
-        async function storeDataAndNavigateHome(){
-
-          //Store Data
-          await AsyncStorage.setItem("User", userData);
-          navigation.navigate("Home")
-        }
-
+       
         //Access Stored Data
-        let test = await AsyncStorage.getItem("User");
-        console.log("Stored: " + test)
-        
-
-
+        //let test = await AsyncStorage.getItem("User");
+        //console.log("Stored: " + test)
       }else{
         console.log("Verify");
 
@@ -152,6 +144,14 @@ const LoginScreen = ({navigation}) => {
 
       }
   }
+
+  async function storeDataAndNavigateHome(userData:any){
+
+    
+    await AsyncStorage.setItem("User", userData);
+    navigation.navigate("Home")
+  }
+
 
   /** ISSUE 85: Complete the function */
   const validate = ()=>{

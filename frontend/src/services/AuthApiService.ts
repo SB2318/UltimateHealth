@@ -18,29 +18,33 @@ export class AuthApiService{
     // Issue 85 : Step 1: Complete the function
 
     //pull userdata from params argument and send to api
-    async login(params:LoginUser){
-        params = {
-            email: params.email,
-            password: params.password
-        }
+    login(params: LoginUser) {
+        return new Promise((resolve, reject) => {
+          const url = BASE_URL + LOGIN_API;
+      
+          postMethodCall(url, params)
+            .then((response:any) => {
 
-        let url = BASE_URL+LOGIN_API
-
-        
-    
-    
-      return new Promise((resolve, reject)=>{
-
-           // return new promises with  postMethodCall(url,params)
-           let url = BASE_URL+LOGIN_API
-           axios.post(url, params)
-           .then(res => {resolve(res.data.user)})
-           .catch(error => {reject(error)})
-
-      })
-      // Remember this is an initial abstraction, if you faces any difficulties you can suggest your own
-      // And if you familiar with it then okay
-    }
+                if (response.status === 403) {
+                    reject(new Error("Email not verified. Please check your email."));
+                  }
+                 
+           //   console.log("Response", response.json());
+              // Check for error in response (modify based on actual format)
+             // if (response.error) {
+             
+             
+            //} else {
+            else{
+                resolve(response); // Assuming successful response has user data
+              }
+            })
+            .catch((err: Error) => {
+              console.log("Error", err);
+              reject(err);
+            });
+        });
+      }
 
 
         /** Add Function to call register api */

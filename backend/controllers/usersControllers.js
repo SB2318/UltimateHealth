@@ -159,15 +159,23 @@ module.exports.login = async (req, res) => {
       return res.status(400).json({ error: 'Please provide email and password' });
     }
 
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
+  
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+
+      user = UnverifiedUser.findOne({email});
+      if(!user)
+        return res.status(404).json({ error: 'User not found' });
+      else
+      return res.status(403).json({ error: 'Email not verified. Please check your email.' });
+     
     }
 
     if (!user.isVerified) {
       return res.status(403).json({ error: 'Email not verified. Please check your email.' });
     }
+   
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
