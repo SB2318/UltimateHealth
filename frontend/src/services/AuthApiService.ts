@@ -15,16 +15,15 @@ export class AuthApiService{
 
     /** Add Function to call login api */
 
-    // Issue 85 : Step 1: Complete the function
 
-    //pull userdata from params argument and send to api
     login(params: LoginUser) {
         return new Promise((resolve, reject) => {
           const url = BASE_URL + LOGIN_API;
-      
+          console.log("Url", url)
           postMethodCall(url, params)
             .then((response:any) => {
-
+                
+              console.log("Enter")
                 if (response.status === 403) {
                     reject(new Error("Email not verified. Please check your email."));
                   }

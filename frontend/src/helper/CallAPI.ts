@@ -39,18 +39,20 @@ export function postMethodCallwithToken(url: string, params: BaseModel, authToke
 
 /** Simple Postmethod call */
 
-export function postMethodCall(url: string, params: BaseModel): Promise<BaseModel> {
+export function postMethodCall(url: string, params: any): Promise<BaseModel> {
     return new Promise<BaseModel>((resolve, error) => {
         fetch(url, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'cache-control': 'no-cache',
+                
             },
             body: JSON.stringify(params)
         }).then(response => response.json()).then(responseJson => {
+           
             resolve(responseJson);
+            console.log("Response JSON", responseJson)
         })
         .catch(er => {
             error(er);

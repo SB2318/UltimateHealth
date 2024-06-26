@@ -192,8 +192,11 @@ module.exports.login = async (req, res) => {
     res.cookie('token', token, { httpOnly: true, maxAge: 86400000 });
     res.status(200).json({ user, token, message: "Login Successful" });
   } catch (error) {
-    console.error('Error logging in:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message }); // Validation errors
+    } else {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 };
 
