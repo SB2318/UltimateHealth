@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { StyleSheet, Switch, Text, View } from "react-native";
 import Body from "react-native-body-highlighter";
 
-const HumanBodyMap = ({ onBodyPartSelect }) => {
+const HumanBodyMap = ({ 
+  onBodyPartSelect = () => {} // Use default parameter
+}) => {
   const [isBackSideEnabled, setIsBackSideEnabled] = useState(false);
   const [isMale, setIsMale] = useState(true);
 
