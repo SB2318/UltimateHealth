@@ -1,3 +1,4 @@
+
 import {
   SafeAreaView,
   StyleSheet,
@@ -24,6 +25,12 @@ import {TabView, TabBar} from 'react-native-tab-view';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import ArticleCard from '../components/ArticleCard';
+import { PRIMARY_COLOR } from '../helper/Theme';
+        
+import NoInternet from '../components/NoInternet';
+import { checkInternetConnection } from '../helper/Utils';
+        
+        
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 const TabBarHeight = 48;
@@ -200,6 +207,18 @@ const HomeScreen = ({navigation}) => {
         return Math.abs(gestureState.dy) > 5;
       },
 
+
+  const [isConnected, setConnected] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = checkInternetConnection(setConnected);
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+
       onPanResponderRelease: (evt, gestureState) => {
         syncScrollOffset();
         if (Math.abs(gestureState.vy) < 0.2) {
@@ -232,6 +251,7 @@ const HomeScreen = ({navigation}) => {
       },
     }),
   ).current;
+
 
   /** * PanResponder for list in tab scene */
   const listPanResponder = useRef(
@@ -436,6 +456,7 @@ const HomeScreen = ({navigation}) => {
       default:
         return null;
     }
+
     return (
       <Animated.FlatList
         scrollEnabled={canScroll}
@@ -532,9 +553,15 @@ const HomeScreen = ({navigation}) => {
     );
   };
 
+
   const isDarkMode = useColorScheme() === 'dark';
   const color = isDarkMode ? 'white' : 'black';
   const handleNoteIconClick = () => {};
+
+
+ if (!isConnected) {
+    return <NoInternet />;
+  }
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: PRIMARY_COLOR}}>
