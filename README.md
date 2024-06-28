@@ -1,5 +1,5 @@
 <a id="top"></a>
-<h1 align="center">UltimateHealth</h1>
+<h1 align="center">UltimateHealth (HealthGuide)</h1>
 <h3 align="center">    
  
 [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Roboto&size=22&duration=4995&pause=1000&color=F7F7F7&random=false&width=431&height=58&lines=Trusted+Source+for+Reliable+Health+Insights)](https://git.io/typing-svg)
@@ -74,7 +74,19 @@ UltimateHealth is an innovative open-source project that aims to provide a compr
 <!---------------------------------------------------------------------- HEADERS--------------------------------------------------------------->
 <details>
   <img src="https://github.com/Vi1234sh12/Face-X/blob/master/.github/Assests/isometric.png" height="290px" align="right"/>
-  <summary><h2>:pushpin:Headers: </h2></summary>
+  <summary><h2>:pushpin:Contents: </h2></summary>
+
+- [Features](https://github.com/SB2318/UltimateHealth#features)
+- [Technology Stack](https://github.com/SB2318/UltimateHealth#technology-stack)
+- [Project Requirements](https://github.com/SB2318/UltimateHealth#project-requirements)<br>
+      - [Install JDK](https://github.com/SB2318/UltimateHealth#install-jdk)<br>
+      - [Set Up Android Development Environment](https://github.com/SB2318/UltimateHealth#setting-android_home-environment-variable)
+- [Getting Started](https://github.com/SB2318/UltimateHealth#getting-started)<br>
+      - [Frontend](https://github.com/SB2318/UltimateHealth#for-frontend)<br>
+      - [Backend](https://github.com/SB2318/UltimateHealth#for-backend)
+- [Testing Frontend with Localhost Backend Server](https://github.com/SB2318/UltimateHealth#testing-frontend-with-localhost-backend-server)
+- [Contribution Guidelines](https://github.com/SB2318/UltimateHealth#contribution-guidelines)
+- [Our Contributors](https://github.com/SB2318/UltimateHealth#our-contributors-%EF%B8%8F)
  <!---------------------------------------------------------------------- FEATURES--------------------------------------------------------------->
  <details>
    <summary><h3>Features :crystal_ball:</h3></summary>
@@ -386,9 +398,54 @@ This project is licensed under the [MIT License](./LICENSE).
 <div align = "center">
  <h3>Thank you for contributing to our repository</h3>
  <h1> We appreciate your help in making UltimateHealth even better.😃</h1>
-<a href="https://github.com/SB2318/UltimateHealth/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=SB2318/UltimateHealth" />
-</a>
+
+
+ <table>
+  <p align="center">
+  <tr>
+    <td align="center"><a href="https://github.com/SB2318"><img src="https://avatars.githubusercontent.com/u/87614560?v=4" width="120px;" alt=""/><br/><sub><b>Susmita Bhattacharya</b></sub></a></td>
+    <td align="center"><a href="https://github.com/suhanipaliwal"><img src="https://avatars.githubusercontent.com/u/161575955?v=4" width="120px;" alt=""/><br/><sub><b>Suhani Singh Paliwal</b></sub></a></td>
+    <td align="center"><a href="https://github.com/SharmaNishchay"><img src="https://avatars.githubusercontent.com/u/146124877?v=4" width="120px;" alt=""/><br/><sub><b>SharmaNischay</b></sub></a></td>
+    <td align="center"><a href="https://github.com/officeneerajsaini"><img src="https://avatars.githubusercontent.com/u/118799941?v=4" width="120px;" alt=""/><br/><sub><b>Neeraj Saini</b></sub></a></td>
+     <td align="center"><a href="https://github.com/jaickeyminj"><img src="https://avatars.githubusercontent.com/u/95216865?v=4" width="120px;" alt=""/><br/><sub><b>Jaickey Joy Minj</b></sub></a></td>  
+     <td align="center"><a href="https://github.com/Asymtode712"><img src="https://avatars.githubusercontent.com/u/115717746?v=4" width="120px;" alt=""/><br/><sub><b>Siddheya Kulkarni</b></sub></a></td> 
+ </tr>
+   
+   <tr>
+    <td align="center"><a href="https://github.com/PradnyaGaitonde"><img src="https://avatars.githubusercontent.com/u/116059908?v=4" width="120px;" alt=""/><br/><sub><b>Pradnya Gaitonde</b></sub></a></td>
+    <td align="center"><a href="https://github.com/sanmarg"><img src="https://avatars.githubusercontent.com/u/50082154?v=4" width="120px;" alt=""/><br/><sub><b>Sanmarg Sandeep Paranjpe</b></sub></a></td>
+    <td align="center"><a href="https://github.com/adrikaDwivedi"><img src="https://avatars.githubusercontent.com/u/89826992?v=4" width="120px;" alt=""/><br/><sub><b>AdrikaDwivedi</b></sub></a></td>
+    <td align="center"><a href="https://github.com/Arpcoder"><img src="https://avatars.githubusercontent.com/u/100352419?v=4" width="120px;" alt=""/><br/><sub><b>Arpna</b></sub></a></td>
+     <td align="center"><a href="https://github.com/alishasingh06"><img src="https://avatars.githubusercontent.com/u/114938485?v=4" width="120px;" alt=""/><br/><sub><b>Alisha Singh</b></sub></a></td>  
+     <td align="center"><a href="https://github.com/Sibam-Paul"><img src="https://avatars.githubusercontent.com/u/158052549?v=4" width="120px;" alt=""/><br/><sub><b>Sibam Paul</b></sub></a></td> 
+ </tr>
+
+<tr>
+    <td align="center"><a href="https://github.com/rushiii3"><img src="https://avatars.githubusercontent.com/u/105168088?v=4" width="120px;" alt=""/><br/><sub><b>HRUSHIKESH SHINDE</b></sub></a></td>
+    <td align="center"><a href="https://github.com/soham0005"><img src="https://avatars.githubusercontent.com/u/83421425?v=4" width="120px;" alt=""/><br/><sub><b>Soham Adhyapak</b></sub></a></td>
+    <td align="center"><a href="https://github.com/kylie-kiaying"><img src="https://avatars.githubusercontent.com/u/133581245?v=4" width="120px;" alt=""/><br/><sub><b>Kylie</b></sub></a></td>
+    <td align="center"><a href="https://github.com/Himanshu8850"><img src="https://avatars.githubusercontent.com/u/128601673?v=4" width="120px;" alt=""/><br/><sub><b>Himanshu Choudhary</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Hemu21"><img src="https://avatars.githubusercontent.com/u/106808387?v=4" width="120px;" alt=""/><br/><sub><b>Hemanth kumar</b></sub></a></td>  
+     <td align="center"><a href="https://github.com/nishant0708"><img src="https://avatars.githubusercontent.com/u/101548649?v=4" width="120px;" alt=""/><br/><sub><b>Nishant Kaushal</b></sub></a></td> 
+ </tr>
+
+ <tr>
+    <td align="center"><a href="https://github.com/Kamaleshbala01"><img src="https://avatars.githubusercontent.com/u/139665559?v=4" width="120px;" alt=""/><br/><sub><b>Kamalesh Bala</b></sub></a></td>
+    <td align="center"><a href="https://github.com/ParthNakum21"><img src="https://avatars.githubusercontent.com/u/134558990?v=4" width="120px;" alt=""/><br/><sub><b>Parth Nakum</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Abhigna-arsam"><img src="https://avatars.githubusercontent.com/u/125258286?v=4" width="120px;" alt=""/><br/><sub><b>Abhigna Arsam</b></sub></a></td>
+      <td align="center"><a href="https://github.com/MaryamMohamedYahya"><img src="https://avatars.githubusercontent.com/u/147263523?v=4" width="120px;" alt=""/><br/><sub><b>MaryamMohamedYahya</b></sub></a></td>
+    <td align="center"><a href="https://github.com/thevijayshankersharma"><img src="https://avatars.githubusercontent.com/u/109781385?v=4" width="120px;" alt=""/><br/><sub><b>Vijay Shanker Sharma</b></sub></a></td>
+    <td align="center"><a href="https://github.com/TonyStark-47"><img src="https://avatars.githubusercontent.com/u/73957207?v=4" width="120px;" alt=""/><br/><sub><b>Tony Stark</b></sub></a>
+        </td>
+ </tr>
+
+ <tr>
+   <td align="center"><a href="https://github.com/iamworrell"><img src="https://avatars.githubusercontent.com/u/99043769?v=4" width="120px;" alt=""/><br/><sub><b>Worrell Seville</b></sub></a>
+        </td>  
+ </tr>
+ 
+   </p>
+ </table>
 </div>
 
 
