@@ -10,25 +10,37 @@ import {
   Alert,
   useColorScheme,
 } from 'react-native';
-import React, {useEffect, useState, useRef} from 'react';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import React, {useEffect, useState} from 'react';
+import { PRIMARY_COLOR } from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fp, hp, wp} from '../../helper/Metric';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {retrieveItem} from '../../helper/Utils';
+import { retrieveItem } from '../../helper/Utils';
 import EmailInputModal from '../../components/EmailInputModal';
-import {UserModel, LoginUser} from '../../models/User';
-import {AuthApiService} from '../../services/AuthApiService';
+import { UserModel,LoginUser } from '../../models/User';
+import { AuthApiService } from '../../services/AuthApiService';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 
 // Import User Model and AUTH API SERVICE HERE, Details will be provided when work start
 
 const LoginScreen = ({navigation}) => {
+
   const inset = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === 'dark';
-  const [emailInputVisible, setEmailInputVisible] = useState(false);
+  const [emailInputVisible, setEmailInputVisible] = useState(false)
+  const [password, setPassword] = useState("");
+  const [passwordVerify, setPasswordVerify] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailVerify, setEmailVerify] = useState(false);
+  let navigationn = useNavigation();
+  const [output, setOutput] = useState(true);
+  const [passwordMessage, setPasswordMessage] = useState(false);
+  const [emailMessage, setEmailMessage] = useState(false);
+
+  const routes = navigation.getState().routeNames;
 
   // ISSUE: 85  Step 2 , Create Reference and useState variable for DOM / View input elements
   /**
@@ -37,14 +49,11 @@ const LoginScreen = ({navigation}) => {
    * passwordRef-> will point password input field
    * password -> useState variable for storing input value
    */
-  const emailRef = useRef(null);
-  const [email, setEmail] = useState('');
-  const passwordRef = useRef(null);
-  const [password, setPassword] = useState('');
 
-  // ISSUE : 77 Step 1:
-  // Create an useState variable which will handle secureTextEntry of password field
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
+
+// ISSUE : 77 Step 1:
+ // Create an useState variable which will handle secureTextEntry of password field
+   const [secureTextEntry, setSecureTextEntry] = useState(true)
 
   // ISSUE : 77 Step 2:
   // Handle Eye Icon action, assume there are already an eye icon in the password field and you have to handle it's action
@@ -53,24 +62,21 @@ const LoginScreen = ({navigation}) => {
   };
 
   //////////////////////////////////////////////////////////////////////
-
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', e => {
-        e.preventDefault();
-        Alert.alert(
-          'Warning',
-          'Do you want to exit',
-          [
-            {text: 'No', onPress: () => null},
-            {text: 'Yes', onPress: () => BackHandler.exitApp()},
-          ],
-          {cancelable: true},
-        );
-      }),
-    [navigation],
-  );
-
+ 
+  useEffect(() =>
+    navigation.addListener('beforeRemove', (e) => {
+      e.preventDefault();
+      Alert.alert(
+        "Warning",
+        "Do you want to exit",
+        [
+          { text: "No", onPress: () => null },
+          { text: "Yes", onPress: () => BackHandler.exitApp() }
+        ],
+        { cancelable: true }
+      );
+    }), [])
+  
   const storeItem = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
@@ -81,60 +87,129 @@ const LoginScreen = ({navigation}) => {
   };
 
   /** ISSUE 85 : Complete the function */
-  const validateAndSubmit = () => {
-    /** Complete the function */
-    if (validate()) {
-      /** Create a new object of service */
-      let service = new AuthApiService();
-      /** Create a new object of params */
-      let params = new LoginUser();
-      params.email = email;
-      params.password = password;
+  const validateAndSubmit = async ()=>{
+    let userData;
 
-      // call login method with the help of service object
-      service.login(params).then(response => {
-        console.log('Response', response);
-        // Store User data after stringify
-        // Navigate to home
-      });
-    }
-  };
+      /** Complete the function */
+      if(validate()){
+        //console.log("Hello");
+
+        //remove error message
+        setPasswordMessage(false);
+        setEmailMessage(false);
+
+        /** Create a new object of service */
+        let service = new AuthApiService()
+        /** Create a new object of params */
+
+        //assign user data to params 
+        //params will contain user data
+        let params = new LoginUser()
+        params.email = email
+        params.password = password
+
+
+        // call login method with the help of service object
+        service.login(params).then((response:any)=>{
+           // Store User data after stringify
+           // Navigate to home 
+           console.log("Response", response)  
+           userData = JSON.stringify(response);
+           console.log("UserData" + userData)
+           storeDataAndNavigateHome(userData);
+        }).catch((error) => {
+          console.log(error)
+        })
+
+       
+        //Access Stored Data
+        //let test = await AsyncStorage.getItem("User");
+        //console.log("Stored: " + test)
+      }else{
+        console.log("Verify");
+
+        //set output back to true and remove error message
+        setOutput(true);
+        setPasswordMessage(false);
+        setEmailMessage(false);
+        //Logic to Output Message to User
+        if(output && !passwordVerify)
+        {
+          setPasswordMessage(true);
+        }
+        if(output && !emailVerify)
+        {
+          setEmailMessage(true);
+        }
+
+      }
+  }
+
+  async function storeDataAndNavigateHome(userData:any){
+
+    
+    await AsyncStorage.setItem("User", userData);
+    navigation.navigate("Home")
+  }
+
 
   /** ISSUE 85: Complete the function */
-  const validate = () => {
+  const validate = ()=>{
+
     /** Validate email data */
     /** Validate Password data */
-    /**
-     * if(validate) return true
-     * else
-     *  return false
-     */
-    if (email && password) {
+    if(emailVerify && passwordVerify)
+    {
       return true;
-    } else {
-      Alert.alert('Validation Error', 'Email and Password are required.');
-      return false;
+    }else{
+      return false
     }
-  };
+  }
+  const handlePassword= (e) =>{
+    let pass = e.nativeEvent.text;
+    setPassword(pass);
+    setPasswordVerify(false);
 
-  const handleForgotPassword = () => {
+    //Validation
+    if(/(?=.*[a-z]).{6,}/.test(pass)){
+        setPassword(pass);
+        setPasswordVerify(true)
+    }
+  }
+  const handleEmail= (e) =>{
+    let email = e.nativeEvent.text;
+    setEmail(email);
+    setEmailVerify(false);
+    //Validation
+    if(/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(email)){
+      setEmail(email);
+      setEmailVerify(true);
+  }
+  }
+
+  const handleForgotPassword= ()=>{
+
     /** Forgot Password Modal visibility */
-    console.log("Forgot Password Click")
-    setEmailInputVisible(true);
-  };
+    setEmailInputVisible(true)
 
-  const handleEmailInputBack = () => {
+  }
+
+  const handleEmailInputBack = ()=>{
+
     /** Handle Email InputDialogBackButton */
-    setEmailInputVisible(false);
-  };
+    setEmailInputVisible(false)
+  }
 
-  const navigateToOtpScreen = () => {
-    /** Here you need to navigate into otp screen,
-     * make sure you have add the screen inside StackNavigation Component
+  const navigateToOtpScreen = ()=>{
+
+    /** Here you need to navigate into otp screen, 
+     * make sure you have add the screen inside StackNavigation Component 
      * */
     setEmailInputVisible(false);
     navigation.navigate('OtpScreen');
-  };
+  }
+
+
 
   return (
     <View style={styles.container}>
@@ -164,11 +239,13 @@ const LoginScreen = ({navigation}) => {
           ]}>
           {/* email input */}
           <View style={styles.input}>
-            {/** ISSUE : 85, STEP:3, set email ref here for TextInput
+            {
+             /** ISSUE : 85, STEP:3, set email ref here for TextInput
                <TextInput ref={emailRef} style={styles.inputLabel}></TextInput>
-              */}
+              */
+            }
             <TextInput
-              ref={emailRef}
+            onChange={e => handleEmail(e)}
               autoCapitalize="none"
               autoCorrect={false}
               clearButtonMode="while-editing"
@@ -182,19 +259,21 @@ const LoginScreen = ({navigation}) => {
                   color: isDarkMode ? 'white' : 'black',
                 },
               ]}
-              onChangeText={text => setEmail(text)}
-              value={email}
             />
+            {
+              emailMessage ? (<Text style={{color: "red"}}>Please Enter a Valid Email</Text>) 
+              : (<Text style={{color: "red"}}></Text>)
+            }
           </View>
           {/* password input */}
 
           {/** Issue 77: Step 3: Here you have to modify the container, first create another container which will wrap the two field
              TextInput and eye icon */}
-
+          
           <View style={styles.input}>
             <View style={styles.passwordContainer}>
               <TextInput
-                ref={passwordRef}
+                
                 autoCapitalize="none"
                 autoCorrect={false}
                 clearButtonMode="while-editing"
@@ -209,11 +288,11 @@ const LoginScreen = ({navigation}) => {
                     color: isDarkMode ? 'white' : 'black',
                   },
                 ]}
-                onChangeText={text => setPassword(text)}
+                onChange={e => handlePassword(e)}
                 value={password}
                 underlineColorAndroid="transparent" // Add this line to remove underline
               />
-
+            
               <TouchableOpacity
                 style={styles.eyeIcon}
                 onPress={handleSecureEntryClickEvent}>
@@ -232,35 +311,42 @@ const LoginScreen = ({navigation}) => {
                 )}
               </TouchableOpacity>
             </View>
+            {
+              passwordMessage ? (<Text style={{color: "red"}}>Password must be 6 Characters Longs</Text>)
+              : (<Text style={{color: "red"}}></Text>) 
+            }
           </View>
-
           {/* forgot password */}
-         
-            {/** Handle Forgot Password Click, Add Email Input Modal Here and control its visibility */}
-            <TouchableOpacity style={styles.forgotPasswordContainer} 
+          <TouchableOpacity style={styles.forgotPasswordContainer} 
             onPress={()=>{
               console.log("Forgot Password Click")
               setEmailInputVisible(!emailInputVisible);
             }}>
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
-          
-          {/* login button */}
+
+      
+          {/* login  button */}
           <View style={styles.loginButtonContainer}>
             <TouchableOpacity
               style={styles.loginButton}
-              onPress={validateAndSubmit}>
+              onPress={() => {
+                    {/** ISSUE 85: Step 5 Handle Login Button Action, Complete the method */}
+                //storeItem('user', 'ok');
+                validateAndSubmit()
+              }}>
               <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
           </View>
-          <EmailInputModal
-            callback={navigateToOtpScreen}
-            visible={emailInputVisible}
-            backButtonClick={handleEmailInputBack}
-            onDismiss={() => setEmailInputVisible(false)}
-           
-          />
-          {/* create account button */}
+
+
+          <EmailInputModal 
+          callback={navigateToOtpScreen} 
+          visible={emailInputVisible}
+          backButtonClick={handleEmailInputBack}
+          onDismiss={() => setEmailInputVisible(false)}/>
+            
+          {/* creat account button */}
           <View style={styles.createAccountContainer}>
             <TouchableOpacity>
               <Text
@@ -271,8 +357,10 @@ const LoginScreen = ({navigation}) => {
                   },
                 ]}
                 onPress={() => {
-                  navigation.navigate('SignUpScreenFirst');
-                }}>
+                   // storeItem('user', 'ok');
+                   navigation.navigate('SignUpScreenFirst')
+                 }}
+                >
                 Create new account
               </Text>
             </TouchableOpacity>
@@ -370,3 +458,5 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
+
+//    emailRef.current.style.borderColor = 'red';
