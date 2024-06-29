@@ -49,132 +49,26 @@
 
 ## About:
 
-UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users looking for reliable and trustworthy information on various health-related topics.
-
-## Headers
-
-### Contents:
-- [Features](https://github.com/SB2318/UltimateHealth#features)
-- [Technology Stack](https://github.com/SB2318/UltimateHealth#technology-stack)
-- [Project Requirements](https://github.com/SB2318/UltimateHealth#project-requirements)<br>
-     (i)  [Install JDK](https://github.com/SB2318/UltimateHealth#install-jdk)<br>
-     (ii) [Set Up Android Development Environment](https://github.com/SB2318/UltimateHealth#setting-android_home-environment-variable)
-- [Getting Started](https://github.com/SB2318/UltimateHealth#getting-started)<br>
-     (i)  [Frontend](https://github.com/SB2318/UltimateHealth#for-frontend)<br>
-     (ii) [Backend](https://github.com/SB2318/UltimateHealth#for-backend)
-- [Testing Frontend with Localhost Backend Server](https://github.com/SB2318/UltimateHealth#testing-frontend-with-localhost-backend-server)
-- [Contribution Guidelines](https://github.com/SB2318/UltimateHealth#contribution-guidelines)
-- [Our Contributors](https://github.com/SB2318/UltimateHealth#our-contributors-%EF%B8%8F)
+UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users who are looking for reliable and trustworthy information on various health-related topics.
 
 ## Features:
 
-From the beginner's perspective, the project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
+From the beginner perspective, the project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
 
 * Diseases-related information
 * General health-related guidance
 * Survival experiences from critical diseases
 * Backend Development
 
-Users can also listen to articles (audio features) if they prefer. The Chat Section features a guide bot that helps users solve health-related problems.  
+Users can also listen to articles(audio features) if they prefer. The Chat Section features a guider bot that helps users solve their health-related problems.  
 
 
 Hello! Congratulations to all the GSSOC'24 contributors and mentors!🎉
-I'm thrilled to be a part of this amazing team and excited to work together to make the Ultimate Health project a huge success. Let's collaborate, learn, and grow together!
-
-## Technology Stacks
-
-<p>
-    <a href="https://www.w3schools.com/java/"><img src="https://i.pinimg.com/originals/79/5e/bb/795ebb5f4a470cd7242136237f61fc53.png" alt="Java" width="70" height="50" /></a>
-<a href="https://www.w3schools.com/nodejs/"><img src="https://e7.pngegg.com/pngimages/247/558/png-clipart-node-js-javascript-express-js-npm-react-github-angle-text.png" alt="Node.js" width="50" height="50" /></a>
-<a href="https://www.javatpoint.com/expressjs-tutorial"><img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/expressjs_logo_icon_169185.png" alt="expressjs" width="50" height="50" /></a>
-<a href="https://www.w3schools.com/REACT/DEFAULT.ASP"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png" alt="React.js" width="50" height="50" /></a>
-</p>
-
-
-## Project Requirements:
-
-* Java installed on your machine. (**Java version:**  17)
-* Android Studio installed on your machine.
-   
-###  Install JDK:
-
-To ensure that your project runs smoothly, make sure you have Java 17 installed on your system. You can follow these steps to set up Java 17:
-
-* Visit the [Oracle website](https://www.oracle.com/in/java/) or the OpenJDK website to download the Java 17 JDK (Java Development Kit) for your operating system.
-* Follow the installation instructions provided for your specific operating system.
-
-### Installing JDK 17 on macOS:
-
-* Visit the [Oracle JDK download page](https://www.oracle.com/in/java/technologies/downloads/#java17) or the AdoptOpenJDK website.
-* Download the JDK 17 installer for macOS (e.g., .dmg or .pkg file).
-* Open the downloaded installer and follow the installation instructions.
-* After the installation is complete, you can verify the installation by opening a Terminal window and running the command java -version. It should display the installed JDK version.
-
-### Setting JAVA_HOME on macOS:
-
-* Open a Terminal window.
-* Determine the installation path of JDK 17. You can use the java_home command to find the path by running /usr/libexec/java_home -v 17.
-* Copy the JDK installation path.
-* Create or edit the .zshrc file in your user home directory by running nano ~/.zshrc in the Terminal.
-* Add the following line to the file, replacing <JDK_PATH> with the copied JDK installation path:
-
-  **export JAVA_HOME=<JDK_PATH>**
-* Save the file and exit the text editor.
-* Close the Terminal window and open a new one to apply the changes.
-* To verify that JAVA_HOME is set correctly, run the command echo $JAVA_HOME in the Terminal. It should display the JDK installation path.
-
-
-### Installing JDK 17 on Windows:
-
-* Visit the [Oracle JDK download page](https://www.oracle.com/in/java/technologies/downloads/#java17) or the AdoptOpenJDK website.
-* Download the JDK 17 installer for Windows (e.g., .exe file).
-* Run the downloaded installer and follow the installation instructions.
-* After the installation is complete, you can verify the installation by opening a Command Prompt window and running the command java -version. It should display the installed JDK version.
-
-
-### Setting JAVA_HOME on Windows:
-
-* Right-click on the Windows Start button and select "System".
-* In the System window, click on "Advanced System Settings" on the left sidebar.
-* Click the "Environment Variables" button.
-* Under the "System Variables" section, click "New".
-* Enter **JAVA_HOME** as the Variable name.
-* Enter the path to the JDK 17 installation directory (e.g., C:\Program Files\Java\jdk-17) as the Variable value.
-* Click "OK" to save the variable.
-* Click "OK" again to close the Environment Variables window.
-* Close and reopen any Command Prompt windows for the changes to take effect.
-* To verify that **JAVA_HOME** is set correctly, run the command echo %JAVA_HOME% in a Command Prompt window. It should display the JDK installation path.
-
-### Setting ANDROID_HOME Environment Variable:
-
-To set the **ANDROID_HOME** variable for both Windows and macOS, you can follow the instructions below:
-
-### Windows:
-
-* Open the System Properties window by right-clicking on the Computer icon and selecting "Properties".
-* Click on "Advanced system settings" on the left-hand side.
-* In the System Properties window, click on the "Environment Variables" button.
-* In the Environment Variables window, under the "System variables" section, click on the "New" button.
-* Enter **ANDROID_HOME** as the variable name.
-* Enter the path to the Android SDK directory as the variable value. (Default Path: ` C:\Users\User_Name\AppData\Local\Android\Sdk `)
-* Click "OK" to save the changes.
-
-### macOS:
-
-* Open a terminal window.
-* Open the .bash_profile file in a text editor by running the command nano `~/.bash_profile.`
-* Add the following line to the file:
-* export ANDROID_HOME=/path/to/android/sdk
-* Replace /path/to/android/sdk with the actual path to the Android SDK directory.
-* Press Control + O to save the file, then press Enter to confirm the file name, and finally press Control + X to exit the text editor.
-* Close the terminal window and reopen it for the changes to take effect.
-
-Please note that the exact path to the Android SDK directory may vary depending on how you installed it. Make sure to replace **/path/to/android/sdk** with the correct path on your system.
-
+I'm thrilled to be a part of this amazing team and I'm excited to work together to make the Ultimate Health project a huge success. Let's collaborate, learn, and grow together!
 
 ## Getting Started:
 
-### Follow these steps to get started with UltimateHealth:
+Follow these steps to get started with UltimateHealth:
 
 **Clone the repository:**
 
@@ -187,15 +81,12 @@ https://github.com/SB2318/UltimateHealth.git
 cd  UltimateHealth
 ```
 
-**Checkout the develop branch and select your preferences (backend or frontend)**.
+
+**Checkout develop branch and select your preferences (backend or frontend)**.
 
 ```
  git checkout develop
 ```
-### If you couldn't find the 'develop' branch in your own forked repository, please go to [CONTRIBUTING.md](./CONTRIBUTING.md) and follow the instructions written in detail.
-
-## For Frontend:
-
 
 **Install dependencies:**
 
@@ -329,55 +220,3 @@ Remember, following these guidelines will help ensure a smooth and efficient con
 ## Contact:
      
 Discord Server (Susmita Bhattacharya, user_name: susmita_)
-
-<h2 align = "center">Our Contributors ❤️</h2>
-<div align = "center">
- <h3>Thank you for contributing to our repository</h3>
-<!--
-![Contributors](https://contrib.rocks/image?repo=SB2318/UltimateHealth)<br>
--->
- <table>
-  <p align="center">
-  <tr>
-    <td align="center"><a href="https://github.com/SB2318"><img src="https://avatars.githubusercontent.com/u/87614560?v=4" width="120px;" alt=""/><br/><sub><b>Susmita Bhattacharya</b></sub></a></td>
-    <td align="center"><a href="https://github.com/suhanipaliwal"><img src="https://avatars.githubusercontent.com/u/161575955?v=4" width="120px;" alt=""/><br/><sub><b>Suhani Singh Paliwal</b></sub></a></td>
-    <td align="center"><a href="https://github.com/SharmaNishchay"><img src="https://avatars.githubusercontent.com/u/146124877?v=4" width="120px;" alt=""/><br/><sub><b>SharmaNischay</b></sub></a></td>
-    <td align="center"><a href="https://github.com/officeneerajsaini"><img src="https://avatars.githubusercontent.com/u/118799941?v=4" width="120px;" alt=""/><br/><sub><b>Neeraj Saini</b></sub></a></td>
-     <td align="center"><a href="https://github.com/jaickeyminj"><img src="https://avatars.githubusercontent.com/u/95216865?v=4" width="120px;" alt=""/><br/><sub><b>Jaickey Joy Minj</b></sub></a></td>  
-     <td align="center"><a href="https://github.com/Asymtode712"><img src="https://avatars.githubusercontent.com/u/115717746?v=4" width="120px;" alt=""/><br/><sub><b>Siddheya Kulkarni</b></sub></a></td> 
- </tr>
-   
-   <tr>
-    <td align="center"><a href="https://github.com/PradnyaGaitonde"><img src="https://avatars.githubusercontent.com/u/116059908?v=4" width="120px;" alt=""/><br/><sub><b>Pradnya Gaitonde</b></sub></a></td>
-    <td align="center"><a href="https://github.com/sanmarg"><img src="https://avatars.githubusercontent.com/u/50082154?v=4" width="120px;" alt=""/><br/><sub><b>Sanmarg Sandeep Paranjpe</b></sub></a></td>
-    <td align="center"><a href="https://github.com/adrikaDwivedi"><img src="https://avatars.githubusercontent.com/u/89826992?v=4" width="120px;" alt=""/><br/><sub><b>AdrikaDwivedi</b></sub></a></td>
-    <td align="center"><a href="https://github.com/Arpcoder"><img src="https://avatars.githubusercontent.com/u/100352419?v=4" width="120px;" alt=""/><br/><sub><b>Arpna</b></sub></a></td>
-     <td align="center"><a href="https://github.com/alishasingh06"><img src="https://avatars.githubusercontent.com/u/114938485?v=4" width="120px;" alt=""/><br/><sub><b>Alisha Singh</b></sub></a></td>  
-     <td align="center"><a href="https://github.com/Sibam-Paul"><img src="https://avatars.githubusercontent.com/u/158052549?v=4" width="120px;" alt=""/><br/><sub><b>Sibam Paul</b></sub></a></td> 
- </tr>
-
-<tr>
-    <td align="center"><a href="https://github.com/rushiii3"><img src="https://avatars.githubusercontent.com/u/105168088?v=4" width="120px;" alt=""/><br/><sub><b>HRUSHIKESH SHINDE</b></sub></a></td>
-    <td align="center"><a href="https://github.com/soham0005"><img src="https://avatars.githubusercontent.com/u/83421425?v=4" width="120px;" alt=""/><br/><sub><b>Soham Adhyapak</b></sub></a></td>
-    <td align="center"><a href="https://github.com/kylie-kiaying"><img src="https://avatars.githubusercontent.com/u/133581245?v=4" width="120px;" alt=""/><br/><sub><b>Kylie</b></sub></a></td>
-    <td align="center"><a href="https://github.com/Himanshu8850"><img src="https://avatars.githubusercontent.com/u/128601673?v=4" width="120px;" alt=""/><br/><sub><b>Himanshu Choudhary</b></sub></a></td>
-     <td align="center"><a href="https://github.com/Hemu21"><img src="https://avatars.githubusercontent.com/u/106808387?v=4" width="120px;" alt=""/><br/><sub><b>Hemanth kumar</b></sub></a></td>  
-     <td align="center"><a href="https://github.com/nishant0708"><img src="https://avatars.githubusercontent.com/u/101548649?v=4" width="120px;" alt=""/><br/><sub><b>Nishant Kaushal</b></sub></a></td> 
- </tr>
-
- <tr>
-    <td align="center"><a href="https://github.com/Kamaleshbala01"><img src="https://avatars.githubusercontent.com/u/139665559?v=4" width="120px;" alt=""/><br/><sub><b>Kamalesh Bala</b></sub></a></td>
-    <td align="center"><a href="https://github.com/ParthNakum21"><img src="https://avatars.githubusercontent.com/u/134558990?v=4" width="120px;" alt=""/><br/><sub><b>Parth Nakum</b></sub></a></td>
-     <td align="center"><a href="https://github.com/Abhigna-arsam"><img src="https://avatars.githubusercontent.com/u/125258286?v=4" width="120px;" alt=""/><br/><sub><b>Abhigna Arsam</b></sub></a></td>
-      <td align="center"><a href="https://github.com/MaryamMohamedYahya"><img src="https://avatars.githubusercontent.com/u/147263523?v=4" width="120px;" alt=""/><br/><sub><b>MaryamMohamedYahya</b></sub></a></td>
-    <td align="center"><a href="https://github.com/thevijayshankersharma"><img src="https://avatars.githubusercontent.com/u/109781385?v=4" width="120px;" alt=""/><br/><sub><b>Vijay Shanker Sharma</b></sub></a></td>
-    <td align="center"><a href="https://github.com/TonyStark-47"><img src="https://avatars.githubusercontent.com/u/73957207?v=4" width="120px;" alt=""/><br/><sub><b>Tony Stark</b></sub></a>
-        </td>
- </tr>
- 
-   </p>
- </table>
-
-
-
-</div>
