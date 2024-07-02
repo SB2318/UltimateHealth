@@ -114,8 +114,9 @@ const LoginScreen = ({navigation}) => {
            // Store User data after stringify
            // Navigate to home 
            console.log("Response", response)  
-           userData = JSON.stringify(response);
-           console.log("UserData" + userData)
+           if(response.error && response.error === 'Email not Verified, Please check your email'){
+            
+           }
            storeDataAndNavigateHome(userData);
         }).catch((error) => {
           console.log(error)
@@ -149,7 +150,7 @@ const LoginScreen = ({navigation}) => {
 
     
     await AsyncStorage.setItem("User", userData);
-    navigation.navigate("Home")
+    navigation.navigate("TabNavigation")
   }
 
 
