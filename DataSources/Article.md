@@ -9,7 +9,6 @@
 6. [Is Cancer Contagious?](#5-is-cancer-contagious)
 7. [Case Studies](#case-studies)
 8. [Conclusion](#conclusion)
-9. [Case Studies](#case-studies)
 10. [References](#references)
 
 ---
