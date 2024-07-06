@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {fp} from '../helper/Metric';
-import { PRIMARY_COLOR } from '../helper/Theme';
+
 
 const ArticleCard = ({item}) => {
   return (

@@ -18,7 +18,6 @@ import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import TabNavigation from './src/navigations/TabNavigation';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -28,21 +27,19 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  // const BarStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content';
+  const BarStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content';
   return (
     <SafeAreaProvider>
       <View style={{flex: 1, backgroundColor: backgroundStyle.backgroundColor}}>
         <StatusBar
-          barStyle={isDarkMode ?  'dark-content' : 'light-content' }
+          barStyle={isDarkMode ? 'light-content' : BarStyle}
           backgroundColor={
             isDarkMode ? backgroundStyle.backgroundColor : PRIMARY_COLOR
           }
         />
-        
         {
           <NavigationContainer>
-            {/* <StackNavigation /> */}
-            <TabNavigation />
+            <StackNavigation />
           </NavigationContainer>
         }
       </View>

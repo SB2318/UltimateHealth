@@ -1,6 +1,15 @@
 
 import { Alert ,BackHandler} from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from '@react-native-community/netinfo';
+
+export const checkInternetConnection = (callback: (isConnected: boolean) => void) => {
+  const unsubscribe = NetInfo.addEventListener((state) => {
+    callback(state.isConnected);
+  });
+
+  return unsubscribe;
+};
 
 
 /** BackButton Handler */

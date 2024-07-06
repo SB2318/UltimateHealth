@@ -33,9 +33,10 @@ app.use("/api", userRoutes);
 app.use("/api", specializationRoutes);
 app.use("/api",articleRoutes );
 
+
 // Start the server
 app.listen(PORT, () => {
-    console.log('Server is running on port 3025');
+    console.log('Server is running on port 4000',PORT);
 });
 
 // Export the app for testing or other purposes

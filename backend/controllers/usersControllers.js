@@ -59,9 +59,9 @@ module.exports.register = async (req, res) => {
     await newUnverifiedUser.save();
 
     // Send verification email
-    sendVerificationEmail(email, verificationToken);
+    // sendVerificationEmail(email, verificationToken);
 
-    res.status(201).json({ message: 'Registration successful. Please verify your email.' });
+    res.status(201).json({ message: 'Registration successful. Please verify your email.',token: verificationToken });
   } catch (error) {
     console.error('Error during registration:', error);
 
@@ -159,15 +159,23 @@ module.exports.login = async (req, res) => {
       return res.status(400).json({ error: 'Please provide email and password' });
     }
 
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
+  
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+
+      user = UnverifiedUser.findOne({email});
+      if(!user)
+        return res.status(404).json({ error: 'User not found' });
+      else
+      return res.status(403).json({ error: 'Email not verified. Please check your email.' });
+     
     }
 
     if (!user.isVerified) {
       return res.status(403).json({ error: 'Email not verified. Please check your email.' });
     }
+   
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -184,8 +192,11 @@ module.exports.login = async (req, res) => {
     res.cookie('token', token, { httpOnly: true, maxAge: 86400000 });
     res.status(200).json({ user, token, message: "Login Successful" });
   } catch (error) {
-    console.error('Error logging in:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ error: error.message }); // Validation errors
+    } else {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 };
 
