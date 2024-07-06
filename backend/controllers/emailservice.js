@@ -15,6 +15,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendVerificationEmail = (email, token) => {
+
     const url = `http://localhost:3025/api/user/verifyEmail?token=${token}`;
     const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -32,15 +33,29 @@ const sendVerificationEmail = (email, token) => {
     });
 };
 
-const Sendverifymail= (req, res) => {
+const Sendverifymail= async (req, res) => {
     const { email, token } = req.body;
 
-    if (!email || !token) {
+    if (!email) {
         return res.status(400).json({ message: 'Email and token are required' });
     }
 
-    sendVerificationEmail(email, token);
+    const unverifiedUser = await UnverifiedUser.findOne({email: email});
 
+    if(!unverifiedUser){
+        return res.status(400).json({ message: 'User not found' });
+    }
+
+    if(!token){
+
+        const verificationToken =  jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        sendVerificationEmail(email, verificationToken);
+    }
+    else{
+      
+     sendVerificationEmail(email, token);
+    }
+    
     res.status(200).json({ message: 'Verification email sent' });
 }
 
@@ -54,7 +69,7 @@ const verifyEmail=async (req, res) => {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const unverifiedUser = await UnverifiedUser.findOne({ email: decoded.email, verificationToken: token });
+        const unverifiedUser = await UnverifiedUser.findOne({ email: decoded.email});
 
         if (!unverifiedUser) {
             return res.status(400).json({ error: 'Invalid or expired token' });
