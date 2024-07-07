@@ -7,6 +7,8 @@ import SignUpScreenFirst from '../screens/auth/SignUpScreenFirst';
 import SignUpScreenSecond from '../screens/auth/SignUpScreenSecond'
 import OtpScreen from "../screens/auth/OtpScreen";
 import NewPasswordScreen from "../screens/auth/NewPasswordScreen";
+import EditorScreen from "../screens/article/EditorScreen";
+import PreviewScreen from "../screens/article/PreviewScreen";
 
 const Stack = createStackNavigator();
 
@@ -48,6 +50,18 @@ const StackNavigation = () => {
       <Stack.Screen
         name="NewPasswordScreen"
         component={NewPasswordScreen}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="EditorScreen"
+        component={EditorScreen}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="PreviewScreen"
+        component={PreviewScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

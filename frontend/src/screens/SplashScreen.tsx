@@ -12,7 +12,7 @@ const SplashScreen = ({navigation}) => {
   const checkLoginStatus = async () => {
     try {
       const user = await AsyncStorage.getItem('user');
-      if (user) {
+      if (!user) {
         navigation.navigate('TabNavigation'); // Navigate to HomePage if user is logged in
       } else {
         navigation.navigate('LoginScreen'); // Navigate to LoginPage if user is not logged in

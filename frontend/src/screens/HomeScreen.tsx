@@ -534,7 +534,7 @@ const HomeScreen = ({navigation}) => {
 
   const isDarkMode = useColorScheme() === 'dark';
   const color = isDarkMode ? 'white' : 'black';
-  const handleNoteIconClick = () => {};
+  const handleNoteIconClick = () => {navigation.navigate('EditorScreen')};
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: PRIMARY_COLOR}}>
