@@ -371,3 +371,9 @@ Public education plays a crucial role in addressing misconceptions about cancer,
 3. Mayo Clinic. (2023). Cancer Care and Support.
 4. World Health Organization. (2023). Cancer Fact Sheets.
 5. Genetics Home Reference. (2023). BRCA1 and BRCA2: Cancer Risk and Genetic Testing.
+
+<div align="center">
+  
+**> "You are braver than you believe, stronger than you seem, and loved more than you know. In this tough face, your courage shines brighter than any diagnosis. Cancer may be a part of your story, but it doesn't define your whole life.**
+
+</div>
