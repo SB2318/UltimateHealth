@@ -42,7 +42,7 @@
 
 ## Abstract
 
-Cancer profoundly impacts the lives of individuals diagnosed with the disease, posing challenges across physical, emotional, and social dimensions. This paper investigates the resilience of cancer patients in maintaining normalcy amidst their condition, exploring their daily adjustments, care needs, psychological impacts, genetic predispositions, and common misconceptions. Through this examination, the study aims to offer hope and support to cancer patients, emphasizing their shared human experiences and resilience in facing adversity.
+Cancer is more than just a physical illness; it deeply affects a person’s emotions and mental health. Imagine the constant worry and fear that come with fighting this disease every day. This article looks into the emotional struggles that cancer patients face. They often deal with anxiety, fear of the unknown, and feelings of sadness. Despite these challenges, they are still the same people at heart, hoping to enjoy the simple pleasures of life. They want to be treated with kindness and understanding, just like everyone else. Their stories show the strength of the human spirit and highlight the importance of empathy and compassion in their journey. This paper investigates the resilience of cancer patients in maintaining normalcy amidst their condition, exploring their daily adjustments, care needs, psychological impacts, genetic predispositions, and common misconceptions. Through this examination, the study aims to offer hope and support to cancer patients, emphasizing their shared human experiences and resilience in facing adversity.
 
 ---
 
