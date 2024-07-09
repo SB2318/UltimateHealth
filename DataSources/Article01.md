@@ -206,8 +206,7 @@ During the Cholera pandemic, efforts focused on improving sanitation practices a
 The Cholera pandemic prompted advancements in public health infrastructure, including improved water treatment systems and sanitation practices. Ongoing research into cholera epidemiology and vaccine development continues to shape global strategies for cholera prevention and control.
 
 <p align="center">
-  <img src="Assets\Number-of-observed-cholera-cases-by-States-in-India-2010-2015.png" alt="Cholera Cases in India" style="width: 70%; border: 2px solid white; >
-
+  <img src="Assets\Number-of-observed-cholera-cases-by-States-in-India-2010-2015.png" alt="Assets\Number-of-observed-cholera-cases-by-States-in-India-2010-2015.png" style="width: 70%; border: 2px solid white;">
 </p>
 
 <p align="center">
