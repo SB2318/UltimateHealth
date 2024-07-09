@@ -8,7 +8,8 @@ import {
 } from "react-native-pell-rich-editor";
 
 import Feather from 'react-native-vector-icons/Feather'
-import Entypo from 'react-native-vector-icons/Entypo'
+import Entypo from 'react-native-vector-icons/Entypo';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import { PRIMARY_COLOR } from "../../helper/Theme";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -58,9 +59,14 @@ const EditorScreen = ({navigation}) => {
 
      <TouchableOpacity
       onPress={()=>{
-        navigation.navigate('PreviewScreen', {
-          article:article
-        })
+
+        if(article.length > 20){
+
+          navigation.navigate('PreviewScreen', {
+            article:article
+          })
+        }
+      
       }}>
 
    <Text style={styles.preview}>Preview</Text>
@@ -74,7 +80,7 @@ const EditorScreen = ({navigation}) => {
         editor={RichText}
         disabled={false}
         iconTint={"white"}
-        selectedIconTint={"pink"}
+        selectedIconTint={"black"}
         disabledIconTint={"purple"}
         onPressAddImage={onPressAddImage}
         iconSize={30}
@@ -85,13 +91,16 @@ const EditorScreen = ({navigation}) => {
           actions.alignLeft,
           actions.alignCenter,
           actions. alignRight,
+          actions.undo,
+          actions.redo,
           actions.heading1,
           actions.heading2,
           actions.heading3,
           actions.heading4,
           actions.heading5,
           actions.heading6,
-          actions.blockquote
+          actions.blockquote,
+         
         ]}
         // map icons for self made actions
         iconMap={{
@@ -100,8 +109,16 @@ const EditorScreen = ({navigation}) => {
               <Feather name='align-left' color={tintColor} size={35}/>
               ),
 
-              [actions.blockquote]: ({ tintColor }) => (
-                <Entypo name='quote' color={tintColor} size={35}/>
+          [actions.blockquote]: ({ tintColor }) => (
+          <Entypo name='quote' color={tintColor} size={35}/>
+            ),
+
+            [actions.undo]: ({ tintColor }) => (
+              <IonIcon name='arrow-undo' color={tintColor} size={35}/>
+              ),
+
+              [actions.redo]: ({ tintColor }) => (
+                <IonIcon name='arrow-redo' color={tintColor} size={35}/>
                 ),
 
         [actions.alignCenter]: ({ tintColor }) => (
@@ -185,7 +202,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   
-    backgroundColor: "white",
+    backgroundColor: "#FFFFFF",
   },
   editor: {
     backgroundColor: "black",

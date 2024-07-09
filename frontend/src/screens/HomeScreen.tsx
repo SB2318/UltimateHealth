@@ -360,6 +360,7 @@ const HomeScreen = ({navigation}) => {
     });
     return (
       <Animated.View
+      
         {...headerPanResponder.panHandlers}
         style={[
           styles.header,
@@ -369,7 +370,7 @@ const HomeScreen = ({navigation}) => {
             paddingTop: insets.top + 10,
           },
         ]}>
-        <View>
+        <View  >
           <View
             style={{
               marginBottom: 6,
@@ -565,19 +566,20 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   headerTitle: {
-    fontSize: fp(10),
+    fontSize: fp(8),
     fontWeight: 'bold',
     color: 'white',
   },
   headerSubtitle: {
     fontSize: fp(3),
-    fontWeight: '600',
+    fontWeight: '400',
+    marginVertical:5,
     color: 'white',
   },
   search: {
     position: 'relative',
     backgroundColor: 'white',
-    borderRadius: 12,
+    borderRadius: 7,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
@@ -617,13 +619,14 @@ const styles = StyleSheet.create({
     top: 0,
     zIndex: 1,
     position: 'absolute',
+    marginTop:4,
     width: wp(100),
   },
   tabBar: {backgroundColor: PRIMARY_COLOR},
-  label: {color: 'white', fontWeight: 'bold', fontSize: fp(3.4)},
+  label: {color: 'white', fontWeight: 'bold', fontSize: fp(4)},
   tabStyle: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 4,
   },
   indicator: {backgroundColor: 'white'},
   //  add article icon button
