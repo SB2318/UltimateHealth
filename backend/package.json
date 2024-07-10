@@ -28,6 +28,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.4",
+    "mongoose-sequence": "^6.0.1",
     "nodemailer": "^6.9.13",
     "nodemon": "^3.1.0",
     "validator": "^13.12.0"
