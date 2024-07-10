@@ -1,6 +1,65 @@
 const ArticleTag = require('../models/ArticleModel');
+const Article = require('../models/Articles');
 
+// Create a new article
+module.exports.createArticle = async (req, res) => {
+  try {
+    const newArticle = new Article(req.body);
+    await newArticle.save();
+    res.status(201).json({ message: 'Article created successfully', newArticle });
+  } catch (error) {
+    res.status(500).json({ error: 'Error creating article', details: error.message });
+  }
+};
 
+// Get all articles
+module.exports.getAllArticles = async (req, res) => {
+  try {
+    const articles = await Article.find();
+    res.status(200).json({ articles });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching articles', details: error.message });
+  }
+};
+
+// Get an article by ID
+module.exports.getArticleById = async (req, res) => {
+  try {
+    const article = await Article.findById(req.params.id);
+    if (!article) {
+      return res.status(404).json({ message: 'Article not found' });
+    }
+    res.status(200).json({ article });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching article', details: error.message });
+  }
+};
+
+// Update an article by ID
+module.exports.updateArticle = async (req, res) => {
+  try {
+    const article = await Article.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!article) {
+      return res.status(404).json({ message: 'Article not found' });
+    }
+    res.status(200).json({ message: 'Article updated successfully', article });
+  } catch (error) {
+    res.status(500).json({ error: 'Error updating article', details: error.message });
+  }
+};
+
+// Delete an article by ID
+module.exports.deleteArticle = async (req, res) => {
+  try {
+    const article = await Article.findByIdAndDelete(req.params.id);
+    if (!article) {
+      return res.status(404).json({ message: 'Article not found' });
+    }
+    res.status(200).json({ message: 'Article deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting article', details: error.message });
+  }
+};
 
 
 /**** For Article Tags */
