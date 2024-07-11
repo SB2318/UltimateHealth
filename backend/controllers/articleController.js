@@ -60,6 +60,30 @@ module.exports.deleteArticle = async (req, res) => {
     res.status(500).json({ error: 'Error deleting article', details: error.message });
   }
 };
+module.exports.getArticleByTitle =   async (req, res) => {
+    try {
+      const article = await Article.findOne({ title: req.params.title });
+      if (!article) {
+        return res.status(404).json({ message: 'Article not found' });
+      }
+      res.status(200).json({ article });
+    } catch (error) {
+      res.status(500).json({ error: 'Error fetching article', details: error.message });
+    }
+  };
+  module.exports.getArticleByName =   async (req, res) => {
+      try {
+        const article = await Article.findOne({ name: req.params.name });
+        if (!article) {
+          return res.status(404).json({ message: 'Article not found' });
+        }
+        res.status(200).json({ article });
+      } catch (error) {
+        res.status(500).json({ error: 'Error fetching article', details: error.message });
+      }
+    }
+  
+
 
 
 /**** For Article Tags */
