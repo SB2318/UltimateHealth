@@ -24,17 +24,15 @@
 
 ## Abstract
 
-This article explores the causes, symptoms, vaccines, and India's response to epidemics since the 1900s. It examines significant outbreaks such as the Spanish Flu, cholera pandemics, and recent events like SARS and COVID-19. The discussion highlights India's healthcare challenges, the impact on society, and the evolution of public health strategies. By analyzing historical and recent epidemics, this article provides insights into how India has navigated and responded to these health crises over the decades.
-
-This abstract encapsulates the focus areas you mentioned: causes, symptoms, vaccines, and India's responses to epidemics, from historical to contemporary contexts.
+The causes, symptoms, vaccinations, and India's response to epidemics since the 1900s are all covered in detail in this article. It discusses major outbreaks like the Spanish Flu, pandemics of cholera, and more contemporary occurrences like SARS and COVID-19. It draws attention to India's healthcare issues, societal ramifications, and the development of public health tactics by analyzing these occurrences. The essay offers insights into how India has dealt with major health crises over the years through an examination of historical and contemporary outbreaks.
 
 ## What is an Epidemic?
 
-An epidemic is defined as the occurrence of cases of a particular disease in a population, geographic area, or community at a rate that is clearly higher than expected. Unlike endemic diseases, which are consistently present in a population at predictable levels, epidemics signify a sudden surge in cases.
+When a certain disease appears in a population, region, or community at a rate that is noticeably higher than normal, it is called an epidemic. Unlike endemic diseases, which are consistently present in a community at known levels, epidemics refer to a rapid surge in cases.
 
-According to the World Health Organization (WHO), an epidemic is the occurrence in a community or region of cases of illness, specific health-related behavior, or other health-related events that are clearly in excess of normal expectancy. The community or region and the period in which the cases occur are specified precisely. The number of cases indicating the presence of an epidemic varies according to the agent, size, and type of population exposed, previous experience or lack of exposure to the disease, and time and place of occurrence.
+The World Health Organization (WHO) defines an epidemic as the occurrence of disease cases, certain health-related behaviors, or other health-related events that are manifestly above normal expectations in a community or region. The cases are specifically defined as well as the community or region and time frame in which they occur. Depending on the agent, the size and nature of the exposed population, prior exposure or lack thereof, and other factors, the number of instances indicating the presence of an epidemic varies.
 
-Epidemics can arise from a variety of infectious agents, including bacteria, viruses, and parasites. They may also result from non-infectious causes such as environmental factors or a sudden increase in the presence of a particular toxin. The critical aspects of an epidemic include:
+The reasons that can cause epidermic can be bacteria, viruses and parasites. They could also be the consequence of non-infectious reasons such changes in the environment or an abrupt rise in a specific toxin's concentration. Among the crucial elements of an epidemic are:
 
 1. **Rapid Spread**: Epidemics involve a swift and often uncontrollable spread of disease, affecting a large number of people within a short period.
 2. **Geographic Concentration**: The spread is typically localized to a specific area or community, though it may expand if not contained.
@@ -128,42 +126,41 @@ Given the scale and impact of these epidemics, it has often been difficult for I
 
 ### Origin and Symptoms
 
-Encephalitis Lethargica, also known as lethargic encephalitis, was an acute contagious disease that spread globally between 1915 and 1926. The exact origin of the disease remains unclear, but it is believed to have emerged in Europe during or shortly after World War I. The disease primarily affected the central nervous system, leading to symptoms such as increasing languor, apathy, drowsiness, and profound lethargy. Some severe cases progressed to more severe symptoms like coma and death. The virus responsible for the disease spread through nasal and oral secretions.
+Encephalitis Lethargica, also known as lethargic encephalitis, was a mysterious disease that spread globally between 1915 and 1926. Its exact origin remains unknown, but it is thought to have emerged in Europe during or shortly after World War I. The disease affected the central nervous system, leading to symptoms such as extreme tiredness, apathy, drowsiness, and profound lethargy. Severe cases could progress to coma and even death. The virus spread through nasal and oral secretions.
 
 <p align="center">
-  <img src="Assets\Economo1918h.png" alt="Encephalitis Lethargica" style="width: 30%; border: 2px solid white;">
+  <img src="Assets/Economo1918h.png" alt="Encephalitis Lethargica" style="width: 30%; border: 2px solid white;">
 </p>
 
 <p align="center">
   Encephalitis Lethargica
 </p>
 
-
 ### Effects on Society
 
-Encephalitis Lethargica had a significant impact on society during its epidemic phase in Europe, although it remained sporadic in India. In Europe, the disease caused widespread fear and panic, as its mysterious origin and rapid spread overwhelmed healthcare systems already strained by the aftermath of World War I. Patients often suffered long-term neurological consequences, leading to disabilities and cognitive impairments. The social and economic disruptions were profound, with families and communities struggling to cope with the long-term care needs of affected individuals.
+In Europe, Encephalitis Lethargica caused widespread fear and overwhelmed healthcare systems already strained by World War I. Patients often faced long-term neurological consequences, leading to disabilities and cognitive impairments. Families and communities struggled to cope with the long-term care needs of affected individuals.
 
 <p align="center">
-  <img src="Assets\Number-of-reported-cases-and-deaths-due-to-acute-encephalitis-syndrome-AES-and-Japanese.png" alt="Encephalitis Lethargica" style="width: 50%; border: 2px solid white;">
+  <img src="Assets/Number-of-reported-cases-and-deaths-due-to-acute-encephalitis-syndrome-AES-and-Japanese.png" alt="Encephalitis Lethargica" style="width: 50%; border: 2px solid white;">
 </p>
 
 ### Development of Medicine to Combat It
 
-During the epidemic, medical researchers worked fervently to understand and combat Encephalitis Lethargica. However, due to its sudden disappearance by 1926, the specific causative agent and effective treatments remained elusive. Research efforts were hindered by the limited understanding of virology and immunology at the time. Post-epidemic studies continued sporadically, but no conclusive breakthroughs were made in developing vaccines or effective treatments.
+During the epidemic, researchers worked hard to understand and combat Encephalitis Lethargica. However, due to its sudden disappearance by 1926, the exact cause and effective treatments remained unknown. Research efforts were limited by the understanding of virology and immunology at the time. Despite sporadic studies post-epidemic, no definitive breakthroughs were made in developing vaccines or effective treatments.
 
 ### Long-Term Health Effects Observed in Subsequent Pandemics
 
-While Encephalitis Lethargica itself did not re-emerge as a global epidemic, its impact on neurological research and understanding of post-viral syndromes persisted. The epidemic raised awareness of the potential for long-term neurological sequelae following viral infections. Lessons learned from studying Encephalitis Lethargica contributed to advancements in neurology and the study of autoimmune diseases affecting the nervous system.
+While Encephalitis Lethargica did not re-emerge as a global epidemic, it raised awareness of potential long-term neurological effects following viral infections. Lessons from studying this disease contributed to advancements in neurology and the understanding of autoimmune diseases affecting the nervous system.
 
 ### Precautions
 
-Precautions against similar diseases typically involve early detection through surveillance systems, rapid response mechanisms for suspected outbreaks, and maintaining high standards of hygiene and sanitation to prevent the spread of viral infections through respiratory or oral routes. Vaccination development, particularly for related viruses, remains a critical area of research to prevent future outbreaks with similar neurological impacts.
+Precautions against similar diseases involve early detection through surveillance systems, rapid response mechanisms for suspected outbreaks, and maintaining high standards of hygiene and sanitation. Vaccination development for related viruses remains crucial to prevent future outbreaks with similar neurological impacts.
 
 # Spanish Flu (1918-1920)
 
 ### Origin and Symptoms
 
-The Spanish Flu pandemic, caused by the H1N1 influenza A virus, spread globally between 1918 and 1920, coinciding with the aftermath of World War I. In India, the virus was introduced primarily by returning Indian soldiers who had served in the war. The disease manifested with symptoms such as high fever, chills, severe body aches, respiratory distress, and in severe cases, pneumonia and death. The rapid spread was facilitated by the movement of troops and civilians during the war.
+The Spanish Flu pandemic, caused by the H1N1 influenza A virus, spread globally between 1918 and 1920, coinciding with the aftermath of World War I. In India, the virus was introduced primarily by returning soldiers who had served in the war. The disease manifested with symptoms such as high fever, chills, severe body aches, respiratory distress, and in severe cases, pneumonia and death. The rapid spread was facilitated by the movement of troops and civilians during the war.
 
 ### Effects on Society
 
@@ -178,7 +175,7 @@ During the Spanish Flu pandemic, medical interventions were limited by the under
 The Spanish Flu pandemic left a lasting impact on global public health strategies. It underscored the importance of international cooperation in disease surveillance, early detection, and rapid response to emerging infectious diseases. Subsequent influenza pandemics, such as the Asian Flu in 1957 and the Hong Kong Flu in 1968, prompted advancements in influenza vaccine development and pandemic preparedness strategies.
 
 <p align="center">
-  <img src="Assets\hyiatkmsnv-1594031407.png" alt="Spanish Flu Impact in India" style="width: 50%; border: 2px solid white;">
+  <img src="Assets/hyiatkmsnv-1594031407.png" alt="Spanish Flu Impact in India" style="width: 50%; border: 2px solid white;">
 </p>
 
 The image above illustrates the estimated number of cases and deaths attributed to the Spanish Flu in India during the pandemic period, highlighting the peak mortality rates and the subsequent decline as public health measures were implemented.
@@ -206,7 +203,7 @@ During the Cholera pandemic, efforts focused on improving sanitation practices a
 The Cholera pandemic prompted advancements in public health infrastructure, including improved water treatment systems and sanitation practices. Ongoing research into cholera epidemiology and vaccine development continues to shape global strategies for cholera prevention and control.
 
 <p align="center">
-  <img src="Assets\Number-of-observed-cholera-cases-by-States-in-India-2010-2015.png" alt="Assets\Number-of-observed-cholera-cases-by-States-in-India-2010-2015.png" style="width: 70%; border: 2px solid white;">
+  <img src="Assets/Number-of-observed-cholera-cases-by-States-in-India-2010-2015.png" alt="Number-of-observed-cholera-cases-by-States-in-India-2010-2015" style="width: 70%; border: 2px solid white;">
 </p>
 
 <p align="center">
@@ -214,7 +211,7 @@ The Cholera pandemic prompted advancements in public health infrastructure, incl
 </p>
 
 <p align="center">
-  <img src="Assets\1-s2.0-S0264410X19307947-gr1.jpg">
+  <img src="Assets/1-s2.0-S0264410X19307947-gr1.jpg">
   <br>
   <em>Figure 2: Cholera cases reports.</em>
 </p>
@@ -224,17 +221,11 @@ The Cholera pandemic prompted advancements in public health infrastructure, incl
 Precautions against cholera include ensuring access to safe drinking water, practicing good hygiene, and promoting vaccination in endemic areas. Public health authorities emphasize early detection and rapid response to suspected cholera outbreaks to prevent widespread transmission and reduce mortality.
 
 - **Access to Safe Drinking Water:** Ensure access to clean and safe drinking water by improving water treatment and distribution systems.
-  
 - **Hygiene Practices:** Promote good hygiene practices such as handwashing with soap and water, especially after using the toilet and before eating or preparing food.
-
 - **Sanitation:** Improve sanitation facilities, including proper disposal of human waste and maintenance of clean and functional toilets.
-
 - **Vaccination:** Encourage vaccination with the Oral Cholera Vaccine (OCV) among high-risk populations, travelers to cholera-endemic areas, and healthcare workers.
-
 - **Surveillance and Early Detection:** Establish robust disease surveillance systems to detect cholera outbreaks early, allowing for prompt public health responses.
-
 - **Community Education:** Educate communities about the causes, symptoms, and prevention of cholera, emphasizing the importance of early treatment and seeking healthcare promptly.
-
 
 # Flu (1968-1969)
 
