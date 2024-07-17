@@ -360,7 +360,6 @@ const HomeScreen = ({navigation}) => {
     });
     return (
       <Animated.View
-      
         {...headerPanResponder.panHandlers}
         style={[
           styles.header,
@@ -370,7 +369,7 @@ const HomeScreen = ({navigation}) => {
             paddingTop: insets.top + 10,
           },
         ]}>
-        <View  >
+        <View>
           <View
             style={{
               marginBottom: 6,
@@ -535,7 +534,9 @@ const HomeScreen = ({navigation}) => {
 
   const isDarkMode = useColorScheme() === 'dark';
   const color = isDarkMode ? 'white' : 'black';
-  const handleNoteIconClick = () => {navigation.navigate('EditorScreen')};
+  const handleNoteIconClick = () => {
+    navigation.navigate('EditorScreen');
+  };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: PRIMARY_COLOR}}>
@@ -573,7 +574,7 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     fontSize: fp(3),
     fontWeight: '400',
-    marginVertical:5,
+    marginVertical: 5,
     color: 'white',
   },
   search: {
@@ -619,7 +620,7 @@ const styles = StyleSheet.create({
     top: 0,
     zIndex: 1,
     position: 'absolute',
-    marginTop:4,
+    marginTop: 4,
     width: wp(100),
   },
   tabBar: {backgroundColor: PRIMARY_COLOR},

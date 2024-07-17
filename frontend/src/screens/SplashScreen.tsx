@@ -1,14 +1,10 @@
 import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ON_PRIMARY_COLOR,PRIMARY_COLOR } from '../helper/Theme';
-import { handleBackButton } from '../helper/Utils';
-
-
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import {handleBackButton} from '../helper/Utils';
 
 const SplashScreen = ({navigation}) => {
-
-  
   const checkLoginStatus = async () => {
     try {
       const user = await AsyncStorage.getItem('user');
@@ -24,17 +20,13 @@ const SplashScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-
-    
     const timer = setTimeout(() => {
       checkLoginStatus();
     }, 3000);
 
     return () => {
-   
       clearTimeout(timer);
- 
-    }
+    };
   }, [navigation]);
 
   return (
