@@ -18,6 +18,8 @@ router.get('/articles/:id',authenticateToken, articleController.getArticleById);
 router.put('/articles/:id',authenticateToken, articleController.updateArticle);// Update an article by ID
 router.delete('/articles/:id',authenticateToken, articleController.deleteArticle);// Delete an article by ID
 router.get('/articles/:title',authenticateToken, articleController.getArticleByTitle);// get article by title
-router.get('/articles/:name',authenticateToken, articleController.getArticleByName);// / get an article by name
+router.get('/articles/:name',authenticateToken, articleController.getArticleByName);// / get an article by name(Author)
+router.get('/articles/:tag',authenticateToken, articleController.getArticlesByTags);// / get an article by tag
+router.get('/articles/:summary',authenticateToken, articleController.getArticlesBySummary);// / get an article by Summary
 
 module.exports = router;
