@@ -1,37 +1,12 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  useColorScheme,
-  BackHandler,
-  Alert,
-  TextInput,
-  Animated,
-  Dimensions,
-  PanResponder,
-  Platform,
-  StatusBar,
-} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import {SafeAreaView, StyleSheet, View, BackHandler, Alert} from 'react-native';
+import React, {useEffect} from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import AddIcon from '../components/AddIcon';
-import {fp, hp, wp} from '../helper/Metric';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import {TabView, TabBar} from 'react-native-tab-view';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import ArticleCard from '../components/ArticleCard';
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
-const TabBarHeight = 48;
-const HeaderHeight = 110;
-const SafeStatusBar = Platform.select({
-  ios: 44,
-  android: StatusBar.currentHeight,
-});
+import HomeScreenHeader from '../components/HomeScreenHeader';
+
 const articles = [
   {
     id: '1',
@@ -163,124 +138,7 @@ const articles = [
 ];
 
 const HomeScreen = ({navigation}) => {
-  const insets = useSafeAreaInsets();
   const bottomBarHeight = useBottomTabBarHeight();
-  const [tabIndex, setIndex] = useState(0);
-  const [routes] = useState([
-    {key: 'All', title: 'All'},
-    {key: 'Popular', title: 'Popular'},
-    {key: 'Health', title: 'Health'},
-    {key: 'Diseases', title: 'Diseases'},
-    {key: 'Stories', title: 'Stories'},
-  ]);
-  const [canScroll, setCanScroll] = useState(true);
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const headerScrollY = useRef(new Animated.Value(0)).current;
-  const listRefArr = useRef([]);
-  const listOffset = useRef({});
-  const isListGliding = useRef(false);
-  const headerScrollStart = useRef(0);
-  const _tabIndex = useRef(0);
-
-  /**
-   * PanResponder for header
-   */
-  const headerPanResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
-      onStartShouldSetPanResponder: (evt, gestureState) => {
-        headerScrollY.stopAnimation();
-        syncScrollOffset();
-        return false;
-      },
-
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        headerScrollY.stopAnimation();
-        return Math.abs(gestureState.dy) > 5;
-      },
-
-      onPanResponderRelease: (evt, gestureState) => {
-        syncScrollOffset();
-        if (Math.abs(gestureState.vy) < 0.2) {
-          return;
-        }
-        headerScrollY.setValue(scrollY._value);
-        Animated.decay(headerScrollY, {
-          velocity: -gestureState.vy,
-          useNativeDriver: true,
-        }).start(() => {
-          syncScrollOffset();
-        });
-      },
-      onPanResponderMove: (evt, gestureState) => {
-        listRefArr.current.forEach(item => {
-          if (item.key !== routes[_tabIndex.current].key) {
-            return;
-          }
-          if (item.value) {
-            item.value.scrollToOffset({
-              offset: -gestureState.dy + headerScrollStart.current,
-              animated: false,
-            });
-          }
-        });
-      },
-      onShouldBlockNativeResponder: () => true,
-      onPanResponderGrant: (evt, gestureState) => {
-        headerScrollStart.current = scrollY._value;
-      },
-    }),
-  ).current;
-
-  /** * PanResponder for list in tab scene */
-  const listPanResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
-      onStartShouldSetPanResponder: (evt, gestureState) => false,
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        headerScrollY.stopAnimation();
-        return false;
-      },
-      onShouldBlockNativeResponder: () => true,
-      onPanResponderGrant: (evt, gestureState) => {
-        headerScrollY.stopAnimation();
-      },
-    }),
-  ).current;
-
-  /**
-   * effect
-   */
-  useEffect(() => {
-    scrollY.addListener(({value}) => {
-      const curRoute = routes[tabIndex].key;
-      listOffset.current[curRoute] = value;
-    });
-
-    headerScrollY.addListener(({value}) => {
-      listRefArr.current.forEach(item => {
-        if (item.key !== routes[tabIndex].key) {
-          return;
-        }
-        if (value > HeaderHeight || value < 0) {
-          headerScrollY.stopAnimation();
-          syncScrollOffset();
-        }
-        if (item.value && value <= HeaderHeight) {
-          item.value.scrollToOffset({
-            offset: value,
-            animated: false,
-          });
-        }
-      });
-    });
-    return () => {
-      scrollY.removeAllListeners();
-      headerScrollY.removeAllListeners();
-    };
-  }, [routes, tabIndex]);
   useEffect(
     () =>
       navigation.addListener('beforeRemove', e => {
@@ -295,253 +153,118 @@ const HomeScreen = ({navigation}) => {
           {cancelable: true},
         );
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
-  /**
-   *  helper functions
-   */
-  const syncScrollOffset = () => {
-    const curRouteKey = routes[_tabIndex.current].key;
-
-    listRefArr.current.forEach(item => {
-      if (item.key !== curRouteKey) {
-        if (scrollY._value < HeaderHeight && scrollY._value >= 0) {
-          if (item.value) {
-            item.value.scrollToOffset({
-              offset: scrollY._value,
-              animated: false,
-            });
-            listOffset.current[item.key] = scrollY._value;
-          }
-        } else if (scrollY._value >= HeaderHeight) {
-          if (
-            listOffset.current[item.key] < HeaderHeight ||
-            listOffset.current[item.key] == null
-          ) {
-            if (item.value) {
-              item.value.scrollToOffset({
-                offset: HeaderHeight,
-                animated: false,
-              });
-              listOffset.current[item.key] = HeaderHeight;
-            }
-          }
-        }
-      }
-    });
-  };
-
-  const onMomentumScrollBegin = () => {
-    isListGliding.current = true;
-  };
-
-  const onMomentumScrollEnd = () => {
-    isListGliding.current = false;
-    syncScrollOffset();
-  };
-
-  const onScrollEndDrag = () => {
-    syncScrollOffset();
-  };
-
   // header
   const renderHeader = () => {
-    // Interpolating the scrollY value to dynamically adjust the y position
-    const y = scrollY.interpolate({
-      inputRange: [0, HeaderHeight],
-      outputRange: [0, -HeaderHeight],
-      extrapolate: 'clamp',
-    });
-    // Interpolating the scrollY value to dynamically adjust the opacity
-    const opacity = scrollY.interpolate({
-      inputRange: [0, HeaderHeight], // Change 120 to your desired threshold
-      outputRange: [1, 0],
-      extrapolate: 'clamp',
-    });
-    return (
-      <Animated.View
-        {...headerPanResponder.panHandlers}
-        style={[
-          styles.header,
-          {
-            transform: [{translateY: y}],
-            opacity: opacity,
-            paddingTop: insets.top + 10,
-          },
-        ]}>
-        <View>
-          <View
-            style={{
-              marginBottom: 6,
-            }}>
-            {/* header title */}
-            <Text style={styles.headerTitle}>Discover</Text>
-            {/* header subtitle */}
-            <Text style={styles.headerSubtitle}>
-              Retrieve the health data, Provide your valuable insights
-            </Text>
-          </View>
-
-          <View style={styles.search}>
-            <View style={styles.searchIcon}>
-              <FeatherIcon color="#778599" name="search" size={17} />
-            </View>
-            <TextInput
-              autoCapitalize="words"
-              autoComplete="name"
-              placeholder="Search articles..."
-              placeholderTextColor="#778599"
-              style={styles.searchControl}
-            />
-            <TouchableOpacity style={styles.filterIcon}>
-              <SimpleLineIcons color="#000" name="equalizer" size={17} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Animated.View>
-    );
-  };
-  // item card
-  const rednerTabItem = ({item, index}) => {
-    return <ArticleCard item={item} />;
-  };
-  // scene
-  const renderScene = ({route}) => {
-    const focused = route.key === routes[tabIndex].key;
-    let data;
-    let renderItem;
-    switch (route.key) {
-      case 'All':
-        data = articles;
-        renderItem = rednerTabItem;
-        break;
-      case 'Popular':
-        data = articles.filter(article => article.category.includes('Popular'));
-        renderItem = rednerTabItem;
-        break;
-      case 'Health':
-        data = articles.filter(article => article.category.includes('Health'));
-        renderItem = rednerTabItem;
-        break;
-      case 'Diseases':
-        data = articles.filter(article =>
-          article.category.includes('Diseases'),
-        );
-        renderItem = rednerTabItem;
-        break;
-      case 'Stories':
-        data = articles.filter(article => article.category.includes('Stories'));
-        renderItem = rednerTabItem;
-        break;
-      default:
-        return null;
-    }
-    return (
-      <Animated.FlatList
-        scrollEnabled={canScroll}
-        {...listPanResponder.panHandlers}
-        numColumns={1}
-        ref={ref => {
-          if (ref) {
-            const found = listRefArr.current.find(e => e.key === route.key);
-            if (!found) {
-              listRefArr.current.push({
-                key: route.key,
-                value: ref,
-              });
-            }
-          }
-        }}
-        scrollEventThrottle={16}
-        onScroll={
-          focused
-            ? Animated.event(
-                [
-                  {
-                    nativeEvent: {contentOffset: {y: scrollY}},
-                  },
-                ],
-                {useNativeDriver: true},
-              )
-            : null
-        }
-        onMomentumScrollBegin={onMomentumScrollBegin}
-        onScrollEndDrag={onScrollEndDrag}
-        onMomentumScrollEnd={onMomentumScrollEnd}
-        ListHeaderComponent={() => <View style={{height: 10}} />}
-        contentContainerStyle={{
-          paddingTop: HeaderHeight + TabBarHeight,
-          paddingHorizontal: 10,
-          minHeight: windowHeight - SafeStatusBar + HeaderHeight,
-          paddingBottom: bottomBarHeight + 15,
-        }}
-        showsHorizontalScrollIndicator={false}
-        data={data}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item, index) => index.toString()}
-      />
-    );
-  };
-  // tab view tabbar
-  const renderTabBar = props => {
-    // Interpolating the scrollY value to dynamically adjust the y position
-    const y = scrollY.interpolate({
-      inputRange: [0, HeaderHeight],
-      outputRange: [HeaderHeight, 0],
-      extrapolateRight: 'clamp',
-    });
-    return (
-      <Animated.View
-        style={[
-          styles.tabBarConatiner,
-          {
-            transform: [{translateY: y}],
-          },
-        ]}>
-        <TabBar
-          style={styles.tabBar}
-          tabStyle={styles.tabStyle}
-          indicatorStyle={styles.indicator}
-          {...props}
-          renderLabel={({focused, route}) => {
-            return <Text style={styles.label}>{route.title}</Text>;
-          }}
-        />
-      </Animated.View>
-    );
-  };
-  // tab view to render tabs
-  const renderTabView = () => {
-    return (
-      <TabView
-        onSwipeStart={() => setCanScroll(false)}
-        onSwipeEnd={() => setCanScroll(true)}
-        onIndexChange={id => {
-          _tabIndex.current = id;
-          setIndex(id);
-        }}
-        navigationState={{index: tabIndex, routes}}
-        renderScene={renderScene}
-        renderTabBar={renderTabBar}
-        initialLayout={{
-          height: 0,
-          width: windowWidth,
-        }}
-      />
-    );
+    return <HomeScreenHeader />;
   };
 
-  const isDarkMode = useColorScheme() === 'dark';
-  const color = isDarkMode ? 'white' : 'black';
   const handleNoteIconClick = () => {
     navigation.navigate('EditorScreen');
   };
 
+  const renderTabBar = props => {
+    return (
+      <MaterialTabBar
+        {...props}
+        scrollEnabled={true}
+        indicatorStyle={styles.indicatorStyle}
+        style={styles.tabBarStyle}
+        activeColor={'white'}
+        inactiveColor="white"
+        labelStyle={styles.labelStyle}
+        contentContainerStyle={styles.contentContainerStyle}
+      />
+    );
+  };
+
+  const renderItem = React.useCallback(({item}) => {
+    return <ArticleCard item={item} />;
+  }, []);
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: PRIMARY_COLOR}}>
-      {renderHeader()}
-      {renderTabView()}
+    <SafeAreaView style={styles.container}>
+      <Tabs.Container
+        renderHeader={renderHeader}
+        renderTabBar={renderTabBar}
+        containerStyle={styles.tabsContainer}>
+        {/* Tab 1 */}
+        <Tabs.Tab name="All">
+          <Tabs.FlatList
+            data={articles}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.flatListContentContainer,
+              {paddingBottom: bottomBarHeight + 15},
+            ]}
+            keyExtractor={item => item?.id}
+          />
+        </Tabs.Tab>
+        {/* Tab 2 */}
+        <Tabs.Tab name="Popular">
+          <Tabs.FlatList
+            data={articles.filter(article =>
+              article.category.includes('Popular'),
+            )}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.flatListContentContainer,
+              {paddingBottom: bottomBarHeight + 15},
+            ]}
+            keyExtractor={item => item?.id}
+          />
+        </Tabs.Tab>
+        {/* Tab 3 */}
+        <Tabs.Tab name="Health">
+          <Tabs.FlatList
+            data={articles.filter(article =>
+              article.category.includes('Health'),
+            )}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.flatListContentContainer,
+              {paddingBottom: bottomBarHeight + 15},
+            ]}
+            keyExtractor={item => item?.id}
+          />
+        </Tabs.Tab>
+        {/* Tab 4 */}
+        <Tabs.Tab name="Diseases">
+          <Tabs.FlatList
+            data={articles.filter(article =>
+              article.category.includes('Diseases'),
+            )}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.flatListContentContainer,
+              {paddingBottom: bottomBarHeight + 15},
+            ]}
+            keyExtractor={item => item?.id}
+          />
+        </Tabs.Tab>
+        {/* Tab 5 */}
+        <Tabs.Tab name="Stories">
+          <Tabs.FlatList
+            data={articles.filter(article =>
+              article.category.includes('Stories'),
+            )}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.flatListContentContainer,
+              {paddingBottom: bottomBarHeight + 15},
+            ]}
+            keyExtractor={item => item?.id}
+          />
+        </Tabs.Tab>
+      </Tabs.Container>
+
       <View style={styles.homePlusIconview}>
         <AddIcon callback={handleNoteIconClick} />
       </View>
@@ -552,84 +275,44 @@ const HomeScreen = ({navigation}) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  // header
-  header: {
-    top: 0,
-    height: HeaderHeight,
-    width: '100%',
+  container: {
     flex: 1,
     backgroundColor: PRIMARY_COLOR,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    paddingHorizontal: 16,
-    paddingBottom: 10,
-    zIndex: 2,
   },
-  headerTitle: {
-    fontSize: fp(8),
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  headerSubtitle: {
-    fontSize: fp(3),
-    fontWeight: '400',
-    marginVertical: 5,
-    color: 'white',
-  },
-  search: {
-    position: 'relative',
+  indicatorStyle: {
     backgroundColor: 'white',
-    borderRadius: 7,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
   },
-  searchIcon: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    width: wp(9),
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 2,
-  },
-  filterIcon: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    width: wp(9),
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 2,
-  },
-  searchControl: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    paddingLeft: wp(9),
-    paddingRight: wp(9),
+  tabBarStyle: {
+    backgroundColor: PRIMARY_COLOR,
     width: '100%',
-    fontSize: fp(4),
-    fontWeight: '500',
+  },
+  labelStyle: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    textTransform: 'capitalize',
+  },
+  contentContainerStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowOpacity: 0,
+    shadowOffset: {width: 0, height: 0},
+    shadowColor: 'white',
   },
 
-  // tab
-  tabBarConatiner: {
-    top: 0,
-    zIndex: 1,
-    position: 'absolute',
-    marginTop: 4,
-    width: wp(100),
+  tabsContainer: {
+    backgroundColor: PRIMARY_COLOR,
+    overflow: 'hidden',
   },
-  tabBar: {backgroundColor: PRIMARY_COLOR},
-  label: {color: 'white', fontWeight: 'bold', fontSize: fp(4)},
-  tabStyle: {
-    flexDirection: 'row',
-    gap: 4,
+  scrollViewContentContainer: {
+    paddingHorizontal: 16,
+    marginTop: 16,
   },
-  indicator: {backgroundColor: 'white'},
+  flatListContentContainer: {
+    paddingHorizontal: 16,
+    marginTop: 10,
+  },
   //  add article icon button
   homePlusIconview: {
     bottom: 100,

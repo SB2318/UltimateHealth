@@ -244,6 +244,7 @@ const styles = StyleSheet.create({
   },
   tabsContainer: {
     backgroundColor: 'white',
+    overflow: 'hidden',
   },
   scrollViewContentContainer: {
     paddingHorizontal: 16,
