@@ -6,9 +6,7 @@ import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import ArticleCard from '../components/ArticleCard';
 import HomeScreenHeader from '../components/HomeScreenHeader';
-import { articles } from '../helper/Utils';
-
-
+import {articles} from '../helper/Utils';
 
 const HomeScreen = ({navigation}) => {
   const bottomBarHeight = useBottomTabBarHeight();
@@ -54,7 +52,8 @@ const HomeScreen = ({navigation}) => {
   };
 
   const renderItem = React.useCallback(({item}) => {
-    return <ArticleCard item={item} />;
+    return <ArticleCard item={item} navigation={navigation} />;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
