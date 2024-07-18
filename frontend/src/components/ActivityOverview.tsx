@@ -12,7 +12,7 @@ const ActivityOverview = () => {
         source={{
           uri: 'https://i.ibb.co/T2WNVJZ/Whats-App-Image-2024-07-14-at-12-46-02-AM-1.jpg',
         }}
-        style={{width: '100%', height: 600}}
+        style={{width: '95%', height: 600, resizeMode:"contain"}}
       />
     </View>
   );

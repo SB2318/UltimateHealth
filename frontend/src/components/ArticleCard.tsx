@@ -59,8 +59,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#E6E6E6',
     flexDirection: 'row',
     width: '100%',
-    marginBottom: 10,
+    marginVertical: 10,
     overflow: 'hidden',
+    elevation:8,
+    borderRadius:8
   },
   image: {
     flex: 0.5,

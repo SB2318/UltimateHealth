@@ -194,7 +194,7 @@ const ProfileScreen = ({navigation}) => {
           renderTabBar={renderTabBar}
           containerStyle={styles.tabsContainer}>
           {/* Tab 1 */}
-          <Tabs.Tab name="Activity Overview">
+          <Tabs.Tab name="My Insights">
             <Tabs.ScrollView
               automaticallyAdjustContentInsets={true}
               contentInsetAdjustmentBehavior="always"
@@ -260,8 +260,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   labelStyle: {
-    fontWeight: 'bold',
-    fontSize: 13,
+    fontWeight: '600',
+    fontSize: 14,
     textTransform: 'capitalize',
   },
   contentContainerStyle: {
