@@ -18,7 +18,6 @@ const TabNavigation = () => {
         component={HomeScreen}
         options={{
           headerShown: false,
-
           headerStyle: {
             backgroundColor: Colors.darker,
           },
