@@ -7,7 +7,7 @@ import ArticleCard from '../components/ArticleCard';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ProfileHeader from '../components/ProfileHeader';
-import { articles } from '../helper/Utils';
+import {articles} from '../helper/Utils';
 
 // Sample article data
 
@@ -36,7 +36,7 @@ const ProfileScreen = ({navigation}) => {
   // Memoized function to render each article item
 
   const renderItem = React.useCallback(({item}) => {
-    return <ArticleCard item={item} />;
+    return <ArticleCard item={item} navigation={navigation} />;
   }, []);
   // Function to render the header
 

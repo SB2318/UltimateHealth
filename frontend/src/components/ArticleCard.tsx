@@ -2,31 +2,27 @@ import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {fp} from '../helper/Metric';
 
-
-const ArticleCard = ({item}) => {
+const ArticleCard = ({item, navigation}) => {
   return (
     <TouchableOpacity
       onPress={() => {
         // handle onPress
+        navigation.navigate('ArticleScreen', {
+          id: item.id,
+        });
       }}>
       <View style={styles.cardContainer}>
         {/* image */}
-        <Image
-          source={{ uri: item?.imageUtils }}
-          style={styles.image}
-        />
+        <Image source={{uri: item?.imageUtils}} style={styles.image} />
         <View style={styles.textContainer}>
           {/* title */}
-          <Text style={styles.title}>
-            {item?.title}
-          </Text>
+          <Text style={styles.title}>{item?.title}</Text>
           {/* description */}
-          <Text style={styles.description}>
-            {item?.description}
-          </Text>
+          <Text style={styles.description}>{item?.description}</Text>
           {/* displaying the categories, author name, and last updated date */}
           <Text style={styles.footerText}>
-            {item?.category.join(' | ')} | {item?.author_name} | Last Updated: {item?.lastUpdatedAt}
+            {item?.category.join(' | ')} | {item?.author_name} | Last Updated:{' '}
+            {item?.lastUpdatedAt}
           </Text>
         </View>
       </View>
@@ -61,8 +57,8 @@ const styles = StyleSheet.create({
     width: '100%',
     marginVertical: 10,
     overflow: 'hidden',
-    elevation:8,
-    borderRadius:8
+    elevation: 8,
+    borderRadius: 8,
   },
   image: {
     flex: 0.5,
@@ -93,48 +89,48 @@ const styles = StyleSheet.create({
     color: '#121a26',
     marginBottom: 4,
   },
-// future card styles
-//   card: {
-//     marginBottom: 20,
-//     backgroundColor: 'white',
-//     padding: 15,
-//     borderRadius: 10,
-//   },
-//   image: {
-//     width: '100%',
-//     height: 200,
-//     borderRadius: 10,
-//     resizeMode: 'cover',
-//   },
-//   content: {
-//     padding: 10,
-//   },
-//   title: {
-//     fontSize: 20,
-//     fontWeight: 'bold',
-//     marginBottom: 10,
-//   },
-//   author: {
-//     fontSize: 14,
-//     color: '#999',
-//     marginBottom: 10,
-//   },
-//   description: {
-//     fontSize: 14,
-//   },
-//   categoriesContainer: {
-//     flexDirection: 'row',
-//     marginTop: 10,
-//     gap: 5,
-//   },
-//   category: {
-//     padding: 10,
-//     borderRadius: 50,
-//     backgroundColor: PRIMARY_COLOR,
-//     marginTop: 5,
-//   },
-//   categoryText: {
-//     color: 'white',
-//     fontWeight: '600',
-//   },
+  // future card styles
+  //   card: {
+  //     marginBottom: 20,
+  //     backgroundColor: 'white',
+  //     padding: 15,
+  //     borderRadius: 10,
+  //   },
+  //   image: {
+  //     width: '100%',
+  //     height: 200,
+  //     borderRadius: 10,
+  //     resizeMode: 'cover',
+  //   },
+  //   content: {
+  //     padding: 10,
+  //   },
+  //   title: {
+  //     fontSize: 20,
+  //     fontWeight: 'bold',
+  //     marginBottom: 10,
+  //   },
+  //   author: {
+  //     fontSize: 14,
+  //     color: '#999',
+  //     marginBottom: 10,
+  //   },
+  //   description: {
+  //     fontSize: 14,
+  //   },
+  //   categoriesContainer: {
+  //     flexDirection: 'row',
+  //     marginTop: 10,
+  //     gap: 5,
+  //   },
+  //   category: {
+  //     padding: 10,
+  //     borderRadius: 50,
+  //     backgroundColor: PRIMARY_COLOR,
+  //     marginTop: 5,
+  //   },
+  //   categoryText: {
+  //     color: 'white',
+  //     fontWeight: '600',
+  //   },
 });
