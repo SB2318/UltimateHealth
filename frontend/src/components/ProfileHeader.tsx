@@ -1,4 +1,13 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Linking,
+  Platform,
+  Alert,
+} from 'react-native';
 import React from 'react';
 import EllipseSvg from '../assets/svg/EllipseSvg';
 import {PRIMARY_COLOR} from '../helper/Theme';
@@ -7,6 +16,22 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {fp, hp, wp} from '../helper/Metric';
 const ProfileHeader = ({isDoctor}) => {
+  const phonenumber = '+91 234567890';
+  const mail = 'someone@gmail.com';
+  const handleCall = phone => {
+    let phoneNumber = phone;
+    if (Platform.OS !== 'android') {
+      phoneNumber = `telprompt:${phone}`;
+    } else {
+      phoneNumber = `tel:${phone}`;
+    }
+    Linking.openURL(phoneNumber).catch(err => Alert.alert('Unable to phone!'));
+  };
+  const handleMail = mail => {
+    Linking.openURL(`mailto: ${mail}`).catch(err =>
+      Alert.alert('Unable to open mail!'),
+    );
+  };
   return (
     <View style={styles.container}>
       <EllipseSvg style={styles.ellipseSvg} />
@@ -34,10 +59,16 @@ const ProfileHeader = ({isDoctor}) => {
         {isDoctor ? (
           <View style={styles.contactContainer}>
             <TouchableOpacity
+              onPress={() => {
+                handleCall(phonenumber);
+              }}
               style={[styles.iconButton, {backgroundColor: PRIMARY_COLOR}]}>
               <MaterialIcons name="phone-in-talk" size={25} color="white" />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => {
+                handleMail(mail);
+              }}
               style={[styles.iconButton, {backgroundColor: PRIMARY_COLOR}]}>
               <MaterialIcons name="email" size={25} color="white" />
             </TouchableOpacity>
