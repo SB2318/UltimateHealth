@@ -110,14 +110,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     borderTopLeftRadius: 25,
     borderTopRightRadius:25,
-    paddingBottom: 10,
+    paddingBottom: 8,
     backgroundColor:"red"
   },
   mainItemContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 7,
     borderRadius: 1,
     borderColor: '#333B42',
   },
