@@ -84,6 +84,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
+    articles: {
+        type:Array,
+        default:[]
+    },
 });
 
 const User = mongoose.model('User', userSchema);

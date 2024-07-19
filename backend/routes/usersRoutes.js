@@ -4,7 +4,7 @@ const router = express.Router();
 const {
     register, login, logout,
     sendOTPForForgotPassword, verifyOtpForForgotPassword,
-    deleteByUser, deleteByAdmin
+    deleteByUser, deleteByAdmin,getprofile
 } = require("../controllers/usersControllers");
 
 const { verifyEmail, sendVerificationEmail, Sendverifymail } = require('../controllers/emailservice');
@@ -19,6 +19,9 @@ router.post("/user/register", register);
 
 // Login User Route
 router.post("/user/login", login);
+
+// Get profile
+router.post('/user/getprofile',getprofile)
 
 // Forget password
 router.post("/user/forgotpassword", sendOTPForForgotPassword);
