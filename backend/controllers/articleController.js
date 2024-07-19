@@ -5,7 +5,16 @@ const Article = require("../models/Articles");
 module.exports.createArticle = async (req, res) => {
   try {
     const newArticle = new Article(req.body);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
     await newArticle.save();
+    // Update the article
+    const user = await User.findById(req.authorId);
+    user.articles.push(newArticle._id);
+    await user.save();
+
     res
       .status(201)
       .json({ message: "Article created successfully", newArticle });
