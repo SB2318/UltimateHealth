@@ -4,10 +4,13 @@ const router = express.Router();
 const {
     register, login, logout,
     sendOTPForForgotPassword, verifyOtpForForgotPassword,
-    deleteByUser, deleteByAdmin,getprofile
+    deleteByUser, deleteByAdmin,getprofile,
+    follow,
+    unfollow
 } = require("../controllers/usersControllers");
 
 const { verifyEmail, sendVerificationEmail, Sendverifymail } = require('../controllers/emailservice');
+const authenticateToken = require('../middleware/authentcatetoken');
 
 router.get("/hello", (req, res) => {
     console.log("Hello World Route Executed");
@@ -22,6 +25,9 @@ router.post("/user/login", login);
 
 // Get profile
 router.post('/user/getprofile',getprofile)
+// Follow and Unfollow Routes
+router.post('/user/follow',authenticateToken, follow);
+router.post('/user/unfollow', authenticateToken , unfollow);
 
 // Forget password
 router.post("/user/forgotpassword", sendOTPForForgotPassword);

@@ -291,3 +291,80 @@ module.exports.logout = (req, res) => {
       res.json({messge:error.message});
     }
   }
+// follow a user
+
+module.exports.follow = async (req, res) => {
+  try {
+      const { userId, followUserId } = req.body;
+
+      // Check if user is trying to follow themselves
+      if (userId === followUserId) {
+          return res.status(400).json({ message: "You cannot follow yourself" });
+      }
+
+      // Find the user who is following
+      const user = await User.findOne({ user_id: userId });
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      // Find the user to be followed
+      const followUser = await User.findOne({ user_id: followUserId });
+      if (!followUser) return res.status(404).json({ message: "User to follow not found" });
+
+      // Check if the user already follows the followUser
+      if (user.followings.includes(followUserId)) {
+          return res.status(400).json({ message: "You already follow this user" });
+      }
+
+      // Add followUserId to user's followings and userId to followUser's followers
+      user.followings.push(followUserId);
+      user.followingCount += 1;
+      await user.save();
+
+      followUser.followers.push(userId);
+      followUser.followerCount += 1;
+      await followUser.save();
+
+      res.json({ message: "Followed successfully" });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
+
+
+// Unfollow a user
+module.exports.unfollow = async (req, res) => {
+  try {
+      const { userId, unfollowUserId } = req.body;
+
+      // Check if user is trying to unfollow themselves
+      if (userId === unfollowUserId) {
+          return res.status(400).json({ message: "You cannot unfollow yourself" });
+      }
+
+      // Find the user who is unfollowing
+      const user = await User.findOne({ user_id: userId });
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      // Find the user to be unfollowed
+      const unfollowUser = await User.findOne({ user_id: unfollowUserId });
+      if (!unfollowUser) return res.status(404).json({ message: "User to unfollow not found" });
+
+      // Check if the user already does not follow the unfollowUser
+      if (!user.followings.includes(unfollowUserId)) {
+          return res.status(400).json({ message: "You do not follow this user" });
+      }
+
+      // Remove unfollowUserId from user's followings and userId from unfollowUser's followers
+      user.followings = user.followings.filter(id => id.toString() !== unfollowUserId);
+      user.followingCount = Math.max(0, user.followingCount - 1);
+      await user.save();
+
+      unfollowUser.followers = unfollowUser.followers.filter(id => id.toString() !== userId);
+      unfollowUser.followerCount = Math.max(0, unfollowUser.followerCount - 1);
+      await unfollowUser.save();
+
+      res.json({ message: "Unfollowed successfully" });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
