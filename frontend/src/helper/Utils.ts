@@ -1,6 +1,7 @@
 import {Alert, BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+import {Category} from '../type';
 
 export const checkInternetConnection = (
   callback: (isConnected: boolean) => void,
@@ -12,7 +13,7 @@ export const checkInternetConnection = (
   return unsubscribe;
 };
 
-export const articles = [
+export const articles: Category[] = [
   {
     id: '1',
     title: 'The Silent Killer: Hypertension',

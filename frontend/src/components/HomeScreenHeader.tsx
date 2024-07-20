@@ -7,7 +7,8 @@ import {
 } from 'react-native';
 import React from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import {fp, wp} from '../helper/Metric';
 import {PRIMARY_COLOR} from '../helper/Theme';
 const HomeScreenHeader = () => {
@@ -24,7 +25,7 @@ const HomeScreenHeader = () => {
         </View>
         <View style={styles.search}>
           <View style={styles.searchIcon}>
-            <FeatherIcon color="#778599" name="search" size={17} />
+            <FeatherIcon color="#778599" name="search" size={20} />
           </View>
           <TextInput
             autoCapitalize="words"
@@ -34,7 +35,7 @@ const HomeScreenHeader = () => {
             style={styles.searchControl}
           />
           <TouchableOpacity style={styles.filterIcon}>
-            <SimpleLineIcons color="#000" name="equalizer" size={17} />
+            <MaterialIcons color="#808080" name="filter-alt" size={28} />
           </TouchableOpacity>
         </View>
       </View>
@@ -48,9 +49,10 @@ const styles = StyleSheet.create({
   // header
   header: {
     width: '100%',
-    flex: 1,
+    flex: 0,
     backgroundColor: PRIMARY_COLOR,
     alignItems: 'center',
+    
     justifyContent: 'center',
     paddingHorizontal: 16,
     paddingBottom: 10,
@@ -62,12 +64,14 @@ const styles = StyleSheet.create({
     fontSize: fp(8),
     fontWeight: 'bold',
     color: 'white',
+    fontFamily:"Lobster-Regular"
   },
   headerSubtitle: {
     fontSize: fp(3),
     fontWeight: '400',
     marginVertical: 5,
     color: 'white',
+    fontFamily:"monospace"
   },
   search: {
     position: 'relative',
@@ -76,6 +80,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
+    width:"100%"
   },
   searchIcon: {
     position: 'absolute',
@@ -105,5 +110,6 @@ const styles = StyleSheet.create({
     width: '100%',
     fontSize: fp(4),
     fontWeight: '500',
+    fontFamily:"Lobster-regular"
   },
 });

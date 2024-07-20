@@ -18,7 +18,7 @@ const ArticleScreen = ({navigation, route}) => {
   const insets = useSafeAreaInsets();
   const {id} = route.params;
   const [sampleData] = useState(articles.find(value => value.id === id));
-  const [isLiked, setisLiked] = useState(false);
+  const [isLiked, setisLiked] = useState(true);
   const handleLike = () => {
     setisLiked(!isLiked);
   };
@@ -33,7 +33,7 @@ const ArticleScreen = ({navigation, route}) => {
             onPress={handleLike}
             style={[
               styles.likeButton,
-              {backgroundColor: isLiked ? 'white' : PRIMARY_COLOR},
+              {backgroundColor: isLiked ? '#f5f5f5' : PRIMARY_COLOR},
             ]}>
             <FontAwesome
               name="heart"
@@ -96,11 +96,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
-    backgroundColor: '#E6E2E2',
+    backgroundColor: '#ffffff',
   },
   scrollView: {
     flex: 1,
-    backgroundColor: '#E6E2E2',
+    backgroundColor: '#ffffff',
     position: 'relative',
   },
   scrollViewContent: {
