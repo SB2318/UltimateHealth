@@ -22,5 +22,8 @@ router.get('/articles/:AuthorName',authenticateToken, articleController.getArtic
 router.get('/articles/:name',authenticateToken, articleController.getArticleByName);//  get an article by name
 router.get('/articles/:tag',authenticateToken, articleController.getArticlesByTags);// / get an article by tag
 router.get('/articles/:summary',authenticateToken, articleController.getArticlesBySummary);// / get an article by Summary
+router.post('/articles/saveArticle', authenticateToken, articleController.saveArticle); // Save Article
+router.post('/articles/unsaveArticle', authenticateToken, articleController.unsaveArticle); // Unsave an article
+router.post('/articles/likeArticle', authenticateToken, articleController.likeArticle ); // For Like and Dislike
 
 module.exports = router;

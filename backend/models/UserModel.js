@@ -88,6 +88,14 @@ const userSchema = new mongoose.Schema({
         type:Array,
         default:[]
     },
+    savedArticles: {
+        type: Array,
+        default:[]
+    },
+    likedArticles: {
+        type: Array,
+        default: []
+    }
 });
 
 const User = mongoose.model('User', userSchema);
