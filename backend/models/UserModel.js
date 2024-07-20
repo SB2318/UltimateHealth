@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
+    about: {
+        type: String,
+        default: null,
+    },
     Years_of_experience: {
         type: Number,
         default: null,
@@ -88,6 +92,36 @@ const userSchema = new mongoose.Schema({
         type:Array,
         default:[]
     },
+    savedArticles: {
+        type: Array,
+        default:[]
+    },
+    likedArticles: {
+        type: Array,
+        default: []
+    },
+    followers:{
+        type: Array,
+        default:[]
+    },
+
+    followings:{
+        type: Array,
+        default: []
+    },
+
+    followerCount: {
+        type: Number,
+        //required: true,
+        default: 0,
+    },
+
+    followingCount: {
+        type: Number,
+       // required: true,
+        default: 0,
+    },
+
 });
 
 const User = mongoose.model('User', userSchema);
