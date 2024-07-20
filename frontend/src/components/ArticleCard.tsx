@@ -1,10 +1,11 @@
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image, Pressable} from 'react-native';
 import React from 'react';
+
 import {fp} from '../helper/Metric';
 
 const ArticleCard = ({item, navigation}) => {
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => {
         // handle onPress
         navigation.navigate('ArticleScreen', {
@@ -13,20 +14,29 @@ const ArticleCard = ({item, navigation}) => {
       }}>
       <View style={styles.cardContainer}>
         {/* image */}
-        <Image source={{uri: item?.imageUtils}} style={styles.image} />
+        { <Image source={{uri: item?.imageUtils}} style={styles.image} /> }
+
         <View style={styles.textContainer}>
           {/* title */}
+          <Text style={styles.footerText}>
+            {item?.category.join(' | ')}
+          </Text>
           <Text style={styles.title}>{item?.title}</Text>
           {/* description */}
-          <Text style={styles.description}>{item?.description}</Text>
+         {/**  <Text style={styles.description}>{item?.description}</Text> */}
           {/* displaying the categories, author name, and last updated date */}
+       
+
           <Text style={styles.footerText}>
-            {item?.category.join(' | ')} | {item?.author_name} | Last Updated:{' '}
-            {item?.lastUpdatedAt}
+          {item?.author_name} {''}
+          {item?.lastUpdatedAt}
           </Text>
+
+
         </View>
+       
       </View>
-    </TouchableOpacity>
+    </Pressable>
     // future card
     // <TouchableOpacity style={styles.card}>
     //   <Image source={{uri: item?.imageUtils}} style={styles.image} />
@@ -52,13 +62,15 @@ export default ArticleCard;
 
 const styles = StyleSheet.create({
   cardContainer: {
+    flex: 1,
+    width: '100%',
     backgroundColor: '#E6E6E6',
     flexDirection: 'row',
-    width: '100%',
-    marginVertical: 10,
+    marginVertical: 14,
     overflow: 'hidden',
-    elevation: 8,
-    borderRadius: 8,
+    elevation: 4,
+    
+    borderRadius: 12,
   },
   image: {
     flex: 0.5,
@@ -75,6 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#121a26',
     marginBottom: 4,
+    fontFamily: 'Lobster-Regular'
   },
   description: {
     fontSize: fp(3),
@@ -82,6 +95,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: '#778599',
     marginBottom: 10,
+    fontFamily: 'monospace'
   },
   footerText: {
     fontSize: fp(3.3),
@@ -89,6 +103,14 @@ const styles = StyleSheet.create({
     color: '#121a26',
     marginBottom: 4,
   },
+
+  footerContainer:{
+    flex:0,
+    width:"100%",
+    flexDirection:"row",
+    justifyContent:"space-between",
+    alignItems:"center"
+  }
   // future card styles
   //   card: {
   //     marginBottom: 20,

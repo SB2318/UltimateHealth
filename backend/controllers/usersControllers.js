@@ -96,6 +96,34 @@ module.exports.register = async (req, res) => {
     return Math.floor(1000 + Math.random() * 9000).toString();
   }
 
+  module.exports.getprofile = async (req, res) => {
+    let token;
+    if (req.cookies && req.cookies['token']) {
+      token = req.cookies['token'];
+    } else {
+      token = req.headers.authorization?.split(' ')[1];
+    }
+  
+    if (!token) {
+      return res.status(401).json({ error: 'Authorization token missing' });
+    }
+    try {
+      const email = await verifyUser(token);
+      const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    if (!user.isVerified) {
+      return res.status(403).json({ error: 'Email not verified. Please check your email.' });
+    }
+      res.json({status:true,profile:user});
+
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+    
+  };
+
 module.exports.sendOTPForForgotPassword = async (req, res) => {
     const { email } = req.body;
     const user = await User.findOne({ email });

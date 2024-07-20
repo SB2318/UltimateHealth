@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
   labelStyle: {
     fontWeight: '600',
     fontSize: 14,
+    color:"black",
     textTransform: 'capitalize',
   },
   contentContainerStyle: {
