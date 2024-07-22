@@ -5,9 +5,9 @@ import {
   BackHandler,
   Alert,
   Text,
-  ScrollView,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
@@ -39,16 +39,14 @@ const HomeScreen = ({navigation}) => {
         'Warning',
         'Do you want to exit',
         [
-          { text: 'No', onPress: () => null },
-          { text: 'Yes', onPress: () => BackHandler.exitApp() },
+          {text: 'No', onPress: () => null},
+          {text: 'Yes', onPress: () => BackHandler.exitApp()},
         ],
-        { cancelable: true },
+        {cancelable: true},
       );
     });
-    return unsubscribe; 
-  }, [navigation]); 
-    
-  
+    return unsubscribe;
+  }, [navigation]);
 
   const handleNoteIconClick = () => {
     navigation.navigate('EditorScreen');
@@ -56,100 +54,76 @@ const HomeScreen = ({navigation}) => {
 
   const renderItem = React.useCallback(({item}) => {
     return <ArticleCard item={item} navigation={navigation} />;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
-
- <View style={{marginTop:200}}>
       <HomeScreenHeader />
-      </View>
 
-     
-      <View 
-     style={{
-      flex: 0,
-      width: '100%',
-      paddingHorizontal: 6,
-     }}>
-
-      <ScrollView
-      contentContainerStyle={{ flexGrow:1}}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}>
-        {articleCategories.map((item, index) => (
-          <TouchableOpacity
-            style={{
-              ...styles.button,
-              backgroundColor:
-                selectedIndex === index ? 'white' : PRIMARY_COLOR,
-              borderColor: selectedIndex === index ? PRIMARY_COLOR : 'white',
-            }}
-            onPress={() => {
-              setSelectedIndex(index);
-
-              if (item === 'All') {
-                setFilteredArticles(articles);
-              } else if (item === 'Popular') {
-                setFilteredArticles(
-                  articles.filter(article =>
-                    article.category.includes('Popular'),
-                  ),
-                );
-              } else if (item === 'Health') {
-                setFilteredArticles(
-                  articles.filter(article =>
-                    article.category.includes('Health'),
-                  ),
-                );
-              } else if (item === 'Diseases') {
-                setFilteredArticles(
-                  articles.filter(article =>
-                    article.category.includes('Diseases'),
-                  ),
-                );
-              } else if (item === 'Stories') {
-                setFilteredArticles(
-                  articles.filter(article =>
-                    article.category.includes('Stories'),
-                  ),
-                );
-              } else {
-                setFilteredArticles(articles);
-              }
-            }}>
-            <Text
+      <View style={styles.buttonContainer}>
+        <ScrollView horizontal={true}>
+          {articleCategories.map((item, index) => (
+            <TouchableOpacity
+              key={index}
               style={{
-                ...styles.labelStyle,
-                color: selectedIndex === index ? 'black' : 'white',
-              }}>
-              {item}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+                ...styles.button,
+                backgroundColor:
+                  selectedIndex === index ? 'white' : PRIMARY_COLOR,
+                borderColor: selectedIndex === index ? PRIMARY_COLOR : 'white',
+              }}
+              onPress={() => {
+                setSelectedIndex(index);
 
+                if (item === 'All') {
+                  setFilteredArticles(articles);
+                } else if (item === 'Popular') {
+                  setFilteredArticles(
+                    articles.filter(article =>
+                      article.category.includes('Popular'),
+                    ),
+                  );
+                } else if (item === 'Health') {
+                  setFilteredArticles(
+                    articles.filter(article =>
+                      article.category.includes('Health'),
+                    ),
+                  );
+                } else if (item === 'Diseases') {
+                  setFilteredArticles(
+                    articles.filter(article =>
+                      article.category.includes('Diseases'),
+                    ),
+                  );
+                } else if (item === 'Stories') {
+                  setFilteredArticles(
+                    articles.filter(article =>
+                      article.category.includes('Stories'),
+                    ),
+                  );
+                } else {
+                  setFilteredArticles(articles);
+                }
+              }}>
+              <Text
+                style={{
+                  ...styles.labelStyle,
+                  color: selectedIndex === index ? 'black' : 'white',
+                }}>
+                {item}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
 
-     <View 
-     style={{
-      flex: 0,
-      width: '100%',
-      paddingHorizontal: 6,
-     }}>
-  <ScrollView
-  contentContainerStyle={{ flexGrow:1, marginBottom:120}}
-  >
-  {filterdArticles.map((item, index) => (
-    <ArticleCard item={item} navigation={navigation} style={{width:'100%'}}/>
-  ))}
-</ScrollView>
-
-</View>
-
- 
-   
+      <View style={styles.articleContainer}>
+        <FlatList
+          data={filterdArticles}
+          renderItem={renderItem}
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={styles.flatListContentContainer}
+        />
+      </View>
 
       <View style={styles.homePlusIconview}>
         <AddIcon callback={handleNoteIconClick} />
@@ -167,30 +141,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  indicatorStyle: {
-    backgroundColor: 'white',
-  },
-  tabBarStyle: {
-    backgroundColor: PRIMARY_COLOR,
-    width: '100%',
-  },
-  labelStyle: {
-    fontWeight: 'bold',
-    fontSize: 15,
-    textTransform: 'capitalize',
-  },
-  contentContainerStyle: {
-    width: '100%',
+  buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowOpacity: 0,
-    shadowOffset: {width: 0, height: 0},
-    shadowColor: 'white',
+    paddingHorizontal: 6,
   },
-
   button: {
-    // TODO
     height: 40,
     width: 100,
     borderRadius: 14,
@@ -201,21 +156,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  tabsContainer: {
-    backgroundColor: PRIMARY_COLOR,
-    overflow: 'hidden',
+  labelStyle: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    textTransform: 'capitalize',
   },
-  scrollViewContentContainer: {
-    paddingHorizontal: 16,
-    marginTop: 16,
+  articleContainer: {
+    flex: 1,
+    width: '100%',
+    paddingHorizontal: 0,
   },
   flatListContentContainer: {
-  
     paddingHorizontal: 16,
     marginTop: 10,
+    paddingBottom: 120,
   },
-  //  add article icon button
   homePlusIconview: {
     bottom: 100,
     right: 25,
