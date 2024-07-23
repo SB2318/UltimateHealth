@@ -9,6 +9,9 @@ export default function PreviewScreen({navigation, route}){
 
     const {article} = route.params;
 
+    console.log("Article", article);
+
+
     return(
         <ScrollView style={styles.container}>
 

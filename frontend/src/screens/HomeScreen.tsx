@@ -50,6 +50,7 @@ const HomeScreen = ({navigation}) => {
 
   const handleNoteIconClick = () => {
     navigation.navigate('EditorScreen');
+    //navigation.navigate('ArticleDescriptionScreen');
   };
 
   const renderItem = React.useCallback(({item}) => {

@@ -12,6 +12,7 @@ import PreviewScreen from '../screens/article/PreviewScreen';
 import ArticleScreen from '../screens/article/ArticleScreen';
 import {TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScreen';
 const Stack = createStackNavigator();
 
 const StackNavigation = () => {
@@ -56,6 +57,12 @@ const StackNavigation = () => {
       <Stack.Screen
         name="EditorScreen"
         component={EditorScreen}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="ArticleDescriptionScreen"
+        component={ArticleDescriptionScreen}
         options={{headerShown: false}}
       />
 

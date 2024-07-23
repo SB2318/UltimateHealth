@@ -250,7 +250,7 @@ module.exports.unsaveArticle = async (req, res) => {
 // Like Articles
 module.exports.likeArticle = async (req, res) => {
   try {
-    const { article, userId } = req.body;
+    const { article._id, userId } = req.body;
     const user = await User.findById(userId);
     
     const articleDb = await Article.findById(article._id);
@@ -274,7 +274,7 @@ module.exports.likeArticle = async (req, res) => {
       user.likedArticles.splice(articleIndex, 1);
       await user.save();
       
-      articleDb.likeCount--;
+      articleDb.likeCount = Math.max(articleDb.likeCount-1,0);
       await articleDb.save();
       res.status(200).json({ message: 'Article remove from liked lists successfully' });
     }else{
