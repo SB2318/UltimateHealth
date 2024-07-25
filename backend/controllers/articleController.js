@@ -1,5 +1,6 @@
 const ArticleTag = require("../models/ArticleModel");
 const Article = require("../models/Articles");
+const User = require("../models/UserModel");
 
 // Create a new article
 module.exports.createArticle = async (req, res) => {
