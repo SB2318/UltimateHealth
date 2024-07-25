@@ -250,7 +250,7 @@ module.exports.unsaveArticle = async (req, res) => {
 // Like Articles
 module.exports.likeArticle = async (req, res) => {
   try {
-    const { article._id, userId } = req.body;
+    const { article, userId } = req.body;
     const user = await User.findById(userId);
     
     const articleDb = await Article.findById(article._id);

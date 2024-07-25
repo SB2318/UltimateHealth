@@ -36,19 +36,20 @@ const EditorScreen = ({navigation}) => {
   }
 
   function onPressAddImage() {
-    // you can easily add images from your gallery
+  
     RichText.current?.insertImage(
       'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/100px-React-icon.svg.png',
     );
   }
 
   function insertVideo() {
-    // you can easily add videos from your gallery
+   
     RichText.current?.insertVideo(
       'https://mdn.github.io/learning-area/html/multimedia-and-embedding/video-and-audio-content/rabbit320.mp4',
     );
   }
 
+  
   return (
     <ScrollView style={styles.container}>
       <View style={styles.box}>
