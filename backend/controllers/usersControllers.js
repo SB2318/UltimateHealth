@@ -4,6 +4,8 @@ const UnverifiedUser = require('../models/UnverifiedUserModel');
 const {verifyUser} = require('../auth/authMiddleware');
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
+const moment = require("moment");
+const Article = require("../models/Articles");
 const adminModel = require('../models/adminModel');
 require('dotenv').config();
 const { sendVerificationEmail } = require('./emailservice');
@@ -366,5 +368,98 @@ module.exports.unfollow = async (req, res) => {
       res.json({ message: "Unfollowed successfully" });
   } catch (error) {
       res.status(500).json({ message: error.message });
+  }
+};
+//update read article 
+module.exports.updateReadArticles = async (req, res) => {
+  try {
+    const { userId, articleId } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.readArticles.push({ articleId: Number(articleId), readingDate: new Date() });
+    await user.save();
+
+    res.status(200).json({ message: 'Article read recorded successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error updating read articles', details: error.message });
+  }
+};
+//This endpoint returns the number of articles read by the user daily for a given month.
+module.exports.collectMonthlyRecordsForReading = async (req, res) => {
+  try {
+    const { userId, month } = req.query;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const startOfMonth = moment(month, 'MM-YYYY').startOf('month');
+    const endOfMonth = moment(month, 'MM-YYYY').endOf('month');
+
+    const records = user.readArticles.filter((record) => 
+      moment(record.readingDate).isBetween(startOfMonth, endOfMonth)
+    );
+
+    const dailyRecords = {};
+    records.forEach((record) => {
+      const date = moment(record.readingDate).format('DD-MM-YY');
+      if (dailyRecords[date]) {
+        dailyRecords[date]++;
+      } else {
+        dailyRecords[date] = 1;
+      }
+    });
+
+    res.status(200).json({
+      status: true,
+      data: Object.keys(dailyRecords).map(date => ({
+        articleReadCount: dailyRecords[date],
+        date
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching reading records', details: error.message });
+  }
+};
+
+//This endpoint returns the list of articles written by the user in a given month.
+
+
+module.exports.collectMonthlyRecordsForWriting = async (req, res) => {
+  try {
+    const { userId, month } = req.query;
+
+    const startOfMonth = moment(month, 'MM-YYYY').startOf('month');
+    const endOfMonth = moment(month, 'MM-YYYY').endOf('month');
+
+    const articles = await Article.find({
+      authorId: userId,
+      published_date: { $gte: startOfMonth, $lt: endOfMonth }
+    });
+
+    const dailyRecords = {};
+    articles.forEach((article) => {
+      const date = moment(article.published_date).format('DD-MM-YY');
+      if (dailyRecords[date]) {
+        dailyRecords[date]++;
+      } else {
+        dailyRecords[date] = 1;
+      }
+    });
+
+    res.status(200).json({
+      status: true,
+      data: Object.keys(dailyRecords).map(date => ({
+        articlePostCount: dailyRecords[date],
+        date
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching writing records', details: error.message });
   }
 };

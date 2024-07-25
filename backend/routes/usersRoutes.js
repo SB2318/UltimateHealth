@@ -6,7 +6,10 @@ const {
     sendOTPForForgotPassword, verifyOtpForForgotPassword,
     deleteByUser, deleteByAdmin,getprofile,
     follow,
-    unfollow
+    unfollow,
+    updateReadArticles,
+    collectMonthlyRecordsForReading,
+    collectMonthlyRecordsForWriting
 } = require("../controllers/usersControllers");
 
 const { verifyEmail, sendVerificationEmail, Sendverifymail } = require('../controllers/emailservice');
@@ -40,6 +43,16 @@ router.post('/admin/deleteUser', deleteByAdmin);
 
 router.get('/user/verifyEmail',verifyEmail );
 router.post('/user/verifyEmail',Sendverifymail);
+
+// Update read articles
+router.post('/user/update-read-articles', updateReadArticles);
+
+// Collect monthly records for reading
+router.get('/user/collect-monthly-records-for-reading', collectMonthlyRecordsForReading);
+
+// Collect monthly records for writing
+router.get('/user/collect-monthly-records-for-writing',collectMonthlyRecordsForWriting);
+
 
 
 router.post("/user/logout", logout);
