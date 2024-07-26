@@ -8,3 +8,4 @@ app.post(
     '/',
     usersController.saveUser
 )
+module.exports = app ;
