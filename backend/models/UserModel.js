@@ -121,6 +121,24 @@ const userSchema = new mongoose.Schema({
        // required: true,
         default: 0,
     },
+    readArticles: {
+        type: [
+          {
+            articleId: {
+              type: Number,
+              required: true,
+            },
+            readingDate: {
+              type: Date,
+              required: true,
+              default: Date.now,
+            },
+          }
+        ],
+        default: []
+      },
+    
+
 
 });
 
