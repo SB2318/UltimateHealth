@@ -7,11 +7,16 @@
 
 <br/>
 
+<<<<<<< HEAD
 # Small Note:
+=======
+UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users looking for reliable and trustworthy information on various health-related topics.
+>>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 
 We are almost near to achieving our goal of collecting articles. I want to express my gratitude to all the contributors who have dedicated their valuable time and made significant contributions in this field. So far, we have collected 13 different articles, and 2 are currently in progress.
 At this point, I have decided to stop accepting new article submissions. However, you can still work on the existing issues, and if you'd like, you can also try translating those articles into various languages. Please note that the issue level will be decreased to level 2 for translation tasks.
 
+<<<<<<< HEAD
 
 <table align="center">
     <thead align="center">
@@ -99,12 +104,16 @@ UltimateHealth is an innovative open-source project that aims to provide a compr
    <summary><h3>Features :crystal_ball:</h3></summary>
     
 From the beginner's perspective, the project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
+=======
+From the beginner's perspective, the]is project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
+>>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 
 * Diseases-related information
 * General health-related guidance :books:
 * Survival experiences from critical diseases
 * Backend Development
 
+<<<<<<< HEAD
 Users can also listen to articles (audio features) if they prefer. The Chat Section features a guide bot that helps users solve health-related problems.:sparkles:
 
 ## Features Left 
@@ -157,6 +166,13 @@ To ensure that your project runs smoothly, make sure you have Java 17 installed 
 
 
 ### Installing JDK 17 on Windows:
+=======
+Users can also listen to articles(audio features) if they prefer. The Chat Section features a guide bot that helps users solve health-related problems.  
+
+
+Hello! Congratulations to all the GSSOC'24 contributors and mentors!🎉
+I'm thrilled to be a part of this amazing team and excited to work together to make the Ultimate Health project a huge success. Let's collaborate, learn, and grow together!
+>>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 
 * Visit the [Oracle JDK download page](https://www.oracle.com/in/java/technologies/downloads/#java17) or the AdoptOpenJDK website.
 * Download the JDK 17 installer for Windows (e.g., .exe file).
@@ -164,6 +180,50 @@ To ensure that your project runs smoothly, make sure you have Java 17 installed 
 * After the installation is complete, you can verify the installation by opening a Command Prompt window and running the command java -version. It should display the installed JDK version.
 
 
+<<<<<<< HEAD
+=======
+### Project Requirements:
+
+* Java Installed on your machine. (**Java version:**  17)
+* Android Studio installed on your machine.
+   
+###  Install JDK:
+
+To ensure that your project runs smoothly, make sure you have Java 17 installed on your system. You can follow these steps to set up Java 17:
+
+* Visit the Oracle website or the OpenJDK website to download the Java 17 JDK (Java Development Kit) for your operating system.
+* Follow the installation instructions provided for your specific operating system.
+
+### Installing JDK 17 on macOS:
+
+* Visit the Oracle JDK download page or the AdoptOpenJDK website.
+* Download the JDK 17 installer for macOS (e.g., .dmg or .pkg file).
+* Open the downloaded installer and follow the installation instructions.
+* After the installation is complete, you can verify the installation by opening a Terminal window and running the command java -version. It should display the installed JDK version.
+
+### Setting JAVA_HOME on macOS:
+
+* Open a Terminal window.
+* Determine the installation path of JDK 17. You can use the java_home command to find the path by running /usr/libexec/java_home -v 17.
+* Copy the JDK installation path.
+* Create or edit the .zshrc file in your user home directory by running nano ~/.zshrc in the Terminal.
+* Add the following line to the file, replacing <JDK_PATH> with the copied JDK installation path:
+
+  **export JAVA_HOME=<JDK_PATH>**
+* Save the file and exit the text editor.
+* Close the Terminal window and open a new one to apply the changes.
+* To verify that JAVA_HOME is set correctly, run the command echo $JAVA_HOME in the Terminal. It should display the JDK installation path.
+
+
+### Installing JDK 17 on Windows:
+
+* Visit the Oracle JDK download page or the AdoptOpenJDK website.
+* Download the JDK 17 installer for Windows (e.g., .exe file).
+* Run the downloaded installer and follow the installation instructions.
+* After the installation is complete, you can verify the installation by opening a Command Prompt window and running the command java -version. It should display the installed JDK version.
+
+
+>>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 ### Setting JAVA_HOME on Windows:
 
 * Right-click on the Windows Start button and select "System".
@@ -177,7 +237,11 @@ To ensure that your project runs smoothly, make sure you have Java 17 installed 
 * Close and reopen any Command Prompt windows for the changes to take effect.
 * To verify that **JAVA_HOME** is set correctly, run the command echo %JAVA_HOME% in a Command Prompt window. It should display the JDK installation path.
 
+<<<<<<< HEAD
 ### Setting ANDROID_HOME Environment Variable:💥
+=======
+### Setting ANDROID_HOME Environment Variable:
+>>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 
 To set the **ANDROID_HOME** variable for both Windows and macOS, you can follow the instructions below:
 
@@ -202,12 +266,17 @@ To set the **ANDROID_HOME** variable for both Windows and macOS, you can follow 
 * Close the terminal window and reopen it for the changes to take effect.
 
 Please note that the exact path to the Android SDK directory may vary depending on how you installed it. Make sure to replace **/path/to/android/sdk** with the correct path on your system.
+<<<<<<< HEAD
   </details>
 <!-------------------------------------------------------------------GETTING STARTED------------------------------------------------------------------------------->
 
   <details>
    <summary><h3>Getting Started :zap:</h3></summary>
    
+=======
+
+
+>>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 ### Follow these steps to get started with UltimateHealth:
 
 **Clone the repository:**
@@ -221,12 +290,19 @@ https://github.com/SB2318/UltimateHealth.git
 cd  UltimateHealth
 ```
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 **Checkout the develop branch and select your preferences (backend or frontend)**.
 
 ```
  git checkout develop
 ```
 ### If you couldn't find the 'develop' branch in your own forked repository, please go to [CONTRIBUTING.md](./CONTRIBUTING.md) and follow the instructions written in detail.
+
+## For Frontend:
+
 
 ## For Frontend:
 
@@ -305,6 +381,47 @@ Open your web browser and navigate to (LOCAL_HOST_URL).
 If you would like to contribute to the project, please follow the contribution guidelines.
 
 ## Testing Frontend with Localhost Backend Server
+<<<<<<< HEAD
+=======
+
+When working with a backend server running on localhost, frontend developers can follow these guidelines to test their application:
+
+1. **Start the backend server**
+   - Before testing the frontend application, ensure that the backend server is running on localhost.
+   - Navigate to the backend project directory and start the server (e.g., `node server.js` for a Node.js server).
+   - The server should be listening on a specific port (e.g., `http://localhost:{PORT}`).
+
+2. **Configure the frontend application**
+   - In the frontend application, locate the configuration file or the section where the API base URL is defined.
+   - Set the API base URL to point to the local backend server.
+
+3. **Use appropriate HTTP clients**
+   - During development, frontend developers can use browser tools like the Network tab in the developer tools or dedicated HTTP clients like Postman or Insomnia to test the backend API endpoints.
+   - Send HTTP requests to the local backend server and observe the responses.
+
+4. **Handle CORS (Cross-Origin Resource Sharing)**
+   - If the frontend application is running on a different port or domain than the backend server, the browser may block the requests due to CORS restrictions.
+   - To handle CORS, the backend server should be configured to allow cross-origin requests from the frontend application's origin.
+   - CORS is handled in the current backend server
+
+5. **Proxy requests (optional)**
+   - Some frontend frameworks (e.g., Create React App, Vue CLI) provide a built-in proxy feature that forwards requests from the frontend application to the backend server.
+   - Configure the proxy in the frontend application's development settings to automatically forward API requests to the local backend server.
+
+6. **Use environment variables**
+   - Avoid hardcoding the backend server URL in the frontend application.
+   - Instead, use environment variables to store the backend server URL and read it during runtime.
+
+7. **Test different scenarios**
+   - Test various user flows and interactions with the backend API, such as creating, reading, updating, and deleting data.
+   - Simulate different scenarios, including error cases and edge cases, to ensure the frontend application and backend server handle them correctly.
+
+**Access the application:**
+Open your web browser and navigate to (LOCAL_HOST_URL).
+If you would like to contribute to the project, please follow the contribution guidelines.
+
+## Contribution Guidelines:
+>>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 
 When working with a backend server running on localhost, frontend developers can follow these guidelines to test their application:
 
@@ -370,6 +487,7 @@ If you would like to contribute to the project, please follow the contribution g
 * **Rebase your commits and optimize file changes:** When submitting your pull request, consider rebasing your commits into one commit and optimizing your file changes. This helps keep the commit history clean and makes it easier for reviewers to understand your changes.
 
 Remember, following these guidelines will help ensure a smooth and efficient contribution process. Happy coding!
+<<<<<<< HEAD
 
 </details>
 
@@ -511,3 +629,18 @@ This project is licensed under the [MIT License](./LICENSE).
 
 
 
+=======
+    
+## Contact:
+     
+Discord Server (Susmita Bhattacharya, user_name: susmita_)
+
+<h2 align = "center">Our Contributors ❤️</h2>
+<div align = "center">
+ <h3>Thank you for contributing to our repository</h3>
+
+![Contributors](https://contrib.rocks/image?repo=SB2318/UltimateHealth)
+
+
+</div>
+>>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
