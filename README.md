@@ -7,16 +7,12 @@
 
 <br/>
 
-<<<<<<< HEAD
 # Small Note:
-=======
 UltimateHealth is an innovative open-source project that aims to provide a comprehensive online library and article management application focused on health. The project is designed to cater to users looking for reliable and trustworthy information on various health-related topics.
->>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 
 We are almost near to achieving our goal of collecting articles. I want to express my gratitude to all the contributors who have dedicated their valuable time and made significant contributions in this field. So far, we have collected 13 different articles, and 2 are currently in progress.
 At this point, I have decided to stop accepting new article submissions. However, you can still work on the existing issues, and if you'd like, you can also try translating those articles into various languages. Please note that the issue level will be decreased to level 2 for translation tasks.
 
-<<<<<<< HEAD
 
 <table align="center">
     <thead align="center">
@@ -104,16 +100,13 @@ UltimateHealth is an innovative open-source project that aims to provide a compr
    <summary><h3>Features :crystal_ball:</h3></summary>
     
 From the beginner's perspective, the project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
-=======
-From the beginner's perspective, the]is project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
->>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
+From the beginner's perspective, the is project consists of three main modules: Article Section, Chat Section, and Podcasts. The Article Section includes:
 
 * Diseases-related information
 * General health-related guidance :books:
 * Survival experiences from critical diseases
 * Backend Development
 
-<<<<<<< HEAD
 Users can also listen to articles (audio features) if they prefer. The Chat Section features a guide bot that helps users solve health-related problems.:sparkles:
 
 ## Features Left 
@@ -180,8 +173,7 @@ I'm thrilled to be a part of this amazing team and excited to work together to m
 * After the installation is complete, you can verify the installation by opening a Command Prompt window and running the command java -version. It should display the installed JDK version.
 
 
-<<<<<<< HEAD
-=======
+
 ### Project Requirements:
 
 * Java Installed on your machine. (**Java version:**  17)
@@ -237,11 +229,8 @@ To ensure that your project runs smoothly, make sure you have Java 17 installed 
 * Close and reopen any Command Prompt windows for the changes to take effect.
 * To verify that **JAVA_HOME** is set correctly, run the command echo %JAVA_HOME% in a Command Prompt window. It should display the JDK installation path.
 
-<<<<<<< HEAD
 ### Setting ANDROID_HOME Environment Variable:💥
-=======
-### Setting ANDROID_HOME Environment Variable:
->>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
+
 
 To set the **ANDROID_HOME** variable for both Windows and macOS, you can follow the instructions below:
 
@@ -266,17 +255,14 @@ To set the **ANDROID_HOME** variable for both Windows and macOS, you can follow 
 * Close the terminal window and reopen it for the changes to take effect.
 
 Please note that the exact path to the Android SDK directory may vary depending on how you installed it. Make sure to replace **/path/to/android/sdk** with the correct path on your system.
-<<<<<<< HEAD
   </details>
 <!-------------------------------------------------------------------GETTING STARTED------------------------------------------------------------------------------->
 
   <details>
    <summary><h3>Getting Started :zap:</h3></summary>
    
-=======
 
 
->>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 ### Follow these steps to get started with UltimateHealth:
 
 **Clone the repository:**
@@ -290,10 +276,7 @@ https://github.com/SB2318/UltimateHealth.git
 cd  UltimateHealth
 ```
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 **Checkout the develop branch and select your preferences (backend or frontend)**.
 
 ```
@@ -381,8 +364,6 @@ Open your web browser and navigate to (LOCAL_HOST_URL).
 If you would like to contribute to the project, please follow the contribution guidelines.
 
 ## Testing Frontend with Localhost Backend Server
-<<<<<<< HEAD
-=======
 
 When working with a backend server running on localhost, frontend developers can follow these guidelines to test their application:
 
@@ -421,7 +402,6 @@ Open your web browser and navigate to (LOCAL_HOST_URL).
 If you would like to contribute to the project, please follow the contribution guidelines.
 
 ## Contribution Guidelines:
->>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
 
 When working with a backend server running on localhost, frontend developers can follow these guidelines to test their application:
 
@@ -487,7 +467,6 @@ If you would like to contribute to the project, please follow the contribution g
 * **Rebase your commits and optimize file changes:** When submitting your pull request, consider rebasing your commits into one commit and optimizing your file changes. This helps keep the commit history clean and makes it easier for reviewers to understand your changes.
 
 Remember, following these guidelines will help ensure a smooth and efficient contribution process. Happy coding!
-<<<<<<< HEAD
 
 </details>
 
@@ -629,7 +608,7 @@ This project is licensed under the [MIT License](./LICENSE).
 
 
 
-=======
+
     
 ## Contact:
      
@@ -643,4 +622,3 @@ Discord Server (Susmita Bhattacharya, user_name: susmita_)
 
 
 </div>
->>>>>>> 7353e4e4c58ac3b9c2b2f5aca5e04aaf0400ef2f
