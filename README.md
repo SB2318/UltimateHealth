@@ -99,6 +99,17 @@ From the beginner's perspective, the project consists of three main modules: Art
 * Backend Development
 
 Users can also listen to articles (audio features) if they prefer. The Chat Section features a guide bot that helps users solve health-related problems.:sparkles:
+
+## Features Left 
+
+ *  MultiLanguage Feature
+ *  PodCast
+ *  Profile API Integration 
+ *  Article API Integration 
+ *  Search & Filter Feature 
+ *  User Insights
+ *  Article Post via file upload
+
   </details>
 
    <!--------------------------------------------------------- PROJECT REQUIREMENTS-------------------------------------------------------------------------------->
@@ -465,6 +476,9 @@ This project is licensed under the [MIT License](./LICENSE).
         </td> 
 
    <td align="center"><a href="https://github.com/Ayushmaanagarwal1211"><img src="https://avatars.githubusercontent.com/u/118350936?v=4" width="120px;" alt=""/><br/><sub><b>Ayushmaan Agarwal</b></sub></a>
+        </td> 
+
+  <td align="center"><a href="https://github.com/Damini2004"><img src="https://avatars.githubusercontent.com/u/119414762?v=4" width="120px;" alt=""/><br/><sub><b>Damini Chachane</b></sub></a>
         </td> 
  </tr>
  
