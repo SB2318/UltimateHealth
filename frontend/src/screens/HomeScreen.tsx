@@ -12,26 +12,29 @@ import {
 import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import AddIcon from '../components/AddIcon';
-import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import ArticleCard from '../components/ArticleCard';
 import HomeScreenHeader from '../components/HomeScreenHeader';
 import {articles} from '../helper/Utils';
-import {Category} from '../type';
-
+import {Article, Category} from '../type';
+import axios from 'axios';
+import {ARTICLE_TAGS_API, BASE_URL} from '../helper/APIUtils';
 const HomeScreen = ({navigation}) => {
-  const bottomBarHeight = useBottomTabBarHeight();
-
-  const articleCategories: string[] = [
-    'All',
-    'Popular',
-    'Health',
-    'Diseases',
-    'Stories',
-  ];
-  const [filterdArticles, setFilteredArticles] = useState<Category[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
+  const [articleCategories, setArticleCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [filterdArticles, setFilteredArticles] = useState<Article[]>([]);
+  /**
+   * The function `getAllCategories` fetches all categories from an API endpoint and sets the article
+   * categories in the state while also selecting the first category as the default.
+   */
+  const getAllCategories = async () => {
+    const {data: categoryData} = await axios.get(
+      `${BASE_URL + ARTICLE_TAGS_API}`,
+    );
+    setArticleCategories(categoryData);
+    setSelectedCategory(categoryData[0]?.name);
+  };
   useEffect(() => {
+    getAllCategories();
     setFilteredArticles(articles);
     const unsubscribe = navigation.addListener('beforeRemove', e => {
       e.preventDefault();
@@ -52,9 +55,24 @@ const HomeScreen = ({navigation}) => {
     navigation.navigate('EditorScreen');
     //navigation.navigate('ArticleDescriptionScreen');
   };
-
+  /**
+   * The function `handleCategoryClick` filters articles based on a selected category and updates the
+   * filtered articles state accordingly.
+   */
+  const handleCategoryClick = category => {
+    setSelectedCategory(category);
+    const filtered = articles.filter(article =>
+      article.category.includes(category),
+    );
+    if (filtered) {
+      setFilteredArticles(filtered);
+    } else {
+      setFilteredArticles(articles);
+    }
+  };
   const renderItem = React.useCallback(({item}) => {
     return <ArticleCard item={item} navigation={navigation} />;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -62,55 +80,28 @@ const HomeScreen = ({navigation}) => {
       <HomeScreenHeader />
 
       <View style={styles.buttonContainer}>
-        <ScrollView horizontal={true}>
-          {articleCategories.map((item, index) => (
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {articleCategories?.map((item, index) => (
             <TouchableOpacity
               key={index}
+              // eslint-disable-next-line react-native/no-inline-styles
               style={{
                 ...styles.button,
                 backgroundColor:
-                  selectedIndex === index ? 'white' : PRIMARY_COLOR,
-                borderColor: selectedIndex === index ? PRIMARY_COLOR : 'white',
+                  selectedCategory === item?.name ? 'white' : PRIMARY_COLOR,
+                borderColor:
+                  selectedCategory === item?.name ? PRIMARY_COLOR : 'white',
               }}
               onPress={() => {
-                setSelectedIndex(index);
-
-                if (item === 'All') {
-                  setFilteredArticles(articles);
-                } else if (item === 'Popular') {
-                  setFilteredArticles(
-                    articles.filter(article =>
-                      article.category.includes('Popular'),
-                    ),
-                  );
-                } else if (item === 'Health') {
-                  setFilteredArticles(
-                    articles.filter(article =>
-                      article.category.includes('Health'),
-                    ),
-                  );
-                } else if (item === 'Diseases') {
-                  setFilteredArticles(
-                    articles.filter(article =>
-                      article.category.includes('Diseases'),
-                    ),
-                  );
-                } else if (item === 'Stories') {
-                  setFilteredArticles(
-                    articles.filter(article =>
-                      article.category.includes('Stories'),
-                    ),
-                  );
-                } else {
-                  setFilteredArticles(articles);
-                }
+                handleCategoryClick(item?.name);
               }}>
               <Text
+                // eslint-disable-next-line react-native/no-inline-styles
                 style={{
                   ...styles.labelStyle,
-                  color: selectedIndex === index ? 'black' : 'white',
+                  color: selectedCategory === item?.name ? 'black' : 'white',
                 }}>
-                {item}
+                {item.name}
               </Text>
             </TouchableOpacity>
           ))}
