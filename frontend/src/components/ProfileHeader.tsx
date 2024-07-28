@@ -15,15 +15,37 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {fp, hp, wp} from '../helper/Metric';
-const ProfileHeader = ({isDoctor}) => {
-  const phonenumber = '+91 234567890';
-  const mail = 'someone@gmail.com';
+const ProfileHeader = ({
+  isDoctor,
+  username,
+  userhandle,
+  profileImg,
+  articlesPosted,
+  articlesSaved,
+  userPhoneNumber,
+  userEmailID,
+  specialization,
+  experience,
+  qualification,
+}: {
+  isDoctor: boolean;
+  username: string;
+  userhandle: string;
+  profileImg: string;
+  articlesPosted: number;
+  articlesSaved: number;
+  userPhoneNumber: string;
+  userEmailID: string;
+  specialization: string;
+  experience: number;
+  qualification: string;
+}) => {
   const handleCall = phone => {
     let phoneNumber = phone;
     if (Platform.OS !== 'android') {
-      phoneNumber = `telprompt:${phone}`;
+      phoneNumber = `telprompt:+91 ${phone}`;
     } else {
-      phoneNumber = `tel:${phone}`;
+      phoneNumber = `tel:+91 ${phone}`;
     }
     Linking.openURL(phoneNumber).catch(err => Alert.alert('Unable to phone!'));
   };
@@ -38,36 +60,34 @@ const ProfileHeader = ({isDoctor}) => {
       <View style={styles.contentContainer}>
         <Image
           source={{
-            uri: isDoctor
-              ? 'https://img.freepik.com/premium-photo/indian-female-doctor-indian-nurse_714173-201.jpg'
-              : 'https://expertphotography.b-cdn.net/wp-content/uploads/2020/08/social-media-profile-photos-3.jpg',
+            uri:
+              profileImg ||
+              'https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=',
           }}
           style={styles.profileImage}
         />
-        <Text style={styles.nameText}>
-          {isDoctor ? 'Dr. Emily Davis' : 'John Doe'}
-        </Text>
+        <Text style={styles.nameText}>{username}</Text>
         <Text style={[styles.usernameText, {color: PRIMARY_COLOR}]}>
-          {isDoctor ? 'dremilydavis' : 'johnDoe'}
+          {userhandle}
         </Text>
         {isDoctor && (
           <View style={styles.experienceContainer}>
             <FontAwesome name="stethoscope" size={hp(3.5)} color="black" />
-            <Text style={styles.experienceText}>10 years</Text>
+            <Text style={styles.experienceText}>{experience} years</Text>
           </View>
         )}
         {isDoctor ? (
           <View style={styles.contactContainer}>
             <TouchableOpacity
               onPress={() => {
-                handleCall(phonenumber);
+                handleCall(userPhoneNumber);
               }}
               style={[styles.iconButton, {backgroundColor: PRIMARY_COLOR}]}>
               <MaterialIcons name="phone-in-talk" size={25} color="white" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                handleMail(mail);
+                handleMail(userEmailID);
               }}
               style={[styles.iconButton, {backgroundColor: PRIMARY_COLOR}]}>
               <MaterialIcons name="email" size={25} color="white" />
@@ -87,13 +107,13 @@ const ProfileHeader = ({isDoctor}) => {
             <>
               <View style={styles.infoBlock}>
                 <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
-                  Dermatology
+                  {specialization}
                 </Text>
                 <Text style={styles.infoLabel}>Specialization</Text>
               </View>
               <View style={styles.infoBlock}>
                 <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
-                  MD
+                  {qualification}
                 </Text>
                 <Text style={styles.infoLabel}>Qualification</Text>
               </View>
@@ -102,13 +122,13 @@ const ProfileHeader = ({isDoctor}) => {
             <>
               <View style={styles.infoBlock}>
                 <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
-                  10
+                  {articlesPosted}
                 </Text>
                 <Text style={styles.infoLabel}>Articles</Text>
               </View>
               <View style={styles.infoBlock}>
                 <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
-                  120
+                  {articlesSaved}
                 </Text>
                 <Text style={styles.infoLabel}>Saved</Text>
               </View>

@@ -27,7 +27,7 @@ router.post("/user/register", register);
 router.post("/user/login", login);
 
 // Get profile
-router.post('/user/getprofile',getprofile)
+router.get('/user/getprofile',getprofile)
 // Follow and Unfollow Routes
 router.post('/user/follow',authenticateToken, follow);
 router.post('/user/unfollow', authenticateToken , unfollow);
