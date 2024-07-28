@@ -7,7 +7,7 @@ import {handleBackButton} from '../helper/Utils';
 const SplashScreen = ({navigation}) => {
   const checkLoginStatus = async () => {
     try {
-      const user = await AsyncStorage.getItem('user');      
+      const user = await AsyncStorage.getItem('user');
       if (!user) {
         navigation.navigate('TabNavigation'); // Navigate to HomePage if user is logged in
       } else {
