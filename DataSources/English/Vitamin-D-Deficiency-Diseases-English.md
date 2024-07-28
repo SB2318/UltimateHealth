@@ -128,7 +128,6 @@ Raising awareness about vitamin D deficiency is crucial. Educational campaigns c
 ## Key Facts
 
  <p> ➤ Around 1 billion people worldwide have vitamin D deficiency, while 50% of the population has vitamin D insufficiency.</p>
-
  <p> ➤ Vitamin D helps regulate calcium and phosphate, which are necessary for maintaining healthy bones.</p>
   <p> ➤ 
 Populations at higher risk include the elderly, individuals with darker skin, those with limited sun exposure, and people with certain health conditions.</p>
