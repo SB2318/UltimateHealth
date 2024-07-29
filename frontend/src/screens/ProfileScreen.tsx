@@ -1,5 +1,5 @@
 import {StyleSheet, View, BackHandler, Alert} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
@@ -8,10 +8,27 @@ import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ProfileHeader from '../components/ProfileHeader';
 import {articles} from '../helper/Utils';
+import {getMethodCallwithToken} from '../helper/CallAPI';
+import {BASE_URL, GET_PROFILE_API} from '../helper/APIUtils';
+import {User} from '../type';
 
 // Sample article data
 
 const ProfileScreen = ({navigation}) => {
+  const [userData, setUserData] = useState<User>();
+  const auth_token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmE2MDA2NWQ4M2YxY2JhMDZjZjc5MzciLCJlbWFpbCI6ImRyLmphbmUuc21pdGhAZXhhbXBsZS5jb20iLCJpYXQiOjE3MjIxNzQ0MjUsImV4cCI6MTcyMjI2MDgyNX0.oaVeBTFak3u1IO9-yw6hhxJ_nLjJncBd96rO2TYPx_M';
+  const getUserProfileData = async () => {
+    const data = await getMethodCallwithToken(
+      `${BASE_URL + GET_PROFILE_API}`,
+      auth_token,
+    );
+    setUserData(data?.profile);
+  };
+  useEffect(() => {
+    getUserProfileData();
+  }, []);
+
   // Handle back button press to show a confirmation alert before exiting the app
   useEffect(
     () =>
@@ -30,7 +47,8 @@ const ProfileScreen = ({navigation}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
-  const isDoctor = true; // Example flag to indicate if the user is a doctor
+
+  const isDoctor = userData?.isDoctor!; // Example flag to indicate if the user is a doctor
   const bottomBarHeight = useBottomTabBarHeight(); // Get the bottom tab bar height
   const insets = useSafeAreaInsets(); // Get safe area insets
   // Memoized function to render each article item
@@ -41,7 +59,23 @@ const ProfileScreen = ({navigation}) => {
   // Function to render the header
 
   const renderHeader = () => {
-    return <ProfileHeader isDoctor={isDoctor} />;
+    return (
+      <ProfileHeader
+        isDoctor={isDoctor}
+        username={userData?.user_name || ''}
+        userhandle={userData?.user_handle || ''}
+        profileImg={userData?.Profile_image || ''}
+        articlesPosted={userData?.articles.length || 0}
+        articlesSaved={userData?.savedArticles.length || 0}
+        userPhoneNumber={
+          isDoctor ? userData?.contact_detail?.phone_no || '' : ''
+        }
+        userEmailID={isDoctor ? userData?.contact_detail?.email_id || '' : ''}
+        specialization={userData?.specialization || ''}
+        experience={userData?.Years_of_experience || 0}
+        qualification={userData?.qualification || ''}
+      />
+    );
   };
   // Function to render the custom tab bar
 
@@ -134,7 +168,7 @@ const styles = StyleSheet.create({
   labelStyle: {
     fontWeight: '600',
     fontSize: 14,
-    color:"black",
+    color: 'black',
     textTransform: 'capitalize',
   },
   contentContainerStyle: {
