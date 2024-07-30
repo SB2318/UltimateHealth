@@ -6,6 +6,14 @@
 </h3>
 
 <br/>
+
+# Small Note:
+
+## After 30th July, no contributions will be accepted for this repository under GSSOC. It is important to note that this is immutable and cannot be changed.
+
+
+
+
 <table align="center">
     <thead align="center">
         <tr border: 1px;>
@@ -99,6 +107,17 @@ From the beginner's perspective, the project consists of three main modules: Art
 * Backend Development
 
 Users can also listen to articles (audio features) if they prefer. The Chat Section features a guide bot that helps users solve health-related problems.:sparkles:
+
+## Features Left 
+
+ *  MultiLanguage Feature
+ *  PodCast
+ *  Profile API Integration 
+ *  Article API Integration 
+ *  Search & Filter Feature 
+ *  User Insights
+ *  Article Post via file upload
+
   </details>
 
    <!--------------------------------------------------------- PROJECT REQUIREMENTS-------------------------------------------------------------------------------->
@@ -461,8 +480,22 @@ This project is licensed under the [MIT License](./LICENSE).
 
   <td align="center"><a href="https://github.com/ananyag309"><img src="https://avatars.githubusercontent.com/u/145869907?v=4" width="120px;" alt=""/><br/><sub><b>Ananya Gupta</b></sub></a>
         </td> 
+   <td align="center"><a href="https://github.com/akshathere"><img src="https://avatars.githubusercontent.com/u/106247875?v=4" width="120px;" alt=""/><br/><sub><b>akshathere</b></sub></a>
+        </td> 
+
+   <td align="center"><a href="https://github.com/Ayushmaanagarwal1211"><img src="https://avatars.githubusercontent.com/u/118350936?v=4" width="120px;" alt=""/><br/><sub><b>Ayushmaan Agarwal</b></sub></a>
+        </td> 
+
+  <td align="center"><a href="https://github.com/Damini2004"><img src="https://avatars.githubusercontent.com/u/119414762?v=4" width="120px;" alt=""/><br/><sub><b>Damini Chachane</b></sub></a>
+        </td> 
  </tr>
- 
+
+ <tr>
+   <td align="center"><a href="https://github.com/Parth20GitHub"><img src="https://avatars.githubusercontent.com/u/142086512?v=4" width="120px;" alt=""/><br/><sub><b>Parth Shah</b></sub></a>
+        </td>  
+  <td align="center"><a href="https://github.com/sreevidya-16"><img src="https://avatars.githubusercontent.com/u/115856774?v=4" width="120px;" alt=""/><br/><sub><b>Sree Vidya</b></sub></a>
+        </td> 
+ </tr>
    </p>
  </table>
 </div>
