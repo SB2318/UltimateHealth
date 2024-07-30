@@ -13,6 +13,7 @@ import ArticleScreen from '../screens/article/ArticleScreen';
 import {TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScreen';
+import ProfileEditScreen from '../screens/ProfileEditScreen';
 const Stack = createStackNavigator();
 
 const StackNavigation = () => {
@@ -92,6 +93,25 @@ const StackNavigation = () => {
           ),
         })}
       />
+      <Stack.Screen
+        name="ProfileEditScreen"
+        component={ProfileEditScreen}
+        options={({navigation}) => ({
+          headerShown: true,
+          title: 'Edit Profile',
+          headerBackTitleVisible: false,
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.profileScreenHeaderLeftButton}
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <FontAwesome6 size={25} name="arrow-left" color="black" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
     </Stack.Navigator>
   );
 };
@@ -99,6 +119,12 @@ const styles = StyleSheet.create({
   headerLeftButton: {
     marginLeft: 15,
     backgroundColor: 'rgba(0,0,0,0.4)',
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 50,
+  },
+  profileScreenHeaderLeftButton: {
+    marginLeft: 15,
     paddingHorizontal: 8,
     paddingVertical: 6,
     borderRadius: 50,

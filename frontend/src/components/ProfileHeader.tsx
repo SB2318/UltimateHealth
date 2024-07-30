@@ -15,6 +15,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {fp, hp, wp} from '../helper/Metric';
+import {useNavigation} from '@react-navigation/native';
 const ProfileHeader = ({
   isDoctor,
   username,
@@ -40,6 +41,7 @@ const ProfileHeader = ({
   experience: number;
   qualification: string;
 }) => {
+  const navigation = useNavigation();
   const handleCall = phone => {
     let phoneNumber = phone;
     if (Platform.OS !== 'android') {
@@ -98,7 +100,11 @@ const ProfileHeader = ({
             </TouchableOpacity>
           </View>
         ) : (
-          <TouchableOpacity style={styles.editProfileButton}>
+          <TouchableOpacity
+            style={styles.editProfileButton}
+            onPress={() => {
+              navigation.navigate('ProfileEditScreen');
+            }}>
             <Text style={styles.editProfileButtonText}>Edit Profile</Text>
           </TouchableOpacity>
         )}
