@@ -16,8 +16,11 @@ import PodcastPlayer from '../components/PodcastPlayer';
 import {podcast} from '../helper/Utils';
 import {hp} from '../helper/Metric';
 
+// PodcastsScreen component displays the list of podcasts and includes a PodcastPlayer
 const PodcastsScreen = ({navigation}) => {
   const headerHeight = useHeaderHeight();
+
+  // Effect to handle back navigation and show an exit confirmation alert
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', e => {
       e.preventDefault();
@@ -34,11 +37,15 @@ const PodcastsScreen = ({navigation}) => {
 
     return unsubscribe;
   }, [navigation]);
+
   return (
+    // Main container
     <View style={styles.container}>
+      {/* Header with PodcastPlayer */}
       <View style={[styles.header, {paddingTop: headerHeight}]}>
         <PodcastPlayer />
       </View>
+      {/* Content including recent podcasts list */}
       <View style={styles.content}>
         <View style={styles.recentPodcastsHeader}>
           <Text style={styles.recentPodcastsTitle}>Recent Podcasts</Text>
@@ -46,6 +53,7 @@ const PodcastsScreen = ({navigation}) => {
             <Text style={styles.seeMoreText}>See more</Text>
           </TouchableOpacity>
         </View>
+        {/* FlatList to display podcasts */}
         <FlatList
           data={podcast}
           renderItem={({item}) => (
@@ -71,6 +79,7 @@ const PodcastsScreen = ({navigation}) => {
 
 export default PodcastsScreen;
 
+// Styles for PodcastsScreen component
 const styles = StyleSheet.create({
   container: {
     flex: 1,

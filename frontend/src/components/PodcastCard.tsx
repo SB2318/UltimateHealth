@@ -4,11 +4,16 @@ import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Podcast} from '../type';
 
+// The PodcastCard component receives the podcast details as props
 const PodcastCard = ({title, host, imageUri, likes, duration}: Podcast) => {
+  // Placeholder function for handling the play button press
   const handlePlayPodcast = () => {};
+
   return (
+    // Main container for the podcast card
     <View style={styles.container}>
       <View style={styles.imageTextContainer}>
+        {/* Display the podcast image */}
         <Image
           source={{
             uri: imageUri
@@ -18,9 +23,12 @@ const PodcastCard = ({title, host, imageUri, likes, duration}: Podcast) => {
           style={styles.image}
         />
         <View>
+          {/* Display the podcast title */}
           <Text style={styles.title}>{title}</Text>
+          {/* Display the podcast host */}
           <Text style={styles.host}>{host}</Text>
           <View style={styles.likesContainer}>
+            {/* Display the number of likes with a heart icon */}
             <Ionicons name="heart" size={20} />
             <Text>{likes}</Text>
           </View>
@@ -28,15 +36,18 @@ const PodcastCard = ({title, host, imageUri, likes, duration}: Podcast) => {
       </View>
 
       <View style={styles.playContainer}>
+        {/* Play button */}
         <TouchableOpacity onPress={handlePlayPodcast}>
           <Feather name="play-circle" size={24} color={'black'} />
         </TouchableOpacity>
+        {/* Display the podcast duration */}
         <Text>{duration}</Text>
       </View>
     </View>
   );
 };
 
+// Styles for the PodcastCard component
 const styles = StyleSheet.create({
   container: {
     gap: 10,

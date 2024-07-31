@@ -8,26 +8,39 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Feather from 'react-native-vector-icons/Feather';
 import {PRIMARY_COLOR} from '../helper/Theme';
 
+// PodcastPlayer component displays the currently playing podcast details and controls
 const PodcastPlayer = ({}) => {
+  // State to track if the podcast is liked
   const [isLiked, setisLiked] = useState(false);
+  // State to track if the podcast is playing
   const [isPlaying, setisPlaying] = useState(false);
+
+  // Toggle the like status
   const handleLike = () => {
     setisLiked(!isLiked);
   };
+
+  // Toggle the play/pause status
   const handlePlay = () => {
     setisPlaying(!isPlaying);
   };
+
+  // Placeholder functions for handling forward, backward, download, and share actions
   const handleForward = () => {};
   const handleBackward = () => {};
   const handleDownload = () => {};
   const handleShare = () => {};
+
   return (
     <>
+      {/* Display the podcast title */}
       <Text style={styles.podcast}>Feel Better. Live More</Text>
       <Text style={styles.podcastname}>
         8 Hidden Habits To Live Your Healthiest, Happiest and Most Fulfilled
         Life with Robin Sharma
       </Text>
+
+      {/* Section displaying who posted the podcast */}
       <View style={styles.postedByContainer}>
         <View style={styles.postedByContent}>
           <Image
@@ -42,6 +55,8 @@ const PodcastPlayer = ({}) => {
           </View>
         </View>
       </View>
+
+      {/* Display podcast description */}
       <Text style={styles.description}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate
         augue erat, congue lacinia turpis pellentesque aliquam. Quisque eu
@@ -49,6 +64,8 @@ const PodcastPlayer = ({}) => {
         ultrices dictum. Class aptent taciti sociosqu ad litora torquent per
         conubia nostra, per inceptos himenaeos.
       </Text>
+
+      {/* Action buttons for liking, downloading, and sharing */}
       <View style={styles.actionsContainer}>
         <View style={styles.actionsContent}>
           <View style={styles.likeContainer}>
@@ -69,6 +86,8 @@ const PodcastPlayer = ({}) => {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Slider for podcast progress */}
       <Slider
         style={styles.slider}
         minimumValue={0}
@@ -76,10 +95,14 @@ const PodcastPlayer = ({}) => {
         minimumTrackTintColor="#FFFFFF"
         maximumTrackTintColor="#000000"
       />
+
+      {/* Display current and remaining time */}
       <View style={styles.timeContainer}>
         <Text style={styles.timeText}>14:15</Text>
         <Text style={styles.timeText}>-5:00</Text>
       </View>
+
+      {/* Controls for playback */}
       <View style={styles.controlContainer}>
         <TouchableOpacity style={styles.controlButton} onPress={handleBackward}>
           <Feather size={30} color={'white'} name="skip-back" />
@@ -101,6 +124,7 @@ const PodcastPlayer = ({}) => {
 
 export default PodcastPlayer;
 
+// Styles for PodcastPlayer component
 const styles = StyleSheet.create({
   podcast: {
     fontSize: 15,
