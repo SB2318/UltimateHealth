@@ -215,7 +215,7 @@ Please note that the exact path to the Android SDK directory may vary depending 
   
 <!-------------------------------------------------------------------GETTING STARTED------------------------------------------------------------------------------->
 
- <details>
+  <details>
    <summary><h3>Getting Started ⚡️</h3></summary>
 
    * [Initial Setup](#follow-these-steps-to-get-started-with-ultimatehealth) 🛠️
@@ -377,6 +377,8 @@ Open your web browser and navigate to `LOCAL_HOST_URL`. Follow contribution guid
 ---
 
 </details>
+
+<hr>
     
  <!---------------------------------------------------------------CONTRIBUTION GUIDELINES--------------------------------------------------------------------------->
 
