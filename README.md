@@ -215,7 +215,7 @@ Please note that the exact path to the Android SDK directory may vary depending 
   
 <!-------------------------------------------------------------------GETTING STARTED------------------------------------------------------------------------------->
 
-  <details>
+ <details>
    <summary><h3>Getting Started ⚡️</h3></summary>
 
    * [Initial Setup](#follow-these-steps-to-get-started-with-ultimatehealth) 🛠️
@@ -375,6 +375,8 @@ Please note that the exact path to the Android SDK directory may vary depending 
 Open your web browser and navigate to `LOCAL_HOST_URL`. Follow contribution guidelines if you'd like to contribute to the project.
 
 ---
+
+</details>
 
 </details>
 
@@ -541,8 +543,4 @@ This project is licensed under the [MIT License](./LICENSE).
 </div> <br>
 
 <a href="#top" style="position: fixed; bottom: 20px; right: 20px; background-color: black ; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px; font-family: Arial; font-size: 16px;">Go to Top</a>
-
-
-
-
 
