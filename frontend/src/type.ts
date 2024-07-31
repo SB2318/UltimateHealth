@@ -51,3 +51,11 @@ interface Contactdetail {
   email_id: string;
   phone_no: string;
 }
+
+export type Podcast = {
+  title: string;
+  host: string;
+  imageUri: string;
+  likes: number;
+  duration: string;
+};
