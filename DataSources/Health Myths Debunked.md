@@ -120,3 +120,11 @@ It's okay to eat after 8 p.m. as long as you're making healthy choices and not o
 
 ## Conclusion
 Health myths can be misleading and sometimes harmful. By understanding the facts behind these myths, you can make better choices for your well-being. Always rely on credible sources for health information and consult with healthcare professionals when in doubt. Remember, knowledge is power when it comes to maintaining your health!
+
+## Sources 
+
+- [Cracking Your Knuckles Causes Arthritis](https://www.houstonmethodist.org/blog/articles/2020/jun/does-cracking-your-knuckles-cause-arthritis/#:~:text=The%20short%20answer%20is%20no,%E2%80%94%20but%20arthritis%2C%20not%20quite.)
+- [You Shouldn’t Eat After 8 p.m. if You Want to Lose Weight](https://www.health.com/eating-after-8-pm-8557472#:~:text=Eating%20later%20in%20the%20evening,it%20comes%20to%20healthy%20habits.)
+- https://nutritionsource.hsph.harvard.edu/
+- https://www.who.int/
+- https://www.nutrition.org.uk/
