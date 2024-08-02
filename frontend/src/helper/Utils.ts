@@ -1,7 +1,7 @@
 import {Alert, BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-import {Article, Category} from '../type';
+import {Article, Podcast} from '../type';
 
 export const checkInternetConnection = (
   callback: (isConnected: boolean) => void,
@@ -140,6 +140,87 @@ export const articles: Article[] = [
     lastUpdatedAt: '05.06.2024',
     imageUtils:
       'https://www.shutterstock.com/image-illustration/virus-vaccine-flu-coronavirus-medical-600nw-1667085835.jpg',
+  },
+];
+
+export const podcast: Podcast[] = [
+  {
+    title: 'Health Matters',
+    host: 'Dr. Jane Smith',
+    imageUri:
+      'https://i.scdn.co/image/ab6765630000ba8a73f9ca9da7bba329aff8638b',
+    likes: 120,
+    duration: '30 min',
+  },
+  {
+    title: 'Fitness Talk',
+    host: 'John Doe',
+    imageUri: 'https://images.radio.com/podcast/be7252f353.jpg',
+    likes: 85,
+    duration: '25 min',
+  },
+  {
+    title: 'Nutrition Now',
+    host: 'Sara Lee',
+    imageUri:
+      'https://i.dailymail.co.uk/1s/2024/05/22/20/85217355-13448793-image-a-73_1716404901450.jpg',
+    likes: 95,
+    duration: '20 min',
+  },
+  {
+    title: 'Mental Health Matters',
+    host: 'Dr. Emily Stone',
+    imageUri:
+      'https://i.scdn.co/image/ab67656300005f1fbbecf91e128e1c623513218f',
+    likes: 110,
+    duration: '40 min',
+  },
+  {
+    title: 'Yoga and You',
+    host: 'Michael Brown',
+    imageUri:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkCPXlx996u66AstY4SUxM6wRgpGdnthccQQ&s',
+    likes: 75,
+    duration: '35 min',
+  },
+  {
+    title: 'Wellness Warriors',
+    host: 'David Clark',
+    imageUri:
+      'https://cdn-images-3.listennotes.com/podcasts/wellness-warriors-by-felicity-cohen-R7auJhlLnUP-NMsP3zcgunv.1400x1400.jpg',
+    likes: 90,
+    duration: '50 min',
+  },
+  {
+    title: 'Healthy Habits',
+    host: 'Lisa Martin',
+    imageUri:
+      'https://cdn-images-3.listennotes.com/podcasts/healthy-habits-podcast-with-dr-anderson-dr-SsF6J-4xMBp.600x600.jpg',
+    likes: 105,
+    duration: '45 min',
+  },
+  {
+    title: 'Fitness Freak',
+    host: 'Chris Johnson',
+    imageUri:
+      'https://i1.sndcdn.com/avatars-YoBEGihqs9XQi12g-j10CEA-t1080x1080.jpg',
+    likes: 60,
+    duration: '30 min',
+  },
+  {
+    title: 'Holistic Health',
+    host: 'Natalie Green',
+    imageUri:
+      'https://i.scdn.co/image/ab6765630000ba8aa02b19cb8acadc824c29b395',
+    likes: 130,
+    duration: '55 min',
+  },
+  {
+    title: 'Mindful Living',
+    host: 'Paul White',
+    imageUri: 'https://assets.libsyn.com/content/164282173',
+    likes: 115,
+    duration: '20 min',
   },
 ];
 
