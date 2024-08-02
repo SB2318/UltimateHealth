@@ -118,8 +118,55 @@ The time you eat is less important than what and how much you eat. Eating late a
 ### Takeaway:
 It's okay to eat after 8 p.m. as long as you're making healthy choices and not overeating. Focus on what you eat rather than when you eat.
 
+## 11. Myth: The '5-Second Rule'
+### The Truth:
+The '5-second rule,' which suggests that food dropped on the floor is safe to eat if picked up within five seconds, is not based on science. Bacteria can contaminate food almost instantly, and the cleanliness of the surface plays a more significant role than the time the food was on the ground.
+
+### Understanding Contamination:
+- **Bacterial Transfer:** Bacteria can transfer to food immediately upon contact with a contaminated surface.
+- **Surface Cleanliness:** Even seemingly clean surfaces can harbor harmful bacteria.
+
+### Takeaway:
+It's best to avoid eating food that has been dropped, regardless of how quickly you pick it up, to minimize the risk of bacterial contamination.
+
+## 12. Myth: Leprosy Is Highly Contagious
+### The Truth:
+Leprosy, also known as Hansen's disease, is not as contagious as people believe. It is caused by a slow-growing bacteria, Mycobacterium leprae, and is spread through prolonged, close contact with an untreated person. Most people have a natural immunity to leprosy, and it is easily treatable with antibiotics.
+
+### Understanding Leprosy:
+- **Transmission:** Requires long-term contact; casual contact like shaking hands or sitting next to someone is not likely to spread the disease.
+- **Treatment:** Antibiotics can cure leprosy, and early treatment can prevent complications.
+
+### Takeaway:
+Leprosy is a rare and treatable condition. Understanding the facts can help reduce the stigma associated with this disease.
+
+## 13. Myth: Once You Have Chickenpox, You Can Never Get It Again, and It’s Harmless
+### The Truth:
+While it’s true that most people develop immunity to chickenpox after contracting it, the virus (varicella-zoster) remains in the body and can reactivate later in life as shingles, a painful and sometimes severe condition. Chickenpox itself can also lead to complications, especially in adults or people with weakened immune systems.
+
+### Understanding Chickenpox:
+- **Immunity:** After having chickenpox, most people are immune for life, but the virus remains dormant in the nervous system.
+- **Shingles:** The virus can reactivate years later, causing shingles, which can be painful and lead to complications.
+- **Complications:** Chickenpox can be serious, especially in adults or those with weakened immune systems.
+
+### Takeaway:
+Chickenpox is not entirely harmless, and the virus can cause issues later in life. Vaccination can help prevent both chickenpox and shingles.
+
+## 14. Myth: Smallpox Can Be Spread Through the Air, and Vaccines Do Not Work
+### The Truth:
+Smallpox, a deadly disease eradicated in 1980, was primarily spread through direct contact with infected bodily fluids or contaminated objects, not through the air over long distances. Vaccines were highly effective in eradicating the disease, and they do work.
+
+### Understanding Smallpox:
+- **Transmission:** Smallpox was spread through close contact with an infected person or contaminated items, not through airborne transmission over long distances.
+- **Eradication:** The smallpox vaccine was instrumental in eradicating the disease globally.
+- **Vaccine Effectiveness:** Vaccination campaigns led to the complete eradication of smallpox by 1980.
+
+### Takeaway:
+Vaccines are effective, and the smallpox vaccine was key to eradicating one of the deadliest diseases in human history.
+
 ## Conclusion
-Health myths can be misleading and sometimes harmful. By understanding the facts behind these myths, you can make better choices for your well-being. Always rely on credible sources for health information and consult with healthcare professionals when in doubt. Remember, knowledge is power when it comes to maintaining your health!
+Myths about health are pervasive, but understanding the truth can lead to better decisions and improved well-being. By debunking these myths, we hope to empower you with accurate information to take control of your health and avoid falling for misconceptions.
+
 
 ## Sources 
 
@@ -128,3 +175,7 @@ Health myths can be misleading and sometimes harmful. By understanding the facts
 - https://nutritionsource.hsph.harvard.edu/
 - https://www.who.int/
 - https://www.nutrition.org.uk/
+- [Second Five Rule](http://livre2.com/LIVREE/E1/E001002.pdf)
+- [Leprasy](https://www.cdc.gov/leprosy/about/index.html#:~:text=Myth%3A%20Hansen's%20disease%20is%20very,someone%20who%20has%20the%20disease.)
+- [Chicken Pox](https://my.clevelandclinic.org/health/diseases/4017-chickenpox)
+- [Small Pox](https://www.who.int/news-room/questions-and-answers/item/smallpox)
