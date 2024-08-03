@@ -17,7 +17,7 @@ import PasswordTab from '../components/PasswordTab';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const ProfileEditScreen = () => {
-  // Get safe area insets for handling notches and status bars on devices
+  // Get safe area insets for handling notches and status bars on device
   const insets = useSafeAreaInsets();
 
   // Define the tabs available in the profile edit screen
