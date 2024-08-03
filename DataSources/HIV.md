@@ -59,6 +59,6 @@ HIV/AIDS stigma can be a significant barrier to treatment and support. Addressin
 HIV/AIDS remains a critical global health issue, but advancements in treatment and prevention have significantly improved the outlook for those living with the virus. Early diagnosis, effective antiretroviral therapy, and ongoing support are essential for managing HIV and maintaining a high quality of life. By promoting education, reducing stigma, and supporting those affected, we can make a significant impact in the fight against HIV/AIDS.
 
 ## Additional Resources
-- **Centers for Disease Control and Prevention (CDC)**: [HIV Basics](https://www.cdc.gov/hiv/basics/index.html)
+- **Centers for Disease Control and Prevention (CDC)**: [HIV Basics](https://www.cdc.gov/)
 - **World Health Organization (WHO)**: [HIV/AIDS](https://www.who.int/health-topics/hiv-aids#tab=tab_1)
-- **National Institute of Allergy and Infectious Diseases (NIAID)**: [HIV/AIDS Research](https://www.niaid.nih.gov/diseases-conditions/hiv-aids)
+- **National Institute of Allergy and Infectious Diseases (NIAID)**: [HIV/AIDS Research](https://www.niaid.nih.gov/)
