@@ -1,11 +1,6 @@
 import React, {useRef, useState} from 'react';
-import {StyleSheet, Text, ScrollView, View, Pressable} from 'react-native';
-import {
-  actions,
-  defaultActions,
-  RichEditor,
-  RichToolbar,
-} from 'react-native-pell-rich-editor';
+import {StyleSheet, Text, ScrollView, View} from 'react-native';
+import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 
 import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -36,20 +31,17 @@ const EditorScreen = ({navigation}) => {
   }
 
   function onPressAddImage() {
-  
     RichText.current?.insertImage(
       'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/100px-React-icon.svg.png',
     );
   }
 
   function insertVideo() {
-   
     RichText.current?.insertVideo(
       'https://mdn.github.io/learning-area/html/multimedia-and-embedding/video-and-audio-content/rabbit320.mp4',
     );
   }
 
-  
   return (
     <ScrollView style={styles.container}>
       <View style={styles.box}>
@@ -57,11 +49,11 @@ const EditorScreen = ({navigation}) => {
 
         <TouchableOpacity
           onPress={() => {
-            if (article.length > 20) {
-              navigation.navigate('PreviewScreen', {
-                article: article,
-              });
-            }
+            //if (article.length > 20) {
+            navigation.navigate('PreviewScreen', {
+              article: article,
+            });
+            // }
           }}>
           <Text style={styles.preview}>Preview</Text>
         </TouchableOpacity>

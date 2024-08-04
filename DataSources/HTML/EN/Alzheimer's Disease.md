@@ -1,14 +1,4 @@
-import React from 'react';
-import {View, SafeAreaView, StyleSheet, Text} from 'react-native';
-import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import HTMLView from 'react-native-htmlview';
-
-export default function PreviewScreen({navigation, route}) {
-  const {article} = route.params;
-
-  const demo = `<h1 id="alzheimer-s-disease-understanding-symptoms-and-care">Alzheimer&#39;s Disease: Understanding Symptoms and Care</h1>
+<h1 id="alzheimer-s-disease-understanding-symptoms-and-care">Alzheimer&#39;s Disease: Understanding Symptoms and Care</h1>
 <h2 id="introduction">Introduction</h2>
 <p>Alzheimer&#39;s is one kind of progressive neurologic disorder which mainly contributes to problems in memory, thinking, and behavior. It accounts for 60-80% of all cases of dementia in elderly people, making it one of the most common kinds of dementia among the elderly. The disease is named after Dr. Alois Alzheimer, who first described it in 1906 following the post-mortem analysis of changes in the brain tissue of a woman who died from an unusual mental illness.</p>
 <p>It&#39;s a disorder characterized by the deposition of amyloid plaques and neurofibrillary tangles in the brain and, eventually, killing the brain cells. This will finally lead to progressive loss of cognitive functions, where patients have a hard time performing daily activities. The symptoms and strategies for care should be learnt in order to understand how to deal with the disease and care for your loved one.</p>
@@ -251,59 +241,3 @@ Advanced Stage: Total dependence of the person on the caregiver for all personal
 </ul>
 <hr>
 <p> Contributed By <a href="https://github.com/nishant0708"> Nishant Kaushal</a></p>
-`;
-
-  return (
-    <ScrollView style={styles.container}>
-      <SafeAreaView style={{padding: 10}}>
-        <View style={styles.row}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}>
-            <IonIcon name="arrow-back" size={30} color={PRIMARY_COLOR} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button} onPress={() => {}}>
-            <Text style={styles.textWhite}>Post</Text>
-          </TouchableOpacity>
-        </View>
-
-        <HTMLView value={demo} stylesheet={styles} />
-      </SafeAreaView>
-    </ScrollView>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-
-  text: {
-    fontWeight: 'bold',
-    fontSize: 20,
-  },
-
-  textWhite: {
-    fontWeight: '600',
-    fontSize: 17,
-    color: 'white',
-  },
-
-  row: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  button: {
-    height: 40,
-    width: 75,
-    backgroundColor: PRIMARY_COLOR,
-    padding: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5,
-  },
-});
