@@ -9,19 +9,39 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import AddIcon from '../components/AddIcon';
 import ArticleCard from '../components/ArticleCard';
 import HomeScreenHeader from '../components/HomeScreenHeader';
-import {articles} from '../helper/Utils';
+import {articles, Categories} from '../helper/Utils';
 import {Article, Category} from '../type';
 import axios from 'axios';
 import {ARTICLE_TAGS_API, BASE_URL} from '../helper/APIUtils';
+import FilterModal from '../components/FilterModal';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 const HomeScreen = ({navigation}) => {
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [filterdArticles, setFilteredArticles] = useState<Article[]>([]);
+  const [date, setDate] = useState<string>('');
+  const [selectCategoryList, setSelectCategoryList] = useState<string[]>([
+    'Gastroenterology',
+  ]);
+  const handleCategorySelection = category => {
+    console.log('Category clicked:', category);
+    setSelectCategoryList(prevList => {
+      const updatedList = prevList.includes(category)
+        ? prevList.filter(item => item !== category)
+        : [...prevList, category];
+      console.log('Updated Category List:', updatedList);
+      return updatedList;
+    });
+  };
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
   /**
    * The function `getAllCategories` fetches all categories from an API endpoint and sets the article
    * categories in the state while also selecting the first category as the default.
@@ -74,11 +94,26 @@ const HomeScreen = ({navigation}) => {
     return <ArticleCard item={item} navigation={navigation} />;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  // handle filter reset function
+  const handleFilterReset = () => {
+    setSelectCategoryList([]);
+    setDate('');
+  };
+  // handle filter apply function
+  const handleFilterApply = () => {};
   return (
     <SafeAreaView style={styles.container}>
-      <HomeScreenHeader />
-
+      <HomeScreenHeader handlePresentModalPress={handlePresentModalPress} />
+      <FilterModal
+        bottomSheetModalRef={bottomSheetModalRef}
+        categories={Categories}
+        handleCategorySelection={handleCategorySelection}
+        selectCategoryList={selectCategoryList}
+        handleFilterReset={handleFilterReset}
+        handleFilterApply={handleFilterApply}
+        setDate={setDate}
+        date={date}
+      />
       <View style={styles.buttonContainer}>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {articleCategories?.map((item, index) => (
@@ -107,7 +142,6 @@ const HomeScreen = ({navigation}) => {
           ))}
         </ScrollView>
       </View>
-
       <View style={styles.articleContainer}>
         <FlatList
           data={filterdArticles}
@@ -116,7 +150,6 @@ const HomeScreen = ({navigation}) => {
           contentContainerStyle={styles.flatListContentContainer}
         />
       </View>
-
       <View style={styles.homePlusIconview}>
         <AddIcon callback={handleNoteIconClick} />
       </View>
@@ -157,6 +190,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     paddingHorizontal: 0,
+    zIndex: -2,
   },
   flatListContentContainer: {
     paddingHorizontal: 16,
@@ -167,5 +201,6 @@ const styles = StyleSheet.create({
     bottom: 100,
     right: 25,
     position: 'absolute',
+    zIndex: -2,
   },
 });

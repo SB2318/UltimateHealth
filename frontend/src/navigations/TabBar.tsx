@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 const {width} = Dimensions.get('window');
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { PRIMARY_COLOR } from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 const TabBar = ({state, descriptors, navigation}: any) => {
@@ -60,7 +60,7 @@ const TabBar = ({state, descriptors, navigation}: any) => {
                   : 'white',
                 borderRadius: 50,
                 width: 40,
-                height:40,
+                height: 40,
                 justifyContent: 'center',
                 alignItems: 'center',
                 padding: 5,
@@ -87,12 +87,11 @@ const TabBar = ({state, descriptors, navigation}: any) => {
                   />
                 )}
                 {label === 'Profile' && (
-                     <FontAwesome
-                       name="user-circle"
-                       size={24}
-                       color={isFocused ? 'white' : isDarkMode?"white":"black"}
-                     />
-                  
+                  <FontAwesome
+                    name="user-circle"
+                    size={24}
+                    color={isFocused ? 'white' : isDarkMode ? 'white' : 'black'}
+                  />
                 )}
               </View>
             </Pressable>
@@ -109,9 +108,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     borderTopLeftRadius: 25,
-    borderTopRightRadius:25,
+    borderTopRightRadius: 25,
     paddingBottom: 8,
-    backgroundColor:"red"
+    backgroundColor: 'red',
+    borderWidth: 0.19,
   },
   mainItemContainer: {
     flex: 1,
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
     marginVertical: 7,
     borderRadius: 1,
     borderColor: '#333B42',
+    zIndex: -2,
   },
 });
 
