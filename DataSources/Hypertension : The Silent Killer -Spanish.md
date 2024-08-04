@@ -69,17 +69,13 @@ Sin causa identificable; tiende a desarrollarse gradualmente a lo largo de mucho
 ## Mitos Médicos
 
 ## 1.La hipertensión no es un problema de salud serio
-```La hipertensión es un importante factor de riesgo para enfermedades cardíacas y accidentes cerebrovasculares, que son las principales causas de muerte.
-```
+```La hipertensión es un importante factor de riesgo para enfermedades cardíacas y accidentes cerebrovasculares, que son las principales causas de muerte.```
 ## 2.Si no tengo síntomas, mi presión arterial no es alta.
-``` La hipertensión a menudo es asintomática; el monitoreo regular es crucial.
-```
+``` La hipertensión a menudo es asintomática; el monitoreo regular es crucial.```
 ## 3.Los jóvenes no sufren de hipertensión.
-``` Aunque es más común en adultos mayores, la hipertensión puede ocurrir a cualquier edad.
-```
+``` Aunque es más común en adultos mayores, la hipertensión puede ocurrir a cualquier edad.```
 ## 4.La hipertensión es inevitable con la edad.
-```Aunque la edad es un factor de riesgo, las elecciones de estilo de vida pueden reducir significativamente el riesgo.
-```
+```Aunque la edad es un factor de riesgo, las elecciones de estilo de vida pueden reducir significativamente el riesgo.```
 
 
 ## Vivir Bien con la Deficiencia de Hierro
