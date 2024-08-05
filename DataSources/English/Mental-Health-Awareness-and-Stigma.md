@@ -1,5 +1,7 @@
 # Mental Health Awareness and Stigma
 
+### Authored by: Siddheya Kulkarni 
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Understanding Mental Health](#understanding-mental-health)
