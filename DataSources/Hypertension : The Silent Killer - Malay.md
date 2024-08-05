@@ -114,3 +114,7 @@ Meningkatkan kesedaran tentang hipertensi adalah kritikal. Kempen kesihatan komu
 
 <br>
 <p align="center"><strong>Ambil tindakan hari ini untuk hari esok yang lebih sihat. 💙</strong></p>
+
+## Penulis
+
+[Suhani Singh Paliwal](https://github.com/suhanipaliwal)
