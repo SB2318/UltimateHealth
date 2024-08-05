@@ -115,3 +115,9 @@ Myeloma is a serious but manageable disease. With early diagnosis and effective 
 
 ## Sources
 [Myeloma](https://www.hematology.org/education/patients/blood-cancers/myeloma#:~:text=Myeloma%20is%20cancer%20of%20the,weakened%20and%20susceptible%20to%20infection.)
+
+## Author
+
+ Sree Vidya
+ 
+ Github - https://github.com/sreevidya-16
