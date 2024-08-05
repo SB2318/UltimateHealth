@@ -90,3 +90,9 @@ Treatment for RA aims to reduce inflammation, relieve symptoms, and prevent join
 
 ## Conclusion
 Rheumatoid arthritis is a chronic autoimmune disease that affects the joints and can cause a range of symptoms, from mild discomfort to severe pain and disability. While there is no cure, early diagnosis and effective treatment can significantly improve the quality of life for those with RA. Managing RA involves a combination of medications, lifestyle changes, and, in some cases, surgery. With proper care and management, many people with RA can lead active and fulfilling lives.
+
+## Author
+
+Revanth
+
+Github - https://github.com/revanth1718
