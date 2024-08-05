@@ -5,13 +5,14 @@
     },
     "CHECKS": {
       "prefixes": [
-        "DOCS: ",
-        "FEAT: ",
+        "docs: ",
+        "feat: ",
         "fix: ",
-        "BUG: ",
+        "build: ",
         "refactor: ",
         "revert: ",
         "style: ",
+        "chore: ",
         "test: "
       ]
     },
