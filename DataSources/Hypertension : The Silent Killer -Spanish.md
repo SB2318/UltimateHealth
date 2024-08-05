@@ -2,7 +2,6 @@
 
 La hipertensión, también conocida como presión arterial alta, es una condición médica grave en la que los vasos sanguíneos empujan contra las paredes de las arterias a una tasa más alta de lo que deberían. A menudo se le denomina "el asesino silencioso" porque puede permanecer sin detectar durante un largo período y llevar a graves consecuencias para la salud, incluyendo infarto, accidente cerebrovascular y enfermedad renal.
 
-
 ## Tabla de Contenidos
 
 1. [Sobre](#Sobre)
@@ -14,7 +13,6 @@ La hipertensión, también conocida como presión arterial alta, es una condici�
     - [Dificultad para Respirar](#Dificultad-para-Respirar)
     - [Dolor en el Pecho o Palpitaciones](#Dolor-en-el-Pecho-o-Palpitaciones)
 
-
 3. [Causas](#causas)
     [Hipertensión Primaria (Esencial)](#Hipertensión-Primaria-Esencial)
     [Hipertensión Secundaria](#Hipertensión-Secundaria)
@@ -25,7 +23,6 @@ La hipertensión, también conocida como presión arterial alta, es una condici�
 7. [Conciencia Social](#Conciencia-Social)
 8. [Datos Clave](#Datos-clave)
 
-
 # Sobre
 
 **¿Qué es la Hipertensión?**
@@ -33,7 +30,6 @@ La hipertensión, también conocida como presión arterial alta, es una condici�
 
 **¿Por qué se le llama "el Asesino Silencioso"?**
 ```La hipertensión a menudo se denomina "el asesino silencioso" porque puede permanecer sin detectar durante años, incluso décadas, sin mostrar síntomas notables. Muchas personas con presión arterial alta no se sienten enfermas ni experimentan signos de advertencia hasta que la condición ha alcanzado una etapa severa. Para cuando aparecen los síntomas, el daño ya puede estar hecho y el riesgo de complicaciones graves para la salud aumenta.```
-
 
 ## Síntomas
 Aunque la hipertensión a menudo es asintomática, algunas personas pueden experimentar síntomas, especialmente si su presión arterial está severamente elevada. Aquí están algunos síntomas comunes de la hipertensión:
@@ -65,7 +61,6 @@ Sin causa identificable; tiende a desarrollarse gradualmente a lo largo de mucho
 ## Hipertensión Secundaria
  Causada por una condición subyacente como enfermedad renal, problemas de tiroides, ciertos medicamentos, apnea obstructiva del sueño o tumores en las glándulas suprarrenales.
 
-
 ## Mitos Médicos
 
 ## 1.La hipertensión no es un problema de salud serio
@@ -76,7 +71,6 @@ Sin causa identificable; tiende a desarrollarse gradualmente a lo largo de mucho
 ``` Aunque es más común en adultos mayores, la hipertensión puede ocurrir a cualquier edad.```
 ## 4.La hipertensión es inevitable con la edad.
 ```Aunque la edad es un factor de riesgo, las elecciones de estilo de vida pueden reducir significativamente el riesgo.```
-
 
 ## Vivir Bien con la Deficiencia de Hierro
 Aquí están los 5 mejores consejos para vivir bien con la hipertensión:
@@ -99,7 +93,6 @@ La hipertensión a menudo es parte de un grupo de condiciones conocido como sín
 ## Conciencia Social
 Aumentar la conciencia sobre la hipertensión es fundamental. Las campañas de salud comunitaria pueden educar a las personas sobre la importancia de controlar regularmente la presión arterial, adoptar elecciones de estilo de vida saludables y los riesgos asociados con la hipertensión no tratada. Las escuelas, lugares de trabajo y organizaciones de salud pueden desempeñar un papel clave en la difusión de esta información.
 
-
 ## Datos Clave
 
  <p> ➤Se estima que 1.28 mil millones de adultos de 30 a 79 años en todo el mundo tienen hipertensión.</p>
@@ -112,3 +105,7 @@ Aumentar la conciencia sobre la hipertensión es fundamental. Las campañas de s
 
 <br>
 <p align="center"><strong>¡Toma acción hoy para un mañana más saludable! 💙</strong></p>
+
+## Autor
+
+[Suhani Singh Paliwal](https://github.com/suhanipaliwal)
