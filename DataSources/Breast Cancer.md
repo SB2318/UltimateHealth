@@ -143,3 +143,8 @@ Coping with breast cancer involves emotional, psychological, and practical suppo
 
 ![image](https://github.com/user-attachments/assets/32c85026-5f51-4e46-9026-353a669fcfdd)
 
+## Author
+
+Sree Vidya
+
+Github : https://github.com/sreevidya-16
