@@ -3,7 +3,13 @@
 ## Introduction
 Natural remedies are a great way to manage common health issues without relying on over-the-counter medications. They’re easy to make at home using ingredients you probably already have in your kitchen. Here’s a guide to some of the best DIY natural remedies that are both safe and effective.
 
+![image](https://github.com/user-attachments/assets/4b340bd3-642b-4bc8-80a9-174438889f2c)
+
 ## 1. Honey and Lemon for Sore Throat
+
+![image](https://github.com/user-attachments/assets/7fb5a621-9834-4c04-bbf3-b334e749fda5)
+
+
 ### Ingredients:
 - 1 tablespoon honey
 - 1 tablespoon lemon juice
@@ -21,6 +27,9 @@ Honey is a natural cough suppressant and soothes the throat, reducing irritation
 For added relief, you can also add a pinch of cinnamon or a slice of fresh ginger to the mix, both of which have anti-inflammatory properties.
 
 ## 2. Aloe Vera for Burns
+
+![image](https://github.com/user-attachments/assets/f48b8b03-3ac6-4f08-a512-8fc9363f0267)
+
 ### Ingredients:
 - Fresh aloe vera leaf or store-bought aloe vera gel
 
@@ -36,6 +45,9 @@ Aloe vera has cooling and anti-inflammatory properties that help soothe burns an
 Keep an aloe vera plant at home for easy access to fresh gel. You can also store aloe vera gel in the fridge for an extra cooling effect.
 
 ## 3. Ginger Tea for Nausea
+
+![image](https://github.com/user-attachments/assets/26df1f81-784f-47d5-9db9-28c1dd42460c)
+
 ### Ingredients:
 - 1 inch fresh ginger root
 - 1 cup boiling water
@@ -69,6 +81,9 @@ Coconut oil is a natural moisturizer rich in fatty acids, which help lock in moi
 You can also use coconut oil as a natural makeup remover or lip balm. It’s gentle on the skin and leaves it feeling nourished.
 
 ## 5. Peppermint Oil for Headaches
+
+![image](https://github.com/user-attachments/assets/1cb3306a-9578-4af1-9455-dd9fcefd4e0c)
+
 ### Ingredients:
 - A few drops of peppermint essential oil
 - Carrier oil (like coconut oil)
@@ -101,6 +116,9 @@ Salt water helps cleanse the mouth, reduce inflammation, and promote healing of 
 Avoid spicy, acidic, or crunchy foods while treating mouth sores, as they can irritate the sores further.
 
 ## 7. Chamomile Tea for Better Sleep
+
+![image](https://github.com/user-attachments/assets/d12791d2-74f1-4d20-82e4-eb75ff48ea75)
+
 ### Ingredients:
 - 1 chamomile tea bag or 1 tablespoon dried chamomile flowers
 - 1 cup boiling water
@@ -134,6 +152,9 @@ Apple cider vinegar helps balance stomach acid levels, making digestion easier. 
 If the taste is too strong, add a little honey or lemon juice to make it more palatable.
 
 ## 9. Eucalyptus Oil for Congestion
+
+![image](https://github.com/user-attachments/assets/3e8d7149-ebf2-4efa-a22a-d595e58e24f9)
+
 ### Ingredients:
 - A few drops of eucalyptus essential oil
 - Bowl of hot water or a diffuser
@@ -151,6 +172,10 @@ Eucalyptus oil can also be applied to the chest or back to ease respiratory issu
 
 
 ## How to Make Your Own Herbal Remedies
+
+![image](https://github.com/user-attachments/assets/cab1a489-d339-4b72-a445-fd2be1eb3e13)
+
+
 
 ###  Herbal Teas
 Herbal teas are simple to make and can be used for a variety of purposes, from soothing a sore throat to aiding digestion.
@@ -188,6 +213,9 @@ Infusions are similar to teas but are steeped longer to extract more of the plan
   4. Strain and store in the refrigerator for up to 48 hours.
 
 ## 40 Medicinal Plants and Their Uses
+
+![image](https://github.com/user-attachments/assets/84d8a2c6-9992-44ef-944c-47bda095162d)
+
 
 | **Medicinal Plant**        | **Uses**                                           |
 |----------------------------|----------------------------------------------------|
@@ -264,6 +292,8 @@ In traditional Indian beliefs, **Tulsi** is considered a sacred plant that not o
 
 ### Which is the King of All Medicinal Plants?
 **Basil** - the king of herbs, the all-purpose plant. Bursting with flavor, a staple of Mediterranean cuisine and a trusted cure for many ailments. 
+
+![image](https://github.com/user-attachments/assets/c04b5a16-009b-4c2d-a34d-a2c47d867529)
 
 ### Which Plant is Known as the Mother of Medicine?
 **Tulsi (Ocimum sanctum)** is a holy basil plant in the basil family Lamiaceae that is known by many names in Ayurveda, including "Mother Medicine of Nature" or "Queen of Herbs".
