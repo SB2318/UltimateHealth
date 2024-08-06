@@ -4,8 +4,8 @@
 
 1. [Introduction](#introduction)
 2. [Understanding Asthma](#understanding-asthma)
-    - [Causes and Triggers](#causes-and-triggers)
     - [Symptoms](#symptoms)
+    - [Causes and Triggers](#causes-and-triggers)
 3. [Medical Management](#medical-management)
     - [Medications](#medications)
     - [Regular Monitoring](#regular-monitoring)
@@ -29,14 +29,6 @@ Asthma is a chronic respiratory condition characterized by inflammation and narr
 
 ## Understanding Asthma
 
-### Causes and Triggers
-
-Asthma can be triggered by a variety of factors. Understanding these triggers is essential for effective management.
-
-- **Genetic Factors:** A family history of asthma or allergies can increase the risk.
-- **Environmental Triggers:** Pollen, dust mites, pet dander, mold, and air pollution can exacerbate asthma symptoms.
-- **Lifestyle Triggers:** Physical activity, stress, and certain medications can also trigger asthma.
-
 ### Symptoms
 
 Asthma symptoms can vary from mild to severe and may include:
@@ -45,6 +37,14 @@ Asthma symptoms can vary from mild to severe and may include:
 - **Wheezing:** A whistling sound when breathing, particularly during exhalation.
 - **Coughing:** Persistent cough, often worse at night or early in the morning.
 - **Chest Tightness:** A feeling of tightness or pressure in the chest.
+
+### Causes and Triggers
+
+Asthma can be triggered by a variety of factors. Understanding these triggers is essential for effective management.
+
+- **Genetic Factors:** A family history of asthma or allergies can increase the risk.
+- **Environmental Triggers:** Pollen, dust mites, pet dander, mold, and air pollution can exacerbate asthma symptoms.
+- **Lifestyle Triggers:** Physical activity, stress, and certain medications can also trigger asthma.
 
 ## Medical Management
 
@@ -145,4 +145,9 @@ Having a plan in place can help manage severe asthma attacks effectively.
 ## Conclusion
 
 Effective asthma management requires a comprehensive approach that includes medical treatment, lifestyle adjustments, and environmental control. By understanding and implementing these strategies, individuals with asthma can significantly reduce symptoms and improve their quality of life. Regular consultation with healthcare providers, staying informed about new treatments, and maintaining a proactive approach to health can make managing asthma more manageable and less daunting. Embrace these strategies to breathe easier and live a healthier, more active life.
-Author** - Arunima Dutta
+
+**Author - Arunima Dutta**
+**Reference images links---
+https://www.istockphoto.com/photo/patient-measures-his-own-lung-capacity-gm1223272456-359276729?searchscope=image%2Cfilm
+https://www.istockphoto.com/photo/work-hard-and-workaholic-concept-businessman-stress-at-work-personal-working-with-gm933805090-255760907?searchscope=image%2Cfilm
+https://www.istockphoto.com/photo/young-man-inflating-the-bubble-gm682289576-125090911?searchscope=image%2Cfilm
