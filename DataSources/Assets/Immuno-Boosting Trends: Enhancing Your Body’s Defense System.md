@@ -155,4 +155,10 @@ Regular sanitization of frequently-touched surfaces helps prevent the spread of 
 ## Conclusion
 
 Enhancing your body’s defense system involves a holistic approach that includes a healthy diet, regular exercise, adequate sleep, stress management, appropriate supplementation, and good hygiene practices. By adopting these immuno-boosting trends, you can support your immune system and improve your overall health and well-being. Start incorporating these practices into your daily routine and experience the benefits of a stronger, more resilient immune system.
+
 Author** - Arunima Dutta
+
+**References ---
+ https://www.istockphoto.com/photo/gentamicin-molecule-it-is-broad-spectrum-aminoglycoside-antibiotic-molecular-model-gm1303676704-395061051?searchscope=image%2Cfilm
+ https://www.istockphoto.com/photo/atom-as-a-coronavirus-covid-19-gm1311973005-400915054?searchscope=image%2Cfilm
+ https://www.istockphoto.com/photo/omicron-variant-covid-19-with-vaccine-protection-shield-gm1363839103-435249565?searchscope=image%2Cfilm
