@@ -13,6 +13,19 @@ export const checkInternetConnection = (
   return unsubscribe;
 };
 
+export const Categories = [
+  {id: 1, name: 'Cardiology'},
+  {id: 2, name: 'Neurology'},
+  {id: 3, name: 'Oncology'},
+  {id: 4, name: 'Dermatology'},
+  {id: 5, name: 'Gastroenterology'},
+  {id: 6, name: 'Endocrinology'},
+  {id: 7, name: 'Pediatrics'},
+  {id: 8, name: 'Orthopedics'},
+  {id: 9, name: 'Psychiatry'},
+  {id: 10, name: 'Pulmonology'},
+];
+
 export const articles: Article[] = [
   {
     id: '1',
