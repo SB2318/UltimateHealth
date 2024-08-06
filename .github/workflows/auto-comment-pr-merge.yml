@@ -1,8 +1,8 @@
-name: Auto Comment on PR
+name: Auto Comment on PR Merge
 
 on:
   pull_request_target:
-    types: [opened]
+    types: [closed]
 
 permissions:
   issues: write
@@ -10,20 +10,23 @@ permissions:
 
 jobs:
   comment:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
-    - name: Add Comment to Pull Request
+    - name: Add Comment to Merged PR
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         COMMENT=$(cat <<EOF
         {
-          "body": "Thank you @${commentAuthor}, for creating the PR and contributing to our UltimateHealth project 💗. \n Our team will review the PR and will reach out to you soon! 😇 \n Make sure that you have marked all the tasks that you are done with ✅. \n Thank you for your patience! 😀"
+          "body": "Congratulations, Your pull request has been successfully merged 🥳🎉 Thank you for your contribution to the project 🚀 Keep Contributing!! ✨"
         }
         EOF
         )
         RESPONSE=$(curl -s -o response.json -w "%{http_code}" \
           -X POST \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Authorization: token $GITHUB_TOKEN" \
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
           -d "$COMMENT")
@@ -32,5 +35,3 @@ jobs:
           echo "Failed to add comment"
           exit 1
         fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
