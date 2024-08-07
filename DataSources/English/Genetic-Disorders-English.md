@@ -142,3 +142,5 @@ Impact: Increased risk of breast, ovarian, and other cancers.
 ## Conclusion
 Understanding genetic disorders involves recognizing the role of DNA mutations and various factors influencing these conditions. While diet alone can't cure genetic disorders, it plays a crucial role in managing symptoms and improving overall health. Personalized dietary approaches, informed by healthcare professionals, can make a significant difference in the quality of life for individuals with genetic disorders.
 
+**Author**: Damini Chachane  
+**Date**: 2024-08-07
