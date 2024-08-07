@@ -97,3 +97,9 @@ Chronic stress can exacerbate inflammation. Incorporating stress-reduction techn
 ## 9. Conclusion
 
 Diet and nutrition play a critical role in managing osteoarthritis. By incorporating anti-inflammatory foods, avoiding harmful foods, managing weight, and considering supplements, individuals can reduce symptoms, improve joint health, and potentially avoid invasive procedures like knee replacement surgeries. As always, it's important to work with healthcare professionals to create a personalized plan that meets your specific needs and goals.
+
+## Author
+
+Nayanika Mukherjee
+
+Github : https://github.com/Nayanika1402
