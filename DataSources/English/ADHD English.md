@@ -1,6 +1,5 @@
 # Attention-deficit/hyperactivity disorder (ADHD) 
 
-
 **Breaking Down ADHD: A Comprehensive Guide to Attention Deficit Hyperactivity Disorder**
 
 Attention Deficit Hyperactivity Disorder (ADHD) is a neurodevelopmental disorder characterized by a persistent pattern of inattention, hyperactivity, and impulsivity that interferes with functioning or development. It is typically diagnosed in childhood, often continuing into adulthood. ADHD manifests in three primary types: predominantly inattentive presentation, predominantly hyperactive-impulsive presentation, and combined presentation.
@@ -27,7 +26,6 @@ Inattentiveness in ADHD includes difficulty sustaining attention, frequent carel
 6. [Syndrome](#syndrome)
 7. [Social Awareness](#social-awareness)
 8. [Key Facts](#key-facts)
-
 
 # About
 ADHD affects approximately 8-10% of children and 4-5% of adults worldwide, with a higher prevalence in the United States. Boys are more likely to be diagnosed with ADHD than girls, with a ratio of 2:1. However, girls with ADHD are more likely to have the inattentive type, which may be underdiagnosed. ADHD symptoms typically appear between 6-12 years old, and around 60% of children with ADHD continue to experience symptoms as adults.
@@ -129,7 +127,6 @@ Here are the common symptoms of ADHD in short:
 
 **Hyperactivity** :
 Here are the symptoms of hyperactivity framed in sentence form:
-
  - I have trouble sitting still and often fidget or feel restless.
  - I struggle to stay seated, even when I'm supposed to be still.
  - I feel like I'm always "on the go" and can't seem to slow down.
