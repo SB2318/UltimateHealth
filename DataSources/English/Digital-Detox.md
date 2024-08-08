@@ -97,14 +97,12 @@ Embarking on a digital detox can be challenging, especially in a world where dig
 
 ## Practical Tips for a Successful Digital Detox
 
-1. **Start Small:** Begin with short detox periods and gradually increase the duration as you become more comfortable with being offline.
-
-2. **Stay Accountable:** Share your detox goals with friends or family to keep yourself accountable. Consider doing a detox challenge together for added motivation.
-
-3. **Plan Engaging Activities:** Fill your schedule with enjoyable activities that don't involve screens, such as outdoor adventures, arts and crafts, or meditation.
-
-4. **Use Technology Wisely:** Utilize technology to assist with your detox by using apps that encourage mindfulness and track usage. For example, meditation apps can guide you in practicing mindfulness during your detox.
-
+| Tip               | Description                                                     | Implementation                                   |
+|-------------------|-----------------------------------------------------------------|-------------------------------------------------|
+| Start Small       | Begin with short detox periods and gradually increase the duration as you become more comfortable with being offline. | Start with one hour per day and gradually add more time each week. |
+| Stay Accountable  | Share your detox goals with friends or family to keep yourself accountable. Consider doing a detox challenge together for added motivation. | Share your detox plan with a friend and check in regularly to discuss progress. |
+| Plan Engaging Activities | Fill your schedule with enjoyable activities that don't involve screens, such as outdoor adventures, arts and crafts, or meditation. | Make a list of activities and schedule them into your week to ensure they happen. |
+| Use Technology Wisely | Utilize technology to assist with your detox by using apps that encourage mindfulness and track usage. For example, meditation apps can guide you in practicing mindfulness during your detox. | Use apps like "Forest" to stay off your phone and "Headspace" for guided meditation sessions during detox times. |
 
 
 ## Conclusion
