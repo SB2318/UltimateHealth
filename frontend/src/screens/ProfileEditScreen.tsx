@@ -30,7 +30,7 @@ const ProfileEditScreen = () => {
   const isDoctor = true;
 
   // Function to handle tab selection
-  const handleTab = tab => {
+  const handleTab = (tab: string) => {
     setcurrentTab(tab);
   };
 
@@ -49,7 +49,7 @@ const ProfileEditScreen = () => {
           style={styles.horizontalScroll}
           contentContainerStyle={styles.horizontalScrollContent}
           showsHorizontalScrollIndicator={false}>
-          {tabs.map(tab => {
+          {tabs.map((tab: string) => {
             if (isDoctor || tab !== 'Professional') {
               return (
                 <TouchableOpacity
@@ -76,9 +76,28 @@ const ProfileEditScreen = () => {
 
         {/* Content of the selected tab */}
         <View style={styles.tabContent}>
-          {currentTab === 'General' && <GeneralTab />}
-          {currentTab === 'Professional' && <ProfessionalTab />}
-          {currentTab === 'Contact' && <ContactTab />}
+          {currentTab === 'General' && (
+            <GeneralTab
+              username="joe"
+              userhandle="userhandle"
+              email="abc@gmail.com"
+              about="hello i m joe doe"
+              imgUrl="https://miro.medium.com/v2/resize:fit:1400/0*0fClPmIScV5pTLoE.jpg"
+            />
+          )}
+          {currentTab === 'Professional' && (
+            <ProfessionalTab
+              specialization="Cardiology"
+              qualification="MD"
+              years_of_experience="10"
+            />
+          )}
+          {currentTab === 'Contact' && (
+            <ContactTab
+              phone_number="1234567890"
+              contact_email="abc@gmail.com"
+            />
+          )}
           {currentTab === 'Password' && <PasswordTab />}
         </View>
       </ScrollView>

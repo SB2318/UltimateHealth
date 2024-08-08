@@ -7,8 +7,9 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {EditorScreenProp} from '../../type';
 
-const EditorScreen = ({navigation}) => {
+const EditorScreen = ({navigation}: EditorScreenProp) => {
   const strikethrough = require('../../assets/stricketThrough.png'); //icon for strikethrough
   const video = require('../../assets/play-button.png'); //icon for Addvideo
   const RichText = useRef(); //reference to the RichEditor component

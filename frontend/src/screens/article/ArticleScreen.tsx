@@ -13,10 +13,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {articles} from '../../helper/Utils';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ArticleScreenProp} from '../../type';
 
-const ArticleScreen = ({navigation, route}) => {
+const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
   const insets = useSafeAreaInsets();
-  const {id} = route.params;
+  const {id}: {id: string} = route.params;
   const [sampleData] = useState(articles.find(value => value.id === id));
   const [isLiked, setisLiked] = useState(true);
   const handleLike = () => {

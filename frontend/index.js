@@ -4,13 +4,7 @@
 /**
  * @format
  */
-import BottomSheet, {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetModalProvider,
-  BottomSheetBackdrop,
-  BottomSheetFooter,
-} from '@gorhom/bottom-sheet';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';

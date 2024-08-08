@@ -7,8 +7,9 @@ import {
 } from 'react-native';
 import React from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
+import {ProfileEditContactTab} from '../type';
 
-const ContactTab = () => {
+const ContactTab = ({phone_number, contact_email}: ProfileEditContactTab) => {
   return (
     <View style={styles.container}>
       {/* Content Container */}
@@ -21,6 +22,8 @@ const ContactTab = () => {
             placeholder="Enter your contact phone number"
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
+            value={phone_number}
+            keyboardType="number-pad"
           />
         </View>
 
@@ -32,6 +35,8 @@ const ContactTab = () => {
             placeholder="Enter your contact email"
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
+            value={contact_email}
+            keyboardType="email-address"
           />
         </View>
       </View>

@@ -9,8 +9,15 @@ import {
 import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import {PRIMARY_COLOR} from '../helper/Theme';
+import {ProfileEditGeneralTab} from '../type';
 
-const GeneralTab = () => {
+const GeneralTab = ({
+  username,
+  userhandle,
+  email,
+  about,
+  imgUrl,
+}: ProfileEditGeneralTab) => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -18,7 +25,7 @@ const GeneralTab = () => {
         <View style={styles.profileImageContainer}>
           <Image
             source={{
-              uri: 'https://miro.medium.com/v2/resize:fit:1400/0*0fClPmIScV5pTLoE.jpg',
+              uri: imgUrl,
             }}
             style={styles.profileImage}
           />
@@ -36,6 +43,7 @@ const GeneralTab = () => {
             placeholder="Enter your username"
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
+            value={username}
           />
         </View>
 
@@ -46,6 +54,7 @@ const GeneralTab = () => {
             placeholder="Enter your userhandle"
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
+            value={userhandle}
           />
         </View>
 
@@ -56,6 +65,7 @@ const GeneralTab = () => {
             placeholder="Enter your email"
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
+            value={email}
           />
         </View>
 
@@ -69,6 +79,7 @@ const GeneralTab = () => {
             style={styles.aboutInput}
             multiline={true}
             numberOfLines={4}
+            value={about}
           />
         </View>
       </View>

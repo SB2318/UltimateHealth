@@ -4,8 +4,10 @@ import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import HTMLView from 'react-native-htmlview';
+import {PreviewScreenProp} from '../../type';
 
-export default function PreviewScreen({navigation, route}) {
+export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {article} = route.params;
 
   const demo = `<h1 id="alzheimer-s-disease-understanding-symptoms-and-care">Alzheimer&#39;s Disease: Understanding Symptoms and Care</h1>

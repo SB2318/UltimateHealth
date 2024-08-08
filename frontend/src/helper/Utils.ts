@@ -1,7 +1,7 @@
 import {Alert, BackHandler} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-import {Article, Podcast} from '../type';
+import {Article, CategoryType, Podcast} from '../type';
 
 export const checkInternetConnection = (
   callback: (isConnected: boolean) => void,
@@ -13,7 +13,7 @@ export const checkInternetConnection = (
   return unsubscribe;
 };
 
-export const Categories = [
+export const Categories: CategoryType[] = [
   {id: 1, name: 'Cardiology'},
   {id: 2, name: 'Neurology'},
   {id: 3, name: 'Oncology'},

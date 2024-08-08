@@ -15,20 +15,21 @@ import AddIcon from '../components/AddIcon';
 import ArticleCard from '../components/ArticleCard';
 import HomeScreenHeader from '../components/HomeScreenHeader';
 import {articles, Categories} from '../helper/Utils';
-import {Article, Category} from '../type';
+import {Article, Category, CategoryType, HomeScreenProps} from '../type';
 import axios from 'axios';
 import {ARTICLE_TAGS_API, BASE_URL} from '../helper/APIUtils';
 import FilterModal from '../components/FilterModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-const HomeScreen = ({navigation}) => {
+
+const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [filterdArticles, setFilteredArticles] = useState<Article[]>([]);
   const [date, setDate] = useState<string>('');
-  const [selectCategoryList, setSelectCategoryList] = useState<string[]>([
-    'Gastroenterology',
-  ]);
-  const handleCategorySelection = category => {
+  const [selectCategoryList, setSelectCategoryList] = useState<
+    CategoryType['name'][]
+  >([]);
+  const handleCategorySelection = (category: CategoryType['name']) => {
     console.log('Category clicked:', category);
     setSelectCategoryList(prevList => {
       const updatedList = prevList.includes(category)
@@ -79,7 +80,7 @@ const HomeScreen = ({navigation}) => {
    * The function `handleCategoryClick` filters articles based on a selected category and updates the
    * filtered articles state accordingly.
    */
-  const handleCategoryClick = category => {
+  const handleCategoryClick = (category: CategoryType['name']) => {
     setSelectedCategory(category);
     const filtered = articles.filter(article =>
       article.category.includes(category),
@@ -90,10 +91,12 @@ const HomeScreen = ({navigation}) => {
       setFilteredArticles(articles);
     }
   };
-  const renderItem = React.useCallback(({item}) => {
+
+  const renderItem = useCallback(({item}: {item: Article}) => {
     return <ArticleCard item={item} navigation={navigation} />;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   // handle filter reset function
   const handleFilterReset = () => {
     setSelectCategoryList([]);

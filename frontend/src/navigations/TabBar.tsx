@@ -1,14 +1,5 @@
 import React from 'react';
-
-import {
-  View,
-  Pressable,
-  Dimensions,
-  StyleSheet,
-  useColorScheme,
-  Image,
-} from 'react-native';
-const {width} = Dimensions.get('window');
+import {View, Pressable, StyleSheet, useColorScheme} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../helper/Theme';
 

@@ -1,9 +1,9 @@
-import {StyleSheet, Text, View, TouchableOpacity, Image, Pressable} from 'react-native';
+import {StyleSheet, Text, View, Image, Pressable} from 'react-native';
 import React from 'react';
-
 import {fp} from '../helper/Metric';
+import {ArticleCardProps} from '../type';
 
-const ArticleCard = ({item, navigation}) => {
+const ArticleCard = ({item, navigation}: ArticleCardProps) => {
   return (
     <Pressable
       onPress={() => {
@@ -14,27 +14,21 @@ const ArticleCard = ({item, navigation}) => {
       }}>
       <View style={styles.cardContainer}>
         {/* image */}
-        { <Image source={{uri: item?.imageUtils}} style={styles.image} /> }
+        {<Image source={{uri: item?.imageUtils}} style={styles.image} />}
 
         <View style={styles.textContainer}>
           {/* title */}
-          <Text style={styles.footerText}>
-            {item?.category.join(' | ')}
-          </Text>
+          <Text style={styles.footerText}>{item?.category.join(' | ')}</Text>
           <Text style={styles.title}>{item?.title}</Text>
           {/* description */}
-         {/**  <Text style={styles.description}>{item?.description}</Text> */}
+          {/**  <Text style={styles.description}>{item?.description}</Text> */}
           {/* displaying the categories, author name, and last updated date */}
-       
 
           <Text style={styles.footerText}>
-          {item?.author_name} {''}
-          {item?.lastUpdatedAt}
+            {item?.author_name} {''}
+            {item?.lastUpdatedAt}
           </Text>
-
-
         </View>
-       
       </View>
     </Pressable>
     // future card
@@ -69,7 +63,7 @@ const styles = StyleSheet.create({
     marginVertical: 14,
     overflow: 'hidden',
     elevation: 4,
-    
+
     borderRadius: 12,
   },
   image: {
@@ -87,7 +81,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#121a26',
     marginBottom: 4,
-    fontFamily: 'Lobster-Regular'
+    fontFamily: 'Lobster-Regular',
   },
   description: {
     fontSize: fp(3),
@@ -95,7 +89,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: '#778599',
     marginBottom: 10,
-    fontFamily: 'monospace'
+    fontFamily: 'monospace',
   },
   footerText: {
     fontSize: fp(3.3),
@@ -104,13 +98,13 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
 
-  footerContainer:{
-    flex:0,
-    width:"100%",
-    flexDirection:"row",
-    justifyContent:"space-between",
-    alignItems:"center"
-  }
+  footerContainer: {
+    flex: 0,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   // future card styles
   //   card: {
   //     marginBottom: 20,

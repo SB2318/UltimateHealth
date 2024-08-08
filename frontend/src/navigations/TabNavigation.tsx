@@ -1,6 +1,5 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-const Tab = createBottomTabNavigator();
 import HomeScreen from '../screens/HomeScreen';
 import PodcastsScreen from '../screens/PodcastsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -11,7 +10,8 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {View} from 'react-native';
-
+import {TabParamList} from '../type';
+const Tab = createBottomTabNavigator<TabParamList>();
 const TabNavigation = () => {
   return (
     <Tab.Navigator
