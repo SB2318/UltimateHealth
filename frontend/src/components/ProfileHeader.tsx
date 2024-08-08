@@ -15,7 +15,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {fp, hp, wp} from '../helper/Metric';
-import {useNavigation} from '@react-navigation/native';
+import {ProfileHeaderProps} from '../type';
+
 const ProfileHeader = ({
   isDoctor,
   username,
@@ -28,20 +29,8 @@ const ProfileHeader = ({
   specialization,
   experience,
   qualification,
-}: {
-  isDoctor: boolean;
-  username: string;
-  userhandle: string;
-  profileImg: string;
-  articlesPosted: number;
-  articlesSaved: number;
-  userPhoneNumber: string;
-  userEmailID: string;
-  specialization: string;
-  experience: number;
-  qualification: string;
-}) => {
-  const navigation = useNavigation();
+  navigation,
+}: ProfileHeaderProps) => {
   const handleCall = phone => {
     let phoneNumber = phone;
     if (Platform.OS !== 'android') {
@@ -49,10 +38,10 @@ const ProfileHeader = ({
     } else {
       phoneNumber = `tel:+91 ${phone}`;
     }
-    Linking.openURL(phoneNumber).catch(err => Alert.alert('Unable to phone!'));
+    Linking.openURL(phoneNumber).catch(() => Alert.alert('Unable to phone!'));
   };
   const handleMail = mail => {
-    Linking.openURL(`mailto: ${mail}`).catch(err =>
+    Linking.openURL(`mailto: ${mail}`).catch(() =>
       Alert.alert('Unable to open mail!'),
     );
   };

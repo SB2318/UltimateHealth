@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Modal,
@@ -7,14 +7,15 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { PRIMARY_COLOR } from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';
+import {EmailInputModalProp} from '../type';
 
 export default function EmailInputModal({
   visible,
   callback,
   backButtonClick,
-  onDismiss
-}) {
+  onDismiss,
+}: EmailInputModalProp) {
   const [modelTitle, setModelTitle] = useState(true);
   const [email, setEmail] = useState('');
 
@@ -32,14 +33,13 @@ export default function EmailInputModal({
     if (!emailRegex.test(email)) {
       setModelTitle(false);
       //return;
+    } else {
+      callback();
+      setModelTitle(true);
+      setEmail('');
     }
-   else{
-    callback();
-    setModelTitle(true);
-    setEmail('');
-   }
-  
-   // navigator.navigate('OtpScreen');
+
+    // navigator.navigate('OtpScreen');
   };
 
   return (
@@ -47,8 +47,7 @@ export default function EmailInputModal({
       animationType="slide"
       transparent={true}
       visible={visible}
-      onDismiss={onDismiss}
-    >
+      onDismiss={onDismiss}>
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
           <Text style={modelTitle ? styles.modalTitle : styles.modalTitleError}>
@@ -70,7 +69,9 @@ export default function EmailInputModal({
           <TouchableOpacity style={styles.modalButton} onPress={verifyEmail}>
             <Text style={styles.modalButtonText}>Submit</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.modalButton} onPress={handleBackClick}>
+          <TouchableOpacity
+            style={styles.modalButton}
+            onPress={handleBackClick}>
             <Text style={styles.modalButtonText}>Back</Text>
           </TouchableOpacity>
         </View>

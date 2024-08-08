@@ -1,5 +1,5 @@
 import {StyleSheet, View, BackHandler, Alert} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
@@ -10,11 +10,11 @@ import ProfileHeader from '../components/ProfileHeader';
 import {articles} from '../helper/Utils';
 import {getMethodCallwithToken} from '../helper/CallAPI';
 import {BASE_URL, GET_PROFILE_API} from '../helper/APIUtils';
-import {User} from '../type';
+import {Article, ProfileScreenProps, User} from '../type';
 
 // Sample article data
 
-const ProfileScreen = ({navigation}) => {
+const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const [userData, setUserData] = useState<User>();
   const auth_token =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmE2MDA2NWQ4M2YxY2JhMDZjZjc5MzciLCJlbWFpbCI6ImRyLmphbmUuc21pdGhAZXhhbXBsZS5jb20iLCJpYXQiOjE3MjIxNzQ0MjUsImV4cCI6MTcyMjI2MDgyNX0.oaVeBTFak3u1IO9-yw6hhxJ_nLjJncBd96rO2TYPx_M';
@@ -53,8 +53,9 @@ const ProfileScreen = ({navigation}) => {
   const insets = useSafeAreaInsets(); // Get safe area insets
   // Memoized function to render each article item
 
-  const renderItem = React.useCallback(({item}) => {
+  const renderItem = useCallback(({item}: {item: Article}) => {
     return <ArticleCard item={item} navigation={navigation} />;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // Function to render the header
 
@@ -74,6 +75,7 @@ const ProfileScreen = ({navigation}) => {
         specialization={userData?.specialization || ''}
         experience={userData?.Years_of_experience || 0}
         qualification={userData?.qualification || ''}
+        navigation={navigation}
       />
     );
   };

@@ -7,8 +7,13 @@ import {
 } from 'react-native';
 import React from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
+import {ProfileEditProfessionalTab} from '../type';
 
-const ProfessionalTab = () => {
+const ProfessionalTab = ({
+  specialization,
+  qualification,
+  years_of_experience,
+}: ProfileEditProfessionalTab) => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -19,6 +24,7 @@ const ProfessionalTab = () => {
             placeholder="Enter your specialization"
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
+            value={specialization}
           />
         </View>
 
@@ -29,6 +35,7 @@ const ProfessionalTab = () => {
             placeholder="Enter your qualification"
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
+            value={qualification}
           />
         </View>
 
@@ -39,6 +46,8 @@ const ProfessionalTab = () => {
             placeholder="Enter your years of experience"
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
+            keyboardType="decimal-pad"
+            value={years_of_experience}
           />
         </View>
       </View>

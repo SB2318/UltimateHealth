@@ -7,11 +7,12 @@ import {
 } from 'react-native';
 import React from 'react';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {fp, wp} from '../helper/Metric';
 import {PRIMARY_COLOR} from '../helper/Theme';
-const HomeScreenHeader = ({handlePresentModalPress}) => {
+import {HomeScreenHeaderProps} from '../type';
+
+const HomeScreenHeader = ({handlePresentModalPress}: HomeScreenHeaderProps) => {
   return (
     <View style={[styles.header]}>
       <View>

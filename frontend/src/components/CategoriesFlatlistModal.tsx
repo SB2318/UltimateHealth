@@ -7,14 +7,14 @@ import {
 } from '@gorhom/bottom-sheet';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {PRIMARY_COLOR} from '../helper/Theme';
-
+import {HomeScreenCategoriesFlatlistProps} from '../type.ts';
 // Main component for the categories modal
 const CategoriesFlatlistModal = ({
   bottomSheetModalRef2,
   categories,
   handleCategorySelection,
   selectCategoryList,
-}) => {
+}: HomeScreenCategoriesFlatlistProps) => {
   // Function to render the backdrop for the bottom sheet
   const renderBackdrop = useCallback(
     props => (

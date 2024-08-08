@@ -6,15 +6,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-  Alert,
-  ScrollView,
 } from 'react-native';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import feather from 'react-native-vector-icons/Feather';
 import {hp} from '../../helper/Metric';
-import AntIcon from 'react-native-vector-icons/AntDesign'
+import AntIcon from 'react-native-vector-icons/AntDesign';
+import {NewPasswordScreenProp} from '../../type';
 
-export default function NewPasswordScreen({navigation}) {
+export default function NewPasswordScreen({navigation}: NewPasswordScreenProp) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState({
@@ -39,91 +38,86 @@ export default function NewPasswordScreen({navigation}) {
   };
 
   return (
-
     <SafeAreaView style={styles.container}>
-
-<TouchableOpacity 
-style={{marginHorizontal:16, marginTop:6}}
-onPress={()=>{
-  navigation.navigate('LoginScreen')
-}}
->
-<AntIcon 
-  name='arrowleft' size={35} color='white' 
-  />
-</TouchableOpacity>
-
-    <View style={styles.innerContainer}>
-      {/* <Text style={styles.title}>New Password</Text> */}
-      <View style={styles.inputContainer}>
-        <Text style={styles.text}>Enter new password</Text>
-        {error && <Text style={styles.error}>{errorText}</Text>}
-        <View style={[styles.passwordContainer, error && styles.inputError]}>
-          <TextInput
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={!showPassword.new}
-            placeholder="at least 10 digits"
-            value={password}
-            onChangeText={setPassword}
-            style={styles.input}
-          />
-          <feather.Button
-            name={showPassword.new ? 'eye' : 'eye-off'}
-            size={24}
-            color="black"
-            backgroundColor="white"
-            onPress={() =>
-              setShowPassword({...showPassword, new: !showPassword.new})
-            }
-          />
-        </View>
-      </View>
-      <View style={styles.inputContainer}>
-        <Text style={styles.text}>Confirm password</Text>
-        {error && <Text style={styles.error}>{errorText}</Text>}
-        <View style={[styles.passwordContainer, error && styles.inputError]}>
-          <TextInput
-            autoCapitalize="none"
-            autoCorrect={false}
-            secureTextEntry={!showPassword.confirm}
-            placeholder="*******"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            style={styles.input}
-          />
-          <feather.Button
-            name={showPassword.confirm ? 'eye' : 'eye-off'}
-            size={24}
-            color="black"
-            backgroundColor="white"
-            onPress={() =>
-              setShowPassword({...showPassword, confirm: !showPassword.confirm})
-            }
-          />
-        </View>
-      </View>
-      <TouchableOpacity style={styles.button} onPress={handlePasswordSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
+      <TouchableOpacity
+        style={{marginHorizontal: 16, marginTop: 6}}
+        onPress={() => {
+          navigation.navigate('LoginScreen');
+        }}>
+        <AntIcon name="arrowleft" size={35} color="white" />
       </TouchableOpacity>
-    </View>
 
+      <View style={styles.innerContainer}>
+        {/* <Text style={styles.title}>New Password</Text> */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Enter new password</Text>
+          {error && <Text style={styles.error}>{errorText}</Text>}
+          <View style={[styles.passwordContainer, error && styles.inputError]}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={!showPassword.new}
+              placeholder="at least 10 digits"
+              value={password}
+              onChangeText={setPassword}
+              style={styles.input}
+            />
+            <feather.Button
+              name={showPassword.new ? 'eye' : 'eye-off'}
+              size={24}
+              color="black"
+              backgroundColor="white"
+              onPress={() =>
+                setShowPassword({...showPassword, new: !showPassword.new})
+              }
+            />
+          </View>
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.text}>Confirm password</Text>
+          {error && <Text style={styles.error}>{errorText}</Text>}
+          <View style={[styles.passwordContainer, error && styles.inputError]}>
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              secureTextEntry={!showPassword.confirm}
+              placeholder="*******"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              style={styles.input}
+            />
+            <feather.Button
+              name={showPassword.confirm ? 'eye' : 'eye-off'}
+              size={24}
+              color="black"
+              backgroundColor="white"
+              onPress={() =>
+                setShowPassword({
+                  ...showPassword,
+                  confirm: !showPassword.confirm,
+                })
+              }
+            />
+          </View>
+        </View>
+        <TouchableOpacity style={styles.button} onPress={handlePasswordSubmit}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-
-  container:{
-
-    flex:1,
-    backgroundColor:PRIMARY_COLOR
+  container: {
+    flex: 1,
+    backgroundColor: PRIMARY_COLOR,
   },
   innerContainer: {
     alignItems: 'center',
     padding: 20,
     borderColor: 'white',
-    marginTop:80,
+    marginTop: 80,
     backgroundColor: 'white',
     paddingHorizontal: 10,
     paddingVertical: 20,
@@ -164,7 +158,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: PRIMARY_COLOR,
     backgroundColor: 'white',
-    borderRadius:8
+    borderRadius: 8,
   },
   input: {
     flex: 1,
@@ -185,6 +179,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize:18
+    fontSize: 18,
   },
 });

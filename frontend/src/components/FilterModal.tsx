@@ -11,9 +11,10 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import CategoriesFlatlistModal from './CategoriesFlatlistModal';
 import {PRIMARY_COLOR} from '../helper/Theme';
+import {HomeScreenFilterModalProps} from '../type';
 
 // Helper function to format date as DD/MM/YYYY
-const formatDate = date => {
+const formatDate = (date: Date) => {
   const day = date.getDate().toString().padStart(2, '0');
   const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
   const year = date.getFullYear();
@@ -30,7 +31,7 @@ const FilterModal = ({
   handleFilterApply,
   setDate,
   date,
-}) => {
+}: HomeScreenFilterModalProps) => {
   // Ref for second bottom sheet modal (category selection)
   const bottomSheetModalRef2 = useRef<BottomSheetModal>(null);
 
@@ -53,7 +54,7 @@ const FilterModal = ({
   };
 
   // Handle date selection from date picker
-  const handleConfirm = date => {
+  const handleConfirm = (date: Date) => {
     const formattedDate = formatDate(date);
     setDate(formattedDate);
     hideDatePicker();

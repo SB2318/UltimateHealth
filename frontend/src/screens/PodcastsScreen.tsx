@@ -15,9 +15,10 @@ import PodcastCard from '../components/PodcastCard';
 import PodcastPlayer from '../components/PodcastPlayer';
 import {podcast} from '../helper/Utils';
 import {hp} from '../helper/Metric';
+import {PodcastScreenProps} from '../type';
 
 // PodcastsScreen component displays the list of podcasts and includes a PodcastPlayer
-const PodcastsScreen = ({navigation}) => {
+const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
   const headerHeight = useHeaderHeight();
 
   // Effect to handle back navigation and show an exit confirmation alert

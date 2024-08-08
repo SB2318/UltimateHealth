@@ -1,14 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button, Alert, TouchableOpacity } from 'react-native';
-import {fp, hp, wp} from '../helper/Metric';
-import { PRIMARY_COLOR } from '../helper/Theme';
+import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {hp, wp} from '../helper/Metric';
+import {PRIMARY_COLOR} from '../helper/Theme';
 
-const NoInternet = ({ onRetry }) => {
-
+const NoInternet = ({onRetry}) => {
   return (
     <View style={styles.container}>
       <View style={styles.box}>
-         <Image
+        <Image
           source={require('../assets/no-internet-icon.png')}
           style={styles.image_wifi}
         />
@@ -26,7 +25,7 @@ const NoInternet = ({ onRetry }) => {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -34,7 +33,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    padding: 20
+    padding: 20,
   },
   box: {
     justifyContent: 'center',
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
-  }
+  },
 });
 
 export default NoInternet;

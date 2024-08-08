@@ -2,9 +2,10 @@ import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
-import {handleBackButton} from '../helper/Utils';
+// import {handleBackButton} from '../helper/Utils';
+import {SplashScreenProp} from '../type';
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = ({navigation}: SplashScreenProp) => {
   const checkLoginStatus = async () => {
     try {
       const user = await AsyncStorage.getItem('user');
@@ -27,6 +28,7 @@ const SplashScreen = ({navigation}) => {
     return () => {
       clearTimeout(timer);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigation]);
 
   return (

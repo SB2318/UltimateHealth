@@ -14,7 +14,8 @@ import {TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
-const Stack = createStackNavigator();
+import {RootStackParamList} from '../type';
+const Stack = createStackNavigator<RootStackParamList>();
 
 const StackNavigation = () => {
   return (
