@@ -2,9 +2,13 @@
 
 The connection between the gut and the brain is more profound than you might think. Often referred to as the "second brain," the digestive system plays a crucial role in mental health, influencing mood, stress levels, and overall mental well-being. Understanding how your digestive system affects your mental health can empower you to make informed choices for both your physical and psychological well-being.
 
+
+
 ## The Gut-Brain Axis: A Two-Way Communication System
 
 The relationship between the gut and the brain is facilitated by a complex network known as the gut-brain axis. This bidirectional communication system allows the brain to influence gut function and vice versa. The gut and brain communicate through neural pathways, hormones, and the immune system, making it clear that what happens in your gut doesn't stay in your gut—it affects your brain too.
+
+![alt text](<Firefly Good Digestion of a healthy person 85881-1.jpg>)
 
 ### The Role of the Vagus Nerve
 
