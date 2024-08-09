@@ -8,12 +8,16 @@ Hormonal balance is crucial for overall health, affecting everything from metabo
 ### a. What Are Hormones?
 Hormones are chemical messengers produced by the endocrine glands, which travel through the bloodstream to tissues and organs, affecting numerous bodily functions. They regulate processes such as growth, metabolism, reproduction, and mood.
 
+![what-is-a-hormone-l](https://github.com/user-attachments/assets/c8393045-daed-4bce-ad6c-8181ae0f38d6)
+
 ### b. Key Hormones and Their Roles
 - **Insulin**: Regulates blood sugar levels.
 - **Thyroid Hormones (T3, T4)**: Control metabolism and energy production.
 - **Estrogen and Progesterone**: Involved in reproductive health and menstrual cycles.
 - **Cortisol**: Known as the stress hormone, it regulates metabolism, immune response, and energy levels.
 - **Testosterone**: Involved in muscle mass, bone density, and libido.
+
+ ![a7130a0524e30b0dfd6fd0ace53682ce](https://github.com/user-attachments/assets/f9bbaa5e-4b89-441b-ae16-dbcc30afbdfa)
 
 ### c. The Impact of Hormonal Imbalance
 Hormonal imbalances can lead to a variety of health issues, including weight gain, fatigue, anxiety, infertility, and chronic diseases. Diet is one of the key factors that can help restore or disrupt this balance.
@@ -36,6 +40,8 @@ Hormonal imbalances can lead to a variety of health issues, including weight gai
 - **Sources**: Berries, green tea, dark chocolate, and leafy greens.
 - **Benefits**: Antioxidants protect the endocrine glands from oxidative stress, supporting healthy hormone production.
 
+![EYN-8-Best-Hormone-Balancing-Foods-instagram-780x780](https://github.com/user-attachments/assets/de766106-a9df-44ab-bd7b-52e668996c70)
+
 ## 3. Foods that Disrupt Hormonal Balance
 
 ### a. Refined Sugars and Carbohydrates
@@ -52,6 +58,8 @@ Hormonal imbalances can lead to a variety of health issues, including weight gai
 ### d. Soy Products
 - **Sources**: Tofu, soy milk, and soy-based products.
 - **Impact**: Soy contains phytoestrogens, which can mimic estrogen in the body and potentially disrupt hormonal balance, especially in individuals sensitive to estrogen.
+
+![th](https://github.com/user-attachments/assets/ef5893c8-f4f6-4e8f-ae31-8ea735c92008)
 
 ## 4. The Role of Diet in Managing Specific Hormonal Conditions
 
@@ -119,6 +127,8 @@ Work with a healthcare provider or nutritionist to create a personalized dietary
 
 ### d. Monitoring and Adjusting Diet Over Time
 Hormonal needs may change with age, lifestyle, and health conditions. Regularly review and adjust your diet with the help of a professional to ensure it continues to meet your needs.
+
+![Hormone-Type-6-Diet-Plan-IG-683x1024](https://github.com/user-attachments/assets/2412cf5f-1bab-41a4-9673-bbeb04ba3ac9)
 
 ## 8. Conclusion
 
