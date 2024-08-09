@@ -3,13 +3,19 @@
 ## Introduction
 CRISPR-Cas9 is a revolutionary gene-editing technology that has transformed the field of molecular biology and genetics. This powerful tool allows for precise, directed changes to the DNA of living organisms, offering new possibilities for genetic research, disease treatment, and biotechnology. This guide explores the mechanism behind CRISPR-Cas9, its applications in gene editing, and the ethical considerations surrounding its use.
 
+![th (2)](https://github.com/user-attachments/assets/07726559-5f8b-4c6b-978d-1fd7a4bc4a5d)
+
 ## 1. Understanding CRISPR-Cas9
 
 ### a. What is CRISPR-Cas9?
 CRISPR (Clustered Regularly Interspaced Short Palindromic Repeats) is a natural defense mechanism found in bacteria, where it serves as an adaptive immune system to protect against viral infections. Cas9 (CRISPR-associated protein 9) is an enzyme that acts as molecular scissors, capable of cutting DNA at specific locations guided by RNA molecules.
 
+![th (1)](https://github.com/user-attachments/assets/822b2752-086a-4fbd-9724-95ebc786a91a)
+
 ### b. How Does CRISPR-Cas9 Work?
 The CRISPR-Cas9 system operates by using a guide RNA (gRNA) to target a specific sequence of DNA. Once the gRNA finds its complementary DNA sequence, Cas9 cuts the DNA at that location. This cut can be repaired by the cell's natural DNA repair mechanisms, which can be harnessed to either disable a gene or introduce new genetic material.
+
+![How-does-CRISPR-Cas9-work-1536x1086](https://github.com/user-attachments/assets/01ccf4bf-d2db-4c0d-a13b-4ffeca09444f)
 
 ## 2. Mechanism of CRISPR-Cas9
 
@@ -27,6 +33,8 @@ The CRISPR-Cas9 system operates by using a guide RNA (gRNA) to target a specific
 - **Viral Vectors**: Commonly used for delivering CRISPR components into cells, especially in vivo.
 - **Non-Viral Methods**: Includes techniques like electroporation, microinjection, and lipid nanoparticles for in vitro and ex vivo gene editing.
 
+![th](https://github.com/user-attachments/assets/69cde627-5607-4fd7-bfe9-b2f6fd174325)
+
 ## 3. Applications of CRISPR-Cas9 in Gene Editing
 
 ### a. Disease Treatment
@@ -40,6 +48,8 @@ The CRISPR-Cas9 system operates by using a guide RNA (gRNA) to target a specific
 ### c. Functional Genomics
 - **Gene Knockout Studies**: CRISPR enables the creation of gene knockout models to study gene function and interactions.
 - **Genome-Wide Screening**: CRISPR libraries allow for high-throughput screening of gene function across the entire genome.
+
+![Applications-of-CRISPR-Cas9-Genomic-Engineering-As-a-genetic-and-epigenetic-engineering](https://github.com/user-attachments/assets/4cccbd9f-940e-4224-bde8-30b0790d23b0)
 
 ## 4. Ethical Considerations in CRISPR-Cas9 Technology
 
