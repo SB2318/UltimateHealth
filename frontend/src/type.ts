@@ -27,7 +27,7 @@ export type TabParamList = {
 };
 
 export type SplashScreenProp =
-  | StackScreenProps<RootStackParamList, 'LoginScreen'>
+  | StackScreenProps<RootStackParamList, 'SplashScreen'>
   | StackScreenProps<RootStackParamList, 'LoginScreen'>;
 
 export type NewPasswordScreenProp = StackScreenProps<
@@ -44,7 +44,7 @@ export type SignUpScreenFirstProp = StackScreenProps<
 
 export type SignUpScreenSecondProp = StackScreenProps<
   RootStackParamList,
-  'SignUpScreenFirst'
+  'SignUpScreenSecond'
 >;
 
 export type LoginScreenProp = StackScreenProps<

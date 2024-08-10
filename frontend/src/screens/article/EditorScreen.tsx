@@ -1,26 +1,47 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, {useRef, useState} from 'react';
-import {StyleSheet, Text, ScrollView, View} from 'react-native';
+import {StyleSheet, Text, ScrollView} from 'react-native';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
 import IonIcon from 'react-native-vector-icons/Ionicons';
+// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {EditorScreenProp} from '../../type';
 import * as ImagePicker from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useHeaderHeight} from '@react-navigation/elements';
+
 const EditorScreen = ({navigation}: EditorScreenProp) => {
   const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
   const strikethrough = require('../../assets/stricketThrough.png'); //icon for strikethrough
   //const video = require('../../assets/play-button.png'); //icon for Addvideo
   const RichText = useRef(); //reference to the RichEditor component
   const [article, setArticle] = useState('');
-
+  React.useEffect(() => {
+    // Use `setOptions` to update the button that we previously specified
+    // Now the button includes an `onPress` handler to update the count
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.preview_button}
+          onPress={() => {
+            //if (article.length > 20) {
+            navigation.navigate('PreviewScreen', {
+              article: article,
+            });
+            // }
+          }}>
+          <Fontisto name="preview" size={26} color="black" />
+          {/* <MaterialIcons name="preview" size={30} /> */}
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, article]);
   // this function will be called when the editor has been initialized
   function editorInitializedCallback() {
-    RichText.current?.registerToolbar(function (items) {
+    RichText.current?.registerToolbar(function (_items) {
       // items contain all the actions that are currently active
       // console.log(
       //   'Toolbar click, selected items (insert end callback):',
@@ -30,7 +51,7 @@ const EditorScreen = ({navigation}: EditorScreenProp) => {
   }
 
   // Callback after height change
-  function handleHeightChange(height) {
+  function handleHeightChange(_height) {
     // console.log("editor height change:", height);
   }
 
@@ -71,12 +92,8 @@ const EditorScreen = ({navigation}: EditorScreenProp) => {
   // }
 
   return (
-    <ScrollView
-      style={[
-        styles.container,
-        {paddingTop: headerHeight, paddingBottom: insets.bottom},
-      ]}>
-      <View style={styles.box}>
+    <ScrollView style={[styles.container, {paddingBottom: insets.bottom}]}>
+      {/* <View style={styles.box}>
         <Text style={styles.text}>Write your post</Text>
 
         <TouchableOpacity
@@ -89,7 +106,7 @@ const EditorScreen = ({navigation}: EditorScreenProp) => {
           }}>
           <Text style={styles.preview}>Preview</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <RichToolbar
         style={[styles.richBar]}
@@ -218,9 +235,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   editor: {
-    backgroundColor: 'black',
+    // backgroundColor: 'black',
     borderColor: 'black',
     borderWidth: 1,
+    marginHorizontal: 10,
   },
   rich: {
     minHeight: 300,
@@ -255,5 +273,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  preview_button: {
+    marginRight: 15,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
   },
 });
