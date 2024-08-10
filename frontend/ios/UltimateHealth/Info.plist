@@ -47,10 +47,10 @@
 		<string>$(CURRENT_PROJECT_VERSION)</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
-		<key>LSApplicationQueriesSchemes</key> 
-		<array> 
-			<string>tel</string> 
-			<string>telprompt</string> 
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>tel</string>
+			<string>telprompt</string>
 		</array>
 		<key>NSAppTransportSecurity</key>
 		<dict>
@@ -59,6 +59,12 @@
 			<key>NSAllowsLocalNetworking</key>
 			<true/>
 		</dict>
+		<key>NSCameraUsageDescription</key>
+		<string>$(PRODUCT_NAME) would like to use your camera</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>$(PRODUCT_NAME) would like to your microphone (for videos)</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>$(PRODUCT_NAME) would like access to your photo gallery</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string/>
 		<key>UILaunchStoryboardName</key>
