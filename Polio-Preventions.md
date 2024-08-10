@@ -69,6 +69,38 @@ Preventing polio involves a combination of vaccination, good hygiene practices, 
 ### Vaccination
 Vaccination is the cornerstone of polio prevention. The polio vaccine is available in two forms: the oral polio vaccine (OPV), which is easy to administer and provides strong immunity, and the inactivated polio vaccine (IPV), which is given by injection and is used in many high-income countries. Both vaccines are highly effective in preventing polio and are safe for use in children. Vaccination campaigns targeting high-risk populations, including infants and young children, are essential to achieving and maintaining polio-free status in all regions.
 
+### Available vaccines
+
+There are two types of vaccines that protect against polio.
+
+**Inactivated polio vaccine (IPV)**:
+- The only polio vaccine that has been used in the United States since 2000.
+- It is given by shot in the leg or arm, depending on the patient's age.
+
+**Oral polio vaccine (OPV)**:
+- No longer licensed or available in the United States
+- It is still used in many parts of the world.
+- Children receive doses of the vaccine by drops in the mouth.
+
+### Why getting vaccinated is important
+- Polio vaccination protects you child from:
+
+- Getting polio, a potentially serious disease.
+- Developing lifelong paralysis from polio.
+- The risk of lifelong paralysis is very serious. Even children who seem to fully recover can later develop new muscle pain, weakness, or paralysis as adults. This can occur 15 to 40 years later.
+- About 2 to 10 children out of 100 who have paralysis from polio die. This is because the virus affects the muscles that help them breathe.
+- 
+### Possible sidde effects
+
+There is a chance of side effects, but they are usually mild and go away on their own. Serious reactions are also possible.
+Some people get a sore spot where the shot was given. IPV has not been known to cause serious problems, and most people do not have any problems with it.
+
+- Some problems that could happen after getting this vaccine:
+- People sometimes faint after a medical procedure, including vaccination. 
+- Sitting or lying down for about 15 minutes can help prevent fainting and injuries caused by a fall.
+- Tell your healthcare provider if you feel dizzy or have vision changes or ringing in the ears after you get the shot.
+- Some people get more severe and lasting shoulder pain than the typical soreness that can follow injections. This happens very rarely.
+
 ### Hygiene Practices
 Good hygiene practices play a crucial role in preventing the spread of the poliovirus. Regular handwashing with soap and clean water, particularly before eating and after using the toilet, is one of the most effective ways to reduce transmission. Ensuring that food is properly cooked and stored, avoiding the consumption of contaminated water, and practicing safe sanitation methods can further reduce the risk of polio. In communities with limited access to clean water, education and infrastructure improvements are necessary to promote hygiene.
 
