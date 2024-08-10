@@ -32,6 +32,7 @@ Polio, or poliomyelitis, is a highly infectious viral disease that can cause par
 ## What is Polio?
 Polio is a viral disease that primarily affects the nervous system, leading to muscle weakness and paralysis. The poliovirus, which belongs to the Enterovirus genus, enters the body through the mouth, usually from hands contaminated with the stool of an infected person. Once inside the body, the virus multiplies in the throat and intestinal tract before spreading to the nervous system, where it can cause irreversible damage. In severe cases, polio can paralyze the muscles used for breathing, leading to death. The disease has three strains: type 1, type 2, and type 3, with type 2 eradicated globally.
 
+![Screenshot 2024-08-10 080351](https://github.com/user-attachments/assets/d4afa88f-cc7b-4392-b487-f301be2f204e)
 
 ## Who is Affected?
 Polio primarily affects children under the age of 5, who are more susceptible to severe complications due to their developing immune systems. However, unvaccinated individuals of any age can contract the disease, making it a concern for adults in regions where vaccination coverage is low. Pregnant women, individuals with weakened immune systems, and those with poor nutritional status are also at higher risk of severe outcomes. In communities where polio is still endemic, the disease can spread rapidly, affecting a large portion of the population.
