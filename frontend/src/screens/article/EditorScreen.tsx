@@ -1,17 +1,20 @@
 import React, {useRef, useState} from 'react';
 import {StyleSheet, Text, ScrollView, View} from 'react-native';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
-
 import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {EditorScreenProp} from '../../type';
-
+import * as ImagePicker from 'react-native-image-picker';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useHeaderHeight} from '@react-navigation/elements';
 const EditorScreen = ({navigation}: EditorScreenProp) => {
+  const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
   const strikethrough = require('../../assets/stricketThrough.png'); //icon for strikethrough
-  const video = require('../../assets/play-button.png'); //icon for Addvideo
+  //const video = require('../../assets/play-button.png'); //icon for Addvideo
   const RichText = useRef(); //reference to the RichEditor component
   const [article, setArticle] = useState('');
 
@@ -19,10 +22,10 @@ const EditorScreen = ({navigation}: EditorScreenProp) => {
   function editorInitializedCallback() {
     RichText.current?.registerToolbar(function (items) {
       // items contain all the actions that are currently active
-      console.log(
-        'Toolbar click, selected items (insert end callback):',
-        items,
-      );
+      // console.log(
+      //   'Toolbar click, selected items (insert end callback):',
+      //   items,
+      // );
     });
   }
 
@@ -31,20 +34,52 @@ const EditorScreen = ({navigation}: EditorScreenProp) => {
     // console.log("editor height change:", height);
   }
 
-  function onPressAddImage() {
-    RichText.current?.insertImage(
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/100px-React-icon.svg.png',
-    );
+  async function onPressAddImage() {
+    const result = await ImagePicker.launchImageLibrary({
+      mediaType: 'photo',
+      presentationStyle: 'popover',
+      quality: 0.7,
+      includeBase64: true,
+    });
+    if (result.assets && result.assets.length > 0) {
+      const type = result.assets[0].type;
+      const base64String = result.assets[0].base64;
+      const str = `data:${type};base64,${base64String}`;
+      await RichText.current?.insertImage(str);
+    } else {
+      console.log('No image selected');
+    }
   }
 
-  function insertVideo() {
-    RichText.current?.insertVideo(
-      'https://mdn.github.io/learning-area/html/multimedia-and-embedding/video-and-audio-content/rabbit320.mp4',
-    );
-  }
+  // async function insertVideo() {
+  //   const result = await ImagePicker.launchImageLibrary({
+  //     mediaType: 'video',
+  //     presentationStyle: 'popover',
+  //   });
+
+  //   if (result.assets && result.assets.length > 0) {
+  //     const fileUri = result.assets[0].uri;
+  //     console.log('Image URI:', fileUri);
+  //     setvideoData(`${fileUri}`);
+  //     // Convert the video URI to a Blob
+  //     // await RichText.current?.insertVideo(blobUrl);
+  //     // Insert video through local file url
+  //     RichText.current?.insertVideo(fileUri);
+  //     // Insert video through direct local url
+  //     // RichText.current?.insertVideo(
+  //     //   '/Users/hrushishinde/Library/Developer/CoreSimulator/Devices/DD9944B6-A638-4549-A4F1-19FD490E72B5/data/Containers/Data/Application/0D39B02E-BD47-44E5-B7C8-B8FC69E84790/tmp/rabbit320.mp4',
+  //     // );
+  //   } else {
+  //     console.log('No video selected');
+  //   }
+  // }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={[
+        styles.container,
+        {paddingTop: headerHeight, paddingBottom: insets.bottom},
+      ]}>
       <View style={styles.box}>
         <Text style={styles.text}>Write your post</Text>
 
@@ -70,9 +105,9 @@ const EditorScreen = ({navigation}: EditorScreenProp) => {
         onPressAddImage={onPressAddImage}
         iconSize={30}
         actions={[
-          'insertVideo',
+          // 'insertVideo',
           'insertImage',
-          ...defaultActions,
+          // ...defaultActions,
           actions.setStrikethrough,
           actions.alignLeft,
           actions.alignCenter,
@@ -86,6 +121,7 @@ const EditorScreen = ({navigation}: EditorScreenProp) => {
           actions.heading5,
           actions.heading6,
           actions.blockquote,
+          actions.insertHTML,
         ]}
         // map icons for self made actions
         iconMap={{
@@ -136,12 +172,12 @@ const EditorScreen = ({navigation}: EditorScreenProp) => {
           ),
 
           [actions.setStrikethrough]: strikethrough,
-          ['insertVideo']: video,
+          // ['insertVideo']: video,
           ['insertImage']: ({tintColor}) => (
             <Entypo name="image" color={tintColor} size={26} />
           ),
         }}
-        insertVideo={insertVideo}
+        // insertVideo={insertVideo}
         insertImage={onPressAddImage}
       />
       <RichEditor
@@ -183,7 +219,6 @@ const styles = StyleSheet.create({
   /*******************************/
   container: {
     flex: 1,
-
     backgroundColor: '#FFFFFF',
   },
   editor: {

@@ -59,7 +59,22 @@ const StackNavigation = () => {
       <Stack.Screen
         name="EditorScreen"
         component={EditorScreen}
-        options={{headerShown: false}}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: '',
+          headerTransparent: true,
+          headerBackTitleVisible: false,
+          // eslint-disable-next-line react/no-unstable-nested-components
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.headerLeftButtonEditorScreen}
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <FontAwesome6 size={25} name="arrow-left" color="black" />
+            </TouchableOpacity>
+          ),
+        })}
       />
 
       <Stack.Screen
@@ -123,6 +138,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 6,
     borderRadius: 50,
+  },
+  headerLeftButtonEditorScreen: {
+    marginLeft: 15,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
   },
   profileScreenHeaderLeftButton: {
     marginLeft: 15,
