@@ -15,6 +15,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
 import {RootStackParamList} from '../type';
+import { PRIMARY_COLOR } from '../helper/Theme';
 const Stack = createStackNavigator<RootStackParamList>();
 
 const StackNavigation = () => {
@@ -61,8 +62,7 @@ const StackNavigation = () => {
         component={EditorScreen}
         options={({navigation}) => ({
           headerShown: true,
-          headerTitle: '',
-          headerTransparent: true,
+          headerTitle: 'Write your post',
           headerBackTitleVisible: false,
           // eslint-disable-next-line react/no-unstable-nested-components
           headerLeft: () => (
@@ -86,7 +86,21 @@ const StackNavigation = () => {
       <Stack.Screen
         name="PreviewScreen"
         component={PreviewScreen}
-        options={{headerShown: false}}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: '',
+          headerBackTitleVisible: false,
+          // eslint-disable-next-line react/no-unstable-nested-components
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.headerLeftButtonEditorScreen}
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
+            </TouchableOpacity>
+          ),
+        })}
       />
 
       <Stack.Screen
