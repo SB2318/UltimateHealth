@@ -65,10 +65,6 @@ const EditorScreen = ({navigation}: EditorScreenProp) => {
   //     // await RichText.current?.insertVideo(blobUrl);
   //     // Insert video through local file url
   //     RichText.current?.insertVideo(fileUri);
-  //     // Insert video through direct local url
-  //     // RichText.current?.insertVideo(
-  //     //   '/Users/hrushishinde/Library/Developer/CoreSimulator/Devices/DD9944B6-A638-4549-A4F1-19FD490E72B5/data/Containers/Data/Application/0D39B02E-BD47-44E5-B7C8-B8FC69E84790/tmp/rabbit320.mp4',
-  //     // );
   //   } else {
   //     console.log('No video selected');
   //   }
