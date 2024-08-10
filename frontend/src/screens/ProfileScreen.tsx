@@ -16,8 +16,7 @@ import {Article, ProfileScreenProps, User} from '../type';
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const [userData, setUserData] = useState<User>();
-  const auth_token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmE2MDA2NWQ4M2YxY2JhMDZjZjc5MzciLCJlbWFpbCI6ImRyLmphbmUuc21pdGhAZXhhbXBsZS5jb20iLCJpYXQiOjE3MjIxNzQ0MjUsImV4cCI6MTcyMjI2MDgyNX0.oaVeBTFak3u1IO9-yw6hhxJ_nLjJncBd96rO2TYPx_M';
+  const auth_token = '';
   const getUserProfileData = async () => {
     const data = await getMethodCallwithToken(
       `${BASE_URL + GET_PROFILE_API}`,
