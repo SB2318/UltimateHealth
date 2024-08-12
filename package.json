@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "react-native-htmlview": "^0.17.0",
-    "react-native-pell-rich-editor": "^1.9.0",
-    "react-native-webview": "^13.10.4"
-  }
-}
