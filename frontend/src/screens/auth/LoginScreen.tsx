@@ -26,7 +26,6 @@ import axios, {AxiosError} from 'axios';
 import {LOGIN_API, RESEND_VERIFICATION, SEND_OTP} from '../../helper/APIUtils';
 import Loader from '../../components/Loader';
 
-
 const LoginScreen = ({navigation}: LoginScreenProp) => {
   const inset = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === 'dark';
