@@ -9,6 +9,7 @@ import {
   BackHandler,
   Alert,
   useColorScheme,
+  Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR} from '../../helper/Theme';
@@ -16,13 +17,15 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fp, hp, wp} from '../../helper/Metric';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 // import {useNavigation} from '@react-navigation/native';
-import {KEYS, storeItem} from '../../helper/Utils';
+import {Categories, KEYS, storeItem} from '../../helper/Utils';
 import EmailInputModal from '../../components/EmailInputModal';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {AuthData, LoginScreenProp, User} from '../../type';
 import {useMutation} from '@tanstack/react-query';
 import axios, {AxiosError} from 'axios';
 import {LOGIN_API, RESEND_VERIFICATION, SEND_OTP} from '../../helper/APIUtils';
+import Loader from '../../components/Loader';
+
 
 const LoginScreen = ({navigation}: LoginScreenProp) => {
   const inset = useSafeAreaInsets();
@@ -252,6 +255,13 @@ const LoginScreen = ({navigation}: LoginScreenProp) => {
     },
   });
 
+  if (
+    loginMutation.isPending ||
+    sendOtpMutation.isPending ||
+    requestVerification.isPending
+  ) {
+    return <Loader />;
+  }
   return (
     <View style={styles.container}>
       <StatusBar
@@ -414,6 +424,7 @@ const LoginScreen = ({navigation}: LoginScreenProp) => {
         </View>
       </View>
     </View>
+    // <DropDownComponent data={Categories} />
   );
 };
 
