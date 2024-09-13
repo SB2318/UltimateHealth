@@ -124,14 +124,11 @@ const LoginScreen = ({navigation}: LoginScreenProp) => {
         userId: data.user_id,
         token: data?.verificationToken,
       };
-      storeItem(KEYS.LOGIN_STATE, auth)
-        .then(() => {
-          navigation.navigate('TabNavigation');
-        })
-        .catch(err => {
-          Alert.alert("Can't able to store your authentication state");
-          console.log('Error', err);
-        });
+      storeItem(KEYS.USER_ID, auth.userId.toString());
+      if (auth.token) {
+        storeItem(KEYS.USER_TOKEN, auth.token.toString());
+      }
+      navigation.navigate('TabNavigation');
     },
 
     onError: (error: AxiosError) => {

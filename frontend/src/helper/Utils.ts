@@ -1,6 +1,7 @@
 import NetInfo from '@react-native-community/netinfo';
 import {Article, CategoryType, Podcast} from '../type';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {MMKV} from 'react-native-mmkv';
+const storage = new MMKV();
 
 export const checkInternetConnection = (
   callback: (isConnected: boolean) => void,
@@ -236,12 +237,10 @@ export const podcast: Podcast[] = [
   },
 ];
 
-
-
-// Async Storage for get Item 
+// Async Storage for get Item
 export const retrieveItem = async key => {
   try {
-    const value = await AsyncStorage.getItem(key);
+    const value = storage.getString(key);
     return value;
   } catch (error) {
     console.error('Error retrieving item:', error);
@@ -249,20 +248,16 @@ export const retrieveItem = async key => {
   }
 };
 
-// Async Storage Store Item 
-export const storeItem = async (key: string, value: any) => {
-  try {
-    await AsyncStorage.setItem(key, JSON.stringify(value));
-  } catch (error) {
-    console.error('Error storing item:', error);
-  }
+// Async Storage Store Item
+export const storeItem = (key: string, value: string) => {
+  storage.set(key, value);
 };
 
 // Async storage remove item
 
-export const removeItem = async key => {
+export const removeItem = key => {
   try {
-    await AsyncStorage.removeItem(key);
+    storage.delete(key);
   } catch (error) {
     console.error('Error removing item:', error);
   }
@@ -514,18 +509,18 @@ Advanced Stage: Total dependence of the person on the caregiver for all personal
 `;
 
 export const KEYS = {
-  LOGIN_STATE:'AUTH_STATE',
-}
+  USER_ID: 'USER_ID',
+  USER_TOKEN: 'USER_TOKEN',
+};
 
 export const createHTMLStructure = (
-  title: string, 
-  body:string, 
-  tags:string[], 
+  title: string,
+  body: string,
+  tags: string[],
   social_link: string,
-  author:string
-)=>{
-  return (
-`<!DOCTYPE html>
+  author: string,
+) => {
+  return `<!DOCTYPE html>
 <html>
 <head>
 <title>${title}</title>
@@ -609,11 +604,10 @@ table {
 ${body}
 <hr>
 <ul class="tag-list">
-  ${tags.map((tag) => `<li><a class="tag" href="#">#${tag}</a></li>`).join('')}
+  ${tags.map(tag => `<li><a class="tag" href="#">#${tag}</a></li>`).join('')}
 </ul>
 <h3>Author</h3>
 <h4><a href=${social_link}>${author}</a></h4>
 </body>
-`
-  )
-}
+`;
+};

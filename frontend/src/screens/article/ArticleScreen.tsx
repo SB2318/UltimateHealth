@@ -7,13 +7,18 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
-import {articles} from '../../helper/Utils';
+import {articles, KEYS, retrieveItem} from '../../helper/Utils';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ArticleScreenProp} from '../../type';
+import {useQuery} from '@tanstack/react-query';
+import {BASE_URL} from '../../helper/APIUtils';
+import Loader from '../../components/Loader';
+import axios from 'axios';
 
 const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
   const insets = useSafeAreaInsets();
@@ -23,6 +28,48 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
   const handleLike = () => {
     setisLiked(!isLiked);
   };
+
+  const getAuthToken = async () => {
+    const data = retrieveItem(KEYS.LOGIN_STATE);
+    if (data) {
+      const auth = JSON.parse(data);
+      console.log('Auth', auth.token);
+      return auth.token;
+    } else {
+      Alert.alert('Not authorized');
+      return null;
+    }
+  };
+
+  const {
+    data: articleData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['get-all-articles'],
+    queryFn: async () => {
+      try {
+        const token = await retrieveItem(KEYS.USER_TOKEN);
+        console.log('Auth token', token);
+        if (token == null) {
+          Alert.alert('No token found');
+          return;
+        }
+
+        const response = await axios.get(`${BASE_URL}/articles`);
+
+        console.log('Article Res', response.headers);
+        return response.data.articles;
+      } catch (err) {
+        console.error('Error fetching articles:', err);
+        throw err; // Make sure to throw the error to handle it properly
+      }
+    },
+  });
+
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <View style={styles.container}>
       <ScrollView

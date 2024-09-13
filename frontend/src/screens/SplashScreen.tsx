@@ -8,7 +8,7 @@ import {KEYS, retrieveItem} from '../helper/Utils';
 const SplashScreen = ({navigation}: SplashScreenProp) => {
   const checkLoginStatus = async () => {
     try {
-      const user = await retrieveItem(KEYS.LOGIN_STATE);
+      const user = await retrieveItem(KEYS.USER_TOKEN);
       if (user) {
         navigation.navigate('TabNavigation');
       } else {
