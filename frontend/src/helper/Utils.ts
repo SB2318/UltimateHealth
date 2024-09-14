@@ -1,7 +1,6 @@
 import NetInfo from '@react-native-community/netinfo';
 import {Article, CategoryType, Podcast} from '../type';
-import {MMKV} from 'react-native-mmkv';
-const storage = new MMKV();
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const checkInternetConnection = (
   callback: (isConnected: boolean) => void,
@@ -238,26 +237,32 @@ export const podcast: Podcast[] = [
 ];
 
 // Async Storage for get Item
-export const retrieveItem = async key => {
+export const retrieveItem = async (key: string) => {
   try {
-    const value = storage.getString(key);
+    const value = await AsyncStorage.getItem(key);
     return value;
-  } catch (error) {
-    console.error('Error retrieving item:', error);
-    return null;
+  } catch (e) {
+    // error reading value
+    console.log('Error reading value', e);
   }
 };
 
 // Async Storage Store Item
-export const storeItem = (key: string, value: string) => {
-  storage.set(key, value);
+export const storeItem = async (key: string, value: string) => {
+  try {
+    await AsyncStorage.setItem(key, value);
+    console.log(`Value saved for key : ${key}`, value);
+  } catch (e) {
+    // saving error
+    console.log('Async Storage Data error', e);
+  }
 };
 
 // Async storage remove item
 
-export const removeItem = key => {
+export const removeItem = async key => {
   try {
-    storage.delete(key);
+    await AsyncStorage.removeItem(key);
   } catch (error) {
     console.error('Error removing item:', error);
   }

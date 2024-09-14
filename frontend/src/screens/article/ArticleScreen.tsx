@@ -56,9 +56,13 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
           return;
         }
 
-        const response = await axios.get(`${BASE_URL}/articles`);
+        const response = await axios.get(`${BASE_URL}/articles`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        console.log('Article Res', response.headers);
+        console.log('Article Res', response.data);
         return response.data.articles;
       } catch (err) {
         console.error('Error fetching articles:', err);

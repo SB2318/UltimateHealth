@@ -119,16 +119,20 @@ const LoginScreen = ({navigation}: LoginScreenProp) => {
       return res.data.user as User;
     },
 
-    onSuccess: data => {
+    onSuccess: async data => {
       const auth: AuthData = {
         userId: data.user_id,
-        token: data?.verificationToken,
+        token: data?.refreshToken,
       };
-      storeItem(KEYS.USER_ID, auth.userId.toString());
-      if (auth.token) {
-        storeItem(KEYS.USER_TOKEN, auth.token.toString());
+      try {
+        await storeItem(KEYS.USER_ID, auth.userId.toString());
+        if (auth.token) {
+          await storeItem(KEYS.USER_TOKEN, auth.token.toString());
+        }
+        navigation.navigate('TabNavigation');
+      } catch (e) {
+        console.log('MMKV ERROR', e);
       }
-      navigation.navigate('TabNavigation');
     },
 
     onError: (error: AxiosError) => {
