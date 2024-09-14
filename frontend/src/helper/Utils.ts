@@ -516,6 +516,7 @@ Advanced Stage: Total dependence of the person on the caregiver for all personal
 export const KEYS = {
   USER_ID: 'USER_ID',
   USER_TOKEN: 'USER_TOKEN',
+  USER_TOKEN_EXPIRY_DATE:'USER_TOKEN_EXPIRY_DATE'
 };
 
 export const createHTMLStructure = (

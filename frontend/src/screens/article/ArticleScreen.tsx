@@ -41,39 +41,6 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
     }
   };
 
-  const {
-    data: articleData,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ['get-all-articles'],
-    queryFn: async () => {
-      try {
-        const token = await retrieveItem(KEYS.USER_TOKEN);
-        console.log('Auth token', token);
-        if (token == null) {
-          Alert.alert('No token found');
-          return;
-        }
-
-        const response = await axios.get(`${BASE_URL}/articles`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        console.log('Article Res', response.data);
-        return response.data.articles;
-      } catch (err) {
-        console.error('Error fetching articles:', err);
-        throw err; // Make sure to throw the error to handle it properly
-      }
-    },
-  });
-
-  if (isLoading) {
-    return <Loader />;
-  }
   return (
     <View style={styles.container}>
       <ScrollView
