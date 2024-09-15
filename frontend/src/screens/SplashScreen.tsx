@@ -6,26 +6,22 @@ import {SplashScreenProp} from '../type';
 import {KEYS, retrieveItem} from '../helper/Utils';
 
 const SplashScreen = ({navigation}: SplashScreenProp) => {
-
-
   function isDateMoreThanSevenDaysOld(dateString: string) {
     const inputDate = new Date(dateString).getTime();
     const currentDate = new Date().getTime();
     const timeDifference = currentDate - inputDate;
     const daysDifference = timeDifference / (1000 * 3600 * 24);
-    return daysDifference >= 7;
+    return daysDifference >= 6;
   }
 
-
-  function isDateNotMoreThanTenMinutesOld(dateString:string) {
+  // For testing purpose
+  function isDateNotMoreThanTenMinutesOld(dateString: string) {
     const inputDate = new Date(dateString);
     const currentDate = new Date();
     const timeDifference = currentDate.getTime() - inputDate.getTime();
     const minutesDifference = timeDifference / (1000 * 60);
     return minutesDifference <= 10;
-}
-
-
+  }
 
   const checkLoginStatus = async () => {
     try {
