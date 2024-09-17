@@ -15,6 +15,7 @@ const articleSchema = new Schema({
     type: String,
     required: true,
   },
+  
   authorId: {
     type: String,
     required: true,

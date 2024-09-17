@@ -1,6 +1,8 @@
 const express = require('express');
 const db = require("./config/database");
 const cors = require("cors");
+const compression = require('compression');
+const bodyParser = require('bodyParser');
 const userRoutes = require("./routes/usersRoutes");
 const specializationRoutes = require("./routes/SpecializationsRoutes");
 const articleRoutes = require("./routes/articleRoutes");
@@ -21,7 +23,9 @@ app.use(express.json());
 
 // Enable CORS
 app.use(cors({ origin: "*" }));
-
+app.use(compression());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/hello", (req, res) => {
     console.log("Hello World");

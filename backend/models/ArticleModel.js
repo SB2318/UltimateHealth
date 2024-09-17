@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-
-
-/** For Artcle Tags */
+/** For Article Tags */
 const articleTagSchema = new Schema({
   id: {
     type: Number,
