@@ -280,6 +280,7 @@ module.exports.updateViewCount = async(req, res)=>{
     return res.status(404).json({ error: 'User or Article not found' });
   }
   articleDb.viewCount +=1;
+  await articleDb.save();
   res.status(200).json({ message: 'Article view count updated', article: articleDb});
 
  }catch(err){
