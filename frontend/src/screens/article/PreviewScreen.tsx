@@ -70,7 +70,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       navigation.navigate('TabNavigation');
     },
     onError: error => {
-      console.log('Article post Error', error);
+      console.log('Article post Error', error.message);
       Alert.alert('Failed to upload your post');
     },
   });

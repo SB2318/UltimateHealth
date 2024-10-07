@@ -1,10 +1,8 @@
+const ArticleTag = require('../models/ArticleModel');
 const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 const AutoIncrement = require('mongoose-sequence')(mongoose);
-
-//const mongoose = require('mongoose');
-
-
 
 const articleSchema = new Schema({
   _id: {
@@ -20,8 +18,9 @@ const articleSchema = new Schema({
     required: true,
   },
   authorId: {
-    type: String,
+    type: Schema.Types.ObjectId, // Reference to User
     required: true,
+    ref: 'User'
   },
   content: {
     type: String,
@@ -29,7 +28,7 @@ const articleSchema = new Schema({
   },
   summary: {
     type: String,
-    default: null, // Explicitly state the default
+    default: null,
   },
   publishedDate: {
     type: Date,
@@ -41,14 +40,15 @@ const articleSchema = new Schema({
     required: true,
     default: Date.now,
   },
-  tags: {
-    type: [String], // Specify that this is an array of strings
-    default: [],
-  },
+  tags: [{
+    type: Schema.Types.ObjectId, // Reference to ArticleTag
+    ref: 'ArticleTag',
+    default: []
+  }],
   status: {
     type: String,
     enum: ['Draft', 'Published', 'Archived'],
-    default: 'Draft', // Setting a default status
+    default: 'Draft',
   },
   imageUtils: {
     type: [String],
@@ -74,14 +74,16 @@ const articleSchema = new Schema({
     required: true,
     default: false,
   },
-  likedUsers: {
-    type: [String], // Specify that this is an array of strings
-    default: [],
-  },
-  savedUsers: {
-    type: [String], // Specify that this is an array of strings
-    default: [],
-  },
+  likedUsers: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User', // Reference to User
+    default: []
+  }],
+  savedUsers: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User', // Reference to User
+    default: []
+  }],
 });
 
 // Apply the autoIncrement plugin to the schema
@@ -90,4 +92,3 @@ articleSchema.plugin(AutoIncrement, { id: 'article_id_counter', inc_field: '_id'
 const Article = mongoose.model('Article', articleSchema);
 
 module.exports = Article;
-

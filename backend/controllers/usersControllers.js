@@ -432,6 +432,39 @@ module.exports.getFollowers =  async (req, res) => {
 
 }
 
+// get User Articles,
+module.exports.getUserWithArticles = async (req, res)=>{
+  try {
+    const user = await User.findById(req.user.userId)
+      .populate('articles') ;// Populate  articles
+
+     if(!user){
+        return res.status(400).json({message:'user not found'});
+     }
+    return res.status(200).json({message:"Articles", data: user});
+  } catch (error) {
+    console.log("Get User Articles Error", error)
+    return res.status(500).json({message:'Internal server error'});
+  }
+}
+
+// get user like and save articles
+module.exports.getUserLikeAndSaveArticles = async (req, res)=>{
+  try {
+    const user = await User.findById(req.user.userId)
+    .populate('likedArticles') // Populate liked articles
+    .populate('savedArticles'); // Populate saved articles
+
+     if(!user){
+        return res.status(400).json({message:'user not found'});
+     }
+    return res.status(200).json({message:"Like and Save Articles", data: user});
+  } catch (error) {
+    console.log("Get User Articles Error", error)
+    return res.status(500).json({message:'Internal server error'});
+  }
+}
+
 //update read article 
 module.exports.updateReadArticles = async (req, res) => {
   try {

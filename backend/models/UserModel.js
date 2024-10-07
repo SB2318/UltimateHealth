@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const Article = require('./Articles');
 const Schema = mongoose.Schema;
 
 const userSchema = new mongoose.Schema({
@@ -90,27 +91,33 @@ const userSchema = new mongoose.Schema({
         default: null,
     },
     refreshToken: { type: String, default: null } ,
-    articles: {
-        type:Array,
-        default:[]
-    },
-    savedArticles: {
-        type: Array,
-        default:[]
-    },
-    likedArticles: {
-        type: Array,
-        default: []
-    },
-    followers:{
-        type: Array,
-        default:[]
-    },
 
-    followings:{
-        type: Array,
+    articles:  [{
+        type: Schema.Types.ObjectId,
+        ref: 'Article',
         default: []
-    },
+    }],
+    
+    savedArticles: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Article',
+        default: []
+    }],
+    likedArticles: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Article',
+        default: []
+    }],
+    followers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        default: []
+    }],
+    followings: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        default: []
+    }],
 
     followerCount: {
         type: Number,
@@ -123,25 +130,18 @@ const userSchema = new mongoose.Schema({
        // required: true,
         default: 0,
     },
-    readArticles: {
-        type: [
-          {
-            articleId: {
-              type: Number,
-              required: true,
-            },
-            readingDate: {
-              type: Date,
-              required: true,
-              default: Date.now,
-            },
-          }
-        ],
-        default: []
-      },
+    readArticles: [{
+        articleId: {
+            type: Number,
+            required: true,
+        },
+        readingDate: {
+            type: Date,
+            required: true,
+            default: Date.now,
+        },
+    }],
     
-
-
 });
 
 const User = mongoose.model('User', userSchema);

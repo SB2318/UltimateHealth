@@ -7,6 +7,8 @@ const {
     deleteByUser, deleteByAdmin,getprofile,
     follow,
     getFollowers,
+    getUserWithArticles,
+    getUserLikeAndSaveArticles,
     updateReadArticles,
     collectMonthlyRecordsForReading,
     collectMonthlyRecordsForWriting,
@@ -59,7 +61,11 @@ router.get('/user/collect-monthly-records-for-reading', collectMonthlyRecordsFor
 // Collect monthly records for writing
 router.get('/user/collect-monthly-records-for-writing',collectMonthlyRecordsForWriting);
 
+// Get user with articles
+router.get('/user/articles', authenticateToken, getUserWithArticles);
 
+// Get user liked and saved articles
+router.get('/user/liked-saved-articles', authenticateToken, getUserLikeAndSaveArticles);
 
 router.post("/user/logout", logout);
 

@@ -17,25 +17,28 @@ model admins {
 }
 
 model articles {
-  id             Int      @id @map("_id")
-  v              Int      @map("__v")
+  id             Int       @id @map("_id")
+  v              Int       @map("__v")
   adminPost      Boolean
   authorId       String
   authorName     String
   content        String
   imageUtils     String[]
   language       String
-  last_updated   DateTime @db.Date
+  lastUpdated    DateTime  @db.Date
+  last_updated   DateTime? @db.Date
   likeCount      Int
   likedUsers     String[]
-  published_date DateTime @db.Date
-  savedUsers     String[]
+  publishedDate  DateTime  @db.Date
+  published_date DateTime? @db.Date
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  savedUsers     Json?
+  status         String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  summary        Json?
   tags           String[]
   title          String
   viewCount      Int
-
-  users          users? @relation(fields: [usersid], references: [id])
-  usersid        String?
 }
 
 model articletags {
@@ -74,7 +77,7 @@ model users {
   v                   Int                @map("__v")
   /// Could not determine type: the field only had null or empty values in the sample set.
   about               Json?
-  articles            articles[]
+  articles            Unknown[]
   contact_detail      UsersContactDetail
   created_at          DateTime           @db.Date
   email               String             @unique(map: "email_1")
@@ -97,11 +100,12 @@ model users {
   /// Could not determine type: the field only had null or empty values in the sample set.
   readArticles        Json?
   refreshToken        String?
-  savedArticles       Int[]
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  savedArticles       Json?
   specialization      String?
   user_handle         String
   user_id             String             @unique(map: "user_id_1") @db.ObjectId
   user_name           String
   /// Could not determine type: the field only had null or empty values in the sample set.
-  verificationToken   String?
+  verificationToken   Json?
 }

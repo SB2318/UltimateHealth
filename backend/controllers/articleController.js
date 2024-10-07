@@ -5,23 +5,36 @@ const User = require("../models/UserModel");
 // Create a new article
 module.exports.createArticle = async (req, res) => {
   try {
-    const user = await User.findOne({ user_id: req.body.authorId })
-    const newArticle = new Article(req.body);
-    console.log("user:", req.body.authorId);
+    const { authorId, title, content, tags,imageUtils } = req.body; // Destructure required fields from req.body
+
+    // Find the user by ID
+    const user = await User.findById(authorId);
+    
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    user.articles.push(newArticle._id);
-    await user.save();
+
+    // Create a new article instance
+    const newArticle = new Article({
+      title,
+      content,
+      tags,
+      imageUtils,
+      authorId: user._id, // Set authorId to the user's ObjectId
+    });
+
+    // Save the new article to the database
     await newArticle.save();
 
-    res
-      .status(201)
-      .json({ message: "Article created successfully", newArticle });
+    // Update the user's articles field
+    user.articles.push(newArticle._id); 
+ 
+    await user.save();
+    // Respond with a success message and the new article
+    res.status(201).json({ message: "Article created successfully", newArticle });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error creating article", details: error.message });
+    console.log("Article Creation Error", error);
+    res.status(500).json({ error: "Error creating article", details: error.message });
   }
 };
 
@@ -36,6 +49,7 @@ module.exports.getAllArticles = async (req, res) => {
       .json({ error: "Error fetching articles", details: error.message });
   }
 };
+
 
 // Get an article by ID
 module.exports.getArticleById = async (req, res) => {
@@ -84,112 +98,6 @@ module.exports.deleteArticle = async (req, res) => {
       .json({ error: "Error deleting article", details: error.message });
   }
 };
-//Search an article by title
-module.exports.getArticleByTitle = async (req, res) => {
-  try {
-    const article = await Article.findOne({ title: req.params.title });
-    if (!article) {
-      return res.status(404).json({ message: "Article not found" });
-    }
-    res.status(200).json({ article });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error fetching article", details: error.message });
-  }
-};
-//Search an article by Author Name
-module.exports.getArticleByAuthorName = async (req, res) => {
-  try {
-    const article = await Article.findOne({
-      authorName: req.params.authorName,
-    });
-    if (!article) {
-      return res.status(404).json({ message: "Article not found" });
-    }
-    res.status(200).json({ article });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error fetching article", details: error.message });
-  }
-};
-//Search an article by  Name
-module.exports.getArticleByName = async (req, res) => {
-  try {
-    const article = await Article.findOne({
-      name: req.params.name,
-    });
-    if (!article) {
-      return res.status(404).json({ message: "Article not found" });
-    }
-    res.status(200).json({ article });
-  } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error fetching article", details: error.message });
-  }
-};
-
-//Search an article by Summary
-module.exports.getArticlesBySummary = async (req, res) => {
-  try {
-    const { summary } = req.query;
-    if (!summary) {
-      return res
-        .status(400)
-        .json({ message: "Summary is required to search articles" });
-    }
-
-    const articles = await Article.find({
-      summary: { $regex: summary, $options: "i" },
-    });
-
-    if (articles.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No articles found with the given summary" });
-    }
-
-    res.status(200).json({ articles });
-  } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Error fetching articles by summary",
-        details: error.message,
-      });
-  }
-};
-//Search an article by Tags
-module.exports.getArticlesByTags = async (req, res) => {
-  try {
-    const { tags } = req.query;
-    if (!tags || tags.length === 0) {
-      return res
-        .status(400)
-        .json({ message: "Tags are required to search articles" });
-    }
-
-    const tagsArray = tags.split(","); // Assuming tags are provided as a comma-separated string in the query
-    const articles = await Article.find({ tags: { $in: tagsArray } });
-
-    if (articles.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No articles found with the given tags" });
-    }
-
-    res.status(200).json({ articles });
-  } catch (error) {
-    res
-      .status(500)
-      .json({
-        error: "Error fetching articles by tags",
-        details: error.message,
-      });
-  }
-};
 
 // Save Article :
 module.exports.saveArticle = async (req, res) => {
@@ -214,19 +122,26 @@ module.exports.saveArticle = async (req, res) => {
     if (isArticleSaved) {
       
        // unsave article
-       user.savedArticles = user.savedArticles.filter(id => id !== article_id);
-       article.savedUsers = article.savedUsers.filter(id => id !== req.user.userId);
-
-       await user.save();
-       await article.save();
-       res.status(200).json({ message: 'Article unsaved'});
+       await Promise.all([
+        Article.findByIdAndUpdate(article_id, {
+          $pull: { savedUsers: req.user.userId } // Remove user from savedUsers
+        }),
+        User.findByIdAndUpdate(req.user.userId, {
+          $pull: { savedArticles: article_id } // Remove article from savedArticles
+        })
+      ]);
+      res.status(200).json({ message: 'Article unsaved'});
     
   }
    else{
-    user.savedArticles.push(article_id);
-    article.savedUsers.push(req.user.userId);
-    await user.save();
-    await article.save();
+    await Promise.all([
+      Article.findByIdAndUpdate(article_id, {
+        $addToSet: { savedUsers: req.user.userId } // Add user to savedUsers
+      }),
+      User.findByIdAndUpdate(req.user.userId, {
+        $addToSet: { savedArticles: article_id } // Add article to savedArticles
+      })
+    ]);
     res.status(200).json({ message: 'Article saved successfully'});
    }
   } catch (error) {
@@ -263,22 +178,34 @@ module.exports.likeArticle = async (req, res) => {
     if (isArticleLiked) {
 
       // Unlike It
-      user.likedArticles = user.likedArticles.filter(id => id !== article_id);
-      articleDb.likeCount = Math.max(articleDb.likeCount - 1, 0);
-      articleDb.likedUsers = articleDb.likedUsers.filter(id => id !== req.user.userId);
-      await user.save();
+      await Promise.all([
+        Article.findByIdAndUpdate(article_id, {
+          $pull: { likedUsers: req.user.userId } // Remove user from likedUsers
+        }),
+        User.findByIdAndUpdate(req.user.userId, {
+          $pull: { likedArticles: article_id } // Remove article from likedArticles
+        })
+      ]);
+
+      articleDb.likeCount = Math.max(articleDb.likeCount - 1, 0); // Decrement like count
       await articleDb.save();
-      res.status(200).json({ message: 'Article remove from liked lists successfully', article:articleDb})
+
+      return res.status(200).json({ message: 'Article unliked successfully', articleDb });
       
     }else{
-      user.likedArticles.push(article_id);
-      articleDb.likeCount++;
-      articleDb.likedUsers.push(req.user.userId);
+      await Promise.all([
+        Article.findByIdAndUpdate(article_id, {
+          $addToSet: { likedUsers: req.user.userId } // Add user to likedUsers
+        }),
+        User.findByIdAndUpdate(req.user.userId, {
+          $addToSet: { likedArticles: article_id } // Add article to likedArticles
+        })
+      ]);
 
-      await user.save();
+      articleDb.likeCount++;
       await articleDb.save();
 
-      return res.status(200).json({ message: 'Article liked successfully', article: articleDb });
+      return res.status(200).json({ message: 'Article liked successfully', articleDb });
     }
 
   } catch (error) {
