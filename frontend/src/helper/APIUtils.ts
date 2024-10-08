@@ -14,9 +14,6 @@ const UPDATE_VIEW_COUNT = `${BASE_URL}/articles/updateViewCount`;
 const SAVE_ARTICLE = `${BASE_URL}/articles/saveArticle`;
 const LIKE_ARTICLE = `${BASE_URL}/articles/likeArticle`;
 const POST_ARTICLE = `${BASE_URL}/articles`;
-
-
-
 export {
   BASE_URL,
   LOGIN_API,
