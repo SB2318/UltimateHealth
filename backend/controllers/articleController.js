@@ -5,7 +5,7 @@ const User = require("../models/UserModel");
 // Create a new article
 module.exports.createArticle = async (req, res) => {
   try {
-    const { authorId, title, content, tags,imageUtils } = req.body; // Destructure required fields from req.body
+    const { authorId,  title, authorName, content, tags,imageUtils } = req.body; // Destructure required fields from req.body
 
     // Find the user by ID
     const user = await User.findById(authorId);
@@ -17,6 +17,7 @@ module.exports.createArticle = async (req, res) => {
     // Create a new article instance
     const newArticle = new Article({
       title,
+      authorName,
       content,
       tags,
       imageUtils,
@@ -41,7 +42,9 @@ module.exports.createArticle = async (req, res) => {
 // Get all articles
 module.exports.getAllArticles = async (req, res) => {
   try {
-    const articles = await Article.find();
+    const articles = await Article.find()
+      .populate('tags') // This populates the tag data
+      .exec();
     res.status(200).json({ articles });
   } catch (error) {
     res

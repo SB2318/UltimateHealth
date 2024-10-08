@@ -92,19 +92,19 @@ const userSchema = new mongoose.Schema({
     },
     refreshToken: { type: String, default: null } ,
 
-    articles:  [{
-        type: Schema.Types.ObjectId,
+    articles: [{
+        type: Number,
         ref: 'Article',
         default: []
     }],
     
     savedArticles: [{
-        type: Schema.Types.ObjectId,
+        type: Number,
         ref: 'Article',
         default: []
     }],
     likedArticles: [{
-        type: Schema.Types.ObjectId,
+        type: Number,
         ref: 'Article',
         default: []
     }],

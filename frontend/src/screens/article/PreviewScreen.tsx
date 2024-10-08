@@ -13,7 +13,7 @@ import {useSelector} from 'react-redux';
 
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {article, title, description, image, selectedGenres} = route.params;
+  const {article, title, description, image, authorName, selectedGenres} = route.params;
   const webViewRef = useRef<WebView>(null);
   const {user_token} = useSelector((state: any) => state.user);
 
@@ -50,7 +50,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
         POST_ARTICLE,
         {
           title: title,
-          authorName: user?.user_name,
+          authorName: authorName,
           authorId: user?._id,
           content: article,
           tags: selectedGenres,
@@ -62,6 +62,8 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
           },
         },
       );
+
+      console.log("Request Body", response.headers);
       return response.data as any;
     },
 
@@ -97,7 +99,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
             article,
             selectedGenres,
             '',
-            user ? user?.user_name : '',
+            authorName,
           ),
         }} // author name required
         javaScriptEnabled={true}

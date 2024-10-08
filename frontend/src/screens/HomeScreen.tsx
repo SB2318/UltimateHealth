@@ -36,7 +36,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const dispatch = useDispatch();
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [sortingType, setSortingType] = useState<string>(''); 
+  const [sortingType, setSortingType] = useState<string>('');
   const [selectCategoryList, setSelectCategoryList] = useState<
     CategoryType['name'][]
   >([]);
@@ -168,7 +168,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     console.log('Filtered before', filtered);
     if (selectedTags.length > 0) {
       filtered = filtered.filter(article =>
-        selectedTags.some(tag => article.tags.includes(tag)),
+        selectedTags.some(tag =>
+          article.tags.some(category => category.name === tag),
+        ),
       );
     }
     console.log('Filtered before sort', filtered);
@@ -208,6 +210,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
             Authorization: `Bearer ${user_token}`,
           },
         });
+
+        console.log('Article Response', response);
         let d = response.data.articles as ArticleData[];
         updateArticles(d);
         return response.data.articles as ArticleData[];
@@ -234,7 +238,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           .toLowerCase()
           .includes(textInput.toLowerCase());
         const matchesTags = article.tags.some(tag =>
-          tag.toLowerCase().includes(textInput.toLowerCase()),
+          tag.name.toLowerCase().includes(textInput.toLowerCase()),
         );
 
         return matchesTitle || matchesTags;
@@ -298,8 +302,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
             data={
               searchMode
                 ? searchedArticles
-                : filteredArticles.filter(article =>
-                    article.tags.includes(selectedCategory),
+                : filteredArticles.filter(
+                    article =>
+                      article.tags &&
+                      article.tags.some(tag => tag.name === selectedCategory),
                   )
             }
             renderItem={renderItem}

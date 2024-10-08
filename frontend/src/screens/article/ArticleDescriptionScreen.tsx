@@ -20,6 +20,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 const ArticleDescriptionScreen = ({navigation}) => {
   const [title, setTitle] = useState('');
+  const [authorName, setAuthorName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
   const {categories} = useSelector((state: any) => state.article);
@@ -40,6 +41,9 @@ const ArticleDescriptionScreen = ({navigation}) => {
     if (title === '') {
       Alert.alert('Title section is required');
       return;
+    } else if (authorName === '') {
+      Alert.alert('Author name is required');
+      return;
     } else if (description === '') {
       Alert.alert('Please give proper description');
       return;
@@ -56,6 +60,7 @@ const ArticleDescriptionScreen = ({navigation}) => {
 
     navigation.navigate('EditorScreen', {
       title: title,
+      authorName: authorName,
       description: description,
       selectedGenres: selectedGenres,
       imageUtils: imageUtils,
@@ -113,6 +118,16 @@ const ArticleDescriptionScreen = ({navigation}) => {
           placeholder="Article Title"
           value={title}
           onChangeText={setTitle}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputLabel}>Author Name</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Author Name"
+          value={authorName}
+          onChangeText={setAuthorName}
         />
       </View>
 

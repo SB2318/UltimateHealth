@@ -14,16 +14,18 @@ export type RootStackParamList = {
   NewPasswordScreen: {email: string};
   EditorScreen: {
     title: string;
+    authorName: string,
     description: string;
     selectedGenres: Category[];
     imageUtils: string;
   };
   ArticleDescriptionScreen: undefined;
   PreviewScreen: {
-    article: string,
-    title: string,
-    description: string,
-    image: string,
+    article: string;
+    title: string;
+    authorName: string;
+    description: string;
+    image: string;
     selectedGenres: Category[];
   };
   ArticleScreen: undefined;
@@ -193,7 +195,7 @@ export type ArticleData = {
   authorId: string;
   content: string;
   summary: string;
-  tags: string[];
+  tags: Category[];
   last_updated: string;
   imageUtils: string[];
   viewCount: number;

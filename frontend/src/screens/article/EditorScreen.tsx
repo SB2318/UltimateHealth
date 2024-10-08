@@ -17,7 +17,8 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const insets = useSafeAreaInsets();
-  const {title, description, selectedGenres, imageUtils} = route.params;
+  const {title, description, selectedGenres, authorName, imageUtils} =
+    route.params;
   //const video = require('../../assets/play-button.png'); //icon for Addvideo
   const RichText = useRef(); //reference to the RichEditor component
   const [article, setArticle] = useState('');
@@ -36,6 +37,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
               navigation.navigate('PreviewScreen', {
                 article: article,
                 title: title,
+                authorName: authorName,
                 description: description,
                 image: imageUtils,
                 selectedGenres: selectedGenres,
