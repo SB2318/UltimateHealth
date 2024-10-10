@@ -1,4 +1,5 @@
-const BASE_URL = 'http://localhost:3025/api';
+//const BASE_URL = 'http://localhost:3025/api';
+const BASE_URL = 'http://65.20.70.198/api';
 const LOGIN_API = `${BASE_URL}/user/login`;
 const REGISTRATION_API = `${BASE_URL}/user/register`;
 const ARTICLE_TAGS_API = '/articles/tags';
@@ -30,5 +31,5 @@ export {
   UPDATE_VIEW_COUNT,
   SAVE_ARTICLE,
   LIKE_ARTICLE,
-  POST_ARTICLE
+  POST_ARTICLE,
 };
