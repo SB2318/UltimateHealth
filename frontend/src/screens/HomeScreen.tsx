@@ -177,14 +177,12 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     if (sortType === 'recent' && filtered.length > 1) {
       filtered = filtered.sort(
         (a, b) =>
-          new Date(b.last_updated).getTime() -
-          new Date(a.last_updated).getTime(),
+          new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime(),
       );
     } else if (sortType === 'oldest' && filtered.length > 1) {
       filtered.sort(
         (a, b) =>
-          new Date(a.last_updated).getTime() -
-          new Date(b.last_updated).getTime(),
+          new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime(),
       );
     } else if (sortType === 'popular' && filtered.length > 1) {
       filtered.sort((a, b) => b.viewCount - a.viewCount);

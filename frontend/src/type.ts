@@ -28,7 +28,10 @@ export type RootStackParamList = {
     image: string;
     selectedGenres: Category[];
   };
-  ArticleScreen: undefined;
+  ArticleScreen: {
+    articleId: number;
+    authorId: string;
+  };
   ProfileEditScreen: undefined;
 };
 
@@ -196,11 +199,11 @@ export type ArticleData = {
   content: string;
   summary: string;
   tags: Category[];
-  last_updated: string;
+  lastUpdated: string;
   imageUtils: string[];
   viewCount: number;
   likeCount: number;
-  likedUsers: string[];
+  likedUsers: User[];
   savedUsers: string[];
 };
 
@@ -215,7 +218,6 @@ export type User = {
   __v: number;
   _id: string;
   about: null;
-  articles: any[];
   contact_detail: Contactdetail;
   created_at: string;
   email: string;
@@ -232,7 +234,8 @@ export type User = {
   password: string;
   qualification: null;
   readArticles: any[];
-  savedArticles: any[];
+  savedArticles: ArticleData[];
+  articles: ArticleData[];
   specialization: string | null;
   user_handle: string;
   user_id: string;

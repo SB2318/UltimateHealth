@@ -16,24 +16,51 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ArticleData, ArticleScreenProp} from '../../type';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import WebView from 'react-native-webview';
 import {hp} from '../../helper/Metric';
 import {useMutation} from '@tanstack/react-query';
-import {BASE_URL, FOLLOW_USER, LIKE_ARTICLE} from '../../helper/APIUtils';
+import {
+  BASE_URL,
+  FOLLOW_USER,
+  GET_ARTICLE_BY_ID,
+  LIKE_ARTICLE,
+} from '../../helper/APIUtils';
 import axios from 'axios';
+import Loader from '../../components/Loader';
 import {setArticle} from '../../store/articleSlice';
 
-const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
+const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
   const insets = useSafeAreaInsets();
-  const {article} = useSelector((state: any) => state.article);
+  // const {article} = useSelector((state: any) => state.article);
+  const {articleId, authorId} = route.params;
   const {user_id, user_token} = useSelector((state: any) => state.user);
-  const dispatch = useDispatch();
 
-  console.log('Article Liked Users', article.likedUsers);
-  console.log('My user Id', user_id)
-  console.log('User Id found', article.likedUsers.includes(user_id));
+  // console.log('Article Liked Users', article.likedUsers);
+  //console.log('My user Id', user_id);
+  //console.log('User Id found', article.likedUsers.includes(user_id));
   const webViewRef = useRef<WebView>(null);
+
+
+ // console.log('GET ARTICLE BY ID', `${GET_ARTICLE_BY_ID}/${articleId}`);
+ // console.log('User Token', user_token);
+  const {
+    data: article,
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ['get-article-by-id'],
+    queryFn: async () => {
+      const response = await axios.get(`${GET_ARTICLE_BY_ID}/${articleId}`, {
+        headers: {
+          Authorization: `Bearer ${user_token}`,
+        },
+      });
+
+      return response.data.article as ArticleData;
+    },
+  });
+
 
   const handleLike = () => {
     updateLikeMutation.mutate();
@@ -54,7 +81,7 @@ const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
       const res = await axios.post(
         FOLLOW_USER,
         {
-          followUserId: article.authorId,
+          followUserId: authorId,
           //user_id: user_id,
         },
         {
@@ -67,12 +94,13 @@ const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
     },
 
     onSuccess: () => {
-      console.log('follow success');
+      //console.log('follow success');
+      refetch();
     },
 
     onError: err => {
       Alert.alert('Try Again!');
-      console.log('Follow Error', err);
+      //console.log('Follow Error', err);
     },
   });
 
@@ -87,7 +115,7 @@ const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
       const res = await axios.post(
         LIKE_ARTICLE,
         {
-          article_id: article._id,
+          article_id: article?._id,
           //user_id: user_id,
         },
         {
@@ -100,7 +128,8 @@ const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
     },
 
     onSuccess: data => {
-      dispatch(setArticle({article: data}));
+      // dispatch(setArticle({article: data}));
+      refetch();
     },
 
     onError: err => {
@@ -109,11 +138,12 @@ const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
     },
   });
 
+  console.log('author id', authorId)
   const {data: authorFollowers} = useQuery({
     queryKey: ['authorFollowers'],
     queryFn: async () => {
       const response = await axios.get(
-        `${BASE_URL}/user/${article.authorId}/followers`,
+        `${BASE_URL}/user/${authorId}/followers`,
         {
           headers: {
             Authorization: `Bearer ${user_token}`,
@@ -125,35 +155,32 @@ const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
     },
   });
 
-  const loadCss = (content: string) => {
-    if (content) {
-      let s = content.split('\\n').join(' ');
-      //console.log('Content Modify', s);
-      return `<!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body {
-            font-size: 40px; 
-            line-height: 1.5; 
-            color: #333; 
-          }
-        </style>
-      </head>
-      <body>${s}</body>
-      </html>`;
-    } else {
-      return 'Content not found';
+  const cssCode = `
+  const style = document.createElement('style');
+  style.innerHTML = \`
+    body {
+      font-size: 46px;
+      line-height: 1.5;
+      color: #333;
     }
-  };
+  \`;
+  document.head.appendChild(style);
+`;
 
+  const contentSource = article?.content?.startsWith('http')
+    ? {uri: article.content}
+    : {html: article?.content};
+
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.imageContainer}>
-          {article?.imageUtils[0] && article?.imageUtils[0].length === 0 ? (
+          {article?.imageUtils && article?.imageUtils.length > 0 ? (
             <Image
               source={{uri: article?.imageUtils[0]}}
               style={styles.image}
@@ -179,7 +206,11 @@ const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
                 name="heart"
                 size={34}
                 color={
-                  article.likedUsers.includes(user_id) ? PRIMARY_COLOR : 'black'
+                  article &&
+                  article?.likedUsers &&
+                  article?.likedUsers.some(user => user._id === user_id)
+                    ? PRIMARY_COLOR
+                    : 'black'
                 }
               />
             </TouchableOpacity>
@@ -193,22 +224,31 @@ const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
                 : `${article?.viewCount} view`
               : '0 view'}
           </Text>
-          <Text style={styles.categoryText}>
-            {article?.tags.join(' | ').toUpperCase()}
-          </Text>
+          {article?.tags && (
+            <Text style={styles.categoryText}>
+              {article?.tags.map(tag => tag.name).join(' | ')}
+            </Text>
+          )}
           <Text style={styles.titleText}>{article?.title}</Text>
-          <View style={styles.avatarsContainer}>
-            <View style={styles.avatar} />
-            <View style={[styles.avatar, styles.avatarOverlap]} />
-            <View style={[styles.avatar, styles.avatarDoubleOverlap]} />
-            <View style={[styles.avatar, styles.avatarTripleOverlap]}>
-              <Text style={styles.moreText}>+{article.likedUsers.length}</Text>
+          {article && (
+            <View style={styles.avatarsContainer}>
+              <View style={styles.avatar} />
+              <View style={[styles.avatar, styles.avatarOverlap]} />
+              <View style={[styles.avatar, styles.avatarDoubleOverlap]} />
+              <View style={[styles.avatar, styles.avatarTripleOverlap]}>
+                <Text style={styles.moreText}>
+                  +
+                  {article?.likedUsers
+                    ? article?.likedUsers.length
+                    : article?.likeCount}
+                </Text>
+              </View>
             </View>
-          </View>
+          )}
           <View style={styles.descriptionContainer}>
             <WebView
               style={{
-                padding: 10,
+                padding: 7,
                 width: '99%',
                 height: hp(2000),
                 justifyContent: 'center',
@@ -216,7 +256,9 @@ const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
               }}
               ref={webViewRef}
               originWhitelist={['*']}
-              source={{html: loadCss(article.content)}}
+              injectedJavaScript={cssCode}
+              source={contentSource}
+              textZoom={100}
             />
           </View>
         </View>
@@ -244,7 +286,8 @@ const ArticleScreen = ({}: {route: ArticleScreenProp['route']}) => {
             </Text>
           </View>
         </View>
-        {user_id !== article.authorId &&
+        {article &&
+          user_id !== article.authorId &&
           (updateFollowMutation.isPending ? (
             <ActivityIndicator size={40} color={PRIMARY_COLOR} />
           ) : (
