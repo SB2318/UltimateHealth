@@ -6,10 +6,11 @@ import {
   View,
   Image,
 } from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {ProfileEditGeneralTab} from '../type';
+import fallback_profile from '../assets/avatar.jpg';
 
 const GeneralTab = ({
   username,
@@ -17,7 +18,14 @@ const GeneralTab = ({
   email,
   about,
   imgUrl,
+  setUsername,
+  setUserHandle,
+  setEmail,
+  setAbout,
+  handleSubmitGeneralDetails,
+  selectImage,
 }: ProfileEditGeneralTab) => {
+  const user_fallback_profile = Image.resolveAssetSource(fallback_profile).uri;
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -25,12 +33,15 @@ const GeneralTab = ({
         <View style={styles.profileImageContainer}>
           <Image
             source={{
-              uri: imgUrl,
+              uri: imgUrl || user_fallback_profile,
             }}
-            style={styles.profileImage}
+            style={[
+              styles.profileImage,
+              !imgUrl && {borderWidth: 0.5, borderColor: 'black'},
+            ]}
           />
           <View style={styles.editIconContainer}>
-            <TouchableOpacity style={styles.editIcon}>
+            <TouchableOpacity style={styles.editIcon} onPress={selectImage}>
               <Feather name="edit-3" color="black" size={25} />
             </TouchableOpacity>
           </View>
@@ -44,6 +55,7 @@ const GeneralTab = ({
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
             value={username}
+            onChangeText={text => setUsername(text)}
           />
         </View>
 
@@ -55,6 +67,7 @@ const GeneralTab = ({
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
             value={userhandle}
+            onChangeText={text => setUserHandle(text)}
           />
         </View>
 
@@ -66,6 +79,7 @@ const GeneralTab = ({
             placeholderTextColor="#6b7280"
             style={styles.inputControl}
             value={email}
+            onChangeText={text => setEmail(text)}
           />
         </View>
 
@@ -80,23 +94,20 @@ const GeneralTab = ({
             multiline={true}
             numberOfLines={4}
             value={about}
+            onChangeText={text => setAbout(text)}
           />
         </View>
       </View>
 
       {/* Save Button */}
-      <TouchableOpacity
-        onPress={() => {
-          // handle onPress
-        }}
-        style={styles.btn}>
+      <TouchableOpacity onPress={handleSubmitGeneralDetails} style={styles.btn}>
         <Text style={styles.btnText}>Save</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default GeneralTab;
+export default memo(GeneralTab);
 
 const styles = StyleSheet.create({
   container: {
@@ -177,7 +188,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     backgroundColor: PRIMARY_COLOR,
-    marginTop: 20,
+    marginVertical: 20,
   },
   btnText: {
     fontSize: 18,

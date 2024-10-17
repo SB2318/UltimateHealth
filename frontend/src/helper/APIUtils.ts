@@ -1,5 +1,5 @@
-//const BASE_URL = 'http://localhost:3025/api';
-const BASE_URL = 'http://139.84.167.240/api';
+const BASE_URL = 'http://10.0.2.2:3025/api';
+// const BASE_URL = 'http://139.84.167.240/api';
 const LOGIN_API = `${BASE_URL}/user/login`;
 const REGISTRATION_API = `${BASE_URL}/user/register`;
 const ARTICLE_TAGS_API = '/articles/tags';
@@ -16,6 +16,14 @@ const SAVE_ARTICLE = `${BASE_URL}/articles/saveArticle`;
 const LIKE_ARTICLE = `${BASE_URL}/articles/likeArticle`;
 const POST_ARTICLE = `${BASE_URL}/articles`;
 const GET_ARTICLE_BY_ID = `${BASE_URL}/articles`;
+const GET_USER_DETAILS_API = `${BASE_URL}/user/getdetails`;
+const UPDATE_USER_GENERAL_DETAILS = `${BASE_URL}/user/update-general-details`;
+const UPDATE_USER_PASSWORD = `${BASE_URL}/user/update-password`;
+const UPDATE_USER_CONTACT_DETAILS = `${BASE_URL}/user/update-contact-details`;
+const UPDATE_USER_PROFESSIONAL_DETAILS = `${BASE_URL}/user/update-professional-details`;
+const UPLOAD_STORAGE = `${BASE_URL}/upload-storage`;
+const GET_STORAGE_DATA = `${BASE_URL}/getFile`;
+const UPDATE_PROFILE_IMAGE = `${BASE_URL}/user/update-profile-image`;
 export {
   BASE_URL,
   LOGIN_API,
@@ -33,5 +41,13 @@ export {
   SAVE_ARTICLE,
   LIKE_ARTICLE,
   POST_ARTICLE,
-  GET_ARTICLE_BY_ID
+  GET_ARTICLE_BY_ID,
+  GET_USER_DETAILS_API,
+  UPDATE_USER_GENERAL_DETAILS,
+  UPDATE_USER_PASSWORD,
+  UPDATE_USER_CONTACT_DETAILS,
+  UPDATE_USER_PROFESSIONAL_DETAILS,
+  UPLOAD_STORAGE,
+  GET_STORAGE_DATA,
+  UPDATE_PROFILE_IMAGE,
 };

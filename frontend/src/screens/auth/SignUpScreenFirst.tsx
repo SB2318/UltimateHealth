@@ -44,7 +44,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
         email: email,
         password: password,
         isDoctor: false,
-        Profile_image:'',
+        Profile_image: '',
       });
       return res.data.token as string;
     },
@@ -54,6 +54,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
     },
 
     onError: (err: AxiosError) => {
+      console.log(err.message);
       if (err.response) {
         const statusCode = err.response.status;
         switch (statusCode) {
