@@ -16,6 +16,7 @@ const SAVE_ARTICLE = `${BASE_URL}/articles/saveArticle`;
 const LIKE_ARTICLE = `${BASE_URL}/articles/likeArticle`;
 const POST_ARTICLE = `${BASE_URL}/articles`;
 const GET_ARTICLE_BY_ID = `${BASE_URL}/articles`;
+const GET_PROFILE_IMAGE_BY_ID = `${BASE_URL}/user/getprofileimage`;
 export {
   BASE_URL,
   LOGIN_API,
@@ -33,5 +34,6 @@ export {
   SAVE_ARTICLE,
   LIKE_ARTICLE,
   POST_ARTICLE,
-  GET_ARTICLE_BY_ID
+  GET_ARTICLE_BY_ID,
+  GET_PROFILE_IMAGE_BY_ID,
 };
