@@ -44,7 +44,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
         specialization: specialization,
         qualification: education,
         Years_of_experience: experience,
-        Profile_image:'',
+        Profile_image: '',
         contact_detail: contactDetail,
       });
       return res.data.token as string;
