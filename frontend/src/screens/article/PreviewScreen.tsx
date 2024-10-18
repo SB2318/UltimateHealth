@@ -13,10 +13,10 @@ import {useSelector} from 'react-redux';
 
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {article, title, description, image, authorName, selectedGenres} = route.params;
+  const {article, title, description, image, selectedGenres} = route.params;
   const webViewRef = useRef<WebView>(null);
   const {user_token} = useSelector((state: any) => state.user);
-
+  
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -50,7 +50,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
         POST_ARTICLE,
         {
           title: title,
-          authorName: authorName,
+          authorName: user?.user_name,
           authorId: user?._id,
           content: article,
           tags: selectedGenres,
@@ -62,8 +62,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
           },
         },
       );
-
-      console.log("Request Body", response.headers);
+      console.log(article);
       return response.data as any;
     },
 
@@ -72,7 +71,9 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       navigation.navigate('TabNavigation');
     },
     onError: error => {
-      console.log('Article post Error', error.message);
+      console.log('Article post Error', error);
+      console.log(error);
+      
       Alert.alert('Failed to upload your post');
     },
   });
@@ -99,7 +100,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
             article,
             selectedGenres,
             '',
-            authorName,
+            user ? user?.user_name : '',
           ),
         }} // author name required
         javaScriptEnabled={true}

@@ -1,7 +1,7 @@
 import type {CompositeScreenProps} from '@react-navigation/native';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {StackScreenProps} from '@react-navigation/stack';
-import {RefObject} from 'react';
+import {Dispatch, RefObject, SetStateAction} from 'react';
 import {BottomSheetModal} from '@gorhom/bottom-sheet'; // Adjust this import based on your actual BottomSheetModal component
 
 export type RootStackParamList = {
@@ -161,17 +161,30 @@ export type ProfileEditGeneralTab = {
   email: string;
   about: string;
   imgUrl: string;
+  setUsername: Dispatch<SetStateAction<string>>;
+  setUserHandle: Dispatch<SetStateAction<string>>;
+  setEmail: Dispatch<SetStateAction<string>>;
+  setAbout: Dispatch<SetStateAction<string>>;
+  handleSubmitGeneralDetails: () => void;
+  selectImage: () => void;
 };
 
 export type ProfileEditProfessionalTab = {
   specialization: string;
   qualification: string;
   years_of_experience: string;
+  setSpecialization: Dispatch<SetStateAction<string>>;
+  setQualification: Dispatch<SetStateAction<string>>;
+  setExperience: Dispatch<SetStateAction<string>>;
+  handleSubmitProfessionalDetails: () => void;
 };
 
 export type ProfileEditContactTab = {
   phone_number: string;
   contact_email: string;
+  setContactNumber: Dispatch<SetStateAction<string>>;
+  setContactEmail: Dispatch<SetStateAction<string>>;
+  handleSubmitContactDetails: () => void;
 };
 
 export type AddIconProp = {
