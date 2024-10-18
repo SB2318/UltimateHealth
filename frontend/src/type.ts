@@ -32,6 +32,7 @@ export type RootStackParamList = {
     articleId: number;
     authorId: string;
   };
+  UserProfileScreen: {authorId: string};
   ProfileEditScreen: undefined;
 };
 
@@ -56,6 +57,10 @@ export type NewPasswordScreenProp = StackScreenProps<
   'NewPasswordScreen'
 >;
 
+export type UserProfileScreenProp =
+  | StackScreenProps<RootStackParamList, 'UserProfileScreen'>
+  | StackScreenProps<RootStackParamList, 'ArticleScreen'>;
+
 export type OtpScreenProp = StackScreenProps<RootStackParamList, 'OtpScreen'>;
 
 export type SignUpScreenFirstProp = StackScreenProps<
@@ -73,10 +78,9 @@ export type LoginScreenProp = StackScreenProps<
   'LoginScreen'
 >;
 
-export type ArticleScreenProp = StackScreenProps<
-  RootStackParamList,
-  'ArticleScreen'
->;
+export type ArticleScreenProp =
+  StackScreenProps<RootStackParamList, 'ArticleScreen'>
+  //StackScreenProps<RootStackParamList, 'UserProfileScreen'>;
 
 export type EditorScreenProp = StackScreenProps<
   RootStackParamList,
@@ -106,7 +110,10 @@ export type HomeScreenHeaderProps = {
 
 export type ArticleCardProps = {
   item: ArticleData;
-  navigation: HomeScreenProps['navigation'] | ProfileScreenProps['navigation'];
+  navigation:
+    | HomeScreenProps['navigation']
+    | ProfileScreenProps['navigation']
+    | UserProfileScreenProp['navigation'];
   success: () => void;
 };
 
@@ -122,7 +129,12 @@ export type ProfileHeaderProps = {
   specialization: string;
   experience: number;
   qualification: string;
-  navigation: ProfileScreenProps['navigation'];
+  other: boolean;
+  navigation:
+    | ProfileScreenProps['navigation']
+    | UserProfileScreenProp['navigation'];
+  followers: number;
+  followings: number;
 };
 
 export type HomeScreenFilterModalProps = {

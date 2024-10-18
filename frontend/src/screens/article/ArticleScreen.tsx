@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React, {useRef} from 'react';
-import {useQuery} from '@tanstack/react-query';
+import {useQuery, useMutation} from '@tanstack/react-query';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -19,31 +19,24 @@ import {ArticleData, ArticleScreenProp} from '../../type';
 import {useSelector} from 'react-redux';
 import WebView from 'react-native-webview';
 import {hp} from '../../helper/Metric';
-import {useMutation} from '@tanstack/react-query';
 import {
   BASE_URL,
   FOLLOW_USER,
   GET_ARTICLE_BY_ID,
+  GET_PROFILE_IMAGE_BY_ID,
   LIKE_ARTICLE,
 } from '../../helper/APIUtils';
 import axios from 'axios';
 import Loader from '../../components/Loader';
 import {setArticle} from '../../store/articleSlice';
 
-const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
+const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const insets = useSafeAreaInsets();
-  // const {article} = useSelector((state: any) => state.article);
   const {articleId, authorId} = route.params;
   const {user_id, user_token} = useSelector((state: any) => state.user);
 
-  // console.log('Article Liked Users', article.likedUsers);
-  //console.log('My user Id', user_id);
-  //console.log('User Id found', article.likedUsers.includes(user_id));
   const webViewRef = useRef<WebView>(null);
 
-
- // console.log('GET ARTICLE BY ID', `${GET_ARTICLE_BY_ID}/${articleId}`);
- // console.log('User Token', user_token);
   const {
     data: article,
     refetch,
@@ -61,9 +54,12 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
     },
   });
 
-
   const handleLike = () => {
-    updateLikeMutation.mutate();
+    if (article) {
+      updateLikeMutation.mutate();
+    } else {
+      Alert.alert('Article not found');
+    }
   };
 
   const handleFollow = () => {
@@ -74,7 +70,7 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
     mutationKey: ['update-follow-status'],
 
     mutationFn: async () => {
-      if (user_token === '') {
+      if (!user_token || user_token === '') {
         Alert.alert('No token found');
         return;
       }
@@ -95,10 +91,12 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
 
     onSuccess: () => {
       //console.log('follow success');
-      refetch();
+      refetchFollowers();
+      refetchProfile();
     },
 
     onError: err => {
+      console.log('Update Follow mutation error', err);
       Alert.alert('Try Again!');
       //console.log('Follow Error', err);
     },
@@ -108,7 +106,7 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
     mutationKey: ['update-like-status'],
 
     mutationFn: async () => {
-      if (user_token === '') {
+      if (!user_token || user_token === '') {
         Alert.alert('No token found');
         return;
       }
@@ -138,8 +136,8 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
     },
   });
 
-  console.log('author id', authorId)
-  const {data: authorFollowers} = useQuery({
+  console.log('author id', authorId);
+  const {data: authorFollowers, refetch: refetchFollowers} = useQuery({
     queryKey: ['authorFollowers'],
     queryFn: async () => {
       const response = await axios.get(
@@ -154,6 +152,23 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
       return response.data.followers as string[];
     },
   });
+
+  const {data: profile_image, refetch: refetchProfile} = useQuery({
+    queryKey: ['author_profile_image'],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${GET_PROFILE_IMAGE_BY_ID}/${authorId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        },
+      );
+      console.log('Response', response);
+      return response.data.profile_image as string;
+    },
+  });
+
 
   const cssCode = `
   const style = document.createElement('style');
@@ -180,7 +195,7 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.imageContainer}>
-          {article?.imageUtils && article?.imageUtils.length > 0 ? (
+          {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
             <Image
               source={{uri: article?.imageUtils[0]}}
               style={styles.image}
@@ -208,7 +223,7 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
                 color={
                   article &&
                   article?.likedUsers &&
-                  article?.likedUsers.some(user => user._id === user_id)
+                  article?.likedUsers?.some(user => user._id === user_id)
                     ? PRIMARY_COLOR
                     : 'black'
                 }
@@ -217,33 +232,35 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
           )}
         </View>
         <View style={styles.contentContainer}>
-          <Text style={{...styles.viewText, marginBottom: 10}}>
-            {article?.viewCount
-              ? article?.viewCount > 1
-                ? `${article?.viewCount} views`
-                : `${article?.viewCount} view`
-              : '0 view'}
-          </Text>
-          {article?.tags && (
-            <Text style={styles.categoryText}>
-              {article?.tags.map(tag => tag.name).join(' | ')}
+          {article && (
+            <Text style={{...styles.viewText, marginBottom: 10}}>
+              {article && article?.viewCount
+                ? article.viewCount > 1
+                  ? `${article.viewCount} views`
+                  : `${article.viewCount} view`
+                : '0 view'}
             </Text>
           )}
-          <Text style={styles.titleText}>{article?.title}</Text>
+          {article && article?.tags && (
+            <Text style={styles.categoryText}>
+              {article.tags.map(tag => tag.name).join(' | ')}
+            </Text>
+          )}
+
           {article && (
-            <View style={styles.avatarsContainer}>
-              <View style={styles.avatar} />
-              <View style={[styles.avatar, styles.avatarOverlap]} />
-              <View style={[styles.avatar, styles.avatarDoubleOverlap]} />
-              <View style={[styles.avatar, styles.avatarTripleOverlap]}>
-                <Text style={styles.moreText}>
-                  +
-                  {article?.likedUsers
-                    ? article?.likedUsers.length
-                    : article?.likeCount}
-                </Text>
+            <>
+              <Text style={styles.titleText}>{article?.title}</Text>
+              <View style={styles.avatarsContainer}>
+                <View style={styles.avatar} />
+                <View style={[styles.avatar, styles.avatarOverlap]} />
+                <View style={[styles.avatar, styles.avatarDoubleOverlap]} />
+                <View style={[styles.avatar, styles.avatarTripleOverlap]}>
+                  <Text style={styles.moreText}>
+                    +{article?.likedUsers ? article.likedUsers.length : 0}
+                  </Text>
+                </View>
               </View>
-            </View>
+            </>
           )}
           <View style={styles.descriptionContainer}>
             <WebView
@@ -273,14 +290,34 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
           },
         ]}>
         <View style={styles.authorContainer}>
-          <Image
-            source={{
-              uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-            }}
-            style={styles.authorImage}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              if (article && article?.authorId) {
+                navigation.navigate('UserProfileScreen', {
+                  authorId: article?.authorId,
+                });
+              }
+            }}>
+            {profile_image && profile_image !== '' ? (
+              <Image
+                source={{
+                  uri: `${profile_image}`,
+                }}
+                style={styles.authorImage}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                }}
+                style={styles.authorImage}
+              />
+            )}
+          </TouchableOpacity>
           <View>
-            <Text style={styles.authorName}>{article?.authorName}</Text>
+            <Text style={styles.authorName}>
+              {article ? article?.authorName : ''}
+            </Text>
             <Text style={styles.authorFollowers}>
               {authorFollowers ? authorFollowers.length : 0} followers
             </Text>
@@ -296,7 +333,7 @@ const ArticleScreen = ({route}: {route: ArticleScreenProp['route']}) => {
               onPress={handleFollow}>
               <Text style={styles.followButtonText}>
                 {authorFollowers && authorFollowers.includes(user_id)
-                  ? 'Unfollow'
+                  ? 'Following'
                   : 'Follow'}
               </Text>
             </TouchableOpacity>

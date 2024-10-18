@@ -13,7 +13,6 @@ import {fp, hp} from '../helper/Metric';
 import {ArticleCardProps, ArticleData} from '../type';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
-import {setArticle} from '../store/articleSlice';
 import axios from 'axios';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import IonIcons from 'react-native-vector-icons/Ionicons';
@@ -26,9 +25,8 @@ import {
 import {PRIMARY_COLOR} from '../helper/Theme';
 
 const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
-  const dispatch = useDispatch();
+ 
   const {user_token, user_id} = useSelector((state: any) => state.user);
-
   const updateViewCountMutation = useMutation({
     mutationKey: ['update-view-count'],
     mutationFn: async () => {
@@ -51,7 +49,6 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
       return res.data.article as ArticleData;
     },
     onSuccess: async data => {
-      dispatch(setArticle({article: data}));
       navigation.navigate('ArticleScreen',{
         articleId: Number(item._id),
         authorId: item.authorId,

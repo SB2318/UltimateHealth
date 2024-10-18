@@ -24,6 +24,7 @@ const UPDATE_USER_PROFESSIONAL_DETAILS = `${BASE_URL}/user/update-professional-d
 const UPLOAD_STORAGE = `${BASE_URL}/upload-storage`;
 const GET_STORAGE_DATA = `${BASE_URL}/getFile`;
 const UPDATE_PROFILE_IMAGE = `${BASE_URL}/user/update-profile-image`;
+const GET_PROFILE_IMAGE_BY_ID = `${BASE_URL}/user/getprofileimage`;
 export {
   BASE_URL,
   LOGIN_API,
@@ -50,4 +51,5 @@ export {
   UPLOAD_STORAGE,
   GET_STORAGE_DATA,
   UPDATE_PROFILE_IMAGE,
+  GET_PROFILE_IMAGE_BY_ID,
 };

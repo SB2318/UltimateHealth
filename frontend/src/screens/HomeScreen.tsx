@@ -5,6 +5,7 @@ import {
   BackHandler,
   Alert,
   Text,
+  Image,
   TouchableOpacity,
   FlatList,
   ScrollView,
@@ -37,6 +38,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [sortingType, setSortingType] = useState<string>('');
+  const [loading, setLoading] = useState(true);
   const [selectCategoryList, setSelectCategoryList] = useState<
     CategoryType['name'][]
   >([]);
@@ -295,7 +297,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         </ScrollView>
       </View>
       <View style={styles.articleContainer}>
-        {filteredArticles && filteredArticles.length > 0 && (
+        {((filteredArticles && filteredArticles.length > 0) ||
+          searchedArticles.length > 0) && (
           <FlatList
             data={
               searchMode
@@ -311,9 +314,21 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
             contentContainerStyle={styles.flatListContentContainer}
             refreshing={refreshing}
             onRefresh={onRefresh}
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                {/**
+                 *  <Image
+                  source={require('../assets/article_default.jpg')}
+                  style={styles.emptyImgStyle}
+                />
+                 */}
+                <Text style={styles.message}>No Article Found</Text>
+              </View>
+            }
           />
         )}
       </View>
+
       <View style={styles.homePlusIconview}>
         <AddIcon callback={handleNoteIconClick} />
       </View>
@@ -365,5 +380,26 @@ const styles = StyleSheet.create({
     right: 25,
     position: 'absolute',
     zIndex: -2,
+  },
+
+  message: {
+    fontSize: 16,
+    color: '#fff',
+    fontFamily: 'bold',
+    textAlign: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    top: 70,
+  },
+  emptyImgStyle: {
+    width: 300,
+    height: 200,
+    borderRadius: 8,
+    marginBottom: 10,
+    resizeMode: 'contain',
   },
 });

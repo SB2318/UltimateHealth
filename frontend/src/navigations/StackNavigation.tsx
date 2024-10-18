@@ -14,8 +14,9 @@ import {TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScreen';
 import ProfileEditScreen from '../screens/ProfileEditScreen';
+import UserProfileScreen from '../screens/UserProfileScreen';
 import {RootStackParamList} from '../type';
-import { PRIMARY_COLOR } from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';
 const Stack = createStackNavigator<RootStackParamList>();
 
 const StackNavigation = () => {
@@ -122,6 +123,14 @@ const StackNavigation = () => {
             </TouchableOpacity>
           ),
         })}
+      />
+
+      <Stack.Screen
+        name="UserProfileScreen"
+        component={UserProfileScreen}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="ProfileEditScreen"

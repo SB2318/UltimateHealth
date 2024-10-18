@@ -32,6 +32,9 @@ const ProfileHeader = ({
   experience,
   qualification,
   navigation,
+  other,
+  followers,
+  followings,
 }: ProfileHeaderProps) => {
   const user_fallback_profile = Image.resolveAssetSource(fallback_profile).uri;
 
@@ -88,23 +91,28 @@ const ProfileHeader = ({
               style={[styles.iconButton, {backgroundColor: PRIMARY_COLOR}]}>
               <MaterialIcons name="email" size={25} color="white" />
             </TouchableOpacity>
+            {other && (
+              <TouchableOpacity
+                style={[styles.iconButton, {backgroundColor: PRIMARY_COLOR}]}
+                onPress={() => {
+                navigation.navigate('ProfileEditScreen');
+              }}>
+                <Feather name="edit-3" size={25} color="white" />
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : (
+          other && (
             <TouchableOpacity
-              style={[styles.iconButton, {backgroundColor: PRIMARY_COLOR}]}
+              style={styles.editProfileButton}
               onPress={() => {
                 navigation.navigate('ProfileEditScreen');
               }}>
-              <Feather name="edit-3" size={25} color="white" />
+              <Text style={styles.editProfileButtonText}>Edit Profile</Text>
             </TouchableOpacity>
-          </View>
-        ) : (
-          <TouchableOpacity
-            style={styles.editProfileButton}
-            onPress={() => {
-              navigation.navigate('ProfileEditScreen');
-            }}>
-            <Text style={styles.editProfileButtonText}>Edit Profile</Text>
-          </TouchableOpacity>
+          )
         )}
+
         <View style={styles.infoContainer}>
           {isDoctor ? (
             <>
@@ -129,12 +137,31 @@ const ProfileHeader = ({
                 </Text>
                 <Text style={styles.infoLabel}>Articles</Text>
               </View>
-              <View style={styles.infoBlock}>
-                <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
-                  {articlesSaved}
-                </Text>
-                <Text style={styles.infoLabel}>Saved</Text>
-              </View>
+              {other && (
+                <View style={styles.infoBlock}>
+                  <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
+                    {articlesSaved}
+                  </Text>
+                  <Text style={styles.infoLabel}>Saved</Text>
+                </View>
+              )}
+              {!other && (
+                <View style={styles.infoBlock}>
+                  <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
+                    {followers}
+                  </Text>
+                  <Text style={styles.infoLabel}>Followers</Text>
+                </View>
+              )}
+
+              {!other && (
+                <View style={styles.infoBlock}>
+                  <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
+                    {followings}
+                  </Text>
+                  <Text style={styles.infoLabel}>Followings</Text>
+                </View>
+              )}
             </>
           )}
         </View>
@@ -163,6 +190,7 @@ const styles = StyleSheet.create({
     width: 130,
     borderRadius: 100,
     objectFit: 'cover',
+    resizeMode: 'contain',
   },
   nameText: {
     fontSize: fp(6),
