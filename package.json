@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "@types/react-native": "^0.72.8"
   }
 }

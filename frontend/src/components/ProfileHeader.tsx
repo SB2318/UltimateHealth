@@ -16,8 +16,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import {fp, hp, wp} from '../helper/Metric';
 import {ProfileHeaderProps} from '../type';
-import fallback_profile from '../assets/avatar.jpg';
-import { GET_STORAGE_DATA } from '../helper/APIUtils';
+
+import {GET_STORAGE_DATA} from '../helper/APIUtils';
 
 const ProfileHeader = ({
   isDoctor,
@@ -36,8 +36,6 @@ const ProfileHeader = ({
   followers,
   followings,
 }: ProfileHeaderProps) => {
-  const user_fallback_profile = Image.resolveAssetSource(fallback_profile).uri;
-
   const handleCall = phone => {
     let phoneNumber = phone;
     if (Platform.OS !== 'android') {
@@ -58,7 +56,9 @@ const ProfileHeader = ({
       <View style={styles.contentContainer}>
         <Image
           source={{
-            uri: `${GET_STORAGE_DATA}/${profileImg}` || user_fallback_profile,
+            uri: profileImg.startsWith('https')
+              ? profileImg
+              : `${GET_STORAGE_DATA}/${profileImg}`
           }}
           style={[
             styles.profileImage,
@@ -95,8 +95,8 @@ const ProfileHeader = ({
               <TouchableOpacity
                 style={[styles.iconButton, {backgroundColor: PRIMARY_COLOR}]}
                 onPress={() => {
-                navigation.navigate('ProfileEditScreen');
-              }}>
+                  navigation.navigate('ProfileEditScreen');
+                }}>
                 <Feather name="edit-3" size={25} color="white" />
               </TouchableOpacity>
             )}

@@ -40,7 +40,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import useUploadImage from '../../hooks/useUploadImage';
 var validator = require('email-validator');
 var expr = /^(0|91)?[6-9][0-9]{9}$/;
-const ProfileEditScreen = () => {
+const ProfileEditScreen = ({navigation}) => {
   const {uploadImage, loading} = useUploadImage();
 
   // Get safe area insets for handling notches and status bars on device
@@ -100,6 +100,7 @@ const ProfileEditScreen = () => {
     },
     onSuccess: _data => {
       Alert.alert('Success', 'Details submitted successfully');
+      navigation.goBack();
     },
 
     onError: (err: AxiosError) => {
@@ -171,6 +172,7 @@ const ProfileEditScreen = () => {
     },
     onSuccess: _data => {
       Alert.alert('Success', 'Details submitted successfully');
+      navigation.goBack();
     },
 
     onError: (err: AxiosError) => {
@@ -243,6 +245,7 @@ const ProfileEditScreen = () => {
     },
     onSuccess: _data => {
       Alert.alert('Success', 'Details submitted successfully');
+      navigation.goBack();
     },
 
     onError: (err: AxiosError) => {

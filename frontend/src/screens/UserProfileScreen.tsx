@@ -42,7 +42,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
       return response.data.profile as User;
     },
   });
-/*
+  /*
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', e => {
       e.preventDefault();
@@ -95,7 +95,10 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         isDoctor={isDoctor}
         username={user.user_name || ''}
         userhandle={user.user_handle || ''}
-        profileImg={user.Profile_image || ''}
+        profileImg={
+          user.Profile_image ||
+          'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+        }
         articlesPosted={user.articles ? user.articles.length : 0}
         articlesSaved={user.savedArticles ? user.savedArticles.length : 0}
         userPhoneNumber={isDoctor ? user.contact_detail?.phone_no || '' : ''}
@@ -141,7 +144,6 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           console.log('States', navigation.getState());
           console.log('Can go back', navigation.canGoBack());
           navigation.goBack();
-         
         }}>
         <FontAwesome6 size={25} name="arrow-left" color="white" />
       </TouchableOpacity>

@@ -24,7 +24,7 @@ const useUploadImage = () => {
       return response.data.key;
     } catch (err) {
       console.error('Image upload failed', err);
-      throw err;
+      //throw err;
     } finally {
       setLoading(false);
     }

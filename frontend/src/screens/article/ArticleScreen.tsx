@@ -92,7 +92,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     onSuccess: () => {
       //console.log('follow success');
       refetchFollowers();
-      refetchProfile();
+      // refetchProfile();
     },
 
     onError: err => {
@@ -168,7 +168,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       return response.data.profile_image as string;
     },
   });
-
 
   const cssCode = `
   const style = document.createElement('style');

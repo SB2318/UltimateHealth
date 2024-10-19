@@ -1,4 +1,4 @@
-import {StyleSheet, View, BackHandler, Text, Alert} from 'react-native';
+import {StyleSheet, View, BackHandler, Text, Alert, Image} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
@@ -18,6 +18,10 @@ import {useFocusEffect} from '@react-navigation/native';
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const {user_id, user_token} = useSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  //const fallback_profile = require('../assets/avatar.jpg');
+  //const user_fallback_profile = Image.resolveAssetSource(fallback_profile).uri;
+
+  //console.log('user fallback profile', user_fallback_profile);
 
   const {
     data: user,
@@ -86,7 +90,10 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         isDoctor={isDoctor}
         username={user.user_name || ''}
         userhandle={user.user_handle || ''}
-        profileImg={user.Profile_image || ''}
+        profileImg={
+          user.Profile_image ||
+          'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+        }
         articlesPosted={user.articles ? user.articles.length : 0}
         articlesSaved={user.savedArticles ? user.savedArticles.length : 0}
         userPhoneNumber={isDoctor ? user.contact_detail?.phone_no || '' : ''}

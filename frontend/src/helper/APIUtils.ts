@@ -1,5 +1,5 @@
-const BASE_URL = 'http://10.0.2.2:3025/api';
-// const BASE_URL = 'http://139.84.167.240/api';
+//const BASE_URL = 'http://10.0.2.2:3025/api';
+const BASE_URL = 'http://139.84.174.38/api';
 const LOGIN_API = `${BASE_URL}/user/login`;
 const REGISTRATION_API = `${BASE_URL}/user/register`;
 const ARTICLE_TAGS_API = '/articles/tags';

@@ -10,7 +10,7 @@ import React, {memo} from 'react';
 import Feather from 'react-native-vector-icons/Feather';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {ProfileEditGeneralTab} from '../type';
-import fallback_profile from '../assets/avatar.jpg';
+//import fallback_profile from '../assets/avatar.jpg';
 
 const GeneralTab = ({
   username,
@@ -25,7 +25,8 @@ const GeneralTab = ({
   handleSubmitGeneralDetails,
   selectImage,
 }: ProfileEditGeneralTab) => {
-  const user_fallback_profile = Image.resolveAssetSource(fallback_profile).uri;
+  //const user_fallback_profile = Image.resolveAssetSource(fallback_profile).uri;
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -33,7 +34,9 @@ const GeneralTab = ({
         <View style={styles.profileImageContainer}>
           <Image
             source={{
-              uri: imgUrl || user_fallback_profile,
+              uri:
+                imgUrl ||
+                'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
             }}
             style={[
               styles.profileImage,
