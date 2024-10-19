@@ -6,9 +6,10 @@ import {PRIMARY_COLOR} from '../../helper/Theme';
 import {PreviewScreenProp, User} from '../../type';
 import {createHTMLStructure} from '../../helper/Utils';
 import {useMutation, useQuery} from '@tanstack/react-query';
+import RNFS from 'react-native-fs';
 import axios from 'axios';
 import Loader from '../../components/Loader';
-import {GET_PROFILE_API, POST_ARTICLE} from '../../helper/APIUtils';
+import {GET_PROFILE_API, POST_ARTICLE, UPLOAD_STORAGE} from '../../helper/APIUtils';
 import {useSelector} from 'react-redux';
 
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
@@ -16,13 +17,15 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {article, title, description, image, selectedGenres} = route.params;
   const webViewRef = useRef<WebView>(null);
   const {user_token} = useSelector((state: any) => state.user);
-  
+
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity style={styles.button} onPress={() => {
-          createPostMutation.mutate();
-        }}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            createPostMutation.mutate();
+          }}>
           <Text style={styles.textWhite}>Post</Text>
         </TouchableOpacity>
       ),
@@ -73,11 +76,42 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
     onError: error => {
       console.log('Article post Error', error);
       console.log(error);
-      
+
       Alert.alert('Failed to upload your post');
     },
   });
 
+  const createAndUploadHtmlFile = async () => {
+    const filePath = `${RNFS.DocumentDirectoryPath}/${title.substring(
+      0,
+      7,
+    )}.html`;
+
+    try {
+      // Step 1: Create the HTML file
+      await RNFS.writeFile(filePath, article, 'utf8');
+      Alert.alert('Success', `HTML file created at: ${filePath}`);
+
+      // Step 2: Upload the file
+      const formData = new FormData();
+      formData.append('file', {
+        uri: filePath,
+        type: 'text/html', // Change if necessary
+        name: `${title.substring(0, 7)}.html`,
+      });
+
+      const response = await axios.post(UPLOAD_STORAGE, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      Alert.alert('Upload Success', `File uploaded: ${response.data}`);
+    } catch (error) {
+      Alert.alert('Error', `Operation failed: ${error.message}`);
+    }
+  };
+  
   // Vultr post
   if (createPostMutation.isPending) {
     return <Loader />;
