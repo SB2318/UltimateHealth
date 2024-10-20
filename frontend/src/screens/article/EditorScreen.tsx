@@ -10,11 +10,11 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {EditorScreenProp} from '../../type';
-import * as ImagePicker from 'react-native-image-picker';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
 
+// Feature:
+// If you want to discard your post, in that case no post will upload into storage, 
 const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const insets = useSafeAreaInsets();
   const {title, description, selectedGenres, authorName, imageUtils} =
@@ -22,6 +22,8 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   //const video = require('../../assets/play-button.png'); //icon for Addvideo
   const RichText = useRef(); //reference to the RichEditor component
   const [article, setArticle] = useState('');
+  const [localImages, setLocalImages] = useState<string[]>([]); // Track local images
+  const [htmlImages, setHtmlImages] = useState<string[]>([]); // Track HTML tags for local images
 
   React.useEffect(() => {
     // Use `setOptions` to update the button that we previously specified
@@ -41,6 +43,8 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
                 description: description,
                 image: imageUtils,
                 selectedGenres: selectedGenres,
+                localImages: localImages,
+                htmlImages: htmlImages,
               });
             }
           }}>
@@ -49,6 +53,14 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       ),
     });
   }, [navigation, article, title, description, imageUtils, selectedGenres]);
+
+
+  React.useEffect(() => {
+    if (imageUtils) {
+      setLocalImages(prevImages => [imageUtils, ...prevImages]); // Add imageUtils at the start
+    }
+  }, [imageUtils]);
+
   // this function will be called when the editor has been initialized
   function editorInitializedCallback() {
     RichText.current?.registerToolbar(function (_items) {
@@ -66,7 +78,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   }
 
   async function onPressAddImage() {
-    const result = await ImagePicker.launchImageLibrary({
+    const result = await launchImageLibrary({
       mediaType: 'photo',
       presentationStyle: 'popover',
       quality: 0.7,
@@ -79,6 +91,9 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       // Define desired width and height
       const width = 300; // Set your desired width
       const height = 200; // Set your desired height
+
+      setLocalImages(prev => [...prev, str]);
+      setHtmlImages(prev => [...prev, imageHTML]);
 
       // Create the image HTML with defined width and height
       const imageHTML = `<img src="${str}" style="width: ${width}px; height: ${height}px;" />`;

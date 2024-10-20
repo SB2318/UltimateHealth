@@ -18,6 +18,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import IonIcons from 'react-native-vector-icons/Ionicons';
 import {useMutation} from '@tanstack/react-query';
 import {
+  GET_IMAGE,
   LIKE_ARTICLE,
   SAVE_ARTICLE,
   UPDATE_VIEW_COUNT,
@@ -25,8 +26,8 @@ import {
 import {PRIMARY_COLOR} from '../helper/Theme';
 
 const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
- 
   const {user_token, user_id} = useSelector((state: any) => state.user);
+  console.log('Image Utils', item?.imageUtils[0]);
   const updateViewCountMutation = useMutation({
     mutationKey: ['update-view-count'],
     mutationFn: async () => {
@@ -49,7 +50,7 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
       return res.data.article as ArticleData;
     },
     onSuccess: async data => {
-      navigation.navigate('ArticleScreen',{
+      navigation.navigate('ArticleScreen', {
         articleId: Number(item._id),
         authorId: item.authorId,
       });
@@ -135,7 +136,14 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
       <View style={styles.cardContainer}>
         {/* image */}
         {item?.imageUtils[0] && item?.imageUtils[0].length !== 0 ? (
-          <Image source={{uri: item?.imageUtils[0]}} style={styles.image} />
+          <Image
+            source={{
+              uri: item?.imageUtils[0].startsWith('http')
+                ? item?.imageUtils[0]
+                : `${GET_IMAGE}/${item?.imageUtils[0]}`,
+            }}
+            style={styles.image}
+          />
         ) : (
           <Image
             source={require('../assets/article_default.jpg')}

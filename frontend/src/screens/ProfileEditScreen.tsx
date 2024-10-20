@@ -605,7 +605,7 @@ const ProfileEditScreen = ({navigation}) => {
         }
 
         if (uri) {
-          ImageResizer.createResizedImage(uri, 2000, 2000, 'JPEG', 100)
+          ImageResizer.createResizedImage(uri, 1000, 1000, 'JPEG', 100)
             .then(async resizedImageUri => {
               setUserProfileImage(resizedImageUri.uri);
               Alert.alert(

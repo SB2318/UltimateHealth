@@ -15,7 +15,6 @@ import {Category} from '../../type';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {launchImageLibrary} from 'react-native-image-picker';
-import RNFS from 'react-native-fs';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 const ArticleDescriptionScreen = ({navigation}) => {
@@ -54,8 +53,8 @@ const ArticleDescriptionScreen = ({navigation}) => {
 
     // Later purpose
     else if (imageUtils.length === 0) {
-      //Alert.alert('Please upload one  image for your article.');
-      // return;
+      Alert.alert('Please upload one  image for your article.');
+      return;
     }
 
     navigation.navigate('EditorScreen', {
@@ -88,7 +87,7 @@ const ArticleDescriptionScreen = ({navigation}) => {
         }
 
         // Check dimensions
-        ImageResizer.createResizedImage(uri, 2000, 2000, 'JPEG', 100)
+        ImageResizer.createResizedImage(uri, 1000, 1000, 'JPEG', 100)
           .then(resizedImageUri => {
             // If the image is resized successfully, upload it
           })
@@ -182,21 +181,48 @@ const ArticleDescriptionScreen = ({navigation}) => {
       </ScrollView>
 
       {imageUtils !== '' && (
-        <Image
-          source={{uri: imageUtils}}
-          style={{
-            width: 400,
-            alignSelf: 'center',
-            resizeMode: 'contain',
-            height: 300,
-            marginTop: 20,
-          }}
-        />
+        <View>
+          <Image
+            source={{uri: imageUtils}}
+            style={{
+              width: 300,
+              alignSelf: 'center',
+              resizeMode: 'cover',
+              height: 300,
+              marginTop: 20,
+            }}
+          />
+
+          <TouchableOpacity
+            onPress={() => {
+              setImageUtils('');
+            }}
+            style={{
+              position: 'absolute',
+              top: 7,
+              right: 10,
+              backgroundColor: 'rgba(255, 255, 255, 1)', // Optional: adds a background
+              borderRadius: 20,
+              padding: 5,
+            }}>
+            <Ionicon name="close" size={25} color={PRIMARY_COLOR} />
+            {/* Adjust icon name and color */}
+          </TouchableOpacity>
+        </View>
       )}
-      <TouchableOpacity onPress={selectImage} style={styles.inputContainer}>
-        <Text style={styles.inputLabel}>Related image</Text>
-        <Text style={styles.input}>Upload one image</Text>
-      </TouchableOpacity>
+      {imageUtils.length === 0 && (
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>Related image</Text>
+          <View style={styles.uploadImageContainer}>
+            <Text style={{...styles.input, borderWidth: 0, padding: 0}}>
+              Upload one image
+            </Text>
+            <TouchableOpacity onPress={selectImage}>
+              <Ionicon name="images" size={20} color="#808080" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       <TouchableOpacity style={styles.submitButton} onPress={handleCreatePost}>
         <Text style={styles.submitButtonText}>Continue</Text>
@@ -281,6 +307,19 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
   },
+
+  uploadImageContainer: {
+    flexDirection: 'row',
+    width: '96%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 6,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 8,
+    marginStart: 7,
+    //marginBottom: 6,
+  },
   checkbox: {
     width: 24,
     height: 24,
@@ -323,8 +362,9 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     backgroundColor: '#007bff',
-    padding: 16,
-    margin: 16,
+    width: '90%',
+    padding: 10,
+    margin: 17,
     borderRadius: 8,
   },
   submitButtonText: {

@@ -27,6 +27,8 @@ export type RootStackParamList = {
     description: string;
     image: string;
     selectedGenres: Category[];
+    localImages: string[];
+    htmlImages: string[];
   };
   ArticleScreen: {
     articleId: number;
