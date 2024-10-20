@@ -58,7 +58,7 @@ const ProfileHeader = ({
           source={{
             uri: profileImg.startsWith('https')
               ? profileImg
-              : `${GET_STORAGE_DATA}/${profileImg}`
+              : `${GET_STORAGE_DATA}/${profileImg}`,
           }}
           style={[
             styles.profileImage,
@@ -103,16 +103,37 @@ const ProfileHeader = ({
           </View>
         ) : (
           other && (
+            // <TouchableOpacity
+            //   style={styles.editProfileButton}
+            //   onPress={() => {
+            //     navigation.navigate('ProfileEditScreen');
+            //   }}>
+            //   <Text style={styles.editProfileButtonText}>Edit Profile</Text>
+            // </TouchableOpacity>
             <TouchableOpacity
-              style={styles.editProfileButton}
               onPress={() => {
                 navigation.navigate('ProfileEditScreen');
-              }}>
-              <Text style={styles.editProfileButtonText}>Edit Profile</Text>
+              }}
+              style={{marginVertical: 10}}>
+              <View style={styles.btnSM}>
+                <MaterialIcons name="edit" size={20} color="black" />
+                <Text style={styles.btnSMText}>Edit Profile</Text>
+              </View>
             </TouchableOpacity>
           )
         )}
-
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('LogoutScreen', {
+              profile_image: profileImg,
+              username: username,
+            });
+          }}>
+          <View style={styles.btnSM}>
+            <MaterialIcons name="logout" size={20} color="black" />
+            <Text style={styles.btnSMText}>Logout</Text>
+          </View>
+        </TouchableOpacity>
         <View style={styles.infoContainer}>
           {isDoctor ? (
             <>
@@ -258,5 +279,24 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'regular',
     color: 'black',
+  },
+  btnSM: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    backgroundColor: '#fff',
+    borderColor: '#d1d5db',
+    width: wp(70),
+    gap: 10,
+  },
+  btnSMText: {
+    fontSize: 17,
+    lineHeight: 20,
+    fontWeight: '600',
+    color: '#374151',
   },
 });

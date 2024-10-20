@@ -1,4 +1,4 @@
-//const BASE_URL = 'http://10.0.2.2:3025/api';
+// const BASE_URL = 'http://10.0.2.2:3025/api';
 const BASE_URL = 'http://139.84.174.38/api';
 const LOGIN_API = `${BASE_URL}/user/login`;
 const REGISTRATION_API = `${BASE_URL}/user/register`;
@@ -25,7 +25,8 @@ const UPLOAD_STORAGE = `${BASE_URL}/upload-storage`;
 const GET_STORAGE_DATA = `${BASE_URL}/getFile`;
 const UPDATE_PROFILE_IMAGE = `${BASE_URL}/user/update-profile-image`;
 const GET_PROFILE_IMAGE_BY_ID = `${BASE_URL}/user/getprofileimage`;
-const GET_IMAGE = `${BASE_URL}/getfile`
+const GET_IMAGE = `${BASE_URL}/getfile`;
+const USER_LOGOUT = `${BASE_URL}/user/logout`;
 export {
   BASE_URL,
   LOGIN_API,
@@ -53,5 +54,6 @@ export {
   GET_STORAGE_DATA,
   UPDATE_PROFILE_IMAGE,
   GET_PROFILE_IMAGE_BY_ID,
-  GET_IMAGE
+  GET_IMAGE,
+  USER_LOGOUT,
 };

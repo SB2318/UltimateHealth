@@ -19,7 +19,9 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
     route.params;
   const webViewRef = useRef<WebView>(null);
   const {user_token} = useSelector((state: any) => state.user);
+
   const {uploadImage, loading} = useUploadImage();
+  console.log(selectedGenres);
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -154,6 +156,37 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       Alert.alert('Failed to upload your post');
     },
   });
+
+  const createAndUploadHtmlFile = async () => {
+    const filePath = `${RNFS.DocumentDirectoryPath}/${title.substring(
+      0,
+      7,
+    )}.html`;
+
+    try {
+      // Step 1: Create the HTML file
+      await RNFS.writeFile(filePath, article, 'utf8');
+      Alert.alert('Success', `HTML file created at: ${filePath}`);
+
+      // Step 2: Upload the file
+      const formData = new FormData();
+      formData.append('file', {
+        uri: filePath,
+        type: 'text/html', // Change if necessary
+        name: `${title.substring(0, 7)}.html`,
+      });
+
+      const response = await axios.post(UPLOAD_STORAGE, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      Alert.alert('Upload Success', `File uploaded: ${response.data}`);
+    } catch (error) {
+      Alert.alert('Error', `Operation failed: ${error.message}`);
+    }
+  };
 
   // Vultr post
   if (createPostMutation.isPending || loading) {
