@@ -89,8 +89,8 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       const base64String = result.assets[0].base64;
       const str = `data:${type};base64,${base64String}`;
       // Define desired width and height
-      const width = 300; // Set your desired width
-      const height = 200; // Set your desired height
+      const width = 1000; // Set your desired width
+      const height = 1000; // Set your desired height
 
       setLocalImages(prev => [...prev, str]);
       setHtmlImages(prev => [...prev, imageHTML]);

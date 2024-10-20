@@ -10,7 +10,7 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {useQuery, useMutation} from '@tanstack/react-query';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
@@ -24,6 +24,7 @@ import {
   FOLLOW_USER,
   GET_ARTICLE_BY_ID,
   GET_PROFILE_IMAGE_BY_ID,
+  GET_STORAGE_DATA,
   LIKE_ARTICLE,
 } from '../../helper/APIUtils';
 import axios from 'axios';
@@ -34,6 +35,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const insets = useSafeAreaInsets();
   const {articleId, authorId} = route.params;
   const {user_id, user_token} = useSelector((state: any) => state.user);
+  const [webViewHeight, setWebViewHeight] = useState(0);
 
   const webViewRef = useRef<WebView>(null);
 
@@ -300,7 +302,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             {profile_image && profile_image !== '' ? (
               <Image
                 source={{
-                  uri: `${profile_image}`,
+                  uri: profile_image.startsWith('http')
+                    ? `${profile_image}`
+                    : `${GET_STORAGE_DATA}/${profile_image}`,
                 }}
                 style={styles.authorImage}
               />
@@ -351,7 +355,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   scrollView: {
-    flex: 1,
+    flex: 0,
     backgroundColor: '#ffffff',
     position: 'relative',
   },
@@ -425,7 +429,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   descriptionContainer: {
-    flex: 1,
+    flex: 0,
     marginTop: 10,
   },
 
