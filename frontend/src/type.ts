@@ -36,6 +36,7 @@ export type RootStackParamList = {
   };
   UserProfileScreen: {authorId: string};
   ProfileEditScreen: undefined;
+  LogoutScreen: {profile_image: string; username: string};
 };
 
 export type UserDetail = {
@@ -80,9 +81,11 @@ export type LoginScreenProp = StackScreenProps<
   'LoginScreen'
 >;
 
-export type ArticleScreenProp =
-  StackScreenProps<RootStackParamList, 'ArticleScreen'>
-  //StackScreenProps<RootStackParamList, 'UserProfileScreen'>;
+export type ArticleScreenProp = StackScreenProps<
+  RootStackParamList,
+  'ArticleScreen'
+>;
+//StackScreenProps<RootStackParamList, 'UserProfileScreen'>;
 
 export type EditorScreenProp = StackScreenProps<
   RootStackParamList,
