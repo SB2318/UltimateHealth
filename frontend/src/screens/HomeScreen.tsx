@@ -100,7 +100,13 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 
   useEffect(() => {
     getAllCategories();
+    /*
     const unsubscribe = navigation.addListener('beforeRemove', e => {
+
+      if (!navigation.canGoBack()) {
+        // If there's no back stack, prevent the alert
+        return;
+      }
       e.preventDefault();
       Alert.alert(
         'Warning',
@@ -110,7 +116,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           {
             text: 'Yes',
             onPress: () => {
-              //BackHandler.exitApp()
+              BackHandler.exitApp()
             },
           },
         ],
@@ -118,6 +124,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       );
     });
     return unsubscribe;
+    */
+    return () => {};
   }, []);
 
   const handleNoteIconClick = () => {

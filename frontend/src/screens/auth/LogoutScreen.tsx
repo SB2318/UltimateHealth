@@ -39,7 +39,11 @@ const LogoutScreen = ({navigation, route}) => {
       await clearStorage();
       dispatch(resetUserState());
       //navigation.navigate('LoginScreen');
-      navigation.replace('LoginScreen');
+      //navigation.replace('LoginScreen');
+      navigation.reset({
+        index: 1,
+        routes: [{name: 'LoginScreen'}], // Send user to LoginScreen after logout
+      });
     },
 
     onError: (err: AxiosError) => {

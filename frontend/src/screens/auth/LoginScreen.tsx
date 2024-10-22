@@ -48,27 +48,37 @@ const LoginScreen = ({navigation}: LoginScreenProp) => {
     setSecureTextEntry(!secureTextEntry);
   };
 
-  useEffect(
-    () =>
-      navigation.addListener('beforeRemove', e => {
-        e.preventDefault();
-        Alert.alert(
-          'Warning',
-          'Do you want to exit',
-          [
-            {text: 'No', onPress: () => null},
-            {
-              text: 'Yes',
-              onPress: () => {
-                BackHandler.exitApp();
-              },
+/*
+  useEffect(() => {
+    const backHandler = navigation.addListener('beforeRemove', e => {
+      if (!navigation.canGoBack()) {
+        return;
+      }
+      e.preventDefault();
+      Alert.alert(
+        'Warning',
+        'Do you want to exit',
+        [
+          {text: 'No', onPress: () => null},
+          {
+            text: 'Yes',
+            onPress: () => {
+              BackHandler.exitApp();
             },
-          ],
-          {cancelable: true},
-        );
-      }),
-    [navigation],
-  );
+          },
+        ],
+        {cancelable: true},
+      );
+    });
+  
+    // Cleanup the event listener when the component unmounts or when the user logs out
+    return () => {
+      backHandler.remove();
+    };
+  }, [navigation]);
+  */
+  
+  
 
   const validateAndSubmit = async () => {
     if (validate()) {
@@ -142,8 +152,12 @@ const LoginScreen = ({navigation}: LoginScreenProp) => {
           );
           dispatch(setUserId(auth.userId));
           dispatch(setUserToken(auth.token));
+          setTimeout(() => {
+            navigation.navigate('TabNavigation');
+          }, 1000);
+        } else {
+          Alert.alert('Token not found');
         }
-        navigation.navigate('TabNavigation');
       } catch (e) {
         console.log('Async Storage ERROR', e);
       }

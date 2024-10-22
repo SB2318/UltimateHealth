@@ -39,6 +39,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     },
   });
 
+  /*
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', e => {
       e.preventDefault();
@@ -50,7 +51,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
           {
             text: 'Yes',
             onPress: () => {
-              //BackHandler.exitApp();
+              BackHandler.exitApp();
             },
           },
         ],
@@ -59,6 +60,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     });
     return unsubscribe;
   }, [navigation]);
+  */
 
   const isDoctor = user !== undefined ? user.isDoctor : false;
   const bottomBarHeight = useBottomTabBarHeight();
