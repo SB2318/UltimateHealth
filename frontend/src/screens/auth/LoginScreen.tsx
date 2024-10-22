@@ -11,7 +11,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fp, hp, wp} from '../../helper/Metric';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
@@ -19,6 +19,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {KEYS, storeItem} from '../../helper/Utils';
 import EmailInputModal from '../../components/EmailInputModal';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import {AuthData, LoginScreenProp, User} from '../../type';
 import {useMutation} from '@tanstack/react-query';
 import axios, {AxiosError} from 'axios';
@@ -398,6 +399,15 @@ const LoginScreen = ({navigation}: LoginScreenProp) => {
             onDismiss={() => setEmailInputVisible(false)}
           />
 
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: '600',
+              marginBottom: 4,
+              alignSelf: 'center',
+            }}>
+            or
+          </Text>
           <View style={styles.createAccountContainer}>
             <TouchableOpacity>
               <Text
@@ -470,14 +480,19 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
-    marginTop: 14,
-    borderTopRightRadius: wp(26),
-    paddingHorizontal: wp(7),
+    marginTop: 10,
+    borderWidth:10,
+    borderColor:ON_PRIMARY_COLOR,
+    borderTopRightRadius: wp(2),
+    borderTopLeftRadius: wp(26),
+    paddingHorizontal: wp(8),
     paddingTop: hp(10),
     flexDirection: 'column',
   },
   input: {
+    flexDirection: 'row',
     marginBottom: hp(2),
+    justifyContent: 'flex-start',
   },
   inputLabel: {
     fontSize: fp(4),
@@ -498,13 +513,16 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginVertical: 2,
   },
-  forgotPasswordText: {color: 'black', fontWeight: '600'},
-  loginButtonContainer: {marginVertical: hp(2), alignItems: 'center'},
+  forgotPasswordText: {color: '	#000080', fontWeight: '600', marginBottom:6,},
+  loginButtonContainer: {marginVertical: hp(2)},
   loginButton: {
     backgroundColor: PRIMARY_COLOR,
-    paddingVertical: hp(1),
+    paddingVertical: hp(1.2),
     paddingHorizontal: wp(10),
-    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    width: '96%',
   },
   loginText: {
     fontSize: fp(5),
@@ -515,6 +533,7 @@ const styles = StyleSheet.create({
   createAccountText: {
     fontSize: 16,
     fontWeight: '500',
+    marginBottom: 5,
   },
   passwordContainer: {
     flexDirection: 'row',
