@@ -57,12 +57,17 @@ const LoginScreen = ({navigation}: LoginScreenProp) => {
           'Do you want to exit',
           [
             {text: 'No', onPress: () => null},
-            {text: 'Yes', onPress: () => BackHandler.exitApp()},
+            {
+              text: 'Yes',
+              onPress: () => {
+                BackHandler.exitApp();
+              },
+            },
           ],
           {cancelable: true},
         );
       }),
-    [],
+    [navigation],
   );
 
   const validateAndSubmit = async () => {
@@ -481,8 +486,8 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     marginTop: 10,
-    borderWidth:10,
-    borderColor:ON_PRIMARY_COLOR,
+    borderWidth: 10,
+    borderColor: ON_PRIMARY_COLOR,
     borderTopRightRadius: wp(2),
     borderTopLeftRadius: wp(26),
     paddingHorizontal: wp(8),
@@ -513,7 +518,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginVertical: 2,
   },
-  forgotPasswordText: {color: '	#000080', fontWeight: '600', marginBottom:6,},
+  forgotPasswordText: {color: '	#000080', fontWeight: '600', marginBottom: 6},
   loginButtonContainer: {marginVertical: hp(2)},
   loginButton: {
     backgroundColor: PRIMARY_COLOR,

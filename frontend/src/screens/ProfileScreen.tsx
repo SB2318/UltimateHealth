@@ -47,7 +47,12 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         'Do you want to exit',
         [
           {text: 'No', onPress: () => null},
-          {text: 'Yes', onPress: () => BackHandler.exitApp()},
+          {
+            text: 'Yes',
+            onPress: () => {
+              //BackHandler.exitApp();
+            },
+          },
         ],
         {cancelable: true},
       );

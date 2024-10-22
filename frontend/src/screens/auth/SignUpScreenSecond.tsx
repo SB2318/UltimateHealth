@@ -72,23 +72,28 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
             console.log('Error message', errorData);
             Alert.alert('Registration failed', 'Please try again');
             break;
-          case 409:
+          case 409: {
             Alert.alert(
               'Registration failed',
               'Email or user handle already exists',
             );
             break;
-          case 500:
+          }
+
+          case 500: {
             Alert.alert(
               'Registration failed',
               'Internal server error. Please try again later.',
             );
             break;
-          default:
+          }
+
+          default: {
             Alert.alert(
               'Registration failed',
               'Something went wrong. Please try again later.',
             );
+          }
         }
       } else {
         console.log('General User Registration Error', err);
@@ -175,7 +180,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
     } else if (validator.validate(businessEmail) === false) {
       Alert.alert('Please enter a valid mail id');
       return;
-    } else if (phone.length < 10 || !validPhoneNumber(phone)) {
+    } else if (phone.length < 10) {
       Alert.alert('Please enter a valid phone number');
       return;
     } else {
@@ -250,7 +255,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
       <TouchableOpacity
         style={{flex: 0, backgroundColor: PRIMARY_COLOR}}
         onPress={() => {
-          navigation.navigate('LoginScreen');
+          navigation.goBack();
         }}>
         <AntIcon name="arrowleft" size={35} color="white" />
       </TouchableOpacity>
@@ -265,7 +270,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
       </View>
       <View style={styles.footer}>
         <View style={styles.form}>
-          <View>
+          <View style={{alignSelf: 'center', marginBottom: 10}}>
             {user.profile_image === '' ? (
               <Icon name="person-add" size={70} color="#0CAFFF" />
             ) : (
@@ -381,7 +386,7 @@ const styles = StyleSheet.create({
     width: '98%',
     alignSelf: 'center',
     backgroundColor: 'white',
-    marginTop: -60,
+    marginTop: -50,
     borderRadius: 10,
   },
   title: {
@@ -401,7 +406,7 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: 20,
-    marginTop: 60,
+    marginTop: 15,
   },
   field: {},
   input: {
@@ -425,7 +430,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     marginTop: 20,
-    width: '60%',
+    width: '90%',
   },
   buttonText: {
     color: '#fff',

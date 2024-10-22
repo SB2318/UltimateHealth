@@ -107,7 +107,12 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         'Do you want to exit',
         [
           {text: 'No', onPress: () => null},
-          {text: 'Yes', onPress: () => BackHandler.exitApp()},
+          {
+            text: 'Yes',
+            onPress: () => {
+              //BackHandler.exitApp()
+            },
+          },
         ],
         {cancelable: true},
       );
