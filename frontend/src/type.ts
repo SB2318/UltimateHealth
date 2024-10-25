@@ -5,9 +5,10 @@ import {Dispatch, RefObject, SetStateAction} from 'react';
 import {BottomSheetModal} from '@gorhom/bottom-sheet'; // Adjust this import based on your actual BottomSheetModal component
 
 export type RootStackParamList = {
+
   SplashScreen: undefined;
-  TabNavigation: undefined;
   LoginScreen: undefined;
+  TabNavigation: undefined;
   SignUpScreenFirst: undefined;
   SignUpScreenSecond: {user: UserDetail};
   OtpScreen: {email: string};

@@ -153,7 +153,12 @@ const LoginScreen = ({navigation}: LoginScreenProp) => {
           dispatch(setUserId(auth.userId));
           dispatch(setUserToken(auth.token));
           setTimeout(() => {
-            navigation.navigate('TabNavigation');
+
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'TabNavigation'}], // Send user to LoginScreen after logout
+            });
+            //navigation.navigate('TabNavigation');
           }, 1000);
         } else {
           Alert.alert('Token not found');

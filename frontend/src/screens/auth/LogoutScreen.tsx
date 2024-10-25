@@ -41,7 +41,7 @@ const LogoutScreen = ({navigation, route}) => {
       //navigation.navigate('LoginScreen');
       //navigation.replace('LoginScreen');
       navigation.reset({
-        index: 1,
+        index: 0,
         routes: [{name: 'LoginScreen'}], // Send user to LoginScreen after logout
       });
     },
