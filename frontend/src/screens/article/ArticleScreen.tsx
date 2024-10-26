@@ -38,7 +38,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [webViewHeight, setWebViewHeight] = useState(0);
 
   const webViewRef = useRef<WebView>(null);
-
+  
   const {
     data: article,
     refetch,
@@ -56,6 +56,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     },
   });
 
+  console.log('View Users', article?.viewUsers);
+  
   const handleLike = () => {
     if (article) {
       updateLikeMutation.mutate();
@@ -235,10 +237,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         <View style={styles.contentContainer}>
           {article && (
             <Text style={{...styles.viewText, marginBottom: 10}}>
-              {article && article?.viewCount
-                ? article.viewCount > 1
-                  ? `${article.viewCount} views`
-                  : `${article.viewCount} view`
+              {article && article?.viewUsers.length
+                ? article.viewUsers.length > 1
+                  ? `${article.viewUsers.length} views`
+                  : `${article.viewUsers.length} view`
                 : '0 view'}
             </Text>
           )}

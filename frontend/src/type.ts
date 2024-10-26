@@ -234,6 +234,7 @@ export type ArticleData = {
   lastUpdated: string;
   imageUtils: string[];
   viewCount: number;
+  viewUsers: User[];
   likeCount: number;
   likedUsers: User[];
   savedUsers: string[];
