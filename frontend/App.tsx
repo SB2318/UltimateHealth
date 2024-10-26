@@ -5,6 +5,7 @@
  * @format
  */
 
+
 import React from 'react';
 import {Platform, StatusBar, useColorScheme, View} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
