@@ -18,6 +18,7 @@ const POST_ARTICLE = `${BASE_URL}/articles`;
 const GET_ARTICLE_BY_ID = `${BASE_URL}/articles`;
 const GET_USER_DETAILS_API = `${BASE_URL}/user/getdetails`;
 const UPDATE_USER_GENERAL_DETAILS = `${BASE_URL}/user/update-general-details`;
+const UPDATE_READ_EVENT = `${BASE_URL}/article/readEvent`;
 const UPDATE_USER_PASSWORD = `${BASE_URL}/user/update-password`;
 const UPDATE_USER_CONTACT_DETAILS = `${BASE_URL}/user/update-contact-details`;
 const UPDATE_USER_PROFESSIONAL_DETAILS = `${BASE_URL}/user/update-professional-details`;
@@ -56,4 +57,5 @@ export {
   GET_PROFILE_IMAGE_BY_ID,
   GET_IMAGE,
   USER_LOGOUT,
+  UPDATE_READ_EVENT
 };
