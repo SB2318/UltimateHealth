@@ -212,6 +212,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
               <ActivityOverview
                 onArticleViewed={onArticleViewed}
                 others={false}
+                articlePosted={user?.articles ? user.articles.length : 0}
               />
             </Tabs.ScrollView>
           </Tabs.Tab>

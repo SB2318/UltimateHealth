@@ -222,6 +222,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
                 onArticleViewed={onArticleViewed}
                 others={true}
                 userId={user?._id}
+                articlePosted={user.articles ? user.articles.length : 0}
               />
             </Tabs.ScrollView>
           </Tabs.Tab>

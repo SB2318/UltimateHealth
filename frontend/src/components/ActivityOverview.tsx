@@ -7,7 +7,7 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import * as Progress from 'react-native-progress';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -48,13 +48,21 @@ interface Props {
   }) => void;
   userId?: string;
   others: boolean;
+  articlePosted: number;
 }
-const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
+const ActivityOverview = ({
+  onArticleViewed,
+  userId,
+  others,
+  articlePosted,
+}: Props) => {
   const [userState, setUserState] = useState<number>(0);
   const {user_token, user_id} = useSelector((state: any) => state.user);
   const [isFocus, setIsFocus] = useState<boolean>(false);
-  const [selectedDay, setSelectedDay] = useState<number>(new Date().getDay());
-  const [selectedMonth, setSelectedMonth] = useState<number>(-1);
+  // const [selectedDay, setSelectedDay] = useState<number>(new Date().getDay());
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    new Date().getMonth(),
+  );
   const [selectedYear, setSelectedYear] = useState<number>(-1);
 
   const dailyDrops = [
@@ -87,15 +95,7 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
   const yearlyDrops = [
     {label: 'Yearly', value: -1},
     {label: '2024', value: 2024},
-    {label: '2025', value: 2025},
-  ];
-
-  const chartData = [
-    {value: 50},
-    {value: 80},
-    {value: 90},
-    {value: 70},
-    {value: 60},
+    //{label: '2025', value: 2025},
   ];
 
   // GET MONTHLY READ REPORT
@@ -130,6 +130,7 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
         let url = others
           ? `${GET_MONTHLY_READ_REPORT}?userId=${userId}&month=${selectedMonth}`
           : `${GET_MONTHLY_READ_REPORT}?userId=${user_id}&month=${selectedMonth}`;
+        console.log('URL', url);
         const response = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${user_token}`,
@@ -471,6 +472,24 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
   });
 
   const colorList = ['black', 'green', PRIMARY_COLOR];
+
+  useEffect(() => {
+    if (userState === 0) {
+      refetchMonthReadReport();
+    } else {
+      refetchMonthWriteReport();
+    }
+  }, [selectedMonth, userState]);
+
+  useEffect(() => {
+    // This will run when selectedMonth changes
+    if (userState === 0) {
+      refetchYearlyReadReport();
+    } else {
+      refetchYearlyWriteReport();
+    }
+  }, [selectedYear, userState]);
+
   if (
     isArticleLoading ||
     likeViewStatDataLoading ||
@@ -488,109 +507,13 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
         backgroundColor: 'white',
       }}>
       <View style={styles.rowContainer}>
-        <View style={styles.box}>
-          <Text style={styles.titleText}> Total Reads</Text>
-          <Text style={styles.valueText}>{readStat?.totalReads}</Text>
-          <Progress.Bar
-            progress={readStat?.progress ? readStat?.progress : 0}
-            width={100}
-            color={
-              readStat?.progress
-                ? readStat?.progress < 0.4
-                  ? colorList[0]
-                  : readStat?.progress < 0.8
-                  ? colorList[1]
-                  : colorList[2]
-                : 'black'
-            }
-            borderRadius={0}
-            style={{marginTop: 4}}
-          />
-        </View>
-
-        <View style={styles.box}>
-          <Text style={styles.titleText}> Total Writes</Text>
-          <Text style={styles.valueText}>{writeStat?.totalWrites}</Text>
-
-          <Progress.Bar
-            progress={writeStat?.progress ? writeStat?.progress : 0}
-            width={100}
-            color={
-              writeStat?.progress
-                ? writeStat?.progress < 0.4
-                  ? colorList[0]
-                  : writeStat?.progress < 0.8
-                  ? colorList[1]
-                  : colorList[2]
-                : 'black'
-            }
-            borderRadius={0}
-            style={{marginTop: 4}}
-          />
-        </View>
-      </View>
-
-      <View style={styles.rowContainer}>
-        <View style={styles.box}>
-          <Text style={styles.titleText}> Total Likes</Text>
-          <Text style={styles.valueText}>{likeViewStat?.totalLikes}</Text>
-
-          <Progress.Bar
-            progress={
-              likeViewStat?.likeProgress ? likeViewStat?.likeProgress : 0
-            }
-            width={100}
-            color={
-              likeViewStat?.likeProgress
-                ? likeViewStat?.likeProgress < 0.4
-                  ? colorList[0]
-                  : likeViewStat?.likeProgress < 0.8
-                  ? colorList[1]
-                  : colorList[2]
-                : 'black'
-            }
-            borderRadius={0}
-            style={{marginTop: 4}}
-          />
-        </View>
-
-        <View style={styles.box}>
-          <Text style={styles.titleText}> Total Views</Text>
-          <Text style={styles.valueText}>{likeViewStat?.totalViews}</Text>
-
-          <Progress.Bar
-            progress={
-              likeViewStat?.viewProgress ? likeViewStat.viewProgress : 0
-            }
-            width={100}
-            color={
-              likeViewStat?.viewProgress
-                ? likeViewStat?.viewProgress < 0.4
-                  ? colorList[0]
-                  : likeViewStat?.viewProgress < 0.8
-                  ? colorList[1]
-                  : colorList[2]
-                : 'black'
-            }
-            borderRadius={0}
-            style={{marginTop: 4}}
-          />
-        </View>
-      </View>
-
-      <View
-        style={{
-          height: 0.8,
-          width: '96%',
-          margin: 10,
-          backgroundColor: '#c1c1c1',
-        }}
-      />
-
-      <View style={styles.rowContainer}>
         <Dropdown
           style={styles.dropdown}
           //placeholderStyle={styles.placeholderStyle}
+          itemTextStyle={{
+            fontSize: 17,
+            fontWeight: '700',
+          }}
           data={[
             {label: 'Read', value: 0},
             {label: 'Write', value: 1},
@@ -614,7 +537,9 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
       </View>
 
       <View style={styles.rowContainer}>
-        <Dropdown
+        {/**
+         *
+         *  <Dropdown
           style={{
             ...styles.button,
             backgroundColor: selectedDay === -1 ? '#c1c1c1' : PRIMARY_COLOR,
@@ -635,6 +560,7 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
           }}
           placeholder={'Daily'}
         />
+         */}
 
         <Dropdown
           style={{
@@ -647,19 +573,22 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
           labelField="label"
           valueField="value"
           //placeholder={!isFocus ? 'Select your role' : '...'}
+          itemTextStyle={{
+            fontSize: 14,
+          }}
           value={selectedMonth}
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
           onChange={item => {
             setSelectedMonth(item.value);
-            setSelectedDay(-1);
+            // setSelectedDay(-1);
             setSelectedYear(-1);
             setIsFocus(false);
-            if (userState === 0) {
-              refetchMonthReadReport();
-            } else {
-              refetchMonthWriteReport();
-            }
+            //if (userState === 0) {
+            // refetchMonthReadReport();
+            //} else {
+            refetchMonthWriteReport();
+            // }
           }}
           placeholder={'Monthly'}
         />
@@ -679,25 +608,27 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
           onBlur={() => setIsFocus(false)}
           onChange={item => {
             setSelectedYear(item.value);
-            setSelectedDay(-1);
+            // setSelectedDay(-1);
             setSelectedMonth(-1);
             setIsFocus(false);
 
-            if (userState === 0) {
-              refetchYearlyReadReport();
-            } else {
-              refetchYearlyWriteReport();
-            }
+            // if (userState === 0) {
+            //  refetchYearlyReadReport();
+            // } else {
+            // refetchYearlyWriteReport();
+            // }
           }}
           placeholder={'Yearly'}
         />
       </View>
 
-      {selectedDay !== -1 && (
+      {/**
+       *   {selectedDay !== -1 && (
         <View style={{marginTop: 10}}>
           <LineChart data={chartData} areaChart />
         </View>
       )}
+       */}
 
       {selectedMonth !== -1 && (
         <View style={{marginTop: 10}}>
@@ -706,17 +637,19 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
               userState === 0
                 ? monthlyReadReport?.map(item => ({
                     value: item.value,
-                    label: item.date,
+                    label: item.date.substring(8),
                   }))
                 : monthlyWriteReport?.map(item => ({
                     value: item.value,
-                    label: item.date,
+                    label: item.date.substring(8),
                   }))
             }
+            minYValue={0}
+            minXValue={0}
             // yAxisLabel="Reads"
             // xAxisLabel="Date"
-           // isAnimated={true}
-           // animationDuration={500}
+            // isAnimated={true}
+            // animationDuration={500}
             //tooltipTextStyle={{color: 'white'}}
             //tooltipBackgroundColor="#2980b9"
             // tooltipStyle={{borderRadius: 5}}
@@ -731,15 +664,17 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
               userState === 0
                 ? yearlyReadReport?.map(item => ({
                     value: item.value,
-                    label: item.month,
+                    label: moment(item.month).format('MMM'),
                   }))
                 : yearlyWriteReport?.map(item => ({
                     value: item.value,
-                    label: item.month,
+                    label: moment(item.month).format('MMM'),
                   }))
             }
-           // isAnimated={true}
-           // animationDuration={500}
+            // isAnimated={true}
+            // animationDuration={500}
+            minYValue={0}
+            minXValue={0}
             areaChart
           />
         </View>
@@ -754,6 +689,115 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
         style={{width: '95%', height: 600, resizeMode: 'contain'}}
       />
          */}
+
+      <View
+        style={{
+          height: 0.8,
+          width: '96%',
+          margin: 10,
+          backgroundColor: '#c1c1c1',
+        }}
+      />
+
+      <View style={styles.colContainer}>
+        <View style={styles.box}>
+          <Text style={styles.titleText}> Total Reads</Text>
+        
+            <Text style={styles.valueText}>{readStat?.totalReads}</Text>
+         
+
+          <Progress.Bar
+            progress={readStat?.progress ? readStat?.progress : 0}
+            width={140}
+            color={
+              readStat?.progress
+                ? readStat?.progress < 0.4
+                  ? colorList[0]
+                  : readStat?.progress < 0.8
+                  ? colorList[1]
+                  : colorList[2]
+                : 'black'
+            }
+            borderRadius={0}
+            style={{marginTop: 2}}
+          />
+        </View>
+
+        <View style={styles.box}>
+          <Text style={styles.titleText}> Total Writes</Text>
+
+            <Text style={styles.valueText}>{articlePosted}</Text>
+          
+
+          <Progress.Bar
+            progress={writeStat?.progress ? writeStat?.progress : 0}
+            width={140}
+            color={
+              writeStat?.progress
+                ? writeStat?.progress < 0.4
+                  ? colorList[0]
+                  : writeStat?.progress < 0.8
+                  ? colorList[1]
+                  : colorList[2]
+                : 'black'
+            }
+            borderRadius={0}
+            style={{marginTop: 4}}
+          />
+        </View>
+
+        <View style={styles.box}>
+          <Text style={styles.titleText}> Total Likes</Text>
+
+         
+            <Text style={{...styles.valueText, marginStart: 8,}}>{likeViewStat?.totalLikes}</Text>
+        
+
+          <Progress.Bar
+            progress={
+              likeViewStat?.likeProgress ? likeViewStat?.likeProgress : 0
+            }
+            width={140}
+            color={
+              likeViewStat?.likeProgress
+                ? likeViewStat?.likeProgress < 0.4
+                  ? colorList[0]
+                  : likeViewStat?.likeProgress < 0.8
+                  ? colorList[1]
+                  : colorList[2]
+                : 'black'
+            }
+            borderRadius={0}
+            style={{marginTop: 4}}
+          />
+        </View>
+
+        <View style={styles.box}>
+          <Text style={styles.titleText}> Total Views</Text>
+
+        
+            <Text style={{...styles.valueText, marginStart:4}}>{likeViewStat?.totalViews}</Text>
+      
+
+          <Progress.Bar
+            progress={
+              likeViewStat?.viewProgress ? likeViewStat.viewProgress : 0
+            }
+            width={140}
+            color={
+              likeViewStat?.viewProgress
+                ? likeViewStat?.viewProgress < 0.4
+                  ? colorList[0]
+                  : likeViewStat?.viewProgress < 0.8
+                  ? colorList[1]
+                  : colorList[2]
+                : 'black'
+            }
+            borderRadius={0}
+            style={{marginTop: 4}}
+          />
+        </View>
+      </View>
 
       <View
         style={{
@@ -845,21 +889,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  box: {
-    width: '45%',
-    height: 120,
-    justifyContent: 'center',
+  colContainer: {
+    flex: 0,
+    width: '100%',
+    flexDirection: 'column',
+    padding: 1,
+    justifyContent: 'space-between',
     alignItems: 'center',
-    margin: 7,
-    borderWidth: 1,
-    padding: 6,
+  },
+
+  box: {
+    width: '95%',
+    // height: 120,
+    flex: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    margin: 4,
+    //borderWidth: 1,
+    padding: 3,
     borderColor: 'black',
     borderRadius: 8,
-    flexDirection: 'column',
+    //flexDirection: 'column',
   },
 
   titleText: {
-    fontSize: 18,
+    fontSize: 16,
     color: 'black',
     marginVertical: 4,
     fontWeight: '600',
@@ -867,24 +922,25 @@ const styles = StyleSheet.create({
 
   valueText: {
     fontSize: 20,
-    color: PRIMARY_COLOR,
+    color: '#c1c1c1',
     marginVertical: 4,
-    fontWeight: '500',
+    fontWeight: '700',
   },
 
   dropdown: {
     height: 30,
-    width: '25%',
-    // borderColor: '#0CAFFF',
-    //borderWidth: 1,
+    width: '35%',
+    borderColor: '#c1c1c1',
+    borderWidth: 0.4,
     borderRadius: 5,
     paddingHorizontal: 6,
-    marginVertical: 6,
+    marginVertical: 3,
     paddingRight: 2,
+    marginStart: 4,
   },
 
   button: {
-    width: '33%',
+    width: '40%',
     padding: 6,
     borderRadius: 8,
     margin: 2,
