@@ -5,17 +5,42 @@ import {
   Image,
   ScrollView,
   Pressable,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {PRIMARY_COLOR, SECONDARY_COLOR} from '../helper/Theme';
 import * as Progress from 'react-native-progress';
 import {Dropdown} from 'react-native-element-dropdown';
 import {LineChart} from 'react-native-gifted-charts';
+import {useQuery} from '@tanstack/react-query';
 import moment from 'moment';
-import { fp } from '../helper/Metric';
+import {fp} from '../helper/Metric';
+import {useSelector} from 'react-redux';
+import axios from 'axios';
+import {
+  GET_IMAGE,
+  GET_MOSTLY_VIEWED,
+  GET_TOTAL_LIKES_VIEWS,
+  GET_TOTAL_READS,
+  GET_TOTAL_WRITES,
+} from '../helper/APIUtils';
+import {ArticleData, ReadStatus, UserStatus, WriteStatus} from '../type';
+import Loader from './Loader';
 
-const ActivityOverview = () => {
+interface Props {
+  onArticleViewed: ({
+    articleId,
+    authorId,
+  }: {
+    articleId: number;
+    authorId: string;
+  }) => void;
+  userId?: string;
+  others: boolean;
+}
+const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
   const [value, setValue] = useState<string>('read');
+  const {user_token, user_id} = useSelector((state: any) => state.user);
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const [selectedDay, setSelectedDay] = useState<string>('');
   const [selectedMonth, setSelectedMonth] = useState<string>('');
@@ -59,6 +84,193 @@ const ActivityOverview = () => {
     {value: 60},
   ];
 
+  // GET MOST VIEWED ARTICLE
+  const {
+    data: article,
+    isLoading: isArticleLoading,
+    refetch: refetchArticles,
+  } = useQuery({
+    queryKey: ['get-most-viewed-articles'],
+    queryFn: async () => {
+      try {
+        if (user_token === '') {
+          Alert.alert('No token found');
+          return '';
+        }
+        if (!userId) {
+          if (others) {
+            // user id not found for others profile
+            Alert.alert('No user id found');
+            return '';
+          }
+        }
+        if (user_id === '' && !others) {
+          // user id not found for own profile
+          Alert.alert('No user id found');
+          return '';
+        }
+
+        let url = others
+          ? `${GET_MOSTLY_VIEWED}${userId}`
+          : `${GET_MOSTLY_VIEWED}${user_id}`;
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        });
+
+        return response.data as ArticleData[];
+      } catch (err) {
+        console.error('Error fetching articles:', err);
+      }
+    },
+  });
+
+  // GET USER STATUS FOR LIKE AND VIEW COUNT
+
+  const {
+    data: likeViewStat,
+    isLoading: likeViewStatDataLoading,
+    refetch: refetchLikeViewStat,
+  } = useQuery({
+    queryKey: ['get-like-view-status'],
+    queryFn: async () => {
+      try {
+        if (user_token === '') {
+          Alert.alert('No token found');
+          return '';
+        }
+        if (!userId) {
+          if (others) {
+            // user id not found for others profile
+            Alert.alert('No user id found');
+            return '';
+          }
+        }
+        if (user_id === '' && !others) {
+          // user id not found for own profile
+          Alert.alert('No user id found');
+          return '';
+        }
+
+        let url = others
+          ? `${GET_TOTAL_LIKES_VIEWS}${userId}`
+          : `${GET_TOTAL_LIKES_VIEWS}${user_id}`;
+
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        });
+        console.log('Like View Data', response.data);
+
+        return response.data as UserStatus;
+      } catch (err) {
+        console.error('Error fetching articles:', err);
+      }
+    },
+  });
+
+  // GET TOTAL READ STATUS
+
+  const {
+    data: readStat,
+    isLoading: readStatDataLoading,
+    refetch: refetchLikeReadStat,
+  } = useQuery({
+    queryKey: ['get-read-status'],
+    queryFn: async () => {
+      try {
+        if (user_token === '') {
+          Alert.alert('No token found');
+          return '';
+        }
+        if (!userId) {
+          if (others) {
+            // user id not found for others profile
+            Alert.alert('No user id found');
+            return '';
+          }
+        }
+        if (user_id === '' && !others) {
+          // user id not found for own profile
+          Alert.alert('No user id found');
+          return '';
+        }
+
+        let url = others
+          ? `${GET_TOTAL_READS}${userId}`
+          : `${GET_TOTAL_READS}${user_id}`;
+
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        });
+        console.log('READ Data', response.data);
+
+        return response.data as ReadStatus;
+      } catch (err) {
+        console.error('Error fetching articles:', err);
+      }
+    },
+  });
+
+  // GET TOTAL WRITE STATUS
+
+  const {
+    data: writeStat,
+    isLoading: writeStatDataLoading,
+    refetch: refetchWriteStat,
+  } = useQuery({
+    queryKey: ['get-write-status'],
+    queryFn: async () => {
+      try {
+        if (user_token === '') {
+          Alert.alert('No token found');
+          return '';
+        }
+        if (!userId) {
+          if (others) {
+            // user id not found for others profile
+            Alert.alert('No user id found');
+            return '';
+          }
+        }
+        if (user_id === '' && !others) {
+          // user id not found for own profile
+          Alert.alert('No user id found');
+          return '';
+        }
+
+        let url = others
+          ? `${GET_TOTAL_WRITES}${userId}`
+          : `${GET_TOTAL_WRITES}${user_id}`;
+
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        });
+        console.log('Write Data', response.data);
+
+        return response.data as WriteStatus;
+      } catch (err) {
+        console.error('Error fetching articles:', err);
+      }
+    },
+  });
+
+  const colorList = ['black', 'green', PRIMARY_COLOR];
+  if (
+    isArticleLoading ||
+    likeViewStatDataLoading ||
+    writeStatDataLoading ||
+    readStatDataLoading
+  ) {
+    <Loader />;
+  }
+
   return (
     <ScrollView
       style={{
@@ -69,11 +281,19 @@ const ActivityOverview = () => {
       <View style={styles.rowContainer}>
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Reads</Text>
-          <Text style={styles.valueText}>20</Text>
+          <Text style={styles.valueText}>{readStat?.totalReads}</Text>
           <Progress.Bar
-            progress={0.2}
+            progress={readStat?.progress ? readStat?.progress : 0}
             width={100}
-            color={'black'}
+            color={
+              readStat?.progress
+                ? readStat?.progress < 0.4
+                  ? colorList[0]
+                  : readStat?.progress < 0.8
+                  ? colorList[1]
+                  : colorList[2]
+                : 'black'
+            }
             borderRadius={0}
             style={{marginTop: 4}}
           />
@@ -81,12 +301,20 @@ const ActivityOverview = () => {
 
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Writes</Text>
-          <Text style={styles.valueText}>26</Text>
+          <Text style={styles.valueText}>{writeStat?.totalWrites}</Text>
 
           <Progress.Bar
-            progress={0.3}
+            progress={writeStat?.progress ? writeStat?.progress : 0}
             width={100}
-            color={'green'}
+            color={
+              writeStat?.progress
+                ? writeStat?.progress < 0.4
+                  ? colorList[0]
+                  : writeStat?.progress < 0.8
+                  ? colorList[1]
+                  : colorList[2]
+                : 'black'
+            }
             borderRadius={0}
             style={{marginTop: 4}}
           />
@@ -96,12 +324,22 @@ const ActivityOverview = () => {
       <View style={styles.rowContainer}>
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Likes</Text>
-          <Text style={styles.valueText}>20</Text>
+          <Text style={styles.valueText}>{likeViewStat?.totalLikes}</Text>
 
           <Progress.Bar
-            progress={0.2}
+            progress={
+              likeViewStat?.likeProgress ? likeViewStat?.likeProgress : 0
+            }
             width={100}
-            color={'black'}
+            color={
+              likeViewStat?.likeProgress
+                ? likeViewStat?.likeProgress < 0.4
+                  ? colorList[0]
+                  : likeViewStat?.likeProgress < 0.8
+                  ? colorList[1]
+                  : colorList[2]
+                : 'black'
+            }
             borderRadius={0}
             style={{marginTop: 4}}
           />
@@ -109,12 +347,22 @@ const ActivityOverview = () => {
 
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Views</Text>
-          <Text style={styles.valueText}>46</Text>
+          <Text style={styles.valueText}>{likeViewStat?.totalViews}</Text>
 
           <Progress.Bar
-            progress={0.4}
+            progress={
+              likeViewStat?.viewProgress ? likeViewStat.viewProgress : 0
+            }
             width={100}
-            color={SECONDARY_COLOR}
+            color={
+              likeViewStat?.viewProgress
+                ? likeViewStat?.viewProgress < 0.4
+                  ? colorList[0]
+                  : likeViewStat?.viewProgress < 0.8
+                  ? colorList[1]
+                  : colorList[2]
+                : 'black'
+            }
             borderRadius={0}
             style={{marginTop: 4}}
           />
@@ -229,94 +477,66 @@ const ActivityOverview = () => {
         }}
       />
 
-      <Text style={{...styles.btnText, fontSize: 14, marginStart: 10}}>
+      <Text style={{...styles.btnText, fontSize: 17, marginStart: 10}}>
         Mostly Viewed Articles
       </Text>
 
-      <Pressable>
-        <View style={styles.cardContainer}>
-          {/* image */}
+      {article &&
+        article.map((item, index) => {
+          return (
+            <Pressable
+              key={index}
+              onPress={() => {
+                onArticleViewed({
+                  articleId: Number(item._id),
+                  authorId: item.authorId,
+                });
+              }}>
+              <View style={styles.cardContainer}>
+                {/* image */}
 
-          <Image
-            source={require('../assets/article_default.jpg')}
-            style={styles.image}
-          />
+                {item?.imageUtils[0] && item?.imageUtils[0].length !== 0 ? (
+                  <Image
+                    source={{
+                      uri: item?.imageUtils[0].startsWith('http')
+                        ? item?.imageUtils[0]
+                        : `${GET_IMAGE}/${item?.imageUtils[0]}`,
+                    }}
+                    style={styles.image}
+                  />
+                ) : (
+                  <Image
+                    source={require('../assets/article_default.jpg')}
+                    style={styles.image}
+                  />
+                )}
 
-          <View style={styles.textContainer}>
-            {/* title */}
-            <Text style={styles.footerText}>
-              {/*item?.tags.map(tag => tag.name).join(' | ') */}
-            </Text>
-            <Text style={styles.title}>{'Health Article'}</Text>
-            {/* description */}
-            {/**  <Text style={styles.description}>{item?.description}</Text> */}
-            {/* displaying the categories, author name, and last updated date */}
+                <View style={styles.textContainer}>
+                  {/* title */}
+                  <Text style={styles.footerText}>
+                    {item?.tags.map(tag => tag.name).join(' | ')}
+                  </Text>
+                  <Text style={styles.title}>{item?.title}</Text>
+                  {/* description */}
+                  {/**  <Text style={styles.description}>{item?.description}</Text> */}
+                  {/* displaying the categories, author name, and last updated date */}
 
-            <Text style={{...styles.footerText, marginBottom: 3}}>0 view</Text>
-            <Text style={styles.footerText}>
-              Last updated: {''}
-              {moment(new Date()).format('DD/MM/YYYY')}
-            </Text>
-          </View>
-        </View>
-      </Pressable>
-
-      <Pressable>
-        <View style={styles.cardContainer}>
-          {/* image */}
-
-          <Image
-            source={require('../assets/article_default.jpg')}
-            style={styles.image}
-          />
-
-          <View style={styles.textContainer}>
-            {/* title */}
-            <Text style={styles.footerText}>
-              {/*item?.tags.map(tag => tag.name).join(' | ') */}
-            </Text>
-            <Text style={styles.title}>{'Health Article'}</Text>
-            {/* description */}
-            {/**  <Text style={styles.description}>{item?.description}</Text> */}
-            {/* displaying the categories, author name, and last updated date */}
-
-            <Text style={{...styles.footerText, marginBottom: 3}}>0 view</Text>
-            <Text style={styles.footerText}>
-              Last updated: {''}
-              {moment(new Date()).format('DD/MM/YYYY')}
-            </Text>
-          </View>
-        </View>
-      </Pressable>
-
-      <Pressable>
-        <View style={styles.cardContainer}>
-          {/* image */}
-
-          <Image
-            source={require('../assets/article_default.jpg')}
-            style={styles.image}
-          />
-
-          <View style={styles.textContainer}>
-            {/* title */}
-            <Text style={styles.footerText}>
-              {/*item?.tags.map(tag => tag.name).join(' | ') */}
-            </Text>
-            <Text style={styles.title}>{'Health Article'}</Text>
-            {/* description */}
-            {/**  <Text style={styles.description}>{item?.description}</Text> */}
-            {/* displaying the categories, author name, and last updated date */}
-
-            <Text style={{...styles.footerText, marginBottom: 3}}>0 view</Text>
-            <Text style={styles.footerText}>
-              Last updated: {''}
-              {moment(new Date()).format('DD/MM/YYYY')}
-            </Text>
-          </View>
-        </View>
-      </Pressable>
-      
+                  <Text style={{...styles.footerText, marginBottom: 3}}>
+                    {item?.viewUsers
+                      ? item?.viewUsers.length > 1
+                        ? `${item?.viewUsers.length} views`
+                        : `${item?.viewUsers.length} view`
+                      : '0 view'}
+                  </Text>
+                  <Text style={styles.footerText}>
+                    Last updated: {''}
+                    {moment(new Date(item?.lastUpdated)).format('DD/MM/YYYY')}
+                  </Text>
+                </View>
+              </View>
+            </Pressable>
+          );
+        })}
     </ScrollView>
   );
 };
@@ -353,7 +573,7 @@ const styles = StyleSheet.create({
 
   valueText: {
     fontSize: 20,
-    color: 'green',
+    color: PRIMARY_COLOR,
     marginVertical: 4,
     fontWeight: '500',
   },
@@ -386,9 +606,10 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 0,
     width: '100%',
-    maxHeight: 100,
+    maxHeight: 150,
     backgroundColor: '#E6E6E6',
     flexDirection: 'row',
+
     marginVertical: 14,
     overflow: 'hidden',
     elevation: 4,

@@ -28,6 +28,12 @@ const UPDATE_PROFILE_IMAGE = `${BASE_URL}/user/update-profile-image`;
 const GET_PROFILE_IMAGE_BY_ID = `${BASE_URL}/user/getprofileimage`;
 const GET_IMAGE = `${BASE_URL}/getfile`;
 const USER_LOGOUT = `${BASE_URL}/user/logout`;
+/** Analytics Part */
+const GET_TOTAL_LIKES_VIEWS = `${BASE_URL}/analytics/user-stats/`;
+const GET_TOTAL_READS = `${BASE_URL}/analytics/total-reads/`;
+const GET_TOTAL_WRITES = `${BASE_URL}/analytics/total-writes/`;
+const GET_MOSTLY_VIEWED = `${BASE_URL}/analytics/mostly-viewed/`;
+
 export {
   BASE_URL,
   LOGIN_API,
@@ -57,5 +63,9 @@ export {
   GET_PROFILE_IMAGE_BY_ID,
   GET_IMAGE,
   USER_LOGOUT,
-  UPDATE_READ_EVENT
+  UPDATE_READ_EVENT,
+  GET_TOTAL_LIKES_VIEWS,
+  GET_TOTAL_READS,
+  GET_TOTAL_WRITES,
+  GET_MOSTLY_VIEWED
 };
