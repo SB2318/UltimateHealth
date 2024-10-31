@@ -33,6 +33,10 @@ const GET_TOTAL_LIKES_VIEWS = `${BASE_URL}/analytics/user-stats/`;
 const GET_TOTAL_READS = `${BASE_URL}/analytics/total-reads/`;
 const GET_TOTAL_WRITES = `${BASE_URL}/analytics/total-writes/`;
 const GET_MOSTLY_VIEWED = `${BASE_URL}/analytics/mostly-viewed/`;
+const GET_MONTHLY_READ_REPORT = `${BASE_URL}/analytics/monthly-reads/`;
+const GET_YEARLY_READ_REPORT = `${BASE_URL}/analytics/yearly-reads/`;
+const GET_MONTHLY_WRITES_REPORT = `${BASE_URL}/analytics/monthly-writes/`;
+const GET_YEARLY_WRITES_REPORT = `${BASE_URL}/analytics/yearly-writes/`;
 
 export {
   BASE_URL,
@@ -67,5 +71,9 @@ export {
   GET_TOTAL_LIKES_VIEWS,
   GET_TOTAL_READS,
   GET_TOTAL_WRITES,
-  GET_MOSTLY_VIEWED
+  GET_MOSTLY_VIEWED,
+  GET_MONTHLY_READ_REPORT,
+  GET_MONTHLY_WRITES_REPORT,
+  GET_YEARLY_READ_REPORT,
+  GET_YEARLY_WRITES_REPORT,
 };

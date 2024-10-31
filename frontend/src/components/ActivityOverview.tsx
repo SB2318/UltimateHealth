@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import React, {useState} from 'react';
-import {PRIMARY_COLOR, SECONDARY_COLOR} from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';
 import * as Progress from 'react-native-progress';
 import {Dropdown} from 'react-native-element-dropdown';
 import {LineChart} from 'react-native-gifted-charts';
@@ -19,12 +19,23 @@ import {useSelector} from 'react-redux';
 import axios from 'axios';
 import {
   GET_IMAGE,
+  GET_MONTHLY_READ_REPORT,
+  GET_MONTHLY_WRITES_REPORT,
   GET_MOSTLY_VIEWED,
   GET_TOTAL_LIKES_VIEWS,
   GET_TOTAL_READS,
   GET_TOTAL_WRITES,
+  GET_YEARLY_READ_REPORT,
+  GET_YEARLY_WRITES_REPORT,
 } from '../helper/APIUtils';
-import {ArticleData, ReadStatus, UserStatus, WriteStatus} from '../type';
+import {
+  ArticleData,
+  MonthStatus,
+  ReadStatus,
+  UserStatus,
+  WriteStatus,
+  YearStatus,
+} from '../type';
 import Loader from './Loader';
 
 interface Props {
@@ -39,41 +50,44 @@ interface Props {
   others: boolean;
 }
 const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
-  const [value, setValue] = useState<string>('read');
+  const [userState, setUserState] = useState<number>(0);
   const {user_token, user_id} = useSelector((state: any) => state.user);
   const [isFocus, setIsFocus] = useState<boolean>(false);
-  const [selectedDay, setSelectedDay] = useState<string>('');
-  const [selectedMonth, setSelectedMonth] = useState<string>('');
-  const [selectedYear, setSelectedYear] = useState<string>('');
+  const [selectedDay, setSelectedDay] = useState<number>(new Date().getDay());
+  const [selectedMonth, setSelectedMonth] = useState<number>(-1);
+  const [selectedYear, setSelectedYear] = useState<number>(-1);
 
   const dailyDrops = [
-    {label: 'Sunday', value: 'sunday'},
-    {label: 'Monday', value: 'monday'},
-    {label: 'Tuesday', value: 'tuesday'},
-    {label: 'Wednesday', value: 'wednesday'},
-    {label: 'Thursday', value: 'thursday'},
-    {label: 'Friday', value: 'friday'},
-    {label: 'Saturday', value: 'saturday'},
+    {label: 'Daily', value: -1},
+    {label: 'Sunday', value: 0},
+    {label: 'Monday', value: 1},
+    {label: 'Tuesday', value: 2},
+    {label: 'Wednesday', value: 3},
+    {label: 'Thursday', value: 4},
+    {label: 'Friday', value: 5},
+    {label: 'Saturday', value: 6},
   ];
 
   const monthlyDrops = [
-    {label: 'January', value: 'january'},
-    {label: 'February', value: 'february'},
-    {label: 'March', value: 'march'},
-    {label: 'April', value: 'april'},
-    {label: 'May', value: 'may'},
-    {label: 'June', value: 'june'},
-    {label: 'July', value: 'july'},
-    {label: 'August', value: 'august'},
-    {label: 'September', value: 'september'},
-    {label: 'October', value: 'october'},
-    {label: 'November', value: 'november'},
-    {label: 'December', value: 'december'},
+    {label: 'Monthly', value: -1},
+    {label: 'January', value: 0},
+    {label: 'February', value: 1},
+    {label: 'March', value: 2},
+    {label: 'April', value: 3},
+    {label: 'May', value: 4},
+    {label: 'June', value: 5},
+    {label: 'July', value: 6},
+    {label: 'August', value: 7},
+    {label: 'September', value: 8},
+    {label: 'October', value: 9},
+    {label: 'November', value: 10},
+    {label: 'December', value: 11},
   ];
 
   const yearlyDrops = [
-    {label: '2024', value: '2024'},
-    {label: '2025', value: '2025'},
+    {label: 'Yearly', value: -1},
+    {label: '2024', value: 2024},
+    {label: '2025', value: 2025},
   ];
 
   const chartData = [
@@ -83,6 +97,201 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
     {value: 70},
     {value: 60},
   ];
+
+  // GET MONTHLY READ REPORT
+  const {
+    data: monthlyReadReport,
+    isLoading: isMonthReadReportLoading,
+    refetch: refetchMonthReadReport,
+  } = useQuery({
+    queryKey: ['get-month-read-reports'],
+    queryFn: async () => {
+      try {
+        if (selectedMonth === -1) {
+          return [];
+        }
+        if (user_token === '') {
+          Alert.alert('No token found');
+          return [];
+        }
+        if (!userId) {
+          if (others) {
+            // user id not found for others profile
+            Alert.alert('No user id found');
+            return [];
+          }
+        }
+        if (user_id === '' && !others) {
+          // user id not found for own profile
+          Alert.alert('No user id found');
+          return [];
+        }
+
+        let url = others
+          ? `${GET_MONTHLY_READ_REPORT}?userId=${userId}&month=${selectedMonth}`
+          : `${GET_MONTHLY_READ_REPORT}?userId=${user_id}&month=${selectedMonth}`;
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        });
+
+        return response.data.monthlyReads as MonthStatus[];
+      } catch (err) {
+        console.error('Error fetching articles reads monthly:', err);
+      }
+    },
+    enabled: !!(user_token && selectedMonth !== -1 && (userId || !others)),
+  });
+
+  // GET MONTHLY WRITE REPORT
+
+  //let url = others
+  // ? `${GET_MONTHLY_WRITES_REPORT}${userId}?month=${selectedMonth}`
+  // : `${GET_MONTHLY_WRITES_REPORT}${user_id}?month=${selectedMonth}`;
+  //console.log('URL', url);
+  // console.log('USER TOKEN', user_token)
+
+  const {
+    data: monthlyWriteReport,
+    isLoading: isMonthWriteReportLoading,
+    refetch: refetchMonthWriteReport,
+  } = useQuery({
+    queryKey: ['get-month-write-reports'],
+    queryFn: async () => {
+      try {
+        if (selectedMonth === -1) {
+          return [];
+        }
+        if (user_token === '') {
+          Alert.alert('No token found');
+          return [];
+        }
+        if (!userId) {
+          if (others) {
+            // user id not found for others profile
+            Alert.alert('No user id found');
+            return [];
+          }
+        }
+        if (user_id === '' && !others) {
+          // user id not found for own profile
+          Alert.alert('No user id found');
+          return [];
+        }
+
+        let url = others
+          ? `${GET_MONTHLY_WRITES_REPORT}?userId=${userId}&month=${selectedMonth}`
+          : `${GET_MONTHLY_WRITES_REPORT}?userId=${user_id}&month=${selectedMonth}`;
+        console.log('URL', url);
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        });
+
+        return response.data.monthlyWrites as MonthStatus[];
+      } catch (err) {
+        console.error('Error fetching articles writes monthly:', err);
+      }
+    },
+    enabled: !!(user_token && selectedMonth !== -1 && (userId || !others)),
+  });
+
+  // GET YEARLY READ REPORT
+  const {
+    data: yearlyReadReport,
+    isLoading: isYearlyReadReportLoading,
+    refetch: refetchYearlyReadReport,
+  } = useQuery({
+    queryKey: ['get-yearly-read-reports'],
+    queryFn: async () => {
+      try {
+        if (selectedYear === -1) {
+          return [];
+        }
+        if (user_token === '') {
+          Alert.alert('No token found');
+          return [];
+        }
+        if (!userId) {
+          if (others) {
+            // user id not found for others profile
+            Alert.alert('No user id found');
+            return [];
+          }
+        }
+        if (user_id === '' && !others) {
+          // user id not found for own profile
+          Alert.alert('No user id found');
+          return [];
+        }
+
+        let url = others
+          ? `${GET_YEARLY_READ_REPORT}?userId=${userId}&year=${selectedYear}`
+          : `${GET_YEARLY_READ_REPORT}?userId=${user_id}&year=${selectedYear}`;
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        });
+
+        return response.data.yearlyReads as YearStatus[];
+      } catch (err) {
+        console.error('Error fetching articles reads yearly:', err);
+      }
+    },
+    enabled: !!(user_token && selectedYear !== -1 && (userId || !others)),
+  });
+
+  // GET YEARLY WRITE REPORT
+
+  const {
+    data: yearlyWriteReport,
+    isLoading: isYearlyWriteReportLoading,
+    refetch: refetchYearlyWriteReport,
+  } = useQuery({
+    queryKey: ['get-yearly-write-reports'],
+    queryFn: async () => {
+      try {
+        if (selectedYear === -1) {
+          return [];
+        }
+        if (user_token === '') {
+          Alert.alert('No token found');
+          return [];
+        }
+        if (!userId) {
+          if (others) {
+            // user id not found for others profile
+            Alert.alert('No user id found');
+            return [];
+          }
+        }
+        if (user_id === '' && !others) {
+          // user id not found for own profile
+          Alert.alert('No user id found');
+          return [];
+        }
+
+        let url = others
+          ? `${GET_YEARLY_WRITES_REPORT}?userId=${userId}&year=${selectedYear}`
+          : `${GET_YEARLY_WRITES_REPORT}?userId=${user_id}&year=${selectedYear}`;
+
+        const response = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        });
+
+        return response.data.yearlyWrites as YearStatus[];
+      } catch (err) {
+        console.error('Error fetching articles reads yearly:', err);
+      }
+    },
+
+    enabled: !!(user_token && selectedYear !== -1 && (userId || !others)),
+  });
 
   // GET MOST VIEWED ARTICLE
   const {
@@ -383,28 +592,33 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
           style={styles.dropdown}
           //placeholderStyle={styles.placeholderStyle}
           data={[
-            {label: 'Read', value: 'read'},
-            {label: 'Write', value: 'write'},
+            {label: 'Read', value: 0},
+            {label: 'Write', value: 1},
           ]}
           labelField="label"
           valueField="value"
           //placeholder={!isFocus ? 'Select your role' : '...'}
-          value={value}
+          value={userState}
           onFocus={() => setIsFocus(true)}
           onBlur={() => setIsFocus(false)}
           onChange={item => {
-            setValue(item.value);
+            setUserState(item.value);
             setIsFocus(false);
           }}
           placeholder={null}
         />
 
-        <Text style={styles.btnText}>29th Oct, 2024</Text>
+        <Text style={styles.btnText}>
+          {moment(new Date()).format('DD MMM, YYYY')}
+        </Text>
       </View>
 
       <View style={styles.rowContainer}>
         <Dropdown
-          style={styles.button}
+          style={{
+            ...styles.button,
+            backgroundColor: selectedDay === -1 ? '#c1c1c1' : PRIMARY_COLOR,
+          }}
           //placeholderStyle={styles.placeholderStyle}
           data={dailyDrops}
           labelField="label"
@@ -415,14 +629,20 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
           onBlur={() => setIsFocus(false)}
           onChange={item => {
             setSelectedDay(item.value);
+            setSelectedMonth(-1);
+            setSelectedYear(-1);
             setIsFocus(false);
           }}
           placeholder={'Daily'}
         />
 
         <Dropdown
-          style={styles.button}
+          style={{
+            ...styles.button,
+            backgroundColor: selectedMonth === -1 ? '#c1c1c1' : PRIMARY_COLOR,
+          }}
           //placeholderStyle={styles.placeholderStyle}
+
           data={monthlyDrops}
           labelField="label"
           valueField="value"
@@ -432,12 +652,23 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
           onBlur={() => setIsFocus(false)}
           onChange={item => {
             setSelectedMonth(item.value);
+            setSelectedDay(-1);
+            setSelectedYear(-1);
             setIsFocus(false);
+            if (userState === 0) {
+              refetchMonthReadReport();
+            } else {
+              refetchMonthWriteReport();
+            }
           }}
           placeholder={'Monthly'}
         />
         <Dropdown
-          style={styles.button}
+          style={{
+            ...styles.button,
+            backgroundColor: selectedYear === -1 ? '#c1c1c1' : PRIMARY_COLOR,
+          }}
+          //placeholderStyle={styles.placeholderStyle}
           //placeholderStyle={styles.placeholderStyle}
           data={yearlyDrops}
           labelField="label"
@@ -448,15 +679,71 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
           onBlur={() => setIsFocus(false)}
           onChange={item => {
             setSelectedYear(item.value);
+            setSelectedDay(-1);
+            setSelectedMonth(-1);
             setIsFocus(false);
+
+            if (userState === 0) {
+              refetchYearlyReadReport();
+            } else {
+              refetchYearlyWriteReport();
+            }
           }}
           placeholder={'Yearly'}
         />
       </View>
 
-      <View style={{marginTop: 10}}>
-        <LineChart data={chartData} areaChart />
-      </View>
+      {selectedDay !== -1 && (
+        <View style={{marginTop: 10}}>
+          <LineChart data={chartData} areaChart />
+        </View>
+      )}
+
+      {selectedMonth !== -1 && (
+        <View style={{marginTop: 10}}>
+          <LineChart
+            data={
+              userState === 0
+                ? monthlyReadReport?.map(item => ({
+                    value: item.value,
+                    label: item.date,
+                  }))
+                : monthlyWriteReport?.map(item => ({
+                    value: item.value,
+                    label: item.date,
+                  }))
+            }
+            // yAxisLabel="Reads"
+            // xAxisLabel="Date"
+           // isAnimated={true}
+           // animationDuration={500}
+            //tooltipTextStyle={{color: 'white'}}
+            //tooltipBackgroundColor="#2980b9"
+            // tooltipStyle={{borderRadius: 5}}
+            areaChart
+          />
+        </View>
+      )}
+      {selectedYear !== -1 && (
+        <View style={{marginTop: 10}}>
+          <LineChart
+            data={
+              userState === 0
+                ? yearlyReadReport?.map(item => ({
+                    value: item.value,
+                    label: item.month,
+                  }))
+                : yearlyWriteReport?.map(item => ({
+                    value: item.value,
+                    label: item.month,
+                  }))
+            }
+           // isAnimated={true}
+           // animationDuration={500}
+            areaChart
+          />
+        </View>
+      )}
 
       {/**
          *
@@ -477,8 +764,15 @@ const ActivityOverview = ({onArticleViewed, userId, others}: Props) => {
         }}
       />
 
-      <Text style={{...styles.btnText, fontSize: 17, marginStart: 10}}>
-        Mostly Viewed Articles
+      <Text
+        style={{
+          ...styles.btnText,
+          marginVertical: 10,
+          fontWeight: '700',
+          fontSize: 17,
+          marginStart: 10,
+        }}>
+        Most viewed articles
       </Text>
 
       {article &&
@@ -546,7 +840,7 @@ const styles = StyleSheet.create({
     flex: 0,
     width: '100%',
     flexDirection: 'row',
-    padding: 7,
+    padding: 6,
     justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -590,10 +884,11 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    width: '30%',
+    width: '33%',
     padding: 6,
     borderRadius: 8,
-    margin: 4,
+    margin: 2,
+    marginTop: 4,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#c1c1c1',

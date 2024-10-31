@@ -253,6 +253,16 @@ export type ReadStatus = {
   progress: number;
 };
 
+export type MonthStatus = {
+  date: string;
+  value: number;
+};
+
+export type YearStatus = {
+  month: string;
+  value: number;
+};
+
 export type WriteStatus = {
   totalWrites: number;
   progress: number;
