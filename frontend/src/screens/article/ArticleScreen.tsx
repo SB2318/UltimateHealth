@@ -33,6 +33,7 @@ import axios from 'axios';
 import Loader from '../../components/Loader';
 import {setArticle} from '../../store/articleSlice';
 import Snackbar from 'react-native-snackbar';
+import { formatCount } from '../../helper/Utils';
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const insets = useSafeAreaInsets();
@@ -299,7 +300,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             <Text style={{...styles.viewText, marginBottom: 10}}>
               {article && article?.viewUsers.length
                 ? article.viewUsers.length > 1
-                  ? `${article.viewUsers.length} views`
+                  ? `${formatCount(article.viewUsers.length)} views`
                   : `${article.viewUsers.length} view`
                 : '0 view'}
             </Text>
@@ -319,7 +320,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 <View style={[styles.avatar, styles.avatarDoubleOverlap]} />
                 <View style={[styles.avatar, styles.avatarTripleOverlap]}>
                   <Text style={styles.moreText}>
-                    +{article?.likedUsers ? article.likedUsers.length : 0}
+                    +
+                    {article?.likedUsers
+                      ? formatCount(article.likedUsers.length)
+                      : 0}
                   </Text>
                 </View>
               </View>

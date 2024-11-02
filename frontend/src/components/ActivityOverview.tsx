@@ -37,7 +37,8 @@ import {
   YearStatus,
 } from '../type';
 import Loader from './Loader';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+import { formatCount } from '../helper/Utils';
 
 interface Props {
   onArticleViewed: ({
@@ -474,7 +475,6 @@ const ActivityOverview = ({
 
   const colorList = ['black', 'green', PRIMARY_COLOR];
 
-
   useFocusEffect(
     useCallback(() => {
       if (userState === 0) {
@@ -482,7 +482,7 @@ const ActivityOverview = ({
       } else {
         refetchMonthWriteReport();
       }
-    }, []),
+    }, [userState, selectedMonth]),
   );
 
   useEffect(() => {
@@ -643,6 +643,7 @@ const ActivityOverview = ({
       )}
        */}
 
+      {console.log('November Data', monthlyWriteReport)}
       {selectedMonth !== -1 && (
         <View style={{marginTop: 10}}>
           <LineChart
@@ -658,7 +659,7 @@ const ActivityOverview = ({
                   }))
             }
             minYValue={0}
-            minXValue={0}
+            //minXValue={0}
             // yAxisLabel="Reads"
             // xAxisLabel="Date"
             // isAnimated={true}
@@ -687,7 +688,7 @@ const ActivityOverview = ({
             // isAnimated={true}
             // animationDuration={500}
             minYValue={0}
-            minXValue={0}
+            // minXValue={0}
             areaChart
           />
         </View>
@@ -715,13 +716,14 @@ const ActivityOverview = ({
       <View style={styles.colContainer}>
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Reads</Text>
-        
-            <Text style={styles.valueText}>{readStat?.totalReads}</Text>
-         
+
+          <Text style={styles.valueText}>{readStat?.progress}%</Text>
 
           <Progress.Bar
             progress={readStat?.progress ? readStat?.progress : 0}
             width={140}
+            borderColor={PRIMARY_COLOR}
+            borderWidth={1}
             color={
               readStat?.progress
                 ? readStat?.progress < 0.4
@@ -731,7 +733,7 @@ const ActivityOverview = ({
                   : colorList[2]
                 : 'black'
             }
-            borderRadius={0}
+            borderRadius={4}
             style={{marginTop: 2}}
           />
         </View>
@@ -739,12 +741,13 @@ const ActivityOverview = ({
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Writes</Text>
 
-            <Text style={styles.valueText}>{articlePosted}</Text>
-          
+          <Text style={styles.valueText}>{writeStat?.progress}%</Text>
 
           <Progress.Bar
             progress={writeStat?.progress ? writeStat?.progress : 0}
             width={140}
+            borderColor={PRIMARY_COLOR}
+            borderWidth={1}
             color={
               writeStat?.progress
                 ? writeStat?.progress < 0.4
@@ -754,7 +757,7 @@ const ActivityOverview = ({
                   : colorList[2]
                 : 'black'
             }
-            borderRadius={0}
+            borderRadius={4}
             style={{marginTop: 4}}
           />
         </View>
@@ -762,15 +765,17 @@ const ActivityOverview = ({
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Likes</Text>
 
-         
-            <Text style={{...styles.valueText, marginStart: 8,}}>{likeViewStat?.totalLikes}</Text>
-        
+          <Text style={{...styles.valueText, marginStart: 8}}>
+            {likeViewStat?.likeProgress}%
+          </Text>
 
           <Progress.Bar
             progress={
               likeViewStat?.likeProgress ? likeViewStat?.likeProgress : 0
             }
             width={140}
+            borderColor={PRIMARY_COLOR}
+            borderWidth={1}
             color={
               likeViewStat?.likeProgress
                 ? likeViewStat?.likeProgress < 0.4
@@ -780,23 +785,23 @@ const ActivityOverview = ({
                   : colorList[2]
                 : 'black'
             }
-            borderRadius={0}
+            borderRadius={4}
             style={{marginTop: 4}}
           />
         </View>
 
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Views</Text>
-
-        
-            <Text style={{...styles.valueText, marginStart:4}}>{likeViewStat?.totalViews}</Text>
-      
-
+          <Text style={{...styles.valueText, marginStart: 1}}>
+            {likeViewStat?.viewProgress}%
+          </Text>
           <Progress.Bar
             progress={
               likeViewStat?.viewProgress ? likeViewStat.viewProgress : 0
             }
             width={140}
+            borderColor={PRIMARY_COLOR}
+            borderWidth={1}
             color={
               likeViewStat?.viewProgress
                 ? likeViewStat?.viewProgress < 0.4
@@ -806,7 +811,7 @@ const ActivityOverview = ({
                   : colorList[2]
                 : 'black'
             }
-            borderRadius={0}
+            borderRadius={4}
             style={{marginTop: 4}}
           />
         </View>
@@ -875,7 +880,7 @@ const ActivityOverview = ({
                   <Text style={{...styles.footerText, marginBottom: 3}}>
                     {item?.viewUsers
                       ? item?.viewUsers.length > 1
-                        ? `${item?.viewUsers.length} views`
+                        ? `${formatCount(item?.viewUsers.length)} views`
                         : `${item?.viewUsers.length} view`
                       : '0 view'}
                   </Text>
@@ -934,8 +939,8 @@ const styles = StyleSheet.create({
   },
 
   valueText: {
-    fontSize: 20,
-    color: '#c1c1c1',
+    fontSize: 17,
+    color: PRIMARY_COLOR,
     marginVertical: 4,
     fontWeight: '700',
   },

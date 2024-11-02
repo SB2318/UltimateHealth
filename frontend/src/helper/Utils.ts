@@ -12,6 +12,15 @@ export const checkInternetConnection = (
   return unsubscribe;
 };
 
+export function formatCount(count: number) {
+  if (count < 1000) {
+    return count.toString();
+  } else if (count < 1000000) {
+    return Math.floor(count / 1000) + 'k';
+  } else {
+    return Math.floor(count / 1000000) + 'M';
+  }
+}
 export const Categories: CategoryType[] = [
   {id: 1, name: 'Cardiology'},
   {id: 2, name: 'Neurology'},
