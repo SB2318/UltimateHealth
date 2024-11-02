@@ -126,8 +126,16 @@ Users can also listen to articles (audio features) if they prefer. The Chat Sect
  *  Profile API Integration 
  *  Article API Integration 
  *  Search & Filter Feature 
- *  User Insights
+ *  User Insights 
  *  Article Post via file upload
+ *  Edit Or Update Article
+ *  Review Team
+ *  Push Notification
+
+   // Phase II
+ *  Chat (User To User, Message Request to Doctor, Comment, Share on the article)
+ *  Chat With AI
+   
 
   </details>
 
