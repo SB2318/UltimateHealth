@@ -7,7 +7,7 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import * as Progress from 'react-native-progress';
 import {Dropdown} from 'react-native-element-dropdown';
@@ -37,6 +37,7 @@ import {
   YearStatus,
 } from '../type';
 import Loader from './Loader';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface Props {
   onArticleViewed: ({
@@ -473,7 +474,19 @@ const ActivityOverview = ({
 
   const colorList = ['black', 'green', PRIMARY_COLOR];
 
+
+  useFocusEffect(
+    useCallback(() => {
+      if (userState === 0) {
+        refetchMonthReadReport();
+      } else {
+        refetchMonthWriteReport();
+      }
+    }, []),
+  );
+
   useEffect(() => {
+    console.log('User State', userState);
     if (userState === 0) {
       refetchMonthReadReport();
     } else {
