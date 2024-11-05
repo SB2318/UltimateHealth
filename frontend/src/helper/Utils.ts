@@ -535,8 +535,20 @@ export const KEYS = {
   USER_ID: 'USER_ID',
   USER_TOKEN: 'USER_TOKEN',
   USER_TOKEN_EXPIRY_DATE: 'USER_TOKEN_EXPIRY_DATE',
+  VULTR_CHAT_MODEL:'zephyr-7b-beta-f32',
+  VULTR_COLLECTION:'care_companion'
 };
 
+export const VULTR_CHAT_ROLES = {
+  'user': 'user',
+  'system':'system',
+  'assistant':'assistant'
+};
+export const VULTR_CHAT_PROFILE_AVTARS = {
+   'user':'',
+   'system':'',
+   'assistant':''
+}
 export const createHTMLStructure = (
   title: string,
   body: string,
