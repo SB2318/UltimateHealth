@@ -41,7 +41,7 @@ interface Message {
 const ChatbotScreen: React.FC = ({navigation}) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(true);
-  const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA';
+  const token = ''; //token
 
   const renderBubble = (props: any) => {
     return (
