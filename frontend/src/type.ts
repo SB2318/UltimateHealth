@@ -3,10 +3,8 @@ import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {StackScreenProps} from '@react-navigation/stack';
 import {Dispatch, RefObject, SetStateAction} from 'react';
 import {BottomSheetModal} from '@gorhom/bottom-sheet'; // Adjust this import based on your actual BottomSheetModal component
-import { Double } from 'react-native/Libraries/Types/CodegenTypes';
 
 export type RootStackParamList = {
-
   SplashScreen: undefined;
   LoginScreen: undefined;
   TabNavigation: undefined;
@@ -39,6 +37,7 @@ export type RootStackParamList = {
   UserProfileScreen: {authorId: string};
   ProfileEditScreen: undefined;
   LogoutScreen: {profile_image: string; username: string};
+  ChatbotScreen: undefined;
 };
 
 export type UserDetail = {
@@ -52,6 +51,7 @@ export type TabParamList = {
   Home: undefined;
   Podcasts: undefined;
   Profile: undefined;
+  Chatbot: undefined;
 };
 
 export type SplashScreenProp =
