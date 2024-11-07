@@ -1,11 +1,23 @@
 import React from 'react';
 import {View, Pressable, StyleSheet, useColorScheme} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../helper/Theme';
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
 const TabBar = ({state, descriptors, navigation}: any) => {
   const isDarkMode = useColorScheme() === 'dark';
+
+  // List of routes where the tab bar should be hidden
+  const hideTabBarScreens = ['Chatbot'];
+
+  // Get the current route name
+  const currentRouteName = state.routes[state.index]?.name;
+
+  // Check if the current route is in the list to hide the tab bar
+  if (hideTabBarScreens.includes(currentRouteName)) {
+    return null; // Don't render the tab bar
+  }
+
   return (
     <View
       style={[
@@ -39,7 +51,7 @@ const TabBar = ({state, descriptors, navigation}: any) => {
             key={index}
             style={[
               styles.mainItemContainer,
-              {borderRightWidth: label == 'notes' ? 3 : 0},
+              {borderRightWidth: label === 'notes' ? 3 : 0},
             ]}>
             <Pressable
               onPress={onPress}
@@ -61,7 +73,6 @@ const TabBar = ({state, descriptors, navigation}: any) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   flex: 1,
-                  //   padding: 10,
                 }}>
                 {label === 'Home' && (
                   <Ionicons
@@ -73,6 +84,13 @@ const TabBar = ({state, descriptors, navigation}: any) => {
                 {label === 'Podcasts' && (
                   <FontAwesome
                     name="podcast"
+                    size={24}
+                    color={isFocused ? 'white' : isDarkMode ? 'white' : 'black'}
+                  />
+                )}
+                {label === 'Chatbot' && (
+                  <Ionicons
+                    name="chatbubbles"
                     size={24}
                     color={isFocused ? 'white' : isDarkMode ? 'white' : 'black'}
                   />
@@ -101,9 +119,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 60,
     borderTopRightRadius: 60,
     paddingBottom: 8,
-    backgroundColor: 'red', // You might want to adjust this color
+    backgroundColor: 'red',
     borderWidth: 0.19,
-    zIndex: 0, // Ensure this is lower than the items
+    zIndex: 0,
   },
   mainItemContainer: {
     flex: 1,
@@ -112,9 +130,8 @@ const styles = StyleSheet.create({
     marginVertical: 7,
     borderRadius: 1,
     borderColor: '#333B42',
-    zIndex: 1, // Higher zIndex to bring items on top
+    zIndex: 1,
   },
 });
-
 
 export default TabBar;
