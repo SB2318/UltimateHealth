@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, Pressable, StyleSheet, useColorScheme} from 'react-native';
+import {View, Pressable, StyleSheet, useColorScheme, Image} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../helper/Theme';
+import {VULTR_CHAT_PROFILE_AVTARS} from '../helper/Utils';
 
 const TabBar = ({state, descriptors, navigation}: any) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -89,10 +90,14 @@ const TabBar = ({state, descriptors, navigation}: any) => {
                   />
                 )}
                 {label === 'Chatbot' && (
-                  <Ionicons
-                    name="chatbubbles"
-                    size={24}
-                    color={isFocused ? 'white' : isDarkMode ? 'white' : 'black'}
+                  <Image
+                    source={{uri: VULTR_CHAT_PROFILE_AVTARS.assistant}} // Make sure the source is valid
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 25,
+                      //tintColor: isFocused ? 'white' : isDarkMode ? 'white' : 'black',
+                    }}
                   />
                 )}
                 {label === 'Profile' && (

@@ -547,7 +547,7 @@ export const VULTR_CHAT_ROLES = {
 export const VULTR_CHAT_PROFILE_AVTARS = {
    'user':'',
    'system':'',
-   'assistant':''
+   'assistant':'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg'
 }
 export const createHTMLStructure = (
   title: string,

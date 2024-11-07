@@ -7,11 +7,17 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {Alert, View} from 'react-native';
+import {useSelector} from 'react-redux';
+import {Alert, View, SafeAreaView,  KeyboardAvoidingView} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useMutation} from '@tanstack/react-query';
-import {VULTR_CHAT_URL} from '../helper/APIUtils';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {
+  GET_PROFILE_API,
+  GET_STORAGE_DATA,
+  VULTR_CHAT_URL,
+} from '../helper/APIUtils';
 import axios, {AxiosError} from 'axios';
+import {ChatBotScreenProps} from '../type';
 
 interface ChatbotResponse {
   id: string;
@@ -38,10 +44,28 @@ interface Message {
   content: string;
 }
 
-const ChatbotScreen: React.FC = ({navigation}) => {
+const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
+  const {user_id, user_token} = useSelector((state: any) => state.user);
+
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(true);
-  const token = ''; //token
+  const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA'; //token
+
+  const {
+    data: user,
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ['get-profile'],
+    queryFn: async () => {
+      const response = await axios.get(`${GET_PROFILE_API}`, {
+        headers: {
+          Authorization: `Bearer ${user_token}`,
+        },
+      });
+      return response.data.profile as User;
+    },
+  });
 
   const renderBubble = (props: any) => {
     return (
@@ -153,6 +177,7 @@ const ChatbotScreen: React.FC = ({navigation}) => {
       );
     },
     onError: (error: AxiosError) => {
+      console.log('Error', error);
       if (error.response) {
         const statusCode = error.response.status;
         switch (statusCode) {
@@ -199,7 +224,7 @@ const ChatbotScreen: React.FC = ({navigation}) => {
   }, []);
 
   return (
-    <View style={{flex: 1, paddingBottom: 10}}>
+    <KeyboardAvoidingView style={{flex: 1, paddingBottom: 10}}>
       <GiftedChat
         messages={messages}
         onSend={messages => onSend(messages)}
@@ -207,7 +232,9 @@ const ChatbotScreen: React.FC = ({navigation}) => {
         user={{
           _id: 1,
           avatar:
-            'https://png.pngtree.com/png-clipart/20231019/original/pngtree-user-profile-avatar-png-image_13369988.png',
+            user && user?.Profile_image
+              ? `${GET_STORAGE_DATA}/${user?.Profile_image}`
+              : 'https://png.pngtree.com/png-clipart/20231019/original/pngtree-user-profile-avatar-png-image_13369988.png',
         }}
         alignTop
         showUserAvatar
@@ -220,7 +247,7 @@ const ChatbotScreen: React.FC = ({navigation}) => {
         renderInputToolbar={renderInputToolBar}
         renderSend={renderSend}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

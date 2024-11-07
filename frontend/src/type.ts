@@ -37,7 +37,7 @@ export type RootStackParamList = {
   UserProfileScreen: {authorId: string};
   ProfileEditScreen: undefined;
   LogoutScreen: {profile_image: string; username: string};
-  ChatbotScreen: undefined;
+  //ChatbotScreen: undefined;
 };
 
 export type UserDetail = {
@@ -104,6 +104,9 @@ export type HomeScreenProps = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, 'Home'>,
   StackScreenProps<RootStackParamList, 'ArticleScreen'>
 >;
+
+export type ChatBotScreenProps = BottomTabScreenProps<TabParamList, 'Chatbot'>;
+
 export type PodcastScreenProps = BottomTabScreenProps<TabParamList, 'Podcasts'>;
 export type ProfileScreenProps = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, 'Profile'>,
