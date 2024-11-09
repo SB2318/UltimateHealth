@@ -37,6 +37,7 @@ import {
   YearStatus,
 } from '../type';
 import Loader from './Loader';
+
 import {useFocusEffect} from '@react-navigation/native';
 import { formatCount } from '../helper/Utils';
 
@@ -475,6 +476,7 @@ const ActivityOverview = ({
 
   const colorList = ['black', 'green', PRIMARY_COLOR];
 
+
   useFocusEffect(
     useCallback(() => {
       if (userState === 0) {
@@ -484,9 +486,7 @@ const ActivityOverview = ({
       }
     }, [userState, selectedMonth]),
   );
-
   useEffect(() => {
-    console.log('User State', userState);
     if (userState === 0) {
       refetchMonthReadReport();
     } else {
@@ -642,8 +642,6 @@ const ActivityOverview = ({
         </View>
       )}
        */}
-
-      {console.log('November Data', monthlyWriteReport)}
       {selectedMonth !== -1 && (
         <View style={{marginTop: 10}}>
           <LineChart
@@ -660,6 +658,7 @@ const ActivityOverview = ({
             }
             minYValue={0}
             //minXValue={0}
+
             // yAxisLabel="Reads"
             // xAxisLabel="Date"
             // isAnimated={true}
@@ -717,11 +716,14 @@ const ActivityOverview = ({
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Reads</Text>
 
+
           <Text style={styles.valueText}>{readStat?.progress}%</Text>
+
 
           <Progress.Bar
             progress={readStat?.progress ? readStat?.progress : 0}
             width={140}
+
             borderColor={PRIMARY_COLOR}
             borderWidth={1}
             color={
@@ -734,6 +736,7 @@ const ActivityOverview = ({
                 : 'black'
             }
             borderRadius={4}
+
             style={{marginTop: 2}}
           />
         </View>
@@ -742,6 +745,7 @@ const ActivityOverview = ({
           <Text style={styles.titleText}> Total Writes</Text>
 
           <Text style={styles.valueText}>{writeStat?.progress}%</Text>
+
 
           <Progress.Bar
             progress={writeStat?.progress ? writeStat?.progress : 0}
@@ -764,10 +768,10 @@ const ActivityOverview = ({
 
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Likes</Text>
-
           <Text style={{...styles.valueText, marginStart: 8}}>
             {likeViewStat?.likeProgress}%
           </Text>
+
 
           <Progress.Bar
             progress={
@@ -785,6 +789,7 @@ const ActivityOverview = ({
                   : colorList[2]
                 : 'black'
             }
+
             borderRadius={4}
             style={{marginTop: 4}}
           />
@@ -792,9 +797,12 @@ const ActivityOverview = ({
 
         <View style={styles.box}>
           <Text style={styles.titleText}> Total Views</Text>
+
           <Text style={{...styles.valueText, marginStart: 1}}>
             {likeViewStat?.viewProgress}%
           </Text>
+
+
           <Progress.Bar
             progress={
               likeViewStat?.viewProgress ? likeViewStat.viewProgress : 0
@@ -812,6 +820,7 @@ const ActivityOverview = ({
                 : 'black'
             }
             borderRadius={4}
+
             style={{marginTop: 4}}
           />
         </View>

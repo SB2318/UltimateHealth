@@ -37,7 +37,9 @@ const GET_MONTHLY_READ_REPORT = `${BASE_URL}/analytics/monthly-reads/`;
 const GET_YEARLY_READ_REPORT = `${BASE_URL}/analytics/yearly-reads/`;
 const GET_MONTHLY_WRITES_REPORT = `${BASE_URL}/analytics/monthly-writes/`;
 const GET_YEARLY_WRITES_REPORT = `${BASE_URL}/analytics/yearly-writes/`;
+
 const VULTR_CHAT_URL = `https://api.vultrinference.com/v1/chat/completions`;
+
 
 export {
   BASE_URL,

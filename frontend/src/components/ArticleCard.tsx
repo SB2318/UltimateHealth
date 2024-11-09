@@ -172,6 +172,7 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
           <Text style={{...styles.footerText, marginBottom: 3}}>
             {item?.viewUsers
               ? item?.viewUsers.length > 1
+
                 ? `${formatCount(item?.viewUsers.length)} views`
                 : `${item?.viewUsers.length} view`
               : '0 view'}
