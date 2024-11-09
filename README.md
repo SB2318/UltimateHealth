@@ -133,7 +133,7 @@ Users can also listen to articles (audio features) if they prefer. The Chat Sect
  *  Push Notification
 
    // Phase II (Initial Implementation Vultr Hackathon)
- *  Chat (User To User, Message Request to Doctor, Comment, Share on the article)
+ *  Chat (Comment, Share on the article)
  *  Chat With AI
    
 
