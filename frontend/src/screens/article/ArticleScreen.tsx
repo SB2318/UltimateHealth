@@ -33,7 +33,9 @@ import axios from 'axios';
 import Loader from '../../components/Loader';
 import {setArticle} from '../../store/articleSlice';
 import Snackbar from 'react-native-snackbar';
+
 import { formatCount } from '../../helper/Utils';
+
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const insets = useSafeAreaInsets();
@@ -300,6 +302,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             <Text style={{...styles.viewText, marginBottom: 10}}>
               {article && article?.viewUsers.length
                 ? article.viewUsers.length > 1
+
                   ? `${formatCount(article.viewUsers.length)} views`
                   : `${article.viewUsers.length} view`
                 : '0 view'}

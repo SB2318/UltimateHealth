@@ -20,7 +20,6 @@ import {RootStackParamList, TabParamList} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import LogoutScreen from '../screens/auth/LogoutScreen';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
-
 const Stack = createStackNavigator<RootStackParamList>();
 
 const StackNavigation = () => {
