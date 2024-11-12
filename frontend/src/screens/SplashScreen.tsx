@@ -32,7 +32,7 @@ const SplashScreen = ({navigation}: SplashScreenProp) => {
     } catch (err) {
       // Token is blacklisted
       const status = err.response.status;
-      console.log('lOGIN STATUS', status);
+      //console.log('lOGIN STATUS', status);
 
       if (status === 403) {
         Alert.alert(
@@ -40,7 +40,7 @@ const SplashScreen = ({navigation}: SplashScreenProp) => {
           'You have logged in from a different device. Please create a new login session. Your previous session has been terminated.',
           [
             {
-              text: 'OK',
+              text: 'continue',
               onPress: () => {
                 navigation.reset({
                   index: 0,
@@ -49,7 +49,7 @@ const SplashScreen = ({navigation}: SplashScreenProp) => {
               },
             },
             {
-              text: 'Cancel',
+              text: 'exit',
               onPress: () => {
                 BackHandler.exitApp(); // This works on Android, for iOS it is not possible
               },
