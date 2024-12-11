@@ -13,18 +13,24 @@ import {PRIMARY_COLOR} from '../helper/Theme';
 import io from 'socket.io-client';
 import {Comment} from '../type';
 import {useSelector} from 'react-redux';
+import {useSocket} from '../../hooks/SocketContext';
 
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
-  const socket = io('http://51.20.1.81:8081');
+  //const socket = io('http://localhost:8080');
+  const socket = useSocket();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const {user_id} = useSelector((state: any) => state.user);
-  const {articledId} = route.params;
+  const {articleId} = route.params;
 
-  console.log('articleid', articledId);
+  console.log('articleid', articleId);
   useEffect(() => {
     console.log('Fetching comments for articleId:', route.params.articleId);
     socket.emit('fetch-comments', {articleId: route.params.articleId});
+
+    socket.on('connect', () => {
+      console.log('connection established');
+    });
 
     socket.on('comments-loaded', data => {
       console.log('comment', data);
