@@ -10,7 +10,7 @@ export const SocketProvider = ({children}: {children: ReactNode}) => {
 
   // Initialize socket connection
   const handleSocket = () => {
-    const newSocket = io('http://localhost:8080'); // Your server URL
+    const newSocket = io('http://51.20.1.81:8081'); // Your server URL
     setSocket(newSocket);
   };
 
