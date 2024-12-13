@@ -103,11 +103,9 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
     };
     */
 
+    console.log();
     // Emit the new comment to the backend via socket
-    socket.emit('new-comment', {
-      comment: newCommentObj,
-      articleId: route.params.articleId,
-    });
+    socket.emit('add-comment', newCommentObj);
 
     setNewComment(''); // Clear the input field after submitting
   };
