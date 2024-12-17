@@ -13,10 +13,10 @@ import {PRIMARY_COLOR} from '../helper/Theme';
 import io from 'socket.io-client';
 import {Comment} from '../type';
 import {useSelector} from 'react-redux';
-import {useSocket} from '../../hooks/SocketContext';
+import moment from 'moment';
 
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
-  const socket = io('http://51.20.1.81:8081');
+  const socket = io('http://51.20.1.81:8082');
   //const socket = useSocket();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
@@ -32,15 +32,19 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
       console.log('connection established');
     });
 
-    socket.on('comments-loaded', data => {
-      console.log('comment', data);
+    socket.on('error', () => {
+      console.log('connection error');
+    });
+
+    socket.on('fetch-comments', data => {
+      console.log('comment loaded');
       if (data.articleId === route.params.articleId) {
         setComments(data.comments);
       }
     });
 
     // Listen for new comments
-    socket.on('new-comment', data => {
+    socket.on('comment', data => {
       if (data.articleId === route.params.articleId) {
         setComments(prevComments => [data.comment, ...prevComments]);
       }
@@ -103,9 +107,9 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
     };
     */
 
-    console.log();
+    console.log('Comment emitting', newCommentObj);
     // Emit the new comment to the backend via socket
-    socket.emit('add-comment', newCommentObj);
+    socket.emit('comment', newCommentObj);
 
     setNewComment(''); // Clear the input field after submitting
   };
@@ -123,7 +127,9 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
             <View style={styles.commentContent}>
               <Text style={styles.username}>Author</Text>
               <Text style={styles.comment}>{item.content}</Text>
-              <Text style={styles.timestamp}>{item.createdAt}</Text>
+              <Text style={styles.timestamp}>
+                {moment(item.createdAt).format('LT')}
+              </Text>
 
               {/* Render replies if they exist */}
               {item.replies && item.replies.length > 0 && (

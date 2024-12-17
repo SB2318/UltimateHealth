@@ -13,7 +13,6 @@ import {NavigationContainer} from '@react-navigation/native';
 import StackNavigation from './src/navigations/StackNavigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {SocketProvider} from './hooks/SocketContext';
 
 const queryClient = new QueryClient();
 function App(): React.JSX.Element {
@@ -40,24 +39,21 @@ function App(): React.JSX.Element {
   const BarStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content';
   return (
     <QueryClientProvider client={queryClient}>
-      <SocketProvider>
-       
-        {/* Wrap your app with SocketProvider */}
-        <SafeAreaProvider>
-          <View
-            style={{flex: 1, backgroundColor: backgroundStyle.backgroundColor}}>
-            <StatusBar
-              barStyle={isDarkMode ? 'light-content' : BarStyle}
-              backgroundColor={
-                isDarkMode ? backgroundStyle.backgroundColor : PRIMARY_COLOR
-              }
-            />
-            <NavigationContainer>
-              <StackNavigation />
-            </NavigationContainer>
-          </View>
-        </SafeAreaProvider>
-      </SocketProvider>
+      {/* Wrap your app with SocketProvider */}
+      <SafeAreaProvider>
+        <View
+          style={{flex: 1, backgroundColor: backgroundStyle.backgroundColor}}>
+          <StatusBar
+            barStyle={isDarkMode ? 'light-content' : BarStyle}
+            backgroundColor={
+              isDarkMode ? backgroundStyle.backgroundColor : PRIMARY_COLOR
+            }
+          />
+          <NavigationContainer>
+            <StackNavigation />
+          </NavigationContainer>
+        </View>
+      </SafeAreaProvider>
     </QueryClientProvider>
   );
 }
