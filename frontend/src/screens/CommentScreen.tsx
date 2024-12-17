@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
+  Image,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -14,6 +15,7 @@ import io from 'socket.io-client';
 import {Comment} from '../type';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
+import {GET_STORAGE_DATA} from '../helper/APIUtils';
 
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   const socket = io('http://51.20.1.81:8082');
@@ -21,11 +23,11 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const {user_id} = useSelector((state: any) => state.user);
-  const {articleId} = route.params;
+  //const {articleId} = route.params;
 
-  console.log('articleid', articleId);
+  //console.log('articleid', articleId);
   useEffect(() => {
-    console.log('Fetching comments for articleId:', route.params.articleId);
+    //console.log('Fetching comments for articleId:', route.params.articleId);
     socket.emit('fetch-comments', {articleId: route.params.articleId});
 
     socket.on('connect', () => {
@@ -45,6 +47,7 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
 
     // Listen for new comments
     socket.on('comment', data => {
+      console.log('new comment loaded', data);
       if (data.articleId === route.params.articleId) {
         setComments(prevComments => [data.comment, ...prevComments]);
       }
@@ -75,14 +78,14 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
     });
 
     return () => {
-      socket.off('comments-loaded');
-      socket.off('new-comment');
+      socket.off('fetch-comments');
+      socket.off('comment');
       socket.off('new-reply');
       socket.off('update-parent-comment');
     };
-  }, [socket, route.params.articleId]);
+  }, [socket,route.params.articleId]);
 
-  console.log('com', comments);
+ // console.log('com', comments);
   const handleCommentSubmit = () => {
     if (!newComment.trim()) {
       Alert.alert('Please enter a comment before submitting.');
@@ -123,9 +126,32 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
         data={comments}
         renderItem={({item}) => (
           <View style={styles.commentContainer}>
-            <Text style={styles.avatar}>🧑‍💻</Text>
+            {item.userId.Profile_image ? (
+              <Image
+                source={{
+                  uri: item.userId.Profile_image.startsWith('https')
+                    ? item.userId.Profile_image
+                    : `${GET_STORAGE_DATA}/${item.userId.Profile_image}`,
+                }}
+                style={[
+                  styles.profileImage,
+                  !item.userId.Profile_image && {borderWidth: 0.5, borderColor: 'black'},
+                ]}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                }}
+                style={[
+                  styles.profileImage,
+                  {borderWidth: 0.5, borderColor: 'black'},
+                ]}
+              />
+            )}
+            {/**<Text style={styles.avatar}>🧑‍💻</Text> */}
             <View style={styles.commentContent}>
-              <Text style={styles.username}>Author</Text>
+              <Text style={styles.username}>{item.userId.user_handle}</Text>
               <Text style={styles.comment}>{item.content}</Text>
               <Text style={styles.timestamp}>
                 {moment(item.createdAt).format('LT')}
@@ -200,6 +226,15 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginRight: 10,
     alignSelf: 'center',
+  },
+
+  profileImage: {
+    height: 60,
+    width: 60,
+    borderRadius: 30,
+    objectFit: 'cover',
+    resizeMode: 'contain',
+    marginHorizontal: 4,
   },
   commentContent: {
     flex: 1,

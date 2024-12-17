@@ -338,15 +338,16 @@ export type AuthData = {
 };
 
 export type Comment = {
-  id: String;
+  _id: string;
+  id: string;
   articleId: number;
-  userId: String;
-  content: String;
-  createdAt: String;
+  userId: User;
+  content: string;
+  createdAt: string;
   updatedAt: string;
   parentCommentId: string;
   replies: Comment[];
   likedUsers: User[];
-  status: String;
+  status: string;
   isEdited: Boolean;
 };
