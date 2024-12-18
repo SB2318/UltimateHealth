@@ -16,6 +16,7 @@ import {Comment} from '../type';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
+import CommentItem from '../components/CommentItem';
 
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   const socket = io('http://51.20.1.81:8082');
@@ -83,9 +84,9 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
       socket.off('new-reply');
       socket.off('update-parent-comment');
     };
-  }, [socket,route.params.articleId]);
+  }, [socket, route.params.articleId]);
 
- // console.log('com', comments);
+  // console.log('com', comments);
   const handleCommentSubmit = () => {
     if (!newComment.trim()) {
       Alert.alert('Please enter a comment before submitting.');
@@ -124,57 +125,7 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
       {/* Comments List */}
       <FlatList
         data={comments}
-        renderItem={({item}) => (
-          <View style={styles.commentContainer}>
-            {item.userId.Profile_image ? (
-              <Image
-                source={{
-                  uri: item.userId.Profile_image.startsWith('https')
-                    ? item.userId.Profile_image
-                    : `${GET_STORAGE_DATA}/${item.userId.Profile_image}`,
-                }}
-                style={[
-                  styles.profileImage,
-                  !item.userId.Profile_image && {borderWidth: 0.5, borderColor: 'black'},
-                ]}
-              />
-            ) : (
-              <Image
-                source={{
-                  uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-                }}
-                style={[
-                  styles.profileImage,
-                  {borderWidth: 0.5, borderColor: 'black'},
-                ]}
-              />
-            )}
-            {/**<Text style={styles.avatar}>🧑‍💻</Text> */}
-            <View style={styles.commentContent}>
-              <Text style={styles.username}>{item.userId.user_handle}</Text>
-              <Text style={styles.comment}>{item.content}</Text>
-              <Text style={styles.timestamp}>
-                {moment(item.createdAt).format('LT')}
-              </Text>
-
-              {/* Render replies if they exist */}
-              {item.replies && item.replies.length > 0 && (
-                <FlatList
-                  data={item.replies}
-                  renderItem={({item: reply}) => (
-                    <View style={styles.replyContainer}>
-                      <Text style={styles.replyText}>
-                        Reply: {reply.content}
-                      </Text>
-                    </View>
-                  )}
-                  keyExtractor={item => item._id}
-                  //style={styles.repliesList}
-                />
-              )}
-            </View>
-          </View>
-        )}
+        renderItem={({item}) => <CommentItem item={item} />}
         keyExtractor={item => item._id} // Change from 'id' to '_id' for consistency
         style={styles.commentsList}
       />
@@ -201,7 +152,7 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: 10,
     backgroundColor: '#F9F9F9',
   },
   header: {
