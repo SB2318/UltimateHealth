@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-  Alert,
-} from 'react-native';
+import {View, Image, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {Comment} from '../type';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
 import moment from 'moment';
@@ -19,8 +11,25 @@ import Animated, {
 } from 'react-native-reanimated';
 import ArticleFloatingMenu from './ArticleFloatingMenu';
 import Entypo from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
-export default function CommentItem({item}: {item: Comment}) {
+export default function CommentItem({
+  item,
+  isSelected,
+  userId,
+  setSelectedCommentId,
+  handleEditAction,
+  deleteAction,
+  handleLikeAction,
+}: {
+  item: Comment;
+  isSelected: Boolean;
+  userId: string;
+  setSelectedCommentId: (id: string) => void;
+  handleEditAction: (comment: Comment) => void;
+  deleteAction: (comment: Comment) => void;
+  handleLikeAction: (comment: Comment) => void;
+}) {
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
 
@@ -35,56 +44,58 @@ export default function CommentItem({item}: {item: Comment}) {
     if (width.value === 0) {
       width.value = withTiming(300, {duration: 300});
       yValue.value = withTiming(-1, {duration: 300});
+      setSelectedCommentId(item._id);
     } else {
       width.value = withTiming(0, {duration: 300});
       yValue.value = withTiming(100, {duration: 300});
+      setSelectedCommentId('');
     }
   };
 
   const formatWithOrdinal = date => {
-    const day = moment(date).date();
-    const suffix =
-      day === 1 || day === 21 || day === 31
-        ? 'st'
-        : day === 2 || day === 22
-        ? 'nd'
-        : day === 3 || day === 23
-        ? 'rd'
-        : 'th';
-
     return moment(date).format('D MMM, ddd, h:mm a');
   };
   return (
     <View style={styles.commentContainer}>
-      <Animated.View style={[menuStyle, styles.shareIconContainer]}>
-        <ArticleFloatingMenu
-          items={[
-            {
-              name: 'Edit',
-              action: () => {
-                Alert.alert('Edit Clicked');
-              },
-              icon: 'edit',
-            },
-            {
-              name: 'Delete',
-              action: () => {
-                Alert.alert('Download Clicked');
-              },
-              icon: 'delete',
-            },
-          ]}
-        />
-      </Animated.View>
+      {/**** User cannot edit or delete other comments */}
+      {userId === item.userId._id && isSelected && (
+        <Animated.View style={[menuStyle, styles.shareIconContainer]}>
+          <ArticleFloatingMenu
+            items={[
+              {
+                name: 'Edit',
+                action: () => {
+                  // Alert.alert('Edit Clicked');
 
-      <TouchableOpacity
-        style={styles.shareIconContainer}
-        onPress={() => {
-          /* Handle share action */
-          handleAnimation();
-        }}>
-        <Entypo name="dots-three-vertical" size={22} color={'black'} />
-      </TouchableOpacity>
+                  handleEditAction(item);
+                  handleAnimation();
+                },
+                icon: 'edit',
+              },
+              {
+                name: 'Delete',
+                action: () => {
+                  // Alert.alert('Download Clicked');
+                  deleteAction(item);
+                  handleAnimation();
+                },
+                icon: 'delete',
+              },
+            ]}
+          />
+        </Animated.View>
+      )}
+
+      {userId === item.userId._id && (
+        <TouchableOpacity
+          style={styles.shareIconContainer}
+          onPress={() => {
+            /* Handle share action */
+            handleAnimation();
+          }}>
+          <Entypo name="dots-three-vertical" size={20} color={'black'} />
+        </TouchableOpacity>
+      )}
       {item.userId && item.userId.Profile_image ? (
         <Image
           source={{
@@ -122,29 +133,41 @@ export default function CommentItem({item}: {item: Comment}) {
           <Text style={styles.username}>{item.userId.user_handle}</Text>
           {item.isEdited && (
             <Text style={{...styles.comment, marginStart: 4, marginTop: 2}}>
-              (Edited)
+              (edited)
             </Text>
           )}
         </View>
 
         <Text style={styles.comment}>{item.content}</Text>
         <Text style={styles.timestamp}>
-          {formatWithOrdinal(item.createdAt)}
+          Last updated {formatWithOrdinal(item.updatedAt)}
         </Text>
 
-        {/* Render replies if they exist
-        {item.replies && item.replies.length > 0 && (
-          <FlatList
-            data={item.replies}
-            renderItem={({item: reply}) => (
-              <View style={styles.replyContainer}>
-                <Text style={styles.replyText}>Reply: {reply.content}</Text>
-              </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            padding: 2,
+            // mrginStart: 6,
+          }}>
+          <TouchableOpacity
+            //style={styles.shareIconContainer}
+            onPress={() => {
+              /* Handle Like action */
+              width.value = withTiming(0, {duration: 300});
+              yValue.value = withTiming(100, {duration: 300});
+              handleLikeAction(item);
+            }}>
+            {item.likedUsers.length > 0 &&
+            item.likedUsers.some(id => id === userId) ? (
+              <AntDesign name="like1" size={19} color={'black'} />
+            ) : (
+              <AntDesign name="like2" size={19} color={'black'} />
             )}
-            keyExtractor={item => item._id}
-            //style={styles.repliesList}
-          />
-        )}*/}
+          </TouchableOpacity>
+
+          <Text style={styles.likeCount}>{item.likedUsers.length}</Text>
+        </View>
       </View>
     </View>
   );
@@ -182,7 +205,14 @@ const styles = StyleSheet.create({
   comment: {
     fontSize: 14,
     color: '#555',
-    marginVertical: 5,
+    marginVertical: 3,
+  },
+
+  likeCount: {
+    fontSize: 14,
+    color: '#666',
+    marginStart: 3,
+    marginVertical: 2,
   },
   timestamp: {
     fontSize: 12,

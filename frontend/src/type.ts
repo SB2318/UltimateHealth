@@ -353,7 +353,7 @@ export type Comment = {
   updatedAt: string;
   parentCommentId: string;
   replies: Comment[];
-  likedUsers: User[];
+  likedUsers: string[];
   status: string;
   isEdited: Boolean;
 };

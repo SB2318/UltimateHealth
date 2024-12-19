@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  Image,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -14,8 +13,6 @@ import {PRIMARY_COLOR} from '../helper/Theme';
 import io from 'socket.io-client';
 import {Comment} from '../type';
 import {useSelector} from 'react-redux';
-import moment from 'moment';
-import {GET_STORAGE_DATA} from '../helper/APIUtils';
 import CommentItem from '../components/CommentItem';
 
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
@@ -24,9 +21,10 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const {user_id} = useSelector((state: any) => state.user);
-  //const {articleId} = route.params;
+  const [selectedCommentId, setSelectedCommentId] = useState<string>('');
+  const [editMode, setEditMode] = useState<Boolean>(false);
+  const [editCommentId, setEditCommentId] = useState<string | null>(null);
 
-  //console.log('articleid', articleId);
   useEffect(() => {
     //console.log('Fetching comments for articleId:', route.params.articleId);
     socket.emit('fetch-comments', {articleId: route.params.articleId});
@@ -67,55 +65,122 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
       }
     });
 
-    // Listen for parent comment updates (e.g., when replies are added)
-    socket.on('update-parent-comment', data => {
+    // Listen to edit comment updates (e.g., when replies are added)
+    socket.on('edit-comment', data => {
       setComments(prevComments => {
         return prevComments.map(comment =>
-          comment._id === data.parentCommentId
-            ? {...comment, ...data.parentComment} // update parent comment
+          comment._id === data._id
+            ? {...comment, ...data} // update the comment with new data
             : comment,
         );
       });
+    });
+
+    // Listen to like and dislike comment
+    socket.on('like-comment', data => {
+      setComments(prevComments => {
+        return prevComments.map(comment =>
+          comment._id === data._id ? {...comment, ...data} : comment,
+        );
+      });
+    });
+
+    socket.on('delete-comment', data => {
+      setComments(prevComments =>
+        prevComments.filter(comment => comment.id !== data.commentId),
+      );
     });
 
     return () => {
       socket.off('fetch-comments');
       socket.off('comment');
       socket.off('new-reply');
-      socket.off('update-parent-comment');
+      socket.off('edit-comment');
+      socket.off('delete-comment');
+      socket.off('like-comment');
     };
   }, [socket, route.params.articleId]);
 
-  // console.log('com', comments);
+  const handleEditAction = (comment: Comment) => {
+    setNewComment(comment.content);
+    setEditMode(true);
+    setEditCommentId(comment._id);
+  };
+
+  const handleDeleteAction = (comment: Comment) => {
+    //commentId, articleId, userId
+    Alert.alert(
+      'Alert',
+      'Are you sure you want to delete this comment.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            socket.emit('delete-comment', {
+              commentId: comment._id,
+              articleId: route.params.articleId,
+              userId: user_id,
+            });
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const handleLikeAction = (comment: Comment) => {
+    socket.emit('like-comment', {
+      commentId: comment._id,
+      articleId: route.params.articleId,
+      userId: user_id,
+    });
+  };
+
   const handleCommentSubmit = () => {
     if (!newComment.trim()) {
       Alert.alert('Please enter a comment before submitting.');
       return;
     }
 
-    const newCommentObj = {
-      userId: user_id,
-      articleId: route.params.articleId,
-      content: newComment,
-      parentCommentId: null,
-    };
+    if (editMode) {
+      if (editCommentId) {
+        console.log('Edit Comment Id', editCommentId);
+        console.log('Edit Comment ', newComment);
+        console.log('Article Id', route.params.articleId);
+        console.log('User Id', user_id);
 
-    /*
-    const newCommentObj = {
-      _id: String(comments.length + 1), // Generate a new id for the comment
-      userId: {user_handle: 'You'}, // Placeholder for username
-      avatar: '🧑‍💻', // Placeholder for avatar
-      content: newComment,
-      timestamp: new Date().toLocaleString(), // dynamic timestamp
-      replies: [],
-    };
-    */
+        socket.emit('edit-comment', {
+          commentId: editCommentId,
+          content: newComment,
+          articleId: route.params.articleId,
+          userId: user_id,
+        });
 
-    console.log('Comment emitting', newCommentObj);
-    // Emit the new comment to the backend via socket
-    socket.emit('comment', newCommentObj);
+        setNewComment('');
+        setEditCommentId(null);
+        setEditMode(false);
+      } else {
+        Alert.alert('Error: Comment Not Found');
+      }
+    } else {
+      const newCommentObj = {
+        userId: user_id,
+        articleId: route.params.articleId,
+        content: newComment,
+        parentCommentId: null,
+      };
 
-    setNewComment(''); // Clear the input field after submitting
+      console.log('Comment emitting', newCommentObj);
+      // Emit the new comment to the backend via socket
+      socket.emit('comment', newCommentObj);
+
+      setNewComment(''); // Clear the input field after submitting
+    }
   };
 
   return (
@@ -125,8 +190,18 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
       {/* Comments List */}
       <FlatList
         data={comments}
-        renderItem={({item}) => <CommentItem item={item} />}
-        keyExtractor={item => item._id} // Change from 'id' to '_id' for consistency
+        renderItem={({item}) => (
+          <CommentItem
+            item={item}
+            isSelected={selectedCommentId === item._id}
+            userId={user_id}
+            setSelectedCommentId={setSelectedCommentId}
+            handleEditAction={handleEditAction}
+            deleteAction={handleDeleteAction}
+            handleLikeAction={handleLikeAction}
+          />
+        )}
+        keyExtractor={item => item._id}
         style={styles.commentsList}
       />
 
