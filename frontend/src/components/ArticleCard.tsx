@@ -32,10 +32,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import ArticleFloatingMenu from './ArticleFloatingMenu';
+import io from 'socket.io-client';
 
 const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
   const {user_token, user_id} = useSelector((state: any) => state.user);
 
+  const socket = io('http://51.20.1.81:8082');
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
 
@@ -136,6 +138,7 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
 
     onSuccess: data => {
       // dispatch(setArticle({article: data}));
+
       success();
     },
 
@@ -404,9 +407,9 @@ const styles = StyleSheet.create({
   },
   shareIconContainer: {
     position: 'absolute',
-    top: 1, 
-    right: 7, 
-    zIndex: 1, 
+    top: 1,
+    right: 7,
+    zIndex: 1,
   },
   // future card styles
   //   card: {
