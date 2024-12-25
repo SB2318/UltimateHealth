@@ -8,21 +8,21 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {fp, hp} from '../helper/Metric';
-import {ArticleCardProps, ArticleData} from '../type';
+import {ArticleCardProps, ArticleData, User} from '../type';
 import moment from 'moment';
 import {useSelector} from 'react-redux';
 import axios from 'axios';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {
   GET_IMAGE,
+  GET_PROFILE_API,
   LIKE_ARTICLE,
   SAVE_ARTICLE,
-  UPDATE_VIEW_COUNT,
 } from '../helper/APIUtils';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {formatCount} from '../helper/Utils';
@@ -37,7 +37,7 @@ import io from 'socket.io-client';
 const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
   const {user_token, user_id} = useSelector((state: any) => state.user);
 
-  const socket = io('http://51.20.1.81:8082');
+  const socket = io('http://51.20.1.81:8084');
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
 
@@ -48,6 +48,7 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
     };
   });
   //console.log('Image Utils', item?.imageUtils[0]);
+  /*
   const updateViewCountMutation = useMutation({
     mutationKey: ['update-view-count'],
     mutationFn: async () => {
@@ -70,15 +71,36 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
       return res.data.article as ArticleData;
     },
     onSuccess: async data => {
-      navigation.navigate('ArticleScreen', {
-        articleId: Number(item._id),
-        authorId: item.authorId,
-      });
+
     },
 
     onError: error => {
       //console.log('Update View Count Error', error);
       Alert.alert('Internal server error, try again!');
+    },
+  });
+   */
+
+  useEffect(()=>{
+
+    socket.on('connect', () => {
+      console.log('connection established');
+    });
+
+  },[]);
+  const {
+    data: user,
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ['get-user-profile'],
+    queryFn: async () => {
+      const response = await axios.get(`${GET_PROFILE_API}`, {
+        headers: {
+          Authorization: `Bearer ${user_token}`,
+        },
+      });
+      return response.data.profile as User;
     },
   });
 
@@ -133,12 +155,23 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
           },
         },
       );
-      return res.data.article as ArticleData;
+      return res.data.articleDb as ArticleData;
     },
 
     onSuccess: data => {
       // dispatch(setArticle({article: data}));
 
+      console.log('author', data)
+      socket.emit('notification', {
+        type: 'likePost',
+        authorId: data?.authorId,
+        message: {
+          title: user
+            ? `${user?.user_handle} liked your post`
+            : 'Someone liked your post',
+          body: data?.title,
+        },
+      });
       success();
     },
 
@@ -164,7 +197,11 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
         // handle onPress
         width.value = withTiming(0, {duration: 300});
         yValue.value = withTiming(100, {duration: 300});
-        updateViewCountMutation.mutate();
+        //updateViewCountMutation.mutate();
+        navigation.navigate('ArticleScreen', {
+          articleId: Number(item._id),
+          authorId: item.authorId,
+        });
       }}>
       <View style={styles.cardContainer}>
         {/* Share Icon */}
@@ -239,9 +276,6 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
           </Text>
           <Text style={styles.title}>{item?.title}</Text>
 
-          {updateViewCountMutation.isPending && (
-            <ActivityIndicator size="small" color={PRIMARY_COLOR} />
-          )}
           <Text style={styles.footerText}>
             {item?.authorName} {''}
           </Text>

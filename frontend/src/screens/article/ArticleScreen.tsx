@@ -11,12 +11,12 @@ import {
   ActivityIndicator,
   Dimensions,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useQuery, useMutation} from '@tanstack/react-query';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ArticleData, ArticleScreenProp} from '../../type';
+import {ArticleData, ArticleScreenProp, User} from '../../type';
 import {useSelector} from 'react-redux';
 import WebView from 'react-native-webview';
 import {hp} from '../../helper/Metric';
@@ -24,16 +24,17 @@ import {
   EC2_BASE_URL,
   FOLLOW_USER,
   GET_ARTICLE_BY_ID,
+  GET_PROFILE_API,
   GET_PROFILE_IMAGE_BY_ID,
   GET_STORAGE_DATA,
   LIKE_ARTICLE,
   UPDATE_READ_EVENT,
+  UPDATE_VIEW_COUNT,
 } from '../../helper/APIUtils';
 import axios from 'axios';
 import Loader from '../../components/Loader';
-import {setArticle} from '../../store/articleSlice';
 import Snackbar from 'react-native-snackbar';
-
+import io from 'socket.io-client';
 import {formatCount} from '../../helper/Utils';
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
@@ -41,9 +42,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId} = route.params;
   const {user_id, user_token} = useSelector((state: any) => state.user);
   const [readEventSave, setReadEventSave] = useState(false);
-  const [webViewHeight, setWebViewHeight] = useState(0);
-
+  //const [webViewHeight, setWebViewHeight] = useState(0);
+  const socket = io('http://51.20.1.81:8084');
   const webViewRef = useRef<WebView>(null);
+
+  useEffect(() => {
+    updateViewCountMutation.mutate();
+    return () => {};
+  }, []);
 
   const {
     data: article,
@@ -59,6 +65,47 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
 
       return response.data.article as ArticleData;
+    },
+  });
+
+  const {data: user} = useQuery({
+    queryKey: ['get-my-profile'],
+    queryFn: async () => {
+      const response = await axios.get(`${GET_PROFILE_API}`, {
+        headers: {
+          Authorization: `Bearer ${user_token}`,
+        },
+      });
+      return response.data.profile as User;
+    },
+  });
+
+  const updateViewCountMutation = useMutation({
+    mutationKey: ['update-view-count'],
+    mutationFn: async () => {
+      if (user_token === '') {
+        Alert.alert('No token found');
+        return;
+      }
+      const res = await axios.post(
+        UPDATE_VIEW_COUNT,
+        {
+          article_id: articleId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        },
+      );
+
+      return res.data.article as ArticleData;
+    },
+    onSuccess: async () => {},
+
+    onError: error => {
+      console.log('Update View Count Error', error);
+      Alert.alert('Internal server error, try again!');
     },
   });
 
@@ -101,6 +148,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
     onSuccess: () => {
       //console.log('follow success');
+      socket.emit('notification', {
+        type: 'userFollow',
+        userId: authorId,
+        message: {
+          title: `${user?.user_handle} has followed you`,
+          body: '',
+        },
+      });
       refetchFollowers();
       // refetchProfile();
     },
@@ -111,6 +166,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       //console.log('Follow Error', err);
     },
   });
+
+  console.log('article id', articleId);
+  console.log('user token', user_token);
 
   const updateLikeMutation = useMutation({
     mutationKey: ['update-like-status'],
@@ -132,11 +190,25 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           },
         },
       );
-      return res.data.article as ArticleData;
+
+      //  console.log('Response', );
+      return res.data.articleDb as ArticleData;
     },
 
     onSuccess: data => {
       // dispatch(setArticle({article: data}));
+
+      console.log('author id', data?.authorId);
+      socket.emit('notification', {
+        type: 'likePost',
+        authorId: data?.authorId,
+        message: {
+          title: user
+            ? `${user?.user_handle} liked your post`
+            : 'Someone liked your post',
+          body: data?.title,
+        },
+      });
       refetch();
     },
 
@@ -252,7 +324,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             offset = e.nativeEvent.contentOffset.y;
           if (windowHeight + offset >= height) {
             //ScrollEnd,
-             console.log('ScrollEnd');
+            console.log('ScrollEnd');
             if (article && !readEventSave) {
               updateReadEventMutation.mutate();
             }
@@ -336,7 +408,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 padding: 7,
                 //width: '99%',
                 height: hp(1000),
-               // flex:7,
+                // flex:7,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}

@@ -16,7 +16,7 @@ import {useSelector} from 'react-redux';
 import CommentItem from '../components/CommentItem';
 
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
-  const socket = io('http://51.20.1.81:8082');
+  const socket = io('http://51.20.1.81:8084');
   //const socket = useSocket();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');

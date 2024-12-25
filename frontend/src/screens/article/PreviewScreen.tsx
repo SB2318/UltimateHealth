@@ -3,7 +3,7 @@ import {Alert, StyleSheet, Text, View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {WebView} from 'react-native-webview';
 import {PRIMARY_COLOR} from '../../helper/Theme';
-import {Article, ArticleData, PreviewScreenProp, User} from '../../type';
+import {ArticleData, PreviewScreenProp, User} from '../../type';
 import {createHTMLStructure} from '../../helper/Utils';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
@@ -19,7 +19,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {article, title, authorName, selectedGenres, localImages} =
     route.params;
 
-  const socket = io('http://51.20.1.81:8082');
+  const socket = io('http://51.20.1.81:8084');
   const webViewRef = useRef<WebView>(null);
   const {user_token} = useSelector((state: any) => state.user);
 
@@ -150,9 +150,9 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
 
     onSuccess: data => {
       socket.emit('notification', {
+        type: 'openPost',
         postId: data._id,
         authorId: user?._id,
-
         message: {
           title: `${user?.user_handle} posted a new article`,
           body: title,
