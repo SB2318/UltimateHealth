@@ -143,19 +143,21 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           },
         },
       );
-      return res.data as any;
+      return res.data.followStatus as boolean;
     },
 
-    onSuccess: () => {
+    onSuccess: data => {
       //console.log('follow success');
-      socket.emit('notification', {
-        type: 'userFollow',
-        userId: authorId,
-        message: {
-          title: `${user?.user_handle} has followed you`,
-          body: '',
-        },
-      });
+      if (data) {
+        socket.emit('notification', {
+          type: 'userFollow',
+          userId: authorId,
+          message: {
+            title: `${user?.user_handle} has followed you`,
+            body: '',
+          },
+        });
+      }
       refetchFollowers();
       // refetchProfile();
     },
@@ -192,23 +194,28 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       );
 
       //  console.log('Response', );
-      return res.data.articleDb as ArticleData;
+      return res.data.data as {
+        article: ArticleData;
+        likeStatus: boolean;
+      };
     },
 
     onSuccess: data => {
       // dispatch(setArticle({article: data}));
 
-      console.log('author id', data?.authorId);
-      socket.emit('notification', {
-        type: 'likePost',
-        authorId: data?.authorId,
-        message: {
-          title: user
-            ? `${user?.user_handle} liked your post`
-            : 'Someone liked your post',
-          body: data?.title,
-        },
-      });
+      // console.log('author id', data?.authorId);
+      if (data?.likeStatus) {
+        socket.emit('notification', {
+          type: 'likePost',
+          authorId: data?.article?.authorId,
+          message: {
+            title: user
+              ? `${user?.user_handle} liked your post`
+              : 'Someone liked your post',
+            body: data?.article?.title,
+          },
+        });
+      }
       refetch();
     },
 

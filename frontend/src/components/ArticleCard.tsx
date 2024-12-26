@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {fp, hp} from '../helper/Metric';
 import {ArticleCardProps, ArticleData, User} from '../type';
 import moment from 'moment';
@@ -81,13 +81,11 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
   });
    */
 
-  useEffect(()=>{
-
+  useEffect(() => {
     socket.on('connect', () => {
       console.log('connection established');
     });
-
-  },[]);
+  }, []);
   const {
     data: user,
     refetch,
@@ -155,23 +153,28 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
           },
         },
       );
-      return res.data.articleDb as ArticleData;
+      return res.data.data as {
+        article: ArticleData;
+        likeStatus: boolean;
+      };
     },
 
     onSuccess: data => {
       // dispatch(setArticle({article: data}));
 
-      console.log('author', data)
-      socket.emit('notification', {
-        type: 'likePost',
-        authorId: data?.authorId,
-        message: {
-          title: user
-            ? `${user?.user_handle} liked your post`
-            : 'Someone liked your post',
-          body: data?.title,
-        },
-      });
+      //console.log('author', data);
+      if (data?.likeStatus) {
+        socket.emit('notification', {
+          type: 'likePost',
+          authorId: data?.article?.authorId,
+          message: {
+            title: user
+              ? `${user?.user_handle} liked your post`
+              : 'Someone liked your post',
+            body: data?.article?.title,
+          },
+        });
+      }
       success();
     },
 
