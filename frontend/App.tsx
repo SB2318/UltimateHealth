@@ -19,20 +19,6 @@ import PushNotification from 'react-native-push-notification';
 const queryClient = new QueryClient();
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
-  /*
-  const [socket, setSocket] = useState<Socket | null>(null);
-
-  const handleSocket = () => {
-    const newSocket = io('http://localhost:8080'); // HTTP didn't work either
-    // newSocket.connect(); //? manual connection didn't work
-    console.log(newSocket.connected); // false
-    setSocket(newSocket);
-  };
-  useEffect(() => {
-    handleSocket();
-  }, [setSocket]);
-*/
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -41,14 +27,46 @@ function App(): React.JSX.Element {
   const navigationContainerRef = useRef();
 
   useEffect(() => {
-    // const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    PushNotification.configure({
+      // Called when the device successfully registers for push notifications
+      onRegister: token => {
+        console.log('FCM Token:', token);
+      },
 
+      onNotification: notification => {
+        console.log(
+          'Foreground notification received from on notification event:',
+          notification,
+        );
+        // Handle notification action here
+        //  notification.finish(PushNotificationIOS.FetchResult.NoData);
+      },
+      requestPermissions: true, // Automatically request permissions on iOS
+    });
+
+    // Create notification channels (Android specific)
+    PushNotification.createChannel(
+      {
+        channelId: 'default-channel',
+        channelName: 'Default Channel',
+        channelDescription: 'A default channel',
+        playSound: true,
+        soundName: 'default',
+        importance: 4,
+        vibrate: true,
+      },
+      created => console.log(`createChannel returned '${created}'`),
+    );
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('Foreground notification received:', remoteMessage); // when app is in foreground
+      console.log(
+        'Foreground notification received from message:',
+        remoteMessage,
+      );
       const data = remoteMessage.data;
       // handleNotification(data);
+
       PushNotification.localNotification({
-        // channelId: 'default-channel-id',
+        channelId: 'default-channel',
         title: remoteMessage?.notification?.title,
         message: remoteMessage?.notification?.body,
         playSound: true,
