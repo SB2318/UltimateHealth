@@ -33,8 +33,16 @@ import Animated, {
 } from 'react-native-reanimated';
 import ArticleFloatingMenu from './ArticleFloatingMenu';
 import io from 'socket.io-client';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Share from 'react-native-share';
 
-const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
+const ArticleCard = ({
+  item,
+  navigation,
+  isSelected,
+  setSelectedCardId,
+  success,
+}: ArticleCardProps) => {
   const {user_token, user_id} = useSelector((state: any) => state.user);
 
   const socket = io('http://51.20.1.81:8084');
@@ -48,38 +56,21 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
     };
   });
   //console.log('Image Utils', item?.imageUtils[0]);
-  /*
-  const updateViewCountMutation = useMutation({
-    mutationKey: ['update-view-count'],
-    mutationFn: async () => {
-      if (user_token === '') {
-        Alert.alert('No token found');
-        return;
-      }
-      const res = await axios.post(
-        UPDATE_VIEW_COUNT,
-        {
-          article_id: item._id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user_token}`,
-          },
-        },
-      );
+  const handleShare = async () => {
+    try {
+      const result = await Share.open({
+        title: item.title,
+        message: `${item.title} : Check out this awesome post on UltimateHealth app!`,
+        url: 'https://drive.google.com/file/d/1eLjfzveJ8oXe_KALbBU-qzwx4mAhkaEC/view', 
+        subject: 'React Native Post',
+      });
+      console.log(result);
+    } catch (error) {
+      console.log('Error sharing:', error);
+      Alert.alert('Error', 'Something went wrong while sharing.');
+    }
+  };
 
-      return res.data.article as ArticleData;
-    },
-    onSuccess: async data => {
-
-    },
-
-    onError: error => {
-      //console.log('Update View Count Error', error);
-      Alert.alert('Internal server error, try again!');
-    },
-  });
-   */
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -188,9 +179,11 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
     if (width.value === 0) {
       width.value = withTiming(300, {duration: 300});
       yValue.value = withTiming(-1, {duration: 300});
+      setSelectedCardId(item._id);
     } else {
       width.value = withTiming(0, {duration: 300});
       yValue.value = withTiming(100, {duration: 300});
+      setSelectedCardId('');
     }
   };
 
@@ -208,40 +201,43 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
       }}>
       <View style={styles.cardContainer}>
         {/* Share Icon */}
-        <Animated.View style={[menuStyle, styles.shareIconContainer]}>
-          <ArticleFloatingMenu
-            items={[
-              {
-                name: 'Share this post',
-                action: () => {
-                  Alert.alert('Share Clicked');
+        {isSelected && (
+          <Animated.View style={[menuStyle, styles.shareIconContainer]}>
+            <ArticleFloatingMenu
+              items={[
+                {
+                  name: 'Share this post',
+                  action: () => {
+                    handleShare();
+                    handleAnimation();
+                  },
+                  icon: 'sharealt',
                 },
-                icon: 'sharealt',
-              },
-              {
-                name: 'Repost in your feed',
-                action: () => {
-                  Alert.alert('Repost Clicked');
+                {
+                  name: 'Repost in your feed',
+                  action: () => {
+                    Alert.alert('Repost Clicked');
+                  },
+                  icon: 'retweet',
                 },
-                icon: 'retweet',
-              },
-              {
-                name: 'Download as pdf',
-                action: () => {
-                  Alert.alert('Download Clicked');
+                {
+                  name: 'Download as pdf',
+                  action: () => {
+                    Alert.alert('Download Clicked');
+                  },
+                  icon: 'download',
                 },
-                icon: 'download',
-              },
-              {
-                name: 'Request to edit',
-                action: () => {
-                  Alert.alert('Edit Clicked');
+                {
+                  name: 'Request to edit',
+                  action: () => {
+                    Alert.alert('Edit Clicked');
+                  },
+                  icon: 'edit',
                 },
-                icon: 'edit',
-              },
-            ]}
-          />
-        </Animated.View>
+              ]}
+            />
+          </Animated.View>
+        )}
 
         <TouchableOpacity
           style={styles.shareIconContainer}
@@ -249,11 +245,7 @@ const ArticleCard = ({item, navigation, success}: ArticleCardProps) => {
             /* Handle share action */
             handleAnimation();
           }}>
-          <IonIcons
-            name="share-social-outline"
-            size={26}
-            color={PRIMARY_COLOR}
-          />
+          <Entypo name="dots-three-vertical" size={20} color={'black'} />
         </TouchableOpacity>
         {/* image */}
         {item?.imageUtils[0] && item?.imageUtils[0].length !== 0 ? (
@@ -379,7 +371,7 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 0,
     width: '100%',
-    maxHeight: 260,
+    maxHeight: 360,
     backgroundColor: '#E6E6E6',
     flexDirection: 'row',
     marginVertical: 14,
@@ -444,8 +436,8 @@ const styles = StyleSheet.create({
   },
   shareIconContainer: {
     position: 'absolute',
-    top: 1,
-    right: 7,
+    top: 2,
+    right: 1,
     zIndex: 1,
   },
   // future card styles
