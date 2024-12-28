@@ -61,7 +61,7 @@ const ArticleCard = ({
       const result = await Share.open({
         title: item.title,
         message: `${item.title} : Check out this awesome post on UltimateHealth app!`,
-        url: 'https://drive.google.com/file/d/1eLjfzveJ8oXe_KALbBU-qzwx4mAhkaEC/view', 
+        url: 'https://drive.google.com/file/d/1eLjfzveJ8oXe_KALbBU-qzwx4mAhkaEC/view',
         subject: 'React Native Post',
       });
       console.log(result);
@@ -70,7 +70,6 @@ const ArticleCard = ({
       Alert.alert('Error', 'Something went wrong while sharing.');
     }
   };
-
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -187,6 +186,56 @@ const ArticleCard = ({
     }
   };
 
+  /*
+  const generatePDFFromUrl = async (url: string, title: string) => {
+    // setLoading(true);
+
+    try {
+      const response = await axios.get(url);
+      const htmlContent = response.data;
+
+      // Create PDF options
+      const options = {
+        html: htmlContent,
+        fileName: `${title.substring(0, 15)}...`,
+        directory: 'Documents',
+      };
+
+      // Convert HTML to PDF
+      const file = await RNHTMLtoPDF.convert(options);
+      console.log('PDF created at:', file.filePath);
+
+      Alert.alert(
+        'PDF created successfully!',
+        `PDF saved at: ${file.filePath}`,
+      );
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      Alert.alert('Error', 'Something went wrong while creating the PDF.');
+    }
+  };
+
+  const generatePDF = async (title: string, htmlContent: string) => {
+    try {
+      const options = {
+        html: htmlContent,
+        fileName: `${title.substring(0, 15)}...`,
+        directory: 'Documents',
+      };
+
+      const file = await RNHTMLtoPDF.convert(options);
+      console.log('PDF created at:', file.filePath);
+
+      Alert.alert(
+        'PDF created successfully!',
+        `PDF saved at: ${file.filePath}`,
+      );
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      Alert.alert('Error', 'Something went wrong while creating the PDF.');
+    }
+  };
+*/
   return (
     <Pressable
       onPress={() => {
@@ -230,7 +279,12 @@ const ArticleCard = ({
                 {
                   name: 'Request to edit',
                   action: () => {
-                    Alert.alert('Edit Clicked');
+                    handleAnimation();
+                    if (item?.content?.endsWith('html')) {
+                      //  generatePDFFromUrl(item?.content, item?.title);
+                    } else {
+                      // generatePDF(item?.title, item?.content);
+                    }
                   },
                   icon: 'edit',
                 },
