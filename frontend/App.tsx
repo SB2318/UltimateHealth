@@ -15,6 +15,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import messaging from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
+import {SocketProvider} from './SocketContext';
 
 const queryClient = new QueryClient();
 function App(): React.JSX.Element {
@@ -121,20 +122,22 @@ function App(): React.JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Wrap your app with SocketProvider */}
-      <SafeAreaProvider>
-        <View
-          style={{flex: 1, backgroundColor: backgroundStyle.backgroundColor}}>
-          <StatusBar
-            barStyle={isDarkMode ? 'light-content' : BarStyle}
-            backgroundColor={
-              isDarkMode ? backgroundStyle.backgroundColor : PRIMARY_COLOR
-            }
-          />
-          <NavigationContainer ref={navigationContainerRef}>
-            <StackNavigation />
-          </NavigationContainer>
-        </View>
-      </SafeAreaProvider>
+      <SocketProvider>
+        <SafeAreaProvider>
+          <View
+            style={{flex: 1, backgroundColor: backgroundStyle.backgroundColor}}>
+            <StatusBar
+              barStyle={isDarkMode ? 'light-content' : BarStyle}
+              backgroundColor={
+                isDarkMode ? backgroundStyle.backgroundColor : PRIMARY_COLOR
+              }
+            />
+            <NavigationContainer ref={navigationContainerRef}>
+              <StackNavigation />
+            </NavigationContainer>
+          </View>
+        </SafeAreaProvider>
+      </SocketProvider>
     </QueryClientProvider>
   );
 }
