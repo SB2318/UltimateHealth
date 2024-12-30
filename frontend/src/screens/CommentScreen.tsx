@@ -64,7 +64,7 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
         setComments(prevComments => {
           const newComments = [data.comment, ...prevComments];
           // Scroll to the first index after adding the new comment
-          if (flatListRef.current) {
+          if (flatListRef.current && newComments.length > 1) {
             flatListRef?.current.scrollToIndex({index: 0, animated: true});
           }
 

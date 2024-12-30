@@ -92,7 +92,7 @@ const NotificationScreen = ({navigation}) => {
 
   const deleteNotificationMutation = useMutation({
     mutationKey: ['delete-notification-by-id'],
-    mutationFn: async (id: string) => {
+    mutationFn: async ({id}: {id: string}) => {
       if (user_token === '') {
         Alert.alert('No token found');
         return;
@@ -154,7 +154,9 @@ const NotificationScreen = ({navigation}) => {
 
   const handleDeleteAction = (item: Notification) => {
     console.log('Notification ID', item?._id);
-    deleteNotificationMutation.mutate(item._id);
+    deleteNotificationMutation.mutate({
+      id: item?._id
+    });
   };
 
   if (isLoading) {
