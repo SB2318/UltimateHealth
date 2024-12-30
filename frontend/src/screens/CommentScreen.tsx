@@ -20,6 +20,7 @@ import {useSocket} from '../../SocketContext';
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   //const socket = io('http://51.20.1.81:8084');
   const socket = useSocket();
+
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const flatListRef = useRef<FlatList<Comment>>(null);
@@ -65,6 +66,7 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
           const newComments = [data.comment, ...prevComments];
           // Scroll to the first index after adding the new comment
           if (flatListRef.current && newComments.length > 1) {
+
             flatListRef?.current.scrollToIndex({index: 0, animated: true});
           }
 
