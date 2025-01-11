@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,9 @@ import {
   StyleSheet,
   FlatList,
   Alert,
+  Pressable,
 } from 'react-native';
-import {CommentScreenProp} from '../type';
+import {CommentScreenProp, User} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 //import io from 'socket.io-client';
 import {Comment} from '../type';
@@ -16,6 +17,7 @@ import {useSelector} from 'react-redux';
 import Loader from '../components/Loader';
 import CommentItem from '../components/CommentItem';
 import {useSocket} from '../../SocketContext';
+import {MentionInput} from 'react-native-controlled-mentions';
 
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   //const socket = io('http://51.20.1.81:8084');
@@ -30,7 +32,39 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   const [editCommentId, setEditCommentId] = useState<string | null>(null);
   const [commentLoading, setCommentLoading] = useState<Boolean>(false);
   const [commentLikeLoading, setCommentLikeLoading] = useState<Boolean>(false);
+  const [mentions, setMentions] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
+  const suggestions = [
+    {id: '1', name: 'David Tabaka'},
+    {id: '2', name: 'Mary'},
+    {id: '3', name: 'Tony'},
+    {id: '4', name: 'Mike'},
+    {id: '5', name: 'Grey'},
+  ];
+
+  const renderSuggestions = ({keyword, onSuggestionPress}) => {
+    if (keyword == null) {
+      return null;
+    }
+
+    return (
+      <View>
+        {suggestions
+          .filter(one =>
+            one.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()),
+          )
+          .map(one => (
+            <Pressable
+              key={one.id}
+              onPress={() => onSuggestionPress(one)}
+              style={{padding: 12}}>
+              <Text>{one.name}</Text>
+            </Pressable>
+          ))}
+      </View>
+    );
+  };
   useEffect(() => {
     //console.log('Fetching comments for articleId:', route.params.articleId);
     socket.emit('fetch-comments', {articleId: route.params.articleId});
@@ -66,7 +100,6 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
           const newComments = [data.comment, ...prevComments];
           // Scroll to the first index after adding the new comment
           if (flatListRef.current && newComments.length > 1) {
-
             flatListRef?.current.scrollToIndex({index: 0, animated: true});
           }
 
@@ -128,6 +161,26 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
     setNewComment(comment.content);
     setEditMode(true);
     setEditCommentId(comment._id);
+  };
+
+  const handleSelectMention = user => {
+    const newText = text.replace(/@([a-zA-Z0-9_]+)/, `@${user.name}`);
+    setNewComment(newText);
+    setFilteredUsers([]);
+  };
+
+  const handleChangeText = inputText => {
+    setNewComment(inputText);
+
+    if (inputText.includes('@')) {
+      const query = inputText.split('@')[1];
+      const filtered = users.filter(user =>
+        user.name.toLowerCase().includes(query.toLowerCase()),
+      );
+      setFilteredUsers(filtered);
+    } else {
+      setFilteredUsers([]);
+    }
   };
 
   const handleDeleteAction = (comment: Comment) => {
@@ -234,13 +287,46 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
         style={styles.commentsList}
       />
 
+      <View style={{flex: 1, padding: 16}}>
+        {filteredUsers.length > 0 && (
+          <FlatList
+            data={filteredUsers}
+            keyExtractor={item => item.id.toString()}
+            renderItem={({item}) => (
+              <TouchableOpacity onPress={() => handleSelectMention(item)}>
+                <View
+                  style={{
+                    padding: 10,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#ccc',
+                  }}>
+                  <Text style={{fontSize: 16}}>{item.name}</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        )}
+      </View>
+
+      <MentionInput
+        value={newComment}
+        onChange={setNewComment}
+        style={styles.textInput}
+        partTypes={[
+          {
+            trigger: '@', // Should be a single character like '@' or '#'
+            renderSuggestions,
+            textStyle: {fontWeight: 'bold', color: 'blue'}, // The mention style in the input
+          },
+        ]}
+      />
       {/* New Comment Input */}
       <TextInput
         style={styles.textInput}
         placeholder="Add a comment..."
         multiline
         value={newComment}
-        onChangeText={setNewComment}
+        onChangeText={handleChangeText}
       />
 
       {/* Submit Button */}
