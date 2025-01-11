@@ -36,6 +36,7 @@ export type RootStackParamList = {
   };
   CommentScreen: {
     articleId: number;
+    mentionedUsers: User[];
   };
   NotificationScreen: undefined;
   UserProfileScreen: {authorId: string};
@@ -272,6 +273,7 @@ export type ArticleData = {
   likeCount: number;
   likedUsers: User[];
   savedUsers: string[];
+  mentionedUsers: User[];
 };
 
 export type UserStatus = {

@@ -438,6 +438,9 @@ const ArticleCard = ({
                 //console.log("item", item);
                 navigation.navigate('CommentScreen', {
                   articleId: item._id,
+                  mentionedUsers: item.mentionedUsers
+                    ? item.mentionedUsers
+                    : [],
                 });
               }}
               style={styles.likeSaveChildContainer}>

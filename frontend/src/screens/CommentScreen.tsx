@@ -1,15 +1,14 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   FlatList,
   Alert,
   Pressable,
 } from 'react-native';
-import {CommentScreenProp, User} from '../type';
+import {CommentScreenProp} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 //import io from 'socket.io-client';
 import {Comment} from '../type';
@@ -22,7 +21,7 @@ import {MentionInput} from 'react-native-controlled-mentions';
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   //const socket = io('http://51.20.1.81:8084');
   const socket = useSocket();
-
+  const {mentionedUsers} = route.params;
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const flatListRef = useRef<FlatList<Comment>>(null);
@@ -33,16 +32,8 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   const [commentLoading, setCommentLoading] = useState<Boolean>(false);
   const [commentLikeLoading, setCommentLikeLoading] = useState<Boolean>(false);
   const [mentions, setMentions] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
 
-  const suggestions = [
-    {id: '1', name: 'David Tabaka'},
-    {id: '2', name: 'Mary'},
-    {id: '3', name: 'Tony'},
-    {id: '4', name: 'Mike'},
-    {id: '5', name: 'Grey'},
-  ];
-
+  console.log('Mentioned users', mentionedUsers);
   const renderSuggestions = ({keyword, onSuggestionPress}) => {
     if (keyword == null) {
       return null;
@@ -50,16 +41,22 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
 
     return (
       <View>
-        {suggestions
-          .filter(one =>
-            one.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()),
+        {mentionedUsers
+          .filter(
+            one =>
+              one.user_handle
+                .toLocaleLowerCase()
+                .includes(keyword.toLocaleLowerCase()) ||
+              one.user_name
+                .toLocaleLowerCase()
+                .includes(keyword.toLocaleLowerCase()),
           )
           .map(one => (
             <Pressable
-              key={one.id}
+              key={one._id}
               onPress={() => onSuggestionPress(one)}
               style={{padding: 12}}>
-              <Text>{one.name}</Text>
+              <Text>{one.user_handle}</Text>
             </Pressable>
           ))}
       </View>
@@ -166,21 +163,7 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   const handleSelectMention = user => {
     const newText = text.replace(/@([a-zA-Z0-9_]+)/, `@${user.name}`);
     setNewComment(newText);
-    setFilteredUsers([]);
-  };
-
-  const handleChangeText = inputText => {
-    setNewComment(inputText);
-
-    if (inputText.includes('@')) {
-      const query = inputText.split('@')[1];
-      const filtered = users.filter(user =>
-        user.name.toLowerCase().includes(query.toLowerCase()),
-      );
-      setFilteredUsers(filtered);
-    } else {
-      setFilteredUsers([]);
-    }
+    //setFilteredUsers([]);
   };
 
   const handleDeleteAction = (comment: Comment) => {
@@ -287,31 +270,11 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
         style={styles.commentsList}
       />
 
-      <View style={{flex: 1, padding: 16}}>
-        {filteredUsers.length > 0 && (
-          <FlatList
-            data={filteredUsers}
-            keyExtractor={item => item.id.toString()}
-            renderItem={({item}) => (
-              <TouchableOpacity onPress={() => handleSelectMention(item)}>
-                <View
-                  style={{
-                    padding: 10,
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#ccc',
-                  }}>
-                  <Text style={{fontSize: 16}}>{item.name}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        )}
-      </View>
-
       <MentionInput
         value={newComment}
         onChange={setNewComment}
         style={styles.textInput}
+        placeholder="Add a comment..."
         partTypes={[
           {
             trigger: '@', // Should be a single character like '@' or '#'
@@ -321,13 +284,6 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
         ]}
       />
       {/* New Comment Input */}
-      <TextInput
-        style={styles.textInput}
-        placeholder="Add a comment..."
-        multiline
-        value={newComment}
-        onChangeText={handleChangeText}
-      />
 
       {/* Submit Button */}
       <TouchableOpacity
@@ -428,3 +384,6 @@ const styles = StyleSheet.create({
 });
 
 export default CommentScreen;
+function useQuery(arg0: {}) {
+  throw new Error('Function not implemented.');
+}
