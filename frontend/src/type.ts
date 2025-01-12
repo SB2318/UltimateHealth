@@ -39,7 +39,10 @@ export type RootStackParamList = {
     mentionedUsers: User[];
   };
   NotificationScreen: undefined;
-  UserProfileScreen: {authorId: string};
+  UserProfileScreen: {
+    authorId: string | undefined;
+    author_handle: string | undefined;
+  };
   ProfileEditScreen: undefined;
   LogoutScreen: {profile_image: string; username: string};
   //ChatbotScreen: undefined;
@@ -70,7 +73,8 @@ export type NewPasswordScreenProp = StackScreenProps<
 
 export type UserProfileScreenProp =
   | StackScreenProps<RootStackParamList, 'UserProfileScreen'>
-  | StackScreenProps<RootStackParamList, 'ArticleScreen'>;
+  | StackScreenProps<RootStackParamList, 'ArticleScreen'>
+  | StackScreenProps<RootStackParamList, 'CommentScreen'>;
 
 export type OtpScreenProp = StackScreenProps<RootStackParamList, 'OtpScreen'>;
 

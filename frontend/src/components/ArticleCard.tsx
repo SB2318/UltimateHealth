@@ -451,24 +451,21 @@ const ArticleCard = ({
               />
             </TouchableOpacity>
 
-            {updateLikeMutation.isPending ? (
-              <ActivityIndicator size="small" color={PRIMARY_COLOR} />
-            ) : (
-              <TouchableOpacity
-                onPress={() => {
-                  width.value = withTiming(0, {duration: 300});
-                  yValue.value = withTiming(100, {duration: 300});
-                  //updateLikeMutation.mutate();
-                  handleRepostAction(item);
-                }}
-                style={styles.likeSaveChildContainer}>
-                <FontAwesome5 name="retweet" size={22} color={'black'} />
+            <TouchableOpacity
+              onPress={() => {
+                width.value = withTiming(0, {duration: 300});
+                yValue.value = withTiming(100, {duration: 300});
+                //updateLikeMutation.mutate();
+                handleRepostAction(item);
+              }}
+              style={styles.likeSaveChildContainer}>
+              <FontAwesome5 name="retweet" size={22} color={'black'} />
 
-                <Text style={{...styles.title, marginStart: 3}}>
-                  {formatCount(item.repostUsers.length)}
-                </Text>
-              </TouchableOpacity>
-            )}
+              <Text style={{...styles.title, marginStart: 3}}>
+                {formatCount(item.repostUsers.length)}
+              </Text>
+            </TouchableOpacity>
+
             {updateSaveStatusMutation.isPending ? (
               <ActivityIndicator size="small" color={PRIMARY_COLOR} />
             ) : (

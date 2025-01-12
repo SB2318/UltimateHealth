@@ -30,6 +30,7 @@ export default function CommentItem({
   deleteAction,
   handleLikeAction,
   commentLikeLoading,
+  handleMentionClick,
 }: {
   item: Comment;
   isSelected: Boolean;
@@ -39,6 +40,7 @@ export default function CommentItem({
   deleteAction: (comment: Comment) => void;
   handleLikeAction: (comment: Comment) => void;
   commentLikeLoading: Boolean;
+  handleMentionClick: (user_handle: string) => void; // on mention user handle click view profile
 }) {
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
@@ -74,10 +76,17 @@ export default function CommentItem({
     return parts.map((part, index) => {
       if (part.match(regex)) {
         // If it's a mention, style it differently
+
         return (
-          <Text key={index} style={styles.mention}>
-            {part}
-          </Text>
+          <TouchableOpacity
+            key={index}
+            onPress={() => {
+              handleMentionClick(part);
+            }}>
+            <Text key={index} style={styles.mention}>
+              {part}
+            </Text>
+          </TouchableOpacity>
         );
       }
       return <Text key={index}>{part}</Text>;
@@ -127,7 +136,10 @@ export default function CommentItem({
           }}
           style={[
             styles.profileImage,
-            !item.userId.Profile_image && {borderWidth: 0.5, borderColor: 'black'},
+            !item.userId.Profile_image && {
+              borderWidth: 0.5,
+              borderColor: 'black',
+            },
           ]}
         />
       ) : (
@@ -135,7 +147,10 @@ export default function CommentItem({
           source={{
             uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
           }}
-          style={[styles.profileImage, {borderWidth: 0.5, borderColor: 'black'}]}
+          style={[
+            styles.profileImage,
+            {borderWidth: 0.5, borderColor: 'black'},
+          ]}
         />
       )}
 
@@ -156,7 +171,12 @@ export default function CommentItem({
           Last updated {formatWithOrdinal(item.updatedAt)}
         </Text>
 
-        <View style={{flexDirection: 'row', justifyContent: 'flex-start', padding: 2}}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            padding: 2,
+          }}>
           {commentLikeLoading && isSelected ? (
             <ActivityIndicator size="small" color={PRIMARY_COLOR} />
           ) : (

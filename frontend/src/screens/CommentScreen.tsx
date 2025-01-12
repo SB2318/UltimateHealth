@@ -170,10 +170,11 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
     setEditCommentId(comment._id);
   };
 
-  const handleSelectMention = user => {
-    const newText = text.replace(/@([a-zA-Z0-9_]+)/, `@${user.name}`);
-    setNewComment(newText);
-    //setFilteredUsers([]);
+  const handleMentionClick = (user_handle: string) => {
+    console.log('user handle', user_handle);
+    navigation.navigate('UserProfileScreen', {
+      author_handle: user_handle.substring(1),
+    });
   };
 
   const handleDeleteAction = (comment: Comment) => {
@@ -242,7 +243,7 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
         articleId: route.params.articleId,
         content: replaceMentionValues(newComment, ({name}) => `@${name}`),
         parentCommentId: null,
-        mentionedUsers: mentions
+        mentionedUsers: mentions,
       };
 
       console.log('Comment emitting', newCommentObj);
@@ -275,6 +276,7 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
             deleteAction={handleDeleteAction}
             handleLikeAction={handleLikeAction}
             commentLikeLoading={commentLikeLoading}
+            handleMentionClick={handleMentionClick}
           />
         )}
         keyExtractor={item => item._id}
