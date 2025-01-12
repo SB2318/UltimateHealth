@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {FC, useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import {CommentScreenProp} from '../type';
+import {CommentScreenProp, User} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 //import io from 'socket.io-client';
 import {Comment} from '../type';
@@ -16,7 +16,11 @@ import {useSelector} from 'react-redux';
 import Loader from '../components/Loader';
 import CommentItem from '../components/CommentItem';
 import {useSocket} from '../../SocketContext';
-import {MentionInput} from 'react-native-controlled-mentions';
+import {
+  MentionInput,
+  MentionSuggestionsProps,
+  replaceMentionValues,
+} from 'react-native-controlled-mentions';
 
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   //const socket = io('http://51.20.1.81:8084');
@@ -31,10 +35,13 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   const [editCommentId, setEditCommentId] = useState<string | null>(null);
   const [commentLoading, setCommentLoading] = useState<Boolean>(false);
   const [commentLikeLoading, setCommentLikeLoading] = useState<Boolean>(false);
-  const [mentions, setMentions] = useState([]);
+  const [mentions, setMentions] = useState<User[]>([]);
 
-  console.log('Mentioned users', mentionedUsers);
-  const renderSuggestions = ({keyword, onSuggestionPress}) => {
+  //console.log('Mentioned users', mentionedUsers);
+  const renderSuggestions: FC<MentionSuggestionsProps> = ({
+    keyword,
+    onSuggestionPress,
+  }) => {
     if (keyword == null) {
       return null;
     }
@@ -54,7 +61,10 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
           .map(one => (
             <Pressable
               key={one._id}
-              onPress={() => onSuggestionPress(one)}
+              onPress={() => {
+                onSuggestionPress({id: one._id, name: one.user_handle});
+                setMentions(prev => [...prev, one]);
+              }}
               style={{padding: 12}}>
               <Text>{one.user_handle}</Text>
             </Pressable>
@@ -230,8 +240,9 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
       const newCommentObj = {
         userId: user_id,
         articleId: route.params.articleId,
-        content: newComment,
+        content: replaceMentionValues(newComment, ({name}) => `@${name}`),
         parentCommentId: null,
+        mentionedUsers: mentions
       };
 
       console.log('Comment emitting', newCommentObj);
