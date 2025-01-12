@@ -2,6 +2,7 @@ import React, {FC, useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
+  Image,
   TouchableOpacity,
   StyleSheet,
   FlatList,
@@ -21,6 +22,7 @@ import {
   MentionSuggestionsProps,
   replaceMentionValues,
 } from 'react-native-controlled-mentions';
+import {GET_STORAGE_DATA} from '../helper/APIUtils';
 
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   //const socket = io('http://51.20.1.81:8084');
@@ -65,8 +67,35 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
                 onSuggestionPress({id: one._id, name: one.user_handle});
                 setMentions(prev => [...prev, one]);
               }}
-              style={{padding: 12}}>
-              <Text>{one.user_handle}</Text>
+              style={{flex: 0, padding: 12, flexDirection: 'row'}}>
+              {one.Profile_image ? (
+                <Image
+                  source={{
+                    uri: one.Profile_image.startsWith('https')
+                      ? one.Profile_image
+                      : `${GET_STORAGE_DATA}/${one.Profile_image}`,
+                  }}
+                  style={[
+                    styles.profileImage2,
+                    !one.Profile_image && {
+                      borderWidth: 0.5,
+                      borderColor: 'black',
+                    },
+                  ]}
+                />
+              ) : (
+                <Image
+                  source={{
+                    uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                  }}
+                  style={[
+                    styles.profileImage2,
+                    {borderWidth: 0.5, borderColor: 'black'},
+                  ]}
+                />
+              )}
+
+              <Text style={styles.username2}>{one.user_handle}</Text>
             </Pressable>
           ))}
       </View>
@@ -171,7 +200,7 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   };
 
   const handleMentionClick = (user_handle: string) => {
-    console.log('user handle', user_handle);
+    //console.log('user handle', user_handle);
     navigation.navigate('UserProfileScreen', {
       author_handle: user_handle.substring(1),
     });
@@ -337,7 +366,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
     alignSelf: 'center',
   },
-
+  username: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginEnd: 4, // Small gap between user handle and content
+  },
   profileImage: {
     height: 60,
     width: 60,
@@ -346,13 +380,23 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     marginHorizontal: 4,
   },
+
+  profileImage2: {
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    objectFit: 'cover',
+    resizeMode: 'contain',
+    marginHorizontal: 4,
+  },
   commentContent: {
     flex: 1,
   },
-  username: {
-    fontSize: 16,
+  username2: {
+    fontSize: 12,
     fontWeight: 'bold',
     color: '#333',
+    alignSelf: 'center',
   },
   comment: {
     fontSize: 14,
