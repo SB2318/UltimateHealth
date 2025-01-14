@@ -27,7 +27,7 @@ import {GET_STORAGE_DATA} from '../helper/APIUtils';
 const CommentScreen = ({navigation, route}: CommentScreenProp) => {
   //const socket = io('http://51.20.1.81:8084');
   const socket = useSocket();
-  const {mentionedUsers} = route.params;
+  const {articleId, mentionedUsers} = route.params;
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const flatListRef = useRef<FlatList<Comment>>(null);
@@ -283,6 +283,13 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
     }
   };
 
+  const handleReportAction = (commentId: string, authorId: string) => {
+    navigation.navigate('ReportScreen', {
+      articleId: articleId.toString(),
+      authorId: authorId,
+      commentId: commentId,
+    });
+  };
   if (commentLoading) {
     return <Loader />;
   }
@@ -306,6 +313,7 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
             handleLikeAction={handleLikeAction}
             commentLikeLoading={commentLikeLoading}
             handleMentionClick={handleMentionClick}
+            handleReportAction={handleReportAction}
           />
         )}
         keyExtractor={item => item._id}

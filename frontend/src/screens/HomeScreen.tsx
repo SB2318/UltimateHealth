@@ -61,6 +61,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [refreshing, setRefreshing] = useState(false);
   const socket = useSocket();
 
+  console.log('User Token', user_token);
+
   const handleCategorySelection = (category: CategoryType['name']) => {
     // Update Redux State
     setSelectCategoryList(prevList => {
@@ -241,6 +243,13 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     },
   });
 
+  const handleReportAction = (item: ArticleData) => {
+    navigation.navigate('ReportScreen', {
+      articleId: item._id,
+      authorId: item.authorId,
+      commentId: null
+    });
+  };
   const renderItem = ({item}: {item: ArticleData}) => {
     return (
       <ArticleCard
@@ -250,6 +259,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         navigation={navigation}
         success={onRefresh}
         handleRepostAction={handleRepostAction}
+        handleReportAction={handleReportAction}
       />
     );
   };

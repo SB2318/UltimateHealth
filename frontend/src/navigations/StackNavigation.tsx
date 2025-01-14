@@ -8,6 +8,8 @@ import SignUpScreenSecond from '../screens/auth/SignUpScreenSecond';
 import OtpScreen from '../screens/auth/OtpScreen';
 import NewPasswordScreen from '../screens/auth/NewPasswordScreen';
 import CommentScreen from '../screens/CommentScreen';
+import ReportScreen from '../screens/report/ReportScreen';
+import ReportConfirmationScreen from '../screens/report/ReportConfirmationScreen';
 import NotificationScreen from '../screens/NotificationScreen';
 import EditorScreen from '../screens/article/EditorScreen';
 import PreviewScreen from '../screens/article/PreviewScreen';
@@ -239,6 +241,65 @@ const StackNavigation = () => {
         })}
       />
 
+      <Stack.Screen
+        name="ReportScreen"
+        component={ReportScreen}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: 'Report',
+          //headerTransparent: true,
+          headerTitleAlign: 'center',
+          headerBackTitleVisible: false,
+          headerStyle: {
+            elevation: 4, // Elevation for Android
+            // backgroundColor:'red',
+            shadowColor: '#000', // Shadow color for iOS
+            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
+            shadowOpacity: 0.25, // Shadow opacity for iOS
+            shadowRadius: 3.5, // Shadow radius for iOS
+          },
+          // eslint-disable-next-line react/no-unstable-nested-components
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.headerLeftButtonCommentScreen}
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+
+      <Stack.Screen
+        name="ReportConfirmationScreen"
+        component={ReportConfirmationScreen}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: 'Confirmation',
+          //headerTransparent: true,
+          headerTitleAlign: 'center',
+          headerBackTitleVisible: false,
+          headerStyle: {
+            elevation: 4, // Elevation for Android
+            // backgroundColor:'red',
+            shadowColor: '#000', // Shadow color for iOS
+            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
+            shadowOpacity: 0.25, // Shadow opacity for iOS
+            shadowRadius: 3.5, // Shadow radius for iOS
+          },
+          // eslint-disable-next-line react/no-unstable-nested-components
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.headerLeftButtonCommentScreen}
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
       <Stack.Screen
         name="UserProfileScreen"
         component={UserProfileScreen}

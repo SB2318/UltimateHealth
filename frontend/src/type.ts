@@ -38,6 +38,12 @@ export type RootStackParamList = {
     articleId: number;
     mentionedUsers: User[];
   };
+  ReportScreen: {
+    articleId: string;
+    authorId: string;
+    commentId: string | null;
+  };
+  ReportConfirmationScreen: undefined;
   NotificationScreen: undefined;
   UserProfileScreen: {
     authorId: string | undefined;
@@ -103,6 +109,15 @@ export type CommentScreenProp = StackScreenProps<
   'CommentScreen'
 >;
 
+export type ReportScreenProp = StackScreenProps<
+  RootStackParamList,
+  'ReportScreen'
+>;
+
+export type ReportConfirmationScreenProp = StackScreenProps<
+  RootStackParamList,
+  'ReportConfirmationScreen'
+>;
 export type NotificationScreenProp = StackScreenProps<
   RootStackParamList,
   'NotificationScreen'
@@ -152,6 +167,7 @@ export type ArticleCardProps = {
   isSelected: Boolean;
   setSelectedCardId: (id: string) => void;
   handleRepostAction: (item: ArticleData) => void;
+  handleReportAction: (item: ArticleData) => void;
 };
 
 export type Notification = {

@@ -219,6 +219,14 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     }, [refetch, authorId]), // Ensure authorId is a stable value
   );
 
+  const handleReportAction = (item: ArticleData) => {
+    navigation.navigate('ReportScreen', {
+      articleId: item._id,
+      authorId: item.authorId,
+      commentId: null
+    });
+  };
+
   const renderItem = useCallback(
     ({item}: {item: ArticleData}) => {
       return (
@@ -229,6 +237,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           isSelected={selectedCardId.toString() === item._id.toString()}
           setSelectedCardId={setSelectedCardId}
           handleRepostAction={handleRepostAction}
+          handleReportAction={handleReportAction}
         />
       );
     },

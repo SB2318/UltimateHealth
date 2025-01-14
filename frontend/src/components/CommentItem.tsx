@@ -31,6 +31,7 @@ export default function CommentItem({
   handleLikeAction,
   commentLikeLoading,
   handleMentionClick,
+  handleReportAction,
 }: {
   item: Comment;
   isSelected: Boolean;
@@ -41,6 +42,7 @@ export default function CommentItem({
   handleLikeAction: (comment: Comment) => void;
   commentLikeLoading: Boolean;
   handleMentionClick: (user_handle: string) => void; // on mention user handle click view profile
+  handleReportAction: (commentId: string, authorId: string) => void;
 }) {
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
@@ -114,6 +116,14 @@ export default function CommentItem({
                   handleAnimation();
                 },
                 icon: 'delete',
+              },
+              {
+                name: 'Report',
+                action: () => {
+                  handleReportAction(item._id, item.userId._id);
+                  handleAnimation();
+                },
+                icon: 'infocirlce',
               },
             ]}
           />
@@ -205,7 +215,7 @@ export default function CommentItem({
 const styles = StyleSheet.create({
   commentContainer: {
     flexDirection: 'row',
-    marginBottom: 15,
+    marginBottom: 40,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
     paddingBottom: 10,
