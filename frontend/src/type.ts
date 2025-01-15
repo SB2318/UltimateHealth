@@ -313,6 +313,11 @@ export type MonthStatus = {
   value: number;
 };
 
+export type ReportReason = {
+_id: string;
+reason: string;
+},
+
 export type YearStatus = {
   month: string;
   value: number;

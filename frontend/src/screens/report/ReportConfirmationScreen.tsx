@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {ReportConfirmationScreenProp} from '../../type';
+import {PRIMARY_COLOR} from '../../helper/Theme';
 
 export default function ReportConfirmationScreen({
   navigation,
