@@ -14,7 +14,13 @@ import NotificationScreen from '../screens/NotificationScreen';
 import EditorScreen from '../screens/article/EditorScreen';
 import PreviewScreen from '../screens/article/PreviewScreen';
 import ArticleScreen from '../screens/article/ArticleScreen';
-import {TouchableOpacity, StyleSheet, Alert, BackHandler} from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  BackHandler,
+  Pressable,
+} from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScreen';
@@ -290,13 +296,13 @@ const StackNavigation = () => {
           },
           // eslint-disable-next-line react/no-unstable-nested-components
           headerLeft: () => (
-            <TouchableOpacity
+            <Pressable
               style={styles.headerLeftButtonCommentScreen}
               onPress={() => {
-                navigation.goBack();
+                // navigation.goBack();
               }}>
-              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
-            </TouchableOpacity>
+              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
+            </Pressable>
           ),
         })}
       />
