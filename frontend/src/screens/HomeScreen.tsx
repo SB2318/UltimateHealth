@@ -35,6 +35,7 @@ import {
 } from '../store/articleSlice';
 import Snackbar from 'react-native-snackbar';
 import {useSocket} from '../../SocketContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 // Here The purpose of using Redux is to maintain filter state throughout the app session. globally
 const HomeScreen = ({navigation}: HomeScreenProps) => {
@@ -162,6 +163,12 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       }
     },
   });
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchUnreadCount();
+    }, [refetchUnreadCount])
+  );
   const handleNoteIconClick = () => {
     //navigation.navigate('EditorScreen');
     navigation.navigate('ArticleDescriptionScreen');

@@ -256,6 +256,7 @@ const styles = StyleSheet.create({
   mention: {
     color: 'blue', // Mention text color
     fontWeight: 'bold',
+    paddingTop: 4,
   },
   shareIconContainer: {
     position: 'absolute',

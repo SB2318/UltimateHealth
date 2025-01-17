@@ -178,9 +178,14 @@ const CommentScreen = ({navigation, route}: CommentScreenProp) => {
     });
 
     socket.on('delete-comment', data => {
+      //console.log('Delete Comment Data', data);
+
+      //console.log('Comments Length before', comments.length);
       setComments(prevComments =>
-        prevComments.filter(comment => comment.id !== data.commentId),
+        prevComments.filter(comment => comment._id !== data.commentId),
       );
+
+      //console.log('Comments Length', comments.length);
     });
 
     return () => {
