@@ -10,7 +10,12 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import RNFS from 'react-native-fs';
 import axios from 'axios';
 import Loader from '../../components/Loader';
-import {GET_IMAGE, GET_PROFILE_API, POST_ARTICLE} from '../../helper/APIUtils';
+import {
+  GET_IMAGE,
+  GET_PROFILE_API,
+  POST_ARTICLE,
+  UPLOAD_STORAGE,
+} from '../../helper/APIUtils';
 import {useSelector} from 'react-redux';
 import useUploadImage from '../../../hooks/useUploadImage';
 
@@ -18,7 +23,7 @@ import {useSocket} from '../../../SocketContext';
 //import io from 'socket.io-client';
 
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
-  const {article, title, authorName, selectedGenres, localImages} =
+  const {article, title, description, authorName, selectedGenres, localImages} =
     route.params;
 
   //const socket = io('http://51.20.1.81:8084');
@@ -132,6 +137,15 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const createPostMutation = useMutation({
     mutationKey: ['create-post-key'],
     mutationFn: async ({article, image}: {article: string; image: string}) => {
+      console.log('article data', {
+        title: title,
+        authorName: authorName,
+        authorId: user?._id,
+        content: article,
+        tags: selectedGenres,
+        imageUtils: [image],
+        description: description,
+      });
       const response = await axios.post(
         POST_ARTICLE,
         {
@@ -141,6 +155,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
           content: article,
           tags: selectedGenres,
           imageUtils: [image],
+          description: description,
         },
         {
           headers: {
@@ -201,6 +216,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
 
       Alert.alert('Upload Success', `File uploaded: ${response.data}`);
     } catch (error) {
+      console.log(error);
       Alert.alert('Error', `Operation failed: ${error.message}`);
     }
   };
@@ -266,5 +282,3 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
 });
-
-
