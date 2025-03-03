@@ -223,8 +223,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       const res = await axios.post(
         FOLLOW_USER,
         {
-          followUserId: authorId,
+          //followUserId: authorId,
           //user_id: user_id,
+          articleId: articleId
         },
         {
           headers: {
@@ -820,12 +821,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         </View>  
 
         
-<View style={{padding: wp(3.5), marginTop: hp(4)}}>
-<FlatList
-  ref={flatListRef}
-  data={comments}
-  renderItem={({item}) => (
-    <CommentItem
+<View style={{padding: wp(4), marginTop: hp(4.5)}}>
+
+  {
+    comments?.map((item, index)=>(
+      <CommentItem
+      key={index}
       item={item}
       isSelected={selectedCommentId === item._id}
       userId={user_id}
@@ -838,11 +839,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       handleReportAction={handleReportAction}
       isFromArticle = {true}
     />
-  )}
-  keyExtractor={item => item._id}
-            style={styles.commentsList}
-/>
-
+    ))
+  }
 
 </View>
       </ScrollView>
