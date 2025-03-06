@@ -1,6 +1,6 @@
-import {StyleSheet, View, BackHandler, Text, Alert, Image} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {StyleSheet, View, Text, Alert} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
@@ -261,8 +261,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         qualification={user.qualification || ''}
         navigation={navigation}
         other={true}
-        followers={user ? user.followerCount : 0}
-        followings={user ? user.followingCount : 0}
+        followers={user ? user.followers.length : 0}
+        followings={user ? user.followings.length : 0}
       />
     );
   };
@@ -381,14 +381,16 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
+    backgroundColor: ON_PRIMARY_COLOR
   },
   tabsContainer: {
-    backgroundColor: 'white',
+    backgroundColor: ON_PRIMARY_COLOR,
     overflow: 'hidden',
   },
   scrollViewContentContainer: {
     paddingHorizontal: 16,
     marginTop: 16,
+    backgroundColor: ON_PRIMARY_COLOR
   },
   flatListContentContainer: {
     paddingHorizontal: 16,
@@ -405,7 +407,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   tabBarStyle: {
-    backgroundColor: 'white',
+    
+    backgroundColor: ON_PRIMARY_COLOR,
   },
   labelStyle: {
     fontWeight: '600',

@@ -883,7 +883,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               {article ? article?.authorName : ''}
             </Text>
             <Text style={styles.authorFollowers}>
-              {authorFollowers ? authorFollowers.length : 0} followers
+              {authorFollowers ? authorFollowers.length >1 ? `${authorFollowers.length} followers`: `${authorFollowers.length} follower`  : '0 follower' } 
             </Text>
           </View>
         </View>

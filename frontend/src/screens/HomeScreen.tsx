@@ -65,6 +65,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const socket = useSocket();
 
   console.log('User Token', user_token);
+  console.log('User Id', user_id);
 
   const handleCategorySelection = (category: CategoryType['name']) => {
     // Update Redux State

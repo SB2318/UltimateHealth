@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import * as Progress from 'react-native-progress';
 import {Dropdown} from 'react-native-element-dropdown';
 import {LineChart} from 'react-native-gifted-charts';
@@ -134,7 +134,7 @@ const ActivityOverview = ({
         let url = others
           ? `${GET_MONTHLY_READ_REPORT}?userId=${userId}&month=${selectedMonth}`
           : `${GET_MONTHLY_READ_REPORT}?userId=${user_id}&month=${selectedMonth}`;
-       // console.log('URL', url);
+        // console.log('URL', url);
         const response = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${user_token}`,
@@ -148,7 +148,6 @@ const ActivityOverview = ({
     },
     enabled: !!(user_token && selectedMonth !== -1 && (userId || !others)),
   });
-
 
   const {
     data: monthlyWriteReport,
@@ -181,7 +180,7 @@ const ActivityOverview = ({
         let url = others
           ? `${GET_MONTHLY_WRITES_REPORT}?userId=${userId}&month=${selectedMonth}`
           : `${GET_MONTHLY_WRITES_REPORT}?userId=${user_id}&month=${selectedMonth}`;
-       // console.log('URL', url);
+        // console.log('URL', url);
         const response = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${user_token}`,
@@ -320,6 +319,7 @@ const ActivityOverview = ({
         let url = others
           ? `${GET_MOSTLY_VIEWED}${userId}`
           : `${GET_MOSTLY_VIEWED}${user_id}`;
+
         const response = await axios.get(url, {
           headers: {
             Authorization: `Bearer ${user_token}`,
@@ -369,7 +369,7 @@ const ActivityOverview = ({
             Authorization: `Bearer ${user_token}`,
           },
         });
-       // console.log('Like View Data', response.data);
+        // console.log('Like View Data', response.data);
 
         return response.data as UserStatus;
       } catch (err) {
@@ -459,7 +459,7 @@ const ActivityOverview = ({
             Authorization: `Bearer ${user_token}`,
           },
         });
-       // console.log('Write Data', response.data);
+        // console.log('Write Data', response.data);
 
         return response.data as WriteStatus;
       } catch (err) {
@@ -506,8 +506,7 @@ const ActivityOverview = ({
   }
 
   const processData = data => {
-
-    if(!data){
+    if (!data) {
       return [];
     }
     return data.map(item => ({
@@ -516,17 +515,15 @@ const ActivityOverview = ({
     }));
   };
 
-
   const screenWidth = Dimensions.get('window').width;
   const chartWidth = screenWidth - 40; // Make some space for padding
   const chartSpacing = 0.2; // Adjust the spacing between points
-    
 
   const getMaxYValue = () => {
-
-    const data = userState === 0
-      ? processData(monthlyReadReport)
-      : processData(monthlyWriteReport);
+    const data =
+      userState === 0
+        ? processData(monthlyReadReport)
+        : processData(monthlyWriteReport);
     return Math.max(...data.map(item => item.value)) + 1; // Add 1 for padding
   };
 
@@ -535,7 +532,7 @@ const ActivityOverview = ({
       style={{
         flex: 1,
         marginBottom: 120,
-        backgroundColor: 'white',
+        backgroundColor: ON_PRIMARY_COLOR,
       }}>
       <View style={styles.rowContainer}>
         <Dropdown
@@ -661,20 +658,22 @@ const ActivityOverview = ({
       )}
        */}
       {selectedMonth !== -1 && (
-        <View style={{marginTop: 10, flex:1}}>
+        <View style={{marginTop: 10, flex: 1}}>
           <LineChart
-            data={userState === 0
-              ? processData(monthlyReadReport)
-              : processData(monthlyWriteReport)}
+            data={
+              userState === 0
+                ? processData(monthlyReadReport)
+                : processData(monthlyWriteReport)
+            }
             //minYValue={0}
-           
+
             roundToDigits={0}
-           // maxValue = {getMaxYValue()}
+            // maxValue = {getMaxYValue()}
             stepChart={true}
             dataPointsColor={PRIMARY_COLOR}
             //isAnimated={true}
             //yAxisInterval={1}
-            //yAxisDomain={[0, getMaxYValue()]} 
+            //yAxisDomain={[0, getMaxYValue()]}
             //maxYValue={getMaxYValue()} // Dynamically set max Y value
             areaChart
           />
@@ -836,6 +835,9 @@ const ActivityOverview = ({
         }}
       />
 
+{
+  others && (
+    <>
       <Text
         style={{
           ...styles.btnText,
@@ -843,10 +845,10 @@ const ActivityOverview = ({
           fontWeight: '700',
           fontSize: 17,
           marginStart: 10,
-        }}>
+        }}
+      >
         Most viewed articles
       </Text>
-
       {article &&
         article.map((item, index) => {
           return (
@@ -857,10 +859,9 @@ const ActivityOverview = ({
                   articleId: Number(item._id),
                   authorId: item.authorId,
                 });
-              }}>
+              }}
+            >
               <View style={styles.cardContainer}>
-                {/* image */}
-
                 {item?.imageUtils[0] && item?.imageUtils[0].length !== 0 ? (
                   <Image
                     source={{
@@ -878,16 +879,12 @@ const ActivityOverview = ({
                 )}
 
                 <View style={styles.textContainer}>
-                  {/* title */}
                   <Text style={styles.footerText}>
                     {item?.tags.map(tag => tag.name).join(' | ')}
                   </Text>
                   <Text style={styles.title}>{item?.title}</Text>
-                  {/* description */}
-                  {/**  <Text style={styles.description}>{item?.description}</Text> */}
-                  {/* displaying the categories, author name, and last updated date */}
 
-                  <Text style={{...styles.footerText, marginBottom: 3}}>
+                  <Text style={{ ...styles.footerText, marginBottom: 3 }}>
                     {item?.viewUsers
                       ? item?.viewUsers.length > 1
                         ? `${formatCount(item?.viewUsers.length)} views`
@@ -903,6 +900,10 @@ const ActivityOverview = ({
             </Pressable>
           );
         })}
+    </>
+  )
+}
+
     </ScrollView>
   );
 };
