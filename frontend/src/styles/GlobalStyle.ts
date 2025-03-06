@@ -1,11 +1,11 @@
 import {StyleSheet} from 'react-native';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 
 const GlobalStyles = StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
-    backgroundColor: 'black',
+    backgroundColor: ON_PRIMARY_COLOR,
   },
 
   main: {
@@ -20,7 +20,7 @@ const GlobalStyles = StyleSheet.create({
   },
 
   text: {
-    color: 'white',
+    color: 'black',
     fontSize: 20,
     fontWeight: '600',
     alignSelf: 'center',
