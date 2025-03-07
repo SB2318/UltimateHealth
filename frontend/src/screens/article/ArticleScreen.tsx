@@ -19,7 +19,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ArticleData, ArticleScreenProp, User} from '../../type';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import WebView from 'react-native-webview';
 import {hp, wp} from '../../helper/Metric';
 import {
@@ -48,6 +48,7 @@ import {
   replaceMentionValues,
 } from 'react-native-controlled-mentions';
 import CommentItem from '../../components/CommentItem';
+import { setUserHandle } from '../../store/UserSlice';
 
 const renderSuggestions: FC<MentionSuggestionsProps> = ({
   keyword,
@@ -111,8 +112,6 @@ const renderSuggestions: FC<MentionSuggestionsProps> = ({
   );
 };
 
-
-
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const insets = useSafeAreaInsets();
   const {articleId, authorId} = route.params;
@@ -121,6 +120,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   //const [webViewHeight, setWebViewHeight] = useState(0);
   //const socket = io('http://51.20.1.81:8084');
   const socket = useSocket();
+  const dispatch = useDispatch();
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
@@ -169,6 +169,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     },
   });
 
+  if (user) {
+    dispatch(setUserHandle(user.user_handle));
+  }
   const updateViewCountMutation = useMutation({
     mutationKey: ['update-view-count'],
     mutationFn: async () => {
@@ -225,7 +228,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         {
           //followUserId: authorId,
           //user_id: user_id,
-          articleId: articleId
+          articleId: articleId,
         },
         {
           headers: {
@@ -359,7 +362,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     },
   });
 
-
   useEffect(() => {
     //console.log('Fetching comments for articleId:', route.params.articleId);
     socket.emit('fetch-comments', {articleId: route.params.articleId});
@@ -456,7 +458,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       socket.off('like-comment');
     };
   }, [socket, route.params.articleId]);
-
 
   const handleEditAction = (comment: Comment) => {
     setNewComment(comment.content);
@@ -818,31 +819,26 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               textZoom={100}
             />
           </View>
-        </View>  
+        </View>
 
-        
-<View style={{padding: wp(4), marginTop: hp(4.5)}}>
-
-  {
-    comments?.map((item, index)=>(
-      <CommentItem
-      key={index}
-      item={item}
-      isSelected={selectedCommentId === item._id}
-      userId={user_id}
-      setSelectedCommentId={setSelectedCommentId}
-      handleEditAction={handleEditAction}
-      deleteAction={handleDeleteAction}
-      handleLikeAction={handleLikeAction}
-      commentLikeLoading={commentLikeLoading}
-      handleMentionClick={handleMentionClick}
-      handleReportAction={handleReportAction}
-      isFromArticle = {true}
-    />
-    ))
-  }
-
-</View>
+        <View style={{padding: wp(4), marginTop: hp(4.5)}}>
+          {comments?.map((item, index) => (
+            <CommentItem
+              key={index}
+              item={item}
+              isSelected={selectedCommentId === item._id}
+              userId={user_id}
+              setSelectedCommentId={setSelectedCommentId}
+              handleEditAction={handleEditAction}
+              deleteAction={handleDeleteAction}
+              handleLikeAction={handleLikeAction}
+              commentLikeLoading={commentLikeLoading}
+              handleMentionClick={handleMentionClick}
+              handleReportAction={handleReportAction}
+              isFromArticle={true}
+            />
+          ))}
+        </View>
       </ScrollView>
       <View
         style={[
@@ -883,7 +879,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               {article ? article?.authorName : ''}
             </Text>
             <Text style={styles.authorFollowers}>
-              {authorFollowers ? authorFollowers.length >1 ? `${authorFollowers.length} followers`: `${authorFollowers.length} follower`  : '0 follower' } 
+              {authorFollowers
+                ? authorFollowers.length > 1
+                  ? `${authorFollowers.length} followers`
+                  : `${authorFollowers.length} follower`
+                : '0 follower'}
             </Text>
           </View>
         </View>

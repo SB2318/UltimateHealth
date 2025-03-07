@@ -25,8 +25,6 @@ const ProfileHeader = ({
   username,
   userhandle,
   profileImg,
-  articlesPosted,
-  articlesSaved,
   userPhoneNumber,
   userEmailID,
   specialization,
@@ -36,6 +34,8 @@ const ProfileHeader = ({
   other,
   followers,
   followings,
+  onFollowerPress,
+  onFollowingPress,
 }: ProfileHeaderProps) => {
   const handleCall = phone => {
     let phoneNumber = phone;
@@ -170,23 +170,23 @@ const ProfileHeader = ({
           </View>
         )}
         <View style={styles.infoContainer}>
-          <View style={styles.infoBlock}>
+          <TouchableOpacity onPress={onFollowerPress} style={styles.infoBlock}>
             <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
               {followers}
             </Text>
             <Text style={styles.infoLabel}>
               {followers > 1 ? 'Followers' : 'Follower'}
             </Text>
-          </View>
+          </TouchableOpacity>
 
-          <View style={styles.infoBlock}>
+          <TouchableOpacity onPress={onFollowingPress} style={styles.infoBlock}>
             <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
               {followings}
             </Text>
             <Text style={styles.infoLabel}>
               {followings > 1 ? 'Followings' : 'Following'}
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

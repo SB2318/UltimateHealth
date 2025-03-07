@@ -36,8 +36,12 @@ export type RootStackParamList = {
   };
   OverviewScreen: undefined;
   ConversationScreen: undefined;
-  FollowerScreen: undefined;
-  FollowingScreen: undefined;
+  FollowerScreen: {
+    followers: User[]
+  };
+  FollowingScreen: {
+    followings: User[]
+  };
   CommentScreen: {
     articleId: number;
     mentionedUsers: User[];
@@ -205,6 +209,8 @@ export type ProfileHeaderProps = {
     | UserProfileScreenProp['navigation'];
   followers: number;
   followings: number;
+  onFollowerPress: ()=> void;
+  onFollowingPress: ()=> void;
 };
 
 export type HomeScreenFilterModalProps = {

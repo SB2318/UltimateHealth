@@ -4,7 +4,7 @@ import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import ProfileHeader from '../components/ProfileHeader';
@@ -20,6 +20,7 @@ import Loader from '../components/Loader';
 import {useFocusEffect} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
 import {useSocket} from '../../SocketContext';
+import {setUserHandle} from '../store/UserSlice';
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const {user_handle, user_id, user_token} = useSelector(
@@ -31,6 +32,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [repostItem, setRepostItem] = useState<ArticleData | null>(null);
   const socket = useSocket();
+  const dispatch = useDispatch();
   //const fallback_profile = require('../assets/avatar.jpg');
   //const user_fallback_profile = Image.resolveAssetSource(fallback_profile).uri;
 
@@ -52,6 +54,9 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     },
   });
 
+  if (user) {
+    dispatch(setUserHandle(user.user_handle));
+  }
   const onArticleViewed = ({
     articleId,
     authorId,
@@ -238,6 +243,18 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     [navigation, selectedCardId, onRefresh],
   );
 
+  const onFollowerClick = () => {
+    if (user) {
+      navigation.navigate('FollowerScreen', {followers: user.followers});
+    }
+  };
+
+  const onFollowingClick = () => {
+    if (user) {
+      navigation.navigate('FollowingScreen', {followings: user.followings});
+    }
+  };
+
   const renderHeader = () => {
     if (user === undefined) {
       return null;
@@ -263,6 +280,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         other={true}
         followers={user ? user.followers.length : 0}
         followings={user ? user.followings.length : 0}
+        onFollowerPress={onFollowerClick}
+        onFollowingPress={onFollowingClick}
       />
     );
   };
@@ -381,7 +400,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    backgroundColor: ON_PRIMARY_COLOR
+    backgroundColor: ON_PRIMARY_COLOR,
   },
   tabsContainer: {
     backgroundColor: ON_PRIMARY_COLOR,
@@ -390,7 +409,7 @@ const styles = StyleSheet.create({
   scrollViewContentContainer: {
     paddingHorizontal: 16,
     marginTop: 16,
-    backgroundColor: ON_PRIMARY_COLOR
+    backgroundColor: ON_PRIMARY_COLOR,
   },
   flatListContentContainer: {
     paddingHorizontal: 16,
@@ -407,7 +426,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   tabBarStyle: {
-    
     backgroundColor: ON_PRIMARY_COLOR,
   },
   labelStyle: {

@@ -223,7 +223,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     navigation.navigate('ReportScreen', {
       articleId: item._id,
       authorId: item.authorId,
-      commentId: null
+      commentId: null,
     });
   };
 
@@ -244,6 +244,17 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     [navigation, onRefresh, selectedCardId],
   );
 
+  const onFollowerClick = () => {
+    if (user) {
+      navigation.navigate('FollowerScreen', {followers: user.followers});
+    }
+  };
+
+  const onFollowingClick = () => {
+    if (user) {
+      navigation.navigate('FollowingScreen', {followings: user.followings});
+    }
+  };
   const renderHeader = () => {
     if (user === undefined) {
       return null;
@@ -269,6 +280,8 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         other={false}
         followers={user ? user.followers.length : 0}
         followings={user ? user.followings.length : 0}
+        onFollowerPress={onFollowerClick}
+        onFollowingPress={onFollowingClick}
       />
     );
   };
