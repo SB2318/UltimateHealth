@@ -244,13 +244,13 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   );
 
   const onFollowerClick = () => {
-    if (user) {
+    if (user && user.followers.length > 0) {
       navigation.navigate('FollowerScreen', {followers: user.followers});
     }
   };
 
   const onFollowingClick = () => {
-    if (user) {
+    if (user && user.followings.length > 0) {
       navigation.navigate('FollowingScreen', {followings: user.followings});
     }
   };

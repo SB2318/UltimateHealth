@@ -86,6 +86,11 @@ export default function FollowerScreen({
 
   return (
     <View style={styles.container}>
+      {followers.length === 0 && (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.message}>No followers found</Text>
+        </View>
+      )}
       {followers.map((follower, index) => (
         <View
           key={index}
@@ -137,7 +142,7 @@ export default function FollowerScreen({
 
           {follower && user_id !== follower._id && (
             <>
-              {updateFollowMutation.isPending ? (
+              {updateFollowMutation.isPending && authorId === follower._id ? (
                 <ActivityIndicator size={40} color={PRIMARY_COLOR} />
               ) : (
                 <TouchableOpacity
@@ -205,5 +210,16 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: '600',
+  },
+  message: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
   },
 });
