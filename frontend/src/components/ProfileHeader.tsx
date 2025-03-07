@@ -124,10 +124,7 @@ const ProfileHeader = ({
         )}
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('LogoutScreen', {
-              profile_image: profileImg,
-              username: username,
-            });
+            navigation.navigate('OverviewScreen');
           }}>
           {other && (
             <View style={styles.btnSM}>

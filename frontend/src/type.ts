@@ -34,6 +34,10 @@ export type RootStackParamList = {
     articleId: number;
     authorId: string;
   };
+  OverviewScreen: undefined;
+  ConversationScreen: undefined;
+  FollowerScreen: undefined;
+  FollowingScreen: undefined;
   CommentScreen: {
     articleId: number;
     mentionedUsers: User[];
@@ -142,6 +146,11 @@ export type HomeScreenProps = CompositeScreenProps<
 >;
 
 export type ChatBotScreenProps = BottomTabScreenProps<TabParamList, 'Chatbot'>;
+export type OverviewScreenProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>;
+export type ConversationScreenProps = StackScreenProps<RootStackParamList, 'ConversationScreen'>;
+export type FollowerScreenProps = StackScreenProps<RootStackParamList, 'FollowerScreen'>;
+export type FollowingScreenProps = StackScreenProps<RootStackParamList, 'FollowingScreen'>;
+
 
 export type PodcastScreenProps = BottomTabScreenProps<TabParamList, 'Podcasts'>;
 export type ProfileScreenProps = CompositeScreenProps<

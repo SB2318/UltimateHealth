@@ -30,6 +30,10 @@ import {RootStackParamList, TabParamList} from '../type';
 import {BUTTON_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import LogoutScreen from '../screens/auth/LogoutScreen';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
+import OverviewScreen from '../screens/overview/OverviewScreen';
+import ConversationScreen from '../screens/overview/ConversationScreen';
+import FollowerScreen from '../screens/overview/FollowerScreen';
+import FollowingScreen from '../screens/overview/FollowingScreen';
 const Stack = createStackNavigator<RootStackParamList>();
 
 const StackNavigation = () => {
@@ -309,6 +313,37 @@ const StackNavigation = () => {
       <Stack.Screen
         name="UserProfileScreen"
         component={UserProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="OverviewScreen"
+        component={OverviewScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="ConversationScreen"
+        component={ConversationScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="FollowerScreen"
+        component={FollowerScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="FollowingScreen"
+        component={FollowingScreen}
         options={{
           headerShown: false,
         }}
