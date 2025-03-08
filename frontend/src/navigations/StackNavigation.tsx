@@ -321,9 +321,31 @@ const StackNavigation = () => {
       <Stack.Screen
         name="OverviewScreen"
         component={OverviewScreen}
-        options={{
-          headerShown: false,
-        }}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: 'Overview',
+          //headerTransparent: true,
+          headerTitleAlign: 'center',
+          headerBackTitleVisible: false,
+          headerStyle: {
+            elevation: 4, // Elevation for Android
+            // backgroundColor:'red',
+            shadowColor: '#000', // Shadow color for iOS
+            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
+            shadowOpacity: 0.25, // Shadow opacity for iOS
+            shadowRadius: 3.5, // Shadow radius for iOS
+          },
+          // eslint-disable-next-line react/no-unstable-nested-components
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.headerLeftButtonCommentScreen}
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
+            </TouchableOpacity>
+          ),
+        })}
       />
 
       <Stack.Screen

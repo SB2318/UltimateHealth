@@ -15,6 +15,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import {fp, hp, wp} from '../helper/Metric';
 import {ProfileHeaderProps} from '../type';
 
@@ -36,6 +37,8 @@ const ProfileHeader = ({
   followings,
   onFollowerPress,
   onFollowingPress,
+  isFollowing,
+  onFollowClick,
 }: ProfileHeaderProps) => {
   const handleCall = phone => {
     let phoneNumber = phone;
@@ -102,25 +105,44 @@ const ProfileHeader = ({
               </TouchableOpacity>
             )}
           </View>
+        ) : other ? (
+          // <TouchableOpacity
+          //   style={styles.editProfileButton}
+          //   onPress={() => {
+          //     navigation.navigate('ProfileEditScreen');
+          //   }}>
+          //   <Text style={styles.editProfileButtonText}>Edit Profile</Text>
+          // </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('ProfileEditScreen');
+            }}>
+            <View style={styles.btnSM}>
+              <MaterialIcons name="edit" size={20} color="black" />
+              <Text style={styles.btnSMText}>Edit Profile</Text>
+            </View>
+          </TouchableOpacity>
         ) : (
-          other && (
-            // <TouchableOpacity
-            //   style={styles.editProfileButton}
-            //   onPress={() => {
-            //     navigation.navigate('ProfileEditScreen');
-            //   }}>
-            //   <Text style={styles.editProfileButtonText}>Edit Profile</Text>
-            // </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('ProfileEditScreen');
+          <TouchableOpacity onPress={onFollowClick}>
+            <View
+              style={{
+                ...styles.btnSM,
+                backgroundColor: isFollowing ? PRIMARY_COLOR : '#fff',
               }}>
-              <View style={styles.btnSM}>
-                <MaterialIcons name="edit" size={20} color="black" />
-                <Text style={styles.btnSMText}>Edit Profile</Text>
-              </View>
-            </TouchableOpacity>
-          )
+              <MaterialIcons
+                name="person"
+                size={20}
+                color={isFollowing ? '#fff' : 'black'}
+              />
+              <Text
+                style={{
+                  ...styles.btnSMText,
+                  color: isFollowing ? '#fff' : 'black',
+                }}>
+                {isFollowing ? 'Following' : 'Follow'}
+              </Text>
+            </View>
+          </TouchableOpacity>
         )}
         <TouchableOpacity
           onPress={() => {

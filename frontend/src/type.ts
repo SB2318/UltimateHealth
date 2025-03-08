@@ -211,6 +211,8 @@ export type ProfileHeaderProps = {
   followings: number;
   onFollowerPress: ()=> void;
   onFollowingPress: ()=> void;
+  isFollowing: boolean| undefined;
+  onFollowClick: ()=> void;
 };
 
 export type HomeScreenFilterModalProps = {

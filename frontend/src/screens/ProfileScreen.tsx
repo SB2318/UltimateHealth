@@ -282,6 +282,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         followings={user ? user.followings.length : 0}
         onFollowerPress={onFollowerClick}
         onFollowingPress={onFollowingClick}
+        isFollowing={false}
+        onFollowClick={() => {}}
       />
     );
   };

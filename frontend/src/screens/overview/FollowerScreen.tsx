@@ -1,22 +1,18 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
-  ActivityIndicator,
   Platform,
   TouchableOpacity,
   Image,
   StyleSheet,
-  Alert,
+  Pressable,
 } from 'react-native';
 import {FollowerScreenProps} from '../../type';
-import {FOLLOW_USER, GET_STORAGE_DATA} from '../../helper/APIUtils';
+import {GET_STORAGE_DATA} from '../../helper/APIUtils';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
-import {useMutation} from '@tanstack/react-query';
-import axios from 'axios';
-import {useSocket} from '../../../SocketContext';
 
 export default function FollowerScreen({
   navigation,
@@ -24,65 +20,7 @@ export default function FollowerScreen({
 }: FollowerScreenProps) {
   const insets = useSafeAreaInsets();
   const followers = route.params.followers;
-  const {user_token, user_id, user_handle} = useSelector(
-    (state: any) => state.user,
-  );
-  const [authorId, setAuthorId] = useState<string | undefined>();
-  const socket = useSocket();
-
-  const handleFollow = (userId: string) => {
-    setAuthorId(userId);
-    updateFollowMutation.mutate({
-      userId: userId,
-    });
-  };
-
-  const updateFollowMutation = useMutation({
-    mutationKey: ['update-follow-status'],
-
-    mutationFn: async ({userId}: {userId: string}) => {
-      if (!user_token || user_token === '') {
-        Alert.alert('No token found');
-        return;
-      }
-      const res = await axios.post(
-        FOLLOW_USER,
-        {
-          followUserId: userId,
-          //user_id: user_id,
-          //articleId: articleId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user_token}`,
-          },
-        },
-      );
-      return res.data.followStatus as boolean;
-    },
-
-    onSuccess: data => {
-      //console.log('follow success');
-      if (data) {
-        socket.emit('notification', {
-          type: 'userFollow',
-          userId: authorId,
-          message: {
-            title: `${user_handle ? user_handle : 'Someone'} has followed you`,
-            body: '',
-          },
-        });
-      }
-      // refetchFollowers();
-      // refetchProfile();
-    },
-
-    onError: err => {
-      console.log('Update Follow mutation error', err);
-      Alert.alert('Try Again!');
-      //console.log('Follow Error', err);
-    },
-  });
+  const {user_id} = useSelector((state: any) => state.user);
 
   return (
     <View style={styles.container}>
@@ -106,6 +44,7 @@ export default function FollowerScreen({
               onPress={() => {
                 navigation.navigate('UserProfileScreen', {
                   authorId: follower._id,
+                  author_handle: undefined,
                 });
               }}>
               {follower.Profile_image && follower.Profile_image !== '' ? (
@@ -140,7 +79,9 @@ export default function FollowerScreen({
             </View>
           </View>
 
-          {follower && user_id !== follower._id && (
+          {/**
+             *
+             * {follower && user_id !== follower._id && (
             <>
               {updateFollowMutation.isPending && authorId === follower._id ? (
                 <ActivityIndicator size={40} color={PRIMARY_COLOR} />
@@ -159,6 +100,16 @@ export default function FollowerScreen({
               )}
             </>
           )}
+             */}
+
+          {follower &&
+            user_id !== follower._id &&
+            follower.followers &&
+            follower.followers.includes(user_id) && (
+              <Pressable style={styles.followButton}>
+                <Text style={styles.followButtonText}>Following</Text>
+              </Pressable>
+            )}
         </View>
       ))}
     </View>
