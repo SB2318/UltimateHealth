@@ -34,7 +34,9 @@ export type RootStackParamList = {
     articleId: number;
     authorId: string;
   };
-  OverviewScreen: undefined;
+  OverviewScreen: {
+    articles: ArticleData[]
+  };
   ConversationScreen: undefined;
   FollowerScreen: {
     followers: User[]
@@ -213,6 +215,7 @@ export type ProfileHeaderProps = {
   onFollowingPress: ()=> void;
   isFollowing: boolean| undefined;
   onFollowClick: ()=> void;
+  onOverviewClick: ()=> void;
 };
 
 export type HomeScreenFilterModalProps = {
@@ -312,6 +315,7 @@ export type ArticleData = {
   likedUsers: User[];
   savedUsers: string[];
   mentionedUsers: User[];
+  status: string;
 };
 
 export type UserStatus = {

@@ -21,6 +21,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
 import {useSocket} from '../../SocketContext';
 import {setUserHandle} from '../store/UserSlice';
+import {StatusEnum} from '../helper/Utils';
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const {user_handle, user_id, user_token} = useSelector(
@@ -284,6 +285,11 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         onFollowingPress={onFollowingClick}
         isFollowing={false}
         onFollowClick={() => {}}
+        onOverviewClick={() => {
+          if (user) {
+            navigation.navigate('OverviewScreen', {articles: user.articles});
+          }
+        }}
       />
     );
   };
@@ -333,7 +339,13 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
           {/* Tab 2 */}
           <Tabs.Tab name="Articles">
             <Tabs.FlatList
-              data={user !== undefined ? user.articles : []}
+              data={
+                user !== undefined
+                  ? user.articles.filter(
+                      article => article.status === StatusEnum.PUBLISHED,
+                    )
+                  : []
+              }
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={[

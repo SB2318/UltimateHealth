@@ -39,6 +39,7 @@ const ProfileHeader = ({
   onFollowingPress,
   isFollowing,
   onFollowClick,
+  onOverviewClick,
 }: ProfileHeaderProps) => {
   const handleCall = phone => {
     let phoneNumber = phone;
@@ -144,10 +145,7 @@ const ProfileHeader = ({
             </View>
           </TouchableOpacity>
         )}
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate('OverviewScreen');
-          }}>
+        <TouchableOpacity onPress={onOverviewClick}>
           {other && (
             <View style={styles.btnSM}>
               <MaterialCommunityIcon

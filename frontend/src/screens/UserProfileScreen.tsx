@@ -344,6 +344,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
             : false
         }
         onFollowClick={handleFollow}
+        onOverviewClick={() => {}}
       />
     );
   };

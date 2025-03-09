@@ -35,6 +35,15 @@ export const Categories: CategoryType[] = [
   {id: 10, name: 'Pulmonology'},
 ];
 
+
+export const StatusEnum = {
+  UNASSIGNED: 'unassigned',
+  IN_PROGRESS: 'in-progress',
+  REVIEW_PENDING: 'review-pending',
+  PUBLISHED: 'published',
+  DISCARDED: 'discarded',
+  AWAITING_USER: 'awaiting-user'
+};
 /*
 
 export const articles: Article[] = [
