@@ -509,8 +509,13 @@ const ActivityOverview = ({
     if (!data) {
       return [];
     }
+
+    console.log('data', data.map(item => ({
+      value: item.value, // Ensure the value is an integer
+      label: item.date.substring(8),
+    })));
     return data.map(item => ({
-      value: Math.round(item.value), // Ensure the value is an integer
+      value: item.value, // Ensure the value is an integer
       label: item.date.substring(8),
     }));
   };
@@ -665,11 +670,11 @@ const ActivityOverview = ({
                 ? processData(monthlyReadReport)
                 : processData(monthlyWriteReport)
             }
-            //minYValue={0}
+           // minYValue={0}
 
             roundToDigits={0}
             // maxValue = {getMaxYValue()}
-            stepChart={true}
+          // stepChart={true}
             dataPointsColor={PRIMARY_COLOR}
             //isAnimated={true}
             //yAxisInterval={1}
@@ -721,8 +726,13 @@ const ActivityOverview = ({
         }}
       />
 
-      <View style={styles.colContainer}>
-        <View style={styles.box}>
+   
+       
+
+     {
+      /**
+       * 
+       *  <View style={styles.box}>
           <Text style={styles.titleText}> Total Reads</Text>
 
           <Text style={styles.valueText}>{readStat?.progress}%</Text>
@@ -745,8 +755,7 @@ const ActivityOverview = ({
             style={{marginTop: 2}}
           />
         </View>
-
-        <View style={styles.box}>
+       *    <View style={styles.box}>
           <Text style={styles.titleText}> Total Writes</Text>
 
           <Text style={styles.valueText}>{writeStat?.progress}%</Text>
@@ -834,6 +843,8 @@ const ActivityOverview = ({
           backgroundColor: '#c1c1c1',
         }}
       />
+       */
+     }
 
 {
   others && (
