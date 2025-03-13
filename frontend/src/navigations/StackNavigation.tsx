@@ -322,7 +322,7 @@ const StackNavigation = () => {
         name="OverviewScreen"
         component={OverviewScreen}
         options={({navigation}) => ({
-          headerShown: true,
+          headerShown: false,
           headerTitle: 'Overview',
           //headerTransparent: true,
           headerTitleAlign: 'center',

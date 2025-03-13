@@ -4,6 +4,8 @@ import {MaterialTabBar, Tabs} from 'react-native-collapsible-tab-view';
 import {PRIMARY_COLOR, ON_PRIMARY_COLOR} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ArticleData, OverviewScreenProps} from '../../type';
+import {StatusEnum} from '../../helper/Utils';
+import {hp} from '../../helper/Metric';
 
 export default function OverviewScreen({
   navigation,
@@ -12,6 +14,28 @@ export default function OverviewScreen({
   //const bottomBarHeight = useBottomTabBarHeight();
   const insets = useSafeAreaInsets();
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const articles = route.params.articles;
+  const progressLabel = `InProgress (${
+    articles
+      ? articles.filter(
+          a =>
+            a.status === StatusEnum.AWAITING_USER ||
+            a.status === StatusEnum.REVIEW_PENDING ||
+            a.status === StatusEnum.IN_PROGRESS,
+        ).length
+      : 0
+  })`;
+  const publishedLabel = `Published (${
+    articles
+      ? articles.filter(a => a.status === StatusEnum.PUBLISHED).length
+      : 0
+  })`;
+
+  const discardLabel = `Discarded (${
+    articles
+      ? articles.filter(a => a.status === StatusEnum.DISCARDED).length
+      : 0
+  })`;
 
   const onRefresh = () => {
     //setRefreshing(true);
@@ -46,23 +70,16 @@ export default function OverviewScreen({
           renderTabBar={renderTabBar}
           containerStyle={styles.tabsContainer}>
           {/* Tab 1 */}
-          <Tabs.Tab name="Draft">
-            <Tabs.ScrollView
-              automaticallyAdjustContentInsets={true}
-              contentInsetAdjustmentBehavior="always"
-              contentContainerStyle={styles.scrollViewContentContainer}>
-              <Text> Draft Article Section</Text>
-            </Tabs.ScrollView>
-          </Tabs.Tab>
+
           {/* Tab 2 */}
-          <Tabs.Tab name="Published">
+          <Tabs.Tab name={publishedLabel}>
             <Tabs.FlatList
               data={[]}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={[
                 styles.flatListContentContainer,
-                {paddingBottom:  15},
+                {paddingBottom: 15},
               ]}
               keyExtractor={item => item?._id}
               refreshing={refreshing}
@@ -74,7 +91,30 @@ export default function OverviewScreen({
             />
           </Tabs.Tab>
 
-          <Tabs.Tab name="Discarded">
+          <Tabs.Tab name={progressLabel}>
+            <Tabs.ScrollView
+              automaticallyAdjustContentInsets={true}
+              contentInsetAdjustmentBehavior="always"
+              contentContainerStyle={styles.scrollViewContentContainer}>
+              <Tabs.FlatList
+                data={[]}
+                renderItem={renderItem}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={[
+                  styles.flatListContentContainer,
+                  {paddingBottom: 15},
+                ]}
+                keyExtractor={item => item?._id}
+                refreshing={refreshing}
+                ListEmptyComponent={
+                  <View style={styles.emptyContainer}>
+                    <Text style={styles.message}>No Article Found</Text>
+                  </View>
+                }
+              />
+            </Tabs.ScrollView>
+          </Tabs.Tab>
+          <Tabs.Tab name={discardLabel}>
             <Tabs.FlatList
               data={[]}
               renderItem={renderItem}
@@ -102,6 +142,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#0CAFFF',
+    // marginTop: hp(5)
   },
   innerContainer: {
     flex: 1,
@@ -131,11 +172,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   tabBarStyle: {
-    backgroundColor: ON_PRIMARY_COLOR,
+    backgroundColor: 'white',
   },
   labelStyle: {
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: 14.6,
     color: 'black',
     textTransform: 'capitalize',
   },

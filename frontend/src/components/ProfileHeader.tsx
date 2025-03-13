@@ -15,7 +15,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 import {fp, hp, wp} from '../helper/Metric';
 import {ProfileHeaderProps} from '../type';
 
