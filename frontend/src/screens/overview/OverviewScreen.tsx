@@ -6,6 +6,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ArticleData, OverviewScreenProps} from '../../type';
 import {StatusEnum} from '../../helper/Utils';
 import {hp} from '../../helper/Metric';
+import ArticleCard from '../../components/ArticleCard';
+import ReviewCard from '../../components/ReviewCard';
 
 export default function OverviewScreen({
   navigation,
@@ -15,7 +17,8 @@ export default function OverviewScreen({
   const insets = useSafeAreaInsets();
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const articles = route.params.articles;
-  const progressLabel = `InProgress (${
+  const [selectedCardId, setSelectedCardId] = useState<string>('');
+  const progressLabel = `Progress (${
     articles
       ? articles.filter(
           a =>
@@ -45,7 +48,17 @@ export default function OverviewScreen({
 
   const renderItem = useCallback(
     ({item}: {item: ArticleData}) => {
-      return <View />;
+      return (
+        <ReviewCard
+          item={item}
+          isSelected={selectedCardId === item._id}
+          setSelectedCardId={setSelectedCardId}
+          navigation={navigation}
+          success={onRefresh}
+          handleRepostAction={() => {}}
+          handleReportAction={() => {}}
+        />
+      );
     },
     [navigation, onRefresh],
   );
@@ -74,7 +87,11 @@ export default function OverviewScreen({
           {/* Tab 2 */}
           <Tabs.Tab name={publishedLabel}>
             <Tabs.FlatList
-              data={[]}
+              data={
+                articles
+                  ? articles.filter(a => a.status === StatusEnum.PUBLISHED)
+                  : []
+              }
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={[
@@ -97,7 +114,16 @@ export default function OverviewScreen({
               contentInsetAdjustmentBehavior="always"
               contentContainerStyle={styles.scrollViewContentContainer}>
               <Tabs.FlatList
-                data={[]}
+                data={
+                  articles
+                    ? articles.filter(
+                        a =>
+                          a.status === StatusEnum.AWAITING_USER ||
+                          a.status === StatusEnum.REVIEW_PENDING ||
+                          a.status === StatusEnum.IN_PROGRESS,
+                      )
+                    : []
+                }
                 renderItem={renderItem}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={[
@@ -116,7 +142,11 @@ export default function OverviewScreen({
           </Tabs.Tab>
           <Tabs.Tab name={discardLabel}>
             <Tabs.FlatList
-              data={[]}
+              data={
+                articles
+                  ? articles.filter(a => a.status === StatusEnum.DISCARDED)
+                  : []
+              }
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={[
@@ -170,9 +200,11 @@ const styles = StyleSheet.create({
   },
   indicatorStyle: {
     backgroundColor: 'white',
+    //minHeight: 50,
   },
   tabBarStyle: {
     backgroundColor: 'white',
+    minHeight: 65,
   },
   labelStyle: {
     fontWeight: '600',
