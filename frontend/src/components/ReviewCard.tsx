@@ -2,33 +2,15 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   Pressable,
-  Alert,
-  ActivityIndicator,
   TouchableOpacity,
-  Platform,
-  NativeModules,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {fp, hp} from '../helper/Metric';
-import {ArticleCardProps, ArticleData, User} from '../type';
+import {ArticleCardProps, ReviewCardProps} from '../type';
 import moment from 'moment';
-import {useSelector} from 'react-redux';
-import axios from 'axios';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialCommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import IonIcons from 'react-native-vector-icons/Ionicons';
-import {useMutation, useQuery} from '@tanstack/react-query';
-import {
-  GET_IMAGE,
-  GET_PROFILE_API,
-  GET_STORAGE_DATA,
-  LIKE_ARTICLE,
-  SAVE_ARTICLE,
-} from '../helper/APIUtils';
 import {BUTTON_COLOR, PRIMARY_COLOR} from '../helper/Theme';
-import {formatCount} from '../helper/Utils';
+import {formatCount, StatusEnum} from '../helper/Utils';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -37,27 +19,25 @@ import Animated, {
 import ArticleFloatingMenu from './ArticleFloatingMenu';
 //import io from 'socket.io-client';
 import Entypo from 'react-native-vector-icons/Entypo';
-import Share from 'react-native-share';
-import RNFS from 'react-native-fs';
-import RNHTMLtoPDF from 'react-native-html-to-pdf';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {useSocket} from '../../SocketContext';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const ReviewCard = ({
   item,
-  navigation,
+  //navigation,
+  onclick,
   isSelected,
   setSelectedCardId,
-  success,
-  handleRepostAction,
-  handleReportAction,
-}: ArticleCardProps) => {
-  const {user_token, user_id} = useSelector((state: any) => state.user);
-
+}: ReviewCardProps) => {
   //const socket = io('http://51.20.1.81:8084');
-  const socket = useSocket();
+  //const socket = useSocket();
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
+  const backgroundColor =
+    item?.status === StatusEnum.PUBLISHED
+      ? 'green'
+      : item?.status === StatusEnum.DISCARDED
+      ? 'red'
+      : BUTTON_COLOR;
 
   const menuStyle = useAnimatedStyle(() => {
     return {
@@ -66,124 +46,6 @@ const ReviewCard = ({
     };
   });
   //console.log('Image Utils', item?.imageUtils[0]);
-  const handleShare = async () => {
-    try {
-      const result = await Share.open({
-        title: item.title,
-        message: `${item.title} : Check out this awesome post on UltimateHealth app!`,
-        // Most Recent APK: 0.5.0
-        url: 'https://drive.google.com/file/d/1MFcGPnz4BDkKryLu-qNE2iLHl3Wb4_Jq/view?usp=sharing',
-        subject: 'React Native Post',
-      });
-      console.log(result);
-    } catch (error) {
-      console.log('Error sharing:', error);
-      Alert.alert('Error', 'Something went wrong while sharing.');
-    }
-  };
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('connection established');
-    });
-  }, []);
-  const {
-    data: user,
-    refetch,
-    isLoading,
-  } = useQuery({
-    queryKey: ['get-my-profile'],
-    queryFn: async () => {
-      const response = await axios.get(`${GET_PROFILE_API}`, {
-        headers: {
-          Authorization: `Bearer ${user_token}`,
-        },
-      });
-      return response.data.profile as User;
-    },
-  });
-
-  const updateSaveStatusMutation = useMutation({
-    mutationKey: ['update-view-count'],
-    mutationFn: async () => {
-      if (user_token === '') {
-        Alert.alert('No token found');
-        return;
-      }
-      const res = await axios.post(
-        SAVE_ARTICLE,
-        {
-          article_id: item._id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user_token}`,
-          },
-        },
-      );
-
-      return res.data as any;
-    },
-    onSuccess: async () => {
-      success();
-    },
-
-    onError: error => {
-      //console.log('Update View Count Error', error);
-      Alert.alert('Internal server error, try again!');
-    },
-  });
-
-  const updateLikeMutation = useMutation({
-    mutationKey: ['update-like-status'],
-
-    mutationFn: async () => {
-      if (user_token === '') {
-        Alert.alert('No token found');
-        return;
-      }
-      const res = await axios.post(
-        LIKE_ARTICLE,
-        {
-          article_id: item._id,
-          //user_id: user_id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user_token}`,
-          },
-        },
-      );
-      return res.data.data as {
-        article: ArticleData;
-        likeStatus: boolean;
-      };
-    },
-
-    onSuccess: data => {
-      // dispatch(setArticle({article: data}));
-
-      //console.log('author', data);
-      if (data?.likeStatus) {
-        socket.emit('notification', {
-          type: 'likePost',
-          authorId: data?.article?.authorId,
-          message: {
-            title: user
-              ? `${user?.user_handle} liked your post`
-              : 'Someone liked your post',
-            body: data?.article?.title,
-          },
-        });
-      }
-      success();
-    },
-
-    onError: err => {
-      Alert.alert('Try Again!');
-      //console.log('Like Error', err);
-    },
-  });
 
   const handleAnimation = () => {
     if (width.value === 0) {
@@ -197,117 +59,19 @@ const ReviewCard = ({
     }
   };
 
-  const generatePDFFromUrl = async (url: string, title: string) => {
-    // setLoading(true);
-
-    try {
-      const response = await axios.get(url);
-      const htmlContent = response.data;
-      console.log('HTML Content', htmlContent);
-      /*
-      // Create PDF options
-      const options = {
-        html: htmlContent,
-        fileName: `${title.substring(0, 15)}...`,
-        directory: 'Documents',
-      };
-
-      // Convert HTML to PDF
-      const file = await RNHTMLtoPDF.convert(options);
-      console.log('PDF created at:', file.filePath);
-
-      Alert.alert(
-        'PDF created successfully!',
-        `PDF saved at: ${file.filePath}`,
-      );
-      */
-      generatePDF(title, htmlContent);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      Alert.alert('Error', 'Something went wrong while creating the PDF.');
-    }
-  };
-
-  const generatePDF = async (title: string, htmlContent: string) => {
-    /*
-    const {RNProcessor: Processor, PSPDFKit} = NativeModules;
-    const configuration = {
-      name: `${title.substring(0, 15)}...`,
-      override: true,
-    };
-    */
-    try {
-      let customDirectory;
-      let filePath;
-
-      if (Platform.OS === 'android') {
-        customDirectory = `${RNFS.DownloadDirectoryPath}/UltimateHealth/Download`;
-        filePath = `${customDirectory}/${title.substring(0, 15)}...pdf`;
-      } else {
-        customDirectory = RNFS.DocumentDirectoryPath;
-        filePath = `${customDirectory}/${title.substring(0, 15)}...pdf`;
-      }
-
-      // Check if the directory exists, create it if not
-      const directoryExists = await RNFS.exists(customDirectory);
-      if (!directoryExists) {
-        await RNFS.mkdir(customDirectory);
-      }
-
-      // Options for generating the PDF
-      const options = {
-        html: htmlContent,
-        fileName: title.substring(0, 15), // Clean file name
-        directory: customDirectory, // Custom directory path
-      };
-
-      // Generate the PDF
-      const file = await RNHTMLtoPDF.convert(options);
-      console.log('PDF created at:', file.filePath);
-
-      // Move the generated PDF to the custom directory (if it's not already saved there)
-      await RNFS.moveFile(file.filePath, filePath);
-
-      // Alert to inform the user
-      Alert.alert('PDF created successfully!', `PDF saved at: ${filePath}`);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      Alert.alert('Error', 'Something went wrong while creating the PDF.');
-    }
-  };
-
-  // IOS Specific
-  const extractAsset = async (fileURL, fileName, callBack) => {
-    try {
-      await RNFS.readFile(fileURL, 'base64').then(document => {
-        let mainPath = `${RNFS.MainBundlePath}/${documentName(fileName)}`;
-        RNFS.writeFile(mainPath, document, 'base64')
-          .then(success => {
-            callBack(mainPath);
-          })
-          .catch(e => console.log(e));
-      });
-    } catch (error) {
-      console.log('Error copying file', error);
-    }
-  };
-
-  const documentName = fileName => {
-    if (fileName.toLowerCase().substring(fileName.length - 4) !== '.pdf') {
-      return `${fileName}.pdf`;
-    }
-    return fileName;
-  };
   return (
     <Pressable
       onPress={() => {
         width.value = withTiming(0, {duration: 250});
         yValue.value = withTiming(100, {duration: 250});
         setSelectedCardId('');
+        /*
         navigation.navigate('ArticleScreen', {
           articleId: Number(item._id),
           authorId: item.authorId,
         });
+        */
+        onclick(item);
       }}>
       <View style={styles.cardContainer}>
         {/* Image Section */}
@@ -343,43 +107,51 @@ const ReviewCard = ({
           </Text>
           <Text style={styles.title}>{item?.title}</Text>
 
-          <Text style={{...styles.footerText1, marginBottom: 3}}>
-            {item?.viewUsers
-              ? item?.viewUsers.length > 1
-                ? `${formatCount(item?.viewUsers.length)} views`
-                : `${item?.viewUsers.length} view`
-              : '0 view'}
-          </Text>
+          {item?.status === StatusEnum.PUBLISHED && (
+            <Text style={{...styles.footerText1, marginBottom: 3}}>
+              {item?.viewUsers
+                ? item?.viewUsers.length > 1
+                  ? `${formatCount(item?.viewUsers.length)} views`
+                  : `${item?.viewUsers.length} view`
+                : '0 view'}
+            </Text>
+          )}
           <Text style={styles.footerText1}>
             Last updated: {''}
             {moment(new Date(item?.lastUpdated)).format('DD/MM/YYYY')}
           </Text>
 
-          <Text style={styles.footerText1}>{item?.status}</Text>
+          <View style={styles.viewContainer}>
+            <Text
+              style={{
+                ...styles.footerText1,
+                color: backgroundColor,
+                // fontSize: 16,
+                fontWeight: '700',
+                marginTop: 3,
+              }}>
+              {item?.status ? item.status.toLocaleUpperCase() : 'Not found'}
+            </Text>
+
+            <TouchableOpacity
+              style={styles.viewInnnerContainer}
+              onPress={() => {
+                onclick(item);
+              }}>
+              <Text style={styles.viewText}>View</Text>
+              <AntDesign
+                name="arrowright"
+                size={16}
+                color={PRIMARY_COLOR}
+                style={{marginTop: 2}}
+              />
+            </TouchableOpacity>
+          </View>
 
           {/* Like, Save, and Comment Actions */}
         </View>
       </View>
     </Pressable>
-
-    // future card
-    // <TouchableOpacity style={styles.card}>
-    //   <Image source={{uri: item?.imageUtils}} style={styles.image} />
-    //   <View style={styles.content}>
-    //     <Text style={styles.title}>{item?.title}</Text>
-    //     <Text style={styles.author}>
-    //       by {item?.author_name} | {item?.date_updated}
-    //     </Text>
-    //     <Text style={styles.description}>{item?.description}</Text>
-    //     <View style={styles.categoriesContainer}>
-    //       {item?.category.map((value, key) => (
-    //         <View key={key} style={styles.category}>
-    //           <Text style={styles.categoryText}>{value}</Text>
-    //         </View>
-    //       ))}
-    //     </View>
-    //   </View>
-    // </TouchableOpacity>
   );
 };
 
@@ -466,6 +238,24 @@ const styles = StyleSheet.create({
     top: 2,
     right: 1,
     zIndex: 1,
+  },
+  viewContainer: {
+    //flex: 1,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    paddingHorizontal: 2,
+  },
+  viewInnnerContainer: {
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    padding: 2,
+  },
+  viewText: {
+    fontSize: fp(4),
+    textDecorationLine: 'underline',
+    color: PRIMARY_COLOR,
+    fontWeight: '700',
+    marginRight: 2,
   },
   // future card styles
   //   card: {

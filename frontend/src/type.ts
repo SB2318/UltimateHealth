@@ -34,6 +34,10 @@ export type RootStackParamList = {
     articleId: number;
     authorId: string;
   };
+  ReviewScreen: {
+    articleId: number;
+    authorId: string;
+  };
   OverviewScreen: {
     articles: ArticleData[]
   };
@@ -114,6 +118,11 @@ export type ArticleScreenProp = StackScreenProps<
   'ArticleScreen'
 >;
 
+export type ReviewScreenProp = StackScreenProps<
+  RootStackParamList,
+  'ReviewScreen'
+>;
+
 export type CommentScreenProp = StackScreenProps<
   RootStackParamList,
   'CommentScreen'
@@ -184,6 +193,14 @@ export type ArticleCardProps = {
   handleRepostAction: (item: ArticleData) => void;
   handleReportAction: (item: ArticleData) => void;
 };
+
+export type ReviewCardProps = {
+  item: ArticleData;
+  onclick:(item: ArticleData)=> void;
+  isSelected: Boolean;
+  setSelectedCardId: (id: string) => void;
+};
+
 
 export type Notification = {
   _id: string;

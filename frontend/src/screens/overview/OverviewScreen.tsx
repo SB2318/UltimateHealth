@@ -24,7 +24,8 @@ export default function OverviewScreen({
           a =>
             a.status === StatusEnum.AWAITING_USER ||
             a.status === StatusEnum.REVIEW_PENDING ||
-            a.status === StatusEnum.IN_PROGRESS,
+            a.status === StatusEnum.IN_PROGRESS ||
+            a.status === StatusEnum.UNASSIGNED,
         ).length
       : 0
   })`;
@@ -53,15 +54,27 @@ export default function OverviewScreen({
           item={item}
           isSelected={selectedCardId === item._id}
           setSelectedCardId={setSelectedCardId}
-          navigation={navigation}
-          success={onRefresh}
-          handleRepostAction={() => {}}
-          handleReportAction={() => {}}
+          onclick={handleClickAction}
         />
       );
     },
     [navigation, onRefresh],
   );
+
+  const handleClickAction = (item: ArticleData) => {
+    if (item?.status === StatusEnum.PUBLISHED) {
+      navigation.navigate('ArticleScreen', {
+        articleId: Number(item?._id),
+        authorId: item?.authorId,
+      });
+    } else {
+      // navigate to review screen
+      navigation.navigate('ReviewScreen', {
+        articleId: Number(item?._id),
+        authorId: item?.authorId,
+      });
+    }
+  };
   const renderTabBar = props => {
     return (
       <MaterialTabBar
@@ -120,7 +133,8 @@ export default function OverviewScreen({
                         a =>
                           a.status === StatusEnum.AWAITING_USER ||
                           a.status === StatusEnum.REVIEW_PENDING ||
-                          a.status === StatusEnum.IN_PROGRESS,
+                          a.status === StatusEnum.IN_PROGRESS ||
+                          a.status === StatusEnum.UNASSIGNED,
                       )
                     : []
                 }
