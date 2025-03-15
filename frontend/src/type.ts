@@ -18,8 +18,11 @@ export type RootStackParamList = {
     description: string;
     selectedGenres: Category[];
     imageUtils: string;
+    articleData: ArticleData | null | undefined;
   };
-  ArticleDescriptionScreen: undefined;
+  ArticleDescriptionScreen: {
+    article: ArticleData | null | undefined;
+  };
   PreviewScreen: {
     article: string;
     title: string;
@@ -29,6 +32,7 @@ export type RootStackParamList = {
     selectedGenres: Category[];
     localImages: string[];
     htmlImages: string[];
+    articleData: ArticleData | null | undefined;
   };
   ArticleScreen: {
     articleId: number;
@@ -106,6 +110,11 @@ export type SignUpScreenFirstProp = StackScreenProps<
 export type SignUpScreenSecondProp = StackScreenProps<
   RootStackParamList,
   'SignUpScreenSecond'
+>;
+
+export type ArticleDescriptionProp = StackScreenProps<
+  RootStackParamList,
+  'ArticleDescriptionScreen'
 >;
 
 export type LoginScreenProp = StackScreenProps<
@@ -319,6 +328,7 @@ export type ArticleData = {
   _id: string;
   title: string;
   authorName: string;
+  description: string;
   authorId: string;
   content: string;
   summary: string;

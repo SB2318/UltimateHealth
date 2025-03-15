@@ -122,37 +122,32 @@ export default function OverviewScreen({
           </Tabs.Tab>
 
           <Tabs.Tab name={progressLabel}>
-            <Tabs.ScrollView
-              automaticallyAdjustContentInsets={true}
-              contentInsetAdjustmentBehavior="always"
-              contentContainerStyle={styles.scrollViewContentContainer}>
-              <Tabs.FlatList
-                data={
-                  articles
-                    ? articles.filter(
-                        a =>
-                          a.status === StatusEnum.AWAITING_USER ||
-                          a.status === StatusEnum.REVIEW_PENDING ||
-                          a.status === StatusEnum.IN_PROGRESS ||
-                          a.status === StatusEnum.UNASSIGNED,
-                      )
-                    : []
-                }
-                renderItem={renderItem}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={[
-                  styles.flatListContentContainer,
-                  {paddingBottom: 15},
-                ]}
-                keyExtractor={item => item?._id}
-                refreshing={refreshing}
-                ListEmptyComponent={
-                  <View style={styles.emptyContainer}>
-                    <Text style={styles.message}>No Article Found</Text>
-                  </View>
-                }
-              />
-            </Tabs.ScrollView>
+            <Tabs.FlatList
+              data={
+                articles
+                  ? articles.filter(
+                      a =>
+                        a.status === StatusEnum.AWAITING_USER ||
+                        a.status === StatusEnum.REVIEW_PENDING ||
+                        a.status === StatusEnum.IN_PROGRESS ||
+                        a.status === StatusEnum.UNASSIGNED,
+                    )
+                  : []
+              }
+              renderItem={renderItem}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={[
+                styles.flatListContentContainer,
+                {paddingBottom: 15},
+              ]}
+              keyExtractor={item => item?._id}
+              refreshing={refreshing}
+              ListEmptyComponent={
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.message}>No Article Found</Text>
+                </View>
+              }
+            />
           </Tabs.Tab>
           <Tabs.Tab name={discardLabel}>
             <Tabs.FlatList

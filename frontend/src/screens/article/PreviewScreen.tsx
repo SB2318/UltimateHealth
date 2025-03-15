@@ -23,8 +23,15 @@ import {useSocket} from '../../../SocketContext';
 //import io from 'socket.io-client';
 
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
-  const {article, title, description, authorName, selectedGenres, localImages} =
-    route.params;
+  const {
+    article,
+    title,
+    description,
+    authorName,
+    selectedGenres,
+    localImages,
+    articleData,
+  } = route.params;
 
   //const socket = io('http://51.20.1.81:8084');
   const socket = useSocket();
@@ -168,6 +175,8 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
     },
 
     onSuccess: data => {
+      // User will not get notified, until the article published
+      /*
       socket.emit('notification', {
         type: 'openPost',
         postId: data._id,
@@ -177,6 +186,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
           body: title,
         },
       });
+      */
       Alert.alert('Article added sucessfully');
 
       navigation.navigate('TabNavigation');

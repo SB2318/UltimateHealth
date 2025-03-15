@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet, Text, ScrollView, Alert} from 'react-native';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import Feather from 'react-native-vector-icons/Feather';
@@ -18,8 +18,14 @@ import {hp} from '../../helper/Metric';
 // If you want to discard your post, in that case no post will upload into storage,
 const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const insets = useSafeAreaInsets();
-  const {title, description, selectedGenres, authorName, imageUtils} =
-    route.params;
+  const {
+    title,
+    description,
+    selectedGenres,
+    authorName,
+    imageUtils,
+    articleData,
+  } = route.params;
   //const video = require('../../assets/play-button.png'); //icon for Addvideo
   const RichText = useRef(); //reference to the RichEditor component
   const [article, setArticle] = useState('');
@@ -46,6 +52,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
                 selectedGenres: selectedGenres,
                 localImages: localImages,
                 htmlImages: htmlImages,
+                articleData: articleData
               });
             } else {
               Alert.alert('Error', 'Please enter at least 20 characters');
@@ -73,6 +80,12 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       // );
     });
   }
+
+  useEffect(() => {
+    if (articleData) {
+      setArticle(articleData.content);
+    }
+  }, []);
 
   // Callback after height change
   function handleHeightChange(_height) {

@@ -8,42 +8,33 @@ import {
   View,
   ScrollView,
   Alert,
-  ActivityIndicator,
-  Dimensions,
   FlatList,
   Pressable,
 } from 'react-native';
 import React, {FC, useEffect, useRef, useState} from 'react';
-import {useQuery, useMutation} from '@tanstack/react-query';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useQuery} from '@tanstack/react-query';
 import {PRIMARY_COLOR} from '../../helper/Theme';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ArticleData, ArticleScreenProp, ReviewScreenProp, User} from '../../type';
+import {ArticleData, ReviewScreenProp, User} from '../../type';
 import {useDispatch, useSelector} from 'react-redux';
 import WebView from 'react-native-webview';
 import {hp, wp} from '../../helper/Metric';
 import {
   EC2_BASE_URL,
-  FOLLOW_USER,
   GET_ARTICLE_BY_ID,
   GET_PROFILE_API,
   GET_PROFILE_IMAGE_BY_ID,
   GET_STORAGE_DATA,
-  LIKE_ARTICLE,
-  UPDATE_READ_EVENT,
-  UPDATE_VIEW_COUNT,
 } from '../../helper/APIUtils';
 import axios from 'axios';
 import Loader from '../../components/Loader';
-import Snackbar from 'react-native-snackbar';
 
 //import io from 'socket.io-client';
 
-import {formatCount} from '../../helper/Utils';
 import {useSocket} from '../../../SocketContext';
 //import CommentScreen from '../CommentScreen';
 import {
-  MentionInput,
   MentionSuggestionsProps,
   replaceMentionValues,
 } from 'react-native-controlled-mentions';
@@ -75,7 +66,7 @@ const renderSuggestions: FC<MentionSuggestionsProps> = ({
             key={one._id}
             onPress={() => {
               onSuggestionPress({id: one._id, name: one.user_handle});
-              setMentions(prev => [...prev, one]);
+              //setMentions(prev => [...prev, one]);
             }}
             style={{flex: 0, padding: 12, flexDirection: 'row'}}>
             {one.Profile_image ? (
@@ -116,16 +107,13 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   const insets = useSafeAreaInsets();
   const {articleId, authorId} = route.params;
   const {user_id, user_token} = useSelector((state: any) => state.user);
-  const [readEventSave, setReadEventSave] = useState(false);
-  //const [webViewHeight, setWebViewHeight] = useState(0);
-  //const socket = io('http://51.20.1.81:8084');
+
   const socket = useSocket();
   const dispatch = useDispatch();
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const flatListRef = useRef<FlatList<Comment>>(null);
-  // const {user_id} = useSelector((state: any) => state.user);
   const [selectedCommentId, setSelectedCommentId] = useState<string>('');
   const [editMode, setEditMode] = useState<Boolean>(false);
   const [editCommentId, setEditCommentId] = useState<string | null>(null);
@@ -134,11 +122,6 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   const [mentions, setMentions] = useState<User[]>([]);
 
   const webViewRef = useRef<WebView>(null);
-
-  useEffect(() => {
-    updateViewCountMutation.mutate();
-    return () => {};
-  }, []);
 
   const {
     data: article,
@@ -172,198 +155,11 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   if (user) {
     dispatch(setUserHandle(user.user_handle));
   }
-  const updateViewCountMutation = useMutation({
-    mutationKey: ['update-view-count'],
-    mutationFn: async () => {
-      if (user_token === '') {
-        Alert.alert('No token found');
-        return;
-      }
-      const res = await axios.post(
-        UPDATE_VIEW_COUNT,
-        {
-          article_id: articleId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user_token}`,
-          },
-        },
-      );
-
-      return res.data.article as ArticleData;
-    },
-    onSuccess: async () => {},
-
-    onError: error => {
-      console.log('Update View Count Error', error);
-      Alert.alert('Internal server error, try again!');
-    },
-  });
-
-  // console.log('View Users', article?.viewUsers);
-
-  const handleLike = () => {
-    if (article) {
-      updateLikeMutation.mutate();
-    } else {
-      Alert.alert('Article not found');
-    }
-  };
-
-  const handleFollow = () => {
-    updateFollowMutation.mutate();
-  };
-
-  const updateFollowMutation = useMutation({
-    mutationKey: ['update-follow-status'],
-
-    mutationFn: async () => {
-      if (!user_token || user_token === '') {
-        Alert.alert('No token found');
-        return;
-      }
-      const res = await axios.post(
-        FOLLOW_USER,
-        {
-          //followUserId: authorId,
-          //user_id: user_id,
-          articleId: articleId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user_token}`,
-          },
-        },
-      );
-      return res.data.followStatus as boolean;
-    },
-
-    onSuccess: data => {
-      //console.log('follow success');
-      if (data) {
-        socket.emit('notification', {
-          type: 'userFollow',
-          userId: authorId,
-          message: {
-            title: `${user?.user_handle} has followed you`,
-            body: '',
-          },
-        });
-      }
-      refetchFollowers();
-      // refetchProfile();
-    },
-
-    onError: err => {
-      console.log('Update Follow mutation error', err);
-      Alert.alert('Try Again!');
-      //console.log('Follow Error', err);
-    },
-  });
 
   console.log('article id', articleId);
   console.log('user token', user_token);
 
-  const updateLikeMutation = useMutation({
-    mutationKey: ['update-like-status'],
-
-    mutationFn: async () => {
-      if (!user_token || user_token === '') {
-        Alert.alert('No token found');
-        return;
-      }
-      const res = await axios.post(
-        LIKE_ARTICLE,
-        {
-          article_id: article?._id,
-          //user_id: user_id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user_token}`,
-          },
-        },
-      );
-
-      //  console.log('Response', );
-      return res.data.data as {
-        article: ArticleData;
-        likeStatus: boolean;
-      };
-    },
-
-    onSuccess: data => {
-      // dispatch(setArticle({article: data}));
-
-      // console.log('author id', data?.authorId);
-      if (data?.likeStatus) {
-        socket.emit('notification', {
-          type: 'likePost',
-          authorId: data?.article?.authorId,
-          message: {
-            title: user
-              ? `${user?.user_handle} liked your post`
-              : 'Someone liked your post',
-            body: data?.article?.title,
-          },
-        });
-      }
-      refetch();
-    },
-
-    onError: err => {
-      Alert.alert('Try Again!');
-      console.log('Like Error', err);
-    },
-  });
-
-  const updateReadEventMutation = useMutation({
-    mutationKey: ['update-read-event-status'],
-
-    mutationFn: async () => {
-      if (!user_token || user_token === '') {
-        Alert.alert('No token found');
-        return;
-      }
-      const res = await axios.post(
-        UPDATE_READ_EVENT,
-        {
-          article_id: article?._id,
-          //user_id: user_id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user_token}`,
-          },
-        },
-      );
-      return res.data as any;
-    },
-
-    onSuccess: () => {
-      console.log('Read Event Updated');
-      setReadEventSave(true);
-      //Alert.alert('Your Read status updated'); For debug purpose
-      Snackbar.show({
-        text: 'Your read status updated.',
-        duration: Snackbar.LENGTH_SHORT,
-      });
-    },
-
-    onError: err => {
-      console.log('Update Read Status mutation error', err);
-      //Alert.alert('Try Again!');
-      //console.log('Follow Error', err);
-      Snackbar.show({
-        text: 'Failed to update your read status.',
-        duration: Snackbar.LENGTH_SHORT,
-      });
-    },
-  });
-
   useEffect(() => {
-    //console.log('Fetching comments for articleId:', route.params.articleId);
     socket.emit('fetch-comments', {articleId: route.params.articleId});
 
     socket.on('connect', () => {
@@ -613,18 +409,6 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
     <View style={styles.container}>
       <ScrollView
         style={styles.scrollView}
-        onScroll={e => {
-          var windowHeight = Dimensions.get('window').height,
-            height = e.nativeEvent.contentSize.height,
-            offset = e.nativeEvent.contentOffset.y;
-          if (windowHeight + offset >= height) {
-            //ScrollEnd,
-            console.log('ScrollEnd');
-            if (article && !readEventSave) {
-              updateReadEventMutation.mutate();
-            }
-          }
-        }}
         contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.imageContainer}>
           {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
@@ -638,41 +422,23 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
               style={styles.image}
             />
           )}
-          {updateLikeMutation.isPending ? (
-            <ActivityIndicator size={40} color={PRIMARY_COLOR} />
-          ) : (
-            <TouchableOpacity
-              onPress={handleLike}
-              style={[
-                styles.likeButton,
-                {
-                  backgroundColor: 'white',
-                },
-              ]}>
-              <FontAwesome
-                name="heart"
-                size={34}
-                color={
-                  article &&
-                  article?.likedUsers &&
-                  article?.likedUsers?.some(user => user._id === user_id)
-                    ? PRIMARY_COLOR
-                    : 'black'
-                }
-              />
-            </TouchableOpacity>
-          )}
+
+          <TouchableOpacity
+            onPress={()=>{
+              navigation.navigate('ArticleDescriptionScreen', {
+                article: article,
+              })
+            }}
+            style={[
+              styles.likeButton,
+              {
+                backgroundColor: 'white',
+              },
+            ]}>
+            <FontAwesome5 name="pencil-alt" size={24} color={PRIMARY_COLOR} />
+          </TouchableOpacity>
         </View>
         <View style={styles.contentContainer}>
-          {article && (
-            <Text style={{...styles.viewText, marginBottom: 10}}>
-              {article && article?.viewUsers.length
-                ? article.viewUsers.length > 1
-                  ? `${formatCount(article.viewUsers.length)} views`
-                  : `${article.viewUsers.length} view`
-                : '0 view'}
-            </Text>
-          )}
           {article && article?.tags && (
             <Text style={styles.categoryText}>
               {article.tags.map(tag => tag.name).join(' | ')}
@@ -682,124 +448,6 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
           {article && (
             <>
               <Text style={styles.titleText}>{article?.title}</Text>
-              <View style={styles.avatarsContainer}>
-                <View style={styles.avatar}>
-                  {/** 3rd image will be display here */}
-                  {article?.likedUsers && article?.likedUsers.length >= 3 ? (
-                    <Image
-                      source={{
-                        uri: article?.likedUsers[2].Profile_image.startsWith(
-                          'https',
-                        )
-                          ? article?.likedUsers[2].Profile_image
-                          : `${GET_STORAGE_DATA}/${article?.likedUsers[2].Profile_image}`,
-                      }}
-                      style={[
-                        styles.profileImage,
-                        !article?.likedUsers[2].Profile_image && {
-                          borderWidth: 0.5,
-                          borderColor: 'black',
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <>
-                      {article?.likedUsers &&
-                        article?.likedUsers.length >= 1 && (
-                          <Image
-                            source={{
-                              uri: article?.likedUsers[0].Profile_image.startsWith(
-                                'https',
-                              )
-                                ? article?.likedUsers[0].Profile_image
-                                : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
-                            }}
-                            style={[
-                              styles.profileImage,
-                              !article?.likedUsers[0].Profile_image && {
-                                borderWidth: 0.5,
-                                borderColor: 'black',
-                              },
-                            ]}
-                          />
-                        )}
-                    </>
-                  )}
-                </View>
-                <View style={[styles.avatar, styles.avatarOverlap]}>
-                  {/** 2nd image will be display here */}
-
-                  {article?.likedUsers && article?.likedUsers.length >= 2 ? (
-                    <Image
-                      source={{
-                        uri: article?.likedUsers[1].Profile_image.startsWith(
-                          'https',
-                        )
-                          ? article?.likedUsers[1].Profile_image
-                          : `${GET_STORAGE_DATA}/${article?.likedUsers[1].Profile_image}`,
-                      }}
-                      style={[
-                        styles.profileImage,
-                        !article?.likedUsers[1].Profile_image && {
-                          borderWidth: 0.5,
-                          borderColor: 'black',
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <>
-                      {article?.likedUsers &&
-                        article?.likedUsers.length >= 1 && (
-                          <Image
-                            source={{
-                              uri: article?.likedUsers[0].Profile_image.startsWith(
-                                'https',
-                              )
-                                ? article?.likedUsers[0].Profile_image
-                                : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
-                            }}
-                            style={[
-                              styles.profileImage,
-                              !article?.likedUsers[0].Profile_image && {
-                                borderWidth: 0.5,
-                                borderColor: 'black',
-                              },
-                            ]}
-                          />
-                        )}
-                    </>
-                  )}
-                </View>
-                <View style={[styles.avatar, styles.avatarDoubleOverlap]}>
-                  {/** 1st Image  will be display here */}
-                  {article?.likedUsers && article?.likedUsers.length >= 1 && (
-                    <Image
-                      source={{
-                        uri: article?.likedUsers[0].Profile_image.startsWith(
-                          'https',
-                        )
-                          ? article?.likedUsers[0].Profile_image
-                          : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
-                      }}
-                      style={[
-                        styles.profileImage,
-                        !article?.likedUsers[0].Profile_image && {
-                          borderWidth: 0.5,
-                          borderColor: 'black',
-                        },
-                      ]}
-                    />
-                  )}
-                </View>
-                <View style={[styles.avatar, styles.avatarTripleOverlap]}>
-                  <Text style={styles.moreText}>
-                    +
-                    {article?.likedUsers
-                      ? formatCount(article.likedUsers.length)
-                      : 0}
-                  </Text>
-                </View>
-              </View>
             </>
           )}
           <View style={styles.descriptionContainer}>
@@ -887,26 +535,10 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
             </Text>
           </View>
         </View>
-        {article &&
-          user_id !== article.authorId &&
-          (updateFollowMutation.isPending ? (
-            <ActivityIndicator size={40} color={PRIMARY_COLOR} />
-          ) : (
-            <TouchableOpacity
-              style={styles.followButton}
-              onPress={handleFollow}>
-              <Text style={styles.followButtonText}>
-                {authorFollowers && authorFollowers.includes(user_id)
-                  ? 'Following'
-                  : 'Follow'}
-              </Text>
-            </TouchableOpacity>
-          ))}
       </View>
     </View>
   );
 };
-
 export default ReviewScreen;
 
 const styles = StyleSheet.create({
@@ -1085,5 +717,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
+  },
+  editIconContainer: {
+    position: 'absolute',
+    top: 16,
+    right: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 20,
+    padding: 5,
   },
 });

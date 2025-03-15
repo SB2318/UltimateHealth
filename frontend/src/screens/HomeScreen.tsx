@@ -174,7 +174,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   );
   const handleNoteIconClick = () => {
     //navigation.navigate('EditorScreen');
-    navigation.navigate('ArticleDescriptionScreen');
+    navigation.navigate('ArticleDescriptionScreen',{
+      article: null
+    });
   };
 
   const handleCategoryClick = (category: string) => {
