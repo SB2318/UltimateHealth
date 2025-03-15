@@ -52,7 +52,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
                 selectedGenres: selectedGenres,
                 localImages: localImages,
                 htmlImages: htmlImages,
-                articleData: articleData
+                articleData: articleData,
               });
             } else {
               Alert.alert('Error', 'Please enter at least 20 characters');
@@ -62,7 +62,18 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, article, title, description, imageUtils, selectedGenres]);
+  }, [
+    navigation,
+    article,
+    title,
+    description,
+    imageUtils,
+    selectedGenres,
+    authorName,
+    localImages,
+    htmlImages,
+    articleData,
+  ]);
 
   React.useEffect(() => {
     if (imageUtils) {
@@ -83,6 +94,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
   useEffect(() => {
     if (articleData) {
+      console.log('Content 2', articleData.content);
       setArticle(articleData.content);
     }
   }, []);
@@ -304,6 +316,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         ref={RichText}
         style={styles.rich}
         placeholder={'Start Writing Here'}
+        initialContentHTML={article}
         onChange={text => setArticle(text)}
         editorInitializedCallback={editorInitializedCallback}
         onHeightChange={handleHeightChange}

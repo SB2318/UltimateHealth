@@ -14,6 +14,7 @@ import {
   GET_IMAGE,
   GET_PROFILE_API,
   POST_ARTICLE,
+  SUBMIT_SUGGESTED_CHANGES,
   UPLOAD_STORAGE,
 } from '../../helper/APIUtils';
 import {useSelector} from 'react-redux';
@@ -77,68 +78,89 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
 
     // Resize and confirm for all images before uploading
     try {
-      const confirmation = await new Promise(resolve => {
-        Alert.alert(
-          'Create Post',
-          'Please confirm you want to upload this post.',
-          [
-            {
-              text: 'Cancel',
-              onPress: () => resolve(false),
-              style: 'cancel',
-            },
-            {
-              text: 'OK',
-              onPress: () => resolve(true),
-            },
-          ],
-          {cancelable: false},
-        );
-      });
-
+      // Show confirmation alert
+      const confirmation = await showConfirmationAlert();
       if (!confirmation) {
         Alert.alert('Post discarded');
         navigation.navigate('TabNavigation');
+        return;
       }
 
       // Process each local image
       for (let i = 0; i < localImages.length; i++) {
         const localImage = localImages[i];
 
-        // Resize the image
-        const resizedImageUri = await ImageResizer.createResizedImage(
-          localImage,
-          1000,
-          1000,
-          'JPEG',
-          100,
-        );
+        let uploadedUrl: string | undefined;
 
-        // Upload the resized image
-        const uploadedUrl = await uploadImage(resizedImageUri.uri);
-        // console.log('Uploaded Url',uploadedUrl);
-        if (i === 0) {
-          imageUtil = `${GET_IMAGE}/${uploadedUrl}`;
-          continue;
+        if (localImage.includes('api/getfile')) {
+          uploadedUrl = localImage;
+        } else {
+          // Resize the image and handle the upload
+          const resizedImageUri = await resizeImage(localImage);
+          uploadedUrl = await uploadImage(resizedImageUri?.uri);
         }
-        finalArticle = finalArticle.replace(
-          localImage,
-          `${GET_IMAGE}/${uploadedUrl}`,
-        );
+
+        if (i === 0 && imageUtil.length === 0) {
+          imageUtil = `${GET_IMAGE}/${uploadedUrl}`;
+        } else {
+          finalArticle = finalArticle.replace(
+            localImage,
+            `${GET_IMAGE}/${uploadedUrl}`,
+          );
+        }
       }
 
-      console.log('Final Article', finalArticle);
-      createPostMutation.mutate({
-        article: finalArticle,
-        image: imageUtil,
-      });
+      // Submit changes or create a new post
+      if (articleData) {
+        // Submit suggested changes
+        submitChangesMutation.mutate({article: finalArticle, image: imageUtil});
+      } else {
+        // Submit new article
+        createPostMutation.mutate({article: finalArticle, image: imageUtil});
+      }
     } catch (err) {
       console.error('Image processing failed:', err);
       Alert.alert('Error', 'Could not process the images.');
-      return; // Exit on error
     }
+  };
 
-    // console.log(finalArticle);
+  // Helper function to show confirmation alert
+  const showConfirmationAlert = () => {
+    return new Promise(resolve => {
+      Alert.alert(
+        'Create Post',
+        'Please confirm you want to upload this post.',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => resolve(false),
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: () => resolve(true),
+          },
+        ],
+        {cancelable: false},
+      );
+    });
+  };
+
+  // Helper function to resize an image
+  const resizeImage = async localImage => {
+    try {
+      const resizedImageUri = await ImageResizer.createResizedImage(
+        localImage,
+        1000, // Width
+        1000, // Height
+        'JPEG', // Format
+        100, // Quality
+      );
+      return resizedImageUri;
+    } catch (err) {
+      console.error('Failed to resize image:', err);
+      // throw new Error('Image resizing failed');
+    }
   };
 
   const createPostMutation = useMutation({
@@ -199,6 +221,73 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
     },
   });
 
+  // submit suggested changes
+
+  const submitChangesMutation = useMutation({
+    mutationKey: ['sumit-post-key'],
+    mutationFn: async ({article, image}: {article: string; image: string}) => {
+      console.log('article data', {
+        title: title,
+        userId: articleData?.authorId,
+        //authorId: user?._id,
+        authorName: authorName,
+        articleId: articleData?._id,
+        content: article,
+        tags: selectedGenres,
+        imageUtils: [image],
+        //aditionalNote: '',
+        description: description,
+      });
+      const response = await axios.post(
+        SUBMIT_SUGGESTED_CHANGES,
+        //  userId, articleId, content, aditionalNote, title, imageUtils
+        {
+          title: title,
+          userId: articleData?.authorId,
+          //authorId: user?._id,
+          authorName: authorName,
+          articleId: articleData?._id,
+          content: article,
+          tags: selectedGenres,
+          imageUtils: [image],
+          //aditionalNote: '',
+          description: description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user_token}`,
+          },
+        },
+      );
+      // console.log(article);
+      return response.data.newArticle as ArticleData;
+    },
+
+    onSuccess: data => {
+      // User will not get notified, until the article published
+      /*
+      socket.emit('notification', {
+        type: 'openPost',
+        postId: data._id,
+        authorId: user?._id,
+        message: {
+          title: `${user?.user_handle} posted a new article`,
+          body: title,
+        },
+      });
+      */
+      Alert.alert('Article updated sucessfully');
+
+      navigation.navigate('TabNavigation');
+    },
+    onError: error => {
+      console.log('Article post Error', error);
+      // console.log(error);
+
+      Alert.alert('Failed to upload your post');
+    },
+  });
+
   const createAndUploadHtmlFile = async () => {
     const filePath = `${RNFS.DocumentDirectoryPath}/${title.substring(
       0,
@@ -232,7 +321,11 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   };
 
   // Vultr post
-  if (createPostMutation.isPending || loading) {
+  if (
+    createPostMutation.isPending ||
+    submitChangesMutation.isPending ||
+    loading
+  ) {
     return <Loader />;
   }
   return (
