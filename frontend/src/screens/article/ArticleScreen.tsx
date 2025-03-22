@@ -614,7 +614,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       Tts.getInitStatus().then((d) => {
 
        // console.log('tts initialized',res)
-        Tts.speak(res.substring(0));
+        Tts.speak(res.substring(0,1000));
       });
      
      
