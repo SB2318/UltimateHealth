@@ -101,7 +101,9 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
         }
 
         if (i === 0 && imageUtil.length === 0) {
-          imageUtil = `${GET_IMAGE}/${uploadedUrl}`;
+          imageUtil = uploadedUrl?.includes('api/getfile')
+            ? uploadedUrl
+            : `${GET_IMAGE}/${uploadedUrl}`;
         } else {
           finalArticle = finalArticle.replace(
             localImage,

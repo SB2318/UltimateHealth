@@ -1,251 +1,294 @@
+  <View style={styles.container}>
+      <ScrollView
+        style={styles.scrollView}
+        onScroll={e => {
+          var windowHeight = Dimensions.get('window').height,
+            height = e.nativeEvent.contentSize.height,
+            offset = e.nativeEvent.contentOffset.y;
+          if (windowHeight + offset >= height) {
+            //ScrollEnd,
+            console.log('ScrollEnd');
+            if (article && !readEventSave) {
+              updateReadEventMutation.mutate();
+            }
+          }
+        }}
+        contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.imageContainer}>
+          {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
+            <Image
+              source={{uri: article?.imageUtils[0]}}
+              style={styles.image}
+            />
+          ) : (
+            <Image
+              source={require('../../assets/article_default.jpg')}
+              style={styles.image}
+            />
+          )}
+          {updateLikeMutation.isPending ? (
+            <ActivityIndicator size={40} color={PRIMARY_COLOR} />
+          ) : (
+            <TouchableOpacity
+              onPress={handleLike}
+              style={[
+                styles.likeButton,
+                {
+                  backgroundColor: 'white',
+                },
+              ]}>
+              <FontAwesome
+                name="heart"
+                size={34}
+                color={
+                  article &&
+                  article?.likedUsers &&
+                  article?.likedUsers?.some(user => user._id === user_id)
+                    ? PRIMARY_COLOR
+                    : 'black'
+                }
+              />
+            </TouchableOpacity>
+          )}
+        </View>
+        <View style={styles.contentContainer}>
+          {article && (
+            <Text style={{...styles.viewText, marginBottom: 10}}>
+              {article && article?.viewUsers.length
+                ? article.viewUsers.length > 1
+                  ? `${formatCount(article.viewUsers.length)} views`
+                  : `${article.viewUsers.length} view`
+                : '0 view'}
+            </Text>
+          )}
+          {article && article?.tags && (
+            <Text style={styles.categoryText}>
+              {article.tags.map(tag => tag.name).join(' | ')}
+            </Text>
+          )}
 
+          {article && (
+            <>
+              <Text style={styles.titleText}>{article?.title}</Text>
+              <View style={styles.avatarsContainer}>
+                <View style={styles.avatar}>
+                  {/** 3rd image will be display here */}
+                  {article?.likedUsers && article?.likedUsers.length >= 3 ? (
+                    <Image
+                      source={{
+                        uri: article?.likedUsers[2].Profile_image.startsWith(
+                          'https',
+                        )
+                          ? article?.likedUsers[2].Profile_image
+                          : `${GET_STORAGE_DATA}/${article?.likedUsers[2].Profile_image}`,
+                      }}
+                      style={[
+                        styles.profileImage,
+                        !article?.likedUsers[2].Profile_image && {
+                          borderWidth: 0.5,
+                          borderColor: 'black',
+                        },
+                      ]}
+                    />
+                  ) : (
+                    <>
+                      {article?.likedUsers &&
+                        article?.likedUsers.length >= 1 && (
+                          <Image
+                            source={{
+                              uri: article?.likedUsers[0].Profile_image.startsWith(
+                                'https',
+                              )
+                                ? article?.likedUsers[0].Profile_image
+                                : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                            }}
+                            style={[
+                              styles.profileImage,
+                              !article?.likedUsers[0].Profile_image && {
+                                borderWidth: 0.5,
+                                borderColor: 'black',
+                              },
+                            ]}
+                          />
+                        )}
+                    </>
+                  )}
+                </View>
+                <View style={[styles.avatar, styles.avatarOverlap]}>
+                  {/** 2nd image will be display here */}
 
+                  {article?.likedUsers && article?.likedUsers.length >= 2 ? (
+                    <Image
+                      source={{
+                        uri: article?.likedUsers[1].Profile_image.startsWith(
+                          'https',
+                        )
+                          ? article?.likedUsers[1].Profile_image
+                          : `${GET_STORAGE_DATA}/${article?.likedUsers[1].Profile_image}`,
+                      }}
+                      style={[
+                        styles.profileImage,
+                        !article?.likedUsers[1].Profile_image && {
+                          borderWidth: 0.5,
+                          borderColor: 'black',
+                        },
+                      ]}
+                    />
+                  ) : (
+                    <>
+                      {article?.likedUsers &&
+                        article?.likedUsers.length >= 1 && (
+                          <Image
+                            source={{
+                              uri: article?.likedUsers[0].Profile_image.startsWith(
+                                'https',
+                              )
+                                ? article?.likedUsers[0].Profile_image
+                                : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                            }}
+                            style={[
+                              styles.profileImage,
+                              !article?.likedUsers[0].Profile_image && {
+                                borderWidth: 0.5,
+                                borderColor: 'black',
+                              },
+                            ]}
+                          />
+                        )}
+                    </>
+                  )}
+                </View>
+                <View style={[styles.avatar, styles.avatarDoubleOverlap]}>
+                  {/** 1st Image  will be display here */}
+                  {article?.likedUsers && article?.likedUsers.length >= 1 && (
+                    <Image
+                      source={{
+                        uri: article?.likedUsers[0].Profile_image.startsWith(
+                          'https',
+                        )
+                          ? article?.likedUsers[0].Profile_image
+                          : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                      }}
+                      style={[
+                        styles.profileImage,
+                        !article?.likedUsers[0].Profile_image && {
+                          borderWidth: 0.5,
+                          borderColor: 'black',
+                        },
+                      ]}
+                    />
+                  )}
+                </View>
+                <View style={[styles.avatar, styles.avatarTripleOverlap]}>
+                  <Text style={styles.moreText}>
+                    +
+                    {article?.likedUsers
+                      ? formatCount(article.likedUsers.length)
+                      : 0}
+                  </Text>
+                </View>
+              </View>
+            </>
+          )}
+          <View style={styles.descriptionContainer}>
+            <WebView
+              style={{
+                padding: 7,
+                //width: '99%',
+                minHeight: webviewHeight,
+                // flex:7,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              ref={webViewRef}
+              originWhitelist={['*']}
+              injectedJavaScript={cssCode}
+              source={contentSource}
+              textZoom={100}
+            />
+          </View>
+        </View>
 
-
-
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      position: 'relative',
-      backgroundColor: '#ffffff',
-    },
-    scrollView: {
-      flex: 0,
-      backgroundColor: '#ffffff',
-      position: 'relative',
-    },
-    scrollViewContent: {
-      marginBottom: 10,
-      flexGrow: 0,
-    },
-    imageContainer: {
-      position: 'relative',
-    },
-    image: {
-      height: 300,
-      width: '100%',
-      objectFit: 'cover',
-    },
-    likeButton: {
-      padding: 10,
-      position: 'absolute',
-      bottom: -25,
-      right: 20,
-      borderRadius: 50,
-    },
-    contentContainer: {
-      marginTop: 25,
-      paddingHorizontal: 16,
-    },
-    categoryText: {
-      fontWeight: '400',
-      fontSize: 12,
-      color: '#6C6C6D',
-      textTransform: 'uppercase',
-    },
-    viewText: {
-      fontWeight: '500',
-      fontSize: 14,
-      color: '#6C6C6D',
-    },
-    titleText: {
-      fontSize: 25,
-      fontWeight: 'bold',
-      marginTop: 5,
-    },
-    avatarsContainer: {
-      position: 'relative',
-      flex: 1,
-      height: 70,
-      marginTop: 10,
-    },
-  
-    profileImage: {
-      height: 70,
-      width: 70,
-      borderRadius: 100,
-      objectFit: 'cover',
-      resizeMode: 'contain',
-    },
-    avatar: {
-      height: 70,
-      width: 70,
-      borderRadius: 100,
-      position: 'absolute',
-      borderWidth: 1,
-      borderColor: 'white',
-      backgroundColor: '#D9D9D9',
-    },
-    avatarOverlap: {
-      left: 15,
-    },
-    avatarDoubleOverlap: {
-      left: 30,
-    },
-    avatarTripleOverlap: {
-      left: 45,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: PRIMARY_COLOR,
-    },
-    moreText: {
-      fontSize: hp(4),
-      fontWeight: '700',
-      color: 'white',
-    },
-    descriptionContainer: {
-      flex: 1,
-      marginTop: 10,
-    },
-  
-    webView: {
-      flex: 1,
-      width: '100%',
-      margin: 0,
-      padding: 0,
-    },
-    descriptionText: {
-      fontWeight: '400',
-      color: '#6C6C6D',
-      fontSize: 15,
-      textAlign: 'justify',
-    },
-    footer: {
-      backgroundColor: '#EDE9E9',
-      position: 'relative',
-      bottom: 0,
-      zIndex: 10,
-      borderTopEndRadius: 30,
-      borderTopStartRadius: 30,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingTop: 20,
-      paddingHorizontal: 20,
-    },
-    authorContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 10,
-    },
-    authorImage: {
-      height: 50,
-      width: 50,
-      borderRadius: 50,
-    },
-    authorName: {
-      fontWeight: '700',
-      fontSize: 15,
-    },
-    authorFollowers: {
-      fontWeight: '400',
-      fontSize: 13,
-    },
-    followButton: {
-      backgroundColor: PRIMARY_COLOR,
-      paddingHorizontal: 15,
-      borderRadius: 20,
-      paddingVertical: 10,
-    },
-    followButtonText: {
-      color: 'white',
-      fontSize: 14,
-      fontWeight: '600',
-    },
-  
-    header: {
-      fontSize: 22,
-      fontWeight: 'bold',
-      color: '#333',
-      textAlign: 'center',
-      marginBottom: 30,
-    },
-    commentsList: {
-      flex: 1,
-      marginBottom: 20,
-    },
-    commentContainer: {
-      flexDirection: 'row',
-      marginBottom: 15,
-      borderBottomWidth: 1,
-      borderBottomColor: '#ddd',
-      paddingBottom: 10,
-    },
-    avatar: {
-      fontSize: 30,
-      marginRight: 10,
-      alignSelf: 'center',
-    },
-    username: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: '#333',
-      marginEnd: 4, // Small gap between user handle and content
-    },
-    profileImage: {
-      height: 60,
-      width: 60,
-      borderRadius: 30,
-      objectFit: 'cover',
-      resizeMode: 'contain',
-      marginHorizontal: 4,
-    },
-  
-    profileImage2: {
-      height: 30,
-      width: 30,
-      borderRadius: 15,
-      objectFit: 'cover',
-      resizeMode: 'contain',
-      marginHorizontal: 4,
-    },
-    commentContent: {
-      flex: 1,
-    },
-    username2: {
-      fontSize: 12,
-      fontWeight: 'bold',
-      color: '#333',
-      alignSelf: 'center',
-    },
-    comment: {
-      fontSize: 14,
-      color: '#555',
-      marginVertical: 5,
-    },
-    timestamp: {
-      fontSize: 12,
-      color: '#888',
-    },
-    replyContainer: {
-      marginLeft: 20,
-      marginTop: 10,
-    },
-    replyText: {
-      fontSize: 14,
-      color: '#555',
-      fontStyle: 'italic',
-    },
-    textInput: {
-      height: 100,
-      borderColor: '#ccc',
-      borderWidth: 1,
-      borderRadius: 8,
-      padding: 10,
-      textAlignVertical: 'top',
-      backgroundColor: '#fff',
-      marginTop: 10,
-    },
-    submitButton: {
-      backgroundColor: PRIMARY_COLOR,
-      padding: 15,
-      marginTop: 20,
-      borderRadius: 8,
-      alignItems: 'center',
-    },
-    submitButtonText: {
-      fontSize: 18,
-      color: '#fff',
-      fontWeight: 'bold',
-    },
-  });
+        <View style={{padding: wp(4), marginTop: hp(4.5)}}>
+          {comments?.map((item, index) => (
+            <CommentItem
+              key={index}
+              item={item}
+              isSelected={selectedCommentId === item._id}
+              userId={user_id}
+              setSelectedCommentId={setSelectedCommentId}
+              handleEditAction={handleEditAction}
+              deleteAction={handleDeleteAction}
+              handleLikeAction={handleLikeAction}
+              commentLikeLoading={commentLikeLoading}
+              handleMentionClick={handleMentionClick}
+              handleReportAction={handleReportAction}
+              isFromArticle={true}
+            />
+          ))}
+        </View>
+      </ScrollView>
+      <View
+        style={[
+          styles.footer,
+          {
+            paddingBottom:
+              Platform.OS === 'ios' ? insets.bottom : insets.bottom + 20,
+          },
+        ]}>
+        <View style={styles.authorContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              //  if (article && article?.authorId) {
+              navigation.navigate('UserProfileScreen', {
+                authorId: authorId,
+              });
+            }}>
+            {profile_image && profile_image !== '' ? (
+              <Image
+                source={{
+                  uri: profile_image.startsWith('http')
+                    ? `${profile_image}`
+                    : `${GET_STORAGE_DATA}/${profile_image}`,
+                }}
+                style={styles.authorImage}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                }}
+                style={styles.authorImage}
+              />
+            )}
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.authorName}>
+              {article ? article?.authorName : ''}
+            </Text>
+            <Text style={styles.authorFollowers}>
+              {authorFollowers
+                ? authorFollowers.length > 1
+                  ? `${authorFollowers.length} followers`
+                  : `${authorFollowers.length} follower`
+                : '0 follower'}
+            </Text>
+          </View>
+        </View>
+        {article &&
+          user_id !== article.authorId &&
+          (updateFollowMutation.isPending ? (
+            <ActivityIndicator size={40} color={PRIMARY_COLOR} />
+          ) : (
+            <TouchableOpacity
+              style={styles.followButton}
+              onPress={handleFollow}>
+              <Text style={styles.followButtonText}>
+                {authorFollowers && authorFollowers.includes(user_id)
+                  ? 'Following'
+                  : 'Follow'}
+              </Text>
+            </TouchableOpacity>
+          ))}
+      </View>
+    </View>

@@ -107,6 +107,8 @@ const ReviewCard = ({
           </Text>
           <Text style={styles.title}>{item?.title}</Text>
 
+          <Text style={styles.description}>{item?.description}</Text>
+
           {item?.status === StatusEnum.PUBLISHED && (
             <Text style={{...styles.footerText1, marginBottom: 3}}>
               {item?.viewUsers
@@ -205,7 +207,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: fp(3),
-    fontWeight: '500',
+    fontWeight: '600',
     lineHeight: 18,
     color: '#778599',
     marginBottom: 10,

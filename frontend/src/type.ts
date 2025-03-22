@@ -460,4 +460,6 @@ export type Comment = {
   likedUsers: string[];
   status: string;
   isEdited: Boolean;
+  isReview: Boolean;
+  isNote: Boolean;
 };

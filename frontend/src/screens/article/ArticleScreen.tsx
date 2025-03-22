@@ -132,6 +132,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [commentLoading, setCommentLoading] = useState<Boolean>(false);
   const [commentLikeLoading, setCommentLikeLoading] = useState<Boolean>(false);
   const [mentions, setMentions] = useState<User[]>([]);
+   const [webviewHeight, setWebViewHeight] = useState(0);
 
   const webViewRef = useRef<WebView>(null);
 
@@ -262,8 +263,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     },
   });
 
-  console.log('article id', articleId);
-  console.log('user token', user_token);
 
   const updateLikeMutation = useMutation({
     mutationKey: ['update-like-status'],
@@ -459,6 +458,24 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     };
   }, [socket, route.params.articleId]);
 
+
+  useEffect(() => {
+    if (article) {
+      let source = article?.content?.endsWith('.html')
+        ? {uri: `${GET_STORAGE_DATA}/${article.content}`}
+        : {html: article?.content};
+
+      const fetchContentLength = async () => {
+        const length = await getContentLength(source);
+        console.log('Content Length:', length);
+
+        setWebViewHeight(length); //Add some buffer to the height calculation
+      };
+
+      fetchContentLength();
+    }
+  }, [article]);
+
   const handleEditAction = (comment: Comment) => {
     setNewComment(comment.content);
     setEditMode(true);
@@ -506,48 +523,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     });
   };
 
-  const handleCommentSubmit = () => {
-    if (!newComment.trim()) {
-      Alert.alert('Please enter a comment before submitting.');
-      return;
-    }
-
-    if (editMode) {
-      if (editCommentId) {
-        console.log('Edit Comment Id', editCommentId);
-        console.log('Edit Comment ', newComment);
-        console.log('Article Id', route.params.articleId);
-        console.log('User Id', user_id);
-
-        socket.emit('edit-comment', {
-          commentId: editCommentId,
-          content: newComment,
-          articleId: route.params.articleId,
-          userId: user_id,
-        });
-
-        setNewComment('');
-        setEditCommentId(null);
-        setEditMode(false);
-      } else {
-        Alert.alert('Error: Comment Not Found');
-      }
-    } else {
-      const newCommentObj = {
-        userId: user_id,
-        articleId: route.params.articleId,
-        content: replaceMentionValues(newComment, ({name}) => `@${name}`),
-        parentCommentId: null,
-        mentionedUsers: mentions,
-      };
-
-      console.log('Comment emitting', newCommentObj);
-      // Emit the new comment to the backend via socket
-      socket.emit('comment', newCommentObj);
-
-      setNewComment(''); // Clear the input field after submitting
-    }
-  };
+ 
 
   const handleReportAction = (commentId: string, authorId: string) => {
     navigation.navigate('ReportScreen', {
@@ -602,308 +578,326 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   document.head.appendChild(style);
 `;
 
-  const contentSource = article?.content?.endsWith('html')
+  const contentSource = article?.content?.endsWith('.html')
     ? {uri: `${GET_STORAGE_DATA}/${article.content}`}
     : {html: article?.content};
+
+    // Function to get the content length based on the type of content (URI or HTML)
+const getContentLength = async (contentSource) => {
+  if (contentSource.uri) {
+    try {
+      const response = await fetch(contentSource.uri);
+      const content = await response.text();
+      return content.length-4000; 
+    } catch (error) {
+      console.error("Error fetching URI:", error);
+      return 0; 
+    }
+  } else if (contentSource.html) {
+    return contentSource.html.length;
+  }
+  return 0; // Return 0 if no valid content source
+};
+
 
   if (isLoading) {
     return <Loader />;
   }
   return (
     <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        onScroll={e => {
-          var windowHeight = Dimensions.get('window').height,
-            height = e.nativeEvent.contentSize.height,
-            offset = e.nativeEvent.contentOffset.y;
-          if (windowHeight + offset >= height) {
-            //ScrollEnd,
-            console.log('ScrollEnd');
-            if (article && !readEventSave) {
-              updateReadEventMutation.mutate();
-            }
+    <ScrollView
+      style={styles.scrollView}
+      onScroll={e => {
+        var windowHeight = Dimensions.get('window').height,
+          height = e.nativeEvent.contentSize.height,
+          offset = e.nativeEvent.contentOffset.y;
+        if (windowHeight + offset >= height) {
+          //ScrollEnd,
+          console.log('ScrollEnd');
+          if (article && !readEventSave) {
+            updateReadEventMutation.mutate();
           }
-        }}
-        contentContainerStyle={styles.scrollViewContent}>
-        <View style={styles.imageContainer}>
-          {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
-            <Image
-              source={{uri: article?.imageUtils[0]}}
-              style={styles.image}
-            />
-          ) : (
-            <Image
-              source={require('../../assets/article_default.jpg')}
-              style={styles.image}
-            />
-          )}
-          {updateLikeMutation.isPending ? (
-            <ActivityIndicator size={40} color={PRIMARY_COLOR} />
-          ) : (
-            <TouchableOpacity
-              onPress={handleLike}
-              style={[
-                styles.likeButton,
-                {
-                  backgroundColor: 'white',
-                },
-              ]}>
-              <FontAwesome
-                name="heart"
-                size={34}
-                color={
-                  article &&
-                  article?.likedUsers &&
-                  article?.likedUsers?.some(user => user._id === user_id)
-                    ? PRIMARY_COLOR
-                    : 'black'
-                }
-              />
-            </TouchableOpacity>
-          )}
-        </View>
-        <View style={styles.contentContainer}>
-          {article && (
-            <Text style={{...styles.viewText, marginBottom: 10}}>
-              {article && article?.viewUsers.length
-                ? article.viewUsers.length > 1
-                  ? `${formatCount(article.viewUsers.length)} views`
-                  : `${article.viewUsers.length} view`
-                : '0 view'}
-            </Text>
-          )}
-          {article && article?.tags && (
-            <Text style={styles.categoryText}>
-              {article.tags.map(tag => tag.name).join(' | ')}
-            </Text>
-          )}
-
-          {article && (
-            <>
-              <Text style={styles.titleText}>{article?.title}</Text>
-              <View style={styles.avatarsContainer}>
-                <View style={styles.avatar}>
-                  {/** 3rd image will be display here */}
-                  {article?.likedUsers && article?.likedUsers.length >= 3 ? (
-                    <Image
-                      source={{
-                        uri: article?.likedUsers[2].Profile_image.startsWith(
-                          'https',
-                        )
-                          ? article?.likedUsers[2].Profile_image
-                          : `${GET_STORAGE_DATA}/${article?.likedUsers[2].Profile_image}`,
-                      }}
-                      style={[
-                        styles.profileImage,
-                        !article?.likedUsers[2].Profile_image && {
-                          borderWidth: 0.5,
-                          borderColor: 'black',
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <>
-                      {article?.likedUsers &&
-                        article?.likedUsers.length >= 1 && (
-                          <Image
-                            source={{
-                              uri: article?.likedUsers[0].Profile_image.startsWith(
-                                'https',
-                              )
-                                ? article?.likedUsers[0].Profile_image
-                                : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
-                            }}
-                            style={[
-                              styles.profileImage,
-                              !article?.likedUsers[0].Profile_image && {
-                                borderWidth: 0.5,
-                                borderColor: 'black',
-                              },
-                            ]}
-                          />
-                        )}
-                    </>
-                  )}
-                </View>
-                <View style={[styles.avatar, styles.avatarOverlap]}>
-                  {/** 2nd image will be display here */}
-
-                  {article?.likedUsers && article?.likedUsers.length >= 2 ? (
-                    <Image
-                      source={{
-                        uri: article?.likedUsers[1].Profile_image.startsWith(
-                          'https',
-                        )
-                          ? article?.likedUsers[1].Profile_image
-                          : `${GET_STORAGE_DATA}/${article?.likedUsers[1].Profile_image}`,
-                      }}
-                      style={[
-                        styles.profileImage,
-                        !article?.likedUsers[1].Profile_image && {
-                          borderWidth: 0.5,
-                          borderColor: 'black',
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <>
-                      {article?.likedUsers &&
-                        article?.likedUsers.length >= 1 && (
-                          <Image
-                            source={{
-                              uri: article?.likedUsers[0].Profile_image.startsWith(
-                                'https',
-                              )
-                                ? article?.likedUsers[0].Profile_image
-                                : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
-                            }}
-                            style={[
-                              styles.profileImage,
-                              !article?.likedUsers[0].Profile_image && {
-                                borderWidth: 0.5,
-                                borderColor: 'black',
-                              },
-                            ]}
-                          />
-                        )}
-                    </>
-                  )}
-                </View>
-                <View style={[styles.avatar, styles.avatarDoubleOverlap]}>
-                  {/** 1st Image  will be display here */}
-                  {article?.likedUsers && article?.likedUsers.length >= 1 && (
-                    <Image
-                      source={{
-                        uri: article?.likedUsers[0].Profile_image.startsWith(
-                          'https',
-                        )
-                          ? article?.likedUsers[0].Profile_image
-                          : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
-                      }}
-                      style={[
-                        styles.profileImage,
-                        !article?.likedUsers[0].Profile_image && {
-                          borderWidth: 0.5,
-                          borderColor: 'black',
-                        },
-                      ]}
-                    />
-                  )}
-                </View>
-                <View style={[styles.avatar, styles.avatarTripleOverlap]}>
-                  <Text style={styles.moreText}>
-                    +
-                    {article?.likedUsers
-                      ? formatCount(article.likedUsers.length)
-                      : 0}
-                  </Text>
-                </View>
-              </View>
-            </>
-          )}
-          <View style={styles.descriptionContainer}>
-            <WebView
-              style={{
-                padding: 7,
-                //width: '99%',
-                minHeight: hp(650),
-                // flex:7,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              ref={webViewRef}
-              originWhitelist={['*']}
-              injectedJavaScript={cssCode}
-              source={contentSource}
-              textZoom={100}
-            />
-          </View>
-        </View>
-
-        <View style={{padding: wp(4), marginTop: hp(4.5)}}>
-          {comments?.map((item, index) => (
-            <CommentItem
-              key={index}
-              item={item}
-              isSelected={selectedCommentId === item._id}
-              userId={user_id}
-              setSelectedCommentId={setSelectedCommentId}
-              handleEditAction={handleEditAction}
-              deleteAction={handleDeleteAction}
-              handleLikeAction={handleLikeAction}
-              commentLikeLoading={commentLikeLoading}
-              handleMentionClick={handleMentionClick}
-              handleReportAction={handleReportAction}
-              isFromArticle={true}
-            />
-          ))}
-        </View>
-      </ScrollView>
-      <View
-        style={[
-          styles.footer,
-          {
-            paddingBottom:
-              Platform.OS === 'ios' ? insets.bottom : insets.bottom + 20,
-          },
-        ]}>
-        <View style={styles.authorContainer}>
+        }
+      }}
+      contentContainerStyle={styles.scrollViewContent}>
+      <View style={styles.imageContainer}>
+        {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
+          <Image
+            source={{uri: article?.imageUtils[0]}}
+            style={styles.image}
+          />
+        ) : (
+          <Image
+            source={require('../../assets/article_default.jpg')}
+            style={styles.image}
+          />
+        )}
+        {updateLikeMutation.isPending ? (
+          <ActivityIndicator size={40} color={PRIMARY_COLOR} />
+        ) : (
           <TouchableOpacity
-            onPress={() => {
-              //  if (article && article?.authorId) {
-              navigation.navigate('UserProfileScreen', {
-                authorId: authorId,
-              });
-            }}>
-            {profile_image && profile_image !== '' ? (
-              <Image
-                source={{
-                  uri: profile_image.startsWith('http')
-                    ? `${profile_image}`
-                    : `${GET_STORAGE_DATA}/${profile_image}`,
-                }}
-                style={styles.authorImage}
-              />
-            ) : (
-              <Image
-                source={{
-                  uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-                }}
-                style={styles.authorImage}
-              />
-            )}
+            onPress={handleLike}
+            style={[
+              styles.likeButton,
+              {
+                backgroundColor: 'white',
+              },
+            ]}>
+            <FontAwesome
+              name="heart"
+              size={34}
+              color={
+                article &&
+                article?.likedUsers &&
+                article?.likedUsers?.some(user => user._id === user_id)
+                  ? PRIMARY_COLOR
+                  : 'black'
+              }
+            />
           </TouchableOpacity>
-          <View>
-            <Text style={styles.authorName}>
-              {article ? article?.authorName : ''}
-            </Text>
-            <Text style={styles.authorFollowers}>
-              {authorFollowers
-                ? authorFollowers.length > 1
-                  ? `${authorFollowers.length} followers`
-                  : `${authorFollowers.length} follower`
-                : '0 follower'}
-            </Text>
-          </View>
-        </View>
-        {article &&
-          user_id !== article.authorId &&
-          (updateFollowMutation.isPending ? (
-            <ActivityIndicator size={40} color={PRIMARY_COLOR} />
-          ) : (
-            <TouchableOpacity
-              style={styles.followButton}
-              onPress={handleFollow}>
-              <Text style={styles.followButtonText}>
-                {authorFollowers && authorFollowers.includes(user_id)
-                  ? 'Following'
-                  : 'Follow'}
-              </Text>
-            </TouchableOpacity>
-          ))}
+        )}
       </View>
+      <View style={styles.contentContainer}>
+        {article && (
+          <Text style={{...styles.viewText, marginBottom: 10}}>
+            {article && article?.viewUsers.length
+              ? article.viewUsers.length > 1
+                ? `${formatCount(article.viewUsers.length)} views`
+                : `${article.viewUsers.length} view`
+              : '0 view'}
+          </Text>
+        )}
+        {article && article?.tags && (
+          <Text style={styles.categoryText}>
+            {article.tags.map(tag => tag.name).join(' | ')}
+          </Text>
+        )}
+
+        {article && (
+          <>
+            <Text style={styles.titleText}>{article?.title}</Text>
+            <View style={styles.avatarsContainer}>
+              <View style={styles.avatar}>
+                {/** 3rd image will be display here */}
+                {article?.likedUsers && article?.likedUsers.length >= 3 ? (
+                  <Image
+                    source={{
+                      uri: article?.likedUsers[2].Profile_image.startsWith(
+                        'https',
+                      )
+                        ? article?.likedUsers[2].Profile_image
+                        : `${GET_STORAGE_DATA}/${article?.likedUsers[2].Profile_image}`,
+                    }}
+                    style={[
+                      styles.profileImage,
+                      !article?.likedUsers[2].Profile_image && {
+                        borderWidth: 0.5,
+                        borderColor: 'black',
+                      },
+                    ]}
+                  />
+                ) : (
+                  <>
+                    {article?.likedUsers &&
+                      article?.likedUsers.length >= 1 && (
+                        <Image
+                          source={{
+                            uri: article?.likedUsers[0].Profile_image.startsWith(
+                              'https',
+                            )
+                              ? article?.likedUsers[0].Profile_image
+                              : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                          }}
+                          style={[
+                            styles.profileImage,
+                            !article?.likedUsers[0].Profile_image && {
+                              borderWidth: 0.5,
+                              borderColor: 'black',
+                            },
+                          ]}
+                        />
+                      )}
+                  </>
+                )}
+              </View>
+              <View style={[styles.avatar, styles.avatarOverlap]}>
+                {/** 2nd image will be display here */}
+
+                {article?.likedUsers && article?.likedUsers.length >= 2 ? (
+                  <Image
+                    source={{
+                      uri: article?.likedUsers[1].Profile_image.startsWith(
+                        'https',
+                      )
+                        ? article?.likedUsers[1].Profile_image
+                        : `${GET_STORAGE_DATA}/${article?.likedUsers[1].Profile_image}`,
+                    }}
+                    style={[
+                      styles.profileImage,
+                      !article?.likedUsers[1].Profile_image && {
+                        borderWidth: 0.5,
+                        borderColor: 'black',
+                      },
+                    ]}
+                  />
+                ) : (
+                  <>
+                    {article?.likedUsers &&
+                      article?.likedUsers.length >= 1 && (
+                        <Image
+                          source={{
+                            uri: article?.likedUsers[0].Profile_image.startsWith(
+                              'https',
+                            )
+                              ? article?.likedUsers[0].Profile_image
+                              : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                          }}
+                          style={[
+                            styles.profileImage,
+                            !article?.likedUsers[0].Profile_image && {
+                              borderWidth: 0.5,
+                              borderColor: 'black',
+                            },
+                          ]}
+                        />
+                      )}
+                  </>
+                )}
+              </View>
+              <View style={[styles.avatar, styles.avatarDoubleOverlap]}>
+                {/** 1st Image  will be display here */}
+                {article?.likedUsers && article?.likedUsers.length >= 1 && (
+                  <Image
+                    source={{
+                      uri: article?.likedUsers[0].Profile_image.startsWith(
+                        'https',
+                      )
+                        ? article?.likedUsers[0].Profile_image
+                        : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                    }}
+                    style={[
+                      styles.profileImage,
+                      !article?.likedUsers[0].Profile_image && {
+                        borderWidth: 0.5,
+                        borderColor: 'black',
+                      },
+                    ]}
+                  />
+                )}
+              </View>
+              <View style={[styles.avatar, styles.avatarTripleOverlap]}>
+                <Text style={styles.moreText}>
+                  +
+                  {article?.likedUsers
+                    ? formatCount(article.likedUsers.length)
+                    : 0}
+                </Text>
+              </View>
+            </View>
+          </>
+        )}
+        <View style={styles.descriptionContainer}>
+          <WebView
+            style={{
+              padding: 7,
+              //width: '99%',
+              minHeight: webviewHeight,
+              // flex:7,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            ref={webViewRef}
+            originWhitelist={['*']}
+            injectedJavaScript={cssCode}
+            source={contentSource}
+            textZoom={100}
+          />
+        </View>
+      </View>
+
+      <View style={{padding: wp(4), marginTop: hp(4.5)}}>
+        {comments?.map((item, index) => (
+          <CommentItem
+            key={index}
+            item={item}
+            isSelected={selectedCommentId === item._id}
+            userId={user_id}
+            setSelectedCommentId={setSelectedCommentId}
+            handleEditAction={handleEditAction}
+            deleteAction={handleDeleteAction}
+            handleLikeAction={handleLikeAction}
+            commentLikeLoading={commentLikeLoading}
+            handleMentionClick={handleMentionClick}
+            handleReportAction={handleReportAction}
+            isFromArticle={true}
+          />
+        ))}
+      </View>
+    </ScrollView>
+    <View
+      style={[
+        styles.footer,
+        {
+          paddingBottom:
+            Platform.OS === 'ios' ? insets.bottom : insets.bottom + 20,
+        },
+      ]}>
+      <View style={styles.authorContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            //  if (article && article?.authorId) {
+            navigation.navigate('UserProfileScreen', {
+              authorId: authorId,
+            });
+          }}>
+          {profile_image && profile_image !== '' ? (
+            <Image
+              source={{
+                uri: profile_image.startsWith('http')
+                  ? `${profile_image}`
+                  : `${GET_STORAGE_DATA}/${profile_image}`,
+              }}
+              style={styles.authorImage}
+            />
+          ) : (
+            <Image
+              source={{
+                uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+              }}
+              style={styles.authorImage}
+            />
+          )}
+        </TouchableOpacity>
+        <View>
+          <Text style={styles.authorName}>
+            {article ? article?.authorName : ''}
+          </Text>
+          <Text style={styles.authorFollowers}>
+            {authorFollowers
+              ? authorFollowers.length > 1
+                ? `${authorFollowers.length} followers`
+                : `${authorFollowers.length} follower`
+              : '0 follower'}
+          </Text>
+        </View>
+      </View>
+      {article &&
+        user_id !== article.authorId &&
+        (updateFollowMutation.isPending ? (
+          <ActivityIndicator size={40} color={PRIMARY_COLOR} />
+        ) : (
+          <TouchableOpacity
+            style={styles.followButton}
+            onPress={handleFollow}>
+            <Text style={styles.followButtonText}>
+              {authorFollowers && authorFollowers.includes(user_id)
+                ? 'Following'
+                : 'Follow'}
+            </Text>
+          </TouchableOpacity>
+        ))}
     </View>
+  </View>
   );
 };
 

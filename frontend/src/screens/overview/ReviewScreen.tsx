@@ -13,10 +13,18 @@ import {
 } from 'react-native';
 import React, {FC, useEffect, useRef, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
+import {
+  BUTTON_COLOR,
+  ON_PRIMARY_COLOR,
+  PRIMARY_COLOR,
+} from '../../helper/Theme';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ArticleData, ReviewScreenProp, User} from '../../type';
+import Feather from 'react-native-vector-icons/Feather';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
 import WebView from 'react-native-webview';
 import {hp, wp} from '../../helper/Metric';
@@ -38,75 +46,20 @@ import {
 import CommentItem from '../../components/CommentItem';
 import {setUserHandle} from '../../store/UserSlice';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
-
-const renderSuggestions: FC<MentionSuggestionsProps> = ({
-  keyword,
-  onSuggestionPress,
-}) => {
-  if (keyword == null) {
-    return null;
-  }
-
-  return (
-    <View>
-      {article?.mentionedUsers
-        .filter(
-          one =>
-            one.user_handle
-              .toLocaleLowerCase()
-              .includes(keyword.toLocaleLowerCase()) ||
-            one.user_name
-              .toLocaleLowerCase()
-              .includes(keyword.toLocaleLowerCase()),
-        )
-        .map(one => (
-          <Pressable
-            key={one._id}
-            onPress={() => {
-              onSuggestionPress({id: one._id, name: one.user_handle});
-              //setMentions(prev => [...prev, one]);
-            }}
-            style={{flex: 0, padding: 12, flexDirection: 'row'}}>
-            {one.Profile_image ? (
-              <Image
-                source={{
-                  uri: one.Profile_image.startsWith('https')
-                    ? one.Profile_image
-                    : `${GET_STORAGE_DATA}/${one.Profile_image}`,
-                }}
-                style={[
-                  styles.profileImage2,
-                  !one.Profile_image && {
-                    borderWidth: 0.5,
-                    borderColor: 'black',
-                  },
-                ]}
-              />
-            ) : (
-              <Image
-                source={{
-                  uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-                }}
-                style={[
-                  styles.profileImage2,
-                  {borderWidth: 0.5, borderColor: 'black'},
-                ]}
-              />
-            )}
-
-            <Text style={styles.username2}>{one.user_handle}</Text>
-          </Pressable>
-        ))}
-    </View>
-  );
-};
+import {
+  createFeebackHTMLStructure,
+  createHTMLStructure,
+  StatusEnum,
+} from '../../helper/Utils';
+import ReviewItem from '../../components/ReviewItem';
 
 const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   const insets = useSafeAreaInsets();
   const {articleId, authorId} = route.params;
-  const {user_id, user_token} = useSelector((state: any) => state.user);
+  const {user_token} = useSelector((state: any) => state.user);
   const RichText = useRef();
   const [feedback, setFeedback] = useState('');
+  const [webviewHeight, setWebViewHeight] = useState(0);
 
   const socket = useSocket();
   const dispatch = useDispatch();
@@ -136,11 +89,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
       // );
     });
   }
-  const {
-    data: article,
-    refetch,
-    isLoading,
-  } = useQuery({
+  const {data: article} = useQuery({
     queryKey: ['get-article-by-id'],
     queryFn: async () => {
       const response = await axios.get(`${GET_ARTICLE_BY_ID}/${articleId}`, {
@@ -210,25 +159,128 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
     };
   }, [socket, route.params.articleId]);
 
-  const handleCommentSubmit = () => {
-    if (!newComment.trim()) {
-      Alert.alert('Please enter a comment before submitting.');
-      return;
-    }
-
-    //  articleId, reviewer_id, feedback, isReview, isNote
-    const newCommentObj = {
-      articleId: articleId,
-      reviewer_id: article?.reviewer_id,
-      feedback: replaceMentionValues(newComment, ({name}) => `@${name}`),
+  const commentTests = [
+    {
+      _id: '1',
+      id: '1',
+      articleId: 101,
+      userId: {_id: 'u1', name: 'Author', email: 'author@example.com'},
+      content:
+        '<h4>Thank you for your feedback! I will make the changes you suggested.</h4>',
+      createdAt: '2025-03-20T10:00:00Z',
+      updatedAt: '2025-03-20T10:00:00Z',
+      parentCommentId: '',
+      replies: [],
+      likedUsers: [],
+      status: 'published',
+      isEdited: false,
       isReview: false,
-      isNote: true,
-    };
+      isNote: false,
+    },
+    {
+      _id: '2',
+      id: '2',
+      articleId: 101,
+      userId: {_id: 'u2', name: 'Moderator', email: 'moderator@example.com'},
+      content:
+        '<h4>The article looks good, but there are a few areas that need clarification regarding your <strong>main argument</strong> in the second section.</h4>',
+      createdAt: '2025-03-20T10:15:00Z',
+      updatedAt: '2025-03-20T10:15:00Z',
+      parentCommentId: '',
+      replies: [],
+      likedUsers: [],
+      status: 'review',
+      isEdited: false,
+      isReview: true,
+      isNote: false,
+    },
+    {
+      _id: '3',
+      id: '3',
+      articleId: 101,
+      userId: {_id: 'u1', name: 'Author', email: 'author@example.com'},
+      content:
+        '<h4>I see, I will rework that section to make my argument clearer. I’ll also provide more <em>evidence</em> to support my points.</h4>',
+      createdAt: '2025-03-20T10:30:00Z',
+      updatedAt: '2025-03-20T10:30:00Z',
+      parentCommentId: '2',
+      replies: [],
+      likedUsers: [],
+      status: 'published',
+      isEdited: false,
+      isReview: false,
+      isNote: false,
+    },
+    {
+      _id: '4',
+      id: '4',
+      articleId: 101,
+      userId: {_id: 'u2', name: 'Moderator', email: 'moderator@example.com'},
+      content:
+        '<h4>Great! Make sure to provide more context on the <strong>statistics</strong> you used. The readers might need additional clarification on how the data supports your claim.</h4>',
+      createdAt: '2025-03-20T10:45:00Z',
+      updatedAt: '2025-03-20T10:45:00Z',
+      parentCommentId: '3',
+      replies: [],
+      likedUsers: [],
+      status: 'review',
+      isEdited: false,
+      isReview: true,
+      isNote: false,
+    },
+    {
+      _id: '5',
+      id: '5',
+      articleId: 101,
+      userId: {_id: 'u1', name: 'Author', email: 'author@example.com'},
+      content:
+        '<h4>Understood! I’ll work on providing more context for the statistics. Thanks again for the constructive feedback.</h4>',
+      createdAt: '2025-03-20T11:00:00Z',
+      updatedAt: '2025-03-20T11:00:00Z',
+      parentCommentId: '4',
+      replies: [],
+      likedUsers: [],
+      status: 'published',
+      isEdited: false,
+      isReview: false,
+      isNote: false,
+    },
+    {
+      _id: '6',
+      id: '6',
+      articleId: 101,
+      userId: {_id: 'u2', name: 'Moderator', email: 'moderator@example.com'},
+      content:
+        "<h4>You're welcome! Once you make those changes, the article will be much clearer. Looking forward to seeing the updated version!</h4>",
+      createdAt: '2025-03-20T11:15:00Z',
+      updatedAt: '2025-03-20T11:15:00Z',
+      parentCommentId: '5',
+      replies: [],
+      likedUsers: [],
+      status: 'review',
+      isEdited: false,
+      isReview: true,
+      isNote: false,
+    },
+  ];
 
-    socket.emit('add-review-comment', newCommentObj);
+  useEffect(() => {
+    if (article) {
+      let source = article?.content?.endsWith('.html')
+        ? {uri: `${GET_STORAGE_DATA}/${article.content}`}
+        : {html: article?.content};
 
-    setNewComment(''); // Clear the input field after submitting
-  };
+      const fetchContentLength = async () => {
+        const length = await getContentLength(source);
+        console.log('Content Length:', length);
+
+        //setWebViewHeight(length * 1.2); //Add some buffer to the height calculation
+        setWebViewHeight(length);
+      };
+
+      fetchContentLength();
+    }
+  }, [article]);
 
   // console.log('author id', authorId);
 
@@ -244,9 +296,25 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
     document.head.appendChild(style);
   `;
 
-  const contentSource = article?.content?.endsWith('html')
+  const contentSource = article?.content?.endsWith('.html')
     ? {uri: `${GET_STORAGE_DATA}/${article.content}`}
     : {html: article?.content};
+
+  const getContentLength = async contentSource => {
+    if (contentSource.uri) {
+      try {
+        const response = await fetch(contentSource.uri);
+        const content = await response.text();
+        return content.length - 4000;
+      } catch (error) {
+        console.error('Error fetching URI:', error);
+        return 0;
+      }
+    } else if (contentSource.html) {
+      return contentSource.html.length;
+    }
+    return 0; // Return 0 if no valid content source
+  };
 
   return (
     <View style={styles.container}>
@@ -266,20 +334,22 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
             />
           )}
 
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('ArticleDescriptionScreen', {
-                article: article,
-              });
-            }}
-            style={[
-              styles.likeButton,
-              {
-                backgroundColor: 'white',
-              },
-            ]}>
-            <FontAwesome5 name="pencil-alt" size={24} color={PRIMARY_COLOR} />
-          </TouchableOpacity>
+          {article?.status !== StatusEnum.DISCARDED && (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('ArticleDescriptionScreen', {
+                  article: article,
+                });
+              }}
+              style={[
+                styles.likeButton,
+                {
+                  backgroundColor: 'white',
+                },
+              ]}>
+              <FontAwesome5 name="pencil-alt" size={24} color={PRIMARY_COLOR} />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.contentContainer}>
           {article && article?.tags && (
@@ -298,7 +368,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
               style={{
                 padding: 7,
                 //width: '99%',
-                minHeight: hp(650),
+                minHeight: webviewHeight,
                 // flex:7,
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -311,40 +381,132 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
             />
           </View>
         </View>
+        {article?.status !== StatusEnum.DISCARDED &&
+          article?.reviewer_id !== null && (
+            <View style={styles.inputContainer}>
+              <RichToolbar
+                style={[styles.richBar]}
+                editor={RichText}
+                disabled={false}
+                iconTint={'white'}
+                selectedIconTint={'black'}
+                disabledIconTint={'purple'}
+                iconSize={30}
+                actions={[
+                  actions.setBold,
+                  actions.setItalic,
+                  actions.setUnderline,
+                  actions.setStrikethrough,
+                  actions.heading1,
+                  actions.heading2,
+                  actions.heading3,
+                  actions.heading4,
+                  actions.heading5,
+                  actions.heading6,
+                  actions.alignLeft,
+                  actions.alignCenter,
+                  actions.alignRight,
+                  actions.insertBulletsList,
+                  actions.insertOrderedList,
+                  actions.insertLink,
+                  actions.table,
+                  actions.undo,
+                  actions.redo,
+                  actions.blockquote,
+                ]}
+                iconMap={{
+                  [actions.setStrikethrough]: ({tintColor}) => (
+                    <FontAwesome
+                      name="strikethrough"
+                      color={tintColor}
+                      size={26}
+                    />
+                  ),
+                  [actions.alignLeft]: ({tintColor}) => (
+                    <Feather name="align-left" color={tintColor} size={35} />
+                  ),
+                  [actions.alignCenter]: ({tintColor}) => (
+                    <Feather name="align-center" color={tintColor} size={35} />
+                  ),
+                  [actions.alignRight]: ({tintColor}) => (
+                    <Feather name="align-right" color={tintColor} size={35} />
+                  ),
+                  [actions.undo]: ({tintColor}) => (
+                    <Ionicons name="arrow-undo" color={tintColor} size={35} />
+                  ),
+                  [actions.redo]: ({tintColor}) => (
+                    <Ionicons name="arrow-redo" color={tintColor} size={35} />
+                  ),
+                  [actions.heading1]: ({tintColor}) => (
+                    <Text style={[styles.tib, {color: tintColor}]}>H1</Text>
+                  ),
+                  [actions.heading2]: ({tintColor}) => (
+                    <Text style={[styles.tib, {color: tintColor}]}>H2</Text>
+                  ),
+                  [actions.heading3]: ({tintColor}) => (
+                    <Text style={[styles.tib, {color: tintColor}]}>H3</Text>
+                  ),
+                  [actions.heading4]: ({tintColor}) => (
+                    <Text style={[styles.tib, {color: tintColor}]}>H4</Text>
+                  ),
+                  [actions.heading5]: ({tintColor}) => (
+                    <Text style={[styles.tib, {color: tintColor}]}>H5</Text>
+                  ),
+                  [actions.heading6]: ({tintColor}) => (
+                    <Text style={[styles.tib, {color: tintColor}]}>H6</Text>
+                  ),
+                  [actions.blockquote]: ({tintColor}) => (
+                    <Entypo name="quote" color={tintColor} size={35} />
+                  ),
+                }}
+              />
+              <RichEditor
+                disabled={false}
+                containerStyle={styles.editor}
+                ref={RichText}
+                style={styles.rich}
+                placeholder={'Start conversation with admin'}
+                initialContentHTML={feedback}
+                onChange={text => setFeedback(text)}
+                editorInitializedCallback={editorInitializedCallback}
+                onHeightChange={handleHeightChange}
+                initialHeight={300}
+              />
 
-        <View style={{padding: wp(4), marginTop: hp(4.5)}}>
+              {feedback.length > 0 && (
+                <TouchableOpacity
+                  style={styles.submitButton}
+                  onPress={() => {
+                    // emit socket event for feedback
+                    const ans = createFeebackHTMLStructure(feedback);
+                    socket.emit('add-review-comment', {
+                      articleId: article?._id,
+                      reviewer_id: article?.reviewer_id,
+                      feedback: ans,
+                      isReview: false,
+                      isNote: true,
+                    });
+                  }}>
+                  <Text style={styles.submitButtonText}>Post</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+
+        {article?.reviewer_id === null ? (
+          <View style={{padding: wp(6), marginTop: hp(4.5)}}>
+            <Text style={{...styles.authorName, marginBottom:5}}> Test Conversations</Text>
+            {commentTests?.map((item, index) => (
+              <ReviewItem key={index} item={item} />
+            ))}
+          </View>
+        ):(
+          <View style={{padding: wp(6), marginTop: hp(4.5)}}>
           {comments?.map((item, index) => (
-            <CommentItem
-              key={index}
-              item={item}
-              isSelected={selectedCommentId === item._id}
-              userId={user_id}
-              setSelectedCommentId={setSelectedCommentId}
-              handleEditAction={handleEditAction}
-              deleteAction={handleDeleteAction}
-              handleLikeAction={handleLikeAction}
-              commentLikeLoading={commentLikeLoading}
-              handleMentionClick={handleMentionClick}
-              handleReportAction={handleReportAction}
-              isFromArticle={true}
-            />
+            <ReviewItem key={index} item={item} />
           ))}
-        </View>
-
-        <View style={styles.inputContainer}>
-          <RichEditor
-            disabled={false}
-            containerStyle={styles.editor}
-            ref={RichText}
-            style={styles.rich}
-            placeholder={'Start Writing Here'}
-            initialContentHTML={feedback}
-            onChange={text => setFeedback(text)}
-            editorInitializedCallback={editorInitializedCallback}
-            onHeightChange={handleHeightChange}
-            initialHeight={300}
-          />
-        </View>
+        </View> 
+        )}
       </ScrollView>
       <View
         style={[
@@ -381,9 +543,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
             )}
           </TouchableOpacity>
           <View>
-            <Text style={styles.authorName}>
-              {article ? article?.authorName : ''}
-            </Text>
+            <Text style={styles.authorName}>{user ? user?.user_name : ''}</Text>
             <Text style={styles.authorFollowers}>
               {user && user.followers
                 ? user.followers.length > 1
@@ -568,7 +728,7 @@ const styles = StyleSheet.create({
     backgroundColor: PRIMARY_COLOR,
     padding: 15,
     marginTop: 20,
-    borderRadius: 8,
+    //borderRadius: 8,
     alignItems: 'center',
   },
   submitButtonText: {
@@ -585,13 +745,17 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   inputContainer: {
-    maxHeight: 300,
+    height: 300,
     overflow: 'hidden',
-    padding: hp(3),
-    margin: wp(1),
+    //backgroundColor: 'red',
+    //padding: hp(1),
+    borderColor: '#000',
+    borderWidth: 0.5,
+   // padding: wp(6),
+    marginHorizontal: wp(4),
   },
   editor: {
-    backgroundColor: ON_PRIMARY_COLOR,
+    backgroundColor: 'blue',
     borderColor: 'black',
     marginHorizontal: 4,
   },
@@ -599,5 +763,11 @@ const styles = StyleSheet.create({
     //minHeight: 700,
     flex: 1,
     backgroundColor: ON_PRIMARY_COLOR,
+  },
+  richBar: {
+    height: 45,
+    backgroundColor: BUTTON_COLOR,
+    marginTop: 0,
+    marginBottom: hp(0.8),
   },
 });

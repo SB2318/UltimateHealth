@@ -665,3 +665,94 @@ ${body}
 </body>
 `;
 };
+
+export const createFeebackHTMLStructure = (feedback: string)=>{
+  
+ return  `<!DOCTYPE html>
+<html>
+<head>
+<style>
+/**
+ * Copyright 2024,UltimateHealth. All rights reserved.
+ */
+body {
+  font-family: Arial, sans-serif;
+  font-size: 40px; 
+  line-height: 1.5; 
+  color: #333; 
+}
+
+h1 {
+  color: #00698f;
+}
+
+h2 {
+  color: #008000;
+}
+
+h3 {
+  color: #660066;
+}
+
+h4 {
+  color: #0099CC;
+}
+
+h5 {
+  color: #FF9900;
+}
+
+h6 {
+  color: #663300;
+}
+
+ul {
+  list-style-type: disc;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+article {
+  width: 80%;
+  margin: 40px auto;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f0f0f0;
+  }
+.tag-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag-list li {
+  margin-right: 10px;
+}
+
+.tag {
+  color: blue;
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+${feedback}
+<hr>
+</body>
+`;
+}
