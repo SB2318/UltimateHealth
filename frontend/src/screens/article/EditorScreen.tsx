@@ -320,6 +320,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         onChange={text => setArticle(text)}
         editorInitializedCallback={editorInitializedCallback}
         onHeightChange={handleHeightChange}
+        initialHeight={600}
       />
 
       {/**

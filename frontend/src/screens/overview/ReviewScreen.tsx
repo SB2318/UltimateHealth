@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import React, {FC, useEffect, useRef, useState} from 'react';
 import {useQuery} from '@tanstack/react-query';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ArticleData, ReviewScreenProp, User} from '../../type';
@@ -21,14 +21,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import WebView from 'react-native-webview';
 import {hp, wp} from '../../helper/Metric';
 import {
-  EC2_BASE_URL,
   GET_ARTICLE_BY_ID,
   GET_PROFILE_API,
-  GET_PROFILE_IMAGE_BY_ID,
   GET_STORAGE_DATA,
 } from '../../helper/APIUtils';
 import axios from 'axios';
-import Loader from '../../components/Loader';
 
 //import io from 'socket.io-client';
 
@@ -40,6 +37,7 @@ import {
 } from 'react-native-controlled-mentions';
 import CommentItem from '../../components/CommentItem';
 import {setUserHandle} from '../../store/UserSlice';
+import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 
 const renderSuggestions: FC<MentionSuggestionsProps> = ({
   keyword,
@@ -107,6 +105,8 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   const insets = useSafeAreaInsets();
   const {articleId, authorId} = route.params;
   const {user_id, user_token} = useSelector((state: any) => state.user);
+  const RichText = useRef();
+  const [feedback, setFeedback] = useState('');
 
   const socket = useSocket();
   const dispatch = useDispatch();
@@ -123,6 +123,19 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
 
   const webViewRef = useRef<WebView>(null);
 
+  function handleHeightChange(_height) {
+    // console.log("editor height change:", height);
+  }
+
+  function editorInitializedCallback() {
+    RichText.current?.registerToolbar(function (_items) {
+      // items contain all the actions that are currently active
+      // console.log(
+      //   'Toolbar click, selected items (insert end callback):',
+      //   items,
+      // );
+    });
+  }
   const {
     data: article,
     refetch,
@@ -156,29 +169,18 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
     dispatch(setUserHandle(user.user_handle));
   }
 
-  console.log('article id', articleId);
-  console.log('user token', user_token);
-
   useEffect(() => {
-    socket.emit('fetch-comments', {articleId: route.params.articleId});
+    socket.emit('load-review-comments', {articleId: route.params.articleId});
 
     socket.on('connect', () => {
       console.log('connection established');
     });
 
-    socket.on('comment-processing', (data: boolean) => {
-      setCommentLoading(data);
+    socket.on('error', data => {
+      console.log('connection error', data);
     });
 
-    socket.on('like-comment-processing', (data: boolean) => {
-      setCommentLikeLoading(data);
-    });
-
-    socket.on('error', () => {
-      console.log('connection error');
-    });
-
-    socket.on('fetch-comments', data => {
+    socket.on('review-comments', data => {
       console.log('comment loaded');
       if (data.articleId === route.params.articleId) {
         setComments(data.comments);
@@ -186,7 +188,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
     });
 
     // Listen for new comments
-    socket.on('comment', data => {
+    socket.on('new-feedback', data => {
       console.log('new comment loaded', data);
       if (data.articleId === route.params.articleId) {
         setComments(prevComments => {
@@ -201,106 +203,12 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
       }
     });
 
-    // Listen for new replies
-    socket.on('new-reply', data => {
-      if (data.articleId === route.params.articleId) {
-        setComments(prevComments => {
-          return prevComments.map(comment =>
-            comment._id === data.parentCommentId
-              ? {...comment, replies: [...comment.replies, data.reply]}
-              : comment,
-          );
-        });
-      }
-    });
-
-    // Listen to edit comment updates (e.g., when replies are added)
-    socket.on('edit-comment', data => {
-      setComments(prevComments => {
-        return prevComments.map(comment =>
-          comment._id === data._id
-            ? {...comment, ...data} // update the comment with new data
-            : comment,
-        );
-      });
-    });
-
-    // Listen to like and dislike comment
-    socket.on('like-comment', data => {
-      setComments(prevComments => {
-        return prevComments.map(comment =>
-          comment._id === data._id ? {...comment, ...data} : comment,
-        );
-      });
-    });
-
-    socket.on('delete-comment', data => {
-      //console.log('Delete Comment Data', data);
-
-      //console.log('Comments Length before', comments.length);
-      setComments(prevComments =>
-        prevComments.filter(comment => comment._id !== data.commentId),
-      );
-
-      //console.log('Comments Length', comments.length);
-    });
-
     return () => {
-      socket.off('fetch-comments');
-      socket.off('comment');
-      socket.off('new-reply');
-      socket.off('edit-comment');
-      socket.off('delete-comment');
-      socket.off('like-comment');
+      socket.off('review-comments');
+      socket.off('new-feedback');
+      socket.off('error');
     };
   }, [socket, route.params.articleId]);
-
-  const handleEditAction = (comment: Comment) => {
-    setNewComment(comment.content);
-    setEditMode(true);
-    setEditCommentId(comment._id);
-  };
-
-  const handleMentionClick = (user_handle: string) => {
-    //console.log('user handle', user_handle);
-    navigation.navigate('UserProfileScreen', {
-      author_handle: user_handle.substring(1),
-    });
-  };
-
-  const handleDeleteAction = (comment: Comment) => {
-    //commentId, articleId, userId
-    Alert.alert(
-      'Alert',
-      'Are you sure you want to delete this comment.',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {
-          text: 'OK',
-          onPress: () => {
-            socket.emit('delete-comment', {
-              commentId: comment._id,
-              articleId: route.params.articleId,
-              userId: user_id,
-            });
-          },
-        },
-      ],
-      {cancelable: false},
-    );
-  };
-
-  const handleLikeAction = (comment: Comment) => {
-    socket.emit('like-comment', {
-      commentId: comment._id,
-      articleId: route.params.articleId,
-      userId: user_id,
-    });
-  };
 
   const handleCommentSubmit = () => {
     if (!newComment.trim()) {
@@ -308,83 +216,21 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
       return;
     }
 
-    if (editMode) {
-      if (editCommentId) {
-        console.log('Edit Comment Id', editCommentId);
-        console.log('Edit Comment ', newComment);
-        console.log('Article Id', route.params.articleId);
-        console.log('User Id', user_id);
+    //  articleId, reviewer_id, feedback, isReview, isNote
+    const newCommentObj = {
+      articleId: articleId,
+      reviewer_id: article?.reviewer_id,
+      feedback: replaceMentionValues(newComment, ({name}) => `@${name}`),
+      isReview: false,
+      isNote: true,
+    };
 
-        socket.emit('edit-comment', {
-          commentId: editCommentId,
-          content: newComment,
-          articleId: route.params.articleId,
-          userId: user_id,
-        });
+    socket.emit('add-review-comment', newCommentObj);
 
-        setNewComment('');
-        setEditCommentId(null);
-        setEditMode(false);
-      } else {
-        Alert.alert('Error: Comment Not Found');
-      }
-    } else {
-      const newCommentObj = {
-        userId: user_id,
-        articleId: route.params.articleId,
-        content: replaceMentionValues(newComment, ({name}) => `@${name}`),
-        parentCommentId: null,
-        mentionedUsers: mentions,
-      };
-
-      console.log('Comment emitting', newCommentObj);
-      // Emit the new comment to the backend via socket
-      socket.emit('comment', newCommentObj);
-
-      setNewComment(''); // Clear the input field after submitting
-    }
-  };
-
-  const handleReportAction = (commentId: string, authorId: string) => {
-    navigation.navigate('ReportScreen', {
-      articleId: articleId.toString(),
-      authorId: authorId,
-      commentId: commentId,
-    });
+    setNewComment(''); // Clear the input field after submitting
   };
 
   // console.log('author id', authorId);
-  const {data: authorFollowers, refetch: refetchFollowers} = useQuery({
-    queryKey: ['authorFollowers'],
-    queryFn: async () => {
-      const response = await axios.get(
-        `${EC2_BASE_URL}/user/${authorId}/followers`,
-        {
-          headers: {
-            Authorization: `Bearer ${user_token}`,
-          },
-        },
-      );
-
-      return response.data.followers as string[];
-    },
-  });
-
-  const {data: profile_image} = useQuery({
-    queryKey: ['author_profile_image'],
-    queryFn: async () => {
-      const response = await axios.get(
-        `${GET_PROFILE_IMAGE_BY_ID}/${authorId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user_token}`,
-          },
-        },
-      );
-      //console.log('Response', response);
-      return response.data.profile_image as string;
-    },
-  });
 
   const cssCode = `
     const style = document.createElement('style');
@@ -402,9 +248,6 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
     ? {uri: `${GET_STORAGE_DATA}/${article.content}`}
     : {html: article?.content};
 
-  if (isLoading) {
-    return <Loader />;
-  }
   return (
     <View style={styles.container}>
       <ScrollView
@@ -424,10 +267,10 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
           )}
 
           <TouchableOpacity
-            onPress={()=>{
+            onPress={() => {
               navigation.navigate('ArticleDescriptionScreen', {
                 article: article,
-              })
+              });
             }}
             style={[
               styles.likeButton,
@@ -487,6 +330,21 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
             />
           ))}
         </View>
+
+        <View style={styles.inputContainer}>
+          <RichEditor
+            disabled={false}
+            containerStyle={styles.editor}
+            ref={RichText}
+            style={styles.rich}
+            placeholder={'Start Writing Here'}
+            initialContentHTML={feedback}
+            onChange={text => setFeedback(text)}
+            editorInitializedCallback={editorInitializedCallback}
+            onHeightChange={handleHeightChange}
+            initialHeight={300}
+          />
+        </View>
       </ScrollView>
       <View
         style={[
@@ -504,12 +362,12 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
                 authorId: authorId,
               });
             }}>
-            {profile_image && profile_image !== '' ? (
+            {user && user.Profile_image && user.Profile_image !== '' ? (
               <Image
                 source={{
-                  uri: profile_image.startsWith('http')
-                    ? `${profile_image}`
-                    : `${GET_STORAGE_DATA}/${profile_image}`,
+                  uri: user.Profile_image.startsWith('http')
+                    ? `${user.Profile_image}`
+                    : `${GET_STORAGE_DATA}/${user.Profile_image}`,
                 }}
                 style={styles.authorImage}
               />
@@ -527,10 +385,10 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
               {article ? article?.authorName : ''}
             </Text>
             <Text style={styles.authorFollowers}>
-              {authorFollowers
-                ? authorFollowers.length > 1
-                  ? `${authorFollowers.length} followers`
-                  : `${authorFollowers.length} follower`
+              {user && user.followers
+                ? user.followers.length > 1
+                  ? `${user.followers.length} followers`
+                  : `${user.followers.length} follower`
                 : '0 follower'}
             </Text>
           </View>
@@ -725,5 +583,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 20,
     padding: 5,
+  },
+  inputContainer: {
+    maxHeight: 300,
+    overflow: 'hidden',
+    padding: hp(3),
+    margin: wp(1),
+  },
+  editor: {
+    backgroundColor: ON_PRIMARY_COLOR,
+    borderColor: 'black',
+    marginHorizontal: 4,
+  },
+  rich: {
+    //minHeight: 700,
+    flex: 1,
+    backgroundColor: ON_PRIMARY_COLOR,
   },
 });

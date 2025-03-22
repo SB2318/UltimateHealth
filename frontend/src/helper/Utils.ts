@@ -2,7 +2,6 @@ import NetInfo from '@react-native-community/netinfo';
 import {Category, CategoryType, Podcast} from '../type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 export const checkInternetConnection = (
   callback: (isConnected: boolean) => void,
 ) => {
@@ -35,14 +34,13 @@ export const Categories: CategoryType[] = [
   {id: 10, name: 'Pulmonology'},
 ];
 
-
 export const StatusEnum = {
-  UNASSIGNED: 'unassigned',
-  IN_PROGRESS: 'in-progress',
-  REVIEW_PENDING: 'review-pending',
+  UNASSIGNED: 'unassigned', // can't change
+  IN_PROGRESS: 'in-progress', // can't change
+  REVIEW_PENDING: 'review-pending', // can't change
   PUBLISHED: 'published',
-  DISCARDED: 'discarded',
-  AWAITING_USER: 'awaiting-user'
+  DISCARDED: 'discarded', // can't change
+  AWAITING_USER: 'awaiting-user',
 };
 /*
 
@@ -549,7 +547,7 @@ export const KEYS = {
   USER_TOKEN_EXPIRY_DATE: 'USER_TOKEN_EXPIRY_DATE',
   VULTR_CHAT_MODEL: 'zephyr-7b-beta-f32',
   VULTR_COLLECTION: 'care_companion',
-  USER_HANDLE: 'USER_HANDLE'
+  USER_HANDLE: 'USER_HANDLE',
 };
 
 export const VULTR_CHAT_ROLES = {

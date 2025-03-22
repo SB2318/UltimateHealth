@@ -43,14 +43,14 @@ export type RootStackParamList = {
     authorId: string;
   };
   OverviewScreen: {
-    articles: ArticleData[]
+    articles: ArticleData[];
   };
   ConversationScreen: undefined;
   FollowerScreen: {
-    followers: User[]
+    followers: User[];
   };
   FollowingScreen: {
-    followings: User[]
+    followings: User[];
   };
   CommentScreen: {
     articleId: number;
@@ -170,11 +170,22 @@ export type HomeScreenProps = CompositeScreenProps<
 >;
 
 export type ChatBotScreenProps = BottomTabScreenProps<TabParamList, 'Chatbot'>;
-export type OverviewScreenProps = StackScreenProps<RootStackParamList, 'OverviewScreen'>;
-export type ConversationScreenProps = StackScreenProps<RootStackParamList, 'ConversationScreen'>;
-export type FollowerScreenProps = StackScreenProps<RootStackParamList, 'FollowerScreen'>;
-export type FollowingScreenProps = StackScreenProps<RootStackParamList, 'FollowingScreen'>;
-
+export type OverviewScreenProps = StackScreenProps<
+  RootStackParamList,
+  'OverviewScreen'
+>;
+export type ConversationScreenProps = StackScreenProps<
+  RootStackParamList,
+  'ConversationScreen'
+>;
+export type FollowerScreenProps = StackScreenProps<
+  RootStackParamList,
+  'FollowerScreen'
+>;
+export type FollowingScreenProps = StackScreenProps<
+  RootStackParamList,
+  'FollowingScreen'
+>;
 
 export type PodcastScreenProps = BottomTabScreenProps<TabParamList, 'Podcasts'>;
 export type ProfileScreenProps = CompositeScreenProps<
@@ -205,11 +216,10 @@ export type ArticleCardProps = {
 
 export type ReviewCardProps = {
   item: ArticleData;
-  onclick:(item: ArticleData)=> void;
+  onclick: (item: ArticleData) => void;
   isSelected: Boolean;
   setSelectedCardId: (id: string) => void;
 };
-
 
 export type Notification = {
   _id: string;
@@ -237,11 +247,11 @@ export type ProfileHeaderProps = {
     | UserProfileScreenProp['navigation'];
   followers: number;
   followings: number;
-  onFollowerPress: ()=> void;
-  onFollowingPress: ()=> void;
-  isFollowing: boolean| undefined;
-  onFollowClick: ()=> void;
-  onOverviewClick: ()=> void;
+  onFollowerPress: () => void;
+  onFollowingPress: () => void;
+  isFollowing: boolean | undefined;
+  onFollowClick: () => void;
+  onOverviewClick: () => void;
 };
 
 export type HomeScreenFilterModalProps = {
@@ -303,7 +313,7 @@ export type EmailInputModalProp = {
   callback: (email: string) => void;
   backButtonClick: () => void;
   onDismiss: () => void;
-  isRequestVerification:boolean;
+  isRequestVerification: boolean;
 };
 
 export type Category = {
@@ -342,7 +352,10 @@ export type ArticleData = {
   likedUsers: User[];
   savedUsers: string[];
   mentionedUsers: User[];
+  assigned_date: string | null;
+  discardReason: string;
   status: string;
+  reviewer_id: string | null | undefined;
 };
 
 export type UserStatus = {
@@ -363,9 +376,9 @@ export type MonthStatus = {
 };
 
 export type ReportReason = {
-_id: string;
-reason: string;
-},
+  _id: string;
+  reason: string;
+};
 
 export type YearStatus = {
   month: string;

@@ -1,12 +1,10 @@
 import React, {useCallback, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Alert} from 'react-native';
 import {MaterialTabBar, Tabs} from 'react-native-collapsible-tab-view';
 import {PRIMARY_COLOR, ON_PRIMARY_COLOR} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ArticleData, OverviewScreenProps} from '../../type';
 import {StatusEnum} from '../../helper/Utils';
-import {hp} from '../../helper/Metric';
-import ArticleCard from '../../components/ArticleCard';
 import ReviewCard from '../../components/ReviewCard';
 
 export default function OverviewScreen({
@@ -69,10 +67,20 @@ export default function OverviewScreen({
       });
     } else {
       // navigate to review screen
-      navigation.navigate('ReviewScreen', {
-        articleId: Number(item?._id),
-        authorId: item?.authorId,
-      });
+      // check item status
+      if (
+        item?.status === StatusEnum.AWAITING_USER ||
+        item?.status === StatusEnum.UNASSIGNED ||
+
+        item?.status === StatusEnum.DISCARDED
+      ) {
+        navigation.navigate('ReviewScreen', {
+          articleId: Number(item?._id),
+          authorId: item?.authorId,
+        });
+      } else {
+        Alert.alert("The article is under reviewed, you can't change it now");
+      }
     }
   };
   const renderTabBar = props => {
