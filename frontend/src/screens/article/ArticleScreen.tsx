@@ -12,6 +12,7 @@ import {
   Dimensions,
   FlatList,
   Pressable,
+  ToastAndroid,
 } from 'react-native';
 import React, {FC, useEffect, useRef, useState} from 'react';
 import {useQuery, useMutation} from '@tanstack/react-query';
@@ -42,13 +43,14 @@ import Snackbar from 'react-native-snackbar';
 import {formatCount} from '../../helper/Utils';
 import {useSocket} from '../../../SocketContext';
 //import CommentScreen from '../CommentScreen';
+import Tts from 'react-native-tts';
 import {
   MentionInput,
   MentionSuggestionsProps,
   replaceMentionValues,
 } from 'react-native-controlled-mentions';
 import CommentItem from '../../components/CommentItem';
-import { setUserHandle } from '../../store/UserSlice';
+import {setUserHandle} from '../../store/UserSlice';
 
 const renderSuggestions: FC<MentionSuggestionsProps> = ({
   keyword,
@@ -132,13 +134,21 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [commentLoading, setCommentLoading] = useState<Boolean>(false);
   const [commentLikeLoading, setCommentLikeLoading] = useState<Boolean>(false);
   const [mentions, setMentions] = useState<User[]>([]);
-   const [webviewHeight, setWebViewHeight] = useState(0);
+  const [webviewHeight, setWebViewHeight] = useState(0);
+  const [speechingMode, setSpeechingMode] = useState(false);
 
   const webViewRef = useRef<WebView>(null);
 
   useEffect(() => {
     updateViewCountMutation.mutate();
-    return () => {};
+
+    Tts.requestInstallData();
+    const subscription = Tts.addEventListener('Tts-finish', event => {
+      finishEvent();
+    });
+    return () => {
+      Tts.stop();
+    };
   }, []);
 
   const {
@@ -262,7 +272,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       //console.log('Follow Error', err);
     },
   });
-
 
   const updateLikeMutation = useMutation({
     mutationKey: ['update-like-status'],
@@ -458,7 +467,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     };
   }, [socket, route.params.articleId]);
 
-
   useEffect(() => {
     if (article) {
       let source = article?.content?.endsWith('.html')
@@ -523,8 +531,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     });
   };
 
- 
-
   const handleReportAction = (commentId: string, authorId: string) => {
     navigation.navigate('ReportScreen', {
       articleId: articleId.toString(),
@@ -566,6 +572,71 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     },
   });
 
+  const clearCache = () => {
+    // Tts.removeEventListener('Tts-finish',finishEvent)
+    setSpeechingMode(false);
+  };
+  const finishEvent = () => {
+    setSpeechingMode(false);
+    Tts.stop();
+  };
+
+  async function convertHtmlToPlainText(html: string) {
+    // Remove inline styles
+    var modifiedHtml = html.replace(/ style="[^"]*"/g, '');
+  
+    // Remove <style> blocks and their content
+    modifiedHtml = modifiedHtml.replace(/<style[^>]*>[\s\S]*?<\/style>/g, '');
+  
+    // Replace &nbsp; with a space
+    modifiedHtml = modifiedHtml.replace(/&nbsp;/g, ' ');
+  
+    // Remove all other HTML tags
+    var plainText = modifiedHtml.replace(/<[^>]*>/g, '');
+  
+    return plainText;
+  }
+
+  const speakSection = async (language = 'en-Us', content: string) => {
+    // checkLanguage();
+
+    if (content.endsWith('.html')) {
+      const response = await fetch(`${GET_STORAGE_DATA}/${content}`);
+      content = await response.text();
+    }
+    const res = await convertHtmlToPlainText(content);
+    //console.log("Result", res);
+
+    if (res) {
+      //Tts.getLanguages().then(languages => console.log(languages));
+      //Tts.setDefaultLanguage('en-US');
+
+      Tts.getInitStatus().then((d) => {
+
+       // console.log('tts initialized',res)
+        Tts.speak(res.substring(0));
+      });
+     
+     
+      // Android
+
+      /*
+      Tts.speak(res, {
+        language: language,
+        flush: true,
+        onDone: result => {
+          console.log('Tts finished speaking', result);
+        },
+        onError: error => {
+          console.error('Tts error', error);
+          // Tts.pause();
+          ToastAndroid.show('Unexpected interaction', ToastAndroid.SHORT);
+        },
+      });
+      */
+    }
+  };
+
   const cssCode = `
   const style = document.createElement('style');
   style.innerHTML = \`
@@ -582,322 +653,344 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     ? {uri: `${GET_STORAGE_DATA}/${article.content}`}
     : {html: article?.content};
 
-    // Function to get the content length based on the type of content (URI or HTML)
-const getContentLength = async (contentSource) => {
-  if (contentSource.uri) {
-    try {
-      const response = await fetch(contentSource.uri);
-      const content = await response.text();
-      return content.length-4000; 
-    } catch (error) {
-      console.error("Error fetching URI:", error);
-      return 0; 
+  // Function to get the content length based on the type of content (URI or HTML)
+  const getContentLength = async contentSource => {
+    if (contentSource.uri) {
+      try {
+        const response = await fetch(contentSource.uri);
+        const content = await response.text();
+        return content.length - 4000;
+      } catch (error) {
+        console.error('Error fetching URI:', error);
+        return 0;
+      }
+    } else if (contentSource.html) {
+      return contentSource.html.length;
     }
-  } else if (contentSource.html) {
-    return contentSource.html.length;
-  }
-  return 0; // Return 0 if no valid content source
-};
-
+    return 0; // Return 0 if no valid content source
+  };
 
   if (isLoading) {
     return <Loader />;
   }
   return (
     <View style={styles.container}>
-    <ScrollView
-      style={styles.scrollView}
-      onScroll={e => {
-        var windowHeight = Dimensions.get('window').height,
-          height = e.nativeEvent.contentSize.height,
-          offset = e.nativeEvent.contentOffset.y;
-        if (windowHeight + offset >= height) {
-          //ScrollEnd,
-          console.log('ScrollEnd');
-          if (article && !readEventSave) {
-            updateReadEventMutation.mutate();
+      <ScrollView
+        style={styles.scrollView}
+        onScroll={e => {
+          var windowHeight = Dimensions.get('window').height,
+            height = e.nativeEvent.contentSize.height,
+            offset = e.nativeEvent.contentOffset.y;
+          if (windowHeight + offset >= height) {
+            //ScrollEnd,
+            console.log('ScrollEnd');
+            if (article && !readEventSave) {
+              updateReadEventMutation.mutate();
+            }
           }
-        }
-      }}
-      contentContainerStyle={styles.scrollViewContent}>
-      <View style={styles.imageContainer}>
-        {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
-          <Image
-            source={{uri: article?.imageUtils[0]}}
-            style={styles.image}
-          />
-        ) : (
-          <Image
-            source={require('../../assets/article_default.jpg')}
-            style={styles.image}
-          />
-        )}
-        {updateLikeMutation.isPending ? (
-          <ActivityIndicator size={40} color={PRIMARY_COLOR} />
-        ) : (
+        }}
+        contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.imageContainer}>
+          {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
+            <Image
+              source={{uri: article?.imageUtils[0]}}
+              style={styles.image}
+            />
+          ) : (
+            <Image
+              source={require('../../assets/article_default.jpg')}
+              style={styles.image}
+            />
+          )}
+          {updateLikeMutation.isPending ? (
+            <ActivityIndicator size={40} color={PRIMARY_COLOR} />
+          ) : (
+            <TouchableOpacity
+              onPress={handleLike}
+              style={[
+                styles.likeButton,
+                {
+                  backgroundColor: 'white',
+                },
+              ]}>
+              <FontAwesome
+                name="heart"
+                size={34}
+                color={
+                  article &&
+                  article?.likedUsers &&
+                  article?.likedUsers?.some(user => user._id === user_id)
+                    ? PRIMARY_COLOR
+                    : 'black'
+                }
+              />
+            </TouchableOpacity>
+          )}
+
           <TouchableOpacity
-            onPress={handleLike}
+            onPress={() => {
+              setSpeechingMode(!speechingMode);
+
+              if (!speechingMode) {
+                // setCartoonModalVisible(true);
+                // prepareSection();
+                if (article) {
+                  speakSection('en-US', article?.content);
+                }
+              } else {
+                Tts.stop();
+              }
+            }}
             style={[
-              styles.likeButton,
+              styles.playButton,
               {
                 backgroundColor: 'white',
               },
             ]}>
-            <FontAwesome
-              name="heart"
-              size={34}
-              color={
-                article &&
-                article?.likedUsers &&
-                article?.likedUsers?.some(user => user._id === user_id)
-                  ? PRIMARY_COLOR
-                  : 'black'
-              }
-            />
+            <FontAwesome name="play" size={34} color={PRIMARY_COLOR} />
           </TouchableOpacity>
-        )}
-      </View>
-      <View style={styles.contentContainer}>
-        {article && (
-          <Text style={{...styles.viewText, marginBottom: 10}}>
-            {article && article?.viewUsers.length
-              ? article.viewUsers.length > 1
-                ? `${formatCount(article.viewUsers.length)} views`
-                : `${article.viewUsers.length} view`
-              : '0 view'}
-          </Text>
-        )}
-        {article && article?.tags && (
-          <Text style={styles.categoryText}>
-            {article.tags.map(tag => tag.name).join(' | ')}
-          </Text>
-        )}
-
-        {article && (
-          <>
-            <Text style={styles.titleText}>{article?.title}</Text>
-            <View style={styles.avatarsContainer}>
-              <View style={styles.avatar}>
-                {/** 3rd image will be display here */}
-                {article?.likedUsers && article?.likedUsers.length >= 3 ? (
-                  <Image
-                    source={{
-                      uri: article?.likedUsers[2].Profile_image.startsWith(
-                        'https',
-                      )
-                        ? article?.likedUsers[2].Profile_image
-                        : `${GET_STORAGE_DATA}/${article?.likedUsers[2].Profile_image}`,
-                    }}
-                    style={[
-                      styles.profileImage,
-                      !article?.likedUsers[2].Profile_image && {
-                        borderWidth: 0.5,
-                        borderColor: 'black',
-                      },
-                    ]}
-                  />
-                ) : (
-                  <>
-                    {article?.likedUsers &&
-                      article?.likedUsers.length >= 1 && (
-                        <Image
-                          source={{
-                            uri: article?.likedUsers[0].Profile_image.startsWith(
-                              'https',
-                            )
-                              ? article?.likedUsers[0].Profile_image
-                              : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
-                          }}
-                          style={[
-                            styles.profileImage,
-                            !article?.likedUsers[0].Profile_image && {
-                              borderWidth: 0.5,
-                              borderColor: 'black',
-                            },
-                          ]}
-                        />
-                      )}
-                  </>
-                )}
-              </View>
-              <View style={[styles.avatar, styles.avatarOverlap]}>
-                {/** 2nd image will be display here */}
-
-                {article?.likedUsers && article?.likedUsers.length >= 2 ? (
-                  <Image
-                    source={{
-                      uri: article?.likedUsers[1].Profile_image.startsWith(
-                        'https',
-                      )
-                        ? article?.likedUsers[1].Profile_image
-                        : `${GET_STORAGE_DATA}/${article?.likedUsers[1].Profile_image}`,
-                    }}
-                    style={[
-                      styles.profileImage,
-                      !article?.likedUsers[1].Profile_image && {
-                        borderWidth: 0.5,
-                        borderColor: 'black',
-                      },
-                    ]}
-                  />
-                ) : (
-                  <>
-                    {article?.likedUsers &&
-                      article?.likedUsers.length >= 1 && (
-                        <Image
-                          source={{
-                            uri: article?.likedUsers[0].Profile_image.startsWith(
-                              'https',
-                            )
-                              ? article?.likedUsers[0].Profile_image
-                              : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
-                          }}
-                          style={[
-                            styles.profileImage,
-                            !article?.likedUsers[0].Profile_image && {
-                              borderWidth: 0.5,
-                              borderColor: 'black',
-                            },
-                          ]}
-                        />
-                      )}
-                  </>
-                )}
-              </View>
-              <View style={[styles.avatar, styles.avatarDoubleOverlap]}>
-                {/** 1st Image  will be display here */}
-                {article?.likedUsers && article?.likedUsers.length >= 1 && (
-                  <Image
-                    source={{
-                      uri: article?.likedUsers[0].Profile_image.startsWith(
-                        'https',
-                      )
-                        ? article?.likedUsers[0].Profile_image
-                        : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
-                    }}
-                    style={[
-                      styles.profileImage,
-                      !article?.likedUsers[0].Profile_image && {
-                        borderWidth: 0.5,
-                        borderColor: 'black',
-                      },
-                    ]}
-                  />
-                )}
-              </View>
-              <View style={[styles.avatar, styles.avatarTripleOverlap]}>
-                <Text style={styles.moreText}>
-                  +
-                  {article?.likedUsers
-                    ? formatCount(article.likedUsers.length)
-                    : 0}
-                </Text>
-              </View>
-            </View>
-          </>
-        )}
-        <View style={styles.descriptionContainer}>
-          <WebView
-            style={{
-              padding: 7,
-              //width: '99%',
-              minHeight: webviewHeight,
-              // flex:7,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            ref={webViewRef}
-            originWhitelist={['*']}
-            injectedJavaScript={cssCode}
-            source={contentSource}
-            textZoom={100}
-          />
         </View>
-      </View>
-
-      <View style={{padding: wp(4), marginTop: hp(4.5)}}>
-        {comments?.map((item, index) => (
-          <CommentItem
-            key={index}
-            item={item}
-            isSelected={selectedCommentId === item._id}
-            userId={user_id}
-            setSelectedCommentId={setSelectedCommentId}
-            handleEditAction={handleEditAction}
-            deleteAction={handleDeleteAction}
-            handleLikeAction={handleLikeAction}
-            commentLikeLoading={commentLikeLoading}
-            handleMentionClick={handleMentionClick}
-            handleReportAction={handleReportAction}
-            isFromArticle={true}
-          />
-        ))}
-      </View>
-    </ScrollView>
-    <View
-      style={[
-        styles.footer,
-        {
-          paddingBottom:
-            Platform.OS === 'ios' ? insets.bottom : insets.bottom + 20,
-        },
-      ]}>
-      <View style={styles.authorContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            //  if (article && article?.authorId) {
-            navigation.navigate('UserProfileScreen', {
-              authorId: authorId,
-            });
-          }}>
-          {profile_image && profile_image !== '' ? (
-            <Image
-              source={{
-                uri: profile_image.startsWith('http')
-                  ? `${profile_image}`
-                  : `${GET_STORAGE_DATA}/${profile_image}`,
-              }}
-              style={styles.authorImage}
-            />
-          ) : (
-            <Image
-              source={{
-                uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-              }}
-              style={styles.authorImage}
-            />
-          )}
-        </TouchableOpacity>
-        <View>
-          <Text style={styles.authorName}>
-            {article ? article?.authorName : ''}
-          </Text>
-          <Text style={styles.authorFollowers}>
-            {authorFollowers
-              ? authorFollowers.length > 1
-                ? `${authorFollowers.length} followers`
-                : `${authorFollowers.length} follower`
-              : '0 follower'}
-          </Text>
-        </View>
-      </View>
-      {article &&
-        user_id !== article.authorId &&
-        (updateFollowMutation.isPending ? (
-          <ActivityIndicator size={40} color={PRIMARY_COLOR} />
-        ) : (
-          <TouchableOpacity
-            style={styles.followButton}
-            onPress={handleFollow}>
-            <Text style={styles.followButtonText}>
-              {authorFollowers && authorFollowers.includes(user_id)
-                ? 'Following'
-                : 'Follow'}
+        <View style={styles.contentContainer}>
+          {article && (
+            <Text style={{...styles.viewText, marginBottom: 10}}>
+              {article && article?.viewUsers.length
+                ? article.viewUsers.length > 1
+                  ? `${formatCount(article.viewUsers.length)} views`
+                  : `${article.viewUsers.length} view`
+                : '0 view'}
             </Text>
+          )}
+          {article && article?.tags && (
+            <Text style={styles.categoryText}>
+              {article.tags.map(tag => tag.name).join(' | ')}
+            </Text>
+          )}
+
+          {article && (
+            <>
+              <Text style={styles.titleText}>{article?.title}</Text>
+              <View style={styles.avatarsContainer}>
+                <View style={styles.avatar}>
+                  {/** 3rd image will be display here */}
+                  {article?.likedUsers && article?.likedUsers.length >= 3 ? (
+                    <Image
+                      source={{
+                        uri: article?.likedUsers[2].Profile_image.startsWith(
+                          'https',
+                        )
+                          ? article?.likedUsers[2].Profile_image
+                          : `${GET_STORAGE_DATA}/${article?.likedUsers[2].Profile_image}`,
+                      }}
+                      style={[
+                        styles.profileImage,
+                        !article?.likedUsers[2].Profile_image && {
+                          borderWidth: 0.5,
+                          borderColor: 'black',
+                        },
+                      ]}
+                    />
+                  ) : (
+                    <>
+                      {article?.likedUsers &&
+                        article?.likedUsers.length >= 1 && (
+                          <Image
+                            source={{
+                              uri: article?.likedUsers[0].Profile_image.startsWith(
+                                'https',
+                              )
+                                ? article?.likedUsers[0].Profile_image
+                                : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                            }}
+                            style={[
+                              styles.profileImage,
+                              !article?.likedUsers[0].Profile_image && {
+                                borderWidth: 0.5,
+                                borderColor: 'black',
+                              },
+                            ]}
+                          />
+                        )}
+                    </>
+                  )}
+                </View>
+                <View style={[styles.avatar, styles.avatarOverlap]}>
+                  {/** 2nd image will be display here */}
+
+                  {article?.likedUsers && article?.likedUsers.length >= 2 ? (
+                    <Image
+                      source={{
+                        uri: article?.likedUsers[1].Profile_image.startsWith(
+                          'https',
+                        )
+                          ? article?.likedUsers[1].Profile_image
+                          : `${GET_STORAGE_DATA}/${article?.likedUsers[1].Profile_image}`,
+                      }}
+                      style={[
+                        styles.profileImage,
+                        !article?.likedUsers[1].Profile_image && {
+                          borderWidth: 0.5,
+                          borderColor: 'black',
+                        },
+                      ]}
+                    />
+                  ) : (
+                    <>
+                      {article?.likedUsers &&
+                        article?.likedUsers.length >= 1 && (
+                          <Image
+                            source={{
+                              uri: article?.likedUsers[0].Profile_image.startsWith(
+                                'https',
+                              )
+                                ? article?.likedUsers[0].Profile_image
+                                : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                            }}
+                            style={[
+                              styles.profileImage,
+                              !article?.likedUsers[0].Profile_image && {
+                                borderWidth: 0.5,
+                                borderColor: 'black',
+                              },
+                            ]}
+                          />
+                        )}
+                    </>
+                  )}
+                </View>
+                <View style={[styles.avatar, styles.avatarDoubleOverlap]}>
+                  {/** 1st Image  will be display here */}
+                  {article?.likedUsers && article?.likedUsers.length >= 1 && (
+                    <Image
+                      source={{
+                        uri: article?.likedUsers[0].Profile_image.startsWith(
+                          'https',
+                        )
+                          ? article?.likedUsers[0].Profile_image
+                          : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                      }}
+                      style={[
+                        styles.profileImage,
+                        !article?.likedUsers[0].Profile_image && {
+                          borderWidth: 0.5,
+                          borderColor: 'black',
+                        },
+                      ]}
+                    />
+                  )}
+                </View>
+                <View style={[styles.avatar, styles.avatarTripleOverlap]}>
+                  <Text style={styles.moreText}>
+                    +
+                    {article?.likedUsers
+                      ? formatCount(article.likedUsers.length)
+                      : 0}
+                  </Text>
+                </View>
+              </View>
+            </>
+          )}
+          <View style={styles.descriptionContainer}>
+            <WebView
+              style={{
+                padding: 7,
+                //width: '99%',
+                minHeight: webviewHeight,
+                // flex:7,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              ref={webViewRef}
+              originWhitelist={['*']}
+              injectedJavaScript={cssCode}
+              source={contentSource}
+              textZoom={100}
+            />
+          </View>
+        </View>
+
+        <View style={{padding: wp(4), marginTop: hp(4.5)}}>
+          {comments?.map((item, index) => (
+            <CommentItem
+              key={index}
+              item={item}
+              isSelected={selectedCommentId === item._id}
+              userId={user_id}
+              setSelectedCommentId={setSelectedCommentId}
+              handleEditAction={handleEditAction}
+              deleteAction={handleDeleteAction}
+              handleLikeAction={handleLikeAction}
+              commentLikeLoading={commentLikeLoading}
+              handleMentionClick={handleMentionClick}
+              handleReportAction={handleReportAction}
+              isFromArticle={true}
+            />
+          ))}
+        </View>
+      </ScrollView>
+      <View
+        style={[
+          styles.footer,
+          {
+            paddingBottom:
+              Platform.OS === 'ios' ? insets.bottom : insets.bottom + 20,
+          },
+        ]}>
+        <View style={styles.authorContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              //  if (article && article?.authorId) {
+              navigation.navigate('UserProfileScreen', {
+                authorId: authorId,
+              });
+            }}>
+            {profile_image && profile_image !== '' ? (
+              <Image
+                source={{
+                  uri: profile_image.startsWith('http')
+                    ? `${profile_image}`
+                    : `${GET_STORAGE_DATA}/${profile_image}`,
+                }}
+                style={styles.authorImage}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                }}
+                style={styles.authorImage}
+              />
+            )}
           </TouchableOpacity>
-        ))}
+          <View>
+            <Text style={styles.authorName}>
+              {article ? article?.authorName : ''}
+            </Text>
+            <Text style={styles.authorFollowers}>
+              {authorFollowers
+                ? authorFollowers.length > 1
+                  ? `${authorFollowers.length} followers`
+                  : `${authorFollowers.length} follower`
+                : '0 follower'}
+            </Text>
+          </View>
+        </View>
+        {article &&
+          user_id !== article.authorId &&
+          (updateFollowMutation.isPending ? (
+            <ActivityIndicator size={40} color={PRIMARY_COLOR} />
+          ) : (
+            <TouchableOpacity
+              style={styles.followButton}
+              onPress={handleFollow}>
+              <Text style={styles.followButtonText}>
+                {authorFollowers && authorFollowers.includes(user_id)
+                  ? 'Following'
+                  : 'Follow'}
+              </Text>
+            </TouchableOpacity>
+          ))}
+      </View>
     </View>
-  </View>
   );
 };
 
@@ -927,6 +1020,14 @@ const styles = StyleSheet.create({
     objectFit: 'cover',
   },
   likeButton: {
+    padding: 10,
+    position: 'absolute',
+    bottom: -25,
+    right: 70,
+    borderRadius: 50,
+  },
+
+  playButton: {
     padding: 10,
     position: 'absolute',
     bottom: -25,
