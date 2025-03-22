@@ -1,11 +1,18 @@
 import React, {useCallback, useState} from 'react';
 import {View, Text, StyleSheet, Alert} from 'react-native';
 import {MaterialTabBar, Tabs} from 'react-native-collapsible-tab-view';
-import {PRIMARY_COLOR, ON_PRIMARY_COLOR} from '../../helper/Theme';
+import {
+  PRIMARY_COLOR,
+  ON_PRIMARY_COLOR,
+  BUTTON_COLOR,
+} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ArticleData, OverviewScreenProps} from '../../type';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {StatusEnum} from '../../helper/Utils';
+import {FAB} from 'react-native-paper';
 import ReviewCard from '../../components/ReviewCard';
+import {hp} from '../../helper/Metric';
 
 export default function OverviewScreen({
   navigation,
@@ -71,7 +78,6 @@ export default function OverviewScreen({
       if (
         item?.status === StatusEnum.AWAITING_USER ||
         item?.status === StatusEnum.UNASSIGNED ||
-
         item?.status === StatusEnum.DISCARDED
       ) {
         navigation.navigate('ReviewScreen', {
@@ -181,6 +187,16 @@ export default function OverviewScreen({
           </Tabs.Tab>
         </Tabs.Container>
       </View>
+      <FAB
+        style={styles.fab}
+        small
+        icon={({size, color}) => (
+          <Ionicons name="arrow-back" size={size} color={'white'} />
+        )}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
     </View>
   );
 }
@@ -254,10 +270,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  fab: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    borderRadius: hp(20),
+    backgroundColor: BUTTON_COLOR, // Customize color
+  },
 });
-
-/**
- *
- * overview screen:
- * (a)
- */
