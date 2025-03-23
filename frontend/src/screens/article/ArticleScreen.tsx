@@ -11,10 +11,8 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
-  Pressable,
-  ToastAndroid,
 } from 'react-native';
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useQuery, useMutation} from '@tanstack/react-query';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
@@ -39,80 +37,13 @@ import Loader from '../../components/Loader';
 import Snackbar from 'react-native-snackbar';
 
 //import io from 'socket.io-client';
-
+import {Comment} from '../../type';
 import {formatCount} from '../../helper/Utils';
 import {useSocket} from '../../../SocketContext';
 //import CommentScreen from '../CommentScreen';
 import Tts from 'react-native-tts';
-import {
-  MentionInput,
-  MentionSuggestionsProps,
-  replaceMentionValues,
-} from 'react-native-controlled-mentions';
 import CommentItem from '../../components/CommentItem';
 import {setUserHandle} from '../../store/UserSlice';
-
-const renderSuggestions: FC<MentionSuggestionsProps> = ({
-  keyword,
-  onSuggestionPress,
-}) => {
-  if (keyword == null) {
-    return null;
-  }
-
-  return (
-    <View>
-      {article?.mentionedUsers
-        .filter(
-          one =>
-            one.user_handle
-              .toLocaleLowerCase()
-              .includes(keyword.toLocaleLowerCase()) ||
-            one.user_name
-              .toLocaleLowerCase()
-              .includes(keyword.toLocaleLowerCase()),
-        )
-        .map(one => (
-          <Pressable
-            key={one._id}
-            onPress={() => {
-              onSuggestionPress({id: one._id, name: one.user_handle});
-              setMentions(prev => [...prev, one]);
-            }}
-            style={{flex: 0, padding: 12, flexDirection: 'row'}}>
-            {one.Profile_image ? (
-              <Image
-                source={{
-                  uri: one.Profile_image.startsWith('https')
-                    ? one.Profile_image
-                    : `${GET_STORAGE_DATA}/${one.Profile_image}`,
-                }}
-                style={[
-                  styles.profileImage2,
-                  !one.Profile_image && {
-                    borderWidth: 0.5,
-                    borderColor: 'black',
-                  },
-                ]}
-              />
-            ) : (
-              <Image
-                source={{
-                  uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-                }}
-                style={[
-                  styles.profileImage2,
-                  {borderWidth: 0.5, borderColor: 'black'},
-                ]}
-              />
-            )}
-
-            <Text style={styles.username2}>{one.user_handle}</Text>
-          </Pressable>
-        ))}
-    </View>
-  );
-};
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const insets = useSafeAreaInsets();
@@ -129,11 +60,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const flatListRef = useRef<FlatList<Comment>>(null);
   // const {user_id} = useSelector((state: any) => state.user);
   const [selectedCommentId, setSelectedCommentId] = useState<string>('');
-  const [editMode, setEditMode] = useState<Boolean>(false);
-  const [editCommentId, setEditCommentId] = useState<string | null>(null);
-  const [commentLoading, setCommentLoading] = useState<Boolean>(false);
   const [commentLikeLoading, setCommentLikeLoading] = useState<Boolean>(false);
-  const [mentions, setMentions] = useState<User[]>([]);
   const [webviewHeight, setWebViewHeight] = useState(0);
   const [speechingMode, setSpeechingMode] = useState(false);
 
@@ -142,12 +69,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   useEffect(() => {
     updateViewCountMutation.mutate();
 
-    Tts.requestInstallData();
+    // Tts.requestInstallData();
     const subscription = Tts.addEventListener('Tts-finish', event => {
       finishEvent();
     });
     return () => {
       Tts.stop();
+      subscription;
     };
   }, []);
 
@@ -379,11 +307,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     });
 
     socket.on('comment-processing', (data: boolean) => {
-      setCommentLoading(data);
+      // setCommentLoading(data);
     });
 
     socket.on('like-comment-processing', (data: boolean) => {
-      setCommentLikeLoading(data);
+      //  setCommentLikeLoading(data);
     });
 
     socket.on('error', () => {
@@ -486,8 +414,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   const handleEditAction = (comment: Comment) => {
     setNewComment(comment.content);
-    setEditMode(true);
-    setEditCommentId(comment._id);
+    // setEditMode(true);
+    //setEditCommentId(comment._id);
   };
 
   const handleMentionClick = (user_handle: string) => {
@@ -572,68 +500,61 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     },
   });
 
-  const clearCache = () => {
-    // Tts.removeEventListener('Tts-finish',finishEvent)
-    setSpeechingMode(false);
-  };
-  const finishEvent = () => {
-    setSpeechingMode(false);
-    Tts.stop();
-  };
+
 
   async function convertHtmlToPlainText(html: string) {
     // Remove inline styles
     var modifiedHtml = html.replace(/ style="[^"]*"/g, '');
-  
+
     // Remove <style> blocks and their content
     modifiedHtml = modifiedHtml.replace(/<style[^>]*>[\s\S]*?<\/style>/g, '');
-  
+
     // Replace &nbsp; with a space
     modifiedHtml = modifiedHtml.replace(/&nbsp;/g, ' ');
-  
+
     // Remove all other HTML tags
     var plainText = modifiedHtml.replace(/<[^>]*>/g, '');
-  
+
     return plainText;
   }
 
-  const speakSection = async (language = 'en-Us', content: string) => {
-    // checkLanguage();
+  const speakSection = async (language = 'en-US', content: string) => {
+    // Tts.requestInstallData();
+    Tts.setDefaultPitch(0.6);
 
     if (content.endsWith('.html')) {
       const response = await fetch(`${GET_STORAGE_DATA}/${content}`);
       content = await response.text();
     }
+
     const res = await convertHtmlToPlainText(content);
-    //console.log("Result", res);
 
     if (res) {
-      //Tts.getLanguages().then(languages => console.log(languages));
-      //Tts.setDefaultLanguage('en-US');
+      Tts.getInitStatus().then(d => {
+        const textChunks = res.split(' ');
+        let chunkIndex = 0;
 
-      Tts.getInitStatus().then((d) => {
+        const speakNextChunk = () => {
+          if (chunkIndex < textChunks.length) {
+            const chunk = textChunks
+              .slice(chunkIndex, chunkIndex + 100)
+              .join(' ');
 
-       // console.log('tts initialized',res)
-        Tts.speak(res.substring(0,1000));
+            Tts.speak(chunk);
+
+            Tts.addEventListener('tts-finish', () => {
+              chunkIndex += 100;
+              speakNextChunk();
+            });
+
+            Tts.addEventListener('tts-error', error => {
+              console.error('TTS Error:', error);
+            });
+          }
+        };
+
+        speakNextChunk();
       });
-     
-     
-      // Android
-
-      /*
-      Tts.speak(res, {
-        language: language,
-        flush: true,
-        onDone: result => {
-          console.log('Tts finished speaking', result);
-        },
-        onError: error => {
-          console.error('Tts error', error);
-          // Tts.pause();
-          ToastAndroid.show('Unexpected interaction', ToastAndroid.SHORT);
-        },
-      });
-      */
     }
   };
 
@@ -747,7 +668,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 backgroundColor: 'white',
               },
             ]}>
-            <FontAwesome name="play" size={34} color={PRIMARY_COLOR} />
+            <FontAwesome
+              name={!speechingMode ? 'play' : 'pause'}
+              size={30}
+              color={PRIMARY_COLOR}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.contentContainer}>
@@ -775,11 +700,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   {article?.likedUsers && article?.likedUsers.length >= 3 ? (
                     <Image
                       source={{
-                        uri: article?.likedUsers[2].Profile_image.startsWith(
-                          'https',
-                        )
-                          ? article?.likedUsers[2].Profile_image
-                          : `${GET_STORAGE_DATA}/${article?.likedUsers[2].Profile_image}`,
+                        uri: article?.likedUsers[
+                          article?.likedUsers.length - 1
+                        ].Profile_image.startsWith('https')
+                          ? article?.likedUsers[article?.likedUsers.length - 1]
+                              .Profile_image
+                          : `${GET_STORAGE_DATA}/${
+                              article?.likedUsers[
+                                article?.likedUsers.length - 1
+                              ].Profile_image
+                            }`,
                       }}
                       style={[
                         styles.profileImage,
@@ -795,15 +725,23 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                         article?.likedUsers.length >= 1 && (
                           <Image
                             source={{
-                              uri: article?.likedUsers[0].Profile_image.startsWith(
-                                'https',
-                              )
-                                ? article?.likedUsers[0].Profile_image
-                                : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                              uri: article?.likedUsers[
+                                article?.likedUsers.length - 1
+                              ].Profile_image.startsWith('https')
+                                ? article?.likedUsers[
+                                    article?.likedUsers.length - 1
+                                  ].Profile_image
+                                : `${GET_STORAGE_DATA}/${
+                                    article?.likedUsers[
+                                      article?.likedUsers.length - 1
+                                    ].Profile_image
+                                  }`,
                             }}
                             style={[
                               styles.profileImage,
-                              !article?.likedUsers[0].Profile_image && {
+                              !article?.likedUsers[
+                                article?.likedUsers.length - 1
+                              ].Profile_image && {
                                 borderWidth: 0.5,
                                 borderColor: 'black',
                               },
@@ -819,15 +757,21 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   {article?.likedUsers && article?.likedUsers.length >= 2 ? (
                     <Image
                       source={{
-                        uri: article?.likedUsers[1].Profile_image.startsWith(
-                          'https',
-                        )
-                          ? article?.likedUsers[1].Profile_image
-                          : `${GET_STORAGE_DATA}/${article?.likedUsers[1].Profile_image}`,
+                        uri: article?.likedUsers[
+                          article?.likedUsers.length - 2
+                        ].Profile_image.startsWith('https')
+                          ? article?.likedUsers[article?.likedUsers.length - 2]
+                              .Profile_image
+                          : `${GET_STORAGE_DATA}/${
+                              article?.likedUsers[
+                                article?.likedUsers.length - 2
+                              ].Profile_image
+                            }`,
                       }}
                       style={[
                         styles.profileImage,
-                        !article?.likedUsers[1].Profile_image && {
+                        !article?.likedUsers[article?.likedUsers.length - 2]
+                          .Profile_image && {
                           borderWidth: 0.5,
                           borderColor: 'black',
                         },
@@ -839,15 +783,23 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                         article?.likedUsers.length >= 1 && (
                           <Image
                             source={{
-                              uri: article?.likedUsers[0].Profile_image.startsWith(
-                                'https',
-                              )
-                                ? article?.likedUsers[0].Profile_image
-                                : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
+                              uri: article?.likedUsers[
+                                article?.likedUsers.length - 1
+                              ].Profile_image.startsWith('https')
+                                ? article?.likedUsers[
+                                    article?.likedUsers.length - 1
+                                  ].Profile_image
+                                : `${GET_STORAGE_DATA}/${
+                                    article?.likedUsers[
+                                      article?.likedUsers.length - 1
+                                    ].Profile_image
+                                  }`,
                             }}
                             style={[
                               styles.profileImage,
-                              !article?.likedUsers[0].Profile_image && {
+                              !article?.likedUsers[
+                                article?.likedUsers.length - 1
+                              ].Profile_image && {
                                 borderWidth: 0.5,
                                 borderColor: 'black',
                               },
@@ -894,7 +846,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               style={{
                 padding: 7,
                 //width: '99%',
-                minHeight: webviewHeight,
+                minHeight: webviewHeight + 1500,
                 // flex:7,
                 justifyContent: 'center',
                 alignItems: 'center',
