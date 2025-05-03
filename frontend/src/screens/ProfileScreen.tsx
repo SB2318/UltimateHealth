@@ -35,6 +35,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const socket = useSocket();
   const dispatch = useDispatch();
 
+  //const fallback_profile = require('../assets/avatar.jpg');
+  //const user_fallback_profile = Image.resolveAssetSource(fallback_profile).uri;
 
   const {
     data: user,
