@@ -59,12 +59,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   const [comments, setComments] = useState<Comment[]>([]);
 
   const flatListRef = useRef<FlatList<Comment>>(null);
-  const [selectedCommentId, setSelectedCommentId] = useState<string>('');
-  const [editMode, setEditMode] = useState<Boolean>(false);
-  const [editCommentId, setEditCommentId] = useState<string | null>(null);
-  const [commentLoading, setCommentLoading] = useState<Boolean>(false);
-  const [commentLikeLoading, setCommentLikeLoading] = useState<Boolean>(false);
-  const [mentions, setMentions] = useState<User[]>([]);
+ 
 
   const webViewRef = useRef<WebView>(null);
 
@@ -758,7 +753,7 @@ const styles = StyleSheet.create({
   },
   richBar: {
     height: 45,
-    backgroundColor: BUTTON_COLOR,
+    backgroundColor: PRIMARY_COLOR,
     marginTop: 0,
     marginBottom: hp(0.8),
   },

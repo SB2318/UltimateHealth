@@ -34,10 +34,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const [repostItem, setRepostItem] = useState<ArticleData | null>(null);
   const socket = useSocket();
   const dispatch = useDispatch();
-  //const fallback_profile = require('../assets/avatar.jpg');
-  //const user_fallback_profile = Image.resolveAssetSource(fallback_profile).uri;
 
-  // console.log('user fallback profile', user_token);
 
   const {
     data: user,
