@@ -39,10 +39,7 @@ import {useSocket} from '../../../SocketContext';
 //import CommentScreen from '../CommentScreen';
 import {setUserHandle} from '../../store/UserSlice';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
-import {
-  createFeebackHTMLStructure,
-  StatusEnum,
-} from '../../helper/Utils';
+import {createFeebackHTMLStructure, StatusEnum} from '../../helper/Utils';
 import ReviewItem from '../../components/ReviewItem';
 
 const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
