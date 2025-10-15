@@ -13,6 +13,7 @@
 # Xcode
 #
 build/
+.kotlin/
 *.pbxuser
 !default.pbxuser
 *.mode1v3

@@ -1,6 +1,6 @@
-import { createTamagui, createTokens } from 'tamagui'
-import { createAnimations } from '@tamagui/animations-css'
-import { themes } from '@tamagui/themes'
+import {createTamagui, createTokens} from 'tamagui';
+import {createAnimations} from '@tamagui/animations-css';
+import {themes} from '@tamagui/themes';
 
 const animations = createAnimations({
   bouncy: {
@@ -10,7 +10,7 @@ const animations = createAnimations({
   },
   fast: 'quick',
   slow: 'lazy',
-})
+});
 
 const tokens = createTokens({
   color: {
@@ -36,6 +36,9 @@ const tokens = createTokens({
     red1: '#FEE2E2',
     red8: '#DC2626',
     red10: '#991B1B',
+    gray2: '#F5F5F5',
+    blue10: '#007BFF',
+    colorPress: '#005FCC',
   },
 
   space: {
@@ -92,7 +95,7 @@ const tokens = createTokens({
     20: 20,
     100: 100,
   },
-})
+});
 
 const shorthands = {
   p: 'padding',
@@ -109,7 +112,7 @@ const shorthands = {
   w: 'width',
   h: 'height',
   br: 'borderRadius',
-}
+};
 
 const config = createTamagui({
   defaultTheme: 'light',
@@ -177,14 +180,14 @@ const config = createTamagui({
     },
   },
   media: {
-    xs: { maxWidth: 660 },
-    sm: { maxWidth: 800 },
-    md: { maxWidth: 1020 },
-    lg: { maxWidth: 1280 },
+    xs: {maxWidth: 660},
+    sm: {maxWidth: 800},
+    md: {maxWidth: 1020},
+    lg: {maxWidth: 1280},
   },
-})
+});
 
-export type AppConfig = typeof config
+export type AppConfig = typeof config;
 
 declare module 'tamagui' {
   interface TamaguiCustomConfig extends AppConfig {}

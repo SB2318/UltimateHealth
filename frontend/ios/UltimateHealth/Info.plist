@@ -27,6 +27,8 @@
 		</array>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>en</string>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+	     <true/>
 		<key>CFBundleDisplayName</key>
 		<string>UltimateHealth</string>
 		<key>CFBundleExecutable</key>
@@ -64,6 +66,7 @@
 
 		<key>NSMicrophoneUsageDescription</key>
         <string>We need microphone access to record audio.</string>
+		
 
 		<key>NSMicrophoneUsageDescription</key>
 		<string>$(PRODUCT_NAME) would like to your microphone (for videos)</string>

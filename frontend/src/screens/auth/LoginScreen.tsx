@@ -1,25 +1,28 @@
+import React from 'react';
 import {
-  Image,
   StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  StatusBar,
-
-  
   Alert,
   useColorScheme,
-  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
-import {useState} from 'react';
+
 import {
-  PRIMARY_COLOR,
-  BUTTON_COLOR,
-} from '../../helper/Theme';
+  YStack,
+  XStack,
+  Input,
+  Button,
+  Text,
+  Label,
+  ScrollView,
+  Theme,
+  H2,
+} from 'tamagui';
+import {Image, TouchableOpacity} from 'react-native';
+import {useState} from 'react';
+import {PRIMARY_COLOR, BUTTON_COLOR} from '../../helper/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {fp, hp, wp} from '../../helper/Metric';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 // import {useNavigation} from '@react-navigation/native';
 import {KEYS, storeItem} from '../../helper/Utils';
 import EmailInputModal from '../../components/EmailInputModal';
@@ -332,176 +335,137 @@ const LoginScreen = ({navigation}: LoginScreenProp) => {
     return <Loader />;
   }
   return (
-    <ScrollView style={styles.container}>
-      <StatusBar
-        barStyle={isDarkMode ? 'dark-content' : 'light-content'}
-        backgroundColor={BUTTON_COLOR}
-      />
-      <View style={[styles.innercontainer, {paddingTop: inset.top}]}>
-        <View style={styles.logoContainer}>
-          {/* image */}
-          <Image
-            source={require('../../assets/icon.png')}
-            style={styles.logo}
-          />
-          {/* brand text container */}
-          <Text style={styles.brandText}>Ultimate Health</Text>
-        </View>
-        {/* login form */}
-        <View
-          style={[
-            styles.formContainer,
-            {backgroundColor: isDarkMode ? Colors.darker : 'white'},
-          ]}>
-          {/* email input */}
-          <Text style={styles.inputLabelTxt}>Email</Text>
-          {emailMessage ? (
-            <Text style={{color: 'red'}}>Please Enter a Valid Email</Text>
-          ) : (
-            <Text style={{color: 'red'}} />
-          )}
-          <View style={styles.input}>
-            <TextInput
-              onChange={e => handleEmail(e)}
-              autoCapitalize="none"
-              autoCorrect={false}
-              clearButtonMode="while-editing"
-              keyboardType="email-address"
-              //placeholder="Enter your mail id"
-              placeholderTextColor="#948585"
-              style={[
-                styles.inputControl,
-                {
-                  borderColor: isDarkMode ? 'white' : 'black',
-                  color: isDarkMode ? 'white' : 'black',
-                },
-              ]}
+    // eslint-disable-next-line react-native/no-inline-styles
+    <Theme name={isDarkMode ? 'dark' : 'light'}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{flex: 1}}>
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            backgroundColor: '#f5f6fa',
+            padding: 20,
+          }}
+          keyboardShouldPersistTaps="handled">
+          <YStack alignItems="center" space="$2">
+            <Image
+              source={require('../../assets/icon.png')}
+              style={{width: 80, height: 80, borderRadius: 20}}
             />
-          </View>
-          <Text style={styles.inputLabelTxt}>Password</Text>
-          {passwordMessage ? (
-            <Text style={{color: 'red'}}>
-              Password must be 6 Characters Longs
+            <Text fontSize={28} fontWeight="800" color="#007BFF">
+              Ultimate Health
             </Text>
-          ) : (
-            <Text style={{color: 'red'}} />
-          )}
-          <View style={styles.input}>
-            <View style={styles.passwordContainer}>
-              <TextInput
+            <Text fontSize={16} color="#333" textAlign="center">
+              Welcome to Ultimate Health login now!
+            </Text>
+          </YStack>
+
+          {/* Login Card */}
+          <YStack
+            space="$4"
+            backgroundColor="white"
+            padding="$6"
+            borderRadius={20}
+            marginTop="$6"
+            shadowColor="rgba(0,0,0,0.15)"
+            shadowOffset={{width: 0, height: 4}}
+            shadowOpacity={0.3}
+            shadowRadius={8}
+            elevation={5}>
+            {/* Email */}
+            <YStack>
+              <Label color="#333" fontWeight="700">
+                Email
+              </Label>
+              <Input
+                placeholder="joedoe75@gmail.com"
+                keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
-                clearButtonMode="while-editing"
-                keyboardType="ascii-capable"
-                //placeholder="Password"
-                placeholderTextColor="#948585"
-                secureTextEntry={secureTextEntry}
-                style={[
-                  styles.inputControl,
-                  {
-                    borderColor: isDarkMode ? 'white' : 'black',
-                    color: isDarkMode ? 'white' : 'black',
-                  },
-                ]}
-                onChange={e => handlePassword(e)}
-                value={password}
-                underlineColorAndroid="transparent"
+                onChangeText={setEmail}
+                value={email}
+                placeholderTextColor="#aaa"
+                borderWidth={1}
+                borderColor="#e0e0e0"
+                borderRadius={12}
+                paddingHorizontal={15}
+                height={48}
+                backgroundColor="#f9f9f9"
+                color="#000"
               />
+            </YStack>
 
-              <TouchableOpacity
-                style={styles.eyeIcon}
-                onPress={handleSecureEntryClickEvent}>
-                {secureTextEntry ? (
+            {/* Password */}
+            <YStack>
+              <Label color="#333" fontWeight="700">
+                Password
+              </Label>
+              <XStack alignItems="center">
+                <Input
+                  placeholder="Enter password"
+                  secureTextEntry={secureTextEntry}
+                  onChangeText={setPassword}
+                  value={password}
+                  placeholderTextColor="#aaa"
+                  borderWidth={1}
+                  borderColor="#e0e0e0"
+                  borderRadius={12}
+                  paddingHorizontal={15}
+                  height={48}
+                  backgroundColor="#f9f9f9"
+                  flex={1}
+                  color="#000"
+                />
+                <TouchableOpacity
+                  onPress={handleSecureEntryClickEvent}
+                  style={{marginLeft: 8}}>
                   <Icon
-                    name="eye-off"
-                    size={20}
-                    color={isDarkMode ? 'white' : 'black'}
+                    name={secureTextEntry ? 'eye-off' : 'eye'}
+                    size={22}
+                    color="#333"
                   />
-                ) : (
-                  <Icon
-                    name="eye"
-                    size={20}
-                    color={isDarkMode ? 'white' : 'black'}
-                  />
-                )}
+                </TouchableOpacity>
+              </XStack>
+            </YStack>
+
+            {/* Remember Me & Forgot */}
+            <XStack justifyContent="space-between" alignItems="center">
+
+              <TouchableOpacity>
+                <Text color="#007BFF">Forgot password?</Text>
               </TouchableOpacity>
-            </View>
-          </View>
+            </XStack>
 
-          <View style={styles.loginButtonContainer}>
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={() => {
-                validateAndSubmit();
-              }}>
-              <Text style={styles.loginText}>Login</Text>
-            </TouchableOpacity>
-          </View>
-
-          <EmailInputModal
-            // eslint-disable-next-line @typescript-eslint/no-shadow
-            callback={(email: string) => {
-              setOtpMail(email);
-              if (requestVerificationMode) {
-                requestVerification.mutate({
-                  email1: email,
-                });
-              } else {
-                sendOtpMutation.mutate({
-                  email: email,
-                });
-              }
-            }}
-            visible={emailInputVisible}
-            backButtonClick={handleEmailInputBack}
-            onDismiss={() => setEmailInputVisible(false)}
-            isRequestVerification={requestVerificationMode}
-          />
-
-          <TouchableOpacity
-            style={styles.createAccountContainer}
-            onPress={() => {
-              navigation.navigate('SignUpScreenFirst');
-            }}>
-            <View style={{...styles.loginButton, backgroundColor: '#F5f5f5'}}>
-              <Text
-                style={[
-                  styles.createAccountText,
-                  {
-                    // color: isDarkMode ? 'white' : 'black',
-                    color: 'black',
-                  },
-                ]}>
-                Sign up
+            {/* Login Button */}
+            <Button
+              height={50}
+              borderRadius={25}
+              backgroundColor="#007BFF"
+              onPress={validateAndSubmit}>
+              <Text color="white" fontWeight="700" fontSize={16}>
+                Login
               </Text>
-            </View>
-          </TouchableOpacity>
+            </Button>
 
-          <TouchableOpacity
-            style={styles.forgotPasswordContainer}
-            onPress={() => {
-              //console.log('Forgot Password Click');
-              setEmailInputVisible(true);
-              setRequestVerification(false);
-            }}>
-            <Text style={styles.inputLabelTxt}>Forgot Password?</Text>
-          </TouchableOpacity>
 
-          <View style={styles.loginButtonContainer}>
+            {/* Sign Up */}
             <TouchableOpacity
-              style={{...styles.loginButton}}
-              onPress={() => {
-                // validateAndSubmit();
-                setRequestVerification(true);
-                setEmailInputVisible(true);
-              }}>
-              <Text style={styles.loginText}>Request Verification</Text>
+              onPress={() => navigation.navigate('SignUpScreenFirst')}>
+              <YStack
+                backgroundColor="transparent"
+                paddingVertical="$3"
+                borderRadius="$3"
+                alignItems="center">
+                <H2 color="black" fontWeight="600">
+                  Sign up
+                </H2>
+              </YStack>
             </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
-    // <DropDownComponent data={Categories} />
+          </YStack>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </Theme>
   );
 };
 

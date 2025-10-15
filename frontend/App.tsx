@@ -7,7 +7,8 @@
 
 import React, {useEffect} from 'react';
 import {Platform, StatusBar, useColorScheme, View} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+//import {Colors} from 'react-native/Libraries/NewAppScreen';
+
 import {PRIMARY_COLOR} from './src/helper/Theme';
 import {NavigationContainer} from '@react-navigation/native';
 import StackNavigation from './src/navigations/StackNavigation';
@@ -37,7 +38,7 @@ declare module '@tamagui/core' {
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? '#ffffff' : '#000000',
   };
 
   const BarStyle = Platform.OS === 'ios' ? 'dark-content' : 'light-content';

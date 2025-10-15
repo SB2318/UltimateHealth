@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   Modal,
   TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native'
+} from 'react-native';
 import {
   YStack,
   Button,
@@ -11,8 +10,8 @@ import {
   Spacer,
   H2,
   H4,
-} from 'tamagui'
-import { EmailInputModalProp } from '../type'
+} from 'tamagui';
+import { EmailInputModalProp } from '../type';
 
 export default function EmailInputModal({
   visible,
@@ -21,24 +20,24 @@ export default function EmailInputModal({
   onDismiss,
   isRequestVerification,
 }: EmailInputModalProp) {
-  const [email, setEmail] = useState('')
-  const [isValid, setIsValid] = useState(true)
+  const [email, setEmail] = useState('');
+  const [isValid, setIsValid] = useState(true);
 
   const verifyEmail = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    const valid = emailRegex.test(email)
-    setIsValid(valid)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const valid = emailRegex.test(email);
+    setIsValid(valid);
     if (valid) {
-      callback(email)
-      setEmail('')
+      callback(email);
+      setEmail('');
     }
-  }
+  };
 
   const handleBackClick = () => {
-    setIsValid(true)
-    setEmail('')
-    backButtonClick()
-  }
+    setIsValid(true);
+    setEmail('');
+    backButtonClick();
+  };
 
   return (
     <Modal
@@ -46,13 +45,13 @@ export default function EmailInputModal({
       transparent
       animationType="fade"
       onRequestClose={() => {
-        onDismiss?.()
+        onDismiss?.();
       }}
     >
       <TouchableWithoutFeedback onPress={() => onDismiss?.()}>
         <YStack
           flex={1}
-          bg="rgba(0,0,0,0.5)"
+          background="rgba(0,0,0,0.5)"
           justifyContent="center"
           alignItems="center"
         >
@@ -60,9 +59,9 @@ export default function EmailInputModal({
             width="90%"
             maxWidth={480}
             minHeight={200}
-            bg="$background"
+            background="$background"
             borderRadius="$6"
-            p="$4"
+            padding="$4"
             elevation={10}
           >
             <YStack width="100%" gap="$4" alignItems="center">
@@ -93,8 +92,8 @@ export default function EmailInputModal({
                 placeholder="Enter your email"
                 value={email}
                 onChangeText={(text) => {
-                  setEmail(text)
-                  setIsValid(true)
+                  setEmail(text);
+                  setIsValid(true);
                 }}
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -119,7 +118,7 @@ export default function EmailInputModal({
                 <Button
                   size="$4"
                   height="$5"
-                  theme="active"
+                  //theme="active"
                   variant="outlined"
                   onPress={handleBackClick}
                 >
@@ -131,5 +130,5 @@ export default function EmailInputModal({
         </YStack>
       </TouchableWithoutFeedback>
     </Modal>
-  )
+  );
 }
