@@ -15,7 +15,7 @@ import Slider from '@react-native-community/slider';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Feather from 'react-native-vector-icons/Feather';
 import {PRIMARY_COLOR} from '../helper/Theme'; // Custom theme color
-import Tts from 'react-native-tts'; // Text-to-Speech library
+//import Tts from 'react-native-tts'; // Text-to-Speech library
 
 // Helper function to check if two values are approximately equal within a given epsilon (tolerance)
 function approximatelyEqual(v1, v2, epsilon = 500) {
@@ -38,6 +38,7 @@ const PodcastPlayer = ({}) => {
   const defaultrate = Platform.OS === 'ios' ? 0.4 : 0.6;
 
   // Function to initialize Text-to-Speech (TTS) settings and calculate the estimated duration of the text
+  /*
   const initTts = async () => {
     const totalDuration = estimateTTSDuration(text); // Calculate total duration based on text
     setDuration(totalDuration); // Set the duration state
@@ -71,7 +72,9 @@ const PodcastPlayer = ({}) => {
       setisPlaying(false);
     }
   };
+  */
 
+  /*
   // Function to estimate TTS duration based on text length and speaking rate
   const estimateTTSDuration = text => {
     const wordsPerMinute = 130; // Average speaking rate at normal speed 1.1
@@ -79,10 +82,11 @@ const PodcastPlayer = ({}) => {
     const words = text.split(' ').length; // Calculate number of words in the text
     return (words / adjustedWordsPerMinute) * 60 * 1000; // Duration in milliseconds
   };
+  */
 
   // useEffect hook to initialize TTS and set up event listeners
   useEffect(() => {
-    Tts.getInitStatus().then(initTts); // Initialize TTS when component mounts
+    //Tts.getInitStatus().then(initTts); // Initialize TTS when component mounts
     return () => {
       clearInterval(sliderInterval.current); // Clear the interval
     };
@@ -98,11 +102,11 @@ const PodcastPlayer = ({}) => {
     if (isPlaying) {
       // If currently playing, stop the speech and clear the interval
       //console.log('paused');
-      Tts.stop(); // Stop the text-to-speech
+     // Tts.stop(); // Stop the text-to-speech
       clearInterval(sliderInterval.current); // Clear the interval used for updating position
     } else {
       // If currently paused, calculate new starting position and resume speech
-      Tts.stop(); // Ensure TTS is stopped before starting new speech
+      // //Tts.stop(); // Ensure TTS is stopped before starting new speech
 
       // Calculate the number of words spoken per second
       const wordsPerSecond = (text.split(' ').length / duration) * 1000;
@@ -114,7 +118,7 @@ const PodcastPlayer = ({}) => {
       const newText = text.split(' ').slice(wordsToSkip).join(' ');
 
       // Start speaking the new text
-      Tts.speak(newText);
+    //  Tts.speak(newText);
 
       // Set an interval to update the current position every second
       sliderInterval.current = setInterval(() => {
