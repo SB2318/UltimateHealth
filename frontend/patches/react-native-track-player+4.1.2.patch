@@ -1,0 +1,104 @@
+diff --git a/node_modules/react-native-track-player/.gitignore b/node_modules/react-native-track-player/.gitignore
+new file mode 100644
+index 0000000..e69de29
+diff --git a/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/module/MusicModule.kt b/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/module/MusicModule.kt
+index b2409a0..b930b8b 100644
+--- a/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/module/MusicModule.kt
++++ b/node_modules/react-native-track-player/android/src/main/java/com/doublesymmetry/trackplayer/module/MusicModule.kt
+@@ -540,24 +540,38 @@ class MusicModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
+         callback.resolve(musicService.playWhenReady)
+     }
+ 
+-    @ReactMethod
+-    fun getTrack(index: Int, callback: Promise) = scope.launch {
+-        if (verifyServiceBoundOrReject(callback)) return@launch
+    
+-        if (index >= 0 && index < musicService.tracks.size) {
+-            callback.resolve(Arguments.fromBundle(musicService.tracks[index].originalItem))
++   @ReactMethod
++fun getTrack(index: Int, callback: Promise) = scope.launch {
++    if (verifyServiceBoundOrReject(callback)) return@launch
++
++    if (index >= 0 && index < musicService.tracks.size) {
++        val bundle = musicService.tracks[index].originalItem
++        if (bundle != null) {
++            callback.resolve(Arguments.fromBundle(bundle))
+         } else {
+             callback.resolve(null)
+         }
++    } else {
++        callback.resolve(null)
+     }
++}
++
++
++
+     
+     @ReactMethod
+     fun getQueue(callback: Promise) = scope.launch {
+         if (verifyServiceBoundOrReject(callback)) return@launch
+ 
+-        callback.resolve(Arguments.fromList(musicService.tracks.map { it.originalItem }))
++    // Filter or map only non-null bundles
++      val list = musicService.tracks.mapNotNull { track ->
++        track.originalItem // only non-null
++      }
++      callback.resolve(Arguments.fromList(list))
+     }
+ 
++
+     @ReactMethod
+     fun setQueue(data: ReadableArray?, callback: Promise) = scope.launch {
+         if (verifyServiceBoundOrReject(callback)) return@launch
+@@ -580,16 +594,23 @@ class MusicModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
+     }
+ 
+     @ReactMethod
+-    fun getActiveTrack(callback: Promise) = scope.launch {
+-        if (verifyServiceBoundOrReject(callback)) return@launch
+-        callback.resolve(
+-            if (musicService.tracks.isEmpty()) null
+-            else Arguments.fromBundle(
+-                musicService.tracks[musicService.getCurrentTrackIndex()].originalItem
+-            )
+-        )
++fun getActiveTrack(callback: Promise) = scope.launch {
++    if (verifyServiceBoundOrReject(callback)) return@launch
++
++    if (musicService.tracks.isEmpty()) {
++        callback.resolve(null)
++        return@launch
+     }
+ 
++    val bundle = musicService.tracks[musicService.getCurrentTrackIndex()].originalItem
++    if (bundle != null) {
++        callback.resolve(Arguments.fromBundle(bundle))
++    } else {
++        callback.resolve(null)
++    }
++}
++
++
+     @ReactMethod
+     fun getDuration(callback: Promise) = scope.launch {
+         if (verifyServiceBoundOrReject(callback)) return@launch
+@@ -622,8 +643,16 @@ class MusicModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaM
+     }
+ 
+     @ReactMethod
+-    fun getPlaybackState(callback: Promise) = scope.launch {
+-        if (verifyServiceBoundOrReject(callback)) return@launch
+-        callback.resolve(Arguments.fromBundle(musicService.getPlayerStateBundle(musicService.state)))
++fun getPlaybackState(callback: Promise) = scope.launch {
++    if (verifyServiceBoundOrReject(callback)) return@launch
++
++    val stateBundle = musicService.getPlayerStateBundle(musicService.state)
++
++    if (stateBundle != null) {
++        callback.resolve(Arguments.fromBundle(stateBundle))
++    } else {
++        callback.resolve(null)
+     }
+ }
++
++}
