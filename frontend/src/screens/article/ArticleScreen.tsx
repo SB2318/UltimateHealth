@@ -29,6 +29,7 @@ import {
   GET_PROFILE_IMAGE_BY_ID,
   GET_STORAGE_DATA,
   LIKE_ARTICLE,
+  SOCKET_PROD,
   UPDATE_READ_EVENT,
   UPDATE_VIEW_COUNT,
 } from '../../helper/APIUtils';
@@ -44,7 +45,6 @@ import Tts from 'react-native-tts';
 import CommentItem from '../../components/CommentItem';
 import {setUserHandle} from '../../store/UserSlice';
 import {io} from 'socket.io-client';
-import Config from 'react-native-config';
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const insets = useSafeAreaInsets();
@@ -52,7 +52,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {user_id, user_token} = useSelector((state: any) => state.user);
   const [readEventSave, setReadEventSave] = useState(false);
 
-  const socket = io(`${Config.SOCKET_PROD}`);
+  const socket = io(`${SOCKET_PROD}`);
   const dispatch = useDispatch();
 
   const {height: SCREEN_HEIGHT} = Dimensions.get('window');

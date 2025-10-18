@@ -737,19 +737,12 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.27.1"
 
-"@babel/plugin-transform-react-display-name@^7.24.7", "@babel/plugin-transform-react-display-name@^7.27.1":
+"@babel/plugin-transform-react-display-name@^7.24.7":
   version "7.28.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-display-name/-/plugin-transform-react-display-name-7.28.0.tgz#6f20a7295fea7df42eb42fed8f896813f5b934de"
   integrity sha512-D6Eujc2zMxKjfa4Zxl4GHMsmhKKZ9VpcqIchJLvwTxad9zWIYulwYItBovpDOoNLISpcZSXoDJ5gaGbQUDqViA==
   dependencies:
     "@babel/helper-plugin-utils" "^7.27.1"
-
-"@babel/plugin-transform-react-jsx-development@^7.27.1":
-  version "7.27.1"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-jsx-development/-/plugin-transform-react-jsx-development-7.27.1.tgz#47ff95940e20a3a70e68ad3d4fcb657b647f6c98"
-  integrity sha512-ykDdF5yI4f1WrAolLqeF3hmYU12j9ntLQl/AOG1HAS21jxyg1Q0/J/tpREuYLfatGdGmXp/3yS0ZA76kOlVq9Q==
-  dependencies:
-    "@babel/plugin-transform-react-jsx" "^7.27.1"
 
 "@babel/plugin-transform-react-jsx-self@^7.24.7":
   version "7.27.1"
@@ -765,7 +758,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.27.1"
 
-"@babel/plugin-transform-react-jsx@^7.25.2", "@babel/plugin-transform-react-jsx@^7.27.1":
+"@babel/plugin-transform-react-jsx@^7.25.2":
   version "7.27.1"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-jsx/-/plugin-transform-react-jsx-7.27.1.tgz#1023bc94b78b0a2d68c82b5e96aed573bcfb9db0"
   integrity sha512-2KH4LWGSrJIkVf5tSiBFYuXDAoWRq2MMwgivCf+93dd0GQi8RXLjKA/0EvRnVV5G0hrHczsquXuD01L8s6dmBw==
@@ -775,14 +768,6 @@
     "@babel/helper-plugin-utils" "^7.27.1"
     "@babel/plugin-syntax-jsx" "^7.27.1"
     "@babel/types" "^7.27.1"
-
-"@babel/plugin-transform-react-pure-annotations@^7.27.1":
-  version "7.27.1"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-pure-annotations/-/plugin-transform-react-pure-annotations-7.27.1.tgz#339f1ce355eae242e0649f232b1c68907c02e879"
-  integrity sha512-JfuinvDOsD9FVMTHpzA/pBLisxpv1aSf+OIV8lgH3MuWrks19R27e6a6DipIg4aX1Zm9Wpb04p8wljfKrVSnPA==
-  dependencies:
-    "@babel/helper-annotate-as-pure" "^7.27.1"
-    "@babel/helper-plugin-utils" "^7.27.1"
 
 "@babel/plugin-transform-regenerator@^7.24.7", "@babel/plugin-transform-regenerator@^7.28.3":
   version "7.28.4"
@@ -896,7 +881,7 @@
     "@babel/helper-create-regexp-features-plugin" "^7.27.1"
     "@babel/helper-plugin-utils" "^7.27.1"
 
-"@babel/preset-env@^7.25.0", "@babel/preset-env@^7.25.3":
+"@babel/preset-env@^7.25.3":
   version "7.28.3"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.28.3.tgz#2b18d9aff9e69643789057ae4b942b1654f88187"
   integrity sha512-ROiDcM+GbYVPYBOeCR6uBXKkQpBExLl8k9HO1ygXEyds39j+vCCsjmj7S8GOniZQlEs81QlkdJZe76IpLSiqpg==
@@ -980,18 +965,6 @@
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/types" "^7.4.4"
     esutils "^2.0.2"
-
-"@babel/preset-react@^7.24.7":
-  version "7.27.1"
-  resolved "https://registry.yarnpkg.com/@babel/preset-react/-/preset-react-7.27.1.tgz#86ea0a5ca3984663f744be2fd26cb6747c3fd0ec"
-  integrity sha512-oJHWh2gLhU9dW9HHr42q0cI0/iHHXTLGe39qvpAZZzagHy0MzYLCnCVV0symeRvzmjHyVU7mw2K06E6u/JwbhA==
-  dependencies:
-    "@babel/helper-plugin-utils" "^7.27.1"
-    "@babel/helper-validator-option" "^7.27.1"
-    "@babel/plugin-transform-react-display-name" "^7.27.1"
-    "@babel/plugin-transform-react-jsx" "^7.27.1"
-    "@babel/plugin-transform-react-jsx-development" "^7.27.1"
-    "@babel/plugin-transform-react-pure-annotations" "^7.27.1"
 
 "@babel/preset-typescript@^7.16.7":
   version "7.27.1"
@@ -7847,16 +7820,6 @@ react-native-communications@^2.2.1:
   resolved "https://registry.yarnpkg.com/react-native-communications/-/react-native-communications-2.2.1.tgz#7883b56b20a002eeb790c113f8616ea8692ca795"
   integrity sha512-5+C0X9mopI0+qxyQHzOPEi5v5rxNBQjxydPPiKMQSlX1RBIcJ8uTcqUPssQ9Mo8p6c1IKIWJUSqCj4jAmD0qVQ==
 
-react-native-config@^1.5.9:
-  version "1.5.9"
-  resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-1.5.9.tgz#a96a3148baa70c050c9f33204716d908f440fdad"
-  integrity sha512-j6EZ+zgcNW21POGDOdE/A42lt9ZZbQvpAfY8rMn/LCWneb+UcxN8DCq1tXcHUW4Yu4adAlDvpuw1WFqj4DR3hw==
-  dependencies:
-    "@babel/core" "^7.25.2"
-    "@babel/preset-env" "^7.25.0"
-    "@babel/preset-react" "^7.24.7"
-    babel-jest "^29.7.0"
-
 react-native-controlled-mentions@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/react-native-controlled-mentions/-/react-native-controlled-mentions-2.2.5.tgz#2eddcdf6b6a0ead0c448be4bb0239e10eca84a29"
@@ -8048,7 +8011,7 @@ react-native-track-player@^4.1.2:
   resolved "https://registry.yarnpkg.com/react-native-track-player/-/react-native-track-player-4.1.2.tgz#f855e79ea947f7fed707dbd4b5e9a8bc02e0454d"
   integrity sha512-cIgMlqVJx/95hirUWPRW8CHxiBFj9Rjl/voKHh2jF/2URYMTQyt76t/m2FKvjeYUW2doKv4QSCBIOUmtyDLtJw==
 
-react-native-vector-icons@^10.1.0:
+react-native-vector-icons@^10.3.0:
   version "10.3.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-10.3.0.tgz#de440f2627a2ed1079ce3b99d5b9d4f86894df28"
   integrity sha512-IFQ0RE57819hOUdFvgK4FowM5aMXg7C7XKsuGLevqXkkIJatc3QopN0wYrb2IrzUgmdpfP+QVIbI3S6h7M0btw==
