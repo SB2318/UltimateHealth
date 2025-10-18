@@ -14,8 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {Dropdown} from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {hp} from '../../helper/Metric';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import {BUTTON_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
+import {PRIMARY_COLOR} from '../../helper/Theme';
 import {SignUpScreenFirstProp, UserDetail} from '../../type';
 import {useMutation} from '@tanstack/react-query';
 import axios, {AxiosError} from 'axios';
@@ -26,7 +25,7 @@ import {
   VERIFICATION_MAIL_API,
 } from '../../helper/APIUtils';
 import EmailVerifiedModal from '../../components/VerifiedModal';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
+//import ImageResizer from '@bam.tech/react-native-image-resizer';
 import Loader from '../../components/Loader';
 import useUploadImage from '../../../hooks/useUploadImage';
 import {
@@ -71,6 +70,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
           return;
         }
 
+        /*
         if (uri) {
           ImageResizer.createResizedImage(uri, 1000, 1000, 'JPEG', 100)
             .then(async resizedImageUri => {
@@ -81,6 +81,11 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               Alert.alert('Error', 'Could not resize the image.');
               setUserProfileImage('');
             });
+        }
+            */
+
+        if (uri) {
+          setUserProfileImage(uri);
         }
       }
     });

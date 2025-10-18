@@ -11,7 +11,6 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@bam.tech/react-native-image-resizer": "^3.0.10",
     "@gorhom/bottom-sheet": "^4.6.4",
     "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-native-community/datetimepicker": "^8.2.0",
@@ -41,7 +40,7 @@
     "react-native-asset": "^2.1.1",
     "react-native-chart-kit": "^6.12.0",
     "react-native-collapsible-tab-view": "^8.0.0",
-    "react-native-config": "^1.5.5",
+    "react-native-config": "^1.5.9",
     "react-native-controlled-mentions": "^2.2.5",
     "react-native-element-dropdown": "^2.12.0",
     "react-native-fs": "^2.20.0",
@@ -53,7 +52,6 @@
     "react-native-htmlview": "^0.17.0",
     "react-native-image-picker": "^7.1.2",
     "react-native-modal-datetime-picker": "^17.1.0",
-    "react-native-pager-view": "^6.3.1",
     "react-native-paper": "^5.13.1",
     "react-native-pell-rich-editor": "^1.9.0",
     "react-native-progress": "^5.0.1",

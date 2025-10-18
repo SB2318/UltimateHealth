@@ -12,7 +12,7 @@ import {
 } from '../../type';
 import {createHTMLStructure} from '../../helper/Utils';
 import {useMutation, useQuery} from '@tanstack/react-query';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
+//import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 import axios from 'axios';
 import Loader from '../../components/Loader';
@@ -116,9 +116,9 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
           uploadedUrl = localImage;
         } else {
           // Resize the image and handle the upload
-          const resizedImageUri = await resizeImage(localImage);
+         // const resizedImageUri = await resizeImage(localImage);
 
-          uploadedUrl = await uploadImage(resizedImageUri?.uri);
+          uploadedUrl = await uploadImage(localImage);
         }
 
         if (i === 0 && imageUtil.length === 0) {
@@ -179,6 +179,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   };
 
   // Helper function to resize an image
+  /*
   const resizeImage = async localImage => {
     try {
       const resizedImageUri = await ImageResizer.createResizedImage(
@@ -194,6 +195,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       // throw new Error('Image resizing failed');
     }
   };
+  */
 
   const createPostMutation = useMutation({
     mutationKey: ['create-post-key'],

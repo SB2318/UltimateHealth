@@ -1,4 +1,5 @@
 import Config from 'react-native-config';
+
 const LOGIN_API = `${Config.PROD_URL}/user/login`;
 const REGISTRATION_API = `${Config.PROD_URL}/user/register`;
 const ARTICLE_TAGS_API = '/articles/tags';

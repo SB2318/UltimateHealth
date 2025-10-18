@@ -24,10 +24,11 @@ import Snackbar from 'react-native-snackbar';
 import TrackPlayer, {State, useProgress} from 'react-native-track-player';
 import {UPLOAD_PODCAST} from '../helper/APIUtils';
 import useUploadImage from '../../hooks/useUploadImage';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
+//import ImageResizer from '@bam.tech/react-native-image-resizer';
 import useUploadAudio from '../../hooks/useUploadAudio';
 import Slider from '@react-native-community/slider';
 import {BUTTON_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import React = require('react');
 
 const {WavAudioRecorder} = NativeModules;
 const AudioModule = NativeModules.WavAudioRecorder;
@@ -348,9 +349,9 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
       setUiState('uploading');
 
       // Resize the image and handle the upload
-      const resizedImageUri = await resizeImage(imageUtils);
+      //const resizedImageUri = await resizeImage(imageUtils);
 
-      let uploadedUrl = await uploadImage(resizedImageUri?.uri);
+      let uploadedUrl = await uploadImage(imageUtils);
       let audioUrl = await uploadAudio(filePath);
 
       console.log("audio", audioUrl);
@@ -395,8 +396,11 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   };
 
   // Helper function to resize an image
+  
   const resizeImage = async localImage => {
     try {
+
+      /*
       const resizedImageUri = await ImageResizer.createResizedImage(
         localImage,
         1000, // Width
@@ -405,6 +409,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
         100, // Quality
       );
       return resizedImageUri;
+      */
     } catch (err) {
       console.error('Failed to resize image:', err);
       // throw new Error('Image resizing failed');
@@ -417,7 +422,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
     if (error || imageError) {
       handleUpload();
     }
-  }, [error, imageError]);
+  }, [error, handleUpload, imageError]);
 
   return (
     <View style={styles.container}>

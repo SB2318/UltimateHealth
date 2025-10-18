@@ -36,7 +36,7 @@ import {
   launchImageLibrary,
   ImagePickerResponse,
 } from 'react-native-image-picker';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
+//import ImageResizer from '@bam.tech/react-native-image-resizer';
 import useUploadImage from '../../hooks/useUploadImage';
 var validator = require('email-validator');
 var expr = /^(0|91)?[6-9][0-9]{9}$/;
@@ -443,7 +443,7 @@ const ProfileEditScreen = ({navigation}) => {
             );
         }
       } else {
-       // console.log('Password Update Error', err);
+        // console.log('Password Update Error', err);
         Alert.alert(
           'Password Update Failed',
           'Network error. Please check your connection.',
@@ -605,6 +605,38 @@ const ProfileEditScreen = ({navigation}) => {
         }
 
         if (uri) {
+          setUserProfileImage(uri);
+          Alert.alert(
+            '',
+            'Are you sure you want to use this image?',
+            [
+              {
+                text: 'Cancel',
+                onPress: () => {
+                  setUserProfileImage(user?.Profile_image || '');
+                },
+                style: 'cancel',
+              },
+              {
+                text: 'OK',
+                onPress: async () => {
+                  try {
+                    const result = await uploadImage(uri);
+                    userProfileImageMutation.mutate(result);
+                  } catch (err) {
+                    console.error('Upload failed', err);
+                    Alert.alert('Error', 'Upload failed');
+                  }
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+        }
+
+        /** With Image Resizer */
+        /*
+        if (uri) {
           ImageResizer.createResizedImage(uri, 1000, 1000, 'JPEG', 100)
             .then(async resizedImageUri => {
               setUserProfileImage(resizedImageUri.uri);
@@ -644,6 +676,7 @@ const ProfileEditScreen = ({navigation}) => {
               Alert.alert('Error', 'Could not resize the image.');
             });
         }
+         */
       }
     });
   };

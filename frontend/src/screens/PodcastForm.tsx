@@ -19,7 +19,7 @@ import {
   ImagePickerResponse,
   launchImageLibrary,
 } from 'react-native-image-picker';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
+//import ImageResizer from '@bam.tech/react-native-image-resizer';
 import {hp} from '../helper/Metric';
 
 const PodcastForm = ({
@@ -92,6 +92,7 @@ const PodcastForm = ({
         }
 
         // Check dimensions
+        /*
         ImageResizer.createResizedImage(uri, 1000, 1000, 'JPEG', 100)
           .then(resizedImageUri => {
             // If the image is resized successfully, upload it
@@ -100,6 +101,7 @@ const PodcastForm = ({
             console.log(err);
             Alert.alert('Error', 'Could not resize the image.');
           });
+          */
 
         setImageUtils(uri ? uri : '');
       }
