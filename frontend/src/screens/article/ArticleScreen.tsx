@@ -41,7 +41,7 @@ import Snackbar from 'react-native-snackbar';
 import {Comment} from '../../type';
 import {formatCount} from '../../helper/Utils';
 //import CommentScreen from '../CommentScreen';
-import Tts from 'react-native-tts';
+//import Tts from 'react-native-tts';
 import CommentItem from '../../components/CommentItem';
 import {setUserHandle} from '../../store/UserSlice';
 import {io} from 'socket.io-client';
@@ -78,7 +78,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     //finishEvent();
     //});
     return () => {
-      Tts.stop();
+      //Tts.stop();
       // subscription;
     };
   }, []);
@@ -547,7 +547,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   const speakSection = async (_language = 'en-US', content: string) => {
     // Tts.requestInstallData();
-    Tts.setDefaultPitch(0.6);
+   // Tts.setDefaultPitch(0.6);
 
     //if (content.endsWith('.html')) {
     //const response = await fetch(`${GET_STORAGE_DATA}/${content}`);
@@ -557,6 +557,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     const res = await convertHtmlToPlainText(content);
 
     if (res) {
+      /*
       Tts.getInitStatus().then(() => {
         const textChunks = res.split(' ');
         let chunkIndex = 0;
@@ -582,6 +583,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
         speakNextChunk();
       });
+      */
     }
   };
 
@@ -693,7 +695,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   speakSection('en-US', htmlContent);
                 }
               } else {
-                Tts.stop();
+              //  Tts.stop();
               }
             }}
             style={[

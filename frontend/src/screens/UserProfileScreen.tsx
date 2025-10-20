@@ -2,7 +2,7 @@ import {StyleSheet, View, Text, Alert, TouchableOpacity} from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
-import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
+//import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
 import {useSelector} from 'react-redux';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -443,11 +443,13 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         <FontAwesome6 size={25} name="arrow-left" color="white" />
       </TouchableOpacity>
       <View style={[styles.innerContainer, {paddingTop: insets.top}]}>
-        <Tabs.Container
+       {
+        /**
+         *  <Tabs.Container
           renderHeader={renderHeader}
           renderTabBar={renderTabBar}
           containerStyle={styles.tabsContainer}>
-          {/* Tab 1 */}
+         
           <Tabs.Tab name="User Insights">
             <Tabs.ScrollView
               automaticallyAdjustContentInsets={true}
@@ -461,7 +463,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
               />
             </Tabs.ScrollView>
           </Tabs.Tab>
-          {/* Tab 2 */}
+        
           <Tabs.Tab name="User Articles">
             <Tabs.FlatList
               data={user !== undefined ? user.articles : []}
@@ -500,6 +502,8 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
             />
           </Tabs.Tab>
         </Tabs.Container>
+         */
+       }
       </View>
     </View>
   );

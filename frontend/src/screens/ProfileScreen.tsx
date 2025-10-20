@@ -2,7 +2,7 @@ import {StyleSheet, View, Text, Alert} from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
-import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
+//import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
 import {useDispatch, useSelector} from 'react-redux';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
@@ -338,11 +338,13 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   return (
     <View style={styles.container}>
       <View style={[styles.innerContainer, {paddingTop: insets.top}]}>
-        <Tabs.Container
+       {
+        /**
+         *  <Tabs.Container
           renderHeader={renderHeader}
           renderTabBar={renderTabBar}
           containerStyle={styles.tabsContainer}>
-          {/* Tab 1 */}
+          
           <Tabs.Tab name="Insight">
             <Tabs.ScrollView
               automaticallyAdjustContentInsets={true}
@@ -355,7 +357,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
               />
             </Tabs.ScrollView>
           </Tabs.Tab>
-          {/* Tab 2 */}
+         
           {/**
          *    <Tabs.Tab name="Articles">
             <Tabs.FlatList
@@ -381,7 +383,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
               }
             />
           </Tabs.Tab>
-         */}
+         }
 
           <Tabs.Tab name={`Reposts (${user?.repostArticles.length})`}>
             <Tabs.FlatList
@@ -401,7 +403,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
               }
             />
           </Tabs.Tab>
-          {/* Tab 3 */}
+          
           <Tabs.Tab name={`Saved(${user?.savedArticles.length})`}>
             <Tabs.FlatList
               data={user !== undefined ? user.savedArticles : []}
@@ -421,6 +423,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
             />
           </Tabs.Tab>
         </Tabs.Container>
+         */
+       }
       </View>
     </View>
   );

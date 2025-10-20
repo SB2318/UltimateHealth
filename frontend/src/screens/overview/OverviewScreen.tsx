@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
-import {MaterialTabBar, Tabs} from 'react-native-collapsible-tab-view';
+//import {MaterialTabBar, Tabs} from 'react-native-collapsible-tab-view';
 import {
   PRIMARY_COLOR,
   ON_PRIMARY_COLOR,
@@ -91,13 +91,15 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
   return (
     <View style={styles.container}>
       <View style={[styles.innerContainer, {paddingTop: insets.top}]}>
-        <Tabs.Container
+        {
+          /**
+           * <Tabs.Container
           //renderHeader={renderHeader}
           renderTabBar={renderTabBar}
           containerStyle={styles.tabsContainer}>
-          {/* Tab 1 */}
+     
 
-          {/* Tab 2 */}
+       
           <Tabs.Tab name="Articles">
             <ArticleWorkSpace handleClickAction={handleClickAction} />
           </Tabs.Tab>
@@ -108,7 +110,7 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
             />
           </Tabs.Tab>
 
-          {/*** Tab 3 */}
+       
           <Tabs.Tab name="Podcasts">
             <PodcastWorkSpace
               handleClickAction={(item: PodcastData) => {
@@ -117,6 +119,8 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
             />
           </Tabs.Tab>
         </Tabs.Container>
+           */
+        }
       </View>
       <FAB
         style={styles.fab}

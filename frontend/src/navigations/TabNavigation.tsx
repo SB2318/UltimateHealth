@@ -4,7 +4,7 @@ import HomeScreen from '../screens/HomeScreen';
 import PodcastsScreen from '../screens/PodcastsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 // import {KeyboardAvoidingView, StyleSheet} from 'react-native';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+//import {Colors} from 'react-native/Libraries/NewAppScreen';
 import TabBar from './TabBar';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {TabParamList} from '../type';
@@ -25,7 +25,7 @@ const TabNavigation = () => {
         options={{
           headerShown: false,
           headerStyle: {
-            backgroundColor: Colors.darker,
+            backgroundColor:'black',
           },
           headerTitleStyle: {
             color: 'white',
