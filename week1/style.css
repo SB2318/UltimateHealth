@@ -1,0 +1,74 @@
+/* Minimal, clean, responsive UI */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: white;
+    width: 100%;
+    max-width: 360px;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+}
+
+h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 16px;
+}
+
+label {
+    font-size: 14px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #0078ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #005fcc;
+}
+
+.link {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.link a {
+    color: #0078ff;
+    text-decoration: none;
+}
+
+.link a:hover {
+    text-decoration: underline;
+}
