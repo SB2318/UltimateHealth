@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import TabNavigation from './TabNavigation';
 import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
+import AppHomeScreen from '../screens/AppHomeScreen';
 import SignUpScreenFirst from '../screens/auth/SignUpScreenFirst';
 import SignUpScreenSecond from '../screens/auth/SignUpScreenSecond';
 import OtpScreen from '../screens/auth/OtpScreen';
@@ -94,6 +95,11 @@ const StackNavigation = () => {
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AppHome"
+        component={AppHomeScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen

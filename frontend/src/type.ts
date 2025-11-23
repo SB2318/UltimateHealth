@@ -6,6 +6,7 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet'; // Adjust this import bas
 
 export type RootStackParamList = {
   navigate(arg0: string): unknown;
+  AppHome: undefined;
   SplashScreen: undefined;
   LoginScreen: undefined;
   TabNavigation: undefined;
