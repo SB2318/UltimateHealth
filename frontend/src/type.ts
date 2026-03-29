@@ -86,7 +86,7 @@ export type RootStackParamList = {
   ReportConfirmationScreen: undefined;
   NotificationScreen: undefined;
   UserProfileScreen: {
-    authorId: string | undefined;
+    authorId: User | string | undefined;
     author_handle: string | undefined;
   };
   ProfileEditScreen: undefined;
@@ -201,6 +201,11 @@ export type PodcastFormProp = StackScreenProps<
 export type LoginScreenProp = StackScreenProps<
   RootStackParamList,
   'LoginScreen'
+>;
+
+export type LogoutScreenProp = StackScreenProps<
+  RootStackParamList,
+  'LogoutScreen'
 >;
 
 export type ArticleScreenProp = StackScreenProps<
@@ -443,7 +448,6 @@ export type ProfileHeaderProps = {
   isFollowing: boolean | undefined;
   onFollowClick: () => void;
   onOverviewClick: () => void;
-  improvementPublished: number;
 };
 
 export type HomeScreenFilterModalProps = {
@@ -566,6 +570,7 @@ export type PodcastData = {
   likedUsers: User[];
   savedUsers: User[];
   viewUsers: User[];
+  viewCount: number;
   discardReason: string;
   is_removed: boolean;
   mentionedUsers: User[];
