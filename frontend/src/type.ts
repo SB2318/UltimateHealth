@@ -27,10 +27,12 @@ export type RootStackParamList = {
     requestId: string | undefined;
     htmlContent: string | undefined;
     pb_record_id: string | undefined;
+    translationSource?: ArticleTranslationSource;
   };
   ArticleDescriptionScreen: {
     article: ArticleData | null | undefined;
     htmlContent: string | undefined;
+    translationSource?: ArticleTranslationSource;
   };
   PreviewScreen: {
     article: string;
@@ -45,6 +47,7 @@ export type RootStackParamList = {
     articleData: ArticleData | null | undefined;
     requestId: string | undefined;
     pb_record_id: string | undefined;
+    translationSource?: ArticleTranslationSource;
   };
   ArticleScreen: {
     articleId: number;
@@ -561,6 +564,18 @@ export type ArticleData = {
   reviewer_id: string | null | undefined;
   contributors: User[];
   pb_recordId: string;
+  isTranslation?: boolean;
+  sourceArticleId?: string;
+  sourceArticleRecordId?: string;
+  sourceLanguage?: string;
+  translationOf?: string;
+};
+
+export type ArticleTranslationSource = {
+  sourceArticleId: string;
+  sourceArticleRecordId: string;
+  sourceLanguage: string;
+  sourceTitle: string;
 };
 
 export type PodcastData = {
