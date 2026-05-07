@@ -565,10 +565,11 @@ export type ArticleData = {
   contributors: User[];
   pb_recordId: string;
   isTranslation?: boolean;
-  sourceArticleId?: string;
+  sourceArticleId?: string | number;
   sourceArticleRecordId?: string;
   sourceLanguage?: string;
-  translationOf?: string;
+  translationOf?: string | number | ArticleData | null;
+  translatedArticles?: ArticleData[];
 };
 
 export type ArticleTranslationSource = {
