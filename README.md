@@ -203,7 +203,7 @@ If you encounter any issues or have any feedback or suggestions, please open an 
  <h3>Thank you for contributing to our repository</h3>
  <h1> We appreciate your help in making UltimateHealth even better.😃</h1>
 
-
+ <!-- CONTRIBUTORS-TABLE-START -->
  <table>
   <p align="center">
   <tr>
@@ -248,6 +248,8 @@ If you encounter any issues or have any feedback or suggestions, please open an 
 
   
  </tr>
+ </table>
+ <!-- CONTRIBUTORS-TABLE-END -->
 
  <tr>
       <td align="center"><a href="https://github.com/thevijayshankersharma"><img src="https://avatars.githubusercontent.com/u/109781385?v=4" width="120px;" alt=""/><br/><sub><b>Vijay Shanker Sharma</b></sub></a></td>
