@@ -162,22 +162,35 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
       return;
     }
 
-    if (role === 'general') {
-      registerGeneralUser();
-      // userRegisterMutation.mutate();
-    } else {
-      const detail: UserDetail = {
-        user_name: name,
-        user_handle: username,
-        email: email,
-        password: password,
-        profile_image: user_profile_image,
-      };
-      console.log('General');
-      navigation.navigate('SignUpScreenSecond', {
-        user: detail,
-      });
-    }
+    Alert.alert(
+      'Security Warning',
+      'Do not create an account using the same password as your Google, Facebook, or any other authentication account. Please use a unique and strong password for this platform, and do not share your password with anyone else.',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'I Understand',
+          onPress: () => {
+            if (role === 'general') {
+              registerGeneralUser();
+              // userRegisterMutation.mutate();
+            } else {
+              const detail: UserDetail = {
+                user_name: name,
+                user_handle: username,
+                email: email,
+                password: password,
+                profile_image: user_profile_image,
+              };
+              console.log('General');
+              navigation.navigate('SignUpScreenSecond', {
+                user: detail,
+              });
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   const callRegisterAPI = (profile_url: string) => {
