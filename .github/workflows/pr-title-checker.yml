@@ -10,6 +10,7 @@ on:
 
 jobs:
   check:
+    if: github.repository == 'Sparshjoshi-iit/UltimateHealth' && github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: thehanimo/pr-title-checker@v1.3.7
