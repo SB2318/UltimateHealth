@@ -2,6 +2,7 @@ import sys
 import re
 import json
 import urllib.request
+import html
 from urllib.error import URLError
 
 def get_user_info(username):
@@ -10,14 +11,14 @@ def get_user_info(username):
     # Standard User-Agent is required by GitHub API
     req = urllib.request.Request(url, headers={'User-Agent': 'Python-urllib'})
     try:
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, timeout=10) as response:
             if response.status == 200:
                 data = json.loads(response.read().decode())
                 # Fallback to username if name is not set
                 name = data.get('name') or username
                 avatar_url = data.get('avatar_url')
                 return name, avatar_url
-    except URLError as e:
+    except Exception as e:
         print(f"Warning: Failed to fetch user info from GitHub API: {e}")
     
     # Fallback to standard URL patterns if API fails
@@ -39,6 +40,10 @@ def update_readme(username):
         return
 
     name, avatar_url = get_user_info(username)
+    
+    # Sanitize inputs to prevent HTML breakage
+    name = html.escape(str(name))
+    avatar_url = html.escape(str(avatar_url))
     
     # Generate the <td> snippet
     new_td = f'    <td align="center"><a href="https://github.com/{username}"><img src="{avatar_url}" width="120px;" alt=""/><br/><sub><b>{name}</b></sub></a></td>'
