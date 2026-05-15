@@ -252,8 +252,6 @@ If you encounter any issues or have any feedback or suggestions, please open an 
    <tr>
     <td align="center"><a href="https://github.com/Sparshjoshi-iit"><img src="https://avatars.githubusercontent.com/u/181929259?v=4" width="120px;" alt=""/><br/><sub><b>Sparsh Joshi</b></sub></a></td>
    </tr>
- </table>
- <!-- CONTRIBUTORS-TABLE-END -->
 
  <tr>
       <td align="center"><a href="https://github.com/thevijayshankersharma"><img src="https://avatars.githubusercontent.com/u/109781385?v=4" width="120px;" alt=""/><br/><sub><b>Vijay Shanker Sharma</b></sub></a></td>
@@ -320,6 +318,7 @@ If you encounter any issues or have any feedback or suggestions, please open an 
  </tr>
    </p>
  </table>
+ <!-- CONTRIBUTORS-TABLE-END -->
 </div>
 
 
