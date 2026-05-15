@@ -84,7 +84,6 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
     setUsername(text);
   };
 
-
   const handleVerifyModalCallback = () => {
     if (token.length > 0) {
       verifyEmailMutation(
@@ -233,43 +232,63 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
     );
   };
 
+  const showPasswordSecurityWarning = (onConfirm: () => void) => {
+    Alert.alert(
+      'Security Warning',
+      'Do not use the same password as your Google, Facebook, or any other authentication account. Please use a unique, strong password and do not share it with anyone else.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'I Understand',
+          onPress: onConfirm,
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   const registerGeneralUser = async () => {
     if (user_profile_image === '') {
-      callRegisterAPI('');
+      showPasswordSecurityWarning(() => callRegisterAPI(''));
     } else {
-      Alert.alert(
-        '',
-        'Are you sure you want to use this image?',
-        [
-          {
-            text: 'Cancel',
-            onPress: () => {
-              // setUserProfileImage(user?.Profile_image || '');
-              setUserProfileImage('');
-              Snackbar.show({
-                text: 'Your profile image will not  be uploaded.',
-                duration: Snackbar.LENGTH_SHORT,
-              });
-             callRegisterAPI('');
+      showPasswordSecurityWarning(() =>
+        Alert.alert(
+          '',
+          'Are you sure you want to use this image?',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => {
+                // setUserProfileImage(user?.Profile_image || '');
+                setUserProfileImage('');
+                Snackbar.show({
+                  text: 'Your profile image will not  be uploaded.',
+                  duration: Snackbar.LENGTH_SHORT,
+                });
+                callRegisterAPI('');
+              },
+              style: 'cancel',
             },
-            style: 'cancel',
-          },
-          {
-            text: 'OK',
-            onPress: async () => {
-              try {
-                // Upload the resized image
-                const result = await uploadImage(user_profile_image);
+            {
+              text: 'OK',
+              onPress: async () => {
+                try {
+                  // Upload the resized image
+                  const result = await uploadImage(user_profile_image);
 
-                callRegisterAPI(result ?? '');
-              } catch (err) {
-                console.error('Upload failed');
-                Alert.alert('Error', 'Upload failed');
-              }
+                  callRegisterAPI(result ?? '');
+                } catch (err) {
+                  console.error('Upload failed');
+                  Alert.alert('Error', 'Upload failed');
+                }
+              },
             },
-          },
-        ],
-        {cancelable: false},
+          ],
+          {cancelable: false},
+        ),
       );
     }
   };
