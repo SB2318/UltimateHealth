@@ -73,7 +73,7 @@ def update_readme(username):
         
         if len(tds) < 6:
             # Append inside the last <tr>, right before </tr>
-            insertion_point = last_tr.rlower().rfind('</tr>')
+            insertion_point = last_tr.lower().rfind('</tr>')
             if insertion_point == -1:
                 insertion_point = len(last_tr) - 5
                 
