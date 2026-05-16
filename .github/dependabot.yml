@@ -8,6 +8,7 @@ updates:
     labels:
       - "dependencies"
       - "github-actions"
+    open-pull-requests-limit: 5
 
   # Maintain dependencies for npm/yarn in the frontend folder
   - package-ecosystem: "npm"
@@ -20,3 +21,11 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    open-pull-requests-limit: 10
+    groups:
+      expo-packages:
+        patterns:
+          - "expo-*"
+      react-navigation:
+        patterns:
+          - "@react-navigation/*"
