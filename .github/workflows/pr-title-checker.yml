@@ -22,13 +22,13 @@ jobs:
     # "CHECKS": {
     #  "prefixes": [
     #    "docs: ",
-    #   "feat: ",
-    #   "fix: ",
-    #   "build: ",
+    #    "feat: ",
+    #    "fix: ",
+    #    "build: ",
     #    "refactor: ",
     #    "revert: ",
     #    "style: ",
     #    "chore: ",
-    #     "test: "
-    #   ]
+    #    "test: "
+    #  ]
     # },
