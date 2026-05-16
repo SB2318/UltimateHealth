@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import {
   Image,
   Platform,
@@ -8,7 +7,6 @@ import {
   View,
   ScrollView,
   Alert,
-  ActivityIndicator,
   Dimensions,
   Share,
 } from 'react-native';
@@ -45,6 +43,7 @@ import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
@@ -355,7 +354,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           />
         )}
         {likeMutationPending ? (
-          <ActivityIndicator size={40} color={PRIMARY_COLOR} />
+          <LoadingSpinner size={40} />
         ) : (
           <TouchableOpacity
             onPress={handleLike}
@@ -663,7 +662,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             onPress={handleLike}
             disabled={likeMutationPending}>
             {likeMutationPending ? (
-              <ActivityIndicator size={18} color={PRIMARY_COLOR} />
+              <LoadingSpinner size={18} />
             ) : (
               <>
                 <FontAwesome
@@ -756,7 +755,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             onPress={handleSave}
             disabled={saveMutationPending}>
             {saveMutationPending ? (
-              <ActivityIndicator size={18} color={PRIMARY_COLOR} />
+              <LoadingSpinner size={18} />
             ) : (
               <>
                 <FontAwesome
@@ -792,16 +791,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   return;
                 }
                 navigation.navigate('UserProfileScreen', {
-                  authorId: authorId,
+                  authorId: (article?.authorId as any)?._id || authorId,
                   author_handle: undefined,
                 });
               }}>
-              {authorId.Profile_image && authorId.Profile_image !== '' ? (
+              {(article?.authorId as any)?.Profile_image ? (
                 <Image
                   source={{
-                    uri: authorId.Profile_image.startsWith('http')
-                      ? `${authorId.Profile_image}`
-                      : `${GET_STORAGE_DATA}/${authorId.Profile_image}`,
+                    uri: (article?.authorId as any).Profile_image.startsWith('http')
+                      ? `${(article?.authorId as any).Profile_image}`
+                      : `${GET_STORAGE_DATA}/${(article?.authorId as any).Profile_image}`,
                   }}
                   style={styles.authorImage}
                 />
@@ -819,10 +818,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 {article ? article?.authorName : ''}
               </Text>
               <Text style={styles.authorFollowers}>
-                {article?.authorId.followers
-                  ? article?.authorId.followers.length > 1
-                    ? `${article?.authorId.followers.length} followers`
-                    : `${article?.authorId.followers.length} follower`
+                {(article?.authorId as any)?.followers
+                  ? (article?.authorId as any).followers.length > 1
+                    ? `${(article?.authorId as any).followers.length} followers`
+                    : `${(article?.authorId as any).followers.length} follower`
                   : '0 follower'}
               </Text>
               {article &&
@@ -852,16 +851,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             </View>
           </View>
           {article &&
-            user_id !== article.authorId._id &&
+            user_id !== (article.authorId as any)?._id &&
             (followMutationPending ? (
-              <ActivityIndicator size={40} color={PRIMARY_COLOR} />
+              <LoadingSpinner size={40} />
             ) : (
               <TouchableOpacity
                 style={styles.followButton}
                 onPress={handleFollow}>
                 <Text style={styles.followButtonText}>
-                  {article.authorId.followers &&
-                  article.authorId.followers.some(
+                  {(article.authorId as any)?.followers &&
+                  (article.authorId as any).followers.some(
                     (user: any) => user._id === user_id,
                   )
                     ? 'Following'
