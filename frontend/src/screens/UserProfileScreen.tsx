@@ -4,9 +4,9 @@ import {
   Text,
   Alert,
   TouchableOpacity,
-  useColorScheme,
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
+import {useAppTheme} from '../hooks/useAppTheme';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
@@ -29,8 +29,7 @@ import {useGetTotalLikeViewStatus} from '../hooks/useGetTotalLikeViewStatus';
 import { NoArticleState } from '../components/EmptyStates';
 
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
-  const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
+  const {isDarkMode} = useAppTheme();
   const {authorId, author_handle} = route.params;
   const {user_id, user_handle} = useSelector(
     (state: any) => state.user,
@@ -315,7 +314,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
       <SafeAreaView
         style={[
           styles.loadingContainer,
-          {backgroundColor: isDarkMode ? '#000A60' : '#F0F8FF'},
+          {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'},
         ]}>
         <StatusBar
           style={isDarkMode ? 'light' : 'dark'}
@@ -330,7 +329,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     <SafeAreaView
       style={[
         styles.container,
-        {backgroundColor: isDarkMode ? '#007AFF' : '#007AFF'},
+        {backgroundColor: '#007AFF'},
       ]}>
       <StatusBar style="light" backgroundColor="#007AFF" />
       <TouchableOpacity
@@ -343,14 +342,14 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
       <View
         style={[
           styles.innerContainer,
-          {backgroundColor: isDarkMode ? '#000A60' : '#F0F8FF'},
+          {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'},
         ]}>
         <Tabs.Container
           renderHeader={renderHeader}
           renderTabBar={renderTabBar}
           containerStyle={[
             styles.tabsContainer,
-            {backgroundColor: isDarkMode ? '#000A60' : '#F0F8FF'},
+            {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'},
           ]}>
           {/* Tab 1 */}
           <Tabs.Tab name="User Insight">

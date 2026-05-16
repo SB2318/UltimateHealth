@@ -20,10 +20,10 @@ import {RootStackParamList} from '../type';
 import {NavigationProp} from '@react-navigation/native';
 import {fp, hp, wp} from '../helper/Metric';
 import {ProfileHeaderProps} from '../type';
-
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
 import {useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
+import {useAppTheme} from '../hooks/useAppTheme';
 
 const ProfileHeader = ({
   isDoctor,
@@ -46,6 +46,7 @@ const ProfileHeader = ({
   onOverviewClick,
 }: ProfileHeaderProps) => {
   const {isConnected} = useSelector((state: any) => state.network);
+  const {isDarkMode} = useAppTheme();
 
   const handleCall = phone => {
     let phoneNumber = phone;
@@ -76,14 +77,14 @@ const ProfileHeader = ({
             !profileImg && {borderWidth: 0.5, borderColor: 'black'},
           ]}
         />
-        <Text style={styles.nameText}>{username}</Text>
+        <Text style={[styles.nameText, {color: isDarkMode ? '#F1F5F9' : '#0F172A'}]}>{username}</Text>
         <Text style={[styles.usernameText, {color: PRIMARY_COLOR}]}>
           @{userhandle}
         </Text>
         {isDoctor && (
           <View style={styles.experienceContainer}>
-            <FontAwesome name="stethoscope" size={hp(3.5)} color="black" />
-            <Text style={styles.experienceText}>{experience} years</Text>
+            <FontAwesome name="stethoscope" size={hp(3.5)} color={isDarkMode ? '#94A3B8' : 'black'} />
+            <Text style={[styles.experienceText, {color: isDarkMode ? '#CBD5E1' : '#0F172A'}]}>{experience} years</Text>
           </View>
         )}
         {isDoctor ? (
@@ -124,9 +125,9 @@ const ProfileHeader = ({
             onPress={() => {
               navigation.navigate('ProfileEditScreen');
             }}>
-            <View style={styles.btnSM}>
-              <MaterialIcons name="edit" size={20} color="black" />
-              <Text style={styles.btnSMText}>Edit Profile</Text>
+            <View style={[styles.btnSM, {backgroundColor: isDarkMode ? '#1E293B' : '#fff', borderColor: isDarkMode ? '#334155' : '#d1d5db'}]}>
+              <MaterialIcons name="edit" size={20} color={isDarkMode ? '#94A3B8' : 'black'} />
+              <Text style={[styles.btnSMText, {color: isDarkMode ? '#E2E8F0' : '#374151'}]}>Edit Profile</Text>
             </View>
           </TouchableOpacity>
         ) : (
@@ -153,13 +154,13 @@ const ProfileHeader = ({
         )}
         <TouchableOpacity onPress={onOverviewClick}>
           {other && (
-            <View style={styles.btnSM}>
+            <View style={[styles.btnSM, {backgroundColor: isDarkMode ? '#1E293B' : '#fff', borderColor: isDarkMode ? '#334155' : '#d1d5db'}]}>
               <MaterialCommunityIcon
                 name="view-dashboard"
                 size={20}
-                color="black"
+                color={isDarkMode ? '#94A3B8' : 'black'}
               />
-              <Text style={styles.btnSMText}>Your Workspace</Text>
+              <Text style={[styles.btnSMText, {color: isDarkMode ? '#E2E8F0' : '#374151'}]}>Your Workspace</Text>
             </View>
           )}
         </TouchableOpacity>
@@ -178,13 +179,13 @@ const ProfileHeader = ({
             }
           }}>
           {other && (
-            <View style={styles.btnSM}>
+            <View style={[styles.btnSM, {backgroundColor: isDarkMode ? '#1E293B' : '#fff', borderColor: isDarkMode ? '#334155' : '#d1d5db'}]}>
               <MaterialCommunityIcon
                 name="bell-cog-outline"
                 size={20}
-                color="black"
+                color={isDarkMode ? '#94A3B8' : 'black'}
               />
-              <Text style={styles.btnSMText}>Notification Preferences</Text>
+              <Text style={[styles.btnSMText, {color: isDarkMode ? '#E2E8F0' : '#374151'}]}>Notification Preferences</Text>
             </View>
           )}
         </TouchableOpacity>
@@ -204,9 +205,9 @@ const ProfileHeader = ({
             }
           }}>
           {other && (
-            <View style={styles.btnSM}>
-              <MaterialIcons name="logout" size={20} color="black" />
-              <Text style={styles.btnSMText}>Logout</Text>
+            <View style={[styles.btnSM, {backgroundColor: isDarkMode ? '#1E293B' : '#fff', borderColor: isDarkMode ? '#334155' : '#d1d5db'}]}>
+              <MaterialIcons name="logout" size={20} color={isDarkMode ? '#F87171' : '#EF4444'} />
+              <Text style={[styles.btnSMText, {color: isDarkMode ? '#F87171' : '#374151'}]}>Logout</Text>
             </View>
           )}
         </TouchableOpacity>
@@ -217,13 +218,13 @@ const ProfileHeader = ({
               <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
                 {specialization}
               </Text>
-              <Text style={styles.infoLabel}>Specialization</Text>
+              <Text style={[styles.infoLabel, {color: isDarkMode ? '#94A3B8' : '#374151'}]}>Specialization</Text>
             </View>
             <View style={styles.infoBlock}>
               <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
                 {qualification}
               </Text>
-              <Text style={styles.infoLabel}>Qualification</Text>
+              <Text style={[styles.infoLabel, {color: isDarkMode ? '#94A3B8' : '#374151'}]}>Qualification</Text>
             </View>
           </View>
         )}
@@ -232,7 +233,7 @@ const ProfileHeader = ({
             <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
               {followers}
             </Text>
-            <Text style={styles.infoLabel}>
+            <Text style={[styles.infoLabel, {color: isDarkMode ? '#94A3B8' : '#374151'}]}>
               {followers > 1 ? 'Followers' : 'Follower'}
             </Text>
           </Pressable>
@@ -241,7 +242,7 @@ const ProfileHeader = ({
             <Text style={[styles.infoText, {color: PRIMARY_COLOR}]}>
               {followings}
             </Text>
-            <Text style={styles.infoLabel}>
+            <Text style={[styles.infoLabel, {color: isDarkMode ? '#94A3B8' : '#374151'}]}>
               {followings > 1 ? 'Followings' : 'Following'}
             </Text>
           </Pressable>
@@ -279,7 +280,6 @@ const styles = StyleSheet.create({
   nameText: {
     fontSize: fp(5.5),
     fontWeight: 'bold',
-    color: 'black',
     marginTop: 6,
   },
   usernameText: {
@@ -297,7 +297,6 @@ const styles = StyleSheet.create({
   experienceText: {
     fontSize: 14,
     fontWeight: 'medium',
-    color: 'black',
   },
   contactContainer: {
     flexDirection: 'row',
@@ -347,7 +346,6 @@ const styles = StyleSheet.create({
   infoLabel: {
     fontSize: 16,
     fontWeight: 'regular',
-    color: 'black',
   },
   btnSM: {
     flexDirection: 'row',

@@ -9,6 +9,7 @@ import {
   TextInputProps,
   useColorScheme,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import { GlassStyles, ProfessionalColors, Typography, Spacing } from '../styles/GlassStyles';
 
 interface GlassInputProps extends TextInputProps {
@@ -29,8 +30,10 @@ export const GlassInput: React.FC<GlassInputProps> = ({
   ...textInputProps
 }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const themeMode = useSelector((state: any) => state.theme?.mode ?? 'system');
   const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
+  const effectiveTheme = themeMode === 'system' ? colorScheme : themeMode;
+  const isDarkMode = effectiveTheme === 'dark';
 
   const getInputStyle = () => {
     if (isFocused) {

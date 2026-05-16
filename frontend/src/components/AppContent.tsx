@@ -7,35 +7,41 @@ import config from '@/tamagui.config';
 import messaging from '@react-native-firebase/messaging';
 import {NavigationContainer} from '@react-navigation/native';
 import React, {useEffect, useRef} from 'react';
-import {useColorScheme, View} from 'react-native';
+import {View, useColorScheme} from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import {PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {addEventListener} from '@react-native-community/netinfo';
-import {useDispatch} from 'react-redux';
-import {TamaguiProvider} from 'tamagui';
+import {useDispatch, useSelector} from 'react-redux';
+import {Theme, TamaguiProvider} from 'tamagui';
 import {initDeepLinking} from '../helper/DeepLinkService';
 import StackNavigation from '../navigations/StackNavigation';
 import {CustomAlertDialog} from './CustomAlert';
 import UpdateModal from './UpdateModal';
-import {ON_PRIMARY_COLOR} from '../helper/Theme';
 import {setConnected} from '../store/NetworkSlice';
 import {firebaseInit} from '../helper/firebase';
 import {cleanUpDownloads, KEYS, retrieveItem} from '../helper/Utils';
 import { setUserToken, setGuestMode } from '../store/UserSlice';
+import { loadThemeMode } from '../store/themeSlice';
 import axios from 'axios';
 
 export default function AppContent() {
   const navigationRef = useRef(null);
-  const isDarkMode = useColorScheme() === 'dark';
+  const dispatch = useDispatch();
+  const {mode: themeMode} = useSelector((state: any) => state.theme || {mode: 'system'});
+  const systemColorScheme = useColorScheme();
+  const effectiveTheme = themeMode === 'system' ? (systemColorScheme === 'dark' ? 'dark' : 'light') : themeMode;
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? '#000' : ON_PRIMARY_COLOR,
+    backgroundColor: effectiveTheme === 'dark' ? '#0F172A' : '#F5F7FB',
   };
 
   const {data: tokenRes = null, isLoading} = useCheckTokenStatus();
 
   const {visible, storeUrl} = useVersionCheck();
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadThemeMode());
+  }, [dispatch]);
 
   useEffect(() => {
     if (navigationRef.current && tokenRes) {
@@ -101,22 +107,24 @@ export default function AppContent() {
 
   return (
     <TamaguiProvider config={config}>
-      <FirebaseProvider>
-        <SocketProvider>
-          <SafeAreaProvider>
-            <PaperProvider>
-              <View style={{flex: 1}}>
-                <StatusBar style={isDarkMode ? 'light' : 'dark'} backgroundColor="#007AFF" />
-                <NavigationContainer ref={navigationRef}>
-                  <StackNavigation />
-                </NavigationContainer>
-                <CustomAlertDialog key={'alert'} />
-                <UpdateModal visible={visible} storeUrl={storeUrl} />
-              </View>
-            </PaperProvider>
-          </SafeAreaProvider>
-        </SocketProvider>
-      </FirebaseProvider>
+      <Theme name={effectiveTheme}>
+        <FirebaseProvider>
+          <SocketProvider>
+            <SafeAreaProvider>
+              <PaperProvider>
+                <View style={[{flex: 1}, backgroundStyle]}>
+                  <StatusBar style={effectiveTheme === 'dark' ? 'light' : 'dark'} backgroundColor="#007AFF" />
+                  <NavigationContainer ref={navigationRef}>
+                    <StackNavigation />
+                  </NavigationContainer>
+                  <CustomAlertDialog key={'alert'} />
+                  <UpdateModal visible={visible} storeUrl={storeUrl} />
+                </View>
+              </PaperProvider>
+            </SafeAreaProvider>
+          </SocketProvider>
+        </FirebaseProvider>
+      </Theme>
     </TamaguiProvider>
   );
 }

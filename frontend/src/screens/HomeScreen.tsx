@@ -12,6 +12,7 @@ import {
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import {useAppTheme} from '../hooks/useAppTheme';
 import AddIcon from '../components/AddIcon';
 import ArticleCard from '../components/ArticleCard';
 
@@ -302,6 +303,7 @@ const EmptyArticleState = () => {
 // Here The purpose of using Redux is to maintain filter state throughout the app session. globally
 const HomeScreen = ({navigation}: HomeScreenProps) => {
   const dispatch = useDispatch();
+  const {isDarkMode} = useAppTheme();
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [sortingType, setSortingType] = useState<string>('');
@@ -612,7 +614,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 
   if (!articleData || articleData.articles?.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'}]}>
         <HomeScreenHeader
           handlePresentModalPress={handlePresentModalPress}
           onTextInputChange={handleSearch}
@@ -639,7 +641,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 
   if (isError) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'}]}>
         <HomeScreenHeader
           handlePresentModalPress={handlePresentModalPress}
           onTextInputChange={handleSearch}
@@ -666,7 +668,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 
   if (isConnected === false) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'}]}>
         <HomeScreenHeader
           handlePresentModalPress={handlePresentModalPress}
           onTextInputChange={handleSearch}
@@ -697,7 +699,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 
   if (user && (user.isBlockUser || user.isBannedUser)) {
     return (
-      <SafeAreaView style={styles.blockContainer}>
+      <SafeAreaView style={[styles.blockContainer, {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'}]}>
         <StatusBar style="light" backgroundColor="#007AFF" />
         <HomeScreenHeader
           handlePresentModalPress={handlePresentModalPress}
@@ -769,7 +771,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'}]}>
       <HomeScreenHeader
         handlePresentModalPress={handlePresentModalPress}
         onTextInputChange={handleSearch}
@@ -814,8 +816,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                   ...styles.button,
                   backgroundColor:
                     selectedCategory && selectedCategory._id !== item._id
-                      ? 'white'
-                      : '#000A60',
+                      ? (isDarkMode ? '#1E293B' : 'white')
+                      : PRIMARY_COLOR,
                   borderColor:
                     selectedCategory && selectedCategory._id !== item._id
                       ? PRIMARY_COLOR
@@ -829,7 +831,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                     ...styles.labelStyle,
                     color:
                       selectedCategory && selectedCategory._id !== item._id
-                        ? 'black'
+                        ? (isDarkMode ? '#E2E8F0' : 'black')
                         : 'white',
                   }}>
                   {item.name}

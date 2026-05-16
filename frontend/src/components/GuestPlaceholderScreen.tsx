@@ -1,11 +1,12 @@
 import React from 'react';
-import { useColorScheme, Image } from 'react-native';
+import { Image } from 'react-native';
 import { YStack, Text, Button, XStack } from 'tamagui';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../type';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { useAppTheme } from '../hooks/useAppTheme';
 
 interface GuestPlaceholderScreenProps {
   title?: string;
@@ -18,7 +19,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
   description = 'Sign up or sign in to access personalized features, interact with the community, and manage your profile.',
   iconName = 'user-lock',
 }) => {
-  const isDarkMode = useColorScheme() === 'dark';
+  const {isDarkMode} = useAppTheme();
   const inset = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 

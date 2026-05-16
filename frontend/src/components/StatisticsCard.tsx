@@ -1,5 +1,6 @@
 import React from 'react';
-import {StyleSheet, View, Text, useColorScheme} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
+import {useAppTheme} from '../hooks/useAppTheme';
 import {Card, XStack, YStack} from 'tamagui';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -21,8 +22,7 @@ const StatisticsCard = ({
   totalPodcasts = 0,
   improvements = 0,
 }:StatisticsCardProps) => {
-  const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
+  const {isDarkMode} = useAppTheme();
 
   const StatItem = ({
     icon,

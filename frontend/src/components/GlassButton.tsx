@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   useColorScheme,
 } from 'react-native';
+import { useSelector } from 'react-redux';
 import { GlassStyles, ProfessionalColors, Typography } from '../styles/GlassStyles';
 
 interface GlassButtonProps {
@@ -31,8 +32,10 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
   textStyle,
   fullWidth = false,
 }) => {
+  const themeMode = useSelector((state: any) => state.theme?.mode ?? 'system');
   const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
+  const effectiveTheme = themeMode === 'system' ? colorScheme : themeMode;
+  const isDarkMode = effectiveTheme === 'dark';
 
   const getVariantStyle = () => {
     switch (variant) {

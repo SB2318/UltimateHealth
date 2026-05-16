@@ -5,8 +5,8 @@ import {
   View,
   Text,
   StyleSheet,
-  useColorScheme,
 } from 'react-native';
+import {useAppTheme} from '../../hooks/useAppTheme';
 import {EditRequest} from '../../type';
 import {useSelector} from 'react-redux';
 import Loader from '../../components/Loader';
@@ -22,8 +22,7 @@ export default function ImprovementWorkspace({
 }: {
   handleImprovementClick: (item: EditRequest) => void;
 }) {
-  const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
+  const {isDarkMode} = useAppTheme();
   const {user_token} = useSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -86,7 +85,7 @@ export default function ImprovementWorkspace({
   );
 
   return (
-    <View style={{flex: 1, backgroundColor: isDarkMode ? '#000A60' : '#F0F8FF'}}>
+    <View style={{flex: 1, backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'}}>
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
           {categories.map((item, index) => (

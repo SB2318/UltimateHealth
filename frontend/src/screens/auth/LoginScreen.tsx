@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 //import React from 'react';
-import {Alert, Image, useColorScheme} from 'react-native';
+import {Alert, Image} from 'react-native';
+import {useAppTheme} from '../../hooks/useAppTheme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import {
@@ -32,7 +33,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   const inset = useSafeAreaInsets();
   const {redirectTo} = route.params || {};
   const dispatch = useDispatch();
-  const isDarkMode = useColorScheme() === 'dark';
+  const {isDarkMode} = useAppTheme();
   const [emailInputVisible, setEmailInputVisible] = useState(false);
   const [requestVerificationMode, setRequestVerification] = useState(false);
   const [password, setPassword] = useState('');

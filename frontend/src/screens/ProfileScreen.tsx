@@ -1,7 +1,8 @@
-import {StyleSheet, View, Text, Alert, useColorScheme} from 'react-native';
+import {StyleSheet, View, Text, Alert, Pressable} from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../helper/Theme';
+import {useAppTheme} from '../hooks/useAppTheme';
 import ActivityOverview from '../components/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
@@ -19,8 +20,6 @@ import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
 import { NoArticleState } from '../components/EmptyStates';
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
-  const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
   const {user_id} = useSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const {isConnected} = useSelector((state: any) => state.network);
@@ -74,6 +73,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   };
 
 
+  const {themeMode, effectiveTheme, isDarkMode, setThemeMode} = useAppTheme();
   const isDoctor = user !== undefined ? user.isDoctor : false;
   const bottomBarHeight = useBottomTabBarHeight();
 
@@ -238,19 +238,52 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     <SafeAreaView
       style={[
         styles.container,
-        {backgroundColor: isDarkMode ? '#000A60' : PRIMARY_COLOR},
+        {backgroundColor: isDarkMode ? '#0B1120' : '#F8FAFC'},
       ]}>
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
         backgroundColor="#007AFF"
       />
       <View style={[styles.innerContainer]}>
+        <View style={[styles.themeRow, {backgroundColor: isDarkMode ? '#0F172A' : '#FFFFFF'}]}>
+          <Text style={[styles.themeTitle, {color: isDarkMode ? '#F8FAFC' : '#111827'}]}>
+            Theme Mode
+          </Text>
+          <View style={styles.themeButtons}>
+            {['system', 'light', 'dark'].map(mode => (
+              <Pressable
+                key={mode}
+                onPress={() => setThemeMode(mode as any)}
+                style={[
+                  styles.themeButton,
+                  themeMode === mode && {
+                    backgroundColor: isDarkMode ? '#2563EB' : '#0B69FF',
+                  },
+                ]}>
+                <Text
+                  style={[
+                    styles.themeButtonText,
+                    {
+                      color:
+                        themeMode === mode
+                          ? '#FFFFFF'
+                          : isDarkMode
+                          ? '#E2E8F0'
+                          : '#1F2937',
+                    },
+                  ]}>
+                  {mode === 'system' ? 'Auto' : mode === 'light' ? 'Light' : 'Dark'}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        </View>
         <Tabs.Container
           renderHeader={renderHeader}
           renderTabBar={renderTabBar}
           containerStyle={[
             styles.tabsContainer,
-            {backgroundColor: isDarkMode ? '#000A60' : '#F0F8FF'},
+            {backgroundColor: isDarkMode ? '#0F172A' : '#FFFFFF'},
           ]}>
           {/* Tab 1 */}
           <Tabs.Tab name="Insight">
@@ -313,11 +346,40 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0CAFFF',
   },
   innerContainer: {
     flex: 1,
-    //  backgroundColor: ON_PRIMARY_COLOR,
+  },
+  themeRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 16,
+    marginHorizontal: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+  },
+  themeTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 10,
+  },
+  themeButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  themeButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 14,
+    backgroundColor: '#E2E8F0',
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 8,
+  },
+  themeButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
   },
   tabsContainer: {
     //  backgroundColor: ON_PRIMARY_COLOR,

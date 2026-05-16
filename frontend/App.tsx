@@ -5,21 +5,22 @@
  * @format
  */
 
-import React, {} from 'react';
-//import {Colors} from 'react-native/Libraries/NewAppScreen';
+import React from 'react';
+import {Provider} from 'react-redux';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-//import PushNotification from 'react-native-push-notification';
 
 import AppContent from './src/components/AppContent';
+import store from './src/store/ReduxStore';
 
 const queryClient = new QueryClient();
 
 function App() {
-  
   return (
-     <QueryClientProvider client={queryClient}>
-      <AppContent />
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <AppContent />
+      </QueryClientProvider>
+    </Provider>
   );
 }
 
