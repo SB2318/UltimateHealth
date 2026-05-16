@@ -1,5 +1,9 @@
 name: Update Contributors
 
+concurrency:
+  group: update-contributors
+  cancel-in-progress: false
+
 on:
   pull_request_target:
     types: 
@@ -30,6 +34,7 @@ jobs:
       - name: Update Contributors in README
         env:
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Processing contributor: $PR_AUTHOR"
           python .github/scripts/update_contributors.py "$PR_AUTHOR"

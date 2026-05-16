@@ -1,4 +1,5 @@
 import sys
+import os
 import re
 import json
 import urllib.request
@@ -9,7 +10,10 @@ def get_user_info(username):
     """Fetch user name and avatar from GitHub API."""
     url = f"https://api.github.com/users/{username}"
     # Standard User-Agent is required by GitHub API
-    req = urllib.request.Request(url, headers={'User-Agent': 'Python-urllib'})
+    headers = {'User-Agent': 'Python-urllib'}
+    if 'GITHUB_TOKEN' in os.environ:
+        headers['Authorization'] = f"Bearer {os.environ['GITHUB_TOKEN']}"
+    req = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=10) as response:
             if response.status == 200:
@@ -35,7 +39,7 @@ def update_readme(username):
         sys.exit(1)
 
     # Prevent duplicates - check if username is already in the file
-    if f'github.com/{username.lower()}"' in content.lower():
+    if re.search(rf'github\.com/{re.escape(username)}["/]', content, re.IGNORECASE):
         print(f"User {username} is already in the contributors list.")
         return
 
@@ -56,8 +60,8 @@ def update_readme(username):
     end_idx = content.find(end_marker)
 
     if start_idx == -1 or end_idx == -1:
-        print("Could not find the contributors table markers.")
-        sys.exit(1)
+        print("Warning: Could not find the contributors table markers. Skipping.")
+        sys.exit(0)
 
     table_start = start_idx + len(start_marker)
     table_end = end_idx
