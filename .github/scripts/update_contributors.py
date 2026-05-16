@@ -87,12 +87,15 @@ def update_readme(username):
                 insertion_point = len(last_tr) - 5
                 
             updated_last_tr = last_tr[:insertion_point] + new_td + '\n ' + last_tr[insertion_point:]
-            updated_table = table_content.replace(last_tr, updated_last_tr)
+            # Replace only the last occurrence of last_tr to avoid changing identical earlier rows
+            head, sep, tail = table_content.rpartition(last_tr)
+            updated_table = head + updated_last_tr + tail
         else:
             # The last <tr> is full, append a new <tr> complete with the <td>
             new_tr = f"   <tr>\n{new_td}\n   </tr>"
-            # Insert the new row directly after the last row
-            updated_table = table_content.replace(last_tr, last_tr + '\n\n' + new_tr)
+            # Insert the new row directly after the last row; only replace the final occurrence
+            head, sep, tail = table_content.rpartition(last_tr)
+            updated_table = head + (last_tr + '\n\n' + new_tr) + tail
              
     # Stitch the file back together
     new_readme_content = content[:table_start] + updated_table + content[table_end:]
