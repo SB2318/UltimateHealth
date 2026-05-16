@@ -205,7 +205,6 @@ If you encounter any issues or have any feedback or suggestions, please open an 
 
  <!-- CONTRIBUTORS-TABLE-START -->
  <table>
-  <p align="center">
   <tr>
     <td align="center"><a href="https://github.com/SB2318"><img src="https://avatars.githubusercontent.com/u/87614560?v=4" width="120px;" alt=""/><br/><sub><b>Susmita Bhattacharya</b></sub></a></td>
     <td align="center"><a href="https://github.com/suhanipaliwal"><img src="https://avatars.githubusercontent.com/u/161575955?v=4" width="120px;" alt=""/><br/><sub><b>Suhani Singh Paliwal</b></sub></a></td>
@@ -312,8 +311,8 @@ If you encounter any issues or have any feedback or suggestions, please open an 
         </td> 
        <td align="center"><a href="https://github.com/ionfwsrijan"><img src="https://avatars.githubusercontent.com/u/201338831?v=4" width="120px;" alt=""/><br/><sub><b>SrijanCodes</b></sub></a></td>
      <td align="center"><a href="https://github.com/Sparshjoshi-iit"><img src="https://avatars.githubusercontent.com/u/181929259?v=4" width="120px;" alt=""/><br/><sub><b>Sparsh Joshi</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Namraa310806"><img src="https://avatars.githubusercontent.com/u/131944677?v=4" width="120px;" alt=""/><br/><sub><b>Patel Namraa</b></sub></a></td>
  </tr>
-   </p>
  </table>
  <!-- CONTRIBUTORS-TABLE-END -->
 </div>
@@ -330,12 +329,4 @@ If you encounter any issues or have any feedback or suggestions, please open an 
 
 <a href="#top" style="position: fixed; bottom: 20px; right: 20px; background-color: black ; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px; font-family: Arial; font-size: 16px;">Go to Top</a>
 
-
-
-< ! - -   t e s t   P R   - - > 
- 
- < ! - -   T r i g g e r   a c t i o n   t e s t   - - > 
- 
- < ! - -   T r i g g e r   a c t i o n   t e s t   - - > 
- 
- 
+<!-- trigger action -->

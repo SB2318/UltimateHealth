@@ -1,23 +1,28 @@
+import os
 import sys
 import re
 import json
 import urllib.request
+import html
 from urllib.error import URLError
 
 def get_user_info(username):
     """Fetch user name and avatar from GitHub API."""
     url = f"https://api.github.com/users/{username}"
     # Standard User-Agent is required by GitHub API
-    req = urllib.request.Request(url, headers={'User-Agent': 'Python-urllib'})
+    headers = {'User-Agent': 'Python-urllib'}
+    if 'GITHUB_TOKEN' in os.environ:
+        headers['Authorization'] = f"Bearer {os.environ['GITHUB_TOKEN']}"
+    req = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, timeout=10) as response:
             if response.status == 200:
                 data = json.loads(response.read().decode())
                 # Fallback to username if name is not set
                 name = data.get('name') or username
                 avatar_url = data.get('avatar_url')
                 return name, avatar_url
-    except URLError as e:
+    except Exception as e:
         print(f"Warning: Failed to fetch user info from GitHub API: {e}")
     
     # Fallback to standard URL patterns if API fails
@@ -34,11 +39,15 @@ def update_readme(username):
         sys.exit(1)
 
     # Prevent duplicates - check if username is already in the file
-    if f'github.com/{username.lower()}"' in content.lower():
+    if re.search(rf'github\.com/{re.escape(username)}["/]', content, re.IGNORECASE):
         print(f"User {username} is already in the contributors list.")
         return
 
     name, avatar_url = get_user_info(username)
+    
+    # Sanitize inputs to prevent HTML breakage
+    name = html.escape(str(name))
+    avatar_url = html.escape(str(avatar_url))
     
     # Generate the <td> snippet
     new_td = f'    <td align="center"><a href="https://github.com/{username}"><img src="{avatar_url}" width="120px;" alt=""/><br/><sub><b>{name}</b></sub></a></td>'
@@ -51,8 +60,8 @@ def update_readme(username):
     end_idx = content.find(end_marker)
 
     if start_idx == -1 or end_idx == -1:
-        print("Could not find the contributors table markers.")
-        sys.exit(1)
+        print("Warning: Could not find the contributors table markers. Skipping.")
+        sys.exit(0)
 
     table_start = start_idx + len(start_marker)
     table_end = end_idx
@@ -78,12 +87,15 @@ def update_readme(username):
                 insertion_point = len(last_tr) - 5
                 
             updated_last_tr = last_tr[:insertion_point] + new_td + '\n ' + last_tr[insertion_point:]
-            updated_table = table_content.replace(last_tr, updated_last_tr)
+            # Replace only the last occurrence of last_tr to avoid changing identical earlier rows
+            head, sep, tail = table_content.rpartition(last_tr)
+            updated_table = head + updated_last_tr + tail
         else:
             # The last <tr> is full, append a new <tr> complete with the <td>
             new_tr = f"   <tr>\n{new_td}\n   </tr>"
-            # Insert the new row directly after the last row
-            updated_table = table_content.replace(last_tr, last_tr + '\n\n' + new_tr)
+            # Insert the new row directly after the last row; only replace the final occurrence
+            head, sep, tail = table_content.rpartition(last_tr)
+            updated_table = head + (last_tr + '\n\n' + new_tr) + tail
              
     # Stitch the file back together
     new_readme_content = content[:table_start] + updated_table + content[table_end:]
@@ -93,10 +105,16 @@ def update_readme(username):
         
     print(f"Successfully added {username} to contributors in README.md.")
 
-if __name__ == '__main__':
+def main():
     if len(sys.argv) < 2:
-        print("Usage: python update_contributors.py <github_username>")
+        print("Usage: python update_contributors.py <username>")
         sys.exit(1)
-        
-    target_username = sys.argv[1]
-    update_readme(target_username)
+
+    # Strip the '@' just in case it gets passed in
+    username = sys.argv[1].lstrip('@')
+
+    update_readme(username)
+
+
+if __name__ == '__main__':
+    main()
