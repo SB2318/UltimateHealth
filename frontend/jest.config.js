@@ -1,3 +1,7 @@
 module.exports = {
-  preset: 'react-native',
+  preset: "ts-jest",
+  testEnvironment: "node",
+  transformIgnorePatterns: [
+    "node_modules/(?!(\\@reduxjs|immer)/)"
+  ],
 };
