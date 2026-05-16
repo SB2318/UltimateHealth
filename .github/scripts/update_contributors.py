@@ -103,9 +103,16 @@ def update_readme(username):
     print(f"Successfully added {username} to contributors in README.md.")
 
 if __name__ == '__main__':
+def main():
     if len(sys.argv) < 2:
-        print("Usage: python update_contributors.py <github_username>")
+        print("Usage: python update_contributors.py <username>")
         sys.exit(1)
-        
-    target_username = sys.argv[1]
-    update_readme(target_username)
+
+    # Strip the '@' just in case it gets passed in
+    username = sys.argv[1].lstrip('@')
+
+    update_readme(username)
+
+
+if __name__ == '__main__':
+    main()
