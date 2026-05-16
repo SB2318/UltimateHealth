@@ -102,7 +102,6 @@ def update_readme(username):
         
     print(f"Successfully added {username} to contributors in README.md.")
 
-if __name__ == '__main__':
 def main():
     if len(sys.argv) < 2:
         print("Usage: python update_contributors.py <username>")
