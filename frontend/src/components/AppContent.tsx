@@ -30,6 +30,7 @@ import axios from 'axios';
 
 export default function AppContent() {
   const navigationRef = useRef<NavigationContainerRef<any> | null>(null);
+  const hasInitialized = useRef(false);
   const isDarkMode = useColorScheme() === 'dark';
 
   const {data: tokenRes = null} = useCheckTokenStatus();
@@ -56,10 +57,11 @@ export default function AppContent() {
   }, [dispatch, tokenRes]);
 
   useEffect(() => {
-    if (navigationRef.current && tokenRes) {
+    if (navigationRef.current && tokenRes && !hasInitialized.current) {
+      hasInitialized.current = true;
       checkToken();
     }
-  }, [checkToken]);
+  }, [checkToken, tokenRes]);
 
 
   useEffect(() => {
