@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Ultimate Health - Empowering Wellness</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+   <style>
+      * {
+         margin: 0;
+         padding: 0;
+         box-sizing: border-box;
+      }
+
+      :root {
+         --primary: #667eea;
+         --primary-dark: #5568d3;
+         --secondary: #764ba2;
+         --accent: #f093fb;
+         --text-dark: #1a202c;
+         --text-light: #4a5568;
+         --text-muted: #718096;
+         --bg-light: #f7fafc;
+         --bg-white: #ffffff;
+         --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+         --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
+         --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.15);
+         --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+         --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+         --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      body {
+         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+         color: var(--text-dark);
+         line-height: 1.7;
+         background: var(--bg-white);
+         overflow-x: hidden;
+      }
+
+      /* Smooth scroll */
+      html {
+         scroll-behavior: smooth;
+      }
+
+      .container {
+         max-width: 1200px;
+         margin: 0 auto;
+         padding: 0 24px;
+      }
+
+      /* ==================== HEADER ==================== */
+      .header {
+         position: fixed;
+         top: 0;
+         left: 0;
+         right: 0;
+         background: rgba(255, 255, 255, 0.95);
+         backdrop-filter: blur(10px);
+         padding: 16px 0;
+         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+         z-index: 1000;
+         transition: var(--transition);
+      }
+
+      .header.scrolled {
+         box-shadow: var(--shadow-md);
+         padding: 12px 0;
+      }
+
+      .nav {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+      }
+
+      .logo {
+         display: inline-flex;
+         align-items: center;
+         gap: 12px;
+         font-size: 1.5rem;
+         font-weight: 800;
+         background: var(--gradient-primary);
+         -webkit-background-clip: text;
+         -webkit-text-fill-color: transparent;
+         text-decoration: none;
+         transition: var(--transition);
+      }
+
+      .logo:hover {
+         transform: translateY(-2px);
+      }
+
+      .logo-icon img {
+         width: 48px;
+         height: 48px;
+         border-radius: 12px;
+         box-shadow: var(--shadow-sm);
+         transition: var(--transition);
+      }
+
+      .logo:hover .logo-icon img {
+         transform: rotate(-5deg) scale(1.05);
+      }
+
+      .nav-links {
+         display: flex;
+         list-style: none;
+         gap: 32px;
+         align-items: center;
+      }
+
+      .nav-links a {
+         text-decoration: none;
+         color: var(--text-dark);
+         font-weight: 600;
+         font-size: 0.95rem;
+         position: relative;
+         transition: var(--transition);
+      }
+
+      .nav-links a::after {
+         content: '';
+         position: absolute;
+         bottom: -4px;
+         left: 0;
+         width: 0;
+         height: 2px;
+         background: var(--gradient-primary);
+         transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover {
+         color: var(--primary);
+      }
+
+      .nav-links a:hover::after {
+         width: 100%;
+      }
+
+      .nav-btn-sm {
+         background: var(--gradient-primary);
+         color: white !important;
+         padding: 10px 24px;
+         border-radius: 50px;
+         font-weight: 600;
+         box-shadow: var(--shadow-sm);
+         transition: var(--transition);
+      }
+
+      .nav-btn-sm::after {
+         display: none;
+      }
+
+      .nav-btn-sm:hover {
+         transform: translateY(-2px);
+         box-shadow: var(--shadow-md);
+      }
+
+      /* Mobile menu toggle */
+      .mobile-menu-toggle {
+         display: none;
+         background: none;
+         border: none;
+         font-size: 1.5rem;
+         color: var(--text-dark);
+         cursor: pointer;
+      }
+
+      /* ==================== HERO SECTION ==================== */
+      .hero {
+         background: var(--gradient-primary);
+         padding: 140px 0 100px;
+         text-align: center;
+         position: relative;
+         overflow: hidden;
+      }
+
+      .hero::before {
+         content: '';
+         position: absolute;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+         opacity: 0.4;
+      }
+
+      .hero-content {
+         position: relative;
+         z-index: 1;
+      }
+
+      .hero h1 {
+         font-size: 3.5rem;
+         color: white !important;
+         margin-bottom: 24px;
+         font-weight: 900;
+         line-height: 1.2;
+         animation: fadeInUp 0.8s ease-out;
+         text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .hero p {
+         font-size: 1.3rem;
+         color: rgba(255, 255, 255, 0.98) !important;
+         max-width: 680px;
+         margin: 0 auto 40px;
+         line-height: 1.8;
+         animation: fadeInUp 0.8s ease-out 0.2s backwards;
+         text-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+      }
+
+      @keyframes fadeInUp {
+         from {
+            opacity: 0;
+            transform: translateY(30px);
+         }
+         to {
+            opacity: 1;
+            transform: translateY(0);
+         }
+      }
+
+      /* ==================== SECTIONS ==================== */
+      section {
+         padding: 100px 0;
+      }
+
+      section:nth-child(even) {
+         background: var(--bg-light);
+      }
+
+      h2 {
+         text-align: center;
+         font-size: 2.5rem;
+         font-weight: 800;
+         background: var(--gradient-primary);
+         -webkit-background-clip: text;
+         -webkit-text-fill-color: transparent;
+         margin-bottom: 16px;
+      }
+
+      p.center {
+         text-align: center;
+         max-width: 700px;
+         margin: 0 auto 60px;
+         font-size: 1.1rem;
+         color: var(--text-muted);
+      }
+
+      /* ==================== STORE BUTTONS ==================== */
+      .store-buttons {
+         display: flex;
+         justify-content: center;
+         gap: 20px;
+         flex-wrap: wrap;
+         margin-top: 40px;
+      }
+
+      .store-buttons a {
+         display: inline-flex;
+         align-items: center;
+         gap: 12px;
+         padding: 16px 32px;
+         border-radius: 50px;
+         border: 2px solid var(--primary);
+         color: var(--primary);
+         font-weight: 700;
+         font-size: 1rem;
+         text-decoration: none;
+         background: white;
+         transition: var(--transition);
+         box-shadow: var(--shadow-sm);
+      }
+
+      .store-buttons a:hover {
+         background: var(--gradient-primary);
+         color: white;
+         transform: translateY(-4px);
+         box-shadow: var(--shadow-md);
+      }
+
+      /* ==================== SCREENSHOT SLIDER ==================== */
+      details {
+         max-width: 1100px;
+         margin: 60px auto;
+         background: white;
+         padding: 32px;
+         border-radius: 20px;
+         box-shadow: var(--shadow-md);
+         border: 1px solid rgba(0, 0, 0, 0.05);
+         transition: var(--transition);
+      }
+
+      details:hover {
+         box-shadow: var(--shadow-lg);
+      }
+
+      summary {
+         font-size: 1.4rem;
+         font-weight: 800;
+         cursor: pointer;
+         color: var(--text-dark);
+         padding: 16px 0;
+         display: flex;
+         align-items: center;
+         gap: 12px;
+      }
+
+      summary::before {
+         content: '▶';
+         color: var(--primary);
+         transition: transform 0.3s ease;
+      }
+
+      details[open] summary::before {
+         transform: rotate(90deg);
+      }
+
+      .screenshot-slider-container {
+         position: relative;
+         max-width: 1000px;
+         margin: 40px auto;
+      }
+
+      .screenshots-wrapper {
+         display: flex;
+         overflow-x: auto;
+         scroll-snap-type: x mandatory;
+         scroll-behavior: smooth;
+         gap: 24px;
+         padding: 24px 0;
+         scrollbar-width: none;
+      }
+
+      .screenshots-wrapper::-webkit-scrollbar {
+         display: none;
+      }
+
+      .screenshot-box {
+         flex: 0 0 300px;
+         height: 550px;
+         background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+         border-radius: 28px;
+         scroll-snap-align: center;
+         box-shadow: var(--shadow-md);
+         overflow: hidden;
+         transition: var(--transition);
+         position: relative;
+         cursor: pointer;
+      }
+
+      .screenshot-box:hover {
+         transform: translateY(-8px) scale(1.02);
+         box-shadow: var(--shadow-lg);
+      }
+
+      .screenshot-box img {
+         width: 100%;
+         height: 100%;
+         object-fit: cover;
+      }
+
+      /* Screenshot Modal */
+      .screenshot-modal {
+         display: none;
+         position: fixed;
+         inset: 0;
+         background: rgba(0, 0, 0, 0.95);
+         backdrop-filter: blur(10px);
+         z-index: 3000;
+         padding: 20px;
+         align-items: center;
+         justify-content: center;
+      }
+
+      .screenshot-modal.active {
+         display: flex;
+      }
+
+      .screenshot-modal-content {
+         max-width: 90vw;
+         max-height: 90vh;
+         position: relative;
+         animation: zoomIn 0.3s ease-out;
+      }
+
+      @keyframes zoomIn {
+         from {
+            transform: scale(0.8);
+            opacity: 0;
+         }
+         to {
+            transform: scale(1);
+            opacity: 1;
+         }
+      }
+
+      .screenshot-modal-content img {
+         width: 100%;
+         height: 100%;
+         object-fit: contain;
+         border-radius: 12px;
+         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      }
+
+      .screenshot-modal-close {
+         position: absolute;
+         top: -40px;
+         right: 0;
+         background: white;
+         color: var(--text-dark);
+         border: none;
+         width: 40px;
+         height: 40px;
+         border-radius: 50%;
+         cursor: pointer;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 20px;
+         transition: var(--transition);
+         box-shadow: var(--shadow-md);
+      }
+
+      .screenshot-modal-close:hover {
+         background: var(--primary);
+         color: white;
+         transform: rotate(90deg);
+      }
+
+      .screenshot-modal-nav {
+         position: absolute;
+         top: 50%;
+         transform: translateY(-50%);
+         background: white;
+         color: var(--text-dark);
+         border: none;
+         width: 48px;
+         height: 48px;
+         border-radius: 50%;
+         cursor: pointer;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 20px;
+         transition: var(--transition);
+         box-shadow: var(--shadow-md);
+      }
+
+      .screenshot-modal-nav:hover {
+         background: var(--primary);
+         color: white;
+         transform: translateY(-50%) scale(1.1);
+      }
+
+      .screenshot-modal-prev {
+         left: -60px;
+      }
+
+      .screenshot-modal-next {
+         right: -60px;
+      }
+
+      .screenshot-caption {
+         position: absolute;
+         bottom: -50px;
+         left: 0;
+         right: 0;
+         text-align: center;
+         color: white;
+         font-size: 1rem;
+         font-weight: 600;
+      }
+
+      .slider-nav {
+         display: flex;
+         justify-content: center;
+         gap: 16px;
+         margin-top: 32px;
+      }
+
+      .nav-btn {
+         background: var(--gradient-primary);
+         color: white;
+         border: none;
+         width: 48px;
+         height: 48px;
+         border-radius: 50%;
+         cursor: pointer;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         transition: var(--transition);
+         box-shadow: var(--shadow-sm);
+      }
+
+      .nav-btn:hover {
+         transform: scale(1.1);
+         box-shadow: var(--shadow-md);
+      }
+
+      /* ==================== FEATURE GRID ==================== */
+      .feature-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+         gap: 32px;
+         margin-top: 60px;
+      }
+
+      .feature-item, .feature-card {
+         background: white;
+         padding: 32px;
+         border-radius: 20px;
+         box-shadow: var(--shadow-sm);
+         transition: var(--transition);
+         border: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .feature-item:hover, .feature-card:hover {
+         transform: translateY(-8px);
+         box-shadow: var(--shadow-lg);
+      }
+
+      .feature-item h3, .feature-card h3 {
+         font-size: 1.3rem;
+         margin-bottom: 12px;
+         color: var(--text-dark);
+         font-weight: 700;
+      }
+
+      .feature-item p, .feature-card p {
+         color: var(--text-muted);
+         line-height: 1.7;
+      }
+
+      /* ==================== MODERATOR SECTION ==================== */
+      .member-section {
+         background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+      }
+
+      .mod-icon {
+         font-size: 2.5rem;
+         margin-bottom: 20px;
+         background: var(--gradient-primary);
+         -webkit-background-clip: text;
+         -webkit-text-fill-color: transparent;
+      }
+
+      .mod-card {
+         border: 2px solid rgba(102, 126, 234, 0.1);
+         background: white;
+      }
+
+      .mod-card:hover {
+         border-color: var(--primary);
+         box-shadow: 0 20px 40px -10px rgba(102, 126, 234, 0.25);
+      }
+
+      /* ==================== PROGRAM CARDS ==================== */
+      .program-grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+         gap: 32px;
+         margin-top: 60px;
+      }
+
+      .program-card {
+         background: white;
+         border: 2px solid rgba(0, 0, 0, 0.05);
+         border-radius: 24px;
+         padding: 36px;
+         transition: var(--transition);
+         box-shadow: var(--shadow-sm);
+      }
+
+      .program-card:hover {
+         transform: translateY(-8px);
+         box-shadow: var(--shadow-lg);
+         border-color: var(--primary);
+      }
+
+      .program-logo-wrapper {
+         height: 80px;
+         display: flex;
+         align-items: center;
+         margin-bottom: 24px;
+      }
+
+      .program-logo-wrapper img {
+         max-height: 100%;
+         max-width: 180px;
+         object-fit: contain;
+      }
+
+      .program-badge {
+         display: inline-block;
+         background: var(--gradient-primary);
+         color: white;
+         font-size: 0.75rem;
+         font-weight: 800;
+         padding: 6px 16px;
+         border-radius: 50px;
+         margin-bottom: 16px;
+         text-transform: uppercase;
+         letter-spacing: 0.5px;
+      }
+
+      /* ==================== CONTACT SECTION ==================== */
+      .contact-section {
+         text-align: center;
+         padding: 120px 0;
+      }
+
+      .social-links {
+         display: flex;
+         justify-content: center;
+         gap: 24px;
+         margin-top: 48px;
+         flex-wrap: wrap;
+      }
+
+      .social-icon {
+         width: 64px;
+         height: 64px;
+         border-radius: 50%;
+         background: white;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 24px;
+         color: var(--text-dark);
+         text-decoration: none;
+         transition: var(--transition);
+         border: 2px solid rgba(0, 0, 0, 0.1);
+         box-shadow: var(--shadow-sm);
+      }
+
+      .social-icon:hover {
+         transform: translateY(-6px) scale(1.05);
+         box-shadow: var(--shadow-md);
+      }
+
+      .contact-email:hover {
+         background: #ea4335;
+         color: white;
+         border-color: #ea4335;
+      }
+
+      .contact-github:hover {
+         background: #24292e;
+         color: white;
+         border-color: #24292e;
+      }
+
+      .contact-linkedin:hover {
+         background: #0077b5;
+         color: white;
+         border-color: #0077b5;
+      }
+
+      /* ==================== FOOTER ==================== */
+      footer {
+         background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+         color: #94a3b8;
+         padding: 80px 0 40px;
+         text-align: center;
+      }
+
+      footer h2 {
+         color: white;
+         margin-bottom: 24px;
+      }
+
+      .footer-note {
+         max-width: 700px;
+         margin: 0 auto 48px;
+         font-size: 1.15rem;
+         line-height: 1.8;
+         color: #cbd5e1;
+      }
+
+      .heart {
+         color: #ef4444;
+         display: inline-block;
+         animation: heartbeat 1.5s infinite;
+      }
+
+      @keyframes heartbeat {
+         0%, 100% { transform: scale(1); }
+         50% { transform: scale(1.15); }
+      }
+
+      .footer-links {
+         display: flex;
+         justify-content: center;
+         gap: 32px;
+         margin-bottom: 32px;
+         flex-wrap: wrap;
+      }
+
+      .footer-links a {
+         color: #f8fafc;
+         text-decoration: none;
+         font-weight: 600;
+         transition: var(--transition);
+      }
+
+      .footer-links a:hover {
+         color: var(--primary);
+         transform: translateY(-2px);
+      }
+
+      .footer-bottom {
+         border-top: 1px solid rgba(255, 255, 255, 0.1);
+         padding-top: 32px;
+         margin-top: 48px;
+         font-size: 0.95rem;
+      }
+
+      /* ==================== MODAL ==================== */
+      .modal {
+         display: none;
+         position: fixed;
+         inset: 0;
+         background: rgba(15, 23, 42, 0.7);
+         backdrop-filter: blur(8px);
+         align-items: center;
+         justify-content: center;
+         z-index: 2000;
+         padding: 24px;
+      }
+
+      .modal-content {
+         background: white;
+         padding: 48px;
+         border-radius: 28px;
+         max-width: 500px;
+         width: 100%;
+         text-align: center;
+         position: relative;
+         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+         animation: modalAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      @keyframes modalAppear {
+         from {
+            transform: scale(0.8);
+            opacity: 0;
+         }
+         to {
+            transform: scale(1);
+            opacity: 1;
+         }
+      }
+
+      .progress-container {
+         background: #f1f5f9;
+         height: 10px;
+         border-radius: 10px;
+         margin: 32px 0;
+         overflow: hidden;
+      }
+
+      .progress-bar {
+         background: var(--gradient-primary);
+         width: 85%;
+         height: 100%;
+         border-radius: 10px;
+         animation: progressAnimation 2s ease-in-out infinite;
+      }
+
+      @keyframes progressAnimation {
+         0%, 100% { opacity: 1; }
+         50% { opacity: 0.7; }
+      }
+
+      .waitlist-input {
+         width: 100%;
+         padding: 14px 20px;
+         border: 2px solid #e2e8f0;
+         border-radius: 12px;
+         outline: none;
+         font-family: inherit;
+         font-size: 1rem;
+         margin-bottom: 16px;
+         transition: var(--transition);
+      }
+
+      .waitlist-input:focus {
+         border-color: var(--primary);
+         box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      }
+
+      .close-modal-btn {
+         margin-top: 20px;
+         background: transparent;
+         border: none;
+         color: var(--text-muted);
+         cursor: pointer;
+         font-weight: 600;
+         font-size: 1rem;
+         transition: var(--transition);
+      }
+
+      .close-modal-btn:hover {
+         color: var(--text-dark);
+      }
+
+      /* ==================== RESPONSIVE ==================== */
+      @media (max-width: 768px) {
+         .nav-links {
+            display: none;
+         }
+
+         .mobile-menu-toggle {
+            display: block;
+         }
+
+         .hero h1 {
+            font-size: 2.5rem;
+         }
+
+         .hero p {
+            font-size: 1.1rem;
+         }
+
+         h2 {
+            font-size: 2rem;
+         }
+
+         section {
+            padding: 60px 0;
+         }
+
+         .feature-grid,
+         .program-grid {
+            grid-template-columns: 1fr;
+         }
+
+         .store-buttons {
+            flex-direction: column;
+         }
+
+         .store-buttons a {
+            width: 100%;
+            justify-content: center;
+         }
+
+         .screenshot-box {
+            flex: 0 0 260px;
+            height: 480px;
+         }
+
+         .footer-links {
+            flex-direction: column;
+            gap: 16px;
+         }
+
+         .screenshot-modal-prev {
+            left: 10px;
+         }
+
+         .screenshot-modal-next {
+            right: 10px;
+         }
+
+         .screenshot-modal-close {
+            top: 10px;
+            right: 10px;
+         }
+      }
+
+      /* ==================== SCROLL ANIMATIONS ==================== */
+      .fade-in {
+         opacity: 0;
+         transform: translateY(30px);
+         transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+
+      .fade-in.visible {
+         opacity: 1;
+         transform: translateY(0);
+      }
+   </style>
+</head>
+
+<body>
+   <!-- Header -->
+   <header class="header" id="header">
+      <div class="container nav">
+         <a href="#" class="logo">
+            <div class="logo-icon">
+               <img src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png" alt="Ultimate Health Logo">
+            </div>
+            Ultimate-Health
+         </a>
+         <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#screenshots">Screenshots</a></li>
+            <li><a href="#programs">Programs</a></li>
+            <li><a href="https://uhsocial.in/docs" target="_blank">Documentation</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#downloads" class="nav-btn-sm">Downloads</a></li>
+         </ul>
+         <button class="mobile-menu-toggle">
+            <i class="fas fa-bars"></i>
+         </button>
+      </div>
+   </header>
+
+   <!-- Hero Section -->
+   <section class="hero">
+      <div class="container hero-content">
+         <h1>Empowering Wellness Through Global Community</h1>
+         <p>Ultimate Health is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
+      </div>
+   </section>
+
+   <!-- Downloads - Play Store -->
+   <section id="downloads">
+      <div class="container">
+         <h2>Download from Play Store</h2>
+         <p class="center">Get started with Ultimate Health on your Android device</p>
+         <div class="store-buttons">
+            <a href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth" target="_blank">
+               <i class="fab fa-google-play"></i> UltimateHealth
+            </a>
+            <a href="javascript:void(0)" onclick="openModal()">
+               <i class="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
+            </a>
+         </div>
+      </div>
+   </section>
+
+   <!-- Downloads - App Store -->
+   <section>
+      <div class="container">
+         <h2>Download from App Store</h2>
+         <p class="center">Coming soon to iOS devices</p>
+         <div class="store-buttons">
+            <a href="javascript:void(0)" onclick="openAppleModal()">
+               <i class="fab fa-apple"></i> UltimateHealth (Coming Soon)
+            </a>
+            <a href="javascript:void(0)" onclick="openAppleModal()">
+               <i class="fab fa-apple"></i> UHealth Admin (Coming Soon)
+            </a>
+         </div>
+      </div>
+   </section>
+
+   <!-- Screenshots -->
+   <section id="screenshots">
+      <div class="container">
+         <h2>App Screenshots</h2>
+         <p class="center">Take a look inside the Ultimate Health experience</p>
+
+         <!-- UltimateHealth App -->
+         <details open>
+            <summary>UltimateHealth App</summary>
+            <div class="screenshot-slider-container">
+               <div class="screenshots-wrapper" id="screenshotSlider">
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/article-home-screen.jpeg', 'Home Screen')">
+                     <img src="/assets/article-home-screen.jpeg" alt="Home Screen">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/article-detail-screen.jpeg', 'Reading View')">
+                     <img src="/assets/article-detail-screen.jpeg" alt="Reading View">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/article-discussion-screen-for-user.jpeg', 'Article Discussion')">
+                     <img src="/assets/article-discussion-screen-for-user.jpeg" alt="Article Discussion">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/article-writing-screen.jpeg', 'Writing Form')">
+                     <img src="/assets/article-writing-screen.jpeg" alt="Writing Form">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/article-writing-screen-2.jpeg', 'Select Language')">
+                     <img src="/assets/article-writing-screen-2.jpeg" alt="Select Language">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/podcast-form.jpeg', 'Podcast Form')">
+                     <img src="/assets/podcast-form.jpeg" alt="Podcast Form">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/podcast-list-screen.jpeg', 'Podcast Listing')">
+                     <img src="/assets/podcast-list-screen.jpeg" alt="Podcast Listing">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/podcast-play-screen.jpeg', 'Podcast Player')">
+                     <img src="/assets/podcast-play-screen.jpeg" alt="Podcast Player">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/podcast-play-screen-2.jpeg', 'Podcast Player')">
+                     <img src="/assets/podcast-play-screen-2.jpeg" alt="Podcast Player">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/podcast-recording.jpeg', 'Podcast Recorder')">
+                     <img src="/assets/podcast-recording.jpeg" alt="Podcast Recorder">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/podcast-upload.jpeg', 'Podcast Upload')">
+                     <img src="/assets/podcast-upload.jpeg" alt="Podcast Upload">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/notificaion-screen.jpeg', 'Notification')">
+                     <img src="/assets/notificaion-screen.jpeg" alt="Notification">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/ultimate-health-about.jpeg', 'App Info')">
+                     <img src="/assets/ultimate-health-about.jpeg" alt="App Info">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/terms_cond_page.jpeg', 'Terms And Condition')">
+                     <img src="/assets/terms_cond_page.jpeg" alt="Terms And Condition">
+                  </div>
+                  <div class="screenshot-box">
+                     <div style="text-align:center; padding:40px;">
+                        <i class="fas fa-mobile-alt" style="font-size:4rem; color:#cbd5e1;"></i>
+                        <p style="margin-top:20px; color:#718096; font-weight:600;">More Screens Coming Soon</p>
+                     </div>
+                  </div>
+               </div>
+               <div class="slider-nav">
+                  <button class="nav-btn" onclick="moveSlider(-1)">
+                     <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <button class="nav-btn" onclick="moveSlider(1)">
+                     <i class="fas fa-chevron-right"></i>
+                  </button>
+               </div>
+            </div>
+         </details>
+
+         <!-- UHealth Admin App -->
+         <details>
+            <summary>UHealth Admin App</summary>
+            <div class="screenshot-slider-container">
+               <div class="screenshots-wrapper" id="screenshotSliderAdmin">
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/admin_dashboard.jpeg', 'Admin Dashboard')">
+                     <img src="/assets/admin_dashboard.jpeg" alt="Admin Dashboard">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/admin_dashboard2.jpeg', 'Admin Dashboard Second')">
+                     <img src="/assets/admin_dashboard2.jpeg" alt="Admin Dashboard Second">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/article_view_unassign.jpeg', 'Article View Unassign')">
+                     <img src="/assets/article_view_unassign.jpeg" alt="Article View Unassign">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/article_view_unassign1.jpeg', 'Article View Unassign')">
+                     <img src="/assets/article_view_unassign1.jpeg" alt="Article View Unassign1">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/article_view_assign.jpeg', 'Article View Assign')">
+                     <img src="/assets/article_view_assign.jpeg" alt="Article View Assign">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/article_action.jpeg', 'Article Action')">
+                     <img src="/assets/article_action.jpeg" alt="Article Action">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/podcast_action.jpeg', 'Podcast Action')">
+                     <img src="/assets/podcast_action.jpeg" alt="Podcast Action">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/podcast_live.jpeg', 'Podcast Live State')">
+                     <img src="/assets/podcast_live.jpeg" alt="Podcast Live State">
+                  </div>
+                  <div class="screenshot-box" onclick="openScreenshotModal('/assets/admin_insights.jpeg', 'Admin Insights')">
+                     <img src="/assets/admin_insights.jpeg" alt="Admin Insights">
+                  </div>
+                  <div class="screenshot-box">
+                     <div style="text-align:center; padding:40px;">
+                        <i class="fas fa-mobile-alt" style="font-size:4rem; color:#cbd5e1;"></i>
+                        <p style="margin-top:20px; color:#718096; font-weight:600;">More Screens Coming Soon</p>
+                     </div>
+                  </div>
+               </div>
+               <div class="slider-nav">
+                  <button class="nav-btn" onclick="moveAdminSlider(-1)">
+                     <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <button class="nav-btn" onclick="moveAdminSlider(1)">
+                     <i class="fas fa-chevron-right"></i>
+                  </button>
+               </div>
+            </div>
+         </details>
+      </div>
+   </section>
+
+   <!-- Features -->
+   <section id="features">
+      <div class="container">
+         <h2>Be a Contributor: Core Community Features</h2>
+         <p class="center">Join our community and make a difference in global health awareness</p>
+         <div class="feature-grid">
+            <div class="feature-item fade-in">
+               <h3>🗣️ Multilingual Article Publishing</h3>
+               <p>Publish health articles in your own language and reach a global audience.</p>
+            </div>
+            <div class="feature-item fade-in">
+               <h3>✍️ Collaborative Article Improvement</h3>
+               <p>Review and improve community-driven health content together.</p>
+            </div>
+            <div class="feature-item fade-in">
+               <h3>🎧 Publish Health Podcasts</h3>
+               <p>Share verified health podcasts with listeners worldwide.</p>
+            </div>
+            <div class="feature-item fade-in">
+               <h3>📊 Contribution Analytics</h3>
+               <p>Track your impact across articles, edits, and podcasts.</p>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <!-- Moderator Features -->
+   <section class="member-section">
+      <div class="container">
+         <h2>Be a Member: Guardian of Content Integrity</h2>
+         <p class="center">Help maintain quality and safety across the platform</p>
+         <div class="feature-grid">
+            <div class="feature-card mod-card fade-in">
+               <div class="mod-icon"><i class="fas fa-sync-alt"></i></div>
+               <h3>Interactive Review</h3>
+               <p>Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors.</p>
+            </div>
+            <div class="feature-card mod-card fade-in">
+               <div class="mod-icon"><i class="fas fa-microchip"></i></div>
+               <h3>Content Integrity</h3>
+               <p>Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores.</p>
+            </div>
+            <div class="feature-card mod-card fade-in">
+               <div class="mod-icon"><i class="fas fa-shield-check"></i></div>
+               <h3>Visual Asset Audit</h3>
+               <p>Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)</p>
+            </div>
+            <div class="feature-card mod-card fade-in">
+               <div class="mod-icon"><i class="fas fa-gavel"></i></div>
+               <h3>Community Safety</h3>
+               <p>Investigate flagged content and manage user reports through a robust system designed to keep the platform safe.</p>
+            </div>
+            <div class="feature-card mod-card fade-in">
+               <div class="mod-icon"><i class="fas fa-fingerprint"></i></div>
+               <h3>Advanced Security</h3>
+               <p>Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations.</p>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <!-- Programs -->
+   <section id="programs">
+      <div class="container">
+         <h2>Programs Participated In</h2>
+         <p class="center">We are proud to have collaborated with and contributed to these prestigious tech and open-source initiatives</p>
+         <div class="program-grid">
+            <div class="program-card fade-in">
+               <div class="program-logo-wrapper">
+                  <img src="https://github.com/user-attachments/assets/e0a40d06-f5b8-42a7-a5a0-033280f842be" alt="IEEE IGDTUW Logo">
+               </div>
+               <span class="program-badge">Open Source Week</span>
+               <h3>IEEE IGDTUW</h3>
+               <p>A week-long intensive event aimed at fostering global collaboration and high-level skill-building in the open-source ecosystem.</p>
+            </div>
+            <div class="program-card fade-in">
+               <div class="program-logo-wrapper">
+                  <img src="https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00" alt="Vultr Logo">
+               </div>
+               <span class="program-badge">Cloud Hackathon</span>
+               <h3>Vultr Cloud Innovate</h3>
+               <p>Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power.</p>
+            </div>
+            <div class="program-card fade-in">
+               <div class="program-logo-wrapper">
+                  <img src="https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png" alt="GSSoC Logo">
+               </div>
+               <span class="program-badge">Summer 2024</span>
+               <h3>GirlScript Summer of Code</h3>
+               <p>A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship.</p>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <!-- Contact -->
+   <section class="contact-section" id="contact">
+      <div class="container">
+         <h2>Connect With Us</h2>
+         <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+            Have questions or want to collaborate? Reach out to us through any of these platforms
+         </p>
+         <div class="social-links">
+            <a href="https://github.com/SB2318" class="social-icon contact-github" target="_blank" title="GitHub">
+               <i class="fab fa-github"></i>
+            </a>
+            <a href="mailto:ultimate.health25@gmail.com" class="social-icon contact-email" title="Email Us">
+               <i class="fas fa-envelope"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" class="social-icon contact-linkedin" target="_blank" title="LinkedIn">
+               <i class="fab fa-linkedin-in"></i>
+            </a>
+         </div>
+      </div>
+   </section>
+
+   <!-- Footer -->
+   <footer>
+      <div class="container">
+         <h2>A Heartfelt Thank You <span class="heart">❤️</span></h2>
+         <p class="footer-note">
+            Ultimate Health exists because of people like you. To every contributor who translated an article,
+            every developer who squashed a bug, and every partner who believed in our mission—thank you for helping us build
+            a healthier, more informed world.
+         </p>
+         <div class="footer-links">
+            <a href="https://github.com/SB2318" target="_blank">Github</a>
+            <a href="https://uhsocial.in/docs" target="_blank">Documentation</a>
+            <a href="https://github.com/SB2318/UltimateHealth?tab=coc-ov-file#" target="_blank">Community Guidelines</a>
+            <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
+         </div>
+         <div class="footer-bottom">
+            <p>&copy; 2026 Ultimate Health. Built with passion for a healthier community.</p>
+         </div>
+      </div>
+   </footer>
+
+   <!-- Coming Soon Modal -->
+   <div class="modal" id="comingSoonModal">
+      <div class="modal-content">
+         <div style="font-size: 4rem; margin-bottom: 16px;">🚀</div>
+         <h2 style="margin-bottom: 12px; font-size: 2rem;">Launching Soon!</h2>
+         <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 8px;">
+            We're currently in final testing. We're <strong>85%</strong> of the way there!
+         </p>
+         <div class="progress-container">
+            <div class="progress-bar"></div>
+         </div>
+         <button class="close-modal-btn" onclick="closeModal()">Close</button>
+      </div>
+   </div>
+
+   <!-- TestFlight Modal -->
+   <div class="modal" id="appleTestFlightModal">
+      <div class="modal-content">
+         <div style="font-size: 3.5rem; margin-bottom: 16px;">✈️</div>
+         <h2 style="margin-bottom: 8px; font-size: 1.8rem;">Join the iOS TestFlight</h2>
+         <p style="color: var(--text-muted); margin-bottom: 24px;">Help us build the ultimate experience</p>
+         <div style="text-align: left; font-size: 0.95rem; color: var(--text-dark); background: #f8fafc; padding: 24px; border-radius: 16px; margin-bottom: 24px; border-left: 4px solid #007aff;">
+            <p style="margin-bottom: 12px;">We have decided to release via <strong>TestFlight</strong> first before moving to a full App Store launch.</p>
+            <p style="margin-bottom: 12px;"><strong>🔹 Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
+            <p style="margin-bottom: 12px;"><strong>🔹 What this means:</strong> The app will be available to invited testers only via TestFlight. Access is intentionally delayed until the app is stable.</p>
+            <p><strong>Are you ready to test?</strong> Enter your email below to request an invitation.</p>
+         </div>
+         <div id="testerForm">
+            <input type="email" id="testerEmail" placeholder="Enter your Apple ID email" class="waitlist-input">
+            <button class="nav-btn-sm" style="width: 100%; height: 48px; border: none; cursor: pointer; font-weight: bold; font-size: 1rem;" onclick="sendTesterEmail()">
+               Send Invitation Request
+            </button>
+         </div>
+         <div id="testerSuccess" style="display: none; padding: 24px; color: #059669; background: #d1fae5; border-radius: 12px;">
+            <p style="margin: 0; font-weight: 600;">✅ <strong>Request Sent!</strong> We'll notify you as soon as the test link is ready.</p>
+         </div>
+         <button class="close-modal-btn" onclick="closeAppleModal()">Maybe later</button>
+      </div>
+   </div>
+
+   <!-- Screenshot Modal -->
+   <div class="screenshot-modal" id="screenshotModal" onclick="closeScreenshotModal(event)">
+      <div class="screenshot-modal-content" onclick="event.stopPropagation()">
+         <button class="screenshot-modal-close" onclick="closeScreenshotModal()">&times;</button>
+         <button class="screenshot-modal-nav screenshot-modal-prev" onclick="navigateScreenshot(-1)">
+            <i class="fas fa-chevron-left"></i>
+         </button>
+         <img id="screenshotModalImage" src="" alt="">
+         <button class="screenshot-modal-nav screenshot-modal-next" onclick="navigateScreenshot(1)">
+            <i class="fas fa-chevron-right"></i>
+         </button>
+         <div class="screenshot-caption" id="screenshotCaption"></div>
+      </div>
+   </div>
+
+   <script>
+      // Screenshot modal functionality
+      const allScreenshots = [
+         { src: '/assets/article-home-screen.jpeg', caption: 'Home Screen' },
+         { src: '/assets/article-detail-screen.jpeg', caption: 'Reading View' },
+         { src: '/assets/article-discussion-screen-for-user.jpeg', caption: 'Article Discussion' },
+         { src: '/assets/article-writing-screen.jpeg', caption: 'Writing Form' },
+         { src: '/assets/article-writing-screen-2.jpeg', caption: 'Select Language' },
+         { src: '/assets/podcast-form.jpeg', caption: 'Podcast Form' },
+         { src: '/assets/podcast-list-screen.jpeg', caption: 'Podcast Listing' },
+         { src: '/assets/podcast-play-screen.jpeg', caption: 'Podcast Player' },
+         { src: '/assets/podcast-play-screen-2.jpeg', caption: 'Podcast Player' },
+         { src: '/assets/podcast-recording.jpeg', caption: 'Podcast Recorder' },
+         { src: '/assets/podcast-upload.jpeg', caption: 'Podcast Upload' },
+         { src: '/assets/notificaion-screen.jpeg', caption: 'Notification' },
+         { src: '/assets/ultimate-health-about.jpeg', caption: 'App Info' },
+         { src: '/assets/terms_cond_page.jpeg', caption: 'Terms And Condition' },
+         { src: '/assets/admin_dashboard.jpeg', caption: 'Admin Dashboard' },
+         { src: '/assets/admin_dashboard2.jpeg', caption: 'Admin Dashboard Second' },
+         { src: '/assets/article_view_unassign.jpeg', caption: 'Article View Unassign' },
+         { src: '/assets/article_view_unassign1.jpeg', caption: 'Article View Unassign' },
+         { src: '/assets/article_view_assign.jpeg', caption: 'Article View Assign' },
+         { src: '/assets/article_action.jpeg', caption: 'Article Action' },
+         { src: '/assets/podcast_action.jpeg', caption: 'Podcast Action' },
+         { src: '/assets/podcast_live.jpeg', caption: 'Podcast Live State' },
+         { src: '/assets/admin_insights.jpeg', caption: 'Admin Insights' }
+      ];
+
+      let currentScreenshotIndex = 0;
+
+      function openScreenshotModal(imageSrc, caption) {
+         currentScreenshotIndex = allScreenshots.findIndex(s => s.src === imageSrc);
+         document.getElementById('screenshotModalImage').src = imageSrc;
+         document.getElementById('screenshotCaption').textContent = caption;
+         document.getElementById('screenshotModal').classList.add('active');
+         document.body.style.overflow = 'hidden';
+      }
+
+      function closeScreenshotModal(event) {
+         if (!event || event.target.id === 'screenshotModal') {
+            document.getElementById('screenshotModal').classList.remove('active');
+            document.body.style.overflow = '';
+         }
+      }
+
+      function navigateScreenshot(direction) {
+         currentScreenshotIndex += direction;
+         if (currentScreenshotIndex < 0) {
+            currentScreenshotIndex = allScreenshots.length - 1;
+         } else if (currentScreenshotIndex >= allScreenshots.length) {
+            currentScreenshotIndex = 0;
+         }
+         const screenshot = allScreenshots[currentScreenshotIndex];
+         document.getElementById('screenshotModalImage').src = screenshot.src;
+         document.getElementById('screenshotCaption').textContent = screenshot.caption;
+      }
+
+      // Keyboard navigation
+      document.addEventListener('keydown', function(e) {
+         const modal = document.getElementById('screenshotModal');
+         if (modal.classList.contains('active')) {
+            if (e.key === 'Escape') {
+               closeScreenshotModal();
+            } else if (e.key === 'ArrowLeft') {
+               navigateScreenshot(-1);
+            } else if (e.key === 'ArrowRight') {
+               navigateScreenshot(1);
+            }
+         }
+      });
+
+      // Scroll header effect
+      window.addEventListener('scroll', function() {
+         const header = document.getElementById('header');
+         if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+         } else {
+            header.classList.remove('scrolled');
+         }
+      });
+
+      // Fade-in animations on scroll
+      const fadeElements = document.querySelectorAll('.fade-in');
+      const observer = new IntersectionObserver((entries) => {
+         entries.forEach(entry => {
+            if (entry.isIntersecting) {
+               entry.target.classList.add('visible');
+            }
+         });
+      }, { threshold: 0.1 });
+
+      fadeElements.forEach(el => observer.observe(el));
+
+      // Modal functions
+      function openModal() {
+         document.getElementById('comingSoonModal').style.display = 'flex';
+      }
+
+      function closeModal() {
+         document.getElementById('comingSoonModal').style.display = 'none';
+      }
+
+      function openAppleModal() {
+         document.getElementById('appleTestFlightModal').style.display = 'flex';
+      }
+
+      function closeAppleModal() {
+         document.getElementById('appleTestFlightModal').style.display = 'none';
+         document.getElementById('testerForm').style.display = 'block';
+         document.getElementById('testerSuccess').style.display = 'none';
+      }
+
+      async function sendTesterEmail() {
+         const emailInput = document.getElementById('testerEmail');
+         const email = emailInput.value;
+         const submitBtn = document.querySelector('#testerForm button');
+
+         if (!email || !email.includes('@')) {
+            alert("Please enter a valid Apple ID email.");
+            return;
+         }
+
+         submitBtn.innerText = "Sending...";
+         submitBtn.disabled = true;
+
+         try {
+            const response = await fetch('https://uhsocial.in/api/publishing-related/invite-testflight', {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({
+                  to: "ultimate.health25@gmail.com",
+                  from: email,
+                  subject: "New TestFlight Invitation Request",
+                  body: `User with email ${email} wants to join the iOS TestFlight group.`
+               })
+            });
+
+            if (response.ok) {
+               showSuccess();
+            } else {
+               throw new Error("API Failure");
+            }
+         } catch (error) {
+            console.error("API Error:", error);
+            window.location.href = `mailto:ultimate.health25@gmail.com?subject=TestFlight Request&body=I would like to be a tester. My email is: ${email}`;
+            showSuccess();
+         }
+      }
+
+      function showSuccess() {
+         document.getElementById('testerForm').style.display = 'none';
+         document.getElementById('testerSuccess').style.display = 'block';
+      }
+
+      // Slider functions
+      function moveSlider(direction) {
+         const slider = document.getElementById('screenshotSlider');
+         const scrollAmount = 324;
+         slider.scrollBy({
+            left: direction * scrollAmount,
+            behavior: 'smooth'
+         });
+      }
+
+      function moveAdminSlider(direction) {
+         const slider = document.getElementById('screenshotSliderAdmin');
+         const scrollAmount = 324;
+         slider.scrollBy({
+            left: direction * scrollAmount,
+            behavior: 'smooth'
+         });
+      }
+   </script>
+</body>
+</html>
