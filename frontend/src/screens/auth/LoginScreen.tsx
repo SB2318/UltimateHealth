@@ -57,6 +57,8 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
     setSecureTextEntry(!secureTextEntry);
   };
 
+  console.log("Is dark mode", isDarkMode);
+
   async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -132,10 +134,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                 dispatch(setGuestMode(false));
                 setTimeout(() => {
                   if (redirectTo) {
-                    navigation.navigate({
-                      name: redirectTo.name,
-                      params: redirectTo.params,
-                    });
+                    (navigation as any).navigate(redirectTo.name, redirectTo.params);
 
                     return;
                   }
@@ -244,10 +243,10 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   return (
     <YStack
       flex={1}
-      backgroundColor={isDarkMode ? '$background' : '#fff'}>
+      backgroundColor="$background">
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
-        backgroundColor={isDarkMode ? '#007AFF' : '#007AFF'}
+        backgroundColor="#007AFF"
       />
 
       <YStack
@@ -256,13 +255,13 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         paddingTop={inset.top}
         paddingHorizontal="$3"
         paddingBottom="$4"
-        space="$3">
+        gap="$3">
         {/* Logo Section */}
 
         {/* Form Section */}
         <YStack
           marginTop="$2"
-          backgroundColor={isDarkMode ? '$black' : '$background'}
+          backgroundColor="$backgroundLight"
           paddingVertical="$4"
           paddingHorizontal="$2"
           borderRadius="$5"
@@ -284,7 +283,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             textAlign="center"
             fontSize={16}
             fontWeight="500"
-            color={isDarkMode ? '$color' : '$color10'}
+            color="$color"
             maxWidth={300}
             lineHeight={22}>
             Enter your email and password to securely access your account
@@ -300,7 +299,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             <Icon
               name="mail"
               size={22}
-              color={isDarkMode ? 'white' : 'black'}
+              color="$color"
               style={{
                 position: 'absolute',
                 left: 6,
@@ -316,7 +315,8 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               autoCorrect={false}
               keyboardType="email-address"
               onChangeText={handleEmail}
-              color={isDarkMode ? '$color' : '$color10'}
+              color="$color"
+              backgroundColor="$background"
               paddingStart="$8"
             />
           </XStack>
@@ -331,7 +331,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             <Entypo
               name="lock"
               size={22}
-              color={isDarkMode ? 'white' : 'black'}
+              color="$color"
               style={{
                 position: 'absolute',
                 left: 12,
@@ -347,7 +347,8 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               autoCapitalize="none"
               onChangeText={handlePassword}
               value={password}
-              color={isDarkMode ? '$color' : '$color10'}
+              color="$color"
+              backgroundColor="$background"
               paddingLeft="$8"
               paddingRight="$8"
             />
@@ -361,7 +362,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               <Icon
                 name={secureTextEntry ? 'eye-off' : 'eye'}
                 size={22}
-                color={isDarkMode ? 'white' : 'black'}
+                color="$color"
               />
             </Button>
           </XStack>
@@ -416,13 +417,13 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
           <Button
             marginTop="$2"
             size="$5"
-            backgroundColor={isDarkMode ? '$gray7' : '#f0f4f8'}
+            backgroundColor="$backgroundLight"
             borderWidth={1}
-            borderColor={isDarkMode ? '$gray8' : '$blue4'}
+            borderColor="$borderColor"
             alignSelf="center"
             width="100%"
             onPress={() => navigation.navigate('SignUpScreenFirst')}>
-            <Text fontWeight="600" fontSize={16} color={isDarkMode ? '$color' : '$blue10'}>
+            <Text fontWeight="600" fontSize={16} color="$color">
               Sign Up
             </Text>
           </Button>
@@ -430,13 +431,13 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
           <Button
             marginTop="$2"
             size="$5"
-            backgroundColor={isDarkMode ? '$gray5' : '$gray3'}
+            backgroundColor="$backgroundLight"
             borderRadius="$6"
             borderWidth={1}
-            borderColor={isDarkMode ? '$gray7' : '$gray5'}
+            borderColor="$borderColor"
             alignSelf="center"
             width="100%"
-            icon={<Icon name="compass-outline" size={22} color={isDarkMode ? 'white' : 'black'} />}
+            icon={<Icon name="compass-outline" size={22} color="$color" />}
             onPress={() => {
               dispatch(setGuestMode(true));
               navigation.reset({
@@ -444,7 +445,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                 routes: [{name: 'TabNavigation'}],
               });
             }}>
-            <Text fontWeight="bold" fontSize={16} color={isDarkMode ? '$color' : '$black'}>
+            <Text fontWeight="bold" fontSize={16} color="$color">
               Continue as Guest
             </Text>
           </Button>

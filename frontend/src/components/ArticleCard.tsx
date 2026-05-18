@@ -5,7 +5,6 @@ import {
   Image,
   Pressable,
   Alert,
-  ActivityIndicator,
   TouchableOpacity,
   Platform,
 } from 'react-native';
@@ -33,6 +32,7 @@ import {generatePDF} from 'react-native-html-to-pdf';
 import {useSocket} from '../contexts/SocketContext';
 import EditRequestModal from './EditRequestModal';
 import {FontAwesome, FontAwesome6} from '@expo/vector-icons';
+import LoadingSpinner from './LoadingSpinner';
 import Snackbar from 'react-native-snackbar';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useLikeArticle} from '../hooks/useLikeArticle';
@@ -90,7 +90,7 @@ const ArticleCard = ({
     try {
       const url =
         `https://uhsocial.in/api/share/article?articleId=${item._id}` +
-        `&authorId=${item.authorId._id}` +
+        `&authorId=${(item.authorId as any)?._id || item.authorId}` +
         `&recordId=${item.pb_recordId}`;
 
       const result = await Share.open({
@@ -212,7 +212,7 @@ const ArticleCard = ({
 
   const repostAction = () => {
     if (isGuest) {
-      navigation.navigate('GuestPlaceholderScreen', {
+      (navigation as any).navigate('GuestPlaceholderScreen', {
         title: 'Sign In Required',
         description: 'Please sign in or sign up to repost this article.',
         iconName: 'arrows-rotate',
@@ -275,7 +275,7 @@ const ArticleCard = ({
           width.value = withTiming(0, {duration: 250});
           yValue.value = withTiming(100, {duration: 250});
           setSelectedCardId('');
-          navigation.navigate('ArticleScreen', {
+          (navigation as any).navigate('ArticleScreen', {
             articleId: Number(item._id),
             authorId: item.authorId,
             recordId: item.pb_recordId,
@@ -362,6 +362,35 @@ const ArticleCard = ({
                 },
                 {
                   articleId: item._id,
+                  name: 'Improve Article',
+                  icon: 'tool',
+                  action: () => {
+                    setMenuVisible(false);
+                    if (!isConnected) {
+                      Snackbar.show({
+                        text: 'Please check your internet connection',
+                        duration: Snackbar.LENGTH_SHORT,
+                      });
+                      return;
+                    }
+                    if (isGuest) {
+                      (navigation as any).navigate('GuestPlaceholderScreen', {
+                        title: 'Sign In Required',
+                        description: 'Please sign in or sign up to improve this article.',
+                        iconName: 'tool',
+                      });
+                      return;
+                    }
+                    // Open article in ArticleScreen where user can tap Improve
+                    (navigation as any).navigate('ArticleScreen', {
+                      articleId: Number(item._id),
+                      authorId: item.authorId,
+                      recordId: item.pb_recordId,
+                    });
+                  },
+                },
+                {
+                  articleId: item._id,
                   name: 'Report this post',
                   action: () => {
                     setMenuVisible(false);
@@ -411,13 +440,13 @@ const ArticleCard = ({
           {/* Like, Save, and Comment Actions */}
           <View style={styles.likeSaveContainer}>
             {likeMutationPending ? (
-              <ActivityIndicator size="small" color={PRIMARY_COLOR} />
+              <LoadingSpinner size="small" />
             ) : (
               <TouchableOpacity
                 onPress={(e) => {
                   e?.stopPropagation?.();
                   if (isGuest) {
-                    navigation.navigate('GuestPlaceholderScreen', {
+                    (navigation as any).navigate('GuestPlaceholderScreen', {
                       title: 'Sign In Required',
                       description: 'Please sign in or sign up to like this article.',
                       iconName: 'heart',
@@ -498,14 +527,14 @@ const ArticleCard = ({
               onPress={(e) => {
                 e?.stopPropagation?.();
                 if (isGuest) {
-                  navigation.navigate('GuestPlaceholderScreen', {
+                  (navigation as any).navigate('GuestPlaceholderScreen', {
                     title: 'Sign In Required',
                     description: 'Please sign in or sign up to view or post comments.',
                     iconName: 'comment',
                   });
                   return;
                 }
-                navigation.navigate('CommentScreen', {
+                (navigation as any).navigate('CommentScreen', {
                   articleId: item._id,
                   mentionedUsers: item.mentionedUsers
                     ? item.mentionedUsers
@@ -520,7 +549,7 @@ const ArticleCard = ({
             {source === 'home' && (
               <>
                 {repostPending ? (
-                  <ActivityIndicator size="small" color={PRIMARY_COLOR} />
+                  <LoadingSpinner size="small" />
                 ) : (
                   <TouchableOpacity
                     onPress={(e) => {
@@ -559,13 +588,13 @@ const ArticleCard = ({
             )}
 
             {saveMutationPending ? (
-              <ActivityIndicator size="small" color={PRIMARY_COLOR} />
+              <LoadingSpinner size="small" />
             ) : (
               <TouchableOpacity
                 onPress={(e) => {
                   e?.stopPropagation?.();
                   if (isGuest) {
-                    navigation.navigate('GuestPlaceholderScreen', {
+                    (navigation as any).navigate('GuestPlaceholderScreen', {
                       title: 'Sign In Required',
                       description: 'Please sign in or sign up to save this article.',
                       iconName: 'bookmark',
@@ -618,7 +647,7 @@ const ArticleCard = ({
                 onPress={(e) => {
                   e?.stopPropagation?.();
                   if (isGuest) {
-                    navigation.navigate('GuestPlaceholderScreen', {
+                    (navigation as any).navigate('GuestPlaceholderScreen', {
                       title: 'Sign In Required',
                       description: 'Please sign in or sign up for more actions.',
                       iconName: 'ellipsis-v',

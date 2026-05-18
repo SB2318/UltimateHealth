@@ -1,11 +1,16 @@
 name: Update Contributors
 
+concurrency:
+  group: update-contributors
+  cancel-in-progress: false
+
 on:
-  pull_request:
+  pull_request_target:
     types: 
       - closed
     branches:
       - main
+      - web
 
 jobs:
   update-readme:
@@ -17,19 +22,20 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # Make sure to fetch the full history to easily commit and push
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.x'
 
       - name: Update Contributors in README
         env:
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Processing contributor: $PR_AUTHOR"
           python .github/scripts/update_contributors.py "$PR_AUTHOR"
@@ -37,6 +43,7 @@ jobs:
       - name: Commit and push if changed
         env:
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
@@ -48,6 +55,6 @@ jobs:
             echo "User $PR_AUTHOR is already in the README or no changes were made."
           else
             git commit -m "docs: add @$PR_AUTHOR to contributors list"
-            git push origin main
+            git push origin "$BASE_BRANCH"
             echo "Successfully committed and pushed new contributor."
           fi
