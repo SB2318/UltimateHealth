@@ -107,7 +107,7 @@ jobs:
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
             ONLY_ACTIVE_ARCH=YES \
-            IPHONEOS_DEPLOYMENT_TARGET=14.0 \
+            IPHONEOS_DEPLOYMENT_TARGET=15.0 \
             COMPILER_INDEX_STORE_ENABLE=NO > build.log 2>&1
 
       - name: Print Build Failure Summary
