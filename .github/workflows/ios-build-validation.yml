@@ -38,6 +38,11 @@ jobs:
       - name: Install JS Dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Firebase Secret Injection
+        env:
+          GOOGLE_SERVICES_INFO_PLIST: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST }}
+        run: echo "$GOOGLE_SERVICES_INFO_PLIST" > GoogleService-Info.plist
+
       - name: Generate Native iOS Project (Expo Prebuild)
         run: npx expo prebuild --platform ios --clean
 
@@ -52,13 +57,6 @@ jobs:
         run: |
           cd ios
           pod install
-
-      - name: Firebase Secret Injection
-        env:
-          GOOGLE_SERVICES_INFO_PLIST: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST }}
-        run: |
-          mkdir -p ios/UltimateHealth
-          echo "$GOOGLE_SERVICES_INFO_PLIST" > ios/UltimateHealth/GoogleService-Info.plist
 
       - name: Compilation
         run: |
