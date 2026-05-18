@@ -67,9 +67,12 @@ jobs:
       - name: Generate Native iOS Project (Expo Prebuild)
         run: npx expo prebuild --platform ios --clean
 
-      - name: Patch Generated Podfile for Modular Headers
+      - name: Patch Generated Podfile for Targeted Firebase Headers
         run: |
-          echo "use_modular_headers!" > temp_podfile
+          cat <<EOF > temp_podfile
+          pod 'FirebaseCoreInternal', :modular_headers => true
+          pod 'GoogleUtilities', :modular_headers => true
+          EOF
           cat ios/Podfile >> temp_podfile
           mv temp_podfile ios/Podfile
 
