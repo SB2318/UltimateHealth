@@ -67,6 +67,12 @@ jobs:
       - name: Generate Native iOS Project (Expo Prebuild)
         run: npx expo prebuild --platform ios --clean
 
+      - name: Patch Generated Podfile for Modular Headers
+        run: |
+          echo "use_modular_headers!" > temp_podfile
+          cat ios/Podfile >> temp_podfile
+          mv temp_podfile ios/Podfile
+
       - name: Ruby & CocoaPods
         uses: ruby/setup-ruby@v1
         with:
