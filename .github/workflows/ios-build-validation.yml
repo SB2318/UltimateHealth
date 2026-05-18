@@ -1,0 +1,73 @@
+name: iOS Build Validation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'frontend/ios/**'
+      - 'frontend/package.json'
+      - 'frontend/yarn.lock'
+      - '.github/workflows/ios-build-validation.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'frontend/ios/**'
+      - 'frontend/package.json'
+      - 'frontend/yarn.lock'
+      - '.github/workflows/ios-build-validation.yml'
+
+jobs:
+  build-ios:
+    name: Build iOS
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Node & Yarn
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install JS Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Ruby & CocoaPods
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: ./frontend
+
+      - name: Install Pods
+        run: |
+          cd ios
+          pod install
+
+      - name: Firebase Secret Injection
+        env:
+          GOOGLE_SERVICES_INFO_PLIST: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST }}
+        run: |
+          mkdir -p ios/UltimateHealth
+          echo "$GOOGLE_SERVICES_INFO_PLIST" > ios/UltimateHealth/GoogleService-Info.plist
+
+      - name: Compilation
+        run: |
+          xcodebuild -workspace ios/UltimateHealth.xcworkspace \
+            -scheme UltimateHealth \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO > build.log 2>&1
+
+      - name: Artifact Upload
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-log
+          path: frontend/build.log
