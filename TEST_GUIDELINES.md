@@ -24,7 +24,7 @@
 
 UltimateHealth is a React Native + Expo application built with TypeScript, Redux Toolkit, and React Query. This document outlines comprehensive testing guidelines for all aspects of the application.
 
-**Current Status**: Testing infrastructure needs to be established. This document serves as the roadmap for implementing a robust testing strategy.
+**Current Status**: Testing infrastructure has been established. You can now write tests using the `jest-expo` and React Native Testing Library stack. See the "Running Tests" section for instructions.
 
 ---
 
