@@ -93,6 +93,10 @@ jobs:
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO > build.log 2>&1
 
+      - name: Print Build Failure Summary
+        if: failure()
+        run: tail -n 200 build.log
+
       - name: Artifact Upload
         if: failure()
         uses: actions/upload-artifact@v4
