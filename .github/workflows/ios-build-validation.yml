@@ -41,7 +41,25 @@ jobs:
       - name: Firebase Secret Injection
         env:
           GOOGLE_SERVICES_INFO_PLIST: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST }}
-        run: echo "$GOOGLE_SERVICES_INFO_PLIST" > GoogleService-Info.plist
+        run: |
+          if [ -z "$GOOGLE_SERVICES_INFO_PLIST" ]; then
+            echo "Notice: GOOGLE_SERVICES_INFO_PLIST secret is missing. Writing placeholder for fork validation."
+            cat <<EOF > GoogleService-Info.plist
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+            <plist version="1.0">
+            <dict>
+              <key>CLIENT_ID</key>
+              <string>placeholder.apps.googleusercontent.com</string>
+              <key>REVERSED_CLIENT_ID</key>
+              <string>com.googleusercontent.apps.placeholder</string>
+            </dict>
+            </plist>
+          EOF
+          else
+            echo "Notice: GOOGLE_SERVICES_INFO_PLIST secret found. Writing to GoogleService-Info.plist."
+            echo "$GOOGLE_SERVICES_INFO_PLIST" > GoogleService-Info.plist
+          fi
 
       - name: Generate Native iOS Project (Expo Prebuild)
         run: npx expo prebuild --platform ios --clean
