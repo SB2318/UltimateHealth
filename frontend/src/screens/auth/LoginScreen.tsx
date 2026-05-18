@@ -57,6 +57,8 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
     setSecureTextEntry(!secureTextEntry);
   };
 
+  console.log("Is dark mode", isDarkMode);
+
   async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -241,10 +243,10 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   return (
     <YStack
       flex={1}
-      backgroundColor={isDarkMode ? '$background' : '#fff'}>
+      backgroundColor="$background">
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
-        backgroundColor={isDarkMode ? '#007AFF' : '#007AFF'}
+        backgroundColor="#007AFF"
       />
 
       <YStack
@@ -253,13 +255,13 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         paddingTop={inset.top}
         paddingHorizontal="$3"
         paddingBottom="$4"
-        space="$3">
+        gap="$3">
         {/* Logo Section */}
 
         {/* Form Section */}
         <YStack
           marginTop="$2"
-          backgroundColor={isDarkMode ? '$black' : '$background'}
+          backgroundColor="$backgroundLight"
           paddingVertical="$4"
           paddingHorizontal="$2"
           borderRadius="$5"
