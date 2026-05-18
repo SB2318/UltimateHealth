@@ -74,7 +74,7 @@ jobs:
       - name: Install Pods
         run: |
           cd ios
-          pod install
+          pod install --repo-update
 
       - name: Compilation
         run: |
