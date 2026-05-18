@@ -38,6 +38,9 @@ jobs:
       - name: Install JS Dependencies
         run: yarn install --frozen-lockfile
 
+      - name: Patch Legacy Podspecs
+        run: find node_modules -name "*image-resizer*.podspec" -exec sed -i '' '/RCT-Folly/d' {} +
+
       - name: Firebase Secret Injection
         env:
           GOOGLE_SERVICES_INFO_PLIST: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST }}
@@ -63,9 +66,6 @@ jobs:
 
       - name: Generate Native iOS Project (Expo Prebuild)
         run: npx expo prebuild --platform ios --clean
-
-      - name: Patch Generated Podfile
-        run: sed -i '' '1s|^|source "https://cdn.cocoapods.org/"\'$'\n|' ios/Podfile
 
       - name: Ruby & CocoaPods
         uses: ruby/setup-ruby@v1
