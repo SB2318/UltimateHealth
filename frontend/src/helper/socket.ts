@@ -2,6 +2,7 @@ import { io, Socket } from 'socket.io-client';
 import { SOCKET_PROD } from './APIUtils';
 
 let socket: Socket | null = null;
+let socketAuthToken: string | null = null;
 
 /**
  * Initialize Socket.IO connection with optional authentication
@@ -9,8 +10,14 @@ let socket: Socket | null = null;
  * @returns {Socket} Socket instance
  */
 export const initializeSocket = (token: string | null = null): Socket => {
-    // Disconnect existing socket if any
-    if (socket) {
+    // Reuse the active socket when the auth context has not changed. This keeps
+    // provider remounts and unrelated Redux updates from resetting realtime flows.
+    if (socket && socketAuthToken === token) {
+        return socket;
+    }
+
+    // Re-authentication requires a fresh connection with the new token.
+    if (socket && socketAuthToken !== token) {
         socket.disconnect();
     }
 
@@ -32,6 +39,7 @@ export const initializeSocket = (token: string | null = null): Socket => {
 
     // Initialize socket connection
     socket = io(SOCKET_PROD, socketOptions);
+    socketAuthToken = token;
 
     // Connection event handlers
     socket.on('connect', () => {
@@ -78,6 +86,7 @@ export const disconnectSocket = (): void => {
     if (socket) {
         socket.disconnect();
         socket = null;
+        socketAuthToken = null;
     }
 };
 
