@@ -15,11 +15,60 @@ import Slider from '@react-native-community/slider';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Feather from '@expo/vector-icons/Feather';
 import {PRIMARY_COLOR} from '../helper/Theme'; // Custom theme color
-import Tts from 'react-native-tts'; // Text-to-Speech library
+import Tts, {type TtsEvent} from 'react-native-tts'; // Text-to-Speech library
 
-// Helper function to check if two values are approximately equal within a given epsilon (tolerance)
-function approximatelyEqual(v1: number, v2: number, epsilon = 500) {
-  return Math.abs(v1 - v2) < epsilon;
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+
+const getSpeechSegmentFromPosition = (
+  sourceText: string,
+  totalDuration: number,
+  position: number,
+) => {
+  if (!sourceText.trim()) {
+    return {charOffset: 0, segmentText: ''};
+  }
+
+  const safePosition = clamp(position, 0, totalDuration);
+  const targetChar =
+    totalDuration > 0
+      ? Math.floor((safePosition / totalDuration) * sourceText.length)
+      : 0;
+
+  const wordMatches = [...sourceText.matchAll(/\S+/g)];
+  const wordStart = wordMatches.reduce((latestStart, match) => {
+    const index = match.index ?? 0;
+    return index <= targetChar ? index : latestStart;
+  }, 0);
+
+  const rawSegment = sourceText.slice(wordStart);
+  const trimmedSegment = rawSegment.trimStart();
+  const trimOffset = rawSegment.length - trimmedSegment.length;
+
+  return {
+    charOffset: wordStart + trimOffset,
+    segmentText: trimmedSegment,
+  };
+};
+
+const getPositionFromTtsProgress = (
+  event: TtsEvent<'tts-progress'>,
+  segmentStartOffset: number,
+  sourceTextLength: number,
+  totalDuration: number,
+) => {
+  if (!sourceTextLength || !totalDuration) {
+    return 0;
+  }
+
+  const eventOffset = (event.location ?? 0) + (event.length ?? 0);
+  const absoluteOffset = clamp(
+    segmentStartOffset + eventOffset,
+    0,
+    sourceTextLength,
+  );
+
+  return (absoluteOffset / sourceTextLength) * totalDuration;
 }
 
 const PodcastPlayer = ({}) => {
@@ -28,7 +77,9 @@ const PodcastPlayer = ({}) => {
   const [isPlaying, setisPlaying] = useState(false); // Track if the podcast is playing
   const [duration, setDuration] = useState(0); // Store the total duration of the podcast
   const [currentPosition, setCurrentPosition] = useState(0); // Store the current playback position
-  const sliderInterval = useRef<NodeJS.Timeout | null>(null); // Reference to store the interval for updating the slider
+  const durationRef = useRef(0);
+  const segmentStartOffsetRef = useRef(0);
+  const stopReasonRef = useRef<'pause' | 'seek' | null>(null);
 
   // Text content of the podcast
   const text = `You're seeking new ways to diversify your portfolio, but it's not always easy to find new reliable investment opportunities. Each week, our financial expert with four decades of successful investing experience will help you discover opportunities outside of your current strategy that you've probably never considered before. If you want to learn about ways to diversify your portfolio in ways that have various levels of risk, this show is for you.`;
@@ -40,6 +91,7 @@ const PodcastPlayer = ({}) => {
   // Function to initialize Text-to-Speech (TTS) settings and calculate the estimated duration of the text
   const initTts = async () => {
     const totalDuration = estimateTTSDuration(text); // Calculate total duration based on text
+    durationRef.current = totalDuration;
     setDuration(totalDuration); // Set the duration state
 
     const voices = await Tts.voices(); // Get available TTS voices
@@ -83,10 +135,40 @@ const PodcastPlayer = ({}) => {
   // useEffect hook to initialize TTS and set up event listeners
   useEffect(() => {
     Tts.getInitStatus().then(initTts); // Initialize TTS when component mounts
-    return () => {
-      if (sliderInterval.current) {
-        clearInterval(sliderInterval.current); // Clear the interval
+
+    const handleProgress = (event: TtsEvent<'tts-progress'>) => {
+      const nextPosition = getPositionFromTtsProgress(
+        event,
+        segmentStartOffsetRef.current,
+        text.length,
+        durationRef.current,
+      );
+      setCurrentPosition(nextPosition);
+    };
+
+    const handleFinish = () => {
+      segmentStartOffsetRef.current = 0;
+      stopReasonRef.current = null;
+      setCurrentPosition(0);
+      setisPlaying(false);
+    };
+
+    const handleCancel = () => {
+      if (stopReasonRef.current === 'pause') {
+        setisPlaying(false);
       }
+      stopReasonRef.current = null;
+    };
+
+    Tts.addEventListener('tts-progress', handleProgress);
+    Tts.addEventListener('tts-finish', handleFinish);
+    Tts.addEventListener('tts-cancel', handleCancel);
+
+    return () => {
+      Tts.removeEventListener('tts-progress', handleProgress);
+      Tts.removeEventListener('tts-finish', handleFinish);
+      Tts.removeEventListener('tts-cancel', handleCancel);
+      Tts.stop();
     };
   }, []);
 
@@ -96,57 +178,40 @@ const PodcastPlayer = ({}) => {
   };
 
   // Function to handle play/pause actions
-  const handlePlay = () => {
-    if (isPlaying) {
-      // If currently playing, stop the speech and clear the interval
-      //console.log('paused');
-      Tts.stop(); // Stop the text-to-speech
-      if (sliderInterval.current) {
-        clearInterval(sliderInterval.current); // Clear the interval used for updating position
-      }
-    } else {
-      // If currently paused, calculate new starting position and resume speech
-      Tts.stop(); // Ensure TTS is stopped before starting new speech
+  const speakFromPosition = (position: number) => {
+    const safePosition = clamp(position, 0, durationRef.current);
+    const {charOffset, segmentText} = getSpeechSegmentFromPosition(
+      text,
+      durationRef.current,
+      safePosition,
+    );
 
-      // Calculate the number of words spoken per second
-      const wordsPerSecond = (text.split(' ').length / duration) * 1000;
-
-      // Calculate how many words to skip based on the current position
-      const wordsToSkip = Math.floor((currentPosition / 1000) * wordsPerSecond);
-
-      // Create new text to speak from the current position
-      const newText = text.split(' ').slice(wordsToSkip).join(' ');
-
-      // Start speaking the new text
-      Tts.speak(newText);
-
-      // Set an interval to update the current position every second
-      sliderInterval.current = setInterval(() => {
-        setCurrentPosition(prevPosition => {
-          const newPosition = prevPosition + 1000; // Increment position by 1000 ms (1 second)
-
-          // If the new position is approximately equal to the duration, reset the position
-          if (approximatelyEqual(newPosition, duration)) {
-            if (sliderInterval.current) {
-              clearInterval(sliderInterval.current); // Stop the interval
-            }
-            setCurrentPosition(0); // Reset position to the start
-            setisPlaying(false);
-            return 0;
-          }
-
-          // Return the new position
-          return newPosition;
-        });
-      }, 1000) as any;
+    if (!segmentText) {
+      segmentStartOffsetRef.current = 0;
+      setCurrentPosition(0);
+      setisPlaying(false);
+      return;
     }
 
-    // Toggle the playing state
-    setisPlaying(!isPlaying);
+    segmentStartOffsetRef.current = charOffset;
+    setCurrentPosition(safePosition);
+    setisPlaying(true);
+    Tts.speak(segmentText);
+  };
+
+  const handlePlay = async () => {
+    if (isPlaying) {
+      stopReasonRef.current = 'pause';
+      await Tts.stop(); // Stop the text-to-speech
+      setisPlaying(false);
+    } else {
+      await Tts.stop(); // Ensure TTS is stopped before starting new speech
+      speakFromPosition(currentPosition);
+    }
   };
 
   // Function to handle slider changes
-  const handleSliderChange = (value: number) => {
+  const handleSliderChange = async (value: number) => {
     // Calculate the position in milliseconds based on slider value
     const seekPosition = value * duration;
 
@@ -154,20 +219,11 @@ const PodcastPlayer = ({}) => {
     setCurrentPosition(seekPosition);
 
     // Stop any ongoing speech
-    Tts.stop();
+    stopReasonRef.current = 'seek';
+    await Tts.stop();
 
-    // Calculate the number of words spoken per second
-    const wordsPerSecond = (text.split(' ').length / duration) * 1000;
-
-    // Calculate how many words to skip based on the seek position
-    const wordsToSkip = Math.floor((seekPosition / 1000) * wordsPerSecond);
-
-    // Create new text to speak from the seek position
-    const newText = text.split(' ').slice(wordsToSkip).join(' ');
-
-    // Set the playing state to true and start speaking the new text
-    setisPlaying(true);
-    Tts.speak(newText);
+    // Resume from the nearest word boundary for a cleaner seek.
+    speakFromPosition(seekPosition);
   };
 
   // Handle forward button press (implementation needed)
