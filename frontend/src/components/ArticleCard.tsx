@@ -110,11 +110,17 @@ const ArticleCard = ({
   };
 
   useEffect(() => {
-    if (socket) {
-      socket.on('connect', () => {
-        console.log('connection established');
-      });
-    }
+    if (!socket) return;
+
+    const handleConnect = () => {
+      console.log('connection established');
+    };
+
+    socket.on('connect', handleConnect);
+
+    return () => {
+      socket.off('connect', handleConnect);
+    };
   }, [socket]);
 
   // Cleanup timer and close menu when card unmounts (FlatList recycling)
@@ -359,6 +365,35 @@ const ArticleCard = ({
                     // handleAnimation();
                   },
                   icon: 'edit',
+                },
+                {
+                  articleId: item._id,
+                  name: 'Improve Article',
+                  icon: 'tool',
+                  action: () => {
+                    setMenuVisible(false);
+                    if (!isConnected) {
+                      Snackbar.show({
+                        text: 'Please check your internet connection',
+                        duration: Snackbar.LENGTH_SHORT,
+                      });
+                      return;
+                    }
+                    if (isGuest) {
+                      (navigation as any).navigate('GuestPlaceholderScreen', {
+                        title: 'Sign In Required',
+                        description: 'Please sign in or sign up to improve this article.',
+                        iconName: 'tool',
+                      });
+                      return;
+                    }
+                    // Open article in ArticleScreen where user can tap Improve
+                    (navigation as any).navigate('ArticleScreen', {
+                      articleId: Number(item._id),
+                      authorId: item.authorId,
+                      recordId: item.pb_recordId,
+                    });
+                  },
                 },
                 {
                   articleId: item._id,

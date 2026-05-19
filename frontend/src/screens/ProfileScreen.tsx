@@ -7,6 +7,7 @@ import ActivityOverview from '../components/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
 import {useDispatch, useSelector} from 'react-redux';
+import { useTheme } from 'tamagui';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileHeader from '../components/ProfileHeader';
@@ -223,7 +224,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
       <SafeAreaView
         style={[
           styles.loadingContainer,
-          {backgroundColor: isDarkMode ? '#000A60' : '#F0F8FF'},
+          {backgroundColor: theme.background.val},
         ]}>
         <StatusBar
           style={isDarkMode ? 'light' : 'dark'}

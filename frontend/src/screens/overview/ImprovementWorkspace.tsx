@@ -11,7 +11,7 @@ import {EditRequest} from '../../type';
 import {useSelector} from 'react-redux';
 import Loader from '../../components/Loader';
 import ImprovementCard from '../../components/ImprovementCard';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
+import {PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
 import {useGetAllImprovementsForReview} from '@/src/hooks/useGetUserAllImprovements';
 import {ProfessionalColors} from '../../styles/GlassStyles';

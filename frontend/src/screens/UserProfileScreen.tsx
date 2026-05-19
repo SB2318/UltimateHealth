@@ -12,6 +12,7 @@ import {PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
+import { useTheme } from 'tamagui';
 import {useSelector} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileHeader from '../components/ProfileHeader';
@@ -314,7 +315,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
       <SafeAreaView
         style={[
           styles.loadingContainer,
-          {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'},
+          {backgroundColor: theme.background.val},
         ]}>
         <StatusBar
           style={isDarkMode ? 'light' : 'dark'}
@@ -342,14 +343,14 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
       <View
         style={[
           styles.innerContainer,
-          {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'},
+          {backgroundColor: theme.background.val},
         ]}>
         <Tabs.Container
           renderHeader={renderHeader}
           renderTabBar={renderTabBar}
           containerStyle={[
             styles.tabsContainer,
-            {backgroundColor: isDarkMode ? '#0F172A' : '#F0F8FF'},
+            {backgroundColor: theme.background.val},
           ]}>
           {/* Tab 1 */}
           <Tabs.Tab name="User Insight">
