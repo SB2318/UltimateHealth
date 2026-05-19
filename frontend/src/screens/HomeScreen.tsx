@@ -4,11 +4,11 @@ import {
   Alert,
   Text,
   TouchableOpacity,
-  FlatList,
   ScrollView,
   Animated,
   Easing,
 } from 'react-native';
+import {FlashList} from '@shopify/flash-list';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
@@ -236,7 +236,7 @@ const OfflineState = () => {
   );
 };
 
-// Empty Article State Component (for FlatList empty state)
+// Empty Article State Component (for FlashList empty state)
 const EmptyArticleState = () => {
   const floatAnim = useRef(new Animated.Value(0)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -841,10 +841,11 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       <View style={styles.articleContainer}>
         {((filteredArticles && filteredArticles.length > 0) ||
           searchedArticles.length > 0) && (
-          <FlatList
+          <FlashList
             data={listData}
             renderItem={renderItem}
             keyExtractor={item => item._id.toString()}
+            estimatedItemSize={280}
             contentContainerStyle={styles.flatListContentContainer}
             refreshing={refreshing}
             onRefresh={onRefresh}
