@@ -1,7 +1,45 @@
 import { io, Socket } from 'socket.io-client';
+
 import { SOCKET_PROD } from './APIUtils';
 
 let socket: Socket | null = null;
+let currentAuthToken: string | null = null;
+let internalListenersAttached = false;
+
+const attachInternalListeners = (): void => {
+    if (!socket || internalListenersAttached) return;
+    internalListenersAttached = true;
+
+    // Connection event handlers
+    socket.on('connect', () => {
+        console.log('✅ Socket connected:', socket?.id);
+    });
+
+    socket.on('disconnect', (reason: string) => {
+        console.log('❌ Socket disconnected:', reason);
+        if (reason === 'io server disconnect') {
+            // Server forcefully disconnected, reconnect manually
+            socket?.connect();
+        }
+    });
+
+    socket.on('connect_error', (error: Error) => {
+        console.error('⚠️ Socket connection error:', error.message);
+    });
+
+    socket.on('reconnect', (attemptNumber: number) => {
+        console.log('🔄 Socket reconnected after', attemptNumber, 'attempts');
+    });
+
+    socket.on('reconnect_attempt', (attemptNumber: number) => {
+        console.log('🔄 Reconnection attempt:', attemptNumber);
+    });
+
+
+    socket.on('reconnect_failed', () => {
+        console.error('❌ Reconnection failed');
+    });
+};
 
 /**
  * Initialize Socket.IO connection with optional authentication
@@ -9,12 +47,28 @@ let socket: Socket | null = null;
  * @returns {Socket} Socket instance
  */
 export const initializeSocket = (token: string | null = null): Socket => {
-    // Disconnect existing socket if any
+    const tokenChanged = currentAuthToken !== token;
+
+    // If we already have a socket with the same auth token, reuse it.
+    if (socket && !tokenChanged) {
+        attachInternalListeners();
+        return socket;
+    }
+
+    // If token changed (or socket doesn't exist), recreate safely.
     if (socket) {
+        // Fully cleanup old socket so we don't keep connections/listeners with old auth.
+        socket.removeAllListeners();
         socket.disconnect();
     }
 
+
+    socket = null;
+    internalListenersAttached = false;
+    currentAuthToken = token;
+
     const socketOptions: any = {
+
         reconnection: true,
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
@@ -26,44 +80,19 @@ export const initializeSocket = (token: string | null = null): Socket => {
     // Add authentication if token is provided
     if (token) {
         socketOptions.auth = {
-            token: token
+            token: token,
         };
     }
 
     // Initialize socket connection
     socket = io(SOCKET_PROD, socketOptions);
 
-    // Connection event handlers
-    socket.on('connect', () => {
-        console.log('✅ Socket connected:', socket?.id);
-    });
-
-    socket.on('disconnect', (reason) => {
-        console.log('❌ Socket disconnected:', reason);
-        if (reason === 'io server disconnect') {
-            // Server forcefully disconnected, reconnect manually
-            socket?.connect();
-        }
-    });
-
-    socket.on('connect_error', (error) => {
-        console.error('⚠️ Socket connection error:', error.message);
-    });
-
-    socket.on('reconnect', (attemptNumber) => {
-        console.log('🔄 Socket reconnected after', attemptNumber, 'attempts');
-    });
-
-    socket.on('reconnect_attempt', (attemptNumber) => {
-        console.log('🔄 Reconnection attempt:', attemptNumber);
-    });
-
-    socket.on('reconnect_failed', () => {
-        console.error('❌ Reconnection failed');
-    });
+    attachInternalListeners();
 
     return socket;
 };
+
+
 
 /**
  * Get current socket instance
@@ -79,7 +108,11 @@ export const disconnectSocket = (): void => {
         socket.disconnect();
         socket = null;
     }
+    currentAuthToken = null;
+    internalListenersAttached = false;
 };
+
+
 
 /**
  * Check if socket is connected
