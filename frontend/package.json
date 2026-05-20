@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
-    "test": "jest --passWithNoTests --ci"
+    "test": "node ./scripts/run-tests-if-present.js"
   },
   "dependencies": {
     "@bam.tech/react-native-image-resizer": "^3.0.11",
