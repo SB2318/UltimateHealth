@@ -12,8 +12,10 @@ body:
         - Documentation
         - Frontend
         - Backend
+        - Mobile
         - Testing
         - CI/CD
+        - Other
     validations:
       required: true
 
