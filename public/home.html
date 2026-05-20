@@ -368,12 +368,13 @@
          display: none;
          position: fixed;
          inset: 0;
-         background: rgba(0, 0, 0, 0.95);
-         backdrop-filter: blur(10px);
+         background: rgba(15, 23, 42, 0.85); /* Premium dark slate translucent background */
+         backdrop-filter: blur(12px);
          z-index: 3000;
          padding: 20px;
          align-items: center;
          justify-content: center;
+         transition: opacity 0.3s ease;
       }
 
       .screenshot-modal.active {
@@ -382,14 +383,17 @@
 
       .screenshot-modal-content {
          max-width: 90vw;
-         max-height: 90vh;
+         max-height: 80vh;
          position: relative;
-         animation: zoomIn 0.3s ease-out;
+         animation: zoomIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+         display: flex;
+         align-items: center;
+         justify-content: center;
       }
 
       @keyframes zoomIn {
          from {
-            transform: scale(0.8);
+            transform: scale(0.9);
             opacity: 0;
          }
          to {
@@ -398,21 +402,43 @@
          }
       }
 
+      .screenshot-modal-image-wrapper {
+         width: 100%;
+         height: 100%;
+         max-height: 80vh;
+         overflow: hidden;
+         border-radius: 16px;
+         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+         border: 1px solid rgba(255, 255, 255, 0.1);
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         background: rgba(0, 0, 0, 0.2);
+      }
+
       .screenshot-modal-content img {
          width: 100%;
          height: 100%;
+         max-height: 80vh;
          object-fit: contain;
-         border-radius: 12px;
-         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+         transition: transform 0.15s ease-out;
+         user-select: none;
+         -webkit-user-drag: none;
+         cursor: default;
+      }
+
+      .screenshot-modal-content img.dragging {
+         transition: none;
       }
 
       .screenshot-modal-close {
          position: absolute;
-         top: -40px;
+         top: -50px;
          right: 0;
-         background: white;
-         color: var(--text-dark);
-         border: none;
+         background: rgba(255, 255, 255, 0.1);
+         backdrop-filter: blur(12px);
+         border: 1px solid rgba(255, 255, 255, 0.2);
+         color: white;
          width: 40px;
          height: 40px;
          border-radius: 50%;
@@ -422,57 +448,92 @@
          justify-content: center;
          font-size: 20px;
          transition: var(--transition);
-         box-shadow: var(--shadow-md);
+         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
 
       .screenshot-modal-close:hover {
-         background: var(--primary);
+         background: rgba(255, 255, 255, 0.25);
          color: white;
          transform: rotate(90deg);
+      }
+
+      .screenshot-modal-zoom-controls {
+         position: absolute;
+         top: -50px;
+         left: 0;
+         display: flex;
+         gap: 10px;
+         z-index: 10;
+      }
+
+      .zoom-btn {
+         background: rgba(255, 255, 255, 0.1);
+         backdrop-filter: blur(12px);
+         border: 1px solid rgba(255, 255, 255, 0.2);
+         color: white;
+         width: 40px;
+         height: 40px;
+         border-radius: 50%;
+         cursor: pointer;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         font-size: 16px;
+         transition: var(--transition);
+         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .zoom-btn:hover {
+         background: rgba(255, 255, 255, 0.25);
+         color: white;
+         transform: scale(1.08);
       }
 
       .screenshot-modal-nav {
          position: absolute;
          top: 50%;
          transform: translateY(-50%);
-         background: white;
-         color: var(--text-dark);
-         border: none;
-         width: 48px;
-         height: 48px;
+         background: rgba(255, 255, 255, 0.1);
+         backdrop-filter: blur(12px);
+         border: 1px solid rgba(255, 255, 255, 0.2);
+         color: white;
+         width: 52px;
+         height: 52px;
          border-radius: 50%;
          cursor: pointer;
          display: flex;
          align-items: center;
          justify-content: center;
-         font-size: 20px;
+         font-size: 18px;
          transition: var(--transition);
-         box-shadow: var(--shadow-md);
+         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+         z-index: 10;
       }
 
       .screenshot-modal-nav:hover {
-         background: var(--primary);
+         background: rgba(255, 255, 255, 0.25);
          color: white;
-         transform: translateY(-50%) scale(1.1);
+         transform: translateY(-50%) scale(1.08);
       }
 
       .screenshot-modal-prev {
-         left: -60px;
+         left: -70px;
       }
 
       .screenshot-modal-next {
-         right: -60px;
+         right: -70px;
       }
 
       .screenshot-caption {
          position: absolute;
-         bottom: -50px;
+         bottom: -45px;
          left: 0;
          right: 0;
          text-align: center;
-         color: white;
-         font-size: 1rem;
+         color: rgba(255, 255, 255, 0.9);
+         font-size: 1.05rem;
          font-weight: 600;
+         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
       }
 
       .slider-nav {
@@ -859,18 +920,83 @@
             gap: 16px;
          }
 
-         .screenshot-modal-prev {
-            left: 10px;
-         }
+          .screenshot-modal {
+             padding: 10px;
+          }
 
-         .screenshot-modal-next {
-            right: 10px;
-         }
+          .screenshot-modal-content {
+             max-width: 100vw;
+             max-height: 75vh;
+          }
 
-         .screenshot-modal-close {
-            top: 10px;
-            right: 10px;
-         }
+          .screenshot-modal-image-wrapper {
+             border-radius: 12px;
+             max-height: 75vh;
+          }
+
+          .screenshot-modal-content img {
+             max-height: 75vh;
+          }
+
+          .screenshot-modal-close {
+             position: fixed;
+             top: 20px;
+             right: 20px;
+             width: 44px;
+             height: 44px;
+             font-size: 22px;
+             background: rgba(15, 23, 42, 0.6);
+             border: 1px solid rgba(255, 255, 255, 0.15);
+             z-index: 3100;
+          }
+
+          .screenshot-modal-nav {
+             width: 44px;
+             height: 44px;
+             font-size: 16px;
+             background: rgba(15, 23, 42, 0.6);
+             border: 1px solid rgba(255, 255, 255, 0.15);
+          }
+
+          .screenshot-modal-prev {
+             left: 15px;
+          }
+
+          .screenshot-modal-next {
+             right: 15px;
+          }
+
+          .screenshot-modal-zoom-controls {
+             position: fixed;
+             top: 20px;
+             left: 20px;
+             z-index: 3100;
+             display: flex;
+             gap: 8px;
+          }
+
+          .zoom-btn {
+             width: 44px;
+             height: 44px;
+             font-size: 18px;
+             background: rgba(15, 23, 42, 0.6);
+             border: 1px solid rgba(255, 255, 255, 0.15);
+          }
+
+          .screenshot-caption {
+             position: fixed;
+             bottom: 30px;
+             left: 20px;
+             right: 20px;
+             font-size: 0.95rem;
+             background: rgba(15, 23, 42, 0.6);
+             padding: 8px 16px;
+             border-radius: 20px;
+             backdrop-filter: blur(8px);
+             border: 1px solid rgba(255, 255, 255, 0.1);
+             max-width: fit-content;
+             margin: 0 auto;
+          }
       }
 
       /* ==================== SCROLL ANIMATIONS ==================== */
@@ -1254,11 +1380,18 @@
    <!-- Screenshot Modal -->
    <div class="screenshot-modal" id="screenshotModal" onclick="closeScreenshotModal(event)">
       <div class="screenshot-modal-content" onclick="event.stopPropagation()">
-         <button class="screenshot-modal-close" onclick="closeScreenshotModal()">&times;</button>
+         <div class="screenshot-modal-zoom-controls">
+            <button class="zoom-btn" onclick="adjustZoom(0.25)" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+            <button class="zoom-btn" onclick="adjustZoom(-0.25)" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+            <button class="zoom-btn" onclick="resetZoom()" title="Reset Zoom"><i class="fas fa-compress"></i></button>
+         </div>
+         <button class="screenshot-modal-close" onclick="closeScreenshotModal(event)">&times;</button>
          <button class="screenshot-modal-nav screenshot-modal-prev" onclick="navigateScreenshot(-1)">
             <i class="fas fa-chevron-left"></i>
          </button>
-         <img id="screenshotModalImage" src="" alt="">
+         <div class="screenshot-modal-image-wrapper">
+            <img id="screenshotModalImage" src="" alt="">
+         </div>
          <button class="screenshot-modal-nav screenshot-modal-next" onclick="navigateScreenshot(1)">
             <i class="fas fa-chevron-right"></i>
          </button>
@@ -1296,7 +1429,50 @@
 
       let currentScreenshotIndex = 0;
 
+      let zoomScale = 1;
+      let panX = 0;
+      let panY = 0;
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+
+      function updateImageTransform() {
+         const img = document.getElementById('screenshotModalImage');
+         img.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomScale})`;
+         
+         if (zoomScale > 1) {
+            img.style.cursor = isDragging ? 'grabbing' : 'grab';
+         } else {
+            img.style.cursor = 'default';
+         }
+      }
+
+      function adjustZoom(amount) {
+         const newScale = Math.min(Math.max(zoomScale + amount, 1), 4);
+         if (newScale === zoomScale) return;
+         
+         if (newScale === 1) {
+            resetZoom();
+         } else {
+            zoomScale = newScale;
+            updateImageTransform();
+         }
+      }
+
+      function resetZoom() {
+         zoomScale = 1;
+         panX = 0;
+         panY = 0;
+         isDragging = false;
+         const img = document.getElementById('screenshotModalImage');
+         if (img) {
+            img.classList.remove('dragging');
+            updateImageTransform();
+         }
+      }
+
       function openScreenshotModal(imageSrc, caption) {
+         resetZoom();
          currentScreenshotIndex = allScreenshots.findIndex(s => s.src === imageSrc);
          document.getElementById('screenshotModalImage').src = imageSrc;
          document.getElementById('screenshotCaption').textContent = caption;
@@ -1305,13 +1481,15 @@
       }
 
       function closeScreenshotModal(event) {
-         if (!event || event.target.id === 'screenshotModal') {
+         if (!event || event.target.id === 'screenshotModal' || event.target.closest('.screenshot-modal-close')) {
             document.getElementById('screenshotModal').classList.remove('active');
             document.body.style.overflow = '';
+            resetZoom();
          }
       }
 
       function navigateScreenshot(direction) {
+         resetZoom();
          currentScreenshotIndex += direction;
          if (currentScreenshotIndex < 0) {
             currentScreenshotIndex = allScreenshots.length - 1;
@@ -1322,6 +1500,85 @@
          document.getElementById('screenshotModalImage').src = screenshot.src;
          document.getElementById('screenshotCaption').textContent = screenshot.caption;
       }
+
+      // Initialize zoom/pan event listeners
+      document.addEventListener('DOMContentLoaded', function() {
+         const modalImage = document.getElementById('screenshotModalImage');
+         
+         if (modalImage) {
+            modalImage.addEventListener('mousedown', function(e) {
+               if (zoomScale <= 1) return;
+               e.preventDefault();
+               isDragging = true;
+               modalImage.classList.add('dragging');
+               startX = e.clientX - panX;
+               startY = e.clientY - panY;
+               updateImageTransform();
+            });
+
+            window.addEventListener('mousemove', function(e) {
+               if (!isDragging) return;
+               panX = e.clientX - startX;
+               panY = e.clientY - startY;
+               updateImageTransform();
+            });
+
+            window.addEventListener('mouseup', function() {
+               if (isDragging) {
+                  isDragging = false;
+                  modalImage.classList.remove('dragging');
+                  updateImageTransform();
+               }
+            });
+
+            // Touch events for drag & pan
+            modalImage.addEventListener('touchstart', function(e) {
+               if (zoomScale <= 1) return;
+               isDragging = true;
+               modalImage.classList.add('dragging');
+               startX = e.touches[0].clientX - panX;
+               startY = e.touches[0].clientY - panY;
+            });
+
+            modalImage.addEventListener('touchmove', function(e) {
+               if (!isDragging) return;
+               e.preventDefault();
+               panX = e.touches[0].clientX - startX;
+               panY = e.touches[0].clientY - startY;
+               updateImageTransform();
+            });
+
+            modalImage.addEventListener('touchend', function() {
+               if (isDragging) {
+                  isDragging = false;
+                  modalImage.classList.remove('dragging');
+                  updateImageTransform();
+               }
+            });
+
+            // Double click zoom toggle
+            modalImage.addEventListener('dblclick', function() {
+               if (zoomScale > 1) {
+                  resetZoom();
+               } else {
+                  zoomScale = 2;
+                  panX = 0;
+                  panY = 0;
+                  updateImageTransform();
+               }
+            });
+
+            // Mouse wheel scroll zoom
+            modalImage.addEventListener('wheel', function(e) {
+               if (document.getElementById('screenshotModal').classList.contains('active')) {
+                  e.preventDefault();
+                  const zoomIntensity = 0.15;
+                  const amount = e.deltaY < 0 ? zoomIntensity : -zoomIntensity;
+                  adjustZoom(amount);
+               }
+            }, { passive: false });
+         }
+      });
 
       // Keyboard navigation
       document.addEventListener('keydown', function(e) {
