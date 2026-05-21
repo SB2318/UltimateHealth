@@ -7,7 +7,6 @@ import {
   FlatList,
 } from 'react-native';
 import {ArticleData} from '../../type';
-import {useSelector} from 'react-redux';
 import ReviewCard from '../../components/ReviewCard';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
@@ -20,7 +19,6 @@ export default function ArticleWorkSpace({
 }: {
   handleClickAction: (item: ArticleData) => void;
 }) {
-  useSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -47,8 +45,13 @@ export default function ArticleWorkSpace({
 
   useEffect(() => {
     refetch();
-    setPageLoading(false);
   }, [page, refetch, selectedStatus]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setPageLoading(false);
+    }
+  }, [isLoading]);
 
   const [selectedCardId, setSelectedCardId] = useState<string>('');
 
@@ -113,11 +116,7 @@ export default function ArticleWorkSpace({
                   ...styles.labelStyle,
                   color: selectedStatus !== item.status ? 'black' : 'white',
                 }}>
-                {item.status === 1
-                  ? publishedLabel
-                  : item.status === 2
-                    ? progressLabel
-                    : discardLabel}
+                {item.label}
               </Text>
             </TouchableOpacity>
           ))}
@@ -128,7 +127,7 @@ export default function ArticleWorkSpace({
         ) : (
           <View style={styles.articleContainer}>
             <FlatList
-              data={articleData ? articleData : []}
+              data={articleData || []}
               renderItem={renderItem}
               keyExtractor={item => item._id.toString()}
               contentContainerStyle={styles.flatListContentContainer}

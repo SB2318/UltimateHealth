@@ -67,14 +67,22 @@ jobs:
       - name: Generate Native iOS Project (Expo Prebuild)
         run: npx expo prebuild --platform ios --clean
 
-      - name: Patch Generated Podfile for Targeted Firebase Headers
+      - name: Patch Generated Podfile
         run: |
-          cat <<EOF > temp_podfile
-          pod 'FirebaseCoreInternal', :modular_headers => true
-          pod 'GoogleUtilities', :modular_headers => true
-          EOF
-          cat ios/Podfile >> temp_podfile
-          mv temp_podfile ios/Podfile
+          sed -i '' "s/platform :ios, '15.0'/platform :ios, '16.0'/" ios/Podfile
+          cat <<EOF >> ios/Podfile
+
+# Custom patches for Firebase modular headers and Swift compatibility
+pre_install do |installer|
+  installer.pod_targets.each do |pod|
+    if pod.name.start_with?('Firebase') || pod.name.start_with?('Google') || pod.name == 'ExpoNotifications'
+      def pod.build_type
+        Pod::BuildType.static_framework
+      end
+    end
+  end
+end
+EOF
 
       - name: Cache iOS Build Artifacts
         uses: actions/cache@v4
@@ -107,7 +115,7 @@ jobs:
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
             ONLY_ACTIVE_ARCH=YES \
-            IPHONEOS_DEPLOYMENT_TARGET=15.0 \
+            IPHONEOS_DEPLOYMENT_TARGET=16.0 \
             COMPILER_INDEX_STORE_ENABLE=NO > build.log 2>&1
 
       - name: Print Build Failure Summary
