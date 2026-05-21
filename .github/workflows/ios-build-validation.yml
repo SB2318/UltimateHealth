@@ -69,16 +69,33 @@ jobs:
 
       - name: Patch Generated Podfile
         run: |
-          sed -i '' "s/platform :ios, '15.0'/platform :ios, '16.0'/" ios/Podfile
-          cat <<EOF >> ios/Podfile
-
-# Custom patches for Firebase modular headers and Swift compatibility
+          # Use ruby to prepend the pre_install hook to ensure it runs first and doesn't conflict
+          ruby -e "
+            content = File.read('ios/Podfile')
+            patch = <<-EOF
 pre_install do |installer|
   installer.pod_targets.each do |pod|
     if pod.name.start_with?('Firebase') || pod.name.start_with?('Google') || pod.name == 'ExpoNotifications'
       def pod.build_type
         Pod::BuildType.static_framework
       end
+    end
+  end
+end
+
+            EOF
+            File.write('ios/Podfile', patch + content)
+          "
+          # Also ensure deployment target is consistently 16.0
+          sed -i '' "s/platform :ios, '15.0'/platform :ios, '16.0'/" ios/Podfile
+          
+          # Inject post_install override for all targets
+          cat <<EOF >> ios/Podfile
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
     end
   end
 end
