@@ -11,7 +11,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 //import PushNotification from 'react-native-push-notification';
 
 import AppContent from './src/components/AppContent';
-import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from 'expo-av';
+import { Audio, InterruptionModeIOS, InterruptionModeAndroid } fr om 'expo-av';
 
 const queryClient = new QueryClient();
 

@@ -17,7 +17,6 @@ import {NewPasswordScreenProp} from '../../type';
 import {AxiosError} from 'axios';
 import Loader from '../../components/Loader';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '@/src/helper/Theme';
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
 import {useChangePasswordMutation} from '@/src/hooks/useChangePassword';
@@ -156,21 +155,21 @@ export default function NewPasswordScreen({
             height="auto"
             padding="$6"
             borderRadius="$8"
-            shadowColor="rgba(0, 0, 0, 0.08)"
+            shadowColor="$shadowColor"
             shadowRadius={24}
             shadowOffset={{ width: 0, height: 8 }}
             alignItems="center">
             {/* Icon Circle */}
             <Circle
               size={80}
-              backgroundColor={ON_PRIMARY_COLOR}
+              backgroundColor="$blue3"
               justifyContent="center"
               alignItems="center"
               marginBottom="$4">
               <AntDesign
                 size={36}
                 name="key"
-                color={PRIMARY_COLOR}
+                color="$blue10"
                 strokeWidth={2.2}
               />
             </Circle>
@@ -210,7 +209,7 @@ export default function NewPasswordScreen({
                   <Entypo
                     name="lock"
                     size={20}
-                    color={passwordVerify ? '#3b82f6' : '#9ca3af'}
+                    color={passwordVerify ? '$blue10' : '$gray8'}
                     style={{
                       position: 'absolute',
                       left: 14,
@@ -260,7 +259,7 @@ export default function NewPasswordScreen({
                     <Icon
                       name={secureTextEntry ? 'eye-off' : 'eye'}
                       size={20}
-                      color="#6b7280"
+                      color="$gray8"
                     />
                   </Button>
                 </XStack>
@@ -300,8 +299,8 @@ export default function NewPasswordScreen({
                     size={20}
                     color={
                       confirmPassword && password === confirmPassword
-                        ? '#3b82f6'
-                        : '#9ca3af'
+                        ? '$blue10'
+                        : '$gray8'
                     }
                     style={{
                       position: 'absolute',
@@ -355,7 +354,7 @@ export default function NewPasswordScreen({
                     <Icon
                       name={secureNewTextEntry ? 'eye-off' : 'eye'}
                       size={20}
-                      color="#6b7280"
+                      color="$gray8"
                     />
                   </Button>
                 </XStack>
@@ -424,7 +423,7 @@ export default function NewPasswordScreen({
                 shadowOffset={{ width: 0, height: 4 }}
                 shadowOpacity={0.25}
                 onPress={handlePasswordSubmit}>
-                <Text fontSize={17} fontWeight="600" color="white">
+                <Text fontSize={17} fontWeight="600" color="$background">
                   Reset Password
                 </Text>
               </Button>

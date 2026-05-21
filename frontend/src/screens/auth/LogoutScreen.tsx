@@ -1,13 +1,10 @@
 import React from 'react';
 import {
   StyleSheet,
-  View,
   Image,
-  Text,
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {PRIMARY_COLOR} from '../../helper/Theme';
 import {GET_STORAGE_DATA, USER_LOGOUT} from '../../helper/APIUtils';
 import axios, {AxiosError} from 'axios';
 import {resetUserState} from '../../store/UserSlice';
@@ -16,6 +13,7 @@ import {clearStorage} from '../../helper/Utils';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';
 import {useUserLogout} from '@/src/hooks/useUserLogout';
+import {YStack, Text} from 'tamagui';
 
 const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
   const {profile_image, username} = route.params;
@@ -70,52 +68,55 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
     );
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
-      <View style={styles.container}>
-        <View style={styles.alert}>
-          <View style={styles.alertContent}>
-            <Image
-              alt=""
-              style={[
-                styles.alertAvatar,
-                !profile_image && {borderWidth: 0.5, borderColor: 'black'},
-              ]}
-              source={{
-                uri: profile_image.startsWith('https')
-                  ? profile_image
-                  : `${GET_STORAGE_DATA}/${profile_image}`,
-              }}
-            />
+    <SafeAreaView style={{flex: 1}}>
+      <YStack flex={1} backgroundColor="$background" style={styles.container}>
+        <YStack style={styles.alert}>
+          <YStack style={styles.alertContent}>
+            <YStack
+              style={styles.alertAvatar}
+              borderWidth={!profile_image ? 0.5 : 0}
+              borderColor="$color"
+              overflow="hidden">
+              <Image
+                alt=""
+                style={{width: '100%', height: '100%'}}
+                source={{
+                  uri: profile_image.startsWith('https')
+                    ? profile_image
+                    : `${GET_STORAGE_DATA}/${profile_image}`,
+                }}
+              />
+            </YStack>
 
-            <Text style={styles.alertTitle}>
+            <Text style={styles.alertTitle} color="$color">
               Log out of
               {'\n'}
               {username}
             </Text>
 
-            <Text style={styles.alertMessage}>
+            <Text style={styles.alertMessage} color="$gray8">
               Are you sure you would like to log out of this account ?
             </Text>
-          </View>
+          </YStack>
 
           <TouchableOpacity onPress={handleLogout}>
-            <View style={styles.btn}>
-              <Text style={styles.btnText}>Yes, log me out</Text>
-            </View>
+            <YStack style={styles.btn} backgroundColor="$blue10" borderColor="$blue10">
+              <Text style={styles.btnText} color="$background">Yes, log me out</Text>
+            </YStack>
           </TouchableOpacity>
 
-          <View style={{marginTop: 8}}>
+          <YStack style={{marginTop: 8}}>
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
               }}>
-              <View style={styles.btnSecondary}>
-                <Text style={styles.btnSecondaryText}>Cancel</Text>
-              </View>
+              <YStack style={styles.btnSecondary}>
+                <Text style={styles.btnSecondaryText} color="$blue10">Cancel</Text>
+              </YStack>
             </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+          </YStack>
+        </YStack>
+      </YStack>
     </SafeAreaView>
   );
 };
@@ -156,7 +157,6 @@ const styles = StyleSheet.create({
     fontSize: 34,
     lineHeight: 44,
     fontWeight: '700',
-    color: '#000',
     textAlign: 'center',
   },
   alertMessage: {
@@ -165,7 +165,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     fontWeight: '500',
-    color: '#9a9a9a',
   },
   /** Button */
   btn: {
@@ -176,14 +175,11 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderWidth: 1,
-    backgroundColor: PRIMARY_COLOR,
-    borderColor: PRIMARY_COLOR,
   },
   btnText: {
     fontSize: 17,
     lineHeight: 24,
     fontWeight: '600',
-    color: '#fff',
   },
   btnSecondary: {
     flexDirection: 'row',
@@ -200,6 +196,5 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 24,
     fontWeight: '600',
-    color: PRIMARY_COLOR,
   },
 });

@@ -246,7 +246,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
       backgroundColor="$background">
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
-        backgroundColor="#007AFF"
+        backgroundColor="$blue10"
       />
 
       <YStack
@@ -290,7 +290,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
           </Text>
 
           {emailMessage && (
-            <Text color="red" fontSize={14}>
+            <Text color="$red10" fontSize={14}>
               Please Enter a Valid Email
             </Text>
           )}
@@ -322,7 +322,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
           </XStack>
 
           {passwordMessage && (
-            <Text color="red" fontSize={14}>
+            <Text color="$red10" fontSize={14}>
               Password must be 6 Characters Long
             </Text>
           )}

@@ -83,20 +83,19 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
       <SafeAreaView
         style={{
           flex: 1,
-          backgroundColor: '#f8f9fa',
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <YStack f={1} jc="center" ai="center" bg="#f8f9fa" p="$6" space="$5">
+        <YStack f={1} jc="center" ai="center" bg="$gray2" p="$6" space="$5">
           <Card
             elevate
             bordered
             p="$8"
             width="90%"
             maxWidth={450}
-            bg="white"
+            bg="$background"
             br="$8"
-            shadowColor="rgba(0, 0, 0, 0.08)"
+            shadowColor="$shadowColor"
             shadowRadius={24}
             shadowOffset={{ width: 0, height: 8 }}>
             <YStack alignItems="center" gap="$4">
@@ -211,8 +210,7 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
               <Text
                 fontSize={17}
                 fontWeight="600"
-                color="white"
-                >
+                color="$background">
                 Verify & Continue
               </Text>
             </Button>

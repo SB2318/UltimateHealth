@@ -319,10 +319,10 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
           marginTop="$2"
           padding="$3"
           space="$2">
-          <Text fontSize={16} color="white" textAlign="center" fontWeight="600">
+          <Text fontSize={16} color="$background" textAlign="center" fontWeight="600">
             He who has health has hope and he who has hope has everything.
           </Text>
-          <Text fontSize={16} color="white" textAlign="center" fontWeight="600">
+          <Text fontSize={16} color="$background" textAlign="center" fontWeight="600">
             ~ Arabian Proverb.
           </Text>
         </YStack>
@@ -339,7 +339,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               <AntDesign
                 name="camera"
                 size={26}
-                color="#ffffff"
+                color="$background"
                 style={{transform: [{scaleX: -1}]}}
               />
             ) : (
@@ -380,18 +380,18 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               onChangeText={setName}
             />
             <YStack position="absolute" right={14} top={10}>
-              <Icon name="person" size={20} color="#000" />
+              <Icon name="person" size={20} color="$color" />
             </YStack>
           </XStack>
 
           {/* Handle Error */}
           {checkhandle?.status === false && (
-            <Text color="red" fontSize={14}>
+            <Text color="$red10" fontSize={14}>
               User handle is already in use.
             </Text>
           )}
           {isLoading && (
-            <Text color="green" fontSize={14}>
+            <Text color="$green10" fontSize={14}>
               Checking...
             </Text>
           )}
@@ -408,7 +408,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               onChangeText={handleUserHandleChange}
             />
             <YStack position="absolute" right={14} top={10}>
-              <Icon name="person" size={20} color="#000" />
+              <Icon name="person" size={20} color="$color" />
             </YStack>
           </XStack>
 
@@ -426,7 +426,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               keyboardType="email-address"
             />
             <YStack position="absolute" right={14} top={10}>
-              <Icon name="email" size={20} color="#000" />
+              <Icon name="email" size={20} color="$color" />
             </YStack>
           </XStack>
 
@@ -452,7 +452,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               <AntDesign
                 name={isSecureEntry ? 'eye-invisible' : 'eye'}
                 size={17}
-                color="#000"
+                color="$color"
               />
             </Button>
           </XStack>
@@ -461,7 +461,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
           <Dropdown
             style={{
               height: 40,
-              borderColor: '#0CAFFF',
+              borderColor: '$blue10',
               borderWidth: 1,
               borderRadius: 5,
               paddingHorizontal: 10,
@@ -491,7 +491,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
             alignSelf="center"
             width="100%"
             onPress={handleSubmit}>
-            <Text color="white" fontWeight="bold" fontSize={18}>
+            <Text color="$background" fontWeight="bold" fontSize={18}>
               {role === 'general' ? 'Register' : 'Continue'}
             </Text>
           </Button>

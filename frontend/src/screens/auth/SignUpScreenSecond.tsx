@@ -268,7 +268,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
           elevation={3}>
           <Text
             fontSize={18}
-            color="white"
+            color="$background"
             textAlign="center"
             lineHeight={26}
             fontWeight="600">
@@ -276,7 +276,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
             combination of intellectual and moral interest found in no other
             profession.”
           </Text>
-          <Text fontSize={14} color="white" textAlign="center" marginTop="$2">
+          <Text fontSize={14} color="$background" textAlign="center" marginTop="$2">
             ~ Sir William Osler
           </Text>
         </YStack>
@@ -369,7 +369,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
                 maxLength={field.maxLength}
               />
               <YStack position="absolute" right={14} top={12}>
-                <Icon name={field.icon as any} size={20} color="#000" />
+                <Icon name={field.icon as any} size={20} color="$color" />
               </YStack>
             </XStack>
           ))}
@@ -383,7 +383,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
             size="$6"
             marginTop="$2"
             onPress={handleSubmit}>
-            <Text color="white" fontWeight="700" fontSize={18}>
+            <Text color="$background" fontWeight="700" fontSize={18}>
               Register
             </Text>
           </Button>
