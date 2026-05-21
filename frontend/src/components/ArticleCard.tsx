@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import {
   StyleSheet,
   Text,
@@ -275,29 +276,35 @@ const ArticleCard = ({
     }
   };
   return (
-    <Pressable
-      onPress={() => {
-        if (isConnected) {
-          width.value = withTiming(0, {duration: 250});
-          yValue.value = withTiming(100, {duration: 250});
-          setSelectedCardId('');
-          (navigation as any).navigate('ArticleScreen', {
-            articleId: Number(item._id),
-            authorId: item.authorId,
-            recordId: item.pb_recordId,
-          });
-        } else {
-          Snackbar.show({
-            text: 'Please connect to the internet to view this article.',
-            duration: Snackbar.LENGTH_LONG,
-          });
-          Alert.alert(
-            'No Internet 🚫',
-            'Internet connection required. Offline mode will be available in the next update.',
-            [{text: 'OK'}],
-          );
-        }
-      }}>
+<Pressable
+  onPress={() => {
+    if (isConnected) {
+      
+      // ✅ FIX: Only run these animations on Native (iOS/Android), disable on Web
+      if (Platform.OS !== 'web') {
+        width.value = withTiming(0, {duration: 250});
+        yValue.value = withTiming(100, {duration: 250});
+      }
+      
+      setSelectedCardId('');
+      (navigation as any).navigate('ArticleScreen', {
+        articleId: Number(item.id),
+        authorId: item.authorId,
+        recordId: item.pb_recordId,
+      });
+    } else {
+      Snackbar.show({
+        text: 'Please connect to the internet to view this article.',
+        duration: Snackbar.LENGTH_LONG,
+      });
+      Alert.alert(
+        'No Internet 🚫',
+        'Internet connection required. Offline mode will be available in the next update.',
+        [{text: 'OK'}],
+      );
+    }
+  }}>
+>
       <View style={styles.cardContainer}>
         {/* Image Section */}
         <Image
