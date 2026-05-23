@@ -450,25 +450,54 @@ export default function Home() {
       </footer>
 
       {/* Closed Testing Modal */}
-      <div className={`modal-overlay${closedTestingModal ? " active" : ""}`} id="coming-soon-modal" onClick={() => setClosedTestingModal(false)}>
+      <div
+        className={`modal-overlay${closedTestingModal ? " active" : ""}`}
+        id="closed-testing-modal"
+        onClick={() => setClosedTestingModal(false)}
+      >
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <div style={{ fontSize: "4rem", marginBottom: 16 }}>🔒</div>
+
           <h2>Closed Testing</h2>
-          <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
-            UHealth Admin is currently in <strong>invite-only closed testing</strong> on the Play Store.
+
+          <p
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "1rem",
+              marginBottom: 8,
+            }}
+          >
+            UHealth Admin is currently in{" "}
+            <strong>invite-only closed testing</strong> on the Play Store.
           </p>
-          <p style={{ color: "var(--text-muted)", fontSize: "0.95rem", marginBottom: 20 }}>
-            Access is restricted to approved testers. If you&apos;d like to participate, please reach out to the team.
+
+          <p
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "0.95rem",
+              marginBottom: 20,
+            }}
+          >
+            Access is restricted to approved testers. Please contact the team to
+            request access.
           </p>
+
           <a
-            href="mailto:ultimate.health25@gmail.com?subject=UHealth Admin Closed Testing Access Request&body=Hi, I would like to request access to the UHealth Admin closed testing program."
+            href="mailto:ultimate.health25@gmail.com?subject=UHealth Admin Closed Testing Access Request"
             className="close-modal-btn"
-            id="request-access-btn"
-            style={{ display: "inline-block", marginBottom: 12, textDecoration: "none" }}
+            style={{
+              display: "inline-block",
+              marginBottom: 12,
+              textDecoration: "none",
+            }}
           >
             Request Access
           </a>
-          <button className="close-modal-btn" id="close-coming-soon" onClick={() => setClosedTestingModal(false)} style={{ background: "transparent", border: "1px solid var(--text-muted)", color: "var(--text-muted)" }}>
+
+          <button
+            className="close-modal-btn"
+            onClick={() => setClosedTestingModal(false)}
+          >
             Close
           </button>
         </div>
