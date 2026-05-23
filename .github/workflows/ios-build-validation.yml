@@ -60,6 +60,12 @@ jobs:
         if: steps.secret-check.outputs.has_secret == 'true'
         run: npx expo prebuild --platform ios
 
+      - name: Place GoogleService-Info.plist in iOS App Directory
+        if: steps.secret-check.outputs.has_secret == 'true'
+        run: |
+          mkdir -p ios/UltimateHealth
+          cp GoogleService-Info.plist ios/UltimateHealth/GoogleService-Info.plist
+
       - name: Setup Ruby & CocoaPods
         if: steps.secret-check.outputs.has_secret == 'true'
         uses: ruby/setup-ruby@v1
