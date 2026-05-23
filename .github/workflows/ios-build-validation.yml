@@ -2,19 +2,19 @@ name: iOS Build Validation
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'frontend/ios/**'
-      - 'frontend/package.json'
-      - 'frontend/yarn.lock'
-      - '.github/workflows/ios-build-validation.yml'
+      - "frontend/ios/**"
+      - "frontend/package.json"
+      - "frontend/yarn.lock"
+      - ".github/workflows/ios-build-validation.yml"
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - 'frontend/ios/**'
-      - 'frontend/package.json'
-      - 'frontend/yarn.lock'
-      - '.github/workflows/ios-build-validation.yml'
+      - "frontend/ios/**"
+      - "frontend/package.json"
+      - "frontend/yarn.lock"
+      - ".github/workflows/ios-build-validation.yml"
 
 jobs:
   build-ios:
@@ -28,93 +28,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Node & Yarn
+      - name: Setup Node & Yarn
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'yarn'
+          cache: "yarn"
           cache-dependency-path: frontend/yarn.lock
 
       - name: Install JS Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Patch Legacy Podspecs
-        run: find node_modules -name "*image-resizer*.podspec" -exec sed -i '' '/RCT-Folly/d' {} +
-
-      - name: Firebase Secret Injection
-        env:
-          GOOGLE_SERVICES_INFO_PLIST: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST }}
-        run: |
-          if [ -z "$GOOGLE_SERVICES_INFO_PLIST" ]; then
-            echo "Notice: GOOGLE_SERVICES_INFO_PLIST secret is missing. Writing placeholder for fork validation."
-            cat <<EOF > GoogleService-Info.plist
-            <?xml version="1.0" encoding="UTF-8"?>
-            <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-            <plist version="1.0">
-            <dict>
-              <key>CLIENT_ID</key>
-              <string>placeholder.apps.googleusercontent.com</string>
-              <key>REVERSED_CLIENT_ID</key>
-              <string>com.googleusercontent.apps.placeholder</string>
-            </dict>
-            </plist>
-          EOF
-          else
-            echo "Notice: GOOGLE_SERVICES_INFO_PLIST secret found. Writing to GoogleService-Info.plist."
-            echo "$GOOGLE_SERVICES_INFO_PLIST" > GoogleService-Info.plist
-          fi
-
-      - name: Generate Native iOS Project (Expo Prebuild)
-        run: npx expo prebuild --platform ios --clean
-
-      - name: Patch Generated Podfile
-        run: |
-          # Use ruby to prepend the pre_install hook to ensure it runs first and doesn't conflict
-          ruby -e "
-            content = File.read('ios/Podfile')
-            patch = <<-EOF
-pre_install do |installer|
-  installer.pod_targets.each do |pod|
-    if pod.name.start_with?('Firebase') || pod.name.start_with?('Google') || pod.name == 'ExpoNotifications'
-      def pod.build_type
-        Pod::BuildType.static_framework
-      end
-    end
-  end
-end
-
-            EOF
-            File.write('ios/Podfile', patch + content)
-          "
-          # Also ensure deployment target is consistently 16.0
-          sed -i '' "s/platform :ios, '15.0'/platform :ios, '16.0'/" ios/Podfile
-          
-          # Inject post_install override for all targets
-          cat <<EOF >> ios/Podfile
-
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
-    end
-  end
-end
-EOF
-
-      - name: Cache iOS Build Artifacts
-        uses: actions/cache@v4
-        with:
-          path: |
-            frontend/ios/Pods
-            ~/Library/Developer/Xcode/DerivedData
-          key: ${{ runner.os }}-ios-build-${{ hashFiles('frontend/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-ios-build-
-
-      - name: Ruby & CocoaPods
+      - name: Setup Ruby & CocoaPods
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: "3.3"
           bundler-cache: true
           working-directory: ./frontend
 
@@ -123,7 +50,22 @@ EOF
           cd ios
           pod install --repo-update
 
-      - name: Compilation
+      - name: Inject GoogleService-Info.plist
+        env:
+          GOOGLE_SERVICES_INFO_PLIST: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST }}
+          GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
+        run: |
+          PLIST_CONTENT="$GOOGLE_SERVICES_INFO_PLIST"
+          if [ -z "$PLIST_CONTENT" ]; then
+            PLIST_CONTENT="$GOOGLE_SERVICE_INFO_PLIST"
+          fi
+          if [ -z "$PLIST_CONTENT" ]; then
+            echo "GOOGLE_SERVICES_INFO_PLIST secret is missing."
+            exit 1
+          fi
+          echo "$PLIST_CONTENT" > ios/UltimateHealth/GoogleService-Info.plist
+
+      - name: Compile iOS Build
         run: |
           xcodebuild -workspace ios/UltimateHealth.xcworkspace \
             -scheme UltimateHealth \
@@ -132,12 +74,8 @@ EOF
             -configuration Debug \
             CODE_SIGNING_ALLOWED=NO \
             ONLY_ACTIVE_ARCH=YES \
-            IPHONEOS_DEPLOYMENT_TARGET=16.0 \
-            COMPILER_INDEX_STORE_ENABLE=NO > build.log 2>&1
-
-      - name: Print Build Failure Summary
-        if: failure()
-        run: tail -n 200 build.log
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            | tee build.log
 
       - name: Artifact Upload
         if: failure()
