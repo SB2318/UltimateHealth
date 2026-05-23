@@ -80,6 +80,9 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Ignore Next.js build output
+**/.next/
 ##############################################################################################################
 
 test.js
