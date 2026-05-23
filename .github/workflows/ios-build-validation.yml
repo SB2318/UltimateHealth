@@ -38,21 +38,6 @@ jobs:
       - name: Install JS Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Generate Native iOS Project
-        run: npx expo prebuild --platform ios --non-interactive
-
-      - name: Setup Ruby & CocoaPods
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.3"
-          bundler-cache: true
-          working-directory: ./frontend
-
-      - name: Install Pods
-        run: |
-          cd ios
-          pod install --repo-update
-
       - name: Inject GoogleService-Info.plist
         env:
           GOOGLE_SERVICES_INFO_PLIST: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST }}
@@ -66,8 +51,22 @@ jobs:
             echo "GOOGLE_SERVICES_INFO_PLIST secret is missing."
             exit 1
           fi
-          mkdir -p ios/UltimateHealth
-          echo "$PLIST_CONTENT" > ios/UltimateHealth/GoogleService-Info.plist
+          echo "$PLIST_CONTENT" > GoogleService-Info.plist
+
+      - name: Generate Native iOS Project
+        run: npx expo prebuild --platform ios
+
+      - name: Setup Ruby & CocoaPods
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: ./frontend
+
+      - name: Install Pods
+        run: |
+          cd ios
+          pod install --repo-update
 
       - name: Compile iOS Build
         run: |
