@@ -38,7 +38,8 @@ jobs:
       - name: Install JS Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Inject GoogleService-Info.plist
+      - name: Check GoogleService-Info.plist Secret
+        id: secret-check
         env:
           GOOGLE_SERVICES_INFO_PLIST: ${{ secrets.GOOGLE_SERVICES_INFO_PLIST }}
           GOOGLE_SERVICE_INFO_PLIST: ${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}
@@ -48,15 +49,19 @@ jobs:
             PLIST_CONTENT="$GOOGLE_SERVICE_INFO_PLIST"
           fi
           if [ -z "$PLIST_CONTENT" ]; then
-            echo "GOOGLE_SERVICES_INFO_PLIST secret is missing."
-            exit 1
+            echo "has_secret=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping iOS build: GOOGLE_SERVICES_INFO_PLIST secret is missing."
+            exit 0
           fi
+          echo "has_secret=true" >> "$GITHUB_OUTPUT"
           echo "$PLIST_CONTENT" > GoogleService-Info.plist
 
       - name: Generate Native iOS Project
+        if: steps.secret-check.outputs.has_secret == 'true'
         run: npx expo prebuild --platform ios
 
       - name: Setup Ruby & CocoaPods
+        if: steps.secret-check.outputs.has_secret == 'true'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
@@ -64,11 +69,13 @@ jobs:
           working-directory: ./frontend
 
       - name: Install Pods
+        if: steps.secret-check.outputs.has_secret == 'true'
         run: |
           cd ios
           pod install --repo-update
 
       - name: Compile iOS Build
+        if: steps.secret-check.outputs.has_secret == 'true'
         run: |
           xcodebuild -workspace ios/UltimateHealth.xcworkspace \
             -scheme UltimateHealth \
