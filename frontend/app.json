@@ -2,10 +2,9 @@
   "expo": {
     "name": "UltimateHealth",
     "slug": "UltimateHealth",
-
     "version": "2.1.0",
     "orientation": "portrait",
-    "icon": "./assets/images/ic_ultimatehealth_appicon.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "ultimatehealth",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
