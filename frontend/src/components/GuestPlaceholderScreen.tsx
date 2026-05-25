@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Image } from 'react-native';
-import { YStack, Text, Button, XStack } from 'tamagui';
+import { YStack, Text, Button, XStack, useTheme } from 'tamagui';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../type';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import LottieView from 'lottie-react-native';
 import BenefitsModal from './BenefitsModal';
 
 interface GuestPlaceholderScreenProps {
@@ -19,8 +20,8 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
   description = 'Sign up or sign in to access personalized features, interact with the community, and manage your profile.',
   iconName = 'user-lock',
 }) => {
-  // removed isDarkMode variable
   const inset = useSafeAreaInsets();
+  const theme = useTheme();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isBenefitsModalVisible, setIsBenefitsModalVisible] = useState(false);
 
@@ -40,14 +41,20 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
         alignItems="center" 
         justifyContent="center" 
         backgroundColor="$backgroundLight"
-        width={100} 
-        height={100} 
-        borderRadius={50}
+        width="100%"
+        maxWidth={200}
+        aspectRatio={1}
+        borderRadius={100}
         marginBottom="$4"
         animation="bouncy"
         enterStyle={{ opacity: 0, scale: 0.5 }}
       >
-        <FontAwesome5 name={iconName} size={40} color="$color" />
+        <LottieView
+          source={require('../assets/LottieAnimation/SecurityAnimation.json')}
+          autoPlay
+          loop
+          style={{ width: '100%', height: '100%' }}
+        />
       </YStack>
 
       <Text
