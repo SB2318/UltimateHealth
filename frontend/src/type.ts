@@ -130,6 +130,7 @@ export type RootStackParamList = {
   Privacy: undefined;
   ContributorPage: undefined;
   OpenSourcePage: undefined;
+  WellnessChallengeScreen: undefined;
   //ChatbotScreen: undefined;
 };
 
@@ -354,6 +355,11 @@ export type ContributorScreenProps = StackScreenProps<
 export type OpenSourceScreenProps = StackScreenProps<
   RootStackParamList,
   'OpenSourcePage'
+>;
+
+export type WellnessChallengeScreenProps = StackScreenProps<
+  RootStackParamList,
+  'WellnessChallengeScreen'
 >;
 
 export type PodcastPlayerScreenProps = StackScreenProps<

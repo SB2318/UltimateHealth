@@ -51,6 +51,7 @@ import {
   NoArticleState,
   BaseEmptyState,
 } from '../components/EmptyStates';
+import DailyWellnessChallenge from '../components/DailyWellnessChallenge';
 
 // Loading State Component with Animation
 const LoadingState = () => {
@@ -108,6 +109,30 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [filterLoading, setFilterLoading] = useState<boolean>(false);
   const {mutate: requestEdit, isPending: requestEditPending} =
     useRequestArticleEdit();
+
+  const dailyHealthTips: Record<string, string> = {
+    Nutrition:
+      'Start your day with a colorful breakfast: fruits, oats, and hydration boost your energy.',
+    Fitness:
+      'Take a 5-minute stretch break every hour to reduce stiffness and keep your body active.',
+    Sleep:
+      'Wind down with a screen-free routine 30 minutes before bed for deeper rest.',
+    Mindfulness:
+      'Try a quick breathing reset: inhale for 4, hold 4, exhale 6, and feel the calm.',
+    Wellness:
+      'Drink a glass of water before each meal to support digestion and natural energy.',
+    Default:
+      'Pause for one mindful moment today: notice your breath, posture, and how your body feels.',
+  };
+
+  const dailyTip = useMemo(() => {
+    if (!selectedCategory?.name) {
+      return dailyHealthTips.Default;
+    }
+    return (
+      dailyHealthTips[selectedCategory.name] || dailyHealthTips.Default
+    );
+  }, [selectedCategory]);
 
   const {
     filteredArticles,
@@ -330,6 +355,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     isError,
     refetch,
   } = useGetPaginatedArticle(isConnected, page);
+
+  const totalSavedArticles = user?.savedArticles?.length ?? 0;
+  const totalArticles = articleData?.articles?.length ?? 0;
 
   useEffect(() => {
     if (articleData) {
@@ -596,6 +624,41 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         hasActiveFilters={hasActiveFilters}
         onFilterReset={handleQuickReset}
       />
+      <View style={styles.healthSnapshotCard}>
+        <Text style={styles.snapshotTitle}>Your Daily Health Snapshot</Text>
+        <Text style={styles.snapshotDescription}>
+          {`Top focus: ${selectedCategory?.name ?? 'General wellness'}`}
+        </Text>
+        <View style={styles.snapshotStatsRow}>
+          <View style={styles.snapshotStatItem}>
+            <Text style={styles.snapshotStatNumber}>{totalArticles}</Text>
+            <Text style={styles.snapshotStatLabel}>Articles</Text>
+          </View>
+          <View style={styles.snapshotStatItem}>
+            <Text style={styles.snapshotStatNumber}>{totalSavedArticles}</Text>
+            <Text style={styles.snapshotStatLabel}>Saved</Text>
+          </View>
+        </View>
+        <Text style={styles.snapshotTipLabel}>Wellness tip</Text>
+        <Text style={styles.snapshotTipText}>{dailyTip}</Text>
+        <TouchableOpacity
+          style={styles.snapshotButton}
+          onPress={() => {
+            setShowSavedOnly(false);
+            if (selectedCategory) {
+              handleCategoryClick(selectedCategory);
+            }
+            Snackbar.show({
+              text: 'Showing your current focus and fresh health tips!',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          }}>
+          <Text style={styles.snapshotButtonText}>Refresh my wellness feed</Text>
+        </TouchableOpacity>
+      </View>
+      <DailyWellnessChallenge
+        onViewHistory={() => navigation.navigate('WellnessChallengeScreen')}
+      />
       <FilterModal
         bottomSheetModalRef={bottomSheetModalRef}
         categories={articleCategories}
@@ -746,6 +809,75 @@ const styles = StyleSheet.create({
     right: 25,
     position: 'absolute',
     zIndex: -2,
+  },
+
+  healthSnapshotCard: {
+    backgroundColor: '#ffffff',
+    marginHorizontal: 16,
+    marginTop: wp(3),
+    padding: 18,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: '#E4E9F2',
+  },
+  snapshotTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 8,
+    color: '#0F2147',
+  },
+  snapshotDescription: {
+    fontSize: 14,
+    color: '#4D5B7A',
+    marginBottom: 12,
+  },
+  snapshotStatsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  snapshotStatItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  snapshotStatNumber: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#000A60',
+  },
+  snapshotStatLabel: {
+    fontSize: 12,
+    color: '#7A869A',
+    marginTop: 4,
+  },
+  snapshotTipLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#0F2147',
+    marginBottom: 6,
+  },
+  snapshotTipText: {
+    fontSize: 14,
+    color: '#33415E',
+    marginBottom: 16,
+    lineHeight: 20,
+  },
+  snapshotButton: {
+    backgroundColor: '#000A60',
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  snapshotButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
   },
 
   message: {
