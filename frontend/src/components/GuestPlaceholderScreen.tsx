@@ -12,18 +12,30 @@ import BenefitsModal from './BenefitsModal';
 interface GuestPlaceholderScreenProps {
   title?: string;
   description?: string;
-  iconName?: string;
+  animationType?: 'security' | 'success' | 'info';
 }
 
 const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
   title = 'Join the Community',
   description = 'Sign up or sign in to access personalized features, interact with the community, and manage your profile.',
-  iconName = 'user-lock',
+  animationType = 'security',
 }) => {
   const inset = useSafeAreaInsets();
   const theme = useTheme();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isBenefitsModalVisible, setIsBenefitsModalVisible] = useState(false);
+
+  const getAnimationSource = (type: 'security' | 'success' | 'info') => {
+    switch (type) {
+      case 'success':
+        return require('../assets/LottieAnimation/SuccessAnimation.json');
+      case 'info':
+        return require('../assets/LottieAnimation/InfoAnimation.json');
+      case 'security':
+      default:
+        return require('../assets/LottieAnimation/SecurityAnimation.json');
+    }
+  };
 
   return (
     <YStack
@@ -50,9 +62,11 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
         enterStyle={{ opacity: 0, scale: 0.5 }}
       >
         <LottieView
-          source={require('../assets/LottieAnimation/SecurityAnimation.json')}
+          source={getAnimationSource(animationType)}
           autoPlay
           loop
+          accessible={false}
+          importantForAccessibility="no"
           style={{ width: '100%', height: '100%' }}
         />
       </YStack>
