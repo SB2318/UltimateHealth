@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -37,7 +37,7 @@ const allScreenshots = [...userScreenshots, ...adminScreenshots];
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [comingSoonModal, setComingSoonModal] = useState(false);
+  const [closedTestingModal, setClosedTestingModal] = useState(false);
   const [appleModal, setAppleModal] = useState(false);
   const [testerEmail, setTesterEmail] = useState("");
   const [testerSuccess, setTesterSuccess] = useState(false);
@@ -201,7 +201,7 @@ export default function Home() {
             >
               <i className="fab fa-google-play"></i> UltimateHealth
             </a>
-            <button className="store-btn" id="admin-closed-testing-btn" onClick={() => setComingSoonModal(true)}>
+            <button className="store-btn" id="admin-closed-testing-btn" onClick={() => setClosedTestingModal(true)}>
               <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
             </button>
           </div>
@@ -449,18 +449,30 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Coming Soon Modal */}
-      <div className={`modal-overlay${comingSoonModal ? " active" : ""}`} id="coming-soon-modal" onClick={() => setComingSoonModal(false)}>
+      {/* Closed Testing Modal */}
+      <div className={`modal-overlay${closedTestingModal ? " active" : ""}`} id="closed-testing-modal" onClick={() => setClosedTestingModal(false)}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
-          <h2>Launching Soon!</h2>
-          <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
-            We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
+          <div style={{ fontSize: "4rem", marginBottom: 16 }}>🔒</div>
+          <h2>Closed Testing</h2>
+          <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 16 }}>
+            UHealth Admin is currently in invite-only closed testing on the Play Store.
           </p>
-          <div className="progress-container">
-            <div className="progress-bar"></div>
-          </div>
-          <button className="close-modal-btn" id="close-coming-soon" onClick={() => setComingSoonModal(false)}>Close</button>
+          <a
+            href="mailto:ultimate.health25@gmail.com?subject=UHealth Admin Closed Testing Access Request"
+            className="close-modal-btn"
+            id="request-access-btn"
+            style={{ display: "inline-block", marginBottom: 16, textDecoration: "none" }}
+          >
+            Request Access
+          </a>
+          <button
+            className="close-modal-btn"
+            id="close-closed-testing"
+            onClick={() => setClosedTestingModal(false)}
+            style={{ background: "transparent", border: "1px solid var(--text-muted)", color: "var(--text-muted)" }}
+          >
+            Close
+          </button>
         </div>
       </div>
 
