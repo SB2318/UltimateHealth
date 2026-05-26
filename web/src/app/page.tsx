@@ -72,8 +72,8 @@ export default function Home() {
   }, []);
 
   // Active section tracking via IntersectionObserver
+  const sectionIds = ["screenshots", "features", "programs", "contact"];
   useEffect(() => {
-    const sectionIds = ["downloads", "screenshots", "features", "programs", "contact"];
 
     const visibleSections = new Set<string>();
 
@@ -87,7 +87,9 @@ export default function Home() {
           }
         });
 
-        // Pick the section closest to top of viewport among visible ones
+        // Pick the section closest to top of viewport among visible ones.
+        // Sorts by absolute distance of section's top edge from viewport top (0),
+        // so whichever section is nearest the top of the screen wins.
         if (visibleSections.size > 0) {
           const topSection = sectionIds
             .filter((id) => visibleSections.has(id))
@@ -189,11 +191,11 @@ export default function Home() {
             Ultimate-Health
           </a>
           <ul className="nav-links">
-            <li><a href="#screenshots" className={activeSection === "screenshots" ? "active" : ""}>Screenshots</a></li>
-            <li><a href="#features" className={activeSection === "features" ? "active" : ""}>Features</a></li>
-            <li><a href="#programs" className={activeSection === "programs" ? "active" : ""}>Programs</a></li>
+            <li><a href="#screenshots" className={activeSection === "screenshots" ? "active" : ""} aria-current={activeSection === "screenshots" ? "location" : undefined}>Screenshots</a></li>
+            <li><a href="#features" className={activeSection === "features" ? "active" : ""} aria-current={activeSection === "features" ? "location" : undefined}>Features</a></li>
+            <li><a href="#programs" className={activeSection === "programs" ? "active" : ""} aria-current={activeSection === "programs" ? "location" : undefined}>Programs</a></li>
             <li><a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a></li>
-            <li><a href="#contact" className={activeSection === "contact" ? "active" : ""}>Contact</a></li>
+            <li><a href="#contact" className={activeSection === "contact" ? "active" : ""} aria-current={activeSection === "contact" ? "location" : undefined}>Contact</a></li>
             <li><a href="#downloads" className="nav-btn-sm">Downloads</a></li>
           </ul>
           <button
