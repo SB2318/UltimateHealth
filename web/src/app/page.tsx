@@ -74,24 +74,39 @@ export default function Home() {
   // Active section tracking via IntersectionObserver
   useEffect(() => {
     const sectionIds = ["downloads", "screenshots", "features", "programs", "contact"];
-    const observers: IntersectionObserver[] = [];
+
+    const visibleSections = new Set<string>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visibleSections.add(entry.target.id);
+          } else {
+            visibleSections.delete(entry.target.id);
+          }
+        });
+
+        // Pick the section closest to top of viewport among visible ones
+        if (visibleSections.size > 0) {
+          const topSection = sectionIds
+            .filter((id) => visibleSections.has(id))
+            .map((id) => ({ id, top: document.getElementById(id)?.getBoundingClientRect().top ?? Infinity }))
+            .sort((a, b) => Math.abs(a.top) - Math.abs(b.top))[0];
+          if (topSection) setActiveSection(topSection.id);
+        } else {
+          setActiveSection("");
+        }
+      },
+      { threshold: 0.3 }
+    );
 
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
-      if (!el) return;
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) setActiveSection(id);
-          });
-        },
-        { threshold: 0.4 }
-      );
-      observer.observe(el);
-      observers.push(observer);
+      if (el) observer.observe(el);
     });
 
-    return () => observers.forEach((o) => o.disconnect());
+    return () => observer.disconnect();
   }, []);
 
   // Keyboard nav for screenshot modal
@@ -174,8 +189,8 @@ export default function Home() {
             Ultimate-Health
           </a>
           <ul className="nav-links">
-            <li><a href="#features" className={activeSection === "features" ? "active" : ""}>Features</a></li>
             <li><a href="#screenshots" className={activeSection === "screenshots" ? "active" : ""}>Screenshots</a></li>
+            <li><a href="#features" className={activeSection === "features" ? "active" : ""}>Features</a></li>
             <li><a href="#programs" className={activeSection === "programs" ? "active" : ""}>Programs</a></li>
             <li><a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a></li>
             <li><a href="#contact" className={activeSection === "contact" ? "active" : ""}>Contact</a></li>
@@ -191,8 +206,8 @@ export default function Home() {
           </button>
         </div>
         <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
           <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
+          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Programs</a>
           <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a>
           <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Contact</a>
