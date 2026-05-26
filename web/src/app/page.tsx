@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
@@ -37,7 +37,6 @@ const allScreenshots = [...userScreenshots, ...adminScreenshots];
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [comingSoonModal, setComingSoonModal] = useState(false);
   const [appleModal, setAppleModal] = useState(false);
   const [testerEmail, setTesterEmail] = useState("");
   const [testerSuccess, setTesterSuccess] = useState(false);
@@ -201,9 +200,15 @@ export default function Home() {
             >
               <i className="fab fa-google-play"></i> UltimateHealth
             </a>
-            <button className="store-btn" id="admin-closed-testing-btn" onClick={() => setComingSoonModal(true)}>
-              <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
-            </button>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin"
+              target="_blank"
+              rel="noreferrer"
+              className="store-btn"
+              id="admin-closed-testing-btn"
+            >
+              <i className="fas fa-user-shield"></i> UHealth Admin
+            </a>
           </div>
         </div>
       </section>
@@ -448,21 +453,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      {/* Coming Soon Modal */}
-      <div className={`modal-overlay${comingSoonModal ? " active" : ""}`} id="coming-soon-modal" onClick={() => setComingSoonModal(false)}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
-          <h2>Launching Soon!</h2>
-          <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
-            We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
-          </p>
-          <div className="progress-container">
-            <div className="progress-bar"></div>
-          </div>
-          <button className="close-modal-btn" id="close-coming-soon" onClick={() => setComingSoonModal(false)}>Close</button>
-        </div>
-      </div>
 
       {/* TestFlight Modal */}
       <div className={`modal-overlay${appleModal ? " active" : ""}`} id="testflight-modal" onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>

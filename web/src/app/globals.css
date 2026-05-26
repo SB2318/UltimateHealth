@@ -838,22 +838,6 @@ footer h2 {
   -webkit-text-fill-color: transparent;
 }
 
-.progress-container {
-  background: #f1f5f9;
-  height: 10px;
-  border-radius: 10px;
-  margin: 32px 0;
-  overflow: hidden;
-}
-
-.progress-bar {
-  background: var(--gradient-primary);
-  width: 85%;
-  height: 100%;
-  border-radius: 10px;
-  animation: progressAnimation 2s ease-in-out infinite;
-}
-
 .waitlist-input {
   width: 100%;
   padding: 14px 20px;
