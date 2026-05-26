@@ -37,7 +37,6 @@ const allScreenshots = [...userScreenshots, ...adminScreenshots];
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [closedTestingModal, setClosedTestingModal] = useState(false);
   const [appleModal, setAppleModal] = useState(false);
   const [testerEmail, setTesterEmail] = useState("");
   const [testerSuccess, setTesterSuccess] = useState(false);
@@ -201,9 +200,15 @@ export default function Home() {
             >
               <i className="fab fa-google-play"></i> UltimateHealth
             </a>
-            <button className="store-btn" id="admin-closed-testing-btn" onClick={() => setClosedTestingModal(true)}>
-              <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
-            </button>
+            <a
+              href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin"
+              target="_blank"
+              rel="noreferrer"
+              className="store-btn"
+              id="admin-closed-testing-btn"
+            >
+              <i className="fas fa-user-shield"></i> UHealth Admin
+            </a>
           </div>
         </div>
       </section>
@@ -448,33 +453,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-
-      {/* Closed Testing Modal */}
-      <div className={`modal-overlay${closedTestingModal ? " active" : ""}`} id="closed-testing-modal" onClick={() => setClosedTestingModal(false)}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div style={{ fontSize: "4rem", marginBottom: 16 }}>🔒</div>
-          <h2>Closed Testing</h2>
-          <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 16 }}>
-            UHealth Admin is currently in invite-only closed testing on the Play Store.
-          </p>
-          <a
-            href="mailto:ultimate.health25@gmail.com?subject=UHealth Admin Closed Testing Access Request"
-            className="close-modal-btn"
-            id="request-access-btn"
-            style={{ display: "inline-block", marginBottom: 16, textDecoration: "none" }}
-          >
-            Request Access
-          </a>
-          <button
-            className="close-modal-btn"
-            id="close-closed-testing"
-            onClick={() => setClosedTestingModal(false)}
-            style={{ background: "transparent", border: "1px solid var(--text-muted)", color: "var(--text-muted)" }}
-          >
-            Close
-          </button>
-        </div>
-      </div>
 
       {/* TestFlight Modal */}
       <div className={`modal-overlay${appleModal ? " active" : ""}`} id="testflight-modal" onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>
