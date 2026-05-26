@@ -45,6 +45,7 @@ export default function Home() {
   const [currentScreenshot, setCurrentScreenshot] = useState(0);
   const [userSliderOpen, setUserSliderOpen] = useState(true);
   const [adminSliderOpen, setAdminSliderOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
@@ -68,6 +69,29 @@ export default function Home() {
     );
     document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
     return () => observer.disconnect();
+  }, []);
+
+  // Active section tracking via IntersectionObserver
+  useEffect(() => {
+    const sectionIds = ["downloads", "screenshots", "features", "programs", "contact"];
+    const observers: IntersectionObserver[] = [];
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) setActiveSection(id);
+          });
+        },
+        { threshold: 0.4 }
+      );
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   // Keyboard nav for screenshot modal
@@ -150,11 +174,11 @@ export default function Home() {
             Ultimate-Health
           </a>
           <ul className="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#screenshots">Screenshots</a></li>
-            <li><a href="#programs">Programs</a></li>
+            <li><a href="#features" className={activeSection === "features" ? "active" : ""}>Features</a></li>
+            <li><a href="#screenshots" className={activeSection === "screenshots" ? "active" : ""}>Screenshots</a></li>
+            <li><a href="#programs" className={activeSection === "programs" ? "active" : ""}>Programs</a></li>
             <li><a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#contact" className={activeSection === "contact" ? "active" : ""}>Contact</a></li>
             <li><a href="#downloads" className="nav-btn-sm">Downloads</a></li>
           </ul>
           <button
