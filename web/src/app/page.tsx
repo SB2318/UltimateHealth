@@ -34,6 +34,8 @@ const adminScreenshots = [
 
 const allScreenshots = [...userScreenshots, ...adminScreenshots];
 
+const TRACKED_SECTION_IDS = ["screenshots", "features", "programs", "contact"];
+
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -72,7 +74,6 @@ export default function Home() {
   }, []);
 
   // Active section tracking via IntersectionObserver
-  const sectionIds = ["screenshots", "features", "programs", "contact"];
   useEffect(() => {
 
     const visibleSections = new Set<string>();
@@ -91,7 +92,7 @@ export default function Home() {
         // Sorts by absolute distance of section's top edge from viewport top (0),
         // so whichever section is nearest the top of the screen wins.
         if (visibleSections.size > 0) {
-          const topSection = sectionIds
+          const topSection = TRACKED_SECTION_IDS
             .filter((id) => visibleSections.has(id))
             .map((id) => ({ id, top: document.getElementById(id)?.getBoundingClientRect().top ?? Infinity }))
             .sort((a, b) => Math.abs(a.top) - Math.abs(b.top))[0];
@@ -103,7 +104,7 @@ export default function Home() {
       { threshold: 0.3 }
     );
 
-    sectionIds.forEach((id) => {
+    TRACKED_SECTION_IDS.forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
