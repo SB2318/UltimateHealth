@@ -28,9 +28,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
   const getAnimationSource = (type: 'security' | 'success' | 'info') => {
     switch (type) {
       case 'success':
-        return require('../assets/LottieAnimation/SuccessAnimation.json');
       case 'info':
-        return require('../assets/LottieAnimation/InfoAnimation.json');
       case 'security':
       default:
         return require('../assets/LottieAnimation/SecurityAnimation.json');
