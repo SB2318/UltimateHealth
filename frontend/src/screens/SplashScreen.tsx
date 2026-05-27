@@ -121,7 +121,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
           color="$color12"
           letterSpacing={1}
           textAlign="center">
-          Ultimate Health
+          UltimateHealth
         </Text>
         <Text marginTop="$2" fontSize="$4" color="$color10" textAlign="center" paddingHorizontal="$4">
           Empowering wellness through knowledge
