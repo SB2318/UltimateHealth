@@ -33,6 +33,8 @@ const adminScreenshots = [
 
 const allScreenshots = [...userScreenshots, ...adminScreenshots];
 
+const TRACKED_SECTION_IDS = ["screenshots", "features", "programs", "contact"];
+
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -45,6 +47,7 @@ export default function Home() {
   const [adminSliderOpen, setAdminSliderOpen] = useState(false);
   const [shortcutModal, setShortcutModal] = useState(false);
   const [commandPalette, setCommandPalette] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
@@ -79,6 +82,46 @@ export default function Home() {
     });
   };
 
+  // Active section tracking via IntersectionObserver
+  useEffect(() => {
+
+    const visibleSections = new Set<string>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visibleSections.add(entry.target.id);
+          } else {
+            visibleSections.delete(entry.target.id);
+          }
+        });
+
+        // Pick the section closest to top of viewport among visible ones.
+        // Sorts by absolute distance of section's top edge from viewport top (0),
+        // so whichever section is nearest the top of the screen wins.
+        if (visibleSections.size > 0) {
+          const topSection = TRACKED_SECTION_IDS
+            .filter((id) => visibleSections.has(id))
+            .map((id) => ({ id, top: document.getElementById(id)?.getBoundingClientRect().top ?? Infinity }))
+            .sort((a, b) => Math.abs(a.top) - Math.abs(b.top))[0];
+          if (topSection) setActiveSection(topSection.id);
+        } else {
+          setActiveSection("");
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    TRACKED_SECTION_IDS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Keyboard nav for screenshot modal
   useEffect(() => {
     const isTyping = (target: EventTarget | null) => {
       const el = target as HTMLElement | null;
@@ -201,24 +244,12 @@ export default function Home() {
           </a>
 
           <ul className="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#screenshots">Screenshots</a></li>
-            <li><a href="#programs">Programs</a></li>
-            <li>
-              <a
-                href="https://uhsocial.in/docs"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Documentation
-              </a>
-            </li>
-            <li><a href="#contact">Contact</a></li>
-            <li>
-              <a href="#downloads" className="nav-btn-sm">
-                Downloads
-              </a>
-            </li>
+            <li><a href="#screenshots" className={activeSection === "screenshots" ? "active" : ""} aria-current={activeSection === "screenshots" ? "location" : undefined}>Screenshots</a></li>
+            <li><a href="#features" className={activeSection === "features" ? "active" : ""} aria-current={activeSection === "features" ? "location" : undefined}>Features</a></li>
+            <li><a href="#programs" className={activeSection === "programs" ? "active" : ""} aria-current={activeSection === "programs" ? "location" : undefined}>Programs</a></li>
+            <li><a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a></li>
+            <li><a href="#contact" className={activeSection === "contact" ? "active" : ""} aria-current={activeSection === "contact" ? "location" : undefined}>Contact</a></li>
+            <li><a href="#downloads" className="nav-btn-sm">Downloads</a></li>
           </ul>
 
           <button
@@ -232,28 +263,12 @@ export default function Home() {
         </div>
 
         <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>
-            Features
-          </a>
-          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>
-            Screenshots
-          </a>
-          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>
-            Programs
-          </a>
-          <a
-            href="https://uhsocial.in/docs"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Documentation
-          </a>
-          <a href="#contact" onClick={() => setMobileMenuOpen(false)}>
-            Contact
-          </a>
-          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>
-            Downloads
-          </a>
+          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
+          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
+          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Programs</a>
+          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a>
+          <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Contact</a>
+          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Downloads</a>
         </nav>
       </header>
 
