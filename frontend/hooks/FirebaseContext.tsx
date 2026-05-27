@@ -7,10 +7,10 @@ import { firebase } from '@react-native-firebase/messaging';
 const androidConfig = {
   appId: `1:393228544987:web:1f4134206db6c1f36395fe`,
   apiKey: `AIzaSyBtxfBmAVd4g3_yk6ufTLknK_AFiyN8k0M`,
-  databaseURL: `https://ultimatehealth-255dc.firebaseio.com`,
-  storageBucket: `ultimatehealth-255dc.firebasestorage.app`,
+  databaseURL: `https://UltimateHealth-255dc.firebaseio.com`,
+  storageBucket: `UltimateHealth-255dc.firebasestorage.app`,
   messagingSenderId: `393228544987`,
-  projectId: `ultimatehealth-255dc`,
+  projectId: `UltimateHealth-255dc`,
   persistence: true,
 };
 

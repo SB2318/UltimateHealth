@@ -89,7 +89,7 @@ Everything from profile fetch → updates → social circle is now isolated into
 
 - Version: **2.0.0**
 - Android `versionCode`: **21**
-- iOS bundle ID: `com.ultimatehealth.app`
+- iOS bundle ID: `com.UltimateHealth.app`
 - Edge-to-edge display enabled
 - Improved compatibility across newer Android versions
 

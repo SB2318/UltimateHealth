@@ -160,8 +160,8 @@ Here’s a cleaner version while keeping your original meaning:
 
 ##  Submodule Repositories
 
-- **Backend Repository**: [ultimatehealth-backend](https://github.com/SB2318/ultimatehealth-backend)
-- **Admin Repository**:  [ultimatehealth-admin](https://github.com/SB2318/ultimatehealth-admin-app)
+- **Backend Repository**: [UltimateHealth-backend](https://github.com/SB2318/UltimateHealth-backend)
+- **Admin Repository**:  [UltimateHealth-admin](https://github.com/SB2318/UltimateHealth-admin-app)
 - **Content Checker Repository**:  [content-checker](https://github.com/SB2318/VeriWise-Content-Check)
 
 <hr>

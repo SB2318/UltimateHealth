@@ -14,7 +14,7 @@ const InactiveUserModal: React.FC<InactiveUserModalProps> = ({
 }) => {
   const handleContactSupport = () => {
     Linking.openURL(
-      'mailto:ultimatehealth.25@gmail.com?subject=Account%20Restriction%20Inquiry&body=Hello%20Support%2C%0D%0A%0D%0AMy%20account%20has%20been%20restricted.%20Reason%3A%20' +
+      'mailto:UltimateHealth.25@gmail.com?subject=Account%20Restriction%20Inquiry&body=Hello%20Support%2C%0D%0A%0D%0AMy%20account%20has%20been%20restricted.%20Reason%3A%20' +
         encodeURIComponent(reason || 'Blocked/Banned') +
         '.%0D%0A%0D%0APlease%20assist%20me%20with%20this%20issue.%0D%0A%0D%0AThank%20you.'
     );

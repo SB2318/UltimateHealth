@@ -10,7 +10,7 @@ type DeepLinkTarget = {
 
 const prefixes = [
   ExpoLinking.createURL('/'),
-  'ultimatehealth://',
+  'UltimateHealth://',
   'https://uhsocial.in',
 ];
 

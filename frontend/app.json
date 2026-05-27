@@ -5,8 +5,8 @@
 
     "version": "2.1.0",
     "orientation": "portrait",
-    "icon": "./assets/images/ic_ultimatehealth_appicon.png",
-    "scheme": "ultimatehealth",
+    "icon": "./assets/images/ic_UltimateHealth_appicon.png",
+    "scheme": "UltimateHealth",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "androidStatusBar": {
@@ -68,7 +68,7 @@
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/ic_ultimatehealth_appicon_foreground.png",
+        "foregroundImage": "./assets/images/ic_UltimateHealth_appicon_foreground.png",
         "backgroundImage": "./assets/images/ic_launcher_background.png"
       },
       "edgeToEdgeEnabled": true,
