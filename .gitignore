@@ -83,3 +83,12 @@ yarn-error.log
 test.js
 GoogleService-Info.plist
 plan.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
