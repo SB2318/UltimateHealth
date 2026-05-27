@@ -51,6 +51,12 @@ export default function Home() {
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
+  
+  // Modal refs for focus management
+  const shortcutModalRef = useRef<HTMLDivElement>(null);
+  const commandPaletteRef = useRef<HTMLDivElement>(null);
+  const appleModalRef = useRef<HTMLDivElement>(null);
+  const screenshotModalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -72,6 +78,36 @@ export default function Home() {
 
     return () => observer.disconnect();
   }, []);
+
+  // Manage focus for each modal when opened
+  useEffect(() => {
+    if (shortcutModal) shortcutModalRef.current?.focus();
+  }, [shortcutModal]);
+
+  useEffect(() => {
+    if (commandPalette) commandPaletteRef.current?.focus();
+  }, [commandPalette]);
+
+  useEffect(() => {
+    if (appleModal) appleModalRef.current?.focus();
+  }, [appleModal]);
+
+  useEffect(() => {
+    if (screenshotModal) screenshotModalRef.current?.focus();
+  }, [screenshotModal]);
+
+  // Unified body scroll management for all modals
+  useEffect(() => {
+    if (shortcutModal || commandPalette || appleModal || screenshotModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [shortcutModal, commandPalette, appleModal, screenshotModal]);
 
   const navigateScreenshot = (dir: number) => {
     setCurrentScreenshot((prev) => {
@@ -148,7 +184,6 @@ export default function Home() {
         setAppleModal(false);
         setShortcutModal(false);
         setCommandPalette(false);
-        document.body.style.overflow = "";
       }
 
       if (e.key === "?") {
@@ -178,12 +213,10 @@ export default function Home() {
     const idx = allScreenshots.findIndex((s) => s.src === src);
     setCurrentScreenshot(idx >= 0 ? idx : 0);
     setScreenshotModal(true);
-    document.body.style.overflow = "hidden";
   };
 
   const closeScreenshotModal = () => {
     setScreenshotModal(false);
-    document.body.style.overflow = "";
   };
 
   const moveSlider = (
@@ -228,7 +261,8 @@ export default function Home() {
   };
 
   return (
-    <>      {/* Header */}
+    <>
+      {/* Header */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
         <div className="container nav">
           <a href="#" className="logo">
@@ -350,6 +384,12 @@ export default function Home() {
             <div
               className="screenshot-summary"
               onClick={() => setUserSliderOpen((o) => !o)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setUserSliderOpen((o) => !o);
+                }
+              }}
               role="button"
               tabIndex={0}
             >
@@ -374,19 +414,33 @@ export default function Home() {
                 </div>
 
                 <div className="slider-nav">
-                  <button onClick={() => moveSlider(userSliderRef, -1)}>
+                  <button 
+                    aria-label="Previous user screenshots" 
+                    onClick={() => moveSlider(userSliderRef, -1)}
+                  >
                     <i className="fas fa-chevron-left"></i>
                   </button>
-                  <button onClick={() => moveSlider(userSliderRef, 1)}>
+                  <button 
+                    aria-label="Next user screenshots" 
+                    onClick={() => moveSlider(userSliderRef, 1)}
+                  >
                     <i className="fas fa-chevron-right"></i>
                   </button>
                 </div>
               </div>
             )}
-          </div>          <div className="screenshot-details">
+          </div>
+          
+          <div className="screenshot-details">
             <div
               className="screenshot-summary"
               onClick={() => setAdminSliderOpen((o) => !o)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setAdminSliderOpen((o) => !o);
+                }
+              }}
               role="button"
               tabIndex={0}
             >
@@ -411,10 +465,16 @@ export default function Home() {
                 </div>
 
                 <div className="slider-nav">
-                  <button onClick={() => moveSlider(adminSliderRef, -1)}>
+                  <button 
+                    aria-label="Previous admin screenshots" 
+                    onClick={() => moveSlider(adminSliderRef, -1)}
+                  >
                     <i className="fas fa-chevron-left"></i>
                   </button>
-                  <button onClick={() => moveSlider(adminSliderRef, 1)}>
+                  <button 
+                    aria-label="Next admin screenshots" 
+                    onClick={() => moveSlider(adminSliderRef, 1)}
+                  >
                     <i className="fas fa-chevron-right"></i>
                   </button>
                 </div>
@@ -522,7 +582,9 @@ export default function Home() {
             </a>
           </div>
         </div>
-      </section>      {/* Footer */}
+      </section>
+      
+      {/* Footer */}
       <footer>
         <div className="container">
           <h2>
@@ -544,8 +606,13 @@ export default function Home() {
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
+            ref={shortcutModalRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="shortcut-modal-title"
           >
-            <h2>Keyboard Shortcuts</h2>
+            <h2 id="shortcut-modal-title">Keyboard Shortcuts</h2>
 
             <div style={{ textAlign: "left", lineHeight: 2 }}>
               <p>
@@ -567,6 +634,7 @@ export default function Home() {
 
             <button
               className="close-modal-btn"
+              aria-label="Close keyboard shortcuts modal"
               onClick={() => setShortcutModal(false)}
             >
               Close
@@ -584,8 +652,13 @@ export default function Home() {
           <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
+            ref={commandPaletteRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="command-palette-title"
           >
-            <h2>Quick Navigation</h2>
+            <h2 id="command-palette-title">Quick Navigation</h2>
 
             <div
               style={{
@@ -648,8 +721,13 @@ export default function Home() {
         <div
           className="modal-content"
           onClick={(e) => e.stopPropagation()}
+          ref={appleModalRef}
+          tabIndex={-1}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="apple-modal-title"
         >
-          <h2>Join the iOS TestFlight</h2>
+          <h2 id="apple-modal-title">Join the iOS TestFlight</h2>
 
           {!testerSuccess ? (
             <div>
@@ -672,6 +750,7 @@ export default function Home() {
           )}
 
           <button
+            aria-label="Close TestFlight modal"
             onClick={() => {
               setAppleModal(false);
               setTesterSuccess(false);
@@ -692,10 +771,28 @@ export default function Home() {
           <div
             className="screenshot-modal-content"
             onClick={(e) => e.stopPropagation()}
+            ref={screenshotModalRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="screenshot-modal-title"
           >
-            <button onClick={closeScreenshotModal}>×</button>
+            {/* Added a hidden title to fulfill aria-labelledby requirement */}
+            <h2 id="screenshot-modal-title" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 }}>
+              Screenshot View
+            </h2>
+            
+            <button 
+              aria-label="Close screenshot viewer" 
+              onClick={closeScreenshotModal}
+            >
+              ×
+            </button>
 
-            <button onClick={() => navigateScreenshot(-1)}>
+            <button 
+              aria-label="Previous screenshot" 
+              onClick={() => navigateScreenshot(-1)}
+            >
               ←
             </button>
 
@@ -703,8 +800,16 @@ export default function Home() {
               src={allScreenshots[currentScreenshot]?.src}
               alt={allScreenshots[currentScreenshot]?.caption}
             />
+            
+            {/* Restored screenshot caption */}
+            <div className="screenshot-caption">
+              {allScreenshots[currentScreenshot]?.caption}
+            </div>
 
-            <button onClick={() => navigateScreenshot(1)}>
+            <button 
+              aria-label="Next screenshot" 
+              onClick={() => navigateScreenshot(1)}
+            >
               →
             </button>
           </div>
@@ -712,4 +817,4 @@ export default function Home() {
       )}
     </>
   );
-}</>
+}
