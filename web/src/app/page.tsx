@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import Image from "next/image";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 const userScreenshots = [
@@ -32,6 +33,7 @@ const adminScreenshots = [
 ];
 
 const allScreenshots = [...userScreenshots, ...adminScreenshots];
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://uhsocial.in";
 const CURSOR_GLOW_STORAGE_KEY = "cursorGlowEnabled";
 const CURSOR_GLOW_EVENT = "cursor-glow-preference-change";
 // Owner-configurable frontend URLs (set in deployment env when needed)
@@ -41,6 +43,10 @@ const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me";
 const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com";
 const PRIVACY_POLICY_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || "#";
 const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || "#";
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SLIDER_SCROLL_AMOUNT = 324;
+const DNA_TRAIL_MAX_POINTS = 38;
+const isValidEmail = (email: string) => EMAIL_PATTERN.test(email.trim());
 
 const getCursorGlowSnapshot = () => {
   if (typeof window === "undefined") return false;
@@ -150,7 +156,7 @@ export default function Home() {
     const draw = () => {
       dnaT += 0.06;
       trail.unshift({ x: mouseX, y: mouseY, t: dnaT });
-      if (trail.length > 38) trail.pop();
+      if (trail.length > DNA_TRAIL_MAX_POINTS) trail.pop();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (dnaEnabledRef.current) {
@@ -294,50 +300,65 @@ export default function Home() {
     setScreenshotModal(true);
   };
 
+  const handleScreenshotCardKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, src: string) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openScreenshotModal(src);
+    }
+  };
+
   const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
-    ref.current?.scrollBy({ left: dir * 324, behavior: "smooth" });
+    ref.current?.scrollBy({ left: dir * SLIDER_SCROLL_AMOUNT, behavior: "smooth" });
   };
 
   // ── TestFlight invite ──
   const sendTesterEmail = async () => {
-    if (!testerEmail || !testerEmail.includes("@")) {
+    const trimmedTesterEmail = testerEmail.trim();
+    if (!isValidEmail(trimmedTesterEmail)) {
       alert("Please enter a valid Apple ID email.");
       return;
     }
     try {
-      const response = await fetch("https://uhsocial.in/api/publishing-related/invite-testflight", {
+      const response = await fetch(`${API_BASE_URL}/api/publishing-related/invite-testflight`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           to: "ultimate.health25@gmail.com",
-          from: testerEmail,
+          from: trimmedTesterEmail,
           subject: "New TestFlight Invitation Request",
-          body: `User with email ${testerEmail} wants to join the iOS TestFlight group.`,
+          body: `User with email ${trimmedTesterEmail} wants to join the iOS TestFlight group.`,
         }),
       });
       if (!response.ok) throw new Error("API Failure");
     } catch {
-      window.location.href = `mailto:ultimate.health25@gmail.com?subject=TestFlight Request&body=I would like to be a tester. My email is: ${testerEmail}`;
+      window.location.href = `mailto:ultimate.health25@gmail.com?subject=TestFlight Request&body=I would like to be a tester. My email is: ${trimmedTesterEmail}`;
     }
     setTesterSuccess(true);
   };
 
   // ── Contact form submit → uhsocial.in API ──
-  // Backend route needed: POST https://uhsocial.in/api/contact/send
+  // Backend route needed: POST /api/contact/send on NEXT_PUBLIC_API_BASE_URL
   // See /contact_newsletter_guide.md for the Express route implementation
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!contactName || !contactEmail || !contactSubject || !contactMessage) return;
+    const trimmedName = contactName.trim();
+    const trimmedEmail = contactEmail.trim();
+    const trimmedSubject = contactSubject.trim();
+    const trimmedMessage = contactMessage.trim();
+    if (!trimmedName || !isValidEmail(trimmedEmail) || !trimmedSubject || !trimmedMessage) {
+      alert("Please complete the form with a valid email address.");
+      return;
+    }
     setContactStatus("sending");
     try {
-      const res = await fetch("https://uhsocial.in/api/contact/send", {
+      const res = await fetch(`${API_BASE_URL}/api/contact/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: contactName,
-          email: contactEmail,
-          subject: contactSubject,
-          message: contactMessage,
+          name: trimmedName,
+          email: trimmedEmail,
+          subject: trimmedSubject,
+          message: trimmedMessage,
         }),
       });
       if (!res.ok) throw new Error("Failed");
@@ -345,23 +366,27 @@ export default function Home() {
       setContactName(""); setContactEmail(""); setContactSubject(""); setContactMessage("");
     } catch {
       // Fallback: open mailto if API not yet implemented
-      window.location.href = `mailto:ultimate.health25@gmail.com?subject=${encodeURIComponent(contactSubject)}&body=${encodeURIComponent(`From: ${contactName} (${contactEmail})\n\n${contactMessage}`)}`;
+      window.location.href = `mailto:ultimate.health25@gmail.com?subject=${encodeURIComponent(trimmedSubject)}&body=${encodeURIComponent(`From: ${trimmedName} (${trimmedEmail})\n\n${trimmedMessage}`)}`;
       setContactStatus("error");
     }
   };
 
   // ── Newsletter subscribe ──
-  // Backend route needed: POST https://uhsocial.in/api/newsletter/subscribe
+  // Backend route needed: POST /api/newsletter/subscribe on NEXT_PUBLIC_API_BASE_URL
   // See /contact_newsletter_guide.md — owner fills DB / Mailchimp credentials
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newsletterEmail || !newsletterEmail.includes("@")) return;
+    const trimmedNewsletterEmail = newsletterEmail.trim();
+    if (!isValidEmail(trimmedNewsletterEmail)) {
+      setNewsletterStatus("error");
+      return;
+    }
     setNewsletterStatus("sending");
     try {
-      const res = await fetch("https://uhsocial.in/api/newsletter/subscribe", {
+      const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: newsletterEmail }),
+        body: JSON.stringify({ email: trimmedNewsletterEmail }),
       });
       if (!res.ok) throw new Error("Failed");
       setNewsletterStatus("success");
@@ -371,6 +396,8 @@ export default function Home() {
     }
   };
 
+  const selectedScreenshot = allScreenshots[currentScreenshot] ?? allScreenshots[0];
+
   return (
     <>
       {/* ── Header ── */}
@@ -378,9 +405,10 @@ export default function Home() {
         <div className="container nav">
           <a href="#" className="logo">
             <div className="logo-icon">
-              <img
+              <Image
                 src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
                 alt="Ultimate Health Logo" width={48} height={48}
+                priority
               />
             </div>
             Ultimate-Health
@@ -437,7 +465,12 @@ export default function Home() {
             <a href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth" target="_blank" rel="noreferrer">
               <i className="fab fa-google-play"></i> UltimateHealth
             </a>
-            <button className="store-btn" onClick={() => setComingSoonModal(true)}>
+            <button
+              className="store-btn"
+              type="button"
+              aria-label="View UHealth Admin closed testing launch status"
+              onClick={() => setComingSoonModal(true)}
+            >
               <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
             </button>
           </div>
@@ -450,10 +483,20 @@ export default function Home() {
           <h2>Download from App Store</h2>
           <p className="center">Coming soon to iOS devices</p>
           <div className="store-buttons">
-            <button className="store-btn" onClick={() => setAppleModal(true)}>
+            <button
+              className="store-btn"
+              type="button"
+              aria-label="Request UltimateHealth iOS TestFlight invitation"
+              onClick={() => setAppleModal(true)}
+            >
               <i className="fab fa-apple"></i> UltimateHealth (Coming Soon)
             </button>
-            <button className="store-btn" onClick={() => setAppleModal(true)}>
+            <button
+              className="store-btn"
+              type="button"
+              aria-label="Request UHealth Admin iOS TestFlight invitation"
+              onClick={() => setAppleModal(true)}
+            >
               <i className="fab fa-apple"></i> UHealth Admin (Coming Soon)
             </button>
           </div>
@@ -475,8 +518,22 @@ export default function Home() {
               <div className="screenshot-slider-container">
                 <div className="screenshots-wrapper" ref={userSliderRef}>
                   {userScreenshots.map((s) => (
-                    <div key={s.src} className="screenshot-box" onClick={() => openScreenshotModal(s.src)}>
-                      <img src={s.src} alt={s.caption} />
+                    <div
+                      key={s.src}
+                      className="screenshot-box"
+                      onClick={() => openScreenshotModal(s.src)}
+                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${s.caption} screenshot`}
+                    >
+                      <Image
+                        src={s.src}
+                        alt={s.caption}
+                        fill
+                        sizes="(max-width: 768px) 260px, 300px"
+                        className="screenshot-image"
+                      />
                     </div>
                   ))}
                   <div className="screenshot-box">
@@ -487,8 +544,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="slider-nav">
-                  <button className="nav-btn" onClick={() => moveSlider(userSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" onClick={() => moveSlider(userSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => moveSlider(userSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => moveSlider(userSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             )}
@@ -503,8 +560,22 @@ export default function Home() {
               <div className="screenshot-slider-container">
                 <div className="screenshots-wrapper" ref={adminSliderRef}>
                   {adminScreenshots.map((s) => (
-                    <div key={s.src} className="screenshot-box" onClick={() => openScreenshotModal(s.src)}>
-                      <img src={s.src} alt={s.caption} />
+                    <div
+                      key={s.src}
+                      className="screenshot-box"
+                      onClick={() => openScreenshotModal(s.src)}
+                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${s.caption} screenshot`}
+                    >
+                      <Image
+                        src={s.src}
+                        alt={s.caption}
+                        fill
+                        sizes="(max-width: 768px) 260px, 300px"
+                        className="screenshot-image"
+                      />
                     </div>
                   ))}
                   <div className="screenshot-box">
@@ -515,8 +586,8 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="slider-nav">
-                  <button className="nav-btn" onClick={() => moveSlider(adminSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" onClick={() => moveSlider(adminSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => moveSlider(adminSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => moveSlider(adminSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             )}
@@ -580,7 +651,16 @@ export default function Home() {
               { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2024", title: "GirlScript Summer of Code", desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship." },
             ].map((p, i) => (
               <div className="program-card fade-in" key={i}>
-                <div className="program-logo-wrapper"><img src={p.logo} alt={p.alt} /></div>
+                <div className="program-logo-wrapper">
+                  <Image
+                    src={p.logo}
+                    alt={p.alt}
+                    width={180}
+                    height={80}
+                    sizes="180px"
+                    className="program-logo"
+                  />
+                </div>
                 <span className="program-badge">{p.badge}</span>
                 <h3>{p.title}</h3>
                 <p>{p.desc}</p>
@@ -632,13 +712,13 @@ export default function Home() {
               </div>
 
               <div className="contact-dark-socials">
-                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noreferrer" title="GitHub">
+                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
                   <i className="fab fa-github"></i>
                 </a>
-                <a href="mailto:ultimate.health25@gmail.com" className="dark-social-icon" title="Email">
+                <a href="mailto:ultimate.health25@gmail.com" className="dark-social-icon" title="Email" aria-label="Email UltimateHealth">
                   <i className="fas fa-envelope"></i>
                 </a>
-                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noreferrer" title="LinkedIn">
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
               </div>
@@ -654,7 +734,7 @@ export default function Home() {
                   <div className="contact-success-icon"><i className="fas fa-check-circle"></i></div>
                   <h4>Message Sent!</h4>
                   <p>Thank you for reaching out. We&apos;ll get back to you within 24 hours.</p>
-                  <button onClick={() => setContactStatus("idle")} className="contact-reset-btn">
+                  <button type="button" onClick={() => setContactStatus("idle")} className="contact-reset-btn">
                     Send Another Message
                   </button>
                 </div>
@@ -664,6 +744,7 @@ export default function Home() {
                     <span className="dark-field-icon"><i className="fas fa-user"></i></span>
                     <input
                       type="text" className="dark-input" placeholder="Your Name *" required
+                      maxLength={80}
                       value={contactName} onChange={(e) => setContactName(e.target.value)}
                     />
                   </div>
@@ -671,6 +752,7 @@ export default function Home() {
                     <span className="dark-field-icon"><i className="fas fa-envelope"></i></span>
                     <input
                       type="email" className="dark-input" placeholder="Email Address *" required
+                      maxLength={120}
                       value={contactEmail} onChange={(e) => setContactEmail(e.target.value)}
                     />
                   </div>
@@ -678,6 +760,7 @@ export default function Home() {
                     <span className="dark-field-icon"><i className="fas fa-tag"></i></span>
                     <input
                       type="text" className="dark-input" placeholder="Subject *" required
+                      maxLength={120}
                       value={contactSubject} onChange={(e) => setContactSubject(e.target.value)}
                     />
                   </div>
@@ -685,6 +768,7 @@ export default function Home() {
                     <span className="dark-field-icon dark-field-icon-top"><i className="fas fa-comment"></i></span>
                     <textarea
                       className="dark-input dark-textarea" placeholder="Your Message *" required
+                      maxLength={1500}
                       value={contactMessage} onChange={(e) => setContactMessage(e.target.value)}
                     ></textarea>
                   </div>
@@ -735,11 +819,12 @@ export default function Home() {
                       type="email"
                       placeholder="Enter your email"
                       className="footer-subscribe-input"
+                      maxLength={120}
                       value={newsletterEmail}
                       onChange={(e) => setNewsletterEmail(e.target.value)}
                       required
                     />
-                    <button type="submit" className="footer-subscribe-btn" disabled={newsletterStatus === "sending"}>
+                    <button type="submit" className="footer-subscribe-btn" aria-label="Subscribe to Ultimate Health newsletter" disabled={newsletterStatus === "sending"}>
                       {newsletterStatus === "sending" ? <i className="fas fa-spinner fa-spin"></i> : "Subscribe"}
                     </button>
                   </div>
@@ -755,16 +840,16 @@ export default function Home() {
             <div style={{ marginTop: 20 }}>
               <span className="footer-follow-label">Follow Us</span>
               <div className="footer-social-links">
-                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noreferrer" title="GitHub">
+                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
                   <i className="fab fa-github"></i>
                 </a>
-                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noreferrer" title="LinkedIn">
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
-                <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Telegram">
+                <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Telegram" aria-label="Open UltimateHealth Telegram link">
                   <i className="fab fa-telegram"></i>
                 </a>
-                <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Instagram">
+                <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Instagram" aria-label="Open UltimateHealth Instagram link">
                   <i className="fab fa-instagram"></i>
                 </a>
               </div>
@@ -832,8 +917,10 @@ export default function Home() {
           {!testerSuccess ? (
             <div>
               <input type="email" placeholder="Enter your Apple ID email" className="waitlist-input"
+                maxLength={120}
                 value={testerEmail} onChange={(e) => setTesterEmail(e.target.value)} />
               <button className="nav-btn-sm"
+                type="button"
                 style={{ width: "100%", height: 48, border: "none", cursor: "pointer", fontWeight: "bold", fontSize: "1rem" }}
                 onClick={sendTesterEmail}>
                 Send Invitation Request
@@ -855,16 +942,22 @@ export default function Home() {
       {screenshotModal && (
         <div className="screenshot-modal active" onClick={closeScreenshotModal}>
           <div className="screenshot-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="screenshot-modal-close" onClick={closeScreenshotModal}>×</button>
-            <button className="screenshot-modal-nav screenshot-modal-prev" onClick={() => navigateScreenshot(-1)}>
+            <button className="screenshot-modal-close" type="button" aria-label="Close screenshot preview" onClick={closeScreenshotModal}>×</button>
+            <button className="screenshot-modal-nav screenshot-modal-prev" type="button" aria-label="Previous screenshot" onClick={() => navigateScreenshot(-1)}>
               <i className="fas fa-chevron-left"></i>
             </button>
-            <img src={allScreenshots[currentScreenshot]?.src} alt={allScreenshots[currentScreenshot]?.caption}
-              style={{ maxHeight: "80vh", borderRadius: 12 }} />
-            <button className="screenshot-modal-nav screenshot-modal-next" onClick={() => navigateScreenshot(1)}>
+            <Image
+              src={selectedScreenshot.src}
+              alt={selectedScreenshot.caption}
+              width={390}
+              height={780}
+              sizes="(max-width: 768px) 80vw, 390px"
+              className="screenshot-modal-image"
+            />
+            <button className="screenshot-modal-nav screenshot-modal-next" type="button" aria-label="Next screenshot" onClick={() => navigateScreenshot(1)}>
               <i className="fas fa-chevron-right"></i>
             </button>
-            <div className="screenshot-caption">{allScreenshots[currentScreenshot]?.caption}</div>
+            <div className="screenshot-caption">{selectedScreenshot.caption}</div>
           </div>
         </div>
       )}
