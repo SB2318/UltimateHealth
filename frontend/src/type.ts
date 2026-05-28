@@ -787,6 +787,9 @@ export interface ContentSuggestionResponse {
   suggested_html?: string;
   full_html?: string;
   suggestion?: string;
+  readability_score: number;
+  reading_time: string;
+  suggested_html: string;
 }
 
 export type PlayList = {
