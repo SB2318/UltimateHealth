@@ -274,8 +274,22 @@ body.touch-device .dna-cursor-canvas {
   background: var(--gradient-primary);
   transition: width 0.3s ease;
 }
-.nav-links a:hover { color: var(--primary); }
-.nav-links a:hover::after { width: 100%; }
+
+.nav-links a:hover {
+  color: var(--primary);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.nav-links a.active {
+  color: var(--primary);
+}
+
+.nav-links a.active::after {
+  width: 100%;
+}
 
 .nav-btn-sm {
   background: var(--gradient-primary);
