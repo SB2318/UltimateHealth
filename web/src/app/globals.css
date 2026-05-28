@@ -207,7 +207,7 @@ body {
 
 .nav-item-icon {
   font-size: 1.05rem;
-  color: currentColor;
+  color: #D4AF37; /* golden */
   line-height: 1;
   transition: all 0.2s ease;
 }
