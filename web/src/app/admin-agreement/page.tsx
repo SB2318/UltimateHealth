@@ -78,6 +78,7 @@ function AdminAgreementContent() {
       if (!raw) return;
       const data = JSON.parse(raw);
       if (data.accepted && data.version === "2.0.0") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setAlreadyAccepted(true);
         const redirectUrl = searchParams.get("redirect") || "/admin/dashboard";
         setTimeout(() => { window.location.href = redirectUrl; }, 3000);
@@ -444,7 +445,11 @@ function AdminAgreementContent() {
                 Draw Your Signature <span style={{ color: "#e53e3e" }}>*</span>
               </label>
               {locked && signatureDataUrl ? (
-                <img src={signatureDataUrl} alt="Your signature" style={css.signatureImg} />
+                <>
+                  {/* NOTE: Keep as standard <img> element. next/image does not support dynamic base64/data URLs. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={signatureDataUrl} alt="Your signature" style={css.signatureImg} />
+                </>
               ) : (
                 <canvas
                   ref={canvasRef}
