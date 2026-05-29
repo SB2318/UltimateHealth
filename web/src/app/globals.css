@@ -231,6 +231,10 @@ body.touch-device .dna-cursor-canvas {
 
 .nav { display: flex; justify-content: space-between; align-items: center; }
 
+.header .container.nav {
+  max-width: 1320px;
+}
+
 .logo {
   display: inline-flex;
   align-items: center;
@@ -255,7 +259,7 @@ body.touch-device .dna-cursor-canvas {
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 28px;
+  gap: 24px;
   align-items: center;
 }
 .nav-links a {
@@ -266,6 +270,29 @@ body.touch-device .dna-cursor-canvas {
   position: relative;
   transition: var(--transition);
 }
+
+.nav-link-item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 4px;
+  min-width: 100px;
+  padding: 4px 0;
+}
+
+.nav-item-icon {
+  font-size: 1.05rem;
+  color: #D4AF37; /* golden */
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.nav-item-text {
+  line-height: 1.25;
+}
+
 .nav-links a::after {
   content: "";
   position: absolute;
@@ -277,6 +304,11 @@ body.touch-device .dna-cursor-canvas {
 
 .nav-links a:hover {
   color: var(--primary);
+}
+
+.nav-link-item:hover .nav-item-icon,
+.nav-link-item.active .nav-item-icon {
+  transform: translateY(-1px);
 }
 
 .nav-links a:hover::after {
@@ -292,16 +324,44 @@ body.touch-device .dna-cursor-canvas {
 }
 
 .nav-btn-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: var(--gradient-primary);
   color: white !important;
-  padding: 10px 24px;
+  padding: 10px 20px;
   border-radius: 50px;
   font-weight: 600;
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
 }
-.nav-btn-sm::after { display: none !important; }
-.nav-btn-sm:hover { transform: translateY(-2px) !important; box-shadow: var(--shadow-md); }
+
+@media (max-width: 1200px) {
+  .nav-links {
+    gap: 12px;
+  }
+
+  .nav-link-item {
+    min-width: 88px;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+  }
+
+  .nav-btn-sm {
+    padding: 9px 16px;
+  }
+}
+
+.nav-btn-sm::after {
+  display: none !important;
+}
+
+.nav-btn-sm:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-md);
+}
 
 .mobile-menu-toggle {
   display: none;

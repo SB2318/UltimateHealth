@@ -415,21 +415,57 @@ export default function Home() {
           </a>
 
           <ul className="nav-links">
-            <li><a href="#screenshots" className={activeSection === "screenshots" ? "active" : ""} aria-current={activeSection === "screenshots" ? "location" : undefined}>Screenshots</a></li>
-            <li><a href="#features" className={activeSection === "features" ? "active" : ""} aria-current={activeSection === "features" ? "location" : undefined}>Features</a></li>
-            <li><a href="#programs" className={activeSection === "programs" ? "active" : ""} aria-current={activeSection === "programs" ? "location" : undefined}>Programs</a></li>
-            <li><a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a></li>
-            <li><a href="#contact" className={activeSection === "contact" ? "active" : ""} aria-current={activeSection === "contact" ? "location" : undefined}>Contact</a></li>
-            <li><a href="#downloads" className="nav-btn-sm">Downloads</a></li>
             <li>
-              <button
-                className={`glow-toggle-btn${cursorGlowEnabled ? " glow-on" : ""}`}
-                onClick={() => setCursorGlowEnabled((v) => !v)}
-                data-tooltip={cursorGlowEnabled ? "DNA Trail On" : "DNA Trail Off"}
-                aria-label="Toggle DNA helix cursor effect"
+              <a
+                href="#features"
+                className={`nav-link-item${activeSection === "features" ? " active" : ""}`}
+                aria-current={activeSection === "features" ? "location" : undefined}
               >
-                <i className="fas fa-dna"></i>
-              </button>
+                <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Platform Highlights</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#screenshots"
+                className={`nav-link-item${activeSection === "screenshots" ? " active" : ""}`}
+                aria-current={activeSection === "screenshots" ? "location" : undefined}
+              >
+                <i className="fas fa-image nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Screenshots</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#programs"
+                className={`nav-link-item${activeSection === "programs" ? " active" : ""}`}
+                aria-current={activeSection === "programs" ? "location" : undefined}
+              >
+                <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Community Programs</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer" className="nav-link-item">
+                <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Read Articles</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#contact"
+                className={`nav-link-item${activeSection === "contact" ? " active" : ""}`}
+                aria-current={activeSection === "contact" ? "location" : undefined}
+              >
+                <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Join Us to Contribute</span>
+              </a>
+            </li>
+            <li>
+              <a href="#downloads" className="nav-btn-sm">
+                <i className="fas fa-user" aria-hidden="true"></i>
+                <span>Login / Register</span>
+              </a>
             </li>
           </ul>
 
@@ -440,11 +476,11 @@ export default function Home() {
 
         <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
           <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
-          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Programs</a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a>
-          <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Contact</a>
-          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Downloads</a>
+          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
+          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
+          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
+          <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
+          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
       </header>
 
