@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import ScrollToTop from "../components/ScrollToTop";
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -997,6 +998,7 @@ export default function Home() {
           </div>
         </div>
       )}
+      <ScrollToTop />
     </>
   );
 }
