@@ -191,6 +191,7 @@
 
 ## Project Structure
 UltimateHealth/
+
 ├── frontend/          # React Native + Expo mobile app
 
 ├── ieee-submodules/   # IEEE submodule references
