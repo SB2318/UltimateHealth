@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -493,49 +493,85 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Downloads — Play Store ── */}
-      <section id="downloads">
+      {/* Downloads Section */}
+      <section id="downloads" className="download-section">
         <div className="container">
-          <h2>Download from Play Store</h2>
-          <p className="center">Get started with Ultimate Health on your Android device</p>
-          <div className="store-buttons">
-            <a href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth" target="_blank" rel="noreferrer">
-              <i className="fab fa-google-play"></i> UltimateHealth
-            </a>
-            <button
-              className="store-btn"
-              type="button"
-              aria-label="View UHealth Admin closed testing launch status"
-              onClick={() => setComingSoonModal(true)}
-            >
-              <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
-            </button>
-          </div>
-        </div>
-      </section>
+          <h2>Get Ultimate Health</h2>
+          <p className="center">
+            Access our platform on your preferred device. Ultimate Health is available now for Android and coming soon to iOS via TestFlight.
+          </p>
+          <div className="download-grid">
+            {/* Android Card */}
+            <div className="download-card fade-in">
+              <div className="download-platform-header">
+                <div className="download-platform-icon android">
+                  <i className="fab fa-android"></i>
+                </div>
+                <div>
+                  <h3>Android App</h3>
+                  <span className="platform-status active">Available Now</span>
+                </div>
+              </div>
+              <p className="platform-desc">
+                Install Ultimate Health on your Android device to publish articles, listen to podcasts, and manage content.
+              </p>
+              <div className="store-buttons">
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="store-btn"
+                  id="playstore-btn"
+                  aria-label="Download Ultimate Health for Android on Google Play Store"
+                >
+                  <i className="fab fa-google-play"></i> UltimateHealth
+                </a>
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="store-btn"
+                  id="admin-closed-testing-btn"
+                  aria-label="Download UHealth Admin for Android on Google Play Store"
+                >
+                  <i className="fas fa-user-shield"></i> UHealth Admin
+                </a>
+              </div>
+            </div>
 
-      {/* ── Downloads — App Store ── */}
-      <section>
-        <div className="container">
-          <h2>Download from App Store</h2>
-          <p className="center">Coming soon to iOS devices</p>
-          <div className="store-buttons">
-            <button
-              className="store-btn"
-              type="button"
-              aria-label="Request UltimateHealth iOS TestFlight invitation"
-              onClick={() => setAppleModal(true)}
-            >
-              <i className="fab fa-apple"></i> UltimateHealth (Coming Soon)
-            </button>
-            <button
-              className="store-btn"
-              type="button"
-              aria-label="Request UHealth Admin iOS TestFlight invitation"
-              onClick={() => setAppleModal(true)}
-            >
-              <i className="fab fa-apple"></i> UHealth Admin (Coming Soon)
-            </button>
+            {/* iOS Card */}
+            <div className="download-card fade-in">
+              <div className="download-platform-header">
+                <div className="download-platform-icon ios">
+                  <i className="fab fa-apple"></i>
+                </div>
+                <div>
+                  <h3>iOS App</h3>
+                  <span className="platform-status coming-soon">Coming Soon</span>
+                </div>
+              </div>
+              <p className="platform-desc">
+                We are actively testing our iOS application. Request to join the TestFlight waitlist for early beta access.
+              </p>
+              <div className="store-buttons">
+                <button
+                  className="store-btn store-btn-secondary"
+                  id="ios-uh-btn"
+                  onClick={() => setAppleModal(true)}
+                  aria-label="Join iOS TestFlight beta for Ultimate Health"
+                >
+                  <i className="fab fa-apple"></i> UltimateHealth (Beta)
+                </button>
+                <button
+                  className="store-btn store-btn-secondary"
+                  id="ios-admin-btn"
+                  onClick={() => setAppleModal(true)}
+                  aria-label="Join iOS TestFlight beta for UHealth Admin"
+                >
+                  <i className="fab fa-apple"></i> UHealth Admin (Beta)
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>

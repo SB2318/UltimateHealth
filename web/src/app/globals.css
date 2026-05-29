@@ -429,8 +429,15 @@ body.touch-device .dna-cursor-canvas {
 }
 
 /* ==================== SECTIONS ==================== */
-section { padding: 100px 0; }
-section:nth-child(even) { background: var(--bg-light); }
+section {
+  padding: 100px 0;
+  scroll-margin-top: 80px; /* Offset for sticky header when navigating via anchors */
+}
+
+section:nth-child(even) {
+  background: var(--bg-light);
+}
+
 
 h2 {
   text-align: center;
@@ -478,6 +485,142 @@ p.center {
   color: white;
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
+}
+
+/* iOS Secondary Store Button (Beta/TestFlight) */
+.store-btn-secondary {
+  border-color: rgba(0, 122, 255, 0.25) !important;
+  color: #007aff !important;
+  background: #f8fafc !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.store-btn-secondary:hover {
+  background: rgba(0, 122, 255, 0.05) !important;
+  color: #0066d6 !important;
+  border-color: rgba(0, 122, 255, 0.6) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.1) !important;
+}
+
+/* ==================== DOWNLOAD REDESIGN ==================== */
+.download-section {
+  position: relative;
+  background: var(--bg-white);
+  padding: 60px 0 80px; /* Reduced vertical padding for better spacing */
+}
+
+.download-section p.center {
+  margin-bottom: 40px; /* Reduced margin below paragraph */
+}
+
+.download-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.download-card {
+  background: var(--bg-white);
+  border: 2px solid rgba(0, 0, 0, 0.05);
+  border-radius: 24px;
+  padding: 40px;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.download-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
+}
+
+.download-platform-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.download-platform-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+}
+
+.download-platform-icon.android {
+  background: #34a853; /* Google Play green */
+}
+
+.download-platform-icon.ios {
+  background: #007aff; /* Apple Blue */
+}
+
+.download-platform-header h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.platform-status {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.platform-status.active {
+  background: rgba(52, 168, 83, 0.1);
+  color: #34a853;
+}
+
+.platform-status.coming-soon {
+  background: rgba(0, 122, 255, 0.1);
+  color: #007aff;
+}
+
+.platform-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 769px) {
+  .platform-desc {
+    min-height: 72px; /* Ensure equal description text heights on desktop for alignment */
+  }
+}
+
+.download-card .store-buttons {
+  margin-top: auto;
+  padding-top: 16px;
+  justify-content: flex-start; /* Align buttons left to match card alignment */
+  gap: 16px;
+}
+
+.download-card .store-btn,
+.download-card .store-buttons a {
+  min-width: 190px; /* Force uniform button widths */
+  justify-content: center;
+  padding: 14px 24px; /* Slightly more compact, polished button padding */
 }
 
 /* ==================== SCREENSHOT SLIDER ==================== */
@@ -1400,19 +1543,76 @@ footer {
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 768px) {
-  .nav-links { display: none; }
-  .mobile-menu-toggle { display: block; }
-  .hero h1 { font-size: 2.5rem; }
-  .hero p  { font-size: 1.1rem; }
-  h2       { font-size: 2rem; }
-  section  { padding: 60px 0; }
-  .feature-grid, .program-grid { grid-template-columns: 1fr; }
-  .store-buttons { flex-direction: column; }
-  .store-buttons a, .store-btn { width: 100%; justify-content: center; }
-  .screenshot-box { flex: 0 0 260px; height: 480px; }
-  .screenshot-modal-prev { left: 10px; }
-  .screenshot-modal-next { right: 10px; }
-  .screenshot-modal-close { top: 10px; right: 10px; }
+  .nav-links {
+    display: none;
+  }
+
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero p {
+    font-size: 1.1rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  section {
+    padding: 60px 0;
+  }
+
+  .feature-grid,
+  .program-grid,
+  .download-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .download-grid {
+    gap: 24px;
+  }
+
+  .download-card {
+    padding: 30px;
+  }
+
+  .store-buttons {
+    flex-direction: column;
+  }
+
+  .store-buttons a,
+  .store-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .screenshot-box {
+    flex: 0 0 260px;
+    height: 480px;
+  }
+
+  .footer-links {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .screenshot-modal-prev {
+    left: 10px;
+  }
+
+  .screenshot-modal-next {
+    right: 10px;
+  }
+
+  .screenshot-modal-close {
+    top: 10px;
+    right: 10px;
+  }
 }
 
 
