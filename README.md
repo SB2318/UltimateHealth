@@ -192,10 +192,15 @@
 ## Project Structure
 UltimateHealth/
 ├── frontend/          # React Native + Expo mobile app
+
 ├── ieee-submodules/   # IEEE submodule references
+
 ├── .env.example       # Environment variable template
+
 ├── CONTRIBUTING.md    # Contribution guidelines
+
 ├── CODE_OF_CONDUCT.md # Code of conduct
+
 └── README.md
 
 > The backend and admin app live in separate submodule repositories. See [Submodule Repositories](#submodule-repositories) for links.
