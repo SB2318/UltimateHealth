@@ -14,7 +14,7 @@
 
 </div>
 
-Here’s a cleaner version while keeping your original meaning:
+
 
 **UltimateHealth Upcoming Release 🚀**
 
@@ -147,7 +147,7 @@ Here’s a cleaner version while keeping your original meaning:
   </tr>
   <tr>
     <td><img src="https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png" width="180" alt="GSSoC"/></td>
-    <td><b>GirlScript Summer of Code 2024</b><br>3-month open source program for beginners</td>
+    <td><b>GirlScript Summer of Code 2024 & 2026</b><br>A nationwide open-source program helping developers contribute to real-world projects through mentorship and community-driven learning</td>
   </tr>
 </table>
 
@@ -189,22 +189,42 @@ Here’s a cleaner version while keeping your original meaning:
 
 <hr>
 
+## Project Structure
+UltimateHealth/
+├── frontend/          # React Native + Expo mobile app
+├── ieee-submodules/   # IEEE submodule references
+├── .env.example       # Environment variable template
+├── CONTRIBUTING.md    # Contribution guidelines
+├── CODE_OF_CONDUCT.md # Code of conduct
+└── README.md
+
+> The backend and admin app live in separate submodule repositories. See [Submodule Repositories](#submodule-repositories) for links.
+
 ## Getting Started ⚡
 
-1. Clone the repo:
-   ```bash
+1. **Clone the repo:**
+```bash
    git clone https://github.com/SB2318/UltimateHealth.git
    cd UltimateHealth
-   git checkout main
-   cd frontend
-2. Frontend (React Native + Expo)
+```
 
-  ```bash
+2. **Set up environment variables:**
+```bash
+   cp .env.example .env
+```
+   Open `.env` and fill in the required values.
+
+3. **Frontend (React Native + Expo):**
+```bash
+   cd frontend
    yarn install
    npx expo prebuild --clean
-   npx expo run android (for android)
-   npx expo run ios (for Ios)
- ```
+   npx expo run:android   # for Android
+   npx expo run:ios       # for iOS
+```
+
+4. **Backend:**
+   The backend lives in a separate submodule. Visit the [backend repository](https://github.com/SB2318/ultimatehealth-backend) for full setup instructions.
 
 ## 🤝 Contribution Guidelines
 
@@ -386,6 +406,18 @@ If you encounter any issues or have any feedback or suggestions, please open an 
  <!-- CONTRIBUTORS-TABLE-END -->
 </div>
 
+<hr>
+<div>
+  <h2> Contributing</h2>
+  <p>We welcome contributions of all kinds! To get started:</p>
+  <ol>
+    <li>Fork the repository and create your branch from <code>main</code></li>
+    <li>Make your changes following the existing code style</li>
+    <li>Test your changes properly</li>
+    <li>Open a Pull Request with a clear description of what you've done</li>
+  </ol>
+  <p>Please read our <a href="./CONTRIBUTING.md">CONTRIBUTING.md</a> and <a href="./CODE_OF_CONDUCT.md">CODE_OF_CONDUCT.md</a> before submitting.</p>
+</div>
 
 <hr>
 <div>
