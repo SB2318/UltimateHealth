@@ -385,7 +385,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
           </XStack>
 
           {/* Handle Error */}
-          {checkhandle?.status === false && (
+          {checkhandle?.status === true && (
             <Text color="red" fontSize={14}>
               User handle is already in use.
             </Text>
