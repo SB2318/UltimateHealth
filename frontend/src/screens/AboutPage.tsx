@@ -256,6 +256,7 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
                   openLink('https://github.com/SB2318/UltimateHealth')
                 }
                 isDarkMode={isDarkMode}
+                accessibilityLabel="GitHub"
               />
 
               <SocialCircle
@@ -264,12 +265,14 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
                   openLink('https://linkedin.com/in/ultimate-health-9290873a8/')
                 }
                 isDarkMode={isDarkMode}
+                accessibilityLabel="LinkedIn"
               />
 
               <SocialCircle
                 icon="envelope"
                 onPress={() => openLink('mailto:ultimate.health25@gmail.com')}
                 isDarkMode={isDarkMode}
+                accessibilityLabel="Email"
               />
             </XStack>
           </YStack>
@@ -367,10 +370,12 @@ const SocialCircle = ({
   icon,
   onPress,
   isDarkMode,
+  accessibilityLabel,
 }: {
   icon: string;
   onPress: () => void;
   isDarkMode: boolean;
+  accessibilityLabel: string;
 }) => (
   <Button
     circular
@@ -379,6 +384,7 @@ const SocialCircle = ({
     borderWidth={1}
     borderColor={isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'}
     onPress={onPress}
+    accessibilityLabel={accessibilityLabel}
     pressStyle={{
       scale: 0.95,
       backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)',
