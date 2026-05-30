@@ -27,6 +27,6 @@ export const useGetAuthorMostViewedArticles = ({
       return response.data as ArticleData[];
     },
 
-    enabled: !!isConnected && !!(!userId && others) && !!(!user_id && !others),
+    enabled: !!isConnected && ((others && !!userId) || (!others && !!user_id)),
   });
 };
