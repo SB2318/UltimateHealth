@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+
+export const metadata: Metadata = {
+  title: "App",
+  description: "App",
+};
 
 const inter = Inter({
   subsets: ["latin"],
@@ -8,32 +15,18 @@ const inter = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Ultimate Health - Empowering Wellness Through Global Community",
-  description:
-    "Ultimate Health is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.",
-  keywords: "health, wellness, community, articles, podcasts, multilingual",
-  openGraph: {
-    title: "Ultimate Health",
-    description: "Empowering Wellness Through Global Community",
-    type: "website",
-  },
-};
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const nonce = (await headers()).get("x-nonce");
+
   return (
     <html lang="en" className={inter.variable}>
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        />
-      </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+      </body>
     </html>
   );
 }
