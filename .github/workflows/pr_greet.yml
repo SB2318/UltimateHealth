@@ -14,23 +14,17 @@ jobs:
 
     steps:
     - name: Add Comment to Pull Request
-      run: |
-        COMMENT=$(cat <<EOF
-        {
-          "body": "Thank you @${commentAuthor}, for creating the PR and contributing to our UltimateHealth project 💗. \n Our team will review the PR and will reach out to you soon! 😇 \n Make sure that you have marked all the tasks that you are done with ✅. \n Thank you for your patience! 😀"
-        }
-        EOF
-        )
-        RESPONSE=$(curl -s -o response.json -w "%{http_code}" \
-          -X POST \
-          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
-          -d "$COMMENT")
-        cat response.json
-        if [ "$RESPONSE" -ne 201 ]; then
-          echo "Failed to add comment"
-          exit 1
-        fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: actions/github-script@v9
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const pr = context.payload.pull_request;
+          const author = pr.user.login;
+          const message = `Thank you @${author}, for creating the PR and contributing to our UltimateHealth project 💗.\n Our team will review the PR and will reach out to you soon! 😇\n Make sure that you have marked all the tasks that you are done with ✅.\n Thank you for your patience! 😀`;
+
+          github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: pr.number,
+            body: message,
+          });
