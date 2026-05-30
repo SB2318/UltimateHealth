@@ -14,227 +14,670 @@
 
 </div>
 
-Here’s a cleaner version while keeping your original meaning:
+---
 
-**UltimateHealth Upcoming Release 🚀**
+## 📋 Table of Contents
 
-* **Translation Contribution** – Extend any article in your preferred language.
-* **Guest Mode Support** – Read articles and listen to podcasts without signing in.
-* **Content Preference Save** – Save your preferences for a more personalized future experience.
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Prerequisites](#-prerequisites)
+- [Environment Setup](#-environment-setup)
+- [Installation](#-installation)
+- [Development Workflow](#-development-workflow)
+- [Build & Deployment](#-build--deployment)
+- [Contribution Guidelines](#-contribution-guidelines)
+- [Submodule Repositories](#-submodule-repositories)
+- [Programs Participated](#-programs-participated-in)
+- [Blogs & Resources](#-blogs--resources)
+- [Status & Metrics](#-status--metrics)
+- [Support](#-support)
+- [License](#-license)
+- [Contributors](#our-contributors-)
 
-**Coming soon.**
+---
 
+## 🎯 Overview
 
-<br/>
+**UltimateHealth** is an open-source, community-driven health platform that empowers individuals to access reliable, multilingual wellness content. Our mission is to foster a healthier society by providing trustworthy, accessible, and engaging health information.
 
-<div align="center">
+### Platform Architecture
 
-<table>
-  <!-- Row 1 -->
-  <tr>
-    <td align="center"><b>🧾 License</b></td>
-    <td align="center"><b>🛠️ Frontend CI</b></td>
-    <td align="center"><b>📱 Expo CI</b></td>
-    <td align="center"><b>🌟 Stars</b></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img alt="License" src="https://img.shields.io/github/license/SB2318/UltimateHealth?style=flat&logo=github&color=success"/>
-    </td>
-    <td align="center">
-      <img alt="Frontend CI" src="https://github.com/SB2318/UltimateHealth/actions/workflows/frontend-ci.yml/badge.svg?style=flat&logo=github&color=success"/>
-    </td>
-    <td align="center">
-      <a href="https://github.com/SB2318/UltimateHealth/actions/workflows/eas-build.yml">
-        <img alt="Expo Build" src="https://github.com/SB2318/UltimateHealth/actions/workflows/eas-build.yml/badge.svg?label=Expo%20Build%20(Android%20%2B%20iOS)&logo=expo&color=blue"/>
-      </a>
-    </td>
-    <td align="center">
-      <img alt="Stars" src="https://img.shields.io/github/stars/SB2318/UltimateHealth?style=flat&logo=github&color=success"/>
-    </td>
-  </tr>
+The platform is built as a distributed system with specialized modules:
 
-  <!-- Row 2 -->
-  <tr>
-    <td align="center"><b>🍴 Forks</b></td>
-    <td align="center"><b>🐛 Issues</b></td>
-    <td align="center"><b>🔄 Open PRs</b></td>
-    <td align="center"><b>✅ Closed PRs</b></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/SB2318/UltimateHealth/network/members">
-        <img alt="Forks" src="https://img.shields.io/github/forks/SB2318/UltimateHealth?style=flat&logo=github&color=success"/>
-      </a>
-    </td>
-    <td align="center">
-      <img alt="Issues" src="https://img.shields.io/github/issues/SB2318/UltimateHealth?style=flat&logo=github"/>
-    </td>
-    <td align="center">
-      <img alt="Open PRs" src="https://img.shields.io/github/issues-pr/SB2318/UltimateHealth?style=flat&logo=github"/>
-    </td>
-    <td align="center">
-      <img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/SB2318/UltimateHealth?style=flat&logo=github&color=critical"/>
-    </td>
-  </tr>
+- **Mobile Application** (React Native + Expo) – Native-like experience on Android/iOS
+- **Web Application** (React) – Progressive web app with responsive design
+- **Backend API** (Node.js + Express + MongoDB) – Scalable RESTful API
+- **Content Intelligence** (Python) – AI-powered content verification and plagiarism detection
+- **Admin Dashboard** – Moderation and content management interface
 
-  <!-- Row 3 -->
-  <tr>
-    <td align="center"><b>🤖 Android Build CI</b></td>
-    <td align="center"><b>🍎 iOS Build CI</b></td>
-    <td align="center"><b>⏱️ Last Commit</b></td>
-    <td align="center"><b>📦 Repo Size</b></td>
-  </tr>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/SB2318/UltimateHealth/actions/workflows/android-build-validation.yml">
-        <img alt="Android Build CI" src="https://github.com/SB2318/UltimateHealth/actions/workflows/android-build-validation.yml/badge.svg?style=flat&logo=android&label=Android%20Build"/>
-      </a>
-    </td>
-    <td align="center">
-      <a href="https://github.com/SB2318/UltimateHealth/actions/workflows/ios-build-validation.yml">
-        <img alt="iOS Build CI" src="https://github.com/SB2318/UltimateHealth/actions/workflows/ios-build-validation.yml/badge.svg?style=flat&logo=apple&label=iOS%20Build"/>
-      </a>
-    </td>
-    <td align="center">
-      <img alt="Last Commit" src="https://img.shields.io/github/last-commit/SB2318/UltimateHealth?style=flat&logo=github&color=informational"/>
-    </td>
-    <td align="center">
-      <img alt="Repo Size" src="https://img.shields.io/github/repo-size/SB2318/UltimateHealth?style=flat&logo=github&color=success"/>
-    </td>
-  </tr>
-</table>
+### 🚀 Upcoming Features
 
-</div>
+- **Translation Contribution** – Extend articles in your preferred language
+- **Guest Mode Support** – Read articles and listen to podcasts without signing in
+- **Content Preference Save** – Personalized experience with saved preferences
 
-<hr>
+---
 
 ## ✨ Key Features
 
-- **Multilingual Article Publishing** — Write health content in any language
-- **Collaborative Reviews** — Community editing, feedback & approval workflow
-- **Community-Driven Content** — collaborative contributions where users can improve, refine, and expand existing health articles.
-- **Health Podcasts** — Publish and share verified podcasts
-- **Contribution Analytics** — Track your impact
-- **Content Integrity** — Plagiarism detection, grammar checks & originality scoring
-- **Community Safety** — Flagging system + RBAC for reviewers & admins
+- **Multilingual Article Publishing** — Write health content in any language with community support
+- **Collaborative Reviews** — Community editing, feedback & approval workflow with transparent versioning
+- **Community-Driven Content** — Collaborative contributions where users can improve, refine, and expand health articles
+- **Health Podcasts** — Publish and share verified wellness podcasts with metadata
+- **Contribution Analytics** — Track your impact and contribution statistics
+- **Content Integrity** — Plagiarism detection, grammar checks & originality scoring using AI
+- **Community Safety** — Flagging system + Role-Based Access Control (RBAC) for reviewers & admins
+- **AI Chat Support** — Intelligent chatbot for health-related queries
+- **Notification System** — Real-time updates with Firebase Cloud Messaging
 
-**Admin Features**: Interactive review dashboard, moderation tools & more.
+**Admin Features**: Interactive review dashboard, moderation tools, user management, analytics, content moderation & more.
 
-*(Video Tour)*  
+### Demo Video
+
 ![UltimateHealth Tour](https://github.com/user-attachments/assets/433e6b0e-6d79-4335-85d8-7977bbddae5e)
 
-<hr>
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+| Technology           | Purpose                           | Version  |
+| -------------------- | --------------------------------- | -------- |
+| **React Native**     | Cross-platform mobile framework   | Latest   |
+| **Expo**             | React Native development platform | ~54.0.19 |
+| **React Navigation** | Navigation library for mobile/web | ^7.1.8   |
+| **Tamagui**          | UI component system and theming   | ^1.135.6 |
+| **TypeScript**       | Static type checking              | Latest   |
+| **React Query**      | Server state management           | ^5.90.5  |
+| **Redux Toolkit**    | State management                  | ^2.9.2   |
+| **Jest**             | Testing framework                 | Latest   |
+| **ESLint**           | Code quality and style            | Latest   |
+
+### Backend
+
+| Technology     | Purpose                          |
+| -------------- | -------------------------------- |
+| **Node.js**    | Runtime environment              |
+| **Express.js** | Web framework                    |
+| **MongoDB**    | NoSQL database                   |
+| **Firebase**   | Authentication & Cloud Messaging |
+| **Python**     | Content intelligence services    |
+
+### DevOps & Tools
+
+| Tool                | Purpose                         |
+| ------------------- | ------------------------------- |
+| **GitHub Actions**  | CI/CD pipelines                 |
+| **EAS Build**       | Expo app builds for iOS/Android |
+| **Docker**          | Containerization (Backend)      |
+| **Swagger/OpenAPI** | API documentation               |
+
+---
+
+## 📁 Project Structure
+
+```
+UltimateHealth/
+├── frontend/                           # Mobile (React Native) & Web (React)
+│   ├── src/
+│   │   ├── components/                # Reusable UI components
+│   │   ├── screens/                   # Screen components for mobile/web
+│   │   ├── navigations/               # Navigation configuration
+│   │   ├── services/                  # API service layer (axios)
+│   │   ├── contexts/                  # React Context for state
+│   │   ├── store/                     # Redux store configuration
+│   │   ├── hooks/                     # Custom React hooks
+│   │   ├── types/                     # TypeScript type definitions
+│   │   ├── helper/                    # Utility functions
+│   │   ├── assets/                    # Static assets (fonts, images, animations)
+│   │   └── constants/                 # App constants and configuration
+│   ├── android/                       # Native Android files (Gradle, manifests)
+│   ├── modules/
+│   │   └── audio-module/              # Custom Expo audio module
+│   ├── plugins/                       # Expo plugins configuration
+│   ├── package.json                   # Dependencies
+│   ├── tsconfig.json                  # TypeScript configuration
+│   ├── babel.config.js                # Babel configuration
+│   ├── metro.config.js                # Metro bundler config
+│   ├── tamagui.config.ts              # UI theming configuration
+│   └── eas.json                       # EAS Build configuration
+├── ieee-submodules/
+│   └── IEEE-s-Mindful-Devs-Bootcamp/  # Learning resources
+├── CONTRIBUTING.md                    # Contribution guidelines
+├── CODE_OF_CONDUCT.md                 # Community standards
+├── TEST_GUIDELINES.md                 # Testing guidelines
+├── Learn.md                           # Learning resources
+└── README.md                          # This file
+```
+
+### Related Repositories
+
+- **Backend**: [ultimatehealth-backend](https://github.com/SB2318/ultimatehealth-backend)
+- **Admin Portal**: [ultimatehealth-admin](https://github.com/SB2318/ultimatehealth-admin-app)
+- **Content Intelligence**: [content-checker](https://github.com/SB2318/VeriWise-Content-Check)
+
+---
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+### System Requirements
+
+- **OS**: Windows, macOS, or Linux
+- **Node.js**: Version 16 or higher
+- **npm** or **yarn**: Latest stable version
+- **Git**: For version control
+
+### For Mobile Development
+
+- **Expo CLI**: `npm install -g expo-cli`
+- **Android Studio** (for Android debugging):
+  - Download from [android.com/studio](https://developer.android.com/studio)
+  - Set up Android SDK and emulator
+  - Set `ANDROID_HOME` environment variable
+
+### For iOS Development (macOS only)
+
+- **Xcode**: From App Store
+- **CocoaPods**: `gem install cocoapods`
+- **Simulator**: Included with Xcode
+
+### For Backend Development
+
+- **Python**: 3.8 or higher (for content intelligence)
+- **MongoDB**: Local or cloud instance (Atlas)
+
+---
+
+## 🔧 Environment Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/SB2318/UltimateHealth.git
+cd UltimateHealth
+git checkout main
+```
+
+### 2. Frontend Environment Setup
+
+Navigate to the frontend directory:
+
+```bash
+cd frontend
+```
+
+#### Install Dependencies
+
+Using **yarn** (recommended):
+
+```bash
+yarn install
+```
+
+Or using **npm**:
+
+```bash
+npm install
+```
+
+#### Create Environment File
+
+Create a `.env.local` file in the `frontend` directory:
+
+```env
+# Firebase Configuration
+EXPO_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_firebase_project_id
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
+EXPO_PUBLIC_FIREBASE_APP_ID=your_firebase_app_id
+
+# API Configuration
+EXPO_PUBLIC_API_BASE_URL=https://api.example.com
+EXPO_PUBLIC_CONTENT_API_URL=https://content-api.example.com
+
+# Environment
+EXPO_PUBLIC_ENV=development
+```
+
+#### Android Setup (if needed)
+
+```bash
+# Generate Android native code
+npx expo prebuild --clean
+
+# Optional: Configure Android-specific settings
+cd android
+./gradlew clean
+cd ..
+```
+
+### 3. Backend Environment Setup
+
+Refer to [ultimatehealth-backend](https://github.com/SB2318/ultimatehealth-backend) for backend setup instructions.
+
+---
+
+## 🚀 Installation
+
+### Mobile & Web Application
+
+#### Option 1: Using Expo Go (Easiest for Testing)
+
+```bash
+cd frontend
+
+# Start development server
+npx expo start
+
+# Scan QR code with Expo Go app on your phone
+# Or press 'w' for web
+```
+
+#### Option 2: Build for Android
+
+```bash
+cd frontend
+
+# Generate native Android files (first time only)
+npx expo prebuild --clean
+
+# Build and run on Android device/emulator
+npx expo run:android
+
+# Or using EAS Build (for cloud builds)
+eas build --platform android
+```
+
+#### Option 3: Build for iOS (macOS only)
+
+```bash
+cd frontend
+
+# Generate native iOS files (first time only)
+npx expo prebuild --clean
+
+# Build and run on iOS simulator/device
+npx expo run:ios
+
+# Or using EAS Build
+eas build --platform ios
+```
+
+#### Option 4: Web Development
+
+```bash
+cd frontend
+
+# Start web dev server
+npx expo start --web
+
+# Or using Expo's web runner
+yarn web
+```
+
+---
+
+## 💻 Development Workflow
+
+### Initial Setup
+
+1. **Fork & Clone**
+
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/UltimateHealth.git
+   cd UltimateHealth
+   git checkout main
+   ```
+
+2. **Create Feature Branch**
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Install Dependencies**
+   ```bash
+   cd frontend
+   yarn install
+   ```
+
+### Development Cycle
+
+1. **Start Development Server**
+
+   ```bash
+   npx expo start
+   ```
+
+2. **Make Your Changes**
+   - Edit components in `src/components/`
+   - Create new screens in `src/screens/`
+   - Add utilities in `src/helper/`
+   - Write TypeScript with proper types
+
+3. **Run Tests**
+
+   ```bash
+   yarn test
+   ```
+
+4. **Check Code Quality**
+
+   ```bash
+   # Linting
+   yarn lint
+
+   # Type checking
+   yarn typecheck
+   ```
+
+5. **Format Code**
+   ```bash
+   # Using ESLint with --fix
+   yarn lint --fix
+   ```
+
+### Before Committing
+
+- Ensure all tests pass: `yarn test`
+- Verify linting: `yarn lint`
+- Check TypeScript: `yarn typecheck`
+- Update documentation if needed
+
+### Git Workflow
+
+```bash
+# Stage changes
+git add .
+
+# Commit with descriptive message
+git commit -m "feat: Add new health article component"
+
+# Push to your fork
+git push origin feature/your-feature-name
+
+# Create Pull Request on GitHub
+```
+
+### Branch Naming Conventions
+
+- `feature/description` - New features
+- `bugfix/description` - Bug fixes
+- `docs/description` - Documentation updates
+- `refactor/description` - Code refactoring
+- `test/description` - Test additions/updates
+
+---
+
+## 🏗️ Build & Deployment
+
+### Local Build
+
+#### Android APK
+
+```bash
+cd frontend
+npx expo prebuild --clean
+npx expo run:android
+```
+
+#### iOS (macOS only)
+
+```bash
+cd frontend
+npx expo prebuild --clean
+npx expo run:ios
+```
+
+#### Web Build
+
+```bash
+cd frontend
+npx expo export --platform web
+```
+
+### Cloud Build with EAS
+
+#### Setup EAS
+
+```bash
+npm install -g eas-cli
+eas login
+eas build:configure
+```
+
+#### Build for Android
+
+```bash
+eas build --platform android
+```
+
+#### Build for iOS
+
+```bash
+eas build --platform ios
+```
+
+#### Submit to App Stores
+
+```bash
+# Android Play Store
+eas submit --platform android
+
+# iOS App Store
+eas submit --platform ios
+```
+
+### Environment-Specific Deployments
+
+- **Development**: Built with `expo start` and hot reload
+- **Staging**: Built via EAS with staging API endpoints
+- **Production**: Released to Google Play Store and iOS App Store
+
+---
+
+## 🤝 Contribution Guidelines
+
+### How to Contribute
+
+We welcome contributions in multiple areas:
+
+1. **Code Contributions**
+   - Bug fixes and feature implementations
+   - Performance optimizations
+   - Refactoring and code quality improvements
+
+2. **Documentation**
+   - README improvements
+   - API documentation
+   - Setup guides and tutorials
+
+3. **Content**
+   - Health articles and translations
+   - Podcast submissions
+   - Community reviews and improvements
+
+4. **Testing**
+   - Writing and improving tests
+   - Bug reporting
+   - Test coverage expansion
+
+5. **Design & UX**
+   - UI/UX improvements
+   - Component design
+   - Accessibility enhancements
+
+### For Mobile Development (main branch)
+
+1. Follow the [CONTRIBUTING.md](CONTRIBUTING.md) guidelines
+2. Create feature branch from `main`
+3. Target pull requests to `main`
+4. Ensure all checks pass before requesting review
+
+### For Web Development (web branch)
+
+1. Switch to web branch: `git checkout web`
+2. Read [Web PR & Contribution Guidelines](https://github.com/SB2318/UltimateHealth/blob/web/PR_GUIDELINES.md)
+3. **CRITICAL**: All web PRs **must target the `web` branch**, NOT `main`
+4. Follow web-specific conventions and guidelines
+
+### Before Submitting a PR
+
+- [ ] Code follows project style guidelines
+- [ ] All tests pass: `yarn test`
+- [ ] No linting errors: `yarn lint`
+- [ ] TypeScript types are correct: `yarn typecheck`
+- [ ] Documentation is updated
+- [ ] Commit messages are descriptive
+- [ ] No merge conflicts with target branch
+
+### Code of Conduct
+
+Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md). We expect all contributors to maintain a respectful and inclusive environment.
+
+---
+
+## 📚 Submodule Repositories
+
+The project uses multiple repositories for different components:
+
+| Repository               | Purpose                                        | Link                                                                       |
+| ------------------------ | ---------------------------------------------- | -------------------------------------------------------------------------- |
+| **Backend API**          | Node.js/Express REST API with MongoDB          | [ultimatehealth-backend](https://github.com/SB2318/ultimatehealth-backend) |
+| **Admin Portal**         | Content moderation and management dashboard    | [ultimatehealth-admin](https://github.com/SB2318/ultimatehealth-admin-app) |
+| **Content Intelligence** | AI-powered plagiarism detection & verification | [content-checker](https://github.com/SB2318/VeriWise-Content-Check)        |
+
+---
 
 ## 🚀 Programs Participated In
 
+<div align="center">
 <table>
   <tr>
     <th>Event</th>
     <th>Description</th>
+    <th>Timeline</th>
   </tr>
   <tr>
     <td><img src="https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png" width="180" alt="GSSoC 2026"/></td>
-    <td><b>GirlScript Summer of Code 2026</b><br>3-month open source program empowering next-generation developers through real-world contributions</td>
+    <td><b>GirlScript Summer of Code 2026</b><br>3-month open-source program empowering next-generation developers</td>
+    <td>May - July 2026</td>
   </tr>
   <tr>
     <td><img src="https://github.com/user-attachments/assets/e0a40d06-f5b8-42a7-a5a0-033280f842be" width="180" alt="IEEE"/></td>
-    <td><b>IEEE IGDTUW Open Source Week</b><br>November 12–18</td>
+    <td><b>IEEE IGDTUW Open Source Week</b><br>Focused on community contributions and learning</td>
+    <td>Nov 12–18, 2025</td>
   </tr>
   <tr>
     <td><img src="https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00" width="180" alt="Vultr"/></td>
-    <td><b>Vultr Cloud Innovate Hackathon</b><br>Build innovative solutions using Vultr cloud</td>
+    <td><b>Vultr Cloud Innovate Hackathon</b><br>Building innovative cloud-based solutions</td>
+    <td>2025</td>
   </tr>
   <tr>
-    <td><img src="https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png" width="180" alt="GSSoC"/></td>
-    <td><b>GirlScript Summer of Code 2024</b><br>3-month open source program for beginners</td>
+    <td><img src="https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png" width="180" alt="GSSoC 2024"/></td>
+    <td><b>GirlScript Summer of Code 2024</b><br>3-month program for beginner developers</td>
+    <td>May - July 2024</td>
   </tr>
 </table>
+</div>
 
-<hr>
+---
 
-## 📖 Blogs
+## 📚 Blogs & Resources
 
-- [Firebase Cloud Messaging Backend (Node.js)](https://medium.com/@bhattacharyas161/firebase-cloud-messaging-backend-implementation-using-nodejs-and-expressjs-5e1525856a3f)
-- [Firebase Cloud Messaging in React Native](https://medium.com/@bhattacharyas161/firebase-cloud-messaging-in-react-native-v8-vs-v9-setup-and-troubleshooting-0d1ed52fdead)
+### Featured Articles
 
-##  Submodule Repositories
+- [Firebase Cloud Messaging Backend (Node.js)](https://medium.com/@bhattacharyas161/firebase-cloud-messaging-backend-implementation-using-nodejs-and-expressjs-5e1525856a3f) - Complete FCM setup guide
+- [Firebase Cloud Messaging in React Native](https://medium.com/@bhattacharyas161/firebase-cloud-messaging-in-react-native-v8-vs-v9-setup-and-troubleshooting-0d1ed52fdead) - React Native FCM integration
 
-- **Backend Repository**: [ultimatehealth-backend](https://github.com/SB2318/ultimatehealth-backend)
-- **Admin Repository**:  [ultimatehealth-admin](https://github.com/SB2318/ultimatehealth-admin-app)
-- **Content Checker Repository**:  [content-checker](https://github.com/SB2318/VeriWise-Content-Check)
+### Additional Resources
 
-<hr>
+- [TEST_GUIDELINES.md](TEST_GUIDELINES.md) - Testing best practices
+- [Learn.md](Learn.md) - Learning resources and documentation
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Detailed contribution guide
 
-## 🛠️ Tech Stack
+---
 
-<p>
-  <img src="https://i.pinimg.com/originals/79/5e/bb/795ebb5f4a470cd7242136237f61fc53.png" alt="Java" width="70" height="50" />
-  <img src="https://e7.pngegg.com/pngimages/247/558/png-clipart-node-js-javascript-express-js-npm-react-github-angle-text.png" alt="Node.js" width="50" height="50" />
-  <img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/expressjs_logo_icon_169185.png" alt="Express" width="50" height="50" />
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/2300px-React-icon.svg.png" alt="React" width="50" height="50" />
-  <img src="https://staging.svgrepo.com/show/331488/mongodb.svg" alt="MongoDB" width="60" height="50" />
-</p>
+## 📊 Status & Metrics
 
-<hr>
+<div align="center">
 
-## 📌 Contents
+| Metric            | Status                                                                                                                                                                                                                                            |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **License**       | [![License](https://img.shields.io/github/license/SB2318/UltimateHealth?style=flat&logo=github&color=success)](LICENSE)                                                                                                                           |
+| **Frontend CI**   | [![Frontend CI](https://github.com/SB2318/UltimateHealth/actions/workflows/frontend-ci.yml/badge.svg?style=flat&logo=github&color=success)](https://github.com/SB2318/UltimateHealth/actions/workflows/frontend-ci.yml)                           |
+| **Expo Build**    | [![Expo Build](https://github.com/SB2318/UltimateHealth/actions/workflows/eas-build.yml/badge.svg?label=Expo%20Build&logo=expo&color=blue)](https://github.com/SB2318/UltimateHealth/actions/workflows/eas-build.yml)                             |
+| **Stars**         | [![Stars](https://img.shields.io/github/stars/SB2318/UltimateHealth?style=flat&logo=github&color=success)](https://github.com/SB2318/UltimateHealth/stargazers)                                                                                   |
+| **Forks**         | [![Forks](https://img.shields.io/github/forks/SB2318/UltimateHealth?style=flat&logo=github&color=success)](https://github.com/SB2318/UltimateHealth/network/members)                                                                              |
+| **Issues**        | [![Issues](https://img.shields.io/github/issues/SB2318/UltimateHealth?style=flat&logo=github)](https://github.com/SB2318/UltimateHealth/issues)                                                                                                   |
+| **Open PRs**      | [![Open PRs](https://img.shields.io/github/issues-pr/SB2318/UltimateHealth?style=flat&logo=github)](https://github.com/SB2318/UltimateHealth/pulls)                                                                                               |
+| **Closed PRs**    | [![Closed PRs](https://img.shields.io/github/issues-pr-closed/SB2318/UltimateHealth?style=flat&logo=github&color=critical)](https://github.com/SB2318/UltimateHealth/pulls?q=is%3Apr+is%3Aclosed)                                                 |
+| **Android Build** | [![Android Build](https://github.com/SB2318/UltimateHealth/actions/workflows/android-build-validation.yml/badge.svg?logo=android&label=Android%20Build)](https://github.com/SB2318/UltimateHealth/actions/workflows/android-build-validation.yml) |
+| **iOS Build**     | [![iOS Build](https://github.com/SB2318/UltimateHealth/actions/workflows/ios-build-validation.yml/badge.svg?logo=apple&label=iOS%20Build)](https://github.com/SB2318/UltimateHealth/actions/workflows/ios-build-validation.yml)                   |
+| **Last Commit**   | [![Last Commit](https://img.shields.io/github/last-commit/SB2318/UltimateHealth?style=flat&logo=github&color=informational)](https://github.com/SB2318/UltimateHealth/commits/main)                                                               |
+| **Repo Size**     | [![Repo Size](https://img.shields.io/github/repo-size/SB2318/UltimateHealth?style=flat&logo=github&color=success)](https://github.com/SB2318/UltimateHealth)                                                                                      |
 
-- [Key Features](#-key-features)
-- [Programs Participated](#-programs-participated-in)
-- [Getting Started](#getting-started)
-- [Contribution Guidelines](#-contribution-guidelines)
-- [Our Vision](#-our-vision)
-- [Contributors](#our-contributors-)
+</div>
 
-<hr>
+---
 
-## Getting Started ⚡
+## 💬 Support
 
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/SB2318/UltimateHealth.git
-   cd UltimateHealth
-   git checkout main
-   cd frontend
-2. Frontend (React Native + Expo)
+### Getting Help
 
-  ```bash
-   yarn install
-   npx expo prebuild --clean
-   npx expo run android (for android)
-   npx expo run ios (for Ios)
- ```
+If you encounter any issues or have questions:
 
-## 🤝 Contribution Guidelines
+1. **Search Existing Issues**: Check [GitHub Issues](https://github.com/SB2318/UltimateHealth/issues) first
+2. **Create a New Issue**: Provide detailed description, steps to reproduce, and expected behavior
+3. **Ask for Guidance**: Tag issues with `question` label for general discussions
+4. **Check Documentation**: Review README, CONTRIBUTING.md, and TEST_GUIDELINES.md
 
-We welcome contributions to both our **Mobile Application (Expo/React Native)** and **Web Application (React)**!
+### Feedback & Suggestions
 
-### 📱 Mobile Contributions (main branch)
-- Mobile code is located on the `main` branch.
-- Follow the standard guidelines in [CONTRIBUTING.md](CONTRIBUTING.md).
-- Create your feature branch off `main` and target your PRs to `main`.
+We value your feedback! Please:
 
-### 🌐 Web Contributions (web branch)
-- Web code is located on the dedicated `web` branch.
-- Switch to the web branch using `git checkout web`.
-- Read and follow the detailed [Web PR & Contribution Guidelines](https://github.com/SB2318/UltimateHealth/blob/web/PR_GUIDELINES.md) on the `web` branch.
-- **CRITICAL:** Ensure all web-related Pull Requests **target the `web` branch** and NOT `main`.
+- Open an issue with your suggestion
+- Describe the problem it solves
+- Provide use cases and examples
+- Engage in discussions respectfully
 
-## :zap:Our Vision:
+### Support Resources
 
-We are committed to delivering reliable health information and comprehensive resources that empower individuals to take charge of their well-being. Our mission is to foster a healthier society by providing trustworthy, accessible, and engaging content, enabling users to make informed decisions and lead healthier lives.
+- 📖 **Documentation**: Check Learn.md and related guides
+- 🐛 **Bug Reports**: Use the [Issues](https://github.com/SB2318/UltimateHealth/issues) section
+- 💡 **Feature Requests**: Create an issue with the `enhancement` label
+- 🤝 **Contribute**: Follow [CONTRIBUTING.md](CONTRIBUTING.md) guidelines
 
-##  Feedback and Support:
+---
 
-If you encounter any issues or have any feedback or suggestions, please open an issue in the Issues section of this repository. We appreciate your feedback and will respond as soon as possible.
+## 📜 License
 
-<hr>
-          
-<h2 align = "center">Our Previous Contributors ❤️</h2>
-<div align = "center">
- <h3>Thank you for contributing to our repository</h3>
- <h1> We appreciate your help in making UltimateHealth even better.😃</h1>
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+### License Summary
+
+- ✅ Commercial use allowed
+- ✅ Modification allowed
+- ✅ Distribution allowed
+- ✅ Private use allowed
+- ⚠️ Liability limited
+- ⚠️ Warranty not provided
+
+---
+
+## 👥 Our Contributors ❤️
+
+Thank you for contributing to UltimateHealth and helping us build a healthier community!
+
+<div align="center">
+ <h3>We appreciate your help in making UltimateHealth better! 😃</h3>
 
  <!-- CONTRIBUTORS-TABLE-START -->
  <table>
@@ -278,7 +721,6 @@ If you encounter any issues or have any feedback or suggestions, please open an 
      <td align="center"><a href="https://github.com/Abhigna-arsam"><img src="https://avatars.githubusercontent.com/u/125258286?v=4" width="120px;" alt=""/><br/><sub><b>Abhigna Arsam</b></sub></a></td>
       <td align="center"><a href="https://github.com/MaryamMohamedYahya"><img src="https://avatars.githubusercontent.com/u/147263523?v=4" width="120px;" alt=""/><br/><sub><b>MaryamMohamedYahya</b></sub></a></td>
 
-  
  </tr>
 
    <tr>
@@ -286,16 +728,15 @@ If you encounter any issues or have any feedback or suggestions, please open an 
     <td align="center"><a href="https://github.com/TonyStark-47"><img src="https://avatars.githubusercontent.com/u/73957207?v=4" width="120px;" alt=""/><br/><sub><b>Tony Stark</b></sub></a>
         </td>
    <td align="center"><a href="https://github.com/iamworrell"><img src="https://avatars.githubusercontent.com/u/99043769?v=4" width="120px;" alt=""/><br/><sub><b>Worrell Seville</b></sub></a>
-        </td>  
+        </td>
 
    <td align="center"><a href="https://github.com/Aditijainnn"><img src="https://avatars.githubusercontent.com/u/144632601?v=4" width="120px;" alt=""/><br/><sub><b>Aditi</b></sub></a>
-        </td>  
+        </td>
 
   <td align="center"><a href="https://github.com/ananyag309"><img src="https://avatars.githubusercontent.com/u/145869907?v=4" width="120px;" alt=""/><br/><sub><b>Ananya Gupta</b></sub></a>
         </td> 
    <td align="center"><a href="https://github.com/akshathere"><img src="https://avatars.githubusercontent.com/u/106247875?v=4" width="120px;" alt=""/><br/><sub><b>akshathere</b></sub></a>
-        </td> 
-
+        </td>
 
  </tr>
 
@@ -338,7 +779,7 @@ If you encounter any issues or have any feedback or suggestions, please open an 
    <td align="center"><a href="https://github.com/Maheshwari-Love"><img src="https://avatars.githubusercontent.com/u/142833275?v=4" width="120px;" alt=""/><br/><sub><b>Maheshwari Love</b></sub></a>
         </td> 
   <td align="center"><a href="https://github.com/Pujan-sarkar"><img src="https://avatars.githubusercontent.com/u/144250917?v=4" width="120px;" alt=""/><br/><sub><b>Pujan Sarkar</b></sub></a>
-        </td> 
+        </td>
 
    <td align="center"><a href="https://github.com/tristnaja"><img src="https://avatars.githubusercontent.com/u/121044617?v=4" width="120px;" alt=""/><br/><sub><b>Tristan Al Harrish Basori</b></sub></a>
         </td> 
@@ -390,16 +831,12 @@ If you encounter any issues or have any feedback or suggestions, please open an 
  <!-- CONTRIBUTORS-TABLE-END -->
 </div>
 
+---
 
-<hr>
-<div>
-  <h2><img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f64f_1f3fb/512.webp" width="35" height="35"> Support </h2>
+<div align="center">
+
+**⭐ Don't forget to leave a star for this project!**
+
+[Back to Top](#-ultimatehealth-healthguide)
+
 </div>
-
-<div>
-  Don't forget to leave a star<img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f31f/512.webp" width="35" height="30"> for this project!
-</div> <br>
-
-<a href="#top" style="position: fixed; bottom: 20px; right: 20px; background-color: black ; color: white; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; border-radius: 5px; font-family: Arial; font-size: 16px;">Go to Top</a>
-
-<!-- trigger action -->
