@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PageWrapper, Section } from "@/components/layout";
 
 export default function UserLoginPage() {
   const [email, setEmail] = useState("");
@@ -46,8 +47,8 @@ export default function UserLoginPage() {
   };
 
   return (
-    <div style={styles.body}>
-      <div style={styles.container}>
+    <Section as="div" style={styles.body}>
+      <PageWrapper as="div" style={styles.container}>
         <img
           src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
           style={styles.icon}
@@ -106,8 +107,8 @@ export default function UserLoginPage() {
             {msg}
           </div>
         )}
-      </div>
-    </div>
+      </PageWrapper>
+    </Section>
   );
 }
 

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { PageWrapper, Section } from "@/components/layout";
 
 /* ---------- types ---------- */
 interface Point { x: number; y: number }
@@ -222,8 +223,8 @@ function AdminAgreementContent() {
 
   /* ---------- render ---------- */
   return (
-    <div style={css.body}>
-      <div style={css.container}>
+    <Section as="div" style={css.body}>
+      <PageWrapper as="div" style={css.container}>
 
         {/* Header */}
         <div style={css.header}>
@@ -537,8 +538,8 @@ function AdminAgreementContent() {
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </PageWrapper>
+    </Section>
   );
 }
 
