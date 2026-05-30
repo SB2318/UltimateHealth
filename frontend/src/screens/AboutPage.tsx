@@ -366,6 +366,25 @@ const AboutScreen = ({navigation}: AboutScreenProps) => {
                   Participated in GSoC, GirlScript Summer of Code, and Social
                   Winter of Code. Growing with every contributor.
                 </Text>
+                <MenuButton
+                  icon="shield-checkmark-outline"
+                  title="Privacy Policy"
+                  iconColor={ProfessionalColors.success}
+                  onPress={() =>
+                    openLink(
+                      'https://www.freeprivacypolicy.com/live/0b40215e-e456-48cc-a549-424216da1e01',
+                    )
+                  }
+                  isDarkMode={isDarkMode}
+                />
+
+                <MenuButton
+                  icon="book-outline"
+                  title="Community Guidelines"
+                  iconColor="#a855f7"
+                  onPress={() => navigation.navigate('CommunityGuidelines')}
+                  isDarkMode={isDarkMode}
+                />
               </YStack>
             </GlassContainer>
           </YStack>
