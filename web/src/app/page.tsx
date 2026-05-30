@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import "./globals2.css";
+
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 const userScreenshots = [
