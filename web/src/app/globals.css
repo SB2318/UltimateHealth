@@ -1721,4 +1721,22 @@ i, svg {
   h3 {
     font-size: 1.3rem;
   }
+.scroll-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  background: #764ba2;
+  color:white;
+}
+
+.scroll-to-top:hover {
+  transform: translateY(-2px);
 }
