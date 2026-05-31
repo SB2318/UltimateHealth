@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 
 const userScreenshots = [
@@ -403,7 +404,7 @@ export default function Home() {
       {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
         <div className="container nav">
-          <a href="#" className="logo">
+          <Link href="/" className="logo">
             <div className="logo-icon">
               <Image
                 src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
@@ -412,38 +413,38 @@ export default function Home() {
               />
             </div>
             Ultimate-Health
-          </a>
+          </Link>
 
           <ul className="nav-links">
             <li>
-              <a
+              <Link
                 href="#features"
                 className={`nav-link-item${activeSection === "features" ? " active" : ""}`}
                 aria-current={activeSection === "features" ? "location" : undefined}
               >
                 <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Platform Highlights</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="#screenshots"
                 className={`nav-link-item${activeSection === "screenshots" ? " active" : ""}`}
                 aria-current={activeSection === "screenshots" ? "location" : undefined}
               >
                 <i className="fas fa-image nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Screenshots</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 href="#programs"
                 className={`nav-link-item${activeSection === "programs" ? " active" : ""}`}
                 aria-current={activeSection === "programs" ? "location" : undefined}
               >
                 <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Community Programs</span>
-              </a>
+              </Link>
             </li>
             <li>
               <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer" className="nav-link-item">
@@ -452,20 +453,20 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <a
+              <Link
                 href="#contact"
                 className={`nav-link-item${activeSection === "contact" ? " active" : ""}`}
                 aria-current={activeSection === "contact" ? "location" : undefined}
               >
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#downloads" className="nav-btn-sm">
+              <Link href="#downloads" className="nav-btn-sm">
                 <i className="fas fa-user" aria-hidden="true"></i>
                 <span>Login / Register</span>
-              </a>
+              </Link>
             </li>
           </ul>
 
@@ -475,12 +476,12 @@ export default function Home() {
         </div>
 
         <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
-          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
+          <Link href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</Link>
+          <Link href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</Link>
+          <Link href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</Link>
           <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-          <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
-          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+          <Link href="#contact" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
+          <Link href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</Link>
         </nav>
       </header>
 
@@ -931,11 +932,11 @@ export default function Home() {
           {/* Quick Links */}
           <div className="footer-links-col">
             <h3>Quick Links</h3>
-            <a href="#">Home</a>
-            <a href="#features">Features</a>
-            <a href="#programs">Programs</a>
-            <a href="#screenshots">Screenshots</a>
-            <a href="#contact">Contact</a>
+            <Link href="/">Home</Link>
+            <Link href="#features">Features</Link>
+            <Link href="#programs">Programs</Link>
+            <Link href="#screenshots">Screenshots</Link>
+            <Link href="#contact">Contact</Link>
           </div>
 
           {/* Support */}
@@ -953,8 +954,8 @@ export default function Home() {
           <div className="footer-bottom-inner">
             <p>© 2026 Ultimate Health. Built with passion for a healthier community.</p>
             <div className="footer-bottom-links">
-              <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>
-              <a href={TERMS_OF_USE_URL}>Terms of Use</a>
+              <Link href={PRIVACY_POLICY_URL}>Privacy Policy</Link>
+              <Link href={TERMS_OF_USE_URL}>Terms of Use</Link>
             </div>
           </div>
         </div>
