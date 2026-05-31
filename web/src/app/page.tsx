@@ -6,6 +6,7 @@ import "./globals.css";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { PageWrapper, Section } from "@/components/layout";
 import ScrollToTop from "../components/ScrollToTop";
+import { Skeleton } from "../components/ui";
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -90,6 +91,7 @@ export default function Home() {
   const [userSliderOpen, setUserSliderOpen] = useState(true);
   const [adminSliderOpen, setAdminSliderOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
+  const [featuresLoading, setFeaturesLoading] = useState(true);
 
   // ── DNA helix cursor ──
   const cursorGlowEnabled = useSyncExternalStore(
@@ -225,6 +227,12 @@ export default function Home() {
     document.querySelectorAll(".fade-in,.scroll-reveal,.scroll-reveal-left,.scroll-reveal-right,.scroll-reveal-scale")
       .forEach((el) => observer.observe(el));
     return () => observer.disconnect();
+  }, []);
+
+  // ── Features loading state (simulates async content fetch) ──
+  useEffect(() => {
+    const timer = setTimeout(() => setFeaturesLoading(false), 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   // Active section tracking via IntersectionObserver
@@ -673,17 +681,21 @@ export default function Home() {
           <h2>Be a Contributor: Core Community Features</h2>
           <p className="center">Join our community and make a difference in global health awareness</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 w-full">
-            {[
-              { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
-              { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
-              { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
-              { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
-            ].map((f, i) => (
-              <div className="feature-item w-full fade-in" key={i}>
-                <h3>{f.icon} {f.title}</h3>
-                <p>{f.desc}</p>
-              </div>
-            ))}
+            {featuresLoading ? (
+              <Skeleton count={4} variant="compact" />
+            ) : (
+              [
+                { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
+                { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
+                { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
+                { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
+              ].map((f, i) => (
+                <div className="feature-item w-full" key={i}>
+                  <h3>{f.icon} {f.title}</h3>
+                  <p>{f.desc}</p>
+                </div>
+              ))
+            )}
           </div>
         </PageWrapper>
       </Section>
