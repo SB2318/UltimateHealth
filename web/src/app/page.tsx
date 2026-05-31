@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import "./globals.css";
+
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import ScrollToTop from "../components/ScrollToTop";
 
