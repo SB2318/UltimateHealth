@@ -4,7 +4,8 @@ import crypto from "crypto";
 
 export default function proxy(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
-  const nonce = crypto.randomUUID();
+
+  const nonce = crypto.randomUUID().replace(/-/g, "");
 
   const csp = isDev
     ? [
@@ -20,8 +21,8 @@ export default function proxy(request: NextRequest) {
       ].join("; ")
     : [
         "default-src 'self'",
-        `script-src 'self' 'nonce-${nonce}'`,
-        "style-src 'self' https://cdnjs.cloudflare.com",
+        `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https:`,
+        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
         "font-src 'self' https://cdnjs.cloudflare.com",
         "img-src 'self' data: blob: https:",
         "connect-src 'self' https:",
@@ -38,6 +39,7 @@ export default function proxy(request: NextRequest) {
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+
   response.headers.set(
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=()"
