@@ -27,6 +27,7 @@ import {useGetProfile} from '../hooks/useGetProfile';
 import {useSendMessageToGemini} from '../hooks/useSendMessageToGemini';
 import {useLoadAIConversations} from '../hooks/useLoadAIChats';
 import Snackbar from 'react-native-snackbar';
+import { trackChatbot } from '../helper/TopicTracker';
 
 // interface ChatbotResponse {
 //   id: string;
@@ -133,6 +134,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       });
       return;
     }
+    trackChatbot(messages[0]?.text ?? '');
     sendMessageToAI(messages[0]?.text ?? 'AI in health within 100 words', {
       onSuccess: (responseData: Message) => {
         safeSetMessages(previousMessages =>

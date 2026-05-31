@@ -48,6 +48,7 @@ import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { trackArticle } from '../../helper/TopicTracker';
 
 const CHUNK_SIZE = 120;
 
@@ -159,6 +160,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     refetch();
   }, [articleId, refetch]);
 
+  useEffect(() => {
+    if (article) {
+      trackArticle('VIEW_ARTICLE', article);
+    }
+  }, [article]);
+
   const noDataHtml = '<p>No Data found</p>';
 
   useEffect(() => {
@@ -204,18 +211,21 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     if (article) {
       likeMutation(undefined, {
         onSuccess: (data: {article: ArticleData; likeStatus: boolean}) => {
-          if (data?.likeStatus && socket) {
-            socket.emit('notification', {
-              type: 'likePost',
-              userId: data?.article?.authorId,
-              articleId: data?.article?._id,
-              podcastId: null,
-              articleRecordId: data?.article?.pb_recordId,
-              title: user
-                ? `${user?.user_handle} liked your post`
-                : 'Someone liked your post',
-              message: data?.article?.title,
-            });
+          if (data?.likeStatus) {
+            trackArticle('LIKE_ARTICLE', article);
+            if (socket) {
+              socket.emit('notification', {
+                type: 'likePost',
+                userId: data?.article?.authorId,
+                articleId: data?.article?._id,
+                podcastId: null,
+                articleRecordId: data?.article?.pb_recordId,
+                title: user
+                  ? `${user?.user_handle} liked your post`
+                  : 'Someone liked your post',
+                message: data?.article?.title,
+              });
+            }
           }
           refetch();
         },
@@ -282,6 +292,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     if (article) {
       saveMutation(undefined, {
         onSuccess: () => {
+          if (!article.savedUsers?.includes(user_id)) {
+            trackArticle('SAVE_ARTICLE', article);
+          }
           refetch();
           Snackbar.show({
             text: article.savedUsers?.includes(user_id)

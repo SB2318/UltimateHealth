@@ -52,6 +52,7 @@ import {
   NoArticleState,
   BaseEmptyState,
 } from '../components/EmptyStates';
+import { trackSearch } from '../helper/TopicTracker';
 
 // Loading State Component with Animation
 const LoadingState = () => {
@@ -457,6 +458,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       dispatch(setSearchedArticles({searchedArticles: []}));
       dispatch(setSearchMode({searchMode: false}));
     } else {
+      trackSearch(textInput);
       dispatch(setSearchMode({searchMode: true}));
       const matchesSearch = articleData?.articles.filter(article => {
         const matchesTitle = article.title && typeof article.title === 'string'

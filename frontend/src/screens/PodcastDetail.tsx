@@ -32,6 +32,7 @@ import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
 import LottieView from 'lottie-react-native';
 import {useGetSinglePodcastDetails} from '../hooks/useGetSinglePodcastDetails';
 import {useLikePodcast} from '../hooks/useLikePodcast';
+import { trackPodcast } from '../helper/TopicTracker';
 
 const isAllowedUrl = (urlStr?: string | null): boolean => {
   if (!urlStr) return false;
@@ -120,6 +121,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
     if(podcast){
       setLike(podcast.likedUsers.includes(user_id));
       setLikeCount(podcast.likedUsers.length);
+      trackPodcast('VIEW_PODCAST', podcast);
     }
   }, [podcast, user_id])
 
@@ -365,9 +367,9 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
                       }
                       likePodcast(trackId, {
                         onSuccess: data => {
-
                           console.log('Like podcast res', data);
                           if (data?.likeStatus && podcast) {
+                            trackPodcast('LIKE_PODCAST', podcast);
                             if (socket) {
                               socket.emit('notification', {
                                 type: 'likePost',

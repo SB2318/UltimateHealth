@@ -65,6 +65,7 @@ export type RootStackParamList = {
     articleRecordId: string;
   };
   OverviewScreen: undefined;
+  HealthTrackingScreen: undefined;
   GuestPlaceholderScreen: {
     title?: string;
     description?: string;
@@ -314,6 +315,10 @@ export type OverviewScreenProps = StackScreenProps<
   RootStackParamList,
   'OverviewScreen'
 >;
+export type HealthTrackingScreenProp = StackScreenProps<
+  RootStackParamList,
+  'HealthTrackingScreen'
+>;
 // export type ConversationScreenProps = StackScreenProps<
 //   RootStackParamList,
 //   'ConversationScreen'
@@ -475,6 +480,7 @@ export type ProfileHeaderProps = {
   isFollowing: boolean | undefined;
   onFollowClick: () => void;
   onOverviewClick: () => void;
+  onInterestDashboardClick: () => void;
 };
 
 export type HomeScreenFilterModalProps = {

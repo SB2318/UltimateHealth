@@ -51,6 +51,7 @@ import ContributorPage from '../screens/ContributorPage';
 import OpenSourcePage from '../screens/OpenSourcePage';
 import NotificationPreferencesScreen from '../screens/NotificationPreferencesScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import HealthTrackingScreen from '../screens/HealthTrackingScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -707,6 +708,14 @@ const StackNavigation = () => {
             </TouchableOpacity>
           ),
         })}
+      />
+
+      <Stack.Screen
+        name="HealthTrackingScreen"
+        component={HealthTrackingScreen}
+        options={{
+          headerShown: false,
+        }}
       />
 
       {/* <Stack.Screen

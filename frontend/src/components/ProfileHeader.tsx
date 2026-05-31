@@ -45,6 +45,7 @@ const ProfileHeader = ({
   isFollowing,
   onFollowClick,
   onOverviewClick,
+  onInterestDashboardClick,
 }: ProfileHeaderProps) => {
   const {isConnected} = useSelector((state: any) => state.network);
   const colorScheme = useColorScheme();
@@ -237,6 +238,21 @@ const ProfileHeader = ({
                  <MaterialCommunityIcon name="view-dashboard" size={22} color={PRIMARY_COLOR} />
               </View>
               <Text style={[styles.listButtonText, {color: themeColors.text}]}>Your Workspace</Text>
+              <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
+            </AccessibleTouchable>
+
+            <AccessibleTouchable 
+              activeOpacity={0.7}
+              onPress={onInterestDashboardClick}
+              
+              accessibilityLabel="Health interest tracking dashboard"
+              accessibilityHint="Opens health interest tracking dashboard"
+              style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
+            >
+              <View style={[styles.listButtonIconBg, { backgroundColor: themeColors.iconBackground }]}>
+                 <MaterialCommunityIcon name="heart-pulse" size={22} color="hsl(220, 90%, 56%)" />
+              </View>
+              <Text style={[styles.listButtonText, {color: themeColors.text}]}>Health Interest Dashboard</Text>
               <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
             </AccessibleTouchable>
 

@@ -200,6 +200,9 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
             }
           }
         }}
+        onInterestDashboardClick={() => {
+          navigation.navigate('HealthTrackingScreen');
+        }}
       />
     );
   };
