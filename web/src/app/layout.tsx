@@ -17,12 +17,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Ultimate Health - Empowering Wellness Through Global Community",
+  title: "UltimateHealth - Empowering Wellness Through Global Community",
   description:
-    "Ultimate Health is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.",
+    "UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.",
   keywords: "health, wellness, community, articles, podcasts, multilingual",
   openGraph: {
-    title: "Ultimate Health",
+    title: "UltimateHealth",
     description: "Empowering Wellness Through Global Community",
     type: "website",
   },

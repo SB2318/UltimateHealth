@@ -18,6 +18,8 @@
     "date-fns": "^4.4.0",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
+    "framer-motion": "^12.40.0",
+    "lucide-react": "^1.17.0",
     "next": "16.2.6",
     "next-themes": "^0.4.6",
     "radix-ui": "^1.4.3",
