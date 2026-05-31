@@ -34,7 +34,8 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
   const [role, setRole] = useState('');
   const [verifyBtntext, setVerifyBtntxt] = useState('Request Verification');
   const [verifiedModalVisible, setVerifiedModalVisible] = useState(false);
-  // const [isHandleAvailable, setIsHandleAvailable] = useState(false);
+  const isHandleAvailable = checkhandle?.status === false;
+  const isHandleTaken = checkhandle?.status === true;
   const [token, setToken] = useState('');
   const [isFocus, setIsFocus] = useState(false);
   const [isSecureEntry, setIsSecureEntry] = useState(true);
@@ -151,9 +152,6 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
     }
   };
   const handleSubmit = () => {
-    // if (!isHandleAvailable) {
-    //   return;
-    // }
     if (!name || !username || !email || !password || !role) {
       Alert.alert('Please fill in all fields');
       return;
@@ -162,6 +160,9 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
       return;
     } else if (password.length < 6) {
       Alert.alert('Password must be at least of 6 length');
+      return;
+    } else if (isHandleTaken) {
+      Alert.alert('User handle is already in use. Please choose a different handle.');
       return;
     }
 
@@ -384,15 +385,20 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
             </YStack>
           </XStack>
 
-          {/* Handle Error */}
-          {checkhandle?.status === true && (
+          {/* Handle availability feedback */}
+          {isLoading && (
+            <Text color="#888" fontSize={14}>
+              Checking...
+            </Text>
+          )}
+          {isHandleTaken && (
             <Text color="red" fontSize={14}>
               User handle is already in use.
             </Text>
           )}
-          {isLoading && (
+          {isHandleAvailable && (
             <Text color="green" fontSize={14}>
-              Checking...
+              User handle is available.
             </Text>
           )}
           {/* User Handle */}
