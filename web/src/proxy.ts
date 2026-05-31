@@ -1,63 +1,43 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import crypto from "crypto";
 
-export function proxy(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-
+export default function proxy(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
+  const nonce = crypto.randomUUID();
 
-  const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'nonce-${nonce}' ${
-      isDev ? "'unsafe-eval'" : "'strict-dynamic'"
-    };
-    style-src 'self' ${
-      isDev ? "'unsafe-inline'" : `'nonce-${nonce}'`
-    };
-    img-src 'self' blob: data: https:;
-    font-src 'self' data:;
-    connect-src 'self' https: ws: wss:;
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-  `;
+  const csp = isDev
+    ? [
+        "default-src 'self'",
+        "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
+        "font-src 'self' https://cdnjs.cloudflare.com",
+        "img-src 'self' data: blob: https:",
+        "connect-src 'self' https:",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "frame-ancestors 'none'",
+      ].join("; ")
+    : [
+        "default-src 'self'",
+        `script-src 'self' 'nonce-${nonce}'`,
+        "style-src 'self' https://cdnjs.cloudflare.com",
+        "font-src 'self' https://cdnjs.cloudflare.com",
+        "img-src 'self' data: blob: https:",
+        "connect-src 'self' https:",
+        "object-src 'none'",
+        "base-uri 'self'",
+        "frame-ancestors 'none'",
+      ].join("; ");
 
-  const contentSecurityPolicyHeaderValue = cspHeader
-    .replace(/\s{2,}/g, " ")
-    .trim();
+  const response = NextResponse.next();
 
-  const requestHeaders = new Headers(request.headers);
-
-  requestHeaders.set("x-nonce", nonce);
-
-  requestHeaders.set(
-    "Content-Security-Policy",
-    contentSecurityPolicyHeaderValue
-  );
-
-  const response = NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
-
-  response.headers.set(
-    "Content-Security-Policy",
-    contentSecurityPolicyHeaderValue
-  );
+  response.headers.set("Content-Security-Policy", csp);
+  response.headers.set("x-nonce", nonce);
 
   response.headers.set("X-Frame-Options", "DENY");
-
-  response.headers.set(
-    "X-Content-Type-Options",
-    "nosniff"
-  );
-
-  response.headers.set(
-    "Referrer-Policy",
-    "strict-origin-when-cross-origin"
-  );
-
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set(
     "Permissions-Policy",
     "camera=(), microphone=(), geolocation=()"
@@ -65,37 +45,15 @@ export function proxy(request: NextRequest) {
 
   response.headers.set(
     "Strict-Transport-Security",
-    "max-age=63072000; includeSubDomains; preload"
+    "max-age=63072000; includeSubDomains"
   );
 
-  response.headers.set(
-    "Cross-Origin-Opener-Policy",
-    "same-origin"
-  );
-
-  response.headers.set(
-    "Cross-Origin-Resource-Policy",
-    "same-origin"
-  );
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  response.headers.set("Cross-Origin-Resource-Policy", "same-origin");
 
   return response;
 }
 
 export const config = {
-  matcher: [
-    {
-      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
-      missing: [
-        {
-          type: "header",
-          key: "next-router-prefetch",
-        },
-        {
-          type: "header",
-          key: "purpose",
-          value: "prefetch",
-        },
-      ],
-    },
-  ],
+  matcher: "/((?!api|_next/static|_next/image|favicon.ico).*)",
 };
