@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { PageWrapper, Section } from "@/components/layout";
+import ScrollToTop from "../components/ScrollToTop";
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -17,7 +18,7 @@ const userScreenshots = [
   { src: "/assets/podcast-recording.jpeg", caption: "Podcast Recorder" },
   { src: "/assets/podcast-upload.jpeg", caption: "Podcast Upload" },
   { src: "/assets/notificaion-screen.jpeg", caption: "Notification" },
-  { src: "/assets/ultimate-health-about.jpeg", caption: "App Info" },
+  { src: "/assets/UltimateHealth-about.jpeg", caption: "App Info" },
   { src: "/assets/terms_cond_page.jpeg", caption: "Terms And Condition" },
 ];
 
@@ -408,7 +409,7 @@ export default function Home() {
             <div className="logo-icon">
               <Image
                 src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
-                alt="Ultimate Health Logo" width={48} height={48}
+                alt="UltimateHealth Logo" width={48} height={48}
                 priority
               />
             </div>
@@ -453,11 +454,7 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <a
-                href="#contact"
-                className={`nav-link-item${activeSection === "contact" ? " active" : ""}`}
-                aria-current={activeSection === "contact" ? "location" : undefined}
-              >
+              <a href="/contribute" className="nav-link-item">
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
               </a>
@@ -480,7 +477,7 @@ export default function Home() {
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
           <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-          <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
+          <a href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
       </header>
@@ -489,16 +486,16 @@ export default function Home() {
       <Section className="hero">
         <PageWrapper className="hero-content scroll-reveal">
           <h1>Empowering Wellness Through Global Community</h1>
-          <p>Ultimate Health is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
-        </PageWrapper>
-      </Section>
+          <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
+        </div>
+      </section>
 
       {/* Downloads Section */}
-      <Section id="downloads" className="download-section">
-        <PageWrapper>
-          <h2>Get Ultimate Health</h2>
+      <section id="downloads" className="download-section">
+        <div className="container">
+          <h2>Get UltimateHealth</h2>
           <p className="center">
-            Access our platform on your preferred device. Ultimate Health is available now for Android and coming soon to iOS via TestFlight.
+            Access our platform on your preferred device. UltimateHealth is available now for Android and coming soon to iOS via TestFlight.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
             {/* Android Card */}
@@ -513,7 +510,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="platform-desc">
-                Install Ultimate Health on your Android device to publish articles, listen to podcasts, and manage content.
+                Install UltimateHealth on your Android device to publish articles, listen to podcasts, and manage content.
               </p>
               <div className="store-buttons">
                 <a
@@ -522,7 +519,7 @@ export default function Home() {
                   rel="noreferrer"
                   className="store-btn"
                   id="playstore-btn"
-                  aria-label="Download Ultimate Health for Android on Google Play Store"
+                  aria-label="Download UltimateHealth for Android on Google Play Store"
                 >
                   <i className="fab fa-google-play"></i> UltimateHealth
                 </a>
@@ -558,7 +555,7 @@ export default function Home() {
                   className="store-btn store-btn-secondary"
                   id="ios-uh-btn"
                   onClick={() => setAppleModal(true)}
-                  aria-label="Join iOS TestFlight beta for Ultimate Health"
+                  aria-label="Join iOS TestFlight beta for UltimateHealth"
                 >
                   <i className="fab fa-apple"></i> UltimateHealth (Beta)
                 </button>
@@ -580,7 +577,7 @@ export default function Home() {
       <Section id="screenshots">
         <PageWrapper>
           <h2>App Screenshots</h2>
-          <p className="center">Take a look inside the Ultimate Health experience</p>
+          <p className="center">Take a look inside the UltimateHealth experience</p>
 
           <div className="screenshot-details">
             <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
@@ -754,7 +751,7 @@ export default function Home() {
           <div className="contact-dark-card">
             {/* Left panel */}
             <div className="contact-dark-left">
-              <div className="contact-left-badge">✦ Ultimate Health</div>
+              <div className="contact-left-badge">✦ UltimateHealth</div>
               <h3 className="contact-dark-title">Let&apos;s Talk<br />Health Together</h3>
               <p className="contact-dark-subtitle">
                 Questions about our platform? We&apos;re here to help. Reach out and we&apos;ll respond promptly.
@@ -876,7 +873,7 @@ export default function Home() {
         <PageWrapper className="footer-grid">
           {/* Brand column */}
           <div className="footer-brand">
-            <h2>Ultimate Health</h2>
+            <h2>UltimateHealth</h2>
             <p className="footer-note">Open-source health and wellness for everyone.</p>
 
             {/* Newsletter — wired to API */}
@@ -897,7 +894,7 @@ export default function Home() {
                       onChange={(e) => setNewsletterEmail(e.target.value)}
                       required
                     />
-                    <button type="submit" className="footer-subscribe-btn" aria-label="Subscribe to Ultimate Health newsletter" disabled={newsletterStatus === "sending"}>
+                    <button type="submit" className="footer-subscribe-btn" aria-label="Subscribe to UltimateHealth newsletter" disabled={newsletterStatus === "sending"}>
                       {newsletterStatus === "sending" ? <i className="fas fa-spinner fa-spin"></i> : "Subscribe"}
                     </button>
                   </div>
@@ -937,6 +934,7 @@ export default function Home() {
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
+            <a href="/contribute">Join Us &amp; Contribute</a>
           </div>
 
           {/* Support */}
@@ -952,7 +950,7 @@ export default function Home() {
         {/* Bottom bar */}
         <div className="footer-bottom">
           <div className="footer-bottom-inner">
-            <p>© 2026 Ultimate Health. Built with passion for a healthier community.</p>
+            <p>© 2026 UltimateHealth. Built with passion for a healthier community.</p>
             <div className="footer-bottom-links">
               <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>
               <a href={TERMS_OF_USE_URL}>Terms of Use</a>
@@ -1034,6 +1032,7 @@ export default function Home() {
           </div>
         </div>
       )}
+      <ScrollToTop />
     </>
   );
 }

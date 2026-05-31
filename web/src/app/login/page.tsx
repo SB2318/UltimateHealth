@@ -52,7 +52,7 @@ export default function UserLoginPage() {
         <img
           src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
           style={styles.icon}
-          alt="Ultimate Health Logo"
+          alt="UltimateHealth Logo"
         />
         <h2 style={styles.heading}>Login Required</h2>
         <p style={styles.subtext}>Please log in to continue to account deletion.</p>
