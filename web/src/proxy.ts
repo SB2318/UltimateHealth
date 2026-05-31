@@ -14,21 +14,22 @@ export default function proxy(request: NextRequest) {
         "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
         "font-src 'self' https://cdnjs.cloudflare.com",
         "img-src 'self' data: blob: https:",
-        "connect-src 'self' https:",
+        "connect-src 'self' http: https: ws:",
         "object-src 'none'",
         "base-uri 'self'",
         "frame-ancestors 'none'",
       ].join("; ")
     : [
         "default-src 'self'",
-        `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https:`,
-        "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
+        `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+        "style-src 'self' https://cdnjs.cloudflare.com",
         "font-src 'self' https://cdnjs.cloudflare.com",
         "img-src 'self' data: blob: https:",
         "connect-src 'self' https:",
         "object-src 'none'",
         "base-uri 'self'",
         "frame-ancestors 'none'",
+        "upgrade-insecure-requests",
       ].join("; ");
 
   const response = NextResponse.next();
