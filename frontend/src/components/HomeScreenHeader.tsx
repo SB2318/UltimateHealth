@@ -44,7 +44,7 @@ import { StatusBar } from 'expo-status-bar';
               <Ionicons name="refresh" size={20} color={'#FF5252'} />
             </Button>
           ) : null}
-          <Button unstyled onPress={handlePresentModalPress}>
+          <Button unstyled onPress={handlePresentModalPress} aria-label="Open navigation menu">
             <AntDesign name="menu-fold" size={20} color={'#191C1B'} />
           </Button>
         </XStack>
