@@ -135,7 +135,6 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: "90vw",
   },
   icon: {
-    width: 55,
     marginBottom: 15,
     borderRadius: 12,
   },
