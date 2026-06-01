@@ -1,3 +1,4 @@
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
 // DO NOT remove the globals2.css import, it contains important global styles for the application
@@ -30,8 +31,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
+}) {
+  return (<html lang="en" className={inter.variable}>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>{children}</body>
+</html>
 }>) {
   return (
     <html lang="en" className={cn("font-sans", dmSans.variable, interHeading.variable)}>
