@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, useInView, AnimatePresence, type Variants } from "framer-motion";
@@ -462,7 +462,7 @@ function Header() {
   return (
     <header className={`header${scrolled ? " scrolled" : ""}`}>
       <div className="container nav">
-        <a href="/" className="logo">
+        <Link href="/" className="logo">
           <div className="logo-icon">
             <Image
               src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
@@ -473,26 +473,26 @@ function Header() {
             />
           </div>
           Ultimate-Health
-        </a>
+        </Link>
 
         <ul className="nav-links">
           <li>
-            <a href="/" className="nav-link-item">
+            <Link href="/" className="nav-link-item">
               <i className="fas fa-home nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Home</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/#features" className="nav-link-item">
+            <Link href="/#features" className="nav-link-item">
               <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Platform Highlights</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/#programs" className="nav-link-item">
+            <Link href="/#programs" className="nav-link-item">
               <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Community Programs</span>
-            </a>
+            </Link>
           </li>
           <li>
             <a
@@ -506,16 +506,16 @@ function Header() {
             </a>
           </li>
           <li>
-            <a href="/contribute" className="nav-link-item active">
+            <Link href="/contribute" className="nav-link-item active">
               <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Join Us</span>
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="/#downloads" className="nav-btn-sm">
+            <Link href="/#downloads" className="nav-btn-sm">
               <i className="fas fa-user" aria-hidden="true"></i>
               <span>Login / Register</span>
-            </a>
+            </Link>
           </li>
         </ul>
 
@@ -529,12 +529,12 @@ function Header() {
       </div>
 
       <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-        <a href="/" onClick={() => setMobileMenuOpen(false)}>Home</a>
-        <a href="/#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
-        <a href="/#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
+        <Link href="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+        <Link href="/#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</Link>
+        <Link href="/#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</Link>
         <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-        <a href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
-        <a href="/#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+        <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
+        <Link href="/#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</Link>
       </nav>
     </header>
   );
@@ -577,11 +577,11 @@ function Footer() {
 
         <div className="footer-links-col">
           <h3>Quick Links</h3>
-          <a href="/">Home</a>
-          <a href="/#features">Features</a>
-          <a href="/#programs">Programs</a>
-          <a href="/#screenshots">Screenshots</a>
-          <a href="/#contact">Contact</a>
+          <Link href="/">Home</Link>
+          <Link href="/#features">Features</Link>
+          <Link href="/#programs">Programs</Link>
+          <Link href="/#screenshots">Screenshots</Link>
+          <Link href="/#contact">Contact</Link>
         </div>
 
         <div className="footer-links-col">

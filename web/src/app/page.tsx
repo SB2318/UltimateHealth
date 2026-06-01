@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import "./globals.css";
-
+import Link from "next/link";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import ScrollToTop from "../components/ScrollToTop";
 
@@ -455,10 +455,10 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <a href="/contribute" className="nav-link-item">
+              <Link href="/contribute" className="nav-link-item">
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
-              </a>
+              </Link>
             </li>
             <li>
               <a href="#downloads" className="nav-btn-sm">
@@ -478,7 +478,7 @@ export default function Home() {
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
           <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-          <a href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
+          <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
       </header>
@@ -935,7 +935,7 @@ export default function Home() {
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
-            <a href="/contribute">Join Us &amp; Contribute</a>
+            <Link href="/contribute">Join Us &amp; Contribute</Link>
           </div>
 
           {/* Support */}
