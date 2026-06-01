@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -48,10 +49,13 @@ export default function AdminLoginPage() {
   return (
     <div style={styles.body}>
       <div style={styles.container}>
-        <img
+        <Image
           src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
           style={styles.icon}
-          alt="UltimateHealth Logo"
+          width={55}
+          height={55}
+          alt="Ultimate Health Logo"
+          priority
         />
         <h2 style={styles.heading}>Admin Login Required</h2>
         <p style={styles.subtext}>Please log in to continue to account deletion.</p>
@@ -131,7 +135,6 @@ const styles: Record<string, React.CSSProperties> = {
     maxWidth: "90vw",
   },
   icon: {
-    width: 55,
     marginBottom: 15,
     borderRadius: 12,
   },
