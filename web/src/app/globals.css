@@ -2773,3 +2773,20 @@ footer {
     padding: 20px;
   }
 }
+.uh-btn-primary:focus-visible,
+.uh-btn-secondary:focus-visible,
+.uh-store-btn:focus-visible {
+  outline: 2px solid var(--uh-accent-light);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .uh-hero-orb,
+  .uh-phone-mockup,
+  .uh-float-icon,
+  .uh-download-card,
+  .uh-badge-dot,
+  .uh-badge-pulse {
+    animation: none !important;
+    transition: none !important;
+  }
+}
