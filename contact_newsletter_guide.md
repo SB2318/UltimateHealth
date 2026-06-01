@@ -124,7 +124,7 @@ router.post("/newsletter/subscribe", async (req, res) => {
   // await transporter.sendMail({
   //   from: process.env.MAIL_USER,
   //   to: email,
-  //   subject: "Welcome to Ultimate Health Newsletter!",
+  //   subject: "Welcome to UltimateHealth Newsletter!",
   //   html: "<p>Thanks for subscribing!</p>",
   // });
 

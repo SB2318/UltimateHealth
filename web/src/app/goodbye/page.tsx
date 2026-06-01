@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Goodbye • Your Account Has Been Deleted | Ultimate Health",
-  description: "Your Ultimate Health account has been successfully deleted.",
+  title: "Goodbye • Your Account Has Been Deleted | UltimateHealth",
+  description: "Your UltimateHealth account has been successfully deleted.",
 };
 
 export default function GoodbyePage() {
