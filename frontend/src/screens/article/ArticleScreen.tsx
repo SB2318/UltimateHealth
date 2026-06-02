@@ -7,6 +7,7 @@ import {
   View,
   ScrollView,
   Alert,
+  Animated,
   Dimensions,
   Share,
   useColorScheme,
@@ -63,6 +64,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [playerVisible, setPlayerVisible] = useState(false);
   const chunkIndexRef = useRef(0);
   const wordsRef = useRef<string[]>([]);
+  const readProgressAnim = useRef(new Animated.Value(0)).current;
+  const [progressWidth, setProgressWidth] = useState(0);
 
   const {mutate: followMutation, isPending: followMutationPending} =
     useUpdateFollowStatusByArticle();
@@ -149,6 +152,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       setIsPlaying(false);
       setIsPaused(false);
       setPlayerVisible(false);
+      readProgressAnim.setValue(0);
+      setProgressWidth(0);
       Tts.stop();
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-error');
@@ -622,12 +627,43 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         )}
       </View>
 
+      {/* Reading Progress Bar */}
+      <View
+        style={styles.progressBarTrack}
+        onLayout={e => setProgressWidth(e.nativeEvent.layout.width)}>
+        <Animated.View
+          style={[
+            styles.progressBarFill,
+            {
+              width: readProgressAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, progressWidth],
+                extrapolate: 'clamp',
+              }),
+            },
+          ]}
+          accessibilityRole="progressbar"
+          accessibilityLabel="Article reading progress"
+        />
+      </View>
+
       <ScrollView
         style={styles.scrollView}
+        scrollEventThrottle={16}
         onScroll={e => {
-          let windowHeight = Dimensions.get('window').height,
-            height = e.nativeEvent.contentSize.height,
-            offset = e.nativeEvent.contentOffset.y;
+          const {contentSize, contentOffset, layoutMeasurement} = e.nativeEvent;
+          const scrollable = contentSize.height - layoutMeasurement.height;
+          if (scrollable > 0) {
+            const progress = contentOffset.y / scrollable;
+            Animated.timing(readProgressAnim, {
+              toValue: Math.min(1, Math.max(0, progress)),
+              duration: 80,
+              useNativeDriver: false,
+            }).start();
+          }
+          const windowHeight = layoutMeasurement.height,
+            height = contentSize.height,
+            offset = contentOffset.y;
           if (windowHeight + offset >= height) {
             if (
               article &&
@@ -1122,9 +1158,17 @@ const styles = StyleSheet.create({
     position: 'relative',
     backgroundColor: '#ffffff',
   },
+  progressBarTrack: {
+    width: '100%',
+    height: 3,
+    backgroundColor: '#E0E0E0',
+  },
+  progressBarFill: {
+    height: 3,
+    backgroundColor: PRIMARY_COLOR,
+  },
   scrollView: {
     flex: 0,
-    // marginTop: hp(4),
     borderBottomEndRadius: hp(2),
     backgroundColor: '#ffffff',
     position: 'relative',
