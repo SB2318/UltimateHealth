@@ -12,6 +12,60 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
       type: 'sourceFile',
     };
   }
+  if (platform === 'web' && moduleName === 'react-native-fs') {
+    return {
+      filePath: path.resolve(__dirname, 'mocks/react-native-fs.js'),
+      type: 'sourceFile',
+    };
+  }
+  if (platform === 'web' && moduleName === 'react-native-share') {
+    return {
+      filePath: path.resolve(__dirname, 'mocks/react-native-share.js'),
+      type: 'sourceFile',
+    };
+  }
+  if (platform === 'web' && moduleName === '@react-native-firebase/app') {
+    return {
+      filePath: path.resolve(__dirname, 'mocks/react-native-firebase-app.js'),
+      type: 'sourceFile',
+    };
+  }
+  if (platform === 'web' && moduleName === '@react-native-firebase/messaging') {
+    return {
+      filePath: path.resolve(__dirname, 'mocks/react-native-firebase-messaging.js'),
+      type: 'sourceFile',
+    };
+  }
+  if (platform === 'web' && moduleName === 'react-native-snackbar') {
+    return {
+      filePath: path.resolve(__dirname, 'mocks/react-native-snackbar.js'),
+      type: 'sourceFile',
+    };
+  }
+  if (platform === 'web' && moduleName === 'react-native-version-check') {
+    return {
+      filePath: path.resolve(__dirname, 'mocks/react-native-version-check.js'),
+      type: 'sourceFile',
+    };
+  }
+  if (platform === 'web' && moduleName === 'react-native-tts') {
+    return {
+      filePath: path.resolve(__dirname, 'mocks/react-native-tts.js'),
+      type: 'sourceFile',
+    };
+  }
+  if (platform === 'web' && moduleName === 'react-native-image-picker') {
+    return {
+      filePath: path.resolve(__dirname, 'mocks/react-native-image-picker.js'),
+      type: 'sourceFile',
+    };
+  }
+  if (platform === 'web' && moduleName === 'react-native-html-to-pdf') {
+    return {
+      filePath: path.resolve(__dirname, 'mocks/react-native-html-to-pdf.js'),
+      type: 'sourceFile',
+    };
+  }
   return context.resolveRequest(context, moduleName, platform);
 };
 
@@ -19,4 +73,4 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
 
 config.resolver.unstable_enablePackageExports = false;
 
-module.exports = config;
+module.exports = config;

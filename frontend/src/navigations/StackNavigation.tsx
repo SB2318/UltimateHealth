@@ -51,6 +51,7 @@ import ContributorPage from '../screens/ContributorPage';
 import OpenSourcePage from '../screens/OpenSourcePage';
 import NotificationPreferencesScreen from '../screens/NotificationPreferencesScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import HealthcareHeroesScreen from '../screens/HealthcareHeroesScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -412,9 +413,15 @@ const StackNavigation = () => {
         options={{headerShown: false}}
       />
 
-        <Stack.Screen
+      <Stack.Screen
         name="OpenSourcePage"
         component={OpenSourcePage}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="HealthcareHeroes"
+        component={HealthcareHeroesScreen}
         options={{headerShown: false}}
       />
 

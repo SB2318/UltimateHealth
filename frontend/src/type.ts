@@ -131,6 +131,7 @@ export type RootStackParamList = {
   CommunityGuidelines: undefined;
   ContributorPage: undefined;
   OpenSourcePage: undefined;
+  HealthcareHeroes: undefined;
   //ChatbotScreen: undefined;
 };
 
@@ -336,6 +337,7 @@ export type AboutScreenProps = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, 'About'>,
   | StackScreenProps<RootStackParamList, 'Privacy'>
   | StackScreenProps<RootStackParamList, 'CommunityGuidelines'>
+  | StackScreenProps<RootStackParamList, 'HealthcareHeroes'>
 >;
 
 export type PodcastRecorderScreenProps = StackScreenProps<
@@ -356,6 +358,11 @@ export type ContributorScreenProps = StackScreenProps<
 export type OpenSourceScreenProps = StackScreenProps<
   RootStackParamList,
   'OpenSourcePage'
+>;
+
+export type HealthcareHeroesScreenProps = StackScreenProps<
+  RootStackParamList,
+  'HealthcareHeroes'
 >;
 
 export type CommunityGuidelinesScreenProps = StackScreenProps<

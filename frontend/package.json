@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
+    "start:clear": "expo start -c",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -93,6 +94,7 @@
     "tamagui": "^1.135.6"
   },
   "devDependencies": {
+    "@react-native-community/cli": "^20.1.3",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^29.2.1",

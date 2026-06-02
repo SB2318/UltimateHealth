@@ -212,6 +212,14 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
                 />
 
                 <MenuButton
+                  icon="medkit-outline"
+                  title="Healthcare Heroes of India"
+                  iconColor="#138A64"
+                  onPress={() => navigation.navigate('HealthcareHeroes')}
+                  isDarkMode={isDarkMode}
+                />
+
+                <MenuButton
                   icon="logo-github"
                   title="Open Source Programs"
                   iconColor="#06402B"

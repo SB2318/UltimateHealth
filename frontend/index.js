@@ -5,15 +5,18 @@ import store from './src/store/ReduxStore';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import App from './App';
 import messaging from '@react-native-firebase/messaging';
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import {initMonitoring} from './src/services/monitoring/sentry';
 
 initMonitoring();
 
-// Firebase background handler must be registered at the app root (run once).
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Background notification received:', remoteMessage);
-});
+// Firebase background messaging is native-only here. Web background messaging
+// belongs in a service worker, not the main app bundle.
+if (Platform.OS !== 'web') {
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    console.log('Background notification received:', remoteMessage);
+  });
+}
 
 const AppWrapper = () => {
   return (
