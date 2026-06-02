@@ -154,7 +154,7 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -180,7 +180,7 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -254,7 +254,7 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -279,7 +279,7 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -300,7 +300,7 @@ const StackNavigation = () => {
           headerTitle: '',
           headerBackTitleVisible: false,
           headerTransparent: true,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -325,7 +325,7 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -346,7 +346,7 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -367,7 +367,7 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -388,7 +388,7 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -433,7 +433,7 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -458,7 +458,7 @@ const StackNavigation = () => {
             backgroundColor: '#000A60',
           },
           headerBackTitleVisible: false,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -543,7 +543,7 @@ const StackNavigation = () => {
             shadowOpacity: 0.25,
             shadowRadius: 3.5,
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -577,7 +577,7 @@ const StackNavigation = () => {
             shadowOpacity: 0.25,
             shadowRadius: 3.5,
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -636,7 +636,7 @@ const StackNavigation = () => {
             shadowOpacity: 0.25, // Shadow opacity for iOS
             shadowRadius: 3.5, // Shadow radius for iOS
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -666,7 +666,7 @@ const StackNavigation = () => {
             shadowOpacity: 0.25, // Shadow opacity for iOS
             shadowRadius: 3.5, // Shadow radius for iOS
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <Pressable
               style={styles.headerLeftButtonCommentScreen}
@@ -703,7 +703,7 @@ const StackNavigation = () => {
             shadowOpacity: 0.25, // Shadow opacity for iOS
             shadowRadius: 3.5, // Shadow radius for iOS
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -741,7 +741,7 @@ const StackNavigation = () => {
             shadowOpacity: 0.25, // Shadow opacity for iOS
             shadowRadius: 3.5, // Shadow radius for iOS
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
