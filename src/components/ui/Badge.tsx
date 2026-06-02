@@ -23,12 +23,24 @@ const sizeClasses: Record<BadgeSize, string> = {
   md: "px-3.5 py-1 text-sm",
 };
 
+const iconSizeClasses: Record<BadgeSize, string> = {
+  sm: "w-3 h-3",
+  md: "w-4 h-4",
+};
+
 const Badge = ({ label, variant = "default", size = "md", icon }: BadgeProps) => {
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full font-medium transition-all duration-200 ${variantClasses[variant]} ${sizeClasses[size]}`}
     >
-      {icon && <span className="flex-shrink-0">{icon}</span>}
+      {icon && (
+        <span
+          className={`inline-flex items-center justify-center shrink-0 text-current ${iconSizeClasses[size]}`}
+          aria-hidden="true"
+        >
+          {icon}
+        </span>
+      )}
       {label}
     </span>
   );
