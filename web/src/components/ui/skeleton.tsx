@@ -1,4 +1,5 @@
 interface SkeletonCardProps {
+  /** Optional Tailwind classes applied to the card for sizing or layout overrides. */
   className?: string;
   /** When true, omits the thumbnail block to match compact card layouts. */
   compact?: boolean;
@@ -10,8 +11,9 @@ interface SkeletonProps {
   /** Optional Tailwind classes applied to each card for sizing or layout overrides. */
   className?: string;
   /**
-   * Use "compact" for cards that have no image (e.g. feature highlight cards).
-   * Defaults to "full" which includes a thumbnail placeholder.
+   * Controls the card structure:
+   * - "full" (default) — includes a thumbnail placeholder, suited for article/content cards.
+   * - "compact" — omits the thumbnail, suited for smaller feature cards to avoid layout shift.
    */
   variant?: "full" | "compact";
 }

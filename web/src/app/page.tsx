@@ -229,7 +229,9 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  // ── Features loading state (simulates async content fetch) ──
+  // ── Features loading state ──
+  // TODO: Replace this simulated delay with real data fetching (e.g. an API call or
+  // a server action) once the features section is backed by dynamic content.
   useEffect(() => {
     const timer = setTimeout(() => setFeaturesLoading(false), 1500);
     return () => clearTimeout(timer);

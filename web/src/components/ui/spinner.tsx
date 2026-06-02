@@ -5,6 +5,11 @@ interface SpinnerProps {
   size?: SpinnerSize;
   /** When true, renders a fixed full-screen overlay with the spinner centred. */
   fullPage?: boolean;
+  /**
+   * z-index applied to the full-page overlay. Defaults to 50.
+   * Increase this value if the spinner needs to sit above modals or other high-z-index layers.
+   */
+  zIndex?: number;
   /** Additional Tailwind classes for the spinner element. */
   className?: string;
   /** Accessible label announced to screen readers. Defaults to "Loading...". */
@@ -20,6 +25,7 @@ const sizeMap: Record<SpinnerSize, string> = {
 function Spinner({
   size = "md",
   fullPage = false,
+  zIndex = 50,
   className = "",
   label = "Loading...",
 }: SpinnerProps) {
@@ -40,7 +46,10 @@ function Spinner({
 
   if (fullPage) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+      <div
+        className="fixed inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm"
+        style={{ zIndex }}
+      >
         {arc}
       </div>
     );
