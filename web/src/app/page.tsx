@@ -786,9 +786,14 @@ export default function Home() {
                 <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="GitHub">
                   <i className="fab fa-github"></i>
                 </a>
-                <a href="mailto:ultimate.health25@gmail.com" className="dark-social-icon" title="Email" aria-label="Email">
-                  <i className="fas fa-envelope"></i>
-                </a>
+               <a
+                 href="mailto:ultimate.health25@gmail.com?subject=Hello%20UltimateHealth&body=Hi%20UltimateHealth%20Team%2C"
+                 className="dark-social-icon"
+                 title="Email"
+                 aria-label="Send email to UltimateHealth via mail client"
+                 style={{ cursor: "pointer" }}>
+                 <i className="fas fa-envelope"></i>
+                 </a>
                 <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="LinkedIn">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
