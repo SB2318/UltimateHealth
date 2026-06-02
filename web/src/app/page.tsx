@@ -673,13 +673,13 @@ export default function Home() {
           <p className="center">Join our community and make a difference in global health awareness</p>
           <div className="feature-grid">
             {[
-              { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
-              { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
-              { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
-              { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
+              { icon: "fa-globe", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
+              { icon: "fa-pen-nib", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
+              { icon: "fa-podcast", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
+              { icon: "fa-chart-line", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
             ].map((f, i) => (
               <div className="feature-item fade-in" key={i}>
-                <h3>{f.icon} {f.title}</h3>
+                <h3><i className={`fas ${f.icon}`}></i> {f.title}</h3>
                 <p>{f.desc}</p>
               </div>
             ))}
