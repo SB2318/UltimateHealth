@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import "./globals.css";
+
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { PageWrapper, Section } from "@/components/layout";
 import ScrollToTop from "../components/ScrollToTop";
@@ -782,13 +784,18 @@ export default function Home() {
               </div>
 
               <div className="contact-dark-socials">
-                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
+                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="GitHub">
                   <i className="fab fa-github"></i>
                 </a>
-                <a href="mailto:ultimate.health25@gmail.com" className="dark-social-icon" title="Email" aria-label="Email UltimateHealth">
-                  <i className="fas fa-envelope"></i>
-                </a>
-                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
+               <a
+                 href="mailto:ultimate.health25@gmail.com?subject=Hello%20UltimateHealth&body=Hi%20UltimateHealth%20Team%2C"
+                 className="dark-social-icon"
+                 title="Email"
+                 aria-label="Send email to UltimateHealth via mail client"
+                 style={{ cursor: "pointer" }}>
+                 <i className="fas fa-envelope"></i>
+                 </a>
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="LinkedIn">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
               </div>
