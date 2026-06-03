@@ -130,6 +130,34 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
             </GlassContainer>
           </YStack>
 
+          {/* Our Purpose */}
+          <YStack marginTop="$4" gap="$3">
+            <Text
+              style={[
+                Typography.h6,
+                {
+                  color: isDarkMode
+                    ? ProfessionalColors.gray400
+                    : ProfessionalColors.gray600,
+                  marginLeft: Spacing.xs,
+                },
+              ]}>
+              ABOUT
+            </Text>
+
+            <GlassContainer variant="card">
+              <YStack gap="$2">
+                <MenuButton
+                  icon="bulb-outline"
+                  title="Our Purpose"
+                  iconColor="#1A91FF"
+                  onPress={() => navigation.navigate('OurPurpose')}
+                  isDarkMode={isDarkMode}
+                />
+              </YStack>
+            </GlassContainer>
+          </YStack>
+
           {/* Legal Section */}
           <YStack marginTop="$4" gap="$3">
             <Text

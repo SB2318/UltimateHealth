@@ -130,6 +130,7 @@ export type RootStackParamList = {
   Privacy: undefined;
   ContributorPage: undefined;
   OpenSourcePage: undefined;
+  OurPurpose: undefined;
   //ChatbotScreen: undefined;
 };
 
@@ -356,6 +357,19 @@ export type OpenSourceScreenProps = StackScreenProps<
   'OpenSourcePage'
 >;
 
+<<<<<<< Updated upstream
+=======
+export type OurPurposeScreenProps = StackScreenProps<
+  RootStackParamList,
+  'OurPurpose'
+>;
+
+export type CommunityGuidelinesScreenProps = StackScreenProps<
+  RootStackParamList,
+  'CommunityGuidelines'
+>;
+
+>>>>>>> Stashed changes
 export type PodcastPlayerScreenProps = StackScreenProps<
   RootStackParamList,
   'PodcastPlayer'

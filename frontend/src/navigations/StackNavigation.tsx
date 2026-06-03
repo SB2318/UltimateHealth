@@ -48,6 +48,7 @@ import PodcastProfile from '../screens/PodcastProfile';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicy';
 import ContributorPage from '../screens/ContributorPage';
 import OpenSourcePage from '../screens/OpenSourcePage';
+import OurPurposePage from '../screens/OurPurposePage';
 import NotificationPreferencesScreen from '../screens/NotificationPreferencesScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 
@@ -415,6 +416,33 @@ const StackNavigation = () => {
         name="OpenSourcePage"
         component={OpenSourcePage}
         options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="OurPurpose"
+        component={OurPurposePage}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: 'Our Purpose',
+          headerTitleAlign: 'center',
+          headerBackTitleVisible: false,
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#000A60',
+            elevation: 4,
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.headerLeftButtonCommentScreen}
+              onPress={() => navigation.goBack()}>
+              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
+            </TouchableOpacity>
+          ),
+        })}
       />
 
       <Stack.Screen
