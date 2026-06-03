@@ -1772,8 +1772,11 @@ i, svg {
   }
 
   h3 {
+    font-weight: 700;
     font-size: 1.3rem;
   }
+}
+
 .scroll-to-top {
   position: fixed;
   bottom: 24px;
