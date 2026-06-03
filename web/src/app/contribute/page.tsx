@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, useInView, AnimatePresence, type Variants } from "framer-motion";
+import { withBasePath } from "@/lib/basePath";
 import {
   Code2,
   BookOpen,
@@ -462,7 +463,7 @@ function Header() {
   return (
     <header className={`header${scrolled ? " scrolled" : ""}`}>
       <div className="container nav">
-        <a href="/" className="logo">
+        <a href={withBasePath("/")} className="logo">
           <div className="logo-icon">
             <Image
               src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
@@ -477,19 +478,19 @@ function Header() {
 
         <ul className="nav-links">
           <li>
-            <a href="/" className="nav-link-item">
+            <a href={withBasePath("/")} className="nav-link-item">
               <i className="fas fa-home nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Home</span>
             </a>
           </li>
           <li>
-            <a href="/#features" className="nav-link-item">
+            <a href={withBasePath("/#features")} className="nav-link-item">
               <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Platform Highlights</span>
             </a>
           </li>
           <li>
-            <a href="/#programs" className="nav-link-item">
+            <a href={withBasePath("/#programs")} className="nav-link-item">
               <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Community Programs</span>
             </a>
@@ -506,13 +507,13 @@ function Header() {
             </a>
           </li>
           <li>
-            <a href="/contribute" className="nav-link-item active">
+            <a href={withBasePath("/contribute")} className="nav-link-item active">
               <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Join Us</span>
             </a>
           </li>
           <li>
-            <a href="/#downloads" className="nav-btn-sm">
+            <a href={withBasePath("/#downloads")} className="nav-btn-sm">
               <i className="fas fa-user" aria-hidden="true"></i>
               <span>Login / Register</span>
             </a>
@@ -529,12 +530,12 @@ function Header() {
       </div>
 
       <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-        <a href="/" onClick={() => setMobileMenuOpen(false)}>Home</a>
-        <a href="/#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
-        <a href="/#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
+        <a href={withBasePath("/")} onClick={() => setMobileMenuOpen(false)}>Home</a>
+        <a href={withBasePath("/#features")} onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
+        <a href={withBasePath("/#programs")} onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
         <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-        <a href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
-        <a href="/#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+        <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
+        <a href={withBasePath("/#downloads")} onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
       </nav>
     </header>
   );
@@ -577,11 +578,11 @@ function Footer() {
 
         <div className="footer-links-col">
           <h3>Quick Links</h3>
-          <a href="/">Home</a>
-          <a href="/#features">Features</a>
-          <a href="/#programs">Programs</a>
-          <a href="/#screenshots">Screenshots</a>
-          <a href="/#contact">Contact</a>
+          <a href={withBasePath("/")}>Home</a>
+          <a href={withBasePath("/#features")}>Features</a>
+          <a href={withBasePath("/#programs")}>Programs</a>
+          <a href={withBasePath("/#screenshots")}>Screenshots</a>
+          <a href={withBasePath("/#contact")}>Contact</a>
         </div>
 
         <div className="footer-links-col">
