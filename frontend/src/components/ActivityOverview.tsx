@@ -687,7 +687,7 @@ const ActivityOverview = ({
 
           {mostViewedArticles.map((item: ArticleData) => (
             <Card
-              key={item.pb_recordId || item._id}
+              key={item.pb_recordId ?? item._id}
               elevate
               bordered
               borderWidth={0.6}
