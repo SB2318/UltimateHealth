@@ -26,7 +26,7 @@ const sizeClasses: Record<BadgeSize, string> = {
 const Badge = ({ label, variant = "default", size = "md", icon }: BadgeProps) => {
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full font-medium transition-all duration-200 ${variantClasses[variant]} ${sizeClasses[size]}`}
+      className={`inline-flex items-center gap-1.5 rounded-full font-medium transition-colors ${variantClasses[variant]} ${sizeClasses[size]}`}
     >
       {icon && <span className="flex-shrink-0">{icon}</span>}
       {label}
