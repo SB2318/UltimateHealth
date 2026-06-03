@@ -1,4 +1,13 @@
 @import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@theme {
+  --container-center: true;
+  --container-padding: 1rem;
+  --container-padding-sm: 1.5rem;
+  --container-padding-lg: 2rem;
+  --container-padding-xl: 3rem;
+}
 
 * {
   margin: 0;
@@ -91,6 +100,7 @@ p {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
+  width: 100%;
 }
 
 /* ==================== ANIMATIONS ==================== */
@@ -1772,6 +1782,7 @@ i, svg {
   }
 
   h3 {
+    font-weight: 700;
     font-size: 1.3rem;
   }
 }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { PageWrapper, Section } from "@/components/layout";
 import ScrollToTop from "../components/ScrollToTop";
 
 const userScreenshots = [
@@ -400,7 +401,7 @@ export default function Home() {
     <>
       {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
-        <div className="container nav">
+        <PageWrapper as="div" className="nav">
           <a href="#" className="logo">
             <div className="logo-icon">
               <Image
@@ -472,7 +473,7 @@ export default function Home() {
           <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Toggle mobile menu">
             <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
           </button>
-        </div>
+        </PageWrapper>
 
         <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
           <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
@@ -486,8 +487,8 @@ export default function Home() {
       </header>
 
       {/* ── Hero ── */}
-      <section className="hero">
-        <div className="container hero-content scroll-reveal">
+      <Section className="hero">
+        <PageWrapper className="hero-content scroll-reveal">
           <h1>Empowering Wellness Through Global Community</h1>
           <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
         </div>
@@ -500,7 +501,7 @@ export default function Home() {
           <p className="center">
             Access our platform on your preferred device. UltimateHealth is available now for Android and coming soon to iOS via TestFlight.
           </p>
-          <div className="download-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
             {/* Android Card */}
             <div className="download-card fade-in">
               <div className="download-platform-header">
@@ -573,12 +574,12 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Screenshots ── */}
-      <section id="screenshots">
-        <div className="container">
+      <Section id="screenshots">
+        <PageWrapper>
           <h2>App Screenshots</h2>
           <p className="center">Take a look inside the UltimateHealth experience</p>
 
@@ -665,36 +666,36 @@ export default function Home() {
               </div>
             )}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Features ── */}
-      <section id="features" className="scroll-reveal">
-        <div className="container">
+      <Section id="features" className="scroll-reveal">
+        <PageWrapper>
           <h2>Be a Contributor: Core Community Features</h2>
           <p className="center">Join our community and make a difference in global health awareness</p>
-          <div className="feature-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 w-full">
             {[
               { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
               { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
               { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
               { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
             ].map((f, i) => (
-              <div className="feature-item fade-in" key={i}>
+              <div className="feature-item w-full fade-in" key={i}>
                 <h3>{f.icon} {f.title}</h3>
                 <p>{f.desc}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Moderator Features ── */}
-      <section className="member-section scroll-reveal">
-        <div className="container">
+      <Section className="member-section scroll-reveal">
+        <PageWrapper>
           <h2>Be a Member: Guardian of Content Integrity</h2>
           <p className="center">Help maintain quality and safety across the platform</p>
-          <div className="feature-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
             {[
               { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
               { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
@@ -702,28 +703,28 @@ export default function Home() {
               { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
               { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
             ].map((f, i) => (
-              <div className="feature-card mod-card fade-in" key={i}>
+              <div className="feature-card mod-card w-full fade-in" key={i}>
                 <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
                 <h3>{f.title}</h3>
                 <p>{f.desc}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Programs ── */}
-      <section id="programs" className="scroll-reveal">
-        <div className="container">
+      <Section id="programs" className="scroll-reveal">
+        <PageWrapper>
           <h2>Programs Participated In</h2>
           <p className="center">We are proud to have collaborated with and contributed to these prestigious tech and open-source initiatives</p>
-          <div className="program-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
             {[
               { logo: "https://github.com/user-attachments/assets/e0a40d06-f5b8-42a7-a5a0-033280f842be", alt: "IEEE IGDTUW Logo", badge: "Open Source Week", title: "IEEE IGDTUW", desc: "A week-long intensive event aimed at fostering global collaboration and high-level skill-building in the open-source ecosystem." },
               { logo: "https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00", alt: "Vultr Logo", badge: "Cloud Hackathon", title: "Vultr Cloud Innovate", desc: "Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power." },
               { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2024", title: "GirlScript Summer of Code", desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship." },
             ].map((p, i) => (
-              <div className="program-card fade-in" key={i}>
+              <div className="program-card w-full fade-in" key={i}>
                 <div className="program-logo-wrapper">
                   <Image
                     src={p.logo}
@@ -740,12 +741,12 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Contact ── */}
-      <section className="contact-section scroll-reveal" id="contact">
-        <div className="container">
+      <Section className="contact-section scroll-reveal" id="contact">
+        <PageWrapper>
           <h2>Connect With Us</h2>
           <p className="center" style={{ marginBottom: 56 }}>
             Have questions or want to collaborate? We&apos;d love to hear from you.
@@ -873,12 +874,12 @@ export default function Home() {
               )}
             </div>
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Footer ── */}
       <footer>
-        <div className="container footer-grid">
+        <PageWrapper className="footer-grid">
           {/* Brand column */}
           <div className="footer-brand">
             <h2>UltimateHealth</h2>
@@ -953,7 +954,7 @@ export default function Home() {
             <a href={FEEDBACK_URL} target="_blank" rel="noreferrer">Feedback</a>
             <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">API Docs</a>
           </div>
-        </div>
+        </PageWrapper>
 
         {/* Bottom bar */}
         <div className="footer-bottom">
