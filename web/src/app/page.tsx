@@ -499,8 +499,8 @@ export default function Home() {
         <PageWrapper className="hero-content scroll-reveal">
           <h1>Empowering Wellness Through Global Community</h1>
           <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* Downloads Section */}
       <section id="downloads" className="download-section">
@@ -582,8 +582,8 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </PageWrapper>
-      </Section>
+        </div>
+      </section>
 
       {/* ── Screenshots ── */}
       <Section id="screenshots">
