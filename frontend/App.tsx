@@ -59,3 +59,27 @@ staleTime: 1000 * 60,
 
 // 3. Using standard Sentry wrapping (or keep your custom one if verified)
 export default Sentry.wrap(App);
+
+const [screenSize, setScreenSize] = useState("desktop");
+
+useEffect(() => {
+  const handleResize = () => {
+    const width = window.innerWidth;
+
+    if (width <= 480) {
+      setScreenSize("mobile");
+    } else if (width <= 768) {
+      setScreenSize("tablet");
+    } else if (width <= 1024) {
+      setScreenSize("small-laptop");
+    } else {
+      setScreenSize("desktop");
+    }
+  };
+
+  handleResize();
+  window.addEventListener("resize", handleResize);
+
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
