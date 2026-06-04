@@ -5,6 +5,7 @@ import "./globals2.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { headers } from "next/headers";
 
 const interHeading = Inter({ subsets: ["latin"], variable: "--font-heading" });
 
@@ -15,6 +16,9 @@ const inter = Inter({
   variable: "--font-inter",
   display: "swap",
 });
+
+// force-dynamic ensures a unique CSP nonce is generated per request (not cached)
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "UltimateHealth - Empowering Wellness Through Global Community",
@@ -28,12 +32,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
- 
+  // Read the nonce injected by middleware so Next.js can use it for inline scripts
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <html
       lang="en"
