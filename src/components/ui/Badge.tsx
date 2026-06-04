@@ -70,7 +70,9 @@ const renderBadgeContent = (
   const content = children ?? label;
 
   return (
-    <>
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full font-medium transition-colors ${variantClasses[variant]} ${sizeClasses[size]}`}
+    >
       {icon && <span className="flex-shrink-0">{icon}</span>}
       {content}
     </>
