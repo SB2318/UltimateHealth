@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, useInView, AnimatePresence, type Variants } from "framer-motion";
-import { withBasePath } from "@/lib/basePath";
 import {
   Code2,
   BookOpen,
@@ -31,6 +30,7 @@ import {
   ArrowRight,
   Mail,
 } from "lucide-react";
+import { withBasePath } from "@/lib/basePath";
 
 // =============================================================================
 // Types
@@ -448,166 +448,6 @@ function FAQAccordionItem({ item, index }: { item: FAQItem; index: number }) {
 }
 
 // =============================================================================
-// Header
-// =============================================================================
-function Header() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return (
-    <header className={`header${scrolled ? " scrolled" : ""}`}>
-      <div className="container nav">
-        <a href={withBasePath("/")} className="logo">
-          <div className="logo-icon">
-            <Image
-              src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
-              alt="Ultimate Health Logo"
-              width={48}
-              height={48}
-              priority
-            />
-          </div>
-          Ultimate-Health
-        </a>
-
-        <ul className="nav-links">
-          <li>
-            <a href={withBasePath("/")} className="nav-link-item">
-              <i className="fas fa-home nav-item-icon" aria-hidden="true"></i>
-              <span className="nav-item-text">Home</span>
-            </a>
-          </li>
-          <li>
-            <a href={withBasePath("/#features")} className="nav-link-item">
-              <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
-              <span className="nav-item-text">Platform Highlights</span>
-            </a>
-          </li>
-          <li>
-            <a href={withBasePath("/#programs")} className="nav-link-item">
-              <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
-              <span className="nav-item-text">Community Programs</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://uhsocial.in/docs"
-              target="_blank"
-              rel="noreferrer"
-              className="nav-link-item"
-            >
-              <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
-              <span className="nav-item-text">Read Articles</span>
-            </a>
-          </li>
-          <li>
-            <a href={withBasePath("/contribute")} className="nav-link-item active">
-              <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
-              <span className="nav-item-text">Join Us</span>
-            </a>
-          </li>
-          <li>
-            <a href={withBasePath("/#downloads")} className="nav-btn-sm">
-              <i className="fas fa-user" aria-hidden="true"></i>
-              <span>Login / Register</span>
-            </a>
-          </li>
-        </ul>
-
-        <button
-          className="mobile-menu-toggle"
-          onClick={() => setMobileMenuOpen((o) => !o)}
-          aria-label="Toggle mobile menu"
-        >
-          <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
-        </button>
-      </div>
-
-      <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-        <a href={withBasePath("/")} onClick={() => setMobileMenuOpen(false)}>Home</a>
-        <a href={withBasePath("/#features")} onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
-        <a href={withBasePath("/#programs")} onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-        <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-        <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
-        <a href={withBasePath("/#downloads")} onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
-      </nav>
-    </header>
-  );
-}
-
-// =============================================================================
-// Footer
-// =============================================================================
-function Footer() {
-  return (
-    <footer>
-      <div className="container footer-grid">
-        <div className="footer-brand">
-          <h2>Ultimate Health</h2>
-          <p className="footer-note">Open-source health and wellness for everyone.</p>
-          <div style={{ marginTop: 20 }}>
-            <span className="footer-follow-label">Follow Us</span>
-            <div className="footer-social-links">
-              <a
-                href="https://github.com/SB2318"
-                className="footer-social-icon"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="GitHub"
-              >
-                <i className="fab fa-github"></i>
-              </a>
-              <a
-                href="https://www.linkedin.com/in/ultimate-health-9290873a8/"
-                className="footer-social-icon"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="LinkedIn"
-              >
-                <i className="fab fa-linkedin-in"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="footer-links-col">
-          <h3>Quick Links</h3>
-          <a href={withBasePath("/")}>Home</a>
-          <a href={withBasePath("/#features")}>Features</a>
-          <a href={withBasePath("/#programs")}>Programs</a>
-          <a href={withBasePath("/#screenshots")}>Screenshots</a>
-          <a href={withBasePath("/#contact")}>Contact</a>
-        </div>
-
-        <div className="footer-links-col">
-          <h3>Contribute</h3>
-          <a href={REPO_URL} target="_blank" rel="noreferrer">Repository</a>
-          <a href={`${REPO_URL}/issues`} target="_blank" rel="noreferrer">Issues</a>
-          <a href={`${REPO_URL}/pulls`} target="_blank" rel="noreferrer">Pull Requests</a>
-          <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
-        </div>
-      </div>
-
-      <div className="footer-bottom">
-        <div className="footer-bottom-inner">
-          <p>© 2026 Ultimate Health. Built with passion for a healthier community.</p>
-          <div className="footer-bottom-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Use</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-// =============================================================================
 // Hero Section
 // =============================================================================
 function HeroSection() {
@@ -632,7 +472,7 @@ function HeroSection() {
         }}
       />
 
-      <div className="container" style={{ position: "relative", zIndex: 1 }}>
+      <div className="contribute-container" style={{ position: "relative", zIndex: 1 }}>
         <div className="contribute-hero-grid">
           {/* Text */}
           <motion.div
@@ -809,7 +649,6 @@ function HeroSection() {
                 >
                   Open-source health platform for everyone
                 </p>
-
               </motion.div>
 
               {/* Floating badge top-right */}
@@ -883,7 +722,7 @@ function HeroSection() {
 function WhyContributeSection() {
   return (
     <section style={{ background: "var(--bg-white)", padding: "100px 0" }}>
-      <div className="container">
+      <div className="contribute-container">
         <AnimateWhenVisible>
           <SectionHeading
             title="Why Contribute?"
@@ -963,7 +802,7 @@ function WhyContributeSection() {
 function WaysToContributeSection() {
   return (
     <section style={{ background: "var(--bg-light)", padding: "100px 0" }}>
-      <div className="container">
+      <div className="contribute-container">
         <AnimateWhenVisible>
           <SectionHeading
             title="Ways to Contribute"
@@ -1063,7 +902,7 @@ function WaysToContributeSection() {
 function WorkflowSection() {
   return (
     <section style={{ background: "var(--bg-white)", padding: "100px 0" }}>
-      <div className="container">
+      <div className="contribute-container">
         <AnimateWhenVisible>
           <SectionHeading
             title="GitHub Contribution Workflow"
@@ -1203,7 +1042,7 @@ function PRSection() {
 
   return (
     <section style={{ background: "var(--bg-light)", padding: "100px 0" }}>
-      <div className="container">
+      <div className="contribute-container">
         <AnimateWhenVisible>
           <SectionHeading
             title="How to Submit a Pull Request"
@@ -1330,7 +1169,7 @@ function PRSection() {
 function CommunitySection() {
   return (
     <section style={{ background: "var(--bg-white)", padding: "100px 0" }}>
-      <div className="container">
+      <div className="contribute-container">
         <AnimateWhenVisible>
           <SectionHeading
             title="Community &amp; Support"
@@ -1451,7 +1290,7 @@ function CommunitySection() {
 function FAQSection() {
   return (
     <section style={{ background: "var(--bg-light)", padding: "100px 0" }}>
-      <div className="container">
+      <div className="contribute-container">
         <AnimateWhenVisible>
           <SectionHeading
             title="Frequently Asked Questions"
@@ -1502,7 +1341,7 @@ function FinalCTASection() {
         }}
       />
 
-      <div className="container" style={{ position: "relative", zIndex: 1 }}>
+      <div className="contribute-container" style={{ position: "relative", zIndex: 1 }}>
         <AnimateWhenVisible>
           <motion.div variants={fadeUp}>
             <div
@@ -1651,7 +1490,7 @@ function FinalCTASection() {
 }
 
 // =============================================================================
-// Page
+// Page — no inline Header/Footer; the root layout.tsx renders those
 // =============================================================================
 export default function ContributePage() {
   useEffect(() => {
@@ -1678,9 +1517,28 @@ export default function ContributePage() {
     return () => observer.disconnect();
   }, []);
 
+  const [navOpen, setNavOpen] = useState(false);
+
+const navLinks = [
+  { href: withBasePath("/"), label: "Home", icon: "fa-home" },
+  { href: withBasePath("/#features"), label: "Platform Highlights", icon: "fa-star" },
+  { href: withBasePath("/#screenshots"), label: "Screenshots", icon: "fa-image" },
+  { href: withBasePath("/#programs"), label: "Community Programs", icon: "fa-code-branch" },
+  { href: "https://uhsocial.in/docs", label: "Read Articles", icon: "fa-file-lines", external: true },
+  { href: withBasePath("/#downloads"), label: "Login / Register", icon: "fa-user" },
+];
+
   return (
     <>
       <style>{`
+        /* ── Give every .container horizontal breathing room ── */
+        .contribute-container {
+         max-width: 1200px;
+         margin: 0 auto;
+         padding-left: clamp(20px, 5vw, 80px);
+         padding-right: clamp(20px, 5vw, 80px);
+         }
+
         .contribute-hero-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -1695,6 +1553,83 @@ export default function ContributePage() {
         .contribute-pr-grid {
           grid-template-columns: 1fr 1fr !important;
         }
+
+        /* ── Floating hamburger button ── */
+        .contrib-fab {
+          position: fixed;
+          top: 20px;
+          right: 24px;
+          z-index: 9999;
+          width: 46px;
+          height: 46px;
+          border-radius: 12px;
+          background: rgba(30,30,50,0.85);
+          backdrop-filter: blur(12px);
+          border: 1.5px solid rgba(102,126,234,0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          color: #667eea;
+          font-size: 1.1rem;
+          transition: background 0.2s, transform 0.2s;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+        .contrib-fab:hover {
+          background: rgba(102,126,234,0.2);
+          transform: scale(1.07);
+        }
+
+        /* ── Dropdown nav panel ── */
+        .contrib-nav-panel {
+          position: fixed;
+          top: 74px;
+          right: 24px;
+          z-index: 9998;
+          background: white;
+          border-radius: 16px;
+          box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+          border: 1px solid rgba(0,0,0,0.07);
+          padding: 8px;
+          min-width: 230px;
+          overflow: hidden;
+        }
+        .contrib-nav-panel a {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 11px 14px;
+          border-radius: 10px;
+          color: #1a202c;
+          text-decoration: none;
+          font-size: 0.9rem;
+          font-weight: 600;
+          transition: background 0.15s, color 0.15s;
+        }
+        .contrib-nav-panel a:hover {
+          background: rgba(102,126,234,0.08);
+          color: #667eea;
+        }
+        .contrib-nav-panel a i {
+          width: 18px;
+          text-align: center;
+          color: #667eea;
+          font-size: 0.85rem;
+        }
+        .contrib-nav-divider {
+          height: 1px;
+          background: rgba(0,0,0,0.06);
+          margin: 6px 8px;
+        }
+        .contrib-nav-active-label {
+          padding: 6px 14px 4px;
+          font-size: 0.7rem;
+          font-weight: 800;
+          letter-spacing: 0.07em;
+          text-transform: uppercase;
+          color: #a0aec0;
+        }
+
         @media (max-width: 1100px) {
           .contribute-ways-grid {
             grid-template-columns: repeat(3, 1fr);
@@ -1727,10 +1662,50 @@ export default function ContributePage() {
           .contribute-ways-grid {
             grid-template-columns: 1fr;
           }
+          .contrib-nav-panel {
+            right: 12px;
+          }
+          .contrib-fab {
+            right: 12px;
+          }
         }
       `}</style>
 
-      <Header />
+      {/* ── Floating hamburger nav ── */}
+      <button
+        className="contrib-fab"
+        onClick={() => setNavOpen((o) => !o)}
+        aria-label="Toggle navigation menu"
+        aria-expanded={navOpen}
+      >
+        <i className={`fas fa-${navOpen ? "times" : "bars"}`}></i>
+      </button>
+
+      {navOpen && (
+        <>
+          {/* backdrop — click outside to close */}
+          <div
+            style={{ position: "fixed", inset: 0, zIndex: 9997 }}
+            onClick={() => setNavOpen(false)}
+            aria-hidden="true"
+          />
+          <nav className="contrib-nav-panel" role="navigation" aria-label="Site navigation">
+            <div className="contrib-nav-active-label">Navigate to</div>
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target={"external" in link && link.external ? "_blank" : undefined}
+                rel={"external" in link && link.external ? "noreferrer" : undefined}
+                onClick={() => setNavOpen(false)}
+              >
+                <i className={`fas ${link.icon}`}></i>
+                {link.label}
+              </a>
+            ))}
+          </nav>
+        </>
+      )}
       <main>
         <HeroSection />
         <WhyContributeSection />
@@ -1741,7 +1716,6 @@ export default function ContributePage() {
         <FAQSection />
         <FinalCTASection />
       </main>
-      <Footer />
     </>
   );
 }
