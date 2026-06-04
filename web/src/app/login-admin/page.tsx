@@ -47,8 +47,8 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div style={styles.body}>
-      <div style={styles.container}>
+    <Section style={styles.body}>
+      <PageWrapper style={styles.container}>
         <Image
           src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
           style={styles.icon}
