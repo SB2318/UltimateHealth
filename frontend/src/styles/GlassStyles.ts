@@ -598,4 +598,3 @@ export const Typography = {
   },
 };
 
-export default GlassStyles;

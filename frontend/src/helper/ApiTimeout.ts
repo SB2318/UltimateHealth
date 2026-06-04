@@ -11,7 +11,7 @@ export const API_TIMEOUT_ERROR_MESSAGE =
  * Custom error class for API timeout scenarios.
  * Extends the standard Error class with a specific error code.
  */
-export class ApiTimeoutError extends Error {
+class ApiTimeoutError extends Error {
   code = 'ECONNABORTED';
 
   /**
@@ -38,7 +38,7 @@ type FetchInit = Parameters<typeof fetch>[1];
  * @param timeoutMs - The timeout duration in milliseconds
  * @returns A new ApiTimeoutError instance
  */
-export function createApiTimeoutError(timeoutMs = API_REQUEST_TIMEOUT_MS) {
+function createApiTimeoutError(timeoutMs = API_REQUEST_TIMEOUT_MS) {
   return new ApiTimeoutError(timeoutMs);
 }
 

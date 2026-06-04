@@ -62,6 +62,6 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
 };
 
 // Custom hook to access Firebase messaging and token
-export const useFirebaseMessaging = (): { messaging: typeof messaging | null; fcmToken: string | null } => {
+const useFirebaseMessaging = (): { messaging: typeof messaging | null; fcmToken: string | null } => {
   return useContext(FirebaseContext);
 };

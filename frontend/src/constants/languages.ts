@@ -25,7 +25,7 @@ export type LanguageCode = typeof INDIAN_LANGUAGES[number]['code'];
 /**
  * Get language name by code
  */
-export const getLanguageName = (code: string): string => {
+const getLanguageName = (code: string): string => {
   const lang = INDIAN_LANGUAGES.find(l => l.code === code);
   return lang?.name || code;
 };

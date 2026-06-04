@@ -37,4 +37,3 @@ export const GlassContainer: React.FC<GlassContainerProps> = ({
   return <View style={[getVariantStyle(), style]}>{children}</View>;
 };
 
-export default GlassContainer;

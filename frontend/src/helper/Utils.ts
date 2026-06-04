@@ -12,7 +12,7 @@ import {
   type PodcastDownloadRecord,
 } from './MMKVUtils';
 
-export const checkInternetConnection = (
+const checkInternetConnection = (
   callback: (isConnected: boolean) => void,
 ) => {
   const unsubscribe = NetInfo.addEventListener(state => {
@@ -193,13 +193,13 @@ export const readDownloadedPodcasts = async (): Promise<PodcastDownloadRecord[]>
   return retrievePodcastCache();
 };
 
-export const writeDownloadedPodcasts = async (
+const writeDownloadedPodcasts = async (
   data: PodcastDownloadRecord[],
 ) => {
   await setPodcastCache(data);
 };
 
-export const removeDownloadedPodcasts = async () => {
+const removeDownloadedPodcasts = async () => {
   await deletePodcastCache();
 };
 
@@ -532,7 +532,7 @@ export const updateOfflinePodcastLikeStatus = async (_podcast: PodcastData) => {
   }
 };
 
-export const createFeebackHTMLStructure = (feedback: string) => {
+const createFeebackHTMLStructure = (feedback: string) => {
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -631,7 +631,7 @@ export const KEYS = {
   DOWNLOAD_PODCAST_DATA: 'DOWNLOAD_PODCAST_DATA',
 };
 
-export const VULTR_CHAT_ROLES = {
+const VULTR_CHAT_ROLES = {
   user: 'user',
   system: 'system',
   assistant: 'assistant',
@@ -658,7 +658,7 @@ export const ttsLanguageList = [
   {name: 'Assamese', code: 'as-IN'},
   {name: 'Urdu (India)', code: 'ur-IN'},
 ];
-export const Categories: CategoryType[] = [
+const Categories: CategoryType[] = [
   {id: 1, name: 'Cardiology'},
   {id: 2, name: 'Neurology'},
   {id: 3, name: 'Oncology'},

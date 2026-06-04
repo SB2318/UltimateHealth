@@ -218,4 +218,4 @@ export const initDeepLinking = (navigation: any, isAuthenticated: boolean) => {
   return () => subscription.remove();
 };
 
-export {resolveDeepLinkTarget};
+;

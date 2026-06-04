@@ -22,7 +22,7 @@ interface LanguagePreferenceSelectorProps {
  * LanguagePreferenceSelector - Component for users to select preferred languages
  * Saves preferences to PreferencesContext which persists to secure storage
  */
-export const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
+const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
   title = 'Select Preferred Languages',
   description = 'Choose the languages you want to see articles and podcasts in',
   showHeader = true,

@@ -8,7 +8,7 @@ import {
   useColorScheme,
   Platform,
 } from 'react-native';
-import { GlassButton } from './GlassButton';
+import GlassButton from './GlassButton';
 import { ProfessionalColors, Typography, Spacing, BorderRadius } from '../styles/GlassStyles';
 
 interface BaseEmptyStateProps {
@@ -153,7 +153,7 @@ export const OfflineArticleState = () => (
   />
 );
 
-export const OfflinePodcastState = () => (
+const OfflinePodcastState = () => (
   <BaseEmptyState
     iconEmoji="🎙️"
     title="Podcasts Offline"

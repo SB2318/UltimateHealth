@@ -55,7 +55,7 @@ interface BackToTopScrollViewProps extends ScrollViewProps {
   children: React.ReactNode;
 }
  
-export function BackToTopScrollView({
+function BackToTopScrollView({
   threshold = 300,
   buttonColor = '#4CAF50',
   iconColor = '#fff',

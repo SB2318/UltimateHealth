@@ -4,8 +4,8 @@ import type { Locale } from 'date-fns';
 import { TZDateMini } from '@date-fns/tz';
 import { getCalendars, getLocales } from 'expo-localization';
 
-export const deviceTimeZone = getCalendars()[0]?.timeZone ?? 'UTC';
-export const deviceLocale = getLocales()[0]?.languageTag ?? 'en-US';
+const deviceTimeZone = getCalendars()[0]?.timeZone ?? 'UTC';
+const deviceLocale = getLocales()[0]?.languageTag ?? 'en-US';
 
 const localeMap: Record<string, Locale> = {
   'en-US': enUS,

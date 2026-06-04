@@ -63,7 +63,7 @@ export function postMethodCallwithToken<T = unknown>(
  * );
  * ```
  */
-export function postMethodCall<T = unknown>(
+function postMethodCall<T = unknown>(
   url: string,
   params: unknown,
 ): Promise<T> {
@@ -95,7 +95,7 @@ export function postMethodCall<T = unknown>(
  * );
  * ```
  */
-export function getMethodCallwithToken<T = unknown>(
+function getMethodCallwithToken<T = unknown>(
   url: string,
   authToken: string,
 ): Promise<T> {

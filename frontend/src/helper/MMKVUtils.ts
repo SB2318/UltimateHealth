@@ -121,7 +121,7 @@ export const deleteItem = async (): Promise<void> => {
   await AsyncStorage.removeItem(PODCAST_STORAGE_KEY);
 };
 
-export const clearMMKV = async (): Promise<void> => {
+const clearMMKV = async (): Promise<void> => {
   const mmkv = initializeMMKV();
 
   if (mmkv) {

@@ -90,7 +90,7 @@ export const useSocket = () => {
  * Hook to check socket connection status
  * @returns {boolean} Connection status
  */
-export const useSocketConnection = () => {
+const useSocketConnection = () => {
     const context = useContext(SocketContext);
     if (!context) {
         throw new Error('useSocketConnection must be used within SocketProvider');

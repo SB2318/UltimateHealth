@@ -24,7 +24,7 @@ interface GlassButtonProps {
   fullWidth?: boolean;
 }
 
-export const GlassButton: React.FC<GlassButtonProps> = ({
+const GlassButton: React.FC<GlassButtonProps> = ({
   title,
   onPress,
   variant = 'default',

@@ -69,7 +69,7 @@ export const initializeSocket = (token: string | null = null): Socket => {
  * Get current socket instance
  * @returns {Socket|null} Current socket instance or null
  */
-export const getSocket = (): Socket | null => socket;
+const getSocket = (): Socket | null => socket;
 
 /**
  * Disconnect and cleanup socket
@@ -85,6 +85,6 @@ export const disconnectSocket = (): void => {
  * Check if socket is connected
  * @returns {boolean} Connection status
  */
-export const isSocketConnected = (): boolean => {
+const isSocketConnected = (): boolean => {
     return socket ? socket.connected : false;
 };

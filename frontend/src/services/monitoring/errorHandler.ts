@@ -28,7 +28,7 @@ export const captureException = (error: unknown, context?: Record<string, any>) 
  * @param message - The text message to log
  * @param level - Sentry severity level (info, warning, error, etc.)
  */
-export const captureMessage = (
+const captureMessage = (
   message: string,
   level: Sentry.SeverityLevel = 'info'
 ) => {
@@ -44,13 +44,13 @@ export const captureMessage = (
  * 
  * @param user - User object containing id, email, username, etc.
  */
-export const setUserContext = (user: { id: string; email?: string; username?: string } | null) => {
+const setUserContext = (user: { id: string; email?: string; username?: string } | null) => {
   Sentry.setUser(user);
 };
 
 /**
  * Clears the user context, typically called on logout.
  */
-export const clearUserContext = () => {
+const clearUserContext = () => {
   Sentry.setUser(null);
 };

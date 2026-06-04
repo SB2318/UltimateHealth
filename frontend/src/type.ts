@@ -135,7 +135,7 @@ export type RootStackParamList = {
   OpenSourcePage: undefined;
 };
 
-export type RedirectTo = {
+type RedirectTo = {
   [K in keyof RootStackParamList]: {
     name: K;
     params: RootStackParamList[K];
@@ -274,7 +274,7 @@ export type ReportConfirmationScreenProp = StackScreenProps<
   'ReportConfirmationScreen'
 >;
 
-export type NotificationScreenProp = StackScreenProps<
+type NotificationScreenProp = StackScreenProps<
   RootStackParamList,
   'NotificationScreen'
 >;
@@ -344,17 +344,17 @@ export type PodcastRecorderScreenProps = StackScreenProps<
   'PodcastRecorder'
 >;
 
-export type PrivacyPolicyScreenProps = StackScreenProps<
+type PrivacyPolicyScreenProps = StackScreenProps<
   RootStackParamList,
   'Privacy'
 >;
 
-export type ContributorScreenProps = StackScreenProps<
+type ContributorScreenProps = StackScreenProps<
   RootStackParamList,
   'ContributorPage'
 >;
 
-export type OpenSourceScreenProps = StackScreenProps<
+type OpenSourceScreenProps = StackScreenProps<
   RootStackParamList,
   'OpenSourcePage'
 >;
@@ -404,7 +404,7 @@ export type ReviewCardProps = {
   setSelectedCardId: (id: string) => void;
 };
 
-export type Admin = {
+type Admin = {
   _id: string;
   user_name: string;
   Profile_avtar: string;
@@ -549,7 +549,7 @@ export type Category = {
   name: string;
 };
 
-export type Article = {
+type Article = {
   id: string;
   title: string;
   description: string;
@@ -593,7 +593,7 @@ export type ArticleData = {
   translatedArticles?: ArticleData[];
 };
 
-export type ArticleTranslationSource = {
+type ArticleTranslationSource = {
   sourceArticleId: string;
   sourceArticleRecordId: string;
   sourceLanguage: string;
@@ -781,11 +781,11 @@ export type PlayList = {
   updated_at: Date;
 };
 
-export type NotificationPreferences = {
+type NotificationPreferences = {
   contentClusters: Category[];
 };
 
-export type UpdatePreferencesReq = {
+type UpdatePreferencesReq = {
   contentClusters: Category[];
 };
 
