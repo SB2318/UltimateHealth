@@ -26,19 +26,19 @@ export function middleware(request: NextRequest) {
    * - default-src: Restrict to same origin
    * - script-src: Use nonces in production with strict-dynamic, allow unsafe-eval in dev for HMR
    * - style-src: Allow same origin and inline styles
-   * - img-src: Allow same origin, blobs, data URIs, and specific GitHub domains
-   * - connect-src: Restrict to same origin and https (plus http/ws in dev)
+   * - img-src: Allow same origin, blobs, data URIs, and trusted image providers
+   * - connect-src: Restrict to same origin and specific API endpoints
    * - report-uri: Send violations to our API endpoint for monitoring
    */
   const cspDirectives = [
     "default-src 'self'",
     isDev
-      ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
+      ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'" // unsafe-eval required for Next.js HMR/Fast Refresh
       : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self'",
-    "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com",
-    "connect-src 'self'" + (isDev ? " http: https: ws:" : " https:"),
+    "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com https://avatars.githubusercontent.com",
+    "connect-src 'self' https://uhsocial.in https://api.github.com" + (isDev ? " http: ws:" : ""),
     "object-src 'none'",
     "base-uri 'self'",
     "frame-ancestors 'none'",
@@ -51,7 +51,15 @@ export function middleware(request: NextRequest) {
 
   const csp = cspDirectives.join("; ");
 
-  const response = NextResponse.next();
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("Content-Security-Policy", csp);
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 
   // Set CSP and Nonce headers
   // The x-nonce header is used by RootLayout to inject the nonce into rendered scripts
@@ -84,5 +92,13 @@ export function middleware(request: NextRequest) {
 
 // Next.js Middleware configuration
 export const config = {
-  matcher: "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  matcher: [
+    {
+      source: "/((?!api|_next/static|_next/image|favicon.ico).*)",
+      missing: [
+        { type: "header", key: "next-router-prefetch" },
+        { type: "header", key: "purpose", value: "prefetch" },
+      ],
+    },
+  ],
 };
