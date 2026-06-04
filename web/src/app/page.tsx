@@ -120,6 +120,14 @@ export default function Home() {
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
 
+  const openComingSoonModal = useCallback(() => {
+    setComingSoonModal(true);
+  }, []);
+
+  const closeComingSoonModal = useCallback(() => {
+    setComingSoonModal(false);
+  }, []);
+
   useEffect(() => {
     dnaEnabledRef.current = cursorGlowEnabled;
     if (dnaCanvasRef.current) {
@@ -524,16 +532,15 @@ export default function Home() {
                 >
                   <i className="fab fa-google-play"></i> UltimateHealth
                 </a>
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin"
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  type="button"
                   className="store-btn"
                   id="admin-closed-testing-btn"
-                  aria-label="Download UHealth Admin for Android on Google Play Store"
+                  onClick={openComingSoonModal}
+                  aria-label="View UHealth Admin closed testing launch status"
                 >
-                  <i className="fas fa-user-shield"></i> UHealth Admin
-                </a>
+                  <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
+                </button>
               </div>
             </div>
 
@@ -961,15 +968,22 @@ export default function Home() {
       </footer>
 
       {/* ── Coming Soon Modal ── */}
-      <div className={`modal-overlay${comingSoonModal ? " active" : ""}`} onClick={() => setComingSoonModal(false)}>
+      <div
+        className={`modal-overlay${comingSoonModal ? " active" : ""}`}
+        onClick={closeComingSoonModal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="coming-soon-modal-title"
+        aria-hidden={!comingSoonModal}
+      >
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
-          <h2>Launching Soon!</h2>
+          <h2 id="coming-soon-modal-title">Launching Soon!</h2>
           <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
             We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
           </p>
           <div className="progress-container"><div className="progress-bar"></div></div>
-          <button className="close-modal-btn" onClick={() => setComingSoonModal(false)}>Close</button>
+          <button className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
         </div>
       </div>
 
