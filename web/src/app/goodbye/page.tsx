@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PageWrapper, Section } from "@/components/layout";
 
 export const metadata: Metadata = {
   title: "Goodbye • Your Account Has Been Deleted | UltimateHealth",
@@ -8,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function GoodbyePage() {
   return (
-    <div style={styles.body}>
-      <div style={styles.card}>
+    <Section as="div" style={styles.body}>
+      <PageWrapper as="div" style={styles.card}>
         <div style={styles.smiley}>👋</div>
         <h2 style={styles.heading}>Your Account Has Been Deleted</h2>
         <p style={styles.text}>
@@ -19,8 +20,8 @@ export default function GoodbyePage() {
         <Link href="/login" style={styles.link}>
           Return to Home
         </Link>
-      </div>
-    </div>
+      </PageWrapper>
+    </Section>
   );
 }
 
