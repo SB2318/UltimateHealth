@@ -69,6 +69,18 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);
+  const [speed, setSpeed] = useState(1.0);
+
+  const cycleSpeed = () => {
+    const speeds = [1.0, 1.25, 1.5, 2.0];
+    const currentIndex = speeds.indexOf(speed);
+    const nextSpeed = speeds[(currentIndex + 1) % speeds.length];
+    setSpeed(nextSpeed);
+    if (player) {
+      player.playbackRate = nextSpeed;
+      player.shouldCorrectPitch = true;
+    }
+  };
 
   const [isLike, setLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -102,6 +114,13 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
       }
     }
   }, [podcast?.audio_url, player, loadedSource]);
+
+  useEffect(() => {
+    if (player) {
+      player.playbackRate = speed;
+      player.shouldCorrectPitch = true;
+    }
+  }, [player, speed, loadedSource]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -340,6 +359,10 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
                 style={styles.controlButton}>
                 <Ionicons name="play-forward" size={32} color="#9BB3C8" />
               </TouchableOpacity>
+
+              <TouchableOpacity onPress={cycleSpeed} style={styles.speedButton}>
+                <Text style={styles.speedText}>{speed}x</Text>
+              </TouchableOpacity>
             </XStack>
           </View>
 
@@ -536,6 +559,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.6,
     shadowRadius: 20,
     elevation: 10,
+  },
+  speedButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 50,
+  },
+  speedText: {
+    color: '#9BB3C8',
+    fontSize: 14,
+    fontWeight: '700',
   },
   actionsContainer: {
     padding: 20,
