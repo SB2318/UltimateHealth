@@ -4,10 +4,9 @@ import Image from "next/image";
 import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
-import ScrollToTop from "../components/ScrollToTop";
+import { PageWrapper, Section } from "../components/layout";
 import { Skeleton } from "../components/ui";
 
 const userScreenshots = [
@@ -118,6 +117,14 @@ export default function Home() {
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
+
+  const openComingSoonModal = useCallback(() => {
+    setComingSoonModal(true);
+  }, []);
+
+  const closeComingSoonModal = useCallback(() => {
+    setComingSoonModal(false);
+  }, []);
 
   useEffect(() => {
     dnaEnabledRef.current = cursorGlowEnabled;
@@ -492,7 +499,10 @@ export default function Home() {
       </header>
 
       {/* ── Hero ── */}
-<HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
+      <HeroAndDownload
+        onJoinTestFlight={() => setAppleModal(true)}
+        onShowComingSoon={openComingSoonModal}
+      />
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
@@ -889,15 +899,22 @@ export default function Home() {
       </footer>
 
       {/* ── Coming Soon Modal ── */}
-      <div className={`modal-overlay${comingSoonModal ? " active" : ""}`} onClick={() => setComingSoonModal(false)}>
+      <div
+        className={`modal-overlay${comingSoonModal ? " active" : ""}`}
+        onClick={closeComingSoonModal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="coming-soon-modal-title"
+        aria-hidden={!comingSoonModal}
+      >
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
-          <h2>Launching Soon!</h2>
+          <h2 id="coming-soon-modal-title">Launching Soon!</h2>
           <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
             We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
           </p>
           <div className="progress-container"><div className="progress-bar"></div></div>
-          <button className="close-modal-btn" onClick={() => setComingSoonModal(false)}>Close</button>
+          <button className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
         </div>
       </div>
 
