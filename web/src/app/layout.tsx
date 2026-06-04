@@ -3,13 +3,13 @@ import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
 // DO NOT remove the globals2.css import, it contains important global styles for the application
 import "./globals2.css";
-// make a new file for css 
+// make a new file for css
 import { cn } from "@/lib/utils";
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-const interHeading = Inter({subsets:['latin'],variable:'--font-heading'});
+const interHeading = Inter({ subsets: ["latin"], variable: "--font-heading" });
 
-const dmSans = DM_Sans({subsets:['latin'],variable:'--font-sans'});
+const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,14 +36,18 @@ export default function RootLayout({
 }) {
  
   return (
-    <html lang="en" className={cn("font-sans", dmSans.variable, interHeading.variable)}>
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        />
-      </head>
-      <body className={`${inter.className} antialiased`}><TooltipProvider>{children}</TooltipProvider></body>
+    <html
+      lang="en"
+      className={cn(
+        "font-sans",
+        dmSans.variable,
+        inter.variable,
+        interHeading.variable
+      )}
+    >
+      <body className={`${inter.className} antialiased`}>
+        <TooltipProvider>{children}</TooltipProvider>
+      </body>
     </html>
   );
 }

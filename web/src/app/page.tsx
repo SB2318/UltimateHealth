@@ -4,7 +4,11 @@ import Image from "next/image";
 import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
+import ScrollToTop from "../components/ScrollToTop";
+import { Skeleton } from "../components/ui";
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -89,6 +93,7 @@ export default function Home() {
   const [userSliderOpen, setUserSliderOpen] = useState(true);
   const [adminSliderOpen, setAdminSliderOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
+  const [featuresLoading, setFeaturesLoading] = useState(true);
 
   // ── DNA helix cursor ──
   const cursorGlowEnabled = useSyncExternalStore(
@@ -96,12 +101,6 @@ export default function Home() {
     getCursorGlowSnapshot,
     () => false
   );
-  const setCursorGlowEnabled = useCallback((next: boolean | ((prev: boolean) => boolean)) => {
-    const prev = getCursorGlowSnapshot();
-    const resolved = typeof next === "function" ? next(prev) : next;
-    localStorage.setItem(CURSOR_GLOW_STORAGE_KEY, String(resolved));
-    window.dispatchEvent(new Event(CURSOR_GLOW_EVENT));
-  }, []);
   const dnaCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const dnaAnimRef = useRef<number | null>(null);
   const dnaEnabledRef = useRef(false);
@@ -224,6 +223,14 @@ export default function Home() {
     document.querySelectorAll(".fade-in,.scroll-reveal,.scroll-reveal-left,.scroll-reveal-right,.scroll-reveal-scale")
       .forEach((el) => observer.observe(el));
     return () => observer.disconnect();
+  }, []);
+
+  // ── Features loading state ──
+  // TODO: Replace this simulated delay with real data fetching (e.g. an API call or
+  // a server action) once the features section is backed by dynamic content.
+  useEffect(() => {
+    const timer = setTimeout(() => setFeaturesLoading(false), 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   // Active section tracking via IntersectionObserver
@@ -403,9 +410,10 @@ export default function Home() {
 
   return (
     <>
+
       {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
-        <div className="container nav">
+        <PageWrapper as="div" className="nav">
           <a href="#" className="logo">
             <div className="logo-icon">
               <Image
@@ -471,7 +479,7 @@ export default function Home() {
           <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Toggle mobile menu">
             <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
           </button>
-        </div>
+        </PageWrapper>
 
         <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
           <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
@@ -484,99 +492,10 @@ export default function Home() {
       </header>
 
       {/* ── Hero ── */}
-      <section className="hero">
-        <div className="container hero-content scroll-reveal">
-          <h1>Empowering Wellness Through Global Community</h1>
-          <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
-        </div>
-      </section>
-
-      {/* Downloads Section */}
-      <section id="downloads" className="download-section">
-        <div className="container">
-          <h2>Get UltimateHealth</h2>
-          <p className="center">
-            Access our platform on your preferred device. UltimateHealth is available now for Android and coming soon to iOS via TestFlight.
-          </p>
-          <div className="download-grid">
-            {/* Android Card */}
-            <div className="download-card fade-in">
-              <div className="download-platform-header">
-                <div className="download-platform-icon android">
-                  <i className="fab fa-android"></i>
-                </div>
-                <div>
-                  <h3>Android App</h3>
-                  <span className="platform-status active">Available Now</span>
-                </div>
-              </div>
-              <p className="platform-desc">
-                Install UltimateHealth on your Android device to publish articles, listen to podcasts, and manage content.
-              </p>
-              <div className="store-buttons">
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="store-btn"
-                  id="playstore-btn"
-                  aria-label="Download UltimateHealth for Android on Google Play Store"
-                >
-                  <i className="fab fa-google-play"></i> UltimateHealth
-                </a>
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="store-btn"
-                  id="admin-closed-testing-btn"
-                  aria-label="Download UHealth Admin for Android on Google Play Store"
-                >
-                  <i className="fas fa-user-shield"></i> UHealth Admin
-                </a>
-              </div>
-            </div>
-
-            {/* iOS Card */}
-            <div className="download-card fade-in">
-              <div className="download-platform-header">
-                <div className="download-platform-icon ios">
-                  <i className="fab fa-apple"></i>
-                </div>
-                <div>
-                  <h3>iOS App</h3>
-                  <span className="platform-status coming-soon">Coming Soon</span>
-                </div>
-              </div>
-              <p className="platform-desc">
-                We are actively testing our iOS application. Request to join the TestFlight waitlist for early beta access.
-              </p>
-              <div className="store-buttons">
-                <button
-                  className="store-btn store-btn-secondary"
-                  id="ios-uh-btn"
-                  onClick={() => setAppleModal(true)}
-                  aria-label="Join iOS TestFlight beta for UltimateHealth"
-                >
-                  <i className="fab fa-apple"></i> UltimateHealth (Beta)
-                </button>
-                <button
-                  className="store-btn store-btn-secondary"
-                  id="ios-admin-btn"
-                  onClick={() => setAppleModal(true)}
-                  aria-label="Join iOS TestFlight beta for UHealth Admin"
-                >
-                  <i className="fab fa-apple"></i> UHealth Admin (Beta)
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+<HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
       {/* ── Screenshots ── */}
-      <section id="screenshots">
-        <div className="container">
+      <Section id="screenshots">
+        <PageWrapper>
           <h2>App Screenshots</h2>
           <p className="center">Take a look inside the UltimateHealth experience</p>
 
@@ -663,36 +582,40 @@ export default function Home() {
               </div>
             )}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Features ── */}
-      <section id="features" className="scroll-reveal">
-        <div className="container">
+      <Section id="features" className="scroll-reveal">
+        <PageWrapper>
           <h2>Be a Contributor: Core Community Features</h2>
           <p className="center">Join our community and make a difference in global health awareness</p>
-          <div className="feature-grid">
-            {[
-              { icon: "fa-globe", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
-              { icon: "fa-pen-nib", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
-              { icon: "fa-podcast", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
-              { icon: "fa-chart-line", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
-            ].map((f, i) => (
-              <div className="feature-item fade-in" key={i}>
-                <h3><i className={`fas ${f.icon}`}></i> {f.title}</h3>
-                <p>{f.desc}</p>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 w-full">
+            {featuresLoading ? (
+              <Skeleton count={4} variant="compact" />
+            ) : (
+              [
+                { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
+                { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
+                { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
+                { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
+              ].map((f, i) => (
+                <div className="feature-item w-full" key={i}>
+                  <h3>{f.icon} {f.title}</h3>
+                  <p>{f.desc}</p>
+                </div>
+              ))
+            )}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Moderator Features ── */}
-      <section className="member-section scroll-reveal">
-        <div className="container">
+      <Section className="member-section scroll-reveal">
+        <PageWrapper>
           <h2>Be a Member: Guardian of Content Integrity</h2>
           <p className="center">Help maintain quality and safety across the platform</p>
-          <div className="feature-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
             {[
               { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
               { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
@@ -700,28 +623,28 @@ export default function Home() {
               { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
               { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
             ].map((f, i) => (
-              <div className="feature-card mod-card fade-in" key={i}>
+              <div className="feature-card mod-card w-full fade-in" key={i}>
                 <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
                 <h3>{f.title}</h3>
                 <p>{f.desc}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Programs ── */}
-      <section id="programs" className="scroll-reveal">
-        <div className="container">
+      <Section id="programs" className="scroll-reveal">
+        <PageWrapper>
           <h2>Programs Participated In</h2>
           <p className="center">We are proud to have collaborated with and contributed to these prestigious tech and open-source initiatives</p>
-          <div className="program-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
             {[
               { logo: "https://github.com/user-attachments/assets/e0a40d06-f5b8-42a7-a5a0-033280f842be", alt: "IEEE IGDTUW Logo", badge: "Open Source Week", title: "IEEE IGDTUW", desc: "A week-long intensive event aimed at fostering global collaboration and high-level skill-building in the open-source ecosystem." },
               { logo: "https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00", alt: "Vultr Logo", badge: "Cloud Hackathon", title: "Vultr Cloud Innovate", desc: "Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power." },
               { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2024", title: "GirlScript Summer of Code", desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship." },
             ].map((p, i) => (
-              <div className="program-card fade-in" key={i}>
+              <div className="program-card w-full fade-in" key={i}>
                 <div className="program-logo-wrapper">
                   <Image
                     src={p.logo}
@@ -738,12 +661,12 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Contact ── */}
-      <section className="contact-section scroll-reveal" id="contact">
-        <div className="container">
+      <Section className="contact-section scroll-reveal" id="contact">
+        <PageWrapper>
           <h2>Connect With Us</h2>
           <p className="center" style={{ marginBottom: 56 }}>
             Have questions or want to collaborate? We&apos;d love to hear from you.
@@ -786,9 +709,14 @@ export default function Home() {
                 <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="GitHub">
                   <i className="fab fa-github"></i>
                 </a>
-                <a href="mailto:ultimate.health25@gmail.com" className="dark-social-icon" title="Email" aria-label="Email">
-                  <i className="fas fa-envelope"></i>
-                </a>
+               <a
+                 href="mailto:ultimate.health25@gmail.com?subject=Hello%20UltimateHealth&body=Hi%20UltimateHealth%20Team%2C"
+                 className="dark-social-icon"
+                 title="Email"
+                 aria-label="Send email to UltimateHealth via mail client"
+                 style={{ cursor: "pointer" }}>
+                 <i className="fas fa-envelope"></i>
+                 </a>
                 <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="LinkedIn">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
@@ -866,12 +794,12 @@ export default function Home() {
               )}
             </div>
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* ── Footer ── */}
       <footer>
-        <div className="container footer-grid">
+        <PageWrapper className="footer-grid">
           {/* Brand column */}
           <div className="footer-brand">
             <h2>UltimateHealth</h2>
@@ -946,7 +874,7 @@ export default function Home() {
             <a href={FEEDBACK_URL} target="_blank" rel="noreferrer">Feedback</a>
             <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">API Docs</a>
           </div>
-        </div>
+        </PageWrapper>
 
         {/* Bottom bar */}
         <div className="footer-bottom">
@@ -1035,5 +963,5 @@ export default function Home() {
       )}
       <ScrollToTop />
     </>
-  );
-}
+    );
+    }
