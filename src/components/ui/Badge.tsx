@@ -65,14 +65,14 @@ const getBadgeClasses = (
 const renderBadgeContent = (
   icon: React.ReactNode,
   children: React.ReactNode,
-  label?: string
+  label: string | undefined,
+  variant: BadgeVariant,
+  size: BadgeSize
 ) => {
   const content = children ?? label;
 
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full font-medium transition-colors ${variantClasses[variant]} ${sizeClasses[size]}`}
-    >
+    <>
       {icon && <span className="flex-shrink-0">{icon}</span>}
       {content}
     </>
@@ -99,7 +99,7 @@ const Badge = (props: BadgeProps) => {
         className={getBadgeClasses(variant, size, true, className)}
         {...buttonProps}
       >
-        {renderBadgeContent(icon, children, label)}
+        {renderBadgeContent(icon, children, label, variant, size)}
       </Component>
     );
   }
@@ -121,7 +121,7 @@ const Badge = (props: BadgeProps) => {
         className={getBadgeClasses(variant, size, true, className)}
         {...anchorProps}
       >
-        {renderBadgeContent(icon, children, label)}
+        {renderBadgeContent(icon, children, label, variant, size)}
       </Component>
     );
   }
@@ -142,7 +142,7 @@ const Badge = (props: BadgeProps) => {
       className={getBadgeClasses(variant, size, false, className)}
       {...spanProps}
     >
-      {renderBadgeContent(icon, children, label)}
+      {renderBadgeContent(icon, children, label, variant, size)}
     </Component>
   );
 };
