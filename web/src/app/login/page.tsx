@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PageWrapper, Section } from "@/components/layout";
 import Image from "next/image";
 
 export default function UserLoginPage() {
@@ -110,8 +111,8 @@ export default function UserLoginPage() {
             {msg}
           </div>
         )}
-      </div>
-    </div>
+      </PageWrapper>
+    </Section>
   );
 }
 
