@@ -9,7 +9,7 @@ import type { NextRequest } from "next/server";
  * - Security Headers (HSTS, X-Frame-Options, etc.)
  * - Permissions Policy
  */
-export function middleware(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
 
   // Generate a cryptographically strong nonce for CSP

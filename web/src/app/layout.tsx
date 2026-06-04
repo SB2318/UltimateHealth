@@ -43,6 +43,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
+      data-nonce={nonce}
       className={cn(
         "font-sans",
         dmSans.variable,
