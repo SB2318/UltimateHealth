@@ -487,6 +487,7 @@ export default function Home() {
                 <span className="nav-item-text">Join Us to Contribute</span>
               </a>
             </li>
+             <ModeToggle/>
             <li>
               <a href="#downloads" className="nav-btn-sm">
                 <i className="fas fa-user" aria-hidden="true"></i>
@@ -494,14 +495,6 @@ export default function Home() {
               </a>
             </li>
           </ul>
-
-      <li>
-        <a href="#downloads" className="nav-btn-sm">
-          <i className="fas fa-user" aria-hidden="true"></i>
-          <span>Login / Register</span>
-        </a>
-      </li>
-    </ul>
 
     <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Toggle mobile menu">
       <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
@@ -514,7 +507,7 @@ export default function Home() {
     <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
     <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
     <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-    <a href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
+    <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
     <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
     
     {/* Clean border separation separator panel for mobile menu */}
@@ -527,14 +520,14 @@ export default function Home() {
 
       {/* ── Hero ── */}
       <section className="hero">
-        <div className="container hero-content scroll-reveal" style={{paddingTop: '80px'}}>
+        <div className="container hero-content scroll-reveal hero-content-padded">
           <h1>Empowering Wellness Through Global Community</h1>
           <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
-        </PageWrapper>
-      </Section>
+        </div>
+      </section>
 
       {/* Downloads Section */}
-      <Section id="downloads" className="download-section">
+      <section id="downloads" className="download-section">
         <PageWrapper>
           <h2>Get UltimateHealth</h2>
           <p className="center">
@@ -612,7 +605,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
+        </PageWrapper>
       </section>
 
 <HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
@@ -748,8 +741,8 @@ export default function Home() {
         { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
       ].map((f, i) => (
         <div 
-          className="feature-card mod-card w-full fade-in border-2 border-transparent transition-all duration-300 ease-in-out hover:border-[#8952c4] hover:bg-muted/40 dark:hover:bg-muted/10 cursor-pointer" 
-          key={i}
+           className="feature-card mod-card w-full fade-in" 
+  key={i}
         >
           <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
           <h3>{f.title}</h3>
@@ -991,7 +984,7 @@ export default function Home() {
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
-            <a href="/contribute">Join Us & Contribute</a>
+            <a href={withBasePath("/contribute")}>Join Us & Contribute</a>
           </div>
 
           {/* Support */}

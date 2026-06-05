@@ -240,21 +240,21 @@ section.hero {
 }
 
 /* --- ABSOLUTE OVERRIDE: Force Dark Backgrounds --- */
+/* Dark mode feature card */
 .dark .feature-card.mod-card {
-  background-color: #1e293b !important;
-  color: #ffffff !important;
+  background-color: var(--color-surface-card);
+  color: var(--color-foreground);
 }
 
-/* Force the text colors within those cards to be white in dark mode */
 .dark .feature-card.mod-card h3,
 .dark .feature-card.mod-card p {
-  color: #ffffff !important;
+  color: var(--color-foreground);
 }
 
-/* Ensure the hover state background stays dark */
 .dark .feature-card.mod-card:hover {
-  background-color: #334155 !important;
+  background-color: var(--color-surface-card-hover);
 }
+
 
 /* Modal Content Background */
 .dark .modal-content {
@@ -299,4 +299,32 @@ section.hero {
 /* Ensure bold text inside the box is visible */
 .dark .modal-content div[style*="background: #f8fafc"] strong {
   color: #ffffff !important;
+}
+
+section.hero {
+  padding: 160px 0 80px 0;
+}
+
+.dark .mobile-nav a {
+  color: #ffffff !important;
+}
+
+.dark .mobile-nav {
+  background-color: #1e293b !important;
+}
+
+.download-card:hover {
+  border-color: #8952c4;
+  box-shadow: 0 10px 25px -5px rgba(137, 82, 196, 0.15);
+}
+
+.dark .download-card:hover {
+  border-color: #8952c4;
+  box-shadow: 0 10px 25px -5px rgba(137, 82, 196, 0.25);
+}
+
+.dark .feature-card.mod-card:hover {
+  background-color: #2d3f55 !important;
+  border: 3px solid #8952c4 !important;
+  box-shadow: 0 10px 25px -5px rgba(137, 82, 196, 0.35) !important;
 }
