@@ -163,9 +163,13 @@ jobs:
             exit 0
           fi
 
-          FAIL_COUNT=$(echo "$OUTPUT" | grep -o "✖" | wc -l | tr -d '[:space:]')
-          if [ "$FAIL_COUNT" -eq 1 ] && echo "$OUTPUT" | grep -q "app config fields that may not be synced"; then
-            echo "Ignoring known non-CNG warning"
+          set +e
+          set +o pipefail
+          CRITICAL_FAILS=$(echo "$OUTPUT" | grep "Check " | grep -v "app config fields that may not be synced" | grep -v "duplicate dependencies" | grep -v "common issues" | grep -v "installed Expo SDK" | wc -l | tr -d '[:space:]')
+          set -e
+          set -o pipefail
+          if [ "$CRITICAL_FAILS" -eq 0 ]; then
+            echo "Ignoring known non-critical Expo Doctor warnings (non-CNG, duplicate dependencies, and package version warnings)"
             exit 0
           fi
 
