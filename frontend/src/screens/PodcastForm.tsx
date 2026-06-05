@@ -28,6 +28,8 @@ import { ttsLanguageList } from '../helper/Utils';
 
 
 const PodcastForm = ({navigation, route}: PodcastFormProp) => {
+  const MAX_TITLE_LENGTH = 100;
+  const MAX_TITLE_LENGTH = 100;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
@@ -264,7 +266,12 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
                 value={title}
-                onChangeText={setTitle}
+                maxLength={MAX_TITLE_LENGTH}
+                onChangeText={text => {
+                  if (text.length <= MAX_TITLE_LENGTH) {
+                    setTitle(text);
+                  }
+                }}
               />
             </View>
 
@@ -518,6 +525,14 @@ const styles = StyleSheet.create({
     color: '#6b7280',
     fontSize: 13,
     fontWeight: '500',
+  },
+  charCounterWarning: {
+    color: '#FFA500',
+    fontWeight: '600',
+  },
+  charCounterError: {
+    color: '#EF4444',
+    fontWeight: '700',
   },
   languageSelector: {
     height: 50,
