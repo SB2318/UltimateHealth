@@ -4,9 +4,12 @@ import Image from "next/image";
 import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { PageWrapper, Section } from "@/components/layout";
+import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import HeroAndDownload from "../components/HeroAndDownload";
+import ScrollToTop from "../components/ScrollToTop";
 import ScrollToTop from "../components/ScrollToTop";
 import { withBasePath } from "@/lib/basePath";
+import { Skeleton } from "../components/ui";
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -91,6 +94,7 @@ export default function Home() {
   const [userSliderOpen, setUserSliderOpen] = useState(true);
   const [adminSliderOpen, setAdminSliderOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
+  const [featuresLoading, setFeaturesLoading] = useState(true);
 
   // ── DNA helix cursor ──
   const cursorGlowEnabled = useSyncExternalStore(
@@ -98,12 +102,6 @@ export default function Home() {
     getCursorGlowSnapshot,
     () => false
   );
-  const setCursorGlowEnabled = useCallback((next: boolean | ((prev: boolean) => boolean)) => {
-    const prev = getCursorGlowSnapshot();
-    const resolved = typeof next === "function" ? next(prev) : next;
-    localStorage.setItem(CURSOR_GLOW_STORAGE_KEY, String(resolved));
-    window.dispatchEvent(new Event(CURSOR_GLOW_EVENT));
-  }, []);
   const dnaCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const dnaAnimRef = useRef<number | null>(null);
   const dnaEnabledRef = useRef(false);
@@ -121,6 +119,14 @@ export default function Home() {
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
+
+  const openComingSoonModal = useCallback(() => {
+    setComingSoonModal(true);
+  }, []);
+
+  const closeComingSoonModal = useCallback(() => {
+    setComingSoonModal(false);
+  }, []);
 
   useEffect(() => {
     dnaEnabledRef.current = cursorGlowEnabled;
@@ -226,6 +232,14 @@ export default function Home() {
     document.querySelectorAll(".fade-in,.scroll-reveal,.scroll-reveal-left,.scroll-reveal-right,.scroll-reveal-scale")
       .forEach((el) => observer.observe(el));
     return () => observer.disconnect();
+  }, []);
+
+  // ── Features loading state ──
+  // TODO: Replace this simulated delay with real data fetching (e.g. an API call or
+  // a server action) once the features section is backed by dynamic content.
+  useEffect(() => {
+    const timer = setTimeout(() => setFeaturesLoading(false), 1500);
+    return () => clearTimeout(timer);
   }, []);
 
   // Active section tracking via IntersectionObserver
@@ -405,6 +419,7 @@ export default function Home() {
 
   return (
     <>
+
       {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
         <PageWrapper as="div" className="nav">
@@ -486,8 +501,8 @@ export default function Home() {
       </header>
 
       {/* ── Hero ── */}
-      <Section className="hero">
-        <PageWrapper className="hero-content scroll-reveal">
+      <section className="hero">
+        <div className="container hero-content scroll-reveal">
           <h1>Empowering Wellness Through Global Community</h1>
           <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
         </PageWrapper>
@@ -500,7 +515,7 @@ export default function Home() {
           <p className="center">
             Access our platform on your preferred device. UltimateHealth is available now for Android and coming soon to iOS via TestFlight.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-4xl mx-auto">
+          <div className="download-grid">
             {/* Android Card */}
             <div className="download-card fade-in">
               <div className="download-platform-header">
@@ -526,16 +541,15 @@ export default function Home() {
                 >
                   <i className="fab fa-google-play"></i> UltimateHealth
                 </a>
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin"
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  type="button"
                   className="store-btn"
                   id="admin-closed-testing-btn"
-                  aria-label="Download UHealth Admin for Android on Google Play Store"
+                  onClick={openComingSoonModal}
+                  aria-label="View UHealth Admin closed testing launch status"
                 >
-                  <i className="fas fa-user-shield"></i> UHealth Admin
-                </a>
+                  <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
+                </button>
               </div>
             </div>
 
@@ -573,9 +587,10 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </PageWrapper>
-      </Section>
+        </div>
+      </section>
 
+<HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
@@ -674,17 +689,21 @@ export default function Home() {
           <h2>Be a Contributor: Core Community Features</h2>
           <p className="center">Join our community and make a difference in global health awareness</p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 w-full">
-            {[
-              { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
-              { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
-              { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
-              { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
-            ].map((f, i) => (
-              <div className="feature-item w-full fade-in" key={i}>
-                <h3>{f.icon} {f.title}</h3>
-                <p>{f.desc}</p>
-              </div>
-            ))}
+            {featuresLoading ? (
+              <Skeleton count={4} variant="compact" />
+            ) : (
+              [
+                { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
+                { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
+                { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
+                { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
+              ].map((f, i) => (
+                <div className="feature-item w-full" key={i}>
+                  <h3>{f.icon} {f.title}</h3>
+                  <p>{f.desc}</p>
+                </div>
+              ))
+            )}
           </div>
         </PageWrapper>
       </Section>
@@ -968,15 +987,22 @@ export default function Home() {
       </footer>
 
       {/* ── Coming Soon Modal ── */}
-      <div className={`modal-overlay${comingSoonModal ? " active" : ""}`} onClick={() => setComingSoonModal(false)}>
+      <div
+        className={`modal-overlay${comingSoonModal ? " active" : ""}`}
+        onClick={closeComingSoonModal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="coming-soon-modal-title"
+        aria-hidden={!comingSoonModal}
+      >
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
-          <h2>Launching Soon!</h2>
+          <h2 id="coming-soon-modal-title">Launching Soon!</h2>
           <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
             We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
           </p>
           <div className="progress-container"><div className="progress-bar"></div></div>
-          <button className="close-modal-btn" onClick={() => setComingSoonModal(false)}>Close</button>
+          <button className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
         </div>
       </div>
 
@@ -1042,5 +1068,5 @@ export default function Home() {
       )}
       <ScrollToTop />
     </>
-  );
-}
+    );
+    }
