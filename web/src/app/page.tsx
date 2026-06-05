@@ -1,7 +1,16 @@
-﻿"use client";
+"use client";
 
-import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import "./globals.css";
+
+import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import HeroAndDownload from "../components/HeroAndDownload";
+import ScrollToTop from "../components/ScrollToTop";
+import ScrollToTop from "../components/ScrollToTop";
+import { withBasePath } from "@/lib/basePath";
+import { Skeleton } from "../components/ui";
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -16,7 +25,7 @@ const userScreenshots = [
   { src: "/assets/podcast-recording.jpeg", caption: "Podcast Recorder" },
   { src: "/assets/podcast-upload.jpeg", caption: "Podcast Upload" },
   { src: "/assets/notificaion-screen.jpeg", caption: "Notification" },
-  { src: "/assets/ultimate-health-about.jpeg", caption: "App Info" },
+  { src: "/assets/UltimateHealth-about.jpeg", caption: "App Info" },
   { src: "/assets/terms_cond_page.jpeg", caption: "Terms And Condition" },
 ];
 
@@ -33,10 +42,51 @@ const adminScreenshots = [
 ];
 
 const allScreenshots = [...userScreenshots, ...adminScreenshots];
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://uhsocial.in";
+const CURSOR_GLOW_STORAGE_KEY = "cursorGlowEnabled";
+const CURSOR_GLOW_EVENT = "cursor-glow-preference-change";
+// Owner-configurable frontend URLs (set in deployment env when needed)
+const HELP_CENTER_URL = process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https://uhsocial.in/docs";
+const FEEDBACK_URL = process.env.NEXT_PUBLIC_FEEDBACK_URL || "https://github.com/SB2318/UltimateHealth/issues";
+const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me";
+const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com";
+const PRIVACY_POLICY_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || "#";
+const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || "#";
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SLIDER_SCROLL_AMOUNT = 324;
+const DNA_TRAIL_MAX_POINTS = 38;
+const isValidEmail = (email: string) => EMAIL_PATTERN.test(email.trim());
+
+const getCursorGlowSnapshot = () => {
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem(CURSOR_GLOW_STORAGE_KEY) === "true";
+};
+
+const subscribeToCursorGlow = (callback: () => void) => {
+  if (typeof window === "undefined") return () => {};
+
+  const onStorage = (event: StorageEvent) => {
+    if (event.storageArea === window.localStorage && event.key === CURSOR_GLOW_STORAGE_KEY) {
+      callback();
+    }
+  };
+  const onCustomEvent: EventListener = () => callback();
+
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(CURSOR_GLOW_EVENT, onCustomEvent);
+
+  return () => {
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(CURSOR_GLOW_EVENT, onCustomEvent);
+  };
+};
+
+const TRACKED_SECTION_IDS = ["screenshots", "features", "programs", "contact"];
 
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [comingSoonModal, setComingSoonModal] = useState(false);
   const [appleModal, setAppleModal] = useState(false);
   const [testerEmail, setTesterEmail] = useState("");
   const [testerSuccess, setTesterSuccess] = useState(false);
@@ -44,316 +94,635 @@ export default function Home() {
   const [currentScreenshot, setCurrentScreenshot] = useState(0);
   const [userSliderOpen, setUserSliderOpen] = useState(true);
   const [adminSliderOpen, setAdminSliderOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
+  const [featuresLoading, setFeaturesLoading] = useState(true);
+
+  // ── DNA helix cursor ──
+  const cursorGlowEnabled = useSyncExternalStore(
+    subscribeToCursorGlow,
+    getCursorGlowSnapshot,
+    () => false
+  );
+  const dnaCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const dnaAnimRef = useRef<number | null>(null);
+  const dnaEnabledRef = useRef(false);
+
+  // ── Contact form state ──
+  const [contactName, setContactName] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactSubject, setContactSubject] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+  const [contactStatus, setContactStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+
+  // ── Newsletter state ──
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
 
-  // Scroll effect for header
+  const openComingSoonModal = useCallback(() => {
+    setComingSoonModal(true);
+  }, []);
+
+  const closeComingSoonModal = useCallback(() => {
+    setComingSoonModal(false);
+  }, []);
+
+  useEffect(() => {
+    dnaEnabledRef.current = cursorGlowEnabled;
+    if (dnaCanvasRef.current) {
+      dnaCanvasRef.current.style.opacity = cursorGlowEnabled ? "1" : "0";
+    }
+  }, [cursorGlowEnabled]);
+
+  // ── DNA Helix Cursor Effect ──
+  useEffect(() => {
+    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    if (isTouchDevice) { document.body.classList.add("touch-device"); return; }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.className = "dna-cursor-canvas";
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    document.body.appendChild(canvas);
+    dnaCanvasRef.current = canvas;
+
+    const saved = getCursorGlowSnapshot();
+    dnaEnabledRef.current = saved;
+    canvas.style.opacity = saved ? "1" : "0";
+
+    const ctx = canvas.getContext("2d")!;
+    const trail: { x: number; y: number; t: number }[] = [];
+    let dnaT = 0;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+
+    const onMove = (e: MouseEvent) => { mouseX = e.clientX; mouseY = e.clientY; };
+    const onResize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("resize", onResize);
+
+    const draw = () => {
+      dnaT += 0.06;
+      trail.unshift({ x: mouseX, y: mouseY, t: dnaT });
+      if (trail.length > DNA_TRAIL_MAX_POINTS) trail.pop();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (dnaEnabledRef.current) {
+        trail.forEach((pt, i) => {
+          const age = i / trail.length;
+          const alpha = (1 - age) * 0.92;
+          const dotR = (1 - age) * 5.5 + 1;
+          const offset = Math.sin(pt.t * 2.2) * 14 * (1 - age * 0.4);
+
+          ctx.beginPath();
+          ctx.arc(pt.x + offset, pt.y, dotR, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(14,165,233,${alpha})`;
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(pt.x - offset, pt.y, dotR * 0.72, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(56,189,248,${alpha * 0.78})`;
+          ctx.fill();
+
+          if (i % 4 === 0 && i + 4 < trail.length) {
+            ctx.beginPath();
+            ctx.moveTo(pt.x + offset, pt.y);
+            ctx.lineTo(pt.x - offset, pt.y);
+            ctx.strokeStyle = `rgba(125,211,252,${alpha * 0.38})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        });
+      }
+      dnaAnimRef.current = requestAnimationFrame(draw);
+    };
+
+    dnaAnimRef.current = requestAnimationFrame(draw);
+
+    return () => {
+      if (dnaAnimRef.current) cancelAnimationFrame(dnaAnimRef.current);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("resize", onResize);
+      canvas.remove();
+      dnaCanvasRef.current = null;
+    };
+  }, []);
+
+  // ── Scroll header ──
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fade-in animations
+  // ── Scroll reveal ──
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.querySelectorAll(".fade-in,.scroll-reveal,.scroll-reveal-left,.scroll-reveal-right,.scroll-reveal-scale")
+        .forEach((el) => el.classList.add("visible", "revealed"));
+      return;
+    }
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("visible");
-        });
-      },
-      { threshold: 0.1 }
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("visible", "revealed"); }),
+      { threshold: 0.15, rootMargin: "0px 0px -50px 0px" }
     );
-    document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el));
+    document.querySelectorAll(".fade-in,.scroll-reveal,.scroll-reveal-left,.scroll-reveal-right,.scroll-reveal-scale")
+      .forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
-  // Keyboard nav for screenshot modal
+  // ── Features loading state ──
+  // TODO: Replace this simulated delay with real data fetching (e.g. an API call or
+  // a server action) once the features section is backed by dynamic content.
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (!screenshotModal) return;
-      if (e.key === "Escape") setScreenshotModal(false);
-      if (e.key === "ArrowLeft") navigateScreenshot(-1);
-      if (e.key === "ArrowRight") navigateScreenshot(1);
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [screenshotModal, currentScreenshot]);
+    const timer = setTimeout(() => setFeaturesLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const openScreenshotModal = (src: string) => {
-    const idx = allScreenshots.findIndex((s) => s.src === src);
-    setCurrentScreenshot(idx >= 0 ? idx : 0);
-    setScreenshotModal(true);
-    document.body.style.overflow = "hidden";
-  };
+  // Active section tracking via IntersectionObserver
+  useEffect(() => {
+    const visibleSections = new Set<string>();
 
-  const closeScreenshotModal = () => {
-    setScreenshotModal(false);
-    document.body.style.overflow = "";
-  };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visibleSections.add(entry.target.id);
+          } else {
+            visibleSections.delete(entry.target.id);
+          }
+        });
 
-  const navigateScreenshot = (dir: number) => {
+        if (visibleSections.size > 0) {
+          const topSection = TRACKED_SECTION_IDS
+            .filter((id) => visibleSections.has(id))
+            .map((id) => ({
+              id,
+              top: document.getElementById(id)?.getBoundingClientRect().top ?? Infinity,
+            }))
+            .sort((a, b) => Math.abs(a.top) - Math.abs(b.top))[0];
+
+          if (topSection) setActiveSection(topSection.id);
+        } else {
+          setActiveSection("");
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    TRACKED_SECTION_IDS.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Screenshot keyboard nav
+  const navigateScreenshot = useCallback((dir: number) => {
     setCurrentScreenshot((prev) => {
       const next = prev + dir;
       if (next < 0) return allScreenshots.length - 1;
       if (next >= allScreenshots.length) return 0;
       return next;
     });
+  }, []);
+
+  const closeScreenshotModal = useCallback(() => {
+    setScreenshotModal(false);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = screenshotModal ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [screenshotModal]);
+  
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (!screenshotModal) return;
+      if (e.key === "Escape") closeScreenshotModal();
+      if (e.key === "ArrowLeft") navigateScreenshot(-1);
+      if (e.key === "ArrowRight") navigateScreenshot(1);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [screenshotModal, navigateScreenshot, closeScreenshotModal]);
+
+  const openScreenshotModal = (src: string) => {
+    const idx = allScreenshots.findIndex((s) => s.src === src);
+    setCurrentScreenshot(idx >= 0 ? idx : 0);
+    setScreenshotModal(true);
   };
 
-  const moveSlider = (ref: React.RefObject<HTMLDivElement | null>, dir: number) => {
-    ref.current?.scrollBy({ left: dir * 324, behavior: "smooth" });
+  const handleScreenshotCardKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, src: string) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openScreenshotModal(src);
+    }
   };
 
+  const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
+    ref.current?.scrollBy({ left: dir * SLIDER_SCROLL_AMOUNT, behavior: "smooth" });
+  };
+
+  // ── TestFlight invite ──
   const sendTesterEmail = async () => {
-    if (!testerEmail || !testerEmail.includes("@")) {
+    const trimmedTesterEmail = testerEmail.trim();
+    if (!isValidEmail(trimmedTesterEmail)) {
       alert("Please enter a valid Apple ID email.");
       return;
     }
     try {
-      const response = await fetch(
-        "https://uhsocial.in/api/publishing-related/invite-testflight",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            to: "ultimate.health25@gmail.com",
-            from: testerEmail,
-            subject: "New TestFlight Invitation Request",
-            body: `User with email ${testerEmail} wants to join the iOS TestFlight group.`,
-          }),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/api/publishing-related/invite-testflight`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: "ultimate.health25@gmail.com",
+          from: trimmedTesterEmail,
+          subject: "New TestFlight Invitation Request",
+          body: `User with email ${trimmedTesterEmail} wants to join the iOS TestFlight group.`,
+        }),
+      });
       if (!response.ok) throw new Error("API Failure");
     } catch {
-      window.location.href = `mailto:ultimate.health25@gmail.com?subject=TestFlight Request&body=I would like to be a tester. My email is: ${testerEmail}`;
+      window.location.href = `mailto:ultimate.health25@gmail.com?subject=TestFlight Request&body=I would like to be a tester. My email is: ${trimmedTesterEmail}`;
     }
     setTesterSuccess(true);
   };
 
+  // ── Contact form submit → uhsocial.in API ──
+  // Backend route needed: POST /api/contact/send on NEXT_PUBLIC_API_BASE_URL
+  // See /contact_newsletter_guide.md for the Express route implementation
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedName = contactName.trim();
+    const trimmedEmail = contactEmail.trim();
+    const trimmedSubject = contactSubject.trim();
+    const trimmedMessage = contactMessage.trim();
+    if (!trimmedName || !isValidEmail(trimmedEmail) || !trimmedSubject || !trimmedMessage) {
+      alert("Please complete the form with a valid email address.");
+      return;
+    }
+    setContactStatus("sending");
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/contact/send`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: trimmedName,
+          email: trimmedEmail,
+          subject: trimmedSubject,
+          message: trimmedMessage,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setContactStatus("success");
+      setContactName(""); setContactEmail(""); setContactSubject(""); setContactMessage("");
+    } catch {
+      // Fallback: open mailto if API not yet implemented
+      window.location.href = `mailto:ultimate.health25@gmail.com?subject=${encodeURIComponent(trimmedSubject)}&body=${encodeURIComponent(`From: ${trimmedName} (${trimmedEmail})\n\n${trimmedMessage}`)}`;
+      setContactStatus("error");
+    }
+  };
+
+  // ── Newsletter subscribe ──
+  // Backend route needed: POST /api/newsletter/subscribe on NEXT_PUBLIC_API_BASE_URL
+  // See /contact_newsletter_guide.md — owner fills DB / Mailchimp credentials
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedNewsletterEmail = newsletterEmail.trim();
+    if (!isValidEmail(trimmedNewsletterEmail)) {
+      setNewsletterStatus("error");
+      return;
+    }
+    setNewsletterStatus("sending");
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: trimmedNewsletterEmail }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setNewsletterStatus("success");
+      setNewsletterEmail("");
+    } catch {
+      setNewsletterStatus("error");
+    }
+  };
+
+  const selectedScreenshot = allScreenshots[currentScreenshot] ?? allScreenshots[0];
+
   return (
     <>
-      {/* Header */}
+
+      {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
-        <div className="container nav">
+        <PageWrapper as="div" className="nav">
           <a href="#" className="logo">
             <div className="logo-icon">
-              <img
+              <Image
                 src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
-                alt="Ultimate Health Logo"
-                width={48}
-                height={48}
+                alt="UltimateHealth Logo" width={48} height={48}
+                priority
               />
             </div>
             Ultimate-Health
           </a>
+
           <ul className="nav-links">
-            <li><a href="#features">Features</a></li>
-            <li><a href="#screenshots">Screenshots</a></li>
-            <li><a href="#programs">Programs</a></li>
-            <li><a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li><a href="#downloads" className="nav-btn-sm">Downloads</a></li>
+            <li>
+              <a
+                href="#features"
+                className={`nav-link-item${activeSection === "features" ? " active" : ""}`}
+                aria-current={activeSection === "features" ? "location" : undefined}
+              >
+                <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Platform Highlights</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#screenshots"
+                className={`nav-link-item${activeSection === "screenshots" ? " active" : ""}`}
+                aria-current={activeSection === "screenshots" ? "location" : undefined}
+              >
+                <i className="fas fa-image nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Screenshots</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#programs"
+                className={`nav-link-item${activeSection === "programs" ? " active" : ""}`}
+                aria-current={activeSection === "programs" ? "location" : undefined}
+              >
+                <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Community Programs</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer" className="nav-link-item">
+                <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Read Articles</span>
+              </a>
+            </li>
+            <li>
+              <Link href="/medical-glossary" className="nav-link-item">
+                <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Medical Glossary</span>
+              </Link>
+            </li>
+            <li>
+             
+              <a href={withBasePath("/contribute")} className="nav-link-item">
+                <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Join Us to Contribute</span>
+              </a>
+            </li>
+            <li>
+              <a href="#downloads" className="nav-btn-sm">
+                <i className="fas fa-user" aria-hidden="true"></i>
+                <span>Login / Register</span>
+              </a>
+            </li>
           </ul>
-          <button
-            className="mobile-menu-toggle"
-            id="mobile-menu-btn"
-            onClick={() => setMobileMenuOpen((o) => !o)}
-            aria-label="Toggle mobile menu"
-          >
+
+          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Open navigation menu">
             <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
           </button>
-        </div>
+        </PageWrapper>
+
         <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Features</a>
           <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
-          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Programs</a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a>
-          <a href="#contact" onClick={() => setMobileMenuOpen(false)}>Contact</a>
-          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Downloads</a>
+          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
+          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
+          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
+          <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
+          <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
+          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
       </header>
 
-      {/* Hero */}
+      {/* ── Hero ── */}
       <section className="hero">
-        <div className="container hero-content">
+        <div className="container hero-content scroll-reveal">
           <h1>Empowering Wellness Through Global Community</h1>
-          <p>
-            Ultimate Health is a platform that lets you publish health knowledge
-            in your own language, review content, and share podcasts with the world.
+          <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
+        </PageWrapper>
+      </Section>
+
+      {/* Downloads Section */}
+      <Section id="downloads" className="download-section">
+        <PageWrapper>
+          <h2>Get UltimateHealth</h2>
+          <p className="center">
+            Access our platform on your preferred device. UltimateHealth is available now for Android and coming soon to iOS via TestFlight.
           </p>
-        </div>
-      </section>
+          <div className="download-grid">
+            {/* Android Card */}
+            <div className="download-card fade-in">
+              <div className="download-platform-header">
+                <div className="download-platform-icon android">
+                  <i className="fab fa-android"></i>
+                </div>
+                <div>
+                  <h3>Android App</h3>
+                  <span className="platform-status active">Available Now</span>
+                </div>
+              </div>
+              <p className="platform-desc">
+                Install UltimateHealth on your Android device to publish articles, listen to podcasts, and manage content.
+              </p>
+              <div className="store-buttons">
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="store-btn"
+                  id="playstore-btn"
+                  aria-label="Download UltimateHealth for Android on Google Play Store"
+                >
+                  <i className="fab fa-google-play"></i> UltimateHealth
+                </a>
+                <button
+                  type="button"
+                  className="store-btn"
+                  id="admin-closed-testing-btn"
+                  onClick={openComingSoonModal}
+                  aria-label="View UHealth Admin closed testing launch status"
+                >
+                  <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
+                </button>
+              </div>
+            </div>
 
-      {/* Downloads - Play Store */}
-      <section id="downloads">
-        <div className="container">
-          <h2>Download from Play Store</h2>
-          <p className="center">Get started with Ultimate Health on your Android device</p>
-          <div className="store-buttons">
-            <a
-              href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
-              target="_blank"
-              rel="noreferrer"
-              id="playstore-btn"
-            >
-              <i className="fab fa-google-play"></i> UltimateHealth
-            </a>
-            <a
-              href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin"
-              target="_blank"
-              rel="noreferrer"
-              className="store-btn"
-              id="admin-closed-testing-btn"
-            >
-              <i className="fas fa-user-shield"></i> UHealth Admin
-            </a>
+            {/* iOS Card */}
+            <div className="download-card fade-in">
+              <div className="download-platform-header">
+                <div className="download-platform-icon ios">
+                  <i className="fab fa-apple"></i>
+                </div>
+                <div>
+                  <h3>iOS App</h3>
+                  <span className="platform-status coming-soon">Coming Soon</span>
+                </div>
+              </div>
+              <p className="platform-desc">
+                We are actively testing our iOS application. Request to join the TestFlight waitlist for early beta access.
+              </p>
+              <div className="store-buttons">
+                <button
+                  className="store-btn store-btn-secondary"
+                  id="ios-uh-btn"
+                  onClick={() => setAppleModal(true)}
+                  aria-label="Join iOS TestFlight beta for UltimateHealth"
+                >
+                  <i className="fab fa-apple"></i> UltimateHealth (Beta)
+                </button>
+                <button
+                  className="store-btn store-btn-secondary"
+                  id="ios-admin-btn"
+                  onClick={() => setAppleModal(true)}
+                  aria-label="Join iOS TestFlight beta for UHealth Admin"
+                >
+                  <i className="fab fa-apple"></i> UHealth Admin (Beta)
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Downloads - App Store */}
-      <section>
-        <div className="container">
-          <h2>Download from App Store</h2>
-          <p className="center">Coming soon to iOS devices</p>
-          <div className="store-buttons">
-            <button className="store-btn" id="ios-uh-btn" onClick={() => setAppleModal(true)}>
-              <i className="fab fa-apple"></i> UltimateHealth (Coming Soon)
-            </button>
-            <button className="store-btn" id="ios-admin-btn" onClick={() => setAppleModal(true)}>
-              <i className="fab fa-apple"></i> UHealth Admin (Coming Soon)
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Screenshots */}
-      <section id="screenshots">
-        <div className="container">
+<HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
+      {/* ── Screenshots ── */}
+      <Section id="screenshots">
+        <PageWrapper>
           <h2>App Screenshots</h2>
-          <p className="center">Take a look inside the Ultimate Health experience</p>
+          <p className="center">Take a look inside the UltimateHealth experience</p>
 
-          {/* UltimateHealth App */}
           <div className="screenshot-details">
-            <div
-              className="screenshot-summary"
-              onClick={() => setUserSliderOpen((o) => !o)}
-              role="button"
-              tabIndex={0}
-              id="user-screenshots-toggle"
-            >
-              <span style={{ color: "var(--primary)" }}>{userSliderOpen ? "▼" : "▶"}</span>
-              UltimateHealth App
+            <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setUserSliderOpen((o) => !o); }}>
+              <span style={{ color: "var(--primary)" }}>{userSliderOpen ? "▼" : "▶"}</span> UltimateHealth App
             </div>
             {userSliderOpen && (
               <div className="screenshot-slider-container">
-                <div className="screenshots-wrapper" ref={userSliderRef} id="screenshotSlider">
+                <div className="screenshots-wrapper" ref={userSliderRef}>
                   {userScreenshots.map((s) => (
                     <div
                       key={s.src}
                       className="screenshot-box"
                       onClick={() => openScreenshotModal(s.src)}
+                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${s.caption} screenshot`}
                     >
-                      <img src={s.src} alt={s.caption} />
+                      <Image
+                        src={s.src}
+                        alt={s.caption}
+                        fill
+                        sizes="(max-width: 768px) 260px, 300px"
+                        className="screenshot-image"
+                      />
                     </div>
                   ))}
                   <div className="screenshot-box">
                     <div className="screenshot-empty">
                       <i className="fas fa-mobile-alt" style={{ fontSize: "4rem", color: "#cbd5e1" }}></i>
-                      <p style={{ marginTop: "20px", color: "#718096", fontWeight: 600 }}>
-                        More Screens Coming Soon
-                      </p>
+                      <p style={{ marginTop: "20px", color: "#718096", fontWeight: 600 }}>More Screens Coming Soon</p>
                     </div>
                   </div>
                 </div>
                 <div className="slider-nav">
-                  <button className="nav-btn" id="user-slider-prev" onClick={() => moveSlider(userSliderRef, -1)}>
-                    <i className="fas fa-chevron-left"></i>
-                  </button>
-                  <button className="nav-btn" id="user-slider-next" onClick={() => moveSlider(userSliderRef, 1)}>
-                    <i className="fas fa-chevron-right"></i>
-                  </button>
+                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => moveSlider(userSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => moveSlider(userSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             )}
           </div>
 
-          {/* UHealth Admin App */}
           <div className="screenshot-details">
-            <div
-              className="screenshot-summary"
-              onClick={() => setAdminSliderOpen((o) => !o)}
-              role="button"
-              tabIndex={0}
-              id="admin-screenshots-toggle"
-            >
-              <span style={{ color: "var(--primary)" }}>{adminSliderOpen ? "▼" : "▶"}</span>
-              UHealth Admin App
+            <div className="screenshot-summary" onClick={() => setAdminSliderOpen((o) => !o)} role="button" tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setAdminSliderOpen((o) => !o); }}>
+              <span style={{ color: "var(--primary)" }}>{adminSliderOpen ? "▼" : "▶"}</span> UHealth Admin App
             </div>
             {adminSliderOpen && (
               <div className="screenshot-slider-container">
-                <div className="screenshots-wrapper" ref={adminSliderRef} id="screenshotSliderAdmin">
+                <div className="screenshots-wrapper" ref={adminSliderRef}>
                   {adminScreenshots.map((s) => (
                     <div
                       key={s.src}
                       className="screenshot-box"
                       onClick={() => openScreenshotModal(s.src)}
+                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${s.caption} screenshot`}
                     >
-                      <img src={s.src} alt={s.caption} />
+                      <Image
+                        src={s.src}
+                        alt={s.caption}
+                        fill
+                        sizes="(max-width: 768px) 260px, 300px"
+                        className="screenshot-image"
+                      />
                     </div>
                   ))}
                   <div className="screenshot-box">
                     <div className="screenshot-empty">
                       <i className="fas fa-mobile-alt" style={{ fontSize: "4rem", color: "#cbd5e1" }}></i>
-                      <p style={{ marginTop: "20px", color: "#718096", fontWeight: 600 }}>
-                        More Screens Coming Soon
-                      </p>
+                      <p style={{ marginTop: "20px", color: "#718096", fontWeight: 600 }}>More Screens Coming Soon</p>
                     </div>
                   </div>
                 </div>
                 <div className="slider-nav">
-                  <button className="nav-btn" id="admin-slider-prev" onClick={() => moveSlider(adminSliderRef, -1)}>
-                    <i className="fas fa-chevron-left"></i>
-                  </button>
-                  <button className="nav-btn" id="admin-slider-next" onClick={() => moveSlider(adminSliderRef, 1)}>
-                    <i className="fas fa-chevron-right"></i>
-                  </button>
+                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => moveSlider(adminSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => moveSlider(adminSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             )}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
-      {/* Features */}
-      <section id="features">
-        <div className="container">
+      {/* ── Features ── */}
+      <Section id="features" className="scroll-reveal">
+        <PageWrapper>
           <h2>Be a Contributor: Core Community Features</h2>
           <p className="center">Join our community and make a difference in global health awareness</p>
-          <div className="feature-grid">
-            {[
-              { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
-              { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
-              { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
-              { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
-            ].map((f, i) => (
-              <div className="feature-item fade-in" key={i}>
-                <h3>{f.icon} {f.title}</h3>
-                <p>{f.desc}</p>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 w-full">
+            {featuresLoading ? (
+              <Skeleton count={4} variant="compact" />
+            ) : (
+              [
+                { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
+                { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
+                { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
+                { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
+              ].map((f, i) => (
+                <div className="feature-item w-full" key={i}>
+                  <h3>{f.icon} {f.title}</h3>
+                  <p>{f.desc}</p>
+                </div>
+              ))
+            )}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
-      {/* Moderator Features */}
-      <section className="member-section">
-        <div className="container">
+      {/* ── Moderator Features ── */}
+      <Section className="member-section scroll-reveal">
+        <PageWrapper>
           <h2>Be a Member: Guardian of Content Integrity</h2>
           <p className="center">Help maintain quality and safety across the platform</p>
-          <div className="feature-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
             {[
               { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
               { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
@@ -361,47 +730,37 @@ export default function Home() {
               { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
               { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
             ].map((f, i) => (
-              <div className="feature-card mod-card fade-in" key={i}>
+              <div className="feature-card mod-card w-full fade-in" key={i}>
                 <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
                 <h3>{f.title}</h3>
                 <p>{f.desc}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
-      {/* Programs */}
-      <section id="programs">
-        <div className="container">
+      {/* ── Programs ── */}
+      <Section id="programs" className="scroll-reveal">
+        <PageWrapper>
           <h2>Programs Participated In</h2>
-          <p className="center">
-            We are proud to have collaborated with and contributed to these prestigious tech and open-source initiatives
-          </p>
-          <div className="program-grid">
+          <p className="center">We are proud to have collaborated with and contributed to these prestigious tech and open-source initiatives</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
             {[
-              {
-                logo: "https://github.com/user-attachments/assets/e0a40d06-f5b8-42a7-a5a0-033280f842be",
-                alt: "IEEE IGDTUW Logo", badge: "Open Source Week",
-                title: "IEEE IGDTUW",
-                desc: "A week-long intensive event aimed at fostering global collaboration and high-level skill-building in the open-source ecosystem.",
-              },
-              {
-                logo: "https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00",
-                alt: "Vultr Logo", badge: "Cloud Hackathon",
-                title: "Vultr Cloud Innovate",
-                desc: "Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power.",
-              },
-              {
-                logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png",
-                alt: "GSSoC Logo", badge: "Summer 2024",
-                title: "GirlScript Summer of Code",
-                desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship.",
-              },
+              { logo: "https://github.com/user-attachments/assets/e0a40d06-f5b8-42a7-a5a0-033280f842be", alt: "IEEE IGDTUW Logo", badge: "Open Source Week", title: "IEEE IGDTUW", desc: "A week-long intensive event aimed at fostering global collaboration and high-level skill-building in the open-source ecosystem." },
+              { logo: "https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00", alt: "Vultr Logo", badge: "Cloud Hackathon", title: "Vultr Cloud Innovate", desc: "Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power." },
+              { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2024", title: "GirlScript Summer of Code", desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship." },
             ].map((p, i) => (
-              <div className="program-card fade-in" key={i}>
+              <div className="program-card w-full fade-in" key={i}>
                 <div className="program-logo-wrapper">
-                  <img src={p.logo} alt={p.alt} />
+                  <Image
+                    src={p.logo}
+                    alt={p.alt}
+                    width={180}
+                    height={80}
+                    sizes="180px"
+                    className="program-logo"
+                  />
                 </div>
                 <span className="program-badge">{p.badge}</span>
                 <h3>{p.title}</h3>
@@ -409,53 +768,256 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
-      {/* Contact */}
-      <section className="contact-section" id="contact">
-        <div className="container">
+      {/* ── Contact ── */}
+      <Section className="contact-section scroll-reveal" id="contact">
+        <PageWrapper>
           <h2>Connect With Us</h2>
-          <p style={{ color: "var(--text-muted)", maxWidth: 600, margin: "0 auto" }}>
-            Have questions or want to collaborate? Reach out to us through any of these platforms
+          <p className="center" style={{ marginBottom: 56 }}>
+            Have questions or want to collaborate? We&apos;d love to hear from you.
           </p>
-          <div className="social-links">
-            <a href="https://github.com/SB2318" className="social-icon contact-github" target="_blank" rel="noreferrer" title="GitHub" id="github-link">
-              <i className="fab fa-github"></i>
-            </a>
-            <a href="mailto:ultimate.health25@gmail.com" className="social-icon contact-email" title="Email Us" id="email-link">
-              <i className="fas fa-envelope"></i>
-            </a>
-            <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="social-icon contact-linkedin" target="_blank" rel="noreferrer" title="LinkedIn" id="linkedin-link">
-              <i className="fab fa-linkedin-in"></i>
-            </a>
-          </div>
-        </div>
-      </section>
 
-      {/* Footer */}
-      <footer>
-        <div className="container">
-          <h2>A Heartfelt Thank You <span className="heart">❤️</span></h2>
-          <p className="footer-note">
-            Ultimate Health exists because of people like you. To every contributor who translated an article,
-            every developer who squashed a bug, and every partner who believed in our mission—thank you for helping us build
-            a healthier, more informed world.
-          </p>
-          <div className="footer-links">
-            <a href="https://github.com/SB2318" target="_blank" rel="noreferrer">Github</a>
-            <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Documentation</a>
-            <a href="https://github.com/SB2318/UltimateHealth?tab=coc-ov-file#" target="_blank" rel="noreferrer">Community Guidelines</a>
-            <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
+          <div className="contact-dark-card">
+            {/* Left panel */}
+            <div className="contact-dark-left">
+              <div className="contact-left-badge">✦ UltimateHealth</div>
+              <h3 className="contact-dark-title">Let&apos;s Talk<br />Health Together</h3>
+              <p className="contact-dark-subtitle">
+                Questions about our platform? We&apos;re here to help. Reach out and we&apos;ll respond promptly.
+              </p>
+
+              <div className="contact-info-cards">
+                <div className="contact-info-card">
+                  <div className="contact-info-icon"><i className="fas fa-envelope"></i></div>
+                  <div>
+                    <strong>Email Us</strong>
+                    <p>ultimate.health25@gmail.com</p>
+                  </div>
+                </div>
+                <div className="contact-info-card">
+                  <div className="contact-info-icon"><i className="fas fa-comment-dots"></i></div>
+                  <div>
+                    <strong>Quick Response</strong>
+                    <p>We aim to reply within 24 hours.</p>
+                  </div>
+                </div>
+                <div className="contact-info-card">
+                  <div className="contact-info-icon"><i className="fas fa-layer-group"></i></div>
+                  <div>
+                    <strong>Multiple Channels</strong>
+                    <p>Reach us via email, GitHub, or this form.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="contact-dark-socials">
+                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="GitHub">
+                  <i className="fab fa-github"></i>
+                </a>
+               <a
+                 href="mailto:ultimate.health25@gmail.com?subject=Hello%20UltimateHealth&body=Hi%20UltimateHealth%20Team%2C"
+                 className="dark-social-icon"
+                 title="Email"
+                 aria-label="Send email to UltimateHealth via mail client"
+                 style={{ cursor: "pointer" }}>
+                 <i className="fas fa-envelope"></i>
+                 </a>
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="LinkedIn">
+                  <i className="fab fa-linkedin-in"></i>
+                </a>
+              </div>
+            </div>
+
+            {/* Right panel — fully wired form */}
+            <div className="contact-dark-right">
+              <h3 className="contact-form-title">Send us a Message</h3>
+              <p className="contact-form-subtitle">We typically respond within 24 hours</p>
+
+              {contactStatus === "success" ? (
+                <div className="contact-success-box">
+                  <div className="contact-success-icon"><i className="fas fa-check-circle"></i></div>
+                  <h4>Message Sent!</h4>
+                  <p>Thank you for reaching out. We&apos;ll get back to you within 24 hours.</p>
+                  <button type="button" onClick={() => setContactStatus("idle")} className="contact-reset-btn">
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form className="contact-dark-form" autoComplete="off" onSubmit={handleContactSubmit}>
+                  <div className="dark-field-group">
+                    <span className="dark-field-icon"><i className="fas fa-user"></i></span>
+                    <input
+                      type="text" className="dark-input" placeholder="Your Name *" required
+                      maxLength={80}
+                      value={contactName} onChange={(e) => setContactName(e.target.value)}
+                    />
+                  </div>
+                  <div className="dark-field-group">
+                    <span className="dark-field-icon"><i className="fas fa-envelope"></i></span>
+                    <input
+                      type="email" className="dark-input" placeholder="Email Address *" required
+                      maxLength={120}
+                      value={contactEmail} onChange={(e) => setContactEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="dark-field-group">
+                    <span className="dark-field-icon"><i className="fas fa-tag"></i></span>
+                    <input
+                      type="text" className="dark-input" placeholder="Subject *" required
+                      maxLength={120}
+                      value={contactSubject} onChange={(e) => setContactSubject(e.target.value)}
+                    />
+                  </div>
+                  <div className="dark-field-group dark-field-textarea">
+                    <span className="dark-field-icon dark-field-icon-top"><i className="fas fa-comment"></i></span>
+                    <textarea
+                      className="dark-input dark-textarea" placeholder="Your Message *" required
+                      maxLength={1500}
+                      value={contactMessage} onChange={(e) => setContactMessage(e.target.value)}
+                    ></textarea>
+                  </div>
+
+                  {contactStatus === "error" && (
+                    <p className="contact-error-msg">
+                      <i className="fas fa-exclamation-circle"></i> Something went wrong. Opening your email client as fallback.
+                    </p>
+                  )}
+
+                  <button type="submit" className="dark-submit-btn" disabled={contactStatus === "sending"}>
+                    {contactStatus === "sending" ? (
+                      <><i className="fas fa-spinner fa-spin"></i> Sending...</>
+                    ) : (
+                      <>Send Message <i className="fas fa-arrow-right" style={{ fontSize: "0.85rem" }}></i></>
+                    )}
+                  </button>
+
+                  <div className="contact-trust">
+                    <div className="contact-trust-dot"></div>
+                    <span className="contact-trust-text">Your message is private and secure</span>
+                  </div>
+                </form>
+              )}
+            </div>
           </div>
-          <div className="footer-bottom">
-            <p>© 2026 Ultimate Health. Built with passion for a healthier community.</p>
+        </PageWrapper>
+      </Section>
+
+      {/* ── Footer ── */}
+      <footer>
+        <PageWrapper className="footer-grid">
+          {/* Brand column */}
+          <div className="footer-brand">
+            <h2>UltimateHealth</h2>
+            <p className="footer-note">Open-source health and wellness for everyone.</p>
+
+            {/* Newsletter — wired to API */}
+            <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit}>
+              {newsletterStatus === "success" ? (
+                <div className="newsletter-success">
+                  <i className="fas fa-check-circle"></i> You&apos;re subscribed!
+                </div>
+              ) : (
+                <>
+                  <div className="footer-subscribe-row">
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="footer-subscribe-input"
+                      maxLength={120}
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
+                      required
+                    />
+                    <button type="submit" className="footer-subscribe-btn" aria-label="Subscribe to UltimateHealth newsletter" disabled={newsletterStatus === "sending"}>
+                      {newsletterStatus === "sending" ? <i className="fas fa-spinner fa-spin"></i> : "Subscribe"}
+                    </button>
+                  </div>
+                  {newsletterStatus === "error" && (
+                    <p className="newsletter-error">Could not subscribe. Please try again.</p>
+                  )}
+                  <small className="footer-subscribe-note">We respect your privacy. Unsubscribe at any time.</small>
+                </>
+              )}
+            </form>
+
+            {/* Social icons */}
+            <div style={{ marginTop: 20 }}>
+              <span className="footer-follow-label">Follow Us</span>
+              <div className="footer-social-links">
+                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
+                  <i className="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
+                  <i className="fab fa-linkedin-in"></i>
+                </a>
+                <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Telegram" aria-label="Open UltimateHealth Telegram link">
+                  <i className="fab fa-telegram"></i>
+                </a>
+                <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Instagram" aria-label="Open UltimateHealth Instagram link">
+                  <i className="fab fa-instagram"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="footer-links-col">
+            <h3>Quick Links</h3>
+            <a href="#">Home</a>
+            <a href="#features">Features</a>
+            <a href="#programs">Programs</a>
+            <a href="#screenshots">Screenshots</a>
+            <a href="#contact">Contact</a>
+            <a href={withBasePath("/contribute")}>Join Us &amp; Contribute</a>
+          </div>
+
+          {/* Support */}
+          <div className="footer-links-col">
+            <h3>Support</h3>
+            <a href={HELP_CENTER_URL} target="_blank" rel="noreferrer">Help Center</a>
+            <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
+            <a href={FEEDBACK_URL} target="_blank" rel="noreferrer">Feedback</a>
+            <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">API Docs</a>
+          </div>
+        </PageWrapper>
+
+        {/* Bottom bar */}
+        <div className="footer-bottom">
+          <div className="footer-bottom-inner">
+            <p>© 2026 UltimateHealth. Built with passion for a healthier community.</p>
+            <div className="footer-bottom-links">
+              <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>
+              <a href={TERMS_OF_USE_URL}>Terms of Use</a>
+            </div>
           </div>
         </div>
       </footer>
 
-      {/* TestFlight Modal */}
-      <div className={`modal-overlay${appleModal ? " active" : ""}`} id="testflight-modal" onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>
+      {/* ── Coming Soon Modal ── */}
+      <div
+        className={`modal-overlay${comingSoonModal ? " active" : ""}`}
+        onClick={closeComingSoonModal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="coming-soon-modal-title"
+        aria-hidden={!comingSoonModal}
+      >
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
+          <h2 id="coming-soon-modal-title">Launching Soon!</h2>
+          <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
+            We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
+          </p>
+          <div className="progress-container"><div className="progress-bar"></div></div>
+          <button className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
+        </div>
+      </div>
+
+      {/* ── TestFlight Modal ── */}
+      <div className={`modal-overlay${appleModal ? " active" : ""}`}
+        onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>
         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
           <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>✈️</div>
           <h2>Join the iOS TestFlight</h2>
@@ -467,21 +1029,14 @@ export default function Home() {
             <p><strong>Are you ready to test?</strong> Enter your email below to request an invitation.</p>
           </div>
           {!testerSuccess ? (
-            <div id="testerForm">
-              <input
-                type="email"
-                id="tester-email-input"
-                placeholder="Enter your Apple ID email"
-                className="waitlist-input"
-                value={testerEmail}
-                onChange={(e) => setTesterEmail(e.target.value)}
-              />
-              <button
-                className="nav-btn-sm"
-                id="send-invitation-btn"
+            <div>
+              <input type="email" placeholder="Enter your Apple ID email" className="waitlist-input"
+                maxLength={120}
+                value={testerEmail} onChange={(e) => setTesterEmail(e.target.value)} />
+              <button className="nav-btn-sm"
+                type="button"
                 style={{ width: "100%", height: 48, border: "none", cursor: "pointer", fontWeight: "bold", fontSize: "1rem" }}
-                onClick={sendTesterEmail}
-              >
+                onClick={sendTesterEmail}>
                 Send Invitation Request
               </button>
             </div>
@@ -490,35 +1045,37 @@ export default function Home() {
               <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We&apos;ll notify you as soon as the test link is ready.</p>
             </div>
           )}
-          <button className="close-modal-btn" id="close-testflight" onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>
+          <button className="close-modal-btn"
+            onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>
             Maybe later
           </button>
         </div>
       </div>
 
-      {/* Screenshot Modal */}
+      {/* ── Screenshot Modal ── */}
       {screenshotModal && (
-        <div className="screenshot-modal active" id="screenshotModal" onClick={closeScreenshotModal}>
+        <div className="screenshot-modal active" onClick={closeScreenshotModal}>
           <div className="screenshot-modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="screenshot-modal-close" id="screenshot-modal-close" onClick={closeScreenshotModal}>×</button>
-            <button className="screenshot-modal-nav screenshot-modal-prev" id="screenshot-prev" onClick={() => navigateScreenshot(-1)}>
+            <button className="screenshot-modal-close" type="button" aria-label="Close screenshot preview" onClick={closeScreenshotModal}>×</button>
+            <button className="screenshot-modal-nav screenshot-modal-prev" type="button" aria-label="Previous screenshot" onClick={() => navigateScreenshot(-1)}>
               <i className="fas fa-chevron-left"></i>
             </button>
-            <img
-              id="screenshotModalImage"
-              src={allScreenshots[currentScreenshot]?.src}
-              alt={allScreenshots[currentScreenshot]?.caption}
-              style={{ maxHeight: "80vh", borderRadius: 12 }}
+            <Image
+              src={selectedScreenshot.src}
+              alt={selectedScreenshot.caption}
+              width={390}
+              height={780}
+              sizes="(max-width: 768px) 80vw, 390px"
+              className="screenshot-modal-image"
             />
-            <button className="screenshot-modal-nav screenshot-modal-next" id="screenshot-next" onClick={() => navigateScreenshot(1)}>
+            <button className="screenshot-modal-nav screenshot-modal-next" type="button" aria-label="Next screenshot" onClick={() => navigateScreenshot(1)}>
               <i className="fas fa-chevron-right"></i>
             </button>
-            <div className="screenshot-caption" id="screenshotCaption">
-              {allScreenshots[currentScreenshot]?.caption}
-            </div>
+            <div className="screenshot-caption">{selectedScreenshot.caption}</div>
           </div>
         </div>
       )}
+      <ScrollToTop />
     </>
-  );
-}
+    );
+    }
