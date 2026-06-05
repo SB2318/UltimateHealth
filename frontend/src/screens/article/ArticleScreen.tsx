@@ -59,6 +59,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [fontScale, setFontScale] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [speedMenuVisible, setSpeedMenuVisible] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
   const [playerVisible, setPlayerVisible] = useState(false);
   const chunkIndexRef = useRef(0);
@@ -524,11 +525,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     1.5: '1.5x',
   };
 
-  const handleSpeedChange = () => {
-    const currentIndex = SPEED_OPTIONS.indexOf(speechRate);
-    const nextRate = SPEED_OPTIONS[(currentIndex + 1) % SPEED_OPTIONS.length];
-    setSpeechRate(nextRate);
-    Tts.setDefaultRate(nextRate);
+  const handleSpeedChange = (newRate: number) => {
+    
+    
+    setSpeechRate(newRate);
+    Tts.setDefaultRate(newRate);
     // Restart current position with new speed if currently playing
     if (isPlaying && !isPaused) {
       Tts.removeAllListeners('tts-finish');
@@ -1095,13 +1096,19 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         </View>
       </View>
       {/* Floating TTS Media Player */}
-      {playerVisible && (
+      {playerVisible {playerVisible && ({playerVisible && ( (
+        <FloatingSpeedSelector
+          visible={speedMenuVisible}
+          currentSpeed={speechRate}
+          onSelect={(rate) => { handleSpeedChange(rate); setSpeedMenuVisible(false); }}
+          onClose={() => setSpeedMenuVisible(false)}
+        />
         <View style={styles.ttsPlayerContainer}>
           <View style={styles.ttsPlayerInner}>
             {/* Speed button */}
             <TouchableOpacity
               style={styles.ttsSpeedButton}
-              onPress={handleSpeedChange}>
+              onPress={() => setSpeedMenuVisible(true)}>
               <Text style={styles.ttsSpeedText}>
                 {SPEED_LABELS[speechRate]}
               </Text>

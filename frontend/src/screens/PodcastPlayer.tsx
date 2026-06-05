@@ -16,13 +16,15 @@ import {AntDesign, Ionicons} from '@expo/vector-icons';
 import AudioWaveform from '../components/AudioWaveform';
 import {useUploadPodcast} from '../hooks/useUploadPodcast';
 import Loader from '../components/Loader';
+import FloatingSpeedSelector from '../components/FloatingSpeedSelector';
 
-const PLAYBACK_SPEEDS = [1, 1.25, 1.5, 2];
+const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
 const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const {uploadImage, loading, error: imageError} = useUploadImage();
   const {uploadAudio, loading: audioLoading, error} = useUploadAudio();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [speedMenuVisible, setSpeedMenuVisible] = useState(false);
   const [position, setPosition] = useState(0);
   const [speed, setSpeed] = useState(1);
   
@@ -75,7 +77,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   // Handle transitions
 
   const handlePlay = async () => {
-    if (!player) return;
+    
     // If the track has fully finished, restart from the beginning.
     // Otherwise resume from the current paused position.
     if (duration > 0 && !isNaN(duration) && position >= duration - 0.5){
@@ -89,28 +91,29 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
 
   const handlePause = async () => {
     console.log('Pause called');
-    if (!player) return;
+    
 
     player.pause();
     setUiState('paused');
     setIsPlaying(false);
   };
 
-  const handleCycleSpeed = () => {
-    if (!player) return;
+  const handleSpeedSelect = (newSpeed: number) => {
+    
 
-    const currentIndex = PLAYBACK_SPEEDS.indexOf(speed);
-    const nextSpeed =
+    
+    // replaced by floating selector
       PLAYBACK_SPEEDS[(currentIndex + 1) % PLAYBACK_SPEEDS.length];
 
-    player.setPlaybackRate(nextSpeed, 'high');
-    setSpeed(nextSpeed);
+    if (!player) return;
+    player.setPlaybackRate(newSpeed, 'high');
+    setSpeed(newSpeed);
   };
 
   const SKIP_TIME = 5; // seconds
 
   const handleForward = async () => {
-    if (!player) return;
+    
 
     let next = position + SKIP_TIME;
 
@@ -123,7 +126,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   };
 
   const handleBackward = async () => {
-    if (!player) return;
+    
 
     let next = position - SKIP_TIME;
 
@@ -284,7 +287,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   };
 
   useEffect(() => {
-    if (!player) return;
+    
 
     const interval = setInterval(() => {
       const status = player.currentStatus;
@@ -459,7 +462,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             borderWidth={1}
             borderColor="$borderColor"
             pressStyle={{scale: 0.94, backgroundColor: '$backgroundPress'}}
-            onPress={handleCycleSpeed}>
+            onPress={() => setSpeedMenuVisible(true)}>
             <Text color="$color" fontSize={14} fontWeight="800">
               {formatPlaybackSpeed(speed)}
             </Text>
