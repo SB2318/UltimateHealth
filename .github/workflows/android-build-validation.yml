@@ -7,14 +7,14 @@ on:
     paths:
       - 'frontend/android/**'
       - 'frontend/package.json'
-      - 'frontend/yarn.lock'
+      - 'frontend/pnpm-lock.yaml'
       - '.github/workflows/android-build-validation.yml'
   pull_request:
     branches: [ main ]
     paths:
       - 'frontend/android/**'
       - 'frontend/package.json'
-      - 'frontend/yarn.lock'
+      - 'frontend/pnpm-lock.yaml'
       - '.github/workflows/android-build-validation.yml'
 
 concurrency:
@@ -39,12 +39,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Node & Cache Dependencies
         uses: actions/setup-node@v6
         with:
           node-version: 20
-          cache: 'yarn'
-          cache-dependency-path: frontend/yarn.lock
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Cache Gradle Wrapper
         uses: actions/cache@v4
@@ -67,13 +72,26 @@ jobs:
           java-version: '17'
 
       - name: Install JS Dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Grant Gradle Execute Permission
         working-directory: ./frontend/android
         run: chmod +x gradlew
         
+      - name: Check Google Services Secret
+        id: secret-check
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$GOOGLE_SERVICES_JSON" ]; then
+            echo "has_secret=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping Android build: GOOGLE_SERVICES_JSON secret is missing."
+          else
+            echo "has_secret=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Inject google-services.json
+        if: steps.secret-check.outputs.has_secret == 'true'
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: |
@@ -104,11 +122,12 @@ jobs:
           "
 
       - name: Compile Android Debug Build
+        if: steps.secret-check.outputs.has_secret == 'true'
         working-directory: ./frontend/android
         run: ./gradlew assembleDebug --console=plain
 
       - name: Upload APK Artifact (On Failure)
-        if: failure()
+        if: failure() && steps.secret-check.outputs.has_secret == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: android-build-logs

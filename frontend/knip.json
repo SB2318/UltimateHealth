@@ -37,6 +37,7 @@
     "babel-preset-expo",
     "metro-config",
     "react-native-svg-transformer",
-    "audio-module"
+    "audio-module",
+    "babel-plugin-transform-remove-console"
   ]
 }

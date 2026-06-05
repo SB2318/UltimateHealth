@@ -1,4 +1,4 @@
-const { withMainApplication } = require('@expo/config-plugins');
+const { withMainApplication } = require('expo/config-plugins');
 
 const withWebViewDebug = (config) => {
   return withMainApplication(config, (config) => {

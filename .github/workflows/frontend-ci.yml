@@ -163,8 +163,8 @@ jobs:
             exit 0
           fi
 
-          if echo "$OUTPUT" | grep -q "app config fields that may not be synced" && \
-             ! echo "$OUTPUT" | grep -q "checks failed"; then
+          FAIL_COUNT=$(echo "$OUTPUT" | grep -o "✖" | wc -l | tr -d '[:space:]')
+          if [ "$FAIL_COUNT" -eq 1 ] && echo "$OUTPUT" | grep -q "app config fields that may not be synced"; then
             echo "Ignoring known non-CNG warning"
             exit 0
           fi
