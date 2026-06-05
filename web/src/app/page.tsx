@@ -493,7 +493,7 @@ export default function Home() {
             </li>
           </ul>
 
-          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Toggle mobile menu">
+          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Open navigation menu">
             <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
           </button>
         </PageWrapper>
