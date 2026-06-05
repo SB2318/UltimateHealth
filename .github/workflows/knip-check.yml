@@ -36,6 +36,7 @@ jobs:
     name: Analyze unused code
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    continue-on-error: ${{ github.event_name == 'pull_request' }}
     defaults:
       run:
         working-directory: ./frontend
@@ -94,72 +95,77 @@ jobs:
 
       - name: Comment Knip results on PR
         if: github.event_name == 'pull_request'
+        continue-on-error: true
         uses: actions/github-script@v9
         with:
           script: |
-            const fs = require('fs');
-            const path = require('path');
+            try {
+              const fs = require('fs');
+              const path = require('path');
 
-            const checks = [
-              ['Full analysis', 'full', '${{ steps.knip.outputs.full_status }}'],
-              ['Dependencies', 'dependencies', '${{ steps.knip.outputs.dependencies_status }}'],
-              ['Files', 'files', '${{ steps.knip.outputs.files_status }}'],
-              ['Exports', 'exports', '${{ steps.knip.outputs.exports_status }}']
-            ];
+              const checks = [
+                ['Full analysis', 'full', '${{ steps.knip.outputs.full_status }}'],
+                ['Dependencies', 'dependencies', '${{ steps.knip.outputs.dependencies_status }}'],
+                ['Files', 'files', '${{ steps.knip.outputs.files_status }}'],
+                ['Exports', 'exports', '${{ steps.knip.outputs.exports_status }}']
+              ];
 
-            const root = process.env.GITHUB_WORKSPACE;
-            const rows = checks.map(([label, key, status]) => {
-              const icon = status === '0' ? 'PASS' : 'NEEDS REVIEW';
-              return `| ${label} | ${icon} | \`${status || 'unknown'}\` |`;
-            });
+              const root = process.env.GITHUB_WORKSPACE;
+              const rows = checks.map(([label, key, status]) => {
+                const icon = status === '0' ? 'PASS' : 'NEEDS REVIEW';
+                return `| ${label} | ${icon} | \`${status || 'unknown'}\` |`;
+              });
 
-            const sections = checks.map(([label, key]) => {
-              const file = path.join(root, `knip-${key}.txt`);
-              const text = fs.existsSync(file) ? fs.readFileSync(file, 'utf8').trim() : '';
-              const truncated = text.length > 5000;
-              const output = text.length > 0 ? text.slice(0, 5000) : 'No output.';
-              const truncationNote = truncated ? '\n\n> ⚠️ Output truncated to 5000 characters. Run `pnpm knip` locally for the full report.' : '';
-              return `<details><summary>${label}</summary>\n\n\`\`\`text\n${output}\n\`\`\`${truncationNote}\n\n</details>`;
-            });
+              const sections = checks.map(([label, key]) => {
+                const file = path.join(root, `knip-${key}.txt`);
+                const text = fs.existsSync(file) ? fs.readFileSync(file, 'utf8').trim() : '';
+                const truncated = text.length > 5000;
+                const output = text.length > 0 ? text.slice(0, 5000) : 'No output.';
+                const truncationNote = truncated ? '\n\n> ⚠️ Output truncated to 5000 characters. Run `pnpm knip` locally for the full report.' : '';
+                return `<details><summary>${label}</summary>\n\n\`\`\`text\n${output}\n\`\`\`${truncationNote}\n\n</details>`;
+              });
 
-            const marker = '<!-- knip-dead-code-check -->';
-            const body = `${marker}
-            ## Knip Dead Code Check
+              const marker = '<!-- knip-dead-code-check -->';
+              const body = `${marker}
+              ## Knip Dead Code Check
 
-            Knip ran in non-blocking mode for this PR. Review any findings before merge.
+              Knip ran in non-blocking mode for this PR. Review any findings before merge.
 
-            | Check | Result | Exit code |
-            | --- | --- | --- |
-            ${rows.join('\n')}
+              | Check | Result | Exit code |
+              | --- | --- | --- |
+              ${rows.join('\n')}
 
-            ${sections.join('\n\n')}
+              ${sections.join('\n\n')}
 
-            Docs: \`docs/KNIP_GUIDE.md\` and \`docs/KNIP_CONTRIBUTOR_GUIDE.md\``;
+              Docs: \`docs/KNIP_GUIDE.md\` and \`docs/KNIP_CONTRIBUTOR_GUIDE.md\``;
 
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number
-            });
-
-            const previous = comments.find(comment =>
-              comment.user.type === 'Bot' && comment.body.includes(marker)
-            );
-
-            if (previous) {
-              await github.rest.issues.updateComment({
+              const { data: comments } = await github.rest.issues.listComments({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                comment_id: previous.id,
-                body
+                issue_number: context.issue.number
               });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body
-              });
+
+              const previous = comments.find(comment =>
+                comment.user.type === 'Bot' && comment.body.includes(marker)
+              );
+
+              if (previous) {
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: previous.id,
+                  body
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body
+                });
+              }
+            } catch (error) {
+              console.log("Could not post comment to PR, likely due to missing permissions from a fork PR:", error.message);
             }
 
       - name: Enforce Knip on main and develop
