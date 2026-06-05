@@ -29,7 +29,6 @@ import { ttsLanguageList } from '../helper/Utils';
 
 const PodcastForm = ({navigation, route}: PodcastFormProp) => {
   const MAX_TITLE_LENGTH = 100;
-  const MAX_TITLE_LENGTH = 100;
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
@@ -273,6 +272,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                   }
                 }}
               />
+              <Text style={[styles.charCounter, title.length >= MAX_TITLE_LENGTH * 0.9 && styles.charCounterWarning, title.length >= MAX_TITLE_LENGTH && styles.charCounterError]}>{title.length} / {MAX_TITLE_LENGTH}</Text>
             </View>
 
             {/* Language Dropdown */}
