@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
  * Sanitizes query parameters and tokens from a URL string to prevent
  * sensitive data exposure in logs.
  */
-function sanitizeUrl(url: any): string {
+function sanitizeUrl(url: unknown): string {
   if (typeof url !== "string") return "";
   try {
     const parsed = new URL(url);
@@ -27,7 +27,7 @@ function sanitizeUrl(url: any): string {
 export async function POST(request: Request) {
   try {
     const rawBody = await request.text();
-    let report: any;
+    let report: Record<string, unknown>;
     
     try {
       report = JSON.parse(rawBody);
@@ -37,15 +37,15 @@ export async function POST(request: Request) {
     }
     
     // Sanitize the report fields to prevent leaking sensitive tokens in logs
-    const cspReport = report?.["csp-report"];
+    const cspReport = report?.["csp-report"] as Record<string, unknown> | undefined;
     if (cspReport) {
-      if (cspReport["document-uri"]) {
+      if (typeof cspReport["document-uri"] === "string") {
         cspReport["document-uri"] = sanitizeUrl(cspReport["document-uri"]);
       }
-      if (cspReport["referrer"]) {
+      if (typeof cspReport["referrer"] === "string") {
         cspReport["referrer"] = sanitizeUrl(cspReport["referrer"]);
       }
-      if (cspReport["blocked-uri"]) {
+      if (typeof cspReport["blocked-uri"] === "string") {
         cspReport["blocked-uri"] = sanitizeUrl(cspReport["blocked-uri"]);
       }
     }
