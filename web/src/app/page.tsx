@@ -5,12 +5,12 @@ import Link from "next/link";
 import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
-import ScrollToTop from "../components/ScrollToTop";
 import ScrollToTop from "../components/ScrollToTop";
 import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
+import PageWrapper from "@/components/layout/PageWrapper";
+import { ModeToggle } from "@/components/mode-toggle"
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -423,17 +423,19 @@ export default function Home() {
 
       {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
-        <PageWrapper as="div" className="nav">
-          <a href="#" className="logo">
-            <div className="logo-icon">
-              <Image
-                src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
-                alt="UltimateHealth Logo" width={48} height={48}
-                priority
-              />
-            </div>
-            Ultimate-Health
-          </a>
+  <PageWrapper as="div" className="nav">
+    <a href="#" className="logo">
+      <div className="logo-icon">
+        <Image
+          src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
+          alt="UltimateHealth Logo" 
+          width={48} 
+          height={48}
+          priority
+        />
+      </div>
+      Ultimate-Health
+    </a>
 
           <ul className="nav-links">
             <li>
@@ -493,25 +495,39 @@ export default function Home() {
             </li>
           </ul>
 
-          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Open navigation menu">
-            <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
-          </button>
-        </PageWrapper>
+      <li>
+        <a href="#downloads" className="nav-btn-sm">
+          <i className="fas fa-user" aria-hidden="true"></i>
+          <span>Login / Register</span>
+        </a>
+      </li>
+    </ul>
 
-        <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
-          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-          <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
-          <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
-          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
-        </nav>
-      </header>
+    <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Toggle mobile menu">
+      <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
+    </button>
+  </PageWrapper>
+
+  {/* Mobile Navigation Drawer with integrated theme support */}
+  <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
+    <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
+    <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
+    <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
+    <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
+    <a href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
+    <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+    
+    {/* Clean border separation separator panel for mobile menu */}
+    <div className="flex items-center justify-between w-full px-6 py-4 mt-2 border-t border-gray-100 dark:border-gray-800">
+      <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Switch Theme</span>
+      <ModeToggle />
+    </div>
+  </nav>
+</header>
 
       {/* ── Hero ── */}
       <section className="hero">
-        <div className="container hero-content scroll-reveal">
+        <div className="container hero-content scroll-reveal" style={{paddingTop: '80px'}}>
           <h1>Empowering Wellness Through Global Community</h1>
           <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
         </PageWrapper>
@@ -601,7 +617,7 @@ export default function Home() {
 
 <HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
       {/* ── Screenshots ── */}
-      <Section id="screenshots">
+      <section id="screenshots">
         <PageWrapper>
           <h2>App Screenshots</h2>
           <p className="center">Take a look inside the UltimateHealth experience</p>
@@ -690,10 +706,10 @@ export default function Home() {
             )}
           </div>
         </PageWrapper>
-      </Section>
+      </section>
 
       {/* ── Features ── */}
-      <Section id="features" className="scroll-reveal">
+      <section id="features" className="scroll-reveal">
         <PageWrapper>
           <h2>Be a Contributor: Core Community Features</h2>
           <p className="center">Join our community and make a difference in global health awareness</p>
@@ -715,33 +731,38 @@ export default function Home() {
             )}
           </div>
         </PageWrapper>
-      </Section>
+      </section>
 
       {/* ── Moderator Features ── */}
-      <Section className="member-section scroll-reveal">
-        <PageWrapper>
-          <h2>Be a Member: Guardian of Content Integrity</h2>
-          <p className="center">Help maintain quality and safety across the platform</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
-            {[
-              { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
-              { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
-              { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
-              { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
-              { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
-            ].map((f, i) => (
-              <div className="feature-card mod-card w-full fade-in" key={i}>
-                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
-                <h3>{f.title}</h3>
-                <p>{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </PageWrapper>
-      </Section>
+      <section className="member-section scroll-reveal">
+  <section className="member-section scroll-reveal">
+  <PageWrapper>
+    <h2>Be a Member: Guardian of Content Integrity</h2>
+    <p className="center">Help maintain quality and safety across the platform</p>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
+      {[
+        { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
+        { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
+        { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
+        { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
+        { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
+      ].map((f, i) => (
+        <div 
+          className="feature-card mod-card w-full fade-in border-2 border-transparent transition-all duration-300 ease-in-out hover:border-[#8952c4] hover:bg-muted/40 dark:hover:bg-muted/10 cursor-pointer" 
+          key={i}
+        >
+          <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+          <h3>{f.title}</h3>
+          <p>{f.desc}</p>
+        </div>
+      ))}
+    </div>
+  </PageWrapper>
+</section>
+</section>
 
       {/* ── Programs ── */}
-      <Section id="programs" className="scroll-reveal">
+      <section id="programs" className="scroll-reveal">
         <PageWrapper>
           <h2>Programs Participated In</h2>
           <p className="center">We are proud to have collaborated with and contributed to these prestigious tech and open-source initiatives</p>
@@ -769,23 +790,23 @@ export default function Home() {
             ))}
           </div>
         </PageWrapper>
-      </Section>
+      </section>
 
       {/* ── Contact ── */}
-      <Section className="contact-section scroll-reveal" id="contact">
+      <section className="contact-section scroll-reveal" id="contact">
         <PageWrapper>
           <h2>Connect With Us</h2>
           <p className="center" style={{ marginBottom: 56 }}>
-            Have questions or want to collaborate? We&apos;d love to hear from you.
+            Have questions or want to collaborate? We'd love to hear from you.
           </p>
 
           <div className="contact-dark-card">
             {/* Left panel */}
             <div className="contact-dark-left">
               <div className="contact-left-badge">✦ UltimateHealth</div>
-              <h3 className="contact-dark-title">Let&apos;s Talk<br />Health Together</h3>
+              <h3 className="contact-dark-title">Let's Talk<br />Health Together</h3>
               <p className="contact-dark-subtitle">
-                Questions about our platform? We&apos;re here to help. Reach out and we&apos;ll respond promptly.
+                Questions about our platform? We're here to help. Reach out and we'll respond promptly.
               </p>
 
               <div className="contact-info-cards">
@@ -839,7 +860,7 @@ export default function Home() {
                 <div className="contact-success-box">
                   <div className="contact-success-icon"><i className="fas fa-check-circle"></i></div>
                   <h4>Message Sent!</h4>
-                  <p>Thank you for reaching out. We&apos;ll get back to you within 24 hours.</p>
+                  <p>Thank you for reaching out. We'll get back to you within 24 hours.</p>
                   <button type="button" onClick={() => setContactStatus("idle")} className="contact-reset-btn">
                     Send Another Message
                   </button>
@@ -902,7 +923,7 @@ export default function Home() {
             </div>
           </div>
         </PageWrapper>
-      </Section>
+      </section>
 
       {/* ── Footer ── */}
       <footer>
@@ -916,7 +937,7 @@ export default function Home() {
             <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit}>
               {newsletterStatus === "success" ? (
                 <div className="newsletter-success">
-                  <i className="fas fa-check-circle"></i> You&apos;re subscribed!
+                  <i className="fas fa-check-circle"></i> You're subscribed!
                 </div>
               ) : (
                 <>
@@ -970,7 +991,7 @@ export default function Home() {
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
-            <a href={withBasePath("/contribute")}>Join Us &amp; Contribute</a>
+            <a href="/contribute">Join Us & Contribute</a>
           </div>
 
           {/* Support */}
@@ -1008,7 +1029,7 @@ export default function Home() {
           <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
           <h2 id="coming-soon-modal-title">Launching Soon!</h2>
           <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
-            We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
+            We're currently in final testing. We're <strong>85%</strong> of the way there!
           </p>
           <div className="progress-container"><div className="progress-bar"></div></div>
           <button className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
@@ -1022,7 +1043,7 @@ export default function Home() {
           <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>✈️</div>
           <h2>Join the iOS TestFlight</h2>
           <p style={{ color: "var(--text-muted)", marginBottom: 24 }}>Help us build the ultimate experience</p>
-          <div style={{ textAlign: "left", fontSize: "0.95rem", color: "var(--text-dark)", background: "#f8fafc", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }}>
+          <div style={{ textAlign: "left", fontSize: "0.95rem", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }}>
             <p style={{ marginBottom: 12 }}>We have decided to release via <strong>TestFlight</strong> first before moving to a full App Store launch.</p>
             <p style={{ marginBottom: 12 }}><strong>🔹 Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
             <p style={{ marginBottom: 12 }}><strong>🔹 What this means:</strong> The app will be available to invited testers only via TestFlight.</p>
@@ -1042,7 +1063,7 @@ export default function Home() {
             </div>
           ) : (
             <div style={{ padding: 24, color: "#059669", background: "#d1fae5", borderRadius: 12 }}>
-              <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We&apos;ll notify you as soon as the test link is ready.</p>
+              <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We'll notify you as soon as the test link is ready.</p>
             </div>
           )}
           <button className="close-modal-btn"

@@ -2879,3 +2879,33 @@ i, svg {
     transition: none !important;
   }
 }
+
+/* ==================== DARK MODE ==================== */
+.dark {
+  --text-dark: #f1f5f9;
+  --text-light: #cbd5e1;
+  --text-muted: #94a3b8;
+  --bg-light: #1e293b;
+  --bg-white: #0f172a;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.dark body {
+  background: var(--bg-white);
+  color: var(--text-dark);
+}
+
+.dark .header {
+  background: rgba(15, 23, 42, 0.95);
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark .feature-item,
+.dark .feature-card,
+.dark .program-card,
+.dark .download-card {
+  background: #1e293b;
+  border-color: rgba(255, 255, 255, 0.08);
+}
