@@ -189,6 +189,16 @@ export const NoPodcastState = ({ onRefresh }: { onRefresh?: () => void }) => (
   />
 );
 
+export const NoOfflinePodcastState = ({ onBrowse }: { onBrowse?: () => void }) => (
+  <BaseEmptyState
+    iconEmoji="🎙️"
+    title="No Offline Podcasts Yet"
+    description="Download podcasts to listen anytime, even without an internet connection."
+    actionText={onBrowse ? "Browse Podcasts" : undefined}
+    onAction={onBrowse}
+  />
+);
+
 export const NoNotificationState = ({ onRefresh }: { onRefresh?: () => void }) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (

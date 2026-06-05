@@ -4,6 +4,7 @@ import {OfflinePodcastListProp, PodcastData} from '../type';
 import {deleteFromDownloads, msToTime, readDownloadedPodcasts} from '../helper/Utils';
 import PodcastCard from '../components/PodcastCard';
 import PodcastEmptyComponent from '../components/PodcastEmptyComponent';
+import {NoOfflinePodcastState} from '../components/EmptyStates';
 import {hp} from '../helper/Metric';
 import {ON_PRIMARY_COLOR} from '../helper/Theme';
 import Snackbar from 'react-native-snackbar';
@@ -113,7 +114,7 @@ export default function OfflinePodcastList({
         data={podcasts}
         keyExtractor={item => item._id.toString()}
         renderItem={renderItem}
-        ListEmptyComponent={<PodcastEmptyComponent />}
+        ListEmptyComponent={<NoOfflinePodcastState onBrowse={() => navigation.navigate('Podcast')} />}
       />
       <CreatePlaylist
         visible={playlistModalOpen}
