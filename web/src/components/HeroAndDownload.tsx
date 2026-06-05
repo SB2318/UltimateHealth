@@ -340,15 +340,28 @@ function AndroidStoreButtons({ onShowComingSoon }: Pick<HeroAndDownloadProps, "o
             <strong>Google Play</strong>
           </div>
         </a>
+        <a
+          href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin"
+          target="_blank"
+          rel="noreferrer"
+          className="uh-store-btn uh-store-admin"
+          aria-label="Download UHealth Admin on Google Play"
+        >
+          <i className="fas fa-user-shield" aria-hidden="true" />
+          <div>
+            <small>Admin Panel</small>
+            <strong>UHealth Admin</strong>
+          </div>
+        </a>
         <button
           type="button"
           onClick={onShowComingSoon}
           className="uh-store-btn uh-store-admin"
           aria-label="View UHealth Admin closed testing launch status"
         >
-          <i className="fas fa-user-shield" aria-hidden="true" />
+          <i className="fas fa-hourglass-half" aria-hidden="true" />
           <div>
-            <small>Admin Panel</small>
+            <small>Launch Status</small>
             <strong>Closed Testing</strong>
           </div>
         </button>
