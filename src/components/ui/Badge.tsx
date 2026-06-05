@@ -48,7 +48,6 @@ const iconSizeClasses: Record<BadgeSize, string> = {
   md: "w-4 h-4",
 };
 
-const Badge = ({ label, variant = "default", size = "md", icon }: BadgeProps) => {
 const interactiveClasses =
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current disabled:cursor-not-allowed disabled:opacity-60";
 
@@ -68,16 +67,24 @@ const getBadgeClasses = (
     .filter(Boolean)
     .join(" ");
 
-const renderBadgeContent = (
-  icon: React.ReactNode,
-  children: React.ReactNode,
-  label?: string
-) => {
-  const content = children ?? label;
+const Badge = (props: BadgeProps) => {
+  const {
+    as: Component = "span",
+    label,
+    children,
+    variant = "default",
+    size = "md",
+    icon,
+    className = "",
+    ...restProps
+  } = props as BadgeSpanProps & BadgeButtonProps & BadgeAnchorProps;
+
+  const isInteractive = Component === "button" || Component === "a";
 
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full font-medium transition-colors ${variantClasses[variant]} ${sizeClasses[size]}`}
+    <Component
+      className={getBadgeClasses(variant, size, isInteractive, className)}
+      {...restProps}
     >
       {icon && (
         <span
@@ -87,8 +94,8 @@ const renderBadgeContent = (
           {icon}
         </span>
       )}
-      {label}
-    </span>
+      {children ?? label}
+    </Component>
   );
 };
 
