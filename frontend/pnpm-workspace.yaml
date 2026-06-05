@@ -1,2 +1,7 @@
 packages:
   - "modules/*"
+allowBuilds:
+  '@firebase/util': true
+  '@sentry/cli': true
+  protobufjs: true
+  unrs-resolver: true

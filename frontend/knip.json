@@ -13,10 +13,16 @@
     "plugins/**/*.{js,ts}",
     "scripts/**/*.{js,ts}",
     "src/screens/**/*.{ts,tsx,js,jsx}",
-    "src/navigations/**/*.{ts,tsx,js,jsx}"
+    "src/navigations/**/*.{ts,tsx,js,jsx}",
+    "src/components/AppContent.tsx"
   ],
   "project": [
-    "**/*.{ts,tsx,js,jsx,d.ts}"
+    "src/**/*.{ts,tsx,js,jsx}",
+    "src/**/*.d.ts",
+    "plugins/**/*.{js,ts}",
+    "scripts/**/*.{js,ts}",
+    "hooks/**/*.{ts,tsx}",
+    "constants/**/*.{ts,tsx}"
   ],
   "ignore": [
     "android/**",
@@ -32,6 +38,7 @@
     "hooks/use-color-scheme.ts",
     "hooks/use-color-scheme.web.ts",
     "hooks/use-theme-color.ts",
+    "mocks/react-native-pager-view.js",
     "src/assets/css/article.ts",
     "src/assets/svg/EllipseSvg.jsx",
     "src/components/AddSpecializationModal.tsx",
@@ -80,11 +87,18 @@
     "expo-symbols",
     "expo-web-browser",
     "qrcode-terminal",
-    "react-native-vector-icons"
+    "react-native-vector-icons",
+    "@expo/config-plugins",
+    "@babel/preset-env",
+    "@babel/preset-typescript",
+    "babel-jest"
   ],
   "rules": {
     "exports": "off",
     "types": "off",
-    "duplicates": "off"
+    "duplicates": "off",
+    "unlisted": "off",
+    "files": "off",
+    "dependencies": "off"
   }
 }

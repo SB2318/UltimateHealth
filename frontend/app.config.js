@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path");
+
 // Dynamic Expo config — merges with and extends app.json
 //
 // Set environment variables in your .env file (see .env.example).
@@ -24,7 +27,9 @@ const defaultStaticConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.anonymous.UltimateHealth",
-    googleServicesFile: "./GoogleService-Info.plist",
+    ...(fs.existsSync(path.join(__dirname, "GoogleService-Info.plist")) && {
+      googleServicesFile: "./GoogleService-Info.plist",
+    }),
     infoPlist: {
       NSMicrophoneUsageDescription: "App requires microphone access to record audio.",
       NSPhotoLibraryAddUsageDescription: "App needs access to save recordings.",
@@ -67,7 +72,9 @@ const defaultStaticConfig = {
         ]
       }
     ],
-    googleServicesFile: "./google-services.json",
+    ...(fs.existsSync(path.join(__dirname, "google-services.json")) && {
+      googleServicesFile: "./google-services.json",
+    }),
     adaptiveIcon: {
       backgroundColor: "#E6F4FE",
       foregroundImage: "./assets/images/ic_ultimatehealth_appicon_foreground.png",

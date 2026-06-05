@@ -86,10 +86,10 @@ jobs:
             fi
           }
 
-          run_check full pnpm knip
-          run_check dependencies pnpm knip --dependencies
-          run_check files pnpm knip --files
-          run_check exports pnpm knip --exports
+          run_check full pnpm knip:run
+          run_check dependencies pnpm knip:deps
+          run_check files pnpm knip:files
+          run_check exports pnpm knip:exports
 
           exit 0
 
