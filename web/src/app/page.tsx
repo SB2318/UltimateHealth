@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
@@ -472,6 +473,13 @@ export default function Home() {
               </a>
             </li>
             <li>
+              <Link href="/medical-glossary" className="nav-link-item">
+                <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Medical Glossary</span>
+              </Link>
+            </li>
+            <li>
+             
               <a href={withBasePath("/contribute")} className="nav-link-item">
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
@@ -495,6 +503,7 @@ export default function Home() {
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
           <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
+          <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
           <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>

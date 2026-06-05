@@ -1,9 +1,7 @@
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
 // DO NOT remove the globals2.css import, it contains important global styles for the application
 import "./globals2.css";
-// make a new file for css
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
