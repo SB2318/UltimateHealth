@@ -20,6 +20,7 @@ import {
 } from 'react-native-image-picker';
 import {useCheckUserHandleAvailability} from '@/src/hooks/useCheckUserHandleAvailability';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
+import {useSubmissionGuard} from '@/src/hooks/useSubmissionGuard';
 import {useRegdMutation} from '@/src/hooks/useUserRegistration';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 let validator = require('email-validator');
@@ -49,6 +50,8 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
     useVerificationMailMutation();
 
   const {mutate: register, isPending: registerPending} = useRegdMutation();
+  const registerGuard = useSubmissionGuard(registerPending || loading);
+  const verifyEmailGuard = useSubmissionGuard(verifyEmailPending);
 
   const selectImage = async () => {
     const options: ImageLibraryOptions = {
@@ -90,6 +93,10 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 
 
   const handleVerifyModalCallback = () => {
+    if (!verifyEmailGuard.acquire()) {
+      return;
+    }
+
     if (token.length > 0) {
       verifyEmailMutation(
         {
@@ -142,9 +149,11 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               });
             }
           },
+          onSettled: verifyEmailGuard.release,
         },
       );
     } else {
+      verifyEmailGuard.release();
       Alert.alert(
         'Failed to authenticate, Token not found',
         'Please try again',
@@ -152,17 +161,25 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
     }
   };
   const handleSubmit = () => {
+    if (!registerGuard.acquire()) {
+      return;
+    }
+
     if (!name || !userHandle || !email || !password || !role) {
       Alert.alert('Please fill in all fields');
+      registerGuard.release();
       return;
     } else if (validator.validate(email) === false) {
       Alert.alert('Email id is not valid');
+      registerGuard.release();
       return;
     } else if (password.length < 6) {
       Alert.alert('Password must be at least of 6 length');
+      registerGuard.release();
       return;
     } else if (handleAvailability && !handleAvailability.isAvailable) {
       Alert.alert('User handle is not available', 'Please choose a different handle.');
+      registerGuard.release();
       return;
     }
 
@@ -179,6 +196,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
       };
       setPendingSubmitAction(() => () => {
         console.log('General');
+        registerGuard.release();
         navigation.navigate('SignUpScreenSecond', {
           user: detail,
         });
@@ -198,6 +216,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
   const handleSecurityWarningCancel = () => {
     setSecurityWarningVisible(false);
     setPendingSubmitAction(null);
+    registerGuard.release();
   };
 
   const callRegisterAPI = (profile_url: string) => {
@@ -249,6 +268,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
             Alert.alert('Registration failed', 'Please try again');
           }
         },
+        onSettled: registerGuard.release,
       },
     );
   };
@@ -285,6 +305,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               } catch (err) {
                 console.error('Upload failed');
                 Alert.alert('Error', 'Upload failed');
+                registerGuard.release();
               }
             },
           },
@@ -497,6 +518,8 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
             alignItems="center"
             alignSelf="center"
             width="100%"
+            disabled={registerGuard.isGuarded}
+            opacity={registerGuard.isGuarded ? 0.5 : 1}
             onPress={handleSubmit}>
             <Text color="white" fontWeight="bold" fontSize={18}>
               {role === 'general' ? 'Register' : 'Continue'}

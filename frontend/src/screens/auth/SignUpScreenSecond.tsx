@@ -12,6 +12,7 @@ import Snackbar from 'react-native-snackbar';
 import useUploadImage from '../../hooks/useUploadImage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
+import {useSubmissionGuard} from '@/src/hooks/useSubmissionGuard';
 import {useRegdMutation} from '@/src/hooks/useUserRegistration';
 let validator = require('email-validator');
 
@@ -31,6 +32,8 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
   const {mutate: verifyEmailMutation, isPending: verifyMutationPending} =
     useVerificationMailMutation();
   const {mutate: register, isPending: registerPending} = useRegdMutation();
+  const registerGuard = useSubmissionGuard(registerPending || loading);
+  const verifyEmailGuard = useSubmissionGuard(verifyMutationPending);
   const theme = useTheme();
   const callRegisterAPI = (
     profile_url: string,
@@ -92,11 +95,16 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
             Alert.alert('Registration failed', 'Please try again');
           }
         },
+        onSettled: registerGuard.release,
       },
     );
   };
 
   const handleVerifyModalCallback = () => {
+    if (!verifyEmailGuard.acquire()) {
+      return;
+    }
+
     if (token.length > 0) {
       verifyEmailMutation(
         {
@@ -148,9 +156,11 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
               });
             }
           },
+          onSettled: verifyEmailGuard.release,
         },
       );
     } else {
+      verifyEmailGuard.release();
       Alert.alert(
         'Failed to authenticate, Token not found',
         'Please try again',
@@ -159,6 +169,10 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
   };
 
   const handleSubmit = () => {
+    if (!registerGuard.acquire()) {
+      return;
+    }
+
     if (
       !specialization ||
       !education ||
@@ -167,12 +181,15 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
       !phone
     ) {
       Alert.alert('Please fill in all fields');
+      registerGuard.release();
       return;
     } else if (validator.validate(businessEmail) === false) {
       Alert.alert('Please enter a valid mail id');
+      registerGuard.release();
       return;
     } else if (phone.length < 10) {
       Alert.alert('Please enter a valid phone number');
+      registerGuard.release();
       return;
     } else {
       let contactDetail: Contactdetail = {
@@ -198,6 +215,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
   const handleSecurityWarningCancel = () => {
     setSecurityWarningVisible(false);
     setPendingContactDetail(null);
+    registerGuard.release();
   };
 
   const registerDoctor = async (contactDetail: Contactdetail) => {
@@ -236,6 +254,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
               } catch (err) {
                 console.error('Registration failed', err);
                 Alert.alert('Error Occured', 'Registration failed');
+                registerGuard.release();
               }
             },
           },
@@ -382,6 +401,8 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
             width="100%"
             size="$6"
             marginTop="$2"
+            disabled={registerGuard.isGuarded}
+            opacity={registerGuard.isGuarded ? 0.5 : 1}
             onPress={handleSubmit}>
             <Text color="$white" fontWeight="700" fontSize={18}>
               Register

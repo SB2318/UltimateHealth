@@ -15,6 +15,7 @@ import {
 
 import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '@/src/helper/Theme';
 import { useChangePasswordMutation } from '@/src/hooks/useChangePassword';
+import { useSubmissionGuard } from '@/src/hooks/useSubmissionGuard';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
@@ -36,6 +37,7 @@ export default function NewPasswordScreen({
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureNewTextEntry, setSecureNewTextEntry] = useState(true);
   const {mutate: changePassword, isPending} = useChangePasswordMutation();
+  const passwordResetGuard = useSubmissionGuard(isPending);
 
   const handleSecureEntryClickEvent = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -48,9 +50,14 @@ export default function NewPasswordScreen({
   };
 
   const handlePasswordSubmit = () => {
+    if (!passwordResetGuard.acquire()) {
+      return;
+    }
+
     const showError = (msg: string) => {
       Alert.alert(msg);
       setErrorMessage(msg);
+      passwordResetGuard.release();
     };
 
     if (!password?.trim()) {
@@ -103,6 +110,7 @@ export default function NewPasswordScreen({
             Alert.alert('Error', 'Something went wrong. Please try again.');
           }
         },
+        onSettled: passwordResetGuard.release,
       },
     );
   };
@@ -426,8 +434,10 @@ export default function NewPasswordScreen({
                 !password ||
                 !confirmPassword ||
                 password !== confirmPassword ||
-                !passwordVerify
+                !passwordVerify ||
+                passwordResetGuard.isGuarded
               }
+              opacity={passwordResetGuard.isGuarded ? 0.5 : 1}
               shadowColor="$blue8"
               shadowRadius={12}
               shadowOffset={{width: 0, height: 4}}

@@ -20,6 +20,7 @@ import {
 
 import {useRequestVerification} from '@/src/hooks/useResendVerification';
 import {useSendOtpMutation} from '@/src/hooks/useSendOtp';
+import {useSubmissionGuard} from '@/src/hooks/useSubmissionGuard';
 import {useLoginMutation} from '@/src/hooks/useUserLogin';
 import EmailInputBottomSheet from '../../components/EmailInputModal';
 import Loader from '../../components/Loader';
@@ -59,6 +60,10 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   const {mutate: sendOtp, isPending: sendOtpPending} = useSendOtpMutation();
 
   const {mutate: login, isPending: loginPending} = useLoginMutation();
+  const loginGuard = useSubmissionGuard(loginPending);
+  const emailActionGuard = useSubmissionGuard(
+    sendOtpPending || resendVerificationPending,
+  );
 
   const handleSecureEntryClickEvent = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -111,6 +116,10 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   }
 
   const validateAndSubmit = async () => {
+    if (!loginGuard.acquire()) {
+      return;
+    }
+
     if (validate()) {
       setPasswordMessage(false);
       setEmailMessage(false);
@@ -210,9 +219,11 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               Alert.alert('Error', 'User not found');
             }
           },
+          onSettled: loginGuard.release,
         },
       );
     } else {
+      loginGuard.release();
       setOutput(true);
       setPasswordMessage(false);
       setEmailMessage(false);
@@ -439,8 +450,8 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                 }
                 validateAndSubmit();
               }}
-              disabled={loginPending}
-              opacity={loginPending ? 0.5 : 1}
+              disabled={loginGuard.isGuarded}
+              opacity={loginGuard.isGuarded ? 0.5 : 1}
               width="100%">
               <Text fontSize={18} color="$white" fontWeight="600">
                 Login
@@ -507,6 +518,10 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         <EmailInputBottomSheet
           visible={emailInputVisible}
           callback={(email: string) => {
+            if (!emailActionGuard.acquire()) {
+              return;
+            }
+
             setOtpMail(email);
             if (requestVerificationMode) {
               resendVerification(
@@ -559,6 +574,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       }
                     }
                   },
+                  onSettled: emailActionGuard.release,
                 },
               );
             } else {
@@ -591,6 +607,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       Alert.alert('Error', 'Network error.');
                     }
                   },
+                  onSettled: emailActionGuard.release,
                 },
               );
             }

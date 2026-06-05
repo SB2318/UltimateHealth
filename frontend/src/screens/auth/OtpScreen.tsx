@@ -1,4 +1,5 @@
 import { useSendOtpMutation } from '@/src/hooks/useSendOtp';
+import { useSubmissionGuard } from '@/src/hooks/useSubmissionGuard';
 import { useVerifyOtpMutation } from '@/src/hooks/useVerifyOtp';
 import axios, { AxiosError, isAxiosError } from 'axios';
 import React, { useRef, useState } from 'react';
@@ -26,12 +27,19 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
   const [errorMessages, setErrorMessages] = useState<string[]>();
   const {mutate: sendOtp, isPending: sendOtpPending} = useSendOtpMutation();
   const {mutate: checkOtp, isPending: checkOtpPending} = useVerifyOtpMutation();
+  const verifyOtpGuard = useSubmissionGuard(checkOtpPending);
+  const resendOtpGuard = useSubmissionGuard(sendOtpPending);
 
   const handleSubmit = () => {
+    if (!verifyOtpGuard.acquire()) {
+      return;
+    }
+
     //navigation.navigate('NewPasswordScreen');
     const fullCode = otp!.join('');
     if (!fullCode || fullCode.length === 0) {
       setErrorMessages(['Please provide otp inputs']);
+      verifyOtpGuard.release();
       return;
     } else {
       setErrorMessages(undefined);
@@ -52,6 +60,7 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
             setErrorMessages(['Invalid or expired otp']);
             Alert.alert('Invalid or expired otp');
           },
+          onSettled: verifyOtpGuard.release,
         },
       );
     }
@@ -213,7 +222,8 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
               //alignSelf="center"
               height={56}
               marginTop="$5"
-              disabled={!otp.every(d => d)}
+              disabled={!otp.every(d => d) || verifyOtpGuard.isGuarded}
+              opacity={verifyOtpGuard.isGuarded ? 0.5 : 1}
               shadowColor="$blue8"
               shadowRadius={12}
               shadowOffset={{width: 0, height: 4}}
@@ -231,6 +241,10 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
               <Button
                 chromeless
                 onPress={() => {
+                  if (!resendOtpGuard.acquire()) {
+                    return;
+                  }
+
                   sendOtp(
                     {
                       email,
@@ -264,9 +278,12 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
                           Alert.alert('Error', 'Network error.');
                         }
                       },
+                      onSettled: resendOtpGuard.release,
                     },
                   );
                 }}
+                disabled={resendOtpGuard.isGuarded}
+                opacity={resendOtpGuard.isGuarded ? 0.5 : 1}
                 padding="$2"
                 height="auto">
                 <XStack ai="center" gap="$2">
