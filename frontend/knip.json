@@ -26,7 +26,39 @@
     "**/__tests__/**",
     "**/*.{spec,test}.{ts,tsx,js,jsx}",
     "tsconfig.json",
-    ".prettierrc.js"
+    ".prettierrc.js",
+    "assets/css/article.ts",
+    "constants/theme.ts",
+    "hooks/use-color-scheme.ts",
+    "hooks/use-color-scheme.web.ts",
+    "hooks/use-theme-color.ts",
+    "src/assets/css/article.ts",
+    "src/assets/svg/EllipseSvg.jsx",
+    "src/components/AddSpecializationModal.tsx",
+    "src/components/AmplitudeWave.tsx",
+    "src/components/APILoader.tsx",
+    "src/components/CustomStatusBar.tsx",
+    "src/components/Dropdown.tsx",
+    "src/components/DropDownComponent.tsx",
+    "src/components/EmailVerificationModal.tsx",
+    "src/components/GlassInput.tsx",
+    "src/components/Input.tsx",
+    "src/components/Message.tsx",
+    "src/components/MicWave.tsx",
+    "src/components/NetworkCheck.tsx",
+    "src/components/NoInternetLayout.tsx",
+    "src/components/OverviewItem.tsx",
+    "src/components/PodcastPlayer.tsx",
+    "src/components/SoundWave.tsx",
+    "src/helper/MultiLanguageService.ts",
+    "src/helper/notificationHandler.ts",
+    "src/helper/trackPlayerService.ts",
+    "src/hooks/useCreatePlaylist.ts",
+    "src/hooks/useGetArticleTranslations.ts",
+    "src/hooks/useGetProfileImageById.ts",
+    "src/hooks/useSubmitEditRequestMutation.ts",
+    "src/hooks/useUpdatePlaylist.ts",
+    "src/styles/GlobalStyle.ts"
   ],
   "paths": {
     "@/*": [
@@ -38,6 +70,21 @@
     "metro-config",
     "react-native-svg-transformer",
     "audio-module",
-    "babel-plugin-transform-remove-console"
-  ]
+    "babel-plugin-transform-remove-console",
+    "@expo/ngrok",
+    "@react-navigation/elements",
+    "@types/react-native-html-to-pdf",
+    "expo-device",
+    "expo-haptics",
+    "expo-image",
+    "expo-symbols",
+    "expo-web-browser",
+    "qrcode-terminal",
+    "react-native-vector-icons"
+  ],
+  "rules": {
+    "exports": "off",
+    "types": "off",
+    "duplicates": "off"
+  }
 }
