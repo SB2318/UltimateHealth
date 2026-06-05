@@ -8,6 +8,7 @@ import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExtern
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
 import ScrollToTop from "../components/ScrollToTop";
+import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
 
 const userScreenshots = [
@@ -471,7 +472,7 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <a href="/contribute" className="nav-link-item">
+              <a href={withBasePath("/contribute")} className="nav-link-item">
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
               </a>
@@ -494,7 +495,7 @@ export default function Home() {
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
           <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-          <a href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
+          <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
       </header>
@@ -504,12 +505,12 @@ export default function Home() {
         <div className="container hero-content scroll-reveal">
           <h1>Empowering Wellness Through Global Community</h1>
           <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
-        </div>
-      </section>
+        </PageWrapper>
+      </Section>
 
       {/* Downloads Section */}
-      <section id="downloads" className="download-section">
-        <div className="container">
+      <Section id="downloads" className="download-section">
+        <PageWrapper>
           <h2>Get UltimateHealth</h2>
           <p className="center">
             Access our platform on your preferred device. UltimateHealth is available now for Android and coming soon to iOS via TestFlight.
@@ -960,7 +961,7 @@ export default function Home() {
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
-            <a href="/contribute">Join Us &amp; Contribute</a>
+            <a href={withBasePath("/contribute")}>Join Us &amp; Contribute</a>
           </div>
 
           {/* Support */}
