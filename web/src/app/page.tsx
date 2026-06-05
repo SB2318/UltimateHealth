@@ -5,12 +5,12 @@ import Link from "next/link";
 import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
-import ScrollToTop from "../components/ScrollToTop";
 import ScrollToTop from "../components/ScrollToTop";
 import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
+import PageWrapper from "../components/layout/PageWrapper";
+import Section from "../components/layout/Section";
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -493,7 +493,7 @@ export default function Home() {
             </li>
           </ul>
 
-          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Open navigation menu">
+          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileMenuOpen}>
             <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
           </button>
         </PageWrapper>
@@ -509,97 +509,8 @@ export default function Home() {
         </nav>
       </header>
 
-      {/* ── Hero ── */}
-      <section className="hero">
-        <div className="container hero-content scroll-reveal">
-          <h1>Empowering Wellness Through Global Community</h1>
-          <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
-        </PageWrapper>
-      </Section>
-
-      {/* Downloads Section */}
-      <Section id="downloads" className="download-section">
-        <PageWrapper>
-          <h2>Get UltimateHealth</h2>
-          <p className="center">
-            Access our platform on your preferred device. UltimateHealth is available now for Android and coming soon to iOS via TestFlight.
-          </p>
-          <div className="download-grid">
-            {/* Android Card */}
-            <div className="download-card fade-in">
-              <div className="download-platform-header">
-                <div className="download-platform-icon android">
-                  <i className="fab fa-android"></i>
-                </div>
-                <div>
-                  <h3>Android App</h3>
-                  <span className="platform-status active">Available Now</span>
-                </div>
-              </div>
-              <p className="platform-desc">
-                Install UltimateHealth on your Android device to publish articles, listen to podcasts, and manage content.
-              </p>
-              <div className="store-buttons">
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="store-btn"
-                  id="playstore-btn"
-                  aria-label="Download UltimateHealth for Android on Google Play Store"
-                >
-                  <i className="fab fa-google-play"></i> UltimateHealth
-                </a>
-                <button
-                  type="button"
-                  className="store-btn"
-                  id="admin-closed-testing-btn"
-                  onClick={openComingSoonModal}
-                  aria-label="View UHealth Admin closed testing launch status"
-                >
-                  <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
-                </button>
-              </div>
-            </div>
-
-            {/* iOS Card */}
-            <div className="download-card fade-in">
-              <div className="download-platform-header">
-                <div className="download-platform-icon ios">
-                  <i className="fab fa-apple"></i>
-                </div>
-                <div>
-                  <h3>iOS App</h3>
-                  <span className="platform-status coming-soon">Coming Soon</span>
-                </div>
-              </div>
-              <p className="platform-desc">
-                We are actively testing our iOS application. Request to join the TestFlight waitlist for early beta access.
-              </p>
-              <div className="store-buttons">
-                <button
-                  className="store-btn store-btn-secondary"
-                  id="ios-uh-btn"
-                  onClick={() => setAppleModal(true)}
-                  aria-label="Join iOS TestFlight beta for UltimateHealth"
-                >
-                  <i className="fab fa-apple"></i> UltimateHealth (Beta)
-                </button>
-                <button
-                  className="store-btn store-btn-secondary"
-                  id="ios-admin-btn"
-                  onClick={() => setAppleModal(true)}
-                  aria-label="Join iOS TestFlight beta for UHealth Admin"
-                >
-                  <i className="fab fa-apple"></i> UHealth Admin (Beta)
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-<HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
+      {/* ── Hero + Downloads (new premium design) ── */}
+      <HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
@@ -1077,5 +988,5 @@ export default function Home() {
       )}
       <ScrollToTop />
     </>
-    );
-    }
+  );
+}

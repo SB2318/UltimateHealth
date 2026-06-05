@@ -1,3 +1,5 @@
+import React from "react";
+
 interface SkeletonCardProps {
   /** Optional Tailwind classes applied to the card for sizing or layout overrides. */
   className?: string;
@@ -5,15 +7,24 @@ interface SkeletonCardProps {
   compact?: boolean;
 }
 
-interface SkeletonProps {
-  /** Number of card skeletons to render. Defaults to 1. */
+/**
+ * Extends React.HTMLAttributes<HTMLDivElement> so that shadcn/ui consumers
+ * (e.g. sidebar.tsx) can pass `style`, `data-*`, and other standard div props
+ * without TypeScript errors.
+ *
+ * Rendering modes:
+ * - **Card mode**: activated when `count > 1` or `variant === "compact"` —
+ *   renders one or more full SkeletonCard articles (thumbnail + content rows).
+ * - **Simple mode** (default when no card-specific props): renders a single
+ *   animated div, compatible with the shadcn/ui Skeleton API.
+ */
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Number of card skeletons to render (card mode). Defaults to 1. */
   count?: number;
-  /** Optional Tailwind classes applied to each card for sizing or layout overrides. */
-  className?: string;
   /**
-   * Controls the card structure:
-   * - "full" (default) — includes a thumbnail placeholder, suited for article/content cards.
-   * - "compact" — omits the thumbnail, suited for smaller feature cards to avoid layout shift.
+   * Controls the card structure (card mode):
+   * - "full" (default) — includes a thumbnail placeholder.
+   * - "compact" — omits the thumbnail; activates card mode even when count === 1.
    */
   variant?: "full" | "compact";
 }
@@ -51,18 +62,34 @@ function SkeletonCard({ className = "", compact = false }: SkeletonCardProps) {
   );
 }
 
-function Skeleton({ count = 1, className, variant = "full" }: SkeletonProps) {
+function Skeleton({ count = 1, className, variant = "full", ...rest }: SkeletonProps) {
+  // Card mode: render one or more SkeletonCard articles.
+  // Triggered when multiple cards are requested OR the compact variant is used.
+  if (count > 1 || variant === "compact") {
+    return (
+      <>
+        {Array.from({ length: count }).map((_, index) => (
+          // Stable string key — replace with real data IDs when backed by fetched content
+          <SkeletonCard
+            key={`skeleton-card-${index}`}
+            className={className}
+            compact={variant === "compact"}
+          />
+        ))}
+      </>
+    );
+  }
+
+  // Simple mode (shadcn-compatible): a single animated div that forwards all
+  // remaining HTML attributes (style, data-*, aria-*, etc.).
+  // Used by generated UI components such as sidebar.tsx.
   return (
-    <>
-      {Array.from({ length: count }).map((_, index) => (
-        // Stable string key — replace with real data IDs when integrating with actual fetched content
-        <SkeletonCard
-          key={`skeleton-card-${index}`}
-          className={className}
-          compact={variant === "compact"}
-        />
-      ))}
-    </>
+    <div
+      aria-hidden="true"
+      data-slot="skeleton"
+      className={`animate-pulse rounded-md bg-gray-200 dark:bg-gray-700 ${className ?? ""}`}
+      {...rest}
+    />
   );
 }
 
