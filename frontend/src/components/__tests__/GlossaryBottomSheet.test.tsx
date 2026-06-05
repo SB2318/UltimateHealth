@@ -11,12 +11,21 @@ jest.mock('@tamagui/sheet', () => {
 
   const SheetMock = ({ open, children }: { open: boolean; children: React.ReactNode }) =>
     open ? <View>{children}</View> : null;
+  SheetMock.displayName = 'Sheet';
 
-  SheetMock.Overlay = ({ children }: { children?: React.ReactNode }) => <View>{children}</View>;
-  SheetMock.Handle = () => <View />;
-  SheetMock.Frame = ({ children, ...props }: { children: React.ReactNode }) => (
+  const Overlay = ({ children }: { children?: React.ReactNode }) => <View>{children}</View>;
+  Overlay.displayName = 'Sheet.Overlay';
+  SheetMock.Overlay = Overlay;
+
+  const Handle = () => <View />;
+  Handle.displayName = 'Sheet.Handle';
+  SheetMock.Handle = Handle;
+
+  const Frame = ({ children, ...props }: { children: React.ReactNode }) => (
     <View {...props}>{children}</View>
   );
+  Frame.displayName = 'Sheet.Frame';
+  SheetMock.Frame = Frame;
 
   return {
     ...actual,
