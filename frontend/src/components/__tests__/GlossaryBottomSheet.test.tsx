@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name, @typescript-eslint/no-require-imports */
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import GlossaryBottomSheet from '../GlossaryBottomSheet';
@@ -17,6 +18,22 @@ jest.mock('@tamagui/sheet', () => {
   );
 
   return { Sheet };
+});
+
+jest.mock('tamagui', () => {
+  const React = require('react');
+  const { View, Text, ScrollView, TouchableOpacity } = require('react-native');
+  return {
+    Theme: ({ children }: any) => React.createElement(React.Fragment, null, children),
+    XStack: ({ children, ...props }: any) => React.createElement(View, props, children),
+    YStack: ({ children, ...props }: any) => React.createElement(View, props, children),
+    Text: ({ children, ...props }: any) => React.createElement(Text, props, children),
+    Paragraph: ({ children, ...props }: any) => React.createElement(Text, props, children),
+    Card: ({ children, ...props }: any) => React.createElement(View, props, children),
+    ScrollView: ({ children, ...props }: any) => React.createElement(ScrollView, props, children),
+    Button: ({ children, onPress, ...props }: any) => 
+      React.createElement(TouchableOpacity, { onPress, ...props }, children),
+  };
 });
 
 describe('GlossaryBottomSheet', () => {

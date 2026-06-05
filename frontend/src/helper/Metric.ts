@@ -1,8 +1,8 @@
 import {Dimensions} from 'react-native';
-export const { } = Dimensions.get('window');
+export const {width, height} = Dimensions.get('window');
 
-  const baseHeight = height * 0.1;
-  const scalePerChar = height * 0.002;
+  export const baseHeight = height * 0.1;
+  export const scalePerChar = height * 0.002;
 
 export const wp = (percent: number): number => {
   return (width * percent) / 100;
