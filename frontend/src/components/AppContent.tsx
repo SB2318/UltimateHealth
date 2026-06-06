@@ -31,6 +31,8 @@ import {RootState} from '../store/ReduxStore';
 import {setupAxiosInterceptor} from '../helper/setupAxiosInterceptor';
 import {initMonitoring} from '../services/monitoring/sentry';
 
+import { GlobalErrorBoundary } from './common/GlobalErrorBoundary';
+
 export default function AppContent() {
   const navigationRef = useRef<NavigationContainerRef<any> | null>(null);
   const hasInitialized = useRef(false);
@@ -139,9 +141,11 @@ export default function AppContent() {
               <PaperProvider>
                 <View style={{flex: 1}}>
                   {/* StatusBar is managed globally by CustomStatusBar — do not add one here. */}
-                  <NavigationContainer ref={navigationRef}>
-                    <StackNavigation />
-                  </NavigationContainer>
+                  <GlobalErrorBoundary>
+                    <NavigationContainer ref={navigationRef}>
+                      <StackNavigation />
+                    </NavigationContainer>
+                  </GlobalErrorBoundary>
                   <CustomAlertDialog key={'alert'} />
                   <UpdateModal visible={visible} storeUrl={storeUrl} />
                 </View>
