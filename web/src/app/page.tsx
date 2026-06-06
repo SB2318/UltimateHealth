@@ -7,9 +7,12 @@ import "./globals.css";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
+
+import { PageWrapper, Section } from "../components/layout";
+
+import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
-import PageWrapper from "../components/layout/PageWrapper";
-import Section from "../components/layout/Section";
+
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -507,8 +510,16 @@ export default function Home() {
         </nav>
       </header>
 
+ fix-unreachable-launching-soon-modal
+      {/* ── Hero ── */}
+      <HeroAndDownload
+        onJoinTestFlight={() => setAppleModal(true)}
+        onShowComingSoon={openComingSoonModal}
+      />
+
       {/* ── Hero + Downloads (new premium design) ── */}
       <HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
+ web
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
