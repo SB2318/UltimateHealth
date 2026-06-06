@@ -7,14 +7,12 @@ import "./globals.css";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
- fix-unreachable-launching-soon-modal
+
 import { PageWrapper, Section } from "../components/layout";
 
- web
 import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
-import PageWrapper from "../components/layout/PageWrapper";
-import Section from "../components/layout/Section";
+
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -483,11 +481,10 @@ export default function Home() {
               </Link>
             </li>
             <li>
-             
-              <a href={withBasePath("/contribute")} className="nav-link-item">
+              <Link href="/contribute" className="nav-link-item">
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
-              </a>
+              </Link>
             </li>
             <li>
               <a href="#downloads" className="nav-btn-sm">
@@ -508,7 +505,7 @@ export default function Home() {
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
           <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
           <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
-          <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
+          <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
       </header>
@@ -893,7 +890,7 @@ export default function Home() {
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
-            <a href={withBasePath("/contribute")}>Join Us &amp; Contribute</a>
+            <Link href="/contribute">Join Us &amp; Contribute</Link>
           </div>
 
           {/* Support */}
