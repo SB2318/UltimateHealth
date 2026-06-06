@@ -1,14 +1,20 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
+ fix-unreachable-launching-soon-modal
 import { PageWrapper, Section } from "../components/layout";
+
+ web
 import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
+import PageWrapper from "../components/layout/PageWrapper";
+import Section from "../components/layout/Section";
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -471,6 +477,13 @@ export default function Home() {
               </a>
             </li>
             <li>
+              <Link href="/medical-glossary" className="nav-link-item">
+                <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Medical Glossary</span>
+              </Link>
+            </li>
+            <li>
+             
               <a href={withBasePath("/contribute")} className="nav-link-item">
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
@@ -484,7 +497,7 @@ export default function Home() {
             </li>
           </ul>
 
-          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Toggle mobile menu">
+          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileMenuOpen}>
             <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
           </button>
         </PageWrapper>
@@ -494,16 +507,22 @@ export default function Home() {
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
           <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
+          <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
           <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
       </header>
 
+ fix-unreachable-launching-soon-modal
       {/* ── Hero ── */}
       <HeroAndDownload
         onJoinTestFlight={() => setAppleModal(true)}
         onShowComingSoon={openComingSoonModal}
       />
+
+      {/* ── Hero + Downloads (new premium design) ── */}
+      <HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
+ web
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
@@ -981,5 +1000,5 @@ export default function Home() {
       )}
       <ScrollToTop />
     </>
-    );
-    }
+  );
+}
