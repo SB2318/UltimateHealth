@@ -18,7 +18,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-import {formatCount, updateOfflinePodcastLikeStatus} from '../helper/Utils';
+import {formatCount, updateOfflinePodcastLikeStatus, updateLastPlayedTimestamp} from '../helper/Utils';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect, useState} from 'react';
 import Snackbar from 'react-native-snackbar';
@@ -77,12 +77,21 @@ export default function OfflinePodcastDetail({
   }, [player]);
 
   const handleListenPress = async () => {
-    const currentState = player.currentStatus;
+    try {
+      const currentState = player.currentStatus;
 
-    if (currentState.playing) {
-      player.pause();
-    } else {
-      player.play();
+      if (currentState.playing) {
+        player.pause();
+      } else {
+        await updateLastPlayedTimestamp(podcast._id);
+        player.play();
+      }
+    } catch (error) {
+      console.error('Error toggling playback:', error);
+      Snackbar.show({
+        text: 'Playback error occurred. Please try again.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
     }
   };
 

@@ -13,10 +13,12 @@ type SerializedPodcastDownloadRecord = Omit<PodcastData, 'filePath' | 'downloadA
   downloadAt: string;
   audioUrl?: string;
   audio_url?: string;
+  lastPlayedAt?: string;
 };
 
-export type PodcastDownloadRecord = Omit<SerializedPodcastDownloadRecord, 'downloadAt'> & {
+export type PodcastDownloadRecord = Omit<SerializedPodcastDownloadRecord, 'downloadAt' | 'lastPlayedAt'> & {
   downloadAt: Date;
+  lastPlayedAt?: Date;
 };
 
 const PODCAST_STORAGE_KEY = 'DOWNLOAD_PODCAST_DATA';
@@ -66,6 +68,7 @@ const parsePodcastData = (
     return parsed.map(item => ({
       ...item,
       downloadAt: new Date(item.downloadAt),
+      lastPlayedAt: item.lastPlayedAt ? new Date(item.lastPlayedAt) : undefined,
     }));
   } catch (error) {
     console.log('Podcast cache parse error', error);

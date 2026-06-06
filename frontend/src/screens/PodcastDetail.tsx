@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -20,7 +20,8 @@ import {useAudioPlayer} from 'expo-audio';
 import {GET_IMAGE} from '../helper/APIUtils';
 import {useSelector} from 'react-redux';
 
-import {downloadAudio, formatCount, StatusEnum} from '../helper/Utils';
+import {downloadAudio, formatCount, StatusEnum, readDownloadedPodcasts, updateLastPlayedTimestamp} from '../helper/Utils';
+import RNFS from 'react-native-fs';
 import Snackbar from 'react-native-snackbar';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Share from 'react-native-share';
@@ -94,22 +95,172 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   // only initialize once a valid uri exists
   const player = useAudioPlayer(initialSource);
 
+  const [retryCount, setRetryCount] = useState(0);
+  const maxRetries = 3;
+  const [wasPlayingBeforeDrop, setWasPlayingBeforeDrop] = useState(false);
+  const [lastConnectionState, setLastConnectionState] = useState(isConnected);
+
+  const attemptStreamRecovery = useCallback(async (currentPos: number) => {
+    if (retryCount < maxRetries) {
+      const nextRetry = retryCount + 1;
+      setRetryCount(nextRetry);
+      const delay = Math.pow(2, nextRetry) * 1000;
+
+      Snackbar.show({
+        text: `Buffering stalled. Retrying connection... (Attempt ${nextRetry}/${maxRetries})`,
+        duration: Snackbar.LENGTH_SHORT,
+      });
+
+      setTimeout(async () => {
+        try {
+          if (podcast?.audio_url) {
+            const secureSource = getFormattedSource(podcast.audio_url);
+            if (secureSource) {
+              player.replace(secureSource);
+              setLoadedSource(secureSource);
+              await player.seekTo(currentPos);
+              player.play();
+              setIsPlaying(true);
+            }
+          }
+        } catch (err) {
+          console.error('Retry attempt failed:', err);
+        }
+      }, delay);
+    } else {
+      Snackbar.show({
+        text: 'Streaming failed. Please check connection or download for offline playback.',
+        duration: Snackbar.LENGTH_LONG,
+      });
+      setRetryCount(0);
+      player.pause();
+      setIsPlaying(false);
+    }
+  }, [retryCount, maxRetries, podcast?.audio_url, player]);
+
+  // Buffer stall watcher
   useEffect(() => {
-    if (podcast?.audio_url) {
-      const secureSource = getFormattedSource(podcast.audio_url);
-      if (secureSource && secureSource !== loadedSource) {
-        player.replace(secureSource);
-        setLoadedSource(secureSource);
+    let bufferTimeout: NodeJS.Timeout;
+
+    if (playing && player.currentStatus.isBuffering && isConnected) {
+      bufferTimeout = setTimeout(() => {
+        console.log('Buffering stalled. Initiating retry...');
+        attemptStreamRecovery(player.currentTime || 0);
+      }, 8000);
+    } else {
+      if (!player.currentStatus.isBuffering) {
+        setRetryCount(0);
       }
     }
-  }, [podcast?.audio_url, player, loadedSource]);
+
+    return () => clearTimeout(bufferTimeout);
+  }, [playing, player.currentStatus.isBuffering, isConnected, player.currentTime, attemptStreamRecovery]);
+
+  // Handle source updates prioritizing local copy
+  useEffect(() => {
+    const updateSource = async () => {
+      // 1. Check if we have a local download
+      const downloads = await readDownloadedPodcasts();
+      const cached = downloads.find(d => d._id === trackId);
+      if (cached && cached.filePath && (await RNFS.exists(cached.filePath))) {
+        const localUri = `file://${cached.filePath}`;
+        if (loadedSource !== localUri) {
+          player.replace(localUri);
+          setLoadedSource(localUri);
+          console.log('Playing from local offline cache:', localUri);
+        }
+        return;
+      }
+
+      // 2. Fallback to remote URL
+      if (podcast?.audio_url) {
+        const secureSource = getFormattedSource(podcast.audio_url);
+        if (secureSource && secureSource !== loadedSource) {
+          player.replace(secureSource);
+          setLoadedSource(secureSource);
+        }
+      }
+    };
+
+    updateSource();
+  }, [podcast?.audio_url, player, loadedSource, trackId]);
+
+  // Detect connection changes and switch source or pause
+  useEffect(() => {
+    if (isConnected !== lastConnectionState) {
+      setLastConnectionState(isConnected);
+
+      const handleConnectionChange = async () => {
+        if (!isConnected) {
+          console.log('Network dropped. Checking cached fallback...');
+          const currentlyPlaying = player.playing;
+          const currentPos = player.currentTime || 0;
+
+          const downloads = await readDownloadedPodcasts();
+          const cached = downloads.find(d => d._id === trackId);
+          if (cached && cached.filePath && (await RNFS.exists(cached.filePath))) {
+            const localUri = `file://${cached.filePath}`;
+            player.replace(localUri);
+            setLoadedSource(localUri);
+            await player.seekTo(currentPos);
+            if (currentlyPlaying) {
+              player.play();
+              setIsPlaying(true);
+            }
+            Snackbar.show({
+              text: 'Network lost. Switched to offline playback.',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          } else {
+            if (currentlyPlaying) {
+              setWasPlayingBeforeDrop(true);
+              player.pause();
+              setIsPlaying(false);
+            }
+            Snackbar.show({
+              text: 'Network connection lost. Playback paused.',
+              duration: Snackbar.LENGTH_LONG,
+            });
+          }
+        } else {
+          console.log('Network restored. Recovering playback...');
+          const isLocal = typeof loadedSource === 'string' && loadedSource.startsWith('file://');
+          if (!isLocal) {
+            try {
+              if (podcast?.audio_url) {
+                const secureSource = getFormattedSource(podcast.audio_url);
+                if (secureSource) {
+                  const currentPos = player.currentTime || 0;
+                  player.replace(secureSource);
+                  setLoadedSource(secureSource);
+                  await player.seekTo(currentPos);
+                  if (wasPlayingBeforeDrop) {
+                    player.play();
+                    setIsPlaying(true);
+                  }
+                  Snackbar.show({
+                    text: 'Network restored. Resuming playback...',
+                    duration: Snackbar.LENGTH_SHORT,
+                  });
+                }
+              }
+            } catch (error) {
+              console.error('Failed to recover stream:', error);
+            }
+          }
+          setWasPlayingBeforeDrop(false);
+        }
+      };
+
+      handleConnectionChange();
+    }
+  }, [isConnected, lastConnectionState, player, loadedSource, podcast, trackId, wasPlayingBeforeDrop]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (player.playing) {
         setPosition(player.currentTime || 0);
         setDuration(player.duration || 1);
-        // setIsPlaying(player.playing || false);
       }
     }, 500);
 
@@ -117,7 +268,6 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   }, [player.currentTime, player.duration, player.playing]);
 
   useEffect(()=>{
-
     if(podcast){
       setLike(podcast.likedUsers.includes(user_id));
       setLikeCount(podcast.likedUsers.length);
@@ -203,6 +353,8 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
     if (!player) {
       return;
     }
+
+    updateLastPlayedTimestamp(trackId);
 
     //await player.seekTo(0);
     player.play();
