@@ -9,6 +9,7 @@ const GlobalStyles = StyleSheet.create({
   },
 
   main: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -30,6 +31,7 @@ const GlobalStyles = StyleSheet.create({
     width: '90%',
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
     margin: 10,
     backgroundColor: PRIMARY_COLOR,
     borderRadius: 24,
@@ -37,8 +39,9 @@ const GlobalStyles = StyleSheet.create({
   },
   normalText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: '600',
+    lineHeight: 24,
     marginTop: 6,
   },
 });
