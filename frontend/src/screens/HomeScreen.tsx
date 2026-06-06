@@ -54,6 +54,7 @@ import {
   BaseEmptyState,
 } from '../components/EmptyStates';
 
+
 // Loading State Component with Animation
 const LoadingState = () => {
   return (
@@ -280,18 +281,23 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   };
 
   const handleFilterReset = () => {
-    // Update Redux State Variables
-    setSelectCategoryList([]);
-    setSortingType('');
-    setSessionSelectedLanguages([]);
-    dispatch(
-      setSelectedTags({
-        selectedTags: articleCategories,
-      }),
-    );
-    dispatch(setSortType({sortType: ''}));
-    dispatch(setFilteredArticles({filteredArticles: allArticlesRef.current}));
-  };
+  // Reset Redux filter states
+  setSelectCategoryList([]);
+  setSortingType('');
+  setSessionSelectedLanguages([]);
+  dispatch(setSelectedTags({ selectedTags: articleCategories }));
+  dispatch(setSortType({ sortType: '' }));
+
+  // Clear search text and exit search mode
+  dispatch(setSearchMode({ searchMode: false }));
+  dispatch(setSearchedArticles({ searchedArticles: [] }));
+
+  // Reset local Saved filter chip
+  setShowSavedOnly(false);
+
+  // Reset filtered articles to the full accumulated list
+  dispatch(setFilteredArticles({ filteredArticles: allArticlesRef.current }));
+};
 
   const handleFilterApply = () => {
     // Update Redux State Variables
