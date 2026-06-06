@@ -30,7 +30,7 @@ import {
   ArrowRight,
   Mail,
 } from "lucide-react";
-import { withBasePath } from "@/lib/basePath";
+
 
 // =============================================================================
 // Types
@@ -448,6 +448,7 @@ function FAQAccordionItem({ item, index }: { item: FAQItem; index: number }) {
 }
 
 // =============================================================================
+
 // Hero Section
 // =============================================================================
 function HeroSection() {
@@ -1520,12 +1521,12 @@ export default function ContributePage() {
   const [navOpen, setNavOpen] = useState(false);
 
 const navLinks = [
-  { href: withBasePath("/"), label: "Home", icon: "fa-home" },
-  { href: withBasePath("/#features"), label: "Platform Highlights", icon: "fa-star" },
-  { href: withBasePath("/#screenshots"), label: "Screenshots", icon: "fa-image" },
-  { href: withBasePath("/#programs"), label: "Community Programs", icon: "fa-code-branch" },
+  { href: "/", label: "Home", icon: "fa-home" },
+  { href: "/#features", label: "Platform Highlights", icon: "fa-star" },
+  { href: "/#screenshots", label: "Screenshots", icon: "fa-image" },
+  { href: "/#programs", label: "Community Programs", icon: "fa-code-branch" },
   { href: "https://uhsocial.in/docs", label: "Read Articles", icon: "fa-file-lines", external: true },
-  { href: withBasePath("/#downloads"), label: "Login / Register", icon: "fa-user" },
+  { href: "/#downloads", label: "Login / Register", icon: "fa-user" },
 ];
 
   return (
