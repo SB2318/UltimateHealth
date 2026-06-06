@@ -43,6 +43,11 @@ const sizeClasses: Record<BadgeSize, string> = {
   md: "px-3.5 py-1 text-sm",
 };
 
+const iconSizeClasses: Record<BadgeSize, string> = {
+  sm: "w-3 h-3",
+  md: "w-4 h-4",
+};
+
 const interactiveClasses =
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-current disabled:cursor-not-allowed disabled:opacity-60";
 
@@ -62,70 +67,7 @@ const getBadgeClasses = (
     .filter(Boolean)
     .join(" ");
 
-const renderBadgeContent = (
-  icon: React.ReactNode,
-  children: React.ReactNode,
-  label: string | undefined,
-  variant: BadgeVariant,
-  size: BadgeSize
-) => {
-  const content = children ?? label;
-
-  return (
-    <>
-      {icon && <span className="flex-shrink-0">{icon}</span>}
-      {content}
-    </>
-  );
-};
-
 const Badge = (props: BadgeProps) => {
-  if (props.as === "button") {
-    const {
-      as: Component,
-      label,
-      children,
-      variant = "default",
-      size = "md",
-      icon,
-      className,
-      type = "button",
-      ...buttonProps
-    } = props;
-
-    return (
-      <Component
-        type={type}
-        className={getBadgeClasses(variant, size, true, className)}
-        {...buttonProps}
-      >
-        {renderBadgeContent(icon, children, label, variant, size)}
-      </Component>
-    );
-  }
-
-  if (props.as === "a") {
-    const {
-      as: Component,
-      label,
-      children,
-      variant = "default",
-      size = "md",
-      icon,
-      className,
-      ...anchorProps
-    } = props;
-
-    return (
-      <Component
-        className={getBadgeClasses(variant, size, true, className)}
-        {...anchorProps}
-      >
-        {renderBadgeContent(icon, children, label, variant, size)}
-      </Component>
-    );
-  }
-
   const {
     as: Component = "span",
     label,
@@ -133,16 +75,26 @@ const Badge = (props: BadgeProps) => {
     variant = "default",
     size = "md",
     icon,
-    className,
-    ...spanProps
-  } = props;
+    className = "",
+    ...restProps
+  } = props as BadgeSpanProps & BadgeButtonProps & BadgeAnchorProps;
+
+  const isInteractive = Component === "button" || Component === "a";
 
   return (
     <Component
-      className={getBadgeClasses(variant, size, false, className)}
-      {...spanProps}
+      className={getBadgeClasses(variant, size, isInteractive, className)}
+      {...restProps}
     >
-      {renderBadgeContent(icon, children, label, variant, size)}
+      {icon && (
+        <span
+          className={`inline-flex items-center justify-center shrink-0 text-current ${iconSizeClasses[size]}`}
+          aria-hidden="true"
+        >
+          {icon}
+        </span>
+      )}
+      {children ?? label}
     </Component>
   );
 };
