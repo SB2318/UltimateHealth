@@ -608,7 +608,7 @@ export default function Home() {
         <PageWrapper>
           <h2>Be a Contributor: Core Community Features</h2>
           <p className="center">Join our community and make a difference in global health awareness</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-16 w-full">
             {featuresLoading ? (
               <Skeleton count={4} variant="compact" />
             ) : (
