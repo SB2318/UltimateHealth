@@ -132,16 +132,7 @@ const ArticleCard = ({
   }, []);
 
   const onChange = () => {
-    // Force a false → true transition so the child Sheet's useEffect
-    // always sees a value change, even if menuVisible was already true.
-    if (menuVisible) {
-      setMenuVisible(false);
-      menuTimerRef.current = setTimeout(() => {
-        setMenuVisible(true);
-      }, 50);
-    } else {
-      setMenuVisible(true);
-    }
+    setMenuVisible(prev => !prev);
   };
 
   const generatePDFFromUrl = async (recordId: string, title: string) => {
@@ -665,6 +656,7 @@ const ArticleCard = ({
                 accessibilityLabel="More options"
                 accessibilityHint="Opens article action menu"
                 style={styles.likeSaveChildContainer}
+                hitSlop={{top: 15, bottom: 15, left: 15, right: 15}}
                 onPress={(e) => {
                   e?.stopPropagation?.();
                   if (isGuest) {

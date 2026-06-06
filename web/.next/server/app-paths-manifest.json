@@ -1,0 +1,14 @@
+{
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/admin-agreement/page": "app/admin-agreement/page.js",
+  "/api/csp-report/route": "app/api/csp-report/route.js",
+  "/contribute/page": "app/contribute/page.js",
+  "/contributors/page": "app/contributors/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/goodbye/page": "app/goodbye/page.js",
+  "/login-admin/page": "app/login-admin/page.js",
+  "/login/page": "app/login/page.js",
+  "/medical-glossary/page": "app/medical-glossary/page.js",
+  "/page": "app/page.js"
+}
