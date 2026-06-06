@@ -75,6 +75,8 @@ jest.mock('../../contexts/SocketContext', () => ({
 jest.mock('../../helper/Utils', () => ({
   downloadAudio: jest.fn(),
   formatCount: (value: number) => String(value),
+  readDownloadedPodcasts: jest.fn(() => Promise.resolve([])),
+  updateLastPlayedTimestamp: jest.fn(() => Promise.resolve()),
   StatusEnum: {
     PUBLISHED: 'PUBLISHED',
   },

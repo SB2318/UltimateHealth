@@ -4,6 +4,7 @@ import {PodcastPlayerScreenProps} from '../type';
 import RNFS from 'react-native-fs';
 import {useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
+import {isPathSafe} from '../helper/Utils';
 
 import useUploadImage from '../hooks/useUploadImage';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
@@ -42,7 +43,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
     useUploadPodcast();
 
   const player = useAudioPlayer(
-    filePath
+    filePath && isPathSafe(filePath)
       ? `file://${filePath}`
       : require('../../assets/sounds/funny-cartoon-sound-397415.mp3'),
   );
@@ -138,6 +139,10 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const unlinkFile = useCallback(async () => {
     if (filePath) {
       try {
+        if (!isPathSafe(filePath)) {
+          console.warn('Unsafe path in unlinkFile blocked:', filePath);
+          return;
+        }
         const exists = await RNFS.exists(filePath);
         if (exists) {
           await RNFS.unlink(filePath);
@@ -176,6 +181,11 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         'Error',
         'Please record a podcast and select an image before uploading.',
       );
+      return;
+    }
+
+    if (!isPathSafe(filePath)) {
+      Alert.alert('Error', 'Invalid recorded audio file path.');
       return;
     }
 

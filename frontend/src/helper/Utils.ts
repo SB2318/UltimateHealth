@@ -361,6 +361,100 @@ export const requestStoragePermissions = async () => {
   }
 };
 
+export const isPathSafe = (path: string): boolean => {
+  const safePrefix = RNFS.DocumentDirectoryPath;
+  const normalizedPath = path.replace(/\\/g, '/');
+  const normalizedPrefix = safePrefix.replace(/\\/g, '/');
+  if (normalizedPath.includes('..')) {
+    return false;
+  }
+  return normalizedPath.startsWith(normalizedPrefix);
+};
+
+const ALLOWED_EXTENSIONS = new Set(['mp3', 'wav', 'aac', 'm4a', 'flac', 'ogg', 'opus', 'webm']);
+
+const getFileExtension = (urlOrPath: string): string => {
+  const parts = urlOrPath.split('?')[0].split('.');
+  return parts.length > 1 ? parts.pop()!.toLowerCase() : '';
+};
+
+const validateMediaUrl = async (url: string): Promise<boolean> => {
+  const ext = getFileExtension(url);
+  if (!ALLOWED_EXTENSIONS.has(ext)) {
+    console.warn(`Validation failed: Disallowed file extension: ${ext}`);
+    return false;
+  }
+
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+    if (response.ok) {
+      const contentType = response.headers.get('content-type');
+      if (contentType) {
+        const mime = contentType.toLowerCase();
+        if (!mime.startsWith('audio/') && mime !== 'application/octet-stream') {
+          console.warn(`Validation failed: Content-Type is not audio: ${contentType}`);
+          return false;
+        }
+      }
+    }
+  } catch (error) {
+    console.log('MIME validation head request failed, falling back to extension check', error);
+  }
+  return true;
+};
+
+const validateFileSignature = async (filePath: string): Promise<boolean> => {
+  try {
+    const exists = await RNFS.exists(filePath);
+    if (!exists) return false;
+
+    // Read first 8 bytes for ID3, RIFF, FLAC, Ogg, MP3 raw frame sync
+    const header = await RNFS.read(filePath, 8, 0, 'base64');
+
+    if (header.startsWith('SUQz')) return true; // ID3 (MP3)
+    if (header.startsWith('UklGR')) return true; // RIFF (WAV)
+    if (header.startsWith('Zkxha')) return true; // FLAC
+    if (header.startsWith('T2dnUw')) return true; // Ogg
+    if (header.startsWith('/7')) return true; // MP3 raw frame sync
+
+    // Check MPEG-4 (M4A) at offset 4: ftyp (base64 ZnR5c)
+    const offsetHeader = await RNFS.read(filePath, 4, 4, 'base64');
+    if (offsetHeader.startsWith('ZnR5c')) return true;
+
+    console.warn('File signature validation failed for base64 headers:', { header, offsetHeader });
+    return false;
+  } catch (error) {
+    console.error('Error validating file signature:', error);
+    return true; // Fallback to true if read fails to avoid blocking users
+  }
+};
+
+export const updateLastPlayedTimestamp = async (podcastId: string) => {
+  try {
+    const existingPodcasts = await readDownloadedPodcasts();
+    if (!Array.isArray(existingPodcasts)) return;
+
+    let updated = false;
+    const freshPodcasts = existingPodcasts.map(item => {
+      if (item._id === podcastId) {
+        updated = true;
+        return {
+          ...item,
+          lastPlayedAt: new Date(),
+        };
+      }
+      return item;
+    });
+
+    if (updated) {
+      await writeDownloadedPodcasts(freshPodcasts);
+      console.log('Updated last played timestamp for podcast:', podcastId);
+    }
+  } catch (err) {
+    console.log('Error updating last played timestamp:', err);
+  }
+};
+
 /** Download podcast */
 
 export const downloadAudio = async (_podcast: PodcastData) => {
@@ -374,13 +468,7 @@ export const downloadAudio = async (_podcast: PodcastData) => {
   try {
     let _existingPodcasts = Array.isArray(existingPodcasts) ? existingPodcasts : [];
 
-    if (_existingPodcasts.length >= 5) {
-      return {
-        message: "You can't keep more than 5 audio",
-        success: false,
-      };
-    }
-    // check for existing downloads
+    // Check for existing downloads
     const isPodcastFound = _existingPodcasts.some((d: any) => d._id === _podcast._id);
 
     if (isPodcastFound) {
@@ -389,9 +477,52 @@ export const downloadAudio = async (_podcast: PodcastData) => {
         success: true,
       };
     }
+
+    const downloadUrl = `${GET_STORAGE_DATA}/${_podcast.audio_url}`;
+    const isValid = await validateMediaUrl(downloadUrl);
+    if (!isValid) {
+      return {
+        message: 'Invalid or unsupported media format',
+        success: false,
+      };
+    }
+
+    // LRU Cache eviction policy (Limit: 5 podcasts)
+    const MAX_CACHE_LIMIT = 5;
+    if (_existingPodcasts.length >= MAX_CACHE_LIMIT) {
+      const sortedPodcasts = [..._existingPodcasts].sort((a, b) => {
+        const timeA = (a.lastPlayedAt ? new Date(a.lastPlayedAt) : a.downloadAt).getTime();
+        const timeB = (b.lastPlayedAt ? new Date(b.lastPlayedAt) : b.downloadAt).getTime();
+        return timeA - timeB;
+      });
+
+      while (sortedPodcasts.length >= MAX_CACHE_LIMIT) {
+        const toEvict = sortedPodcasts.shift();
+        if (toEvict) {
+          if (toEvict.filePath && (await RNFS.exists(toEvict.filePath))) {
+            await RNFS.unlink(toEvict.filePath);
+            console.log('LRU cache evicted local file:', toEvict.filePath);
+          }
+          _existingPodcasts = _existingPodcasts.filter(p => p._id !== toEvict._id);
+        }
+      }
+    }
+
     // download the file
     const path = await downloadFile(_podcast.audio_url, _podcast.title);
     if (path) {
+      // Validate file signature after download
+      const isSignatureValid = await validateFileSignature(path);
+      if (!isSignatureValid) {
+        if (await RNFS.exists(path)) {
+          await RNFS.unlink(path);
+        }
+        return {
+          message: 'File failed signature integrity validation',
+          success: false,
+        };
+      }
+
       if (!Array.isArray(_existingPodcasts)) {
         _existingPodcasts = [];
       }
@@ -400,8 +531,8 @@ export const downloadAudio = async (_podcast: PodcastData) => {
         ..._podcast,
         filePath: path,
         downloadAt: new Date(),
+        lastPlayedAt: new Date(),
       };
-      //_podcast.filePath = path;
       _existingPodcasts.push(newPodcast);
       await writeDownloadedPodcasts(_existingPodcasts);
 
@@ -429,12 +560,13 @@ const downloadFile = async (key: string, title: string) => {
   const fileName = `${safeTitle}_${Date.now()}.mp3`;
   const downloadUrl = `${GET_STORAGE_DATA}/${key}`;
 
-  const customDirectory =
-    Platform.OS === 'android'
-      ? RNFS.ExternalDirectoryPath
-      : RNFS.DocumentDirectoryPath;
-
+  const customDirectory = RNFS.DocumentDirectoryPath;
   const filePath = `${customDirectory}/${fileName}`;
+
+  if (!isPathSafe(filePath)) {
+    console.error('Path traversal attempt detected:', filePath);
+    return null;
+  }
 
   const directoryExists = await RNFS.exists(customDirectory);
 
