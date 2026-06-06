@@ -439,29 +439,32 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 
           {/* Password */}
           <XStack position="relative">
-            <Input
-              flex={1}
-              height="$5"
-              borderColor="$blue10"
-              borderWidth={1}
-              borderRadius="$3"
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry={isSecureEntry}
-            />
-            <Button
-              chromeless
-              position="absolute"
-              right={1}
-              top={8}
-              onPress={() => setIsSecureEntry(!isSecureEntry)}>
-              <AntDesign
-                name={isSecureEntry ? 'eye-invisible' : 'eye'}
-                size={17}
-                color={theme.black.val}
-              />
-            </Button>
+ <Input
+  flex={1}
+  height="$5"
+  borderColor="$blue10"
+  borderWidth={1}
+  borderRadius="$3"
+  placeholder="Password"
+  value={password}
+  onChangeText={setPassword}
+  secureTextEntry={isSecureEntry}
+  paddingRight={50}
+/>
+  <Button
+  chromeless
+  position="absolute"
+  right={10}
+  top={8}
+  onPress={() => setIsSecureEntry(!isSecureEntry)}
+>
+  <AntDesign
+    name={isSecureEntry ? 'eye-invisible' : 'eye'}
+    size={20}
+    color={theme.black.val}
+  />
+</Button>
+
           </XStack>
 
           {/* Role Dropdown */}
