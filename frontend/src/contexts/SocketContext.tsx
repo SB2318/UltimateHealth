@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
-
+import { AppState, AppStateStatus } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Socket } from 'socket.io-client';
 import { initializeSocket, disconnectSocket } from '../helper/socket';
@@ -102,6 +102,22 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
             socket.off('connect', joinUserNotifications);
         };
     }, [socket, user_id]);
+
+    // Force reconnection when app returns from background
+    useEffect(() => {
+        const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
+            if (nextAppState === 'active') {
+                if (socket && !socket.connected) {
+                    if (__DEV__) console.log('Socket Context: App returned to foreground, forcing reconnection');
+                    socket.connect();
+                }
+            }
+        });
+
+        return () => {
+            subscription.remove();
+        };
+    }, [socket]);
 
 
     const value = useMemo(
