@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
@@ -509,16 +508,12 @@ export default function Home() {
         </nav>
       </header>
 
- fix-unreachable-launching-soon-modal
       {/* ── Hero ── */}
       <HeroAndDownload
         onJoinTestFlight={() => setAppleModal(true)}
         onShowComingSoon={openComingSoonModal}
       />
 
-      {/* ── Hero + Downloads (new premium design) ── */}
-      <HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
- web
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
