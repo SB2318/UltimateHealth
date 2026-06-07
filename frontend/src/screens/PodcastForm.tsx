@@ -264,8 +264,9 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
                 value={title}
-                onChangeText={setTitle}
+                onChangeText={text => setTitle(text.slice(0, 100))}
               />
+              <Text style={styles.charCounter}>{title.length}/100</Text>
             </View>
 
             {/* Language Dropdown */}
@@ -297,11 +298,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 numberOfLines={4}
                 autoCapitalize="sentences"
                 value={description}
-                onChangeText={text => {
-                  if (text.length <= 160) {
-                    setDescription(text);
-                  }
-                }}
+                onChangeText={text => setDescription(text.slice(0, 160))}
               />
               <Text style={styles.charCounter}>{description.length}/160</Text>
             </View>
