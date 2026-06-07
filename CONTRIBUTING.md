@@ -54,6 +54,23 @@ Make sure you have [Node.js](https://nodejs.org/) (v18 or higher) and `npm` (or 
 
 ---
 
+## Running Knip
+
+Knip detects unused dependencies, exports, and files in the Next.js web app. From the repository root:
+
+```bash
+cd web
+npm install
+```
+
+Run the following scripts as needed:
+
+- `npm run knip` — check all (dependencies, exports, and files)
+- `npm run knip:deps` — unused dependencies only
+- `npm run knip:files` — unused files only
+
+---
+
 ## 📁 Codebase Directory Structure
 
 All frontend application code is placed in the `/web/src` folder. Please adhere to the following directory layout:

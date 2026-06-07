@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "knip": "knip",
+    "knip:deps": "knip --dependencies",
+    "knip:files": "knip --include files"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -44,6 +47,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
+    "knip": "^5.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
