@@ -85,11 +85,15 @@ export default function OfflinePodcastList({
           const res = await deleteFromDownloads(item);
 
           if (res) {
-            Snackbar.show({
-              text: 'Podcast has been removed from offline',
-              duration: Snackbar.LENGTH_SHORT,
-            });
-          } else {
+  setPodcasts(prev =>
+    prev.filter(podcast => podcast._id !== item._id)
+  );
+
+  Snackbar.show({
+    text: 'Podcast has been removed from offline',
+    duration: Snackbar.LENGTH_SHORT,
+  });
+} else {
             Snackbar.show({
               text: 'Failed to removed podcast from offline',
               duration: Snackbar.LENGTH_SHORT,
