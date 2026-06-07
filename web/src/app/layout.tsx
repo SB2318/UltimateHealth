@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
 // DO NOT remove the globals2.css import, it contains important global styles for the application
+import "./globals.css";
 import "./globals2.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ const inter = Inter({
 });
 
 // force-dynamic ensures a unique CSP nonce is generated per request (not cached)
+// Note: This disables Next.js static caching for the layout, causing it to be dynamically rendered on every request.
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -44,7 +46,6 @@ export default async function RootLayout({
     <html
       lang="en"
       nonce={nonce}
-      data-nonce={nonce}
       className={cn(
         "font-sans",
         dmSans.variable,
