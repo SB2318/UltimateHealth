@@ -96,7 +96,7 @@ function Carousel({
 
   React.useEffect(() => {
     if (!api) return
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Initialize scroll state synchronously on mount/api change
     onSelect(api)
     api.on("reInit", onSelect)
     api.on("select", onSelect)

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { withBasePath } from "@/lib/basePath";
 import { MedicalGlossaryExplorer } from "./MedicalGlossaryExplorer";
 
 export const metadata: Metadata = {
@@ -15,13 +14,13 @@ export default function MedicalGlossaryPage() {
     <main className="min-h-screen bg-[linear-gradient(180deg,#f8fafc_0%,#ecfdf5_55%,#f8fafc_100%)] text-slate-950">
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
         <Link
-          href={withBasePath("/")}
+          href="/"
           className="text-sm font-semibold text-slate-600 transition hover:text-emerald-700"
         >
           UltimateHealth
         </Link>
         <Link
-          href={withBasePath("/contribute")}
+          href="/contribute"
           className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-emerald-200 hover:text-emerald-700"
         >
           Contribute

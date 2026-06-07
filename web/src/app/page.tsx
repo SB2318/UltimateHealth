@@ -10,7 +10,6 @@ import ScrollToTop from "../components/ScrollToTop";
 
 import { PageWrapper, Section } from "../components/layout";
 
-import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
 
 

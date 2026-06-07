@@ -9,7 +9,7 @@ import type { NextRequest } from "next/server";
  * - Security Headers (HSTS, X-Frame-Options, etc.)
  * - Permissions Policy
  */
-export default function proxy(request: NextRequest) {
+export default function middleware(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
 
   // Generate a cryptographically strong nonce for CSP
@@ -35,9 +35,12 @@ export default function proxy(request: NextRequest) {
     isDev
       ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'" // unsafe-eval required for Next.js HMR/Fast Refresh
       : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    // style-src: unsafe-inline is required because Tailwind CSS, dynamic styling, and Next.js hydration generate/inject inline styles.
     "style-src 'self' 'unsafe-inline'",
+    // font-src: Font Awesome and other font assets are imported via NPM packages and bundled locally (served from 'self'), so no CDN exemptions (e.g. cdnjs) are needed.
     "font-src 'self'",
     "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com https://avatars.githubusercontent.com",
+    // connect-src: Warning: Adding new external services or APIs to the application requires updating this directive to allow their endpoints.
     "connect-src 'self' https://uhsocial.in https://api.github.com" + (isDev ? " http: ws:" : ""),
     "object-src 'none'",
     "base-uri 'self'",

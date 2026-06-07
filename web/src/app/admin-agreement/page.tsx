@@ -79,7 +79,7 @@ function AdminAgreementContent() {
       if (!raw) return;
       const data = JSON.parse(raw);
       if (data.accepted && data.version === "2.0.0") {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- Guarded by the redirect flag stored in localStorage to prevent loop
         setAlreadyAccepted(true);
         const redirectUrl = searchParams.get("redirect") || "/admin/dashboard";
         setTimeout(() => { window.location.href = redirectUrl; }, 3000);
