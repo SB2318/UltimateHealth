@@ -1,8 +1,10 @@
 "use client";
 
+import type { CSSProperties, FormEvent } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { PageWrapper, Section } from "@/components/layout";
 
 export default function UserLoginPage() {
   const [email, setEmail] = useState("");
@@ -12,7 +14,7 @@ export default function UserLoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setMsg("Processing...");
     setMsgColor("#718096");
@@ -110,12 +112,12 @@ export default function UserLoginPage() {
             {msg}
           </div>
         )}
-      </div>
-    </div>
+      </PageWrapper>
+    </Section>
   );
 }
 
-const styles: Record<string, React.CSSProperties> = {
+const styles: Record<string, CSSProperties> = {
   body: {
     fontFamily: '"Inter", Arial, sans-serif',
     background: "#f4f7fc",
