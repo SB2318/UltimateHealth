@@ -591,7 +591,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     );
   }
 
-  if (isConnected === false) {
+  if (isConnected === false && (!listData || listData.length === 0)) {
     return (
       <SafeAreaView style={styles.container}>
         <HomeScreenHeader

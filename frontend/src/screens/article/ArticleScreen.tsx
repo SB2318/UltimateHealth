@@ -60,6 +60,7 @@ const CHUNK_SIZE = 120;
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
   const {user_id, isGuest} = useSelector((state: any) => state.user);
+  const {isConnected} = useSelector((state: any) => state.network);
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontScale, setFontScale] = useState(1);
@@ -601,6 +602,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   if (articleLoading) {
     return <ArticleDetailSkeleton />;
+  }
+
+  if (isConnected === false && (!articleContent || !article)) {
+    return (
+      <SafeAreaView style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <FontAwesome5 name="wifi" size={50} color="#ccc" style={{ marginBottom: 20 }} />
+        <Text style={{ fontSize: 18, color: '#333', fontWeight: 'bold' }}>You are offline</Text>
+        <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', marginTop: 10, paddingHorizontal: 20 }}>
+          This article is not available offline. Please check your network connection and try again.
+        </Text>
+      </SafeAreaView>
+    );
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;

@@ -29,6 +29,8 @@ import {SECURE_KEYS, secureRetrieveItem} from '../helper/SecureStorageUtils';
 import {setUserToken, setGuestMode} from '../store/UserSlice';
 import {RootState} from '../store/ReduxStore';
 import {setupAxiosInterceptor} from '../helper/setupAxiosInterceptor';
+import { useQueryClient } from '@tanstack/react-query';
+import OfflineBanner from './OfflineBanner';
 import {initMonitoring} from '../services/monitoring/sentry';
 
 export default function AppContent() {
@@ -53,6 +55,17 @@ export default function AppContent() {
 
   const {visible, storeUrl} = useVersionCheck();
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const { isConnected } = useSelector((state: RootState) => state.network);
+  const prevConnectedRef = useRef(isConnected);
+
+  useEffect(() => {
+    if (!prevConnectedRef.current && isConnected) {
+      // Network restored, invalidate queries
+      queryClient.invalidateQueries();
+    }
+    prevConnectedRef.current = isConnected;
+  }, [isConnected, queryClient]);
 
   const checkToken = useCallback(async () => {
     const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
@@ -138,6 +151,7 @@ export default function AppContent() {
             <SafeAreaProvider>
               <PaperProvider>
                 <View style={{flex: 1}}>
+                  <OfflineBanner />
                   {/* StatusBar is managed globally by CustomStatusBar — do not add one here. */}
                   <NavigationContainer ref={navigationRef}>
                     <StackNavigation />
