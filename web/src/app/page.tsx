@@ -329,9 +329,41 @@ export default function Home() {
     }
   };
 
-  const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
-    ref.current?.scrollBy({ left: dir * SLIDER_SCROLL_AMOUNT, behavior: "smooth" });
-  };
+const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
+  const slider = ref.current;
+  if (!slider) return;
+
+  const maxScroll = slider.scrollWidth - slider.clientWidth;
+  const nextScroll = slider.scrollLeft + dir * SLIDER_SCROLL_AMOUNT;
+
+  if (slider.scrollLeft >= maxScroll - 5) {
+    slider.scrollTo({ left: 0, behavior: "auto" });
+    return;
+  }
+
+  if (nextScroll > maxScroll) {
+    slider.scrollTo({ left: maxScroll, behavior: "smooth" });
+    return;
+  }
+
+  if (nextScroll < 0) {
+    slider.scrollTo({ left: maxScroll, behavior: "auto" });
+    return;
+  }
+
+  slider.scrollTo({ left: nextScroll, behavior: "smooth" });
+};
+  useEffect(() => {
+    const interval = setInterval(() => {
+      moveSlider(userSliderRef, 1);
+
+      if (adminSliderOpen) {
+        moveSlider(adminSliderRef, 1);
+      }
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, [adminSliderOpen]);
 
   // ── TestFlight invite ──
   const sendTesterEmail = async () => {
