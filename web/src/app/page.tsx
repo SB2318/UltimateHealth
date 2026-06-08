@@ -334,24 +334,32 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
   if (!slider) return;
 
   const maxScroll = slider.scrollWidth - slider.clientWidth;
-  const nextScroll = slider.scrollLeft + dir * SLIDER_SCROLL_AMOUNT;
+  const currentScroll = slider.scrollLeft;
+  const targetScroll = currentScroll + dir * SLIDER_SCROLL_AMOUNT;
 
-  if (slider.scrollLeft >= maxScroll - 5) {
-    slider.scrollTo({ left: 0, behavior: "auto" });
-    return;
+  if (dir === 1) {
+    if (currentScroll >= maxScroll) {
+      slider.scrollTo({ left: 0, behavior: "auto" });
+      return;
+    }
+
+    if (targetScroll > maxScroll) {
+      slider.scrollTo({ left: maxScroll, behavior: "smooth" });
+      return;
+    }
   }
 
-  if (nextScroll > maxScroll) {
-    slider.scrollTo({ left: maxScroll, behavior: "smooth" });
-    return;
+  if (dir === -1) {
+    if (currentScroll <= 0 || targetScroll < 0) {
+      slider.scrollTo({ left: maxScroll, behavior: "auto" });
+      return;
+    }
   }
 
-  if (nextScroll < 0) {
-    slider.scrollTo({ left: maxScroll, behavior: "auto" });
-    return;
-  }
-
-  slider.scrollTo({ left: nextScroll, behavior: "smooth" });
+  slider.scrollTo({
+    left: Math.max(0, Math.min(targetScroll, maxScroll)),
+    behavior: "smooth",
+  });
 };
   useEffect(() => {
     const interval = setInterval(() => {
