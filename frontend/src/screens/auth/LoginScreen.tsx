@@ -32,6 +32,7 @@ import {
   setUserId,
   setUserToken,
 } from '../../store/UserSlice';
+import { tokenRefreshService } from '../../services/TokenRefreshService';
 
 import { AuthData, LoginScreenProp } from '../../type';
 
@@ -134,27 +135,30 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
           onSuccess: async data => {
             const auth: AuthData = {
               userId: data._id,
-              token: data?.refreshToken,
               user_handle: data?.user_handle,
             };
             try {
               await storeItem(KEYS.USER_ID, auth.userId.toString());
               await storeItem(KEYS.USER_HANDLE, data?.user_handle);
-              if (auth.token) {
-                await secureStoreItem(
-                  SECURE_KEYS.USER_TOKEN,
-                  auth.token,
-                );
-                await storeItem(
-                  KEYS.USER_TOKEN_EXPIRY_DATE,
-                  new Date().toISOString(),
-                );
+              
+              // Store both access token and refresh token
+              const accessToken = data?.accessToken;
+              const refreshToken = data?.refreshToken;
+              
+              if (accessToken && refreshToken) {
+                // Use the new token refresh service for secure token storage
+                await tokenRefreshService.storeTokens(accessToken, refreshToken);
+                
                 dispatch(setUserId(auth.userId));
-                dispatch(setUserToken(auth.token));
+                dispatch(setUserToken(accessToken));
                 dispatch(setUserHandle(auth.user_handle));
                 dispatch(setGuestMode(false));
                 // Reset so the next session expiry triggers the notification again.
                 resetSessionExpiredNotification();
+                
+                // Initialize token refresh service
+                tokenRefreshService.initialize();
+                
                 setTimeout(() => {
                   if (redirectTo) {
                     (navigation as any).navigate(
@@ -170,12 +174,13 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                   });
                 }, 1000);
               } else {
-                Alert.alert('Token not found');
+                Alert.alert('Error', 'Authentication failed. Please try again.');
               }
             } catch (e) {
               if (__DEV__) {
-                console.log('Async Storage ERROR', e);
+                console.log('Token Storage ERROR', e);
               }
+              Alert.alert('Error', 'Failed to store authentication tokens.');
             }
           },
 

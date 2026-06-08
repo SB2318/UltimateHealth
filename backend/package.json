@@ -1,0 +1,37 @@
+{
+  "name": "ultimatehealth-security",
+  "version": "1.0.0",
+  "description": "Production-grade security module for UltimateHealth API",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": [
+    "security",
+    "jwt",
+    "rbac",
+    "audit",
+    "rate-limiting"
+  ],
+  "author": "UltimateHealth Team",
+  "license": "MIT",
+  "dependencies": {
+    "express-rate-limit": "^7.1.5",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.3",
+    "sanitize-html": "^2.11.0",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
