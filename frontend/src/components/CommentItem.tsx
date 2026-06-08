@@ -13,7 +13,8 @@ import ArticleFloatingMenu from './AnimatedMenu';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {Comment} from '../type';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from './LoadingSpinner';import { rf } from '../helper/Metric';
+
 
 export default function CommentItem({
   item,
@@ -181,11 +182,11 @@ export default function CommentItem({
         <YStack flex={1} space="$1.5">
           <XStack alignItems="center" justifyContent="space-between">
             <XStack alignItems="center" space="$2">
-              <Text fontWeight="700" color="$gray12" fontSize={18}>
+              <Text fontWeight="700" color="$gray12" fontSize={rf(18)}>
                 {item.userId.user_handle}
               </Text>
               {item.isEdited && (
-                <Text color="$gray9" fontSize={15}>
+                <Text color="$gray9" fontSize={rf(15)}>
                   (edited)
                 </Text>
               )}
@@ -196,7 +197,7 @@ export default function CommentItem({
             </TouchableOpacity>
           </XStack>
 
-          <Paragraph color="$gray11" fontSize={16}>
+          <Paragraph color="$gray11" fontSize={rf(16)}>
             {renderTextWithMentions(item.content)}
           </Paragraph>
 

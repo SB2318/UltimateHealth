@@ -1,7 +1,8 @@
 
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
 
 interface MessageProps {
   message: string;
@@ -59,11 +60,11 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   senderText: {
-    fontSize: 14,
+    fontSize: rf(14),
   },
   messageText: {
     marginTop: 5,
-    fontSize: 15,
+    fontSize: rf(15),
   },
 });
 

@@ -13,7 +13,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useGetAllNotifications} from '../hooks/useGetAllNotifications';
 import {useMarkNotificationAsRead} from '../hooks/useMarkNoticationAsRead';
 import {useDeleteNotification} from '../hooks/useDeleteNotification';
-import {NoNotificationState} from '../components/EmptyStates';
+import {NoNotificationState} from '../components/EmptyStates';import { rf } from '../helper/Metric';
+
 
 type PendingDelete = {
   item: Notification;
@@ -400,13 +401,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   recentPodcastsTitle: {
-    fontSize: 25,
+    fontSize: rf(25),
     fontWeight: 'bold',
     color: 'white',
     alignSelf: 'center',
   },
   seeMoreText: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '600',
   },
 

@@ -7,7 +7,8 @@ import Animated, {
   withTiming,
   withDelay,
 } from 'react-native-reanimated';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
 const NetworkCheck = () => {
   // Shared values for text opacity
   const fadeText1 = useSharedValue(0);
@@ -72,12 +73,12 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   loadingText: {
-    fontSize: 18,
+    fontSize: rf(18),
     color: PRIMARY_COLOR,
     fontWeight: '600',
   },
   subText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#7f8c8d',
     marginTop: 5,
   },

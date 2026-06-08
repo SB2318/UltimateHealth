@@ -16,7 +16,8 @@ import {PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
 import {useGetAllImprovementsForReview} from '@/src/hooks/useGetUserAllImprovements';
 import {ProfessionalColors} from '../../styles/GlassStyles';
-import {NoArticleState} from '../../components/EmptyStates';
+import {NoArticleState} from '../../components/EmptyStates';import { rf } from '../../helper/Metric';
+
 
 export default function ImprovementWorkspace({
   handleImprovementClick,
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
   },
   labelStyle: {
     fontWeight: '700',
-    fontSize: 15,
+    fontSize: rf(15),
     textTransform: 'capitalize',
     letterSpacing: 0.3,
   },

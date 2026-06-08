@@ -14,7 +14,8 @@ import Slider from '@react-native-community/slider';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Feather from '@expo/vector-icons/Feather';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import Tts from 'react-native-tts';
+import Tts from 'react-native-tts';import { rf } from '../helper/Metric';
+
 
 const WORDS_PER_MINUTE = 130;
 const IOS_TTS_RATE = 0.4;
@@ -377,13 +378,13 @@ export default PodcastPlayer;
 
 const styles = StyleSheet.create({
   podcast: {
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: 'normal',
     color: 'white',
     marginTop: 10,
   },
   podcastname: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 5,
@@ -404,17 +405,17 @@ const styles = StyleSheet.create({
   },
   postedByText: {
     color: 'white',
-    fontSize: 10,
+    fontSize: rf(10),
     fontWeight: '300',
   },
   postedByName: {
     color: 'white',
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: 'bold',
   },
   description: {
     color: 'white',
-    fontSize: 13,
+    fontSize: rf(13),
     textAlign: 'justify',
     marginBottom: 15,
   },
@@ -433,7 +434,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   likeText: {
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: 'bold',
     color: 'white',
   },
@@ -448,7 +449,7 @@ const styles = StyleSheet.create({
   },
   timeText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: rf(14),
   },
   controlContainer: {
     flexDirection: 'row',

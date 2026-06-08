@@ -18,7 +18,8 @@ import {EditorScreenProp} from '../../type';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
-import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
+import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';import { rf } from '../../helper/Metric';
+
 
 // Feature:
 // If you want to discard your post, in that case no post will upload into storage,
@@ -372,7 +373,7 @@ const styles = StyleSheet.create({
     fontFamily: 'monospace',
   },
   p: {
-    fontSize: 16,
+    fontSize: rf(16),
     lineHeight: 24,
   },
   /*******************************/
@@ -381,7 +382,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9FAFB',
   },
   helperText: {
-    fontSize: 15,
+    fontSize: rf(15),
     color: '#6B7280',
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -409,7 +410,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontSize: 16,
+    fontSize: rf(16),
     lineHeight: 24,
   },
   richBar: {
@@ -427,11 +428,11 @@ const styles = StyleSheet.create({
   },
   headingIcon: {
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: '700',
   },
   characterCount: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#9CA3AF',
     paddingHorizontal: 16,
     paddingVertical: 12,

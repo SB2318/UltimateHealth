@@ -18,7 +18,8 @@ import {Category, NotificationPreferencesScreenProp} from '../type';
 import {useGetCategories} from '../hooks/useGetArticleTags';
 import {useGetNotificationPreferences} from '../hooks/useGetNotificationPreferences';
 import {useUpdateNotificationPreferences} from '../hooks/useUpdateNotificationPreferences';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from '../components/LoadingSpinner';import { rf } from '../helper/Metric';
+
 
 const NotificationPreferencesScreen = ({
   navigation,
@@ -247,7 +248,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     color: 'rgba(255,255,255,0.75)',
-    fontSize: 12,
+    fontSize: rf(12),
     marginTop: 2,
   },
   loaderContainer: {
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
     paddingBottom: hp(4),
   },
   sectionLabel: {
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '600',
     color: '#6b7280',
     textTransform: 'uppercase',
@@ -298,7 +299,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   chipText: {
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
     color: PRIMARY_COLOR,
   },
@@ -322,13 +323,13 @@ const styles = StyleSheet.create({
     borderColor: '#d1d5db',
   },
   bulkBtnText: {
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '600',
     color: PRIMARY_COLOR,
   },
   helperText: {
     marginTop: hp(3),
-    fontSize: 12.5,
+    fontSize: rf(12).5,
     color: '#9ca3af',
     lineHeight: 18,
     borderLeftWidth: 3,
@@ -359,7 +360,7 @@ const styles = StyleSheet.create({
   },
   saveBtnText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '700',
     letterSpacing: 0.4,
   },

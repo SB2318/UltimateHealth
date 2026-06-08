@@ -18,7 +18,8 @@ import {
 import {Feather, FontAwesome, MaterialCommunityIcons} from '@expo/vector-icons';
 import {ON_PRIMARY_COLOR} from '../helper/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useFilterPodcasts} from '../hooks/useFilterPodcasts';
+import {useFilterPodcasts} from '../hooks/useFilterPodcasts';import { rf } from '../helper/Metric';
+
 
 interface Props {
   onClick: () => void;
@@ -130,7 +131,7 @@ const HeaderRightMenu = ({onClick}: Props) => {
                   }
                   navigation.navigate('PodcastProfile');
                 }}>
-                <Text fontSize={15} color="#333">
+                <Text fontSize={rf(15)} color="#333">
                   Profile
                 </Text>
                 <FontAwesome name="user" size={17} color="#555" />
@@ -157,7 +158,7 @@ const HeaderRightMenu = ({onClick}: Props) => {
                   }
                   navigation.navigate('OfflinePodcastList');
                 }}>
-                <Text fontSize={15} color="#333">
+                <Text fontSize={rf(15)} color="#333">
                   Downloads
                 </Text>
                 <Feather name="download" size={17} color="#555" />
@@ -175,7 +176,7 @@ const HeaderRightMenu = ({onClick}: Props) => {
                 hoverStyle={{backgroundColor: 'rgba(0,0,0,0.05)'}}
                 pressStyle={{opacity: 0.8}}
                 onPress={handlePresentModalPress}>
-                <Text fontSize={15} color="#333">
+                <Text fontSize={rf(15)} color="#333">
                   Filter
                 </Text>
                 <Feather name="filter" size={17} color="#555" />

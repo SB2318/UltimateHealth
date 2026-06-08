@@ -1,5 +1,6 @@
 import React from 'react';
-import {
+import {import { rf } from '../helper/Metric';
+
   Modal,
   View,
   Text,
@@ -65,13 +66,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: rf(24),
     color: '#007BFF',
     marginBottom: 10,
     alignSelf: 'center',
   },
   message: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#666',
     marginBottom: 20,
     textAlign: 'center',
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#fff',
     alignSelf: 'center',
   },

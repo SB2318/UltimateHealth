@@ -11,7 +11,8 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import {HomeScreenCategoriesFlatlistProps, Category} from '../type';
 
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {hp} from '../helper/Metric';
+import {hp} from '../helper/Metric';import { rf } from '../helper/Metric';
+
 
 
 const CategoriesFlatlistModal = ({
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   title: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: '700',
     color: '#111827',
     flex: 1,
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontSize: 15,
+    fontSize: rf(15),
     color: '#111827',
     paddingVertical: 0,
   },
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   itemText: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '500',
     color: '#374151',
   },
@@ -225,13 +226,13 @@ const styles = StyleSheet.create({
     paddingVertical: 60,
   },
   noResultsText: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: '600',
     color: '#6B7280',
     marginTop: 16,
   },
   noResultsSubText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#9ca3af',
     marginTop: 8,
   },

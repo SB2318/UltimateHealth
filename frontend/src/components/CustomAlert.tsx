@@ -1,6 +1,7 @@
 import { AlertDialog, Button, XStack, YStack } from "tamagui";
 import { useDispatch, useSelector } from "react-redux";
-import { hideAlert } from "../store/alertSlice";
+import { hideAlert } from "../store/alertSlice";import { rf } from '../helper/Metric';
+
 
 export function CustomAlertDialog() {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ export function CustomAlertDialog() {
           
         >
           <YStack space="$3">
-            <AlertDialog.Title fontSize={18} fontWeight="600">
+            <AlertDialog.Title fontSize={rf(18)} fontWeight="600">
               {title}
             </AlertDialog.Title>
 

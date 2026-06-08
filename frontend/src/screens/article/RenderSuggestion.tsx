@@ -5,7 +5,8 @@ import { useDispatch } from 'react-redux';
 import { setSuggestionAccepted } from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 // ✅ Re-introduced original project helpers for security sanitization and link safety
-import { createHTMLStructure, handleExternalClick } from '../../helper/Utils';
+import { createHTMLStructure, handleExternalClick } from '../../helper/Utils';import { rf } from '../../helper/Metric';
+
 
 export default function RenderSuggestion({
   navigation,
@@ -103,9 +104,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     alignItems: 'center' 
   },
-  scoreTitle: { fontSize: 14, color: '#64748b', fontWeight: '600' },
-  scoreNumber: { fontSize: 36, fontWeight: 'bold', marginVertical: 4 },
-  readingTime: { fontSize: 14, color: '#475569' },
+  scoreTitle: { fontSize: rf(14), color: '#64748b', fontWeight: '600' },
+  scoreNumber: { fontSize: rf(36), fontWeight: 'bold', marginVertical: 4 },
+  readingTime: { fontSize: rf(14), color: '#475569' },
   webView: { width: '100%', flex: 1, marginBottom: 16 },
   buttonRow: { flexDirection: 'row', justifyContent: 'space-between' },
   cancelButton: { padding: 14, borderRadius: 8, backgroundColor: '#f1f5f9', flex: 0.48, alignItems: 'center' },
@@ -123,6 +124,6 @@ const styles = StyleSheet.create({
   },
   debugText: {
     color: '#92400e',
-    fontSize: 12,
+    fontSize: rf(12),
   },
 });

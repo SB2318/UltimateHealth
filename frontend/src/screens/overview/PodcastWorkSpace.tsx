@@ -15,7 +15,8 @@ import Loader from '../../components/Loader';
 import {useGetPendingPodcasts} from '@/src/hooks/useGetPendingPodcasts';
 import {useGetDiscardedPodcasts} from '@/src/hooks/useGetDiscardedPodcast';
 import {useGetUserPublishedPodcasts} from '@/src/hooks/useGetUserPublishedPodcasts';
-import {NoPodcastState} from '../../components/EmptyStates';
+import {NoPodcastState} from '../../components/EmptyStates';import { rf } from '../../helper/Metric';
+
 
 export default function PodcastWorkSpace({
   handleClickAction,
@@ -251,7 +252,7 @@ const styles = StyleSheet.create({
   },
   labelStyle: {
     fontWeight: '700',
-    fontSize: 13,
+    fontSize: rf(13),
     textTransform: 'capitalize',
     letterSpacing: 0.3,
   },

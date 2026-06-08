@@ -15,7 +15,8 @@ import {Button, Circle, Theme, XStack, YStack, Text, useTheme} from 'tamagui';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import AudioWaveform from '../components/AudioWaveform';
 import {useUploadPodcast} from '../hooks/useUploadPodcast';
-import Loader from '../components/Loader';
+import Loader from '../components/Loader';import { rf } from '../helper/Metric';
+
 
 const PLAYBACK_SPEEDS = [1, 1.25, 1.5, 2];
 
@@ -319,16 +320,16 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         <YStack mb="$4">
           <Text
             color="#94A3B8"
-            fontSize={13}
+            fontSize={rf(13)}
             fontWeight="600"
             mb="$2"
             letterSpacing={1}>
             NOW PLAYING
           </Text>
-          <Text color="#F1F5F9" fontSize={28} fontWeight="800" lineHeight={34}>
+          <Text color="#F1F5F9" fontSize={rf(28)} fontWeight="800" lineHeight={34}>
             {title}
           </Text>
-          <Text color="#94A3B8" fontSize={16} marginTop="$3" lineHeight={24}>
+          <Text color="#94A3B8" fontSize={rf(16)} marginTop="$3" lineHeight={24}>
             {description}
           </Text>
         </YStack>
@@ -353,7 +354,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
           <Text
             marginTop="$3"
             color="#60A5FA"
-            fontSize={15}
+            fontSize={rf(15)}
             fontWeight="700"
             textAlign="center"
             letterSpacing={0.5}>
@@ -388,14 +389,14 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
           <XStack justifyContent="space-between" marginTop="$2">
             <Text
               color="#94A3B8"
-              fontSize={14}
+              fontSize={rf(14)}
               fontWeight="600"
               style={{fontFamily: 'monospace'}}>
               {formatSecTime(position)}
             </Text>
             <Text
               color="#94A3B8"
-              fontSize={14}
+              fontSize={rf(14)}
               fontWeight="600"
               style={{fontFamily: 'monospace'}}>
               {formatSecTime(duration)}
@@ -460,7 +461,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             borderColor="$borderColor"
             pressStyle={{scale: 0.94, backgroundColor: '$backgroundPress'}}
             onPress={handleCycleSpeed}>
-            <Text color="$color" fontSize={14} fontWeight="800">
+            <Text color="$color" fontSize={rf(14)} fontWeight="800">
               {formatPlaybackSpeed(speed)}
             </Text>
           </Button>
@@ -485,7 +486,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
           marginBottom="$2"
           textAlign="center"
           color="#64748B"
-          fontSize={11}
+          fontSize={rf(11)}
           numberOfLines={1}
           ellipsizeMode="middle">
           {filePath}
@@ -511,7 +512,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   time: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#777',
   },
 });

@@ -48,21 +48,23 @@ import {useGetProfile} from '../hooks/useGetProfile';
 import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../hooks/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../hooks/useGetPaginatedArticles';
-import {
+import {import { rf } from '../helper/Metric';
+
   OfflineArticleState,
   NoArticleState,
   BaseEmptyState,
 } from '../components/EmptyStates';
 
-// Loading State Component with Animation
+import ArticleCardSkeleton from '../components/ArticleCardSkeleton';
+
+// Loading State Component with Skeletons
 const LoadingState = () => {
   return (
-    <BaseEmptyState
-      iconEmoji="📚"
-      title="Loading Articles"
-      description="Gathering the latest health insights for you..."
-      loading={true}
-    />
+    <View style={{ paddingHorizontal: 16 }}>
+      {[1, 2, 3].map((key) => (
+        <ArticleCardSkeleton key={key} />
+      ))}
+    </View>
   );
 };
 
@@ -526,7 +528,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     handleFilterReset();
   };
 
-  if (!articleData || articleData.articles?.length === 0) {
+  if (isLoading || !articleData || articleData.articles?.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <HomeScreenHeader
@@ -607,7 +609,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     );
   }
 
-  if (isLoading || requestEditPending) {
+  if (requestEditPending) {
     return <Loader />;
   }
 
@@ -834,10 +836,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    minHeight: 44,
+    minWidth: 44,
   },
   labelStyle: {
     fontWeight: 'bold',
-    fontSize: 15,
+    fontSize: rf(15),
     textTransform: 'capitalize',
   },
   articleContainer: {
@@ -860,7 +864,7 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#000',
     fontFamily: 'bold',
     textAlign: 'center',
@@ -910,17 +914,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF3E0',
   },
   iconEmoji: {
-    fontSize: 56,
+    fontSize: rf(56),
   },
   stateTitle: {
-    fontSize: 24,
+    fontSize: rf(24),
     fontWeight: 'bold',
     color: '#1A1A1A',
     marginBottom: 12,
     textAlign: 'center',
   },
   stateDescription: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#666',
     textAlign: 'center',
     lineHeight: 24,
@@ -954,7 +958,7 @@ const styles = StyleSheet.create({
   },
   retryButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -983,17 +987,17 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   emptyIconEmoji: {
-    fontSize: 48,
+    fontSize: rf(48),
   },
   emptyArticleTitle: {
-    fontSize: 22,
+    fontSize: rf(22),
     fontWeight: 'bold',
     color: EMPTY_STATE_TEXT_PRIMARY,
     marginBottom: 10,
     textAlign: 'center',
   },
   emptyArticleDescription: {
-    fontSize: 15,
+    fontSize: rf(15),
     color: EMPTY_STATE_TEXT_SECONDARY,
     textAlign: 'center',
     lineHeight: 22,
@@ -1014,7 +1018,7 @@ const styles = StyleSheet.create({
   },
   emptyTagText: {
     color: '#3F51B5',
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
   },
   savedEmptyContainer: {
@@ -1027,14 +1031,14 @@ const styles = StyleSheet.create({
     backgroundColor: EMPTY_STATE_BACKGROUND,
   },
   savedEmptyTitle: {
-    fontSize: 22,
+    fontSize: rf(22),
     fontWeight: 'bold',
     color: EMPTY_STATE_TEXT_PRIMARY,
     marginBottom: 10,
     textAlign: 'center',
   },
   savedEmptyDescription: {
-    fontSize: 15,
+    fontSize: rf(15),
     color: EMPTY_STATE_TEXT_SECONDARY,
     textAlign: 'center',
     lineHeight: 22,

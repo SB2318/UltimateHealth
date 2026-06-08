@@ -34,6 +34,8 @@ import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
 import LottieView from 'lottie-react-native';
 import {useGetSinglePodcastDetails} from '../hooks/useGetSinglePodcastDetails';
 import {useLikePodcast} from '../hooks/useLikePodcast';
+import {getPlaybackPosition, savePlaybackPosition} from '../helper/PlaybackManager';import { rf } from '../helper/Metric';
+
 
 const isAllowedUrl = (urlStr?: string | null): boolean => {
   if (!urlStr) return false;
@@ -112,16 +114,63 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   }, [podcast?.audio_url, player, loadedSource]);
 
   useEffect(() => {
+    let lastSaveTime = 0;
     const interval = setInterval(() => {
       if (player.playing) {
-        setPosition(player.currentTime || 0);
-        setDuration(player.duration || 1);
-        // setIsPlaying(player.playing || false);
+        const currentPos = player.currentTime || 0;
+        const totalDur = player.duration || 1;
+        setPosition(currentPos);
+        setDuration(totalDur);
+
+        // Save position every 5 seconds to reduce AsyncStorage writes
+        const now = Date.now();
+        if (now - lastSaveTime > 5000) {
+          savePlaybackPosition(trackId, currentPos, totalDur);
+          lastSaveTime = now;
+        }
       }
     }, 500);
 
     return () => clearInterval(interval);
-  }, [player.currentTime, player.duration, player.playing]);
+  }, [player.currentTime, player.duration, player.playing, trackId]);
+
+  // Check for saved position on mount
+  useEffect(() => {
+    let isCancelled = false;
+    const checkResume = async () => {
+      const saved = await getPlaybackPosition(trackId);
+      if (!isCancelled && saved && saved.position > 5) {
+        Alert.alert(
+          'Resume Podcast',
+          `Do you want to resume from ${formatSecTime(saved.position)}?`,
+          [
+            { 
+              text: 'Start Over', 
+              style: 'cancel', 
+              onPress: async () => { 
+                await player.seekTo(0); 
+                setPosition(0);
+              } 
+            },
+            { 
+              text: 'Resume', 
+              onPress: async () => { 
+                await player.seekTo(saved.position); 
+                setPosition(saved.position); 
+                player.play(); 
+                setIsPlaying(true); 
+              } 
+            }
+          ]
+        );
+      }
+    };
+    // Give player a brief moment to initialize before asking
+    setTimeout(() => {
+      checkResume();
+    }, 500);
+    return () => { isCancelled = true; };
+  }, [trackId]);
 
   useEffect(()=>{
 
@@ -172,17 +221,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
       return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
   };
-  // For position update
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (player) {
-        const status = player.currentStatus;
-        if (status.isLoaded) setPosition(status.currentTime);
-      }
-    }, 500);
-    return () => clearInterval(interval);
-  }, [player, player.currentTime, player.duration, player.playing]);
+  // For position update (removed redundant interval)
 
   const handleShare = async () => {
     try {
@@ -220,10 +259,10 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const handlePause = async () => {
     if (!player) return;
 
-
     player.pause();
-    //  setUiState('paused');
     setIsPlaying(false);
+    // Ensure we save exact position on pause
+    savePlaybackPosition(trackId, player.currentTime || 0, player.duration || 1);
   };
 
   if (isPodcastLoading || isLoading) {
@@ -233,10 +272,10 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   if (isPodcastError || !podcast) {
     return (
       <View testID="podcast-detail-error" style={styles.errorContainer}>
-        <Text color="#F1F5F9" fontSize={18} fontWeight="700">
+        <Text color="#F1F5F9" fontSize={rf(18)} fontWeight="700">
           Unable to load podcast details.
         </Text>
-        <Text color="#94A3B8" fontSize={14} marginTop="$2">
+        <Text color="#94A3B8" fontSize={rf(14)} marginTop="$2">
           {podcastError instanceof Error ? podcastError.message : 'Please try again later.'}
         </Text>
 
@@ -247,7 +286,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           onPress={() => {
             refetch();
           }}>
-          <Text color="#0B1425" fontSize={16} fontWeight="800">
+          <Text color="#0B1425" fontSize={rf(16)} fontWeight="800">
             Retry
           </Text>
         </TouchableOpacity>
@@ -269,7 +308,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const titleEl = (
     <Text
       color="#F1F5F9"
-      fontSize={28}
+      fontSize={rf(28)}
       fontWeight="800">
       {podcast?.title}
     </Text>
@@ -285,7 +324,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
     <YStack>
       <Text
         color="#94A3B8"
-        fontSize={16}
+        fontSize={rf(16)}
         marginTop="$3">
         {displayDescription}
       </Text>
@@ -298,7 +337,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
           style={styles.readMoreButton}
         >
-          <Text color={PRIMARY_COLOR} fontSize={14} fontWeight="700">
+          <Text color={PRIMARY_COLOR} fontSize={rf(14)} fontWeight="700">
             {isDescriptionExpanded ? 'Read Less' : 'Read More'}
           </Text>
         </TouchableOpacity>
@@ -353,10 +392,10 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
         justifyContent="space-between"
         marginTop="$2"
         paddingHorizontal="$2">
-        <Text color="#C0C9DA" fontSize={14} fontWeight="600">
+        <Text color="#C0C9DA" fontSize={rf(14)} fontWeight="600">
           {formatSecTime(position)}
         </Text>
-        <Text color="#C0C9DA" fontSize={14} fontWeight="600">
+        <Text color="#C0C9DA" fontSize={rf(14)} fontWeight="600">
           {formatSecTime(duration)}
         </Text>
       </XStack>
@@ -555,7 +594,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           <YStack>
             <Text
               color="#94A3B8"
-              fontSize={13}
+              fontSize={rf(13)}
               fontWeight="600"
               marginBottom="$2"
               letterSpacing={1}>
@@ -582,7 +621,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
         <YStack>
           <Text
             color="#94A3B8"
-            fontSize={13}
+            fontSize={rf(13)}
             fontWeight="600"
             marginBottom="$2"
             letterSpacing={1}>
@@ -685,6 +724,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10,
     flexDirection: 'row',
+    minHeight: 44,
+    minWidth: 44,
   },
   actionText: {
     //marginTop: 6,

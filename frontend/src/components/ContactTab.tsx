@@ -5,17 +5,43 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
-import {PRIMARY_COLOR} from '../helper/Theme';
-import {ProfileEditContactTab} from '../type';
+import React, {useEffect} from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import {PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
+
+const contactSchema = z.object({
+  phone_number: z.string().min(10, 'Please enter a valid phone number'),
+  contact_email: z.string().email('Please enter a valid email'),
+});
+export type ContactFormData = z.infer<typeof contactSchema>;
+
+export interface ProfileEditContactTab {
+  user: any;
+  handleSubmitContactDetails: (data: ContactFormData) => void;
+}
 
 const ContactTab = ({
-  phone_number,
-  contact_email,
-  setContactNumber,
-  setContactEmail,
+  user,
   handleSubmitContactDetails,
 }: ProfileEditContactTab) => {
+  const { control, handleSubmit, reset } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+    mode: 'onChange',
+    defaultValues: {
+      phone_number: user?.contact_detail?.phone_no || '',
+      contact_email: user?.contact_detail?.email_id || '',
+    }
+  });
+
+  useEffect(() => {
+    reset({
+      phone_number: user?.contact_detail?.phone_no || '',
+      contact_email: user?.contact_detail?.email_id || '',
+    });
+  }, [user, reset]);
   return (
     <View style={styles.container}>
       {/* Content Container */}
@@ -23,35 +49,55 @@ const ContactTab = ({
         {/* Phone Number Input */}
         <View style={styles.input}>
           <Text style={styles.inputLabel}>Phone Number</Text>
-          <TextInput
-            clearButtonMode="while-editing"
-            placeholder="Enter your contact phone number"
-            placeholderTextColor="#6b7280"
-            style={styles.inputControl}
-            value={phone_number}
-            keyboardType="number-pad"
-            maxLength={10}
-            onChangeText={text => setContactNumber(text)}
+          <Controller
+            control={control}
+            name="phone_number"
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              <>
+                <TextInput
+                  clearButtonMode="while-editing"
+                  placeholder="Enter your contact phone number"
+                  placeholderTextColor="#6b7280"
+                  style={[styles.inputControl, error && { borderColor: 'red' }]}
+                  value={value}
+                  keyboardType="number-pad"
+                  maxLength={10}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
+                {error && <Text style={styles.errorText}>{error.message}</Text>}
+              </>
+            )}
           />
         </View>
 
         {/* Contact Email Input */}
         <View style={styles.input}>
           <Text style={styles.inputLabel}>Contact Email</Text>
-          <TextInput
-            clearButtonMode="while-editing"
-            placeholder="Enter your contact email"
-            placeholderTextColor="#6b7280"
-            style={styles.inputControl}
-            value={contact_email}
-            keyboardType="email-address"
-            onChangeText={text => setContactEmail(text)}
+          <Controller
+            control={control}
+            name="contact_email"
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              <>
+                <TextInput
+                  clearButtonMode="while-editing"
+                  placeholder="Enter your contact email"
+                  placeholderTextColor="#6b7280"
+                  style={[styles.inputControl, error && { borderColor: 'red' }]}
+                  value={value}
+                  keyboardType="email-address"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
+                {error && <Text style={styles.errorText}>{error.message}</Text>}
+              </>
+            )}
           />
         </View>
       </View>
 
       {/* Save Button */}
-      <TouchableOpacity onPress={handleSubmitContactDetails} style={styles.btn}>
+      <TouchableOpacity onPress={handleSubmit(handleSubmitContactDetails)} style={styles.btn}>
         <Text style={styles.btnText}>Save</Text>
       </TouchableOpacity>
     </View>
@@ -77,7 +123,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputLabel: {
-    fontSize: 17,
+    fontSize: rf(17),
     fontWeight: '600',
     color: '#222',
     marginBottom: 8,
@@ -87,7 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 16,
     borderRadius: 12,
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     color: '#222',
     borderWidth: 1,
@@ -105,8 +151,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   btnText: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: 'bold',
     color: 'white',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: rf(12),
+    marginTop: 4,
   },
 });

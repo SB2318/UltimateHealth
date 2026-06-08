@@ -26,7 +26,8 @@ import {useGetAllPodcasts} from '../hooks/useGetAllPodcasts';
 import {useUpdatePodcastViewcount} from '../hooks/useUpdatePodcastViewcount';
 import { PodcastLoadingState, NoPodcastState } from '../components/EmptyStates';
 import LoadingSpinner from '../components/LoadingSpinner';
-import {usePreferences} from '../contexts/PreferencesContext';
+import {usePreferences} from '../contexts/PreferencesContext';import { rf } from '../helper/Metric';
+
 
 const {WavAudioRecorder} = NativeModules;
 //const recorderEvents = new NativeEventEmitter(WavAudioRecorder);
@@ -282,13 +283,13 @@ const styles = StyleSheet.create({
   },
 
   headerTitle: {
-    fontSize: 24,
+    fontSize: rf(24),
     fontWeight: '700',
     color: ProfessionalColors.gray900,
   },
 
   headerSubtitle: {
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '500',
     color: ProfessionalColors.gray600,
     marginTop: 2,
@@ -318,7 +319,7 @@ const styles = StyleSheet.create({
   },
 
   loadingText: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: '700',
     color: ProfessionalColors.gray900,
     textAlign: 'center',
@@ -327,7 +328,7 @@ const styles = StyleSheet.create({
 
   loadingSubText: {
     marginTop: 8,
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '500',
     color: ProfessionalColors.gray600,
     textAlign: 'center',
@@ -352,7 +353,7 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: '700',
     color: ProfessionalColors.gray900,
     textAlign: 'center',
@@ -361,7 +362,7 @@ const styles = StyleSheet.create({
 
   subMessage: {
     marginTop: 8,
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '500',
     color: ProfessionalColors.gray600,
     textAlign: 'center',

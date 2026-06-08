@@ -11,12 +11,14 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileHeader from '../components/ProfileHeader';
 import {ArticleData, ProfileScreenProps} from '../type';
 import Loader from '../components/Loader';
+import ArticleCardSkeleton from '../components/ArticleCardSkeleton';
 import {useFocusEffect} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
 import {setUserHandle} from '../store/UserSlice';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
-import { NoArticleState } from '../components/EmptyStates';
+import { NoArticleState } from '../components/EmptyStates';import { rf } from '../helper/Metric';
+
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const theme = useTheme();
@@ -218,7 +220,11 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
           style={isDarkMode ? 'light' : 'dark'}
           backgroundColor="#007AFF"
         />
-        <Loader />
+        <View style={{ width: '100%', paddingHorizontal: 16 }}>
+          {[1, 2, 3].map((key) => (
+            <ArticleCardSkeleton key={key} />
+          ))}
+        </View>
       </SafeAreaView>
     );
   }
@@ -366,7 +372,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   tabButtonText: {
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '600',
     textTransform: 'capitalize',
   },

@@ -4,6 +4,9 @@ import {AxiosError, isAxiosError} from 'axios';
 import {StatusBar} from 'expo-status-bar';
 import messaging from '@react-native-firebase/messaging';
 import React, {useEffect, useState} from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {Alert, Image, useColorScheme} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
@@ -33,7 +36,15 @@ import {
   setUserToken,
 } from '../../store/UserSlice';
 
-import { AuthData, LoginScreenProp } from '../../type';
+import { AuthData, LoginScreenProp } from '../../type';import { rf } from '../../helper/Metric';
+
+
+const loginSchema = z.object({
+  email: z.string().email('Please Enter a Valid Email'),
+  password: z.string().min(6, 'Password must be 6 Characters Long'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   const inset = useSafeAreaInsets();
@@ -42,15 +53,22 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [emailInputVisible, setEmailInputVisible] = useState(false);
   const [requestVerificationMode, setRequestVerification] = useState(false);
-  const [password, setPassword] = useState('');
-  const [passwordVerify, setPasswordVerify] = useState(false);
-  const [email, setEmail] = useState('');
   const [otpMail, setOtpMail] = useState('');
   const [fcmToken, setFcmToken] = useState<string | null>(null);
-  const [emailVerify, setEmailVerify] = useState(false);
-  const [output, setOutput] = useState(true);
-  const [passwordMessage, setPasswordMessage] = useState(false);
-  const [emailMessage, setEmailMessage] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+    setValue,
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onChange',
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const {mutate: resendVerification, isPending: resendVerificationPending} =
@@ -110,26 +128,23 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
     }
   }
 
-  const validateAndSubmit = async () => {
-    if (validate()) {
-      setPasswordMessage(false);
-      setEmailMessage(false);
-      if (__DEV__) {
-        console.log('Login attempt in progress');
-      }
+  const onSubmit = async (data: LoginFormData) => {
+    if (__DEV__) {
+      console.log('Login attempt in progress');
+    }
 
-      const fcmToken = await getFCMToken();
+    const fcmToken = await getFCMToken();
 
-      if (__DEV__) {
-        console.log('Attempting to retrieve FCM Token');
-      }
+    if (__DEV__) {
+      console.log('Attempting to retrieve FCM Token');
+    }
 
-      login(
-        {
-          email: email,
-          password: password,
-          fcmToken: fcmToken ?? 'not found',
-        },
+    login(
+      {
+        email: data.email,
+        password: data.password,
+        fcmToken: fcmToken ?? 'not found',
+      },
         {
           onSuccess: async data => {
             const auth: AuthData = {
@@ -183,8 +198,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             if (__DEV__) {
               console.log('Error', error);
             }
-            setPassword('');
-            setEmail('');
+            setValue('password', '');
             if (error.response) {
               const errorCode = error.response.status;
               switch (errorCode) {
@@ -212,46 +226,6 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
           },
         },
       );
-    } else {
-      setOutput(true);
-      setPasswordMessage(false);
-      setEmailMessage(false);
-      if (output && !passwordVerify) {
-        setPasswordMessage(true);
-      }
-      if (output && !emailVerify) {
-        setEmailMessage(true);
-      }
-    }
-  };
-
-  const validate = () => {
-    if (emailVerify && passwordVerify) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  const handlePassword = (e: any) => {
-    //let pass = e.nativeEvent.text;
-    setPassword(e);
-    setPasswordVerify(false);
-
-    if (/(?=.*[a-z]).{6,}/.test(e)) {
-      setPassword(e);
-      setPasswordVerify(true);
-    }
-  };
-
-  const handleEmail = (e: any) => {
-    //console.log("Event",e );
-    //let email = e.nativeEvent.text;
-    setEmail(e);
-    setEmailVerify(false);
-    if (/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(e)) {
-      setEmail(e);
-      setEmailVerify(true);
-    }
   };
 
   const handleEmailInputBack = () => {
@@ -307,7 +281,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             <Text
               alignSelf="center"
               textAlign="center"
-              fontSize={16}
+              fontSize={rf(16)}
               fontWeight="500"
               color={isDarkMode ? '$color' : '$color10'}
               maxWidth={300}
@@ -317,81 +291,98 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
           </YStack>
 
           <YStack gap="$3">
-            {emailMessage && (
-              <Text color="$red10" fontSize={14} marginBottom="$-2">
-                Please Enter a Valid Email
-              </Text>
-            )}
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                <YStack>
+                  {error && (
+                    <Text color="$red10" fontSize={rf(14)} marginBottom="$2">
+                      {error.message}
+                    </Text>
+                  )}
+                  <XStack alignItems="center" position="relative">
+                    <Icon
+                      name="mail"
+                      size={22}
+                      color={isDarkMode ? 'white' : 'black'}
+                      style={{
+                        position: 'absolute',
+                        left: 12,
+                        zIndex: 1,
+                      }}
+                    />
+                    <Input
+                      flex={1}
+                      height="$6"
+                      borderRadius="$4"
+                      placeholder="Enter your email"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      keyboardType="email-address"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      color={isDarkMode ? '$color' : '$color10'}
+                      paddingStart="$10"
+                    />
+                  </XStack>
+                </YStack>
+              )}
+            />
 
-            <XStack alignItems="center" position="relative">
-              <Icon
-                name="mail"
-                size={22}
-                color={isDarkMode ? 'white' : 'black'}
-                style={{
-                  position: 'absolute',
-                  left: 12,
-                  zIndex: 1,
-                }}
-              />
-              <Input
-                flex={1}
-                height="$6"
-                borderRadius="$4"
-                placeholder="Enter your email"
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
-                onChangeText={handleEmail}
-                color={isDarkMode ? '$color' : '$color10'}
-                paddingStart="$10"
-              />
-            </XStack>
-
-            {passwordMessage && (
-              <Text color="$red10" fontSize={14} marginBottom="$-2">
-                Password must be 6 Characters Long
-              </Text>
-            )}
-
-            <XStack alignItems="center" position="relative">
-              <Entypo
-                name="lock"
-                size={22}
-                color={isDarkMode ? 'white' : 'black'}
-                style={{
-                  position: 'absolute',
-                  left: 12,
-                  zIndex: 1,
-                }}
-              />
-              <Input
-                flex={1}
-                height="$6"
-                borderRadius="$4"
-                placeholder="Password"
-                secureTextEntry={secureTextEntry}
-                autoCapitalize="none"
-                onChangeText={handlePassword}
-                value={password}
-                color={isDarkMode ? '$color' : '$color10'}
-                paddingLeft="$10"
-                paddingRight="$10"
-              />
-              <Button
-                chromeless
-                size="$4"
-                circular
-                position="absolute"
-                right={6}
-                onPress={handleSecureEntryClickEvent}>
-                <Icon
-                  name={secureTextEntry ? 'eye-off' : 'eye'}
-                  size={22}
-                  color={isDarkMode ? 'white' : 'black'}
-                />
-              </Button>
-            </XStack>
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                <YStack>
+                  {error && (
+                    <Text color="$red10" fontSize={rf(14)} marginBottom="$2">
+                      {error.message}
+                    </Text>
+                  )}
+                  <XStack alignItems="center" position="relative">
+                    <Entypo
+                      name="lock"
+                      size={22}
+                      color={isDarkMode ? 'white' : 'black'}
+                      style={{
+                        position: 'absolute',
+                        left: 12,
+                        zIndex: 1,
+                      }}
+                    />
+                    <Input
+                      flex={1}
+                      height="$6"
+                      borderRadius="$4"
+                      placeholder="Password"
+                      secureTextEntry={secureTextEntry}
+                      autoCapitalize="none"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      color={isDarkMode ? '$color' : '$color10'}
+                      paddingLeft="$10"
+                      paddingRight="$10"
+                    />
+                    <Button
+                      chromeless
+                      size="$4"
+                      circular
+                      position="absolute"
+                      right={6}
+                      onPress={handleSecureEntryClickEvent}>
+                      <Icon
+                        name={secureTextEntry ? 'eye-off' : 'eye'}
+                        size={22}
+                        color={isDarkMode ? 'white' : 'black'}
+                      />
+                    </Button>
+                  </XStack>
+                </YStack>
+              )}
+            />
 
             <XStack
               justifyContent="space-between"
@@ -401,7 +392,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               <Text
                 color={isDarkMode ? '$gray400' : '$gray700'}
                 fontWeight="500"
-                fontSize={13}
+                fontSize={rf(13)}
                 pressStyle={{opacity: 0.7}}
                 cursor="pointer"
                 onPress={() => {
@@ -414,7 +405,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               <Text
                 color="$blue10"
                 fontWeight="600"
-                fontSize={13}
+                fontSize={rf(13)}
                 pressStyle={{opacity: 0.7}}
                 cursor="pointer"
                 onPress={() => {
@@ -433,16 +424,11 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               borderRadius="$4"
               fontWeight="700"
               alignSelf="center"
-              onPress={() => {
-                if (__DEV__) {
-                  console.log('Login button pressed!');
-                }
-                validateAndSubmit();
-              }}
-              disabled={loginPending}
-              opacity={loginPending ? 0.5 : 1}
+              onPress={handleSubmit(onSubmit)}
+              disabled={loginPending || !isValid}
+              opacity={loginPending || !isValid ? 0.5 : 1}
               width="100%">
-              <Text fontSize={18} color="$white" fontWeight="600">
+              <Text fontSize={rf(18)} color="$white" fontWeight="600">
                 Login
               </Text>
             </Button>
@@ -467,7 +453,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               onPress={() => navigation.navigate('SignUpScreenFirst')}>
               <Text
                 fontWeight="600"
-                fontSize={16}
+                fontSize={rf(16)}
                 color={isDarkMode ? '$color' : '$blue10'}>
                 Sign Up
               </Text>
@@ -496,7 +482,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               }}>
               <Text
                 fontWeight="500"
-                fontSize={15}
+                fontSize={rf(15)}
                 color={isDarkMode ? '$gray11' : '$gray11'}>
                 Continue as Guest
               </Text>
@@ -517,8 +503,8 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                   onSuccess: () => {
                     /** Check Status */
                     Alert.alert('Verification Email Sent');
-                    setEmail('');
-                    setPassword('');
+                    setValue('password', '');
+                    setValue('email', '');
                   },
                   onError: (error: AxiosError) => {
                     if (__DEV__) {

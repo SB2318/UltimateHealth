@@ -18,6 +18,7 @@ import ProfileHeader from '../components/ProfileHeader';
 import {ArticleData, UserProfileScreenProp} from '../type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Loader from '../components/Loader';
+import ArticleCardSkeleton from '../components/ArticleCardSkeleton';
 import {useFocusEffect} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
 import {useSocket} from '../contexts/SocketContext';
@@ -26,7 +27,8 @@ import {useUpdateFollowStatus} from '../hooks/useUpdateFollowStatus';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
 import { useGetAuthorProfile } from '../hooks/useGetAuthorProfile';
 import {useGetTotalLikeViewStatus} from '../hooks/useGetTotalLikeViewStatus';
-import { NoArticleState } from '../components/EmptyStates';
+import { NoArticleState } from '../components/EmptyStates';import { rf } from '../helper/Metric';
+
 
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const theme = useTheme();
@@ -322,7 +324,11 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           style={isDarkMode ? 'light' : 'dark'}
           backgroundColor="#007AFF"
         />
-        <Loader />
+        <View style={{ width: '100%', paddingHorizontal: 16 }}>
+          {[1, 2, 3].map((key) => (
+            <ArticleCardSkeleton key={key} />
+          ))}
+        </View>
       </SafeAreaView>
     );
   }
@@ -436,7 +442,7 @@ const styles = StyleSheet.create({
   },
   labelStyle: {
     fontWeight: '600',
-    fontSize: 13,
+    fontSize: rf(13),
     //color: 'black',
     textTransform: 'capitalize',
   },
@@ -450,7 +456,7 @@ const styles = StyleSheet.create({
     shadowColor: 'white',
   },
   message: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#555',
     textAlign: 'center',
   },

@@ -22,7 +22,8 @@ import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
 import {useDispatch} from 'react-redux';
-import {requestStoragePermissions} from '../helper/Utils';
+import {requestStoragePermissions} from '../helper/Utils';import { rf } from '../helper/Metric';
+
 
 //const AudioModule = requireNativeModule('AudioModule');
 
@@ -242,10 +243,10 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
       <YStack flex={1} bg="#0F172A" ai="center" jc="center" px="$4" space="$4">
         {/* Header Section */}
         <YStack ai="center" space="$2" mb="$4">
-          <Text color="#F1F5F9" fontSize={32} fontWeight="800" letterSpacing={1}>
+          <Text color="#F1F5F9" fontSize={rf(32)} fontWeight="800" letterSpacing={1}>
             Podcast Studio
           </Text>
-          <Text color="#94A3B8" fontSize={15} fontWeight="500">
+          <Text color="#94A3B8" fontSize={rf(15)} fontWeight="500">
             Record your voice with studio quality
           </Text>
         </YStack>
@@ -277,14 +278,14 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
         {/* Timer Display */}
         <YStack alignItems="center" bg="#1E293B" px="$6" py="$4" borderRadius={16} mb="$2">
           <Text
-            fontSize={50}
+            fontSize={rf(50)}
             color="#60A5FA"
             fontWeight="800"
             letterSpacing={4}
             fontFamily={"monospace" as any}>
             {recordTime}
           </Text>
-          <Text color="#94A3B8" fontSize={13} fontWeight="600" mt="$1">
+          <Text color="#94A3B8" fontSize={rf(13)} fontWeight="600" mt="$1">
             {uiState === 'recording' ? 'RECORDING IN PROGRESS' : uiState === 'review' ? 'RECORDING COMPLETE' : 'READY TO RECORD'}
           </Text>
         </YStack>
@@ -328,7 +329,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
                 }>
                 <Icon name="play" size={36} color="#60A5FA" />
               </Circle>
-              <Text color="#94A3B8" fontSize={12} fontWeight="600">
+              <Text color="#94A3B8" fontSize={rf(12)} fontWeight="600">
                 PLAY
               </Text>
             </YStack>
@@ -366,7 +367,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
                 />
               </Circle>
             </Circle>
-            <Text color="#94A3B8" fontSize={12} fontWeight="600">
+            <Text color="#94A3B8" fontSize={rf(12)} fontWeight="600">
               {uiState === 'recording' ? 'STOP' : 'RECORD'}
             </Text>
           </YStack>
@@ -385,7 +386,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
                 onPress={handleReRecord}>
                 <Icon name="refresh" size={36} color="#FBBF24" />
               </Circle>
-              <Text color="#94A3B8" fontSize={12} fontWeight="600">
+              <Text color="#94A3B8" fontSize={rf(12)} fontWeight="600">
                 RETRY
               </Text>
             </YStack>
@@ -394,10 +395,10 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 
         {/* Article Title Display */}
         <YStack ai="center" mt="$6" px="$4" py="$3" bg="#1E293B" borderRadius={12} maxWidth="90%">
-          <Text color="#64748B" fontSize={12} fontWeight="600" mb="$1">
+          <Text color="#64748B" fontSize={rf(12)} fontWeight="600" mb="$1">
             PODCAST TITLE
           </Text>
-          <Text color="#E2E8F0" fontSize={17} fontWeight="700" textAlign="center">
+          <Text color="#E2E8F0" fontSize={rf(17)} fontWeight="700" textAlign="center">
             {title}
           </Text>
         </YStack>
@@ -417,14 +418,14 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   title: {
-    fontSize: 28,
+    fontSize: rf(28),
     color: '#f8fafc',
     marginBottom: 20,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   timer: {
-    fontSize: 42,
+    fontSize: rf(42),
     color: '#38bdf8',
     marginVertical: 20,
     fontVariant: ['tabular-nums'],
@@ -483,7 +484,7 @@ const styles = StyleSheet.create({
 
   buttonText: {
     color: '#f8fafc',
-    fontSize: 12,
+    fontSize: rf(12),
     fontWeight: '600',
     textAlign: 'center',
     marginTop: 4,
@@ -491,7 +492,7 @@ const styles = StyleSheet.create({
 
   pathText: {
     marginTop: 20,
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#cbd5e1',
     textAlign: 'center',
   },
@@ -562,7 +563,7 @@ const styles = StyleSheet.create({
 
   actionButtonText: {
     color: '#f8fafc',
-    fontSize: 10,
+    fontSize: rf(10),
     fontWeight: '600',
     textAlign: 'center',
     //marginTop: 2,
@@ -583,7 +584,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   time: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#777',
   },
 });

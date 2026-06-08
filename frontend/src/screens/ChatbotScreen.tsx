@@ -26,7 +26,8 @@ import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useSendMessageToGemini} from '../hooks/useSendMessageToGemini';
 import {useLoadAIConversations} from '../hooks/useLoadAIChats';
-import Snackbar from 'react-native-snackbar';
+import Snackbar from 'react-native-snackbar';import { rf } from '../helper/Metric';
+
 
 // interface ChatbotResponse {
 //   id: string;
@@ -253,12 +254,12 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
         </View>
 
         <View style={{flex: 1}}>
-          <Text style={{fontSize: 18, fontWeight: '600', color: '#111827'}}>
+          <Text style={{fontSize: rf(18), fontWeight: '600', color: '#111827'}}>
             Care Companion AI
           </Text>
 
           {isTyping && (
-            <Text style={{fontSize: 13, color: '#3b82f6'}}>typing...</Text>
+            <Text style={{fontSize: rf(13), color: '#3b82f6'}}>typing...</Text>
           )}
         </View>
       </View>
@@ -297,8 +298,8 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
                   left: {backgroundColor: '#f3f4f6'},
                 }}
                 textStyle={{
-                  right: {color: 'white', fontSize: 17, lineHeight: 24},
-                  left: {color: '#111827', fontSize: 17, lineHeight: 24},
+                  right: {color: 'white', fontSize: rf(17), lineHeight: 24},
+                  left: {color: '#111827', fontSize: rf(17), lineHeight: 24},
                 }}
               />
             )}

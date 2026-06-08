@@ -6,7 +6,8 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {wp, hp} from '../helper/Metric';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
-import {useRef, useState} from 'react';
+import {useRef, useState} from 'react';import { rf } from '../helper/Metric';
+
 
 export default function Editor({
   callback,
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
   },
   tib: {
     textAlign: 'center',
-    fontSize: 22,
+    fontSize: rf(22),
     fontWeight: '600',
     color: '#515156',
   },
@@ -251,7 +252,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   submitButtonText: {
-    fontSize: 18,
+    fontSize: rf(18),
     color: '#fff',
     fontWeight: 'bold',
   },
