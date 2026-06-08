@@ -17,6 +17,7 @@ export type DataState = {
   // Add or remove playlist case
   addedPodcastId: string;
   removePlaylistId: string;
+  readProgress: Record<string, number>;
 }
 
 const initialState: DataState = {
@@ -59,6 +60,7 @@ const initialState: DataState = {
   podcasts:[],
   addedPodcastId:'',
   removePlaylistId:'',
+  readProgress: {},
 };
 const dataSlice = createSlice({
   name: 'data',
@@ -114,6 +116,13 @@ const dataSlice = createSlice({
     setRemovePlaylistId(state, action){
       state.removePlaylistId = action.payload;
     },
+    setReadProgress(state, action){
+      state.readProgress = action.payload;
+    },
+    updateSingleReadProgress(state, action){
+      const { articleId, progress } = action.payload;
+      state.readProgress[articleId] = progress;
+    },
   },
 });
 
@@ -132,6 +141,8 @@ export const {
   appendPodcasts,
   setaddedPodcastId,
   setRemovePlaylistId,
+  setReadProgress,
+  updateSingleReadProgress,
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

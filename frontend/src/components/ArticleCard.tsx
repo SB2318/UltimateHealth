@@ -53,6 +53,8 @@ const ArticleCard = ({
 
   const socket = useSocket();
   const width = useSharedValue(0);
+  const readProgressDict = useSelector((state: any) => state.data.readProgress) || {};
+  const readProgress = readProgressDict[item._id] || 0;
   const yValue = useSharedValue(60);
   const [requestModalVisible, setRequestModalVisible] =
     useState<boolean>(false);
@@ -684,7 +686,45 @@ const ArticleCard = ({
               </AccessibleTouchable>
             )}
           </View>
-        </View>
+          {readProgress > 0 && readProgress < 95 && (
+          <View style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 4,
+            backgroundColor: '#E0E0E0',
+            borderBottomLeftRadius: 12,
+            borderBottomRightRadius: 12,
+            overflow: 'hidden'
+          }}>
+            <View style={{
+              width: `${readProgress}%`,
+              height: '100%',
+              backgroundColor: PRIMARY_COLOR,
+            }} />
+          </View>
+        )}
+      </View>
+        {readProgress > 0 && readProgress < 95 && (
+          <View style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 4,
+            backgroundColor: '#E0E0E0',
+            borderBottomLeftRadius: 12,
+            borderBottomRightRadius: 12,
+            overflow: 'hidden'
+          }}>
+            <View style={{
+              width: `${readProgress}%`,
+              height: '100%',
+              backgroundColor: PRIMARY_COLOR,
+            }} />
+          </View>
+        )}
       </View>
     </Pressable>
   );

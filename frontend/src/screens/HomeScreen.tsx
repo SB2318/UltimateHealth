@@ -48,6 +48,7 @@ import {useGetProfile} from '../hooks/useGetProfile';
 import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../hooks/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../hooks/useGetPaginatedArticles';
+import { getAllArticleProgress } from '../helper/ReadProgress';
 import {import { rf } from '../helper/Metric';
 
   OfflineArticleState,
@@ -101,6 +102,14 @@ const SavedArticleEmptyState = () => (
 // Here The purpose of using Redux is to maintain filter state throughout the app session. globally
 const HomeScreen = ({navigation}: HomeScreenProps) => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      const progressDict = await getAllArticleProgress();
+      dispatch({ type: 'data/setReadProgress', payload: progressDict });
+    };
+    fetchProgress();
+  }, [dispatch]);
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [sortingType, setSortingType] = useState<string>('');

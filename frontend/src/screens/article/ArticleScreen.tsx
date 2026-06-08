@@ -50,6 +50,7 @@ import {useUpdateFollowStatusByArticle} from '@/src/hooks/useUpdateFollowStatus'
 import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
+import { saveArticleProgress, getArticleProgress } from '../../helper/ReadProgress';
 import {useSocket} from '../../contexts/SocketContext';
 import LoadingSpinner from '../../components/LoadingSpinner';import { rf } from '../../helper/Metric';
 
@@ -66,6 +67,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [isPaused, setIsPaused] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
   const [playerVisible, setPlayerVisible] = useState(false);
+  const [showResumePrompt, setShowResumePrompt] = useState(false);
+  const [savedProgressValue, setSavedProgressValue] = useState(0);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const lastSavedPercentage = useRef(0);
+  const contentHeightRef = useRef(0);
   const [summary, setSummary] = useState<ArticleSummary | null>(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const chunkIndexRef = useRef(0);
@@ -98,6 +104,17 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {mutate: saveMutation, isPending: saveMutationPending} = useSaveArticle(
     Number(articleId),
   );
+
+  useEffect(() => {
+    const checkProgress = async () => {
+      const progress = await getArticleProgress(articleId);
+      if (progress > 10 && progress < 95) {
+        setSavedProgressValue(progress);
+        setShowResumePrompt(true);
+      }
+    };
+    checkProgress();
+  }, [articleId]);
 
   const FONT_SCALE_KEY = 'article_font_scale';
   const FONT_SCALE_MIN = 0.8;
@@ -1159,8 +1176,30 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </View>
         </View>
       )}
+    
+      {showResumePrompt && (
+        <View style={styles.resumePromptContainer}>
+          <Text style={styles.resumePromptText}>Continue reading? ({Math.round(savedProgressValue)}%)</Text>
+          <TouchableOpacity 
+            style={styles.resumePromptButton}
+            onPress={() => {
+              setShowResumePrompt(false);
+              if (scrollViewRef.current && contentHeightRef.current > 0) {
+                 const windowHeight = Dimensions.get('window').height;
+                 const targetOffset = (savedProgressValue / 100) * (contentHeightRef.current - windowHeight);
+                 scrollViewRef.current.scrollTo({ y: targetOffset, animated: true });
+              }
+            }}
+          >
+            <Text style={styles.resumePromptButtonText}>Resume</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setShowResumePrompt(false)} style={styles.resumePromptClose}>
+            <FontAwesome5 name="times" size={16} color="white" />
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
-  );
+);
 };
 
 export default ArticleScreen;
@@ -1467,5 +1506,43 @@ const styles = StyleSheet.create({
     color: PRIMARY_COLOR,
     marginTop: hp(0.5),
     fontSize: rf(14),
+  },
+resumePromptContainer: {
+    position: 'absolute',
+    bottom: 90,
+    left: 20,
+    right: 20,
+    backgroundColor: PRIMARY_COLOR,
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 8,
+  },
+  resumePromptText: {
+    color: 'white',
+    fontSize: rf(14),
+    fontWeight: 'bold',
+    flex: 1,
+  },
+  resumePromptButton: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    marginRight: 10,
+  },
+  resumePromptButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: rf(13),
+  },
+  resumePromptClose: {
+    padding: 4,
   },
 });
