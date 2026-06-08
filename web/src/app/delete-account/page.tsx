@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AccountDeletionPage from "@/components/AccountDeletionPage";
+import { getApiUrl } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "Delete Account | UltimateHealth",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
 export default function DeleteAccountPage() {
   return (
     <AccountDeletionPage
-      apiUrl="https://uhsocial.in/api/user/delete-account"
+      apiUrl={getApiUrl("/user/delete-account")}
       loginPath="/login"
       title="Delete Your Account"
       description="You are signed in. Confirm below to permanently delete your UltimateHealth account."

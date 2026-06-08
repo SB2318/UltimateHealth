@@ -1,11 +1,32 @@
 "use client";
 
-import type { CSSProperties } from "react";
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PageWrapper, Section } from "@/components/layout";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 
 type AccountDeletionPageProps = {
   apiUrl: string;
@@ -20,9 +41,6 @@ type ApiErrorBody = {
   message?: string;
 };
 
-const TOKEN_KEY = "accessToken";
-const REFRESH_TOKEN_KEY = "refreshToken";
-
 export default function AccountDeletionPage({
   apiUrl,
   loginPath,
@@ -32,23 +50,11 @@ export default function AccountDeletionPage({
 }: AccountDeletionPageProps) {
   const router = useRouter();
   const [deleting, setDeleting] = useState(false);
-  const [message, setMessage] = useState("");
-  const [messageColor, setMessageColor] = useState("#4a5568");
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem(TOKEN_KEY);
-
-    if (!storedToken) {
-      router.replace(loginPath);
-    }
-  }, [loginPath, router]);
-
-  const clearAuthData = () => {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
-    sessionStorage.removeItem(TOKEN_KEY);
-    sessionStorage.removeItem(REFRESH_TOKEN_KEY);
-  };
+  const [message, setMessage] = useState<{
+    title: string;
+    description: string;
+    variant?: "default" | "destructive";
+  } | null>(null);
 
   const readErrorMessage = async (response: Response) => {
     const fallback = "Unable to delete account. Please try again.";
@@ -69,172 +75,125 @@ export default function AccountDeletionPage({
   };
 
   const handleDeleteAccount = async () => {
-    const token = localStorage.getItem(TOKEN_KEY);
-
-    if (!token) {
-      router.replace(loginPath);
-      return;
-    }
-
-    const confirmed = window.confirm(
-      "This action permanently deletes your account. Do you want to continue?"
-    );
-
-    if (!confirmed) return;
-
     setDeleting(true);
-    setMessage("Deleting your account...");
-    setMessageColor("#4a5568");
+    setMessage({
+      title: "Deleting account",
+      description: "Please wait while your request is processed.",
+    });
 
     try {
       const response = await fetch(apiUrl, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
         credentials: "include",
       });
 
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) {
-          clearAuthData();
           router.replace(loginPath);
           return;
         }
 
         const errorMessage = await readErrorMessage(response);
-        setMessage(errorMessage);
-        setMessageColor("#e53e3e");
+        setMessage({
+          title: "Deletion failed",
+          description: errorMessage,
+          variant: "destructive",
+        });
         return;
       }
 
-      clearAuthData();
-      setMessage("Account deleted successfully. Redirecting...");
-      setMessageColor("#2f855a");
+      setMessage({
+        title: "Account deleted",
+        description: "Redirecting you now.",
+      });
       router.replace("/goodbye");
     } catch (error: unknown) {
-      setMessage(
-        "Server error: " + (error instanceof Error ? error.message : "Unknown error")
-      );
-      setMessageColor("#e53e3e");
+      setMessage({
+        title: "Server error",
+        description: error instanceof Error ? error.message : "Unknown error",
+        variant: "destructive",
+      });
     } finally {
       setDeleting(false);
     }
   };
 
   return (
-    <Section as="div" style={styles.body}>
-      <PageWrapper as="div" style={styles.card}>
-        <Image
-          src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
-          style={styles.icon}
-          width={58}
-          height={58}
-          alt="Ultimate Health Logo"
-          priority
-        />
-        <h1 style={styles.heading}>{title}</h1>
-        <p style={styles.text}>{description}</p>
-        <p style={styles.warning}>
-          This action cannot be undone. Your saved authentication data will be cleared
-          after a successful deletion.
-        </p>
+    <Section
+      as="main"
+      className="flex min-h-screen items-center bg-slate-50 px-4 py-10"
+    >
+      <PageWrapper className="flex max-w-md justify-center px-0">
+        <Card className="w-full rounded-lg shadow-sm">
+          <CardHeader className="items-center text-center">
+            <div className="mb-2 flex size-12 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+              <span className="text-xl font-semibold" aria-hidden="true">
+                !
+              </span>
+            </div>
+            <CardTitle className="text-xl font-semibold">
+              <h1>{title}</h1>
+            </CardTitle>
+            <CardDescription className="leading-6">{description}</CardDescription>
+          </CardHeader>
 
-        <button
-          type="button"
-          onClick={handleDeleteAccount}
-          disabled={deleting}
-          style={{
-            ...styles.deleteButton,
-            background: deleting ? "#a0aec0" : "#e53e3e",
-            cursor: deleting ? "not-allowed" : "pointer",
-          }}
-        >
-          {deleting ? "Deleting..." : confirmLabel}
-        </button>
+          <CardContent className="space-y-4">
+            <Alert variant="destructive">
+              <AlertTitle>Permanent deletion</AlertTitle>
+              <AlertDescription>
+                This cannot be undone. Your account and all associated data will be
+                permanently removed and cannot be recovered.
+              </AlertDescription>
+            </Alert>
 
-        <Link href={loginPath} style={styles.cancelLink}>
-          Cancel and go back
-        </Link>
+            {message && (
+              <Alert variant={message.variant} role="status">
+                <AlertTitle>{message.title}</AlertTitle>
+                <AlertDescription>{message.description}</AlertDescription>
+              </Alert>
+            )}
+          </CardContent>
 
-        {message && (
-          <div role="status" style={{ ...styles.message, color: messageColor }}>
-            {message}
-          </div>
-        )}
+          <CardFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
+            <Button variant="outline" asChild disabled={deleting}>
+              <Link href={loginPath}>Cancel</Link>
+            </Button>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" disabled={deleting}>
+                  {deleting && <Spinner size="sm" className="mr-1" />}
+                  {deleting ? "Deleting..." : confirmLabel}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogMedia className="bg-destructive/10 text-destructive">
+                    <span className="text-xl font-semibold" aria-hidden="true">
+                      !
+                    </span>
+                  </AlertDialogMedia>
+                  <AlertDialogTitle>Delete this account permanently?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action will permanently remove the account and all associated
+                    data. It cannot be undone, and the data cannot be recovered.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel disabled={deleting}>Keep account</AlertDialogCancel>
+                  <AlertDialogAction
+                    variant="destructive"
+                    disabled={deleting}
+                    onClick={handleDeleteAccount}
+                  >
+                    Yes, delete permanently
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </CardFooter>
+        </Card>
       </PageWrapper>
     </Section>
   );
 }
-
-const styles: Record<string, CSSProperties> = {
-  body: {
-    fontFamily: '"Inter", Arial, sans-serif',
-    background: "#f4f7fc",
-    margin: 0,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-  },
-  card: {
-    background: "#fff",
-    width: 440,
-    padding: "40px 32px",
-    borderRadius: 20,
-    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-    textAlign: "center",
-    maxWidth: "90vw",
-  },
-  icon: {
-    marginBottom: 16,
-    borderRadius: 12,
-  },
-  heading: {
-    marginBottom: 12,
-    fontWeight: 700,
-    fontSize: "1.5rem",
-    color: "#1a202c",
-  },
-  text: {
-    color: "#555",
-    fontSize: 15,
-    lineHeight: 1.6,
-    marginBottom: 16,
-  },
-  warning: {
-    color: "#742a2a",
-    background: "#fff5f5",
-    border: "1px solid #fed7d7",
-    borderRadius: 10,
-    fontSize: 14,
-    lineHeight: 1.5,
-    padding: 12,
-    marginBottom: 22,
-  },
-  deleteButton: {
-    width: "100%",
-    color: "white",
-    padding: 14,
-    border: "none",
-    borderRadius: 25,
-    fontSize: 16,
-    fontWeight: 700,
-    transition: "background 0.2s ease",
-    fontFamily: "inherit",
-  },
-  cancelLink: {
-    display: "inline-block",
-    marginTop: 16,
-    color: "#4d7cff",
-    fontSize: 14,
-    fontWeight: 600,
-    textDecoration: "none",
-  },
-  message: {
-    marginTop: 16,
-    fontSize: 14,
-    lineHeight: 1.5,
-  },
-};
