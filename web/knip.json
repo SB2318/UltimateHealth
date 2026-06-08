@@ -9,10 +9,12 @@
   "project": [
     "src/**/*.{ts,tsx,js,jsx}"
   ],
+  "$comment": "src/components/ui is temporarily ignored — shadcn/ui generated components not yet fully imported. Remove once component set is reviewed.",
   "ignore": [
     "public/**",
     ".next/**",
-    "node_modules/**"
+    "node_modules/**",
+    "src/components/ui/**"
   ],
   "ignoreDependencies": [
     "tw-animate-css",
