@@ -14,7 +14,8 @@ import HeaderRightMenu from '../components/HeaderRightMenu';
 import ChatbotScreen from '../screens/ChatbotScreen';
 import AboutScreen from '../screens/AboutPage';
 import {useSelector} from 'react-redux';
-import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';import { rf } from '../helper/Metric';
+
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -51,7 +52,7 @@ const TabNavigation = () => {
             backgroundColor: '#000A60',
           },
           headerTitleStyle: {
-            fontSize: 23,
+            fontSize: rf(23),
             marginBottom: 12,
             color: 'white',
           },
@@ -108,7 +109,7 @@ const TabNavigation = () => {
             backgroundColor: '#000A60',
           },
           headerTitleStyle: {
-            fontSize: 23,
+            fontSize: rf(23),
             marginBottom: 12,
             color: 'white',
           },
@@ -125,7 +126,7 @@ const TabNavigation = () => {
             backgroundColor: '#000A60',
           },
           headerTitleStyle: {
-            fontSize: 23,
+            fontSize: rf(23),
             marginBottom: 12,
             color: 'white',
           },

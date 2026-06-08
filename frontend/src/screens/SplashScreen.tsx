@@ -12,7 +12,8 @@ import {useDispatch} from 'react-redux';
 import {KEYS, clearStorage, retrieveItem} from '../helper/Utils';
 import {setUserId, setUserToken, setUserHandle} from '../store/UserSlice';
 import { useCheckTokenStatus } from '@/src/hooks/useGetTokenStatus';
-import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../helper/SecureStorageUtils';
+import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../helper/SecureStorageUtils';import { rf } from '../helper/Metric';
+
 
 export default function SplashScreen({navigation}: SplashScreenProp) {
   const opacity = useSharedValue(0);
@@ -141,7 +142,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
 
         pressStyle={{scale: 0.96, opacity: 0.9}}
         onPress={checkLoginStatus}>
-        <Text fontSize={16} color="black">
+        <Text fontSize={rf(16)} color="black">
           Continue
         </Text>
       </Button>

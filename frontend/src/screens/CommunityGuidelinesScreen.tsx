@@ -8,7 +8,8 @@ import { ProfessionalColors, Typography, Spacing } from '../styles/GlassStyles';
 import { GlassContainer } from '../components/GlassContainer';
 import { useBackToTop } from '../components/BackToTopScrollView';
 import { BackToTopButton } from '../components/BackToTopButton';
-import type { CommunityGuidelinesScreenProps } from '../type';
+import type { CommunityGuidelinesScreenProps } from '../type';import { rf } from '../helper/Metric';
+
 
 interface Section {
   id: number;
@@ -316,7 +317,7 @@ const CommunityGuidelinesScreen = (_props: CommunityGuidelinesScreenProps) => {
                         <Text
                           style={{
                             color: section.iconColor,
-                            fontSize: 16,
+                            fontSize: rf(16),
                             lineHeight: 24,
                             marginTop: -1,
                           }}
@@ -379,7 +380,7 @@ const CommunityGuidelinesScreen = (_props: CommunityGuidelinesScreenProps) => {
               >
                 <XStack gap="$2" alignItems="center">
                   <Ionicons name="share-social-outline" size={18} color="#fff" />
-                  <Text style={{ color: '#fff', fontWeight: '600', fontSize: 15 }}>Share Guidelines</Text>
+                  <Text style={{ color: '#fff', fontWeight: '600', fontSize: rf(15) }}>Share Guidelines</Text>
                 </XStack>
               </Button>
             </YStack>

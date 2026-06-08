@@ -3,7 +3,8 @@ import {View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator}
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import {INDIAN_LANGUAGES, LanguageCode} from '../constants/languages';
 import {usePreferences} from '../contexts/PreferencesContext';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
 
 interface LanguagePreferenceSelectorProps {
   /** Optional title for the selector */
@@ -189,13 +190,13 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e5e7eb',
   },
   title: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: '700',
     color: '#1f2937',
     marginBottom: 8,
   },
   description: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#6b7280',
     lineHeight: 20,
   },
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 12,
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#6b7280',
   },
   quickActionsContainer: {
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f9fa',
   },
   quickActionText: {
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '600',
   },
   languagesContainer: {
@@ -279,7 +280,7 @@ const styles = StyleSheet.create({
     borderColor: '#d1d5db',
   },
   languageName: {
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '600',
     color: '#1f2937',
     flex: 1,
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
     color: '#9ca3af',
   },
   languageCode: {
-    fontSize: 12,
+    fontSize: rf(12),
     color: '#9ca3af',
     fontWeight: '500',
   },
@@ -315,7 +316,7 @@ const styles = StyleSheet.create({
     borderLeftColor: PRIMARY_COLOR,
   },
   summaryText: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: PRIMARY_COLOR,
     fontWeight: '500',
     flex: 1,
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#d1d5db',
   },
   saveButtonText: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '700',
     color: 'white',
   },

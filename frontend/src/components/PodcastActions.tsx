@@ -12,7 +12,8 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import Icon from '@expo/vector-icons/MaterialIcons';
-import { PRIMARY_COLOR } from '../helper/Theme';
+import { PRIMARY_COLOR } from '../helper/Theme';import { rf } from '../helper/Metric';
+
 
 const ActionItem = ({
   icon,
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sheetTitle: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: '700',
     color: '#1a1a1a',
     marginBottom: 20,
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   label: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '500',
     color: '#1a1a1a',
   },

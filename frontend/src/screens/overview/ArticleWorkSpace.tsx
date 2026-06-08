@@ -13,7 +13,8 @@ import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
 import Loader from '../../components/Loader';
 import {useGetAllArticlesForUser} from '@/src/hooks/useGetUserAllArticles';
-import {NoArticleState} from '../../components/EmptyStates';
+import {NoArticleState} from '../../components/EmptyStates';import { rf } from '../../helper/Metric';
+
 
 export default function ArticleWorkSpace({
   handleClickAction,
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
   },
   labelStyle: {
     fontWeight: '700',
-    fontSize: 13,
+    fontSize: rf(13),
     textTransform: 'capitalize',
     letterSpacing: 0.3,
   },

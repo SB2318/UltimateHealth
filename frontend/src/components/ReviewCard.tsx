@@ -19,7 +19,8 @@ import {
 import ArticleFloatingMenu from './ArticleFloatingMenu';
 //import io from 'socket.io-client';
 import Entypo from '@expo/vector-icons/Entypo';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from '@expo/vector-icons/AntDesign';import { rf } from '../helper/Metric';
+
 
 const ReviewCard = ({
   item,
@@ -128,7 +129,7 @@ const ReviewCard = ({
               style={{
                 ...styles.footerText1,
                 color: backgroundColor,
-                // fontSize: 16,
+                // fontSize: rf(16),
                 fontWeight: '700',
                 marginTop: 3,
               }}>
@@ -288,17 +289,17 @@ const styles = StyleSheet.create({
   //     padding: 10,
   //   },
   //   title: {
-  //     fontSize: 20,
+  //     fontSize: rf(20),
   //     fontWeight: 'bold',
   //     marginBottom: 10,
   //   },
   //   author: {
-  //     fontSize: 14,
+  //     fontSize: rf(14),
   //     color: '#999',
   //     marginBottom: 10,
   //   },
   //   description: {
-  //     fontSize: 14,
+  //     fontSize: rf(14),
   //   },
   //   categoriesContainer: {
   //     flexDirection: 'row',

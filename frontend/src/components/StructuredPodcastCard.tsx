@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 import { NavigationProp, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../type';
-import { getPlaybackPosition, PlaybackPosition } from '../helper/PlaybackManager';
+import { getPlaybackPosition, PlaybackPosition } from '../helper/PlaybackManager';import { rf } from '../helper/Metric';
+
 
 interface PodcastEpisode {
   id: string;
@@ -77,7 +78,7 @@ const StructuredPodcastCard: React.FC<StructuredPodcastCardProps> = ({
           accessibilityLabel={`Listen to ${episode.title}`}
         >
           <View style={styles.episodeIcon}>
-            <Text style={{ fontSize: 20 }}>▶️</Text>
+            <Text style={{ fontSize: rf(20) }}>▶️</Text>
           </View>
           <View style={styles.episodeInfo}>
             <Text style={[styles.episodeTitle, { color: textColor }]}>{episode.title}</Text>
@@ -106,12 +107,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '700',
     marginBottom: 4,
   },
   subtitle: {
-    fontSize: 12,
+    fontSize: rf(12),
     marginBottom: 12,
     opacity: 0.8,
   },
@@ -131,17 +132,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   episodeTitle: {
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
     marginBottom: 3,
   },
   episodeDesc: {
-    fontSize: 12,
+    fontSize: rf(12),
     lineHeight: 18,
     marginBottom: 4,
   },
   episodeMeta: {
-    fontSize: 11,
+    fontSize: rf(11),
     fontWeight: '500',
   },
   progressBarContainer: {

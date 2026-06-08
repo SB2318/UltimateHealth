@@ -7,7 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { EmailInputModalProp } from '../type';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import Feather from '@expo/vector-icons/Feather';
+import Feather from '@expo/vector-icons/Feather';import { rf } from '../helper/Metric';
+
 
 const emailInputSchema = z.object({
   email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
@@ -118,7 +119,7 @@ export default function EmailInputBottomSheet({
               <Text
                 color={!errors.email ? '$color12' : '$red10'}
                 textAlign="center"
-                fontSize={26}
+                fontSize={rf(26)}
                 fontWeight="700"
                 lineHeight={32}
               >
@@ -133,7 +134,7 @@ export default function EmailInputBottomSheet({
               <Paragraph
                 color="$gray11"
                 textAlign="center"
-                fontSize={15}
+                fontSize={rf(15)}
                 fontWeight="500"
                 lineHeight={22}
                 marginBottom="$2"
@@ -147,7 +148,7 @@ export default function EmailInputBottomSheet({
 
               {/* Email Input Field with Icon */}
               <YStack width="100%" gap="$2">
-                <Text fontSize={14} fontWeight="600" color="$gray11">
+                <Text fontSize={rf(14)} fontWeight="600" color="$gray11">
                   Email Address
                 </Text>
                 <Controller
@@ -206,7 +207,7 @@ export default function EmailInputBottomSheet({
                       {error && (
                         <XStack gap="$2" alignItems="center" paddingLeft="$2">
                           <Feather name="alert-circle" size={14} color="#ef4444" />
-                          <Text fontSize={13} color="$red10" fontWeight="500">
+                          <Text fontSize={rf(13)} color="$red10" fontWeight="500">
                             {error.message}
                           </Text>
                         </XStack>
@@ -235,7 +236,7 @@ export default function EmailInputBottomSheet({
                   shadowOffset={{ width: 0, height: 4 }}
                   shadowOpacity={0.3}
                 >
-                  <Text fontSize={17} fontWeight="600" color="white">
+                  <Text fontSize={rf(17)} fontWeight="600" color="white">
                     {isRequestVerification ? 'Send Verification Link' : 'Send Reset Code'}
                   </Text>
                 </Button>
@@ -258,7 +259,7 @@ export default function EmailInputBottomSheet({
                     scale: 0.98
                   }}
                 >
-                  <Text fontSize={17} fontWeight="600" color="$gray11">
+                  <Text fontSize={rf(17)} fontWeight="600" color="$gray11">
                     Cancel
                   </Text>
                 </Button>

@@ -14,7 +14,8 @@ import {
 } from 'tamagui';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // Corrected Icon Imports
-import { FontAwesome5, Ionicons, Entypo, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, Entypo, MaterialIcons } from '@expo/vector-icons';import { rf } from '../helper/Metric';
+
 
 const PROGRAMS = [
   {
@@ -70,9 +71,9 @@ const ProgramsPage = () => {
           <YStack padding="$6" paddingTop="$10" alignItems="center" gap="$2">
             <XStack alignItems="center" gap="$3">
               <FontAwesome5 name="trophy" size={30} color="#1A91FF" />
-              <Text fontSize={24} fontWeight="900" color="#1A202C" letterSpacing={-0.5}>Programs</Text>
+              <Text fontSize={rf(24)} fontWeight="900" color="#1A202C" letterSpacing={-0.5}>Programs</Text>
             </XStack>
-            <Paragraph color="$gray10" textAlign="center" fontSize={15}>
+            <Paragraph color="$gray10" textAlign="center" fontSize={rf(15)}>
               Participated Open Source Programs & Hackathons
             </Paragraph>
             <Separator borderWidth={2} width={60} borderColor="#1A91FF" marginTop="$2" borderRadius={10} />
@@ -114,19 +115,19 @@ const ProgramsPage = () => {
                 <YStack padding="$5" gap="$3" borderTopWidth={1} borderTopColor="#F0F0F0">
                   <XStack justifyContent="space-between" alignItems="flex-start">
                     <YStack flex={1} space="$1">
-                      <H3 fontSize={20} fontWeight="800" color="#1A91FF" lineHeight={24}>
+                      <H3 fontSize={rf(20)} fontWeight="800" color="#1A91FF" lineHeight={24}>
                         {program.name}
                       </H3>
                       <XStack alignItems="center" gap="$1.5">
                         <MaterialIcons name="verified" size={14} color="#4CAF50" />
-                        <Text color="$gray10" fontWeight="700" fontSize={11} textTransform="uppercase">
+                        <Text color="$gray10" fontWeight="700" fontSize={rf(11)} textTransform="uppercase">
                           {program.type}
                         </Text>
                       </XStack>
                     </YStack>
                   </XStack>
 
-                  <Paragraph color="#4A5568" fontSize={14} lineHeight={20}>
+                  <Paragraph color="#4A5568" fontSize={rf(14)} lineHeight={20}>
                     {program.description}
                   </Paragraph>
 
@@ -135,11 +136,11 @@ const ProgramsPage = () => {
                     <XStack alignItems="center" gap="$4">
                       <XStack alignItems="center" gap="$1.5">
                         <Ionicons name="calendar-outline" size={16} color="#718096" />
-                        <Text color="#718096" fontSize={13} fontWeight="500">{program.date}</Text>
+                        <Text color="#718096" fontSize={rf(13)} fontWeight="500">{program.date}</Text>
                       </XStack>
                       <XStack alignItems="center" gap="$1.5">
                         <Entypo name="globe" size={16} color="#718096" />
-                        <Text color="#718096" fontSize={13} fontWeight="500">Online</Text>
+                        <Text color="#718096" fontSize={rf(13)} fontWeight="500">Online</Text>
                       </XStack>
                     </XStack>
                     

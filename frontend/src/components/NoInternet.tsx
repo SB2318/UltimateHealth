@@ -1,7 +1,8 @@
 import React from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import {hp, wp} from '../helper/Metric';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
 
 interface NoInternetProps {
   onRetry: () => void;
@@ -60,13 +61,13 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   title: {
-    fontSize: 24,
+    fontSize: rf(24),
     fontWeight: 'bold',
     marginBottom: 15,
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#555',
     textAlign: 'center',
     marginBottom: 40,
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: 'bold',
   },
 });

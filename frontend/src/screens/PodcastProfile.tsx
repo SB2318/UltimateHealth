@@ -24,7 +24,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {NoPodcastState} from '../components/EmptyStates';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {downloadAudio, msToTime} from '../helper/Utils';
-import Snackbar from 'react-native-snackbar';
+import Snackbar from 'react-native-snackbar';import { rf } from '../helper/Metric';
+
 
 const {width} = Dimensions.get('window');
 
@@ -374,13 +375,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileName: {
-    fontSize: 24,
+    fontSize: rf(24),
     fontWeight: '700',
     color: '#1a1a1a',
     marginBottom: 4,
   },
   profileHandle: {
-    fontSize: 15,
+    fontSize: rf(15),
     color: '#6b7280',
     marginBottom: 20,
   },
@@ -396,13 +397,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   statValue: {
-    fontSize: 22,
+    fontSize: rf(22),
     fontWeight: '700',
     color: PRIMARY_COLOR,
     marginBottom: 4,
   },
   statLabel: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#6b7280',
     fontWeight: '500',
   },
@@ -427,7 +428,7 @@ const styles = StyleSheet.create({
   },
   createButtonText: {
     color: '#ffffff',
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '700',
   },
   tabContainer: {
@@ -458,7 +459,7 @@ const styles = StyleSheet.create({
     backgroundColor: `${PRIMARY_COLOR}15`,
   },
   tabText: {
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '600',
     color: '#6b7280',
   },
@@ -495,13 +496,13 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   playlistTitle: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '600',
     color: '#1a1a1a',
     marginBottom: 4,
   },
   playlistCount: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#6b7280',
   },
   podcastCardWrapper: {
@@ -514,14 +515,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   emptyText: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: '600',
     color: '#374151',
     marginTop: 16,
     marginBottom: 8,
   },
   emptySubText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#6b7280',
     textAlign: 'center',
     lineHeight: 20,
@@ -535,7 +536,7 @@ const styles = StyleSheet.create({
   },
   emptyButtonText: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
   },
 });

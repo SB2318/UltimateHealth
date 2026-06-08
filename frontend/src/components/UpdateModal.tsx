@@ -1,4 +1,5 @@
-import { Modal, View, Text, Pressable, Linking } from 'react-native';
+import { Modal, View, Text, Pressable, Linking } from 'react-native';import { rf } from '../helper/Metric';
+
 
 export default function UpdateModal({ visible, storeUrl }: any) {
   return (
@@ -20,7 +21,7 @@ export default function UpdateModal({ visible, storeUrl }: any) {
             alignItems: 'center'
           }}
         >
-          <Text style={{ fontSize: 18, fontWeight: '600' }}>
+          <Text style={{ fontSize: rf(18), fontWeight: '600' }}>
             Update Available 🚀
           </Text>
 

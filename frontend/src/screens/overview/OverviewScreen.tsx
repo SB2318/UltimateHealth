@@ -14,7 +14,8 @@ import {FAB} from 'react-native-paper';
 import {hp} from '../../helper/Metric';
 import ArticleWorkSpace from './ArticleWorkSpace';
 import ImprovementWorkspace from './ImprovementWorkspace';
-import PodcastWorkSpace from './PodcastWorkSpace';
+import PodcastWorkSpace from './PodcastWorkSpace';import { rf } from '../../helper/Metric';
+
 
 export default function OverviewScreen({navigation}: OverviewScreenProps) {
   //const bottomBarHeight = useBottomTabBarHeight();
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
   },
   labelStyle: {
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: rf(14),
     color: 'black',
     textTransform: 'capitalize',
   },
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     shadowColor: 'white',
   },
   message: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#555',
     textAlign: 'center',
   },

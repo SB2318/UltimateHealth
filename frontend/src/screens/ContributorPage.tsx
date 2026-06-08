@@ -12,7 +12,8 @@ import {
   Input,
 } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';
+import {MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';import { rf } from '../helper/Metric';
+
 
 
 const CONTRIBUTORS = [
@@ -367,10 +368,10 @@ const ContributorPage = () => {
           </Circle>
 
           <YStack flex={1}>
-            <Text fontWeight="800" fontSize={16} numberOfLines={2}>
+            <Text fontWeight="800" fontSize={rf(16)} numberOfLines={2}>
               {item.name}
             </Text>
-            <Text color="#718096" fontSize={13}>
+            <Text color="#718096" fontSize={rf(13)}>
               {item.handle}
             </Text>
           </YStack>
@@ -397,7 +398,7 @@ const ContributorPage = () => {
           borderBottomRightRadius={40}
           gap="$4">
           <XStack justifyContent="center" alignItems="center" gap="$3">
-            <H2 color="white" fontWeight="900" fontSize={28}>
+            <H2 color="white" fontWeight="900" fontSize={rf(28)}>
               Our Contributors
             </H2>
             <MaterialCommunityIcons
@@ -407,7 +408,7 @@ const ContributorPage = () => {
             />
           </XStack>
 
-          <Text color="white" textAlign="center" opacity={0.85} fontSize={15}>
+          <Text color="white" textAlign="center" opacity={0.85} fontSize={rf(15)}>
             Thank you for contributing to our repository
           </Text>
 
@@ -423,7 +424,7 @@ const ContributorPage = () => {
                 color="white"
                 textAlign="center"
                 fontWeight="600"
-                fontSize={14}>
+                fontSize={rf(14)}>
                 We appreciate your help in making UltimateHealth better!
               </Text>
               <FontAwesome5 name="grin-stars" size={18} color="#FFD700" />

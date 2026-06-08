@@ -50,7 +50,8 @@ import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import LoadingSpinner from '../../components/LoadingSpinner';import { rf } from '../../helper/Metric';
+
 
 const CHUNK_SIZE = 120;
 
@@ -1216,17 +1217,17 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontWeight: '400',
-    fontSize: 12,
+    fontSize: rf(12),
     color: '#6C6C6D',
     textTransform: 'uppercase',
   },
   viewText: {
     fontWeight: '500',
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#6C6C6D',
   },
   titleText: {
-    fontSize: 25,
+    fontSize: rf(25),
     fontWeight: 'bold',
     marginTop: 5,
   },
@@ -1237,7 +1238,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   fontSizeLabel: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#6C6C6D',
     fontWeight: '500',
   },
@@ -1255,7 +1256,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   fontSizeButtonText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#333333',
     fontWeight: '600',
   },
@@ -1307,7 +1308,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontWeight: '400',
     color: '#6C6C6D',
-    fontSize: 15,
+    fontSize: rf(15),
     textAlign: 'justify',
   },
   footer: {
@@ -1340,7 +1341,7 @@ const styles = StyleSheet.create({
     minHeight: 52,
   },
   actionTextFooter: {
-    fontSize: 10,
+    fontSize: rf(10),
     fontWeight: '600',
   },
   authorRow: {
@@ -1360,11 +1361,11 @@ const styles = StyleSheet.create({
   },
   authorName: {
     fontWeight: '700',
-    fontSize: 14,
+    fontSize: rf(14),
   },
   authorFollowers: {
     fontWeight: '400',
-    fontSize: 11,
+    fontSize: rf(11),
   },
   followButton: {
     backgroundColor: PRIMARY_COLOR,
@@ -1374,7 +1375,7 @@ const styles = StyleSheet.create({
   },
   followButtonText: {
     color: 'white',
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '600',
   },
 
@@ -1444,19 +1445,19 @@ const styles = StyleSheet.create({
   },
   ttsSpeedText: {
     color: 'white',
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '700',
   },
   ttsStatusText: {
     flex: 1,
     color: '#f8fafc',
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '600',
     textAlign: 'right',
   },
 
   submitButtonText: {
-    fontSize: 18,
+    fontSize: rf(18),
     color: '#fff',
     fontWeight: 'bold',
   },
@@ -1464,6 +1465,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: PRIMARY_COLOR,
     marginTop: hp(0.5),
-    fontSize: 14,
+    fontSize: rf(14),
   },
 });

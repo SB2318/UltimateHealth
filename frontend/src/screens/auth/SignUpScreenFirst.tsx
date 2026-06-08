@@ -23,7 +23,8 @@ import {
 } from 'react-native-image-picker';
 import {useCheckUserHandleAvailability} from '@/src/hooks/useCheckUserHandleAvailability';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
-import {useRegdMutation} from '@/src/hooks/useUserRegistration';
+import {useRegdMutation} from '@/src/hooks/useUserRegistration';import { rf } from '../../helper/Metric';
+
 
 const signupSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -331,10 +332,10 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
           marginTop="$2"
           padding="$3"
           space="$2">
-          <Text fontSize={16} color="white" textAlign="center" fontWeight="600">
+          <Text fontSize={rf(16)} color="white" textAlign="center" fontWeight="600">
             He who has health has hope and he who has hope has everything.
           </Text>
-          <Text fontSize={16} color="white" textAlign="center" fontWeight="600">
+          <Text fontSize={rf(16)} color="white" textAlign="center" fontWeight="600">
             ~ Arabian Proverb.
           </Text>
         </YStack>
@@ -369,7 +370,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 
         {/* Title */}
         <Text
-          fontSize={20}
+          fontSize={rf(20)}
           fontWeight="700"
           color="$blue10"
           textAlign="center"
@@ -401,7 +402,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     <Icon name="person" size={20} color={theme.black.val} />
                   </YStack>
                 </XStack>
-                {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
+                {error && <Text color="$red10" fontSize={rf(12)}>{error.message}</Text>}
               </YStack>
             )}
           />
@@ -428,24 +429,24 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     <Icon name="person" size={20} color={theme.black.val} />
                   </YStack>
                 </XStack>
-                {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
+                {error && <Text color="$red10" fontSize={rf(12)}>{error.message}</Text>}
               </YStack>
             )}
           />
 
           {/* Handle Availability Feedback */}
           {isCheckingHandle && (
-            <Text color="$gray10" fontSize={14}>
+            <Text color="$gray10" fontSize={rf(14)}>
               Checking availability...
             </Text>
           )}
           {!isCheckingHandle && handleAvailability && !handleAvailability.isAvailable && (
-            <Text color="$red10" fontSize={14}>
+            <Text color="$red10" fontSize={rf(14)}>
               {handleAvailability.message}
             </Text>
           )}
           {!isCheckingHandle && handleAvailability?.isAvailable && (
-            <Text color="green" fontSize={14}>
+            <Text color="green" fontSize={rf(14)}>
               {handleAvailability.message}
             </Text>
           )}
@@ -474,7 +475,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     <Icon name="email" size={20} color={theme.black.val} />
                   </YStack>
                 </XStack>
-                {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
+                {error && <Text color="$red10" fontSize={rf(12)}>{error.message}</Text>}
               </YStack>
             )}
           />
@@ -512,7 +513,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     />
                   </Button>
                 </XStack>
-                {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
+                {error && <Text color="$red10" fontSize={rf(12)}>{error.message}</Text>}
               </YStack>
             )}
           />
@@ -532,7 +533,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     paddingHorizontal: 10,
                     marginBottom: error ? 0 : 20,
                   }}
-                  placeholderStyle={{fontSize: 15}}
+                  placeholderStyle={{fontSize: rf(15)}}
                   data={data}
                   labelField="label"
                   valueField="value"
@@ -545,7 +546,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     setIsFocus(false);
                   }}
                 />
-                {error && <Text color="$red10" fontSize={12} marginBottom="$4">{error.message}</Text>}
+                {error && <Text color="$red10" fontSize={rf(12)} marginBottom="$4">{error.message}</Text>}
               </YStack>
             )}
           />
@@ -562,7 +563,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
             onPress={handleSubmit(onSubmit)}
             disabled={!isValid || registerPending}
             opacity={!isValid || registerPending ? 0.5 : 1}>
-            <Text color="white" fontWeight="bold" fontSize={18}>
+            <Text color="white" fontWeight="bold" fontSize={rf(18)}>
               {watch('role') === 'general' ? 'Register' : 'Continue'}
             </Text>
           </Button>

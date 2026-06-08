@@ -1,7 +1,8 @@
 import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import AccessibleTouchable from './common/AccessibleTouchable';
+import AccessibleTouchable from './common/AccessibleTouchable';import { rf } from '../helper/Metric';
+
 
 type AntDesignIconName = React.ComponentProps<typeof AntDesign>['name'];
 
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   text: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: 'black',
     fontWeight: '500',
     marginLeft: 10, 

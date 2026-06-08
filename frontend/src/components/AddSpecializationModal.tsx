@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
 
 interface AddSpecializationModalProps {
   isModalVisible: boolean;
@@ -95,7 +96,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '600',
     color: '#222',
     marginBottom: 8,
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f5f9',
     paddingHorizontal: 16,
     borderRadius: 12,
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     color: '#222',
   },
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     borderColor: PRIMARY_COLOR,
   },
   cancelText: {
-    fontSize: 17,
+    fontSize: rf(17),
     lineHeight: 24,
     color: PRIMARY_COLOR,
   },
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
     borderColor: PRIMARY_COLOR,
   },
   addText: {
-    fontSize: 17,
+    fontSize: rf(17),
     lineHeight: 24,
     color: 'white',
   },

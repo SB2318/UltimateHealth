@@ -23,7 +23,8 @@ import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
 import { AxiosError } from 'axios';
 import Loader from '../../components/Loader';
-import { NewPasswordScreenProp } from '../../type';
+import { NewPasswordScreenProp } from '../../type';import { rf } from '../../helper/Metric';
+
 
 const newPasswordSchema = z.object({
   password: z.string()
@@ -158,7 +159,7 @@ export default function NewPasswordScreen({
 
           {/* Title & Subtitle */}
           <Text
-            fontSize={26}
+            fontSize={rf(26)}
             fontWeight="700"
             alignSelf="center"
             marginTop="$2"
@@ -171,7 +172,7 @@ export default function NewPasswordScreen({
 
           <Paragraph
             color="$gray700"
-            fontSize={15}
+            fontSize={rf(15)}
             fontWeight="500"
             textAlign="center"
             lineHeight={22}
@@ -183,7 +184,7 @@ export default function NewPasswordScreen({
           {/* Inputs */}
           <YStack gap="$4" width="100%" marginTop="$2">
             <YStack gap="$2">
-              <Text fontWeight="600" color="$gray700" fontSize={14}>
+              <Text fontWeight="600" color="$gray700" fontSize={rf(14)}>
                 New Password
               </Text>
 
@@ -264,24 +265,24 @@ export default function NewPasswordScreen({
               <XStack gap="$2" alignItems="center" paddingLeft="$2">
                 {password && passwordVerify ? (
                   <>
-                    <Text fontSize={14} color="$green10">
+                    <Text fontSize={rf(14)} color="$green10">
                       ✓
                     </Text>
-                    <Text fontSize={13} color="$green10" fontWeight="500">
+                    <Text fontSize={rf(13)} color="$green10" fontWeight="500">
                       Password meets requirements
                     </Text>
                   </>
                 ) : errors.password ? (
                   <>
-                    <Text fontSize={14} color="$red10">
+                    <Text fontSize={rf(14)} color="$red10">
                       ✗
                     </Text>
-                    <Text fontSize={13} color="$red10" fontWeight="500">
+                    <Text fontSize={rf(13)} color="$red10" fontWeight="500">
                       {errors.password.message}
                     </Text>
                   </>
                 ) : (
-                  <Text fontSize={13} color="$gray400" fontWeight="500">
+                  <Text fontSize={rf(13)} color="$gray400" fontWeight="500">
                     At least 6 characters with lowercase letter
                   </Text>
                 )}
@@ -289,7 +290,7 @@ export default function NewPasswordScreen({
             </YStack>
 
             <YStack gap="$2">
-              <Text fontWeight="600" color="$gray700" fontSize={14}>
+              <Text fontWeight="600" color="$gray700" fontSize={rf(14)}>
                 Confirm Password
               </Text>
 
@@ -378,19 +379,19 @@ export default function NewPasswordScreen({
                 <XStack gap="$2" alignItems="center" paddingLeft="$2">
                   {password === confirmPassword ? (
                     <>
-                      <Text fontSize={14} color="$green10">
+                      <Text fontSize={rf(14)} color="$green10">
                         ✓
                       </Text>
-                      <Text fontSize={13} color="$green10" fontWeight="500">
+                      <Text fontSize={rf(13)} color="$green10" fontWeight="500">
                         Passwords match
                       </Text>
                     </>
                   ) : (
                     <>
-                      <Text fontSize={14} color="$red10">
+                      <Text fontSize={rf(14)} color="$red10">
                         ✗
                       </Text>
-                      <Text fontSize={13} color="$red10" fontWeight="500">
+                      <Text fontSize={rf(13)} color="$red10" fontWeight="500">
                         {errors.confirmPassword?.message || "Passwords don't match"}
                       </Text>
                     </>
@@ -421,7 +422,7 @@ export default function NewPasswordScreen({
               shadowOffset={{width: 0, height: 4}}
               shadowOpacity={0.25}
               onPress={handleSubmit(handlePasswordSubmit)}>
-              <Text fontSize={17} fontWeight="600" color="white">
+              <Text fontSize={rf(17)} fontWeight="600" color="white">
                 Reset Password
               </Text>
             </Button>
@@ -440,7 +441,7 @@ export default function NewPasswordScreen({
                 name="arrow-back-circle-outline"
                 size={24}
               />
-              <Text color="$blue10" fontWeight="600" fontSize={15}>
+              <Text color="$blue10" fontWeight="600" fontSize={rf(15)}>
                 Back to Login
               </Text>
             </XStack>

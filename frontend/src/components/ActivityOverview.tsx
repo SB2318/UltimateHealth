@@ -32,7 +32,8 @@ import {useGetTotalReads} from '../hooks/useGetTotalReads';
 import {useGetTotalWrites} from '../hooks/useGetTotalWrites';
 import {useGetAuthorYearlyReadReport} from '../hooks/useGetYearlyReadReport';
 import {useGetAuthorYearlyWriteReport} from '../hooks/useGetYearlyWriteReport';
-import StatisticsCard from './StatisticsCard';
+import StatisticsCard from './StatisticsCard';import { rf } from '../helper/Metric';
+
 
 const getArticleImageSource = (image?: string): ImageSourcePropType => {
   if (!image) {
@@ -376,7 +377,7 @@ const ActivityOverview = ({
           bordered
           borderWidth={0.6}>
           <Text
-            fontSize={15}
+            fontSize={rf(15)}
             color="$gray700"
             textAlign="center"
             fontWeight={'700'}
@@ -391,7 +392,7 @@ const ActivityOverview = ({
               <View key={`quarter-${index}`}>
                 {/* Quarter Title */}
                 <Text
-                  fontSize={15}
+                  fontSize={rf(15)}
                   fontWeight="600"
                   color="#000"
                   marginBottom={8}>
@@ -460,7 +461,7 @@ const ActivityOverview = ({
         bordered
         borderWidth={0.6}>
         <Text
-          fontSize={15}
+          fontSize={rf(15)}
           color="$gray700"
           fontWeight={'700'}
           textAlign="center"
@@ -496,7 +497,7 @@ const ActivityOverview = ({
   const BarChartSection = () => {
     return (
       <View background="$background" paddingHorizontal="$4" marginTop="$6">
-        <Text fontSize={19} fontWeight="700" marginBottom="$3">
+        <Text fontSize={rf(19)} fontWeight="700" marginBottom="$3">
           {userState === 0 ? 'Reading Trend' : 'Writing Trend'}
         </Text>
         {selectedMonth !== -1 ? <WeeklyChartSection /> : <YearlyChartSection />}
@@ -552,7 +553,7 @@ const ActivityOverview = ({
                 backgroundColor={userState === 0 ? PRIMARY_COLOR : 'transparent'}
                 onPress={() => setUserState(0)}>
                 <Text
-                  fontSize={16}
+                  fontSize={rf(16)}
                   fontWeight="700"
                   color={userState === 0 ? 'white' : 'black'}>
                   Read
@@ -568,7 +569,7 @@ const ActivityOverview = ({
                 backgroundColor={userState === 1 ? PRIMARY_COLOR : 'transparent'}
                 onPress={() => setUserState(1)}>
                 <Text
-                  fontSize={16}
+                  fontSize={rf(16)}
                   fontWeight="700"
                   color={userState === 1 ? 'white' : 'black'}>
                   Write
@@ -639,12 +640,12 @@ const ActivityOverview = ({
       {/* ===== MOST VIEWED ===== */}
       {others && (
         <YStack paddingHorizontal="$4" marginTop="$6">
-          <Text fontSize={19} fontWeight="800" marginBottom="$3">
+          <Text fontSize={rf(19)} fontWeight="800" marginBottom="$3">
             Most Viewed Articles
           </Text>
 
           {!hasMostViewedArticles && (
-            <Text fontSize={13} color="$gray10">
+            <Text fontSize={rf(13)} color="$gray10">
               No most viewed articles available yet.
             </Text>
           )}
@@ -675,19 +676,19 @@ const ActivityOverview = ({
                 />
 
                 <YStack flex={1} padding="$3">
-                  <Text fontSize={12} color="$gray10">
+                  <Text fontSize={rf(12)} color="$gray10">
                     {item.tags?.map(t => t.name).join(' | ')}
                   </Text>
 
-                  <Text fontSize={17} fontWeight="700" marginTop="$1">
+                  <Text fontSize={rf(17)} fontWeight="700" marginTop="$1">
                     {item?.title}
                   </Text>
 
-                  <Text fontSize={13} color="$gray10">
+                  <Text fontSize={rf(13)} color="$gray10">
                     {item?.viewUsers?.length ?? 0} views
                   </Text>
 
-                  <Text fontSize={12} color="$gray8" marginTop="$1">
+                  <Text fontSize={rf(12)} color="$gray8" marginTop="$1">
                     Updated: {formatDateShortYear(item.lastUpdated)}
                   </Text>
                 </YStack>

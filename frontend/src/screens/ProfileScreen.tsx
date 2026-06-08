@@ -16,7 +16,8 @@ import Snackbar from 'react-native-snackbar';
 import {setUserHandle} from '../store/UserSlice';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
-import { NoArticleState } from '../components/EmptyStates';
+import { NoArticleState } from '../components/EmptyStates';import { rf } from '../helper/Metric';
+
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const theme = useTheme();
@@ -366,7 +367,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   tabButtonText: {
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '600',
     textTransform: 'capitalize',
   },

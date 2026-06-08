@@ -3,7 +3,8 @@ import {StyleSheet, View} from 'react-native';
 import {Card, XStack, YStack, Text} from 'tamagui';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome from '@expo/vector-icons/FontAwesome';import { rf } from '../helper/Metric';
+
 
 
 interface StatisticsCardProps {
@@ -92,7 +93,7 @@ export default StatisticsCard;
 
 const styles = StyleSheet.create({
   sectionTitle: {
-    fontSize: 19,
+    fontSize: rf(19),
     fontWeight: '700',
     marginBottom: 8,
   },
@@ -105,12 +106,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   statValue: {
-    fontSize: 22,
+    fontSize: rf(22),
     fontWeight: '700',
     marginVertical: 4,
   },
   statLabel: {
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '500',
     textAlign: 'center',
   },

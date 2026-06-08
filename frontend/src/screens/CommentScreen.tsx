@@ -35,7 +35,8 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import {
+import {import { rf } from '../helper/Metric';
+
   GET_IMAGE,
   GET_STORAGE_DATA,
 } from '../helper/APIUtils';
@@ -486,7 +487,7 @@ const CommentScreen = ({
                     styles.articleTitleCard
                   }>
                   <H3
-                    fontSize={20}
+                    fontSize={rf(20)}
                     color="#1F2937"
                     fontWeight={'700'}>
                     {article.title}
@@ -545,7 +546,7 @@ const CommentScreen = ({
                   }>
                   <Paragraph
                     color="#4B5563"
-                    fontSize={15}
+                    fontSize={rf(15)}
                     lineHeight={22}>
                     {article.description}
                   </Paragraph>
@@ -700,7 +701,7 @@ const styles = StyleSheet.create({
   viewArticleText: {
     color: '#FFFFFF',
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: rf(16),
   },
 
   descriptionCard: {
@@ -731,14 +732,14 @@ const styles = StyleSheet.create({
   },
 
   username2: {
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
     color: '#374151',
   },
 
   textInput: {
     minHeight: 100,
-    fontSize: 15,
+    fontSize: rf(15),
     borderRadius: 12,
     padding: 16,
     textAlignVertical: 'top',
@@ -758,7 +759,7 @@ const styles = StyleSheet.create({
   },
 
   submitButtonText: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#FFFFFF',
     fontWeight: '700',
   },
@@ -774,7 +775,7 @@ const styles = StyleSheet.create({
 
   commentsHeaderText: {
     fontWeight: '700',
-    fontSize: 18,
+    fontSize: rf(18),
     color: '#1F2937',
   },
 });

@@ -19,7 +19,8 @@ import Loader from '../components/Loader';
 import {useGetUserSocials} from '../hooks/useGetUserSocialCircle';
 import {useUpdateFollowStatus} from '../hooks/useUpdateFollowStatus';
 import Snackbar from 'react-native-snackbar';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from '../components/LoadingSpinner';import { rf } from '../helper/Metric';
+
 
 export default function Socialcreen({navigation, route}: SocialScreenProps) {
   const insets = useSafeAreaInsets();
@@ -236,13 +237,13 @@ const styles = StyleSheet.create({
   },
   authorName: {
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#1a1a1a',
     marginBottom: 4,
   },
   authorFollowers: {
     fontWeight: '500',
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#6b7280',
   },
   followButton: {
@@ -255,17 +256,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 4,
+    minHeight: 44,
+    justifyContent: 'center',
   },
   followingButton: {
     backgroundColor: '#d1d5db',
   },
   followButtonText: {
     color: '#ffffff',
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '700',
   },
   message: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#6b7280',
     textAlign: 'center',
     fontWeight: '500',

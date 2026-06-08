@@ -26,7 +26,8 @@ import {useUpdateFollowStatus} from '../hooks/useUpdateFollowStatus';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
 import { useGetAuthorProfile } from '../hooks/useGetAuthorProfile';
 import {useGetTotalLikeViewStatus} from '../hooks/useGetTotalLikeViewStatus';
-import { NoArticleState } from '../components/EmptyStates';
+import { NoArticleState } from '../components/EmptyStates';import { rf } from '../helper/Metric';
+
 
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const theme = useTheme();
@@ -436,7 +437,7 @@ const styles = StyleSheet.create({
   },
   labelStyle: {
     fontWeight: '600',
-    fontSize: 13,
+    fontSize: rf(13),
     //color: 'black',
     textTransform: 'capitalize',
   },
@@ -450,7 +451,7 @@ const styles = StyleSheet.create({
     shadowColor: 'white',
   },
   message: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#555',
     textAlign: 'center',
   },

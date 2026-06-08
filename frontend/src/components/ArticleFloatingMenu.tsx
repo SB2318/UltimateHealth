@@ -2,7 +2,8 @@ import React from 'react';
 import {YStack, XStack, Text, Button} from 'tamagui';
 import {Sheet} from '@tamagui/sheet';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import {ScrollView} from 'react-native';
+import {ScrollView} from 'react-native';import { rf } from '../helper/Metric';
+
 
 interface ArticleFloatingMenuProp {
   visible: boolean;
@@ -60,7 +61,7 @@ export default function ArticleFloatingMenuSheet({
                 pressStyle={{backgroundColor: '$gray4'}}>
                 <XStack alignItems="center" gap="$3">
                   <AntDesign name={item.icon as any} size={20} color="black" />
-                  <Text fontSize={16} fontWeight="600" color="black">
+                  <Text fontSize={rf(16)} fontWeight="600" color="black">
                     {item.name}
                   </Text>
                 </XStack>

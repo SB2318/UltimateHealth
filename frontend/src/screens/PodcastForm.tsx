@@ -24,7 +24,8 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import {hp} from '../helper/Metric';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
-import { ttsLanguageList } from '../helper/Utils';
+import { ttsLanguageList } from '../helper/Utils';import { rf } from '../helper/Metric';
+
 
 
 const PodcastForm = ({navigation, route}: PodcastFormProp) => {
@@ -392,13 +393,13 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: rf(20),
     fontWeight: '700',
     color: '#1a1a1a',
     marginBottom: 4,
   },
   sectionSubtitle: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#666',
     lineHeight: 20,
   },
@@ -406,7 +407,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '600',
     color: '#222',
     marginBottom: 8,
@@ -418,7 +419,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 16,
     borderRadius: 12,
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     color: '#222',
     borderWidth: 1,
@@ -430,7 +431,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderRadius: 12,
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     color: '#222',
     borderWidth: 1,
@@ -471,7 +472,7 @@ const styles = StyleSheet.create({
   changeButtonText: {
     color: '#222',
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: rf(14),
   },
   deleteButton: {
     backgroundColor: '#EF4444',
@@ -486,7 +487,7 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: 'white',
     fontWeight: '600',
-    fontSize: 14,
+    fontSize: rf(14),
   },
   uploadContainer: {
     backgroundColor: 'rgba(59, 130, 246, 0.05)',
@@ -504,19 +505,19 @@ const styles = StyleSheet.create({
   uploadText: {
     color: '#222',
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: rf(16),
     marginTop: 8,
   },
   uploadHint: {
     color: '#6b7280',
-    fontSize: 13,
+    fontSize: rf(13),
     marginTop: 4,
   },
   charCounter: {
     marginTop: 6,
     alignSelf: 'flex-end',
     color: '#6b7280',
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '500',
   },
   languageSelector: {
@@ -531,7 +532,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   languageSelectorText: {
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     color: '#222',
   },
@@ -553,7 +554,7 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '700',
   },
   genreContainer: {
@@ -571,7 +572,7 @@ const styles = StyleSheet.create({
   },
   genreButtonText: {
     color: '#374151',
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
   },
   selectedGenreButton: {
@@ -600,7 +601,7 @@ const styles = StyleSheet.create({
   },
   selectedGenreChipText: {
     color: PRIMARY_COLOR,
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
   },
   selectedGenreText: {
@@ -620,13 +621,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   warningTitle: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '700',
     color: '#EA580C',
     marginBottom: 6,
   },
   warningText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#78350F',
     lineHeight: 20,
   },
@@ -652,7 +653,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E5E7EB',
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: rf(20),
     fontWeight: '700',
     color: '#1a1a1a',
   },
@@ -669,7 +670,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(59, 130, 246, 0.05)',
   },
   languageItemText: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#374151',
     fontWeight: '500',
   },

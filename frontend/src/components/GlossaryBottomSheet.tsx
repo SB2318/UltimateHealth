@@ -10,7 +10,8 @@ import {
   XStack,
   YStack,
 } from 'tamagui';
-import type { GlossaryTerm } from '../constants/glossary';
+import type { GlossaryTerm } from '../constants/glossary';import { rf } from '../helper/Metric';
+
 
 export type GlossaryBottomSheetProps = GlossaryTerm & {
   visible: boolean;
@@ -85,7 +86,7 @@ export default function GlossaryBottomSheet({
               {!!category && (
                 <Text
                   color="$blue10"
-                  fontSize={13}
+                  fontSize={rf(13)}
                   fontWeight="700"
                   textTransform="uppercase"
                   letterSpacing={0.8}
@@ -93,7 +94,7 @@ export default function GlossaryBottomSheet({
                   {category}
                 </Text>
               )}
-              <Text color="$color12" fontSize={26} fontWeight="800" lineHeight={32}>
+              <Text color="$color12" fontSize={rf(26)} fontWeight="800" lineHeight={32}>
                 {term}
               </Text>
             </YStack>
@@ -105,7 +106,7 @@ export default function GlossaryBottomSheet({
               accessibilityRole="button"
               accessibilityLabel={`Close glossary definition for ${term}`}
             >
-              <Text fontSize={20} fontWeight="700">
+              <Text fontSize={rf(20)} fontWeight="700">
                 x
               </Text>
             </Button>
@@ -119,14 +120,14 @@ export default function GlossaryBottomSheet({
               borderRadius="$6"
               backgroundColor="$gray2"
             >
-              <Paragraph color="$color11" fontSize={16} lineHeight={24}>
+              <Paragraph color="$color11" fontSize={rf(16)} lineHeight={24}>
                 {definition}
               </Paragraph>
             </Card>
 
             {relatedTerms.length > 0 && (
               <YStack gap="$3" marginTop="$4">
-                <Text color="$color12" fontSize={16} fontWeight="700">
+                <Text color="$color12" fontSize={rf(16)} fontWeight="700">
                   Related terms
                 </Text>
                 <XStack gap="$2" flexWrap="wrap">
@@ -138,7 +139,7 @@ export default function GlossaryBottomSheet({
                       borderRadius="$10"
                       paddingHorizontal="$3"
                       paddingVertical="$2"
-                      fontSize={13}
+                      fontSize={rf(13)}
                       fontWeight="600"
                     >
                       {relatedTerm}

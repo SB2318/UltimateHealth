@@ -30,7 +30,8 @@ import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 import {useGetImprovementById} from '@/src/hooks/useGetImprovementById';
 import {useGetImprovementContent} from '@/src/hooks/useGetImprovementContent';
 import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';
+import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';import { rf } from '../../helper/Metric';
+
 
 const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
   const insets = useSafeAreaInsets();
@@ -348,7 +349,7 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
             backgroundColor="#F8F9FA"
             borderWidth={1}
             borderColor="#E0E0E0">
-            <Text fontSize={17} fontWeight="700" color="#1A1A1A" marginBottom="$2">
+            <Text fontSize={rf(17)} fontWeight="700" color="#1A1A1A" marginBottom="$2">
               💬 Add a Comment
             </Text>
             <TextArea
@@ -395,7 +396,7 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
 
                       setFeedback('');
                     }}>
-                    <Text color="#ffffff" fontSize={16} fontWeight="700">
+                    <Text color="#ffffff" fontSize={rf(16)} fontWeight="700">
                       Post Comment
                     </Text>
                   </Button>
@@ -512,17 +513,17 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontWeight: '400',
-    fontSize: 12,
+    fontSize: rf(12),
     color: '#6C6C6D',
     textTransform: 'uppercase',
   },
   viewText: {
     fontWeight: '500',
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#6C6C6D',
   },
   titleText: {
-    fontSize: 25,
+    fontSize: rf(25),
     fontWeight: 'bold',
     marginTop: 5,
   },
@@ -580,7 +581,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontWeight: '400',
     color: '#6C6C6D',
-    fontSize: 15,
+    fontSize: rf(15),
     textAlign: 'justify',
   },
   footer: {
@@ -608,11 +609,11 @@ const styles = StyleSheet.create({
   },
   authorName: {
     fontWeight: '700',
-    fontSize: 15,
+    fontSize: rf(15),
   },
   authorFollowers: {
     fontWeight: '400',
-    fontSize: 13,
+    fontSize: rf(13),
   },
   followButton: {
     backgroundColor: PRIMARY_COLOR,
@@ -622,7 +623,7 @@ const styles = StyleSheet.create({
   },
   followButtonText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
   },
 
@@ -649,7 +650,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitButtonText: {
-    fontSize: 18,
+    fontSize: rf(18),
     color: '#fff',
     fontWeight: 'bold',
   },

@@ -9,7 +9,8 @@ import React, {useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
 
 const contactSchema = z.object({
   phone_number: z.string().min(10, 'Please enter a valid phone number'),
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputLabel: {
-    fontSize: 17,
+    fontSize: rf(17),
     fontWeight: '600',
     color: '#222',
     marginBottom: 8,
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 16,
     borderRadius: 12,
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     color: '#222',
     borderWidth: 1,
@@ -150,13 +151,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   btnText: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: 'bold',
     color: 'white',
   },
   errorText: {
     color: 'red',
-    fontSize: 12,
+    fontSize: rf(12),
     marginTop: 4,
   },
 });

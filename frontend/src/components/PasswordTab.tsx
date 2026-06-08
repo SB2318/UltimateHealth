@@ -10,7 +10,8 @@ import Feather from '@expo/vector-icons/Feather';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
 
 const passwordSchema = z.object({
   old_password: z.string().min(1, 'Old password is required'),
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputLabel: {
-    fontSize: 17,
+    fontSize: rf(17),
     fontWeight: '600',
     color: '#222',
     marginBottom: 8,
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 40,
     borderRadius: 12,
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     color: '#222',
     borderWidth: 1,
@@ -232,13 +233,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   btnText: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: 'bold',
     color: 'white',
   },
   errorText: {
     color: 'red',
-    fontSize: 12,
+    fontSize: rf(12),
     marginTop: 4,
   },
 });

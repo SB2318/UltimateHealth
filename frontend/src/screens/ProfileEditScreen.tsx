@@ -35,7 +35,8 @@ import {useUpdateProfileImage} from '../hooks/useUpdateProfileImage';
 import {useUpdateUserContactDetail} from '../hooks/useUpdateUserContactDetail';
 import {useUpdateUserGeneralDetails} from '../hooks/useUpdateUserGeneralDetails';
 import {useUpdateUserProfDetails} from '../hooks/useUpdateUserProfDetails';
-import LoadingSpinner from '../components/LoadingSpinner';
+import LoadingSpinner from '../components/LoadingSpinner';import { rf } from '../helper/Metric';
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 // let validator = require('email-validator');
 // let expr = /^(0|91)?[6-9][0-9]{9}$/;
@@ -666,12 +667,14 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     paddingVertical: 10,
     backgroundColor: 'transparent',
+    minHeight: 44,
+    justifyContent: 'center',
   },
   activeTabButton: {
     backgroundColor: PRIMARY_COLOR, // Highlight the active tab
   },
   tabText: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '500', // Font weight '500' for normal tabs
     color: '#B1B2B2',
   },
