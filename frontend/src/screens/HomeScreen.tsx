@@ -55,15 +55,16 @@ import {import { rf } from '../helper/Metric';
   BaseEmptyState,
 } from '../components/EmptyStates';
 
-// Loading State Component with Animation
+import ArticleCardSkeleton from '../components/ArticleCardSkeleton';
+
+// Loading State Component with Skeletons
 const LoadingState = () => {
   return (
-    <BaseEmptyState
-      iconEmoji="📚"
-      title="Loading Articles"
-      description="Gathering the latest health insights for you..."
-      loading={true}
-    />
+    <View style={{ paddingHorizontal: 16 }}>
+      {[1, 2, 3].map((key) => (
+        <ArticleCardSkeleton key={key} />
+      ))}
+    </View>
   );
 };
 
@@ -527,7 +528,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     handleFilterReset();
   };
 
-  if (!articleData || articleData.articles?.length === 0) {
+  if (isLoading || !articleData || articleData.articles?.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <HomeScreenHeader
@@ -608,7 +609,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     );
   }
 
-  if (isLoading || requestEditPending) {
+  if (requestEditPending) {
     return <Loader />;
   }
 

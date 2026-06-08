@@ -20,6 +20,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {hp} from '../../helper/Metric';
 import {GET_IMAGE, GET_STORAGE_DATA} from '../../helper/APIUtils';
 import Loader from '../../components/Loader';
+import ArticleDetailSkeleton from '../../components/ArticleDetailSkeleton';
 import Snackbar from 'react-native-snackbar';
 import ResearchSummaryCard from '../../components/ResearchSummaryCard';
 import StructuredPodcastCard from '../../components/StructuredPodcastCard';
@@ -582,7 +583,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   if (articleLoading) {
-    return <Loader />;
+    return <ArticleDetailSkeleton />;
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;

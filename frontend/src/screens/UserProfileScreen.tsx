@@ -18,6 +18,7 @@ import ProfileHeader from '../components/ProfileHeader';
 import {ArticleData, UserProfileScreenProp} from '../type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Loader from '../components/Loader';
+import ArticleCardSkeleton from '../components/ArticleCardSkeleton';
 import {useFocusEffect} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
 import {useSocket} from '../contexts/SocketContext';
@@ -323,7 +324,11 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           style={isDarkMode ? 'light' : 'dark'}
           backgroundColor="#007AFF"
         />
-        <Loader />
+        <View style={{ width: '100%', paddingHorizontal: 16 }}>
+          {[1, 2, 3].map((key) => (
+            <ArticleCardSkeleton key={key} />
+          ))}
+        </View>
       </SafeAreaView>
     );
   }
