@@ -20,14 +20,14 @@ export const secureStoreItem = async (
 ): Promise<boolean> => {
   try {
     if (!value || typeof value !== 'string' || value.trim().length === 0) {
-      console.warn(`[SecureStorage] Attempted to store invalid value for key: ${key}`);
+      if (__DEV__) console.warn(`[SecureStorage] Attempted to store invalid value for key: ${key}`);
       return false;
     }
 
     await SecureStore.setItemAsync(key, value);
     return true;
   } catch (error) {
-    console.error(`[SecureStorage] Error storing key "${key}":`, error);
+    if (__DEV__) console.error(`[SecureStorage] Error storing key "${key}":`, error);
     return false;
   }
 };
@@ -42,7 +42,7 @@ export const secureRetrieveItem = async (
     }
     return value;
   } catch (error) {
-    console.error(`[SecureStorage] Error retrieving key "${key}":`, error);
+    if (__DEV__) console.error(`[SecureStorage] Error retrieving key "${key}":`, error);
     return null;
   }
 };
@@ -52,7 +52,7 @@ export const secureRemoveItem = async (key: SecureKey): Promise<boolean> => {
     await SecureStore.deleteItemAsync(key);
     return true;
   } catch (error) {
-    console.error(`[SecureStorage] Error removing key "${key}":`, error);
+    if (__DEV__) console.error(`[SecureStorage] Error removing key "${key}":`, error);
     return false;
   }
 };
@@ -63,6 +63,6 @@ export const secureClearAllItems = async (): Promise<void> => {
       Object.values(SECURE_KEYS).map(key => SecureStore.deleteItemAsync(key))
     );
   } catch (error) {
-    console.error('[SecureStorage] Error clearing all items:', error);
+    if (__DEV__) console.error('[SecureStorage] Error clearing all items:', error);
   }
 };

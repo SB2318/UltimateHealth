@@ -78,11 +78,11 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
     // socket.emit('load-review-comments', {articleId: route.params.articleId});
 
     const onConnect = () => {
-      console.log('connection established');
+      if (__DEV__) console.log('connection established');
     };
 
     const onError = (data: any) => {
-      console.log('connection error', data);
+      if (__DEV__) console.log('connection error', data);
     };
 
     const onNewFeedback = (data: any) => {
@@ -170,7 +170,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
                 marginBottom: 30,
               }}
               customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; }`}
-              onSizeUpdated={size => console.log(size.height)}
+              onSizeUpdated={size => if (__DEV__) console.log(size.height)}
               files={[
                 {
                   href: 'cssfileaddress',

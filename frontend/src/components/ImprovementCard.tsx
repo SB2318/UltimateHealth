@@ -25,7 +25,7 @@ const ImprovementCard = ({item, onNavigate}: ImprovementCardProps) => {
       ? 'red'
       : BUTTON_COLOR;
 
- // console.log('ImprovementCard item:', item);
+ // if (__DEV__) console.log('ImprovementCard item:', item);
 
   const extractBody = (html: string) => {
   if (!html) return '<p>No reason provided.</p>';
@@ -72,7 +72,7 @@ const ImprovementCard = ({item, onNavigate}: ImprovementCardProps) => {
                 marginTop: 35,
               }}
               customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; color: #121a26; }`}
-              onSizeUpdated={size => console.log(size.height)}
+              onSizeUpdated={size => if (__DEV__) console.log(size.height)}
               files={[
                 {
                   href: 'cssfileaddress',

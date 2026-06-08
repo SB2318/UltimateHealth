@@ -18,7 +18,7 @@ export const useGetPaginatedArticle = (
         const response = await axios.get(`${PROD_URL}/articles?page=${page}`);
         return response.data as ArticleRes;
       } catch (err) {
-        console.error('Error fetching articles:', err);
+        if (__DEV__) console.error('Error fetching articles:', err);
         return null;
       }
     },

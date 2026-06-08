@@ -28,7 +28,7 @@ export const useSubmitImprovement = (): UseMutationResult<
         pb_recordId: recordId,
         imageUtils: imageUtils,
       });
-      // console.log(article);
+      // if (__DEV__) console.log(article);
       return response.data.newArticle as ArticleData;
     },
   });

@@ -113,7 +113,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     try {
       await storeItem(FONT_SCALE_KEY, value.toFixed(2));
     } catch (error) {
-      console.error('Failed to persist font scale:', error);
+      if (__DEV__) console.error('Failed to persist font scale:', error);
     }
   };
 
@@ -146,7 +146,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     if (!isGuest) {
       updateViewCount(articleId, {
         onError: error => {
-          console.log('Update View Count Error', error);
+          if (__DEV__) console.log('Update View Count Error', error);
         },
       });
     }
@@ -185,7 +185,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           setFontScale(clampFontScale(parsed));
         }
       } catch (error) {
-        console.error('Failed to load font scale:', error);
+        if (__DEV__) console.error('Failed to load font scale:', error);
       }
     };
 
@@ -251,7 +251,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           refetch();
         },
         onError: (err: any) => {
-          console.log('error', err);
+          if (__DEV__) console.log('error', err);
           Snackbar.show({
             text: 'Something went wrong, try again!',
             duration: Snackbar.LENGTH_LONG,
@@ -276,7 +276,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
     followMutation(articleId.toString(), {
       onSuccess: data => {
-        //console.log('follow success');
+        //if (__DEV__) console.log('follow success');
         if (data && socket) {
           socket.emit('notification', {
             type: 'userFollow',
@@ -292,7 +292,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       },
 
       onError: err => {
-        console.log('Update Follow mutation error', err);
+        if (__DEV__) console.log('Update Follow mutation error', err);
         Snackbar.show({
           text: 'Something went wrong, Try again!',
           duration: Snackbar.LENGTH_SHORT,
@@ -322,7 +322,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           });
         },
         onError: (err: any) => {
-          console.log('error', err);
+          if (__DEV__) console.log('error', err);
           Snackbar.show({
             text: 'Something went wrong, try again!',
             duration: Snackbar.LENGTH_LONG,
@@ -474,7 +474,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
       Tts.addEventListener('tts-finish', speakNextChunk);
       Tts.addEventListener('tts-error', e => {
-        console.log('TTS Error:', e);
+        if (__DEV__) console.log('TTS Error:', e);
         setIsPlaying(false);
         setIsPaused(false);
         setPlayerVisible(false);
@@ -485,7 +485,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       setPlayerVisible(true);
       speakNextChunk();
     } catch (error) {
-      console.log('TTS Error:', error);
+      if (__DEV__) console.log('TTS Error:', error);
       setIsPlaying(false);
       setIsPaused(false);
       setPlayerVisible(false);
@@ -511,7 +511,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         // Re-attach listeners
         Tts.addEventListener('tts-finish', speakNextChunk);
         Tts.addEventListener('tts-error', e => {
-          console.log('TTS Error:', e);
+          if (__DEV__) console.log('TTS Error:', e);
           setIsPlaying(false);
           setIsPaused(false);
           setPlayerVisible(false);
@@ -527,7 +527,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         setIsPaused(true);
       }
     } catch (e) {
-      console.log('TTS Pause/Resume Error:', e);
+      if (__DEV__) console.log('TTS Pause/Resume Error:', e);
     }
   };
 
@@ -542,7 +542,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       setIsPaused(false);
       setPlayerVisible(false);
     } catch (e) {
-      console.log('TTS Stop Error:', e);
+      if (__DEV__) console.log('TTS Stop Error:', e);
     }
   };
 
@@ -570,7 +570,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       Tts.stop().then(() => {
         Tts.addEventListener('tts-finish', speakNextChunk);
         Tts.addEventListener('tts-error', e => {
-          console.log('TTS Error:', e);
+          if (__DEV__) console.log('TTS Error:', e);
           setIsPlaying(false);
           setIsPaused(false);
           setPlayerVisible(false);
@@ -691,7 +691,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             ) {
               updateReadEvent(undefined, {
                 onSuccess: () => {
-                  console.log('Read Event Updated');
+                  if (__DEV__) console.log('Read Event Updated');
                   setReadEventSave(true);
                   Snackbar.show({
                     text: 'Your read status updated.',
@@ -699,7 +699,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   });
                 },
                 onError: err => {
-                  console.log('Update Read Status mutation error', err);
+                  if (__DEV__) console.log('Update Read Status mutation error', err);
                   Snackbar.show({
                     text: 'Failed to update your read status.',
                     duration: Snackbar.LENGTH_SHORT,
@@ -930,7 +930,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   }
                 }
               } catch (error) {
-                console.log('Error sharing:', error);
+                if (__DEV__) console.log('Error sharing:', error);
                 Snackbar.show({
                   text: 'Failed to share article',
                   duration: Snackbar.LENGTH_SHORT,

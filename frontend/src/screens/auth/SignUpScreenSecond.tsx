@@ -61,7 +61,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
             switch (statusCode) {
               case 400:
                 const errorData = err.message;
-                console.log('Error message', errorData);
+                if (__DEV__) console.log('Error message', errorData);
                 Alert.alert('Registration failed', 'Please try again');
                 break;
               case 409: {
@@ -88,7 +88,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
               }
             }
           } else {
-            console.log('General User Registration Error', err);
+            if (__DEV__) console.log('General User Registration Error', err);
             Alert.alert('Registration failed', 'Please try again');
           }
         },
@@ -234,7 +234,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
                callRegisterAPI(result ?? "", contactDetail);
               
               } catch (err) {
-                console.error('Registration failed', err);
+                if (__DEV__) console.error('Registration failed', err);
                 Alert.alert('Error Occured', 'Registration failed');
               }
             },

@@ -159,7 +159,7 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                           },
 
                           onError: err => {
-                            console.log('Update Follow mutation error', err);
+                            if (__DEV__) console.log('Update Follow mutation error', err);
                             Snackbar.show({
                               text: 'Try again!',
                               duration: Snackbar.LENGTH_SHORT,

@@ -50,7 +50,7 @@ class MultiLanguageTTSService {
     const ready = await this.ensureLanguage(lang);
 
     if (!ready) {
-      console.warn(`${lang} voice not installed`);
+      if (__DEV__) console.warn(`${lang} voice not installed`);
       return;
     }
 

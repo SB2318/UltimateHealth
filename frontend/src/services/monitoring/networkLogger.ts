@@ -79,6 +79,6 @@ export const logApiError = (error: any, url?: string, context?: Record<string, a
   if (!error.response || (status >= 500 && status < 600)) {
     captureException(error, safeContext);
   } else if (__DEV__) {
-    console.warn(`[NetworkLogger] Expected client error (Status: ${status}) for ${endpoint}`);
+    if (__DEV__) console.warn(`[NetworkLogger] Expected client error (Status: ${status}) for ${endpoint}`);
   }
 };

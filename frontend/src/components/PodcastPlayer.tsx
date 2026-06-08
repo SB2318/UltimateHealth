@@ -95,7 +95,7 @@ const PodcastPlayer = ({navigation}: any) => {
         try {
           await Tts.setDefaultLanguage(availableVoices[0].language);
         } catch (err) {
-          console.warn(`Failed to set TTS language to ${availableVoices[0].language}, using default.`, err);
+          if (__DEV__) console.warn(`Failed to set TTS language to ${availableVoices[0].language}, using default.`, err);
         }
         await Tts.setDefaultVoice(availableVoices[0].id);
         Tts.setDefaultRate(defaultRate, true);
@@ -106,7 +106,7 @@ const PodcastPlayer = ({navigation}: any) => {
         setisPlaying(false);
       }
     } catch (error) {
-      console.error('Failed to initialize TTS voices', error);
+      if (__DEV__) console.error('Failed to initialize TTS voices', error);
       setisPlaying(false);
     }
   };
@@ -144,7 +144,7 @@ const PodcastPlayer = ({navigation}: any) => {
 
         await initTts();
       } catch (error) {
-        console.error('Failed to initialize TTS', error);
+        if (__DEV__) console.error('Failed to initialize TTS', error);
         if (isMounted) {
           setisPlaying(false);
         }
@@ -170,7 +170,7 @@ const PodcastPlayer = ({navigation}: any) => {
             : null;
 
       if (eventPosMs == null) {
-        console.warn('TTS progress event did not include a position update.');
+        if (__DEV__) console.warn('TTS progress event did not include a position update.');
         return;
       }
 
@@ -233,7 +233,7 @@ const PodcastPlayer = ({navigation}: any) => {
       await Tts.speak(newText);
       setisPlaying(true);
     } catch (error) {
-      console.error('Failed to start TTS playback', error);
+      if (__DEV__) console.error('Failed to start TTS playback', error);
       setisPlaying(false);
     }
   };

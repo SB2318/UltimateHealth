@@ -71,9 +71,9 @@ const PodcastCard = ({
         url: url,
         subject: 'Podcast Sharing',
       });
-      console.log(result);
+      if (__DEV__) console.log(result);
     } catch (error) {
-      console.log('Error sharing:', error);
+      if (__DEV__) console.log('Error sharing:', error);
       Alert.alert('Error', 'Something went wrong while sharing.');
     }
   };

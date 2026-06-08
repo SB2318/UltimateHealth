@@ -41,7 +41,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
 
   const onCheck = (id: string) => {
     // add the playlist id addedPlaylist
-    console.log('on check');
+    if (__DEV__) console.log('on check');
     if (!addedPlaylistIds.includes(id)) {
       setAddedPlaylistIds(prev => [...prev, id]);
     }
@@ -52,7 +52,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
   };
   const onClear = (id: string) => {
     // Add the playlist id to remove playlist id
-    console.log('on clear');
+    if (__DEV__) console.log('on clear');
     if (!removePlaylistIds.includes(id)) {
       setRemovePlaylistIds(prev => [...prev, id]);
     }
@@ -90,7 +90,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
       });
     },
     onError: err => {
-      console.log(err);
+      if (__DEV__) console.log(err);
       Alert.alert(err.message);
       //setInputValue('');
       setSelectedPlaylistId('');
@@ -124,7 +124,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
       dismiss();
     },
     onError: err => {
-      console.log(err);
+      if (__DEV__) console.log(err);
       Alert.alert(err.message);
       //setInputValue('');
       setSelectedPlaylistId('');
@@ -133,7 +133,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
   });
 
   const createPlaylist = () => {
-    console.log('podcast id', podcast_ids);
+    if (__DEV__) console.log('podcast id', podcast_ids);
     if (!inputValue || inputValue === '') {
       Alert.alert('Playlist name cannot be empty');
       return;
@@ -142,7 +142,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
   };
 
   const addToPlaylist = () => {
-    console.log('podcast id', podcast_ids);
+    if (__DEV__) console.log('podcast id', podcast_ids);
     if (!selectedPlaylistId || selectedPlaylistId === '') {
       Alert.alert('No playlist selected yet');
       return;

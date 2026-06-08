@@ -91,7 +91,7 @@ const NotificationScreen = ({navigation}: any) => {
           },
 
           onError: error => {
-            console.log(error);
+            if (__DEV__) console.log(error);
             Snackbar.show({
               text: 'Internal server error, cannot mark the notification as read!',
               duration: Snackbar.LENGTH_SHORT,
@@ -149,7 +149,7 @@ const NotificationScreen = ({navigation}: any) => {
         },
 
         onError: error => {
-          console.log(error);
+          if (__DEV__) console.log(error);
           pendingDeletesRef.current.delete(snapshot.item._id);
 
           if (isMountedRef.current) {
@@ -167,7 +167,7 @@ const NotificationScreen = ({navigation}: any) => {
 
   const handleDeleteAction = useCallback(
     (item: Notification) => {
-      console.log('Notification ID', item?._id);
+      if (__DEV__) console.log('Notification ID', item?._id);
 
       if (!isConnected) {
         Snackbar.show({

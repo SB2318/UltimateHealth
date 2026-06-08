@@ -79,21 +79,21 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
     // socket.emit('load-review-comments', {requestId: route.params.requestId});
 
     socket.on('connect', () => {
-      console.log('connection established');
+      if (__DEV__) console.log('connection established');
     });
 
     socket.on('error', data => {
-      console.log('connection error', data);
+      if (__DEV__) console.log('connection error', data);
     });
 
     socket.on('review-comments', data => {
-      // console.log('comment loaded', data);
+      // if (__DEV__) console.log('comment loaded', data);
       // setComments(data);
     });
 
     // Listen for new comments
     socket.on('new-feedback', data => {
-      console.log('new comment loaded', data);
+      if (__DEV__) console.log('new comment loaded', data);
       setFeedback('');
       // if (data.articleId === route.params.articleId) {
       setComments(prevComments => {
@@ -125,7 +125,7 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
     }
   }, [htmlContent]);
 
-  // console.log('author id', authorId);
+  // if (__DEV__) console.log('author id', authorId);
 
   return (
     <View style={styles.container}>
@@ -214,7 +214,7 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
                 marginBottom: 30,
               }}
               customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; }`}
-              onSizeUpdated={size => console.log(size.height)}
+              onSizeUpdated={size => if (__DEV__) console.log(size.height)}
               files={[
                 {
                   href: 'cssfileaddress',

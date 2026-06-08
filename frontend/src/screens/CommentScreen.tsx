@@ -271,7 +271,7 @@ const CommentScreen = ({
     user_handle: string,
   ) => {
 
-    console.log('Mention clicked:', user_handle);
+    if (__DEV__) console.log('Mention clicked:', user_handle);
     navigation.navigate('UserProfileScreen', {
       author_handle: user_handle,
       userHandle: user_handle,

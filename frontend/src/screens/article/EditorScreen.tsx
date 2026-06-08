@@ -50,9 +50,9 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         <TouchableOpacity
           style={styles.preview_button}
           onPress={() => {
-            console.log('Preview button pressed');
+            if (__DEV__) console.log('Preview button pressed');
             if (article.length > 20) {
-              //console.log('Preview Screen');
+              //if (__DEV__) console.log('Preview Screen');
               dispatch(setSuggestion({suggestion: ''}));
               dispatch(setSuggestionAccepted({selection: false}));
               navigation.navigate('PreviewScreen', {
@@ -111,7 +111,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
           setEditorReady(true);
         }
       } catch (err) {
-        console.error('Failed to load article:', err);
+        if (__DEV__) console.error('Failed to load article:', err);
       }
     };
     */
@@ -152,7 +152,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       const text = await response.text();
       setArticle(text);
     } catch (error) {
-      // console.error('Error fetching URI:', error);
+      // if (__DEV__) console.error('Error fetching URI:', error);
       setArticle(content);
     }
   };
@@ -160,7 +160,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
   // Callback after height change
   function handleHeightChange(_height: number) {
-    // console.log("editor height change:", height);
+    // if (__DEV__) console.log("editor height change:", height);
   }
 
   async function onPressAddImage() {
@@ -188,7 +188,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
       //await RichText.current?.insertImage(str);
     } else {
-      //console.log('No image selected');
+      //if (__DEV__) console.log('No image selected');
     }
   }
 
@@ -200,14 +200,14 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
   //   if (result.assets && result.assets.length > 0) {
   //     const fileUri = result.assets[0].uri;
-  //     console.log('Image URI:', fileUri);
+  //     if (__DEV__) console.log('Image URI:', fileUri);
   //     setvideoData(`${fileUri}`);
   //     // Convert the video URI to a Blob
   //     // await RichText.current?.insertVideo(blobUrl);
   //     // Insert video through local file url
   //     RichText.current?.insertVideo(fileUri);
   //   } else {
-  //     console.log('No video selected');
+  //     if (__DEV__) console.log('No video selected');
   //   }
   // }
   /*
@@ -219,9 +219,9 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
     launchImageLibrary(options, async response => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        if (__DEV__) console.log('User cancelled image picker');
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
+        if (__DEV__) console.log('ImagePicker Error: ', response.error);
       } else if (response.assets) {
         const {uri, fileSize} = response.assets[0];
 
@@ -237,7 +237,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
             // If the image is resized successfully, upload it
           })
           .catch(err => {
-            console.log(err);
+            if (__DEV__) console.log(err);
             Alert.alert('Error', 'Could not resize the image.');
           });
 

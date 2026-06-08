@@ -48,7 +48,7 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
             });
           },
           onError: (error: AxiosError) => {
-            console.log('OTP ERROR', error);
+            if (__DEV__) console.log('OTP ERROR', error);
             setErrorMessages(['Invalid or expired otp']);
             Alert.alert('Invalid or expired otp');
           },

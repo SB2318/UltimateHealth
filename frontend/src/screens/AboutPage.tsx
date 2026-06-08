@@ -35,12 +35,12 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
           'Get fit with Ultimate-Health 🌿\nYour ultimate wellness companion for a healthier lifestyle.\n\nDownload now:\nhttps://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth',
       });
     } catch (error: any) {
-      console.log(error.message);
+      if (__DEV__) console.log(error.message);
     }
   };
 
   const openLink = (url: string) => {
-    Linking.openURL(url).catch(err => console.error('URL error', err));
+    Linking.openURL(url).catch(err => if (__DEV__) console.error('URL error', err));
   };
 
   

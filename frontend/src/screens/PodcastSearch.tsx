@@ -80,7 +80,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
               });
             },
             onError: (err: AxiosError) => {
-              console.log('Update view count err', err);
+              if (__DEV__) console.log('Update view count err', err);
               Snackbar.show({
                 text: 'Something went wrong!',
                 duration: Snackbar.LENGTH_SHORT,
@@ -110,7 +110,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
               });
             },
             onError: (err: AxiosError) => {
-              console.log('Update view count err', err);
+              if (__DEV__) console.log('Update view count err', err);
               Snackbar.show({
                 text: 'Something went wrong!',
                 duration: Snackbar.LENGTH_SHORT,

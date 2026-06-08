@@ -23,7 +23,7 @@ AxiosError
 
           return response.data as PendingRes;
         } catch (err) {
-          console.error('Error fetching podcasts:', err);
+          if (__DEV__) console.error('Error fetching podcasts:', err);
           return null;
         }
       },

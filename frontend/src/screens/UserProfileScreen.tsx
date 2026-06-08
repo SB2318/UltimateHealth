@@ -96,7 +96,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         },
 
         onError: error => {
-          console.log('Update View Count Error', error);
+          if (__DEV__) console.log('Update View Count Error', error);
           Alert.alert('Internal server error, try again!');
         },
       });
@@ -117,7 +117,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('Current authorId:', authorId); // Check if authorId changes
+      if (__DEV__) console.log('Current authorId:', authorId); // Check if authorId changes
       refetch();
     }, [refetch, authorId]), // Ensure authorId is a stable value
   );
@@ -161,7 +161,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
                     });
                   },
                   onError: err => {
-                    console.log(err);
+                    if (__DEV__) console.log(err);
                     Snackbar.show({
                       text: 'Try again!',
                       duration: Snackbar.LENGTH_LONG,
@@ -241,7 +241,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           },
 
           onError: err => {
-            console.log('Update Follow mutation error', err);
+            if (__DEV__) console.log('Update Follow mutation error', err);
             Snackbar.show({
               text: 'Try again!',
               duration: Snackbar.LENGTH_SHORT,

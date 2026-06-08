@@ -59,7 +59,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
   const {data: user} = useGetProfile();
   // const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA'; //token
 
-  //console.log("User Token", user_token);
+  //if (__DEV__) console.log("User Token", user_token);
 
   const {mutate: sendMessageToAI, isPending: messageProcessPending} =
     useSendMessageToGemini();
@@ -154,7 +154,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
         if (!isMountedRef.current) {
           return;
         }
-        console.log('Error', error);
+        if (__DEV__) console.log('Error', error);
         if (error.response) {
           const statusCode = error.response.status;
           switch (statusCode) {

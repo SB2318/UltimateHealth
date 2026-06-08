@@ -296,10 +296,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const handleFilterApply = () => {
     // Update Redux State Variables
     if (selectCategoryList.length > 0) {
-      //   console.log("enter")
+      //   if (__DEV__) console.log("enter")
       dispatch(setSelectedTags({selectedTags: selectCategoryList}));
     } else {
-      //console.log("enter ele", articleCategories);
+      //if (__DEV__) console.log("enter ele", articleCategories);
 
       dispatch(
         setSelectedTags({
@@ -469,7 +469,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   }, [isFetching, refreshing]);
 
   const handleSearch = (textInput: string) => {
-    //console.log('Search Input', textInput);
+    //if (__DEV__) console.log('Search Input', textInput);
     if (textInput === '' || articleData === undefined) {
       dispatch(setSearchedArticles({searchedArticles: []}));
       dispatch(setSearchMode({searchMode: false}));

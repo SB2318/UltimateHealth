@@ -86,7 +86,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
     launchImageLibrary(options, (response: ImagePickerResponse) => {
       if (response.didCancel) {
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
+        if (__DEV__) console.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets) {
         const {uri, fileSize} = response.assets[0];
 
@@ -100,7 +100,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
           .then(resizedImageUri => {
           })
           .catch(err => {
-            console.log(err);
+            if (__DEV__) console.log(err);
              Alert.alert('Error', 'Could not resize the image.');
           });
 

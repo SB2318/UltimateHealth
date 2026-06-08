@@ -17,7 +17,7 @@ AxiosError
         );
         return response.data as PodcastData;
       } catch (err) {
-        console.error('Error fetching podcast:', err);
+        if (__DEV__) console.error('Error fetching podcast:', err);
         return null;
       }
     },

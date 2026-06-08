@@ -31,7 +31,7 @@ export const usePostArticleData = (): UseMutationResult<
     mutationKey: ['create-post-key'],
     mutationFn: async (data: PostReq) => {
       const response = await axios.post(POST_ARTICLE, data);
-      //  console.log(article);
+      //  if (__DEV__) console.log(article);
       return response.data.newArticle as ArticleData;
     },
   });

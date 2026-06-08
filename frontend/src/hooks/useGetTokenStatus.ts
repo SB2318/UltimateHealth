@@ -38,7 +38,7 @@ export const useCheckTokenStatus = () => {
     queryKey: ['token-status'],
     queryFn: async () => {
       const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN as SecureKey);
-      console.log('Checking token status. Token present:', !!token);
+      if (__DEV__) console.log('Checking token status. Token present:', !!token);
       if (!token) {
         return { isValid: false, message: 'No token found' };
       }

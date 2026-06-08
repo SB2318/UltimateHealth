@@ -11,7 +11,7 @@ const categoryFunc = async () => {
 
   return categoryData as Category[];
   }catch(err){
-    console.log("GET CATEGORY ERR", err);
+    if (__DEV__) console.log("GET CATEGORY ERR", err);
     return null;
   }
 };

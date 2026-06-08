@@ -9,8 +9,8 @@ import * as Sentry from '@sentry/react-native';
  */
 export const captureException = (error: unknown, context?: Record<string, any>) => {
   if(__DEV__){
-    console.log('[Monitoring] Exception captured');
-    console.error('Captured Exception (Development):', error);
+    if (__DEV__) console.log('[Monitoring] Exception captured');
+    if (__DEV__) console.error('Captured Exception (Development):', error);
   }
 
   Sentry.captureException(error, scope => {
@@ -33,7 +33,7 @@ export const captureMessage = (
   level: Sentry.SeverityLevel = 'info'
 ) => {
   if(__DEV__){
-    console.log(`Captured Message [${level}]:`, message);
+    if (__DEV__) console.log(`Captured Message [${level}]:`, message);
   }
   Sentry.captureMessage(message, level);
 };

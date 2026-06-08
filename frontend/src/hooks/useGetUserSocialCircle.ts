@@ -29,7 +29,7 @@ export const useGetUserSocials = ({
         url = `${url}&social_user_id=${social_user_id}`;
       }
 
-      console.log('Request Url', url);
+      if (__DEV__) console.log('Request Url', url);
 
       const response = await axios.get(url);
 

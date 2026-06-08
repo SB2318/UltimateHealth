@@ -59,7 +59,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
             }
           } else {
             // Handle network errors
-            console.log('General Update Error', err);
+            if (__DEV__) console.log('General Update Error', err);
             Alert.alert(
               'Logout Failed',
               'Network error. Please check your connection.',

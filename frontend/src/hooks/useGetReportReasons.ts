@@ -12,7 +12,7 @@ const reasonsFunc = async () => {
 
   return categoryData as ReportReason[];
   }catch(err){
-    console.log("GET CATEGORY ERR", err);
+    if (__DEV__) console.log("GET CATEGORY ERR", err);
     return null;
   }
 };

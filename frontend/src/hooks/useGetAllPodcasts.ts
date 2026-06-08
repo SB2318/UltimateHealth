@@ -18,7 +18,7 @@ AxiosError
         const response = await axios.get(`${GET_ALL_PODCASTS}?page=${page}`);
         return response.data as PodcastResponse
       } catch (err) {
-        console.error('Error fetching podcasts:', err);
+        if (__DEV__) console.error('Error fetching podcasts:', err);
         return null;
       }
     },

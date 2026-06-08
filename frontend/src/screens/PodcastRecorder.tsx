@@ -119,13 +119,13 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 
   //   try {
   //     const path: string = await AudioModule.startRecording();
-  //     console.log('File path', path);
+  //     if (__DEV__) console.log('File path', path);
   //     setFilePath(path);
   //     setRecording(true);
   //     //setElapsedMs(0);
   //     startTimer();
   //   } catch (e) {
-  //     console.error('Failed to start recording:', e);
+  //     if (__DEV__) console.error('Failed to start recording:', e);
   //   }
   // };
 
@@ -154,10 +154,10 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
         const exists = await RNFS.exists(filePath);
         if (exists) {
           await RNFS.unlink(filePath);
-          console.log('File deleted:', filePath);
+          if (__DEV__) console.log('File deleted:', filePath);
         }
       } catch (err) {
-        console.warn('Error deleting file:', err);
+        if (__DEV__) console.warn('Error deleting file:', err);
       }
     }
     setFilePath(null);
@@ -173,10 +173,10 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
         const exists = await RNFS.exists(filePath);
         if (exists) {
           await RNFS.unlink(filePath);
-          console.log('File deleted:', filePath);
+          if (__DEV__) console.log('File deleted:', filePath);
         }
       } catch (err) {
-        console.warn('Error deleting file:', err);
+        if (__DEV__) console.warn('Error deleting file:', err);
       }
     }
   }, [filePath]);
@@ -192,7 +192,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 
   // useEffect(() => {
   //   // const stopSub = AudioModule.addListener('recStop', (data:any) => {
-  //   //   console.log('File saved at:', data.filePath);
+  //   //   if (__DEV__) console.log('File saved at:', data.filePath);
   //   //   setFilePath(data.filePath);
   //   //   setRecording(false);
   //   // });
@@ -207,7 +207,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   //       /*
   //       const amplitude = event.amplitude;
   //       // setCurrentAmplitude(amplitude);
-  //       //console.log('event',event);
+  //       //if (__DEV__) console.log('event',event);
   //       const scaled = Math.min(1, amplitude * 6);
   //       if (scaled >= 1) {
   //         setAmplitudes(prev => {
@@ -220,7 +220,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   //         });
   //       }
   //         */
-  //       //console.log('amplitudes', amplitudes);
+  //       //if (__DEV__) console.log('amplitudes', amplitudes);
   //     },
   //   );
 

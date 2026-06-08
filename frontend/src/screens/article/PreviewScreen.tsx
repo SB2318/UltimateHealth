@@ -77,7 +77,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {uploadImage, loading} = useUploadImage();
 
   const {data: user} = useGetProfile();
-  // console.log(selectedGenres);
+  // if (__DEV__) console.log(selectedGenres);
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -183,7 +183,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                       navigation.navigate('TabNavigation');
                     },
                     onError: error => {
-                      console.log('Article post Error', error);
+                      if (__DEV__) console.log('Article post Error', error);
 
                       Alert.alert('Error', 'Failed to upload your post');
                     },
@@ -194,8 +194,8 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
               }
             },
             onError: error => {
-              console.log('Article post Error', error);
-              // console.log(error);
+              if (__DEV__) console.log('Article post Error', error);
+              // if (__DEV__) console.log(error);
 
               Alert.alert('Failed to upload your post');
             },
@@ -243,8 +243,8 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                         navigation.navigate('TabNavigation');
                       },
                       onError: error => {
-                        console.log('Article post Error', error);
-                        // console.log(error);
+                        if (__DEV__) console.log('Article post Error', error);
+                        // if (__DEV__) console.log(error);
 
                         Alert.alert('Failed to upload your post');
                       },
@@ -284,7 +284,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                       },
 
                       onError: error => {
-                        console.log('Article post Error', error);
+                        if (__DEV__) console.log('Article post Error', error);
                         Snackbar.show({
                           text: 'Failed to upload your post',
                           duration: Snackbar.LENGTH_SHORT,
@@ -301,14 +301,14 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
               }
             },
             onError: error => {
-              console.log('Article post Error pb', error.message);
+              if (__DEV__) console.log('Article post Error pb', error.message);
               Alert.alert('Failed to upload your post');
             },
           },
         );
       }
     } catch (err) {
-      console.error('Image processing failed:', err);
+      if (__DEV__) console.error('Image processing failed:', err);
       Alert.alert('Error', 'Could not process the images.');
     }
   };
@@ -347,7 +347,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       );
       return resizedImageUri;
     } catch (err) {
-      console.error('Failed to resize image:', err);
+      if (__DEV__) console.error('Failed to resize image:', err);
       // throw new Error('Image resizing failed');
     }
   };
@@ -403,7 +403,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                     }
                   },
                   onError: error => {
-                    console.log('Article suggestion Error', error);
+                    if (__DEV__) console.log('Article suggestion Error', error);
 
                     Snackbar.show({
                       text: 'Failed to load suggestions, try again!',
@@ -433,7 +433,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
         <AutoHeightWebView
           style={styles.webView}
           customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; }`}
-          onSizeUpdated={size => console.log(size.height)}
+          onSizeUpdated={size => if (__DEV__) console.log(size.height)}
           files={[
             {
               href: 'cssfileaddress',

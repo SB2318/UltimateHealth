@@ -160,7 +160,7 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
             });
           },
           onError: err => {
-            console.log('Update view count err', err);
+            if (__DEV__) console.log('Update view count err', err);
             Snackbar.show({
               text: 'Something went wrong!',
               duration: Snackbar.LENGTH_SHORT,
@@ -249,12 +249,12 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
         <TouchableOpacity
           style={styles.fab}
           onPress={() => {
-            console.log('Add icon clicked');
+            if (__DEV__) console.log('Add icon clicked');
             navigation.navigate('PodcastForm');
           }}>
           <CreateIcon
             callback={() => {
-              console.log('Add icon clicked');
+              if (__DEV__) console.log('Add icon clicked');
               navigation.navigate('PodcastForm');
             }}
           />

@@ -88,7 +88,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   };
 
   const handlePause = async () => {
-    console.log('Pause called');
+    if (__DEV__) console.log('Pause called');
     if (!player) return;
 
     player.pause();
@@ -141,10 +141,10 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         const exists = await RNFS.exists(filePath);
         if (exists) {
           await RNFS.unlink(filePath);
-          console.log('File deleted:', filePath);
+          if (__DEV__) console.log('File deleted:', filePath);
         }
       } catch (err) {
-        console.warn('Error deleting file:', err);
+        if (__DEV__) console.warn('Error deleting file:', err);
       }
     }
   }, [filePath]);
@@ -160,7 +160,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
     try {
       player.remove();
     } catch (e) {
-      console.error('Error stopping playback:', e);
+      if (__DEV__) console.error('Error stopping playback:', e);
     }
   };
 
@@ -198,8 +198,8 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
       let uploadedUrl = await uploadImage(resizedImageUri?.uri as string);
       let audioUrl = await uploadAudio(filePath);
 
-      console.log('audio', audioUrl);
-      console.log('Image', uploadedUrl);
+      if (__DEV__) console.log('audio', audioUrl);
+      if (__DEV__) console.log('Image', uploadedUrl);
 
       if (uploadedUrl && audioUrl) {
 
@@ -230,7 +230,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
                 text: 'Upload failed',
                 duration: Snackbar.LENGTH_SHORT,
               });
-              console.error('Upload error:', error);
+              if (__DEV__) console.error('Upload error:', error);
             },
           },
         );
@@ -238,7 +238,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         Alert.alert('Error', 'Could not upload the podcast. Please try again.');
       }
     } catch (err) {
-      console.error('Image processing failed:', err);
+      if (__DEV__) console.error('Image processing failed:', err);
       Alert.alert('Error', 'Could not process the images.');
       await handleUpload();
     }
@@ -278,7 +278,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
       );
       return resizedImageUri;
     } catch (err) {
-      console.error('Failed to resize image:', err);
+      if (__DEV__) console.error('Failed to resize image:', err);
       // throw new Error('Image resizing failed');
     }
   };

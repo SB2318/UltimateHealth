@@ -209,7 +209,7 @@ const CommunityGuidelinesScreen = (_props: CommunityGuidelinesScreenProps) => {
           'Check out the UltimateHealth Community Guidelines \nLearn how we keep our wellness community safe and respectful.\n\nDownload UltimateHealth:\nhttps://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth',
       });
     } catch (error: any) {
-      console.log(error.message);
+      if (__DEV__) console.log(error.message);
     }
   };
 

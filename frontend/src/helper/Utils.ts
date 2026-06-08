@@ -166,7 +166,7 @@ export const retrieveItem = async (key: string) => {
     return value;
   } catch (e) {
     // error reading value
-    console.log('Error reading value', e);
+    if (__DEV__) console.log('Error reading value', e);
   }
 };
 
@@ -174,9 +174,9 @@ export const retrieveItem = async (key: string) => {
 export const storeItem = async (key: string, value: string) => {
   try {
     await AsyncStorage.setItem(key, value);
-    // console.log(`Value saved for key : ${key}`, value);
+    // if (__DEV__) console.log(`Value saved for key : ${key}`, value);
   } catch (e) {
-    console.log('Async Storage Data error', e);
+    if (__DEV__) console.log('Async Storage Data error', e);
   }
 };
 
@@ -185,7 +185,7 @@ export const removeItem = async (key: string) => {
   try {
     await AsyncStorage.removeItem(key);
   } catch (error) {
-    console.error('Error removing item:', error);
+    if (__DEV__) console.error('Error removing item:', error);
   }
 };
 
@@ -208,9 +208,9 @@ export const removeDownloadedPodcasts = async () => {
 //     await AsyncStorage.clear();
 //     await secureClearAllItems();
 //     //navigation.navigate('LoginScreen');
-//     console.log('All storage cleared successfully.');
+//     if (__DEV__) console.log('All storage cleared successfully.');
 //   } catch (error) {
-//     console.error('Error removing item:', error);
+//     if (__DEV__) console.error('Error removing item:', error);
 //   }
 // };
 
@@ -225,9 +225,9 @@ export const clearStorage = async () => {
     ]);
     await secureClearAllItems();
     //navigation.navigate('LoginScreen');
-    console.log('All user-related storage cleared successfully.');
+    if (__DEV__) console.log('All user-related storage cleared successfully.');
   } catch (error) {
-    console.error('Error clearing user-related storage:', error);
+    if (__DEV__) console.error('Error clearing user-related storage:', error);
   }
 };
 
@@ -411,7 +411,7 @@ export const downloadAudio = async (_podcast: PodcastData) => {
       };
     }
   } catch (err) {
-    console.log(err);
+    if (__DEV__) console.log(err);
     return {
       message: 'Something went wrong, try again after sometime',
       success: false,
@@ -442,10 +442,10 @@ const downloadFile = async (key: string, title: string) => {
   }).promise;
 
   if (result.statusCode === 200) {
-    console.log('Audio downloaded to:', filePath);
+    if (__DEV__) console.log('Audio downloaded to:', filePath);
     return filePath;
   } else {
-    console.error('Download failed:', result.statusCode);
+    if (__DEV__) console.error('Download failed:', result.statusCode);
     return null;
   }
 };
@@ -465,14 +465,14 @@ export const cleanUpDownloads = async () => {
     if (Number.isFinite(age) && age > THIRTY_DAYS_MS) {
       if (item.filePath && (await RNFS.exists(item.filePath))) {
         await RNFS.unlink(item.filePath);
-        console.log('Deleted old file:', item.filePath);
+        if (__DEV__) console.log('Deleted old file:', item.filePath);
       }
     } else {
       freshPodcasts.push(item);
     }
   }
   await writeDownloadedPodcasts(freshPodcasts);
-  console.log('Cleanup completed. Remaining items:', freshPodcasts.length);
+  if (__DEV__) console.log('Cleanup completed. Remaining items:', freshPodcasts.length);
 };
 
 export const deleteFromDownloads = async (_podcast: PodcastData) => {
@@ -488,17 +488,17 @@ export const deleteFromDownloads = async (_podcast: PodcastData) => {
         // unlink
         if (item.filePath && (await RNFS.exists(item.filePath))) {
           await RNFS.unlink(item.filePath);
-          console.log('Deleted old file:', item.filePath);
+          if (__DEV__) console.log('Deleted old file:', item.filePath);
         }
       } else {
         freshPodcasts.push(item);
       }
     }
     await writeDownloadedPodcasts(freshPodcasts);
-    console.log('Cleanup completed. Remaining items:', freshPodcasts.length);
+    if (__DEV__) console.log('Cleanup completed. Remaining items:', freshPodcasts.length);
     return true;
   } catch (err) {
-    console.log('cleaned up error', err);
+    if (__DEV__) console.log('cleaned up error', err);
     return false;
   }
 };
@@ -521,9 +521,9 @@ export const updateOfflinePodcastLikeStatus = async (_podcast: PodcastData) => {
     }
 
     await writeDownloadedPodcasts(freshPodcasts);
-    console.log('Update completed');
+    if (__DEV__) console.log('Update completed');
   } catch (err) {
-    console.log(err);
+    if (__DEV__) console.log(err);
   }
 };
 

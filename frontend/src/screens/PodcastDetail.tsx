@@ -89,7 +89,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const getFormattedSource = (url?: string | null) => {
     if (!url) return null;
     if (!isAllowedUrl(url)) {
-      console.warn('Blocked untrusted media URL:', url);
+      if (__DEV__) console.warn('Blocked untrusted media URL:', url);
       return null;
     }
     return url.startsWith('http') ? url : `${GET_IMAGE}/${url}`;
@@ -437,7 +437,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
                   refetch();
                 },
                 onError: err => {
-                  console.log('Update like count err', err);
+                  if (__DEV__) console.log('Update like count err', err);
                   Snackbar.show({
                     text: 'Something went wrong!',
                     duration: Snackbar.LENGTH_SHORT,

@@ -41,7 +41,7 @@ const ReviewCard = ({
       ? 'red'
       : BUTTON_COLOR;
 
-  //console.log('Image Utils', item?.imageUtils[0]);
+  //if (__DEV__) console.log('Image Utils', item?.imageUtils[0]);
 
   const handleAnimation = () => {
     if (width.value === 0) {

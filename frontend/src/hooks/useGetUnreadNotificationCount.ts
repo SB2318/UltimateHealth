@@ -18,7 +18,7 @@ export const useGetUnreadNotificationCount = (
 
         return response.data.unreadCount as number;
       } catch (err) {
-        console.error('Error fetching articles:', err);
+        if (__DEV__) console.error('Error fetching articles:', err);
         return 0;
       }
     },

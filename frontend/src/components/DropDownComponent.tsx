@@ -25,7 +25,7 @@ const DropDownComponent = ({data}: {data: any[]}) => {
       (specialize: any) =>
         specialize.name.toLowerCase() === specialization.toLocaleLowerCase(),
     );
-    //console.log(isAlreadyExist);
+    //if (__DEV__) console.log(isAlreadyExist);
     if (isAlreadyExist.length > 0) {
       Alert.alert('Entered specialization already present!');
       // dispatch(showAlert({

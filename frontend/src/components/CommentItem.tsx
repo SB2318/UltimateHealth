@@ -49,7 +49,7 @@ export default function CommentItem({
     transform: [{translateY: yValue.value}],
   }));
 
-  //console.log("Item", item);
+  //if (__DEV__) console.log("Item", item);
 
   const handleAnimation = () => {
     if (!isMenuVisible) {

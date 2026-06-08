@@ -57,9 +57,9 @@ export default function OfflinePodcastDetail({
   const {mutate: likePodcast, isPending: likePodcastPending} = useLikePodcast();
 
   useEffect(() => {
-    //console.log("File path", `${filePath}`);
-    console.log('Player time', player.currentTime);
-    console.log('Player status', player.currentStatus.currentTime);
+    //if (__DEV__) console.log("File path", `${filePath}`);
+    if (__DEV__) console.log('Player time', player.currentTime);
+    if (__DEV__) console.log('Player status', player.currentStatus.currentTime);
   }, [player.currentStatus.currentTime, player.currentTime]);
 
   useEffect(() => {
@@ -96,9 +96,9 @@ export default function OfflinePodcastDetail({
         url: url,
         subject: 'Podcast Sharing',
       });
-      //console.log(result);
+      //if (__DEV__) console.log(result);
     } catch (error) {
-      console.log('Error sharing:', error);
+      if (__DEV__) console.log('Error sharing:', error);
       Alert.alert('Error', 'Something went wrong while sharing.');
       // dispatch(
       //   showAlert({
@@ -218,7 +218,7 @@ export default function OfflinePodcastDetail({
                   }
                 },
                 onError: err => {
-                  console.log('Update like count err', err);
+                  if (__DEV__) console.log('Update like count err', err);
                   Snackbar.show({
                     text: 'Something went wrong!',
                     duration: Snackbar.LENGTH_SHORT,

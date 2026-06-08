@@ -23,7 +23,7 @@ export const useGetAllNotifications = (
         );
         return response.data as NotificationRes;
       } catch (err) {
-        console.error('Error fetching articles:', err);
+        if (__DEV__) console.error('Error fetching articles:', err);
         return null;
       }
     },

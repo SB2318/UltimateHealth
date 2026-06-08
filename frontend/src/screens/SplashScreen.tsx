@@ -65,7 +65,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
         });
       }
     } catch (error) {
-      console.error('Error retrieving user data from storage', error);
+      if (__DEV__) console.error('Error retrieving user data from storage', error);
       await clearStorage();
       // navigation.navigate('LoginScreen');
       navigation.reset({
@@ -76,7 +76,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
   },[dispatch, navigation, tokenRes]);
 
    useEffect(() => {
-    console.log('Token status:', tokenRes);
+    if (__DEV__) console.log('Token status:', tokenRes);
     if (tokenRes) {
       checkLoginStatus();
     }

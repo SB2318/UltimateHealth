@@ -126,9 +126,9 @@ const ArticleDescriptionScreen = ({
 
     launchImageLibrary(options, (response: ImagePickerResponse) => {
       if (response.didCancel) {
-        //console.log('User cancelled image picker');
+        //if (__DEV__) console.log('User cancelled image picker');
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
+        if (__DEV__) console.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets) {
         const {uri, fileSize} = response.assets[0];
 
@@ -145,7 +145,7 @@ const ArticleDescriptionScreen = ({
               // If the image is resized successfully, upload it
             })
             .catch(err => {
-              console.log(err);
+              if (__DEV__) console.log(err);
               Alert.alert('Error', 'Could not resize the image.');
             });
         }
