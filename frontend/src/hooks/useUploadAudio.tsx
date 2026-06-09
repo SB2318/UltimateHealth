@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Alert } from 'react-native';
 import { getMimeTypes } from '../helper/Utils';
 import { UPLOAD_STORAGE } from '../helper/APIUtils';
+import logger from '../helper/logger';
 import { fetchWithTimeout } from '../helper/ApiTimeout';
 
 
@@ -38,7 +39,7 @@ const useUploadAudio = () => {
         type
       } as any);
 
-      if (__DEV__) console.log(`Uploading audio: ${filename} (${type})`);
+      logger.log(`Uploading audio: ${filename} (${type})`);
 
       const response = await fetchWithTimeout(UPLOAD_STORAGE, {
         method: 'POST',
@@ -47,17 +48,17 @@ const useUploadAudio = () => {
 
       if (!response.ok) {
         const errorBody = await response.text();
-        if (__DEV__) console.log('Audio upload failed with status', response.status, errorBody);
+        logger.log('Audio upload failed with status', response.status, errorBody);
         throw new Error('Audio upload failed');
       }
 
       const data = await response.json();
-      if (__DEV__) console.log('Audio upload response:', data);
+      logger.log('Audio upload response:', data);
       setError(false);
       return data.key as string;
 
     } catch (err) {
-      if (__DEV__) console.log('Audio upload failed', err);
+      logger.log('Audio upload failed', err);
       Alert.alert('Upload failed', 'Unable to upload audio. Please check your connection.');
     //  dispatch(showAlert({
     //   title: "Upload falied",

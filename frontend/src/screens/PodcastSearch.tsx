@@ -14,6 +14,7 @@ import {PRIMARY_COLOR} from '../helper/Theme';
 import {XStack, YStack, Input, Separator, Text, useTheme} from 'tamagui';
 import {Feather} from '@expo/vector-icons';
 import {useUpdatePodcastViewcount} from '../hooks/useUpdatePodcastViewcount';
+import logger from '../helper/logger';
 import {useGetSearchPodcasts} from '../hooks/useGetSearchPodcasts';
 
 const SKELETON_COUNT = 3;
@@ -80,7 +81,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
               });
             },
             onError: (err: AxiosError) => {
-              if (__DEV__) console.log('Update view count err', err);
+              logger.log('Update view count err', err);
               Snackbar.show({
                 text: 'Something went wrong!',
                 duration: Snackbar.LENGTH_SHORT,
@@ -110,7 +111,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
               });
             },
             onError: (err: AxiosError) => {
-              if (__DEV__) console.log('Update view count err', err);
+              logger.log('Update view count err', err);
               Snackbar.show({
                 text: 'Something went wrong!',
                 duration: Snackbar.LENGTH_SHORT,

@@ -19,6 +19,7 @@ import NoInternet from './NoInternet';
 import {useGetPlaylists} from '../hooks/useGetPlaylists';
 import {useUpdatePodcastPlaylist} from '../hooks/useUpdatePodcastPlaylist';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import logger from '../helper/logger';
 import LoadingSpinner from './LoadingSpinner';
 
 interface Props {
@@ -41,7 +42,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
 
   const onCheck = (id: string) => {
     // add the playlist id addedPlaylist
-    if (__DEV__) console.log('on check');
+    logger.log('on check');
     if (!addedPlaylistIds.includes(id)) {
       setAddedPlaylistIds(prev => [...prev, id]);
     }
@@ -52,7 +53,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
   };
   const onClear = (id: string) => {
     // Add the playlist id to remove playlist id
-    if (__DEV__) console.log('on clear');
+    logger.log('on clear');
     if (!removePlaylistIds.includes(id)) {
       setRemovePlaylistIds(prev => [...prev, id]);
     }
@@ -90,7 +91,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
       });
     },
     onError: err => {
-      if (__DEV__) console.log(err);
+      logger.log(err);
       Alert.alert(err.message);
       //setInputValue('');
       setSelectedPlaylistId('');
@@ -124,7 +125,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
       dismiss();
     },
     onError: err => {
-      if (__DEV__) console.log(err);
+      logger.log(err);
       Alert.alert(err.message);
       //setInputValue('');
       setSelectedPlaylistId('');
@@ -133,7 +134,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
   });
 
   const createPlaylist = () => {
-    if (__DEV__) console.log('podcast id', podcast_ids);
+    logger.log('podcast id', podcast_ids);
     if (!inputValue || inputValue === '') {
       Alert.alert('Playlist name cannot be empty');
       return;
@@ -142,7 +143,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
   };
 
   const addToPlaylist = () => {
-    if (__DEV__) console.log('podcast id', podcast_ids);
+    logger.log('podcast id', podcast_ids);
     if (!selectedPlaylistId || selectedPlaylistId === '') {
       Alert.alert('No playlist selected yet');
       return;

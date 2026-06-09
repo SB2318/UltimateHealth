@@ -14,6 +14,7 @@ import {BUTTON_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import {handleExternalClick, StatusEnum} from '../helper/Utils';
 //import io from 'socket.io-client';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import logger from '../helper/logger';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 
 
@@ -25,7 +26,7 @@ const ImprovementCard = ({item, onNavigate}: ImprovementCardProps) => {
       ? 'red'
       : BUTTON_COLOR;
 
- // if (__DEV__) console.log('ImprovementCard item:', item);
+ // logger.log('ImprovementCard item:', item);
 
   const extractBody = (html: string) => {
   if (!html) return '<p>No reason provided.</p>';
@@ -72,7 +73,7 @@ const ImprovementCard = ({item, onNavigate}: ImprovementCardProps) => {
                 marginTop: 35,
               }}
               customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; color: #121a26; }`}
-              onSizeUpdated={size => { if (__DEV__) console.log(size.height); }}
+              onSizeUpdated={size => { logger.log(size.height); }}
               files={[
                 {
                   href: 'cssfileaddress',

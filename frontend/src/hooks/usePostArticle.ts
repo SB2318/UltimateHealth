@@ -1,6 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {ArticleData, Category} from '../type';
 import axios, {AxiosError} from 'axios';
+import logger from '../helper/logger';
 import {POST_ARTICLE} from '../helper/APIUtils';
 
 type PostReq = {
@@ -31,7 +32,7 @@ export const usePostArticleData = (): UseMutationResult<
     mutationKey: ['create-post-key'],
     mutationFn: async (data: PostReq) => {
       const response = await axios.post(POST_ARTICLE, data);
-      //  if (__DEV__) console.log(article);
+      //  logger.log(article);
       return response.data.newArticle as ArticleData;
     },
   });

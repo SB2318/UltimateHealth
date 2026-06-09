@@ -35,6 +35,7 @@ import {useUpdateProfileImage} from '../hooks/useUpdateProfileImage';
 import {useUpdateUserContactDetail} from '../hooks/useUpdateUserContactDetail';
 import {useUpdateUserGeneralDetails} from '../hooks/useUpdateUserGeneralDetails';
 import {useUpdateUserProfDetails} from '../hooks/useUpdateUserProfDetails';
+import logger from '../helper/logger';
 import LoadingSpinner from '../components/LoadingSpinner';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 let validator = require('email-validator');
@@ -93,7 +94,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
 
   useEffect(() => {
     if (user) {
-      //if (__DEV__) console.log(user);
+      //logger.log(user);
       setUserProfileImage(
         user.Profile_image ?
         user.Profile_image.startsWith("http") ? user.Profile_image :
@@ -224,7 +225,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
             }
           } else {
             // Handle network errors
-            if (__DEV__) console.log('General Update Error', err);
+            logger.log('General Update Error', err);
             Alert.alert(
               'Update Failed',
               'Network error. Please check your connection.',
@@ -247,7 +248,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
       Alert.alert('Validation Error', errorMessage);
       return;
     }
-    //if (__DEV__) console.log('donee');
+    //logger.log('donee');
     //userConatctDetailsMutation.mutate();
 
     updateContactDetails(
@@ -306,7 +307,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
             }
           } else {
             // Handle network errors
-            if (__DEV__) console.log('General Update Error', err);
+            logger.log('General Update Error', err);
             Alert.alert(
               'Update Failed',
               'Network error. Please check your connection.',
@@ -329,7 +330,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
       Alert.alert('Validation Error', errorMessage);
       return;
     }
-    //if (__DEV__) console.log('donee');
+    //logger.log('donee');
 
     updateProfessionalDetails(
       {
@@ -378,7 +379,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
             }
           } else {
             // Handle network errors
-            if (__DEV__) console.log('General Update Error', err);
+            logger.log('General Update Error', err);
             Alert.alert(
               'Update Failed',
               'Network error. Please check your connection.',
@@ -483,7 +484,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
                 );
             }
           } else {
-            // if (__DEV__) console.log('Password Update Error', err);
+            // logger.log('Password Update Error', err);
             Alert.alert(
               'Password Update Failed',
               'Network error. Please check your connection.',
@@ -501,9 +502,9 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
 
     launchImageLibrary(options, async (response: ImagePickerResponse) => {
       if (response.didCancel) {
-        //if (__DEV__) console.log('User cancelled image picker');
+        //logger.log('User cancelled image picker');
       } else if (response.errorMessage) {
-        if (__DEV__) console.log('ImagePicker Error: ', response.errorMessage);
+        logger.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets) {
         const {uri, fileSize} = response.assets[0];
 
@@ -626,7 +627,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
                                     'A network error occurred. Please check your internet connection and try again.',
                                   );
                                 } else {
-                                  if (__DEV__) console.log('General Update Error:', err);
+                                  logger.log('General Update Error:', err);
                                   Alert.alert(
                                     'Update Failed',
                                     'Something went wrong. Please try again.',
@@ -643,7 +644,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
                           return;
                         }
                       } catch (err: any) {
-                        if (__DEV__) console.error('Upload failed');
+                        logger.error('Upload failed');
                         Alert.alert('Error', 'Upload failed');
                       }
                     },
@@ -653,7 +654,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
               );
             })
             .catch(err => {
-              //if (__DEV__) console.log(err);
+              //logger.log(err);
               Alert.alert('Error', 'Could not resize the image.');
             });
         }

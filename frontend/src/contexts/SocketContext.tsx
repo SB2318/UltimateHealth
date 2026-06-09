@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useRef, useState,
 
 import { useSelector } from 'react-redux';
 import { Socket } from 'socket.io-client';
+import logger from '../helper/logger';
 import { initializeSocket, disconnectSocket } from '../helper/socket';
 
 
@@ -32,7 +33,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
     useEffect(() => {
         // Only initialize if we have a valid token
         if (!user_token) {
-            if (__DEV__) console.log('Socket Context: No valid token present, skipping connection');
+            logger.log('Socket Context: No valid token present, skipping connection');
             // Authentication removed: ensure we tear down the singleton.
             disconnectSocket();
             setSocket(null);
@@ -49,7 +50,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
         // Connection listeners
         const onConnect = () => {
             setIsConnected(true);
-            if (__DEV__) console.log('Socket Context: Connected');
+            logger.log('Socket Context: Connected');
             
             // Auto-join user room for notifications if logged in
             if (user_id) {
@@ -59,7 +60,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
 
         const onDisconnect = () => {
             setIsConnected(false);
-            if (__DEV__) console.log('Socket Context: Disconnected');
+            logger.log('Socket Context: Disconnected');
         };
 
         socketInstance.on('connect', onConnect);

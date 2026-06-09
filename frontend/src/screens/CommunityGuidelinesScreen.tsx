@@ -8,6 +8,7 @@ import { ProfessionalColors, Typography, Spacing } from '../styles/GlassStyles';
 import { GlassContainer } from '../components/GlassContainer';
 import { useBackToTop } from '../components/BackToTopScrollView';
 import { BackToTopButton } from '../components/BackToTopButton';
+import logger from '../helper/logger';
 import type { CommunityGuidelinesScreenProps } from '../type';
 
 interface Section {
@@ -209,7 +210,7 @@ const CommunityGuidelinesScreen = (_props: CommunityGuidelinesScreenProps) => {
           'Check out the UltimateHealth Community Guidelines \nLearn how we keep our wellness community safe and respectful.\n\nDownload UltimateHealth:\nhttps://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth',
       });
     } catch (error: any) {
-      if (__DEV__) console.log(error.message);
+      logger.log(error.message);
     }
   };
 

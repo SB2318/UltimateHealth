@@ -1,6 +1,7 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios, {AxiosError} from 'axios';
 import {ARTICLE_TAGS_API, PROD_URL} from '../helper/APIUtils';
+import logger from '../helper/logger';
 import {Category} from '../type';
 
 const categoryFunc = async () => {
@@ -11,7 +12,7 @@ const categoryFunc = async () => {
 
   return categoryData as Category[];
   }catch(err){
-    if (__DEV__) console.log("GET CATEGORY ERR", err);
+    logger.log("GET CATEGORY ERR", err);
     return null;
   }
 };

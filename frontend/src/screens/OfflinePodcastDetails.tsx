@@ -29,6 +29,7 @@ import Icon from '@expo/vector-icons/MaterialIcons';
 import {useSocket} from '../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import {useAudioPlayer} from 'expo-audio';
+import logger from '../helper/logger';
 import {useLikePodcast} from '../hooks/useLikePodcast';
 
 export default function OfflinePodcastDetail({
@@ -57,9 +58,9 @@ export default function OfflinePodcastDetail({
   const {mutate: likePodcast, isPending: likePodcastPending} = useLikePodcast();
 
   useEffect(() => {
-    //if (__DEV__) console.log("File path", `${filePath}`);
-    if (__DEV__) console.log('Player time', player.currentTime);
-    if (__DEV__) console.log('Player status', player.currentStatus.currentTime);
+    //logger.log("File path", `${filePath}`);
+    logger.log('Player time', player.currentTime);
+    logger.log('Player status', player.currentStatus.currentTime);
   }, [player.currentStatus.currentTime, player.currentTime]);
 
   useEffect(() => {
@@ -96,9 +97,9 @@ export default function OfflinePodcastDetail({
         url: url,
         subject: 'Podcast Sharing',
       });
-      //if (__DEV__) console.log(result);
+      //logger.log(result);
     } catch (error) {
-      if (__DEV__) console.log('Error sharing:', error);
+      logger.log('Error sharing:', error);
       Alert.alert('Error', 'Something went wrong while sharing.');
       // dispatch(
       //   showAlert({
@@ -218,7 +219,7 @@ export default function OfflinePodcastDetail({
                   }
                 },
                 onError: err => {
-                  if (__DEV__) console.log('Update like count err', err);
+                  logger.log('Update like count err', err);
                   Snackbar.show({
                     text: 'Something went wrong!',
                     duration: Snackbar.LENGTH_SHORT,

@@ -33,6 +33,7 @@ import {
   setUserToken,
 } from '../../store/UserSlice';
 
+import logger from '../../helper/logger';
 import { AuthData, LoginScreenProp } from '../../type';
 
 const LoginScreen = ({navigation, route}: LoginScreenProp) => {
@@ -74,14 +75,14 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
 
     if (enabled) {
       if (__DEV__) {
-        if (__DEV__) console.log('Authorization status:', authStatus);
+        logger.log('Authorization status:', authStatus);
       }
     }
   }
 
   useEffect(() => {
     if (__DEV__) {
-      if (__DEV__) console.log('Email modal visibility state', emailInputVisible);
+      logger.log('Email modal visibility state', emailInputVisible);
     }
   }, [emailInputVisible]);
 
@@ -91,19 +92,19 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
       const fcmToken = await messaging().getToken();
       if (fcmToken) {
         if (__DEV__) {
-          if (__DEV__) console.log('FCM Token:', fcmToken);
+          logger.log('FCM Token:', fcmToken);
         }
         setFcmToken(fcmToken);
         return fcmToken;
       } else {
         if (__DEV__) {
-          if (__DEV__) console.log('Failed to get FCM Token');
+          logger.log('Failed to get FCM Token');
         }
         return null;
       }
     } catch (error) {
       if (__DEV__) {
-        if (__DEV__) console.log('Error getting FCM Token:', error);
+        logger.log('Error getting FCM Token:', error);
       }
       // Return a placeholder token in debug mode to allow login to proceed
       return __DEV__ ? 'debug-mode-token' : null;
@@ -115,13 +116,13 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
       setPasswordMessage(false);
       setEmailMessage(false);
       if (__DEV__) {
-        if (__DEV__) console.log('Login attempt in progress');
+        logger.log('Login attempt in progress');
       }
 
       const fcmToken = await getFCMToken();
 
       if (__DEV__) {
-        if (__DEV__) console.log('Attempting to retrieve FCM Token');
+        logger.log('Attempting to retrieve FCM Token');
       }
 
       login(
@@ -174,14 +175,14 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               }
             } catch (e) {
               if (__DEV__) {
-                if (__DEV__) console.log('Async Storage ERROR', e);
+                logger.log('Async Storage ERROR', e);
               }
             }
           },
 
           onError: (error: AxiosError) => {
             if (__DEV__) {
-              if (__DEV__) console.log('Error', error);
+              logger.log('Error', error);
             }
             setPassword('');
             setEmail('');
@@ -244,7 +245,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   };
 
   const handleEmail = (e: any) => {
-    //if (__DEV__) console.log("Event",e );
+    //logger.log("Event",e );
     //let email = e.nativeEvent.text;
     setEmail(e);
     setEmailVerify(false);
@@ -435,7 +436,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               alignSelf="center"
               onPress={() => {
                 if (__DEV__) {
-                  if (__DEV__) console.log('Login button pressed!');
+                  logger.log('Login button pressed!');
                 }
                 validateAndSubmit();
               }}
@@ -522,7 +523,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                   },
                   onError: (error: AxiosError) => {
                     if (__DEV__) {
-                      if (__DEV__) console.log('Email Verification error', error);
+                      logger.log('Email Verification error', error);
                     }
 
                     if (error.response) {
@@ -555,7 +556,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       }
                     } else {
                       if (__DEV__) {
-                        if (__DEV__) console.log('Email Verification error', error);
+                        logger.log('Email Verification error', error);
                       }
                     }
                   },

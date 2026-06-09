@@ -29,6 +29,7 @@ import {SECURE_KEYS, secureRetrieveItem} from '../helper/SecureStorageUtils';
 import {setUserToken, setGuestMode} from '../store/UserSlice';
 import {RootState} from '../store/ReduxStore';
 import {setupAxiosInterceptor} from '../helper/setupAxiosInterceptor';
+import logger from '../helper/logger';
 import {initMonitoring} from '../services/monitoring/sentry';
 
 export default function AppContent() {
@@ -90,7 +91,7 @@ export default function AppContent() {
       // FCM message content (including user-targeted data fields) to
       // production log aggregators or crash reporters.
       if (__DEV__) {
-        if (__DEV__) console.log(
+        logger.log(
           'Foreground notification received from message:',
           remoteMessage,
         );
@@ -99,8 +100,8 @@ export default function AppContent() {
 
     const unsubscribe1 = addEventListener(state => {
       if (__DEV__) {
-        if (__DEV__) console.log('Connection type', state.type);
-        if (__DEV__) console.log('Is connected?', state.isConnected);
+        logger.log('Connection type', state.type);
+        logger.log('Is connected?', state.isConnected);
       }
       /** Dispatch use a reducer to update the value in store */
       dispatch(setConnected(state.isConnected));
@@ -108,7 +109,7 @@ export default function AppContent() {
 
     const onOpenApp = messaging().onNotificationOpenedApp(remoteMessage => {
       if (__DEV__) {
-        if (__DEV__) console.log('Notification caused app to open:', remoteMessage);
+        logger.log('Notification caused app to open:', remoteMessage);
       }
       // const data = remoteMessage.data;
       // handleNotification(data);

@@ -1,4 +1,5 @@
 // ─────────────────────────────────────────────────────────────
+import logger from '../helper/logger';
 // SummaryService.ts
 // Calls Google Gemini API (FREE) to auto-generate article summaries
 // Free tier: 1500 requests/day, no credit card needed
@@ -27,7 +28,7 @@ export async function generateArticleSummary(
 
   // Safety check — don't call API if key is missing
   if (!GEMINI_API_KEY || GEMINI_API_KEY === 'AIza-YOUR-KEY-HERE') {
-    if (__DEV__) console.warn('[SummaryService] No Gemini API key set. Add EXPO_PUBLIC_GEMINI_API_KEY to .env.local');
+    logger.warn('[SummaryService] No Gemini API key set. Add EXPO_PUBLIC_GEMINI_API_KEY to .env.local');
     return null;
   }
 
@@ -73,7 +74,7 @@ ${trimmedContent}`;
     // Handle non-OK responses
     if (!response.ok) {
       const errorText = await response.text();
-      if (__DEV__) console.error('[SummaryService] Gemini API error:', response.status, errorText);
+      logger.error('[SummaryService] Gemini API error:', response.status, errorText);
       return null;
     }
 
@@ -84,7 +85,7 @@ ${trimmedContent}`;
       data?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
 
     if (!rawText) {
-      if (__DEV__) console.error('[SummaryService] Empty response from Gemini');
+      logger.error('[SummaryService] Empty response from Gemini');
       return null;
     }
 
@@ -99,7 +100,7 @@ ${trimmedContent}`;
     return parsed;
 
   } catch (err) {
-    if (__DEV__) console.error('[SummaryService] Failed to generate summary:', err);
+    logger.error('[SummaryService] Failed to generate summary:', err);
     return null;
   }
 }

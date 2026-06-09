@@ -15,6 +15,7 @@ import {Button, Circle, Theme, XStack, YStack, Text, useTheme} from 'tamagui';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import AudioWaveform from '../components/AudioWaveform';
 import {useUploadPodcast} from '../hooks/useUploadPodcast';
+import logger from '../helper/logger';
 import Loader from '../components/Loader';
 
 const PLAYBACK_SPEEDS = [1, 1.25, 1.5, 2];
@@ -88,7 +89,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   };
 
   const handlePause = async () => {
-    if (__DEV__) console.log('Pause called');
+    logger.log('Pause called');
     if (!player) return;
 
     player.pause();
@@ -141,10 +142,10 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         const exists = await RNFS.exists(filePath);
         if (exists) {
           await RNFS.unlink(filePath);
-          if (__DEV__) console.log('File deleted:', filePath);
+          logger.log('File deleted:', filePath);
         }
       } catch (err) {
-        if (__DEV__) console.warn('Error deleting file:', err);
+        logger.warn('Error deleting file:', err);
       }
     }
   }, [filePath]);
@@ -160,7 +161,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
     try {
       player.remove();
     } catch (e) {
-      if (__DEV__) console.error('Error stopping playback:', e);
+      logger.error('Error stopping playback:', e);
     }
   };
 
@@ -198,8 +199,8 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
       let uploadedUrl = await uploadImage(resizedImageUri?.uri as string);
       let audioUrl = await uploadAudio(filePath);
 
-      if (__DEV__) console.log('audio', audioUrl);
-      if (__DEV__) console.log('Image', uploadedUrl);
+      logger.log('audio', audioUrl);
+      logger.log('Image', uploadedUrl);
 
       if (uploadedUrl && audioUrl) {
 
@@ -230,7 +231,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
                 text: 'Upload failed',
                 duration: Snackbar.LENGTH_SHORT,
               });
-              if (__DEV__) console.error('Upload error:', error);
+              logger.error('Upload error:', error);
             },
           },
         );
@@ -238,7 +239,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         Alert.alert('Error', 'Could not upload the podcast. Please try again.');
       }
     } catch (err) {
-      if (__DEV__) console.error('Image processing failed:', err);
+      logger.error('Image processing failed:', err);
       Alert.alert('Error', 'Could not process the images.');
       await handleUpload();
     }
@@ -278,7 +279,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
       );
       return resizedImageUri;
     } catch (err) {
-      if (__DEV__) console.error('Failed to resize image:', err);
+      logger.error('Failed to resize image:', err);
       // throw new Error('Image resizing failed');
     }
   };

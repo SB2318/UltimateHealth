@@ -13,6 +13,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useGetAllNotifications} from '../hooks/useGetAllNotifications';
 import {useMarkNotificationAsRead} from '../hooks/useMarkNoticationAsRead';
 import {useDeleteNotification} from '../hooks/useDeleteNotification';
+import logger from '../helper/logger';
 import {NoNotificationState} from '../components/EmptyStates';
 
 type PendingDelete = {
@@ -91,7 +92,7 @@ const NotificationScreen = ({navigation}: any) => {
           },
 
           onError: error => {
-            if (__DEV__) console.log(error);
+            logger.log(error);
             Snackbar.show({
               text: 'Internal server error, cannot mark the notification as read!',
               duration: Snackbar.LENGTH_SHORT,
@@ -149,7 +150,7 @@ const NotificationScreen = ({navigation}: any) => {
         },
 
         onError: error => {
-          if (__DEV__) console.log(error);
+          logger.log(error);
           pendingDeletesRef.current.delete(snapshot.item._id);
 
           if (isMountedRef.current) {
@@ -167,7 +168,7 @@ const NotificationScreen = ({navigation}: any) => {
 
   const handleDeleteAction = useCallback(
     (item: Notification) => {
-      if (__DEV__) console.log('Notification ID', item?._id);
+      logger.log('Notification ID', item?._id);
 
       if (!isConnected) {
         Snackbar.show({

@@ -11,6 +11,7 @@ import {GET_STORAGE_DATA} from '../helper/APIUtils';
 import {GlassStyles, ProfessionalColors, BorderRadius} from '../styles/GlassStyles';
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import logger from '../helper/logger';
 import { PODCAST_CARD } from '@/constants/podcastCard';
 
 interface PodcastProps {
@@ -71,9 +72,9 @@ const PodcastCard = ({
         url: url,
         subject: 'Podcast Sharing',
       });
-      if (__DEV__) console.log(result);
+      logger.log(result);
     } catch (error) {
-      if (__DEV__) console.log('Error sharing:', error);
+      logger.log('Error sharing:', error);
       Alert.alert('Error', 'Something went wrong while sharing.');
     }
   };

@@ -39,6 +39,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {wp} from '../helper/Metric';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
+import logger from '../helper/logger';
 import { useGetSinglePodcastDetails } from '../hooks/useGetSinglePodcastDetails';
 
 const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
@@ -173,11 +174,11 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
 
   useEffect(() => {
     if (!socket) return;
-    //if (__DEV__) console.log('Fetching comments for articleId:', route.params.articleId);
+    //logger.log('Fetching comments for articleId:', route.params.articleId);
     socket.emit('fetch-comments', {podcastId: route.params.podcastId});
 
     socket.on('connect', () => {
-      if (__DEV__) console.log('connection established');
+      logger.log('connection established');
     });
 
     socket.on('comment-processing', (data: boolean) => {
@@ -189,11 +190,11 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
     });
 
     socket.on('error', data => {
-      if (__DEV__) console.log('connection error', data);
+      logger.log('connection error', data);
     });
 
     socket.on('fetch-comments', data => {
-      if (__DEV__) console.log('comment loaded');
+      logger.log('comment loaded');
       if (data.podcastId === route.params.podcastId) {
         setComments(data.comments);
       }
@@ -201,7 +202,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
 
     // Listen for new comments
     socket.on('comment', data => {
-      //if (__DEV__) console.log('new comment loaded', data);
+      //logger.log('new comment loaded', data);
       if (data.podcastId === route.params.podcastId) {
         setComments(prevComments => {
           const newComments = [data.comment, ...prevComments];
@@ -252,7 +253,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
         prevComments.filter(comment => comment._id !== data.commentId),
       );
 
-      //if (__DEV__) console.log('Comments Length', comments.length);
+      //logger.log('Comments Length', comments.length);
     });
 
     return () => {
@@ -280,7 +281,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
       [
         {
           text: 'Cancel',
-          onPress: () => if (__DEV__) console.log('Cancel Pressed'),
+          onPress: () => logger.log('Cancel Pressed'),
           style: 'cancel',
         },
         {
@@ -324,10 +325,10 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
 
     if (editMode) {
       if (editCommentId) {
-        if (__DEV__) console.log('Edit Comment Id', editCommentId);
-        if (__DEV__) console.log('Edit Comment ', newComment);
-        if (__DEV__) console.log('Podcast Id', route.params.podcastId);
-        if (__DEV__) console.log('User Id', user_id);
+        logger.log('Edit Comment Id', editCommentId);
+        logger.log('Edit Comment ', newComment);
+        logger.log('Podcast Id', route.params.podcastId);
+        logger.log('User Id', user_id);
 
         socket.emit('edit-comment', {
           commentId: editCommentId,
@@ -356,7 +357,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
         mentionedUsers: mentions,
       };
 
-     // if (__DEV__) console.log('Comment emitting', newCommentObj);
+     // logger.log('Comment emitting', newCommentObj);
       // Emit the new comment to the backend via socket
       socket.emit('comment', newCommentObj);
 

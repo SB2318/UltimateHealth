@@ -5,6 +5,7 @@ import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../helper/SecureStor
 import { TokenStatus } from '@/src/type';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
+import logger from '../helper/logger';
 import { useSelector } from 'react-redux';
 
  const checkTokenStatusApi = async (
@@ -38,7 +39,7 @@ export const useCheckTokenStatus = () => {
     queryKey: ['token-status'],
     queryFn: async () => {
       const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN as SecureKey);
-      if (__DEV__) console.log('Checking token status. Token present:', !!token);
+      logger.log('Checking token status. Token present:', !!token);
       if (!token) {
         return { isValid: false, message: 'No token found' };
       }

@@ -13,6 +13,7 @@ import ArticleFloatingMenu from './AnimatedMenu';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {Comment} from '../type';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
+import logger from '../helper/logger';
 import LoadingSpinner from './LoadingSpinner';
 
 export default function CommentItem({
@@ -49,7 +50,7 @@ export default function CommentItem({
     transform: [{translateY: yValue.value}],
   }));
 
-  //if (__DEV__) console.log("Item", item);
+  //logger.log("Item", item);
 
   const handleAnimation = () => {
     if (!isMenuVisible) {

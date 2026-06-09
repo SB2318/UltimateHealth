@@ -26,6 +26,7 @@ import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useSendMessageToGemini} from '../hooks/useSendMessageToGemini';
 import {useLoadAIConversations} from '../hooks/useLoadAIChats';
+import logger from '../helper/logger';
 import Snackbar from 'react-native-snackbar';
 
 // interface ChatbotResponse {
@@ -59,7 +60,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
   const {data: user} = useGetProfile();
   // const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA'; //token
 
-  //if (__DEV__) console.log("User Token", user_token);
+  //logger.log("User Token", user_token);
 
   const {mutate: sendMessageToAI, isPending: messageProcessPending} =
     useSendMessageToGemini();
@@ -154,7 +155,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
         if (!isMountedRef.current) {
           return;
         }
-        if (__DEV__) console.log('Error', error);
+        logger.log('Error', error);
         if (error.response) {
           const statusCode = error.response.status;
           switch (statusCode) {

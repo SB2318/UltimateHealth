@@ -18,6 +18,7 @@ import {Category, NotificationPreferencesScreenProp} from '../type';
 import {useGetCategories} from '../hooks/useGetArticleTags';
 import {useGetNotificationPreferences} from '../hooks/useGetNotificationPreferences';
 import {useUpdateNotificationPreferences} from '../hooks/useUpdateNotificationPreferences';
+import logger from '../helper/logger';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const NotificationPreferencesScreen = ({
@@ -36,21 +37,21 @@ const NotificationPreferencesScreen = ({
   const {data: preferencesData, isLoading: prefsLoading} =
     useGetNotificationPreferences(isConnected);
 
-  if (__DEV__) console.log("Preference data", preferencesData);
+  logger.log("Preference data", preferencesData);
   // Mutation to save
   const {mutate: updatePreferences, isPending: isSaving} =
     useUpdateNotificationPreferences();
 
   // Pre-fill selections once both data sets are ready
   useEffect(() => {
-    if (__DEV__) console.log('Fetched Preferences Data:', preferencesData);
+    logger.log('Fetched Preferences Data:', preferencesData);
     if (preferencesData) {
       // Support both { preferences: { contentClusters: [] } } and { contentClusters: [] }
       const clusters =
         preferencesData.preferences?.contentClusters ||
         preferencesData.contentClusters;
 
-      if (__DEV__) console.log("Clusters", clusters);
+      logger.log("Clusters", clusters);
 
       if (Array.isArray(clusters)) {
         setSelectedIds(clusters.map(cluster => cluster._id));
@@ -90,7 +91,7 @@ const NotificationPreferencesScreen = ({
       {contentClusters: payload},
       {
         onSuccess: () => {
-          if (__DEV__) console.log('Preferences saved successfully:', selectedIds);
+          logger.log('Preferences saved successfully:', selectedIds);
           queryClient.invalidateQueries({
             queryKey: ['notification-preferences'],
           });
@@ -100,7 +101,7 @@ const NotificationPreferencesScreen = ({
           });
         },
         onError: err => {
-          if (__DEV__) console.error('Preferences update error:', err);
+          logger.error('Preferences update error:', err);
           Alert.alert(
             'Save Failed',
             'Could not update your preferences. Please try again.',

@@ -18,6 +18,7 @@ import {EditorScreenProp} from '../../type';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
+import logger from '../../helper/logger';
 import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
 
 // Feature:
@@ -50,9 +51,9 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         <TouchableOpacity
           style={styles.preview_button}
           onPress={() => {
-            if (__DEV__) console.log('Preview button pressed');
+            logger.log('Preview button pressed');
             if (article.length > 20) {
-              //if (__DEV__) console.log('Preview Screen');
+              //logger.log('Preview Screen');
               dispatch(setSuggestion({suggestion: ''}));
               dispatch(setSuggestionAccepted({selection: false}));
               navigation.navigate('PreviewScreen', {
@@ -111,7 +112,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
           setEditorReady(true);
         }
       } catch (err) {
-        if (__DEV__) console.error('Failed to load article:', err);
+        logger.error('Failed to load article:', err);
       }
     };
     */
@@ -152,7 +153,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       const text = await response.text();
       setArticle(text);
     } catch (error) {
-      // if (__DEV__) console.error('Error fetching URI:', error);
+      // logger.error('Error fetching URI:', error);
       setArticle(content);
     }
   };
@@ -160,7 +161,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
   // Callback after height change
   function handleHeightChange(_height: number) {
-    // if (__DEV__) console.log("editor height change:", height);
+    // logger.log("editor height change:", height);
   }
 
   async function onPressAddImage() {
@@ -188,7 +189,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
       //await RichText.current?.insertImage(str);
     } else {
-      //if (__DEV__) console.log('No image selected');
+      //logger.log('No image selected');
     }
   }
 
@@ -200,14 +201,14 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
   //   if (result.assets && result.assets.length > 0) {
   //     const fileUri = result.assets[0].uri;
-  //     if (__DEV__) console.log('Image URI:', fileUri);
+  //     logger.log('Image URI:', fileUri);
   //     setvideoData(`${fileUri}`);
   //     // Convert the video URI to a Blob
   //     // await RichText.current?.insertVideo(blobUrl);
   //     // Insert video through local file url
   //     RichText.current?.insertVideo(fileUri);
   //   } else {
-  //     if (__DEV__) console.log('No video selected');
+  //     logger.log('No video selected');
   //   }
   // }
   /*
@@ -219,9 +220,9 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
     launchImageLibrary(options, async response => {
       if (response.didCancel) {
-        if (__DEV__) console.log('User cancelled image picker');
+        logger.log('User cancelled image picker');
       } else if (response.error) {
-        if (__DEV__) console.log('ImagePicker Error: ', response.error);
+        logger.log('ImagePicker Error: ', response.error);
       } else if (response.assets) {
         const {uri, fileSize} = response.assets[0];
 
@@ -237,7 +238,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
             // If the image is resized successfully, upload it
           })
           .catch(err => {
-            if (__DEV__) console.log(err);
+            logger.log(err);
             Alert.alert('Error', 'Could not resize the image.');
           });
 

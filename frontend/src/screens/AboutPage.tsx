@@ -20,6 +20,7 @@ import { AboutScreenProps } from '../type';
 import { GlassContainer } from '../components/GlassContainer';
 import { ProfessionalColors, Typography, Spacing } from '../styles/GlassStyles';
 import { useBackToTop } from '../components/BackToTopScrollView';
+import logger from '../helper/logger';
 import { BackToTopButton } from '../components/BackToTopButton';
 
 const AboutScreen = ({ navigation }: AboutScreenProps) => {
@@ -35,12 +36,12 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
           'Get fit with Ultimate-Health 🌿\nYour ultimate wellness companion for a healthier lifestyle.\n\nDownload now:\nhttps://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth',
       });
     } catch (error: any) {
-      if (__DEV__) console.log(error.message);
+      logger.log(error.message);
     }
   };
 
   const openLink = (url: string) => {
-    Linking.openURL(url).catch(err => if (__DEV__) console.error('URL error', err));
+    Linking.openURL(url).catch(err => logger.error('URL error', err));
   };
 
   

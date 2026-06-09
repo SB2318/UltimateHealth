@@ -2,6 +2,7 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {Notification} from '../type';
 import axios, {AxiosError} from 'axios';
 import {PROD_URL} from '../helper/APIUtils';
+import logger from '../helper/logger';
 import {useSelector} from 'react-redux';
 
 type NotificationRes = {
@@ -23,7 +24,7 @@ export const useGetAllNotifications = (
         );
         return response.data as NotificationRes;
       } catch (err) {
-        if (__DEV__) console.error('Error fetching articles:', err);
+        logger.error('Error fetching articles:', err);
         return null;
       }
     },

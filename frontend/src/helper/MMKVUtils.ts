@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import logger from 'logger';
 import {PodcastData} from '../type';
 
 type MMKVStorageLike = {
@@ -42,7 +43,7 @@ const initializeMMKV = (): MMKVStorageLike | null => {
       podcastMMKV = mmkvModule.createMMKV({id: PODCAST_CACHE_ID});
     }
   } catch (error) {
-    if (__DEV__) console.log('MMKV module not available, falling back to AsyncStorage', error);
+    logger.log('MMKV module not available, falling back to AsyncStorage', error);
     podcastMMKV = null;
   }
 
@@ -68,7 +69,7 @@ const parsePodcastData = (
       downloadAt: new Date(item.downloadAt),
     }));
   } catch (error) {
-    if (__DEV__) console.log('Podcast cache parse error', error);
+    logger.log('Podcast cache parse error', error);
     return [];
   }
 };
@@ -81,7 +82,7 @@ const persistPodcastData = async (value: string): Promise<void> => {
       mmkv.set(PODCAST_STORAGE_KEY, value);
       return;
     } catch (error) {
-      if (__DEV__) console.log('MMKV write error', error);
+      logger.log('MMKV write error', error);
     }
   }
 
@@ -98,10 +99,10 @@ export const retrieveItem = async (): Promise<PodcastDownloadRecord[]> => {
   const mmkv = initializeMMKV();
 
   if (mmkv) {
-    if (__DEV__) console.log('Retrieving podcast data from MMKV');
+    logger.log('Retrieving podcast data from MMKV');
     return parsePodcastData(mmkv.getString(PODCAST_STORAGE_KEY));
   }
-  if (__DEV__) console.log('Retrieving podcast data from AsyncStorage');
+  logger.log('Retrieving podcast data from AsyncStorage');
   const storedValue = await AsyncStorage.getItem(PODCAST_STORAGE_KEY);
   return parsePodcastData(storedValue);
 };
@@ -114,7 +115,7 @@ export const deleteItem = async (): Promise<void> => {
       mmkv.delete(PODCAST_STORAGE_KEY);
       return;
     } catch (error) {
-      if (__DEV__) console.log('MMKV delete error', error);
+      logger.log('MMKV delete error', error);
     }
   }
 
@@ -129,7 +130,7 @@ export const clearMMKV = async (): Promise<void> => {
       mmkv.clearAll();
       return;
     } catch (error) {
-      if (__DEV__) console.log('MMKV clear error', error);
+      logger.log('MMKV clear error', error);
     }
   }
 

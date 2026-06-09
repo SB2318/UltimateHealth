@@ -14,6 +14,7 @@ import Slider from '@react-native-community/slider';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Feather from '@expo/vector-icons/Feather';
 import {PRIMARY_COLOR} from '../helper/Theme';
+import logger from '../helper/logger';
 import Tts from 'react-native-tts';
 
 const WORDS_PER_MINUTE = 130;
@@ -95,7 +96,7 @@ const PodcastPlayer = ({navigation}: any) => {
         try {
           await Tts.setDefaultLanguage(availableVoices[0].language);
         } catch (err) {
-          if (__DEV__) console.warn(`Failed to set TTS language to ${availableVoices[0].language}, using default.`, err);
+          logger.warn(`Failed to set TTS language to ${availableVoices[0].language}, using default.`, err);
         }
         await Tts.setDefaultVoice(availableVoices[0].id);
         Tts.setDefaultRate(defaultRate, true);
@@ -106,7 +107,7 @@ const PodcastPlayer = ({navigation}: any) => {
         setisPlaying(false);
       }
     } catch (error) {
-      if (__DEV__) console.error('Failed to initialize TTS voices', error);
+      logger.error('Failed to initialize TTS voices', error);
       setisPlaying(false);
     }
   };
@@ -144,7 +145,7 @@ const PodcastPlayer = ({navigation}: any) => {
 
         await initTts();
       } catch (error) {
-        if (__DEV__) console.error('Failed to initialize TTS', error);
+        logger.error('Failed to initialize TTS', error);
         if (isMounted) {
           setisPlaying(false);
         }
@@ -170,7 +171,7 @@ const PodcastPlayer = ({navigation}: any) => {
             : null;
 
       if (eventPosMs == null) {
-        if (__DEV__) console.warn('TTS progress event did not include a position update.');
+        logger.warn('TTS progress event did not include a position update.');
         return;
       }
 
@@ -233,7 +234,7 @@ const PodcastPlayer = ({navigation}: any) => {
       await Tts.speak(newText);
       setisPlaying(true);
     } catch (error) {
-      if (__DEV__) console.error('Failed to start TTS playback', error);
+      logger.error('Failed to start TTS playback', error);
       setisPlaying(false);
     }
   };

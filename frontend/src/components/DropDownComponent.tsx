@@ -2,6 +2,7 @@ import {Alert, View} from 'react-native';
 import React, {useState} from 'react';
 import Dropdown from './Dropdown';
 import { useDispatch } from 'react-redux';
+import logger from '../helper/logger';
 import { showAlert } from '../store/alertSlice';
 
 const DropDownComponent = ({data}: {data: any[]}) => {
@@ -25,7 +26,7 @@ const DropDownComponent = ({data}: {data: any[]}) => {
       (specialize: any) =>
         specialize.name.toLowerCase() === specialization.toLocaleLowerCase(),
     );
-    //if (__DEV__) console.log(isAlreadyExist);
+    //logger.log(isAlreadyExist);
     if (isAlreadyExist.length > 0) {
       Alert.alert('Entered specialization already present!');
       // dispatch(showAlert({

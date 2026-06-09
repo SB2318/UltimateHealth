@@ -48,6 +48,7 @@ import {useGetProfile} from '../hooks/useGetProfile';
 import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../hooks/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../hooks/useGetPaginatedArticles';
+import logger from '../helper/logger';
 import {
   OfflineArticleState,
   NoArticleState,
@@ -265,7 +266,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                 });
               },
               onError: err => {
-                if (__DEV__) console.log(err);
+                logger.log(err);
                 Snackbar.show({
                   text: 'Try again!',
                   duration: Snackbar.LENGTH_SHORT,
@@ -296,10 +297,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const handleFilterApply = () => {
     // Update Redux State Variables
     if (selectCategoryList.length > 0) {
-      //   if (__DEV__) console.log("enter")
+      //   logger.log("enter")
       dispatch(setSelectedTags({selectedTags: selectCategoryList}));
     } else {
-      //if (__DEV__) console.log("enter ele", articleCategories);
+      //logger.log("enter ele", articleCategories);
 
       dispatch(
         setSelectedTags({
@@ -309,7 +310,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     }
 
     if (sortingType && sortingType !== '') {
-      if (__DEV__) console.log('Sort type', sortType);
+      logger.log('Sort type', sortType);
       dispatch(setSortType({sortType: sortingType}));
     }
 
@@ -469,7 +470,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   }, [isFetching, refreshing]);
 
   const handleSearch = (textInput: string) => {
-    //if (__DEV__) console.log('Search Input', textInput);
+    //logger.log('Search Input', textInput);
     if (textInput === '' || articleData === undefined) {
       dispatch(setSearchedArticles({searchedArticles: []}));
       dispatch(setSearchMode({searchMode: false}));

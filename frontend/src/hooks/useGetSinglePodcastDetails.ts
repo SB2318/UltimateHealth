@@ -1,6 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { PodcastData } from "../type";
 import axios, { AxiosError } from "axios";
+import logger from '../helper/logger';
 import { GET_PODCAST_DETAILS } from "../helper/APIUtils";
 
 export const useGetSinglePodcastDetails = (trackId: string): UseQueryResult<
@@ -17,7 +18,7 @@ AxiosError
         );
         return response.data as PodcastData;
       } catch (err) {
-        if (__DEV__) console.error('Error fetching podcast:', err);
+        logger.error('Error fetching podcast:', err);
         return null;
       }
     },

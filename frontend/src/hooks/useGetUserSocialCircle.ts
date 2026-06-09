@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { GET_SOCIALS } from '../helper/APIUtils';
 import { User } from '../type';
+import logger from '../helper/logger';
 import { useSelector } from 'react-redux';
 
 interface Props {
@@ -29,7 +30,7 @@ export const useGetUserSocials = ({
         url = `${url}&social_user_id=${social_user_id}`;
       }
 
-      if (__DEV__) console.log('Request Url', url);
+      logger.log('Request Url', url);
 
       const response = await axios.get(url);
 

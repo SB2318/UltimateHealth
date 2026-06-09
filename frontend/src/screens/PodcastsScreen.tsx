@@ -26,6 +26,7 @@ import {useGetAllPodcasts} from '../hooks/useGetAllPodcasts';
 import {useUpdatePodcastViewcount} from '../hooks/useUpdatePodcastViewcount';
 import { PodcastLoadingState, NoPodcastState } from '../components/EmptyStates';
 import LoadingSpinner from '../components/LoadingSpinner';
+import logger from '../helper/logger';
 import {usePreferences} from '../contexts/PreferencesContext';
 
 const {WavAudioRecorder} = NativeModules;
@@ -160,7 +161,7 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
             });
           },
           onError: err => {
-            if (__DEV__) console.log('Update view count err', err);
+            logger.log('Update view count err', err);
             Snackbar.show({
               text: 'Something went wrong!',
               duration: Snackbar.LENGTH_SHORT,
@@ -249,12 +250,12 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
         <TouchableOpacity
           style={styles.fab}
           onPress={() => {
-            if (__DEV__) console.log('Add icon clicked');
+            logger.log('Add icon clicked');
             navigation.navigate('PodcastForm');
           }}>
           <CreateIcon
             callback={() => {
-              if (__DEV__) console.log('Add icon clicked');
+              logger.log('Add icon clicked');
               navigation.navigate('PodcastForm');
             }}
           />

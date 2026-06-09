@@ -16,6 +16,7 @@ import {clearStorage} from '../../helper/Utils';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';
 import {useUserLogout} from '@/src/hooks/useUserLogout';
+import logger from '../../helper/logger';
 import {useTheme} from 'tamagui';
 
 const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
@@ -59,7 +60,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
             }
           } else {
             // Handle network errors
-            if (__DEV__) console.log('General Update Error', err);
+            logger.log('General Update Error', err);
             Alert.alert(
               'Logout Failed',
               'Network error. Please check your connection.',

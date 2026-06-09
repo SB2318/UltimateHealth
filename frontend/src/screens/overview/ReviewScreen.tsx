@@ -30,6 +30,7 @@ import {useGetArticleDetails} from '@/src/hooks/useGetArticleDetail';
 import {useGetArticleContent} from '@/src/hooks/useGetArticleContent';
 import {useGetProfile} from '@/src/hooks/useGetProfile';
 import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';
+import logger from '../../helper/logger';
 import {useSocket} from '../../contexts/SocketContext';
 
 const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
@@ -78,11 +79,11 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
     // socket.emit('load-review-comments', {articleId: route.params.articleId});
 
     const onConnect = () => {
-      if (__DEV__) console.log('connection established');
+      logger.log('connection established');
     };
 
     const onError = (data: any) => {
-      if (__DEV__) console.log('connection error', data);
+      logger.log('connection error', data);
     };
 
     const onNewFeedback = (data: any) => {
@@ -170,7 +171,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
                 marginBottom: 30,
               }}
               customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; }`}
-              onSizeUpdated={size => { if (__DEV__) console.log(size.height); }}
+              onSizeUpdated={size => { logger.log(size.height); }}
               files={[
                 {
                   href: 'cssfileaddress',
