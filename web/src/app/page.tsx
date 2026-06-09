@@ -604,22 +604,25 @@ export default function Home() {
       </Section>
 
       {/* ── Features ── */}
-      <Section id="features" className="scroll-reveal">
+      <Section id="features" className="feature-section-premium scroll-reveal">
         <PageWrapper>
           <h2>Be a Contributor: Core Community Features</h2>
           <p className="center">Join our community and make a difference in global health awareness</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-16 w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 w-full relative z-10">
             {featuresLoading ? (
               <Skeleton count={4} variant="compact" />
             ) : (
               [
-                { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
-                { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
-                { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
-                { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
+                { icon: "fa-language", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
+                { icon: "fa-users-cog", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
+                { icon: "fa-podcast", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
+                { icon: "fa-chart-pie", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
               ].map((f, i) => (
-                <div className="feature-item w-full" key={i}>
-                  <h3>{f.icon} {f.title}</h3>
+                <div className="feature-card-premium w-full fade-in" key={i}>
+                  <div className="feature-icon-wrapper">
+                    <i className={`fas ${f.icon}`}></i>
+                  </div>
+                  <h3>{f.title}</h3>
                   <p>{f.desc}</p>
                 </div>
               ))
