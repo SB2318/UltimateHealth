@@ -214,7 +214,7 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
                 marginBottom: 30,
               }}
               customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; }`}
-              onSizeUpdated={size => if (__DEV__) console.log(size.height)}
+              onSizeUpdated={size => { if (__DEV__) console.log(size.height); }}
               files={[
                 {
                   href: 'cssfileaddress',

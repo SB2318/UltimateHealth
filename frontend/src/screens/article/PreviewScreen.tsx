@@ -433,7 +433,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
         <AutoHeightWebView
           style={styles.webView}
           customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; }`}
-          onSizeUpdated={size => if (__DEV__) console.log(size.height)}
+          onSizeUpdated={size => { if (__DEV__) console.log(size.height); }}
           files={[
             {
               href: 'cssfileaddress',
