@@ -80,15 +80,11 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
                 styles.alertAvatar,
                 !profile_image && {borderWidth: 0.5, borderColor: theme.black.val},
               ]}
-              source={
-  profile_image
-    ? {
-        uri: profile_image.startsWith('https')
-          ? profile_image
-          : `${GET_STORAGE_DATA}/${profile_image}`,
-      }
-    : require('../../assets/images/avatar.jpg')
-}
+              source={{
+                uri: profile_image.startsWith('https')
+                  ? profile_image
+                  : `${GET_STORAGE_DATA}/${profile_image}`,
+              }}
             />
 
             <Text style={[
