@@ -1,25 +1,42 @@
 "use client";
 
+import type { FormEvent } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { PageWrapper, Section } from "@/components/layout";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
+import { getApiUrl } from "@/lib/api";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
-  const [msgColor, setMsgColor] = useState("");
+  const [message, setMessage] = useState<{
+    title: string;
+    description: string;
+    variant?: "default" | "destructive";
+  } | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setMsg("Processing...");
-    setMsgColor("#718096");
+    setMessage({ title: "Processing", description: "Signing you in." });
     setLoading(true);
 
     try {
-      const res = await fetch("https://uhsocial.in/api/admin/login", {
+      const res = await fetch(getApiUrl("/admin/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -29,158 +46,93 @@ export default function AdminLoginPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setMsg("Login successful. Redirecting...");
-        setMsgColor("green");
-        if (data.accessToken) localStorage.setItem("accessToken", data.accessToken);
-        if (data.refreshToken) localStorage.setItem("refreshToken", data.refreshToken);
+        setMessage({
+          title: "Login successful",
+          description: "Redirecting to admin account deletion.",
+        });
         setTimeout(() => router.push("/delete-account-admin"), 1000);
       } else {
-        setMsg(data.error || "Login failed");
-        setMsgColor("red");
+        setMessage({
+          title: "Login failed",
+          description: data.error || data.message || "Please check your details and try again.",
+          variant: "destructive",
+        });
       }
     } catch (err: unknown) {
-      setMsg("Server error: " + (err instanceof Error ? err.message : "Unknown error"));
-      setMsgColor("red");
+      setMessage({
+        title: "Server error",
+        description: err instanceof Error ? err.message : "Unknown error",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Section style={styles.body}>
-      <PageWrapper style={styles.container}>
-        <Image
-          src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
-          style={styles.icon}
-          width={55}
-          height={55}
-          alt="Ultimate Health Logo"
-          priority
-        />
-        <h2 style={styles.heading}>Admin Login Required</h2>
-        <p style={styles.subtext}>Please log in to continue to account deletion.</p>
+    <Section
+      as="main"
+      className="flex min-h-screen items-center bg-slate-50 px-4 py-10"
+    >
+      <PageWrapper className="flex max-w-md justify-center px-0">
+        <Card className="w-full rounded-lg shadow-sm">
+          <CardHeader className="items-center text-center">
+            <div className="mb-2 flex size-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <span className="text-sm font-semibold" aria-hidden="true">
+                UH
+              </span>
+            </div>
+            <CardTitle className="text-xl font-semibold">
+              <h1>Admin Login Required</h1>
+            </CardTitle>
+            <CardDescription>
+              Please log in to continue to account deletion.
+            </CardDescription>
+          </CardHeader>
 
-        <form id="loginForm" onSubmit={handleSubmit}>
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Email</label>
-            <input
-              id="email"
-              type="email"
-              required
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={styles.input}
-              onFocus={(e) => (e.target.style.borderColor = "#4da3ff")}
-              onBlur={(e) => (e.target.style.borderColor = "#d9d9d9")}
-            />
-          </div>
+          <form id="loginForm" onSubmit={handleSubmit}>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  required
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
 
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Password</label>
-            <input
-              id="password"
-              type="password"
-              required
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={styles.input}
-              onFocus={(e) => (e.target.style.borderColor = "#4da3ff")}
-              onBlur={(e) => (e.target.style.borderColor = "#d9d9d9")}
-            />
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
 
-          <button
-            type="submit"
-            id="login-btn"
-            disabled={loading}
-            style={{
-              ...styles.loginBtn,
-              background: loading ? "#a0aec0" : "#4d7cff",
-              cursor: loading ? "not-allowed" : "pointer",
-            }}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+              {message && (
+                <Alert id="msg" variant={message.variant} role="status">
+                  <AlertTitle>{message.title}</AlertTitle>
+                  <AlertDescription>{message.description}</AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
 
-        {msg && (
-          <div id="msg" style={{ marginTop: 15, fontSize: 14, color: msgColor }}>
-            {msg}
-          </div>
-        )}
-      </div>
-    </div>
+            <CardFooter className="justify-end">
+              <Button type="submit" id="login-btn" disabled={loading}>
+                {loading && <Spinner size="sm" className="mr-1" />}
+                {loading ? "Logging in..." : "Login"}
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
+      </PageWrapper>
+    </Section>
   );
 }
-
-const styles: Record<string, React.CSSProperties> = {
-  body: {
-    fontFamily: '"Inter", Arial, sans-serif',
-    background: "#f4f7fc",
-    margin: 0,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-  },
-  container: {
-    background: "#fff",
-    width: 420,
-    padding: "40px 30px",
-    borderRadius: 20,
-    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-    textAlign: "center",
-    maxWidth: "90vw",
-  },
-  icon: {
-    marginBottom: 15,
-    borderRadius: 12,
-  },
-  heading: {
-    marginBottom: 15,
-    fontWeight: 600,
-    fontSize: "1.4rem",
-    color: "#1a202c",
-  },
-  subtext: {
-    color: "#555",
-    fontSize: 14,
-    marginBottom: 25,
-  },
-  inputGroup: {
-    marginBottom: 18,
-    textAlign: "left",
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: 500,
-    display: "block",
-    marginBottom: 6,
-    color: "#1a202c",
-  },
-  input: {
-    width: "100%",
-    padding: 12,
-    border: "1px solid #d9d9d9",
-    borderRadius: 10,
-    fontSize: 15,
-    outline: "none",
-    transition: "border-color 0.2s ease",
-    boxSizing: "border-box",
-    fontFamily: "inherit",
-  },
-  loginBtn: {
-    width: "100%",
-    color: "white",
-    padding: 14,
-    border: "none",
-    borderRadius: 25,
-    fontSize: 16,
-    fontWeight: 600,
-    marginTop: 10,
-    transition: "background 0.2s ease",
-    fontFamily: "inherit",
-  },
-};

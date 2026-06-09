@@ -510,16 +510,12 @@ export default function Home() {
         </nav>
       </header>
 
- fix-unreachable-launching-soon-modal
       {/* ── Hero ── */}
       <HeroAndDownload
         onJoinTestFlight={() => setAppleModal(true)}
         onShowComingSoon={openComingSoonModal}
       />
 
-      {/* ── Hero + Downloads (new premium design) ── */}
-      <HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
- web
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
