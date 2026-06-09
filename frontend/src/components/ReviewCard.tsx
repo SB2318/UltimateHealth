@@ -19,6 +19,7 @@ import {
 import ArticleFloatingMenu from './ArticleFloatingMenu';
 //import io from 'socket.io-client';
 import Entypo from '@expo/vector-icons/Entypo';
+import logger from '../helper/logger';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 const ReviewCard = ({
@@ -41,7 +42,7 @@ const ReviewCard = ({
       ? 'red'
       : BUTTON_COLOR;
 
-  //console.log('Image Utils', item?.imageUtils[0]);
+  //logger.log('Image Utils', item?.imageUtils[0]);
 
   const handleAnimation = () => {
     if (width.value === 0) {

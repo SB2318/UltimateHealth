@@ -19,6 +19,7 @@ import Loader from '../components/Loader';
 import {useGetUserSocials} from '../hooks/useGetUserSocialCircle';
 import {useUpdateFollowStatus} from '../hooks/useUpdateFollowStatus';
 import Snackbar from 'react-native-snackbar';
+import logger from '../helper/logger';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function Socialcreen({navigation, route}: SocialScreenProps) {
@@ -159,7 +160,7 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                           },
 
                           onError: err => {
-                            console.log('Update Follow mutation error', err);
+                            logger.log('Update Follow mutation error', err);
                             Snackbar.show({
                               text: 'Try again!',
                               duration: Snackbar.LENGTH_SHORT,

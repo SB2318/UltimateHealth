@@ -24,6 +24,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import {hp} from '../helper/Metric';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
+import logger from '../helper/logger';
 import { ttsLanguageList } from '../helper/Utils';
 
 
@@ -86,7 +87,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
     launchImageLibrary(options, (response: ImagePickerResponse) => {
       if (response.didCancel) {
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
+        logger.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets) {
         const {uri, fileSize} = response.assets[0];
 
@@ -100,7 +101,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
           .then(resizedImageUri => {
           })
           .catch(err => {
-            console.log(err);
+            logger.log(err);
              Alert.alert('Error', 'Could not resize the image.');
           });
 

@@ -26,6 +26,7 @@ import {useUpdateFollowStatus} from '../hooks/useUpdateFollowStatus';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
 import { useGetAuthorProfile } from '../hooks/useGetAuthorProfile';
 import {useGetTotalLikeViewStatus} from '../hooks/useGetTotalLikeViewStatus';
+import logger from '../helper/logger';
 import { NoArticleState } from '../components/EmptyStates';
 
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
@@ -96,7 +97,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         },
 
         onError: error => {
-          console.log('Update View Count Error', error);
+          logger.log('Update View Count Error', error);
           Alert.alert('Internal server error, try again!');
         },
       });
@@ -117,7 +118,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('Current authorId:', authorId); // Check if authorId changes
+      logger.log('Current authorId:', authorId); // Check if authorId changes
       refetch();
     }, [refetch, authorId]), // Ensure authorId is a stable value
   );
@@ -161,7 +162,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
                     });
                   },
                   onError: err => {
-                    console.log(err);
+                    logger.log(err);
                     Snackbar.show({
                       text: 'Try again!',
                       duration: Snackbar.LENGTH_LONG,
@@ -241,7 +242,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           },
 
           onError: err => {
-            console.log('Update Follow mutation error', err);
+            logger.log('Update Follow mutation error', err);
             Snackbar.show({
               text: 'Try again!',
               duration: Snackbar.LENGTH_SHORT,

@@ -3,6 +3,7 @@ import { showAlert } from '@/src/store/alertSlice';
 import { useDispatch } from 'react-redux';
 import { Alert } from 'react-native';
 import { UPLOAD_STORAGE } from '../helper/APIUtils';
+import logger from '../helper/logger';
 import { fetchWithTimeout } from '../helper/ApiTimeout';
 
 const useUploadImage = () => {
@@ -22,7 +23,7 @@ const useUploadImage = () => {
 
       const formData = new FormData();
       formData.append('file', {uri, name: filename, type} as any);
-      if (__DEV__) console.log('Type:', type);
+      logger.log('Type:', type);
 
       //formData.append('file', uri);
 
@@ -34,17 +35,17 @@ const useUploadImage = () => {
 
       if (!response.ok) {
         const errorBody = await response.text();
-        if (__DEV__) console.log('Image upload failed with status', response.status, errorBody);
+        logger.log('Image upload failed with status', response.status, errorBody);
         throw new Error('Image upload failed');
       }
 
       const data = await response.json();
-      if (__DEV__) console.log('Image upload res', data);
+      logger.log('Image upload res', data);
       setError(false);
       return data.key as string;
     } catch (err) {
    
-      if (__DEV__) console.log('Image upload failed', err);
+      logger.log('Image upload failed', err);
       Alert.alert('Low network connection, failed to upload image');
     //  dispatch(showAlert({
     //        title: "Upload falied",

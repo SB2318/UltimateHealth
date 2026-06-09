@@ -1,6 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { PodcastData } from "../type";
 import axios, { AxiosError } from "axios";
+import logger from '../helper/logger';
 import { DISCARDED_PODCASTS } from "../helper/APIUtils";
 
 type DiscardResponse = {
@@ -20,7 +21,7 @@ AxiosError
         const res = await axios.get(`${DISCARDED_PODCASTS}?page=${discardedPage}`);
         return res.data as DiscardResponse;
       } catch (err) {
-        console.error('Error fetching podcasts:', err);
+        logger.error('Error fetching podcasts:', err);
         return null;
       }
     },

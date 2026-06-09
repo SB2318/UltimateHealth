@@ -6,6 +6,7 @@ import { Alert, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {OtpScreenProp} from '../../type';
 import Loader from '../../components/Loader';
+import logger from '../../helper/logger';
 import {
   Button,
   Card,
@@ -48,7 +49,7 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
             });
           },
           onError: (error: AxiosError) => {
-            console.log('OTP ERROR', error);
+            logger.log('OTP ERROR', error);
             setErrorMessages(['Invalid or expired otp']);
             Alert.alert('Invalid or expired otp');
           },

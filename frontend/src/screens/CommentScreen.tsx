@@ -35,6 +35,7 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import logger from '../helper/logger';
 import {
   GET_IMAGE,
   GET_STORAGE_DATA,
@@ -271,7 +272,7 @@ const CommentScreen = ({
     user_handle: string,
   ) => {
 
-    console.log('Mention clicked:', user_handle);
+    logger.log('Mention clicked:', user_handle);
     navigation.navigate('UserProfileScreen', {
       author_handle: user_handle,
       userHandle: user_handle,

@@ -12,6 +12,7 @@ import {
   secureRetrieveItem,
   SECURE_KEYS,
 } from '../helper/SecureStorageUtils';
+import logger from '../helper/logger';
 import { LanguageCode, isValidLanguageCode } from '../constants/languages';
 
 interface PreferencesContextType {
@@ -57,7 +58,7 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
             );
             setInternalPreferredLanguages(validLanguages);
           } catch (parseError) {
-            console.error(
+            logger.error(
               '[PreferencesContext] Failed to parse stored languages:',
               parseError
             );
@@ -65,7 +66,7 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
           }
         }
       } catch (error) {
-        console.error(
+        logger.error(
           '[PreferencesContext] Error loading preferences:',
           error
         );
@@ -91,7 +92,7 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
           JSON.stringify(languages)
         );
       } catch (error) {
-        console.error(
+        logger.error(
           '[PreferencesContext] Error saving preferences:',
           error
         );
@@ -115,7 +116,7 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
   const addLanguagePreference = useCallback(
     async (language: LanguageCode): Promise<void> => {
       if (!isValidLanguageCode(language)) {
-        console.warn(
+        logger.warn(
           `[PreferencesContext] Invalid language code: ${language}`
         );
         return;

@@ -24,6 +24,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import {hp} from '../../helper/Metric';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import logger from '../../helper/logger';
 import { ttsLanguageList } from '@/src/helper/Utils';
 
 const ARTICLE_TITLE_MAX_LENGTH = 150;
@@ -126,9 +127,9 @@ const ArticleDescriptionScreen = ({
 
     launchImageLibrary(options, (response: ImagePickerResponse) => {
       if (response.didCancel) {
-        //console.log('User cancelled image picker');
+        //logger.log('User cancelled image picker');
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
+        logger.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets) {
         const {uri, fileSize} = response.assets[0];
 
@@ -145,7 +146,7 @@ const ArticleDescriptionScreen = ({
               // If the image is resized successfully, upload it
             })
             .catch(err => {
-              console.log(err);
+              logger.log(err);
               Alert.alert('Error', 'Could not resize the image.');
             });
         }

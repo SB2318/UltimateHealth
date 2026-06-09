@@ -1,6 +1,7 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {PROD_URL} from '../helper/APIUtils';
 import axios, {AxiosError} from 'axios';
+import logger from '../helper/logger';
 import {useSelector} from 'react-redux';
 
 export const useGetUnreadNotificationCount = (
@@ -18,7 +19,7 @@ export const useGetUnreadNotificationCount = (
 
         return response.data.unreadCount as number;
       } catch (err) {
-        console.error('Error fetching articles:', err);
+        logger.error('Error fetching articles:', err);
         return 0;
       }
     },

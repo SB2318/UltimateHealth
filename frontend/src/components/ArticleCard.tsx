@@ -38,6 +38,7 @@ import {useGetProfile} from '../hooks/useGetProfile';
 import {useLikeArticle} from '../hooks/useLikeArticle';
 import {useSaveArticle} from '../hooks/useSaveArticle';
 import {useLazyGetArticleContent} from '../hooks/useLazyGetArticleContent';
+import logger from '../helper/logger';
 import {useRepostArticle} from '../hooks/useArticleRepost';
 
 const ArticleCard = ({
@@ -100,10 +101,10 @@ const ArticleCard = ({
         url: url,
         subject: 'Article Post',
       });
-      console.log(result);
+      logger.log(result);
       setMenuVisible(false);
     } catch (error) {
-      console.log('Error sharing:', error);
+      logger.log('Error sharing:', error);
       Alert.alert('Error', 'Something went wrong while sharing.');
       setMenuVisible(false);
     }
@@ -113,7 +114,7 @@ const ArticleCard = ({
     if (!socket) return;
 
     const handleConnect = () => {
-      console.log('connection established');
+      logger.log('connection established');
     };
 
     socket.on('connect', handleConnect);
@@ -161,18 +162,18 @@ const ArticleCard = ({
       getArticleContent(recordId, {
         onSuccess: async (htmlContent: string) => {
           if (htmlContent) {
-            console.log('Response', htmlContent);
+            logger.log('Response', htmlContent);
             await generatePDFData(title, htmlContent);
             setMenuVisible(false);
           }
         },
         onError: error => {
-          console.error('Error generating PDF:', error);
+          logger.error('Error generating PDF:', error);
           Alert.alert('Error', 'Something went wrong while creating the PDF.');
         },
       });
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      logger.error('Error generating PDF:', error);
       Alert.alert('Error', 'Something went wrong while creating the PDF.');
     }
   };
@@ -202,15 +203,15 @@ const ArticleCard = ({
         base64: true,
       };
 
-      console.log('File flow reach upto now');
+      logger.log('File flow reach upto now');
       const file = await generatePDF(options);
 
       await RNFS.moveFile(file.filePath, filePath);
-      console.log('File flow reach upto move');
+      logger.log('File flow reach upto move');
 
       Alert.alert('PDF created successfully!', `Saved at: ${filePath}`);
     } catch (error) {
-      console.error('Error generating PDF:', error);
+      logger.error('Error generating PDF:', error);
       Alert.alert('Error', 'Something went wrong while creating the PDF.');
     }
   };
@@ -229,7 +230,7 @@ const ArticleCard = ({
         onSuccess: data => {
           if (reposted === false) {
 
-            console.log('Repost success', data);
+            logger.log('Repost success', data);
             setReposted(true);
             const body = {
               type: 'repost',
@@ -259,7 +260,7 @@ const ArticleCard = ({
           });
         },
         onError: err => {
-          console.log('Repost error', err);
+          logger.log('Repost error', err);
           Snackbar.show({
             text: 'Something went wrong, try again!',
             duration: Snackbar.LENGTH_SHORT,
@@ -343,7 +344,7 @@ const ArticleCard = ({
                   name: 'Download as pdf',
                   action: () => {
                     //handleAnimation();
-                    console.log('click card');
+                    logger.log('click card');
 
                     generatePDFFromUrl(item?.pb_recordId, item?.title);
                   },
@@ -354,7 +355,7 @@ const ArticleCard = ({
                   name: 'Request to edit',
                   action: () => {
                     if (!isConnected) {
-                      console.log('click improvement');
+                      logger.log('click improvement');
                       Snackbar.show({
                         text: 'Please check your internet connection',
                         duration: Snackbar.LENGTH_SHORT,
@@ -363,7 +364,7 @@ const ArticleCard = ({
                     }
                     setMenuVisible(false);
                     setRequestModalVisible(true);
-                    console.log('modal visible', requestModalVisible);
+                    logger.log('modal visible', requestModalVisible);
                     // handleAnimation();
                   },
                   icon: 'edit',
@@ -478,7 +479,7 @@ const ArticleCard = ({
                         article: ArticleData;
                         likeStatus: boolean;
                       }) => {
-                        console.log('Article like success', data.likeStatus);
+                        logger.log('Article like success', data.likeStatus);
                         setIsLiked(data?.likeStatus);
 
                         if (data?.likeStatus) {
@@ -498,7 +499,7 @@ const ArticleCard = ({
                         }
                       },
                       onError: (err: any) => {
-                        console.log('Like error', err);
+                        logger.log('Like error', err);
                         // Rollback optimistic update
                         setIsLiked(previousIsLiked);
                         setLikeCount(previousLikeCount);
@@ -624,7 +625,7 @@ const ArticleCard = ({
                     yValue.value = withTiming(100, {duration: 250});
                     saveMutation(undefined, {
                       onSuccess: async data => {
-                        console.log('Article save success', data);
+                        logger.log('Article save success', data);
                         Snackbar.show({
                           text: data.message,
                           duration: Snackbar.LENGTH_SHORT,

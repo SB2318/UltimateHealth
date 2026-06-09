@@ -36,6 +36,7 @@ import {
   setUserToken,
 } from '../../store/UserSlice';
 
+import logger from '../../helper/logger';
 import { AuthData, LoginScreenProp } from '../../type';
 
 const loginSchema = z.object({
@@ -91,14 +92,14 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
 
     if (enabled) {
       if (__DEV__) {
-        console.log('Authorization status:', authStatus);
+        logger.log('Authorization status:', authStatus);
       }
     }
   }
 
   useEffect(() => {
     if (__DEV__) {
-      console.log('Email modal visibility state', emailInputVisible);
+      logger.log('Email modal visibility state', emailInputVisible);
     }
   }, [emailInputVisible]);
 
@@ -108,29 +109,32 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
       const fcmToken = await messaging().getToken();
       if (fcmToken) {
         if (__DEV__) {
-          console.log('FCM Token:', fcmToken);
+          logger.log('FCM Token:', fcmToken);
         }
         setFcmToken(fcmToken);
         return fcmToken;
       } else {
         if (__DEV__) {
-          console.log('Failed to get FCM Token');
+          logger.log('Failed to get FCM Token');
         }
         return null;
       }
     } catch (error) {
       if (__DEV__) {
-        console.log('Error getting FCM Token:', error);
+        logger.log('Error getting FCM Token:', error);
       }
       // Return a placeholder token in debug mode to allow login to proceed
       return __DEV__ ? 'debug-mode-token' : null;
     }
   }
 
-  const onSubmit = async (data: LoginFormData) => {
-    if (__DEV__) {
-      console.log('Login attempt in progress');
-    }
+  const validateAndSubmit = async () => {
+    if (validate()) {
+      setPasswordMessage(false);
+      setEmailMessage(false);
+      if (__DEV__) {
+        logger.log('Login attempt in progress');
+      }
 
     const fcmToken = await getFCMToken();
 
@@ -188,14 +192,14 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               }
             } catch (e) {
               if (__DEV__) {
-                console.log('Async Storage ERROR', e);
+                logger.log('Async Storage ERROR', e);
               }
             }
           },
 
           onError: (error: AxiosError) => {
             if (__DEV__) {
-              console.log('Error', error);
+              logger.log('Error', error);
             }
             setValue('password', '');
             if (error.response) {
@@ -225,6 +229,46 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
           },
         },
       );
+    } else {
+      setOutput(true);
+      setPasswordMessage(false);
+      setEmailMessage(false);
+      if (output && !passwordVerify) {
+        setPasswordMessage(true);
+      }
+      if (output && !emailVerify) {
+        setEmailMessage(true);
+      }
+    }
+  };
+
+  const validate = () => {
+    if (emailVerify && passwordVerify) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const handlePassword = (e: any) => {
+    //let pass = e.nativeEvent.text;
+    setPassword(e);
+    setPasswordVerify(false);
+
+    if (/(?=.*[a-z]).{6,}/.test(e)) {
+      setPassword(e);
+      setPasswordVerify(true);
+    }
+  };
+
+  const handleEmail = (e: any) => {
+    //logger.log("Event",e );
+    //let email = e.nativeEvent.text;
+    setEmail(e);
+    setEmailVerify(false);
+    if (/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(e)) {
+      setEmail(e);
+      setEmailVerify(true);
+    }
   };
 
   const handleEmailInputBack = () => {
@@ -423,9 +467,14 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               borderRadius="$4"
               fontWeight="700"
               alignSelf="center"
-              onPress={handleSubmit(onSubmit)}
-              disabled={loginPending || !isValid}
-              opacity={loginPending || !isValid ? 0.5 : 1}
+              onPress={() => {
+                if (__DEV__) {
+                  logger.log('Login button pressed!');
+                }
+                validateAndSubmit();
+              }}
+              disabled={loginPending}
+              opacity={loginPending ? 0.5 : 1}
               width="100%">
               <Text fontSize={18} color="$white" fontWeight="600">
                 Login
@@ -507,7 +556,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                   },
                   onError: (error: AxiosError) => {
                     if (__DEV__) {
-                      console.log('Email Verification error', error);
+                      logger.log('Email Verification error', error);
                     }
 
                     if (error.response) {
@@ -540,7 +589,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       }
                     } else {
                       if (__DEV__) {
-                        console.log('Email Verification error', error);
+                        logger.log('Email Verification error', error);
                       }
                     }
                   },

@@ -12,6 +12,7 @@ import {
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import Icon from '@expo/vector-icons/MaterialIcons';
+import logger from '../helper/logger';
 import { PRIMARY_COLOR } from '../helper/Theme';
 
 const ActionItem = ({
@@ -49,7 +50,7 @@ const PodcastActions = React.forwardRef(
     const snapPoints = useMemo(() => ['40%'], []);
 
     const handleAction = (action: () => void) => {
-      console.log('click');
+      logger.log('click');
       action();
       //onClear();
       ref?.current?.dismiss();

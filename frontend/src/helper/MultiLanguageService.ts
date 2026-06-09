@@ -1,4 +1,5 @@
 import Tts from "react-native-tts";
+import logger from 'logger';
 import { Platform } from "react-native";
 
 type SupportedLang = "en-IN" | "hi-IN" | "bn-IN" | "ta-IN";
@@ -50,7 +51,7 @@ class MultiLanguageTTSService {
     const ready = await this.ensureLanguage(lang);
 
     if (!ready) {
-      console.warn(`${lang} voice not installed`);
+      logger.warn(`${lang} voice not installed`);
       return;
     }
 

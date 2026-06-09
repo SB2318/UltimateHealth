@@ -15,6 +15,7 @@ import Snackbar from 'react-native-snackbar';
 import useUploadImage from '../../hooks/useUploadImage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
+import logger from '../../helper/logger';
 import {useRegdMutation} from '@/src/hooks/useUserRegistration';
 let validator = require('email-validator');
 const signupSecondSchema = z.object({
@@ -87,7 +88,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
             switch (statusCode) {
               case 400:
                 const errorData = err.message;
-                console.log('Error message', errorData);
+                logger.log('Error message', errorData);
                 Alert.alert('Registration failed', 'Please try again');
                 break;
               case 409: {
@@ -114,7 +115,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
               }
             }
           } else {
-            console.log('General User Registration Error', err);
+            logger.log('General User Registration Error', err);
             Alert.alert('Registration failed', 'Please try again');
           }
         },
@@ -243,7 +244,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
                callRegisterAPI(result ?? "", contactDetail, data);
               
               } catch (err) {
-                console.error('Registration failed', err);
+                logger.error('Registration failed', err);
                 Alert.alert('Error Occured', 'Registration failed');
               }
             },

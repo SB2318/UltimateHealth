@@ -12,6 +12,7 @@ import {useDispatch} from 'react-redux';
 import {KEYS, clearStorage, retrieveItem} from '../helper/Utils';
 import {setUserId, setUserToken, setUserHandle} from '../store/UserSlice';
 import { useCheckTokenStatus } from '@/src/hooks/useGetTokenStatus';
+import logger from '../helper/logger';
 import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../helper/SecureStorageUtils';
 
 export default function SplashScreen({navigation}: SplashScreenProp) {
@@ -65,7 +66,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
         });
       }
     } catch (error) {
-      console.error('Error retrieving user data from storage', error);
+      logger.error('Error retrieving user data from storage', error);
       await clearStorage();
       // navigation.navigate('LoginScreen');
       navigation.reset({
@@ -76,7 +77,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
   },[dispatch, navigation, tokenRes]);
 
    useEffect(() => {
-    console.log('Token status:', tokenRes);
+    logger.log('Token status:', tokenRes);
     if (tokenRes) {
       checkLoginStatus();
     }

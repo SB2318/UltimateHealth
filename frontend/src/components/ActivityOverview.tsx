@@ -32,6 +32,7 @@ import {useGetTotalReads} from '../hooks/useGetTotalReads';
 import {useGetTotalWrites} from '../hooks/useGetTotalWrites';
 import {useGetAuthorYearlyReadReport} from '../hooks/useGetYearlyReadReport';
 import {useGetAuthorYearlyWriteReport} from '../hooks/useGetYearlyWriteReport';
+import logger from '../helper/logger';
 import StatisticsCard from './StatisticsCard';
 
 const getArticleImageSource = (image?: string): ImageSourcePropType => {
@@ -352,9 +353,9 @@ const ActivityOverview = ({
   const YearlyChartSection = () => {
     const yearlyData =
       userState === 0 ? (yearlyReadReport ?? []) : (yearlyWriteReport ?? []);
-    console.log('Raw yearly Data:', yearlyData);
+    logger.log('Raw yearly Data:', yearlyData);
     const groupedData = groupYearlyData(yearlyData);
-    console.log('Grouped yearly Data:', groupedData);
+    logger.log('Grouped yearly Data:', groupedData);
 
     const CHART_HORIZONTAL_PADDING = 32;
     const chartWidth = screenWidth - CHART_HORIZONTAL_PADDING - 16;
@@ -442,11 +443,11 @@ const ActivityOverview = ({
     const rawMonthlyData =
       userState === 0 ? (monthlyReadReport ?? []) : (monthlyWriteReport ?? []);
 
-    console.log('Raw Monthly Data:', rawMonthlyData);
+    logger.log('Raw Monthly Data:', rawMonthlyData);
 
     const weeklyData = dayToWeekData(rawMonthlyData);
 
-    console.log('Weekly Data:', weeklyData);
+    logger.log('Weekly Data:', weeklyData);
 
     const labels = weeklyData.map(w => w.label);
     const values = weeklyData.map(w => w.value);

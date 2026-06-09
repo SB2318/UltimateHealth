@@ -1,6 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {ArticleData} from '../type';
 import axios, {AxiosError} from 'axios';
+import logger from '../helper/logger';
 import {SUBMIT_IMPROVEMENT} from '../helper/APIUtils';
 
 type SubmitReq = {
@@ -28,7 +29,7 @@ export const useSubmitImprovement = (): UseMutationResult<
         pb_recordId: recordId,
         imageUtils: imageUtils,
       });
-      // console.log(article);
+      // logger.log(article);
       return response.data.newArticle as ArticleData;
     },
   });

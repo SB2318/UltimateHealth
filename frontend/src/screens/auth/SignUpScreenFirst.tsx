@@ -23,6 +23,7 @@ import {
 } from 'react-native-image-picker';
 import {useCheckUserHandleAvailability} from '@/src/hooks/useCheckUserHandleAvailability';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
+import logger from '../../helper/logger';
 import {useRegdMutation} from '@/src/hooks/useUserRegistration';
 
 const signupSchema = z.object({
@@ -80,9 +81,9 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 
     launchImageLibrary(options, async (response: ImagePickerResponse) => {
       if (response.didCancel) {
-        // console.log('User cancelled image picker');
+        // logger.log('User cancelled image picker');
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
+        logger.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets) {
         const {uri, fileSize} = response.assets[0];
 
@@ -98,7 +99,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               setUserProfileImage(resizedImageUri.uri);
             })
             .catch(err => {
-              console.log(err);
+              logger.log(err);
               Alert.alert('Error', 'Could not resize the image.');
               setUserProfileImage('');
             });
@@ -154,7 +155,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                   });
               }
             } else {
-              console.log('Email Verification error', err);
+              logger.log('Email Verification error', err);
               Snackbar.show({
                 text: 'An error occured, try again!',
                 duration: Snackbar.LENGTH_SHORT,
@@ -189,7 +190,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
         profile_image: user_profile_image,
       };
       setPendingSubmitAction(() => () => {
-        console.log('General');
+        logger.log('General');
         navigation.navigate('SignUpScreenSecond', {
           user: detail,
         });
@@ -228,13 +229,13 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
         },
 
         onError: (err: AxiosError) => {
-          console.log(err.message);
+          logger.log(err.message);
           if (err.response) {
             const statusCode = err.response.status;
             switch (statusCode) {
               case 400:
                 const errorData = err.message;
-                console.log('Error message', errorData);
+                logger.log('Error message', errorData);
                 Alert.alert('Registration failed', 'Please try again');
                 break;
               case 409:
@@ -256,7 +257,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                 );
             }
           } else {
-            console.log('General User Registration Error', err);
+            logger.log('General User Registration Error', err);
             Alert.alert('Registration failed', 'Please try again');
           }
         },
@@ -294,7 +295,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 
                 callRegisterAPI(result ?? '', data);
               } catch (err) {
-                console.error('Upload failed');
+                logger.error('Upload failed');
                 Alert.alert('Error', 'Upload failed');
               }
             },

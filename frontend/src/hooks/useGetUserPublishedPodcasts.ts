@@ -1,6 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { PodcastData } from "../type";
 import axios, { AxiosError } from "axios";
+import logger from '../helper/logger';
 import { USER_PUBLISHED_PODCASTS } from "../helper/APIUtils";
 
 
@@ -23,7 +24,7 @@ AxiosError
 
         return response.data as PublishRes;
       } catch (err) {
-        console.error('Error fetching podcasts:', err);
+        logger.error('Error fetching podcasts:', err);
         return null;
       }
     },

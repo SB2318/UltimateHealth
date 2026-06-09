@@ -1,6 +1,7 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {PROD_URL} from '../helper/APIUtils';
 import axios, {AxiosError} from 'axios';
+import logger from '../helper/logger';
 import {ArticleData} from '../type';
 
 type ArticleRes = {
@@ -18,7 +19,7 @@ export const useGetPaginatedArticle = (
         const response = await axios.get(`${PROD_URL}/articles?page=${page}`);
         return response.data as ArticleRes;
       } catch (err) {
-        console.error('Error fetching articles:', err);
+        logger.error('Error fetching articles:', err);
         return null;
       }
     },

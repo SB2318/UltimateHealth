@@ -33,6 +33,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
 import LottieView from 'lottie-react-native';
 import {useGetSinglePodcastDetails} from '../hooks/useGetSinglePodcastDetails';
+import logger from '../helper/logger';
 import {useLikePodcast} from '../hooks/useLikePodcast';
 
 const isAllowedUrl = (urlStr?: string | null): boolean => {
@@ -89,7 +90,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const getFormattedSource = (url?: string | null) => {
     if (!url) return null;
     if (!isAllowedUrl(url)) {
-      console.warn('Blocked untrusted media URL:', url);
+      logger.warn('Blocked untrusted media URL:', url);
       return null;
     }
     return url.startsWith('http') ? url : `${GET_IMAGE}/${url}`;
@@ -437,7 +438,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
                   refetch();
                 },
                 onError: err => {
-                  console.log('Update like count err', err);
+                  logger.log('Update like count err', err);
                   Snackbar.show({
                     text: 'Something went wrong!',
                     duration: Snackbar.LENGTH_SHORT,

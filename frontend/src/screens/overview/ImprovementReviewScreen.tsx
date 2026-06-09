@@ -30,6 +30,7 @@ import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 import {useGetImprovementById} from '@/src/hooks/useGetImprovementById';
 import {useGetImprovementContent} from '@/src/hooks/useGetImprovementContent';
 import {useGetProfile} from '@/src/hooks/useGetProfile';
+import logger from '../../helper/logger';
 import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';
 
 const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
@@ -79,21 +80,21 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
     // socket.emit('load-review-comments', {requestId: route.params.requestId});
 
     socket.on('connect', () => {
-      console.log('connection established');
+      logger.log('connection established');
     });
 
     socket.on('error', data => {
-      console.log('connection error', data);
+      logger.log('connection error', data);
     });
 
     socket.on('review-comments', data => {
-      // console.log('comment loaded', data);
+      // logger.log('comment loaded', data);
       // setComments(data);
     });
 
     // Listen for new comments
     socket.on('new-feedback', data => {
-      console.log('new comment loaded', data);
+      logger.log('new comment loaded', data);
       setFeedback('');
       // if (data.articleId === route.params.articleId) {
       setComments(prevComments => {
@@ -125,7 +126,7 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
     }
   }, [htmlContent]);
 
-  // console.log('author id', authorId);
+  // logger.log('author id', authorId);
 
   return (
     <View style={styles.container}>
@@ -214,7 +215,7 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
                 marginBottom: 30,
               }}
               customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; }`}
-              onSizeUpdated={size => console.log(size.height)}
+              onSizeUpdated={size => { logger.log(size.height); }}
               files={[
                 {
                   href: 'cssfileaddress',

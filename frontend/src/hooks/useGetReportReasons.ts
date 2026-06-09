@@ -2,6 +2,7 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios, {AxiosError} from 'axios';
 import {GET_REPORT_REASONS} from '../helper/APIUtils';
 import {ReportReason} from '../type';
+import logger from '../helper/logger';
 import {useSelector} from 'react-redux';
 
 const reasonsFunc = async () => {
@@ -12,7 +13,7 @@ const reasonsFunc = async () => {
 
   return categoryData as ReportReason[];
   }catch(err){
-    console.log("GET CATEGORY ERR", err);
+    logger.log("GET CATEGORY ERR", err);
     return null;
   }
 };
