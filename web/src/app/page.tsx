@@ -475,13 +475,15 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <Link href="/medical-glossary" className="nav-link-item">
+              {/* FIX #1: Use withBasePath to resolve correct route under /frontend/v2/ deployment */}
+              <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
                 <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Medical Glossary</span>
               </Link>
             </li>
             <li>
-              <Link href="/contribute" className="nav-link-item">
+              {/* FIX #2: Use withBasePath to resolve correct route under /frontend/v2/ deployment */}
+              <Link href={withBasePath("/contribute")} className="nav-link-item">
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
               </Link>
@@ -504,22 +506,20 @@ export default function Home() {
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
           <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-          <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
-          <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
+          {/* FIX #3: Use withBasePath for mobile nav - Medical Glossary */}
+          <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
+          {/* FIX #4: Use withBasePath for mobile nav - Contribute */}
+          <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
       </header>
 
- fix-unreachable-launching-soon-modal
       {/* ── Hero ── */}
       <HeroAndDownload
         onJoinTestFlight={() => setAppleModal(true)}
         onShowComingSoon={openComingSoonModal}
       />
 
-      {/* ── Hero + Downloads (new premium design) ── */}
-      <HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
- web
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
@@ -890,7 +890,8 @@ export default function Home() {
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
-            <Link href="/contribute">Join Us &amp; Contribute</Link>
+            {/* FIX #5: Use withBasePath for footer link - Contribute */}
+            <Link href={withBasePath("/contribute")}>Join Us &amp; Contribute</Link>
           </div>
 
           {/* Support */}
