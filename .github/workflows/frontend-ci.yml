@@ -36,23 +36,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup Node & Cache Yarn Store
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node & Cache pnpm Store
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "yarn"
-          cache-dependency-path: frontend/yarn.lock
+          cache: "pnpm"
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Cache node_modules
         id: node-cache
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
 
       - name: Install Dependencies
         if: steps.node-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
   lint:
     name: Lint
@@ -69,6 +74,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -78,10 +88,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+
+      - name: Install Dependencies (cache miss)
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
 
       - name: Run ESLint
-        run: yarn lint
+        run: pnpm lint
 
   typecheck:
     name: Typecheck
@@ -98,6 +112,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -107,10 +126,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
 
       - name: Run TypeScript Check
-        run: yarn type-check
+        run: pnpm type-check
 
   test:
     name: Unit Tests
@@ -127,6 +146,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -136,10 +160,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
 
       - name: Run Unit Tests
-        run: yarn test
+        run: pnpm test
 
   expo-doctor:
     name: Expo Doctor
@@ -156,6 +180,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -165,13 +194,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
 
       - name: Run Expo Doctor
         shell: bash
         run: |
           set +e
-          OUTPUT=$(npx expo-doctor 2>&1)
+          OUTPUT=$(pnpm dlx expo-doctor 2>&1)
           STATUS=$?
           set -e
 
