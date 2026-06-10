@@ -79,10 +79,15 @@ jobs:
         run: |
           node -e "
             const fs = require('fs');
+            const path = 'android/app/google-services.json';
             let content = process.env.GOOGLE_SERVICES_JSON;
             if (!content || content.trim().length === 0) {
-              console.error('GOOGLE_SERVICES_JSON is empty!');
-              process.exit(1);
+              console.warn('GOOGLE_SERVICES_JSON secret is not available (fork PR?). Using placeholder.');
+              fs.writeFileSync(path, JSON.stringify({
+                project_info: { project_number: '0', project_id: 'placeholder' },
+                client: [{ client_info: { mobilesdk_app_id: '1:0:android:000', android_client_info: { package_name: 'com.ultimatehealth.app' } } }]
+              }, null, 2));
+              process.exit(0);
             }
             let parsed;
             try {
@@ -100,7 +105,7 @@ jobs:
                 process.exit(1);
               }
             }
-            fs.writeFileSync('android/app/google-services.json', JSON.stringify(parsed, null, 2));
+            fs.writeFileSync(path, JSON.stringify(parsed, null, 2));
           "
 
       - name: Compile Android Debug Build

@@ -2,17 +2,20 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-import {useSendOtpMutation} from '../useSendOtp';
+import {useSendOtpMutation} from './useSendOtp';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-function makeWrapper() {
+function Wrapper({children}: {children: React.ReactNode}) {
   const queryClient = new QueryClient({
     defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
   });
-  return ({children}: {children: React.ReactNode}) =>
-    React.createElement(QueryClientProvider, {client: queryClient}, children);
+  return React.createElement(QueryClientProvider, {client: queryClient}, children);
+}
+
+function makeWrapper() {
+  return Wrapper;
 }
 
 describe('useSendOtpMutation', () => {

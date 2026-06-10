@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "type-check": "tsc --noEmit",
-    "test": "jest --passWithNoTests --ci",
+    "test": "jest --passWithNoTests --ci --forceExit",
     "knip": "knip",
     "knip:deps": "knip --dependencies",
     "knip:files": "knip --files",
