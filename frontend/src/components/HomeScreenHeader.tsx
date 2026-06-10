@@ -43,6 +43,7 @@ const HomeScreenHeader = ({
         {hasActiveFilters && onFilterReset && (
           <Button
             unstyled
+
             onPress={onFilterReset}
             paddingRight="$1"
             paddingLeft="$1"
@@ -58,6 +59,20 @@ const HomeScreenHeader = ({
             </Text>
           </Button>
         )}
+
+            flex={1}
+            // marginLeft="$1"
+            placeholder="Search articles..."
+            placeholderTextColor="#778599"
+            onChangeText={onTextInputChange}
+            fontSize="$4"
+          />
+          {hasActiveFilters && onFilterReset ? (
+            <Button unstyled onPress={onFilterReset} paddingRight="$1" paddingLeft="$1">
+              <Ionicons name="refresh" size={20} color={'#FF5252'} />
+            </Button>
+          ) : null}
+
           <Button unstyled onPress={handlePresentModalPress}>
             <AntDesign name="menu-fold" size={20} color={'#191C1B'} />
           </Button>
