@@ -73,7 +73,20 @@ jobs:
         working-directory: ./frontend/android
         run: chmod +x gradlew
         
+      - name: Check Google Services Secret
+        id: secret-check
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$GOOGLE_SERVICES_JSON" ]; then
+            echo "has_secret=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping Android build: GOOGLE_SERVICES_JSON secret is missing (fork PR)."
+          else
+            echo "has_secret=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Inject google-services.json
+        if: steps.secret-check.outputs.has_secret == 'true'
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: |
@@ -81,21 +94,6 @@ jobs:
             const fs = require('fs');
             const path = 'android/app/google-services.json';
             let content = process.env.GOOGLE_SERVICES_JSON;
-            if (!content || content.trim().length === 0) {
-              console.warn('GOOGLE_SERVICES_JSON secret is not available (fork PR?). Using placeholder.');
-              fs.writeFileSync(path, JSON.stringify({
-                project_info: { project_number: '000000000000', project_id: 'placeholder-00000' },
-                client: [{
-                  client_info: {
-                    mobilesdk_app_id: '1:000000000000:android:0000000000000000',
-                    android_client_info: { package_name: 'com.anonymous.UltimateHealth' }
-                  },
-                  api_key: [{ current_key: 'placeholder' }]
-                }],
-                services: { analytics_service: { status: 2 }, appinvite_service: { status: 2 } }
-              }, null, 2));
-              process.exit(0);
-            }
             let parsed;
             try {
               parsed = JSON.parse(content);
@@ -116,16 +114,18 @@ jobs:
           "
 
       - name: Compile Android Debug Build
+        if: steps.secret-check.outputs.has_secret == 'true'
         working-directory: ./frontend/android
-        run: ./gradlew assembleDebug --console=plain
+        run: ./gradlew assembleDebug --console=plain --stacktrace 2>&1 | tee /tmp/gradle-output.log
 
       - name: Upload APK Artifact (On Failure)
-        if: failure()
+        if: failure() && steps.secret-check.outputs.has_secret == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: android-build-logs
           path: |
             ~/.gradle/daemon/**/daemon-*.out.log
             frontend/android/app/build/reports
+            /tmp/gradle-output.log
           if-no-files-found: ignore
           retention-days: 7

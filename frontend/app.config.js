@@ -107,9 +107,7 @@ const defaultStaticConfig = {
       "expo-build-properties",
       {
         android: {
-          minSdkVersion: 26,
-          compileSdkVersion: 35,
-          targetSdkVersion: 35
+          minSdkVersion: 26
         }
       }
     ],
