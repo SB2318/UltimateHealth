@@ -1,5 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
-import logger from 'logger';
+import logger from './logger';
 
 /**
  * SecureStorageUtils.ts

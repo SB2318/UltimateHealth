@@ -5,7 +5,7 @@ import {GET_STORAGE_DATA} from './APIUtils';
 import {Alert, Linking, Platform} from 'react-native';
 import RNFS from 'react-native-fs';
 import {secureClearAllItems} from './SecureStorageUtils';
-import logger from 'logger';
+import logger from './logger';
 import {
   deleteItem as deletePodcastCache,
   retrieveItem as retrievePodcastCache,

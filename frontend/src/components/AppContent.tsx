@@ -90,7 +90,7 @@ export default function AppContent() {
       // Only log notification payloads in development to avoid leaking
       // FCM message content (including user-targeted data fields) to
       // production log aggregators or crash reporters.
-      if (__DEV__) {
+      
         logger.log(
           'Foreground notification received from message:',
           remoteMessage,
@@ -99,7 +99,7 @@ export default function AppContent() {
     });
 
     const unsubscribe1 = addEventListener(state => {
-      if (__DEV__) {
+      
         logger.log('Connection type', state.type);
         logger.log('Is connected?', state.isConnected);
       }
@@ -108,7 +108,7 @@ export default function AppContent() {
     });
 
     const onOpenApp = messaging().onNotificationOpenedApp(remoteMessage => {
-      if (__DEV__) {
+      
         logger.log('Notification caused app to open:', remoteMessage);
       }
       // const data = remoteMessage.data;
