@@ -133,6 +133,11 @@ export type RootStackParamList = {
   CommunityGuidelines: undefined;
   ContributorPage: undefined;
   OpenSourcePage: undefined;
+  CollectionsScreen: undefined;
+  CollectionDetailScreen: {
+    collectionId: string;
+    collectionName: string;
+  };
 };
 
 type RedirectTo = {
@@ -794,4 +799,26 @@ export type NotificationPreferencesResponse = {
   contentClusters?: Category[];
   message: string;
   error?: string;
+};
+
+export type BookmarkCollection = {
+  _id: string;
+  name: string;
+  description?: string;
+  articleIds: number[];
+  articleCount: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CollectionDetailResponse = {
+  _id: string;
+  name: string;
+  description: string;
+  articleIds: number[];
+  totalArticles: number;
+  page: number;
+  totalPages: number;
+  createdAt: string;
+  updatedAt: string;
 };

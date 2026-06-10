@@ -111,6 +111,14 @@ const GET_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`
 const UPDATE_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`;
 
 
+/** Bookmark Collections */
+const COLLECTIONS_API = `${PROD_URL}/collections`;
+const COLLECTION_BY_ID = (id: string) => `${PROD_URL}/collections/${id}`;
+const COLLECTION_ARTICLES = (id: string) =>
+  `${PROD_URL}/collections/${id}/articles`;
+const COLLECTION_ARTICLE_BY_ID = (id: string, articleId: number) =>
+  `${PROD_URL}/collections/${id}/articles/${articleId}`;
+
 export {
   LOGIN_API,
   REGISTRATION_API,
@@ -193,4 +201,8 @@ export {
   SEND_MESSAGE_TO_GEMINI,
   GET_NOTIFICATION_PREFERENCES,
   UPDATE_NOTIFICATION_PREFERENCES,
+  COLLECTIONS_API,
+  COLLECTION_BY_ID,
+  COLLECTION_ARTICLES,
+  COLLECTION_ARTICLE_BY_ID,
 };

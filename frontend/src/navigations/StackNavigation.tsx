@@ -51,6 +51,8 @@ import ContributorPage from '../screens/ContributorPage';
 import OpenSourcePage from '../screens/OpenSourcePage';
 import NotificationPreferencesScreen from '../screens/NotificationPreferencesScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import CollectionsScreen from '../screens/CollectionsScreen';
+import CollectionDetailScreen from '../screens/CollectionDetailScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -415,6 +417,17 @@ const StackNavigation = () => {
         <Stack.Screen
         name="OpenSourcePage"
         component={OpenSourcePage}
+        options={{headerShown: false}}
+      />
+
+      <Stack.Screen
+        name="CollectionsScreen"
+        component={CollectionsScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="CollectionDetailScreen"
+        component={CollectionDetailScreen}
         options={{headerShown: false}}
       />
 
