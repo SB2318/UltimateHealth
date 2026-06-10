@@ -118,7 +118,7 @@ export default function Home() {
 
   // ── Newsletter state ──
   const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error"| "invalid" | "empty" | "duplicate">("idle");
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
@@ -439,10 +439,17 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedNewsletterEmail = newsletterEmail.trim();
-    if (!isValidEmail(trimmedNewsletterEmail)) {
-      setNewsletterStatus("error");
+
+    // Bug fix 1: Show specific validation error for empty or invalid email
+    if (!trimmedNewsletterEmail) {
+      setNewsletterStatus("empty");
       return;
     }
+    if (!isValidEmail(trimmedNewsletterEmail)) {
+      setNewsletterStatus("invalid");
+      return;
+    }
+     setNewsletterStatus("sending");
     setNewsletterStatus("sending");
     try {
       const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
@@ -450,6 +457,12 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: trimmedNewsletterEmail }),
       });
+
+      if (res.status === 409) {
+        setNewsletterStatus("duplicate");
+        return;
+      }
+
       if (!res.ok) throw new Error("Failed");
       setNewsletterStatus("success");
       setNewsletterEmail("");
@@ -890,10 +903,23 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                       {newsletterStatus === "sending" ? <i className="fas fa-spinner fa-spin"></i> : "Subscribe"}
                     </button>
                   </div>
-                  {newsletterStatus === "error" && (
-                    <p className="newsletter-error">Could not subscribe. Please try again.</p>
+                  {newsletterStatus === "error" && (<p className="newsletter-error">
+                   <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
+                  </p>
+                   )}
+                  {newsletterStatus ===  "invalid" && (<p className="newsletter-error">
+                  <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
+                  </p>
+                   )}
+                 {newsletterStatus === "empty" && (<p className="newsletter-error">
+                 <i className="fas fa-exclamation-circle"></i> Email address cannot be empty.
+                 </p>
                   )}
-                  <small className="footer-subscribe-note">We respect your privacy. Unsubscribe at any time.</small>
+                 {newsletterStatus === "duplicate" && (<p className="newsletter-error">
+                  <i className="fas fa-info-circle"></i> This email is already subscribed.
+                  </p>
+                  )}
+                <small className="footer-subscribe-note">We respect your privacy. Unsubscribe at any time.</small>
                 </>
               )}
             </form>
