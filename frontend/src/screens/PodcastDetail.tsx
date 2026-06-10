@@ -77,6 +77,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);
+  const [speed, setSpeed] = useState(1.0);
 
   const [isLike, setLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -130,6 +131,19 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
       setLikeCount(podcast.likedUsers.length);
     }
   }, [podcast, user_id])
+
+  const SPEEDS = [1.0, 1.25, 1.5, 2.0];
+
+  const cycleSpeed = () => {
+    const currentIndex = SPEEDS.indexOf(speed);
+    const nextSpeed = SPEEDS[(currentIndex + 1) % SPEEDS.length];
+    setSpeed(nextSpeed);
+  };
+
+  useEffect(() => {
+    player.playbackRate = speed;
+    player.shouldCorrectPitch = true;
+  }, [speed, player]);
 
   const SKIP_TIME = 5; // seconds
 
@@ -395,6 +409,15 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           onPress={handleForward}
           style={styles.controlButton}>
           <Ionicons name="play-forward" size={32} color="#9BB3C8" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          testID="podcast-speed-button"
+          accessibilityLabel="podcast-speed-button"
+          accessibilityHint="Cycles through playback speeds: 1x, 1.25x, 1.5x, 2x"
+          onPress={cycleSpeed}
+          style={styles.speedButton}>
+          <Text style={styles.speedText}>{speed}x</Text>
         </TouchableOpacity>
       </XStack>
     </View>
@@ -673,6 +696,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.6,
     shadowRadius: 20,
     elevation: 10,
+  },
+  speedButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 50,
+  },
+  speedText: {
+    color: '#9BB3C8',
+    fontSize: 14,
+    fontWeight: '700',
   },
   actionsContainer: {
     padding: 20,
