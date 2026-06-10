@@ -113,6 +113,17 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const {preferredLanguages, isLoading: preferencesLoading} = usePreferences();
   const {mutate: requestEdit, isPending: requestEditPending} =
     useRequestArticleEdit();
+  const handleClearAllFilters = () => {
+  // 1. Local state category ko reset karein
+  setSelectedCategory('');
+  setSortingType('');
+
+    // 2. Global Redux filters aur search mode ko clear karein
+  dispatch(setSearchMode(false));
+  dispatch(setSearchedArticles([]));
+  dispatch(setFilteredArticles([]));
+  dispatch(setTags([]));
+  };
 
   const {
     filteredArticles,
