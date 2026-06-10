@@ -35,7 +35,8 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import {import { rf } from '../helper/Metric';
+import {
+import { rf } from '../helper/Metric';
 
   GET_IMAGE,
   GET_STORAGE_DATA,

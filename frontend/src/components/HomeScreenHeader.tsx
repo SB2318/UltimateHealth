@@ -2,7 +2,8 @@ import React from 'react';
 import { Input, XStack, YStack, Button, Text, View } from 'tamagui';
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import { HomeScreenHeaderProps } from '../type';
-import { StatusBar } from 'expo-status-bar';import { rf } from '../helper/Metric';
+import { StatusBar } from 'expo-status-bar';
+import { rf } from '../helper/Metric';
 
 
  const HomeScreenHeader = ({

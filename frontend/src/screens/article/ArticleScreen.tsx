@@ -50,7 +50,8 @@ import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
-import LoadingSpinner from '../../components/LoadingSpinner';import { rf } from '../../helper/Metric';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import { rf } from '../../helper/Metric';
 
 
 const CHUNK_SIZE = 120;

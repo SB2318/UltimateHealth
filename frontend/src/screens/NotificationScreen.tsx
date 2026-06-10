@@ -13,7 +13,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useGetAllNotifications} from '../hooks/useGetAllNotifications';
 import {useMarkNotificationAsRead} from '../hooks/useMarkNoticationAsRead';
 import {useDeleteNotification} from '../hooks/useDeleteNotification';
-import {NoNotificationState} from '../components/EmptyStates';import { rf } from '../helper/Metric';
+import {NoNotificationState} from '../components/EmptyStates';
+import { rf } from '../helper/Metric';
 
 
 type PendingDelete = {

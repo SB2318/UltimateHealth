@@ -15,7 +15,8 @@ import {Button, Circle, Theme, XStack, YStack, Text, useTheme} from 'tamagui';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import AudioWaveform from '../components/AudioWaveform';
 import {useUploadPodcast} from '../hooks/useUploadPodcast';
-import Loader from '../components/Loader';import { rf } from '../helper/Metric';
+import Loader from '../components/Loader';
+import { rf } from '../helper/Metric';
 
 
 const PLAYBACK_SPEEDS = [1, 1.25, 1.5, 2];

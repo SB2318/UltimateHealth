@@ -1,5 +1,6 @@
 import React from 'react';
-import {import { rf } from '../helper/Metric';
+import {
+import { rf } from '../helper/Metric';
 
   Modal,
   View,

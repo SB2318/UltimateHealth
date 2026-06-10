@@ -18,7 +18,8 @@ import {Category, NotificationPreferencesScreenProp} from '../type';
 import {useGetCategories} from '../hooks/useGetArticleTags';
 import {useGetNotificationPreferences} from '../hooks/useGetNotificationPreferences';
 import {useUpdateNotificationPreferences} from '../hooks/useUpdateNotificationPreferences';
-import LoadingSpinner from '../components/LoadingSpinner';import { rf } from '../helper/Metric';
+import LoadingSpinner from '../components/LoadingSpinner';
+import { rf } from '../helper/Metric';
 
 
 const NotificationPreferencesScreen = ({

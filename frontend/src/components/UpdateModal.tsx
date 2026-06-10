@@ -1,4 +1,5 @@
-import { Modal, View, Text, Pressable, Linking } from 'react-native';import { rf } from '../helper/Metric';
+import { Modal, View, Text, Pressable, Linking } from 'react-native';
+import { rf } from '../helper/Metric';
 
 
 export default function UpdateModal({ visible, storeUrl }: any) {

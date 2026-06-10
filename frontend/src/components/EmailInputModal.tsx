@@ -7,7 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { EmailInputModalProp } from '../type';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
-import Feather from '@expo/vector-icons/Feather';import { rf } from '../helper/Metric';
+import Feather from '@expo/vector-icons/Feather';
+import { rf } from '../helper/Metric';
 
 
 const emailInputSchema = z.object({
