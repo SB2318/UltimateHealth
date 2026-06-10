@@ -1,4 +1,5 @@
 import React from 'react';
+import { useWindowDimensions } from 'react-native';
 import { Input, XStack, YStack, Button, Text, View } from 'tamagui';
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import { HomeScreenHeaderProps } from '../type';
@@ -12,32 +13,38 @@ const HomeScreenHeader = ({
   hasActiveFilters = false,
   onFilterReset,
 }: HomeScreenHeaderProps) => {
+  const { width } = useWindowDimensions();
+  const isCompact = width < 390;
+  const notificationSize = isCompact ? 30 : 34;
+
   return (
-    <YStack backgroundColor="#000A60" width="100%" paddingHorizontal="$3" paddingVertical="$3" elevation={1}>
-      <XStack alignItems="center" justifyContent="space-between" gap="$3">
+    <YStack backgroundColor="#F8FAFC" width="100%" paddingHorizontal={isCompact ? '$2' : '$3'} paddingVertical="$3" elevation={1} borderBottomWidth={1} borderBottomColor="#E2E8F0">
+      <XStack alignItems="center" justifyContent="space-between" gap={isCompact ? '$2' : '$3'}>
 
         {/* Search Bar */}
         <XStack
           flex={1}
+          minWidth={0}
           alignItems="center"
           backgroundColor="white"
           borderWidth={1.5}
-          borderColor={'#4D6360'}
+          borderColor={'#CBD5E1'}
           borderRadius={10}
           paddingHorizontal="$1"
           paddingVertical="$0.5"
           justifyContent="space-between"
-          shadowColor="rgba(0,0,0,0.05)"
+          shadowColor="rgba(15, 23, 42, 0.08)"
         >
-          <Feather name="search" size={18} color="#778599" />
+          <Feather name="search" size={isCompact ? 16 : 18} color="#475569" />
           <Input
             unstyled
             flex={1}
-            // marginLeft="$1"
+            minWidth={0}
+           // marginLeft="$1"
             placeholder="Search articles..."
-            placeholderTextColor="#778599"
+            placeholderTextColor="#64748B"
             onChangeText={onTextInputChange}
-            fontSize="$4"
+            fontSize={isCompact ? '$3' : '$4'}
           />
           {hasActiveFilters && onFilterReset ? (
             <Button unstyled onPress={onFilterReset} paddingRight="$1" paddingLeft="$1">
@@ -45,13 +52,13 @@ const HomeScreenHeader = ({
             </Button>
           ) : null}
           <Button unstyled onPress={handlePresentModalPress}>
-            <AntDesign name="menu-fold" size={20} color={'#191C1B'} />
+            <AntDesign name="menu-fold" size={isCompact ? 18 : 20} color={'#0F766E'} />
           </Button>
         </XStack>
 
         {/* Notification */}
-        <Button unstyled onPress={onNotificationClick} position="relative" p={0}>
-          <Ionicons name="notifications" size={38} color={'white'} />
+        <Button unstyled onPress={onNotificationClick} position="relative" p={0} flexShrink={0}>
+          <Ionicons name="notifications" size={notificationSize} color={'#1E40AF'} />
           {unreadCount > 0 && (
             <View
               position="absolute"
