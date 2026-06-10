@@ -24,8 +24,39 @@ env:
   NODE_VERSION: "20"
 
 jobs:
+  setup:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node & Cache Yarn Store
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "yarn"
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Cache node_modules
+        id: node-cache
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+
+      - name: Install Dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
+
   lint:
     name: Lint
+    needs: setup
     runs-on: ubuntu-latest
     timeout-minutes: 5
     defaults:
@@ -38,26 +69,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: frontend/pnpm-lock.yaml
 
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
 
       - name: Run ESLint
-        run: pnpm lint
+        run: yarn lint
 
   typecheck:
     name: Typecheck
+    needs: setup
     runs-on: ubuntu-latest
     timeout-minutes: 5
     defaults:
@@ -70,26 +98,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: frontend/pnpm-lock.yaml
 
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
 
       - name: Run TypeScript Check
-        run: pnpm type-check
+        run: yarn type-check
 
   test:
     name: Unit Tests
+    needs: setup
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -102,26 +127,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: frontend/pnpm-lock.yaml
 
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
 
       - name: Run Unit Tests
-        run: pnpm test
+        run: yarn test
 
   expo-doctor:
     name: Expo Doctor
+    needs: setup
     runs-on: ubuntu-latest
     timeout-minutes: 5
     defaults:
@@ -134,26 +156,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "pnpm"
-          cache-dependency-path: frontend/pnpm-lock.yaml
 
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
 
       - name: Run Expo Doctor
         shell: bash
         run: |
           set +e
-          OUTPUT=$(pnpm dlx expo-doctor 2>&1)
+          OUTPUT=$(npx expo-doctor 2>&1)
           STATUS=$?
           set -e
 

@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name, @typescript-eslint/no-require-imports */
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import GlossaryBottomSheet from '../GlossaryBottomSheet';
@@ -31,17 +30,24 @@ jest.mock('@tamagui/sheet', () => {
 
 jest.mock('tamagui', () => {
   const React = require('react');
-  const { View, Text, ScrollView, TouchableOpacity } = require('react-native');
+  const {
+    Text: RNText,
+    View: RNView,
+    ScrollView: RNScrollView,
+    Pressable,
+  } = require('react-native');
+
   return {
-    Theme: ({ children }: any) => React.createElement(React.Fragment, null, children),
-    XStack: ({ children, ...props }: any) => React.createElement(View, props, children),
-    YStack: ({ children, ...props }: any) => React.createElement(View, props, children),
-    Text: ({ children, ...props }: any) => React.createElement(Text, props, children),
-    Paragraph: ({ children, ...props }: any) => React.createElement(Text, props, children),
-    Card: ({ children, ...props }: any) => React.createElement(View, props, children),
-    ScrollView: ({ children, ...props }: any) => React.createElement(ScrollView, props, children),
-    Button: ({ children, onPress, ...props }: any) => 
-      React.createElement(TouchableOpacity, { onPress, ...props }, children),
+    Theme: ({children}: any) => React.createElement(React.Fragment, null, children),
+    XStack: ({children, ...props}: any) => React.createElement(RNView, props, children),
+    YStack: ({children, ...props}: any) => React.createElement(RNView, props, children),
+    Text: ({children, ...props}: any) => React.createElement(RNText, props, children),
+    Button: ({children, onPress, ...props}: any) =>
+      React.createElement(Pressable, {onPress, ...props}, children),
+    Card: ({children, ...props}: any) => React.createElement(RNView, props, children),
+    Paragraph: ({children, ...props}: any) => React.createElement(RNText, props, children),
+    ScrollView: ({children, ...props}: any) =>
+      React.createElement(RNScrollView, props, children),
   };
 });
 

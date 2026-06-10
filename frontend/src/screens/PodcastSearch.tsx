@@ -16,9 +16,7 @@ import {Feather} from '@expo/vector-icons';
 import {useUpdatePodcastViewcount} from '../hooks/useUpdatePodcastViewcount';
 import {useGetSearchPodcasts} from '../hooks/useGetSearchPodcasts';
 
-// Number of skeleton placeholders to show while loading.
-// Chosen to fill most phone screens without over-rendering.
-const SKELETON_COUNT = 6;
+const SKELETON_COUNT = 3;
 
 export default function PodcastSearch({navigation}: PodcastSearchProp) {
   const [query, setQuery] = useState<string>('');
