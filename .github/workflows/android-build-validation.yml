@@ -84,8 +84,15 @@ jobs:
             if (!content || content.trim().length === 0) {
               console.warn('GOOGLE_SERVICES_JSON secret is not available (fork PR?). Using placeholder.');
               fs.writeFileSync(path, JSON.stringify({
-                project_info: { project_number: '0', project_id: 'placeholder' },
-                client: [{ client_info: { mobilesdk_app_id: '1:0:android:000', android_client_info: { package_name: 'com.anonymous.UltimateHealth' } } }]
+                project_info: { project_number: '000000000000', project_id: 'placeholder-00000' },
+                client: [{
+                  client_info: {
+                    mobilesdk_app_id: '1:000000000000:android:0000000000000000',
+                    android_client_info: { package_name: 'com.anonymous.UltimateHealth' }
+                  },
+                  api_key: [{ current_key: 'placeholder' }]
+                }],
+                services: { analytics_service: { status: 2 }, appinvite_service: { status: 2 } }
               }, null, 2));
               process.exit(0);
             }
