@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+import { rf } from '../helper/Metric';
+
   Modal,
   View,
   Text,
@@ -37,12 +39,7 @@ const EmailVerifiedModal: React.FC<Props> = ({
           <Text style={styles.message}>
             Registration successful. Please verify your email.
           </Text>
-          <TouchableOpacity 
-            style={styles.button} 
-            onPress={onClick}
-            accessibilityRole="button"
-            accessibilityLabel={message}
-          >
+          <TouchableOpacity style={styles.button} onPress={onClick}>
             <Text style={styles.buttonText}>{message}</Text>
           </TouchableOpacity>
         </View>
@@ -70,13 +67,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: rf(24),
     color: '#007BFF',
     marginBottom: 10,
     alignSelf: 'center',
   },
   message: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#666',
     marginBottom: 20,
     textAlign: 'center',
@@ -87,7 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#fff',
     alignSelf: 'center',
   },

@@ -39,7 +39,8 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {wp} from '../helper/Metric';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
-import { useGetSinglePodcastDetails } from '../hooks/useGetSinglePodcastDetails';
+import { useGetSinglePodcastDetails } from '../hooks/useGetSinglePodcastDetails';import { rf } from '../helper/Metric';
+
 
 const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const socket = useSocket();
@@ -390,7 +391,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
         <YStack gap="$3">
           {/* Article Title Card */}
           <View style={styles.podcastTitleCard}>
-            <H3 fontSize={20} color="#1F2937" fontWeight={'700'}>
+            <H3 fontSize={rf(20)} color="#1F2937" fontWeight={'700'}>
               {podcast?.title}
             </H3>
           </View>
@@ -422,7 +423,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
 
           {/* Article Description */}
           <View style={styles.descriptionCard}>
-            <Paragraph color="#4B5563" fontSize={15} lineHeight={22}>
+            <Paragraph color="#4B5563" fontSize={rf(15)} lineHeight={22}>
               {podcast?.description}
             </Paragraph>
           </View>
@@ -559,7 +560,7 @@ const styles = StyleSheet.create({
   viewPodcastText: {
     color: '#FFFFFF',
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: rf(16),
   },
   descriptionCard: {
     backgroundColor: '#FFFFFF',
@@ -582,7 +583,7 @@ const styles = StyleSheet.create({
   },
   commentsHeaderText: {
     fontWeight: '700',
-    fontSize: 18,
+    fontSize: rf(18),
     color: '#1F2937',
   },
   container: {
@@ -591,7 +592,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   header: {
-    fontSize: 22,
+    fontSize: rf(22),
     fontWeight: 'bold',
     color: '#333',
     textAlign: 'center',
@@ -616,11 +617,11 @@ const styles = StyleSheet.create({
   },
   authorName: {
     fontWeight: '700',
-    fontSize: 15,
+    fontSize: rf(15),
   },
   authorFollowers: {
     fontWeight: '400',
-    fontSize: 13,
+    fontSize: rf(13),
   },
   followButton: {
     backgroundColor: PRIMARY_COLOR,
@@ -630,7 +631,7 @@ const styles = StyleSheet.create({
   },
   followButtonText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
   },
   commentContainer: {
@@ -641,12 +642,12 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   avatar: {
-    fontSize: 30,
+    fontSize: rf(30),
     marginRight: 10,
     alignSelf: 'center',
   },
   username: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: 'bold',
     color: '#333',
     marginEnd: 4, // Small gap between user handle and content
@@ -672,18 +673,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   username2: {
-    fontSize: 12,
+    fontSize: rf(12),
     fontWeight: 'bold',
     color: '#333',
     alignSelf: 'center',
   },
   comment: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#555',
     marginVertical: 5,
   },
   timestamp: {
-    fontSize: 12,
+    fontSize: rf(12),
     color: '#888',
   },
   replyContainer: {
@@ -691,7 +692,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   replyText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#555',
     fontStyle: 'italic',
   },
@@ -714,7 +715,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   submitButtonText: {
-    fontSize: 18,
+    fontSize: rf(18),
     color: '#fff',
     fontWeight: 'bold',
   },
@@ -726,18 +727,18 @@ const styles = StyleSheet.create({
   paddingHorizontal: 20,
 },
 emptyIcon: {
-  fontSize: 60,
+  fontSize: rf(60),
   marginBottom: 16,
 },
 emptyTitle: {
-  fontSize: 20,
+  fontSize: rf(20),
   fontWeight: 'bold',
   color: PRIMARY_COLOR,
   marginBottom: 8,
   textAlign: 'center',
 },
 emptySubtitle: {
-  fontSize: 14,
+  fontSize: rf(14),
   color: '#888',
   marginBottom: 24,
   textAlign: 'center',
@@ -751,7 +752,7 @@ emptyButton: {
 emptyButtonText: {
   color: '#fff',
   fontWeight: 'bold',
-  fontSize: 14,
+  fontSize: rf(14),
 },
 });
 

@@ -14,7 +14,8 @@ import {BUTTON_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import {handleExternalClick, StatusEnum} from '../helper/Utils';
 //import io from 'socket.io-client';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
+import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';import { rf } from '../helper/Metric';
+
 
 
 const ImprovementCard = ({item, onNavigate}: ImprovementCardProps) => {
@@ -98,7 +99,7 @@ const ImprovementCard = ({item, onNavigate}: ImprovementCardProps) => {
               style={{
                 ...styles.footerText1,
                 color: backgroundColor,
-                // fontSize: 16,
+                // fontSize: rf(16),
                 fontWeight: '700',
                 marginTop: 3,
               }}>

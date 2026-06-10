@@ -15,7 +15,8 @@ import Snackbar from 'react-native-snackbar';
 import useUploadImage from '../../hooks/useUploadImage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
-import {useRegdMutation} from '@/src/hooks/useUserRegistration';
+import {useRegdMutation} from '@/src/hooks/useUserRegistration';import { rf } from '../../helper/Metric';
+
 let validator = require('email-validator');
 const signupSecondSchema = z.object({
   specialization: z.string().min(1, 'Specialization is required'),
@@ -276,7 +277,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
           paddingVertical="$5"
           elevation={3}>
           <Text
-            fontSize={18}
+            fontSize={rf(18)}
             color="$white"
             textAlign="center"
             lineHeight={26}
@@ -285,7 +286,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
             combination of intellectual and moral interest found in no other
             profession.”
           </Text>
-          <Text fontSize={14} color="$white" textAlign="center" marginTop="$2">
+          <Text fontSize={rf(14)} color="$white" textAlign="center" marginTop="$2">
             ~ Sir William Osler
           </Text>
         </YStack>
@@ -383,7 +384,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
                       <Icon name={field.icon as any} size={20} color={theme.black.val} />
                     </YStack>
                   </XStack>
-                  {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
+                  {error && <Text color="$red10" fontSize={rf(12)}>{error.message}</Text>}
                 </YStack>
               )}
             />
@@ -400,7 +401,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
             onPress={handleSubmit(onSubmit)}
             disabled={!isValid || registerPending}
             opacity={!isValid || registerPending ? 0.5 : 1}>
-            <Text color="$white" fontWeight="700" fontSize={18}>
+            <Text color="$white" fontWeight="700" fontSize={rf(18)}>
               Register
             </Text>
           </Button>

@@ -36,7 +36,8 @@ import {
   setUserToken,
 } from '../../store/UserSlice';
 
-import { AuthData, LoginScreenProp } from '../../type';
+import { AuthData, LoginScreenProp } from '../../type';import { rf } from '../../helper/Metric';
+
 
 const loginSchema = z.object({
   email: z.string().email('Please Enter a Valid Email'),
@@ -280,7 +281,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             <Text
               alignSelf="center"
               textAlign="center"
-              fontSize={16}
+              fontSize={rf(16)}
               fontWeight="500"
               color={isDarkMode ? '$color' : '$color10'}
               maxWidth={300}
@@ -296,7 +297,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <YStack>
                   {error && (
-                    <Text color="$red10" fontSize={14} marginBottom="$2">
+                    <Text color="$red10" fontSize={rf(14)} marginBottom="$2">
                       {error.message}
                     </Text>
                   )}
@@ -336,7 +337,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
                 <YStack>
                   {error && (
-                    <Text color="$red10" fontSize={14} marginBottom="$2">
+                    <Text color="$red10" fontSize={rf(14)} marginBottom="$2">
                       {error.message}
                     </Text>
                   )}
@@ -391,7 +392,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               <Text
                 color={isDarkMode ? '$gray400' : '$gray700'}
                 fontWeight="500"
-                fontSize={13}
+                fontSize={rf(13)}
                 pressStyle={{opacity: 0.7}}
                 cursor="pointer"
                 onPress={() => {
@@ -404,7 +405,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               <Text
                 color="$blue10"
                 fontWeight="600"
-                fontSize={13}
+                fontSize={rf(13)}
                 pressStyle={{opacity: 0.7}}
                 cursor="pointer"
                 onPress={() => {
@@ -427,7 +428,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               disabled={loginPending || !isValid}
               opacity={loginPending || !isValid ? 0.5 : 1}
               width="100%">
-              <Text fontSize={18} color="$white" fontWeight="600">
+              <Text fontSize={rf(18)} color="$white" fontWeight="600">
                 Login
               </Text>
             </Button>
@@ -452,7 +453,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               onPress={() => navigation.navigate('SignUpScreenFirst')}>
               <Text
                 fontWeight="600"
-                fontSize={16}
+                fontSize={rf(16)}
                 color={isDarkMode ? '$color' : '$blue10'}>
                 Sign Up
               </Text>
@@ -481,7 +482,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               }}>
               <Text
                 fontWeight="500"
-                fontSize={15}
+                fontSize={rf(15)}
                 color={isDarkMode ? '$gray11' : '$gray11'}>
                 Continue as Guest
               </Text>

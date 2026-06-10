@@ -3,8 +3,10 @@ import { Input, XStack, YStack, Button, Text, View } from 'tamagui';
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import { HomeScreenHeaderProps } from '../type';
 import { StatusBar } from 'expo-status-bar';
+import { rf } from '../helper/Metric';
 
-const HomeScreenHeader = ({
+
+ const HomeScreenHeader = ({
   handlePresentModalPress,
   onTextInputChange,
   onNotificationClick,
@@ -33,7 +35,7 @@ const HomeScreenHeader = ({
           <Input
             unstyled
             flex={1}
-            // marginLeft="$1"
+           // marginLeft="$1"
             placeholder="Search articles..."
             placeholderTextColor="#778599"
             onChangeText={onTextInputChange}
@@ -64,7 +66,7 @@ const HomeScreenHeader = ({
               ai="center"
               jc="center"
             >
-              <Text color="white" fontSize={12} fontWeight="700">
+              <Text color="white" fontSize={rf(12)} fontWeight="700">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </Text>
             </View>

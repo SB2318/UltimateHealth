@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { GlassButton } from './GlassButton';
-import { ProfessionalColors, Typography, Spacing, BorderRadius } from '../styles/GlassStyles';
+import { ProfessionalColors, Typography, Spacing, BorderRadius } from '../styles/GlassStyles';import { rf } from '../helper/Metric';
+
 
 interface BaseEmptyStateProps {
   iconEmoji?: string;
@@ -314,7 +315,7 @@ const styles = StyleSheet.create({
     }),
   },
   iconEmoji: {
-    fontSize: 44,
+    fontSize: rf(44),
   },
   stateTitle: {
     fontWeight: '700',
@@ -337,7 +338,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   infoText: {
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '600',
     textAlign: 'center',
   },

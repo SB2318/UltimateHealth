@@ -7,7 +7,8 @@ import {
   ActivityIndicator,
   useColorScheme,
 } from 'react-native';
-import { ArticleSummary } from '../services/SummaryService';
+import { ArticleSummary } from '../services/SummaryService';import { rf } from '../helper/Metric';
+
 
 interface Props {
   summary: ArticleSummary | null;
@@ -60,7 +61,7 @@ const ResearchSummaryCard: React.FC<Props> = ({ summary, loading }) => {
             ✨ AI-generated  ·  Not medical advice
           </Text>
         </View>
-        <Text style={{ color: accent, fontSize: 16, marginLeft: 8 }}>
+        <Text style={{ color: accent, fontSize: rf(16), marginLeft: 8 }}>
           {expanded ? '▲' : '▼'}
         </Text>
       </TouchableOpacity>
@@ -126,32 +127,32 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '700',
   },
   aiTag: {
-    fontSize: 10,
+    fontSize: rf(10),
     marginTop: 3,
     fontStyle: 'italic',
   },
   loadingNote: {
-    fontSize: 12,
+    fontSize: rf(12),
     marginTop: 6,
     textAlign: 'center',
   },
   bodyText: {
-    fontSize: 14,
+    fontSize: rf(14),
     lineHeight: 22,
     marginBottom: 6,
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '700',
     marginTop: 14,
     marginBottom: 6,
   },
   bullet: {
-    fontSize: 13,
+    fontSize: rf(13),
     lineHeight: 20,
     paddingLeft: 8,
     marginBottom: 4,

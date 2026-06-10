@@ -8,7 +8,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
 
 type LoadingSpinnerProps = {
   size?: 'small' | 'large' | number;
@@ -69,13 +70,13 @@ const styles = StyleSheet.create({
   },
   text: {
     marginTop: 12,
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '600',
     textAlign: 'center',
   },
   subText: {
     marginTop: 6,
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#7f8c8d',
     textAlign: 'center',
   },

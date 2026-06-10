@@ -9,7 +9,8 @@ import {ON_PRIMARY_COLOR} from '../helper/Theme';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch, useSelector} from 'react-redux';
 import CreatePlaylist from '../components/CreatePlaylist';
-import { setaddedPodcastId, setRemovePlaylistId } from '../store/dataSlice';
+import { setaddedPodcastId, setRemovePlaylistId } from '../store/dataSlice';import { rf } from '../helper/Metric';
+
 
 export default function OfflinePodcastList({
   navigation,
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     // backgroundColor:'#ffffff'
   },
   header: {
-    fontSize: 24,
+    fontSize: rf(24),
     fontWeight: 'bold',
     marginBottom: 12,
   },
@@ -143,11 +144,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   title: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '600',
   },
   artist: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#666',
   },
 });

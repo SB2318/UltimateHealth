@@ -11,7 +11,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import CategoriesFlatlistModal from './CategoriesFlatlistModal';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {HomeScreenFilterModalProps} from '../type';
-import {INDIAN_LANGUAGES} from '../constants/languages';
+import {INDIAN_LANGUAGES} from '../constants/languages';import { rf } from '../helper/Metric';
+
 
 // Helper function to format date as DD/MM/YYY
 
@@ -365,7 +366,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E5E7EB',
   },
   title: {
-    fontSize: 20,
+    fontSize: rf(20),
     fontWeight: '700',
     color: '#111827',
   },
@@ -384,7 +385,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   sectionLabel: {
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '600',
     color: '#374151',
     marginBottom: 12,
@@ -406,7 +407,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontSize: 15,
+    fontSize: rf(15),
     color: '#111827',
     paddingVertical: 0,
   },
@@ -431,7 +432,7 @@ const styles = StyleSheet.create({
     borderColor: PRIMARY_COLOR,
   },
   chipText: {
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '500',
     color: '#6B7280',
   },
@@ -450,7 +451,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   selectedCountText: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: PRIMARY_COLOR,
     fontWeight: '600',
   },
@@ -465,7 +466,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   seeAllText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: PRIMARY_COLOR,
     fontWeight: '600',
   },
@@ -473,7 +474,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   selectedCategoriesLabel: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#6B7280',
     marginBottom: 8,
     fontWeight: '500',
@@ -492,7 +493,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   selectedCategoryChipText: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: 'white',
     fontWeight: '500',
   },
@@ -517,7 +518,7 @@ const styles = StyleSheet.create({
     borderColor: PRIMARY_COLOR,
   },
   categoryCardText: {
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     color: '#374151',
   },
@@ -541,7 +542,7 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
   },
   noResultsText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#9ca3af',
     marginTop: 8,
   },
@@ -572,7 +573,7 @@ const styles = StyleSheet.create({
   },
   resetButtonText: {
     color: PRIMARY_COLOR,
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '600',
   },
   applyButton: {
@@ -587,7 +588,7 @@ const styles = StyleSheet.create({
   },
   applyButtonText: {
     color: 'white',
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '600',
   },
 });

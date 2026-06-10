@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-  TextInput,
 } from 'react-native';
 import {useQueryClient} from '@tanstack/react-query';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -20,6 +19,8 @@ import {useGetCategories} from '../hooks/useGetArticleTags';
 import {useGetNotificationPreferences} from '../hooks/useGetNotificationPreferences';
 import {useUpdateNotificationPreferences} from '../hooks/useUpdateNotificationPreferences';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { rf } from '../helper/Metric';
+
 
 const NotificationPreferencesScreen = ({
   navigation,
@@ -28,7 +29,6 @@ const NotificationPreferencesScreen = ({
   const {isConnected} = useSelector((state: any) => state.network);
   const {isGuest} = useSelector((state: any) => state.user);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch all article tags
   const {data: categories, isLoading: tagsLoading} =
@@ -59,20 +59,6 @@ const NotificationPreferencesScreen = ({
       }
     }
   }, [preferencesData]);
-
-  const filteredCategories = (categories ?? []).filter((tag: Category) => {
-    if (!searchQuery.trim()) return true;
-    const query = searchQuery.toLowerCase().trim();
-    const nameMatch = tag.name?.toLowerCase().includes(query);
-    const titleMatch = (tag as any).title?.toLowerCase().includes(query);
-    const keywordsMatch = Array.isArray((tag as any).keywords)
-      ? (tag as any).keywords.some((kw: string) => kw?.toLowerCase().includes(query))
-      : typeof (tag as any).keywords === 'string'
-      ? (tag as any).keywords.toLowerCase().includes(query)
-      : false;
-      
-    return nameMatch || titleMatch || keywordsMatch;
-  });
 
   const toggleTag = (id: string) => {
     setSelectedIds(prev =>
@@ -151,114 +137,60 @@ const NotificationPreferencesScreen = ({
         </View>
       ) : (
         <>
-          <View style={styles.searchContainer}>
-            <View style={styles.searchBar}>
-              <MaterialCommunityIcons
-                name="magnify"
-                size={20}
-                color="#9ca3af"
-                style={styles.searchIcon}
-              />
-              <TextInput
-                style={styles.searchInput}
-                placeholder="Search preferences..."
-                placeholderTextColor="#9ca3af"
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-                autoCapitalize="none"
-                autoCorrect={false}
-                accessibilityLabel="Search preferences input"
-                testID="search-input"
-              />
-              {searchQuery.length > 0 && (
-                <TouchableOpacity
-                  onPress={() => setSearchQuery('')}
-                  accessibilityLabel="Clear search text"
-                  accessibilityRole="button"
-                  style={styles.clearButton}
-                  testID="clear-search-button">
-                  <MaterialCommunityIcons
-                    name="close-circle"
-                    size={18}
-                    color="#9ca3af"
-                  />
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-
           <ScrollView
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}>
-            {filteredCategories.length > 0 ? (
-              <>
-                <Text style={styles.sectionLabel}>Select all that apply</Text>
+            <Text style={styles.sectionLabel}>Select all that apply</Text>
 
-                <View style={styles.chipsContainer}>
-                  {filteredCategories.map((tag: Category) => {
-                    const isSelected = selectedIds.includes(tag._id);
-                    return (
-                      <TouchableOpacity
-                        key={tag._id}
-                        style={[
-                          styles.chip,
-                          isSelected && styles.chipSelected,
-                        ]}
-                        activeOpacity={0.75}
-                        onPress={() => toggleTag(tag._id)}>
-                        {isSelected && (
-                          <MaterialCommunityIcons
-                            name="check-circle"
-                            size={16}
-                            color="white"
-                            style={styles.chipIcon}
-                          />
-                        )}
-                        <Text
-                          style={[
-                            styles.chipText,
-                            isSelected && styles.chipTextSelected,
-                          ]}>
-                          {tag.name}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-
-                {/* Select All / Clear All */}
-                <View style={styles.bulkActionsRow}>
+            <View style={styles.chipsContainer}>
+              {(categories ?? []).map((tag: Category) => {
+                const isSelected = selectedIds.includes(tag._id);
+                return (
                   <TouchableOpacity
-                    style={styles.bulkBtn}
-                    onPress={() => {
-                      const visibleIds = (filteredCategories ?? []).map(t => t._id);
-                      setSelectedIds(prev => Array.from(new Set([...prev, ...visibleIds])));
-                    }}>
-                    <Text style={styles.bulkBtnText}>Select All</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.bulkBtn, styles.bulkBtnClear]}
-                    onPress={() => setSelectedIds([])}>
-                    <Text style={[styles.bulkBtnText, {color: '#6b7280'}]}>
-                      Clear All
+                    key={tag._id}
+                    style={[
+                      styles.chip,
+                      isSelected && styles.chipSelected,
+                    ]}
+                    activeOpacity={0.75}
+                    onPress={() => toggleTag(tag._id)}>
+                    {isSelected && (
+                      <MaterialCommunityIcons
+                        name="check-circle"
+                        size={16}
+                        color="white"
+                        style={styles.chipIcon}
+                      />
+                    )}
+                    <Text
+                      style={[
+                        styles.chipText,
+                        isSelected && styles.chipTextSelected,
+                      ]}>
+                      {tag.name}
                     </Text>
                   </TouchableOpacity>
-                </View>
-              </>
-            ) : (
-              <View style={styles.emptyStateContainer} testID="empty-state">
-                <MaterialCommunityIcons
-                  name="magnify-close"
-                  size={48}
-                  color="#9ca3af"
-                  style={styles.emptyStateIcon}
-                />
-                <Text style={styles.emptyStateTitle}>No preferences found</Text>
-                <Text style={styles.emptyStateSubtitle}>
-                  Try searching with a different keyword
+                );
+              })}
+            </View>
+
+            {/* Select All / Clear All */}
+            <View style={styles.bulkActionsRow}>
+              <TouchableOpacity
+                style={styles.bulkBtn}
+                onPress={() =>
+                  setSelectedIds((categories ?? []).map(t => t._id))
+                }>
+                <Text style={styles.bulkBtnText}>Select All</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.bulkBtn, styles.bulkBtnClear]}
+                onPress={() => setSelectedIds([])}>
+                <Text style={[styles.bulkBtnText, {color: '#6b7280'}]}>
+                  Clear All
                 </Text>
-              </View>
-            )}
+              </TouchableOpacity>
+            </View>
 
             <Text style={styles.helperText}>
               You will receive push notifications and emails for new articles
@@ -317,7 +249,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     color: 'rgba(255,255,255,0.75)',
-    fontSize: 12,
+    fontSize: rf(12),
     marginTop: 2,
   },
   loaderContainer: {
@@ -331,7 +263,7 @@ const styles = StyleSheet.create({
     paddingBottom: hp(4),
   },
   sectionLabel: {
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '600',
     color: '#6b7280',
     textTransform: 'uppercase',
@@ -368,7 +300,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   chipText: {
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
     color: PRIMARY_COLOR,
   },
@@ -392,13 +324,13 @@ const styles = StyleSheet.create({
     borderColor: '#d1d5db',
   },
   bulkBtnText: {
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '600',
     color: PRIMARY_COLOR,
   },
   helperText: {
     marginTop: hp(3),
-    fontSize: 12.5,
+    fontSize: rf(12).5,
     color: '#9ca3af',
     lineHeight: 18,
     borderLeftWidth: 3,
@@ -429,63 +361,8 @@ const styles = StyleSheet.create({
   },
   saveBtnText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '700',
     letterSpacing: 0.4,
-  },
-  searchContainer: {
-    paddingHorizontal: wp(4),
-    paddingTop: hp(2),
-    paddingBottom: hp(1),
-    backgroundColor: ON_PRIMARY_COLOR,
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: '#e5e7eb',
-    paddingHorizontal: wp(3),
-    height: hp(6),
-    minHeight: 44,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  searchIcon: {
-    marginRight: wp(2),
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 15,
-    color: '#1f2937',
-    paddingVertical: 0,
-  },
-  clearButton: {
-    padding: wp(1),
-  },
-  emptyStateContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: hp(8),
-    paddingHorizontal: wp(6),
-  },
-  emptyStateIcon: {
-    marginBottom: hp(2),
-  },
-  emptyStateTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#374151',
-    textAlign: 'center',
-    marginBottom: hp(1),
-  },
-  emptyStateSubtitle: {
-    fontSize: 14,
-    color: '#6b7280',
-    textAlign: 'center',
   },
 });

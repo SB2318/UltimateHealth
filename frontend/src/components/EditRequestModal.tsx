@@ -2,7 +2,8 @@ import {View, Text, StyleSheet, Modal, TouchableOpacity} from 'react-native';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import {hp, wp} from '../helper/Metric';
 import Ionicon from '@expo/vector-icons/Ionicons';
-import Editor from './Editor';
+import Editor from './Editor';import { rf } from '../helper/Metric';
+
 
 export default function EditRequestModal({
   visible,
@@ -72,11 +73,11 @@ const styles = StyleSheet.create({
     backgroundColor: ON_PRIMARY_COLOR,
   },
   text: {
-    fontSize: 20,
+    fontSize: rf(20),
     //color: 'black',
   },
   modalTitle: {
-    fontSize: 18,
+    fontSize: rf(18),
     //fontWeight: 'bold',
     fontWeight: '500',
     marginVertical: 3,
@@ -93,6 +94,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     textAlignVertical: 'top',
-    fontSize: 20,
+    fontSize: rf(20),
   },
 });

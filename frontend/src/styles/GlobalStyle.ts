@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
 
 const GlobalStyles = StyleSheet.create({
   container: {
@@ -13,7 +14,7 @@ const GlobalStyles = StyleSheet.create({
     alignItems: 'center',
   },
   welcomeLabel: {
-    fontSize: 24,
+    fontSize: rf(24),
     color: 'white',
     fontWeight: '700',
     marginStart: 4,
@@ -21,7 +22,7 @@ const GlobalStyles = StyleSheet.create({
 
   text: {
     color: 'black',
-    fontSize: 20,
+    fontSize: rf(20),
     fontWeight: '600',
     alignSelf: 'center',
   },
@@ -37,7 +38,7 @@ const GlobalStyles = StyleSheet.create({
   },
   normalText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: rf(20),
     fontWeight: '600',
     marginTop: 6,
   },

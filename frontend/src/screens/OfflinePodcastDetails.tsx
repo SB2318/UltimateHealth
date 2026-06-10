@@ -29,7 +29,8 @@ import Icon from '@expo/vector-icons/MaterialIcons';
 import {useSocket} from '../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import {useAudioPlayer} from 'expo-audio';
-import {useLikePodcast} from '../hooks/useLikePodcast';
+import {useLikePodcast} from '../hooks/useLikePodcast';import { rf } from '../helper/Metric';
+
 
 export default function OfflinePodcastDetail({
   route,
@@ -372,7 +373,7 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? 12 : 0,
   },
   header: {
-    fontSize: 20,
+    fontSize: rf(20),
     textAlign: 'center',
     marginBottom: 6,
     fontWeight: '600',
@@ -387,7 +388,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   episodeTitle: {
-    fontSize: 19,
+    fontSize: rf(19),
     fontWeight: 'bold',
     textAlign: 'center',
     color: '#1E1E1E',
@@ -395,7 +396,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   podcastTitle: {
-    fontSize: 16,
+    fontSize: rf(16),
     textAlign: 'justify',
     color: '#555',
     marginBottom: 2,
@@ -404,7 +405,7 @@ const styles = StyleSheet.create({
   readMoreText: {
     color: '#007AFF',
     marginTop: 2,
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     paddingHorizontal: 6,
   },
@@ -417,7 +418,7 @@ const styles = StyleSheet.create({
   },
   tagText: {
     color: PRIMARY_COLOR,
-    fontSize: 15,
+    fontSize: rf(15),
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 10,
@@ -430,7 +431,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   metaText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#666',
     fontWeight: '500',
   },
@@ -447,7 +448,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   time: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#777',
   },
   bufferingText: {
@@ -455,7 +456,7 @@ const styles = StyleSheet.create({
     color: '#888',
     marginBottom: 6,
     fontStyle: 'italic',
-    fontSize: 14,
+    fontSize: rf(14),
   },
   listenButton: {
     backgroundColor: BUTTON_COLOR,
@@ -469,7 +470,7 @@ const styles = StyleSheet.create({
   },
   listenText: {
     color: '#fff',
-    fontSize: 17,
+    fontSize: rf(17),
     fontWeight: '600',
   },
   footerOptions: {
@@ -505,11 +506,11 @@ const styles = StyleSheet.create({
   },
   authorName: {
     fontWeight: '700',
-    fontSize: 15,
+    fontSize: rf(15),
   },
   authorFollowers: {
     fontWeight: '400',
-    fontSize: 13,
+    fontSize: rf(13),
   },
   followButton: {
     backgroundColor: PRIMARY_COLOR,
@@ -519,7 +520,7 @@ const styles = StyleSheet.create({
   },
   followButtonText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
   },
   iconContainer: {
@@ -535,7 +536,7 @@ const styles = StyleSheet.create({
 
   likeCount: {
     marginLeft: 4,
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#333',
   },
 });

@@ -1,4 +1,4 @@
-import {Dimensions} from 'react-native';
+import {Dimensions, PixelRatio} from 'react-native';
 export const {width, height} = Dimensions.get('window');
 
   export const baseHeight = height * 0.1;
@@ -16,4 +16,9 @@ export const hp = (percent: number): number => {
 export const fp = (percent: number): number => {
   // Using the width for font size calculation as it usually scales better with different screen sizes
   return (width * percent) / 100;
+};
+
+// Responsive font size using PixelRatio.getFontScale()
+export const rf = (size: number): number => {
+  return size * PixelRatio.getFontScale();
 };

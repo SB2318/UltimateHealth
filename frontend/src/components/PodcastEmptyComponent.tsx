@@ -1,7 +1,8 @@
 import {Text, StyleSheet} from 'react-native';
 import {hp} from '../helper/Metric';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';import { rf } from '../helper/Metric';
+
 
 export default function PodcastEmptyComponent() {
   return (
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
   },
 
   message: {
-    fontSize: 17,
+    fontSize: rf(17),
     color: '#555',
     fontWeight: '500',
     textAlign: 'center',

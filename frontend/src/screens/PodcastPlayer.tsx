@@ -16,8 +16,10 @@ import {AntDesign, Ionicons} from '@expo/vector-icons';
 import AudioWaveform from '../components/AudioWaveform';
 import {useUploadPodcast} from '../hooks/useUploadPodcast';
 import Loader from '../components/Loader';
+import { rf } from '../helper/Metric';
 
-import FloatingSpeedSelector from '../components/FloatingSpeedSelector';
+
+const PLAYBACK_SPEEDS = [1, 1.25, 1.5, 2];
 
 const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const {uploadImage, loading, error: imageError} = useUploadImage();
@@ -25,7 +27,6 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [position, setPosition] = useState(0);
   const [speed, setSpeed] = useState(1);
-  const [isSpeedSelectorVisible, setIsSpeedSelectorVisible] = useState(false);
   
   const [duration, setDuration] = useState(0);
   const theme = useTheme();
@@ -97,7 +98,16 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
     setIsPlaying(false);
   };
 
+  const handleCycleSpeed = () => {
+    if (!player) return;
 
+    const currentIndex = PLAYBACK_SPEEDS.indexOf(speed);
+    const nextSpeed =
+      PLAYBACK_SPEEDS[(currentIndex + 1) % PLAYBACK_SPEEDS.length];
+
+    player.setPlaybackRate(nextSpeed, 'high');
+    setSpeed(nextSpeed);
+  };
 
   const SKIP_TIME = 5; // seconds
 
@@ -311,16 +321,16 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         <YStack mb="$4">
           <Text
             color="#94A3B8"
-            fontSize={13}
+            fontSize={rf(13)}
             fontWeight="600"
             mb="$2"
             letterSpacing={1}>
             NOW PLAYING
           </Text>
-          <Text color="#F1F5F9" fontSize={28} fontWeight="800" lineHeight={34}>
+          <Text color="#F1F5F9" fontSize={rf(28)} fontWeight="800" lineHeight={34}>
             {title}
           </Text>
-          <Text color="#94A3B8" fontSize={16} marginTop="$3" lineHeight={24}>
+          <Text color="#94A3B8" fontSize={rf(16)} marginTop="$3" lineHeight={24}>
             {description}
           </Text>
         </YStack>
@@ -345,7 +355,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
           <Text
             marginTop="$3"
             color="#60A5FA"
-            fontSize={15}
+            fontSize={rf(15)}
             fontWeight="700"
             textAlign="center"
             letterSpacing={0.5}>
@@ -380,14 +390,14 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
           <XStack justifyContent="space-between" marginTop="$2">
             <Text
               color="#94A3B8"
-              fontSize={14}
+              fontSize={rf(14)}
               fontWeight="600"
               style={{fontFamily: 'monospace'}}>
               {formatSecTime(position)}
             </Text>
             <Text
               color="#94A3B8"
-              fontSize={14}
+              fontSize={rf(14)}
               fontWeight="600"
               style={{fontFamily: 'monospace'}}>
               {formatSecTime(duration)}
@@ -451,8 +461,8 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             borderWidth={1}
             borderColor="$borderColor"
             pressStyle={{scale: 0.94, backgroundColor: '$backgroundPress'}}
-            onPress={() => setIsSpeedSelectorVisible(true)}>
-            <Text color="$color" fontSize={14} fontWeight="800">
+            onPress={handleCycleSpeed}>
+            <Text color="$color" fontSize={rf(14)} fontWeight="800">
               {formatPlaybackSpeed(speed)}
             </Text>
           </Button>
@@ -477,23 +487,11 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
           marginBottom="$2"
           textAlign="center"
           color="#64748B"
-          fontSize={11}
+          fontSize={rf(11)}
           numberOfLines={1}
           ellipsizeMode="middle">
           {filePath}
         </Text>
-
-        <FloatingSpeedSelector
-          currentSpeed={speed}
-          onSpeedSelect={(selectedSpeed) => {
-            if (player) {
-              player.setPlaybackRate(selectedSpeed, 'high');
-              setSpeed(selectedSpeed);
-            }
-          }}
-          visible={isSpeedSelectorVisible}
-          onClose={() => setIsSpeedSelectorVisible(false)}
-        />
       </YStack>
     </Theme>
   );
@@ -515,7 +513,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   time: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#777',
   },
 });

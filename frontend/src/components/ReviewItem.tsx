@@ -2,7 +2,8 @@ import React from 'react';
 import {Comment} from '../type';
 import { formatWithOrdinalAndDay } from '../helper/dateUtils';
 import {Avatar, XStack, YStack, Text, Paragraph} from 'tamagui';
-import {GET_STORAGE_DATA} from '../helper/APIUtils';
+import {GET_STORAGE_DATA} from '../helper/APIUtils';import { rf } from '../helper/Metric';
+
 
 export default function ReviewItem({item}: {item: Comment}) {
 
@@ -62,22 +63,22 @@ export default function ReviewItem({item}: {item: Comment}) {
         <YStack flex={1} space="$2">
           <XStack alignItems="center" justifyContent="space-between">
             <XStack alignItems="center" space="$2">
-              <Text fontWeight="800" color="#1A1A1A" fontSize={17} letterSpacing={0.3}>
+              <Text fontWeight="800" color="#1A1A1A" fontSize={rf(17)} letterSpacing={0.3}>
                 {item.adminId ? item.adminId.user_handle : item.userId.user_handle}
               </Text>
               {item.isEdited && (
-                <Text color="$gray9" fontSize={13} fontStyle="italic">
+                <Text color="$gray9" fontSize={rf(13)} fontStyle="italic">
                   (edited)
                 </Text>
               )}
             </XStack>
           </XStack>
 
-          <Paragraph color="#4A4A4A" fontSize={15} lineHeight={22}>
+          <Paragraph color="#4A4A4A" fontSize={rf(15)} lineHeight={22}>
             {item.content}
           </Paragraph>
 
-          <Text color="#999" fontSize={13} marginTop="$1">
+          <Text color="#999" fontSize={rf(13)} marginTop="$1">
             Last updated {formatWithOrdinal(item.updatedAt)}
           </Text>
         </YStack>

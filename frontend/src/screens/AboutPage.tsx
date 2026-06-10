@@ -20,7 +20,8 @@ import { AboutScreenProps } from '../type';
 import { GlassContainer } from '../components/GlassContainer';
 import { ProfessionalColors, Typography, Spacing } from '../styles/GlassStyles';
 import { useBackToTop } from '../components/BackToTopScrollView';
-import { BackToTopButton } from '../components/BackToTopButton';
+import { BackToTopButton } from '../components/BackToTopButton';import { rf } from '../helper/Metric';
+
 
 const AboutScreen = ({ navigation }: AboutScreenProps) => {
   const colorScheme = useColorScheme();
@@ -102,7 +103,7 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
                 <Text
                   style={{
                     color: ProfessionalColors.success,
-                    fontSize: 11,
+                    fontSize: rf(11),
                     fontWeight: '700',
                   }}>
                   VERSION {currentVersion}

@@ -19,7 +19,8 @@ import NoInternet from './NoInternet';
 import {useGetPlaylists} from '../hooks/useGetPlaylists';
 import {useUpdatePodcastPlaylist} from '../hooks/useUpdatePodcastPlaylist';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from './LoadingSpinner';import { rf } from '../helper/Metric';
+
 
 interface Props {
   //podcast_ids: string[];
@@ -333,12 +334,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerSubTitle: {
-    fontSize: 20,
+    fontSize: rf(20),
     color: '#1a1a1a',
     fontWeight: '700',
   },
   sectionLabel: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#6b7280',
     fontWeight: '600',
     marginTop: 16,
@@ -352,13 +353,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   noPlaylistsText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#9ca3af',
     marginTop: 8,
     fontWeight: '500',
   },
   headerCloseText: {
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#313131',
     fontWeight: '400',
   },
@@ -380,7 +381,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    fontSize: 15,
+    fontSize: rf(15),
     color: '#1a1a1a',
     backgroundColor: '#f9fafb',
   },
@@ -400,7 +401,7 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: '#ffffff',
     fontWeight: '700',
-    fontSize: 15,
+    fontSize: rf(15),
   },
   itemContainer: {
     flexDirection: 'row',
@@ -421,7 +422,7 @@ const styles = StyleSheet.create({
   },
 
   itemTitle: {
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '600',
     color: '#1a1a1a',
   },

@@ -6,7 +6,8 @@ import { Alert, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {OtpScreenProp} from '../../type';
 import Loader from '../../components/Loader';
-import {
+import {import { rf } from '../../helper/Metric';
+
   Button,
   Card,
   Input,
@@ -110,13 +111,13 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
                 justifyContent="center"
                 alignItems="center"
                 marginBottom="$2">
-                <Text fontSize={32} color="$blue10">
+                <Text fontSize={rf(32)} color="$blue10">
                   🔐
                 </Text>
               </YStack>
 
               <Text
-                fontSize={28}
+                fontSize={rf(28)}
                 fontWeight="700"
                 color="$color12"
                 textAlign="center">
@@ -125,7 +126,7 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
               <Paragraph
                 textAlign="center"
                 color="$gray700"
-                fontSize={15}
+                fontSize={rf(15)}
                 fontWeight="500"
                 lineHeight={22}
                 paddingHorizontal="$2">
@@ -153,7 +154,7 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
                   keyboardType="numeric"
                   maxLength={1}
                   textAlign="center"
-                  fontSize={28}
+                  fontSize={rf(28)}
                   fontWeight="700"
                   borderWidth={2}
                   borderColor={
@@ -189,12 +190,12 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
                 backgroundColor="$red2"
                 borderRadius="$3"
                 alignSelf="center">
-                <Text color="$red10" fontSize={20}>
+                <Text color="$red10" fontSize={rf(20)}>
                   ⚠️
                 </Text>
                 <Paragraph
                   color="$red10"
-                  fontSize={14}
+                  fontSize={rf(14)}
                   fontWeight="600"
                   textAlign="center">
                   {errorMessages}
@@ -219,13 +220,13 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
               shadowOffset={{width: 0, height: 4}}
               shadowOpacity={0.25}
               onPress={handleSubmit}>
-              <Text fontSize={17} fontWeight="600" color="white">
+              <Text fontSize={rf(17)} fontWeight="600" color="white">
                 Verify & Continue
               </Text>
             </Button>
 
             <YStack marginTop="$6" alignItems="center" gap="$3">
-              <Paragraph color="$gray400" fontSize={15} textAlign="center">
+              <Paragraph color="$gray400" fontSize={rf(15)} textAlign="center">
                 Didn&apos;t receive the code?
               </Paragraph>
               <Button
@@ -270,8 +271,8 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
                 padding="$2"
                 height="auto">
                 <XStack ai="center" gap="$2">
-                  <Text fontSize={18}>🔄</Text>
-                  <Text color="$blue10" fontWeight="700" fontSize={15}>
+                  <Text fontSize={rf(18)}>🔄</Text>
+                  <Text color="$blue10" fontWeight="700" fontSize={rf(15)}>
                     Resend Code
                   </Text>
                 </XStack>

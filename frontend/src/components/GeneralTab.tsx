@@ -11,7 +11,8 @@ import Feather from '@expo/vector-icons/Feather';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import {PRIMARY_COLOR} from '../helper/Theme';import { rf } from '../helper/Metric';
+
 
 const generalSchema = z.object({
   username: z.string().min(1, 'Username is required'),
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   inputLabel: {
-    fontSize: 17,
+    fontSize: rf(17),
     fontWeight: '600',
     color: '#222',
     marginBottom: 8,
@@ -222,7 +223,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 16,
     borderRadius: 12,
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     color: '#222',
     borderWidth: 1,
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 16,
     borderRadius: 12,
-    fontSize: 15,
+    fontSize: rf(15),
     fontWeight: '500',
     color: '#222',
     borderWidth: 1,
@@ -253,13 +254,13 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   btnText: {
-    fontSize: 18,
+    fontSize: rf(18),
     fontWeight: 'bold',
     color: 'white',
   },
   errorText: {
     color: 'red',
-    fontSize: 12,
+    fontSize: rf(12),
     marginTop: 4,
   },
 });

@@ -16,7 +16,8 @@ import {clearStorage} from '../../helper/Utils';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';
 import {useUserLogout} from '@/src/hooks/useUserLogout';
-import {useTheme} from 'tamagui';
+import {useTheme} from 'tamagui';import { rf } from '../../helper/Metric';
+
 
 const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
   const {profile_image, username} = route.params;
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
   },
   alertTitle: {
     marginBottom: 16,
-    fontSize: 34,
+    fontSize: rf(34),
     lineHeight: 44,
     fontWeight: '700',
     
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
   alertMessage: {
     marginBottom: 24,
     textAlign: 'center',
-    fontSize: 16,
+    fontSize: rf(16),
     lineHeight: 22,
     fontWeight: '500',
    
@@ -186,7 +187,7 @@ const styles = StyleSheet.create({
     borderColor: PRIMARY_COLOR,
   },
   btnText: {
-    fontSize: 17,
+    fontSize: rf(17),
     lineHeight: 24,
     fontWeight: '600',
    
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   btnSecondaryText: {
-    fontSize: 17,
+    fontSize: rf(17),
     lineHeight: 24,
     fontWeight: '600',
     color: PRIMARY_COLOR,

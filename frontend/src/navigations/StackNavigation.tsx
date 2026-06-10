@@ -50,7 +50,8 @@ import CommunityGuidelinesScreen from '../screens/CommunityGuidelinesScreen';
 import ContributorPage from '../screens/ContributorPage';
 import OpenSourcePage from '../screens/OpenSourcePage';
 import NotificationPreferencesScreen from '../screens/NotificationPreferencesScreen';
-import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';import { rf } from '../helper/Metric';
+
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -896,7 +897,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(229, 233, 241)',
   },
   placeholderStyle: {
-    fontSize: 15,
+    fontSize: rf(15),
     color: 'black',
   },
 });

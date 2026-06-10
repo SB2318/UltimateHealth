@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { YStack, XStack, Text, Button, Circle, ScrollView as TamaguiScrollView, useTheme } from 'tamagui';
 import { Sheet } from '@tamagui/sheet';
-import Feather from '@expo/vector-icons/Feather';
+import Feather from '@expo/vector-icons/Feather';import { rf } from '../helper/Metric';
+
 
 interface BenefitsModalProps {
   visible: boolean;
@@ -84,12 +85,12 @@ export default function BenefitsModal({ visible, onDismiss, onSignUp }: Benefits
               <Feather name="star" size={32} color={primaryColor as string} />
             </Circle>
 
-            <Text fontSize={24} fontWeight="800" color="$color" textAlign="center">
+            <Text fontSize={rf(24)} fontWeight="800" color="$color" textAlign="center">
               Why Join Us?
             </Text>
             
             <Text 
-              fontSize={15} 
+              fontSize={rf(15)} 
               color="$color10" 
               textAlign="center" 
               lineHeight={22} 
@@ -113,8 +114,8 @@ export default function BenefitsModal({ visible, onDismiss, onSignUp }: Benefits
                     <Feather name={item.icon as any} size={22} color={primaryColor as string} />
                   </Circle>
                   <YStack flex={1}>
-                    <Text fontSize={16} fontWeight="700" color="$color">{item.title}</Text>
-                    <Text fontSize={14} color="$color10" marginTop="$1">{item.description}</Text>
+                    <Text fontSize={rf(16)} fontWeight="700" color="$color">{item.title}</Text>
+                    <Text fontSize={rf(14)} color="$color10" marginTop="$1">{item.description}</Text>
                   </YStack>
                 </XStack>
               ))}
@@ -133,7 +134,7 @@ export default function BenefitsModal({ visible, onDismiss, onSignUp }: Benefits
                 onSignUp();
               }}
             >
-              <Text fontSize={18} fontWeight="700" color="$white">
+              <Text fontSize={rf(18)} fontWeight="700" color="$white">
                 Sign Up Now
               </Text>
             </Button>
@@ -151,7 +152,7 @@ export default function BenefitsModal({ visible, onDismiss, onSignUp }: Benefits
                 onDismiss();
               }}
             >
-              <Text fontSize={16} fontWeight="600" color="$color10">
+              <Text fontSize={rf(16)} fontWeight="600" color="$color10">
                 Maybe Later
               </Text>
             </Button>

@@ -5,7 +5,8 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 
 import { RootStackParamList } from '../type';
-import BenefitsModal from './BenefitsModal';
+import BenefitsModal from './BenefitsModal';import { rf } from '../helper/Metric';
+
 
 interface GuestPlaceholderScreenProps {
   title?: string;
@@ -51,7 +52,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
       </YStack>
 
       <Text
-        fontSize={24}
+        fontSize={rf(24)}
         fontWeight="800"
         color="$color"
         textAlign="center"
@@ -60,7 +61,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
       </Text>
 
       <Text
-        fontSize={16}
+        fontSize={rf(16)}
         color="$color10"
         textAlign="center"
         lineHeight={24}
@@ -85,7 +86,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
             });
           }}
         >
-          <Text fontSize={18} color="$white" fontWeight="600">
+          <Text fontSize={rf(18)} color="$white" fontWeight="600">
             Sign In
           </Text>
         </Button>
@@ -101,7 +102,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
             navigation.navigate('SignUpScreenFirst');
           }}
         >
-          <Text fontSize={18} color="$color" fontWeight="600">
+          <Text fontSize={rf(18)} color="$color" fontWeight="600">
             Sign Up
           </Text>
         </Button>
@@ -117,7 +118,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
         onPress={() => setIsBenefitsModalVisible(true)}
       >
         <Text
-          fontSize={15}
+          fontSize={rf(15)}
           color="$color10"
           fontWeight="600"
           textDecorationLine="underline"

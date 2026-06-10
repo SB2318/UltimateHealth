@@ -14,7 +14,8 @@ import {PRIMARY_COLOR} from '../helper/Theme';
 import {XStack, YStack, Input, Separator, Text, useTheme} from 'tamagui';
 import {Feather} from '@expo/vector-icons';
 import {useUpdatePodcastViewcount} from '../hooks/useUpdatePodcastViewcount';
-import {useGetSearchPodcasts} from '../hooks/useGetSearchPodcasts';
+import {useGetSearchPodcasts} from '../hooks/useGetSearchPodcasts';import { rf } from '../helper/Metric';
+
 
 const SKELETON_COUNT = 3;
 
@@ -146,10 +147,10 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
           <XStack alignItems="center" gap="$3">
             <Feather name="mic" size={24} color={PRIMARY_COLOR} />
             <YStack>
-              <Text style={{fontSize: 24, fontWeight: '800', color: theme.color.val}}>
+              <Text style={{fontSize: rf(24), fontWeight: '800', color: theme.color.val}}>
                 Discover Podcasts
               </Text>
-              <Text style={{fontSize: 13, color: theme.colorMuted?.val, marginTop: 2}}>
+              <Text style={{fontSize: rf(13), color: theme.colorMuted?.val, marginTop: 2}}>
                 {searchData.length > 0
                   ? `${searchData.length} results found`
                   : 'Search for your favorite content'}
@@ -188,7 +189,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
             onChangeText={setQuery}
             value={query}
             color={theme.color.val}
-            fontSize={14}
+            fontSize={rf(14)}
             fontWeight="500"
             focusStyle={{
               outlineWidth: 0,
@@ -229,7 +230,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
               query !== '' && searchData.length > 0 ? (
                 <YStack paddingVertical="$3" paddingHorizontal="$2">
                   <Text
-                    fontSize={13}
+                    fontSize={rf(13)}
                     fontWeight="700"
                     color={theme.colorMuted?.val}
                     letterSpacing={1}>
@@ -246,11 +247,11 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                   paddingVertical="$10"
                   gap="$3">
                   <Feather name="headphones" size={64} color={theme.colorMuted?.val as string} />
-                  <Text fontSize={18} fontWeight="700" color={theme.colorMuted?.val}>
+                  <Text fontSize={rf(18)} fontWeight="700" color={theme.colorMuted?.val}>
                     Start Your Search
                   </Text>
                   <Text
-                    fontSize={14}
+                    fontSize={rf(14)}
                     color={theme.colorMuted?.val}
                     textAlign="center"
                     paddingHorizontal="$6">

@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ScrollView,
   Alert,
   Dimensions,
   Share,
@@ -34,7 +35,6 @@ import {
 //import CommentScreen from '../CommentScreen';
 import Tts from 'react-native-tts';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import FloatingSpeedSelector from '../../components/FloatingSpeedSelector';
 
 import {setUserHandle} from '../../store/UserSlice';
 import {FontAwesome5} from '@expo/vector-icons';
@@ -47,19 +47,12 @@ import {useGetProfile} from '@/src/hooks/useGetProfile';
 import {useLikeArticle} from '@/src/hooks/useLikeArticle';
 import {useUpdateFollowStatusByArticle} from '@/src/hooks/useUpdateFollowStatus';
 import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
-import {getReadTime} from '../../utils/readTime';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import Animated, {
-  useSharedValue,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  interpolate,
-  Extrapolate,
-  runOnJS,
-} from 'react-native-reanimated';
+import { rf } from '../../helper/Metric';
+
 
 const CHUNK_SIZE = 120;
 
@@ -72,17 +65,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
-  const [isSpeedSelectorVisible, setIsSpeedSelectorVisible] = useState(false);
   const [playerVisible, setPlayerVisible] = useState(false);
   const [summary, setSummary] = useState<ArticleSummary | null>(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const chunkIndexRef = useRef(0);
   const wordsRef = useRef<string[]>([]);
-
-  // Progress Bar Shared Values
-  const scrollY = useSharedValue(0);
-  const contentHeight = useSharedValue(0);
-  const layoutHeight = useSharedValue(0);
 
   const {mutate: followMutation, isPending: followMutationPending} =
     useUpdateFollowStatusByArticle();
@@ -213,12 +200,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   // Generate AI summary using Gemini
   useEffect(() => {
-    if (!article?.content) {
+    if (!article?.content && !article?.body) {
       setSummary(null);
       return;
     }
 
-    const rawText = article?.content || '';
+    const rawText = article?.content || article?.body || '';
     
     // Only call API if there's enough text
     if (!rawText || rawText.length < 100) {
@@ -235,7 +222,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       .catch(() => setSummary(null))
       .finally(() => setSummaryLoading(false));
 
-  }, [article?.content]);
+  }, [article?.content, article?.body]);
 
   // --- Settings ---
   const handleLike = () => {
@@ -561,9 +548,20 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
-  const handleSpeedSelect = (selectedSpeed: number) => {
-    setSpeechRate(selectedSpeed);
-    Tts.setDefaultRate(selectedSpeed);
+  const SPEED_OPTIONS = [0.5, 0.75, 1.0, 1.25, 1.5];
+  const SPEED_LABELS: Record<number, string> = {
+    0.5: '0.5x',
+    0.75: '0.75x',
+    1.0: '1x',
+    1.25: '1.25x',
+    1.5: '1.5x',
+  };
+
+  const handleSpeedChange = () => {
+    const currentIndex = SPEED_OPTIONS.indexOf(speechRate);
+    const nextRate = SPEED_OPTIONS[(currentIndex + 1) % SPEED_OPTIONS.length];
+    setSpeechRate(nextRate);
+    Tts.setDefaultRate(nextRate);
     // Restart current position with new speed if currently playing
     if (isPlaying && !isPaused) {
       Tts.removeAllListeners('tts-finish');
@@ -583,72 +581,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
     }
   };
-
-  // Function to handle the Read Status logic (preserved from original onScroll)
-  const handleReadStatusUpdate = (offset: number, height: number, layout: number) => {
-    if (layout + offset >= height) {
-      if (
-        article &&
-        !readEventSave &&
-        !isGuest &&
-        article.status === StatusEnum.PUBLISHED
-      ) {
-        updateReadEvent(undefined, {
-          onSuccess: () => {
-            setReadEventSave(true);
-            Snackbar.show({
-              text: 'Your read status updated.',
-              duration: Snackbar.LENGTH_SHORT,
-            });
-          },
-          onError: err => {
-            console.log('Update Read Status mutation error', err);
-            Snackbar.show({
-              text: 'Failed to update your read status.',
-              duration: Snackbar.LENGTH_SHORT,
-            });
-          },
-        });
-      }
-    }
-  };
-
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: event => {
-      scrollY.value = event.contentOffset.y;
-      contentHeight.value = event.contentSize.height;
-      layoutHeight.value = event.layoutMeasurement.height;
-
-      // Execute existing read-status logic on JS thread
-      runOnJS(handleReadStatusUpdate)(
-        event.contentOffset.y,
-        event.contentSize.height,
-        event.layoutMeasurement.height,
-      );
-    },
-  });
-
-  const progressStyle = useAnimatedStyle(() => {
-  const scrollableDistance =
-    contentHeight.value - layoutHeight.value;
-
-  if (scrollableDistance <= 0 && contentHeight.value > 0) {
-    return {
-      width: Dimensions.get('window').width,
-    };
-  }
-
-  const width = interpolate(
-    scrollY.value,
-    [0, Math.max(1, scrollableDistance)],
-    [0, Dimensions.get('window').width],
-    Extrapolate.CLAMP,
-  );
-
-  return {
-    width,
-  };
-});
 
   if (articleLoading) {
     return <Loader />;
@@ -672,9 +604,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Reading Progress Bar */}
-      <Animated.View style={[styles.progressBar, progressStyle]} />
-
       <View style={styles.imageContainer}>
         {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
           <Image
@@ -749,10 +678,39 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         )}
       </View>
 
-      <Animated.ScrollView
+      <ScrollView
         style={styles.scrollView}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
+        onScroll={e => {
+          let windowHeight = Dimensions.get('window').height,
+            height = e.nativeEvent.contentSize.height,
+            offset = e.nativeEvent.contentOffset.y;
+          if (windowHeight + offset >= height) {
+            if (
+              article &&
+              !readEventSave &&
+              !isGuest &&
+              article.status === StatusEnum.PUBLISHED
+            ) {
+              updateReadEvent(undefined, {
+                onSuccess: () => {
+                  console.log('Read Event Updated');
+                  setReadEventSave(true);
+                  Snackbar.show({
+                    text: 'Your read status updated.',
+                    duration: Snackbar.LENGTH_SHORT,
+                  });
+                },
+                onError: err => {
+                  console.log('Update Read Status mutation error', err);
+                  Snackbar.show({
+                    text: 'Failed to update your read status.',
+                    duration: Snackbar.LENGTH_SHORT,
+                  });
+                },
+              });
+            }
+          }
+        }}
         contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.contentContainer}>
           {article && (
@@ -771,16 +729,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           {article && (
             <>
               <Text style={styles.titleText}>{article?.title}</Text>
-<Text style={{
-  fontSize: 13,
-  color: '#6C6C6D',
-  marginTop: 6,
-  marginBottom: 4,
-  fontWeight: '500',
-}}>
-  🕐 {getReadTime(articleContent ?? '')}
-</Text>
-<View style={styles.fontSizeControls}>
+              <View style={styles.fontSizeControls}>
                 <Text style={styles.fontSizeLabel}>Text size</Text>
                 <View style={styles.fontSizeButtons}>
                   <TouchableOpacity
@@ -1178,9 +1127,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             {/* Speed button */}
             <TouchableOpacity
               style={styles.ttsSpeedButton}
-              onPress={() => setIsSpeedSelectorVisible(true)}>
+              onPress={handleSpeedChange}>
               <Text style={styles.ttsSpeedText}>
-                {`${speechRate}x`}
+                {SPEED_LABELS[speechRate]}
               </Text>
             </TouchableOpacity>
 
@@ -1210,13 +1159,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </View>
         </View>
       )}
-
-      <FloatingSpeedSelector
-        currentSpeed={speechRate}
-        onSpeedSelect={handleSpeedSelect}
-        visible={isSpeedSelectorVisible}
-        onClose={() => setIsSpeedSelectorVisible(false)}
-      />
     </SafeAreaView>
   );
 };
@@ -1228,16 +1170,6 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     backgroundColor: '#ffffff',
-  },
-  progressBar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    height: 4,
-    backgroundColor: PRIMARY_COLOR,
-    zIndex: 1000,
-    borderBottomRightRadius: 2,
-    borderTopRightRadius: 2,
   },
   scrollView: {
     flex: 0,
@@ -1286,17 +1218,17 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontWeight: '400',
-    fontSize: 12,
+    fontSize: rf(12),
     color: '#6C6C6D',
     textTransform: 'uppercase',
   },
   viewText: {
     fontWeight: '500',
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#6C6C6D',
   },
   titleText: {
-    fontSize: 25,
+    fontSize: rf(25),
     fontWeight: 'bold',
     marginTop: 5,
   },
@@ -1307,7 +1239,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   fontSizeLabel: {
-    fontSize: 13,
+    fontSize: rf(13),
     color: '#6C6C6D',
     fontWeight: '500',
   },
@@ -1325,7 +1257,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   fontSizeButtonText: {
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#333333',
     fontWeight: '600',
   },
@@ -1377,7 +1309,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     fontWeight: '400',
     color: '#6C6C6D',
-    fontSize: 15,
+    fontSize: rf(15),
     textAlign: 'justify',
   },
   footer: {
@@ -1410,7 +1342,7 @@ const styles = StyleSheet.create({
     minHeight: 52,
   },
   actionTextFooter: {
-    fontSize: 10,
+    fontSize: rf(10),
     fontWeight: '600',
   },
   authorRow: {
@@ -1430,11 +1362,11 @@ const styles = StyleSheet.create({
   },
   authorName: {
     fontWeight: '700',
-    fontSize: 14,
+    fontSize: rf(14),
   },
   authorFollowers: {
     fontWeight: '400',
-    fontSize: 11,
+    fontSize: rf(11),
   },
   followButton: {
     backgroundColor: PRIMARY_COLOR,
@@ -1444,7 +1376,7 @@ const styles = StyleSheet.create({
   },
   followButtonText: {
     color: 'white',
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '600',
   },
 
@@ -1514,19 +1446,19 @@ const styles = StyleSheet.create({
   },
   ttsSpeedText: {
     color: 'white',
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '700',
   },
   ttsStatusText: {
     flex: 1,
     color: '#f8fafc',
-    fontSize: 13,
+    fontSize: rf(13),
     fontWeight: '600',
     textAlign: 'right',
   },
 
   submitButtonText: {
-    fontSize: 18,
+    fontSize: rf(18),
     color: '#fff',
     fontWeight: 'bold',
   },
@@ -1534,6 +1466,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: PRIMARY_COLOR,
     marginTop: hp(0.5),
-    fontSize: 14,
+    fontSize: rf(14),
   },
 });

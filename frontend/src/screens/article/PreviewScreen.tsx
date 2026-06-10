@@ -28,7 +28,8 @@ import {useSubmitImprovement} from '@/src/hooks/useSubmitImprovement';
 import {useSubmitSuggestedChanges} from '@/src/hooks/useSubmitSuggestedChanges';
 import {useUploadArticleToPocketbase} from '@/src/hooks/useUploadArticlePocketbase';
 import {useUploadImprovementToPocketbase} from '@/src/hooks/useUploadImprovementToPocketbase';
-import {useRenderSuggestion} from '@/src/hooks/useRenderSuggestion';
+import {useRenderSuggestion} from '@/src/hooks/useRenderSuggestion';import { rf } from '../../helper/Metric';
+
 
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {
@@ -467,7 +468,7 @@ const styles = StyleSheet.create({
   },
   textWhite: {
     fontWeight: '700',
-    fontSize: 16,
+    fontSize: rf(16),
     color: 'white',
   },
   button: {
@@ -506,17 +507,17 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   iconText: {
-    fontSize: 32,
+    fontSize: rf(32),
   },
   reviewTitle: {
-    fontSize: 22,
+    fontSize: rf(22),
     fontWeight: '700',
     color: '#1F2937',
     marginBottom: 8,
     textAlign: 'center',
   },
   reviewSubtext: {
-    fontSize: 15,
+    fontSize: rf(15),
     color: '#6B7280',
     textAlign: 'center',
     marginBottom: 20,
@@ -538,7 +539,7 @@ const styles = StyleSheet.create({
   },
   continueButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: rf(16),
     fontWeight: '700',
     letterSpacing: 0.5,
   },
@@ -550,7 +551,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E5E7EB',
   },
   previewLabel: {
-    fontSize: 14,
+    fontSize: rf(14),
     fontWeight: '600',
     color: '#6B7280',
     textTransform: 'uppercase',
