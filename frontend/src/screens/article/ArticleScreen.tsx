@@ -873,7 +873,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             </>
           )}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
 
       <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
         {/* Action Bar Row */}

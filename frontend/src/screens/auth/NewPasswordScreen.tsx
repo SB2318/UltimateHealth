@@ -112,9 +112,6 @@ export default function NewPasswordScreen({
     );
   };
 
-    );
-  };
-
   const insets = useSafeAreaInsets();
   if (isPending) {
     return <Loader />;
