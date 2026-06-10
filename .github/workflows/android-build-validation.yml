@@ -85,7 +85,7 @@ jobs:
               console.warn('GOOGLE_SERVICES_JSON secret is not available (fork PR?). Using placeholder.');
               fs.writeFileSync(path, JSON.stringify({
                 project_info: { project_number: '0', project_id: 'placeholder' },
-                client: [{ client_info: { mobilesdk_app_id: '1:0:android:000', android_client_info: { package_name: 'com.ultimatehealth.app' } } }]
+                client: [{ client_info: { mobilesdk_app_id: '1:0:android:000', android_client_info: { package_name: 'com.anonymous.UltimateHealth' } } }]
               }, null, 2));
               process.exit(0);
             }
