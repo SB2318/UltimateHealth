@@ -1,0 +1,98 @@
+[33m45b5aa1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/reposition-explore-filters[m[33m, [m[1;31morigin/feature/reposition-explore-filters[m[33m)[m chore: resolve merge conflict in env example
+[33me362ce6[m chore: force override env example to clear hardcoded secrets check
+[33mceef28a[m Merge branch 'main' into feature/reposition-explore-filters
+[33m7b6ce82[m feat: reposition clear all filters button to home screen header next to search input
+[33mc670411[m fix: retry on HTTP 503 (and other 5xx errors) from Gemini API
+[33mf66757c[m feat: fetch recent commits and enhance Gemini triage prompt to distinguish web and mobile frontend
+[33m582d80e[m feat: improve issue triage bot replies with difficulty labels, descriptive effect/reasoning, and auto-assignment for issue authors
+[33m3a8f9c3[m fix: switch back to gemini-2.5-flash since 2.0-flash has 0 quota on this key
+[33me128617[m fix: increase base_wait to 50s for Gemini 429 retries to avoid wasting quota on early retries
+[33mae09cb9[m chore: increase Gemini 429 backoff wait time to handle 46s+ RetryInfo demands
+[33md4e6f57[m fix: implement exponential backoff retry logic for Gemini API 429 errors
+[33meecbe80[m feat: add workflow_dispatch with issue/PR number inputs for manual single-item triage and review
+[33ma4f7c1a[m refactor: remove all scheduled/batch/manual triggers - event-driven only (new issue, new PR)
+[33m98eaf27[m Merge pull request #1238 from Hasini2706/feat/floating-speed-selector-1072
+[33m740bc74[m Merge branch 'main' into feat/floating-speed-selector-1072
+[33m92cf1aa[m Merge pull request #1255 from akshatsinghai6682-sketch/main
+[33mf209238[m Merge branch 'main' into main
+[33ma6dabaa[m Delete frontend/package-lock.json
+[33mb6e7524[m Merge pull request #1214 from saidai-bhuvanesh/fix/a11y-core-components
+[33m9af482d[m Merge branch 'main' into fix/a11y-core-components
+[33mbb2378a[m Merge pull request #1209 from WHENKEY2007/feat/notification-preferences-search
+[33mc3d8668[m Merge branch 'main' into feat/notification-preferences-search
+[33m11f4ee6[m Merge pull request #1207 from paruuup/main
+[33m52c580c[m Merge pull request #1159 from pratyakshasingh281-coder/feat/article-read-time
+[33mae510a9[m Delete frontend/package-lock.json
+[33m3b1e139[m Merge pull request #1298 from anjali62510-star/fix/notifications-auto-refresh
+[33m86c1a9b[m Merge branch 'main' into fix/notifications-auto-refresh
+[33m665c7ac[m Merge pull request #1241 from Yug-Gupta/bugfix/password-icon-clean
+[33me8a8daa[m Merge branch 'main' into bugfix/password-icon-clean
+[33m97f5d88[m Merge pull request #1267 from SB2318/dependabot/npm_and_yarn/frontend/lottiefiles/dotlottie-react-0.19.4
+[33m53cdb66[m Merge branch 'main' into dependabot/npm_and_yarn/frontend/lottiefiles/dotlottie-react-0.19.4
+[33m6c39ac3[m Merge pull request #1265 from SB2318/dependabot/npm_and_yarn/frontend/react-native-safe-area-context-5.8.0
+[33mda32eae[m Merge branch 'main' into dependabot/npm_and_yarn/frontend/react-native-safe-area-context-5.8.0
+[33mdcbc79c[m Merge pull request #1262 from SB2318/dependabot/github_actions/expo/expo-github-action-9
+[33mad5ffd4[m refactor:use Tamagui theme tokens for dark mode
+[33m7dac9c3[m Merge pull request #1272 from SB2318/dependabot/npm_and_yarn/frontend/react-native-svg-15.15.5
+[33mac06079[m Merge branch 'main' into dependabot/npm_and_yarn/frontend/react-native-svg-15.15.5
+[33m118630b[m Delete frontend/package-lock.json
+[33m1172e6f[m Merge pull request #1324 from MajBlaze/issue-746-reading-progress
+[33mf51c878[m Merge branch 'main' into issue-746-reading-progress
+[33mdd2d2f3[m Delete package-lock.json
+[33m8525d0a[m Delete frontend/package-lock.json
+[33m620cddd[m chore(deps): bump @lottiefiles/dotlottie-react in /frontend
+[33m7352684[m Merge pull request #1297 from VikashRaj110/fix/comment-screen-syntax
+[33m72bf4e7[m chore(deps): bump react-native-svg from 15.12.1 to 15.15.5 in /frontend
+[33mfe27f84[m chore(deps): bump react-native-safe-area-context in /frontend
+[33m74a6b55[m Merge pull request #1321 from Nareshkumawat-star/fix-inline-validation
+[33m4c82c0a[m Merge pull request #1306 from Srejoye/fix/otp-not-leaked-in-response
+[33mfdfc1b6[m fix: reduce MAX_BATCH_PER_RUN to 5 to avoid exhausting daily quota
+[33mfdf5ba5[m fix: limit batch to 20/run, retry on 429, switch to gemini-2.0-flash for stability
+[33ma8ee5fb[m fix: bubble up exact Gemini API error message to GitHub step summary for debugging
+[33mc0aa972[m fix: update ai_issue_triage.py to gemini-2.5-flash
+[33m90c22c2[m fix: switch issue triage bot to use the primary GEMINI_API_KEY secret
+[33m89a171d[m fix: api model for automated_reviewer
+[33mc95dabf[m fix: upgrade Gemini API model to gemini-2.0-flash to resolve 404 model not found errors
+[33m29bb369[m fix: resolve JSON parsing failures and infinite API hangs in Issue Triage bot
+[33ma0beaca[m perf: use GitHub search API to fetch only issues and ignore PRs
+[33m8f68e6f[m fix: paginate issues fetch to avoid skipping, add step summary report generation
+[33m5ea75bb[m perf: abort batch run instantly if Gemini API daily quota (429) is exhausted
+[33m1bbd793[m fix: add robust GitHub API rate limit backoff to solve 429/403 errors and empty diffs
+[33mca763ae[m feat: ignore PRs authored by dependabot
+[33m8afa8f1[m fix: address automated review feedback
+[33m9d8d20e[m fix: restore full user prompt for precise triage rules and maintainer escalation
+[33m267f005[m chore: use GEMINI_ISSUE_API_KEY for issue triage bot
+[33m75400c2[m feat: enforce gssoc label and skip labelled issues/PRs to optimize batch runs
+[33mbd46048[m feat: add batch mode for untriaged issues in AI Triage Bot
+[33m99f8dcc[m feat: add AI Issue Triage and Assignment Bot
+[33m8dacc5f[m feat: add comprehensive audit logging and GitHub Actions job summary
+[33mb2d0b85[m fix: batch mode — fetch labels once, inter-PR delay, robust PR_NUMBER check, higher 429 backoff
+[33m923caf0[m fix: add API timeouts and fix scheduled re-check for unresolved PR feedback
+[33m8871f6f[m feat: add reading progress bar to article screen
+[33m0047fb0[m Refactor auth and profile forms to use react-hook-form and zod for validation
+[33m0fafb22[m fix(useSendOtp): stop returning OTP value from mutationFn response
+[33mf0a6714[m fix: strip HTML tags before calculating read time for accuracy
+[33mac62a54[m ui:Improve light mode background consistency
+[33mcde9bcf[m chore: remove unintended iOS files
+[33m5b27ea4[m feat: schedule AI reviewer daily at 7 AM IST with PR pagination
+[33mb801c49[m --fix
+[33md1a4c6b[m feat: integrate new AI reviewer bot with labels and multi-PR support
+[33m0b4721a[m fix: auto refresh notifications on app foreground
+[33m0f3ea50[m fix: resolve syntax error in CommentScreen
+[33m92e58eb[m chore(deps): bump expo/expo-github-action from 8 to 9
+[33m8c92ff6[m feat:improve dark mode theme support
+[33md745ec7[m fix: resolve merge conflicts and fix typecheck/syntax issues
+[33m3db8259[m Merge remote-tracking branch 'upstream/main' into feat/notification-preferences-search
+[33m9d697f5[m fix: align password visibility toggle icon on signup page
+[33mebef230[m feat: replace playback speed buttons with floating speed selector
+[33m7fccf23[m fix: resolve yarn.lock conflict by syncing with main
+[33me6a88a5[m Merge pull request #1144 from vedant7007/fix/pull-to-refresh-stale-state-1042
+[33m5262a4d[m Merge pull request #1127 from DeepeshKafalatiya/feature/comment-character-limit
+[33mee3ec2d[m Merge pull request #1126 from anjalikumari45/fix/remove-storage-permission-alerts-1084
+[33meeeb597[m Merge pull request #1123 from PeswikaBavagni-30/gssoc-2026-card-update
+[33ma83b1d0[m Delete frontend/package-lock.json
+[33m6a2a20c[m Merge pull request #1122 from Hasini2706/fix/podcast-detail-long-text
+[33mc03effa[m Merge pull request #1115 from PeswikaBavagni-30/guest-lottie-animation
+[33m7696dae[m Merge pull request #1114 from saurabhhhcodes/feat/article-character-counters-1076
+[33m9a91392[m fix(a11y): improve accessibility support across custom components
+[33m69523f2[m Merge pull request #1113 fr

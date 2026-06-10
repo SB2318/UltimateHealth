@@ -4,7 +4,7 @@ import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import { HomeScreenHeaderProps } from '../type';
 import { StatusBar } from 'expo-status-bar';
 
- const HomeScreenHeader = ({
+const HomeScreenHeader = ({
   handlePresentModalPress,
   onTextInputChange,
   onNotificationClick,
@@ -31,9 +31,37 @@ import { StatusBar } from 'expo-status-bar';
         >
           <Feather name="search" size={18} color="#778599" />
           <Input
+          unstyled
+          flex={1}
+          placeholder="Search articles..."
+          placeholderTextColor="#778599"
+          onChangeText={onTextInputChange}
+          fontSize="$4"
+        />
+
+        {/* UI/UX Relocated Clear All Action Trigger */}
+        {hasActiveFilters && onFilterReset && (
+          <Button
             unstyled
+
+            onPress={onFilterReset}
+            paddingRight="$1"
+            paddingLeft="$1"
+            hoverStyle={{ opacity: 0.7 }}
+          >
+            <Text
+              color="#FF5252"
+              fontWeight="600"
+              fontSize={14}
+              paddingHorizontal="$1"
+            >
+              Clear All
+            </Text>
+          </Button>
+        )}
+          
             flex={1}
-           // marginLeft="$1"
+            // marginLeft="$1"
             placeholder="Search articles..."
             placeholderTextColor="#778599"
             onChangeText={onTextInputChange}
@@ -44,6 +72,7 @@ import { StatusBar } from 'expo-status-bar';
               <Ionicons name="refresh" size={20} color={'#FF5252'} />
             </Button>
           ) : null}
+
           <Button unstyled onPress={handlePresentModalPress}>
             <AntDesign name="menu-fold" size={20} color={'#191C1B'} />
           </Button>
