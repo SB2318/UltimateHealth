@@ -26,7 +26,9 @@
     "**/__tests__/**",
     "**/*.{spec,test}.{ts,tsx,js,jsx}",
     "tsconfig.json",
-    ".prettierrc.js"
+    ".prettierrc.js",
+    "src/components/CollectionPickerSheet.tsx",
+    "src/hooks/useCollections.ts"
   ],
   "paths": {
     "@/*": [
