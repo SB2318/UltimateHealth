@@ -3,7 +3,6 @@ import { useWindowDimensions } from 'react-native';
 import { Input, XStack, YStack, Button, Text, View } from 'tamagui';
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import { HomeScreenHeaderProps } from '../type';
-import { StatusBar } from 'expo-status-bar';
 
 const HomeScreenHeader = ({
   handlePresentModalPress,
