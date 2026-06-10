@@ -1,17 +1,25 @@
 import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
+// DO NOT remove the globals2.css import, it contains important global styles for the application
 import "./globals2.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { headers } from "next/headers";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const interHeading = Inter({ subsets: ["latin"], variable: "--font-heading" });
+
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" });
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
 });
+
+// force-dynamic ensures a unique CSP nonce is generated per request (not cached)
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "UltimateHealth - Empowering Wellness Through Global Community",
@@ -25,14 +33,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Read the nonce injected by middleware so Next.js can use it for inline scripts
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <html
       lang="en"
+      nonce={nonce}
+      data-nonce={nonce}
       suppressHydrationWarning
       className={cn(
         "font-sans",
@@ -41,13 +54,6 @@ export default function RootLayout({
         interHeading.variable
       )}
     >
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-          crossOrigin="anonymous"
-        />
-      </head>
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider
           attribute="class"
@@ -57,6 +63,7 @@ export default function RootLayout({
         >
           <TooltipProvider>{children}</TooltipProvider>
         </ThemeProvider>
+        
       </body>
     </html>
   );

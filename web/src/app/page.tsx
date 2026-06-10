@@ -7,10 +7,14 @@ import "./globals.css";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
+
+import { PageWrapper, Section } from "../components/layout";
+
 import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
-import PageWrapper from "@/components/layout/PageWrapper";
-import { ModeToggle } from "@/components/mode-toggle"
+import { ModeToggle } from "@/components/mode-toggle";
+import { Toggle } from "@/components/ui/toggle";
+
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -422,22 +426,20 @@ export default function Home() {
     <>
 
       {/* ── Header ── */}
-      <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
-  <PageWrapper as="div" className="nav">
-    <a href="#" className="logo">
-      <div className="logo-icon">
-        <Image
-          src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
-          alt="UltimateHealth Logo" 
-          width={48} 
-          height={48}
-          priority
-        />
-      </div>
-      Ultimate-Health
-    </a>
+      <header className={`header${scrolled ? " scrolled" : ""}bg-white dark:bg-slate-900 transition-colors duration-300 h-[80px]`} id="header">
+        <PageWrapper as="div" className="nav">
+          <a href="#" className="logo">
+            <div className="logo-icon">
+              <Image
+                src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
+                alt="UltimateHealth Logo" width={48} height={48}
+                priority
+              />
+            </div>
+            Ultimate-Health
+          </a>
 
-          <ul className="nav-links">
+          <ul className="nav-links text-black dark:text-white">
             <li>
               <a
                 href="#features"
@@ -445,7 +447,7 @@ export default function Home() {
                 aria-current={activeSection === "features" ? "location" : undefined}
               >
                 <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Platform Highlights</span>
+                <span className="nav-item-text ">Platform Highlights</span>
               </a>
             </li>
             <li>
@@ -481,13 +483,12 @@ export default function Home() {
               </Link>
             </li>
             <li>
-             
-              <a href={withBasePath("/contribute")} className="nav-link-item">
+              <Link href="/contribute" className="nav-link-item">
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
-              </a>
+              </Link>
             </li>
-             <ModeToggle/>
+            <ModeToggle/>
             <li>
               <a href="#downloads" className="nav-btn-sm">
                 <i className="fas fa-user" aria-hidden="true"></i>
@@ -496,129 +497,42 @@ export default function Home() {
             </li>
           </ul>
 
-    <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Toggle mobile menu">
-      <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
-    </button>
-  </PageWrapper>
-
-  {/* Mobile Navigation Drawer with integrated theme support */}
-  <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-    <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
-    <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
-    <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-    <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-    <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
-    <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
-    
-    {/* Clean border separation separator panel for mobile menu */}
-    <div className="flex items-center justify-between w-full px-6 py-4 mt-2 border-t border-gray-100 dark:border-gray-800">
-      <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Switch Theme</span>
-      <ModeToggle />
-    </div>
-  </nav>
-</header>
-
-      {/* ── Hero ── */}
-      <section className="hero">
-        <div className="container hero-content scroll-reveal hero-content-padded">
-          <h1>Empowering Wellness Through Global Community</h1>
-          <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
-        </div>
-      </section>
-
-      {/* Downloads Section */}
-      <section id="downloads" className="download-section">
-        <PageWrapper>
-          <h2>Get UltimateHealth</h2>
-          <p className="center">
-            Access our platform on your preferred device. UltimateHealth is available now for Android and coming soon to iOS via TestFlight.
-          </p>
-          <div className="download-grid">
-            {/* Android Card */}
-            <div className="download-card fade-in">
-              <div className="download-platform-header">
-                <div className="download-platform-icon android">
-                  <i className="fab fa-android"></i>
-                </div>
-                <div>
-                  <h3>Android App</h3>
-                  <span className="platform-status active">Available Now</span>
-                </div>
-              </div>
-              <p className="platform-desc">
-                Install UltimateHealth on your Android device to publish articles, listen to podcasts, and manage content.
-              </p>
-              <div className="store-buttons">
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="store-btn"
-                  id="playstore-btn"
-                  aria-label="Download UltimateHealth for Android on Google Play Store"
-                >
-                  <i className="fab fa-google-play"></i> UltimateHealth
-                </a>
-                <button
-                  type="button"
-                  className="store-btn"
-                  id="admin-closed-testing-btn"
-                  onClick={openComingSoonModal}
-                  aria-label="View UHealth Admin closed testing launch status"
-                >
-                  <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
-                </button>
-              </div>
-            </div>
-
-            {/* iOS Card */}
-            <div className="download-card fade-in">
-              <div className="download-platform-header">
-                <div className="download-platform-icon ios">
-                  <i className="fab fa-apple"></i>
-                </div>
-                <div>
-                  <h3>iOS App</h3>
-                  <span className="platform-status coming-soon">Coming Soon</span>
-                </div>
-              </div>
-              <p className="platform-desc">
-                We are actively testing our iOS application. Request to join the TestFlight waitlist for early beta access.
-              </p>
-              <div className="store-buttons">
-                <button
-                  className="store-btn store-btn-secondary"
-                  id="ios-uh-btn"
-                  onClick={() => setAppleModal(true)}
-                  aria-label="Join iOS TestFlight beta for UltimateHealth"
-                >
-                  <i className="fab fa-apple"></i> UltimateHealth (Beta)
-                </button>
-                <button
-                  className="store-btn store-btn-secondary"
-                  id="ios-admin-btn"
-                  onClick={() => setAppleModal(true)}
-                  aria-label="Join iOS TestFlight beta for UHealth Admin"
-                >
-                  <i className="fab fa-apple"></i> UHealth Admin (Beta)
-                </button>
-              </div>
-            </div>
-          </div>
+          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileMenuOpen}>
+            <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
+          </button>
         </PageWrapper>
-      </section>
 
-<HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
+        <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
+          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
+          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
+          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
+          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
+          <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
+          <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
+          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+        </nav>
+      </header>
+
+ {/* fix-unreachable-launching-soon-modal */}
+      {/* ── Hero ── */}
+      <HeroAndDownload
+        onJoinTestFlight={() => setAppleModal(true)}
+        onShowComingSoon={openComingSoonModal}
+      />
+
+      {/* ── Hero + Downloads (new premium design) ── */}
+      {/* <HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} /> */}
       {/* ── Screenshots ── */}
-      <section id="screenshots">
+      <Section id="screenshots" className="bg-[#F7FAFC] dark:!bg-slate-800">
         <PageWrapper>
           <h2>App Screenshots</h2>
           <p className="center">Take a look inside the UltimateHealth experience</p>
 
-          <div className="screenshot-details">
-            <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
+           {/* UltimateHealth App Slider */}
+          <div className="screenshot-details bg-white dark:bg-gray-800 border border-white dark:border-gray-600 shadow-md dark:shadow-black/40 transition-all duration-300 hover:-translate-y-1">
+            <div className="screenshot-summary text-black dark:text-white" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setUserSliderOpen((o) => !o); }}>
-              <span style={{ color: "var(--primary)" }}>{userSliderOpen ? "▼" : "▶"}</span> UltimateHealth App
+              <span style={{ color: "var(--primary)" }}>{userSliderOpen ? "▼" : "▶"}</span> <span className="text-black dark:text-white">UltimateHealth App</span>
             </div>
             {userSliderOpen && (
               <div className="screenshot-slider-container">
@@ -657,10 +571,11 @@ export default function Home() {
             )}
           </div>
 
-          <div className="screenshot-details">
+            {/* UHealth Admin App Slider */}
+          <div className="screenshot-details bg-white dark:bg-gray-800 border border-white dark:border-gray-600 shadow-md dark:shadow-black/40 transition-all duration-300 hover:-translate-y-1">
             <div className="screenshot-summary" onClick={() => setAdminSliderOpen((o) => !o)} role="button" tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setAdminSliderOpen((o) => !o); }}>
-              <span style={{ color: "var(--primary)" }}>{adminSliderOpen ? "▼" : "▶"}</span> UHealth Admin App
+              <span style={{ color: "var(--primary)" }}>{adminSliderOpen ? "▼" : "▶"}</span> <span className="text-black dark:text-white">UHealth Admin App</span>
             </div>
             {adminSliderOpen && (
               <div className="screenshot-slider-container">
@@ -699,10 +614,10 @@ export default function Home() {
             )}
           </div>
         </PageWrapper>
-      </section>
+      </Section>
 
       {/* ── Features ── */}
-      <section id="features" className="scroll-reveal">
+      <Section id="features" className="scroll-reveal dark:!bg-slate-900">
         <PageWrapper>
           <h2>Be a Contributor: Core Community Features</h2>
           <p className="center">Join our community and make a difference in global health awareness</p>
@@ -716,46 +631,45 @@ export default function Home() {
                 { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
                 { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
               ].map((f, i) => (
-                <div className="feature-item w-full" key={i}>
-                  <h3>{f.icon} {f.title}</h3>
+                <div
+            className="feature-item w-full bg-stone-50 dark:bg-gray-800 border border-stone-200 dark:border-gray-800 shadow-md shadow-stone-200/50 dark:shadow-none "
+            key={i}
+          >
+                  <h3 className="text-black dark:!text-white">{f.icon} {f.title}</h3>
                   <p>{f.desc}</p>
                 </div>
               ))
             )}
           </div>
         </PageWrapper>
-      </section>
+      </Section>
 
       {/* ── Moderator Features ── */}
-      <section className="member-section scroll-reveal">
-  <section className="member-section scroll-reveal">
-  <PageWrapper>
-    <h2>Be a Member: Guardian of Content Integrity</h2>
-    <p className="center">Help maintain quality and safety across the platform</p>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
-      {[
-        { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
-        { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
-        { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
-        { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
-        { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
-      ].map((f, i) => (
-        <div 
-           className="feature-card mod-card w-full fade-in" 
-  key={i}
-        >
-          <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
-          <h3>{f.title}</h3>
-          <p>{f.desc}</p>
-        </div>
-      ))}
-    </div>
-  </PageWrapper>
-</section>
-</section>
+      <Section className="member-section scroll-reveal bg-[#F7FAFC] dark:!bg-gray-600">
+        <PageWrapper>
+          <h2 className="dark:!text-red-500">Be a Member: Guardian of Content Integrity</h2>
+          <p className="center">Help maintain quality and safety across the platform</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
+            {[
+              { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
+              { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
+              { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
+              { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
+              { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
+            ].map((f, i) => (
+              <div
+className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
+                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+                <h3 className="dark:!text-white">{f.title}</h3>
+                <p className="dark:text-slate-400">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </PageWrapper>
+      </Section>
 
       {/* ── Programs ── */}
-      <section id="programs" className="scroll-reveal">
+      <Section id="programs" className="scroll-reveal dark:bg-slate-900">
         <PageWrapper>
           <h2>Programs Participated In</h2>
           <p className="center">We are proud to have collaborated with and contributed to these prestigious tech and open-source initiatives</p>
@@ -765,7 +679,11 @@ export default function Home() {
               { logo: "https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00", alt: "Vultr Logo", badge: "Cloud Hackathon", title: "Vultr Cloud Innovate", desc: "Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power." },
               { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2024", title: "GirlScript Summer of Code", desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship." },
             ].map((p, i) => (
-              <div className="program-card w-full fade-in" key={i}>
+              <div 
+                className="program-card w-full fade-in bg-white dark:bg-gray-800 border-2 border-black/5 dark:border-gray-800 text-white dark:text-black dark:hover:border-purple-500 hover:border-2 " 
+                key={i}
+              > 
+
                 <div className="program-logo-wrapper">
                   <Image
                     src={p.logo}
@@ -776,30 +694,30 @@ export default function Home() {
                     className="program-logo"
                   />
                 </div>
-                <span className="program-badge">{p.badge}</span>
-                <h3>{p.title}</h3>
-                <p>{p.desc}</p>
+                <span className="program-badge !bg-[#1e2736] dark:text-white">{p.badge}</span>
+                <h3 className="dark:!text-white">{p.title}</h3>
+                <p className="!text-gray-400">{p.desc}</p>
               </div>
             ))}
           </div>
         </PageWrapper>
-      </section>
+      </Section>
 
       {/* ── Contact ── */}
-      <section className="contact-section scroll-reveal" id="contact">
+      <Section className="contact-section scroll-reveal bg-white dark:!bg-gray-900" id="contact">
         <PageWrapper>
           <h2>Connect With Us</h2>
           <p className="center" style={{ marginBottom: 56 }}>
-            Have questions or want to collaborate? We'd love to hear from you.
+            Have questions or want to collaborate? We&apos;d love to hear from you.
           </p>
 
           <div className="contact-dark-card">
             {/* Left panel */}
             <div className="contact-dark-left">
-              <div className="contact-left-badge">✦ UltimateHealth</div>
-              <h3 className="contact-dark-title">Let's Talk<br />Health Together</h3>
+              <div className="contact-left-badge ">✦ UltimateHealth</div>
+              <h3 className="contact-dark-title">Let&apos;s Talk<br />Health Together</h3>
               <p className="contact-dark-subtitle">
-                Questions about our platform? We're here to help. Reach out and we'll respond promptly.
+                Questions about our platform? We&apos;re here to help. Reach out and we&apos;ll respond promptly.
               </p>
 
               <div className="contact-info-cards">
@@ -845,49 +763,58 @@ export default function Home() {
             </div>
 
             {/* Right panel — fully wired form */}
-            <div className="contact-dark-right">
-              <h3 className="contact-form-title">Send us a Message</h3>
-              <p className="contact-form-subtitle">We typically respond within 24 hours</p>
+            <div className="bg-white dark:bg-gray-800 contact-dark-right">
+              <h3 className="contact-form-title text-[#1a202c] dark:!text-white">Send us a Message</h3>
+              <p className="contact-form-subtitle text-gray-400 dark:text-gray-400">We typically respond within 24 hours</p>
 
               {contactStatus === "success" ? (
-                <div className="contact-success-box">
+                <div className="contact-success-box dark:!bg-green-900/20 dark:!border-green-700">
                   <div className="contact-success-icon"><i className="fas fa-check-circle"></i></div>
                   <h4>Message Sent!</h4>
-                  <p>Thank you for reaching out. We'll get back to you within 24 hours.</p>
+                  <p>Thank you for reaching out. We&apos;ll get back to you within 24 hours.</p>
                   <button type="button" onClick={() => setContactStatus("idle")} className="contact-reset-btn">
                     Send Another Message
                   </button>
                 </div>
               ) : (
                 <form className="contact-dark-form" autoComplete="off" onSubmit={handleContactSubmit}>
-                  <div className="dark-field-group">
-                    <span className="dark-field-icon"><i className="fas fa-user"></i></span>
-                    <input
-                      type="text" className="dark-input" placeholder="Your Name *" required
-                      maxLength={80}
-                      value={contactName} onChange={(e) => setContactName(e.target.value)}
-                    />
+                   <div className="dark-field-group ">
+                      <span className="dark-field-icon dark:text-gray-400 group-focus-within:text-purple-500 transition-colors duration-300">
+                        <i className="fas fa-user"></i>
+                      </span>
+                      <input
+                        type="text" 
+                        className="dark-input bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" 
+                        placeholder="Your Name *" 
+                        required
+                      />
                   </div>
-                  <div className="dark-field-group">
-                    <span className="dark-field-icon"><i className="fas fa-envelope"></i></span>
+
+                  <div className="dark-field-group group">
+                    <span className="dark-field-icon dark:text-gray-400 group-focus-within:text-purple-500 transition-colors duration-300"><i className="fas fa-envelope"></i></span>
                     <input
-                      type="email" className="dark-input" placeholder="Email Address *" required
+                      type="email" 
+                      className="dark-input bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" 
+                      placeholder="Email Address *" required
                       maxLength={120}
                       value={contactEmail} onChange={(e) => setContactEmail(e.target.value)}
                     />
                   </div>
-                  <div className="dark-field-group">
-                    <span className="dark-field-icon"><i className="fas fa-tag"></i></span>
+
+                  <div className="dark-field-group group">
+                    <span className="dark-field-icon dark:text-gray-400 group-focus-within:text-purple-500 transition-colors duration-300"><i className="fas fa-tag"></i></span>
                     <input
-                      type="text" className="dark-input" placeholder="Subject *" required
+                      type="text" className="dark-input bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" 
+                      placeholder="Subject *" required
                       maxLength={120}
                       value={contactSubject} onChange={(e) => setContactSubject(e.target.value)}
                     />
                   </div>
-                  <div className="dark-field-group dark-field-textarea">
-                    <span className="dark-field-icon dark-field-icon-top"><i className="fas fa-comment"></i></span>
+                  <div className="dark-field-group group dark-field-textarea">
+                    <span className="dark-field-icon dark-field-icon-top mt-3 dark:text-gray-400 group-focus-within:text-purple-500 transition-colors duration-300"><i className="fas fa-comment"></i></span>
                     <textarea
-                      className="dark-input dark-textarea" placeholder="Your Message *" required
+                      className="dark-input bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400" 
+                      placeholder="Your Message *" required
                       maxLength={1500}
                       value={contactMessage} onChange={(e) => setContactMessage(e.target.value)}
                     ></textarea>
@@ -916,7 +843,7 @@ export default function Home() {
             </div>
           </div>
         </PageWrapper>
-      </section>
+      </Section>
 
       {/* ── Footer ── */}
       <footer>
@@ -930,7 +857,7 @@ export default function Home() {
             <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit}>
               {newsletterStatus === "success" ? (
                 <div className="newsletter-success">
-                  <i className="fas fa-check-circle"></i> You're subscribed!
+                  <i className="fas fa-check-circle"></i> You&apos;re subscribed!
                 </div>
               ) : (
                 <>
@@ -984,7 +911,7 @@ export default function Home() {
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
-            <a href={withBasePath("/contribute")}>Join Us & Contribute</a>
+            <Link href="/contribute">Join Us &amp; Contribute</Link>
           </div>
 
           {/* Support */}
@@ -1022,7 +949,7 @@ export default function Home() {
           <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
           <h2 id="coming-soon-modal-title">Launching Soon!</h2>
           <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
-            We're currently in final testing. We're <strong>85%</strong> of the way there!
+            We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
           </p>
           <div className="progress-container"><div className="progress-bar"></div></div>
           <button className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
@@ -1032,11 +959,11 @@ export default function Home() {
       {/* ── TestFlight Modal ── */}
       <div className={`modal-overlay${appleModal ? " active" : ""}`}
         onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-content dark:!bg-slate-800" onClick={(e) => e.stopPropagation()}>
           <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>✈️</div>
           <h2>Join the iOS TestFlight</h2>
           <p style={{ color: "var(--text-muted)", marginBottom: 24 }}>Help us build the ultimate experience</p>
-          <div style={{ textAlign: "left", fontSize: "0.95rem", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }}>
+          <div style={{ textAlign: "left", fontSize: "0.95rem", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }} className="bg-[#f8fafc] dark:bg-slate-700 text-black dark:text-white">
             <p style={{ marginBottom: 12 }}>We have decided to release via <strong>TestFlight</strong> first before moving to a full App Store launch.</p>
             <p style={{ marginBottom: 12 }}><strong>🔹 Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
             <p style={{ marginBottom: 12 }}><strong>🔹 What this means:</strong> The app will be available to invited testers only via TestFlight.</p>
@@ -1056,7 +983,7 @@ export default function Home() {
             </div>
           ) : (
             <div style={{ padding: 24, color: "#059669", background: "#d1fae5", borderRadius: 12 }}>
-              <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We'll notify you as soon as the test link is ready.</p>
+              <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We&apos;ll notify you as soon as the test link is ready.</p>
             </div>
           )}
           <button className="close-modal-btn"
@@ -1091,5 +1018,5 @@ export default function Home() {
       )}
       <ScrollToTop />
     </>
-    );
-    }
+  );
+}
