@@ -1,215 +1,142 @@
-import React, {
-  useEffect,
-  useRef,
-} from 'react';
+// PodcastSkeletonCard.tsx
+import React, {useEffect, useRef} from 'react';
+import {StyleSheet, View, Animated, useWindowDimensions} from 'react-native';
+import {useTheme, YStack, XStack} from 'tamagui';
+import { PODCAST_CARD } from '@/constants/podcastCard';
 
-import {
-  StyleSheet,
-  View,
-  Animated,
-} from 'react-native';
+interface ShimmerBoxProps {
+  style?: object | object[];
+  shimmerX: Animated.AnimatedInterpolation<number>;
+  highlightColor: string;
+  baseColor: string;
+}
 
-import {
-  YStack,
-  XStack,
-} from 'tamagui';
+const ShimmerBox: React.FC<ShimmerBoxProps> = ({
+  style,
+  shimmerX,
+  highlightColor,
+  baseColor,
+}) => (
+  <View style={[{overflow: 'hidden'}, style]}>
+    <View style={[StyleSheet.absoluteFill, {backgroundColor: baseColor}]} />
+    <Animated.View
+      style={[
+        StyleSheet.absoluteFill,
+        {
+          backgroundColor: highlightColor,
+          opacity: 0.5,
+          transform: [{translateX: shimmerX}],
+        },
+      ]}
+    />
+  </View>
+);
 
-const AnimatedView =
-  Animated.createAnimatedComponent(
-    View,
-  );
+const PodcastSkeletonCard: React.FC = () => {
+  const theme = useTheme();
+  const {width} = useWindowDimensions();
 
-const PodcastSkeletonCard =
-  () => {
-    const shimmerAnim =
-      useRef(
-        new Animated.Value(-1),
-      ).current;
+  const baseColor = (theme.gray200?.val ?? '#E5E7EB') as string;
+  const highlightColor = (theme.gray100?.val ?? '#F9FAFB') as string;
+  const cardBackground = (theme.background?.val ?? '#FFFFFF') as string;
 
-    useEffect(() => {
-      Animated.loop(
-        Animated.timing(
-          shimmerAnim,
-          {
-            toValue: 1,
+  const shimmerProgress = useRef(new Animated.Value(0)).current;
 
-            duration: 1200,
+  const shimmerX = shimmerProgress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-width, width],
+  });
 
-            useNativeDriver: true,
-          },
-        ),
-      ).start();
-    }, []);
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.timing(shimmerProgress, {
+        toValue: 1,
+        duration: 1200,
+        useNativeDriver: true,
+      }),
+    );
+    animation.start();
+    return () => animation.stop();
+  }, [shimmerProgress]);
 
-    const translateX =
-      shimmerAnim.interpolate({
-        inputRange: [-1, 1],
+  const shimmerProps = {shimmerX, baseColor, highlightColor};
 
-        outputRange: [-300, 300],
-      });
+  return (
+    <YStack
+      style={styles.cardWrapper}
+      accessibilityElementsHidden={true}
+      importantForAccessibility="no-hide-descendants">
+      <YStack style={[styles.cardContainer, {backgroundColor: cardBackground}]}>
+        <ShimmerBox style={styles.imageSkeleton} {...shimmerProps} />
 
-    const renderShimmer =
-      (
-        style: any,
-      ) => (
-        <View
-          style={[
-            styles.skeletonBase,
-            style,
-          ]}>
+        <YStack padding="$3" gap="$2" flex={1}>
+          <YStack gap="$2">
+            <ShimmerBox style={styles.skeletonLine} {...shimmerProps} />
+            <ShimmerBox
+              style={[styles.skeletonLine, {width: '70%'}]}
+              {...shimmerProps}
+            />
+          </YStack>
 
-          <AnimatedView
-            style={[
-              styles.shimmer,
-              {
-                transform: [
-                  {
-                    translateX,
-                  },
-                ],
-              },
-            ]}
+          <ShimmerBox
+            style={[styles.skeletonLine, {width: '50%', marginTop: 4}]}
+            {...shimmerProps}
           />
-        </View>
-      );
 
-    return (
-      <YStack
-        style={
-          styles.card
-        }>
-
-        {/* Image */}
-        {renderShimmer(
-          styles.image,
-        )}
-
-        <YStack
-          padding="$3"
-          gap="$2">
-
-          {/* Title */}
-          {renderShimmer(
-            styles.title,
-          )}
-
-          {renderShimmer(
-            styles.titleSmall,
-          )}
-
-          {/* Subtitle */}
-          {renderShimmer(
-            styles.subtitle,
-          )}
-
-          {/* Tags */}
-          <XStack gap="$2">
-
-            {renderShimmer(
-              styles.tag,
-            )}
-
-            {renderShimmer(
-              styles.tag,
-            )}
+          <XStack gap="$1.5" marginTop="$2">
+            {[1, 2].map(i => (
+              <ShimmerBox
+                key={`skeleton-tag-${i}`}
+                style={styles.skeletonTag}
+                {...shimmerProps}
+              />
+            ))}
           </XStack>
 
-          {/* Footer */}
-          <XStack gap="$2">
-
-            {renderShimmer(
-              styles.footer,
-            )}
-
-            {renderShimmer(
-              styles.footer,
-            )}
+          <XStack
+            alignItems="center"
+            justifyContent="space-between"
+            marginTop="$2"
+            gap="$2">
+            <ShimmerBox
+              style={[styles.skeletonLine, {flex: 1}]}
+              {...shimmerProps}
+            />
+            <ShimmerBox
+              style={[styles.skeletonLine, {flex: 1}]}
+              {...shimmerProps}
+            />
           </XStack>
         </YStack>
       </YStack>
-    );
-  };
+    </YStack>
+  );
+};
 
-export default PodcastSkeletonCard;
+const styles = StyleSheet.create({
+  cardWrapper: {
+    marginVertical: 8,
+    width: '100%',
+  },
+  cardContainer: {
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  imageSkeleton: {
+    width: '100%',
+    height: PODCAST_CARD.imageHeight,
+    borderRadius: 0,
+  },
+  skeletonLine: {
+    height: PODCAST_CARD.lineHeight,
+    borderRadius: PODCAST_CARD.lineRadius,
+    width: '100%',
+  },
+  skeletonTag: {
+    height: PODCAST_CARD.tagHeight,
+    width: PODCAST_CARD.tagWidth,
+    borderRadius: PODCAST_CARD.lineRadius,
+  },
+});
 
-const styles =
-  StyleSheet.create({
-    card: {
-      width: '100%',
-
-      backgroundColor:
-        '#111827',
-
-      borderRadius: 18,
-
-      overflow: 'hidden',
-
-      marginBottom: 16,
-    },
-
-    skeletonBase: {
-      backgroundColor:
-        '#1F2937',
-
-      overflow: 'hidden',
-    },
-
-    shimmer: {
-      width: '40%',
-
-      height: '100%',
-
-      backgroundColor:
-        'rgba(255,255,255,0.15)',
-
-      position: 'absolute',
-    },
-
-    image: {
-      width: '100%',
-
-      height: 220,
-    },
-
-    title: {
-      height: 18,
-
-      borderRadius: 8,
-
-      width: '90%',
-    },
-
-    titleSmall: {
-      height: 18,
-
-      borderRadius: 8,
-
-      width: '70%',
-    },
-
-    subtitle: {
-      height: 14,
-
-      borderRadius: 8,
-
-      width: '50%',
-    },
-
-    tag: {
-      height: 28,
-
-      width: 80,
-
-      borderRadius: 999,
-    },
-
-    footer: {
-      flex: 1,
-
-      height: 14,
-
-      borderRadius: 8,
-
-      marginTop: 10,
-    },
-  });
+export default PodcastSkeletonCard;
