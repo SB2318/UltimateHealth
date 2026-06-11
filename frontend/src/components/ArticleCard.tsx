@@ -90,10 +90,9 @@ const ArticleCard = ({
   const handleShare = async () => {
     try {
       const url =
-        `https://uhsocial.in/api/share/article?articleId=${item._id}` +
-        `&authorId=${(item.authorId as any)?._id || item.authorId}` +
-        `&recordId=${item.pb_recordId}`;
-
+  `https://uhsocial.in/share/article?articleId=${item._id}` +
+  `&authorId=${(item.authorId as any)?._id || item.authorId}` +
+  `&recordId=${item.pb_recordId}`;
       const result = await Share.open({
         title: item.title,
         message: `${item.title} : Check out this awesome post on UltimateHealth app!`,
