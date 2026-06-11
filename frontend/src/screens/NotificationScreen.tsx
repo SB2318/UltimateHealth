@@ -2,7 +2,7 @@ import {FlatList, StyleSheet, Text, View, Image} from 'react-native';
 import React, {useEffect} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import NotificationItem from '../components/NotificationItem';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Notification, NotificationType} from '../type';
 import Loader from '../components/Loader';
 import Snackbar from 'react-native-snackbar';
@@ -15,7 +15,6 @@ import {useDeleteNotification} from '../hooks/useDeleteNotification';
 // PodcastsScreen component displays the list of podcasts and includes a PodcastPlayer
 const NotificationScreen = ({navigation}: any) => {
   //const notifications = [];
-  const {user_token} = useSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(0);
@@ -23,15 +22,16 @@ const NotificationScreen = ({navigation}: any) => {
   const [notificationsData, setNotificationsData] =
     React.useState<Notification[]>();
 
-  const dispatch = useDispatch();
   const {mutate: markNotification} = useMarkNotificationAsRead();
   const {mutate: deleteNotification, isPending} = useDeleteNotification();
 
   const {
     data: notificationsRes,
-    isLoading,
     refetch,
   } = useGetAllNotifications(page, isConnected);
+
+  const hasUnreadNotifications =
+    notificationsData?.some(notification => !notification.read) ?? false;
 
   useEffect(() => {
     if (notificationsRes) {
@@ -43,9 +43,8 @@ const NotificationScreen = ({navigation}: any) => {
         setNotificationsData(notificationsRes.notifications);
       } else {
         if (notificationsRes.notifications) {
-          const oldNotif = notificationsData ?? [];
-          setNotificationsData([
-            ...oldNotif,
+          setNotificationsData(prev => [
+            ...(prev ?? []),
             ...notificationsRes.notifications,
           ]);
         }
@@ -55,30 +54,30 @@ const NotificationScreen = ({navigation}: any) => {
 
 
   useEffect(() => {
-    if (isConnected) {
-      markNotification(
-        {},
-        {
-          onSuccess: async () => {
-            Snackbar.show({
-              text: 'All notifications marked as read',
-              duration: Snackbar.LENGTH_SHORT,
-            });
-          },
-
-          onError: error => {
-            console.log(error);
-            Snackbar.show({
-              text: 'Internal server error, cannot mark the notification as read!',
-              duration: Snackbar.LENGTH_SHORT,
-            });
-          },
-        },
-      );
+    if (!isConnected || !notificationsData?.length || !hasUnreadNotifications) {
+      return;
     }
 
-    return () => {};
-  }, []);
+    markNotification(
+      {},
+      {
+        onSuccess: async () => {
+          Snackbar.show({
+            text: 'All notifications marked as read',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+
+        onError: error => {
+          console.log(error);
+          Snackbar.show({
+            text: 'Internal server error, cannot mark the notification as read!',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+      },
+    );
+  }, [hasUnreadNotifications, isConnected, markNotification, notificationsData]);
 
   const onRefresh = () => {
     setRefreshing(true);
