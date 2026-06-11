@@ -649,22 +649,43 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       </Section>
 
       {/* ── Features ── */}
-      <Section id="features" className="scroll-reveal">
+      <Section id="features" className="feature-section-premium scroll-reveal">
         <PageWrapper>
-          <h2>Be a Contributor: Core Community Features</h2>
-          <p className="center">Join our community and make a difference in global health awareness</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 w-full">
+          <h2>UltimateHealth Features</h2>
+          <p className="center">
+            UltimateHealth is an open-source health platform that provides trusted articles, AI-powered assistance, podcasts, multilingual content, community contributions, and a centralized wellness knowledge repository.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full relative z-10">
             {featuresLoading ? (
-              <Skeleton count={4} variant="compact" />
+              <Skeleton count={6} variant="compact" />
             ) : (
               [
-                { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
-                { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
-                { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
-                { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
+                { icon: "fa-robot", title: "AI Health Chat Assistant", desc: "Get instant, AI-powered health guidance and support.", span: "md:col-span-2 lg:col-span-2" },
+                { icon: "fa-book-medical", title: "Centralized Library", desc: "Access a vast repository of trusted health articles.", span: "col-span-1" },
+                
+                { icon: "fa-edit", title: "CRUD Articles", desc: "Create, read, update, and delete your health content seamlessly.", span: "col-span-1" },
+                { icon: "fa-podcast", title: "Health Podcasts", desc: "Stream and share verified health audio content worldwide.", span: "md:col-span-2 lg:col-span-2" },
+                
+                { icon: "fa-tags", title: "Smart Categorization", desc: "Organize articles with intuitive categorization and tagging.", span: "col-span-1" },
+                { icon: "fa-search", title: "Advanced Search", desc: "Quickly find the specific health information you need.", span: "col-span-1" },
+                { icon: "fa-users", title: "Community Contributions", desc: "Collaborate and drive open-source content creation.", span: "col-span-1" },
+                
+                { icon: "fa-code-branch", title: "Edit Request Workflow", desc: "Propose and review changes to maintain content quality.", span: "col-span-1" },
+                { icon: "fa-language", title: "Multilingual Resources", desc: "Read and write content in multiple languages globally.", span: "col-span-1" },
+                { icon: "fa-mobile-alt", title: "Cross-Platform Support", desc: "Available on both Android mobile and Web platforms.", span: "col-span-1" },
+                
+                { icon: "fa-user-shield", title: "Authentication & Users", desc: "Secure role-based access and robust user management.", span: "col-span-1" },
+                { icon: "fa-cloud", title: "Cloud Content Management", desc: "Reliable cloud infrastructure for all your health data.", span: "col-span-1" },
+                { icon: "fa-graduation-cap", title: "Educational Content", desc: "Spread health awareness through verified information.", span: "col-span-1" },
+                
+                { icon: "fa-shield-alt", title: "Trusted Wellness Repository", desc: "A heavily moderated, safe, and accurate knowledge base.", span: "md:col-span-2 lg:col-span-2" },
+                { icon: "fa-globe", title: "Open-Source Platform", desc: "Join our global initiative for a healthier community.", span: "col-span-1" },
               ].map((f, i) => (
-                <div className="feature-item w-full" key={i}>
-                  <h3>{f.icon} {f.title}</h3>
+                <div className={`feature-card-premium w-full fade-in ${f.span}`} key={i}>
+                  <div className="feature-icon-wrapper">
+                    <i className={`fas ${f.icon}`}></i>
+                  </div>
+                  <h3>{f.title}</h3>
                   <p>{f.desc}</p>
                 </div>
               ))
