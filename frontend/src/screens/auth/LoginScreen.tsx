@@ -287,10 +287,16 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         {/* Form Section */}
         <YStack
           marginTop="$2"
-          backgroundColor="$backgroundLight"
-          paddingVertical="$4"
-          paddingHorizontal="$2"
-          borderRadius="$5"
+          backgroundColor={isDarkMode ? '#111827' : '#FFFFFF'}
+          paddingVertical="$5"
+          paddingHorizontal="$4"
+          borderRadius="$6"
+          borderWidth={1}
+          borderColor={isDarkMode ? '#334155' : '#E5E7EB'}
+          shadowColor="#000"
+          shadowOffset={{width: 0, height: 8}}
+          shadowOpacity={isDarkMode ? 0.25 : 0.08}
+          shadowRadius={16}
           gap="$2"
           elevation={1}>
           <YStack alignItems="center" marginBottom="$4" gap="$2">
@@ -394,35 +400,52 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             </XStack>
 
             <XStack
-              justifyContent="space-between"
+              gap="$2"
               alignItems="center"
+              flexWrap="wrap"
               marginTop="$2"
               paddingHorizontal="$2">
-              <Text
-                color={isDarkMode ? '$gray400' : '$gray700'}
-                fontWeight="500"
-                fontSize={13}
-                pressStyle={{opacity: 0.7}}
-                cursor="pointer"
+              <Button
+                flex={1}
+                minWidth={150}
+                borderRadius="$4"
+                borderWidth={1}
+                borderColor={isDarkMode ? '#475569' : '#93C5FD'}
+                backgroundColor={isDarkMode ? '#334155' : '#EFF6FF'}
+                pressStyle={{opacity: 0.8}}
                 onPress={() => {
                   setRequestVerification(true);
                   setEmailInputVisible(true);
                 }}>
-                Request Verification
-              </Text>
+                <Text
+                  color={isDarkMode ? 'white' : '#1D4ED8'}
+                  fontWeight="700"
+                  fontSize={14}
+                  textAlign="center">
+                  Request Verification
+                </Text>
+              </Button>
 
-              <Text
-                color="$blue10"
-                fontWeight="600"
-                fontSize={13}
+              <Button
+                flex={1}
+                minWidth={150}
+                borderRadius="$4"
+                borderWidth={1}
+                borderColor={isDarkMode ? '#475569' : '#93C5FD'}
+                backgroundColor={isDarkMode ? '#334155' : '#FFFFFF'}
                 pressStyle={{opacity: 0.7}}
-                cursor="pointer"
                 onPress={() => {
                   setEmailInputVisible(true);
                   setRequestVerification(false);
                 }}>
-                Forgot Password?
-              </Text>
+                <Text
+                  color={isDarkMode ? 'white' : '#1D4ED8'}
+                  fontWeight="700"
+                  fontSize={14}
+                  textAlign="center">
+                  Forgot Password?
+                </Text>
+              </Button>
             </XStack>
 
             <Button
