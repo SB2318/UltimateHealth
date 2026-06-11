@@ -18,6 +18,8 @@ const inter = Inter({
 });
 
 // force-dynamic ensures a unique CSP nonce is generated per request (not cached)
+// Trade-off: this disables static optimization and caching for the layout,
+// but is required because CSP nonces must be generated dynamically per request.
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -44,7 +46,6 @@ export default async function RootLayout({
     <html
       lang="en"
       nonce={nonce}
-      data-nonce={nonce}
       className={cn(
         "font-sans",
         dmSans.variable,
