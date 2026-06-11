@@ -146,7 +146,7 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                               if (socket) {
                                 socket.emit('notification', {
                                   type: 'userFollow',
-                                  userId: userid,
+                                  userId: follower._id,
                                   message: {
                                     title: `${user_handle} has followed you`,
                                     body: '',

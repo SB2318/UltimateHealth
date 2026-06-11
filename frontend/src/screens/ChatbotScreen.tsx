@@ -53,7 +53,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
   const {isConnected} = useSelector((state: any) => state.network);
 
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const [isTyping, setIsTyping] = useState<boolean>(true);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const isMountedRef = useRef(true);
   const dispatch = useDispatch();
   const {data: user} = useGetProfile();
@@ -133,8 +133,10 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       });
       return;
     }
+    safeSetIsTyping(true);
     sendMessageToAI(messages[0]?.text ?? 'AI in health within 100 words', {
       onSuccess: (responseData: Message) => {
+        safeSetIsTyping(false);
         safeSetMessages(previousMessages =>
           GiftedChat.append(previousMessages, [
             {
@@ -151,6 +153,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
         );
       },
       onError: (error: AxiosError) => {
+        safeSetIsTyping(false);
         if (!isMountedRef.current) {
           return;
         }
@@ -214,7 +217,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
     safeSetMessages(previousMessages =>
       GiftedChat.append(previousMessages, messages),
     );
-  }, [isConnected, safeSetMessages, sendMessageToAI]);
+  }, [isConnected, safeSetMessages, sendMessageToAI, safeSetIsTyping]);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}} edges={['top']}>

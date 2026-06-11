@@ -71,7 +71,8 @@ const ArticleDescriptionScreen = ({
     }
   };
 
-  const isSelected = (genre: Category) => selectedGenres.includes(genre);
+  const isSelected = (genre: Category) =>
+    selectedGenres.some(item => item.id === genre.id || item._id === genre._id);
 
   const handleCreatePost = () => {
     if (title === '') {

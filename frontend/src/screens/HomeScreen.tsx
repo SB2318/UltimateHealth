@@ -526,7 +526,11 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     handleFilterReset();
   };
 
-  if (!articleData || articleData.articles?.length === 0) {
+  if (requestEditPending) {
+    return <Loader />;
+  }
+
+  if (isConnected === false) {
     return (
       <SafeAreaView style={styles.container}>
         <HomeScreenHeader
@@ -548,7 +552,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           onFilterReset={handleQuickReset}
         />
 
-        <LoadingState />
+        <OfflineState />
       </SafeAreaView>
     );
   }
@@ -580,7 +584,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     );
   }
 
-  if (isConnected === false) {
+  if (isLoading) {
     return (
       <SafeAreaView style={styles.container}>
         <HomeScreenHeader
@@ -602,13 +606,36 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           onFilterReset={handleQuickReset}
         />
 
-        <OfflineState />
+        <LoadingState />
       </SafeAreaView>
     );
   }
 
-  if (isLoading || requestEditPending) {
-    return <Loader />;
+  if (!articleData || !articleData.articles || articleData.articles.length === 0) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <HomeScreenHeader
+          handlePresentModalPress={handlePresentModalPress}
+          onTextInputChange={handleSearch}
+          onNotificationClick={() => {
+            if (isGuest) {
+              navigation.navigate('GuestPlaceholderScreen', {
+                title: 'Notifications',
+                description: 'Sign in to see your notifications.',
+                iconName: 'bell',
+              });
+            } else {
+              navigation.navigate('NotificationScreen');
+            }
+          }}
+          unreadCount={unreadCount || 0}
+          hasActiveFilters={hasActiveFilters}
+          onFilterReset={handleQuickReset}
+        />
+
+        <EmptyArticleState />
+      </SafeAreaView>
+    );
   }
 
   if (user && (user.isBlockUser || user.isBannedUser)) {
