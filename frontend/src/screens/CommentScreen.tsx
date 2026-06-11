@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { H3, Image, Paragraph, Text, YStack } from 'tamagui';
 
 import CommentItem from '../components/CommentItem';
@@ -109,7 +109,7 @@ const CommentScreen = ({
     User[]
   >([]);
 
-  const dispatch = useDispatch();
+  const inputRef = useRef<TextInput>(null);
 
   const triggersConfig: TriggersConfig<
     'mention' | 'hashtag'
@@ -559,6 +559,7 @@ const CommentScreen = ({
                 />
 
                 <TextInput
+                  ref={inputRef}
                   {...textInputProps}
                   style={styles.textInput}
                   placeholder="Add a comment..."
@@ -634,6 +635,29 @@ const CommentScreen = ({
               isFromArticle={false}
             />
           )}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyIcon}>
+                💬
+              </Text>
+              <Text style={styles.emptyTitle}>
+                No comments yet
+              </Text>
+              <Text style={styles.emptySubtitle}>
+                Start the conversation and be the first to share your thoughts
+              </Text>
+              <TouchableOpacity
+                style={styles.emptyButton}
+                onPress={() =>
+                  inputRef.current?.focus()
+                }
+                activeOpacity={0.8}>
+                <Text style={styles.emptyButtonText}>
+                  Write Comment
+                </Text>
+              </TouchableOpacity>
+            </View>
+          }
           contentContainerStyle={[
             styles.scrollContent,
             {
@@ -766,6 +790,46 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 18,
     color: '#1F2937',
+  },
+
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 20,
+  },
+
+  emptyIcon: {
+    fontSize: 60,
+    marginBottom: 16,
+  },
+
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: PRIMARY_COLOR,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+
+  emptySubtitle: {
+    fontSize: 14,
+    color: '#888',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+
+  emptyButton: {
+    backgroundColor: PRIMARY_COLOR,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+
+  emptyButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
 });
 
