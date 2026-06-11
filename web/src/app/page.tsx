@@ -461,10 +461,6 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
         setNewsletterStatus("duplicate");
         return;
       }
-      if (res.status === 400) {
-      setNewsletterStatus("invalid");
-      return;
-    }
       if (!res.ok) throw new Error("Failed");
 
       setNewsletterStatus("success");
