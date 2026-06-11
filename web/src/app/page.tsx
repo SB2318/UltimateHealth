@@ -463,92 +463,224 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
   return (
     <>
 
-      {/* ── Header ── */}
-      <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
+      {/* ── Header / Navbar ── */}
+      <header className={`header${scrolled ? " scrolled" : ""}`} id="header" role="banner">
         <PageWrapper as="div" className="nav">
-          <a href="#" className="logo">
-            <div className="logo-icon">
+
+          {/* ─ Logo ─ */}
+          <a href="#" className="logo" aria-label="UltimateHealth — back to top">
+            <span className="logo-icon">
               <Image
                 src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
-                alt="UltimateHealth Logo" width={48} height={48}
+                alt=""
+                width={40}
+                height={40}
                 priority
+                aria-hidden="true"
               />
-            </div>
+            </span>
             Ultimate-Health
           </a>
 
-          <ul className="nav-links">
-            <li>
-              <a
-                href="#features"
-                className={`nav-link-item${activeSection === "features" ? " active" : ""}`}
-                aria-current={activeSection === "features" ? "location" : undefined}
-              >
-                <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Platform Highlights</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#screenshots"
-                className={`nav-link-item${activeSection === "screenshots" ? " active" : ""}`}
-                aria-current={activeSection === "screenshots" ? "location" : undefined}
-              >
-                <i className="fas fa-image nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Screenshots</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#programs"
-                className={`nav-link-item${activeSection === "programs" ? " active" : ""}`}
-                aria-current={activeSection === "programs" ? "location" : undefined}
-              >
-                <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Community Programs</span>
-              </a>
-            </li>
-            <li>
-              <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer" className="nav-link-item">
-                <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Read Articles</span>
-              </a>
-            </li>
-            <li>
-              <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
-                <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Medical Glossary</span>
-              </Link>
-            </li>
-            <li>
-              <Link href={withBasePath("/contribute")} className="nav-link-item">
-                <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Join Us to Contribute</span>
-              </Link>
-            </li>
-            <li>
-              <a href="#downloads" className="nav-btn-sm">
-                <i className="fas fa-user" aria-hidden="true"></i>
-                <span>Login / Register</span>
-              </a>
-            </li>
-          </ul>
+          {/* ─ Desktop Navigation ─ */}
+          <nav aria-label="Main navigation">
+            <ul className="nav-links" role="list">
 
-          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileMenuOpen}>
-            <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
+              {/* ── Features Dropdown ── */}
+              <li className="nav-dropdown">
+                <button
+                  className="nav-dropdown-trigger"
+                  aria-haspopup="true"
+                  aria-label="Features menu"
+                  type="button"
+                >
+                  Features
+                  <i className="fas fa-chevron-down nav-caret" aria-hidden="true"></i>
+                </button>
+                <div className="nav-dropdown-menu" role="menu" aria-label="Features">
+                  <span className="nav-dropdown-label">Features</span>
+                  <a
+                    href="#features"
+                    className={`nav-dropdown-item${activeSection === "features" ? " active" : ""}`}
+                    role="menuitem"
+                    aria-current={activeSection === "features" ? "location" : undefined}
+                  >
+                    <i className="fas fa-star" aria-hidden="true"></i>
+                    Platform Highlights
+                  </a>
+                  <a
+                    href="#screenshots"
+                    className={`nav-dropdown-item${activeSection === "screenshots" ? " active" : ""}`}
+                    role="menuitem"
+                    aria-current={activeSection === "screenshots" ? "location" : undefined}
+                  >
+                    <i className="fas fa-images" aria-hidden="true"></i>
+                    Screenshots
+                  </a>
+                </div>
+              </li>
+
+              {/* ── Resources Dropdown ── */}
+              <li className="nav-dropdown">
+                <button
+                  className="nav-dropdown-trigger"
+                  aria-haspopup="true"
+                  aria-label="Resources menu"
+                  type="button"
+                >
+                  Resources
+                  <i className="fas fa-chevron-down nav-caret" aria-hidden="true"></i>
+                </button>
+                <div className="nav-dropdown-menu" role="menu" aria-label="Resources">
+                  <span className="nav-dropdown-label">Resources</span>
+                  <a
+                    href="#programs"
+                    className={`nav-dropdown-item${activeSection === "programs" ? " active" : ""}`}
+                    role="menuitem"
+                    aria-current={activeSection === "programs" ? "location" : undefined}
+                  >
+                    <i className="fas fa-users" aria-hidden="true"></i>
+                    Community Programs
+                  </a>
+                  <Link
+                    href={withBasePath("/medical-glossary")}
+                    className="nav-dropdown-item"
+                    role="menuitem"
+                  >
+                    <i className="fas fa-book-medical" aria-hidden="true"></i>
+                    Medical Glossary
+                  </Link>
+                </div>
+              </li>
+
+              {/* ── Divider ── */}
+              <li aria-hidden="true"><span className="nav-divider"></span></li>
+
+              {/* ── Read Articles ── */}
+              <li>
+                <a
+                  href="https://uhsocial.in/docs"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="nav-plain-link"
+                  aria-label="Read health articles (opens in new tab)"
+                >
+                  <i className="fas fa-file-lines" aria-hidden="true"></i>
+                  Read Articles
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+
+          {/* ─ CTAs ─ */}
+          <div className="nav-cta-group">
+            <Link
+              href={withBasePath("/contribute")}
+              className="nav-cta-secondary"
+              aria-label="Join us to contribute to UltimateHealth"
+            >
+              <i className="fas fa-hand-holding-heart" aria-hidden="true"></i>
+              Join Us
+            </Link>
+            <a
+              href="#downloads"
+              className="nav-cta-primary"
+              aria-label="Login or Register for UltimateHealth"
+            >
+              <i className="fas fa-user" aria-hidden="true"></i>
+              Login / Register
+            </a>
+          </div>
+
+          {/* ─ Hamburger ─ */}
+          <button
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen((o) => !o)}
+            aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-nav-drawer"
+            type="button"
+          >
+            <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`} aria-hidden="true"></i>
           </button>
+
         </PageWrapper>
 
-        <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
-          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-          <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
-          <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
-          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+        {/* ─ Mobile Navigation Drawer ─ */}
+        <nav
+          id="mobile-nav-drawer"
+          className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}
+          aria-label="Mobile navigation"
+          aria-hidden={!mobileMenuOpen}
+        >
+          <div className="mobile-nav-inner">
+
+            {/* Features */}
+            <span className="mobile-nav-label">Features</span>
+            <a href="#features" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
+              <i className="fas fa-star" aria-hidden="true"></i>
+              Platform Highlights
+            </a>
+            <a href="#screenshots" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
+              <i className="fas fa-images" aria-hidden="true"></i>
+              Screenshots
+            </a>
+
+            <div className="mobile-nav-sep" role="separator"></div>
+
+            {/* Resources */}
+            <span className="mobile-nav-label">Resources</span>
+            <a href="#programs" className="mobile-nav-link" onClick={() => setMobileMenuOpen(false)}>
+              <i className="fas fa-users" aria-hidden="true"></i>
+              Community Programs
+            </a>
+            <Link
+              href={withBasePath("/medical-glossary")}
+              className="mobile-nav-link"
+              onClick={() => setMobileMenuOpen(false)}
+              aria-label="Browse the Medical Glossary"
+            >
+              <i className="fas fa-book-medical" aria-hidden="true"></i>
+              Medical Glossary
+            </Link>
+            <a
+              href="https://uhsocial.in/docs"
+              target="_blank"
+              rel="noreferrer"
+              className="mobile-nav-link"
+              aria-label="Read health articles (opens in new tab)"
+            >
+              <i className="fas fa-file-lines" aria-hidden="true"></i>
+              Read Articles
+            </a>
+
+            {/* CTA Row */}
+            <div className="mobile-nav-ctas">
+              <Link
+                href={withBasePath("/contribute")}
+                className="nav-cta-secondary"
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Join us to contribute to UltimateHealth"
+              >
+                <i className="fas fa-hand-holding-heart" aria-hidden="true"></i>
+                Join Us
+              </Link>
+              <a
+                href="#downloads"
+                className="nav-cta-primary"
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Login or Register for UltimateHealth"
+              >
+                <i className="fas fa-user" aria-hidden="true"></i>
+                Login / Register
+              </a>
+            </div>
+
+          </div>
         </nav>
       </header>
+
 
       {/* ── Hero ── */}
       <HeroAndDownload
