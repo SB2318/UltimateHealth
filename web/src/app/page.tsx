@@ -450,7 +450,6 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       return;
     }
      setNewsletterStatus("sending");
-    setNewsletterStatus("sending");
     try {
       const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
         method: "POST",
@@ -462,8 +461,12 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
         setNewsletterStatus("duplicate");
         return;
       }
-
+      if (res.status === 400) {
+      setNewsletterStatus("invalid");
+      return;
+    }
       if (!res.ok) throw new Error("Failed");
+
       setNewsletterStatus("success");
       setNewsletterEmail("");
     } catch {
@@ -882,48 +885,72 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
             <p className="footer-note">Open-source health and wellness for everyone.</p>
 
             {/* Newsletter — wired to API */}
-            <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit}>
-              {newsletterStatus === "success" ? (
-                <div className="newsletter-success">
-                  <i className="fas fa-check-circle"></i> You&apos;re subscribed!
-                </div>
-              ) : (
-                <>
-                  <div className="footer-subscribe-row">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="footer-subscribe-input"
-                      maxLength={120}
-                      value={newsletterEmail}
-                      onChange={(e) => setNewsletterEmail(e.target.value)}
-                      required
-                    />
-                    <button type="submit" className="footer-subscribe-btn" aria-label="Subscribe to UltimateHealth newsletter" disabled={newsletterStatus === "sending"}>
-                      {newsletterStatus === "sending" ? <i className="fas fa-spinner fa-spin"></i> : "Subscribe"}
-                    </button>
-                  </div>
-                  {newsletterStatus === "error" && (<p className="newsletter-error">
-                   <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
-                  </p>
-                   )}
-                  {newsletterStatus ===  "invalid" && (<p className="newsletter-error">
-                  <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
-                  </p>
-                   )}
-                 {newsletterStatus === "empty" && (<p className="newsletter-error">
-                 <i className="fas fa-exclamation-circle"></i> Email address cannot be empty.
-                 </p>
-                  )}
-                 {newsletterStatus === "duplicate" && (<p className="newsletter-error">
-                  <i className="fas fa-info-circle"></i> This email is already subscribed.
-                  </p>
-                  )}
-                <small className="footer-subscribe-note">We respect your privacy. Unsubscribe at any time.</small>
-                </>
-              )}
-            </form>
+            <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit} noValidate>
+            {newsletterStatus === "success" ? (
+            <div className="newsletter-success">
+            <i className="fas fa-check-circle"></i> You have successfully subscribed!
+           </div>
+            ) : (
+             <>
+              <div className="footer-subscribe-row">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="footer-subscribe-input"
+                maxLength={120}
+                value={newsletterEmail}
+                required
+                aria-label="Newsletter email address"
+                aria-describedby="newsletter-feedback"
+                onChange={(e) => {
+                setNewsletterEmail(e.target.value);
+                if (
+                  newsletterStatus !== "idle" &&
+                  newsletterStatus !== "sending"
+                ) {
+                setNewsletterStatus("idle");
+              }
+            }}
+            />
+            <button
+              type="submit"
+              className="footer-subscribe-btn"
+              aria-label="Subscribe to UltimateHealth newsletter"
+              disabled={newsletterStatus === "sending"}
+            >
+            {newsletterStatus === "sending" ? "Subscribing..." : "Subscribe"}
+           </button>
+           </div>
 
+          <div id="newsletter-feedback" aria-live="polite">
+            {newsletterStatus === "empty" && (
+            <p className="newsletter-error">
+              <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
+            </p>
+            )}
+            {newsletterStatus === "invalid" && (
+              <p className="newsletter-error">
+               <i className="fas fa-exclamation-circle"></i> Invalid email format.
+               </p>
+            )}
+              {newsletterStatus === "duplicate" && (
+              <p className="newsletter-error">
+               <i className="fas fa-info-circle"></i> This email is already subscribed.
+              </p>
+              )}
+            {newsletterStatus === "error" && (
+            <p className="newsletter-error">
+              <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
+             </p>
+            )}
+      </div>
+
+      <small className="footer-subscribe-note">
+        We respect your privacy. Unsubscribe at any time.
+      </small>
+    </>
+  )}
+</form>
             {/* Social icons */}
             <div style={{ marginTop: 20 }}>
               <span className="footer-follow-label">Follow Us</span>
