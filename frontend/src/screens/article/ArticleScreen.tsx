@@ -554,6 +554,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
+  const scaleTextSize = (baseSize: number) => baseSize * fontScale;
   const articleCustomStyle = `
     body { font-family: 'Times New Roman'; font-size: ${articleFontSize}px; line-height: 1.6; }
     p, li { font-size: ${articleFontSize}px; }
@@ -587,6 +588,43 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             style={styles.image}
           />
         )}
+        <View
+          style={[
+            styles.fontScaleOverlay,
+            {
+              backgroundColor: isDarkMode
+                ? 'rgba(15, 23, 42, 0.92)'
+                : 'rgba(255, 255, 255, 0.95)',
+              borderColor: isDarkMode
+                ? 'rgba(255, 255, 255, 0.12)'
+                : 'rgba(15, 23, 42, 0.08)',
+            },
+          ]}>
+          <TouchableOpacity
+            onPress={handleDecreaseFont}
+            accessibilityRole="button"
+            accessibilityLabel="Decrease article text size"
+            hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+            style={styles.fontScaleButton}>
+            <FontAwesome
+              name="minus"
+              size={14}
+              color={isDarkMode ? '#F8FAFC' : '#334155'}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleIncreaseFont}
+            accessibilityRole="button"
+            accessibilityLabel="Increase article text size"
+            hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+            style={styles.fontScaleButton}>
+            <FontAwesome
+              name="plus"
+              size={14}
+              color={isDarkMode ? '#F8FAFC' : '#334155'}
+            />
+          </TouchableOpacity>
+        </View>
         {likeMutationPending ? (
           <LoadingSpinner size={40} />
         ) : (
@@ -681,42 +719,35 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.contentContainer}>
           {article && (
-            <Text style={{...styles.viewText, marginBottom: 10}}>
+            <Text
+              style={[
+                styles.viewText,
+                {marginBottom: 10, fontSize: scaleTextSize(14)},
+              ]}>
               {article?.viewCount
-                ? article.viewCount > 1
-                : `${article.viewCount} view`}
+                ? `${formatCount(article.viewCount)} ${article.viewCount > 1 ? 'views' : 'view'}`
+                : '0 views'}
             </Text>
           )}
           {article && article?.tags && (
-            <Text style={styles.categoryText}>
+            <Text
+              style={[
+                styles.categoryText,
+                {fontSize: scaleTextSize(12)},
+              ]}>
               {article.tags.map(tag => tag.name).join(' | ')}
             </Text>
           )}
 
           {article && (
             <>
-              <Text style={styles.titleText}>{article?.title}</Text>
-              <View style={styles.fontSizeControls}>
-                <Text style={styles.fontSizeLabel}>Text size</Text>
-                <View style={styles.fontSizeButtons}>
-                  <TouchableOpacity
-                    onPress={handleDecreaseFont}
-                    accessibilityRole="button"
-                    accessibilityLabel="Decrease article font size"
-                    hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
-                    style={styles.fontSizeButton}>
-                    <Text style={styles.fontSizeButtonText}>A-</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleIncreaseFont}
-                    accessibilityRole="button"
-                    accessibilityLabel="Increase article font size"
-                    hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
-                    style={styles.fontSizeButton}>
-                    <Text style={styles.fontSizeButtonText}>A+</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              <Text
+                style={[
+                  styles.titleText,
+                  {fontSize: scaleTextSize(25)},
+                ]}>
+                {article?.title}
+              </Text>
               {totalLikes > 0 && (
                 <View style={styles.avatarsContainer}>
                   {likedUsers
@@ -756,7 +787,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                         styles.avatar,
                         styles.avatarTripleOverlap,
                       ]}>
-                      <Text style={styles.moreText}>+{totalLikes - 3}</Text>
+                      <Text
+                        style={[
+                          styles.moreText,
+                          {fontSize: scaleTextSize(16)},
+                        ]}>
+                        +{totalLikes - 3}
+                      </Text>
                     </View>
                   )}
                 </View>
@@ -830,6 +867,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                         article?.likedUsers?.some(user => user._id === user_id)
                           ? PRIMARY_COLOR
                           : footerColors.text,
+                      fontSize: scaleTextSize(10),
                     },
                   ]}>
                   {article?.likeCount ? formatCount(article.likeCount) : 0}
@@ -866,7 +904,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               size={18}
               color={footerColors.text}
             />
-            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+            <Text
+              style={[
+                styles.actionTextFooter,
+                {color: footerColors.text, fontSize: scaleTextSize(10)},
+              ]}>
               Comment
             </Text>
           </TouchableOpacity>
@@ -900,7 +942,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               }
             }}>
             <FontAwesome name="share" size={18} color={footerColors.text} />
-            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+            <Text
+              style={[
+                styles.actionTextFooter,
+                {color: footerColors.text, fontSize: scaleTextSize(10)},
+              ]}>
               Share
             </Text>
           </TouchableOpacity>
@@ -916,7 +962,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               size={18}
               color={footerColors.text}
             />
-            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+            <Text
+              style={[
+                styles.actionTextFooter,
+                {color: footerColors.text, fontSize: scaleTextSize(10)},
+              ]}>
               Translate
             </Text>
           </TouchableOpacity>
@@ -932,7 +982,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               size={18}
               color={footerColors.text}
             />
-            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+            <Text
+              style={[
+                styles.actionTextFooter,
+                {color: footerColors.text, fontSize: scaleTextSize(10)},
+              ]}>
               Improve
             </Text>
           </TouchableOpacity>
@@ -972,6 +1026,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                       color: article?.savedUsers?.includes(user_id)
                         ? PRIMARY_COLOR
                         : footerColors.text,
+                      fontSize: scaleTextSize(10),
                     },
                   ]}>
                   Save
@@ -1023,10 +1078,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               )}
             </TouchableOpacity>
             <View>
-              <Text style={styles.authorName}>
+              <Text
+                style={[
+                  styles.authorName,
+                  {fontSize: scaleTextSize(14)},
+                ]}>
                 {article ? article?.authorName : ''}
               </Text>
-              <Text style={styles.authorFollowers}>
+              <Text
+                style={[
+                  styles.authorFollowers,
+                  {fontSize: scaleTextSize(11)},
+                ]}>
                 {(article?.authorId as any)?.followers
                   ? (article?.authorId as any).followers.length > 1
                     ? `${(article?.authorId as any).followers.length} followers`
@@ -1053,7 +1116,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                         social_user_id: undefined,
                       });
                     }}>
-                    <Text style={styles.contributorTextStyle}>
+                    <Text
+                      style={[
+                        styles.contributorTextStyle,
+                        {fontSize: scaleTextSize(14)},
+                      ]}>
                       See all contributors
                     </Text>
                   </TouchableOpacity>
@@ -1068,7 +1135,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               <TouchableOpacity
                 style={styles.followButton}
                 onPress={handleFollow}>
-                <Text style={styles.followButtonText}>
+                <Text
+                  style={[
+                    styles.followButtonText,
+                    {fontSize: scaleTextSize(13)},
+                  ]}>
                   {(article.authorId as any)?.followers &&
                   (article.authorId as any).followers.some(
                     (user: any) => user._id === user_id,
@@ -1088,7 +1159,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             <TouchableOpacity
               style={styles.ttsSpeedButton}
               onPress={handleSpeedChange}>
-              <Text style={styles.ttsSpeedText}>
+              <Text
+                style={[
+                  styles.ttsSpeedText,
+                  {fontSize: scaleTextSize(13)},
+                ]}>
                 {SPEED_LABELS[speechRate]}
               </Text>
             </TouchableOpacity>
@@ -1113,7 +1188,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             </TouchableOpacity>
 
             {/* Status label */}
-            <Text style={styles.ttsStatusText}>
+            <Text
+              style={[
+                styles.ttsStatusText,
+                {fontSize: scaleTextSize(13)},
+              ]}>
               {isPaused ? 'Paused' : isPlaying ? 'Playing...' : 'Stopped'}
             </Text>
           </View>
@@ -1157,6 +1236,31 @@ const styles = StyleSheet.create({
     width: '100%',
     objectFit: 'cover',
   },
+  fontScaleOverlay: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    borderWidth: 1,
+    zIndex: 6,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+  },
+  fontScaleButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   likeButton: {
     padding: 10,
     position: 'absolute',
@@ -1191,35 +1295,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     marginTop: 5,
-  },
-  fontSizeControls: {
-    marginTop: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  fontSizeLabel: {
-    fontSize: 13,
-    color: '#6C6C6D',
-    fontWeight: '500',
-  },
-  fontSizeButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  fontSizeButton: {
-    borderWidth: 1,
-    borderColor: '#D0D0D0',
-    borderRadius: 14,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    backgroundColor: '#FFFFFF',
-  },
-  fontSizeButtonText: {
-    fontSize: 14,
-    color: '#333333',
-    fontWeight: '600',
   },
   avatarsContainer: {
     position: 'relative',
