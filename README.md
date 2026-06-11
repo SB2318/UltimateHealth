@@ -99,25 +99,6 @@
 
 </div>
 
----
-
-## Table of Contents
-
-- [Maintainer Notice](#-maintainer-notice)
-- [About the Project](#-about-the-project)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Latest Releases](#-latest-releases)
-- [Getting Started](#-getting-started)
-- [Project Structure](#-project-structure)
-- [Development Workflow](#-development-workflow)
-- [Build & Deployment](#-build--deployment)
-- [Services & Dependencies](#-services--api-dependencies)
-- [Automation & Bot System](#-automation--bot-system)
-- [Contributing](#-contributing)
-- [Programs](#-programs-participated-in)
-- [Blogs & Resources](#-blogs--resources)
-- [Contributors](#-our-contributors)
 
 ---
 
@@ -134,6 +115,30 @@ This repository is currently receiving a very large number of forks, issues, and
 | Self-service issue assignment | **Instant** — just comment to claim |
 | Final human review by @SB2318 | **24-72 hours** depending on queue depth |
 
+## Table of Contents
+ 
+- [🌟 UltimateHealth (HealthGuide)](#-ultimatehealth-healthguide)
+- [📢 Maintainer Notice](#-maintainer-notice)
+- [📖 About the Project](#-about-the-project)
+- [✨ Features](#-features)
+- [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
+- [📊 Code Quality](#code-quality)
+- [🚀 Latest Releases](#-latest-releases)
+- [⚙️ Getting Started](#%EF%B8%8F-getting-started)
+- [🔧 Environment Setup](#%EF%B8%8F-environment-setup)
+- [🚀 Installation](#-installation)
+- [📁 Project Structure](#-project-structure)
+- [🔁 Development Workflow](#-development-workflow)
+- [🏗️ Build & Deployment](#%EF%B8%8F-build--deployment)
+- [🔌 Services & API Dependencies](#-services--api-dependencies)
+- [🤖 Automation & Bot System](#-automation--bot-system)
+- [🔗 Submodule Repositories](#submodule-repositories)
+- [🤝 Contribution Guidelines](#-contribution-guidelines)
+- [🚀 Programs Participated In](#-programs-participated-in)
+- [📚 Blogs & Resources](#-blogs--resources)
+- [❤️ Our Contributors](#-our-contributors)
+
+## 📖 Overview
 Our AI bot suite handles the initial pipeline automatically. See [Automation & Bot System](#-automation--bot-system) for a full breakdown.
 
 ---
@@ -739,7 +744,16 @@ We welcome contributions from everyone — developers, designers, writers, and t
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/PranavAgarkar07"><img src="https://avatars.githubusercontent.com/u/90404176?v=4" width="100px;" alt=""/><br/><sub><b>Pranav Agarkar</b></sub></a></td>
-  </tr>
+      <td align="center"><a href="https://github.com/Sha-lini3"><img src="https://avatars.githubusercontent.com/u/184716203?v=4" width="120px;" alt=""/><br/><sub><b>Shalini Yadav</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Kinara2020"><img src="https://avatars.githubusercontent.com/u/199802893?v=4" width="120px;" alt=""/><br/><sub><b>KINARA PATEL</b></sub></a></td>
+     <td align="center"><a href="https://github.com/SwaraMishra07"><img src="https://avatars.githubusercontent.com/u/197755595?v=4" width="120px;" alt=""/><br/><sub><b>SwaraMishra07</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Srejoye"><img src="https://avatars.githubusercontent.com/u/177326090?v=4" width="120px;" alt=""/><br/><sub><b>Srejoye Saha</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Priyanshu1-62"><img src="https://avatars.githubusercontent.com/u/150027236?v=4" width="120px;" alt=""/><br/><sub><b>Priyanshu Bariar</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/Yogender-verma"><img src="https://avatars.githubusercontent.com/u/232599506?v=4" width="120px;" alt=""/><br/><sub><b>Yogender Verma</b></sub></a></td>
+   </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
