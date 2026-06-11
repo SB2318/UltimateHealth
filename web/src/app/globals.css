@@ -2979,3 +2979,82 @@ i, svg {
     transition: none !important;
   }
 }
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #7c3aed;
+  color: white;
+
+  transition: transform 0.3s ease;
+  box-shadow:
+    0 0 10px rgba(124, 58, 237, 0.4),
+    0 0 20px rgba(124, 58, 237, 0.3);
+}
+
+@keyframes launch {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100px); opacity: 0; }
+}
+
+.scroll-to-top:hover {
+  transform: translateY(-4px) rotate(4deg);
+}
+
+.scroll-to-top:hover::before {
+  opacity: 1;
+}
+
+.scroll-to-top:hover .arrow {
+  transform: translateY(-3px);
+}
+
+.progress-ring {
+  position: absolute;
+  transform: rotate(-90deg);
+  animation: rotateRing 4s linear infinite;
+
+}
+
+.progress-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.2);
+  stroke-width: 4;
+}
+
+.progress-bar {
+  fill: none;
+  stroke: white;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.2s ease;
+}
+
+.arrow {
+  position: relative;
+  z-index: 1;
+  font-size: 20px;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .scroll-to-top {
+    width: 50px;
+    height: 50px;
+    bottom: 20px;
+    right: 20px;
+  }
+}
