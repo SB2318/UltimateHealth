@@ -2,6 +2,7 @@ import React from 'react';
 import { Input, XStack, YStack, Button, Text } from "tamagui";
 import Feather from '@expo/vector-icons/Feather';
 
+
 interface HomeScreenHeaderProps {
   handlePresentModalPress: () => void;
   onTextInputChange: (text: string) => void;
@@ -13,6 +14,9 @@ interface HomeScreenHeaderProps {
 }
 
 export const HomeScreenHeader = ({
+
+const HomeScreenHeader = ({
+
   handlePresentModalPress,
   onTextInputChange,
   onNotificationClick,
@@ -42,6 +46,10 @@ export const HomeScreenHeader = ({
           <Input 
             unstyled
             flex={1}
+
+
+            // marginLeft="$1"
+
             placeholder="Search articles..."
             placeholderTextColor="#778599"
             fontSize="$4"
