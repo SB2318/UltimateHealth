@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 import {
   Alert,
   FlatList,
@@ -61,9 +62,9 @@ const CommentScreen = ({
   const [newComment, setNewComment] =
     useState('');
 
-  const {user_id} = useSelector(
-    (state: any) => state.user,
-  );
+  const {user_id, isGuest} = useSelector(
+  (state: any) => state.user,
+);
 
   const [selectedCommentId, setSelectedCommentId] =
     useState<string>('');
@@ -460,6 +461,15 @@ const CommentScreen = ({
     [mentionedUsers, usedUserIds],
   );
 
+  if (isGuest) {
+    return (
+      <GuestPlaceholderScreen
+        title="Join the Discussion"
+        description="Sign in or sign up to leave feedback and interact with the community."
+      />
+    );
+  }
+
   if (commentLoading) {
     return <Loader />;
   }
@@ -620,7 +630,7 @@ const CommentScreen = ({
                 item._id
               }
               userId={user_id}
-              setSelectedCommentId={0
+              setSelectedCommentId={
                 setSelectedCommentId
               }
               handleEditAction={
@@ -644,15 +654,13 @@ const CommentScreen = ({
               isFromArticle={false}
             />
           )}
-          contentContainerStyle={[
-            styles.scrollContent,
-            {
-              paddingBottom:
-                keyboardHeight > 0
-                  ? keyboardHeight + (Platform.OS === 'ios' ? 0 : 20)
-                  : 20,
-            },
-          ]}
+         contentContainerStyle={{
+  ...styles.scrollContent,
+  paddingBottom:
+    keyboardHeight > 0
+      ? keyboardHeight + (Platform.OS === 'ios' ? 0 : 20)
+      : 20,
+}}
           showsVerticalScrollIndicator={
             false
           }

@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 import {
   View,
   Text,
@@ -34,6 +35,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
   const [language, setLanguage] = useState('en');
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const {categories} = useSelector((state: any) => state.data);
+const {isGuest} = useSelector((state: any) => state.user);
   const [imageUtils, setImageUtils] = useState('');
   const dispatch = useDispatch();
 
@@ -186,6 +188,15 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
       </Modal>
     );
   };
+
+  if (isGuest) {
+    return (
+      <GuestPlaceholderScreen
+        title="Create Podcasts"
+        description="Sign in or sign up to record and publish your own health podcasts."
+      />
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
