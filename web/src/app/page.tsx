@@ -26,7 +26,7 @@ const userScreenshots = [
   { src: "/assets/podcast-play-screen-2.jpeg", caption: "Podcast Player" },
   { src: "/assets/podcast-recording.jpeg", caption: "Podcast Recorder" },
   { src: "/assets/podcast-upload.jpeg", caption: "Podcast Upload" },
-  { src: "/assets/notificaion-screen.jpeg", caption: "Notification" },
+  { src: "/assets/notification-screen.jpeg", caption: "Notification" },
   { src: "/assets/UltimateHealth-about.jpeg", caption: "App Info" },
   { src: "/assets/terms_cond_page.jpeg", caption: "Terms And Condition" },
 ];
@@ -50,8 +50,8 @@ const CURSOR_GLOW_EVENT = "cursor-glow-preference-change";
 // Owner-configurable frontend URLs (set in deployment env when needed)
 const HELP_CENTER_URL = process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https://uhsocial.in/docs";
 const FEEDBACK_URL = process.env.NEXT_PUBLIC_FEEDBACK_URL || "https://github.com/SB2318/UltimateHealth/issues";
-const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me";
-const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com";
+const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "";
+const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "";
 const PRIVACY_POLICY_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || "#";
 const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || "#";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -118,7 +118,7 @@ export default function Home() {
 
   // ── Newsletter state ──
   const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error"| "invalid" | "empty" | "duplicate">("idle");
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
@@ -468,18 +468,30 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedNewsletterEmail = newsletterEmail.trim();
-    if (!isValidEmail(trimmedNewsletterEmail)) {
-      setNewsletterStatus("error");
+
+    // Bug fix 1: Show specific validation error for empty or invalid email
+    if (!trimmedNewsletterEmail) {
+      setNewsletterStatus("empty");
       return;
     }
-    setNewsletterStatus("sending");
+    if (!isValidEmail(trimmedNewsletterEmail)) {
+      setNewsletterStatus("invalid");
+      return;
+    }
+     setNewsletterStatus("sending");
     try {
       const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: trimmedNewsletterEmail }),
       });
+
+      if (res.status === 409) {
+        setNewsletterStatus("duplicate");
+        return;
+      }
       if (!res.ok) throw new Error("Failed");
+
       setNewsletterStatus("success");
       setNewsletterEmail("");
     } catch {
@@ -495,7 +507,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
         <PageWrapper as="div" className="nav">
-          <a href="#" className="logo">
+          <Link href={withBasePath("/")} className="logo">
             <div className="logo-icon">
               <Image
                 src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
@@ -504,7 +516,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               />
             </div>
             Ultimate-Health
-          </a>
+          </Link>
 
           <ul className="nav-links">
             <li>
@@ -538,10 +550,10 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               </a>
             </li>
             <li>
-              <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer" className="nav-link-item">
+              <Link href={withBasePath("/articles")} className="nav-link-item">
                 <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Read Articles</span>
-              </a>
+              </Link>
             </li>
             <li>
               <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
@@ -572,7 +584,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer">Read Articles</a>
+          <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
           <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
           <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
@@ -919,35 +931,72 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
             <p className="footer-note">Open-source health and wellness for everyone.</p>
 
             {/* Newsletter — wired to API */}
-            <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit}>
-              {newsletterStatus === "success" ? (
-                <div className="newsletter-success">
-                  <i className="fas fa-check-circle"></i> You&apos;re subscribed!
-                </div>
-              ) : (
-                <>
-                  <div className="footer-subscribe-row">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="footer-subscribe-input"
-                      maxLength={120}
-                      value={newsletterEmail}
-                      onChange={(e) => setNewsletterEmail(e.target.value)}
-                      required
-                    />
-                    <button type="submit" className="footer-subscribe-btn" aria-label="Subscribe to UltimateHealth newsletter" disabled={newsletterStatus === "sending"}>
-                      {newsletterStatus === "sending" ? <i className="fas fa-spinner fa-spin"></i> : "Subscribe"}
-                    </button>
-                  </div>
-                  {newsletterStatus === "error" && (
-                    <p className="newsletter-error">Could not subscribe. Please try again.</p>
-                  )}
-                  <small className="footer-subscribe-note">We respect your privacy. Unsubscribe at any time.</small>
-                </>
-              )}
-            </form>
+            <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit} noValidate>
+            {newsletterStatus === "success" ? (
+            <div className="newsletter-success">
+            <i className="fas fa-check-circle"></i> You have successfully subscribed!
+           </div>
+            ) : (
+             <>
+              <div className="footer-subscribe-row">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="footer-subscribe-input"
+                maxLength={120}
+                value={newsletterEmail}
+                required
+                aria-label="Newsletter email address"
+                aria-describedby="newsletter-feedback"
+                onChange={(e) => {
+                setNewsletterEmail(e.target.value);
+                if (
+                  newsletterStatus !== "idle" &&
+                  newsletterStatus !== "sending"
+                ) {
+                setNewsletterStatus("idle");
+              }
+            }}
+            />
+            <button
+              type="submit"
+              className="footer-subscribe-btn"
+              aria-label="Subscribe to UltimateHealth newsletter"
+              disabled={newsletterStatus === "sending"}
+            >
+            {newsletterStatus === "sending" ? "Subscribing..." : "Subscribe"}
+           </button>
+           </div>
 
+          <div id="newsletter-feedback" aria-live="polite">
+            {newsletterStatus === "empty" && (
+            <p className="newsletter-error">
+              <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
+            </p>
+            )}
+            {newsletterStatus === "invalid" && (
+              <p className="newsletter-error">
+               <i className="fas fa-exclamation-circle"></i> Invalid email format.
+               </p>
+            )}
+              {newsletterStatus === "duplicate" && (
+              <p className="newsletter-error">
+               <i className="fas fa-info-circle"></i> This email is already subscribed.
+              </p>
+              )}
+            {newsletterStatus === "error" && (
+            <p className="newsletter-error">
+              <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
+             </p>
+            )}
+      </div>
+
+      <small className="footer-subscribe-note">
+        We respect your privacy. Unsubscribe at any time.
+      </small>
+    </>
+  )}
+</form>
             {/* Social icons */}
             <div style={{ marginTop: 20 }}>
               <span className="footer-follow-label">Follow Us</span>
@@ -958,12 +1007,16 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                 <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
-                <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="Telegram" aria-label="Open UltimateHealth Telegram link">
-                  <i className="fab fa-telegram"></i>
-                </a>
-                <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Open UltimateHealth Instagram link">
-                  <i className="fab fa-instagram"></i>
-                </a>
+                {TELEGRAM_URL && (
+                  <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Telegram" aria-label="Open UltimateHealth Telegram link">
+                    <i className="fab fa-telegram-plane"></i>
+                  </a>
+                )}
+                {INSTAGRAM_URL && (
+                  <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Instagram" aria-label="Open UltimateHealth Instagram link">
+                    <i className="fab fa-instagram"></i>
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -971,11 +1024,12 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           {/* Quick Links */}
           <div className="footer-links-col">
             <h3>Quick Links</h3>
-            <a href="#">Home</a>
+            <Link href={withBasePath("/")}>Home</Link>
             <a href="#features">Features</a>
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
+            <Link href={withBasePath("/articles")}>Health Articles</Link>
             <Link href={withBasePath("/contribute")}>Join Us &amp; Contribute</Link>
           </div>
 
