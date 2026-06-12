@@ -315,7 +315,62 @@ export const articles: Article[] = [
     readingTime: "9 min read",
     category: "Diabetes Management",
     tags: ["diabetes", "blood sugar", "insulin resistance", "lifestyle", "nutrition"],
-    content: { blocks: [] },
+    content: {
+      blocks: [
+        {
+          type: "paragraph",
+          html: "Type 2 diabetes management works best when daily choices and clinical care move in the same direction. The goal is not perfection; it is steady improvement in blood glucose patterns, energy, and long-term risk reduction.",
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "blood-sugar-basics",
+          text: "Blood Sugar Basics",
+        },
+        {
+          type: "paragraph",
+          html: "After meals, carbohydrates are broken down into glucose. Insulin helps move that glucose from the bloodstream into cells. With insulin resistance, the same amount of insulin has less effect, so blood glucose can remain elevated for longer.",
+        },
+        {
+          type: "callout",
+          variant: "info",
+          title: "Sample Data Note",
+          text: "This article uses realistic placeholder guidance for local testing until production article content is served by the API.",
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "daily-habits",
+          text: "Daily Habits That Move the Needle",
+        },
+        {
+          type: "list",
+          listType: "unordered",
+          items: [
+            "<strong>Build balanced plates</strong> with vegetables, lean protein, high-fiber carbohydrates, and unsaturated fats.",
+            "<strong>Walk after meals</strong> for 10-20 minutes to improve post-meal glucose handling.",
+            "<strong>Prioritize sleep</strong> because short sleep can worsen insulin resistance and appetite regulation.",
+            "<strong>Track patterns</strong> rather than isolated readings; trends are more useful for decision-making.",
+          ],
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "monitoring",
+          text: "Monitoring With Context",
+        },
+        {
+          type: "paragraph",
+          html: "Finger-stick meters, continuous glucose monitors, and HbA1c tests each answer different questions. Use them with your care team to understand fasting levels, post-meal spikes, medication response, and progress over time.",
+        },
+        {
+          type: "callout",
+          variant: "warning",
+          title: "Do Not Adjust Medication Alone",
+          text: "Lifestyle changes can meaningfully affect glucose levels. Work with a licensed clinician before changing insulin, sulfonylureas, or other prescribed medications.",
+        },
+      ],
+    },
   },
   {
     id: "sleep-and-heart-health",
@@ -337,7 +392,63 @@ export const articles: Article[] = [
     readingTime: "7 min read",
     category: "Cardiovascular Health",
     tags: ["sleep", "heart health", "cardiovascular", "wellness", "sleep apnea"],
-    content: { blocks: [] },
+    content: {
+      blocks: [
+        {
+          type: "paragraph",
+          html: "Sleep is not just recovery time for the mind. During healthy sleep, blood pressure dips, heart rate settles, inflammation is regulated, and metabolic systems recalibrate for the next day.",
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "why-sleep-matters",
+          text: "Why Sleep Matters for the Heart",
+        },
+        {
+          type: "paragraph",
+          html: "Consistently short or fragmented sleep can raise sympathetic nervous system activity. Over time, that may contribute to hypertension, insulin resistance, weight gain, and higher cardiovascular risk.",
+        },
+        {
+          type: "image",
+          src: "/assets/article-home-screen.jpeg",
+          alt: "UltimateHealth article screen used as placeholder content artwork",
+          caption:
+            "Placeholder image for local article testing; production content can replace this with topic-specific media.",
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "sleep-apnea",
+          text: "Sleep Apnea Is Often Missed",
+        },
+        {
+          type: "paragraph",
+          html: "Loud snoring, gasping, morning headaches, dry mouth, and daytime sleepiness can point to obstructive sleep apnea. Because apnea repeatedly lowers oxygen during sleep, it can place extra strain on the cardiovascular system.",
+        },
+        {
+          type: "callout",
+          variant: "note",
+          title: "When to Ask for Screening",
+          text: "If you snore loudly, wake unrefreshed, or have resistant high blood pressure, ask your clinician whether a sleep study is appropriate.",
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "better-rest",
+          text: "Practical Steps for Better Rest",
+        },
+        {
+          type: "list",
+          listType: "ordered",
+          items: [
+            "Keep wake time consistent, including weekends.",
+            "Get morning light exposure to anchor your circadian rhythm.",
+            "Limit alcohol close to bedtime because it fragments sleep architecture.",
+            "Keep the room cool, dark, and quiet.",
+          ],
+        },
+      ],
+    },
   },
   {
     id: "stress-and-your-heart",
@@ -359,7 +470,61 @@ export const articles: Article[] = [
     readingTime: "8 min read",
     category: "Mental Health",
     tags: ["stress", "heart health", "cortisol", "mental health", "prevention"],
-    content: { blocks: [] },
+    content: {
+      blocks: [
+        {
+          type: "paragraph",
+          html: "Stress becomes a cardiovascular problem when the body's alarm system stays switched on. Short bursts of stress are normal; persistent stress can keep blood pressure, heart rate, cortisol, and inflammation higher than the body is built to tolerate.",
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "stress-response",
+          text: "The Stress Response",
+        },
+        {
+          type: "paragraph",
+          html: "When the brain detects threat, it activates the sympathetic nervous system and the hypothalamic-pituitary-adrenal axis. This helps in emergencies, but repeated activation can nudge cardiovascular risk factors in the wrong direction.",
+        },
+        {
+          type: "blockquote",
+          text: "The aim is not to remove every stressor. The aim is to build reliable recovery into the day.",
+          attribution: "UltimateHealth clinical review sample",
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "hidden-patterns",
+          text: "Hidden Patterns That Increase Risk",
+        },
+        {
+          type: "list",
+          listType: "unordered",
+          items: [
+            "<strong>Stress eating</strong> can increase sodium, refined carbohydrate, and saturated fat intake.",
+            "<strong>Skipped movement</strong> removes one of the body's most effective pressure-release tools.",
+            "<strong>Late-night screen time</strong> can compress sleep and weaken next-day resilience.",
+            "<strong>Social withdrawal</strong> may remove protective support during difficult periods.",
+          ],
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "recovery-tools",
+          text: "Recovery Tools That Are Easy to Start",
+        },
+        {
+          type: "paragraph",
+          html: "A five-minute breathing break, a short walk, journaling, therapy, and regular connection with trusted people can all reduce stress load. The best tool is the one you can repeat on an ordinary day.",
+        },
+        {
+          type: "callout",
+          variant: "tip",
+          title: "Two-Minute Reset",
+          text: "Try six slow breaths per minute for two minutes. Keep the exhale slightly longer than the inhale to encourage a calmer physiological state.",
+        },
+      ],
+    },
   },
   {
     id: "plant-based-diet-and-heart",
@@ -387,7 +552,62 @@ export const articles: Article[] = [
       "nutrition",
       "cholesterol",
     ],
-    content: { blocks: [] },
+    content: {
+      blocks: [
+        {
+          type: "paragraph",
+          html: "A plant-forward diet emphasizes vegetables, fruits, legumes, whole grains, nuts, seeds, and minimally processed foods. It does not have to be all-or-nothing to support better cardiovascular markers.",
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "what-plant-forward-means",
+          text: "What Plant-Forward Means",
+        },
+        {
+          type: "paragraph",
+          html: "Plant-forward eating can include fully vegan patterns, vegetarian patterns, Mediterranean-style meals, or simply a higher proportion of plants on the plate. The common thread is fiber-rich, nutrient-dense food replacing more processed choices.",
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "heart-benefits",
+          text: "Potential Heart Benefits",
+        },
+        {
+          type: "list",
+          listType: "unordered",
+          items: [
+            "<strong>Soluble fiber</strong> from oats, beans, lentils, and fruit can help lower LDL cholesterol.",
+            "<strong>Unsaturated fats</strong> from nuts, seeds, avocado, and olive oil support healthier lipid patterns.",
+            "<strong>Potassium-rich foods</strong> such as leafy greens and legumes can support blood pressure control.",
+            "<strong>Lower energy density</strong> may make weight management easier without strict calorie counting.",
+          ],
+        },
+        {
+          type: "callout",
+          variant: "note",
+          title: "Plan the Plate",
+          text: "A practical plate is half non-starchy vegetables, one quarter protein-rich plants, and one quarter whole grains or starchy vegetables.",
+        },
+        {
+          type: "heading",
+          level: 2,
+          id: "common-gaps",
+          text: "Common Nutrition Gaps",
+        },
+        {
+          type: "paragraph",
+          html: "People eating mostly or entirely plant-based should pay attention to vitamin B12, iron, iodine, calcium, vitamin D, omega-3 fatty acids, and total protein. A clinician or registered dietitian can help personalize the plan.",
+        },
+        {
+          type: "callout",
+          variant: "tip",
+          title: "Start Small",
+          text: "Begin with one plant-forward meal you already enjoy, such as lentil soup, bean chili, tofu stir-fry, or oatmeal with nuts and berries.",
+        },
+      ],
+    },
   },
 ];
 
