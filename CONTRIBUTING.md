@@ -133,3 +133,30 @@ Thank you for helping make **UltimateHealth** a trusted resource for wellness in
 
 — **The UltimateHealth Team**  
 *(Susmita Bhattacharya & contributors)*
+
+## ❓ FAQ
+
+**Q: Do I need to be an expert to contribute?**
+No! We welcome all skill levels. Good first issues are labeled accordingly.
+
+**Q: How do I get assigned to an issue?**
+Comment on the issue you want to work on. A maintainer will assign it to you.
+
+**Q: How long do I have to complete an issue?**
+Generally 3–5 days. If you need more time, comment on the issue to let the maintainer know.
+
+**Q: My PR was requested changes — what do I do?**
+Read the review comments, make the requested changes in your branch, and push again. The PR updates automatically.
+
+**Q: Can I work on multiple issues at the same time?**
+Yes, but please ensure you can deliver quality work on each within the expected timeframe.
+
+**Q: What if two people submit PRs for the same issue?**
+The first mergeable PR that meets the acceptance criteria will be merged. To avoid duplicate effort, always comment before starting work.
+
+**Q: How do I keep my fork up to date?**
+```bash
+git remote add upstream https://github.com/SB2318/UltimateHealth.git
+git fetch upstream
+git merge upstream/main
+```
