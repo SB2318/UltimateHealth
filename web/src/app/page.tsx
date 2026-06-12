@@ -538,10 +538,10 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               </a>
             </li>
             <li>
-              <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer" className="nav-link-item">
+              <Link href={withBasePath("/articles")} className="nav-link-item">
                 <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Read Articles</span>
-              </a>
+              </Link>
             </li>
             <li>
               <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
@@ -572,7 +572,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
+          <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
           <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
           <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
@@ -976,6 +976,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
+            <Link href={withBasePath("/articles")}>Health Articles</Link>
             <Link href={withBasePath("/contribute")}>Join Us &amp; Contribute</Link>
           </div>
 
