@@ -466,7 +466,7 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer" className="nav-link-item">
+              <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer" className="nav-link-item">
                 <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Read Articles</span>
               </a>
@@ -494,7 +494,7 @@ export default function Home() {
           <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
+          <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer">Read Articles</a>
           <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
@@ -534,7 +534,7 @@ export default function Home() {
                 <a
                   href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="store-btn"
                   id="playstore-btn"
                   aria-label="Download UltimateHealth for Android on Google Play Store"
@@ -804,7 +804,7 @@ export default function Home() {
               </div>
 
               <div className="contact-dark-socials">
-                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="GitHub">
+                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub">
                   <i className="fab fa-github"></i>
                 </a>
                <a
@@ -815,7 +815,7 @@ export default function Home() {
                  style={{ cursor: "pointer" }}>
                  <i className="fas fa-envelope"></i>
                  </a>
-                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="LinkedIn">
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
               </div>
@@ -937,16 +937,16 @@ export default function Home() {
             <div style={{ marginTop: 20 }}>
               <span className="footer-follow-label">Follow Us</span>
               <div className="footer-social-links">
-                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
+                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
                   <i className="fab fa-github"></i>
                 </a>
-                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
-                <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Telegram" aria-label="Open UltimateHealth Telegram link">
+                <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="Telegram" aria-label="Open UltimateHealth Telegram link">
                   <i className="fab fa-telegram"></i>
                 </a>
-                <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Instagram" aria-label="Open UltimateHealth Instagram link">
+                <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Open UltimateHealth Instagram link">
                   <i className="fab fa-instagram"></i>
                 </a>
               </div>
@@ -967,10 +967,10 @@ export default function Home() {
           {/* Support */}
           <div className="footer-links-col">
             <h3>Support</h3>
-            <a href={HELP_CENTER_URL} target="_blank" rel="noreferrer">Help Center</a>
+            <a href={HELP_CENTER_URL} target="_blank" rel="noopener noreferrer">Help Center</a>
             <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
-            <a href={FEEDBACK_URL} target="_blank" rel="noreferrer">Feedback</a>
-            <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">API Docs</a>
+            <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">Feedback</a>
+            <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer">API Docs</a>
           </div>
         </PageWrapper>
 
