@@ -223,6 +223,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             }
             setIsSubmitting(false);
           },
+        }
       );
   };
 
