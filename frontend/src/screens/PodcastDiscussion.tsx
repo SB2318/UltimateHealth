@@ -35,6 +35,7 @@ import {
   Text,
   View,
   Image,
+  XStack,
 } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {wp} from '../helper/Metric';
@@ -50,6 +51,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const inputRef = useRef<TextInput>(null);
   useArticleRoom(null, podcastId);
   const [comments, setComments] = useState<Comment[]>([]);
+  const MAX_COMMENT_LENGTH = 500;
   const [newComment, setNewComment] = useState('');
   const flatListRef = useRef<FlatList<Comment>>(null);
   const {user_id, user_token} = useSelector((state: any) => state.user);
@@ -438,19 +440,35 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
             placeholder="Add a comment..."
             placeholderTextColor="#9CA3AF"
             multiline
+            maxLength={MAX_COMMENT_LENGTH}
           />
 
-          {/* Submit Button */}
-          {newComment.length > 0 && (
+          {/* Brand New Layout Row for Counter and Submit Button */}
+          <XStack justifyContent="space-between" alignItems="center" mt="$2" px="$2" width="100%">
+            
+            {/* Real-time Dynamic Character Counter */}
+            <Text 
+              fontSize="$2" 
+              color={newComment.length >= 480 ? '$red10' : '$colorMuted'} 
+              fontWeight={newComment.length >= 480 ? '600' : '400'}
+            >
+              {newComment.length} / {MAX_COMMENT_LENGTH}
+            </Text>
+
+            {/* Submit Button (Always visible but visually disabled/faded when text is empty) */}
             <TouchableOpacity
-              style={styles.submitButton}
+              style={[
+                styles.submitButton, 
+                { marginTop: 0, opacity: newComment.trim().length === 0 ? 0.5 : 1 }
+              ]}
+              disabled={newComment.trim().length === 0}
               onPress={handleCommentSubmit}
               activeOpacity={0.8}>
               <Text style={styles.submitButtonText}>
                 {editMode ? 'Update Comment' : 'Submit Comment'}
               </Text>
             </TouchableOpacity>
-          )}
+          </XStack>
 
           {/* Comments Section Header */}
           <View style={styles.commentsHeader}>
