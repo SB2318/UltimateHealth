@@ -1,11 +1,11 @@
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import type { Metadata } from "next";
 import { Inter, DM_Sans } from "next/font/google";
 // DO NOT remove the globals2.css import, it contains important global styles for the application
 import "./globals2.css";
-// make a new file for css
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { headers } from "next/headers";
 
 const interHeading = Inter({ subsets: ["latin"], variable: "--font-heading" });
 
@@ -16,6 +16,11 @@ const inter = Inter({
   variable: "--font-inter",
   display: "swap",
 });
+
+// force-dynamic ensures a unique CSP nonce is generated per request (not cached)
+// Trade-off: this disables static optimization and caching for the layout,
+// but is required because CSP nonces must be generated dynamically per request.
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "UltimateHealth - Empowering Wellness Through Global Community",
@@ -29,14 +34,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Read the nonce injected by middleware so Next.js can use it for inline scripts
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <html
       lang="en"
+      nonce={nonce}
       className={cn(
         "font-sans",
         dmSans.variable,

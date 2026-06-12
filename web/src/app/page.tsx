@@ -1,15 +1,18 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
-import ScrollToTop from "../components/ScrollToTop";
+
+import { PageWrapper, Section } from "../components/layout";
+
 import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
+
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -126,6 +129,16 @@ export default function Home() {
 
   const closeComingSoonModal = useCallback(() => {
     setComingSoonModal(false);
+  }, []);
+
+  const openAppleModal = useCallback(() => {
+    setAppleModal(true);
+  }, []);
+
+  const closeAppleModal = useCallback(() => {
+    setAppleModal(false);
+    setTesterSuccess(false);
+    setTesterEmail("");
   }, []);
 
   useEffect(() => {
@@ -295,23 +308,42 @@ export default function Home() {
     setScreenshotModal(false);
   }, []);
 
+  const isAnyModalOpen = comingSoonModal || appleModal || screenshotModal;
+
   useEffect(() => {
-    document.body.style.overflow = screenshotModal ? "hidden" : "";
+    if (!isAnyModalOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
-  }, [screenshotModal]);
-  
+  }, [isAnyModalOpen]);
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (!screenshotModal) return;
-      if (e.key === "Escape") closeScreenshotModal();
-      if (e.key === "ArrowLeft") navigateScreenshot(-1);
-      if (e.key === "ArrowRight") navigateScreenshot(1);
+      if (e.key === "Escape") {
+        if (screenshotModal) closeScreenshotModal();
+        else if (appleModal) closeAppleModal();
+        else if (comingSoonModal) closeComingSoonModal();
+      }
+
+      if (screenshotModal && e.key === "ArrowLeft") navigateScreenshot(-1);
+      if (screenshotModal && e.key === "ArrowRight") navigateScreenshot(1);
     };
+
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [screenshotModal, navigateScreenshot, closeScreenshotModal]);
+  }, [
+    appleModal,
+    closeAppleModal,
+    closeComingSoonModal,
+    closeScreenshotModal,
+    comingSoonModal,
+    navigateScreenshot,
+    screenshotModal,
+  ]);
 
   const openScreenshotModal = (src: string) => {
     const idx = allScreenshots.findIndex((s) => s.src === src);
@@ -326,9 +358,49 @@ export default function Home() {
     }
   };
 
-  const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
-    ref.current?.scrollBy({ left: dir * SLIDER_SCROLL_AMOUNT, behavior: "smooth" });
-  };
+const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
+  const slider = ref.current;
+  if (!slider) return;
+
+  const maxScroll = slider.scrollWidth - slider.clientWidth;
+  const currentScroll = slider.scrollLeft;
+  const targetScroll = currentScroll + dir * SLIDER_SCROLL_AMOUNT;
+
+  if (dir === 1) {
+    if (currentScroll >= maxScroll) {
+      slider.scrollTo({ left: 0, behavior: "auto" });
+      return;
+    }
+
+    if (targetScroll > maxScroll) {
+      slider.scrollTo({ left: maxScroll, behavior: "smooth" });
+      return;
+    }
+  }
+
+  if (dir === -1) {
+    if (currentScroll <= 0 || targetScroll < 0) {
+      slider.scrollTo({ left: maxScroll, behavior: "auto" });
+      return;
+    }
+  }
+
+  slider.scrollTo({
+    left: Math.max(0, Math.min(targetScroll, maxScroll)),
+    behavior: "smooth",
+  });
+};
+  useEffect(() => {
+    const interval = setInterval(() => {
+      moveSlider(userSliderRef, 1);
+
+      if (adminSliderOpen) {
+        moveSlider(adminSliderRef, 1);
+      }
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, [adminSliderOpen]);
 
   // ── TestFlight invite ──
   const sendTesterEmail = async () => {
@@ -472,10 +544,16 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <a href={withBasePath("/contribute")} className="nav-link-item">
+              <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
+                <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Medical Glossary</span>
+              </Link>
+            </li>
+            <li>
+              <Link href={withBasePath("/contribute")} className="nav-link-item">
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
-              </a>
+              </Link>
             </li>
             <li>
               <a href="#downloads" className="nav-btn-sm">
@@ -485,7 +563,7 @@ export default function Home() {
             </li>
           </ul>
 
-          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label="Toggle mobile menu">
+          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileMenuOpen}>
             <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
           </button>
         </PageWrapper>
@@ -495,102 +573,18 @@ export default function Home() {
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
           <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer">Read Articles</a>
-          <a href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</a>
+          <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
+          <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
       </header>
 
       {/* ── Hero ── */}
-      <section className="hero">
-        <div className="container hero-content scroll-reveal">
-          <h1>Empowering Wellness Through Global Community</h1>
-          <p>UltimateHealth is a platform that lets you publish health knowledge in your own language, review content, and share podcasts with the world.</p>
-        </PageWrapper>
-      </Section>
+      <HeroAndDownload
+        onJoinTestFlight={openAppleModal}
+        onShowComingSoon={openComingSoonModal}
+      />
 
-      {/* Downloads Section */}
-      <Section id="downloads" className="download-section">
-        <PageWrapper>
-          <h2>Get UltimateHealth</h2>
-          <p className="center">
-            Access our platform on your preferred device. UltimateHealth is available now for Android and coming soon to iOS via TestFlight.
-          </p>
-          <div className="download-grid">
-            {/* Android Card */}
-            <div className="download-card fade-in">
-              <div className="download-platform-header">
-                <div className="download-platform-icon android">
-                  <i className="fab fa-android"></i>
-                </div>
-                <div>
-                  <h3>Android App</h3>
-                  <span className="platform-status active">Available Now</span>
-                </div>
-              </div>
-              <p className="platform-desc">
-                Install UltimateHealth on your Android device to publish articles, listen to podcasts, and manage content.
-              </p>
-              <div className="store-buttons">
-                <a
-                  href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="store-btn"
-                  id="playstore-btn"
-                  aria-label="Download UltimateHealth for Android on Google Play Store"
-                >
-                  <i className="fab fa-google-play"></i> UltimateHealth
-                </a>
-                <button
-                  type="button"
-                  className="store-btn"
-                  id="admin-closed-testing-btn"
-                  onClick={openComingSoonModal}
-                  aria-label="View UHealth Admin closed testing launch status"
-                >
-                  <i className="fas fa-user-shield"></i> UHealth Admin (Closed Testing)
-                </button>
-              </div>
-            </div>
-
-            {/* iOS Card */}
-            <div className="download-card fade-in">
-              <div className="download-platform-header">
-                <div className="download-platform-icon ios">
-                  <i className="fab fa-apple"></i>
-                </div>
-                <div>
-                  <h3>iOS App</h3>
-                  <span className="platform-status coming-soon">Coming Soon</span>
-                </div>
-              </div>
-              <p className="platform-desc">
-                We are actively testing our iOS application. Request to join the TestFlight waitlist for early beta access.
-              </p>
-              <div className="store-buttons">
-                <button
-                  className="store-btn store-btn-secondary"
-                  id="ios-uh-btn"
-                  onClick={() => setAppleModal(true)}
-                  aria-label="Join iOS TestFlight beta for UltimateHealth"
-                >
-                  <i className="fab fa-apple"></i> UltimateHealth (Beta)
-                </button>
-                <button
-                  className="store-btn store-btn-secondary"
-                  id="ios-admin-btn"
-                  onClick={() => setAppleModal(true)}
-                  aria-label="Join iOS TestFlight beta for UHealth Admin"
-                >
-                  <i className="fab fa-apple"></i> UHealth Admin (Beta)
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-<HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} />
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
@@ -684,22 +678,43 @@ export default function Home() {
       </Section>
 
       {/* ── Features ── */}
-      <Section id="features" className="scroll-reveal">
+      <Section id="features" className="feature-section-premium scroll-reveal">
         <PageWrapper>
-          <h2>Be a Contributor: Core Community Features</h2>
-          <p className="center">Join our community and make a difference in global health awareness</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 w-full">
+          <h2>UltimateHealth Features</h2>
+          <p className="center">
+            UltimateHealth is an open-source health platform that provides trusted articles, AI-powered assistance, podcasts, multilingual content, community contributions, and a centralized wellness knowledge repository.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full relative z-10">
             {featuresLoading ? (
-              <Skeleton count={4} variant="compact" />
+              <Skeleton count={6} variant="compact" />
             ) : (
               [
-                { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
-                { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
-                { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
-                { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
+                { icon: "fa-robot", title: "AI Health Chat Assistant", desc: "Get instant, AI-powered health guidance and support.", span: "md:col-span-2 lg:col-span-2" },
+                { icon: "fa-book-medical", title: "Centralized Library", desc: "Access a vast repository of trusted health articles.", span: "col-span-1" },
+                
+                { icon: "fa-edit", title: "CRUD Articles", desc: "Create, read, update, and delete your health content seamlessly.", span: "col-span-1" },
+                { icon: "fa-podcast", title: "Health Podcasts", desc: "Stream and share verified health audio content worldwide.", span: "md:col-span-2 lg:col-span-2" },
+                
+                { icon: "fa-tags", title: "Smart Categorization", desc: "Organize articles with intuitive categorization and tagging.", span: "col-span-1" },
+                { icon: "fa-search", title: "Advanced Search", desc: "Quickly find the specific health information you need.", span: "col-span-1" },
+                { icon: "fa-users", title: "Community Contributions", desc: "Collaborate and drive open-source content creation.", span: "col-span-1" },
+                
+                { icon: "fa-code-branch", title: "Edit Request Workflow", desc: "Propose and review changes to maintain content quality.", span: "col-span-1" },
+                { icon: "fa-language", title: "Multilingual Resources", desc: "Read and write content in multiple languages globally.", span: "col-span-1" },
+                { icon: "fa-mobile-alt", title: "Cross-Platform Support", desc: "Available on both Android mobile and Web platforms.", span: "col-span-1" },
+                
+                { icon: "fa-user-shield", title: "Authentication & Users", desc: "Secure role-based access and robust user management.", span: "col-span-1" },
+                { icon: "fa-cloud", title: "Cloud Content Management", desc: "Reliable cloud infrastructure for all your health data.", span: "col-span-1" },
+                { icon: "fa-graduation-cap", title: "Educational Content", desc: "Spread health awareness through verified information.", span: "col-span-1" },
+                
+                { icon: "fa-shield-alt", title: "Trusted Wellness Repository", desc: "A heavily moderated, safe, and accurate knowledge base.", span: "md:col-span-2 lg:col-span-2" },
+                { icon: "fa-globe", title: "Open-Source Platform", desc: "Join our global initiative for a healthier community.", span: "col-span-1" },
               ].map((f, i) => (
-                <div className="feature-item w-full" key={i}>
-                  <h3>{f.icon} {f.title}</h3>
+                <div className={`feature-card-premium w-full fade-in ${f.span}`} key={i}>
+                  <div className="feature-icon-wrapper">
+                    <i className={`fas ${f.icon}`}></i>
+                  </div>
+                  <h3>{f.title}</h3>
                   <p>{f.desc}</p>
                 </div>
               ))
@@ -961,7 +976,7 @@ export default function Home() {
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
             <a href="#contact">Contact</a>
-            <a href={withBasePath("/contribute")}>Join Us &amp; Contribute</a>
+            <Link href={withBasePath("/contribute")}>Join Us &amp; Contribute</Link>
           </div>
 
           {/* Support */}
@@ -987,61 +1002,68 @@ export default function Home() {
       </footer>
 
       {/* ── Coming Soon Modal ── */}
-      <div
-        className={`modal-overlay${comingSoonModal ? " active" : ""}`}
-        onClick={closeComingSoonModal}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="coming-soon-modal-title"
-        aria-hidden={!comingSoonModal}
-      >
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
-          <h2 id="coming-soon-modal-title">Launching Soon!</h2>
-          <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
-            We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
-          </p>
-          <div className="progress-container"><div className="progress-bar"></div></div>
-          <button className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
+      {comingSoonModal && (
+        <div
+          className="modal-overlay active"
+          onClick={closeComingSoonModal}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="coming-soon-modal-title"
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
+            <h2 id="coming-soon-modal-title">Launching Soon!</h2>
+            <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
+              We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
+            </p>
+            <div className="progress-container"><div className="progress-bar"></div></div>
+            <button type="button" className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ── TestFlight Modal ── */}
-      <div className={`modal-overlay${appleModal ? " active" : ""}`}
-        onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>✈️</div>
-          <h2>Join the iOS TestFlight</h2>
-          <p style={{ color: "var(--text-muted)", marginBottom: 24 }}>Help us build the ultimate experience</p>
-          <div style={{ textAlign: "left", fontSize: "0.95rem", color: "var(--text-dark)", background: "#f8fafc", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }}>
-            <p style={{ marginBottom: 12 }}>We have decided to release via <strong>TestFlight</strong> first before moving to a full App Store launch.</p>
-            <p style={{ marginBottom: 12 }}><strong>🔹 Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
-            <p style={{ marginBottom: 12 }}><strong>🔹 What this means:</strong> The app will be available to invited testers only via TestFlight.</p>
-            <p><strong>Are you ready to test?</strong> Enter your email below to request an invitation.</p>
+      {appleModal && (
+        <div
+          className="modal-overlay active"
+          onClick={closeAppleModal}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="testflight-modal-title"
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>✈️</div>
+            <h2 id="testflight-modal-title">Join the iOS TestFlight</h2>
+            <p style={{ color: "var(--text-muted)", marginBottom: 24 }}>Help us build the ultimate experience</p>
+            <div style={{ textAlign: "left", fontSize: "0.95rem", color: "var(--text-dark)", background: "#f8fafc", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }}>
+              <p style={{ marginBottom: 12 }}>We have decided to release via <strong>TestFlight</strong> first before moving to a full App Store launch.</p>
+              <p style={{ marginBottom: 12 }}><strong>🔹 Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
+              <p style={{ marginBottom: 12 }}><strong>🔹 What this means:</strong> The app will be available to invited testers only via TestFlight.</p>
+              <p><strong>Are you ready to test?</strong> Enter your email below to request an invitation.</p>
+            </div>
+            {!testerSuccess ? (
+              <div>
+                <input type="email" placeholder="Enter your Apple ID email" className="waitlist-input"
+                  maxLength={120}
+                  value={testerEmail} onChange={(e) => setTesterEmail(e.target.value)} />
+                <button className="nav-btn-sm"
+                  type="button"
+                  style={{ width: "100%", height: 48, border: "none", cursor: "pointer", fontWeight: "bold", fontSize: "1rem" }}
+                  onClick={sendTesterEmail}>
+                  Send Invitation Request
+                </button>
+              </div>
+            ) : (
+              <div style={{ padding: 24, color: "#059669", background: "#d1fae5", borderRadius: 12 }}>
+                <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We&apos;ll notify you as soon as the test link is ready.</p>
+              </div>
+            )}
+            <button type="button" className="close-modal-btn" onClick={closeAppleModal}>
+              Maybe later
+            </button>
           </div>
-          {!testerSuccess ? (
-            <div>
-              <input type="email" placeholder="Enter your Apple ID email" className="waitlist-input"
-                maxLength={120}
-                value={testerEmail} onChange={(e) => setTesterEmail(e.target.value)} />
-              <button className="nav-btn-sm"
-                type="button"
-                style={{ width: "100%", height: 48, border: "none", cursor: "pointer", fontWeight: "bold", fontSize: "1rem" }}
-                onClick={sendTesterEmail}>
-                Send Invitation Request
-              </button>
-            </div>
-          ) : (
-            <div style={{ padding: 24, color: "#059669", background: "#d1fae5", borderRadius: 12 }}>
-              <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We&apos;ll notify you as soon as the test link is ready.</p>
-            </div>
-          )}
-          <button className="close-modal-btn"
-            onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>
-            Maybe later
-          </button>
         </div>
-      </div>
+      )}
 
       {/* ── Screenshot Modal ── */}
       {screenshotModal && (
@@ -1068,5 +1090,5 @@ export default function Home() {
       )}
       <ScrollToTop />
     </>
-    );
-    }
+  );
+}

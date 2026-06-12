@@ -4,6 +4,7 @@ import Image from "next/image";
 
 type HeroAndDownloadProps = {
   onJoinTestFlight: () => void;
+  onShowComingSoon: () => void;
 };
 
 const activityItems = [
@@ -56,7 +57,7 @@ const platforms = [
   },
 ];
 
-export default function HeroAndDownload({ onJoinTestFlight }: HeroAndDownloadProps) {
+export default function HeroAndDownload({ onJoinTestFlight, onShowComingSoon }: HeroAndDownloadProps) {
   return (
     <>
       <section className="uh-hero">
@@ -244,7 +245,7 @@ export default function HeroAndDownload({ onJoinTestFlight }: HeroAndDownloadPro
                   </ul>
 
                   {platform.theme === "android" ? (
-                    <AndroidStoreButtons />
+                    <AndroidStoreButtons onShowComingSoon={onShowComingSoon} />
                   ) : (
                     <IosStoreButtons onJoinTestFlight={onJoinTestFlight} />
                   )}
@@ -322,7 +323,7 @@ function MiniPhone({ theme }: { theme: string }) {
   );
 }
 
-function AndroidStoreButtons() {
+function AndroidStoreButtons({ onShowComingSoon }: Pick<HeroAndDownloadProps, "onShowComingSoon">) {
   return (
     <div className="uh-store-buttons-group">
       <div className="uh-store-buttons">
@@ -352,12 +353,24 @@ function AndroidStoreButtons() {
             <strong>UHealth Admin</strong>
           </div>
         </a>
+        <button
+          type="button"
+          onClick={onShowComingSoon}
+          className="uh-store-btn uh-store-admin"
+          aria-label="View UHealth Admin closed testing launch status"
+        >
+          <i className="fas fa-hourglass-half" aria-hidden="true" />
+          <div>
+            <small>Launch Status</small>
+            <strong>Closed Testing</strong>
+          </div>
+        </button>
       </div>
     </div>
   );
 }
 
-function IosStoreButtons({ onJoinTestFlight }: HeroAndDownloadProps) {
+function IosStoreButtons({ onJoinTestFlight }: Pick<HeroAndDownloadProps, "onJoinTestFlight">) {
   return (
     <div className="uh-store-buttons-group">
       <div className="uh-store-buttons">

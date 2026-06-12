@@ -1,0 +1,31 @@
+name: Knip
+
+on:
+  push:
+    branches:
+      - web
+  pull_request:
+    branches:
+      - web
+
+jobs:
+  knip:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: web
+        run: npm install
+
+      - name: Run Knip
+        working-directory: web
+        continue-on-error: true
+        run: npm run knip
