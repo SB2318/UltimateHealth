@@ -13,6 +13,7 @@ import {HomeScreenCategoriesFlatlistProps, Category} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {hp} from '../helper/Metric';
 
+const SEARCH_DEBOUNCE_DELAY = 300;
 
 const CategoriesFlatlistModal = ({
   bottomSheetModalRef2,
@@ -20,9 +21,17 @@ const CategoriesFlatlistModal = ({
   handleCategorySelection,
   selectCategoryList,
 }: HomeScreenCategoriesFlatlistProps) => {
-  const SEARCH_DEBOUNCE_DELAY = 300; // ms
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+
+  // Debounce the search query to avoid filtering on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, SEARCH_DEBOUNCE_DELAY);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -38,57 +47,34 @@ const CategoriesFlatlistModal = ({
   // Define snap points for the bottom sheet
   const snapPoints = useMemo(() => ['25%', '75%', '95%'], []);
 
-  // Debounce search input to avoid filtering categories on every keystroke
-  useEffect(() => {
+  // Build a Set of selected category keys for O(1) lookup
+  const selectCategoryKeys = useMemo(() => {
+    const keys = new Set<string>();
+    selectCategoryList.forEach(item => {
+      if (item._id !== undefined) keys.add(String(item._id));
+      if (item.id !== undefined) keys.add(String(item.id));
+      if (item.name) keys.add(item.name);
+    });
+    return keys;
+  }, [selectCategoryList]);
 
-    const timeout = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-    }, SEARCH_DEBOUNCE_DELAY);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [searchQuery]);
-
-  // Filter categories based on search
+  // Filter categories based on debounced search query
   const filteredCategories = useMemo(() => {
     if (!debouncedSearchQuery.trim()) return categories;
     return categories.filter(cat =>
       cat && cat.name && typeof cat.name === 'string' &&
-      cat.name.toLowerCase().includes((debouncedSearchQuery || '').toLowerCase())
+      cat.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
     );
   }, [categories, debouncedSearchQuery]);
-
-  // Memoize selected category identifiers for constant-time lookup during item rendering
-  const selectCategoryKeys = useMemo(() => {
-
-    const keys = new Set<string>();
-
-    selectCategoryList.forEach((category) => {
-      if(category.id !== undefined){
-        keys.add(`id:${category.id}`);
-      }
-
-      if(category._id !== undefined){
-        keys.add(`_id:${category._id}`);
-      }
-
-      if(category.name !== undefined){
-        keys.add(`name:${category.name}`);
-      }
-    });
-
-    return keys;
-  }, [selectCategoryList]);
 
   // Function to render each category item
   const renderItem = useCallback(
     ({item}: {item: Category}) => {
-
-      const isSelected = 
-        (item?.id !== undefined && selectCategoryKeys.has(`id:${item.id}`)) ||
-        (item?._id !== undefined && selectCategoryKeys.has(`_id:${item._id}`)) ||
-        (item?.name !== undefined && selectCategoryKeys.has(`name:${item.name}`));
+      // O(1) Set lookup instead of O(N) array iteration
+      const isSelected =
+        (item._id !== undefined && selectCategoryKeys.has(String(item._id))) ||
+        (item.id !== undefined && selectCategoryKeys.has(String(item.id))) ||
+        (item.name !== undefined && selectCategoryKeys.has(item.name));
 
       return (
         <AccessibleTouchable
@@ -120,7 +106,7 @@ const CategoriesFlatlistModal = ({
         </AccessibleTouchable>
       );
     },
-    [handleCategorySelection, selectCategoryList],
+    [handleCategorySelection, selectCategoryKeys],
   );
 
   // Function to close the bottom sheet modal
@@ -180,7 +166,7 @@ const CategoriesFlatlistModal = ({
           renderItem={renderItem}
           contentContainerStyle={styles.contentContainer}
           contentInsetAdjustmentBehavior={'always'}
-          extraData={selectCategoryList}
+          extraData={selectCategoryKeys}
         />
       )}
     </BottomSheetModal>

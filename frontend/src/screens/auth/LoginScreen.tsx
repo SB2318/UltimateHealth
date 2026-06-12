@@ -37,7 +37,6 @@ import {
 } from '../../store/UserSlice';
 
 import { AuthData, LoginScreenProp } from '../../type';
-import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
 
 const loginSchema = z.object({
   email: z.string().email('Please Enter a Valid Email'),
@@ -71,7 +70,6 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   });
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const {mutate: resendVerification, isPending: resendVerificationPending} =
     useRequestVerification();
 
@@ -214,21 +212,17 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                     'Error',
                     'Email not verified. Please check your email.',
                   );
-                  return;
-                }
-                navigation.reset({
-                  index: 0,
-                  routes: [{name: 'TabNavigation'}],
-                });
-              }, 1000);
+                  break;
+                case 404:
+                  Alert.alert('Error', 'User not found');
+                  break;
+                default:
+                  Alert.alert('Error', 'Internal server error');
+              }
             } else {
-              Alert.alert('Token not found');
+              Alert.alert('Error', 'User not found');
             }
-          } catch (e) {
-            if (__DEV__) console.log('Async Storage ERROR', e);
-          } finally {
-            setIsSubmitting(false);
-          }
+          },
         },
       );
   };
@@ -421,7 +415,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               </Text>
             </XStack>
 
-          <Button
+            <Button
               backgroundColor="$blue10"
               theme="blue"
               marginTop="$5"
@@ -433,13 +427,9 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               disabled={loginPending || !isValid}
               opacity={loginPending || !isValid ? 0.5 : 1}
               width="100%">
-              {isSubmitting || loginPending ? (
-                <ActivityIndicator color="white" />
-              ) : (
-                <Text fontSize={18} color="$white" fontWeight="600">
-                  Login
-                </Text>
-              )}
+              <Text fontSize={18} color="$white" fontWeight="600">
+                Login
+              </Text>
             </Button>
           </YStack>
 

@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {Alert} from 'react-native';
 import {ScrollView, YStack, XStack, Text, Input, Button, Image, useTheme} from 'tamagui';
 import Icon from '@expo/vector-icons/MaterialIcons';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -71,7 +72,6 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
     useVerificationMailMutation();
 
   const {mutate: register, isPending: registerPending} = useRegdMutation();
-  const[isSubmitting, setIsSubmitting] = useState(false);
 
   const selectImage = async () => {
     const options: ImageLibraryOptions = {
