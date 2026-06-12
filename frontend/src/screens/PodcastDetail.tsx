@@ -33,6 +33,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import PodcastDetailSkeleton from '../components/PodcastDetailSkeleton';
 import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
 import LottieView from 'lottie-react-native';
+import AudioWaveform from '../components/AudioWaveform';
 import {useGetSinglePodcastDetails} from '../hooks/useGetSinglePodcastDetails';
 import {useLikePodcast} from '../hooks/useLikePodcast';
 
@@ -61,7 +62,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   //const [progress, setProgress] = useState(10);
   // const insets = useSafeAreaInsets();
   const {trackId, audioUrl} = route.params;
-
+ 
   const {width, height} = useWindowDimensions();
   const isLandscape = width > height;
   const isTablet = width >= 768;
@@ -311,19 +312,17 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
     </YStack>
   );
 
-  const visualizerEl = playing && (
+  const visualizerEl = (
     <YStack alignItems="center" width="100%">
       <View
+        accessible={true}
+        accessibilityLabel="Audio waveform visualizer"
+        accessibilityHint={playing ? "Currently animating, audio is playing" : "Currently paused"}
         style={[
           styles.visualizerContainer,
           GlassStyles.glassContainerDark,
         ]}>
-        <LottieView
-          source={require('../assets/LottieAnimation/sound-voice-waves.json')}
-          autoPlay
-          loop
-          style={{width: '100%', height: useSplitLayout ? 120 : 150}}
-        />
+        <AudioWaveform isPlaying={playing} accentColor="#4F46E5" />
       </View>
     </YStack>
   );
