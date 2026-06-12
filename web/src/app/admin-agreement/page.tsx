@@ -11,6 +11,8 @@ type Stroke = Point[];
 
 const SIGNATURE_STROKE = "#2d3748";
 const SIGNATURE_LINE_WIDTH = 2;
+const MIN_SIGNATURE_WIDTH_RATIO = 0.1;
+const MIN_SIGNATURE_HEIGHT_RATIO = 0.13;
 
 /* ---------- inner component (needs useSearchParams) ---------- */
 function AdminAgreementContent() {
@@ -63,7 +65,7 @@ function AdminAgreementContent() {
       maxX = Math.max(maxX, p.x);
       maxY = Math.max(maxY, p.y);
     });
-    return maxX - minX > 0.1 && maxY - minY > 0.13;
+    return maxX - minX > MIN_SIGNATURE_WIDTH_RATIO && maxY - minY > MIN_SIGNATURE_HEIGHT_RATIO;
   }, [strokes]);
 
   const canAccept =
