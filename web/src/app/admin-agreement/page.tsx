@@ -7,6 +7,10 @@ import { PageWrapper, Section } from "@/components/layout";
 
 /* ---------- types ---------- */
 interface Point { x: number; y: number }
+type Stroke = Point[];
+
+const SIGNATURE_STROKE = "#2d3748";
+const SIGNATURE_LINE_WIDTH = 2;
 
 /* ---------- inner component (needs useSearchParams) ---------- */
 function AdminAgreementContent() {
@@ -18,7 +22,7 @@ function AdminAgreementContent() {
   const [agreed, setAgreed] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [points, setPoints] = useState<Point[]>([]);
+  const [strokes, setStrokes] = useState<Stroke[]>([]);
 
   // ui state
   const [message, setMessage] = useState<{ text: string; type: "success" | "error" | "info" } | null>(null);
@@ -29,13 +33,29 @@ function AdminAgreementContent() {
   const [signedTimestamp, setSignedTimestamp] = useState<string | null>(null);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const strokesRef = useRef<Stroke[]>([]);
+  const activeStrokeRef = useRef<Stroke>([]);
 
   /* ---------- helpers ---------- */
   const isValidFullName = (name: string) =>
     name.trim().split(" ").filter((p) => p.length > 0).length >= 2;
 
+  const canvasHasInk = useCallback(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return false;
+
+    const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    for (let index = 3; index < pixels.length; index += 4) {
+      if (pixels[index] !== 0) return true;
+    }
+    return false;
+  }, []);
+
   const isSignatureValid = useCallback(() => {
+    const points = strokes.flat();
     if (points.length < 20) return false;
+
     let minX = Infinity, minY = Infinity, maxX = 0, maxY = 0;
     points.forEach((p) => {
       minX = Math.min(minX, p.x);
@@ -43,8 +63,8 @@ function AdminAgreementContent() {
       maxX = Math.max(maxX, p.x);
       maxY = Math.max(maxY, p.y);
     });
-    return maxX - minX > 50 && maxY - minY > 20;
-  }, [points]);
+    return maxX - minX > 0.1 && maxY - minY > 0.13;
+  }, [strokes]);
 
   const canAccept =
     isValidFullName(fullName) &&
@@ -53,18 +73,39 @@ function AdminAgreementContent() {
     agreed;
 
   /* ---------- canvas setup ---------- */
+  const drawStrokes = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    strokesRef.current.forEach((stroke) => {
+      if (stroke.length === 0) return;
+      ctx.beginPath();
+      ctx.moveTo(stroke[0].x * width, stroke[0].y * height);
+      stroke.slice(1).forEach((point) => ctx.lineTo(point.x * width, point.y * height));
+      ctx.stroke();
+      ctx.closePath();
+    });
+  }, []);
+
   const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+    const pixelRatio = window.devicePixelRatio || 1;
+    canvas.width = Math.round(rect.width * pixelRatio);
+    canvas.height = Math.round(rect.height * pixelRatio);
     const ctx = canvas.getContext("2d")!;
-    ctx.strokeStyle = "#2d3748";
-    ctx.lineWidth = 2;
+    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    ctx.strokeStyle = SIGNATURE_STROKE;
+    ctx.lineWidth = SIGNATURE_LINE_WIDTH;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
-  }, []);
+    drawStrokes(ctx, rect.width, rect.height);
+
+    const lastPoint = activeStrokeRef.current.at(-1);
+    if (lastPoint) {
+      ctx.beginPath();
+      ctx.moveTo(lastPoint.x * rect.width, lastPoint.y * rect.height);
+    }
+  }, [drawStrokes]);
 
   useEffect(() => {
     setupCanvas();
@@ -91,32 +132,54 @@ function AdminAgreementContent() {
   const getPos = (e: React.MouseEvent | React.TouchEvent): Point => {
     const canvas = canvasRef.current!;
     const rect = canvas.getBoundingClientRect();
-    if ("touches" in e) {
-      return {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top,
-      };
-    }
-    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    const clientPoint = "touches" in e ? e.touches[0] : e;
+
+    return {
+      x: (clientPoint.clientX - rect.left) / rect.width,
+      y: (clientPoint.clientY - rect.top) / rect.height,
+    };
+  };
+
+  const toCanvasPoint = (point: Point): Point => {
+    const rect = canvasRef.current!.getBoundingClientRect();
+    return {
+      x: point.x * rect.width,
+      y: point.y * rect.height,
+    };
+  };
+
+  const updateStrokes = (nextStrokes: Stroke[]) => {
+    strokesRef.current = nextStrokes;
+    setStrokes(nextStrokes);
   };
 
   const startDraw = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     if (locked) return;
-    setIsDrawing(true);
+
     const pos = getPos(e);
+    activeStrokeRef.current = [pos];
+    updateStrokes([...strokesRef.current, activeStrokeRef.current]);
+    setIsDrawing(true);
+
+    const canvasPoint = toCanvasPoint(pos);
     const ctx = canvasRef.current!.getContext("2d")!;
     ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
+    ctx.moveTo(canvasPoint.x, canvasPoint.y);
   };
 
   const draw = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     if (!isDrawing || locked) return;
+
     const pos = getPos(e);
-    setPoints((prev) => [...prev, pos]);
+    const activeStroke = [...activeStrokeRef.current, pos];
+    activeStrokeRef.current = activeStroke;
+    updateStrokes([...strokesRef.current.slice(0, -1), activeStroke]);
+
+    const canvasPoint = toCanvasPoint(pos);
     const ctx = canvasRef.current!.getContext("2d")!;
-    ctx.lineTo(pos.x, pos.y);
+    ctx.lineTo(canvasPoint.x, canvasPoint.y);
     ctx.stroke();
     setHasSignature(true);
   };
@@ -124,6 +187,7 @@ function AdminAgreementContent() {
   const stopDraw = () => {
     if (isDrawing) {
       canvasRef.current!.getContext("2d")!.closePath();
+      activeStrokeRef.current = [];
       setIsDrawing(false);
     }
   };
@@ -131,9 +195,14 @@ function AdminAgreementContent() {
   const clearSignature = () => {
     if (locked) return;
     const canvas = canvasRef.current!;
-    canvas.getContext("2d")!.clearRect(0, 0, canvas.width, canvas.height);
+    const ctx = canvas.getContext("2d")!;
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+    activeStrokeRef.current = [];
+    updateStrokes([]);
     setHasSignature(false);
-    setPoints([]);
   };
 
   /* ---------- showMessage helper ---------- */
@@ -152,7 +221,7 @@ function AdminAgreementContent() {
       showMessage("error", "✗ Please enter your designation", true);
       return;
     }
-    if (!isSignatureValid()) {
+    if (!isSignatureValid() || !canvasHasInk()) {
       showMessage("error", "✗ Please provide a valid signature", true);
       return;
     }
