@@ -3004,11 +3004,6 @@ i, svg {
     0 0 20px rgba(124, 58, 237, 0.3);
 }
 
-@keyframes launch {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-100px); opacity: 0; }
-}
-
 .scroll-to-top:hover {
   transform: translateY(-4px) rotate(4deg);
 }
