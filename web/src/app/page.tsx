@@ -735,7 +735,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
             className="feature-item w-full bg-stone-50 dark:bg-gray-800 border border-stone-200 dark:border-gray-800 shadow-md shadow-stone-200/50 dark:shadow-none "
             key={i}
           >
-                  <h3 className="text-black dark:!text-white">{f.icon} {f.title}</h3>
+                  <h3 className="text-black dark:!text-white"> <i className={`fas ${f.icon}`}></i> {f.title}</h3>
                   <p>{f.desc}</p>
                 </div>
               ))
@@ -794,7 +794,7 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
                     className="program-logo"
                   />
                 </div>
-                <span className="program-badge !bg-[#1e2736] dark:text-white">{p.badge}</span>
+                <span className="program-badge bg-[#1e2736] dark:text-white">{p.badge}</span>
                 <h3 className="dark:!text-white">{p.title}</h3>
                 <p className="!text-gray-400">{p.desc}</p>
               </div>
@@ -1108,7 +1108,8 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
             <p><strong>Are you ready to test?</strong> Enter your email below to request an invitation.</p>
           </div>
         </div>
-      )}
+        </div>
+
 
       {/* ── Screenshot Modal ── */}
       {screenshotModal && (

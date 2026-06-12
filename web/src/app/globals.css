@@ -1006,7 +1006,7 @@ p.center {
 }
 .program-badge {
   display: inline-block;
-  background: var(--gradient-primary);
+  /* background: var(--gradient-primary); */
   color: white;
   font-size: 0.75rem;
   font-weight: 800;
