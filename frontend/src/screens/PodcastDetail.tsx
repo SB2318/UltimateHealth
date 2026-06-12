@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef, useCallback} from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -7,6 +7,8 @@ import {
   View,
   Image,
   useWindowDimensions,
+  AppState,
+  AppStateStatus,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {PodcastDetailScreenProp} from '../type';
@@ -16,8 +18,6 @@ import {GlassStyles} from '../styles/GlassStyles';
 
 import {useAudioPlayer} from 'expo-audio';
 
-// GET_IMAGE is defined as `${PROD_URL}/getfile` (resolves to absolute URL: https://uhsocial.in/api/getfile).
-// This absolute, securely-configured endpoint ensures that relative resource paths cannot access local device files via traversal.
 import {GET_IMAGE} from '../helper/APIUtils';
 import {useSelector} from 'react-redux';
 
@@ -34,11 +34,11 @@ import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
 import LottieView from 'lottie-react-native';
 import {useGetSinglePodcastDetails} from '../hooks/useGetSinglePodcastDetails';
 import {useLikePodcast} from '../hooks/useLikePodcast';
+import {useFocusEffect} from '@react-navigation/native';
 
 const isAllowedUrl = (urlStr?: string | null): boolean => {
   if (!urlStr) return false;
   if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
-    // allow ONLY relative paths
     if (urlStr.includes('://')) return false;
     return true;
   }
@@ -57,8 +57,6 @@ const isAllowedUrl = (urlStr?: string | null): boolean => {
 };
 
 const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
-  //const [progress, setProgress] = useState(10);
-  // const insets = useSafeAreaInsets();
   const {trackId, audioUrl} = route.params;
 
   const {width, height} = useWindowDimensions();
@@ -81,7 +79,13 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const [isLike, setLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
 
-  const {data: podcast, refetch, isLoading: isPodcastLoading, isError: isPodcastError, error: podcastError} = useGetSinglePodcastDetails(trackId);
+  const {
+    data: podcast,
+    refetch,
+    isLoading: isPodcastLoading,
+    isError: isPodcastError,
+    error: podcastError,
+  } = useGetSinglePodcastDetails(trackId);
   const {mutate: likePodcast, isPending: likePodcastPending} = useLikePodcast();
 
   const defaultFallback = require('../../assets/sounds/funny-cartoon-sound-397415.mp3');
@@ -98,9 +102,58 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const initialSource = getFormattedSource(audioUrl) ?? defaultFallback;
   const [loadedSource, setLoadedSource] = useState<string | number>(initialSource);
 
-  // only initialize once a valid uri exists
   const player = useAudioPlayer(initialSource);
 
+  // ─── FIX 1: Track whether WE paused (so we don't resume a user-stopped track) ──
+  const wePausedIt = useRef(false);
+
+  // ─── FIX 2: Pause on screen blur, resume on focus ────────────────────────────
+  // This also handles unmount cleanup, so no separate useEffect needed.
+  useFocusEffect(
+    useCallback(() => {
+      // Screen gained focus — resume only if we were the ones who paused it
+      if (wePausedIt.current && player) {
+        player.play();
+        setIsPlaying(true);
+        wePausedIt.current = false;
+      }
+
+      return () => {
+        // Fires on blur AND on unmount — covers both navigation away and screen removal
+        if (player && player.playing) {
+          player.pause();
+          setIsPlaying(false);
+          wePausedIt.current = true;
+        }
+      };
+    }, [player]),
+  );
+
+  // ─── FIX 3: Pause when app goes to background, resume when it returns ────────
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      'change',
+      (nextState: AppStateStatus) => {
+        if (nextState === 'background' || nextState === 'inactive') {
+          if (player && player.playing) {
+            player.pause();
+            setIsPlaying(false);
+            wePausedIt.current = true;
+          }
+        } else if (nextState === 'active') {
+          if (player && wePausedIt.current) {
+            player.play();
+            setIsPlaying(true);
+            wePausedIt.current = false;
+          }
+        }
+      },
+    );
+
+    return () => subscription.remove();
+  }, [player]);
+
+  // ─── Replace audio source when podcast data loads ─────────────────────────────
   useEffect(() => {
     if (podcast?.audio_url) {
       const secureSource = getFormattedSource(podcast.audio_url);
@@ -111,50 +164,40 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
     }
   }, [podcast?.audio_url, player, loadedSource]);
 
+  // ─── Sync position/duration from player ──────────────────────────────────────
   useEffect(() => {
     const interval = setInterval(() => {
-      if (player.playing) {
+      if (player) {
         setPosition(player.currentTime || 0);
         setDuration(player.duration || 1);
-        // setIsPlaying(player.playing || false);
+        setIsPlaying(player.playing || false);
       }
     }, 500);
 
     return () => clearInterval(interval);
-  }, [player.currentTime, player.duration, player.playing]);
+  }, [player]);
 
-  useEffect(()=>{
-
-    if(podcast){
+  useEffect(() => {
+    if (podcast) {
       setLike(podcast.likedUsers.includes(user_id));
       setLikeCount(podcast.likedUsers.length);
     }
-  }, [podcast, user_id])
+  }, [podcast, user_id]);
 
-  const SKIP_TIME = 5; // seconds
+  const SKIP_TIME = 5;
 
   const handleForward = async () => {
     if (!player) return;
-
     let next = position + SKIP_TIME;
-
-    if (next > duration) {
-      next = duration;
-    }
-
+    if (next > duration) next = duration;
     await player.seekTo(next);
     setPosition(next);
   };
 
   const handleBackward = async () => {
     if (!player) return;
-
     let next = position - SKIP_TIME;
-
-    if (next < 0) {
-      next = 0;
-    }
-
+    if (next < 0) next = 0;
     await player.seekTo(next);
     setPosition(next);
   };
@@ -163,26 +206,12 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
-
     if (hours > 0) {
-      return `${hours}:${mins < 10 ? '0' : ''}${mins}:${
-        secs < 10 ? '0' : ''
-      }${secs}`;
+      return `${hours}:${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
     } else {
       return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
   };
-  // For position update
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (player) {
-        const status = player.currentStatus;
-        if (status.isLoaded) setPosition(status.currentTime);
-      }
-    }, 500);
-    return () => clearInterval(interval);
-  }, [player, player.currentTime, player.duration, player.playing]);
 
   const handleShare = async () => {
     try {
@@ -190,39 +219,23 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
       await Share.open({
         title: podcast?.title,
         message: `${podcast?.title} : Check out this awesome podcast on UltimateHealth app!`,
-        // Most Recent APK: 0.7.4
         url: url,
         subject: 'Podcast Sharing',
       });
     } catch (error) {
       Alert.alert('Error', 'Something went wrong while sharing.');
-
-      // dispatch(
-      //   showAlert({
-      //     title: 'Error!',
-      //     message: 'Something went wrong while sharing.',
-      //   }),
-      // );
     }
   };
 
   const handlePlay = async () => {
-    if (!player) {
-      return;
-    }
-
-    //await player.seekTo(0);
+    if (!player) return;
     player.play();
-    //setUiState('playing');
     setIsPlaying(true);
   };
 
   const handlePause = async () => {
     if (!player) return;
-
-
     player.pause();
-    //  setUiState('paused');
     setIsPlaying(false);
   };
 
@@ -237,9 +250,10 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           Unable to load podcast details.
         </Text>
         <Text color="#94A3B8" fontSize={14} marginTop="$2">
-          {podcastError instanceof Error ? podcastError.message : 'Please try again later.'}
+          {podcastError instanceof Error
+            ? podcastError.message
+            : 'Please try again later.'}
         </Text>
-
         <TouchableOpacity
           testID="podcast-detail-retry-button"
           accessibilityLabel="podcast-detail-retry-button"
@@ -255,49 +269,40 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
     );
   }
 
-
   const coverImageEl = (
     <Image
       testID="podcast-cover-image"
-      source={{
-        uri: getFormattedSource(podcast.cover_image) ?? undefined,
-      }}
+      source={{uri: getFormattedSource(podcast.cover_image) ?? undefined}}
       style={useSplitLayout ? styles.coverImageLandscape : styles.coverImage}
     />
   );
 
   const titleEl = (
-    <Text
-      color="#F1F5F9"
-      fontSize={28}
-      fontWeight="800">
+    <Text color="#F1F5F9" fontSize={28} fontWeight="800">
       {podcast?.title}
     </Text>
   );
 
   const description = podcast?.description || '';
   const shouldTruncate = description.length > 180;
-  const displayDescription = (shouldTruncate && !isDescriptionExpanded)
-    ? `${description.slice(0, 180)}...`
-    : description;
+  const displayDescription =
+    shouldTruncate && !isDescriptionExpanded
+      ? `${description.slice(0, 180)}...`
+      : description;
 
   const descriptionEl = (
     <YStack>
-      <Text
-        color="#94A3B8"
-        fontSize={16}
-        marginTop="$3">
+      <Text color="#94A3B8" fontSize={16} marginTop="$3">
         {displayDescription}
       </Text>
       {shouldTruncate && (
         <TouchableOpacity
           testID="description-toggle-button"
-          accessibilityLabel={isDescriptionExpanded ? "Read Less" : "Read More"}
+          accessibilityLabel={isDescriptionExpanded ? 'Read Less' : 'Read More'}
           accessibilityRole="button"
           accessibilityHint="Toggles between expanding and collapsing the full podcast description text"
           onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-          style={styles.readMoreButton}
-        >
+          style={styles.readMoreButton}>
           <Text color={PRIMARY_COLOR} fontSize={14} fontWeight="700">
             {isDescriptionExpanded ? 'Read Less' : 'Read More'}
           </Text>
@@ -309,10 +314,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const visualizerEl = playing && (
     <YStack alignItems="center" width="100%">
       <View
-        style={[
-          styles.visualizerContainer,
-          GlassStyles.glassContainerDark,
-        ]}>
+        style={[styles.visualizerContainer, GlassStyles.glassContainerDark]}>
         <LottieView
           source={require('../assets/LottieAnimation/sound-voice-waves.json')}
           autoPlay
@@ -324,16 +326,11 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   );
 
   const sliderEl = (
-    <View
-      style={[styles.sliderContainer, GlassStyles.glassContainerDark]}>
+    <View style={[styles.sliderContainer, GlassStyles.glassContainerDark]}>
       <Slider
         testID="podcast-progress-slider"
         accessibilityLabel="podcast-progress-slider"
-        accessibilityValue={{
-          min: 0,
-          max: duration,
-          now: position,
-        }}
+        accessibilityValue={{min: 0, max: duration, now: position}}
         style={styles.slider}
         minimumValue={0}
         maximumValue={duration}
@@ -348,7 +345,6 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           }
         }}
       />
-
       <XStack
         justifyContent="space-between"
         marginTop="$2"
@@ -364,8 +360,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   );
 
   const controlsEl = (
-    <View
-      style={[styles.controlsContainer, GlassStyles.glassContainerDark]}>
+    <View style={[styles.controlsContainer, GlassStyles.glassContainerDark]}>
       <XStack justifyContent="space-around" alignItems="center">
         <TouchableOpacity
           testID="podcast-back-button"
@@ -375,12 +370,11 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           <Ionicons name="play-back" size={32} color="#9BB3C8" />
         </TouchableOpacity>
 
+        {/* ✅ FIX: uses local `playing` state — single consistent source of truth */}
         <TouchableOpacity
           testID="podcast-play-pause-button"
           accessibilityLabel="podcast-play-pause-button"
-          onPress={() =>
-            player.currentStatus.playing ? handlePause() : handlePlay()
-          }
+          onPress={() => (playing ? handlePause() : handlePlay())}
           style={styles.mainPlayButton}>
           {playing ? (
             <Ionicons name="pause" size={40} color="white" />
@@ -400,156 +394,149 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
     </View>
   );
 
-  const actionsEl = podcast && podcast.status === StatusEnum.PUBLISHED ? (
-    <View
-      style={[styles.actionsContainer, GlassStyles.glassContainerDark]}>
-      <XStack alignItems="center" justifyContent="space-evenly">
-        {/* LIKE */}
-        {likePodcastPending ? (
-          <LoadingSpinner size="small" />
-        ) : (
+  const actionsEl =
+    podcast && podcast.status === StatusEnum.PUBLISHED ? (
+      <View style={[styles.actionsContainer, GlassStyles.glassContainerDark]}>
+        <XStack alignItems="center" justifyContent="space-evenly">
+          {/* LIKE */}
+          {likePodcastPending ? (
+            <LoadingSpinner size="small" />
+          ) : (
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => {
+                if (isGuest) {
+                  navigation.navigate('GuestPlaceholderScreen', {
+                    title: 'Sign In Required',
+                    description:
+                      'Please sign in or sign up to like this podcast.',
+                    iconName: 'heart',
+                  });
+                  return;
+                }
+                likePodcast(trackId, {
+                  onSuccess: data => {
+                    if (data?.likeStatus && podcast) {
+                      if (socket) {
+                        socket.emit('notification', {
+                          type: 'likePost',
+                          userId: user_id,
+                          articleId: null,
+                          podcastId: podcast._id,
+                          articleRecordId: null,
+                          title: `${user_handle} liked your post`,
+                          message: podcast.title,
+                        });
+                      }
+                    }
+                    refetch();
+                  },
+                  onError: err => {
+                    console.log('Update like count err', err);
+                    Snackbar.show({
+                      text: 'Something went wrong!',
+                      duration: Snackbar.LENGTH_SHORT,
+                    });
+                  },
+                });
+              }}>
+              {isLike ? (
+                <AntDesign name="heart" size={26} color={PRIMARY_COLOR} />
+              ) : (
+                <Feather name="heart" size={26} color="white" />
+              )}
+              <Text style={styles.actionText}>
+                {likeCount > 0 ? formatCount(likeCount) : ''}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {/* DOWNLOAD */}
+          {isLoading ? (
+            <LoadingSpinner size="small" />
+          ) : (
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={async () => {
+                if (isGuest) {
+                  navigation.navigate('GuestPlaceholderScreen', {
+                    title: 'Sign In Required',
+                    description:
+                      'Please sign in or sign up to download podcasts.',
+                    iconName: 'download',
+                  });
+                  return;
+                }
+                if (!podcast) {
+                  Snackbar.show({
+                    text: 'Something went wrong! try again',
+                    duration: Snackbar.LENGTH_SHORT,
+                  });
+                  return;
+                }
+                setLoading(true);
+                const res = await downloadAudio(podcast);
+                setLoading(false);
+                Snackbar.show({
+                  text: res?.message ?? 'Audio downloaded successfully!',
+                  duration: Snackbar.LENGTH_SHORT,
+                });
+              }}>
+              <Ionicons name="download-outline" size={26} color="white" />
+            </TouchableOpacity>
+          )}
+
+          {/* COMMENTS */}
           <TouchableOpacity
             style={styles.actionButton}
             onPress={() => {
               if (isGuest) {
                 navigation.navigate('GuestPlaceholderScreen', {
                   title: 'Sign In Required',
-                  description: 'Please sign in or sign up to like this podcast.',
-                  iconName: 'heart',
+                  description:
+                    'Please sign in or sign up to view and post comments.',
+                  iconName: 'comment',
                 });
                 return;
               }
-              likePodcast(trackId, {
-                onSuccess: data => {
-                  if (data?.likeStatus && podcast) {
-                    if (socket) {
-                      socket.emit('notification', {
-                        type: 'likePost',
-                        userId: user_id,
-                        articleId: null,
-                        podcastId: podcast._id,
-                        articleRecordId: null,
-                        title: `${user_handle} liked your post`,
-                        message: podcast.title,
-                      });
-                    }
-                  }
-                  refetch();
-                },
-                onError: err => {
-                  console.log('Update like count err', err);
-                  Snackbar.show({
-                    text: 'Something went wrong!',
-                    duration: Snackbar.LENGTH_SHORT,
-                  });
-                },
-              });
-            }}>
-            {isLike ? (
-              <AntDesign name="heart" size={26} color={PRIMARY_COLOR} />
-            ) : (
-              <Feather name="heart" size={26} color="white" />
-            )}
-            <Text style={styles.actionText}>
-              {likeCount > 0 ? formatCount(likeCount) : ''}
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        {/* DOWNLOAD */}
-        {isLoading ? (
-          <LoadingSpinner size="small" />
-        ) : (
-          <TouchableOpacity
-            style={styles.actionButton}
-            onPress={async () => {
-              if (isGuest) {
-                navigation.navigate('GuestPlaceholderScreen', {
-                  title: 'Sign In Required',
-                  description: 'Please sign in or sign up to download podcasts.',
-                  iconName: 'download',
-                });
-                return;
-              }
-              if (!podcast) {
+              if (!isConnected) {
                 Snackbar.show({
-                  text: 'Something went wrong! try again',
+                  text: 'You are currently offline',
                   duration: Snackbar.LENGTH_SHORT,
                 });
                 return;
               }
-
-              setLoading(true);
-              const res = await downloadAudio(podcast);
-              setLoading(false);
-
-              Snackbar.show({
-                text: res?.message ?? 'Audio downloaded successfully!',
-                duration: Snackbar.LENGTH_SHORT,
-              });
+              if (podcast) {
+                navigation.navigate('PodcastDiscussion', {
+                  podcastId: podcast._id,
+                  mentionedUsers: podcast.mentionedUsers,
+                });
+              }
             }}>
-            <Ionicons name="download-outline" size={26} color="white" />
+            <Ionicons name="chatbubble-outline" size={26} color="white" />
+            <Text style={styles.actionText}>
+              {podcast?.commentCount ? formatCount(podcast.commentCount) : 0}
+            </Text>
           </TouchableOpacity>
-        )}
 
-        {/* COMMENTS */}
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={() => {
-            if (isGuest) {
-              navigation.navigate('GuestPlaceholderScreen', {
-                title: 'Sign In Required',
-                description: 'Please sign in or sign up to view and post comments.',
-                iconName: 'comment',
-              });
-              return;
-            }
-            if (!isConnected) {
-              Snackbar.show({
-                text: 'You are currently offline',
-                duration: Snackbar.LENGTH_SHORT,
-              });
-              return;
-            }
-
-            if (podcast) {
-              navigation.navigate('PodcastDiscussion', {
-                podcastId: podcast._id,
-                mentionedUsers: podcast.mentionedUsers,
-              });
-            }
-          }}>
-          <Ionicons name="chatbubble-outline" size={26} color="white" />
-          <Text style={styles.actionText}>
-            {podcast?.commentCount
-              ? formatCount(podcast.commentCount)
-              : 0}
-          </Text>
-        </TouchableOpacity>
-
-        {/* SHARE */}
-        <TouchableOpacity
-          style={styles.actionButton}
-          onPress={handleShare}>
-          <Ionicons name="share-outline" size={26} color="white" />
-        </TouchableOpacity>
-      </XStack>
-    </View>
-  ) : (
-    <XStack></XStack>
-  );
+          {/* SHARE */}
+          <TouchableOpacity style={styles.actionButton} onPress={handleShare}>
+            <Ionicons name="share-outline" size={26} color="white" />
+          </TouchableOpacity>
+        </XStack>
+      </View>
+    ) : (
+      <XStack></XStack>
+    );
 
   const content = useSplitLayout ? (
     <XStack gap="$4" flex={1} paddingHorizontal="$2">
-      {/* Left Column: Artwork Image and Visualizer */}
       <YStack width={isTablet ? 340 : '42%'} gap="$4">
         <View style={[styles.titleContainer, GlassStyles.glassContainerDark]}>
           {coverImageEl}
         </View>
         {visualizerEl}
       </YStack>
-
-      {/* Right Column: Text Information, Slider, Controls, Actions */}
       <YStack flex={1} gap="$4">
         <View style={[styles.titleContainer, GlassStyles.glassContainerDark]}>
           <YStack>
@@ -566,17 +553,12 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           </YStack>
         </View>
         {sliderEl}
-        <View style={{ marginTop: -15 }}>
-          {controlsEl}
-        </View>
-        <View style={{ marginTop: -15 }}>
-          {actionsEl}
-        </View>
+        <View style={{marginTop: -15}}>{controlsEl}</View>
+        <View style={{marginTop: -15}}>{actionsEl}</View>
       </YStack>
     </XStack>
   ) : (
     <YStack flexGrow={1} gap="$4">
-      {/* TITLE with Glass Effect */}
       <View style={[styles.titleContainer, GlassStyles.glassContainerDark]}>
         {coverImageEl}
         <YStack>
@@ -592,27 +574,15 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           {descriptionEl}
         </YStack>
       </View>
-
       {visualizerEl}
-
-      {/* SLIDER + TIME */}
-      <YStack>
-        {sliderEl}
-      </YStack>
-
-      {/* PLAYER BUTTONS */}
+      <YStack>{sliderEl}</YStack>
       {controlsEl}
-
-      {/* FOOTER OPTIONS */}
       {actionsEl}
     </YStack>
   );
 
   return (
-    <ScrollView
-      backgroundColor="#0B1425"
-      contentContainerStyle={{ flexGrow: 1 }}
-    >
+    <ScrollView backgroundColor="#0B1425" contentContainerStyle={{flexGrow: 1}}>
       <Theme name="dark">
         <YStack
           flexGrow={1}
@@ -630,30 +600,16 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
 export default PodcastDetail;
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    padding: 20,
-    borderRadius: 20,
-  },
-  waveContainer: {
-    width: '100%',
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
+  titleContainer: {padding: 20, borderRadius: 20},
+  waveContainer: {width: '100%', borderRadius: 20, overflow: 'hidden'},
   visualizerContainer: {
     width: '100%',
     borderRadius: 20,
     padding: 10,
     overflow: 'hidden',
   },
-  sliderContainer: {
-    padding: 20,
-    borderRadius: 20,
-  },
-  controlsContainer: {
-    padding: 20,
-    borderRadius: 30,
-    marginTop: 20,
-  },
+  sliderContainer: {padding: 20, borderRadius: 20},
+  controlsContainer: {padding: 20, borderRadius: 30, marginTop: 20},
   controlButton: {
     width: 60,
     height: 60,
@@ -687,7 +643,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   actionText: {
-    //marginTop: 6,
     fontSize: fp(4),
     marginStart: 5,
     fontWeight: '600',
@@ -698,16 +653,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingTop: Platform.OS === 'android' ? 12 : 0,
   },
-  slider: {
-    width: '100%',
-    height: 40,
-  },
-  coverImage: {
-    width: '100%',
-    height: 180,
-    borderRadius: 16,
-    marginBottom: 16,
-  },
+  slider: {width: '100%', height: 40},
+  coverImage: {width: '100%', height: 180, borderRadius: 16, marginBottom: 16},
   errorContainer: {
     flex: 1,
     backgroundColor: '#0B1425',
@@ -724,19 +671,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  coverImageLandscape: {
-    width: '100%',
-    aspectRatio: 1,
-    borderRadius: 16,
-  },
+  coverImageLandscape: {width: '100%', aspectRatio: 1, borderRadius: 16},
   readMoreButton: {
     marginTop: 8,
     paddingVertical: 10,
     paddingHorizontal: 12,
     alignSelf: 'flex-start',
     minWidth: 100,
-    minHeight: 44, // Minimum touch target size for accessibility
+    minHeight: 44,
     justifyContent: 'center',
   },
-
 });
