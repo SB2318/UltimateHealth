@@ -2,7 +2,6 @@
   "expo": {
     "name": "UltimateHealth",
     "slug": "UltimateHealth",
-
     "version": "2.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/ic_ultimatehealth_appicon.png",
@@ -37,7 +36,8 @@
         "RECEIVE_BOOT_COMPLETED",
         "POST_NOTIFICATIONS",
         "READ_MEDIA_AUDIO",
-        "MODIFY_AUDIO_SETTINGS"
+        "MODIFY_AUDIO_SETTINGS",
+        "FOREGROUND_SERVICE"
       ],
       "blockedPermissions": [
         "android.permission.SYSTEM_ALERT_WINDOW",
@@ -45,7 +45,6 @@
         "android.permission.WRITE_EXTERNAL_STORAGE"
       ],
       "allowBackup": false,
-
       "intentFilters": [
         {
           "action": "VIEW",
