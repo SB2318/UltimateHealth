@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { setAudioModeAsync } from 'expo-audio';
 import * as Sentry from '@sentry/react-native';
+import { logger } from './src/services/monitoring/logger';
 
 import AppContent from './src/components/AppContent';
 import { AudioProvider } from './src/store/AudioContext';
@@ -37,8 +38,8 @@ function App() {
           extra: { context: 'App startup audio configuration' },
         });
 
-        if (__DEV__) {
-          console.error('[App] Failed to configure audio mode:', error);
+        
+          logger.error('[App] Failed to configure audio mode:', error);
         }
       }
     };
