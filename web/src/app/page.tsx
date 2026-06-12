@@ -831,7 +831,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               </div>
 
               <div className="contact-dark-socials">
-                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="GitHub">
+                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub">
                   <i className="fab fa-github"></i>
                 </a>
                <a
@@ -842,7 +842,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                  style={{ cursor: "pointer" }}>
                  <i className="fas fa-envelope"></i>
                  </a>
-                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="LinkedIn">
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
               </div>
@@ -1001,10 +1001,10 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
             <div style={{ marginTop: 20 }}>
               <span className="footer-follow-label">Follow Us</span>
               <div className="footer-social-links">
-                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
+                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
                   <i className="fab fa-github"></i>
                 </a>
-                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
                 {TELEGRAM_URL && (
@@ -1036,10 +1036,10 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           {/* Support */}
           <div className="footer-links-col">
             <h3>Support</h3>
-            <a href={HELP_CENTER_URL} target="_blank" rel="noreferrer">Help Center</a>
+            <a href={HELP_CENTER_URL} target="_blank" rel="noopener noreferrer">Help Center</a>
             <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
-            <a href={FEEDBACK_URL} target="_blank" rel="noreferrer">Feedback</a>
-            <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">API Docs</a>
+            <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">Feedback</a>
+            <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer">API Docs</a>
           </div>
         </PageWrapper>
 
