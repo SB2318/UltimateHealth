@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { PageWrapper, Section } from "@/components/layout";
+import { canvasPixelsHaveInk, isSignatureValid as hasValidSignatureBounds } from "./signatureValidation";
 
 /* ---------- types ---------- */
 interface Point { x: number; y: number }
@@ -11,8 +12,6 @@ type Stroke = Point[];
 
 const SIGNATURE_STROKE = "#2d3748";
 const SIGNATURE_LINE_WIDTH = 2;
-const MIN_SIGNATURE_WIDTH_RATIO = 0.1;
-const MIN_SIGNATURE_HEIGHT_RATIO = 0.13;
 
 /* ---------- inner component (needs useSearchParams) ---------- */
 function AdminAgreementContent() {
@@ -48,24 +47,11 @@ function AdminAgreementContent() {
     if (!canvas || !ctx) return false;
 
     const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-    for (let index = 3; index < pixels.length; index += 4) {
-      if (pixels[index] !== 0) return true;
-    }
-    return false;
+    return canvasPixelsHaveInk(pixels);
   }, []);
 
   const isSignatureValid = useCallback(() => {
-    const points = strokes.flat();
-    if (points.length < 20) return false;
-
-    let minX = Infinity, minY = Infinity, maxX = 0, maxY = 0;
-    points.forEach((p) => {
-      minX = Math.min(minX, p.x);
-      minY = Math.min(minY, p.y);
-      maxX = Math.max(maxX, p.x);
-      maxY = Math.max(maxY, p.y);
-    });
-    return maxX - minX > MIN_SIGNATURE_WIDTH_RATIO && maxY - minY > MIN_SIGNATURE_HEIGHT_RATIO;
+    return hasValidSignatureBounds(strokes);
   }, [strokes]);
 
   const canAccept =
