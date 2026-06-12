@@ -507,7 +507,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
         <PageWrapper as="div" className="nav">
-          <a href="#" className="logo">
+          <Link href={withBasePath("/")} className="logo">
             <div className="logo-icon">
               <Image
                 src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
@@ -516,7 +516,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               />
             </div>
             Ultimate-Health
-          </a>
+          </Link>
 
           <ul className="nav-links">
             <li>
@@ -1020,7 +1020,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           {/* Quick Links */}
           <div className="footer-links-col">
             <h3>Quick Links</h3>
-            <a href="#">Home</a>
+            <Link href={withBasePath("/")}>Home</Link>
             <a href="#features">Features</a>
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
