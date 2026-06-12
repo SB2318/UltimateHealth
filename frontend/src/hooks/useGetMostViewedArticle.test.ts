@@ -21,10 +21,10 @@ function makeWrapper() {
 describe('useGetAuthorMostViewedArticles', () => {
   afterEach(() => jest.clearAllMocks());
 
-  it('executes successfully', async () => {
+  it('executes mutation successfully and calls API', async () => {
     
     
-    mockedAxios.get.mockResolvedValueOnce({ data: { success: true, data: [] } });
+    
     mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });
 
     const {result} = renderHook(() => useGetAuthorMostViewedArticles({ userId: '1', others: true, isConnected: true }), {

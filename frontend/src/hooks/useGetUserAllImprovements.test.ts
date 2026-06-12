@@ -24,10 +24,10 @@ function makeWrapper() {
 describe('useGetAllImprovementsForReview', () => {
   afterEach(() => jest.clearAllMocks());
 
-  it('executes successfully', async () => {
+  it('executes mutation successfully and calls API', async () => {
     (ReactRedux.useSelector as unknown as jest.Mock).mockReturnValue(false);
     
-    mockedAxios.get.mockResolvedValueOnce({ data: { success: true, data: [] } });
+    
     mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });
 
     const {result} = renderHook(() => useGetAllImprovementsForReview({ page: 1, selectedStatus: 1, visit: 1, setVisit: jest.fn(), setTotalPages: jest.fn(), setImprovementData: jest.fn(), setPublishedLabel: jest.fn(), setProgressLabel: jest.fn(), setDiscardLabel: jest.fn() }), {

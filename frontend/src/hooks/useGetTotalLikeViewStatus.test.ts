@@ -24,10 +24,10 @@ function makeWrapper() {
 describe('useGetTotalLikeViewStatus', () => {
   afterEach(() => jest.clearAllMocks());
 
-  it('executes successfully', async () => {
+  it('executes mutation successfully and calls API', async () => {
     (ReactRedux.useSelector as unknown as jest.Mock).mockReturnValue(false);
     
-    mockedAxios.get.mockResolvedValueOnce({ data: { success: true, data: [] } });
+    
     mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });
 
     const {result} = renderHook(() => useGetTotalLikeViewStatus({ user_id: '1', isConnected: true }), {

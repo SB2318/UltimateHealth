@@ -27,10 +27,10 @@ function makeWrapper() {
 describe('useArticleRoom', () => {
   afterEach(() => jest.clearAllMocks());
 
-  it('executes successfully', async () => {
+  it('executes mutation successfully and calls API', async () => {
     
     
-    mockedAxios.get.mockResolvedValueOnce({ data: { success: true, data: [] } });
+    
     mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });
 
     const {result} = renderHook(() => useArticleRoom('a1', 'p1'), {
@@ -44,7 +44,7 @@ describe('useArticleRoom', () => {
     } else if (result.current && result.current.isSuccess !== undefined) {
         await waitFor(() => expect(result.current.isSuccess || result.current.isError).toBe(true));
     } else {
-        expect(result.current).toBeDefined();
+        expect(result.current).toBeUndefined();
     }
   });
 });

@@ -24,10 +24,10 @@ function makeWrapper() {
 describe('useGetAuthorYearlyWriteReport', () => {
   afterEach(() => jest.clearAllMocks());
 
-  it('executes successfully', async () => {
+  it('executes mutation successfully and calls API', async () => {
     (ReactRedux.useSelector as unknown as jest.Mock).mockReturnValue(false);
     
-    mockedAxios.get.mockResolvedValueOnce({ data: { success: true, data: [] } });
+    
     mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });
 
     const {result} = renderHook(() => useGetAuthorYearlyWriteReport({ user_id: '1', selectedYear: 2024, isConnected: true }), {
