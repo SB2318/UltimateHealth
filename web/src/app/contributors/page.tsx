@@ -1,5 +1,7 @@
 
 
+import Image from "next/image";
+
 interface GitHubContributor {
   login?: string;
   avatar_url?: string;
@@ -38,7 +40,7 @@ function ContributorCard({ contributor }: ContributorCardProps) {
   return (
     <article className="feature-card contributor-card" aria-label={`Contributor: ${displayName}`}>
       <div className="contributor-avatar-wrapper">
-        <img
+        <Image
         src={avatarSrc}
         alt={isAnonymous ? "Anonymous contributor avatar" : `${displayName}'s avatar`}
         width={80}

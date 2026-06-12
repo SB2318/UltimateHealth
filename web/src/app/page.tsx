@@ -16,6 +16,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { Toggle } from "@/components/ui/toggle";
 
 
+
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
   { src: "/assets/article-detail-screen.jpeg", caption: "Reading View" },
@@ -120,7 +121,7 @@ export default function Home() {
 
   // ── Newsletter state ──
   const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error"| "invalid" | "empty" | "duplicate">("idle");
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
@@ -131,6 +132,16 @@ export default function Home() {
 
   const closeComingSoonModal = useCallback(() => {
     setComingSoonModal(false);
+  }, []);
+
+  const openAppleModal = useCallback(() => {
+    setAppleModal(true);
+  }, []);
+
+  const closeAppleModal = useCallback(() => {
+    setAppleModal(false);
+    setTesterSuccess(false);
+    setTesterEmail("");
   }, []);
 
   useEffect(() => {
@@ -300,23 +311,42 @@ export default function Home() {
     setScreenshotModal(false);
   }, []);
 
+  const isAnyModalOpen = comingSoonModal || appleModal || screenshotModal;
+
   useEffect(() => {
-    document.body.style.overflow = screenshotModal ? "hidden" : "";
+    if (!isAnyModalOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
-  }, [screenshotModal]);
-  
+  }, [isAnyModalOpen]);
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (!screenshotModal) return;
-      if (e.key === "Escape") closeScreenshotModal();
-      if (e.key === "ArrowLeft") navigateScreenshot(-1);
-      if (e.key === "ArrowRight") navigateScreenshot(1);
+      if (e.key === "Escape") {
+        if (screenshotModal) closeScreenshotModal();
+        else if (appleModal) closeAppleModal();
+        else if (comingSoonModal) closeComingSoonModal();
+      }
+
+      if (screenshotModal && e.key === "ArrowLeft") navigateScreenshot(-1);
+      if (screenshotModal && e.key === "ArrowRight") navigateScreenshot(1);
     };
+
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [screenshotModal, navigateScreenshot, closeScreenshotModal]);
+  }, [
+    appleModal,
+    closeAppleModal,
+    closeComingSoonModal,
+    closeScreenshotModal,
+    comingSoonModal,
+    navigateScreenshot,
+    screenshotModal,
+  ]);
 
   const openScreenshotModal = (src: string) => {
     const idx = allScreenshots.findIndex((s) => s.src === src);
@@ -331,9 +361,49 @@ export default function Home() {
     }
   };
 
-  const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
-    ref.current?.scrollBy({ left: dir * SLIDER_SCROLL_AMOUNT, behavior: "smooth" });
-  };
+const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
+  const slider = ref.current;
+  if (!slider) return;
+
+  const maxScroll = slider.scrollWidth - slider.clientWidth;
+  const currentScroll = slider.scrollLeft;
+  const targetScroll = currentScroll + dir * SLIDER_SCROLL_AMOUNT;
+
+  if (dir === 1) {
+    if (currentScroll >= maxScroll) {
+      slider.scrollTo({ left: 0, behavior: "auto" });
+      return;
+    }
+
+    if (targetScroll > maxScroll) {
+      slider.scrollTo({ left: maxScroll, behavior: "smooth" });
+      return;
+    }
+  }
+
+  if (dir === -1) {
+    if (currentScroll <= 0 || targetScroll < 0) {
+      slider.scrollTo({ left: maxScroll, behavior: "auto" });
+      return;
+    }
+  }
+
+  slider.scrollTo({
+    left: Math.max(0, Math.min(targetScroll, maxScroll)),
+    behavior: "smooth",
+  });
+};
+  useEffect(() => {
+    const interval = setInterval(() => {
+      moveSlider(userSliderRef, 1);
+
+      if (adminSliderOpen) {
+        moveSlider(adminSliderRef, 1);
+      }
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, [adminSliderOpen]);
 
   // ── TestFlight invite ──
   const sendTesterEmail = async () => {
@@ -401,18 +471,30 @@ export default function Home() {
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedNewsletterEmail = newsletterEmail.trim();
-    if (!isValidEmail(trimmedNewsletterEmail)) {
-      setNewsletterStatus("error");
+
+    // Bug fix 1: Show specific validation error for empty or invalid email
+    if (!trimmedNewsletterEmail) {
+      setNewsletterStatus("empty");
       return;
     }
-    setNewsletterStatus("sending");
+    if (!isValidEmail(trimmedNewsletterEmail)) {
+      setNewsletterStatus("invalid");
+      return;
+    }
+     setNewsletterStatus("sending");
     try {
       const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: trimmedNewsletterEmail }),
       });
+
+      if (res.status === 409) {
+        setNewsletterStatus("duplicate");
+        return;
+      }
       if (!res.ok) throw new Error("Failed");
+
       setNewsletterStatus("success");
       setNewsletterEmail("");
     } catch {
@@ -428,7 +510,7 @@ export default function Home() {
       {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}bg-white dark:bg-slate-900 transition-colors duration-300 h-[80px]`} id="header">
         <PageWrapper as="div" className="nav">
-          <a href="#" className="logo">
+          <Link href={withBasePath("/")} className="logo">
             <div className="logo-icon">
               <Image
                 src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
@@ -437,7 +519,7 @@ export default function Home() {
               />
             </div>
             Ultimate-Health
-          </a>
+          </Link>
 
           <ul className="nav-links text-black dark:text-white">
             <li>
@@ -471,13 +553,13 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer" className="nav-link-item">
+              <Link href={withBasePath("/articles")} className="nav-link-item">
                 <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Read Articles</span>
-              </a>
+              </Link>
             </li>
             <li>
-              <Link href="/medical-glossary" className="nav-link-item">
+              <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
                 <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Medical Glossary</span>
               </Link>
@@ -619,17 +701,35 @@ export default function Home() {
       {/* ── Features ── */}
       <Section id="features" className="scroll-reveal dark:!bg-slate-900">
         <PageWrapper>
-          <h2>Be a Contributor: Core Community Features</h2>
-          <p className="center">Join our community and make a difference in global health awareness</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mt-16 w-full">
+          <h2>UltimateHealth Features</h2>
+          <p className="center">
+            UltimateHealth is an open-source health platform that provides trusted articles, AI-powered assistance, podcasts, multilingual content, community contributions, and a centralized wellness knowledge repository.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full relative z-10">
             {featuresLoading ? (
-              <Skeleton count={4} variant="compact" />
+              <Skeleton count={6} variant="compact" />
             ) : (
               [
-                { icon: "🗣️", title: "Multilingual Article Publishing", desc: "Publish health articles in your own language and reach a global audience." },
-                { icon: "✍️", title: "Collaborative Article Improvement", desc: "Review and improve community-driven health content together." },
-                { icon: "🎧", title: "Publish Health Podcasts", desc: "Share verified health podcasts with listeners worldwide." },
-                { icon: "📊", title: "Contribution Analytics", desc: "Track your impact across articles, edits, and podcasts." },
+                { icon: "fa-robot", title: "AI Health Chat Assistant", desc: "Get instant, AI-powered health guidance and support.", span: "md:col-span-2 lg:col-span-2" },
+                { icon: "fa-book-medical", title: "Centralized Library", desc: "Access a vast repository of trusted health articles.", span: "col-span-1" },
+                
+                { icon: "fa-edit", title: "CRUD Articles", desc: "Create, read, update, and delete your health content seamlessly.", span: "col-span-1" },
+                { icon: "fa-podcast", title: "Health Podcasts", desc: "Stream and share verified health audio content worldwide.", span: "md:col-span-2 lg:col-span-2" },
+                
+                { icon: "fa-tags", title: "Smart Categorization", desc: "Organize articles with intuitive categorization and tagging.", span: "col-span-1" },
+                { icon: "fa-search", title: "Advanced Search", desc: "Quickly find the specific health information you need.", span: "col-span-1" },
+                { icon: "fa-users", title: "Community Contributions", desc: "Collaborate and drive open-source content creation.", span: "col-span-1" },
+                
+                { icon: "fa-code-branch", title: "Edit Request Workflow", desc: "Propose and review changes to maintain content quality.", span: "col-span-1" },
+                { icon: "fa-language", title: "Multilingual Resources", desc: "Read and write content in multiple languages globally.", span: "col-span-1" },
+                { icon: "fa-mobile-alt", title: "Cross-Platform Support", desc: "Available on both Android mobile and Web platforms.", span: "col-span-1" },
+                
+                { icon: "fa-user-shield", title: "Authentication & Users", desc: "Secure role-based access and robust user management.", span: "col-span-1" },
+                { icon: "fa-cloud", title: "Cloud Content Management", desc: "Reliable cloud infrastructure for all your health data.", span: "col-span-1" },
+                { icon: "fa-graduation-cap", title: "Educational Content", desc: "Spread health awareness through verified information.", span: "col-span-1" },
+                
+                { icon: "fa-shield-alt", title: "Trusted Wellness Repository", desc: "A heavily moderated, safe, and accurate knowledge base.", span: "md:col-span-2 lg:col-span-2" },
+                { icon: "fa-globe", title: "Open-Source Platform", desc: "Join our global initiative for a healthier community.", span: "col-span-1" },
               ].map((f, i) => (
                 <div
             className="feature-item w-full bg-stone-50 dark:bg-gray-800 border border-stone-200 dark:border-gray-800 shadow-md shadow-stone-200/50 dark:shadow-none "
@@ -854,35 +954,72 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
             <p className="footer-note">Open-source health and wellness for everyone.</p>
 
             {/* Newsletter — wired to API */}
-            <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit}>
-              {newsletterStatus === "success" ? (
-                <div className="newsletter-success">
-                  <i className="fas fa-check-circle"></i> You&apos;re subscribed!
-                </div>
-              ) : (
-                <>
-                  <div className="footer-subscribe-row">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="footer-subscribe-input"
-                      maxLength={120}
-                      value={newsletterEmail}
-                      onChange={(e) => setNewsletterEmail(e.target.value)}
-                      required
-                    />
-                    <button type="submit" className="footer-subscribe-btn" aria-label="Subscribe to UltimateHealth newsletter" disabled={newsletterStatus === "sending"}>
-                      {newsletterStatus === "sending" ? <i className="fas fa-spinner fa-spin"></i> : "Subscribe"}
-                    </button>
-                  </div>
-                  {newsletterStatus === "error" && (
-                    <p className="newsletter-error">Could not subscribe. Please try again.</p>
-                  )}
-                  <small className="footer-subscribe-note">We respect your privacy. Unsubscribe at any time.</small>
-                </>
-              )}
-            </form>
+            <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit} noValidate>
+            {newsletterStatus === "success" ? (
+            <div className="newsletter-success">
+            <i className="fas fa-check-circle"></i> You have successfully subscribed!
+           </div>
+            ) : (
+             <>
+              <div className="footer-subscribe-row">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="footer-subscribe-input"
+                maxLength={120}
+                value={newsletterEmail}
+                required
+                aria-label="Newsletter email address"
+                aria-describedby="newsletter-feedback"
+                onChange={(e) => {
+                setNewsletterEmail(e.target.value);
+                if (
+                  newsletterStatus !== "idle" &&
+                  newsletterStatus !== "sending"
+                ) {
+                setNewsletterStatus("idle");
+              }
+            }}
+            />
+            <button
+              type="submit"
+              className="footer-subscribe-btn"
+              aria-label="Subscribe to UltimateHealth newsletter"
+              disabled={newsletterStatus === "sending"}
+            >
+            {newsletterStatus === "sending" ? "Subscribing..." : "Subscribe"}
+           </button>
+           </div>
 
+          <div id="newsletter-feedback" aria-live="polite">
+            {newsletterStatus === "empty" && (
+            <p className="newsletter-error">
+              <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
+            </p>
+            )}
+            {newsletterStatus === "invalid" && (
+              <p className="newsletter-error">
+               <i className="fas fa-exclamation-circle"></i> Invalid email format.
+               </p>
+            )}
+              {newsletterStatus === "duplicate" && (
+              <p className="newsletter-error">
+               <i className="fas fa-info-circle"></i> This email is already subscribed.
+              </p>
+              )}
+            {newsletterStatus === "error" && (
+            <p className="newsletter-error">
+              <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
+             </p>
+            )}
+      </div>
+
+      <small className="footer-subscribe-note">
+        We respect your privacy. Unsubscribe at any time.
+      </small>
+    </>
+  )}
+</form>
             {/* Social icons */}
             <div style={{ marginTop: 20 }}>
               <span className="footer-follow-label">Follow Us</span>
@@ -906,7 +1043,7 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
           {/* Quick Links */}
           <div className="footer-links-col">
             <h3>Quick Links</h3>
-            <a href="#">Home</a>
+            <Link href={withBasePath("/")}>Home</Link>
             <a href="#features">Features</a>
             <a href="#programs">Programs</a>
             <a href="#screenshots">Screenshots</a>
@@ -937,24 +1074,25 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
       </footer>
 
       {/* ── Coming Soon Modal ── */}
-      <div
-        className={`modal-overlay${comingSoonModal ? " active" : ""}`}
-        onClick={closeComingSoonModal}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="coming-soon-modal-title"
-        aria-hidden={!comingSoonModal}
-      >
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
-          <h2 id="coming-soon-modal-title">Launching Soon!</h2>
-          <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
-            We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
-          </p>
-          <div className="progress-container"><div className="progress-bar"></div></div>
-          <button className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
+      {comingSoonModal && (
+        <div
+          className="modal-overlay active"
+          onClick={closeComingSoonModal}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="coming-soon-modal-title"
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
+            <h2 id="coming-soon-modal-title">Launching Soon!</h2>
+            <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
+              We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
+            </p>
+            <div className="progress-container"><div className="progress-bar"></div></div>
+            <button type="button" className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ── TestFlight Modal ── */}
       <div className={`modal-overlay${appleModal ? " active" : ""}`}
@@ -969,29 +1107,8 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
             <p style={{ marginBottom: 12 }}><strong>🔹 What this means:</strong> The app will be available to invited testers only via TestFlight.</p>
             <p><strong>Are you ready to test?</strong> Enter your email below to request an invitation.</p>
           </div>
-          {!testerSuccess ? (
-            <div>
-              <input type="email" placeholder="Enter your Apple ID email" className="waitlist-input"
-                maxLength={120}
-                value={testerEmail} onChange={(e) => setTesterEmail(e.target.value)} />
-              <button className="nav-btn-sm"
-                type="button"
-                style={{ width: "100%", height: 48, border: "none", cursor: "pointer", fontWeight: "bold", fontSize: "1rem" }}
-                onClick={sendTesterEmail}>
-                Send Invitation Request
-              </button>
-            </div>
-          ) : (
-            <div style={{ padding: 24, color: "#059669", background: "#d1fae5", borderRadius: 12 }}>
-              <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We&apos;ll notify you as soon as the test link is ready.</p>
-            </div>
-          )}
-          <button className="close-modal-btn"
-            onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>
-            Maybe later
-          </button>
         </div>
-      </div>
+      )}
 
       {/* ── Screenshot Modal ── */}
       {screenshotModal && (
