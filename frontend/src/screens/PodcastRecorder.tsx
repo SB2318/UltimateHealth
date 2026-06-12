@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 import {StyleSheet, Alert} from 'react-native';
 
 import {PodcastRecorderScreenProps} from '../type';
@@ -21,7 +22,7 @@ import audioModule from '@/modules/audio-module';
 import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {requestStoragePermissions} from '../helper/Utils';
 
 //const AudioModule = requireNativeModule('AudioModule');
@@ -29,6 +30,7 @@ import {requestStoragePermissions} from '../helper/Utils';
 const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   const [recording, setRecording] = useState(false);
   const dispatch = useDispatch();
+  const {isGuest} = useSelector((state: any) => state.user);
 
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(audioRecorder);

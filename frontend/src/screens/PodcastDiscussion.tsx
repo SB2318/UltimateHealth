@@ -1,3 +1,4 @@
+import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 import {FC, useEffect, useMemo, useRef, useState} from 'react';
 import {
   TouchableOpacity,
@@ -52,10 +53,10 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const flatListRef = useRef<FlatList<Comment>>(null);
-  const {user_id, user_token} = useSelector((state: any) => state.user);
-  const [selectedCommentId, setSelectedCommentId] = useState<string>('');
+  const {user_id, user_token, isGuest} = useSelector((state: any) => state.user);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [editCommentId, setEditCommentId] = useState<string | null>(null);
+  const [selectedCommentId, setSelectedCommentId] = useState<string>('');
   const [commentLoading, setCommentLoading] = useState<boolean>(false);
   const [commentLikeLoading, setCommentLikeLoading] = useState<boolean>(false);
   const [mentions, setMentions] = useState<User[]>([]);
@@ -372,6 +373,15 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
       podcastId: podcastId,
     });
   };
+  if (isGuest) {
+    return (
+      <GuestPlaceholderScreen
+        title="Join the Discussion"
+        description="Sign in or sign up to participate in podcast discussions."
+      />
+    );
+  }
+
   if (commentLoading) {
     return <Loader />;
   }
