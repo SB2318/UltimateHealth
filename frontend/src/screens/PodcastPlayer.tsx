@@ -308,7 +308,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         paddingTop="$8"
         justifyContent="space-between">
         {/* Header Section */}
-        <YStack mb="$4">
+        <YStack mb="$4" width="100%" paddingHorizontal="$1">
           <Text
             color="#94A3B8"
             fontSize={13}
@@ -317,10 +317,24 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             letterSpacing={1}>
             NOW PLAYING
           </Text>
-          <Text color="#F1F5F9" fontSize={28} fontWeight="800" lineHeight={34}>
+          <Text
+            color="#F1F5F9"
+            fontSize={28}
+            fontWeight="800"
+            lineHeight={34}
+            flexShrink={1}
+            flexWrap="wrap"
+            allowFontScaling>
             {title}
           </Text>
-          <Text color="#94A3B8" fontSize={16} marginTop="$3" lineHeight={24}>
+          <Text
+            color="#94A3B8"
+            fontSize={16}
+            marginTop="$3"
+            lineHeight={24}
+            flexShrink={1}
+            flexWrap="wrap"
+            allowFontScaling>
             {description}
           </Text>
         </YStack>

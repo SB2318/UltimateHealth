@@ -40,7 +40,7 @@ export default function NewPasswordScreen({
   navigation,
   route,
 }: NewPasswordScreenProp) {
-  const {email} = route.params;
+  const { email } = route.params;
 
   const {
     control,
@@ -62,45 +62,38 @@ export default function NewPasswordScreen({
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureNewTextEntry, setSecureNewTextEntry] = useState(true);
-  const {mutate: changePassword, isPending} = useChangePasswordMutation();
+  const { mutate: changePassword, isPending } = useChangePasswordMutation();
+
+  const theme = useTheme();
 
   const handleSecureEntryClickEvent = () => {
     setSecureTextEntry(!secureTextEntry);
   };
-
-  const theme = useTheme();
 
   const handleSecureNewEntryClickEvent = () => {
     setSecureNewTextEntry(!secureNewTextEntry);
   };
 
   const handlePasswordSubmit = (data: NewPasswordFormData) => {
-
     changePassword(
       {
         email,
-        newPassword: password,
+        newPassword: data.password,
       },
       {
         onSuccess: () => {
           Alert.alert('Password reset successfully');
           navigation.navigate('LoginScreen', {});
         },
-
         onError: (error: AxiosError) => {
           if (error.response) {
             switch (error.response.status) {
               case 400:
                 Alert.alert('Error', 'User not found');
                 break;
-
               case 402:
-                Alert.alert(
-                  'Error',
-                  'New password should not be same as old password',
-                );
+                Alert.alert('Error', 'New password should not be same as old password');
                 break;
-
               default:
                 Alert.alert('Error', 'Something went wrong. Please try again.');
             }
@@ -112,13 +105,12 @@ export default function NewPasswordScreen({
     );
   };
 
-    );
-  };
-
   const insets = useSafeAreaInsets();
+
   if (isPending) {
     return <Loader />;
   }
+
   return (
     <YStack flex={1} backgroundColor="$background" paddingTop={insets.top}>
       <YStack
@@ -139,8 +131,9 @@ export default function NewPasswordScreen({
           shadowColor="$black"
           shadowOpacity={0.08}
           shadowRadius={24}
-          shadowOffset={{width: 0, height: 8}}
+          shadowOffset={{ width: 0, height: 8 }}
           alignItems="center">
+
           {/* Icon Circle */}
           <Circle
             size={80}
@@ -182,11 +175,12 @@ export default function NewPasswordScreen({
 
           {/* Inputs */}
           <YStack gap="$4" width="100%" marginTop="$2">
+
+            {/* New Password Field */}
             <YStack gap="$2">
               <Text fontWeight="600" color="$gray700" fontSize={14}>
                 New Password
               </Text>
-
               <Controller
                 control={control}
                 name="password"
@@ -196,11 +190,7 @@ export default function NewPasswordScreen({
                       name="lock"
                       size={20}
                       color={!error && value ? '$blue10' : '$gray500'}
-                      style={{
-                        position: 'absolute',
-                        left: 14,
-                        zIndex: 1,
-                      }}
+                      style={{ position: 'absolute', left: 14, zIndex: 1 }}
                     />
                     <Input
                       flex={1}
@@ -217,18 +207,10 @@ export default function NewPasswordScreen({
                       paddingRight={46}
                       borderWidth={2}
                       borderColor={
-                        error && value
-                          ? '$red8'
-                          : !error && value
-                            ? '$green8'
-                            : '$gray6'
+                        error && value ? '$red8' : !error && value ? '$green8' : '$gray6'
                       }
                       backgroundColor={
-                        error && value
-                          ? '$red1'
-                          : !error && value
-                            ? '$green1'
-                            : '$gray1'
+                        error && value ? '$red1' : !error && value ? '$green1' : '$gray1'
                       }
                       focusStyle={{
                         borderColor: !error && value ? '$green9' : '$blue9',
@@ -252,30 +234,18 @@ export default function NewPasswordScreen({
                   </XStack>
                 )}
               />
-                  <Icon
-                    name={secureTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray700.val}
-                  />
-                </Button>
-              </XStack>
-
               {/* Password Requirements */}
               <XStack gap="$2" alignItems="center" paddingLeft="$2">
                 {password && passwordVerify ? (
                   <>
-                    <Text fontSize={14} color="$green10">
-                      ✓
-                    </Text>
+                    <Text fontSize={14} color="$green10">✓</Text>
                     <Text fontSize={13} color="$green10" fontWeight="500">
                       Password meets requirements
                     </Text>
                   </>
                 ) : errors.password ? (
                   <>
-                    <Text fontSize={14} color="$red10">
-                      ✗
-                    </Text>
+                    <Text fontSize={14} color="$red10">✗</Text>
                     <Text fontSize={13} color="$red10" fontWeight="500">
                       {errors.password.message}
                     </Text>
@@ -288,11 +258,11 @@ export default function NewPasswordScreen({
               </XStack>
             </YStack>
 
+            {/* Confirm Password Field */}
             <YStack gap="$2">
               <Text fontWeight="600" color="$gray700" fontSize={14}>
                 Confirm Password
               </Text>
-
               <Controller
                 control={control}
                 name="confirmPassword"
@@ -302,15 +272,9 @@ export default function NewPasswordScreen({
                       name="lock"
                       size={20}
                       color={
-                        value && password === value
-                          ? theme.blue10.val
-                          : theme.gray500.val
+                        value && password === value ? theme.blue10.val : theme.gray500.val
                       }
-                      style={{
-                        position: 'absolute',
-                        left: 14,
-                        zIndex: 1,
-                      }}
+                      style={{ position: 'absolute', left: 14, zIndex: 1 }}
                     />
                     <Input
                       flex={1}
@@ -327,24 +291,13 @@ export default function NewPasswordScreen({
                       paddingRight={46}
                       borderWidth={2}
                       borderColor={
-                        error && value
-                          ? '$red8'
-                          : value && password === value
-                            ? '$green8'
-                            : '$gray6'
+                        error && value ? '$red8' : value && password === value ? '$green8' : '$gray6'
                       }
                       backgroundColor={
-                        error && value
-                          ? '$red1'
-                          : value && password === value
-                            ? '$green1'
-                            : '$gray1'
+                        error && value ? '$red1' : value && password === value ? '$green1' : '$gray1'
                       }
                       focusStyle={{
-                        borderColor:
-                          value && password === value
-                            ? '$green9'
-                            : '$blue9',
+                        borderColor: value && password === value ? '$green9' : '$blue9',
                         backgroundColor: '$background',
                       }}
                     />
@@ -365,31 +318,19 @@ export default function NewPasswordScreen({
                   </XStack>
                 )}
               />
-                  <Icon
-                    name={secureNewTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray600.val}
-                  />
-                </Button>
-              </XStack>
-
               {/* Confirmation Status */}
               {confirmPassword && (
                 <XStack gap="$2" alignItems="center" paddingLeft="$2">
                   {password === confirmPassword ? (
                     <>
-                      <Text fontSize={14} color="$green10">
-                        ✓
-                      </Text>
+                      <Text fontSize={14} color="$green10">✓</Text>
                       <Text fontSize={13} color="$green10" fontWeight="500">
                         Passwords match
                       </Text>
                     </>
                   ) : (
                     <>
-                      <Text fontSize={14} color="$red10">
-                        ✗
-                      </Text>
+                      <Text fontSize={14} color="$red10">✗</Text>
                       <Text fontSize={13} color="$red10" fontWeight="500">
                         {errors.confirmPassword?.message || "Passwords don't match"}
                       </Text>
@@ -400,25 +341,19 @@ export default function NewPasswordScreen({
             </YStack>
           </YStack>
 
-          {/* Confirm Button */}
+          {/* Reset Password Button */}
           <YStack w="100%" marginTop="$6">
             <Button
-              backgroundColor={
-                isValid && !isPending
-                  ? '$blue10'
-                  : '$gray7'
-              }
+              backgroundColor={isValid && !isPending ? '$blue10' : '$gray7'}
               w="100%"
               h={56}
               borderRadius={12}
-              hoverStyle={{bg: '$blue9', opacity: 0.9}}
-              pressStyle={{bg: '$blue11', scale: 0.98}}
-              disabled={
-                !isValid || isPending
-              }
+              hoverStyle={{ bg: '$blue9', opacity: 0.9 }}
+              pressStyle={{ bg: '$blue11', scale: 0.98 }}
+              disabled={!isValid || isPending}
               shadowColor="$blue8"
               shadowRadius={12}
-              shadowOffset={{width: 0, height: 4}}
+              shadowOffset={{ width: 0, height: 4 }}
               shadowOpacity={0.25}
               onPress={handleSubmit(handlePasswordSubmit)}>
               <Text fontSize={17} fontWeight="600" color="white">
@@ -427,7 +362,7 @@ export default function NewPasswordScreen({
             </Button>
           </YStack>
 
-          {/* Return Link */}
+          {/* Back to Login */}
           <Button
             chromeless
             marginTop="$5"
@@ -435,16 +370,13 @@ export default function NewPasswordScreen({
             padding="$2"
             height="auto">
             <XStack ai="center" gap="$2">
-              <Icon
-                color="$gray400"
-                name="arrow-back-circle-outline"
-                size={24}
-              />
+              <Icon color="$gray400" name="arrow-back-circle-outline" size={24} />
               <Text color="$blue10" fontWeight="600" fontSize={15}>
                 Back to Login
               </Text>
             </XStack>
           </Button>
+
         </Card>
       </YStack>
     </YStack>

@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, TextInput} from 'react-native';
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import AccessibleTouchable from './common/AccessibleTouchable';
 import {
   BottomSheetModal,
@@ -13,6 +13,7 @@ import {HomeScreenCategoriesFlatlistProps, Category} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {hp} from '../helper/Metric';
 
+const SEARCH_DEBOUNCE_DELAY = 300;
 
 const CategoriesFlatlistModal = ({
   bottomSheetModalRef2,
@@ -21,6 +22,16 @@ const CategoriesFlatlistModal = ({
   selectCategoryList,
 }: HomeScreenCategoriesFlatlistProps) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+
+  // Debounce the search query to avoid filtering on every keystroke
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, SEARCH_DEBOUNCE_DELAY);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -36,23 +47,35 @@ const CategoriesFlatlistModal = ({
   // Define snap points for the bottom sheet
   const snapPoints = useMemo(() => ['25%', '75%', '95%'], []);
 
-  // Filter categories based on search
+  // Build a Set of selected category keys for O(1) lookup
+  const selectCategoryKeys = useMemo(() => {
+    const keys = new Set<string>();
+    selectCategoryList.forEach(item => {
+      if (item._id !== undefined) keys.add(String(item._id));
+      if (item.id !== undefined) keys.add(String(item.id));
+      if (item.name) keys.add(item.name);
+    });
+    return keys;
+  }, [selectCategoryList]);
+
+  // Filter categories based on debounced search query
   const filteredCategories = useMemo(() => {
-    if (!searchQuery.trim()) return categories;
+    if (!debouncedSearchQuery.trim()) return categories;
     return categories.filter(cat =>
       cat && cat.name && typeof cat.name === 'string' &&
-      cat.name.toLowerCase().includes((searchQuery || '').toLowerCase())
+      cat.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
     );
-  }, [categories, searchQuery]);
+  }, [categories, debouncedSearchQuery]);
 
   // Function to render each category item
   const renderItem = useCallback(
     ({item}: {item: Category}) => {
-      const isSelected = selectCategoryList.some(i => 
-        (i.id !== undefined && item?.id !== undefined && i.id === item.id) ||
-        (i._id !== undefined && item?._id !== undefined && i._id === item._id) ||
-        (i.name === item?.name)
-      );
+      // O(1) Set lookup instead of O(N) array iteration
+      const isSelected =
+        (item._id !== undefined && selectCategoryKeys.has(String(item._id))) ||
+        (item.id !== undefined && selectCategoryKeys.has(String(item.id))) ||
+        (item.name !== undefined && selectCategoryKeys.has(item.name));
+
       return (
         <AccessibleTouchable
           accessibilityLabel={item.name}
@@ -83,7 +106,7 @@ const CategoriesFlatlistModal = ({
         </AccessibleTouchable>
       );
     },
-    [handleCategorySelection, selectCategoryList],
+    [handleCategorySelection, selectCategoryKeys],
   );
 
   // Function to close the bottom sheet modal
@@ -143,7 +166,7 @@ const CategoriesFlatlistModal = ({
           renderItem={renderItem}
           contentContainerStyle={styles.contentContainer}
           contentInsetAdjustmentBehavior={'always'}
-          extraData={selectCategoryList}
+          extraData={selectCategoryKeys}
         />
       )}
     </BottomSheetModal>
