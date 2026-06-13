@@ -360,7 +360,7 @@ export const requestReadStoragePermissions = async () => {
 
 export const downloadAudio = async (_podcast: PodcastData) => {
   // Check for existing downloads
-  const storageGranted = await requestStoragePermissions();
+  const storageGranted = await requestReadStoragePermissions();
   if (!storageGranted) {
     return;
   }

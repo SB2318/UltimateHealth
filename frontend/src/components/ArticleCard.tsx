@@ -20,7 +20,7 @@ import {GET_IMAGE} from '../helper/APIUtils';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import {
   formatCount,
-  requestStoragePermissions,
+  requestReadStoragePermissions,
   StatusEnum,
 } from '../helper/Utils';
 import {useSharedValue, withTiming} from 'react-native-reanimated';
@@ -147,7 +147,7 @@ const ArticleCard = ({
 
   const generatePDFFromUrl = async (recordId: string, title: string) => {
     try {
-      const storageGranted = await requestStoragePermissions();
+      const storageGranted = await requestReadStoragePermissions();
       if (!storageGranted) {
         return;
       }

@@ -562,7 +562,7 @@ const CommentScreen = ({
           <TextInput
            {...textInputProps}
             id="article-comment-input"    // 👈 Added unique id attribute
-             name="commentContent"         // 👈 Added explicit name attribute
+
              style={styles.textInput}
                placeholder="Add a comment..."
                placeholderTextColor="#9CA3AF"

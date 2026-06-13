@@ -414,7 +414,7 @@ export default function NewPasswordScreen({
               password !== confirmPassword ||
               !passwordVerify || isSubmitting || isPending
             }
-            onPress={handlePasswordSubmit}
+            onPress={() => handleSubmit(handlePasswordSubmit)()}
             opacity={isSubmitting || isPending ? 0.6 : 1}>
             {isSubmitting || isPending ? (
               <ActivityIndicator color="white" />

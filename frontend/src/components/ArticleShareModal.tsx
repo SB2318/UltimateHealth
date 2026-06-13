@@ -130,7 +130,7 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
 
           {/* Card preview — centred, slightly scaled down so it fits */}
           <View style={styles.cardWrapper}>
-            <ArticleShareCard {...article} cardRef={cardRef} />
+            <ArticleShareCard {...article} cardRef={cardRef as React.RefObject<View>} />
           </View>
 
           {/* Share button */}
