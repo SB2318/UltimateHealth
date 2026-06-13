@@ -12,6 +12,7 @@ import ArticleHero from "./ArticleHero";
 import ArticleContent from "./ArticleContent";
 import RelatedArticles from "./RelatedArticles";
 import AccessibilityControls, { type FontSize } from "./AccessibilityControls";
+import TableOfContents from "./TableOfContents";
 
 const FONT_SIZE_MAP: Record<FontSize, number> = {
   sm: 16,
@@ -66,18 +67,27 @@ export default function ArticlePageClient({
           {/* ── Article body ── */}
           <div
             id="article-body"
-            className="max-w-185 mx-auto px-4 sm:px-6 py-12"
+            className="max-w-275 mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-[1fr_250px] lg:gap-12"
           >
-            <article
-              aria-label={article.title}
-              className="[font-size:var(--article-font-size)]"
-              style={{ "--article-font-size": `${FONT_SIZE_MAP[fontSize]}px` } as CSSProperties}
-            >
-              <ArticleContent content={article.content} />
-            </article>
+            <div className="max-w-185 w-full">
+              <article
+                aria-label={article.title}
+                className="[font-size:var(--article-font-size)]"
+                style={{ "--article-font-size": `${FONT_SIZE_MAP[fontSize]}px` } as CSSProperties}
+              >
+                <ArticleContent content={article.content} />
+              </article>
 
-            {/* ── Article footer: share + attribution ── */}
-            <ArticleFooter article={article} />
+              {/* ── Article footer: share + attribution ── */}
+              <ArticleFooter article={article} />
+            </div>
+
+            {/* ── Table of Contents Sidebar ── */}
+            <aside className="hidden lg:block lg:w-[250px]">
+              <div className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
+                <TableOfContents content={article.content} />
+              </div>
+            </aside>
           </div>
         </main>
 
