@@ -51,6 +51,7 @@ import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
 
 const CHUNK_SIZE = 120;
 
@@ -718,11 +719,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 : `${article.viewCount} view`}
             </Text>
           )}
-          {article && article?.tags && (
-            <Text style={styles.categoryText}>
-              {article.tags.map(tag => tag.name).join(' | ')}
-            </Text>
-          )}
+          <View style={styles.badgeRow}>
+            {article && article?.tags && (
+              <Text style={styles.categoryText}>
+                {article.tags.map(tag => tag.name).join(' | ')}
+              </Text>
+            )}
+            {article && (
+              <ReadingDifficulty difficulty={getArticleDifficulty(article)} />
+            )}
+          </View>
 
           {article && (
             <>
@@ -1219,6 +1225,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6C6C6D',
     textTransform: 'uppercase',
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+    flexWrap: 'wrap',
+    gap: 8,
   },
   viewText: {
     fontWeight: '500',
