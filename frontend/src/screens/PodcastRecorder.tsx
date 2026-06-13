@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import { requestReadStoragePermissions } from '../helper/Utils'
 import {StyleSheet, Alert} from 'react-native';
 
 import {PodcastRecorderScreenProps} from '../type';
@@ -68,7 +68,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
         Alert.alert('Permission to access microphone was denied');
       }
 
-      const storageGranted = await requestStoragePermissions();
+      const storageGranted = await requestReadStoragePermissions();
       if (!storageGranted) {
         return;
       }
