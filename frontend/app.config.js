@@ -79,7 +79,7 @@ const defaultStaticConfig = {
   },
   web: {
     output: "single",
-    favicon: "./assets/images/favicon.png"
+    favicon: "./assets/images/favicon.ico"
   },
   plugins: [
     "@react-native-firebase/app",
