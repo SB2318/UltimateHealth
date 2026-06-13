@@ -54,7 +54,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   // Get the actual authorId string
  // const actualAuthorId = typeof authorId === 'string' ? authorId : authorId?._id || userId || '';
-  const actualAuthorId = routeUserId || user_id; // Prioritize routeUserId, fallback to current user_id
+  const actualAuthorId = routeUserId || routeUserHandle || user_id; // Prioritize routeUserId or routeUserHandle, fallback to current user_id
   const {
     data: user,
     refetch,
