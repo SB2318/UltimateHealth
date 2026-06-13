@@ -201,11 +201,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.22)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.45)',
+    paddingVertical: 4,   
+    paddingHorizontal: 8,  
   },
   badgeDark: {
     backgroundColor: BRAND.badgeBg,
     borderWidth: 1,
     borderColor: BRAND.teal,
+    paddingVertical: 4,    
+    paddingHorizontal: 8,  
   },
   badgeText: {
     fontSize: 10,
