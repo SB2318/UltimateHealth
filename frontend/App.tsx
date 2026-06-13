@@ -37,9 +37,7 @@ staleTime: 1000 * 60,
           extra: { context: 'App startup audio configuration' },
         });
 
-        
-          logger.error('[App] Failed to configure audio mode:', error);
-        }
+        logger.error('[App] Failed to configure audio mode:', error);
       }
     };
 
