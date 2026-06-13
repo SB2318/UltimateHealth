@@ -7,7 +7,7 @@ import React, {useEffect, useState} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {Alert, Image, useColorScheme} from 'react-native';
+
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch} from 'react-redux';
@@ -214,21 +214,16 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                     'Error',
                     'Email not verified. Please check your email.',
                   );
-                  return;
-                }
-                navigation.reset({
-                  index: 0,
-                  routes: [{name: 'TabNavigation'}],
-                });
-              }, 1000);
+                  break;
+                default:
+                  Alert.alert('Error', 'Login failed. Please try again.');
+                  break;
+              }
             } else {
-              Alert.alert('Token not found');
+              Alert.alert('Error', 'Something went wrong. Please try again.');
             }
-          } catch (e) {
-            if (__DEV__) console.log('Async Storage ERROR', e);
-          } finally {
             setIsSubmitting(false);
-          }
+          },
         },
       );
   };

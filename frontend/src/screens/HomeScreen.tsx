@@ -116,7 +116,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     useRequestArticleEdit();
   const handleClearAllFilters = () => {
     // 1. Local state categories reset
-    setSelectedCategory('');
+    setSelectedCategory(undefined);
     setSortingType('');
     setSearchText('');
 
@@ -551,7 +551,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           }}
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
         <LoadingState />
@@ -578,7 +578,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           }}
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
         <ErrorState onRetry={refetch} />
@@ -605,7 +605,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           }}
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
         <OfflineState />
@@ -629,7 +629,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           }}
           unreadCount={unreadCount ? unreadCount : 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
         <View style={styles.buttonContainer}>
@@ -686,7 +686,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     <SafeAreaView style={styles.container}>
       <HomeScreenHeader
             handlePresentModalPress={handlePresentModalPress}
-            onTextInputChange={(text) => {
+            onTextInputChange={(text: string) => {
               setSearchText(text);
               handleSearch(text);
             }}
@@ -702,7 +702,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
               }
             }}
             unreadCount={unreadCount ? unreadCount : 0}
-            hasActiveFilters={selectedCategory !== '' || sortingType !== '' || searchText !== ''}
+            hasActiveFilters={selectedCategory !== undefined || sortingType !== '' || searchText !== ''}
             onFilterReset={handleClearAllFilters}
             searchText={searchText}
           />

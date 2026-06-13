@@ -353,7 +353,6 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
             </Text>
             <TextArea
                  id="improvement-feedback-input"  // 👈 Added a unique web platform ID
-                 name="feedbackContent"            // 👈 Added an explicit form name property
                  placeholder="Share your thoughts or ask a question..."
                  value={feedback}
                  onChangeText={setFeedback}
