@@ -133,6 +133,11 @@ export type RootStackParamList = {
   CommunityGuidelines: undefined;
   ContributorPage: undefined;
   OpenSourcePage: undefined;
+  CollectionsScreen: undefined;
+  CollectionDetailScreen: {
+    collectionId: string;
+    collectionName: string;
+  };
 };
 
 export type RedirectTo = {
@@ -368,6 +373,10 @@ export type PodcastPlayerScreenProps = StackScreenProps<
   RootStackParamList,
   'PodcastPlayer'
 >;
+
+export type CollectionScreenProp = StackScreenProps<RootStackParamList, 'CollectionsScreen'>;
+
+export type CollectionDetailScreenProp = StackScreenProps<RootStackParamList, 'CollectionDetailScreen'>;
 
 export type HomeScreenHeaderProps = {
   handlePresentModalPress: () => void;
@@ -615,6 +624,16 @@ export type ArticleTranslationSource = {
   sourceArticleRecordId: string;
   sourceLanguage: string;
   sourceTitle: string;
+};
+
+export type Collection = {
+  _id: string;
+  name: string;
+  description?: string;
+  articleCount: number;
+  articleIds: number[];
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type PodcastData = {

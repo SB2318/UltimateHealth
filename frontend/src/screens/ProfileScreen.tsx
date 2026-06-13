@@ -17,6 +17,7 @@ import {setUserHandle} from '../store/UserSlice';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
 import { NoArticleState } from '../components/EmptyStates';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const theme = useTheme();
@@ -325,6 +326,19 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
                 {paddingBottom: bottomBarHeight + 15},
               ]}
               keyExtractor={item => item?._id}
+              ListHeaderComponent={
+                <TouchableOpacity
+                  style={styles.collectionsLink}
+                  onPress={() => navigation.navigate('CollectionsScreen')}
+                  accessibilityRole="button"
+                  accessibilityLabel="View your collections">
+                  <FontAwesome name="folder" size={20} color={PRIMARY_COLOR} />
+                  <Text style={styles.collectionsLinkText}>
+                    View Collections
+                  </Text>
+                  <FontAwesome name="chevron-right" size={14} color="#ccc" />
+                </TouchableOpacity>
+              }
               ListEmptyComponent={
                  <NoArticleState/>
               }
@@ -385,5 +399,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  collectionsLink: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+    gap: 10,
+  },
+  collectionsLinkText: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1A1A1A',
   },
 });

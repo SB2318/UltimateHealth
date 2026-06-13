@@ -878,7 +878,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             </>
           )}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
       <ArticleShareModal
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}

@@ -102,6 +102,9 @@ const USER_PUBLISHED_PODCASTS = `${PROD_URL}/podcast/user-published`;
 const LOAD_REVIEW_COMMENTS = `${PROD_URL}/review/load`;
 const GET_TOKEN_STATUS = `${PROD_URL}/tokenstatus`;
 
+/** Bookmark Collections */
+const COLLECTIONS = `${PROD_URL}/collections`;
+
 // chat url
 const CHAT_URL = `${PROD_URL}/gemini/messages`;
 const SEND_MESSAGE_TO_GEMINI = `${PROD_URL}/gemini/send`;
@@ -193,4 +196,5 @@ export {
   SEND_MESSAGE_TO_GEMINI,
   GET_NOTIFICATION_PREFERENCES,
   UPDATE_NOTIFICATION_PREFERENCES,
+  COLLECTIONS,
 };
