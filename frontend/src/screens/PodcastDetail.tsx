@@ -1,40 +1,41 @@
-import React, {useEffect, useState} from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Slider from '@react-native-community/slider';
+import React, { useEffect, useState } from 'react';
 import {
+  Alert,
+  Image,
+  Platform,
   StyleSheet,
   TouchableOpacity,
-  Alert,
-  Platform,
-  View,
-  Image,
   useWindowDimensions,
+  View,
 } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import {PodcastDetailScreenProp} from '../type';
-import {PRIMARY_COLOR} from '../helper/Theme';
-import Slider from '@react-native-community/slider';
-import {GlassStyles} from '../styles/GlassStyles';
+import { PRIMARY_COLOR } from '../helper/Theme';
+import { GlassStyles } from '../styles/GlassStyles';
+import { PodcastDetailScreenProp } from '../type';
 
-import {useAudioPlayer} from 'expo-audio';
+import { useAudioPlayer } from 'expo-audio';
+import NetworkRecoveringBanner from '../components/NetworkRecoveringBanner';
+import { useNetworkRecovery } from '../hooks/useNetworkRecovery';
 
 // GET_IMAGE is defined as `${PROD_URL}/getfile` (resolves to absolute URL: https://uhsocial.in/api/getfile).
 // This absolute, securely-configured endpoint ensures that relative resource paths cannot access local device files via traversal.
-import {GET_IMAGE} from '../helper/APIUtils';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
+import { GET_IMAGE } from '../helper/APIUtils';
 
-import {downloadAudio, formatCount, StatusEnum} from '../helper/Utils';
-import Snackbar from 'react-native-snackbar';
+import { Feather } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Share from 'react-native-share';
-import {fp} from '../helper/Metric';
-import {useSocket} from '../contexts/SocketContext';
-import {Feather} from '@expo/vector-icons';
+import Snackbar from 'react-native-snackbar';
+import { ScrollView, Text, Theme, XStack, YStack } from 'tamagui';
+import AudioWaveform from '../components/AudioWaveform';
 import Loader from '../components/Loader';
 import LoadingSpinner from '../components/LoadingSpinner';
-import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
-import LottieView from 'lottie-react-native';
-import AudioWaveform from '../components/AudioWaveform';
-import {useGetSinglePodcastDetails} from '../hooks/useGetSinglePodcastDetails';
-import {useLikePodcast} from '../hooks/useLikePodcast';
+import { useSocket } from '../contexts/SocketContext';
+import { fp } from '../helper/Metric';
+import { downloadAudio, formatCount, StatusEnum } from '../helper/Utils';
+import { useGetSinglePodcastDetails } from '../hooks/useGetSinglePodcastDetails';
+import { useLikePodcast } from '../hooks/useLikePodcast';
 
 const isAllowedUrl = (urlStr?: string | null): boolean => {
   if (!urlStr) return false;
@@ -85,6 +86,8 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const {data: podcast, refetch, isLoading: isPodcastLoading, isError: isPodcastError, error: podcastError} = useGetSinglePodcastDetails(trackId);
   const {mutate: likePodcast, isPending: likePodcastPending} = useLikePodcast();
 
+  // Network recovery: automatically pause, save position, and resume playback on reconnection
+
   const defaultFallback = require('../../assets/sounds/funny-cartoon-sound-397415.mp3');
 
   const getFormattedSource = (url?: string | null) => {
@@ -102,6 +105,14 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   // only initialize once a valid uri exists
   const player = useAudioPlayer(initialSource);
 
+  // Initialize network recovery AFTER player is created to avoid using player before declaration
+  const { isRecovering, handleNetworkError } = useNetworkRecovery(
+    player,
+    isConnected,
+    position,
+    playing,
+  );
+
   useEffect(() => {
     if (podcast?.audio_url) {
       const secureSource = getFormattedSource(podcast.audio_url);
@@ -111,6 +122,38 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
       }
     }
   }, [podcast?.audio_url, player, loadedSource]);
+
+  /**
+   * Player error listener: detects playback errors and routes them to network recovery
+   * if they appear to be network-related.
+   */
+  useEffect(() => {
+    if (!player) return;
+
+    // Check if player has an error state (expo-audio may throw or emit errors)
+    const checkPlayerError = () => {
+      try {
+        const status = player.currentStatus;
+        // If status indicates an error and network is down, treat as network error
+        if (status?.error && !isConnected) {
+          handleNetworkError(
+            new Error(status.error || 'Playback error'),
+            true // Mark as network-related
+          );
+        }
+      } catch (error) {
+        // Player may throw if in error state
+        if (error instanceof Error && !isConnected) {
+          handleNetworkError(error, true); // Assume network-related if offline
+        }
+      }
+    };
+
+    // Poll player status every 2 seconds to catch errors early
+    const errorCheckInterval = setInterval(checkPlayerError, 2000);
+
+    return () => clearInterval(errorCheckInterval);
+  }, [player, isConnected, handleNetworkError]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -619,6 +662,8 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           padding="$3"
           paddingTop="$10"
           justifyContent="space-between">
+          {/* Network Recovery Banner: appears when connection is lost during playback */}
+          <NetworkRecoveringBanner isVisible={isRecovering} />
           {content}
         </YStack>
       </Theme>
