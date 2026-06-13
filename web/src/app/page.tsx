@@ -27,7 +27,7 @@ const userScreenshots = [
   { src: "/assets/podcast-recording.jpeg", caption: "Podcast Recorder" },
   { src: "/assets/podcast-upload.jpeg", caption: "Podcast Upload" },
   { src: "/assets/notificaion-screen.jpeg", caption: "Notification" },
-  { src: "/assets/UltimateHealth-about.jpeg", caption: "App Info" },
+  { src: "/assets/ultimate-health-about.jpeg", caption: "App Info" },
   { src: "/assets/terms_cond_page.jpeg", caption: "Terms And Condition" },
 ];
 
