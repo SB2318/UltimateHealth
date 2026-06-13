@@ -1,11 +1,14 @@
-const URL_REPORT_FIELDS = new Set([
+type CspReportLogValue = string | number | boolean | null;
+type SanitizedCspReport = Record<string, CspReportLogValue>;
+
+const URL_REPORT_FIELDS = new Set<string>([
   "blocked-uri",
   "document-uri",
   "referrer",
   "source-file",
 ]);
 
-const LOGGED_REPORT_FIELDS = new Set([
+const LOGGED_REPORT_FIELDS = new Set<string>([
   "blocked-uri",
   "column-number",
   "disposition",
@@ -20,11 +23,11 @@ const LOGGED_REPORT_FIELDS = new Set([
   "violated-directive",
 ]);
 
-function isPlainObject(value) {
+function isPlainObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
-function sanitizeLogValue(value) {
+function sanitizeLogValue(value: unknown): CspReportLogValue {
   if (
     typeof value === "string" ||
     typeof value === "number" ||
@@ -41,7 +44,7 @@ function sanitizeLogValue(value) {
  * Sanitizes query parameters, fragments, and tokens from a URL string to
  * prevent sensitive data exposure in logs.
  */
-export function sanitizeUrl(url) {
+export function sanitizeUrl(url: unknown): string {
   if (typeof url !== "string") return "";
 
   try {
@@ -62,10 +65,10 @@ export function sanitizeUrl(url) {
   }
 }
 
-export function sanitizeCspReport(report) {
+export function sanitizeCspReport(report: unknown): SanitizedCspReport | undefined {
   if (!isPlainObject(report)) return undefined;
 
-  const sanitizedReport = {};
+  const sanitizedReport: SanitizedCspReport = {};
 
   for (const [field, value] of Object.entries(report)) {
     if (!LOGGED_REPORT_FIELDS.has(field)) continue;
