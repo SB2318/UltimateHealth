@@ -361,6 +361,8 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
 export default EditorScreen;
 
+});
+
 const styles = StyleSheet.create({
   /********************************/
   /* styles for html tags */
