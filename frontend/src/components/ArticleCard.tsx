@@ -40,6 +40,7 @@ import {useLikeArticle} from '../hooks/useLikeArticle';
 import {useSaveArticle} from '../hooks/useSaveArticle';
 import {useLazyGetArticleContent} from '../hooks/useLazyGetArticleContent';
 import {useRepostArticle} from '../hooks/useArticleRepost';
+import { ReadingDifficulty, getArticleDifficulty } from './ReadingDifficulty';
 
 const ArticleCard = ({
   item,
@@ -417,9 +418,14 @@ const ArticleCard = ({
           )}
 
           {/* Title & Footer Text */}
-          <Text style={styles.footerText}>
-            {item?.tags.map(tag => tag.name).join(' | ')}
-          </Text>
+          <View style={styles.badgeRow}>
+            {item?.tags && item.tags.length > 0 && (
+              <Text style={styles.footerText}>
+                {item?.tags.map(tag => tag.name).join(' | ')}
+              </Text>
+            )}
+            <ReadingDifficulty difficulty={getArticleDifficulty(item)} />
+          </View>
           <Text style={styles.title}>{item?.title}</Text>
 
           <View style={styles.metaRow}>
@@ -834,6 +840,14 @@ const styles = StyleSheet.create({
     backgroundColor: ON_PRIMARY_COLOR,
     padding: 6,
     borderRadius: 20,
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+    flexWrap: 'wrap',
+    gap: 8,
   },
 });
 
