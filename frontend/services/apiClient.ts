@@ -1,6 +1,5 @@
 // frontend/src/services/apiClient.ts
-import Constants from "expo-constants";
-
+const PROD_URL = "http://10.0.2.2:3000/api";
 const extra = Constants.expoConfig?.extra ?? {};
 const PROD_URL: string = extra.PROD_URL;
 
