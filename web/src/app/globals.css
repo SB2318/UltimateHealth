@@ -259,6 +259,8 @@ body.touch-device .dna-cursor-canvas {
   -webkit-text-fill-color: transparent;
   text-decoration: none;
   transition: var(--transition);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .logo:hover { transform: translateY(-2px); }
 .logo-icon img {
@@ -292,7 +294,7 @@ body.touch-device .dna-cursor-canvas {
   text-align: center;
   gap: 4px;
   min-width: 100px;
-  padding: 4px 0;
+  padding: 0;
 }
 
 .nav-item-icon {
@@ -339,14 +341,19 @@ body.touch-device .dna-cursor-canvas {
 .nav-btn-sm {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  align-self: center;
+  padding: 10px 22px;
   gap: 8px;
   background: var(--gradient-primary);
   color: white !important;
-  padding: 10px 20px;
   border-radius: 50px;
   font-weight: 600;
+  font-size: 0.95rem;
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
+  line-height: 1.4;
+  flex-shrink: 0;
 }
 
 @media (max-width: 1200px) {
@@ -957,6 +964,10 @@ p.center {
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
   border: 1px solid rgba(0, 0, 0, 0.05);
+  /*changing the layout to flex column */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .feature-item:hover, .feature-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
 .feature-item h3, .feature-card h3 { font-size: 1.3rem; margin-bottom: 12px; color: var(--text-dark); font-weight: 700; }
