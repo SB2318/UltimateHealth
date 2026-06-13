@@ -21,7 +21,7 @@ const CONTENT_CHECKER_PROD: string = extra.CONTENT_CHECKER_PROD;
 
 const LOGIN_API = `${PROD_URL}/user/login`;
 const REGISTRATION_API = `${PROD_URL}/user/register`;
-const ARTICLE_TAGS_API = '/articles/tags';
+const ARTICLE_TAGS_API = `${PROD_URL}/articles/tags`;
 const GET_PROFILE_API = `${PROD_URL}/user/getprofile`;
 const VERIFICATION_MAIL_API = `${PROD_URL}/user/verifyEmail`;
 const RESEND_VERIFICATION = `${PROD_URL}/user/resend-verification-mail`;
