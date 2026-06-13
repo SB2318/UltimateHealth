@@ -1,22 +1,5 @@
 import { NextResponse } from "next/server";
-
-/**
- * Sanitizes query parameters and tokens from a URL string to prevent
- * sensitive data exposure in logs.
- */
-function sanitizeUrl(url: unknown): string {
-  if (typeof url !== "string") return "";
-  try {
-    const parsed = new URL(url);
-    if (parsed.search) {
-      parsed.search = "?[redacted]";
-    }
-    return parsed.toString();
-  } catch {
-    const qIndex = url.indexOf("?");
-    return qIndex !== -1 ? url.substring(0, qIndex) + "?[redacted]" : url;
-  }
-}
+import { sanitizeCspReport } from "./sanitizeCspReport";
 
 /**
  * CSP Report API Endpoint
@@ -28,31 +11,23 @@ export async function POST(request: Request) {
   try {
     const rawBody = await request.text();
     let report: Record<string, unknown>;
-    
+
     try {
       report = JSON.parse(rawBody);
     } catch (jsonError) {
       console.error("CSP Report: Error parsing JSON body:", jsonError);
       return NextResponse.json({ error: "Invalid JSON format" }, { status: 400 });
     }
-    
-    // Sanitize the report fields to prevent leaking sensitive tokens in logs
-    const cspReport = report?.["csp-report"] as Record<string, unknown> | undefined;
-    if (cspReport) {
-      if (typeof cspReport["document-uri"] === "string") {
-        cspReport["document-uri"] = sanitizeUrl(cspReport["document-uri"]);
-      }
-      if (typeof cspReport["referrer"] === "string") {
-        cspReport["referrer"] = sanitizeUrl(cspReport["referrer"]);
-      }
-      if (typeof cspReport["blocked-uri"] === "string") {
-        cspReport["blocked-uri"] = sanitizeUrl(cspReport["blocked-uri"]);
-      }
-    }
-    
+
+    const cspReport = sanitizeCspReport(report?.["csp-report"]);
+
     // Log the violation report (or forward to monitoring service like Sentry)
-    console.warn("CSP Violation Reported:", report);
-    
+    if (cspReport) {
+      console.warn("CSP Violation Reported:", cspReport);
+    } else {
+      console.warn("CSP Violation Reported: Missing or invalid csp-report payload");
+    }
+
     // Return 204 No Content as recommended to prevent response feedback loops
     return new NextResponse(null, { status: 204 });
   } catch (error) {
