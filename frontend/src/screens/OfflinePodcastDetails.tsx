@@ -59,8 +59,10 @@ export default function OfflinePodcastDetail({
   useEffect(() => {
     //console.log("File path", `${filePath}`);
     console.log('Player time', player.currentTime);
-    console.log('Player status', player.currentStatus.currentTime);
-  }, [player.currentStatus.currentTime, player.currentTime]);
+    if (player.currentStatus) {
+      console.log('Player status', player.currentStatus.currentTime);
+    }
+  }, [player.currentStatus?.currentTime, player.currentTime]);
 
   useEffect(() => {
     if (!player) return;
@@ -79,7 +81,7 @@ export default function OfflinePodcastDetail({
   const handleListenPress = async () => {
     const currentState = player.currentStatus;
 
-    if (currentState.playing) {
+    if (currentState?.playing) {
       player.pause();
     } else {
       player.play();
@@ -345,19 +347,19 @@ export default function OfflinePodcastDetail({
         <Text style={styles.time}>{formatTime(player.duration || 1)}</Text>
       </View>
 
-      {player.currentStatus.isBuffering && (
+      {player.currentStatus?.isBuffering && (
         <Text style={styles.bufferingText}>⏳ Buffering... please wait</Text>
       )}
 
       <TouchableOpacity
         style={[
           styles.listenButton,
-          player.currentStatus.isBuffering && styles.listenButtonDisabled,
+          player.currentStatus?.isBuffering && styles.listenButtonDisabled,
         ]}
         onPress={handleListenPress}
-        disabled={player.currentStatus.isBuffering}>
+        disabled={player.currentStatus?.isBuffering}>
         <Text style={styles.listenText}>
-          {player.currentStatus.playing ? '⏸️Pause' : '🎧 Listen Now'}
+          {player.currentStatus?.playing ? '⏸️Pause' : '🎧 Listen Now'}
         </Text>
       </TouchableOpacity>
     </ScrollView>

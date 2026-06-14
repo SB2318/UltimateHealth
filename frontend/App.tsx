@@ -40,8 +40,7 @@ staleTime: 1000 * 60,
         
           logger.error('[App] Failed to configure audio mode:', error);
         }
-      }
-    };
+      };
 
     configureAudio();
 

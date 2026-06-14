@@ -339,12 +339,10 @@ ${body}
 // General purpose podcast app, no need to encrypted download data here,
 // We will ensure that, there will be no copyrighted content, or we can't give access to download
 // copyrighted content, as per ultimatehealth system
-export const requestReadStoragePermissions = async () => {
+export const requestStoragePermissions = async () => {
   if (Platform.OS !== 'android') return true;
 
-  if ((Platform.Version as number) < 33) {
-    return true;
-  } else {
+  if ((Platform.Version as number) >= 33) {
     const granted = await PermissionsAndroid.requestMultiple([
       PermissionsAndroid.PERMISSIONS.READ_MEDIA_AUDIO,
     ]);
@@ -352,6 +350,18 @@ export const requestReadStoragePermissions = async () => {
     return (
       granted['android.permission.READ_MEDIA_AUDIO'] ===
       PermissionsAndroid.RESULTS.GRANTED
+    );
+  } else {
+    const granted = await PermissionsAndroid.requestMultiple([
+      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    ]);
+
+    return (
+      granted['android.permission.READ_EXTERNAL_STORAGE'] ===
+        PermissionsAndroid.RESULTS.GRANTED &&
+      granted['android.permission.WRITE_EXTERNAL_STORAGE'] ===
+        PermissionsAndroid.RESULTS.GRANTED
     );
   }
 };

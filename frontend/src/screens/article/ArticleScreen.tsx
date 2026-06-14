@@ -762,9 +762,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         <View style={styles.contentContainer}>
           {article && (
             <Text style={{...styles.viewText, marginBottom: 10}}>
-              {article?.viewCount
+              {article?.viewCount !== undefined
                 ? article.viewCount > 1
-                : `${article.viewCount} view`}
+                  ? `${formatCount(article.viewCount)} views`
+                  : `${article.viewCount} view`
+                : '0 views'}
             </Text>
           )}
           {article && article?.tags && (
@@ -878,18 +880,20 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             </>
           )}
         </View>
-      </ScrollView>
-      <ArticleShareModal
-        visible={shareModalVisible}
-        onClose={() => setShareModalVisible(false)}
-        article={{
-          title: article.title,               // string
-          authorName: article.author?.name,   // string  — adjust to your model shape
-          category: article.category ?? 'Health',  // string
-          coverImageUrl: article.cover_image ?? null,
-          authorAvatarUrl: article.author?.profile_picture ?? null,
-        }}
-      />
+      </Animated.ScrollView>
+      {article && (
+        <ArticleShareModal
+          visible={shareModalVisible}
+          onClose={() => setShareModalVisible(false)}
+          article={{
+            title: article.title,
+            authorName: article.authorName,
+            category: article.tags?.[0]?.name ?? 'Health',
+            coverImageUrl: article.imageUtils?.[0] ?? null,
+            authorAvatarUrl: null,
+          }}
+        />
+      )}
 
       <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
         {/* Action Bar Row */}

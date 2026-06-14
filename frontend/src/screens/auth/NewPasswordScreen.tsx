@@ -101,9 +101,6 @@ export default function NewPasswordScreen({
     );
   };
 
-    );
-  };
-
   const insets = useSafeAreaInsets();
   if (isPending) {
     return <Loader />;
@@ -241,13 +238,6 @@ export default function NewPasswordScreen({
                   </XStack>
                 )}
               />
-                  <Icon
-                    name={secureTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray700.val}
-                  />
-                </Button>
-              </XStack>
 
               {/* Password Requirements */}
               <XStack gap="$2" alignItems="center" paddingLeft="$2">
@@ -354,13 +344,6 @@ export default function NewPasswordScreen({
                   </XStack>
                 )}
               />
-                  <Icon
-                    name={secureNewTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray600.val}
-                  />
-                </Button>
-              </XStack>
 
               {/* Confirmation Status */}
               {confirmPassword && (
@@ -418,28 +401,14 @@ export default function NewPasswordScreen({
 
           {/* Return Link */}
           <Button
-            backgroundColor={
-              password && confirmPassword &&
-              password === confirmPassword && passwordVerify
-                ? '$blue10' : '$gray7'
-            }
+            chromeless
             w="100%"
             h={56}
-            borderRadius={12}
-            disabled={
-              !password || !confirmPassword ||
-              password !== confirmPassword ||
-              !passwordVerify || isSubmitting || isPending
-            }
-            onPress={handlePasswordSubmit}
-            opacity={isSubmitting || isPending ? 0.6 : 1}>
-            {isSubmitting || isPending ? (
-              <ActivityIndicator color="white" />
-            ) : (
-              <Text fontSize={17} fontWeight="600" color="white">
-                Reset Password
-              </Text>
-            )}
+            marginTop="$2"
+            onPress={() => navigation.navigate('LoginScreen', {})}>
+            <Text fontSize={15} fontWeight="600" color="$blue10">
+              Back to Login
+            </Text>
           </Button>
         </Card>
       </YStack>

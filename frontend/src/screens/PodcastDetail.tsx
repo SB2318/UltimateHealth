@@ -378,7 +378,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
           testID="podcast-play-pause-button"
           accessibilityLabel="podcast-play-pause-button"
           onPress={() =>
-            player.currentStatus.playing ? handlePause() : handlePlay()
+            player.currentStatus?.playing ? handlePause() : handlePlay()
           }
           style={styles.mainPlayButton}>
           {playing ? (

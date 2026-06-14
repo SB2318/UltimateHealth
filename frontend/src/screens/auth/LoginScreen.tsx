@@ -7,7 +7,7 @@ import React, {useEffect, useState} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {Alert, Image, useColorScheme} from 'react-native';
+import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch} from 'react-redux';
@@ -37,7 +37,7 @@ import {
 } from '../../store/UserSlice';
 
 import { AuthData, LoginScreenProp } from '../../type';
-import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
+
 
 const loginSchema = z.object({
   email: z.string().email('Please Enter a Valid Email'),
@@ -134,28 +134,30 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
       console.log('Login attempt in progress');
     }
 
-    const fcmToken = await getFCMToken();
+    try {
+      setIsSubmitting(true);
+      const fcmToken = await getFCMToken();
 
-    if (__DEV__) {
-      console.log('Attempting to retrieve FCM Token');
-    }
+      if (__DEV__) {
+        console.log('Attempting to retrieve FCM Token');
+      }
 
-    login(
-      {
-        email: data.email,
-        password: data.password,
-        fcmToken: fcmToken ?? 'not found',
-      },
+      login(
         {
-          onSuccess: async data => {
+          email: data.email,
+          password: data.password,
+          fcmToken: fcmToken ?? 'not found',
+        },
+        {
+          onSuccess: async loginData => {
             const auth: AuthData = {
-              userId: data._id,
-              token: data?.refreshToken,
-              user_handle: data?.user_handle,
+              userId: loginData._id,
+              token: loginData?.refreshToken,
+              user_handle: loginData?.user_handle,
             };
             try {
               await storeItem(KEYS.USER_ID, auth.userId.toString());
-              await storeItem(KEYS.USER_HANDLE, data?.user_handle);
+              await storeItem(KEYS.USER_HANDLE, loginData?.user_handle);
               if (auth.token) {
                 await secureStoreItem(
                   SECURE_KEYS.USER_TOKEN,
@@ -215,22 +217,22 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                     'Email not verified. Please check your email.',
                   );
                   return;
-                }
-                navigation.reset({
-                  index: 0,
-                  routes: [{name: 'TabNavigation'}],
-                });
-              }, 1000);
+                default:
+                  Alert.alert('Error', 'Something went wrong, please try again.');
+              }
             } else {
-              Alert.alert('Token not found');
+              Alert.alert('Error', 'Something went wrong, please try again.');
             }
-          } catch (e) {
-            if (__DEV__) console.log('Async Storage ERROR', e);
-          } finally {
-            setIsSubmitting(false);
-          }
+          },
         },
       );
+    } catch (e) {
+      if (__DEV__) {
+        console.log('Async Storage ERROR', e);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleEmailInputBack = () => {
