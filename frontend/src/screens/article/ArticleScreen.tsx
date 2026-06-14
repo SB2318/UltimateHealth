@@ -12,7 +12,7 @@ import {
   Dimensions,
   Share,
 } from 'react-native';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -50,7 +50,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
   const [spakingStarted, setSpeakingStarted] = useState(false);
   const {user_id, isGuest} = useSelector((state: any) => state.user);
-  const [readEventSave, setReadEventSave] = useState(false);
+  const readEventSave = useRef(false);
 
   const {mutate: followMutation, isPending: followMutationPending} =
     useUpdateFollowStatusByArticle();
@@ -433,7 +433,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             // console.log('ScrollEnd');
             if (
               article &&
-              !readEventSave &&
+              !readEventSave.current &&
               !isGuest &&
               article.status === StatusEnum.PUBLISHED
             ) {
@@ -441,7 +441,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               updateReadEvent(undefined, {
                 onSuccess: () => {
                   console.log('Read Event Updated');
-                  setReadEventSave(true);
+                  readEventSave.current = true;
                   //Alert.alert('Your Read status updated'); For debug purpose
                   Snackbar.show({
                     text: 'Your read status updated.',
