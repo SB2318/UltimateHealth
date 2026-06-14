@@ -12,8 +12,10 @@ function makeWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
   });
-  return ({children}: {children: React.ReactNode}) =>
+  const Wrapper = ({children}: {children: React.ReactNode}) =>
     React.createElement(QueryClientProvider, {client: queryClient}, children);
+  Wrapper.displayName = 'Wrapper';
+  return Wrapper;
 }
 
 describe('useUpdateReadEvent', () => {

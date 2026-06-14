@@ -22,7 +22,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
 import {useDispatch} from 'react-redux';
-import {requestStoragePermissions} from '../helper/Utils';
+import {requestReadStoragePermissions} from '../helper/Utils';
 
 //const AudioModule = requireNativeModule('AudioModule');
 
@@ -68,7 +68,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
         Alert.alert('Permission to access microphone was denied');
       }
 
-      const storageGranted = await requestStoragePermissions();
+      const storageGranted = await requestReadStoragePermissions();
       if (!storageGranted) {
         return;
       }

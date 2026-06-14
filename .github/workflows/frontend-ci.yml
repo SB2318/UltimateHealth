@@ -75,10 +75,15 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Restore node_modules
+        id: cache-lint
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+
+      - name: Install Dependencies (if cache miss)
+        if: steps.cache-lint.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
 
       - name: Run ESLint
         run: yarn lint
@@ -104,10 +109,15 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Restore node_modules
+        id: cache-typecheck
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+
+      - name: Install Dependencies (if cache miss)
+        if: steps.cache-typecheck.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
 
       - name: Run TypeScript Check
         run: yarn type-check
@@ -133,10 +143,15 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Restore node_modules
+        id: cache-test
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+
+      - name: Install Dependencies (if cache miss)
+        if: steps.cache-test.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
 
       - name: Run Unit Tests
         run: yarn test
@@ -162,10 +177,15 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
 
       - name: Restore node_modules
+        id: cache-doctor
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+
+      - name: Install Dependencies (if cache miss)
+        if: steps.cache-doctor.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
 
       - name: Run Expo Doctor
         shell: bash

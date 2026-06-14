@@ -202,7 +202,6 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
               </Text>
               <TextArea
                 id="general-review-input"     // 👈 Added unique web platform ID
-                name="generalReviewContent"
                 placeholder="Share your thoughts or ask a question..."
                 value={feedback}
                 onChangeText={setFeedback}

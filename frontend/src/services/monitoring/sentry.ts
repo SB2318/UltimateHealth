@@ -15,24 +15,15 @@ export const initMonitoring = () => {
     (__DEV__ ? 'development' : 'production');
 
   if (!dsn) {
-    
-      // Warn rather than log — no DSN is a non-default state worth noticing.
-      logger.warn('[Monitoring] Sentry is disabled: EXPO_PUBLIC_SENTRY_DSN is not set.');
-    }
+    logger.warn('[Monitoring] Sentry is disabled: EXPO_PUBLIC_SENTRY_DSN is not set.');
     return;
   }
 
   Sentry.init({
     dsn,
     environment,
-    // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring
-    // In production, this should be a lower value (e.g., 0.1 for 10%)
     tracesSampleRate: environment === 'production' ? 0.2 : 1.0,
-    
-    // Enable this to track navigation (needs further integration with react-navigation if desired)
     enableAutoPerformanceTracing: true,
-
-    // Add useful tags
     initialScope: scope => {
       scope.setTags({
         platform: Platform.OS,
@@ -43,12 +34,5 @@ export const initMonitoring = () => {
     },
   });
 
-  
-    logger.log(`[Monitoring] Sentry initialized for environment: ${environment}`);
-
-/**
- * Wrap the root component of the app.
- */
-export const wrapWithSentry = (App: React.ComponentType<any>) => {
-  return Sentry.wrap(App);
+  logger.log(`[Monitoring] Sentry initialized for environment: ${environment}`);
 };

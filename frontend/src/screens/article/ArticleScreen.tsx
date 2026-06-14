@@ -10,7 +10,6 @@ import {
   Share,
   useColorScheme,
 } from 'react-native';
-import ArticleShareModal from '../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
@@ -878,18 +877,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             </>
           )}
         </View>
-      </ScrollView>
-      <ArticleShareModal
-        visible={shareModalVisible}
-        onClose={() => setShareModalVisible(false)}
-        article={{
-          title: article.title,               // string
-          authorName: article.author?.name,   // string  — adjust to your model shape
-          category: article.category ?? 'Health',  // string
-          coverImageUrl: article.cover_image ?? null,
-          authorAvatarUrl: article.author?.profile_picture ?? null,
-        }}
-      />
+      </Animated.ScrollView>
 
       <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
         {/* Action Bar Row */}

@@ -73,17 +73,27 @@ jobs:
         working-directory: ./frontend/android
         run: chmod +x gradlew
         
+      - name: Check Google Services Secret
+        id: secret-check
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$GOOGLE_SERVICES_JSON" ]; then
+            echo "has_secret=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping Android build: GOOGLE_SERVICES_JSON secret is missing (fork PR)."
+          else
+            echo "has_secret=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Inject google-services.json
+        if: steps.secret-check.outputs.has_secret == 'true'
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: |
           node -e "
             const fs = require('fs');
+            const path = 'android/app/google-services.json';
             let content = process.env.GOOGLE_SERVICES_JSON;
-            if (!content || content.trim().length === 0) {
-              console.error('GOOGLE_SERVICES_JSON is empty!');
-              process.exit(1);
-            }
             let parsed;
             try {
               parsed = JSON.parse(content);
@@ -100,20 +110,22 @@ jobs:
                 process.exit(1);
               }
             }
-            fs.writeFileSync('android/app/google-services.json', JSON.stringify(parsed, null, 2));
+            fs.writeFileSync(path, JSON.stringify(parsed, null, 2));
           "
 
       - name: Compile Android Debug Build
+        if: steps.secret-check.outputs.has_secret == 'true'
         working-directory: ./frontend/android
-        run: ./gradlew assembleDebug --console=plain
+        run: ./gradlew assembleDebug --console=plain --stacktrace 2>&1 | tee /tmp/gradle-output.log
 
       - name: Upload APK Artifact (On Failure)
-        if: failure()
+        if: failure() && steps.secret-check.outputs.has_secret == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: android-build-logs
           path: |
             ~/.gradle/daemon/**/daemon-*.out.log
             frontend/android/app/build/reports
+            /tmp/gradle-output.log
           if-no-files-found: ignore
           retention-days: 7

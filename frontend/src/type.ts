@@ -376,6 +376,7 @@ export type HomeScreenHeaderProps = {
   unreadCount: number;
   hasActiveFilters?: boolean;
   onFilterReset?: () => void;
+  searchText?: string;
 };
 
 export type ArticleCardProps = {
