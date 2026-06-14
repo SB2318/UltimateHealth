@@ -52,6 +52,8 @@ export default function AppContent() {
       dispatch(setUserToken(token));
       if (token) {
         dispatch(setGuestMode(false));
+      } else {
+        dispatch(setGuestMode(true));
       }
       initDeepLinking(navigationRef.current, tokenRes?.isValid || false);
     
