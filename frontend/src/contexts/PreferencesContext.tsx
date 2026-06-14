@@ -16,7 +16,7 @@ import { LanguageCode, isValidLanguageCode } from '../constants/languages';
 
 interface PreferencesContextType {
   preferredLanguages: LanguageCode[];
-  setPreferredLanguages: (languages: LanguageCode[]) => Promise<void>;
+  setPreferredLanguages: (languages: LanguageCode[] | ((prev: LanguageCode[]) => LanguageCode[])) => Promise<void>;
   addLanguagePreference: (language: LanguageCode) => Promise<void>;
   removeLanguagePreference: (language: LanguageCode) => Promise<void>;
   isLoading: boolean;
@@ -101,17 +101,18 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
   );
 
   const setPreferredLanguages = useCallback(
-    async (languages: LanguageCode[]): Promise<void> => {
-      const validLanguages = languages.filter(lang =>
-        isValidLanguageCode(lang)
-      );
-      setInternalPreferredLanguages(validLanguages);
+    async (updater: LanguageCode[] | ((prev: LanguageCode[]) => LanguageCode[])): Promise<void> => {
+      let validLanguages: LanguageCode[] = [];
+      setInternalPreferredLanguages(prev => {
+        const next = typeof updater === 'function' ? updater(prev) : updater;
+        validLanguages = next.filter(lang => isValidLanguageCode(lang));
+        return validLanguages;
+      });
       await savePreferencesToStorage(validLanguages);
     },
     [savePreferencesToStorage]
   );
 
-  // ✅ FIXED: Refactored to avoid race conditions
   const addLanguagePreference = useCallback(
     async (language: LanguageCode): Promise<void> => {
       if (!isValidLanguageCode(language)) {
@@ -120,25 +121,20 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
         );
         return;
       }
-      // Use setPreferredLanguages to avoid race conditions
-      if (!preferredLanguages.includes(language)) {
-        await setPreferredLanguages([...preferredLanguages, language]);
-      }
+      await setPreferredLanguages(prev =>
+        prev.includes(language) ? prev : [...prev, language]
+      );
     },
-    [preferredLanguages, setPreferredLanguages]
+    [setPreferredLanguages]
   );
 
-  // ✅ FIXED: Refactored to avoid race conditions
   const removeLanguagePreference = useCallback(
     async (language: LanguageCode): Promise<void> => {
-      // Use setPreferredLanguages to avoid race conditions
-      if (preferredLanguages.includes(language)) {
-        await setPreferredLanguages(
-          preferredLanguages.filter(lang => lang !== language)
-        );
-      }
+      await setPreferredLanguages(prev =>
+        prev.filter(lang => lang !== language)
+      );
     },
-    [preferredLanguages, setPreferredLanguages]
+    [setPreferredLanguages]
   );
 
   const value: PreferencesContextType = {
