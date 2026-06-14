@@ -40,24 +40,36 @@ export default function ArticlePageClient({
       {/* Sticky reading progress indicator */}
       <ReadingProgressBar />
 
-      {/* Skip navigation for keyboard / screen reader users */}
-      <a
-        href="#article-body"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-80 focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:text-[#667eea] focus:font-semibold focus:border focus:border-[#667eea]/30"
-      >
-        Skip to article content
-      </a>
+      
 
       <div className="min-h-screen bg-white">
         {/* ── Sticky top navigation bar ── */}
-        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm flex items-center p-2 border border-gray-200 rounded-full m-3 ">
+           {/* Back link */}
+          <div className="ml-4">
+              <Link
+                href={withBasePath("/articles")}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-[#667eea] hover:text-[#5568d3] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#667eea] rounded-full px-3 py-2 border border-gray-200"
+              >
+                <i className="fas fa-arrow-left text-xs" aria-hidden="true" />
+                Back to Articles
+              </Link>
+              {/* Skip navigation for keyboard / screen reader users */}
+              <a
+                href="#article-body"
+                className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-70 focus:z-80   focus:px-4 focus:py-1 focus:rounded-full focus:shadow-lg focus:text-[#667eea] focus:font-semibold  focus:border-gray-100"
+              >
+                Skip to article content
+              </a>
+          </div>
+          
           <div className="max-w-275 mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <ArticleBreadcrumbs
               category={article.category}
               title={article.title}
             />
           </div>
-        </div>
+        </div> 
 
         <main>
           {/* ── Hero: image + title + metadata ── */}
