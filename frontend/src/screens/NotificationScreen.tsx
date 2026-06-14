@@ -331,6 +331,7 @@ const NotificationScreen = ({navigation}: any) => {
         navigation.navigate('CommentScreen', {
           articleId: item.articleId._id,
           mentionedUsers: item.articleId.mentionedUsers,
+          article: item.articleId,
         });
       }
     } else if (item.type === NotificationType.ArticleReview) {
