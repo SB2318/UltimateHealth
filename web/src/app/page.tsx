@@ -29,7 +29,7 @@ const userScreenshots = [
   { src: "/assets/podcast-play-screen-2.jpeg", caption: "Podcast Player" },
   { src: "/assets/podcast-recording.jpeg", caption: "Podcast Recorder" },
   { src: "/assets/podcast-upload.jpeg", caption: "Podcast Upload" },
-  { src: "/assets/notificaion-screen.jpeg", caption: "Notification" },
+  { src: "/assets/notification-screen.jpeg", caption: "Notification" },
   { src: "/assets/UltimateHealth-about.jpeg", caption: "App Info" },
   { src: "/assets/terms_cond_page.jpeg", caption: "Terms And Condition" },
 ];
@@ -53,8 +53,8 @@ const CURSOR_GLOW_EVENT = "cursor-glow-preference-change";
 // Owner-configurable frontend URLs (set in deployment env when needed)
 const HELP_CENTER_URL = process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https://uhsocial.in/docs";
 const FEEDBACK_URL = process.env.NEXT_PUBLIC_FEEDBACK_URL || "https://github.com/SB2318/UltimateHealth/issues";
-const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "https://t.me";
-const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://instagram.com";
+const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "";
+const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "";
 const PRIVACY_POLICY_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || "#";
 const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || "#";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -845,7 +845,7 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
               </div>
 
               <div className="contact-dark-socials">
-                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="GitHub">
+                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub">
                   <i className="fab fa-github"></i>
                 </a>
                <a
@@ -856,7 +856,7 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
                  style={{ cursor: "pointer" }}>
                  <i className="fas fa-envelope"></i>
                  </a>
-                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="LinkedIn">
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
               </div>
@@ -1024,18 +1024,22 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
             <div style={{ marginTop: 20 }}>
               <span className="footer-follow-label">Follow Us</span>
               <div className="footer-social-links">
-                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
+                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
                   <i className="fab fa-github"></i>
                 </a>
-                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
-                <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Telegram" aria-label="Open UltimateHealth Telegram link">
-                  <i className="fab fa-telegram"></i>
-                </a>
-                <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Instagram" aria-label="Open UltimateHealth Instagram link">
-                  <i className="fab fa-instagram"></i>
-                </a>
+                {TELEGRAM_URL && (
+                  <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Telegram" aria-label="Open UltimateHealth Telegram link">
+                    <i className="fab fa-telegram-plane"></i>
+                  </a>
+                )}
+                {INSTAGRAM_URL && (
+                  <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Instagram" aria-label="Open UltimateHealth Instagram link">
+                    <i className="fab fa-instagram"></i>
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -1054,10 +1058,10 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
           {/* Support */}
           <div className="footer-links-col">
             <h3>Support</h3>
-            <a href={HELP_CENTER_URL} target="_blank" rel="noreferrer">Help Center</a>
+            <a href={HELP_CENTER_URL} target="_blank" rel="noopener noreferrer">Help Center</a>
             <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
-            <a href={FEEDBACK_URL} target="_blank" rel="noreferrer">Feedback</a>
-            <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">API Docs</a>
+            <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">Feedback</a>
+            <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer">API Docs</a>
           </div>
         </PageWrapper>
 
