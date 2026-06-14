@@ -23,6 +23,7 @@ import {
 import {useCheckUserHandleAvailability} from '@/src/hooks/useCheckUserHandleAvailability';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
 import {useRegdMutation} from '@/src/hooks/useUserRegistration';
+import {Alert} from 'react-native';
 
 const signupSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -64,6 +65,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 
   const username = watch('username');
   const userHandle = username?.trim();
+  const email = watch('email');
 
   const {data: handleAvailability, isLoading: isCheckingHandle} =
     useCheckUserHandleAvailability(userHandle);

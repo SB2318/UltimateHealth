@@ -101,8 +101,7 @@ export default function NewPasswordScreen({
     );
   };
 
-    );
-  };
+
 
   const insets = useSafeAreaInsets();
   if (isPending) {
@@ -241,13 +240,7 @@ export default function NewPasswordScreen({
                   </XStack>
                 )}
               />
-                  <Icon
-                    name={secureTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray700.val}
-                  />
-                </Button>
-              </XStack>
+
 
               {/* Password Requirements */}
               <XStack gap="$2" alignItems="center" paddingLeft="$2">
@@ -354,13 +347,7 @@ export default function NewPasswordScreen({
                   </XStack>
                 )}
               />
-                  <Icon
-                    name={secureNewTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray600.val}
-                  />
-                </Button>
-              </XStack>
+
 
               {/* Confirmation Status */}
               {confirmPassword && (
@@ -431,7 +418,7 @@ export default function NewPasswordScreen({
               password !== confirmPassword ||
               !passwordVerify || isSubmitting || isPending
             }
-            onPress={handlePasswordSubmit}
+            onPress={handleSubmit(handlePasswordSubmit)}
             opacity={isSubmitting || isPending ? 0.6 : 1}>
             {isSubmitting || isPending ? (
               <ActivityIndicator color="white" />
