@@ -130,6 +130,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   }
 
   const onSubmit = async (data: LoginFormData) => {
+    setIsSubmitting(true);
     if (__DEV__) {
       console.log('Login attempt in progress');
     }
@@ -146,74 +147,38 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         password: data.password,
         fcmToken: fcmToken ?? 'not found',
       },
-        {
-          onSuccess: async data => {
-            const auth: AuthData = {
-              userId: data._id,
-              token: data?.refreshToken,
-              user_handle: data?.user_handle,
-            };
-            try {
-              await storeItem(KEYS.USER_ID, auth.userId.toString());
-              await storeItem(KEYS.USER_HANDLE, data?.user_handle);
-              if (auth.token) {
-                await secureStoreItem(
-                  SECURE_KEYS.USER_TOKEN,
-                  auth.token,
-                );
-                await storeItem(
-                  KEYS.USER_TOKEN_EXPIRY_DATE,
-                  new Date().toISOString(),
-                );
-                dispatch(setUserId(auth.userId));
-                dispatch(setUserToken(auth.token));
-                dispatch(setUserHandle(auth.user_handle));
-                dispatch(setGuestMode(false));
-                // Reset so the next session expiry triggers the notification again.
-                resetSessionExpiredNotification();
-                setTimeout(() => {
-                  if (redirectTo) {
-                    (navigation as any).navigate(
-                      redirectTo.name,
-                      redirectTo.params,
-                    );
-
-                    return;
-                  }
-                  navigation.reset({
-                    index: 0,
-                    routes: [{name: 'TabNavigation'}],
-                  });
-                }, 1000);
-              } else {
-                Alert.alert('Token not found');
-              }
-            } catch (e) {
-              if (__DEV__) {
-                console.log('Async Storage ERROR', e);
-              }
-            }
-          },
-
-          onError: (error: AxiosError) => {
-            if (__DEV__) {
-              console.log('Error', error);
-            }
-            setValue('password', '');
-            if (error.response) {
-              const errorCode = error.response.status;
-              switch (errorCode) {
-                case 400:
-                  Alert.alert('Error', 'Please provide email and password');
-                  break;
-                case 401:
-                  Alert.alert('Error', 'Invalid password');
-                  break;
-                case 403:
-                  Alert.alert(
-                    'Error',
-                    'Email not verified. Please check your email.',
+      {
+        onSuccess: async data => {
+          const auth: AuthData = {
+            userId: data._id,
+            token: data?.refreshToken,
+            user_handle: data?.user_handle,
+          };
+          try {
+            await storeItem(KEYS.USER_ID, auth.userId.toString());
+            await storeItem(KEYS.USER_HANDLE, data?.user_handle);
+            if (auth.token) {
+              await secureStoreItem(
+                SECURE_KEYS.USER_TOKEN,
+                auth.token,
+              );
+              await storeItem(
+                KEYS.USER_TOKEN_EXPIRY_DATE,
+                new Date().toISOString(),
+              );
+              dispatch(setUserId(auth.userId));
+              dispatch(setUserToken(auth.token));
+              dispatch(setUserHandle(auth.user_handle));
+              dispatch(setGuestMode(false));
+              // Reset so the next session expiry triggers the notification again.
+              resetSessionExpiredNotification();
+              setTimeout(() => {
+                if (redirectTo) {
+                  (navigation as any).navigate(
+                    redirectTo.name,
+                    redirectTo.params,
                   );
+
                   return;
                 }
                 navigation.reset({
@@ -225,12 +190,45 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               Alert.alert('Token not found');
             }
           } catch (e) {
-            if (__DEV__) console.log('Async Storage ERROR', e);
+            if (__DEV__) {
+              console.log('Async Storage ERROR', e);
+            }
           } finally {
             setIsSubmitting(false);
           }
         },
-      );
+
+        onError: (error: AxiosError) => {
+          setIsSubmitting(false);
+          if (__DEV__) {
+            console.log('Error', error);
+          }
+          setValue('password', '');
+          if (error.response) {
+            const errorCode = error.response.status;
+            switch (errorCode) {
+              case 400:
+                Alert.alert('Error', 'Please provide email and password');
+                break;
+              case 401:
+                Alert.alert('Error', 'Invalid password');
+                break;
+              case 403:
+                Alert.alert(
+                  'Error',
+                  'Email not verified. Please check your email.',
+                );
+                break;
+              default:
+                Alert.alert('Error', 'Internal server error');
+                break;
+            }
+          } else {
+            Alert.alert('Error', 'Network error or server unreachable');
+          }
+        },
+      },
+    );
   };
 
   const handleEmailInputBack = () => {
