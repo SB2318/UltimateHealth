@@ -101,8 +101,7 @@ export default function NewPasswordScreen({
     );
   };
 
-    );
-  };
+
 
   const insets = useSafeAreaInsets();
   if (isPending) {
@@ -241,13 +240,6 @@ export default function NewPasswordScreen({
                   </XStack>
                 )}
               />
-                  <Icon
-                    name={secureTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray700.val}
-                  />
-                </Button>
-              </XStack>
 
               {/* Password Requirements */}
               <XStack gap="$2" alignItems="center" paddingLeft="$2">
@@ -354,13 +346,6 @@ export default function NewPasswordScreen({
                   </XStack>
                 )}
               />
-                  <Icon
-                    name={secureNewTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray600.val}
-                  />
-                </Button>
-              </XStack>
 
               {/* Confirmation Status */}
               {confirmPassword && (
@@ -410,37 +395,15 @@ export default function NewPasswordScreen({
               shadowOffset={{width: 0, height: 4}}
               shadowOpacity={0.25}
               onPress={handleSubmit(handlePasswordSubmit)}>
-              <Text fontSize={17} fontWeight="600" color="white">
-                Reset Password
-              </Text>
+              {isPending ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text fontSize={17} fontWeight="600" color="white">
+                  Reset Password
+                </Text>
+              )}
             </Button>
           </YStack>
-
-          {/* Return Link */}
-          <Button
-            backgroundColor={
-              password && confirmPassword &&
-              password === confirmPassword && passwordVerify
-                ? '$blue10' : '$gray7'
-            }
-            w="100%"
-            h={56}
-            borderRadius={12}
-            disabled={
-              !password || !confirmPassword ||
-              password !== confirmPassword ||
-              !passwordVerify || isSubmitting || isPending
-            }
-            onPress={handlePasswordSubmit}
-            opacity={isSubmitting || isPending ? 0.6 : 1}>
-            {isSubmitting || isPending ? (
-              <ActivityIndicator color="white" />
-            ) : (
-              <Text fontSize={17} fontWeight="600" color="white">
-                Reset Password
-              </Text>
-            )}
-          </Button>
         </Card>
       </YStack>
     </YStack>
