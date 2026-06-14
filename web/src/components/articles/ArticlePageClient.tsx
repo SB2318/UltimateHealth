@@ -57,7 +57,7 @@ export default function ArticlePageClient({
               {/* Skip navigation for keyboard / screen reader users */}
               <a
                 href="#article-body"
-                className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-70 focus:z-80   focus:px-4 focus:py-1 focus:rounded-full focus:shadow-lg focus:text-[#667eea] focus:font-semibold  focus:border-gray-100"
+                className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-[200px] focus:z-80   focus:px-4 focus:py-1 focus:rounded-full focus:shadow-lg focus:text-[#667eea] focus:font-semibold  focus:border-gray-100"
               >
                 Skip to article content
               </a>
