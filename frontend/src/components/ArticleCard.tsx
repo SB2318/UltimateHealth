@@ -420,9 +420,21 @@ const ArticleCard = ({
           <Text style={styles.footerText}>
             {item?.tags.map(tag => tag.name).join(' | ')}
           </Text>
-          <Text style={styles.title}>{item?.title}</Text>
+          <Text
+  style={styles.title}
+  numberOfLines={2}
+  ellipsizeMode="tail"
+>
+  {item?.title}
+</Text>
 
           <View style={styles.metaRow}>
+  metaRow: {
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  marginTop: 6,
+},
   <Text style={styles.footerText1}>{item?.authorName}</Text>
   <Text style={styles.dot}>•</Text>
   <Text style={styles.footerText1}>
@@ -776,9 +788,10 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
 
-  contentContainer: {
-    padding: 14,
-  },
+ contentContainer: {
+  padding: 14,
+  flex: 1,
+},
 
   footerText: {
     fontSize: fp(3.4),
@@ -787,25 +800,26 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
 
-  title: {
-    fontSize: fp(5.8),
-    fontWeight: '700',
-    color: '#121212',
-    lineHeight: 26,
-    marginBottom: 6,
-  },
-
+ title: {
+  fontSize: fp(5.0),
+  fontWeight: '700',
+  color: '#121212',
+  lineHeight: 24,
+  marginBottom: 6,
+},
+  
   footerText1: {
     fontSize: fp(3.5),
     color: '#7A869A',
     marginBottom: 2,
   },
 
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 6,
-  },
+ metaRow: {
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  marginTop: 6,
+},
 
   dot: {
     marginHorizontal: 6,
