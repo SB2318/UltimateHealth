@@ -1,3 +1,4 @@
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { Input, XStack, YStack, Button, Text } from "tamagui";
 import Feather from '@expo/vector-icons/Feather';
@@ -15,7 +16,16 @@ const HomeScreenHeader = ({
   searchText,
 }: HomeScreenHeaderProps) => {
   return (
-    <YStack backgroundColor="#000A60" width="100%" paddingHorizontal="$3" paddingVertical="$3" elevation={1}>
+  <SafeAreaView edges={['top']} style={{ backgroundColor: '#000A60' }}>
+    <YStack
+      backgroundColor="#000A60"
+      width="100%"
+      paddingHorizontal="$3"
+      paddingTop="$2"
+      paddingBottom="$3"
+      elevation={1}
+      zIndex={100}
+    >
       <XStack alignItems="center" justifyContent="space-between" gap="$3">
         
         {/* Left Side Menu Button - Restored! */}
