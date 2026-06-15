@@ -1,10 +1,8 @@
-import {FlatList, StyleSheet, Text, View, Image} from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FlatList, StyleSheet, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import NotificationItem from '../components/NotificationItem';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {Notification, NotificationType} from '../type';
 import Loader from '../components/Loader';
 import Snackbar from 'react-native-snackbar';
@@ -23,9 +21,7 @@ type PendingDelete = {
 
 const UNDO_TIMEOUT_MS = 3500;
 
-// PodcastsScreen component displays the list of podcasts and includes a PodcastPlayer
 const NotificationScreen = ({navigation}: any) => {
-  //const notifications = [];
   const {user_token} = useSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = React.useState(false);
   const [page, setPage] = React.useState(1);
@@ -37,7 +33,6 @@ const NotificationScreen = ({navigation}: any) => {
   const pendingDeletesRef = useRef<Map<string, PendingDelete>>(new Map());
   const isMountedRef = useRef(true);
 
-  const dispatch = useDispatch();
   const {mutate: markNotification} = useMarkNotificationAsRead();
   const {mutate: deleteNotification} = useDeleteNotification();
 
@@ -51,17 +46,13 @@ const NotificationScreen = ({navigation}: any) => {
     if (notificationsRes) {
       if (Number(page) === 1) {
         if (notificationsRes.totalPages) {
-          const totalPage = notificationsRes.totalPages;
-          setTotalPages(totalPage);
+          setTotalPages(notificationsRes.totalPages);
         }
         setNotificationsData(notificationsRes.notifications);
       } else {
         if (notificationsRes.notifications) {
           const oldNotif = notificationsData ?? [];
-          setNotificationsData([
-            ...oldNotif,
-            ...notificationsRes.notifications,
-          ]);
+          setNotificationsData([...oldNotif, ...notificationsRes.notifications]);
         }
       }
     }
@@ -79,7 +70,9 @@ const NotificationScreen = ({navigation}: any) => {
   }, [deleteNotification]);
 
   useEffect(() => {
-    if (isConnected) {
+    const hasUnread = notificationsData.some(n => !n.read);
+
+    if (isConnected && notificationsData.length > 0 && hasUnread) {
       markNotification(
         {},
         {
@@ -89,7 +82,6 @@ const NotificationScreen = ({navigation}: any) => {
               duration: Snackbar.LENGTH_SHORT,
             });
           },
-
           onError: error => {
             console.log(error);
             Snackbar.show({
@@ -102,7 +94,7 @@ const NotificationScreen = ({navigation}: any) => {
     }
 
     return () => {};
-  }, []);
+  }, [notificationsData, isConnected]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -114,15 +106,13 @@ const NotificationScreen = ({navigation}: any) => {
     (snapshot: PendingDelete) => {
       setNotificationsData(previous => {
         const current = previous ?? [];
-
-        if (current.some(notification => notification._id === snapshot.item._id)) {
+        if (current.some(n => n._id === snapshot.item._id)) {
           return current;
         }
-
-        const nextNotifications = [...current];
-        const insertionIndex = Math.min(snapshot.index, nextNotifications.length);
-        nextNotifications.splice(insertionIndex, 0, snapshot.item);
-        return nextNotifications;
+        const next = [...current];
+        const insertionIndex = Math.min(snapshot.index, next.length);
+        next.splice(insertionIndex, 0, snapshot.item);
+        return next;
       });
     },
     [],
@@ -130,7 +120,6 @@ const NotificationScreen = ({navigation}: any) => {
 
   const clearPendingDelete = useCallback((id: string) => {
     const pendingDelete = pendingDeletesRef.current.get(id);
-
     if (pendingDelete) {
       clearTimeout(pendingDelete.timer);
       pendingDeletesRef.current.delete(id);
@@ -142,16 +131,13 @@ const NotificationScreen = ({navigation}: any) => {
       deleteNotification(snapshot.item._id, {
         onSuccess: () => {
           pendingDeletesRef.current.delete(snapshot.item._id);
-
           if (isMountedRef.current) {
             refetch();
           }
         },
-
         onError: error => {
           console.log(error);
           pendingDeletesRef.current.delete(snapshot.item._id);
-
           if (isMountedRef.current) {
             restoreDeletedNotification(snapshot);
             Snackbar.show({
@@ -167,8 +153,6 @@ const NotificationScreen = ({navigation}: any) => {
 
   const handleDeleteAction = useCallback(
     (item: Notification) => {
-      console.log('Notification ID', item?._id);
-
       if (!isConnected) {
         Snackbar.show({
           text: 'Please check your internet connection',
@@ -187,18 +171,12 @@ const NotificationScreen = ({navigation}: any) => {
 
       setNotificationsData(previous => {
         const current = previous ?? [];
-        const index = current.findIndex(notification => notification._id === item._id);
-
+        const index = current.findIndex(n => n._id === item._id);
         if (index === -1) {
           return current;
         }
-
-        snapshot = {
-          item,
-          index,
-        };
-
-        return current.filter(notification => notification._id !== item._id);
+        snapshot = {item, index};
+        return current.filter(n => n._id !== item._id);
       });
 
       if (!snapshot) {
@@ -207,18 +185,13 @@ const NotificationScreen = ({navigation}: any) => {
 
       const timer = setTimeout(() => {
         const pendingDelete = pendingDeletesRef.current.get(item._id);
-
         if (!pendingDelete) {
           return;
         }
-
         commitDeleteNotification(pendingDelete);
       }, UNDO_TIMEOUT_MS);
 
-      pendingDeletesRef.current.set(item._id, {
-        ...snapshot,
-        timer,
-      });
+    pendingDeletesRef.current.set(item._id, {...(snapshot as Omit<PendingDelete, 'timer'>), timer});
 
       Snackbar.show({
         text: 'Notification deleted',
@@ -228,11 +201,9 @@ const NotificationScreen = ({navigation}: any) => {
           textColor: '#ffffff',
           onPress: () => {
             const pendingDelete = pendingDeletesRef.current.get(item._id);
-
             if (!pendingDelete) {
               return;
             }
-
             clearPendingDelete(item._id);
             restoreDeletedNotification(pendingDelete);
             Snackbar.show({
@@ -344,7 +315,6 @@ const NotificationScreen = ({navigation}: any) => {
   }
 
   return (
-    // Main container
     <SafeAreaView style={styles.container}>
       <FlatList
         data={notificationsData}
@@ -359,9 +329,7 @@ const NotificationScreen = ({navigation}: any) => {
         ]}
         refreshing={refreshing}
         onRefresh={onRefresh}
-        ListEmptyComponent={
-          <NoNotificationState onRefresh={onRefresh} />
-        }
+        ListEmptyComponent={<NoNotificationState onRefresh={onRefresh} />}
         onEndReached={() => {
           if (page < totalPages) {
             setPage(prev => prev + 1);
@@ -380,14 +348,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: ON_PRIMARY_COLOR,
     justifyContent: 'center',
-    //marginTop: 16,
   },
   header: {
     backgroundColor: PRIMARY_COLOR,
     paddingHorizontal: 16,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    // paddingBottom: hp(3),
   },
   content: {
     marginTop: hp(3),
@@ -409,7 +375,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-
   flatListContentContainer: {
     paddingHorizontal: 16,
     marginTop: 4,
