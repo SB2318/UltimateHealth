@@ -26,7 +26,8 @@ const ContactTab = ({
   user,
   handleSubmitContactDetails,
 }: ProfileEditContactTab) => {
-  const { control, handleSubmit, reset } = useForm<ContactFormData>({
+  // Destructured isValid and isSubmitting to monitor form state
+  const { control, handleSubmit, reset, formState: { isValid, isSubmitting } } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     mode: 'onChange',
     defaultValues: {
@@ -41,6 +42,7 @@ const ContactTab = ({
       contact_email: user?.contact_detail?.email_id || '',
     });
   }, [user, reset]);
+
   return (
     <View style={styles.container}>
       {/* Content Container */}
@@ -95,9 +97,15 @@ const ContactTab = ({
         </View>
       </View>
 
-      {/* Save Button */}
-      <TouchableOpacity onPress={handleSubmit(handleSubmitContactDetails)} style={styles.btn}>
-        <Text style={styles.btnText}>Save</Text>
+      {/* Save Button with dynamic styling and disabled properties */}
+      <TouchableOpacity 
+        onPress={handleSubmit(handleSubmitContactDetails)} 
+        disabled={!isValid || isSubmitting}
+        style={[styles.btn, (!isValid || isSubmitting) && styles.btnDisabled]}
+      >
+        <Text style={styles.btnText}>
+          {isSubmitting ? 'Saving...' : 'Save'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -148,6 +156,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: PRIMARY_COLOR,
     marginTop: 20,
+  },
+  btnDisabled: {
+    opacity: 0.5, // Fades the button when inputs are incomplete/invalid
   },
   btnText: {
     fontSize: 18,
