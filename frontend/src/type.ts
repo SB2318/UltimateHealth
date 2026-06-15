@@ -684,6 +684,7 @@ export type CategoryType = {
 export type TokenStatus = {
   isValid: boolean;
   message: string;
+  isNetworkError?: boolean;
 };
 
 export type User = {
