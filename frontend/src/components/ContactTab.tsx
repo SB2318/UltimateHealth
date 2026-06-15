@@ -4,6 +4,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -103,9 +104,18 @@ const ContactTab = ({
         disabled={!isValid || isSubmitting}
         style={[styles.btn, (!isValid || isSubmitting) && styles.btnDisabled]}
       >
-        <Text style={styles.btnText}>
-          {isSubmitting ? 'Saving...' : 'Save'}
-        </Text>
+        <View style={styles.btnContent}>
+          {isSubmitting && (
+            <ActivityIndicator 
+              size="small" 
+              color="white" 
+              style={styles.spinner} 
+            />
+          )}
+          <Text style={styles.btnText}>
+            {isSubmitting ? 'Saving...' : 'Save'}
+          </Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
@@ -157,13 +167,23 @@ const styles = StyleSheet.create({
     backgroundColor: PRIMARY_COLOR,
     marginTop: 20,
   },
-  btnDisabled: {
-    opacity: 0.5, // Fades the button when inputs are incomplete/invalid
+  btnContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
   },
   btnText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+  },
+  btnDisabled: {
+    opacity: 0.5,
+    backgroundColor: '#9CA3AF',
+  },
+  spinner: {
+    marginRight: 4,
   },
   errorText: {
     color: 'red',
