@@ -595,9 +595,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       if (
         article &&
         !readEventSave &&
+        !readEventFiredRef.current &&
         !isGuest &&
         article.status === StatusEnum.PUBLISHED
       ) {
+        readEventFiredRef.current = true;
         updateReadEvent(undefined, {
           onSuccess: () => {
             setReadEventSave(true);
@@ -607,6 +609,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             });
           },
           onError: err => {
+            readEventFiredRef.current = false;
             console.log('Update Read Status mutation error', err);
             Snackbar.show({
               text: 'Failed to update your read status.',
