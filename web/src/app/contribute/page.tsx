@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { withBasePath } from "@/lib/basePath";
 import { motion, useInView, AnimatePresence, type Variants } from "framer-motion";
 import {
   Code2,
@@ -1526,7 +1527,7 @@ const navLinks = [
   { href: "/#screenshots", label: "Screenshots", icon: "fa-image" },
   { href: "/#programs", label: "Community Programs", icon: "fa-code-branch" },
   { href: "https://uhsocial.in/docs", label: "Read Articles", icon: "fa-file-lines", external: true },
-  { href: "/#downloads", label: "Login / Register", icon: "fa-user" },
+  { href: "/login", label: "Login / Register", icon: "fa-user" },
 ];
 
   return (
@@ -1695,7 +1696,7 @@ const navLinks = [
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
+                href={withBasePath(link.href)}
                 target={"external" in link && link.external ? "_blank" : undefined}
                 rel={"external" in link && link.external ? "noreferrer" : undefined}
                 onClick={() => setNavOpen(false)}

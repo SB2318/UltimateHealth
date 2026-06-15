@@ -508,7 +508,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
     <>
 
       {/* ── Header ── */}
-      <header className={`header${scrolled ? " scrolled" : ""}bg-white dark:bg-slate-900 transition-colors duration-300 h-[80px]`} id="header">
+      <header className={`header ${scrolled ? "scrolled " : ""}bg-white dark:bg-slate-900 transition-colors duration-300 h-[80px]`} id="header">
         <PageWrapper as="div" className="nav">
           <Link href={withBasePath("/")} className="logo">
             <div className="logo-icon">
@@ -572,10 +572,10 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
             </li>
             <ModeToggle/>
             <li>
-              <a href="#downloads" className="nav-btn-sm">
+              <Link href={withBasePath("/login")} className="nav-btn-sm">
                 <i className="fas fa-user" aria-hidden="true"></i>
                 <span>Login / Register</span>
-              </a>
+              </Link>
             </li>
           </ul>
 
@@ -591,7 +591,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
           <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
           <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
-          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+          <Link href={withBasePath("/login")} onClick={() => setMobileMenuOpen(false)}>Login / Register</Link>
         </nav>
       </header>
 
