@@ -7,16 +7,17 @@ import PodcastEmptyComponent from '../components/PodcastEmptyComponent';
 import {hp} from '../helper/Metric';
 import {ON_PRIMARY_COLOR} from '../helper/Theme';
 import Snackbar from 'react-native-snackbar';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import CreatePlaylist from '../components/CreatePlaylist';
 import { setaddedPodcastId, setRemovePlaylistId } from '../store/dataSlice';
-import { NoOfflinePodcastsState } from '../components/EmptyStates';
+import { NoOfflinePodcastsState } from '../components/EmptyStates';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 export default function OfflinePodcastList({
   navigation,
 }: OfflinePodcastListProp) {
   const [podcasts, setPodcasts] = useState<PodcastData[]>([]);
-  const {user_id} = useSelector((state: any) => state.user);
+  const {user_id} = useAppSelector((state => state.user);
   const [playlistModalOpen, setPlaylistModalOpen] = useState<boolean>(false);
   //const [playlistIds, setPlaylistIds] = useState<string[]>([]);
   const dispatch = useDispatch();

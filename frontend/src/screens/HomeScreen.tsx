@@ -26,7 +26,7 @@ import HomeScreenHeader from '../components/HomeScreenHeader';
 import {ArticleData, Category, HomeScreenProps} from '../type';
 import FilterModal from '../components/FilterModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import Loader from '../components/Loader';
 import {usePreferences} from '../contexts/PreferencesContext';
 
@@ -47,7 +47,8 @@ import {useGetCategories} from '../hooks/useGetArticleTags';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../hooks/useGetUnreadNotificationCount';
-import {useGetPaginatedArticle} from '../hooks/useGetPaginatedArticles';
+import {useGetPaginatedArticle} from '../hooks/useGetPaginatedArticles';import { useAppSelector } from '../hooks/reduxHooks';
+
 import {
   OfflineArticleState,
   NoArticleState,
@@ -103,7 +104,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [sortingType, setSortingType] = useState<string>('');
   const [searchText, setSearchText] = useState('');
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state => state.network);
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   // const [repostItem, setRepostItem] = useState<ArticleData | null>(null);
   const [selectCategoryList, setSelectCategoryList] = useState<Category[]>([]);
@@ -131,10 +132,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     searchMode,
     selectedTags,
     sortType,
-  } = useSelector((state: any) => state.data);
+  } = useAppSelector((state => state.data);
 
-  const {user_token, isGuest} = useSelector(
-    (state: any) => state.user,
+  const {user_token, isGuest} = useAppSelector((state => state.user,
   );
 
   const [refreshing, setRefreshing] = useState(false);

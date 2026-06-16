@@ -12,7 +12,7 @@ import ActivityOverview from '../components/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
 import { useTheme } from 'tamagui';
-import {useSelector} from 'react-redux';
+
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileHeader from '../components/ProfileHeader';
 import {ArticleData, UserProfileScreenProp} from '../type';
@@ -26,17 +26,17 @@ import {useUpdateFollowStatus} from '../hooks/useUpdateFollowStatus';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
 import { useGetAuthorProfile } from '../hooks/useGetAuthorProfile';
 import {useGetTotalLikeViewStatus} from '../hooks/useGetTotalLikeViewStatus';
-import { NoArticleState } from '../components/EmptyStates';
+import { NoArticleState } from '../components/EmptyStates';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
   const {authorId, userId, author_handle} = (route.params || {}) as any;
   const {userId: routeUserId, userHandle: routeUserHandle} = (route.params || {}) as any; 
-  const {user_id, user_handle} = useSelector(
-    (state: any) => state.user,
+  const {user_id, user_handle} = useAppSelector((state => state.user,
   );
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state => state.network);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const [articleId, setArticleId] = useState<number>();

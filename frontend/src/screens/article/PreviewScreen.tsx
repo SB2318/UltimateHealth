@@ -17,7 +17,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 import Loader from '../../components/Loader';
 import {GET_IMAGE} from '../../helper/APIUtils';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import useUploadImage from '../../hooks/useUploadImage';
 import {setSuggestion} from '../../store/dataSlice';
 import Snackbar from 'react-native-snackbar';
@@ -28,7 +28,8 @@ import {useSubmitImprovement} from '@/src/hooks/useSubmitImprovement';
 import {useSubmitSuggestedChanges} from '@/src/hooks/useSubmitSuggestedChanges';
 import {useUploadArticleToPocketbase} from '@/src/hooks/useUploadArticlePocketbase';
 import {useUploadImprovementToPocketbase} from '@/src/hooks/useUploadImprovementToPocketbase';
-import {useRenderSuggestion} from '@/src/hooks/useRenderSuggestion';
+import {useRenderSuggestion} from '@/src/hooks/useRenderSuggestion';import { useAppSelector } from '../../hooks/reduxHooks';
+
 
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {
@@ -48,12 +49,11 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const [imageUtil, setImageUtil] = useState<string>('');
   const [imageUtils, setImageUtils] = useState<string[]>([]);
 
-  const {user_token, user_id} = useSelector((state: any) => state.user);
-  const {suggestion, suggestionAccepted} = useSelector(
-    (state: any) => state.data,
+  const {user_token, user_id} = useAppSelector((state => state.user);
+  const {suggestion, suggestionAccepted} = useAppSelector((state => state.data,
   );
 
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state => state.network);
   const dispatch = useDispatch();
 
   const {mutate: postMutation, isPending: postMutationPending} =

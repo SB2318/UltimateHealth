@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {useCallback, useRef, useState} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {setPodcasts} from '../store/dataSlice';
@@ -18,7 +18,8 @@ import {
 import {Feather, FontAwesome, MaterialCommunityIcons} from '@expo/vector-icons';
 import {ON_PRIMARY_COLOR} from '../helper/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useFilterPodcasts} from '../hooks/useFilterPodcasts';
+import {useFilterPodcasts} from '../hooks/useFilterPodcasts';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 interface Props {
   onClick: () => void;
@@ -32,9 +33,9 @@ const HeaderRightMenu = ({onClick}: Props) => {
     [],
   );
 
-  const {categories} = useSelector((state: any) => state.data);
-  const {user_token, isGuest} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {categories} = useAppSelector((state => state.data);
+  const {user_token, isGuest} = useAppSelector((state => state.user);
+  const {isConnected} = useAppSelector((state => state.network);
   const dispatch = useDispatch();
 
   const {mutate: filterPodcast, isPending: filterPodcastPending} =

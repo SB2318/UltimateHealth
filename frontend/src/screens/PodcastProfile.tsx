@@ -13,7 +13,7 @@ import {
 import {PodcastProfileProp, PodcastData, PlayList} from '../type';
 import {MaterialCommunityIcons, Feather, Ionicons} from '@expo/vector-icons';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {useSelector} from 'react-redux';
+
 import {useFocusEffect} from '@react-navigation/native';
 import {useGetPlaylists} from '../hooks/useGetPlaylists';
 import {useGetUserPublishedPodcasts} from '../hooks/useGetUserPublishedPodcasts';
@@ -24,7 +24,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {NoPodcastState} from '../components/EmptyStates';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {downloadAudio, msToTime} from '../helper/Utils';
-import Snackbar from 'react-native-snackbar';
+import Snackbar from 'react-native-snackbar';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 const {width} = Dimensions.get('window');
 
@@ -34,10 +35,9 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
     'podcasts',
   );
   const [refreshing, setRefreshing] = useState(false);
-  const {user_name, Profile_image, user_handle} = useSelector(
-    (state: any) => state.user,
+  const {user_name, Profile_image, user_handle} = useAppSelector((state => state.user,
   );
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state => state.network);
 
   const [publishedPage, setPublishedPage] = useState(1);
   const [totalPublishPages, setTotalPublishPages] = useState(0);

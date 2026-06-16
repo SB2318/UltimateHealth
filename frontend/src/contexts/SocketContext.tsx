@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
 
-import { useSelector } from 'react-redux';
+
 import { Socket } from 'socket.io-client';
-import { initializeSocket, disconnectSocket } from '../helper/socket';
+import { initializeSocket, disconnectSocket } from '../helper/socket';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 
 interface SocketContextType {
@@ -21,7 +22,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
     const [isConnected, setIsConnected] = useState(false);
 
     // Get token and user info from Redux
-    const { user_token, user_id } = useSelector((state: any) => state.user);
+    const { user_token, user_id } = useAppSelector((state => state.user);
 
     // Track the token that this provider instance initialized with.
     // This lets us disconnect safely on unmount/auth removal without thrashing the singleton.

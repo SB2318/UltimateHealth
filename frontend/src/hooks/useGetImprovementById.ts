@@ -2,12 +2,13 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {EditRequest} from '../type';
 import axios, {AxiosError} from 'axios';
 import {GET_IMPROVEMENT_BY_ID} from '../helper/APIUtils';
-import {useSelector} from 'react-redux';
+import { useAppSelector } from './reduxHooks';
+
 
 export const useGetImprovementById = (
   requestId: string,
 ): UseQueryResult<EditRequest, AxiosError> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-improvement-by-id', requestId],

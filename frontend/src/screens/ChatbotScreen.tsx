@@ -7,7 +7,7 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {
   Alert,
   View,
@@ -26,7 +26,8 @@ import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useSendMessageToGemini} from '../hooks/useSendMessageToGemini';
 import {useLoadAIConversations} from '../hooks/useLoadAIChats';
-import Snackbar from 'react-native-snackbar';
+import Snackbar from 'react-native-snackbar';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 // interface ChatbotResponse {
 //   id: string;
@@ -49,8 +50,8 @@ import Snackbar from 'react-native-snackbar';
 // }
 
 const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
-  const {user_id, user_token} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_id, user_token} = useAppSelector((state => state.user);
+  const {isConnected} = useAppSelector((state => state.network);
 
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(true);

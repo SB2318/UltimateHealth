@@ -13,7 +13,7 @@ import {fp} from '../helper/Metric';
 import {ArticleCardProps, ArticleData} from '../type';
 import { formatDateShort } from '../helper/dateUtils';
 import { getReadTime } from '../utils/readTime';
-import {useSelector} from 'react-redux';
+
 import AntDesign from '@expo/vector-icons/AntDesign';
 import IonIcons from '@expo/vector-icons/Ionicons';
 import {GET_IMAGE} from '../helper/APIUtils';
@@ -39,7 +39,8 @@ import {useGetProfile} from '../hooks/useGetProfile';
 import {useLikeArticle} from '../hooks/useLikeArticle';
 import {useSaveArticle} from '../hooks/useSaveArticle';
 import {useLazyGetArticleContent} from '../hooks/useLazyGetArticleContent';
-import {useRepostArticle} from '../hooks/useArticleRepost';
+import {useRepostArticle} from '../hooks/useArticleRepost';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 const ArticleCard = ({
   item,
@@ -49,8 +50,8 @@ const ArticleCard = ({
   handleEditRequestAction,
   source,
 }: ArticleCardProps) => {
-  const {user_id, user_handle, isGuest} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_id, user_handle, isGuest} = useAppSelector((state => state.user);
+  const {isConnected} = useAppSelector((state => state.network);
 
   const socket = useSocket();
   const width = useSharedValue(0);

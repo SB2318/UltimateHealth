@@ -11,7 +11,7 @@ import {
   Modal,
   FlatList,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {PodcastFormProp, Category} from '../type';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../helper/Theme';
@@ -24,7 +24,8 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import {hp} from '../helper/Metric';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
-import { ttsLanguageList } from '../helper/Utils';
+import { ttsLanguageList } from '../helper/Utils';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 
 const PodcastForm = ({navigation, route}: PodcastFormProp) => {
@@ -33,7 +34,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
   const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
   const [language, setLanguage] = useState('en');
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
-  const {categories} = useSelector((state: any) => state.data);
+  const {categories} = useAppSelector((state => state.data);
   const [imageUtils, setImageUtils] = useState('');
   const dispatch = useDispatch();
 

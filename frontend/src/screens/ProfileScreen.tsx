@@ -4,7 +4,7 @@ import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
 import ArticleCard from '../components/ArticleCard';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import { useTheme } from 'tamagui';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -16,14 +16,15 @@ import Snackbar from 'react-native-snackbar';
 import {setUserHandle} from '../store/UserSlice';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
-import { NoArticleState } from '../components/EmptyStates';
+import { NoArticleState } from '../components/EmptyStates';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
-  const {user_id} = useSelector((state: any) => state.user);
+  const {user_id} = useAppSelector((state => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state => state.network);
   const [articleId, setArticleId] = useState<number>();
   const [authorId, setAuthorId] = useState<string>('');
   const [recordId, setRecordId] = useState<string>('');

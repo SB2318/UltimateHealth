@@ -13,7 +13,7 @@ import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ReviewScreenProp, Comment} from '../../type';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {hp, wp} from '../../helper/Metric';
 import {
   GET_IMAGE,
@@ -30,13 +30,14 @@ import {useGetArticleDetails} from '@/src/hooks/useGetArticleDetail';
 import {useGetArticleContent} from '@/src/hooks/useGetArticleContent';
 import {useGetProfile} from '@/src/hooks/useGetProfile';
 import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';
-import {useSocket} from '../../contexts/SocketContext';
+import {useSocket} from '../../contexts/SocketContext';import { useAppSelector } from '../../hooks/reduxHooks';
+
 
 const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   const insets = useSafeAreaInsets();
   const {articleId, authorId, recordId} = route.params;
-  const {user_token} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.isConnected);
+  const {user_token} = useAppSelector((state => state.user);
+  const {isConnected} = useAppSelector((state => state.isConnected);
 
   const [feedback, setFeedback] = useState<string>('');
   const [loading, setLoading] = useState(false);

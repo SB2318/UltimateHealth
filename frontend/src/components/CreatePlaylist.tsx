@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+
 import {PRIMARY_COLOR} from '../helper/Theme';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -19,7 +19,8 @@ import NoInternet from './NoInternet';
 import {useGetPlaylists} from '../hooks/useGetPlaylists';
 import {useUpdatePodcastPlaylist} from '../hooks/useUpdatePodcastPlaylist';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from './LoadingSpinner';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 interface Props {
   //podcast_ids: string[];
@@ -27,11 +28,11 @@ interface Props {
   dismiss: () => void;
 }
 export default function CreatePlaylist({visible, dismiss}: Props) {
-  const {user_token} = useSelector((state: any) => state.user);
+  const {user_token} = useAppSelector((state => state.user);
   // const [selectedPlaylistId, setSelectedPlaylistId] = useState<string>('');
   const [inputValue, setInputValue] = useState<string>('');
-  const {addedPodcastId} = useSelector((state: any) => state.data);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {addedPodcastId} = useAppSelector((state => state.data);
+  const {isConnected} = useAppSelector((state => state.network);
   const [addedPlaylistIds, setAddedPlaylistIds] = useState<string[]>([]);
   const [removePlaylistIds, setRemovePlaylistIds] = useState<string[]>([]);
 

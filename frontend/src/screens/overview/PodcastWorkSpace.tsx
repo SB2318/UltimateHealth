@@ -7,7 +7,7 @@ import {
   FlatList,
 } from 'react-native';
 import {PodcastData} from '../../type';
-import {useSelector} from 'react-redux';
+
 import PodcastReviewCard from '../../components/PodcastReviewCard';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
@@ -15,14 +15,15 @@ import Loader from '../../components/Loader';
 import {useGetPendingPodcasts} from '@/src/hooks/useGetPendingPodcasts';
 import {useGetDiscardedPodcasts} from '@/src/hooks/useGetDiscardedPodcast';
 import {useGetUserPublishedPodcasts} from '@/src/hooks/useGetUserPublishedPodcasts';
-import {NoPodcastState} from '../../components/EmptyStates';
+import {NoPodcastState} from '../../components/EmptyStates';import { useAppSelector } from '../../hooks/reduxHooks';
+
 
 export default function PodcastWorkSpace({
   handleClickAction,
 }: {
   handleClickAction: (item: PodcastData) => void;
 }) {
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state => state.network);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [publishedPage, setPublishedPage] = useState(1);
   const [totalPublishPages, setTotalPublishPages] = useState(0);

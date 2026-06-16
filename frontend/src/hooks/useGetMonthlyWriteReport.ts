@@ -2,7 +2,8 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 import {MonthStatus} from '../type';
 import {GET_MONTHLY_WRITES_REPORT} from '../helper/APIUtils';
-import {useSelector} from 'react-redux';
+import { useAppSelector } from './reduxHooks';
+
 
 export const useGetAuthorMonthlyWriteReport = ({
   user_id,
@@ -17,7 +18,7 @@ export const useGetAuthorMonthlyWriteReport = ({
   others?: boolean;
   isConnected?: boolean;
 }): UseQueryResult<MonthStatus[]> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state => state.user.isGuest);
 
   return useQuery<MonthStatus[]>({
     queryKey: ['get-user-monthly-write-report', user_id, userId, others],

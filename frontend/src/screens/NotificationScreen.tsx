@@ -2,12 +2,12 @@ import {AppState, FlatList, StyleSheet, Text, View, Image} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import NotificationItem from '../components/NotificationItem';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {Notification, NotificationType} from '../type';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Loader from '../components/Loader';
 import Snackbar from 'react-native-snackbar';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { NoNotificationState } from '../components/EmptyStates';
 import Loader from '../components/Loader';
 import NotificationItem from '../components/NotificationItem';
@@ -16,7 +16,8 @@ import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '../helper/Theme';
 import { useDeleteNotification } from '../hooks/useDeleteNotification';
 import { useGetAllNotifications } from '../hooks/useGetAllNotifications';
 import { useMarkNotificationAsRead } from '../hooks/useMarkNoticationAsRead';
-import { Notification, NotificationType } from '../type';
+import { Notification, NotificationType } from '../type';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 type PendingDelete = {
   item: Notification;
@@ -29,11 +30,11 @@ const UNDO_TIMEOUT_MS = 3500;
 // PodcastsScreen component displays the list of podcasts and includes a PodcastPlayer
 const NotificationScreen = ({navigation}: any) => {
   //const notifications = [];
-  const {user_token} = useSelector((state: any) => state.user);
+  const {user_token} = useAppSelector((state => state.user);
   const [refreshing, setRefreshing] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(0);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state => state.network);
   const [notificationsData, setNotificationsData] = React.useState<
     Notification[]
   >([]);

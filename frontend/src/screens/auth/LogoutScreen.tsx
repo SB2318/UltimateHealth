@@ -11,19 +11,20 @@ import {PRIMARY_COLOR} from '../../helper/Theme';
 import {GET_STORAGE_DATA, USER_LOGOUT} from '../../helper/APIUtils';
 import axios, {AxiosError} from 'axios';
 import {resetUserState} from '../../store/UserSlice';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {clearStorage} from '../../helper/Utils';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';
 import {useUserLogout} from '@/src/hooks/useUserLogout';
-import {useTheme} from 'tamagui';
+import {useTheme} from 'tamagui';import { useAppSelector } from '../../hooks/reduxHooks';
+
 
 const DEFAULT_PROFILE_IMAGE =
   'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
 
 const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
   const {profile_image, username} = route.params;
- // const {user_token} = useSelector((state: any) => state.user);
+ // const {user_token} = useAppSelector((state => state.user);
   const dispatch = useDispatch();
   const theme = useTheme();
   const {mutate: logout} = useUserLogout();  

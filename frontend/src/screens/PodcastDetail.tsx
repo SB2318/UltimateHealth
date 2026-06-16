@@ -19,7 +19,7 @@ import {useAudioPlayer} from 'expo-audio';
 // GET_IMAGE is defined as `${PROD_URL}/getfile` (resolves to absolute URL: https://uhsocial.in/api/getfile).
 // This absolute, securely-configured endpoint ensures that relative resource paths cannot access local device files via traversal.
 import {GET_IMAGE} from '../helper/APIUtils';
-import {useSelector} from 'react-redux';
+
 
 import {downloadAudio, formatCount, StatusEnum} from '../helper/Utils';
 import Snackbar from 'react-native-snackbar';
@@ -35,7 +35,8 @@ import LottieView from 'lottie-react-native';
 import AudioWaveform from '../components/AudioWaveform';
 import {useGetSinglePodcastDetails} from '../hooks/useGetSinglePodcastDetails';
 import {useLikePodcast} from '../hooks/useLikePodcast';
-import {getPlaybackPosition, savePlaybackPosition} from '../helper/PlaybackManager';
+import {getPlaybackPosition, savePlaybackPosition} from '../helper/PlaybackManager';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 const isAllowedUrl = (urlStr?: string | null): boolean => {
   if (!urlStr) return false;
@@ -72,10 +73,9 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const socket = useSocket();
-  const {user_token, user_id, user_handle, isGuest} = useSelector(
-    (state: any) => state.user,
+  const {user_token, user_id, user_handle, isGuest} = useAppSelector((state => state.user,
   );
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state => state.network);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);

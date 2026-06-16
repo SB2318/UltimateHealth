@@ -2,7 +2,8 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {Notification} from '../type';
 import axios, {AxiosError} from 'axios';
 import {PROD_URL} from '../helper/APIUtils';
-import {useSelector} from 'react-redux';
+import { useAppSelector } from './reduxHooks';
+
 
 type NotificationRes = {
   totalPages: number;
@@ -12,7 +13,7 @@ export const useGetAllNotifications = (
   page: number,
   isConnected: boolean,
 ): UseQueryResult<NotificationRes | null, AxiosError> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-all-notifications', page],

@@ -11,7 +11,7 @@ import {
 import {PodcastDiscussionProp, User, Comment} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 //import io from 'socket.io-client';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import Loader from '../components/Loader';
 import CommentItem from '../components/CommentItem';
 import {useSocket} from '../contexts/SocketContext';
@@ -39,7 +39,8 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {wp} from '../helper/Metric';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
-import { useGetSinglePodcastDetails } from '../hooks/useGetSinglePodcastDetails';
+import { useGetSinglePodcastDetails } from '../hooks/useGetSinglePodcastDetails';import { useAppSelector } from '../hooks/reduxHooks';
+
 
 const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const socket = useSocket();
@@ -52,7 +53,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const flatListRef = useRef<FlatList<Comment>>(null);
-  const {user_id, user_token} = useSelector((state: any) => state.user);
+  const {user_id, user_token} = useAppSelector((state => state.user);
   const [selectedCommentId, setSelectedCommentId] = useState<string>('');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [editCommentId, setEditCommentId] = useState<string | null>(null);

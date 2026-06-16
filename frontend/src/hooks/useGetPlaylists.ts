@@ -2,10 +2,11 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {PlayList} from '../type';
 import {GET_PLAYLIST} from '../helper/APIUtils';
 import axios, {AxiosError} from 'axios';
-import {useSelector} from 'react-redux';
+import { useAppSelector } from './reduxHooks';
+
 
 export const useGetPlaylists = (): UseQueryResult<PlayList[], AxiosError> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-my-playlists'],

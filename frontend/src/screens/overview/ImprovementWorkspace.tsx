@@ -9,14 +9,15 @@ import {
 } from 'react-native';
 import { useTheme } from 'tamagui';
 import {EditRequest} from '../../type';
-import {useSelector} from 'react-redux';
+
 import Loader from '../../components/Loader';
 import ImprovementCard from '../../components/ImprovementCard';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
 import {useGetAllImprovementsForReview} from '@/src/hooks/useGetUserAllImprovements';
 import {ProfessionalColors} from '../../styles/GlassStyles';
-import {NoArticleState} from '../../components/EmptyStates';
+import {NoArticleState} from '../../components/EmptyStates';import { useAppSelector } from '../../hooks/reduxHooks';
+
 
 export default function ImprovementWorkspace({
   handleImprovementClick,
@@ -25,7 +26,7 @@ export default function ImprovementWorkspace({
 }) {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
-  const {user_token} = useSelector((state: any) => state.user);
+  const {user_token} = useAppSelector((state => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const [page, setPage] = useState(1);
