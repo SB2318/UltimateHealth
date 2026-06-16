@@ -1,4 +1,4 @@
-import React, {useState, useMemo,useRef} from 'react';
+import React, {useState, useMemo, useRef} from 'react';
 import {Linking, FlatList} from 'react-native';
 import {
   YStack,
@@ -14,7 +14,6 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';
 
-
 const CONTRIBUTORS = [
   {
     id: 1,
@@ -29,7 +28,6 @@ const CONTRIBUTORS = [
     handle: '@suhanipaliwal',
     img: 'https://avatars.githubusercontent.com/u/161575955?v=4',
     url: 'https://github.com/suhanipaliwal',
-  
   },
   {
     id: 3,
@@ -37,7 +35,6 @@ const CONTRIBUTORS = [
     handle: '@BHS-Harish',
     img: 'https://avatars.githubusercontent.com/u/114602603?v=4',
     url: 'https://github.com/BHS-Harish',
- 
   },
   {
     id: 4,
@@ -45,7 +42,6 @@ const CONTRIBUTORS = [
     handle: '@SharmaNishchay',
     img: 'https://avatars.githubusercontent.com/u/146124877?v=4',
     url: 'https://github.com/SharmaNishchay',
-   
   },
   {
     id: 5,
@@ -331,8 +327,8 @@ const CONTRIBUTORS = [
 
 const ContributorPage = () => {
   const [search, setSearch] = useState('');
-const [showScrollTop, setShowScrollTop] = useState(false); // NEW: Tracks button visibility
-const flatListRef = useRef<FlatList>(null);                // NEW: Creates a reference link to the list layout
+  const [showScrollTop, setShowScrollTop] = useState(false); // NEW: Tracks button visibility
+  const flatListRef = useRef<FlatList>(null); // NEW: Creates a reference link to the list layout
   const openLink = (url: string) => {
     Linking.openURL(url);
   };
@@ -358,7 +354,7 @@ const flatListRef = useRef<FlatList>(null);                // NEW: Creates a ref
   };
 
   const scrollToTop = () => {
-    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+    flatListRef.current?.scrollToOffset({offset: 0, animated: true});
   };
 
   const renderItem = ({item}: {item: any}) => (
@@ -466,9 +462,9 @@ const flatListRef = useRef<FlatList>(null);                // NEW: Creates a ref
 
         {/* LIST */}
         <FlatList
-        ref={flatListRef}         // <-- ADDED THIS
-          onScroll={handleScroll}   // <-- ADDED THIS
-          scrollEventThrottle={16}  // <-- ADDED THIS
+          ref={flatListRef} // <-- ADDED THIS
+          onScroll={handleScroll} // <-- ADDED THIS
+          scrollEventThrottle={16} // <-- ADDED THIS
           data={filteredContributors}
           keyExtractor={item => item.id.toString()}
           renderItem={renderItem}
@@ -483,6 +479,31 @@ const flatListRef = useRef<FlatList>(null);                // NEW: Creates a ref
             </YStack>
           }
         />
+        {/* FLOATING ACTION BUTTON FOR SCROLL TO TOP */}
+        {showScrollTop && (
+          <Button
+            position="absolute"
+            bottom={24}
+            right={24}
+            width={52}
+            height={52}
+            borderRadius={26}
+            backgroundColor="#1A91FF"
+            hoverStyle={{backgroundColor: '#107ACC'}}
+            pressStyle={{scale: 0.95, opacity: 0.9}}
+            elevation="$4"
+            shadowColor="rgba(0,0,0,0.3)"
+            onPress={scrollToTop}
+            padding={0}
+            alignItems="center"
+            justifyContent="center">
+            <MaterialCommunityIcons
+              name="chevron-double-up"
+              size={26}
+              color="white"
+            />
+          </Button>
+        )}
       </SafeAreaView>
     </Theme>
   );
