@@ -86,7 +86,7 @@ export const Navbar = () => {
           <ul className="nav-links text-black dark:text-white">
             <li>
               <a
-                href="/#feature"
+                href="#feature"
                 className={`nav-link-item${activeSection === 'features' ? ' active' : ''}`}
                 aria-current={
                   activeSection === 'features' ? 'location' : undefined
@@ -98,7 +98,7 @@ export const Navbar = () => {
             </li>
             <li>
               <a
-                href="/#screenshots"
+                href="#screenshots"
                 className={`nav-link-item${activeSection === 'screenshots' ? ' active' : ''}`}
                 aria-current={
                   activeSection === 'screenshots' ? 'location' : undefined
@@ -113,7 +113,7 @@ export const Navbar = () => {
             </li>
             <li>
               <a
-                href="/#programs"
+                href="#programs"
                 className={`nav-link-item${activeSection === 'programs' ? ' active' : ''}`}
                 aria-current={
                   activeSection === 'programs' ? 'location' : undefined
@@ -158,7 +158,7 @@ export const Navbar = () => {
             </li>
             <ModeToggle />
             <li>
-              <a href="/#downloads" className="nav-btn-sm">
+              <a href="#downloads" className="nav-btn-sm">
                 <i className="fas fa-user" aria-hidden="true"></i>
                 <span>Login / Register</span>
               </a>
