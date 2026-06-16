@@ -24,6 +24,7 @@ import Snackbar from 'react-native-snackbar';
 import ResearchSummaryCard from '../../components/ResearchSummaryCard';
 import StructuredPodcastCard from '../../components/StructuredPodcastCard';
 import { generateArticleSummary, ArticleSummary } from '../../services/SummaryService';
+import {recordArticleView} from '../../services/ReadingHistoryService';
 
 import {
   formatCount,
@@ -159,6 +160,17 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     setFontScale(nextValue);
     debouncedPersistFontScale(nextValue);
   };
+
+  useEffect(() => {
+    if (!article) return;
+    recordArticleView({
+      articleId: String(article._id),
+      title: article.title ?? '',
+      authorName: article.authorName ?? '',
+      category: article.tags?.[0]?.name ?? '',
+      coverImage: article.imageUtils?.[0] ?? '',
+    });
+  }, [article]);
 
   useEffect(() => {
     if (!isGuest) {
