@@ -6,7 +6,7 @@ export const useSendOtpMutation = ():UseMutationResult<
   void,
   AxiosError,
   {email: string}
-> =>{
+> => {
     return useMutation({
     mutationKey: ['forgot-password-otp'],
     mutationFn: async ({email}: {email: string}) => {

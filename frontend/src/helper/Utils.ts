@@ -356,6 +356,8 @@ export const requestStoragePermissions = async () => {
   }
 };
 
+export const requestReadStoragePermissions = requestStoragePermissions;
+
 /** Download podcast */
 
 export const downloadAudio = async (_podcast: PodcastData) => {

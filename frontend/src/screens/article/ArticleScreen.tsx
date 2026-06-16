@@ -10,7 +10,7 @@ import {
   Share,
   useColorScheme,
 } from 'react-native';
-import ArticleShareModal from '../components/ArticleShareModal';
+import ArticleShareModal from '../../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
