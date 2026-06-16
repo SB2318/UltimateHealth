@@ -110,37 +110,22 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
                 </Text>
               </View>
               {/* Open Source Health Platform badge */}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                  borderRadius: 20,
-                  borderWidth: 1,
-                  borderColor: 'rgba(255, 255, 255, 0.3)',
-                  paddingVertical: 6,
-                  paddingHorizontal: 12,
-                  marginTop: 8,
-                }}>
-                <View
-                  style={{
-                    width: 7,
-                    height: 7,
-                    borderRadius: 4,
-                    backgroundColor: '#4ade80',
-                    marginRight: 7,
-                  }}
+              <XStack
+                style={[GlassStyles.glassBadge, { marginTop: Spacing.sm }]}
+                alignItems="center">
+                <Circle
+                  size={7}
+                  backgroundColor={ProfessionalColors.success}
+                  marginRight="$2"
                 />
                 <Text
-                  style={{
-                    color: isDarkMode ? '#e2e8f0' : '#1e293b',
-                    fontSize: 11,
-                    fontWeight: '700',
-                    letterSpacing: 1,
-                  }}>
+                  color={isDarkMode ? ProfessionalColors.gray200 : ProfessionalColors.gray800}
+                  fontSize={11}
+                  fontWeight="700"
+                  letterSpacing={1}>
                   OPEN SOURCE HEALTH PLATFORM
                 </Text>
-              </View>
+              </XStack>
             </YStack>
 
             <GlassContainer variant="card" style={{ marginTop: Spacing.md }}>
