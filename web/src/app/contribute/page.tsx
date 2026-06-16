@@ -30,6 +30,7 @@ import {
   ArrowRight,
   Mail,
 } from "lucide-react";
+import { Footer } from "@/components/ui/footer";
 
 
 // =============================================================================
@@ -1716,6 +1717,7 @@ const navLinks = [
         <CommunitySection />
         <FAQSection />
         <FinalCTASection />
+        <Footer />
       </main>
     </>
   );
