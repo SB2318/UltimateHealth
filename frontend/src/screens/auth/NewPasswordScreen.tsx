@@ -446,15 +446,3 @@ export default function NewPasswordScreen({
     </YStack>
   );
 }
-function setErrorMessage(arg0: null) {
-  throw new Error('Function not implemented.');
-}
-
-function setPassword(pass: string) {
-  throw new Error('Function not implemented.');
-}
-
-function setPasswordVerify(arg0: boolean) {
-  throw new Error('Function not implemented.');
-}
-
