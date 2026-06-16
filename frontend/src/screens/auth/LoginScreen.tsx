@@ -4,10 +4,10 @@ import {AxiosError, isAxiosError} from 'axios';
 import {StatusBar} from 'expo-status-bar';
 import messaging from '@react-native-firebase/messaging';
 import React, {useEffect, useState} from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import {useForm, Controller} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {Alert, Image, useColorScheme} from 'react-native';
+import {Alert, Image, useColorScheme, ActivityIndiator} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch} from 'react-redux';
@@ -36,8 +36,7 @@ import {
   setUserToken,
 } from '../../store/UserSlice';
 
-import { AuthData, LoginScreenProp } from '../../type';
-import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
+import {AuthData, LoginScreenProp} from '../../type';
 
 const loginSchema = z.object({
   email: z.string().email('Please Enter a Valid Email'),
@@ -59,7 +58,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   const {
     control,
     handleSubmit,
-    formState: { isValid },
+    formState: {isValid},
     setValue,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -146,74 +145,35 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         password: data.password,
         fcmToken: fcmToken ?? 'not found',
       },
-        {
-          onSuccess: async data => {
-            const auth: AuthData = {
-              userId: data._id,
-              token: data?.refreshToken,
-              user_handle: data?.user_handle,
-            };
-            try {
-              await storeItem(KEYS.USER_ID, auth.userId.toString());
-              await storeItem(KEYS.USER_HANDLE, data?.user_handle);
-              if (auth.token) {
-                await secureStoreItem(
-                  SECURE_KEYS.USER_TOKEN,
-                  auth.token,
-                );
-                await storeItem(
-                  KEYS.USER_TOKEN_EXPIRY_DATE,
-                  new Date().toISOString(),
-                );
-                dispatch(setUserId(auth.userId));
-                dispatch(setUserToken(auth.token));
-                dispatch(setUserHandle(auth.user_handle));
-                dispatch(setGuestMode(false));
-                // Reset so the next session expiry triggers the notification again.
-                resetSessionExpiredNotification();
-                setTimeout(() => {
-                  if (redirectTo) {
-                    (navigation as any).navigate(
-                      redirectTo.name,
-                      redirectTo.params,
-                    );
-
-                    return;
-                  }
-                  navigation.reset({
-                    index: 0,
-                    routes: [{name: 'TabNavigation'}],
-                  });
-                }, 1000);
-              } else {
-                Alert.alert('Token not found');
-              }
-            } catch (e) {
-              if (__DEV__) {
-                console.log('Async Storage ERROR', e);
-              }
-            }
-          },
-
-          onError: (error: AxiosError) => {
-            if (__DEV__) {
-              console.log('Error', error);
-            }
-            setValue('password', '');
-            if (error.response) {
-              const errorCode = error.response.status;
-              switch (errorCode) {
-                case 400:
-                  Alert.alert('Error', 'Please provide email and password');
-                  break;
-                case 401:
-                  Alert.alert('Error', 'Invalid password');
-                  break;
-                case 403:
-                  Alert.alert(
-                    'Error',
-                    'Email not verified. Please check your email.',
+      {
+        onSuccess: async data => {
+          const auth: AuthData = {
+            userId: data._id,
+            token: data?.refreshToken,
+            user_handle: data?.user_handle,
+          };
+          try {
+            await storeItem(KEYS.USER_ID, auth.userId.toString());
+            await storeItem(KEYS.USER_HANDLE, data?.user_handle);
+            if (auth.token) {
+              await secureStoreItem(SECURE_KEYS.USER_TOKEN, auth.token);
+              await storeItem(
+                KEYS.USER_TOKEN_EXPIRY_DATE,
+                new Date().toISOString(),
+              );
+              dispatch(setUserId(auth.userId));
+              dispatch(setUserToken(auth.token));
+              dispatch(setUserHandle(auth.user_handle));
+              dispatch(setGuestMode(false));
+              // Reset so the next session expiry triggers the notification again.
+              resetSessionExpiredNotification();
+              setTimeout(() => {
+                if (redirectTo) {
+                  (navigation as any).navigate(
+                    redirectTo.name,
+                    redirectTo.params,
                   );
+
                   return;
                 }
                 navigation.reset({
@@ -225,12 +185,44 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               Alert.alert('Token not found');
             }
           } catch (e) {
-            if (__DEV__) console.log('Async Storage ERROR', e);
+            if (__DEV__) {
+              console.log('Async Storage ERROR', e);
+            }
           } finally {
             setIsSubmitting(false);
           }
         },
-      );
+
+        onError: (error: AxiosError) => {
+          if (__DEV__) {
+            console.log('Error', error);
+          }
+          setValue('password', '');
+          setIsSubmitting(false);
+          if (error.response) {
+            const errorCode = error.response.status;
+            switch (errorCode) {
+              case 400:
+                Alert.alert('Error', 'Please provide email and password');
+                break;
+              case 401:
+                Alert.alert('Error', 'Invalid password');
+                break;
+              case 403:
+                Alert.alert(
+                  'Error',
+                  'Email not verified. Please check your email.',
+                );
+                break;
+              default:
+                Alert.alert('Error', 'An error occurred during login.');
+            }
+          } else {
+            Alert.alert('Error', 'Network error. Please try again.');
+          }
+        },
+      },
+    );
   };
 
   const handleEmailInputBack = () => {
@@ -299,7 +291,10 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             <Controller
               control={control}
               name="email"
-              render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              render={({
+                field: {onChange, onBlur, value},
+                fieldState: {error},
+              }) => (
                 <YStack>
                   {error && (
                     <Text color="$red10" fontSize={14} marginBottom="$2">
@@ -339,7 +334,10 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             <Controller
               control={control}
               name="password"
-              render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              render={({
+                field: {onChange, onBlur, value},
+                fieldState: {error},
+              }) => (
                 <YStack>
                   {error && (
                     <Text color="$red10" fontSize={14} marginBottom="$2">
@@ -421,7 +419,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               </Text>
             </XStack>
 
-          <Button
+            <Button
               backgroundColor="$blue10"
               theme="blue"
               marginTop="$5"

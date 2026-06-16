@@ -1,9 +1,15 @@
-import React, { createContext, useContext, useEffect, ReactNode, useState } from 'react';
-import { Platform } from 'react-native';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  ReactNode,
+  useState,
+} from 'react';
+import {Platform} from 'react-native';
 import firebase from '@react-native-firebase/app';
-import messaging from '@react-native-firebase/messaging'; 
+import messaging from '@react-native-firebase/messaging';
 import Constants from 'expo-constants';
-import { logger } from '../src/services/monitoring/logger';
+import {logger} from '../src/services/monitoring/logger';
 
 const extra = Constants.expoConfig?.extra ?? {};
 
@@ -29,19 +35,20 @@ const firebaseConfig = {
   persistence: true,
 };
 
-
 // Define the type for the FirebaseContext
 const FirebaseContext = createContext<{
   messaging: typeof messaging | null;
   fcmToken: string | null;
-}>({ messaging: null, fcmToken: null }); // We add fcmToken to the context
+}>({messaging: null, fcmToken: null}); // We add fcmToken to the context
 
 // Define the type for FirebaseProvider props (expecting children)
 interface FirebaseProviderProps {
   children: ReactNode;
 }
 
-export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) => {
+export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
+  children,
+}) => {
   const [fcmToken, setFcmToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -56,17 +63,16 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
         ];
 
         const missingFields = requiredFields.filter(
-          (field) => !firebaseConfig[field as keyof typeof firebaseConfig]
+          field => !firebaseConfig[field as keyof typeof firebaseConfig],
         );
 
         if (missingFields.length > 0) {
-          
-            logger.warn(
-              `Firebase configuration is incomplete. Missing fields: ${missingFields.join(
-                ', '
-              )}. Skipping Firebase initialization.`
-            );
-          }
+          logger.warn(
+            `Firebase configuration is incomplete. Missing fields: ${missingFields.join(
+              ', ',
+            )}. Skipping Firebase initialization.`,
+          );
+
           return;
         }
 
@@ -76,14 +82,12 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
           firebase.app(); // if already initialized, use that one
         }
         const token = await messaging().getToken();
-        if 
+        if (token) {
           logger.log('Firebase Token:', token);
         }
         setFcmToken(token); // Store the token in state
       } catch (error) {
-        
-          logger.error('Error getting token:', error);
-        }
+        logger.error('Error getting token:', error);
       }
     };
 
@@ -95,13 +99,16 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
   }, []);
 
   return (
-    <FirebaseContext.Provider value={{ messaging, fcmToken }}>
+    <FirebaseContext.Provider value={{messaging, fcmToken}}>
       {children}
     </FirebaseContext.Provider>
   );
 };
 
 // Custom hook to access Firebase messaging and token
-export const useFirebaseMessaging = (): { messaging: typeof messaging | null; fcmToken: string | null } => {
+export const useFirebaseMessaging = (): {
+  messaging: typeof messaging | null;
+  fcmToken: string | null;
+} => {
   return useContext(FirebaseContext);
 };

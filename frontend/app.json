@@ -10,7 +10,6 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "androidStatusBar": {
-      "backgroundColor": "#00BFFF",
       "barStyle": "light-content"
     },
     "splash": {

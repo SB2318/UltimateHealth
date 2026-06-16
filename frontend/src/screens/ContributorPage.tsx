@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo,useRef} from 'react';
 import {Linking, FlatList} from 'react-native';
 import {
   YStack,
@@ -331,7 +331,8 @@ const CONTRIBUTORS = [
 
 const ContributorPage = () => {
   const [search, setSearch] = useState('');
-
+const [showScrollTop, setShowScrollTop] = useState(false); // NEW: Tracks button visibility
+const flatListRef = useRef<FlatList>(null);                // NEW: Creates a reference link to the list layout
   const openLink = (url: string) => {
     Linking.openURL(url);
   };
@@ -347,6 +348,18 @@ const ContributorPage = () => {
         item.handle.toLowerCase().includes(q),
     );
   }, [search]);
+  const handleScroll = (event: any) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    if (offsetY > 300) {
+      setShowScrollTop(true);
+    } else {
+      setShowScrollTop(false);
+    }
+  };
+
+  const scrollToTop = () => {
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
+  };
 
   const renderItem = ({item}: {item: any}) => (
     <Card
@@ -453,6 +466,9 @@ const ContributorPage = () => {
 
         {/* LIST */}
         <FlatList
+        ref={flatListRef}         // <-- ADDED THIS
+          onScroll={handleScroll}   // <-- ADDED THIS
+          scrollEventThrottle={16}  // <-- ADDED THIS
           data={filteredContributors}
           keyExtractor={item => item.id.toString()}
           renderItem={renderItem}
