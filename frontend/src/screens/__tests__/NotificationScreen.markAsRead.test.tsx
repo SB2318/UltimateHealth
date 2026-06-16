@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 describe('NotificationScreen – mark-as-read guard', () => {
   function makeMarkAsReadHandler(markNotification: jest.Mock) {
