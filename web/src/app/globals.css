@@ -294,7 +294,7 @@ body.touch-device .dna-cursor-canvas {
   text-align: center;
   gap: 4px;
   min-width: 100px;
-  padding: 0;
+  padding: 4px 0;
 }
 
 .nav-item-icon {
@@ -984,6 +984,21 @@ p.center {
 }
 .mod-card { border: 2px solid rgba(102, 126, 234, 0.1); background: white; }
 .mod-card:hover { border-color: var(--primary); box-shadow: 0 20px 40px -10px rgba(102, 126, 234, 0.25); }
+
+.member-bottom-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  max-width: 860px;
+  margin: 1.5rem auto 0;
+}
+
+@media (max-width: 768px) {
+  .member-bottom-cards {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+}
 
 /* ==================== PROGRAM CARDS ==================== */
 .program-grid {
