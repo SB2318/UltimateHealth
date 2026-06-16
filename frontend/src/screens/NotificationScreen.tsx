@@ -1,26 +1,18 @@
 
-import {FlatList, StyleSheet, View} from 'react-native';
-
-import {AppState, FlatList, StyleSheet, Text, View, Image} from 'react-native';
-
+import {AppState, FlatList, StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import NotificationItem from '../components/NotificationItem';
 import {useSelector} from 'react-redux';
 import {Notification, NotificationType} from '../type';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Loader from '../components/Loader';
 import Snackbar from 'react-native-snackbar';
-import { useDispatch, useSelector } from 'react-redux';
-import { NoNotificationState } from '../components/EmptyStates';
-import Loader from '../components/Loader';
-import NotificationItem from '../components/NotificationItem';
-import { hp } from '../helper/Metric';
-import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '../helper/Theme';
-import { useDeleteNotification } from '../hooks/useDeleteNotification';
-import { useGetAllNotifications } from '../hooks/useGetAllNotifications';
-import { useMarkNotificationAsRead } from '../hooks/useMarkNoticationAsRead';
-import { Notification, NotificationType } from '../type';
+import {hp} from '../helper/Metric';
+import {SafeAreaView} from 'react-native';
+import {useGetAllNotifications} from '../hooks/useGetAllNotifications';
+import {useMarkNotificationAsRead} from '../hooks/useMarkNoticationAsRead';
+import {useDeleteNotification} from '../hooks/useDeleteNotification';
+import {NoNotificationState} from '../components/EmptyStates';
 
 type PendingDelete = {
   item: Notification;
@@ -161,17 +153,9 @@ const NotificationScreen = ({navigation}: any) => {
     },
     [deleteNotification, refetch, restoreDeletedNotification],
   );
+  
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', state => {
-      if (state === 'active') {
-        refetch();
-      }
-    });
-
-    return () => subscription.remove();
-  }, [refetch]);
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', state => {
+    const subscription = AppState.addEventListener('change', (state: string) => {
       if (state === 'active') {
         setPage(1); // reset pagination
         refetch(); // fetch fresh data
@@ -356,11 +340,11 @@ const NotificationScreen = ({navigation}: any) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={StyleSheet.flatten(styles.container)}>
       <FlatList
         data={notificationsData}
         renderItem={renderItem}
-        keyExtractor={item => item._id.toString()}
+        keyExtractor={(item: Notification) => item._id.toString()}
         contentContainerStyle={[
           styles.flatListContentContainer,
           (!notificationsData || notificationsData.length === 0) && {
