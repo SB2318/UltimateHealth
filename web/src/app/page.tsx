@@ -756,7 +756,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
 </div>
 
 {/* Bottom row — 2 cards centered under the top row */}
-<div className="member-bottom-cards">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 mx-auto" style={{ maxWidth: "66.666%", marginLeft: "auto", marginRight: "auto" , marginTop: "20px"}}>
   {[
     { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
     { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
