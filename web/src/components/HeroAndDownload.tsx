@@ -89,7 +89,7 @@ export default function HeroAndDownload({ onJoinTestFlight, onShowComingSoon }: 
                 <a
                   href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="uh-btn-primary"
                 >
                   <i className="fas fa-download" aria-hidden="true" />
@@ -330,7 +330,7 @@ function AndroidStoreButtons({ onShowComingSoon }: Pick<HeroAndDownloadProps, "o
         <a
           href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="uh-store-btn uh-store-google"
           aria-label="Download UltimateHealth on Google Play"
         >
@@ -343,7 +343,7 @@ function AndroidStoreButtons({ onShowComingSoon }: Pick<HeroAndDownloadProps, "o
         <a
           href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="uh-store-btn uh-store-admin"
           aria-label="Download UHealth Admin on Google Play"
         >
