@@ -7,6 +7,7 @@
         "./*"
       ]
     },
+    "module": "preserve",
     "moduleResolution": "bundler",
     "skipLibCheck": true
   },
