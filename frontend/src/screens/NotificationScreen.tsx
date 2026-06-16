@@ -1,17 +1,26 @@
+
 import {FlatList, StyleSheet, View} from 'react-native';
+
+import {AppState, FlatList, StyleSheet, Text, View, Image} from 'react-native';
+
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import NotificationItem from '../components/NotificationItem';
 import {useSelector} from 'react-redux';
 import {Notification, NotificationType} from '../type';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Loader from '../components/Loader';
 import Snackbar from 'react-native-snackbar';
-import {hp} from '../helper/Metric';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useGetAllNotifications} from '../hooks/useGetAllNotifications';
-import {useMarkNotificationAsRead} from '../hooks/useMarkNoticationAsRead';
-import {useDeleteNotification} from '../hooks/useDeleteNotification';
-import {NoNotificationState} from '../components/EmptyStates';
+import { useDispatch, useSelector } from 'react-redux';
+import { NoNotificationState } from '../components/EmptyStates';
+import Loader from '../components/Loader';
+import NotificationItem from '../components/NotificationItem';
+import { hp } from '../helper/Metric';
+import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '../helper/Theme';
+import { useDeleteNotification } from '../hooks/useDeleteNotification';
+import { useGetAllNotifications } from '../hooks/useGetAllNotifications';
+import { useMarkNotificationAsRead } from '../hooks/useMarkNoticationAsRead';
+import { Notification, NotificationType } from '../type';
 
 type PendingDelete = {
   item: Notification;
@@ -27,8 +36,9 @@ const NotificationScreen = ({navigation}: any) => {
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(0);
   const {isConnected} = useSelector((state: any) => state.network);
-  const [notificationsData, setNotificationsData] =
-    React.useState<Notification[]>([]);
+  const [notificationsData, setNotificationsData] = React.useState<
+    Notification[]
+  >([]);
   const [openSwipeItemId, setOpenSwipeItemId] = useState<string | null>(null);
   const pendingDeletesRef = useRef<Map<string, PendingDelete>>(new Map());
   const isMountedRef = useRef(true);
@@ -102,21 +112,22 @@ const NotificationScreen = ({navigation}: any) => {
     setRefreshing(false);
   };
 
-  const restoreDeletedNotification = useCallback(
-    (snapshot: PendingDelete) => {
-      setNotificationsData(previous => {
-        const current = previous ?? [];
-        if (current.some(n => n._id === snapshot.item._id)) {
-          return current;
-        }
-        const next = [...current];
-        const insertionIndex = Math.min(snapshot.index, next.length);
-        next.splice(insertionIndex, 0, snapshot.item);
-        return next;
-      });
-    },
-    [],
-  );
+  const restoreDeletedNotification = useCallback((snapshot: PendingDelete) => {
+    setNotificationsData(previous => {
+      const current = previous ?? [];
+
+      if (
+        current.some(notification => notification._id === snapshot.item._id)
+      ) {
+        return current;
+      }
+
+      const nextNotifications = [...current];
+      const insertionIndex = Math.min(snapshot.index, nextNotifications.length);
+      nextNotifications.splice(insertionIndex, 0, snapshot.item);
+      return nextNotifications;
+    });
+  }, []);
 
   const clearPendingDelete = useCallback((id: string) => {
     const pendingDelete = pendingDeletesRef.current.get(id);
@@ -150,6 +161,25 @@ const NotificationScreen = ({navigation}: any) => {
     },
     [deleteNotification, refetch, restoreDeletedNotification],
   );
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', state => {
+      if (state === 'active') {
+        refetch();
+      }
+    });
+
+    return () => subscription.remove();
+  }, [refetch]);
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', state => {
+      if (state === 'active') {
+        setPage(1); // reset pagination
+        refetch(); // fetch fresh data
+      }
+    });
+
+    return () => subscription.remove();
+  }, [refetch]);
 
   const handleDeleteAction = useCallback(
     (item: Notification) => {
@@ -171,7 +201,10 @@ const NotificationScreen = ({navigation}: any) => {
 
       setNotificationsData(previous => {
         const current = previous ?? [];
-        const index = current.findIndex(n => n._id === item._id);
+        const index = current.findIndex(
+          notification => notification._id === item._id,
+        );
+
         if (index === -1) {
           return current;
         }
@@ -191,7 +224,10 @@ const NotificationScreen = ({navigation}: any) => {
         commitDeleteNotification(pendingDelete);
       }, UNDO_TIMEOUT_MS);
 
-    pendingDeletesRef.current.set(item._id, {...(snapshot as Omit<PendingDelete, 'timer'>), timer});
+      pendingDeletesRef.current.set(item._id, {
+        ...(snapshot as Omit<PendingDelete, 'timer'>),
+        timer,
+      });
 
       Snackbar.show({
         text: 'Notification deleted',
@@ -214,7 +250,12 @@ const NotificationScreen = ({navigation}: any) => {
         },
       });
     },
-    [clearPendingDelete, commitDeleteNotification, isConnected, restoreDeletedNotification],
+    [
+      clearPendingDelete,
+      commitDeleteNotification,
+      isConnected,
+      restoreDeletedNotification,
+    ],
   );
 
   const handleNotificationClick = (item: Notification) => {
