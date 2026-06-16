@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --no-warnings --test src/app/admin-agreement/signatureValidation.test.mjs",
+    "test": "node --no-warnings --test src/app/admin-agreement/signatureValidation.test.mjs src/components/articles/article-layout.test.mjs",
     "lint": "eslint",
     "knip": "knip",
     "knip:deps": "knip --dependencies",

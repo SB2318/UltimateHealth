@@ -13,6 +13,7 @@ import ArticleContent from "./ArticleContent";
 import RelatedArticles from "./RelatedArticles";
 import AccessibilityControls, { type FontSize } from "./AccessibilityControls";
 import TableOfContents from "./TableOfContents";
+import { ARTICLE_STICKY_HEADER_HEIGHT_PX } from "./article-layout.js";
 
 const FONT_SIZE_MAP: Record<FontSize, number> = {
   sm: 16,
@@ -49,7 +50,14 @@ export default function ArticlePageClient({
         Skip to article content
       </a>
 
-      <div className="min-h-screen bg-white">
+      <div
+        className="min-h-screen bg-white"
+        style={
+          {
+            "--article-sticky-header-height": `${ARTICLE_STICKY_HEADER_HEIGHT_PX}px`,
+          } as CSSProperties
+        }
+      >
         {/* ── Sticky top navigation bar ── */}
         <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
           <div className="max-w-275 mx-auto px-4 sm:px-6 lg:px-8 py-3">
@@ -84,7 +92,7 @@ export default function ArticlePageClient({
 
             {/* ── Table of Contents Sidebar ── */}
             <aside className="hidden lg:block lg:w-[250px]">
-              <div className="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-2">
+              <div className="sticky top-[var(--article-sticky-header-height)] max-h-[calc(100vh-var(--article-sticky-header-height))] overflow-y-auto pr-2">
                 <TableOfContents content={article.content} />
               </div>
             </aside>

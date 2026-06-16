@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import type { RichContent, HeadingBlock } from "@/types/article";
+import type { RichContent } from "@/types/article";
+import {
+  ARTICLE_STICKY_HEADER_HEIGHT_PX,
+  ARTICLE_TOC_INTERSECTION_THRESHOLD,
+  extractTocHeadings,
+  getArticleScrollTargetY,
+  getArticleTocObserverRootMargin,
+} from "./article-layout.js";
 
 interface TableOfContentsProps {
   content: RichContent;
@@ -10,19 +17,17 @@ interface TableOfContentsProps {
 export default function TableOfContents({ content }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>("");
 
-  const headings = useMemo(() => {
-    return content.blocks.filter(
-      (block): block is HeadingBlock =>
-        block.type === "heading" && (block.level === 2 || block.level === 3)
-    );
-  }, [content.blocks]);
+  const headings = useMemo(() => extractTocHeadings(content.blocks), [content.blocks]);
 
   useEffect(() => {
     if (headings.length === 0) return;
 
     const observerOptions = {
-      rootMargin: "-100px 0px -65% 0px",
-      threshold: 0,
+      // Shrink the observer root below the sticky header (top) and above the
+      // lower viewport (bottom %) so the active heading reflects what the reader
+      // is actually reading, not merely what barely entered the top edge.
+      rootMargin: getArticleTocObserverRootMargin(),
+      threshold: ARTICLE_TOC_INTERSECTION_THRESHOLD,
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -54,8 +59,11 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
     e.preventDefault();
     const el = document.getElementById(id);
     if (el) {
-      const yOffset = -85; // Offset to account for sticky header height
-      const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
+      const y = getArticleScrollTargetY(
+        el.getBoundingClientRect().top,
+        window.scrollY,
+        ARTICLE_STICKY_HEADER_HEIGHT_PX,
+      );
       window.scrollTo({ top: y, behavior: "smooth" });
       setActiveId(id);
       // Update browser history/hash without scrolling
@@ -91,6 +99,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                     ? "font-semibold text-[#667eea]"
                     : "text-slate-500 hover:translate-x-0.5"
                 }`}
+                {...(isActive && { "aria-current": "true" })}
               >
                 {heading.text}
               </a>
