@@ -526,7 +526,9 @@ const ArticleCard = ({
             {item?.tags.map(tag => tag.name).join(' | ')}
           </Text>
           <Text style={styles.title}>{item?.title}</Text>
-
+<Text style={styles.description} numberOfLines={2}>
+  {item?.description}
+</Text>
           <View style={styles.metaRow}>
   <Text style={styles.footerText1}>{item?.authorName}</Text>
   <Text style={styles.dot}>•</Text>
@@ -812,14 +814,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 4,
     shadowColor: '#000',
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
+    shadowOpacity: 0.12,
+shadowRadius: 12,
     shadowOffset: {width: 0, height: 4},
   },
 
   imageWrapper: {
     width: '100%',
-    height: 180,
+    height: 220,
     position: 'relative',
   },
   heartOverlay: {
@@ -861,6 +863,12 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     marginBottom: 6,
   },
+  description: {
+  fontSize: fp(3.8),
+  color: '#6B7280',
+  lineHeight: 20,
+  marginBottom: 8,
+},
 
   footerText1: {
     fontSize: fp(3.5),
@@ -869,10 +877,11 @@ const styles = StyleSheet.create({
   },
 
   metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 6,
-  },
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  alignItems: 'center',
+  marginTop: 6,
+},
 
   dot: {
     marginHorizontal: 6,
