@@ -294,15 +294,14 @@ function AnimateWhenVisible({
     once: true,
     margin: '-60px' as `${number}px`,
   })
-
   return (
     <motion.div
-      ref={ref}
-      variants={staggerContainer}
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      className={className}
-      style={style}
+    ref={ref}
+    variants={staggerContainer}
+    initial="hidden"
+    animate={inView ? 'visible' : 'hidden'}
+    className={className}
+    style={style}
     >
       {children}
     </motion.div>
@@ -319,6 +318,7 @@ function SectionHeading({
   title: string
   subtitle: string
 }) {
+  const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact'];
   return (
     <motion.div
       variants={fadeUp}
@@ -1665,6 +1665,8 @@ export default function ContributePage() {
   }, [])
 
   const [navOpen, setNavOpen] = useState(false)
+        const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact']
+
   return (
     <>
       <style>{`
@@ -1809,7 +1811,7 @@ export default function ContributePage() {
       `}</style>
 
       {/* ── Floating hamburger nav ── */}
-      <Navbar />
+      <Navbar tracking_id = {TRACKED_SECTION_IDS} />
 
       <main>
         <HeroSection />
