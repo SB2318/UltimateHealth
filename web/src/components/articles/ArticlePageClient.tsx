@@ -12,6 +12,8 @@ import ArticleHero from "./ArticleHero";
 import ArticleContent from "./ArticleContent";
 import RelatedArticles from "./RelatedArticles";
 import AccessibilityControls, { type FontSize } from "./AccessibilityControls";
+import TableOfContents from "./TableOfContents";
+import { ARTICLE_STICKY_HEADER_HEIGHT_PX } from "./article-layout.js";
 
 const FONT_SIZE_MAP: Record<FontSize, number> = {
   sm: 16,
@@ -48,7 +50,14 @@ export default function ArticlePageClient({
         Skip to article content
       </a>
 
-      <div className="min-h-screen bg-white">
+      <div
+        className="min-h-screen bg-white"
+        style={
+          {
+            "--article-sticky-header-height": `${ARTICLE_STICKY_HEADER_HEIGHT_PX}px`,
+          } as CSSProperties
+        }
+      >
         {/* ── Sticky top navigation bar ── */}
         <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm">
           <div className="max-w-275 mx-auto px-4 sm:px-6 lg:px-8 py-3">
@@ -66,18 +75,27 @@ export default function ArticlePageClient({
           {/* ── Article body ── */}
           <div
             id="article-body"
-            className="max-w-185 mx-auto px-4 sm:px-6 py-12"
+            className="max-w-275 mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-[1fr_250px] lg:gap-12"
           >
-            <article
-              aria-label={article.title}
-              className="[font-size:var(--article-font-size)]"
-              style={{ "--article-font-size": `${FONT_SIZE_MAP[fontSize]}px` } as CSSProperties}
-            >
-              <ArticleContent content={article.content} />
-            </article>
+            <div className="max-w-185 w-full">
+              <article
+                aria-label={article.title}
+                className="[font-size:var(--article-font-size)]"
+                style={{ "--article-font-size": `${FONT_SIZE_MAP[fontSize]}px` } as CSSProperties}
+              >
+                <ArticleContent content={article.content} />
+              </article>
 
-            {/* ── Article footer: share + attribution ── */}
-            <ArticleFooter article={article} />
+              {/* ── Article footer: share + attribution ── */}
+              <ArticleFooter article={article} />
+            </div>
+
+            {/* ── Table of Contents Sidebar ── */}
+            <aside className="hidden lg:block lg:w-[250px]">
+              <div className="sticky top-[var(--article-sticky-header-height)] max-h-[calc(100vh-var(--article-sticky-header-height))] overflow-y-auto pr-2">
+                <TableOfContents content={article.content} />
+              </div>
+            </aside>
           </div>
         </main>
 
