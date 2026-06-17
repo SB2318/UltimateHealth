@@ -19,7 +19,6 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
   description = 'Sign up or sign in to access personalized features, interact with the community, and manage your profile.',
   iconName = 'user-lock',
 }) => {
-  // removed isDarkMode variable
   const inset = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [isBenefitsModalVisible, setIsBenefitsModalVisible] = useState(false);
@@ -36,12 +35,12 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
       animation="bouncy"
       enterStyle={{ opacity: 0, y: 15, scale: 0.95 }}
     >
-      <YStack 
-        alignItems="center" 
-        justifyContent="center" 
+      <YStack
+        alignItems="center"
+        justifyContent="center"
         backgroundColor="$backgroundLight"
-        width={100} 
-        height={100} 
+        width={100}
+        height={100}
         borderRadius={50}
         marginBottom="$4"
         animation="bouncy"
@@ -79,14 +78,11 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
           pressStyle={{ scale: 0.97 }}
           animation="fast"
           onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'LoginScreen'}],
-            });
+            navigation.navigate('LoginScreen');
           }}
         >
           <Text fontSize={18} color="$white" fontWeight="600">
-            Sign In
+            Login / Register
           </Text>
         </Button>
 
@@ -98,7 +94,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
           pressStyle={{ scale: 0.97 }}
           animation="fast"
           onPress={() => {
-             navigation.navigate('SignUpScreenFirst');
+            navigation.navigate('SignUpScreenFirst');
           }}
         >
           <Text fontSize={18} color="$color" fontWeight="600">
