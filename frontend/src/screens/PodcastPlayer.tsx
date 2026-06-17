@@ -1,5 +1,5 @@
-import {useCallback, useEffect, useState} from 'react';
-import {Alert, StyleSheet} from 'react-native';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {Alert, StyleSheet, TouchableOpacity} from 'react-native';
 import {PodcastPlayerScreenProps} from '../type';
 import RNFS from 'react-native-fs';
 import {useSelector} from 'react-redux';
@@ -18,6 +18,8 @@ import {useUploadPodcast} from '../hooks/useUploadPodcast';
 import Loader from '../components/Loader';
 
 import FloatingSpeedSelector from '../components/FloatingSpeedSelector';
+import FloatingSleepTimerSelector from '../components/FloatingSleepTimerSelector';
+import {SleepTimerOption} from '../constants/playback';
 
 const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const {uploadImage, loading, error: imageError} = useUploadImage();
@@ -26,6 +28,12 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const [position, setPosition] = useState(0);
   const [speed, setSpeed] = useState(1);
   const [isSpeedSelectorVisible, setIsSpeedSelectorVisible] = useState(false);
+
+  // Sleep timer state
+  const [isSleepTimerVisible, setIsSleepTimerVisible] = useState(false);
+  const [sleepTimerOption, setSleepTimerOption] = useState<SleepTimerOption | undefined>(undefined);
+  const [sleepTimerRemaining, setSleepTimerRemaining] = useState<number | undefined>(undefined);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   
   const [duration, setDuration] = useState(0);
   const theme = useTheme();
@@ -37,7 +45,6 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const {isConnected} = useSelector((state: any) => state.network);
   const [amplitudes, setAmplitudes] = useState<number[]>([]);
   //const [currentAmplitude, setCurrentAmplitude] = useState<number>(0);
-  //const timerRef = useRef(null);
 
   const {mutate: uploadPodcast, isPending: uploadPodcastPending} =
     useUploadPodcast();
@@ -121,6 +128,84 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
     await player.seekTo(next);
     setPosition(next);
   };
+
+  // ─── Sleep Timer ────────────────────────────────────────────────────────────
+
+  /** Clear any running countdown interval. */
+  const clearSleepTimer = useCallback(() => {
+    if (timerRef.current !== null) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  /** Pause playback and reset all timer state. */
+  const triggerSleepTimerExpiry = useCallback(() => {
+    clearSleepTimer();
+    setSleepTimerOption(undefined);
+    setSleepTimerRemaining(undefined);
+    if (player) {
+      player.pause();
+      setUiState('paused');
+      setIsPlaying(false);
+    }
+  }, [clearSleepTimer, player]);
+
+  /**
+   * Start (or restart) the sleep timer.
+   * - option === null  → "end of episode" mode: we watch `position` instead of
+   *   counting down, so no interval is started here.
+   * - option === number → count down that many minutes.
+   */
+  const handleSleepTimerSelect = useCallback(
+    (option: SleepTimerOption) => {
+      clearSleepTimer();
+      setSleepTimerOption(option);
+
+      if (option === null) {
+        // "End of episode" — no countdown to show
+        setSleepTimerRemaining(undefined);
+        return;
+      }
+
+      const totalSeconds = option * 60;
+      setSleepTimerRemaining(totalSeconds);
+
+      timerRef.current = setInterval(() => {
+        setSleepTimerRemaining(prev => {
+          if (prev === undefined || prev <= 1) {
+            // Time's up — schedule expiry outside the state updater
+            setTimeout(triggerSleepTimerExpiry, 0);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    },
+    [clearSleepTimer, triggerSleepTimerExpiry],
+  );
+
+  /** Cancel the timer without pausing playback. */
+  const handleSleepTimerCancel = useCallback(() => {
+    clearSleepTimer();
+    setSleepTimerOption(undefined);
+    setSleepTimerRemaining(undefined);
+  }, [clearSleepTimer]);
+
+  // "End of episode" watch: pause when the track finishes
+  useEffect(() => {
+    if (sleepTimerOption !== null || sleepTimerOption === undefined) return;
+    if (duration > 0 && position >= duration - 0.5) {
+      triggerSleepTimerExpiry();
+    }
+  }, [position, duration, sleepTimerOption, triggerSleepTimerExpiry]);
+
+  // Clean up the interval when the component unmounts
+  useEffect(() => {
+    return () => clearSleepTimer();
+  }, [clearSleepTimer]);
+
+  // ────────────────────────────────────────────────────────────────────────────
 
   const unlinkFile = useCallback(async () => {
     if (filePath) {
@@ -480,6 +565,41 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
           </Circle>
         </XStack>
 
+        {/* Sleep Timer Button */}
+        <XStack justifyContent="center" alignItems="center" marginTop="$3">
+          <TouchableOpacity
+            onPress={() => setIsSleepTimerVisible(true)}
+            accessibilityRole="button"
+            accessibilityLabel={
+              sleepTimerOption !== undefined
+                ? 'Sleep timer active, tap to change'
+                : 'Set sleep timer'
+            }
+            style={[
+              sleepTimerStyles.timerButton,
+              sleepTimerOption !== undefined && sleepTimerStyles.timerButtonActive,
+            ]}>
+            <Ionicons
+              name="moon-outline"
+              size={16}
+              color={sleepTimerOption !== undefined ? '#00BFFF' : '#94A3B8'}
+              style={{marginRight: 6}}
+            />
+            <Text
+              fontSize={13}
+              fontWeight="600"
+              color={sleepTimerOption !== undefined ? '#00BFFF' : '#94A3B8'}>
+              {sleepTimerOption === undefined
+                ? 'Sleep Timer'
+                : sleepTimerOption === null
+                ? 'End of episode'
+                : sleepTimerRemaining !== undefined
+                ? `Stops in ${Math.floor(sleepTimerRemaining / 60)}m ${sleepTimerRemaining % 60 < 10 ? '0' : ''}${sleepTimerRemaining % 60}s`
+                : `${sleepTimerOption} min`}
+            </Text>
+          </TouchableOpacity>
+        </XStack>
+
         {/* Footer Info */}
         <Text
           marginTop="$4"
@@ -502,6 +622,15 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
           }}
           visible={isSpeedSelectorVisible}
           onClose={() => setIsSpeedSelectorVisible(false)}
+        />
+
+        <FloatingSleepTimerSelector
+          activeOption={sleepTimerOption}
+          remainingSeconds={sleepTimerRemaining}
+          onSelect={handleSleepTimerSelect}
+          onCancel={handleSleepTimerCancel}
+          visible={isSleepTimerVisible}
+          onClose={() => setIsSleepTimerVisible(false)}
         />
       </YStack>
     </Theme>
@@ -526,5 +655,22 @@ const styles = StyleSheet.create({
   time: {
     fontSize: 13,
     color: '#777',
+  },
+});
+
+const sleepTimerStyles = StyleSheet.create({
+  timerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 18,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#334155',
+    backgroundColor: '#1E293B',
+  },
+  timerButtonActive: {
+    borderColor: '#00BFFF',
+    backgroundColor: '#0C1F2E',
   },
 });
