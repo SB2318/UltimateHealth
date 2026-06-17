@@ -6,6 +6,7 @@ import { useNavigation , NavigationProp } from '@react-navigation/native';
 
 import { RootStackParamList } from '../type';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import LottieView from 'lottie-react-native';
 import BenefitsModal from './BenefitsModal';
 
 interface GuestPlaceholderScreenProps {
@@ -38,15 +39,16 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
       <YStack
         alignItems="center"
         justifyContent="center"
-        backgroundColor="$backgroundLight"
-        width={100}
-        height={100}
-        borderRadius={50}
         marginBottom="$4"
         animation="bouncy"
         enterStyle={{ opacity: 0, scale: 0.5 }}
       >
-        <FontAwesome5 name={iconName} size={40} color="$color" />
+        <LottieView
+          source={require('../assets/LottieAnimation/lock-animation.json')}
+          autoPlay
+          loop
+          style={{ width: 100, height: 100 }}
+        />
       </YStack>
 
       <Text
