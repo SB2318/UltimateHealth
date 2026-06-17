@@ -545,7 +545,7 @@ function HeroSection() {
                 whileTap={{ scale: 0.97 }}
                 href={`${REPO_URL}/issues`}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -569,7 +569,7 @@ function HeroSection() {
                 whileTap={{ scale: 0.97 }}
                 href={REPO_URL}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1256,7 +1256,9 @@ function CommunitySection() {
                     whileTap={{ scale: 0.97 }}
                     href={card.link}
                     target={card.link.startsWith("mailto:") ? undefined : "_blank"}
-                    rel={card.link.startsWith("mailto:") ? undefined : "noreferrer"}
+                    rel={card.link.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -1407,7 +1409,7 @@ function FinalCTASection() {
                 whileTap={{ scale: 0.97 }}
                 href={`${REPO_URL}/issues/new`}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1431,7 +1433,7 @@ function FinalCTASection() {
                 whileTap={{ scale: 0.97 }}
                 href={`${REPO_URL}/pulls`}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",

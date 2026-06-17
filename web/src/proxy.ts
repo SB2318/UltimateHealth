@@ -35,9 +35,17 @@ export default function proxy(request: NextRequest) {
     isDev
       ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'" // unsafe-eval required for Next.js HMR/Fast Refresh
       : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+      // The application currently uses inline React styles and
+      // framework-generated styling. Removing 'unsafe-inline'
+      // would require migration to a nonce- or hash-based approach.  
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self'",
     "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com https://avatars.githubusercontent.com",
+    // IMPORTANT:
+// If new external services are integrated (APIs, analytics,
+// monitoring, authentication providers, etc.), their origins
+// must be added to connect-src. Otherwise browser requests
+// will be blocked by the Content Security Policy.
     "connect-src 'self' https://uhsocial.in https://api.github.com" + (isDev ? " http: ws:" : ""),
     "object-src 'none'",
     "base-uri 'self'",
