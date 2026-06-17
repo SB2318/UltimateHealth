@@ -448,7 +448,6 @@ function FAQAccordionItem({ item, index }: { item: FAQItem; index: number }) {
 }
 
 // =============================================================================
-
 // Hero Section
 // =============================================================================
 function HeroSection() {
@@ -507,7 +506,7 @@ function HeroSection() {
 
             <h1
               style={{
-                fontSize: "3.2rem",
+                fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
                 fontWeight: 900,
                 color: "white",
                 lineHeight: 1.15,
@@ -515,8 +514,7 @@ function HeroSection() {
                 textShadow: "0 2px 10px rgba(0,0,0,0.2)",
               }}
             >
-              Join Us &amp; Contribute to{" "}
-              <span style={{ whiteSpace: "nowrap" }}>UltimateHealth</span>
+              Join Us &amp; Contribute to UltimateHealth
             </h1>
 
             <p
@@ -526,6 +524,8 @@ function HeroSection() {
                 lineHeight: 1.8,
                 marginBottom: "40px",
                 maxWidth: "520px",
+                marginLeft: "auto",
+                marginRight: "auto",
               }}
             >
               Build, improve, and grow UltimateHealth with the community. Every
@@ -538,6 +538,7 @@ function HeroSection() {
                 gap: "16px",
                 flexWrap: "wrap",
                 alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <motion.a
@@ -1548,7 +1549,7 @@ const navLinks = [
         }
         .contribute-ways-grid {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
           gap: 20px;
         }
         .contribute-pr-grid {
@@ -1631,11 +1632,6 @@ const navLinks = [
           color: #a0aec0;
         }
 
-        @media (max-width: 1100px) {
-          .contribute-ways-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
         @media (max-width: 900px) {
           .contribute-hero-grid {
             grid-template-columns: 1fr;
@@ -1652,16 +1648,10 @@ const navLinks = [
           .contribute-pr-grid {
             grid-template-columns: 1fr !important;
           }
-          .contribute-ways-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
         }
         @media (max-width: 600px) {
           .contribute-hero-grid h1 {
             font-size: 2.2rem !important;
-          }
-          .contribute-ways-grid {
-            grid-template-columns: 1fr;
           }
           .contrib-nav-panel {
             right: 12px;
