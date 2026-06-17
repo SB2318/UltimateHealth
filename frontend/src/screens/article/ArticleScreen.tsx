@@ -23,7 +23,10 @@ import Loader from '../../components/Loader';
 import Snackbar from 'react-native-snackbar';
 import ResearchSummaryCard from '../../components/ResearchSummaryCard';
 import StructuredPodcastCard from '../../components/StructuredPodcastCard';
-import { generateArticleSummary, ArticleSummary } from '../../services/SummaryService';
+import {
+  generateArticleSummary,
+  ArticleSummary,
+} from '../../services/SummaryService';
 
 import {
   formatCount,
@@ -67,6 +70,15 @@ const CHUNK_SIZE = 120;
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
+  const getProfileImageUri = (profileImage?: string) => {
+    if (!profileImage?.trim()) {
+      return 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
+    }
+
+    return profileImage.startsWith('http')
+      ? profileImage
+      : `${GET_STORAGE_DATA}/${profileImage}`;
+  };
   const {user_id, isGuest} = useSelector((state: any) => state.user);
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
@@ -225,7 +237,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
 
     const rawText = article?.content || '';
-    
+
     // Only call API if there's enough text
     if (!rawText || rawText.length < 100) {
       setSummary(null);
@@ -240,7 +252,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       .then(result => setSummary(result))
       .catch(() => setSummary(null))
       .finally(() => setSummaryLoading(false));
-
   }, [article?.content]);
 
   // --- Settings ---
@@ -528,7 +539,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         setIsPaused(false);
         // Step back one chunk to resume from the interrupted chunk
         chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
-        
+
         // Re-attach listeners
         Tts.addEventListener('tts-finish', speakNextChunk);
         Tts.addEventListener('tts-error', e => {
@@ -537,7 +548,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           setIsPaused(false);
           setPlayerVisible(false);
         });
-        
+
         speakNextChunk();
       } else {
         // Pause
@@ -591,7 +602,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   // Function to handle the Read Status logic (preserved from original onScroll)
-  const handleReadStatusUpdate = (offset: number, height: number, layout: number) => {
+  const handleReadStatusUpdate = (
+    offset: number,
+    height: number,
+    layout: number,
+  ) => {
     if (layout + offset >= height) {
       if (
         article &&
@@ -635,26 +650,25 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   });
 
   const progressStyle = useAnimatedStyle(() => {
-  const scrollableDistance =
-    contentHeight.value - layoutHeight.value;
+    const scrollableDistance = contentHeight.value - layoutHeight.value;
 
-  if (scrollableDistance <= 0 && contentHeight.value > 0) {
+    if (scrollableDistance <= 0 && contentHeight.value > 0) {
+      return {
+        width: Dimensions.get('window').width,
+      };
+    }
+
+    const width = interpolate(
+      scrollY.value,
+      [0, Math.max(1, scrollableDistance)],
+      [0, Dimensions.get('window').width],
+      Extrapolate.CLAMP,
+    );
+
     return {
-      width: Dimensions.get('window').width,
+      width,
     };
-  }
-
-  const width = interpolate(
-    scrollY.value,
-    [0, Math.max(1, scrollableDistance)],
-    [0, Dimensions.get('window').width],
-    Extrapolate.CLAMP,
-  );
-
-  return {
-    width,
-  };
-});
+  });
 
   if (articleLoading) {
     return <Loader />;
@@ -762,10 +776,17 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.contentContainer}>
           {article && (
-            <Text style={{...styles.viewText, marginBottom: 10}}>
-              {article?.viewCount
-                ? article.viewCount > 1
-                : `${article.viewCount} view`}
+            <Text
+              style={[
+                styles.viewText,
+                {
+                  marginBottom: 10,
+                  fontSize: 14 * fontScale,
+                },
+              ]}>
+              {`${article?.viewCount ?? 0} ${
+                article?.viewCount === 1 ? 'view' : 'views'
+              }`}
             </Text>
           )}
           <View style={styles.badgeRow}>
@@ -781,18 +802,20 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
           {article && (
             <>
-              <Text style={styles.titleText}>{article?.title}</Text>
-<Text style={{
-  fontSize: 13,
-  color: '#6C6C6D',
-  marginTop: 6,
-  marginBottom: 4,
-  fontWeight: '500',
-}}>
-  🕐 {getReadTime(articleContent ?? '')}
-</Text>
-<View style={styles.fontSizeControls}>
-                <Text style={styles.fontSizeLabel}>Text size</Text>
+              <Text style={[styles.titleText, {fontSize: 25 * fontScale}]}>
+                {article?.title}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 13 * fontScale,
+                  color: '#6C6C6D',
+                  marginTop: 6,
+                  marginBottom: 4,
+                  fontWeight: '500',
+                }}>
+                🕐 {getReadTime(articleContent ?? '')}
+              </Text>
+              <View style={styles.fontSizeControls}>
                 <View style={styles.fontSizeButtons}>
                   <TouchableOpacity
                     onPress={handleDecreaseFont}
@@ -818,21 +841,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     .slice(Math.max(0, totalLikes - 3))
                     .map((likedUser, index) => {
                       const profileImage = likedUser.Profile_image;
-                      const uri = profileImage && profileImage.trim() !== ''
-                        ? (profileImage.startsWith('http')
-                          ? profileImage
-                          : `${GET_STORAGE_DATA}/${profileImage}`)
-                        : 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
+                      const uri = getProfileImageUri(profileImage);
 
                       return (
                         <View
                           key={likedUser._id || index}
-                          style={[
-                            styles.avatar,
-                            { left: index * 15 }
-                          ]}>
+                          style={[styles.avatar, {left: index * 15}]}>
                           <Image
-                            source={{ uri }}
+                            source={{uri}}
                             style={[
                               styles.profileImage,
                               !profileImage && {
@@ -846,11 +862,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     })}
 
                   {totalLikes > 3 && (
-                    <View
-                      style={[
-                        styles.avatar,
-                        styles.avatarTripleOverlap,
-                      ]}>
+                    <View style={[styles.avatar, styles.avatarTripleOverlap]}>
                       <Text style={styles.moreText}>+{totalLikes - 3}</Text>
                     </View>
                   )}
@@ -878,20 +890,23 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               {/* ── Research Summary Card ── */}
               <ResearchSummaryCard summary={summary} loading={summaryLoading} />
 
-              {article?.relatedPodcasts && article.relatedPodcasts.length > 0 && (
-                <StructuredPodcastCard relatedEpisodes={article.relatedPodcasts} />
-              )}
+              {article?.relatedPodcasts &&
+                article.relatedPodcasts.length > 0 && (
+                  <StructuredPodcastCard
+                    relatedEpisodes={article.relatedPodcasts}
+                  />
+                )}
             </>
           )}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
       <ArticleShareModal
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}
         article={{
-          title: article.title,               // string
-          authorName: article.author?.name,   // string  — adjust to your model shape
-          category: article.category ?? 'Health',  // string
+          title: article.title, // string
+          authorName: article.author?.name, // string  — adjust to your model shape
+          category: article.category ?? 'Health', // string
           coverImageUrl: article.cover_image ?? null,
           authorAvatarUrl: article.author?.profile_picture ?? null,
         }}
@@ -989,8 +1004,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               styles.actionButtonFooter,
               {backgroundColor: footerColors.pillBackground},
             ]}
-            onPress={async () => {() => setShareModalVisible(true)}}>
-            
+            onPress={() => setShareModalVisible(true)}>
             <FontAwesome name="share" size={18} color={footerColors.text} />
             <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
               Share
@@ -1115,10 +1129,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               )}
             </TouchableOpacity>
             <View>
-              <Text style={styles.authorName}>
+              <Text style={[styles.authorName, {fontSize: 14 * fontScale}]}>
                 {article ? article?.authorName : ''}
               </Text>
-              <Text style={styles.authorFollowers}>
+              <Text
+                style={[styles.authorFollowers, {fontSize: 11 * fontScale}]}>
                 {(article?.authorId as any)?.followers
                   ? (article?.authorId as any).followers.length > 1
                     ? `${(article?.authorId as any).followers.length} followers`
@@ -1145,7 +1160,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                         social_user_id: undefined,
                       });
                     }}>
-                    <Text style={styles.contributorTextStyle}>
+                    <Text
+                      style={[
+                        styles.contributorTextStyle,
+                        {fontSize: 14 * fontScale},
+                      ]}>
                       See all contributors
                     </Text>
                   </TouchableOpacity>
@@ -1180,14 +1199,15 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             <TouchableOpacity
               style={styles.ttsSpeedButton}
               onPress={() => setIsSpeedSelectorVisible(true)}>
-              <Text style={styles.ttsSpeedText}>
-                {`${speechRate}x`}
-              </Text>
+              <Text style={styles.ttsSpeedText}>{`${speechRate}x`}</Text>
             </TouchableOpacity>
 
             {/* Play / Pause button — disabled if neither playing nor paused */}
             <TouchableOpacity
-              style={[styles.ttsControlButton, (!isPlaying && !isPaused) && {opacity: 0.4}]}
+              style={[
+                styles.ttsControlButton,
+                !isPlaying && !isPaused && {opacity: 0.4},
+              ]}
               onPress={handleTtsPause}
               disabled={!isPlaying && !isPaused}>
               <FontAwesome5
