@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
@@ -502,7 +501,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
   const selectedScreenshot = allScreenshots[currentScreenshot] ?? allScreenshots[0];
 
   return (
-    <>
+    <div className="landing-page">
 
       {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
@@ -1156,6 +1155,6 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
         </div>
       )}
       <ScrollToTop />
-    </>
+    </div>
   );
 }
