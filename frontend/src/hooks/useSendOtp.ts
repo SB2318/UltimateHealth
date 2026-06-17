@@ -3,9 +3,9 @@ import axios, { AxiosError } from "axios";
 import { SEND_OTP } from "../helper/APIUtils";
 
 export const useSendOtpMutation = ():UseMutationResult<
- string,
- AxiosError,
- {email: string}
+  void,
+  AxiosError,
+  {email: string}
 > =>{
     return useMutation({
     mutationKey: ['forgot-password-otp'],
@@ -13,7 +13,7 @@ export const useSendOtpMutation = ():UseMutationResult<
       const res = await axios.post(SEND_OTP, {
         email: email,
       });
-      return res.data.otp as string;
+      void res;
     },
   });
-}
+};
