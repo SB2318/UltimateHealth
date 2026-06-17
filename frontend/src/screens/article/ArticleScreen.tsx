@@ -14,6 +14,7 @@ import {
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
+import GlobalStyles from '../../styles/GlobalStyle';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData, ArticleScreenProp} from '../../type';
 import {useDispatch, useSelector} from 'react-redux';
@@ -719,7 +720,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 : `${article.viewCount} view`}
             </Text>
           )}
-          <View style={styles.badgeRow}>
+          <View style={GlobalStyles.badgeRow}>
             {article && article?.tags && (
               <Text style={styles.categoryText}>
                 {article.tags.map(tag => tag.name).join(' | ')}
@@ -1225,14 +1226,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6C6C6D',
     textTransform: 'uppercase',
-  },
-  badgeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-    flexWrap: 'wrap',
-    gap: 8,
   },
   viewText: {
     fontWeight: '500',

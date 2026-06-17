@@ -17,6 +17,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import IonIcons from '@expo/vector-icons/Ionicons';
 import {GET_IMAGE} from '../helper/APIUtils';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import GlobalStyles from '../styles/GlobalStyle';
 import {
   formatCount,
   requestStoragePermissions,
@@ -417,7 +418,7 @@ const ArticleCard = ({
           )}
 
           {/* Title & Footer Text */}
-          <View style={styles.badgeRow}>
+          <View style={GlobalStyles.badgeRow}>
             {item?.tags && item.tags.length > 0 && (
               <Text style={styles.footerText}>
                 {item?.tags.map(tag => tag.name).join(' | ')}
@@ -836,14 +837,6 @@ const styles = StyleSheet.create({
     backgroundColor: ON_PRIMARY_COLOR,
     padding: 6,
     borderRadius: 20,
-  },
-  badgeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-    flexWrap: 'wrap',
-    gap: 8,
   },
 });
 
