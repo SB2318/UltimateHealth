@@ -1,0 +1,64 @@
+import axios from 'axios';
+import {renderHook, waitFor} from '@testing-library/react-native';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import React from 'react';
+import {useVerificationMailMutation} from './useMailVerification';
+
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+function makeWrapper() {
+  const queryClient = new QueryClient({
+    defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
+  });
+  return ({children}: {children: React.ReactNode}) =>
+    React.createElement(QueryClientProvider, {client: queryClient}, children);
+}
+
+describe('useVerificationMailMutation', () => {
+  afterEach(() => jest.clearAllMocks());
+
+  it('resolves with success message', async () => {
+    mockedAxios.post.mockResolvedValueOnce({
+      data: {message: 'Mail verified'},
+    });
+
+    const {result} = renderHook(() => useVerificationMailMutation(), {
+      wrapper: makeWrapper(),
+    });
+
+    result.current.mutate({email: 'test@example.com', token: 'token123'});
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data).toBe('Mail verified');
+  });
+
+  it('sets error state on network failure', async () => {
+    mockedAxios.post.mockRejectedValueOnce(new Error('Network Error'));
+
+    const {result} = renderHook(() => useVerificationMailMutation(), {
+      wrapper: makeWrapper(),
+    });
+
+    result.current.mutate({email: 'test@example.com', token: 'token123'});
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+  });
+
+  it('posts to the correct endpoint', async () => {
+    mockedAxios.post.mockResolvedValueOnce({data: {message: 'Mail verified'}});
+
+    const {result} = renderHook(() => useVerificationMailMutation(), {
+      wrapper: makeWrapper(),
+    });
+
+    result.current.mutate({email: 'test@example.com', token: 'token123'});
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(mockedAxios.post).toHaveBeenCalledWith(
+      expect.stringContaining('verifyEmail'),
+      {email: 'test@example.com', token: 'token123'},
+    );
+  });
+});
