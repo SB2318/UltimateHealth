@@ -33,6 +33,8 @@ const getActiveLocale = (localeTag: string): Locale => {
 
 const activeLocale = getActiveLocale(deviceLocale);
 
+const fixMidnightHour = (str: string): string => str.replace(/\b0+:/g, '12:');
+
 const COMMON_DATE_FORMATS = [
   'yyyy-MM-dd HH:mm:ss',
   "yyyy-MM-dd'T'HH:mm:ss",
@@ -98,9 +100,9 @@ const getValidDate = (date: Date | string | number | null | undefined): Date | n
 export const formatDateWithTime = (date: Date | string | number | null | undefined): string => {
   const validDate = getValidDate(date);
   if (!validDate) return '';
-  return format(validDate, "MMMM do yyyy, h:mm a", {
+  return fixMidnightHour(format(validDate, "MMMM do yyyy, h:mm a", {
     locale: activeLocale,
-  });
+  }));
 };
 
 /**
@@ -110,9 +112,9 @@ export const formatDateWithTime = (date: Date | string | number | null | undefin
 export const formatTimeWithDate = (date: Date | string | number | null | undefined): string => {
   const validDate = getValidDate(date);
   if (!validDate) return '';
-  return format(validDate, "hh:mm a dd/MM/yyyy", {
+  return fixMidnightHour(format(validDate, "hh:mm a dd/MM/yyyy", {
     locale: activeLocale,
-  });
+  }));
 };
 
 /**
@@ -134,9 +136,9 @@ export const formatDateShortYear = (date: Date | string | number | null | undefi
 export const formatWithOrdinalAndDay = (date: Date | string | number | null | undefined): string => {
   const validDate = getValidDate(date);
   if (!validDate) return '';
-  return format(validDate, "d MMM, EEE, h:mm a", {
+  return fixMidnightHour(format(validDate, "d MMM, EEE, h:mm a", {
     locale: activeLocale,
-  });
+  }));
 };
 
 /**
