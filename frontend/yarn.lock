@@ -4305,7 +4305,7 @@ asynckit@^0.4.0:
   resolved "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
 
-"audio-module@file:C:\\Users\\Swara Mishra\\UltimateHealth\\frontend\\modules\\audio-module":
+"audio-module@file:modules/audio-module":
   version "1.0.0"
   resolved "file:modules/audio-module"
 
