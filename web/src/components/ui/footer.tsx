@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import '../../app/globals.css'
 
 import { PageWrapper } from '../layout'
 
@@ -63,9 +62,7 @@ export const Footer = () => {
     }
   }
   return (
-    <footer className='' style={{
-        zIndex:10
-    }}>
+    <footer >
       <PageWrapper className="footer-grid">
         {/* Brand column */}
         <div className="footer-brand">
@@ -208,10 +205,10 @@ export const Footer = () => {
         <div className="footer-links-col">
           <h3>Quick Links</h3>
           <Link href={withBasePath('/')}>Home</Link>
-          <a href="/#features">Features</a>
-          <a href="/#programs">Programs</a>
-          <a href="/#screenshots">Screenshots</a>
-          <a href="/#contact">Contact</a>
+          <a href={withBasePath('#features')}>Features</a>
+          <a href={withBasePath('#programs')}>Programs</a>
+          <a href={withBasePath('#screenshots')}>Screenshots</a>
+          <a href={withBasePath('#contact')}>Contact</a>
           <Link href="/contribute">Join Us &amp; Contribute</Link>
         </div>
 
