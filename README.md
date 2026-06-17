@@ -362,6 +362,7 @@ UltimateHealth/
 ├── docs/                        # Documentation files
 ├── .env.example
 ├── setup-android.sh
+├── BACKEND_SETUP.md         
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
 ├── TEST_GUIDELINES.md
@@ -900,6 +901,18 @@ We welcome contributions from everyone — developers, designers, writers, and t
    <tr>
     <td align="center"><a href="https://github.com/Nareshkumawat-star"><img src="https://avatars.githubusercontent.com/u/207768679?v=4" width="120px;" alt=""/><br/><sub><b>Nareshkumawat-star</b></sub></a></td>
        <td align="center"><a href="https://github.com/Shrestha-ijarwal"><img src="https://avatars.githubusercontent.com/u/246360066?v=4" width="120px;" alt=""/><br/><sub><b>Shrestha-ijarwal</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Gurkaran18"><img src="https://avatars.githubusercontent.com/u/143310060?v=4" width="120px;" alt=""/><br/><sub><b>Gurkaran18</b></sub></a></td>
+     <td align="center"><a href="https://github.com/silentguyracer"><img src="https://avatars.githubusercontent.com/u/195958565?v=4" width="120px;" alt=""/><br/><sub><b>silentguyracer</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Wombatfreak6"><img src="https://avatars.githubusercontent.com/u/163987103?v=4" width="120px;" alt=""/><br/><sub><b>wombfrk.exe</b></sub></a></td>
+     <td align="center"><a href="https://github.com/deepsikha-dash"><img src="https://avatars.githubusercontent.com/u/232145023?v=4" width="120px;" alt=""/><br/><sub><b>Deepsikha Dash</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/divanshuaggarwal30"><img src="https://avatars.githubusercontent.com/u/223733104?v=4" width="120px;" alt=""/><br/><sub><b>Divanshu Aggarwal</b></sub></a></td>
+       <td align="center"><a href="https://github.com/smridhi-07"><img src="https://avatars.githubusercontent.com/u/226873227?v=4" width="120px;" alt=""/><br/><sub><b>Smridhi </b></sub></a></td>
+     <td align="center"><a href="https://github.com/Janarthanang-10"><img src="https://avatars.githubusercontent.com/u/234872499?v=4" width="120px;" alt=""/><br/><sub><b>Janarthanan G</b></sub></a></td>
+     <td align="center"><a href="https://github.com/shravi25"><img src="https://avatars.githubusercontent.com/u/219078114?v=4" width="120px;" alt=""/><br/><sub><b>Shraviya Ramesh Poojary</b></sub></a></td>
+     <td align="center"><a href="https://github.com/mannatjain11465-netizen"><img src="https://avatars.githubusercontent.com/u/226103934?v=4" width="120px;" alt=""/><br/><sub><b>Mannat Jain</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
