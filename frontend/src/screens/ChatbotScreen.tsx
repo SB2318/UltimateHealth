@@ -134,10 +134,12 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       });
       return;
     }
-    safeSetMessages(previousMessages =>
+  safeSetMessages(previousMessages =>
   GiftedChat.append(previousMessages, messages),
 );
-    sendMessageToAI(messages[0]?.text ?? 'AI in health within 100 words', {
+
+const prompt = messages?.[0]?.text ?? 'AI in health within 100 words';
+sendMessageToAI(prompt, {
      onSuccess: (responseData: Message) => {
   const verification = verifyChatbotResponse(responseData.text);
 
@@ -152,7 +154,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
           avatar:
             'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-design-template-vector.jpg',
         },
-        extra: {
+metadata: {
   status: verification.status,
   confidence: verification.confidence,
 },
@@ -299,9 +301,8 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
             }}
           renderBubble={props => {
   const message: any = props.currentMessage;
-
-  const status = message?.extra?.status;
-  const confidence = message?.extra?.confidence;
+const status = message?.metadata?.status;
+const confidence = message?.metadata?.confidence;
 
   return (
     <>
