@@ -27,6 +27,7 @@ import {useGetProfile} from '../hooks/useGetProfile';
 import {useSendMessageToGemini} from '../hooks/useSendMessageToGemini';
 import {useLoadAIConversations} from '../hooks/useLoadAIChats';
 import Snackbar from 'react-native-snackbar';
+import {verifyChatbotResponse} from '../chatbot-response-verification';
 
 // interface ChatbotResponse {
 //   id: string;
@@ -133,23 +134,32 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       });
       return;
     }
+    safeSetMessages(previousMessages =>
+  GiftedChat.append(previousMessages, messages),
+);
     sendMessageToAI(messages[0]?.text ?? 'AI in health within 100 words', {
-      onSuccess: (responseData: Message) => {
-        safeSetMessages(previousMessages =>
-          GiftedChat.append(previousMessages, [
-            {
-              _id: responseData._id,
-              text: responseData.text,
-              createdAt: new Date(),
-              user: {
-                _id: 2,
-                avatar:
-                  'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
-              },
-            },
-          ]),
-        );
+     onSuccess: (responseData: Message) => {
+  const verification = verifyChatbotResponse(responseData.text);
+
+  safeSetMessages(previousMessages =>
+    GiftedChat.append(previousMessages, [
+      {
+        _id: responseData._id,
+       text: responseData.text,
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          avatar:
+            'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-design-template-vector.jpg',
+        },
+        extra: {
+  status: verification.status,
+  confidence: verification.confidence,
+},
       },
+    ]),
+  );
+},
       onError: (error: AxiosError) => {
         if (!isMountedRef.current) {
           return;
@@ -211,9 +221,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
         }
       },
     });
-    safeSetMessages(previousMessages =>
-      GiftedChat.append(previousMessages, messages),
-    );
+   
   }, [isConnected, safeSetMessages, sendMessageToAI]);
 
   return (
@@ -289,19 +297,45 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
               paddingTop: 10,
               paddingBottom: 20,
             }}
-            renderBubble={props => (
-              <Bubble
-                {...props}
-                wrapperStyle={{
-                  right: {backgroundColor: PRIMARY_COLOR},
-                  left: {backgroundColor: '#f3f4f6'},
-                }}
-                textStyle={{
-                  right: {color: 'white', fontSize: 17, lineHeight: 24},
-                  left: {color: '#111827', fontSize: 17, lineHeight: 24},
-                }}
-              />
-            )}
+          renderBubble={props => {
+  const message: any = props.currentMessage;
+
+  const status = message?.extra?.status;
+  const confidence = message?.extra?.confidence;
+
+  return (
+    <>
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {backgroundColor: PRIMARY_COLOR},
+          left: {backgroundColor: '#f3f4f6'},
+        }}
+        textStyle={{
+          right: {color: 'white', fontSize: 17, lineHeight: 24},
+          left: {color: '#111827', fontSize: 17, lineHeight: 24},
+        }}
+      />
+
+      {status && (
+        <Text
+          style={{
+            fontSize: 11,
+            marginLeft: 10,
+            marginTop: 2,
+            color:
+              confidence === 'HIGH'
+                ? 'green'
+                : confidence === 'MEDIUM'
+                ? 'orange'
+                : 'red',
+          }}>
+          🧠 {status} | {confidence}
+        </Text>
+      )}
+    </>
+  );
+}}
             renderInputToolbar={props => (
               <InputToolbar
                 {...props}
