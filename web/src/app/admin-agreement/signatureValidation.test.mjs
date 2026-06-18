@@ -37,3 +37,24 @@ test("isSignatureValid accepts signatures with enough points and bounds across s
 
   assert.equal(isSignatureValid(strokes), true);
 });
+
+test("isSignatureValid rejects signatures when any point contains NaN", () => {
+  const strokes = [
+    Array.from({ length: 20 }, (_, i) =>
+      i === 10 ? { x: Number.NaN, y: 0.5 } : { x: 0.1 + i * 0.01, y: 0.1 + i * 0.01 },
+    ),
+  ];
+
+  assert.equal(isSignatureValid(strokes), false);
+});
+
+test("isSignatureValid rejects signatures when any point contains Infinity", () => {
+  const strokes = [
+    Array.from({ length: 20 }, (_, i) =>
+      i === 5 ? { x: Number.POSITIVE_INFINITY, y: 0.2 } : { x: 0.1 + i * 0.01, y: 0.1 + i * 0.01 },
+    ),
+  ];
+
+  assert.equal(isSignatureValid(strokes), false);
+});
+
