@@ -567,7 +567,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                 <span className="nav-item-text">Join Us to Contribute</span>
               </Link>
             </li>
-            <li style={{ display: "flex", alignItems: "center" }}>
+            <li className="nav-toggle-item">
               <ModeToggle />
             </li>
             <li style={{ display: "flex", alignItems: "center" }}>

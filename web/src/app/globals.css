@@ -308,6 +308,11 @@ body.touch-device .dna-cursor-canvas {
   line-height: 1.25;
 }
 
+.nav-toggle-item {
+  display: flex;
+  align-items: center;
+}
+
 .nav-links a::after {
   content: "";
   position: absolute;
@@ -3019,7 +3024,9 @@ html.dark .screenshot-details {
 }
 html.dark .screenshot-summary { color: #f1f5f9; }
 html.dark .screenshot-card-caption { background: #1e293b; }
-html.dark .feature-section-premium,
+html.dark .feature-section-premium {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
 html.dark .member-section {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
 }
