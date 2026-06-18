@@ -5,15 +5,16 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ScrollView,
   Alert,
   Dimensions,
   Share,
   useColorScheme,
 } from 'react-native';
+import ArticleShareModal from '../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
+import GlobalStyles from '../../styles/GlobalStyle';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData, ArticleScreenProp} from '../../type';
 import {useDispatch, useSelector} from 'react-redux';
@@ -23,7 +24,10 @@ import Loader from '../../components/Loader';
 import Snackbar from 'react-native-snackbar';
 import ResearchSummaryCard from '../../components/ResearchSummaryCard';
 import StructuredPodcastCard from '../../components/StructuredPodcastCard';
-import { generateArticleSummary, ArticleSummary } from '../../services/SummaryService';
+import {
+  generateArticleSummary,
+  ArticleSummary,
+} from '../../services/SummaryService';
 
 import {
   formatCount,
@@ -35,6 +39,7 @@ import {
 //import CommentScreen from '../CommentScreen';
 import Tts from 'react-native-tts';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import FloatingSpeedSelector from '../../components/FloatingSpeedSelector';
 
 import {setUserHandle} from '../../store/UserSlice';
 import {FontAwesome5} from '@expo/vector-icons';
@@ -47,15 +52,34 @@ import {useGetProfile} from '@/src/hooks/useGetProfile';
 import {useLikeArticle} from '@/src/hooks/useLikeArticle';
 import {useUpdateFollowStatusByArticle} from '@/src/hooks/useUpdateFollowStatus';
 import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
+import {getReadTime} from '../../utils/readTime';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  interpolate,
+  Extrapolate,
+  runOnJS,
+} from 'react-native-reanimated';
 
 const CHUNK_SIZE = 120;
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
+  const getProfileImageUri = (profileImage?: string) => {
+    if (!profileImage?.trim()) {
+      return 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
+    }
+
+    return profileImage.startsWith('http')
+      ? profileImage
+      : `${GET_STORAGE_DATA}/${profileImage}`;
+  };
   const {user_id, isGuest} = useSelector((state: any) => state.user);
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
@@ -63,11 +87,19 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
+  const [isSpeedSelectorVisible, setIsSpeedSelectorVisible] = useState(false);
   const [playerVisible, setPlayerVisible] = useState(false);
   const [summary, setSummary] = useState<ArticleSummary | null>(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
+  const [shareModalVisible, setShareModalVisible] = useState(false);
   const chunkIndexRef = useRef(0);
   const wordsRef = useRef<string[]>([]);
+  const readEventFiredRef = useRef(false);
+
+  // Progress Bar Shared Values
+  const scrollY = useSharedValue(0);
+  const contentHeight = useSharedValue(0);
+  const layoutHeight = useSharedValue(0);
 
   const {mutate: followMutation, isPending: followMutationPending} =
     useUpdateFollowStatusByArticle();
@@ -161,6 +193,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }, [articleId, isGuest, updateViewCount]);
 
   useEffect(() => {
+    readEventFiredRef.current = false;
+    setReadEventSave(false);
     refetch();
   }, [articleId, refetch]);
 
@@ -507,7 +541,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         setIsPaused(false);
         // Step back one chunk to resume from the interrupted chunk
         chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
-        
+
         // Re-attach listeners
         Tts.addEventListener('tts-finish', speakNextChunk);
         Tts.addEventListener('tts-error', e => {
@@ -516,7 +550,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           setIsPaused(false);
           setPlayerVisible(false);
         });
-        
+
         speakNextChunk();
       } else {
         // Pause
@@ -546,20 +580,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
-  const SPEED_OPTIONS = [0.5, 0.75, 1.0, 1.25, 1.5];
-  const SPEED_LABELS: Record<number, string> = {
-    0.5: '0.5x',
-    0.75: '0.75x',
-    1.0: '1x',
-    1.25: '1.25x',
-    1.5: '1.5x',
-  };
-
-  const handleSpeedChange = () => {
-    const currentIndex = SPEED_OPTIONS.indexOf(speechRate);
-    const nextRate = SPEED_OPTIONS[(currentIndex + 1) % SPEED_OPTIONS.length];
-    setSpeechRate(nextRate);
-    Tts.setDefaultRate(nextRate);
+  const handleSpeedSelect = (selectedSpeed: number) => {
+    setSpeechRate(selectedSpeed);
+    Tts.setDefaultRate(selectedSpeed);
     // Restart current position with new speed if currently playing
     if (isPlaying && !isPaused) {
       Tts.removeAllListeners('tts-finish');
@@ -579,6 +602,75 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
     }
   };
+
+  // Function to handle the Read Status logic (preserved from original onScroll)
+  const handleReadStatusUpdate = (
+    offset: number,
+    height: number,
+    layout: number,
+  ) => {
+    if (layout + offset >= height) {
+      if (
+        article &&
+        !readEventSave &&
+        !isGuest &&
+        article.status === StatusEnum.PUBLISHED
+      ) {
+        updateReadEvent(undefined, {
+          onSuccess: () => {
+            setReadEventSave(true);
+            Snackbar.show({
+              text: 'Your read status updated.',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          },
+          onError: err => {
+            console.log('Update Read Status mutation error', err);
+            Snackbar.show({
+              text: 'Failed to update your read status.',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          },
+        });
+      }
+    }
+  };
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      scrollY.value = event.contentOffset.y;
+      contentHeight.value = event.contentSize.height;
+      layoutHeight.value = event.layoutMeasurement.height;
+
+      // Execute existing read-status logic on JS thread
+      runOnJS(handleReadStatusUpdate)(
+        event.contentOffset.y,
+        event.contentSize.height,
+        event.layoutMeasurement.height,
+      );
+    },
+  });
+
+  const progressStyle = useAnimatedStyle(() => {
+    const scrollableDistance = contentHeight.value - layoutHeight.value;
+
+    if (scrollableDistance <= 0 && contentHeight.value > 0) {
+      return {
+        width: Dimensions.get('window').width,
+      };
+    }
+
+    const width = interpolate(
+      scrollY.value,
+      [0, Math.max(1, scrollableDistance)],
+      [0, Dimensions.get('window').width],
+      Extrapolate.CLAMP,
+    );
+
+    return {
+      width,
+    };
+  });
 
   if (articleLoading) {
     return <Loader />;
@@ -602,6 +694,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Reading Progress Bar */}
+      <Animated.View style={[styles.progressBar, progressStyle]} />
+
       <View style={styles.imageContainer}>
         {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
           <Image
@@ -676,59 +771,53 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         )}
       </View>
 
-      <ScrollView
+      <Animated.ScrollView
         style={styles.scrollView}
-        onScroll={e => {
-          let windowHeight = Dimensions.get('window').height,
-            height = e.nativeEvent.contentSize.height,
-            offset = e.nativeEvent.contentOffset.y;
-          if (windowHeight + offset >= height) {
-            if (
-              article &&
-              !readEventSave &&
-              !isGuest &&
-              article.status === StatusEnum.PUBLISHED
-            ) {
-              updateReadEvent(undefined, {
-                onSuccess: () => {
-                  console.log('Read Event Updated');
-                  setReadEventSave(true);
-                  Snackbar.show({
-                    text: 'Your read status updated.',
-                    duration: Snackbar.LENGTH_SHORT,
-                  });
-                },
-                onError: err => {
-                  console.log('Update Read Status mutation error', err);
-                  Snackbar.show({
-                    text: 'Failed to update your read status.',
-                    duration: Snackbar.LENGTH_SHORT,
-                  });
-                },
-              });
-            }
-          }
-        }}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
         contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.contentContainer}>
           {article && (
-            <Text style={{...styles.viewText, marginBottom: 10}}>
-              {article?.viewCount
-                ? article.viewCount > 1
-                : `${article.viewCount} view`}
+            <Text
+              style={[
+                styles.viewText,
+                {
+                  marginBottom: 10,
+                  fontSize: 14 * fontScale,
+                },
+              ]}>
+              {`${article?.viewCount ?? 0} ${
+                article?.viewCount === 1 ? 'view' : 'views'
+              }`}
             </Text>
           )}
-          {article && article?.tags && (
-            <Text style={styles.categoryText}>
-              {article.tags.map(tag => tag.name).join(' | ')}
-            </Text>
-          )}
+          <View style={GlobalStyles.badgeRow}>
+            {article && article?.tags && (
+              <Text style={styles.categoryText}>
+                {article.tags.map(tag => tag.name).join(' | ')}
+              </Text>
+            )}
+            {article && (
+              <ReadingDifficulty difficulty={getArticleDifficulty(article)} />
+            )}
+          </View>
 
           {article && (
             <>
-              <Text style={styles.titleText}>{article?.title}</Text>
+              <Text style={[styles.titleText, {fontSize: 25 * fontScale}]}>
+                {article?.title}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 13 * fontScale,
+                  color: '#6C6C6D',
+                  marginTop: 6,
+                  marginBottom: 4,
+                  fontWeight: '500',
+                }}>
+                🕐 {getReadTime(articleContent ?? '')}
+              </Text>
               <View style={styles.fontSizeControls}>
-                <Text style={styles.fontSizeLabel}>Text size</Text>
                 <View style={styles.fontSizeButtons}>
                   <TouchableOpacity
                     onPress={handleDecreaseFont}
@@ -754,21 +843,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     .slice(Math.max(0, totalLikes - 3))
                     .map((likedUser, index) => {
                       const profileImage = likedUser.Profile_image;
-                      const uri = profileImage && profileImage.trim() !== ''
-                        ? (profileImage.startsWith('http')
-                          ? profileImage
-                          : `${GET_STORAGE_DATA}/${profileImage}`)
-                        : 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
+                      const uri = getProfileImageUri(profileImage);
 
                       return (
                         <View
                           key={likedUser._id || index}
-                          style={[
-                            styles.avatar,
-                            { left: index * 15 }
-                          ]}>
+                          style={[styles.avatar, {left: index * 15}]}>
                           <Image
-                            source={{ uri }}
+                            source={{uri}}
                             style={[
                               styles.profileImage,
                               !profileImage && {
@@ -782,11 +864,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     })}
 
                   {totalLikes > 3 && (
-                    <View
-                      style={[
-                        styles.avatar,
-                        styles.avatarTripleOverlap,
-                      ]}>
+                    <View style={[styles.avatar, styles.avatarTripleOverlap]}>
                       <Text style={styles.moreText}>+{totalLikes - 3}</Text>
                     </View>
                   )}
@@ -814,13 +892,27 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               {/* ── Research Summary Card ── */}
               <ResearchSummaryCard summary={summary} loading={summaryLoading} />
 
-              {article?.relatedPodcasts && article.relatedPodcasts.length > 0 && (
-                <StructuredPodcastCard relatedEpisodes={article.relatedPodcasts} />
-              )}
+              {article?.relatedPodcasts &&
+                article.relatedPodcasts.length > 0 && (
+                  <StructuredPodcastCard
+                    relatedEpisodes={article.relatedPodcasts}
+                  />
+                )}
             </>
           )}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
+      <ArticleShareModal
+        visible={shareModalVisible}
+        onClose={() => setShareModalVisible(false)}
+        article={{
+          title: article.title, // string
+          authorName: article.author?.name, // string  — adjust to your model shape
+          category: article.category ?? 'Health', // string
+          coverImageUrl: article.cover_image ?? null,
+          authorAvatarUrl: article.author?.profile_picture ?? null,
+        }}
+      />
 
       <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
         {/* Action Bar Row */}
@@ -914,29 +1006,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               styles.actionButtonFooter,
               {backgroundColor: footerColors.pillBackground},
             ]}
-            onPress={async () => {
-              try {
-                if (article) {
-                  const result = await Share.share({
-                    message: `Check out this article: ${article.title}\n\n${article.description}`,
-                    title: article.title,
-                  });
-
-                  if (result.action === Share.sharedAction) {
-                    Snackbar.show({
-                      text: 'Article shared successfully!',
-                      duration: Snackbar.LENGTH_SHORT,
-                    });
-                  }
-                }
-              } catch (error) {
-                console.log('Error sharing:', error);
-                Snackbar.show({
-                  text: 'Failed to share article',
-                  duration: Snackbar.LENGTH_SHORT,
-                });
-              }
-            }}>
+            onPress={() => setShareModalVisible(true)}>
             <FontAwesome name="share" size={18} color={footerColors.text} />
             <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
               Share
@@ -1061,10 +1131,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               )}
             </TouchableOpacity>
             <View>
-              <Text style={styles.authorName}>
+              <Text style={[styles.authorName, {fontSize: 14 * fontScale}]}>
                 {article ? article?.authorName : ''}
               </Text>
-              <Text style={styles.authorFollowers}>
+              <Text
+                style={[styles.authorFollowers, {fontSize: 11 * fontScale}]}>
                 {(article?.authorId as any)?.followers
                   ? (article?.authorId as any).followers.length > 1
                     ? `${(article?.authorId as any).followers.length} followers`
@@ -1091,7 +1162,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                         social_user_id: undefined,
                       });
                     }}>
-                    <Text style={styles.contributorTextStyle}>
+                    <Text
+                      style={[
+                        styles.contributorTextStyle,
+                        {fontSize: 14 * fontScale},
+                      ]}>
                       See all contributors
                     </Text>
                   </TouchableOpacity>
@@ -1125,15 +1200,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             {/* Speed button */}
             <TouchableOpacity
               style={styles.ttsSpeedButton}
-              onPress={handleSpeedChange}>
-              <Text style={styles.ttsSpeedText}>
-                {SPEED_LABELS[speechRate]}
-              </Text>
+              onPress={() => setIsSpeedSelectorVisible(true)}>
+              <Text style={styles.ttsSpeedText}>{`${speechRate}x`}</Text>
             </TouchableOpacity>
 
             {/* Play / Pause button — disabled if neither playing nor paused */}
             <TouchableOpacity
-              style={[styles.ttsControlButton, (!isPlaying && !isPaused) && {opacity: 0.4}]}
+              style={[
+                styles.ttsControlButton,
+                !isPlaying && !isPaused && {opacity: 0.4},
+              ]}
               onPress={handleTtsPause}
               disabled={!isPlaying && !isPaused}>
               <FontAwesome5
@@ -1157,6 +1233,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </View>
         </View>
       )}
+
+      <FloatingSpeedSelector
+        currentSpeed={speechRate}
+        onSpeedSelect={handleSpeedSelect}
+        visible={isSpeedSelectorVisible}
+        onClose={() => setIsSpeedSelectorVisible(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -1168,6 +1251,16 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     backgroundColor: '#ffffff',
+  },
+  progressBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: 4,
+    backgroundColor: PRIMARY_COLOR,
+    zIndex: 1000,
+    borderBottomRightRadius: 2,
+    borderTopRightRadius: 2,
   },
   scrollView: {
     flex: 0,
