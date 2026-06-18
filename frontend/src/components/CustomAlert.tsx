@@ -26,7 +26,8 @@ export function CustomAlertDialog() {
           animation="bouncy"
           borderRadius={12}
           padded
-          width={300}
+          width="90%"
+          maxWidth={300}
           
         >
           <YStack space="$3">

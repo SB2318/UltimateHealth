@@ -138,6 +138,7 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
 
             <XStack
               gap="$3"
+              $xs={{ gap: "$2" }}
               justifyContent="center"
               marginTop="$7"
               marginBottom="$2">
@@ -171,6 +172,7 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
                   br="$5"
                   width={60}
                   height={64}
+                  $xs={{ width: 48, height: 52 }}
                   bg={errorMessages ? '$red1' : digit ? '$blue1' : '$gray1'}
                   color="$color12"
                 />

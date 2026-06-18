@@ -289,7 +289,8 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               fontSize={16}
               fontWeight="500"
               color={isDarkMode ? '$color' : '$color10'}
-              maxWidth={300}
+              maxWidth="100%"
+              width="100%"
               lineHeight={22}>
               Enter your email and password to securely access your account
             </Text>
@@ -393,7 +394,9 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               justifyContent="space-between"
               alignItems="center"
               marginTop="$2"
-              paddingHorizontal="$2">
+              paddingHorizontal="$2"
+              flexWrap="wrap"
+              gap="$2">
               <Text
                 color={isDarkMode ? '$gray400' : '$gray700'}
                 fontWeight="500"

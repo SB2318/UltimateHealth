@@ -15,8 +15,8 @@ const HomeScreenHeader = ({
   searchText,
 }: HomeScreenHeaderProps) => {
   return (
-    <YStack backgroundColor="#000A60" width="100%" paddingHorizontal="$3" paddingVertical="$3" elevation={1}>
-      <XStack alignItems="center" justifyContent="space-between" gap="$3">
+    <YStack backgroundColor="#000A60" width="100%" paddingHorizontal="$3" $xs={{ paddingHorizontal: "$2" }} paddingVertical="$3" elevation={1}>
+      <XStack alignItems="center" justifyContent="space-between" gap="$3" $xs={{ gap: "$2" }}>
         
         {/* Left Side Menu Button - Restored! */}
         <Button chromeless onPress={handlePresentModalPress} padding="$0">
@@ -39,9 +39,10 @@ const HomeScreenHeader = ({
           <Input 
             unstyled
             flex={1}
-            placeholder="Search articles..."
+            placeholder="Search..."
             placeholderTextColor="#778599"
             fontSize="$4"
+            $xs={{ fontSize: "$3" }}
             value={searchText}
             onChangeText={onTextInputChange}
             accessibilityLabel="Search articles"
@@ -51,8 +52,8 @@ const HomeScreenHeader = ({
             <Button 
               chromeless 
               onPress={onFilterReset}
-              paddingHorizontal="$3"
-              paddingVertical="$2"
+              paddingHorizontal="$2"
+              paddingVertical="$1"
               marginRight="$1"
               accessibilityLabel="Clear all active filters"
             >
@@ -60,8 +61,9 @@ const HomeScreenHeader = ({
                 color="$color"
                 fontWeight="$fontWeight.semibold"
                 fontSize="$2"
+                $xs={{ fontSize: "$1" }}
               >
-                Clear All
+                Clear
               </Text>
             </Button>
           )}
