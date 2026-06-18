@@ -362,6 +362,7 @@ UltimateHealth/
 ├── docs/                        # Documentation files
 ├── .env.example
 ├── setup-android.sh
+├── BACKEND_SETUP.md         
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
 ├── TEST_GUIDELINES.md
@@ -904,6 +905,31 @@ We welcome contributions from everyone — developers, designers, writers, and t
      <td align="center"><a href="https://github.com/silentguyracer"><img src="https://avatars.githubusercontent.com/u/195958565?v=4" width="120px;" alt=""/><br/><sub><b>silentguyracer</b></sub></a></td>
      <td align="center"><a href="https://github.com/Wombatfreak6"><img src="https://avatars.githubusercontent.com/u/163987103?v=4" width="120px;" alt=""/><br/><sub><b>wombfrk.exe</b></sub></a></td>
      <td align="center"><a href="https://github.com/deepsikha-dash"><img src="https://avatars.githubusercontent.com/u/232145023?v=4" width="120px;" alt=""/><br/><sub><b>Deepsikha Dash</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/divanshuaggarwal30"><img src="https://avatars.githubusercontent.com/u/223733104?v=4" width="120px;" alt=""/><br/><sub><b>Divanshu Aggarwal</b></sub></a></td>
+       <td align="center"><a href="https://github.com/smridhi-07"><img src="https://avatars.githubusercontent.com/u/226873227?v=4" width="120px;" alt=""/><br/><sub><b>Smridhi </b></sub></a></td>
+     <td align="center"><a href="https://github.com/Janarthanang-10"><img src="https://avatars.githubusercontent.com/u/234872499?v=4" width="120px;" alt=""/><br/><sub><b>Janarthanan G</b></sub></a></td>
+     <td align="center"><a href="https://github.com/shravi25"><img src="https://avatars.githubusercontent.com/u/219078114?v=4" width="120px;" alt=""/><br/><sub><b>Shraviya Ramesh Poojary</b></sub></a></td>
+     <td align="center"><a href="https://github.com/mannatjain11465-netizen"><img src="https://avatars.githubusercontent.com/u/226103934?v=4" width="120px;" alt=""/><br/><sub><b>Mannat Jain</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Stewartsson"><img src="https://avatars.githubusercontent.com/u/198082561?v=4" width="120px;" alt=""/><br/><sub><b>John Stewartsson J R</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/Deepak-Akuthota"><img src="https://avatars.githubusercontent.com/u/192285199?v=4" width="120px;" alt=""/><br/><sub><b>Deepak-Akuthota</b></sub></a></td>
+       <td align="center"><a href="https://github.com/Kr1491"><img src="https://avatars.githubusercontent.com/u/107742536?v=4" width="120px;" alt=""/><br/><sub><b>Krishna Jha</b></sub></a></td>
+     <td align="center"><a href="https://github.com/sahare-mayur-0071"><img src="https://avatars.githubusercontent.com/u/184800556?v=4" width="120px;" alt=""/><br/><sub><b>MAYUR AJIT SAHARE</b></sub></a></td>
+     <td align="center"><a href="https://github.com/kandhwayanushka-hue"><img src="https://avatars.githubusercontent.com/u/231687775?v=4" width="120px;" alt=""/><br/><sub><b>ANUSHKA KANDHWAY</b></sub></a></td>
+     <td align="center"><a href="https://github.com/dinesh9997"><img src="https://avatars.githubusercontent.com/u/217073059?v=4" width="120px;" alt=""/><br/><sub><b>GUJJU DINESH</b></sub></a></td>
+     <td align="center"><a href="https://github.com/dishamalukani-creator"><img src="https://avatars.githubusercontent.com/u/266451120?v=4" width="120px;" alt=""/><br/><sub><b>dishamalukani-creator</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/Kruthi-choudary"><img src="https://avatars.githubusercontent.com/u/230213533?v=4" width="120px;" alt=""/><br/><sub><b>Kruthi</b></sub></a></td>
+       <td align="center"><a href="https://github.com/Hasini2706"><img src="https://avatars.githubusercontent.com/u/180012483?v=4" width="120px;" alt=""/><br/><sub><b>HASINI</b></sub></a></td>
+     <td align="center"><a href="https://github.com/anjali62510-star"><img src="https://avatars.githubusercontent.com/u/221178990?v=4" width="120px;" alt=""/><br/><sub><b>anjali62510-star</b></sub></a></td>
+     <td align="center"><a href="https://github.com/aspartic-gthb"><img src="https://avatars.githubusercontent.com/u/243364071?v=4" width="120px;" alt=""/><br/><sub><b>Anirudh Sahu</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
