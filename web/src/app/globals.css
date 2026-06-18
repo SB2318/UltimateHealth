@@ -738,6 +738,25 @@ p.center {
   object-fit: cover;
 }
 
+.screenshot-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.screenshot-box .screenshot-image {
+  flex: 1;
+}
+
+.screenshot-card-caption {
+  padding: 14px 16px;
+  background: white;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-align: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
 .screenshot-empty {
   display: flex;
   flex-direction: column;

@@ -536,7 +536,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                 aria-current={activeSection === "screenshots" ? "location" : undefined}
               >
                 <i className="fas fa-image nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Screenshots</span>
+                <span className="nav-item-text">App Experience</span>
               </a>
             </li>
             <li>
@@ -581,7 +581,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
         </PageWrapper>
 
         <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
+          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>App Experience</a>
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
           <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
@@ -600,8 +600,8 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
-          <h2>App Screenshots</h2>
-          <p className="center">Take a look inside the UltimateHealth experience</p>
+          <h2>App Experience</h2>
+          <p className="center">A closer look at what UltimateHealth offers, screen by screen</p>
 
           <div className="screenshot-details">
             <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
