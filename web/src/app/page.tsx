@@ -7,7 +7,7 @@ import "./globals.css";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
-
+import { ModeToggle } from "@/components/mode-toggle";
 import { PageWrapper, Section } from "../components/layout";
 
 import { withBasePath } from "@/lib/basePath";
@@ -568,6 +568,9 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               </Link>
             </li>
             <li style={{ display: "flex", alignItems: "center" }}>
+              <ModeToggle />
+            </li>
+            <li style={{ display: "flex", alignItems: "center" }}>
               <a href="#downloads" className="nav-btn-sm">
                 <i className="fas fa-user" aria-hidden="true"></i>
                 <span>Login / Register</span>
@@ -588,6 +591,9 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
           <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+          <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
+            <ModeToggle />
+          </div>
         </nav>
       </header>
 

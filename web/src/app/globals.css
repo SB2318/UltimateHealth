@@ -3009,3 +3009,58 @@ i, svg {
     transition: none !important;
   }
 }
+
+/* ==================== DARK MODE ==================== */
+html.dark {
+  --text-dark: #f1f5f9;
+  --text-light: #cbd5e1;
+  --text-muted: #94a3b8;
+  --bg-light: #1e293b;
+  --bg-white: #0f172a;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+html.dark .header {
+  background: rgba(15, 23, 42, 0.95);
+  border-bottom-color: rgba(255,255,255,0.05);
+}
+html.dark .mobile-nav { background: #0f172a; }
+html.dark .mobile-nav a {
+  color: #f1f5f9;
+  border-bottom-color: rgba(255,255,255,0.05);
+}
+html.dark .mobile-menu-toggle { color: #f1f5f9; }
+html.dark .screenshot-details {
+  background: #1e293b;
+  border-color: rgba(255,255,255,0.05);
+}
+html.dark .screenshot-summary { color: #f1f5f9; }
+html.dark .screenshot-card-caption { background: #1e293b; }
+html.dark .feature-section-premium,
+html.dark .member-section {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+}
+html.dark .feature-card-premium {
+  background: rgba(30,41,59,0.6);
+  border-color: rgba(255,255,255,0.1);
+}
+html.dark .feature-item,
+html.dark .feature-card,
+html.dark .mod-card,
+html.dark .program-card,
+html.dark .download-card,
+html.dark .modal-content {
+  background: #1e293b;
+  border-color: rgba(255,255,255,0.05);
+}
+html.dark section#contact.contact-section { background: #0f172a; }
+html.dark .contact-dark-right { background: #1e293b; }
+html.dark .contact-form-title { color: #f1f5f9; }
+html.dark .dark-field-group {
+  background: #0f172a;
+  border-color: rgba(255,255,255,0.1);
+}
+html.dark .dark-input { color: #f1f5f9; }
+html.dark .dark-input::placeholder { color: #475569; }
