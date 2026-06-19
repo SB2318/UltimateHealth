@@ -23,7 +23,7 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
   return (
     <header>
       {/* ── Hero image ── */}
-      <div className="relative  overflow-hidden bg-gradient-to-br from-[#667eea] to-[#764ba2] aspect-[16/9] md:aspect-[21/9]   border-2 border-slate-400 ml-10 mr-10 mt-3 rounded-3xl">
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#667eea] to-[#764ba2] aspect-[16/9] md:aspect-[2.4/1] border-2 border-slate-400 mx-4 sm:mx-6 lg:mx-10 mt-3 rounded-3xl">
         {article.imageUrl ? (
           <Image
             src={article.imageUrl}
@@ -31,7 +31,7 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
             fill
             priority
             sizes="100vw"
-            className="object-contain"
+            className="object-cover"
           />
         ) : (
           /* Gradient placeholder when no hero image is provided */
