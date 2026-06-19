@@ -50,7 +50,7 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
       </div>
 
       {/* ── Article metadata ── */}
-      <div className="max-w-[860px] mx-auto px-4 sm:px-6 mt-8 pb-2">
+      <div className="max-w-275 mx-auto px-4 sm:px-6 lg:px-8 mt-8 pb-2">
         {/* Category badge */}
         <div className="mb-4">
           <span className="inline-block text-xs font-bold uppercase tracking-widest text-[#667eea] bg-[#667eea]/10 px-3 py-1.5 rounded-full border border-[#667eea]/20">

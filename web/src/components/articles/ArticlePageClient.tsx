@@ -42,8 +42,6 @@ export default function ArticlePageClient({
       {/* Sticky reading progress indicator */}
       <ReadingProgressBar />
 
-      
-
       <div
         className="min-h-screen bg-white"
         style={
