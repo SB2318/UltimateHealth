@@ -50,6 +50,10 @@ jobs:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
 
+      - name: Clear yarn cache
+        if: steps.node-cache.outputs.cache-hit != 'true'
+        run: yarn cache clean
+
       - name: Install Dependencies
         if: steps.node-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
