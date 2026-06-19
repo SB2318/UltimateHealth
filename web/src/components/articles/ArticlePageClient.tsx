@@ -52,7 +52,7 @@ export default function ArticlePageClient({
       >
         {/* ── Sticky top navigation bar ── */}
         <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm rounded-full m-3">
-          <div className="max-w-275 mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between gap-4">
+          <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between gap-4">
             {/* Back link */}
             <Link
               href={withBasePath("/articles")}
@@ -84,9 +84,9 @@ export default function ArticlePageClient({
           {/* ── Article body ── */}
           <div
             id="article-body"
-            className="max-w-275 mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-[1fr_250px] lg:gap-12"
+            className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-[1fr_250px] lg:gap-12"
           >
-            <div className="max-w-185 w-full">
+            <div className="max-w-[740px] w-full">
               <article
                 aria-label={article.title}
                 className="[font-size:var(--article-font-size)]"
@@ -192,7 +192,7 @@ function ArticleFooter({ article }: { article: Article }) {
 function ArticlePageFooter() {
   return (
     <div className="bg-[#0f172a] text-[#64748b] py-8">
-      <div className="max-w-275 mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
         <div className="flex items-center gap-2">
           <Link
             href={withBasePath("/")}
