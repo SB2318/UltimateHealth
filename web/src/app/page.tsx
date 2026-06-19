@@ -65,7 +65,7 @@ const getCursorGlowSnapshot = () => {
 };
 
 const subscribeToCursorGlow = (callback: () => void) => {
-  if (typeof window === "undefined") return () => {};
+  if (typeof window === "undefined") return () => { };
 
   const onStorage = (event: StorageEvent) => {
     if (event.storageArea === window.localStorage && event.key === CURSOR_GLOW_STORAGE_KEY) {
@@ -111,6 +111,7 @@ export default function Home() {
 
   // ── Contact form state ──
   const [contactName, setContactName] = useState("");
+  const [contactNameError, setContactNameError] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactSubject, setContactSubject] = useState("");
   const [contactMessage, setContactMessage] = useState("");
@@ -118,7 +119,7 @@ export default function Home() {
 
   // ── Newsletter state ──
   const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error"| "invalid" | "empty" | "duplicate">("idle");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error" | "invalid" | "empty" | "duplicate">("idle");
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
@@ -358,38 +359,38 @@ export default function Home() {
     }
   };
 
-const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
-  const slider = ref.current;
-  if (!slider) return;
+  const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
+    const slider = ref.current;
+    if (!slider) return;
 
-  const maxScroll = slider.scrollWidth - slider.clientWidth;
-  const currentScroll = slider.scrollLeft;
-  const targetScroll = currentScroll + dir * SLIDER_SCROLL_AMOUNT;
+    const maxScroll = slider.scrollWidth - slider.clientWidth;
+    const currentScroll = slider.scrollLeft;
+    const targetScroll = currentScroll + dir * SLIDER_SCROLL_AMOUNT;
 
-  if (dir === 1) {
-    if (currentScroll >= maxScroll) {
-      slider.scrollTo({ left: 0, behavior: "auto" });
-      return;
+    if (dir === 1) {
+      if (currentScroll >= maxScroll) {
+        slider.scrollTo({ left: 0, behavior: "auto" });
+        return;
+      }
+
+      if (targetScroll > maxScroll) {
+        slider.scrollTo({ left: maxScroll, behavior: "smooth" });
+        return;
+      }
     }
 
-    if (targetScroll > maxScroll) {
-      slider.scrollTo({ left: maxScroll, behavior: "smooth" });
-      return;
+    if (dir === -1) {
+      if (currentScroll <= 0 || targetScroll < 0) {
+        slider.scrollTo({ left: maxScroll, behavior: "auto" });
+        return;
+      }
     }
-  }
 
-  if (dir === -1) {
-    if (currentScroll <= 0 || targetScroll < 0) {
-      slider.scrollTo({ left: maxScroll, behavior: "auto" });
-      return;
-    }
-  }
-
-  slider.scrollTo({
-    left: Math.max(0, Math.min(targetScroll, maxScroll)),
-    behavior: "smooth",
-  });
-};
+    slider.scrollTo({
+      left: Math.max(0, Math.min(targetScroll, maxScroll)),
+      behavior: "smooth",
+    });
+  };
   useEffect(() => {
     const interval = setInterval(() => {
       moveSlider(userSliderRef, 1);
@@ -430,13 +431,34 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
   // ── Contact form submit → uhsocial.in API ──
   // Backend route needed: POST /api/contact/send on NEXT_PUBLIC_API_BASE_URL
   // See /contact_newsletter_guide.md for the Express route implementation
+
+  // ── Name validation ──
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setContactName(value);
+    const invalidChars = /[^a-zA-Z\s\-']/;
+    if (value.trim() === "") {
+      setContactNameError("Name is required.");
+    } else if (invalidChars.test(value)) {
+      setContactNameError("Name can only contain letters, spaces, hyphens, and apostrophes.");
+    } else {
+      setContactNameError("");
+    }
+  };
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = contactName.trim();
     const trimmedEmail = contactEmail.trim();
     const trimmedSubject = contactSubject.trim();
     const trimmedMessage = contactMessage.trim();
-    if (!trimmedName || !isValidEmail(trimmedEmail) || !trimmedSubject || !trimmedMessage) {
+    if (!trimmedName) {
+      setContactNameError("Name is required.");
+      return;
+    }
+    if (contactNameError) {
+      return;
+    }
+    if (!isValidEmail(trimmedEmail) || !trimmedSubject || !trimmedMessage) {
       alert("Please complete the form with a valid email address.");
       return;
     }
@@ -454,7 +476,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       });
       if (!res.ok) throw new Error("Failed");
       setContactStatus("success");
-      setContactName(""); setContactEmail(""); setContactSubject(""); setContactMessage("");
+      setContactName(""); setContactEmail(""); setContactSubject(""); setContactMessage(""); setContactNameError("");
     } catch {
       // Fallback: open mailto if API not yet implemented
       window.location.href = `mailto:ultimate.health25@gmail.com?subject=${encodeURIComponent(trimmedSubject)}&body=${encodeURIComponent(`From: ${trimmedName} (${trimmedEmail})\n\n${trimmedMessage}`)}`;
@@ -478,7 +500,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       setNewsletterStatus("invalid");
       return;
     }
-     setNewsletterStatus("sending");
+    setNewsletterStatus("sending");
     try {
       const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
         method: "POST",
@@ -703,22 +725,22 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               [
                 { icon: "fa-robot", title: "AI Health Chat Assistant", desc: "Get instant, AI-powered health guidance and support.", span: "md:col-span-2 lg:col-span-2" },
                 { icon: "fa-book-medical", title: "Centralized Library", desc: "Access a vast repository of trusted health articles.", span: "col-span-1" },
-                
+
                 { icon: "fa-edit", title: "CRUD Articles", desc: "Create, read, update, and delete your health content seamlessly.", span: "col-span-1" },
                 { icon: "fa-podcast", title: "Health Podcasts", desc: "Stream and share verified health audio content worldwide.", span: "md:col-span-2 lg:col-span-2" },
-                
+
                 { icon: "fa-tags", title: "Smart Categorization", desc: "Organize articles with intuitive categorization and tagging.", span: "col-span-1" },
                 { icon: "fa-search", title: "Advanced Search", desc: "Quickly find the specific health information you need.", span: "col-span-1" },
                 { icon: "fa-users", title: "Community Contributions", desc: "Collaborate and drive open-source content creation.", span: "col-span-1" },
-                
+
                 { icon: "fa-code-branch", title: "Edit Request Workflow", desc: "Propose and review changes to maintain content quality.", span: "col-span-1" },
                 { icon: "fa-language", title: "Multilingual Resources", desc: "Read and write content in multiple languages globally.", span: "col-span-1" },
                 { icon: "fa-mobile-alt", title: "Cross-Platform Support", desc: "Available on both Android mobile and Web platforms.", span: "col-span-1" },
-                
+
                 { icon: "fa-user-shield", title: "Authentication & Users", desc: "Secure role-based access and robust user management.", span: "col-span-1" },
                 { icon: "fa-cloud", title: "Cloud Content Management", desc: "Reliable cloud infrastructure for all your health data.", span: "col-span-1" },
                 { icon: "fa-graduation-cap", title: "Educational Content", desc: "Spread health awareness through verified information.", span: "col-span-1" },
-                
+
                 { icon: "fa-shield-alt", title: "Trusted Wellness Repository", desc: "A heavily moderated, safe, and accurate knowledge base.", span: "md:col-span-2 lg:col-span-2" },
                 { icon: "fa-globe", title: "Open-Source Platform", desc: "Join our global initiative for a healthier community.", span: "col-span-1" },
               ].map((f, i) => (
@@ -741,33 +763,33 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           <h2>Be a Member: Guardian of Content Integrity</h2>
           <p className="center">Help maintain quality and safety across the platform</p>
           {/* Top row — 3 cards */}
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
-  {[
-    { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
-    { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
-    { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
-  ].map((f, i) => (
-    <div className="feature-card mod-card w-full fade-in" key={i}>
-      <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
-      <h3>{f.title}</h3>
-      <p>{f.desc}</p>
-    </div>
-  ))}
-</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
+            {[
+              { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
+              { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
+              { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
+            ].map((f, i) => (
+              <div className="feature-card mod-card w-full fade-in" key={i}>
+                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
 
-{/* Bottom row — 2 cards centered under the top row */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 mx-auto" style={{ maxWidth: "66.666%", marginLeft: "auto", marginRight: "auto" , marginTop: "20px"}}>
-  {[
-    { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
-    { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
-  ].map((f, i) => (
-    <div className="feature-card mod-card w-full fade-in" key={i}>
-      <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
-      <h3>{f.title}</h3>
-      <p>{f.desc}</p>
-    </div>
-  ))}
-</div>
+          {/* Bottom row — 2 cards centered under the top row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 mx-auto" style={{ maxWidth: "66.666%", marginLeft: "auto", marginRight: "auto", marginTop: "20px" }}>
+            {[
+              { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
+              { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
+            ].map((f, i) => (
+              <div className="feature-card mod-card w-full fade-in" key={i}>
+                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
         </PageWrapper>
       </Section>
 
@@ -847,14 +869,14 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                 <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub">
                   <i className="fab fa-github"></i>
                 </a>
-               <a
-                 href="mailto:ultimate.health25@gmail.com?subject=Hello%20UltimateHealth&body=Hi%20UltimateHealth%20Team%2C"
-                 className="dark-social-icon"
-                 title="Email"
-                 aria-label="Send email to UltimateHealth via mail client"
-                 style={{ cursor: "pointer" }}>
-                 <i className="fas fa-envelope"></i>
-                 </a>
+                <a
+                  href="mailto:ultimate.health25@gmail.com?subject=Hello%20UltimateHealth&body=Hi%20UltimateHealth%20Team%2C"
+                  className="dark-social-icon"
+                  title="Email"
+                  aria-label="Send email to UltimateHealth via mail client"
+                  style={{ cursor: "pointer" }}>
+                  <i className="fas fa-envelope"></i>
+                </a>
                 <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
@@ -880,11 +902,20 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                   <div className="dark-field-group">
                     <span className="dark-field-icon"><i className="fas fa-user"></i></span>
                     <input
-                      type="text" className="dark-input" placeholder="Your Name *" required
+                      type="text"
+                      className={`dark-input${contactNameError ? " input-error" : ""}`}
+                      placeholder="Your Name *"
+                      required
                       maxLength={80}
-                      value={contactName} onChange={(e) => setContactName(e.target.value)}
+                      value={contactName}
+                      onChange={handleNameChange}
                     />
                   </div>
+                  {contactNameError && (
+                    <p className="contact-error-msg" style={{ marginTop: "-8px", marginBottom: "4px" }}>
+                      <i className="fas fa-exclamation-circle"></i> {contactNameError}
+                    </p>
+                  )}
                   <div className="dark-field-group">
                     <span className="dark-field-icon"><i className="fas fa-envelope"></i></span>
                     <input
@@ -945,71 +976,71 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
 
             {/* Newsletter — wired to API */}
             <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit} noValidate>
-            {newsletterStatus === "success" ? (
-            <div className="newsletter-success">
-            <i className="fas fa-check-circle"></i> You have successfully subscribed!
-           </div>
-            ) : (
-             <>
-              <div className="footer-subscribe-row">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="footer-subscribe-input"
-                maxLength={120}
-                value={newsletterEmail}
-                required
-                aria-label="Newsletter email address"
-                aria-describedby="newsletter-feedback"
-                onChange={(e) => {
-                setNewsletterEmail(e.target.value);
-                if (
-                  newsletterStatus !== "idle" &&
-                  newsletterStatus !== "sending"
-                ) {
-                setNewsletterStatus("idle");
-              }
-            }}
-            />
-            <button
-              type="submit"
-              className="footer-subscribe-btn"
-              aria-label="Subscribe to UltimateHealth newsletter"
-              disabled={newsletterStatus === "sending"}
-            >
-            {newsletterStatus === "sending" ? "Subscribing..." : "Subscribe"}
-           </button>
-           </div>
+              {newsletterStatus === "success" ? (
+                <div className="newsletter-success">
+                  <i className="fas fa-check-circle"></i> You have successfully subscribed!
+                </div>
+              ) : (
+                <>
+                  <div className="footer-subscribe-row">
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="footer-subscribe-input"
+                      maxLength={120}
+                      value={newsletterEmail}
+                      required
+                      aria-label="Newsletter email address"
+                      aria-describedby="newsletter-feedback"
+                      onChange={(e) => {
+                        setNewsletterEmail(e.target.value);
+                        if (
+                          newsletterStatus !== "idle" &&
+                          newsletterStatus !== "sending"
+                        ) {
+                          setNewsletterStatus("idle");
+                        }
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      className="footer-subscribe-btn"
+                      aria-label="Subscribe to UltimateHealth newsletter"
+                      disabled={newsletterStatus === "sending"}
+                    >
+                      {newsletterStatus === "sending" ? "Subscribing..." : "Subscribe"}
+                    </button>
+                  </div>
 
-          <div id="newsletter-feedback" aria-live="polite">
-            {newsletterStatus === "empty" && (
-            <p className="newsletter-error">
-              <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
-            </p>
-            )}
-            {newsletterStatus === "invalid" && (
-              <p className="newsletter-error">
-               <i className="fas fa-exclamation-circle"></i> Invalid email format.
-               </p>
-            )}
-              {newsletterStatus === "duplicate" && (
-              <p className="newsletter-error">
-               <i className="fas fa-info-circle"></i> This email is already subscribed.
-              </p>
+                  <div id="newsletter-feedback" aria-live="polite">
+                    {newsletterStatus === "empty" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
+                      </p>
+                    )}
+                    {newsletterStatus === "invalid" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-exclamation-circle"></i> Invalid email format.
+                      </p>
+                    )}
+                    {newsletterStatus === "duplicate" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-info-circle"></i> This email is already subscribed.
+                      </p>
+                    )}
+                    {newsletterStatus === "error" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
+                      </p>
+                    )}
+                  </div>
+
+                  <small className="footer-subscribe-note">
+                    We respect your privacy. Unsubscribe at any time.
+                  </small>
+                </>
               )}
-            {newsletterStatus === "error" && (
-            <p className="newsletter-error">
-              <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
-             </p>
-            )}
-      </div>
-
-      <small className="footer-subscribe-note">
-        We respect your privacy. Unsubscribe at any time.
-      </small>
-    </>
-  )}
-</form>
+            </form>
             {/* Social icons */}
             <div style={{ marginTop: 20 }}>
               <span className="footer-follow-label">Follow Us</span>
