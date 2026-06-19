@@ -909,10 +909,11 @@ export default function Home() {
                       maxLength={80}
                       value={contactName}
                       onChange={handleNameChange}
+                      aria-describedby="contact-name-error"
                     />
                   </div>
                   {contactNameError && (
-                    <p className="contact-error-msg" style={{ marginTop: "-8px", marginBottom: "4px" }}>
+                    <p id="contact-name-error" className="contact-error-msg" style={{ marginTop: "-8px", marginBottom: "4px" }}>
                       <i className="fas fa-exclamation-circle"></i> {contactNameError}
                     </p>
                   )}
