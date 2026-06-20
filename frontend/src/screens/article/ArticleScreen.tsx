@@ -368,6 +368,27 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
+  const handleCopyLink = async () => {
+    try {
+      const url =
+        `https://uhsocial.in/api/share/article?articleId=${articleId}` +
+        `&authorId=${authorId}` +
+        `&recordId=${resolvedRecordId}`;
+
+      await (navigator as any).clipboard.writeText(url);
+      Snackbar.show({
+        text: 'Link copied',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    } catch (error) {
+      console.log('Error copying link:', error);
+      Snackbar.show({
+        text: 'Failed to copy link',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+
   const handleTranslateArticle = () => {
     if (isGuest) {
       navigation.navigate('GuestPlaceholderScreen', {
@@ -1010,6 +1031,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             <FontAwesome name="share" size={18} color={footerColors.text} />
             <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
               Share
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.actionButtonFooter,
+              {backgroundColor: footerColors.pillBackground},
+            ]}
+            onPress={handleCopyLink}>
+            <FontAwesome name="link" size={18} color={footerColors.text} />
+            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+              Copy Link
             </Text>
           </TouchableOpacity>
 

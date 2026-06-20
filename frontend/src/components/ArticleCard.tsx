@@ -231,6 +231,27 @@ const ArticleCard = ({
       setMenuVisible(false);
     }
   };
+
+  const handleCopyLink = async () => {
+    try {
+      const url =
+        `https://uhsocial.in/api/share/article?articleId=${item._id}` +
+        `&authorId=${(item.authorId as any)?._id || item.authorId}` +
+        `&recordId=${item.pb_recordId}`;
+
+      await (navigator as any).clipboard.writeText(url);
+      Snackbar.show({
+        text: 'Link copied',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    } catch (error) {
+      console.log('Error copying link:', error);
+      Snackbar.show({
+        text: 'Failed to copy link',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
   <Text style={styles.readTime}>{readTime} min read</Text>
   const styles = StyleSheet.create({
     readTime: {
@@ -666,6 +687,19 @@ const ArticleCard = ({
                 }}
                 style={styles.likeSaveChildContainer}>
                 <FontAwesome name="share-alt" size={24} color={'#414A4C'} />
+              </AccessibleTouchable>
+            )}
+
+            {source === 'home' && (
+              <AccessibleTouchable
+                accessibilityLabel="Copy link"
+                accessibilityHint="Copies this article link to clipboard"
+                onPress={(e) => {
+                  e?.stopPropagation?.();
+                  handleCopyLink();
+                }}
+                style={styles.likeSaveChildContainer}>
+                <FontAwesome name="link" size={24} color={'#414A4C'} />
               </AccessibleTouchable>
             )}
 
