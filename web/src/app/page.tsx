@@ -52,8 +52,6 @@ const HELP_CENTER_URL = process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https://uhso
 const FEEDBACK_URL = process.env.NEXT_PUBLIC_FEEDBACK_URL || "https://github.com/SB2318/UltimateHealth/issues";
 const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "";
 const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "";
-const PRIVACY_POLICY_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || "#";
-const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || "#";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SLIDER_SCROLL_AMOUNT = 324;
 const DNA_TRAIL_MAX_POINTS = 38;
@@ -1061,8 +1059,8 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           <div className="footer-bottom-inner">
             <p>© 2026 UltimateHealth. Built with passion for a healthier community.</p>
             <div className="footer-bottom-links">
-              <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>
-              <a href={TERMS_OF_USE_URL}>Terms of Use</a>
+              <Link href={withBasePath("/privacy-policy")}>Privacy Policy</Link>
+              <Link href={withBasePath("/terms-of-use")}>Terms of Use</Link>
             </div>
           </div>
         </div>
