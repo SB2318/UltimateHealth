@@ -56,6 +56,7 @@ import {getReadTime} from '../../utils/readTime';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
+import { copyArticleShareLink } from '../../helper/shareUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
 import Animated, {
@@ -370,12 +371,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   const handleCopyLink = async () => {
     try {
-      const url =
-        `https://uhsocial.in/api/share/article?articleId=${articleId}` +
-        `&authorId=${authorId}` +
-        `&recordId=${resolvedRecordId}`;
-
-      await (navigator as any).clipboard.writeText(url);
+      copyArticleShareLink(articleId, authorId, resolvedRecordId);
       Snackbar.show({
         text: 'Link copied',
         duration: Snackbar.LENGTH_SHORT,
