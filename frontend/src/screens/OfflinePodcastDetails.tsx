@@ -8,9 +8,9 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import {OfflinePodcastDetailProp, PodcastData} from '../type';
-import {hp} from '../helper/Metric';
-import {ON_PRIMARY_COLOR, BUTTON_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import { OfflinePodcastDetailProp, PodcastData } from '../type';
+import { hp } from '../helper/Metric';
+import { ON_PRIMARY_COLOR, BUTTON_COLOR, PRIMARY_COLOR } from '../helper/Theme';
 import Slider from '@react-native-community/slider';
 import { formatDateWithTime } from '../helper/dateUtils';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -18,23 +18,23 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-import {formatCount, updateOfflinePodcastLikeStatus} from '../helper/Utils';
-import {useDispatch, useSelector} from 'react-redux';
-import {useEffect, useState} from 'react';
+import { formatCount, updateOfflinePodcastLikeStatus } from '../helper/Utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 import Snackbar from 'react-native-snackbar';
-import {GET_STORAGE_DATA} from '../helper/APIUtils';
+import { GET_STORAGE_DATA } from '../helper/APIUtils';
 import Share from 'react-native-share';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from '@expo/vector-icons/MaterialIcons';
-import {useSocket} from '../contexts/SocketContext';
-import {Feather} from '@expo/vector-icons';
-import {useAudioPlayer} from 'expo-audio';
-import {useLikePodcast} from '../hooks/useLikePodcast';
+import { useSocket } from '../contexts/SocketContext';
+import { Feather } from '@expo/vector-icons';
+import { useAudioPlayer } from 'expo-audio';
+import { useLikePodcast } from '../hooks/useLikePodcast';
 
 export default function OfflinePodcastDetail({
   route,
 }: OfflinePodcastDetailProp) {
-  const {podcast} = route.params;
+  const { podcast } = route.params;
   const socket = useSocket();
   const insets = useSafeAreaInsets();
 
@@ -43,10 +43,10 @@ export default function OfflinePodcastDetail({
 
   //const playbackState = usePlaybackState();
   //const progress = useProgress();
-  const {user_id, user_token, user_handle} = useSelector(
+  const { user_id, user_token, user_handle } = useSelector(
     (state: any) => state.user,
   );
-  const {isConnected} = useSelector((state: any) => state.network);
+  const { isConnected } = useSelector((state: any) => state.network);
   //const [isLoading, setLoading] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [currentPodcast, setCurrentPodcast] = useState<PodcastData>(podcast);
@@ -54,7 +54,7 @@ export default function OfflinePodcastDetail({
 
   const player = useAudioPlayer(`file://${podcast.filePath}`);
 
-  const {mutate: likePodcast, isPending: likePodcastPending} = useLikePodcast();
+  const { mutate: likePodcast, isPending: likePodcastPending } = useLikePodcast();
 
   useEffect(() => {
     //console.log("File path", `${filePath}`);
@@ -115,9 +115,8 @@ export default function OfflinePodcastDetail({
     const secs = Math.floor(seconds % 60);
 
     if (hours > 0) {
-      return `${hours}:${mins < 10 ? '0' : ''}${mins}:${
-        secs < 10 ? '0' : ''
-      }${secs}`;
+      return `${hours}:${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''
+        }${secs}`;
     } else {
       return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
@@ -313,7 +312,7 @@ export default function OfflinePodcastDetail({
           {formatDateWithTime(podcast?.updated_at)}
         </Text>
         {podcast && (
-           
+
           <Text style={styles.metaText}>
             {podcast?.viewUsers.length <= 1
               ? `${podcast?.viewUsers.length} view`
@@ -330,7 +329,7 @@ export default function OfflinePodcastDetail({
         minimumTrackTintColor={PRIMARY_COLOR}
         maximumTrackTintColor="#ccc"
         thumbTintColor={PRIMARY_COLOR}
-        onSlidingComplete={async value => {
+        onSlidingComplete={async (value: number) => {
           // seek to selected time
           await player.seekTo(value);
         }}

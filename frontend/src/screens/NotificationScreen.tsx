@@ -1,15 +1,14 @@
-import {AppState, FlatList, StyleSheet, Text, View, Image} from 'react-native';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
-import NotificationItem from '../components/NotificationItem';
-import {useDispatch, useSelector} from 'react-redux';
-import {Notification, NotificationType} from '../type';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { AppState, FlatList, StyleSheet, Text, View, Image, SafeAreaView } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+
+
+import { useDispatch, useSelector } from 'react-redux';
+
 import Loader from '../components/Loader';
 import Snackbar from 'react-native-snackbar';
-import { useDispatch, useSelector } from 'react-redux';
+
 import { NoNotificationState } from '../components/EmptyStates';
-import Loader from '../components/Loader';
+
 import NotificationItem from '../components/NotificationItem';
 import { hp } from '../helper/Metric';
 import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '../helper/Theme';
@@ -27,13 +26,13 @@ type PendingDelete = {
 const UNDO_TIMEOUT_MS = 3500;
 
 // PodcastsScreen component displays the list of podcasts and includes a PodcastPlayer
-const NotificationScreen = ({navigation}: any) => {
+const NotificationScreen = ({ navigation }: any) => {
   //const notifications = [];
-  const {user_token} = useSelector((state: any) => state.user);
+  const { user_token } = useSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(0);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const { isConnected } = useSelector((state: any) => state.network);
   const [notificationsData, setNotificationsData] = React.useState<
     Notification[]
   >([]);
@@ -42,8 +41,8 @@ const NotificationScreen = ({navigation}: any) => {
   const isMountedRef = useRef(true);
 
   const dispatch = useDispatch();
-  const {mutate: markNotification} = useMarkNotificationAsRead();
-  const {mutate: deleteNotification} = useDeleteNotification();
+  const { mutate: markNotification } = useMarkNotificationAsRead();
+  const { mutate: deleteNotification } = useDeleteNotification();
 
   const {
     data: notificationsRes,
@@ -105,7 +104,7 @@ const NotificationScreen = ({navigation}: any) => {
       );
     }
 
-    return () => {};
+    return () => { };
   }, []);
 
   const onRefresh = () => {
@@ -168,7 +167,7 @@ const NotificationScreen = ({navigation}: any) => {
     [deleteNotification, refetch, restoreDeletedNotification],
   );
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', state => {
+    const subscription = AppState.addEventListener('change', (state: string) => {
       if (state === 'active') {
         refetch();
       }
@@ -177,7 +176,7 @@ const NotificationScreen = ({navigation}: any) => {
     return () => subscription.remove();
   }, [refetch]);
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', state => {
+    const subscription = AppState.addEventListener('change', (state: string) => {
       if (state === 'active') {
         setPage(1); // reset pagination
         refetch(); // fetch fresh data
@@ -353,7 +352,7 @@ const NotificationScreen = ({navigation}: any) => {
     }
   };
 
-  const renderItem = ({item}: {item: Notification}) => {
+  const renderItem = ({ item }: { item: Notification }) => {
     return (
       <NotificationItem
         item={item}
@@ -378,7 +377,7 @@ const NotificationScreen = ({navigation}: any) => {
       <FlatList
         data={notificationsData}
         renderItem={renderItem}
-        keyExtractor={item => item._id.toString()}
+        keyExtractor={(item: { _id: { toString: () => any; }; }) => item._id.toString()}
         contentContainerStyle={[
           styles.flatListContentContainer,
           (!notificationsData || notificationsData.length === 0) && {

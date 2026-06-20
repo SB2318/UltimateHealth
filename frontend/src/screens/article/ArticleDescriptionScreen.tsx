@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -11,19 +11,19 @@ import {
   Modal,
   FlatList,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-import {ArticleDescriptionProp, Category} from '../../type';
+import { useSelector } from 'react-redux';
+import { ArticleDescriptionProp, Category } from '../../type';
 import Ionicon from '@expo/vector-icons/Ionicons';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import { PRIMARY_COLOR } from '../../helper/Theme';
 import {
   ImageLibraryOptions,
   ImagePickerResponse,
   launchImageLibrary,
 } from 'react-native-image-picker';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
-import {hp} from '../../helper/Metric';
+import { hp } from '../../helper/Metric';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native';
 import { ttsLanguageList } from '@/src/helper/Utils';
 
 const ARTICLE_TITLE_MAX_LENGTH = 150;
@@ -34,7 +34,7 @@ const ArticleDescriptionScreen = ({
   navigation,
   route,
 }: ArticleDescriptionProp) => {
-  const {article, htmlContent, translationSource} = route.params;
+  const { article, htmlContent, translationSource } = route.params;
   const isTranslation = Boolean(translationSource);
   const [title, setTitle] = useState('');
   const [authorName, setAuthorName] = useState('');
@@ -42,7 +42,7 @@ const ArticleDescriptionScreen = ({
   const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
   const [language, setLanguage] = useState('en-IN');
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
-  const {categories} = useSelector((state: any) => state.data);
+  const { categories } = useSelector((state: any) => state.data);
   const [imageUtils, setImageUtils] = useState('');
 
   /** Set Initial Value */
@@ -130,7 +130,7 @@ const ArticleDescriptionScreen = ({
       } else if (response.errorMessage) {
         if (__DEV__) console.log('ImagePicker Error:', response.errorMessage);
       } else if (response.assets) {
-        const {uri, fileSize} = response.assets[0];
+        const { uri, fileSize } = response.assets[0];
 
         // Check file size (1 MB limit)
         if (fileSize && fileSize > 1024 * 1024) {
@@ -154,8 +154,8 @@ const ArticleDescriptionScreen = ({
 
   const availableLanguages = isTranslation
     ? ttsLanguageList.filter(
-        lang => lang.code !== translationSource?.sourceLanguage,
-      )
+      lang => lang.code !== translationSource?.sourceLanguage,
+    )
     : ttsLanguageList;
 
   const isNearLimit = (value: string, limit: number) =>
@@ -193,8 +193,8 @@ const ArticleDescriptionScreen = ({
             </View>
             <FlatList
               data={availableLanguages}
-              keyExtractor={item => item.code}
-              renderItem={({item}) => (
+              keyExtractor={(item: { code: any; }) => item.code}
+              renderItem={({ item }: { item: { code: string; name: string } }) => (
                 <TouchableOpacity
                   style={[
                     styles.languageItem,
@@ -226,7 +226,7 @@ const ArticleDescriptionScreen = ({
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView
-        style={{width: '100%', flex: 1}}
+        style={{ width: '100%', flex: 1 }}
         bottomOffset={50}
         showsVerticalScrollIndicator={false}
         extraKeyboardSpace={20}
@@ -236,210 +236,210 @@ const ArticleDescriptionScreen = ({
           paddingBottom: hp(18),
           paddingHorizontal: 6,
         }}>
-      <View style={styles.form}>
-        <LanguageSelector />
+        <View style={styles.form}>
+          <LanguageSelector />
 
-        {/* Header Section */}
-        <View style={styles.headerSection}>
-          <Text style={styles.sectionTitle}>Article Details</Text>
-          <Text style={styles.sectionSubtitle}>
-            {isTranslation
-              ? `Create a translated version of "${translationSource?.sourceTitle}"`
-              : 'Fill in the information below to create your article'}
-          </Text>
-        </View>
-
-        {isTranslation && (
-          <View style={styles.translationNotice}>
-            <Ionicon name="language-outline" size={20} color={PRIMARY_COLOR} />
-            <View style={styles.translationNoticeTextWrapper}>
-              <Text style={styles.translationNoticeTitle}>Translation article</Text>
-              <Text style={styles.translationNoticeText}>
-                Source language: {getLanguageLabel(translationSource?.sourceLanguage ?? '')}
-              </Text>
-            </View>
+          {/* Header Section */}
+          <View style={styles.headerSection}>
+            <Text style={styles.sectionTitle}>Article Details</Text>
+            <Text style={styles.sectionSubtitle}>
+              {isTranslation
+                ? `Create a translated version of "${translationSource?.sourceTitle}"`
+                : 'Fill in the information below to create your article'}
+            </Text>
           </View>
-        )}
 
-        {/* Image Upload Section */}
-        <View style={styles.section}>
-          <Text style={styles.inputLabel}>
-            <Ionicon name="image-outline" size={18} color="#222" /> Cover Image
-          </Text>
-          {imageUtils ? (
-            <View style={styles.imageContainer}>
-              <Image source={{uri: imageUtils}} style={styles.image} />
-              <View style={styles.imageOverlay}>
-                <TouchableOpacity
-                  style={styles.changeButton}
-                  onPress={selectImage}>
-                  <Ionicon name="pencil" size={16} color="#222" />
-                  <Text style={styles.changeButtonText}>Change</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={() => setImageUtils('')}>
-                  <Ionicon name="trash" size={16} color="#fff" />
-                  <Text style={styles.deleteButtonText}>Delete</Text>
-                </TouchableOpacity>
+          {isTranslation && (
+            <View style={styles.translationNotice}>
+              <Ionicon name="language-outline" size={20} color={PRIMARY_COLOR} />
+              <View style={styles.translationNoticeTextWrapper}>
+                <Text style={styles.translationNoticeTitle}>Translation article</Text>
+                <Text style={styles.translationNoticeText}>
+                  Source language: {getLanguageLabel(translationSource?.sourceLanguage ?? '')}
+                </Text>
               </View>
             </View>
-          ) : (
-            <TouchableOpacity
-              style={styles.uploadContainer}
-              onPress={selectImage}>
-              <Ionicon name="cloud-upload" size={40} color={PRIMARY_COLOR} />
-              <Text style={styles.uploadText}>Upload Cover Image</Text>
-              <Text style={styles.uploadHint}>Maximum file size: 1MB • JPG, PNG</Text>
-            </TouchableOpacity>
           )}
-        </View>
 
-        {/* Basic Information Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Basic Information</Text>
-
-          {/* Title */}
-          <View style={styles.input}>
+          {/* Image Upload Section */}
+          <View style={styles.section}>
             <Text style={styles.inputLabel}>
-              <Ionicon name="newspaper-outline" size={18} color="#222" /> Title *
+              <Ionicon name="image-outline" size={18} color="#222" /> Cover Image
             </Text>
-            <TextInput
-              autoCapitalize="sentences"
-              autoCorrect={false}
-              keyboardType="default"
-              placeholder="Enter your article title"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              value={title}
-              onChangeText={handleTitleChange}
-              maxLength={ARTICLE_TITLE_MAX_LENGTH}
-            />
-            <Text
-              style={[
-                styles.charCounter,
-                isNearLimit(title, ARTICLE_TITLE_MAX_LENGTH) &&
-                  styles.charCounterWarning,
-              ]}>
-              {title.length} / {ARTICLE_TITLE_MAX_LENGTH}
-            </Text>
-          </View>
-
-          {/* Author Name */}
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>
-              <Ionicon name="person-outline" size={18} color="#222" /> Author Name *
-            </Text>
-            <TextInput
-              autoCapitalize="words"
-              autoCorrect={false}
-              keyboardType="default"
-              placeholder="Enter author name"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              value={authorName}
-              onChangeText={setAuthorName}
-            />
-          </View>
-
-          {/* Language Dropdown */}
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>
-              <Ionicon name="globe-outline" size={18} color="#222" /> Language *
-            </Text>
-            <TouchableOpacity
-              style={styles.languageSelector}
-              onPress={() => setLanguageModalVisible(true)}>
-              <Text style={styles.languageSelectorText}>
-                {language ? getLanguageLabel(language) : 'Select target language'}
-              </Text>
-              <Ionicon name="chevron-down" size={20} color="#6b7280" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Description */}
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>
-              <Ionicon name="document-text-outline" size={18} color="#222" /> Description *
-            </Text>
-            <TextInput
-              placeholder="Provide a brief overview of your article"
-              placeholderTextColor="#6b7280"
-              textAlignVertical="top"
-              style={styles.aboutInput}
-              multiline
-              numberOfLines={4}
-              autoCapitalize="sentences"
-              value={description}
-              onChangeText={handleDescriptionChange}
-              maxLength={ARTICLE_DESCRIPTION_MAX_LENGTH}
-            />
-            <Text
-              style={[
-                styles.charCounter,
-                isNearLimit(description, ARTICLE_DESCRIPTION_MAX_LENGTH) &&
-                  styles.charCounterWarning,
-              ]}>
-              {description.length} / {ARTICLE_DESCRIPTION_MAX_LENGTH}
-            </Text>
-          </View>
-        </View>
-
-        {/* Tags Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            <Ionicon name="pricetag-outline" size={18} color="#222" /> Tags
-          </Text>
-          <Text style={styles.sectionSubtitle}>
-            Select up to 5 tags to help people discover your article
-          </Text>
-
-          {selectedGenres.length > 0 && (
-            <View style={styles.selectedGenresWrapper}>
-              {selectedGenres.map((genre, index) => (
-                <View key={index} style={styles.selectedGenreChip}>
-                  <Text style={styles.selectedGenreChipText}>#{genre.name}</Text>
-                  <TouchableOpacity onPress={() => handleGenrePress(genre)}>
-                    <Ionicon name="close-circle" size={18} color={PRIMARY_COLOR} />
+            {imageUtils ? (
+              <View style={styles.imageContainer}>
+                <Image source={{ uri: imageUtils }} style={styles.image} />
+                <View style={styles.imageOverlay}>
+                  <TouchableOpacity
+                    style={styles.changeButton}
+                    onPress={selectImage}>
+                    <Ionicon name="pencil" size={16} color="#222" />
+                    <Text style={styles.changeButtonText}>Change</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => setImageUtils('')}>
+                    <Ionicon name="trash" size={16} color="#fff" />
+                    <Text style={styles.deleteButtonText}>Delete</Text>
                   </TouchableOpacity>
                 </View>
-              ))}
-            </View>
-          )}
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.genreContainer}>
-            {categories.map((genre: Category, index: number) => (
+              </View>
+            ) : (
               <TouchableOpacity
-                key={index}
-                style={[
-                  styles.genreButton,
-                  isSelected(genre) && styles.selectedGenreButton,
-                ]}
-                onPress={() => handleGenrePress(genre)}>
-                <Text
-                  style={[
-                    styles.genreButtonText,
-                    isSelected(genre) && styles.selectedGenreButtonText,
-                  ]}>
-                  #{genre.name}
-                </Text>
+                style={styles.uploadContainer}
+                onPress={selectImage}>
+                <Ionicon name="cloud-upload" size={40} color={PRIMARY_COLOR} />
+                <Text style={styles.uploadText}>Upload Cover Image</Text>
+                <Text style={styles.uploadHint}>Maximum file size: 1MB • JPG, PNG</Text>
               </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
+            )}
+          </View>
 
-        {/* Submit Button */}
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={handleCreatePost}>
-          <Text style={styles.submitButtonText}>Continue to Editor</Text>
-          <Ionicon name="arrow-forward" size={20} color="#fff" />
-        </TouchableOpacity>
-      </View>
-    </KeyboardAwareScrollView>
+          {/* Basic Information Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Basic Information</Text>
+
+            {/* Title */}
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>
+                <Ionicon name="newspaper-outline" size={18} color="#222" /> Title *
+              </Text>
+              <TextInput
+                autoCapitalize="sentences"
+                autoCorrect={false}
+                keyboardType="default"
+                placeholder="Enter your article title"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={title}
+                onChangeText={handleTitleChange}
+                maxLength={ARTICLE_TITLE_MAX_LENGTH}
+              />
+              <Text
+                style={[
+                  styles.charCounter,
+                  isNearLimit(title, ARTICLE_TITLE_MAX_LENGTH) &&
+                  styles.charCounterWarning,
+                ]}>
+                {title.length} / {ARTICLE_TITLE_MAX_LENGTH}
+              </Text>
+            </View>
+
+            {/* Author Name */}
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>
+                <Ionicon name="person-outline" size={18} color="#222" /> Author Name *
+              </Text>
+              <TextInput
+                autoCapitalize="words"
+                autoCorrect={false}
+                keyboardType="default"
+                placeholder="Enter author name"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={authorName}
+                onChangeText={setAuthorName}
+              />
+            </View>
+
+            {/* Language Dropdown */}
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>
+                <Ionicon name="globe-outline" size={18} color="#222" /> Language *
+              </Text>
+              <TouchableOpacity
+                style={styles.languageSelector}
+                onPress={() => setLanguageModalVisible(true)}>
+                <Text style={styles.languageSelectorText}>
+                  {language ? getLanguageLabel(language) : 'Select target language'}
+                </Text>
+                <Ionicon name="chevron-down" size={20} color="#6b7280" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Description */}
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>
+                <Ionicon name="document-text-outline" size={18} color="#222" /> Description *
+              </Text>
+              <TextInput
+                placeholder="Provide a brief overview of your article"
+                placeholderTextColor="#6b7280"
+                textAlignVertical="top"
+                style={styles.aboutInput}
+                multiline
+                numberOfLines={4}
+                autoCapitalize="sentences"
+                value={description}
+                onChangeText={handleDescriptionChange}
+                maxLength={ARTICLE_DESCRIPTION_MAX_LENGTH}
+              />
+              <Text
+                style={[
+                  styles.charCounter,
+                  isNearLimit(description, ARTICLE_DESCRIPTION_MAX_LENGTH) &&
+                  styles.charCounterWarning,
+                ]}>
+                {description.length} / {ARTICLE_DESCRIPTION_MAX_LENGTH}
+              </Text>
+            </View>
+          </View>
+
+          {/* Tags Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              <Ionicon name="pricetag-outline" size={18} color="#222" /> Tags
+            </Text>
+            <Text style={styles.sectionSubtitle}>
+              Select up to 5 tags to help people discover your article
+            </Text>
+
+            {selectedGenres.length > 0 && (
+              <View style={styles.selectedGenresWrapper}>
+                {selectedGenres.map((genre, index) => (
+                  <View key={index} style={styles.selectedGenreChip}>
+                    <Text style={styles.selectedGenreChipText}>#{genre.name}</Text>
+                    <TouchableOpacity onPress={() => handleGenrePress(genre)}>
+                      <Ionicon name="close-circle" size={18} color={PRIMARY_COLOR} />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.genreContainer}>
+              {categories.map((genre: Category, index: number) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.genreButton,
+                    isSelected(genre) && styles.selectedGenreButton,
+                  ]}
+                  onPress={() => handleGenrePress(genre)}>
+                  <Text
+                    style={[
+                      styles.genreButtonText,
+                      isSelected(genre) && styles.selectedGenreButtonText,
+                    ]}>
+                    #{genre.name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+
+          {/* Submit Button */}
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleCreatePost}>
+            <Text style={styles.submitButtonText}>Continue to Editor</Text>
+            <Ionicon name="arrow-forward" size={20} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
@@ -652,7 +652,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: hp(4),
     shadowColor: PRIMARY_COLOR,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 4,

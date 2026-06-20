@@ -7,8 +7,8 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { SafeAreaView } from 'react-native';
 import {
   ON_PRIMARY_COLOR,
   PRIMARY_COLOR,
@@ -23,12 +23,12 @@ import AddIcon from '../components/AddIcon';
 import ArticleCard from '../components/ArticleCard';
 
 import HomeScreenHeader from '../components/HomeScreenHeader';
-import {ArticleData, Category, HomeScreenProps} from '../type';
+import { ArticleData, Category, HomeScreenProps } from '../type';
 import FilterModal from '../components/FilterModal';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useSelector, useDispatch} from 'react-redux';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useSelector, useDispatch } from 'react-redux';
 import Loader from '../components/Loader';
-import {usePreferences} from '../contexts/PreferencesContext';
+import { usePreferences } from '../contexts/PreferencesContext';
 
 import {
   setFilteredArticles,
@@ -39,15 +39,15 @@ import {
   setTags,
 } from '../store/dataSlice';
 import Snackbar from 'react-native-snackbar';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import InactiveUserModal from '../components/InactiveUserModal';
-import {StatusBar} from 'expo-status-bar';
-import {wp} from '../helper/Metric';
-import {useGetCategories} from '../hooks/useGetArticleTags';
-import {useGetProfile} from '../hooks/useGetProfile';
-import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
-import {useGetUnreadNotificationCount} from '../hooks/useGetUnreadNotificationCount';
-import {useGetPaginatedArticle} from '../hooks/useGetPaginatedArticles';
+import { StatusBar } from 'expo-status-bar';
+import { wp } from '../helper/Metric';
+import { useGetCategories } from '../hooks/useGetArticleTags';
+import { useGetProfile } from '../hooks/useGetProfile';
+import { useRequestArticleEdit } from '../hooks/useRequestArticleEdit';
+import { useGetUnreadNotificationCount } from '../hooks/useGetUnreadNotificationCount';
+import { useGetPaginatedArticle } from '../hooks/useGetPaginatedArticles';
 import {
   OfflineArticleState,
   NoArticleState,
@@ -67,7 +67,7 @@ const LoadingState = () => {
 };
 
 // Error State Component
-const ErrorState = ({onRetry}: {onRetry: () => void}) => {
+const ErrorState = ({ onRetry }: { onRetry: () => void }) => {
   return (
     <NoArticleState onRefresh={onRetry} />
   );
@@ -97,13 +97,13 @@ const SavedArticleEmptyState = () => (
 );
 
 // Here The purpose of using Redux is to maintain filter state throughout the app session. globally
-const HomeScreen = ({navigation}: HomeScreenProps) => {
+const HomeScreen = ({ navigation }: HomeScreenProps) => {
   const dispatch = useDispatch();
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [sortingType, setSortingType] = useState<string>('');
   const [searchText, setSearchText] = useState('');
-  const {isConnected} = useSelector((state: any) => state.network);
+  const { isConnected } = useSelector((state: any) => state.network);
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   // const [repostItem, setRepostItem] = useState<ArticleData | null>(null);
   const [selectCategoryList, setSelectCategoryList] = useState<Category[]>([]);
@@ -111,12 +111,12 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [filterLoading, setFilterLoading] = useState<boolean>(false);
   // Session-level language filter (can override preferences per session)
   const [sessionSelectedLanguages, setSessionSelectedLanguages] = useState<string[]>([]);
-  const {preferredLanguages, isLoading: preferencesLoading} = usePreferences();
-  const {mutate: requestEdit, isPending: requestEditPending} =
+  const { preferredLanguages, isLoading: preferencesLoading } = usePreferences();
+  const { mutate: requestEdit, isPending: requestEditPending } =
     useRequestArticleEdit();
   const handleClearAllFilters = () => {
     // 1. Local state categories reset
-    setSelectedCategory('');
+    setSelectedCategory(undefined);
     setSortingType('');
     setSearchText('');
 
@@ -124,6 +124,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     dispatch(setSearchedArticles([]));
     dispatch(setFilteredArticles([]));
     dispatch(setTags([]));
+  };
+  // Backwards-compatible alias used by header components for a quick reset action
+  const handleQuickReset = () => {
+    handleClearAllFilters();
   };
   const {
     filteredArticles,
@@ -133,7 +137,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     sortType,
   } = useSelector((state: any) => state.data);
 
-  const {user_token, isGuest} = useSelector(
+  const { user_token, isGuest } = useSelector(
     (state: any) => state.user,
   );
 
@@ -147,8 +151,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   // keep fetching pages when a niche category yields no new articles per page.
   const lastCategoryFilteredCountRef = useRef<number>(-1);
   const prevSelectedCategoryNameRef = useRef<string | undefined>(undefined);
-  const {data: user, refetch: refetchUser} = useGetProfile();
-  const {data: categoryData, isSuccess} = useGetCategories(isConnected);
+  const { data: user, refetch: refetchUser } = useGetProfile();
+  const { data: categoryData, isSuccess } = useGetCategories(isConnected);
 
   useEffect(() => {
     if (!isSuccess || !categoryData) return;
@@ -165,13 +169,13 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     }
 
     setArticleCategories(categoryData);
-    dispatch(setTags({tags: categoryData}));
+    dispatch(setTags({ tags: categoryData }));
   }, [categoryData, dispatch, isSuccess, selectedTags]);
 
   const handleCategorySelection = (category: Category) => {
     // Update Redux State
     setSelectCategoryList(prevList => {
-       const isAlreadySelected = prevList.some(p => p._id === category._id);
+      const isAlreadySelected = prevList.some(p => p._id === category._id);
       const updatedList = isAlreadySelected
         ? prevList.filter(item => item._id !== category._id)
         : [...prevList, category];
@@ -184,7 +188,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     bottomSheetModalRef.current?.present();
   }, []);
 
-  const {data: unreadCount, refetch: refetchUnreadCount} =
+  const { data: unreadCount, refetch: refetchUnreadCount } =
     useGetUnreadNotificationCount(isConnected);
 
   useFocusEffect(
@@ -250,7 +254,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       podcastId: null,
     });
   };
-  const renderItem = ({item}: {item: ArticleData}) => {
+  const renderItem = ({ item }: { item: ArticleData }) => {
     return (
       <ArticleCard
         item={item}
@@ -258,7 +262,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         setSelectedCardId={setSelectedCardId}
         navigation={navigation}
         success={onRefresh}
-        handleRepostAction={()=>{}}
+        handleRepostAction={() => { }}
         handleReportAction={handleReportAction}
         handleEditRequestAction={(item, index, reason) => {
           // submitRequest
@@ -300,15 +304,15 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         selectedTags: articleCategories,
       }),
     );
-    dispatch(setSortType({sortType: ''}));
-    dispatch(setFilteredArticles({filteredArticles: allArticlesRef.current}));
+    dispatch(setSortType({ sortType: '' }));
+    dispatch(setFilteredArticles({ filteredArticles: allArticlesRef.current }));
   };
 
   const handleFilterApply = () => {
     // Update Redux State Variables
     if (selectCategoryList.length > 0) {
       //   console.log("enter")
-      dispatch(setSelectedTags({selectedTags: selectCategoryList}));
+      dispatch(setSelectedTags({ selectedTags: selectCategoryList }));
     } else {
       //console.log("enter ele", articleCategories);
 
@@ -321,7 +325,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 
     if (sortingType && sortingType !== '') {
       if (__DEV__) console.log('Sort type', sortType);
-      dispatch(setSortType({sortType: sortingType}));
+      dispatch(setSortType({ sortType: sortingType }));
     }
 
     updateArticles(allArticlesRef.current);
@@ -347,10 +351,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 
     // Filter by language preference
     // Priority: session-selected languages > preferred languages
-    const effectiveLanguages = sessionSelectedLanguages.length > 0 
-      ? sessionSelectedLanguages 
+    const effectiveLanguages = sessionSelectedLanguages.length > 0
+      ? sessionSelectedLanguages
       : preferredLanguages;
-    
+
     if (effectiveLanguages.length > 0) {
       filtered = filtered.filter(article =>
         effectiveLanguages.includes(article.language || 'en-IN'),
@@ -371,7 +375,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     } else if (sortType && sortType === 'popular' && filtered.length > 1) {
       filtered.sort((a, b) => b.viewCount - a.viewCount);
     }
-    dispatch(setFilteredArticles({filteredArticles: filtered}));
+    dispatch(setFilteredArticles({ filteredArticles: filtered }));
     setFilterLoading(false);
   };
 
@@ -439,7 +443,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       currentFiltered.length < 5 &&
       currentFiltered.length > lastCategoryFilteredCountRef.current
     ) {
-       prevSelectedCategoryNameRef.current = selectedCategory.name; 
+      prevSelectedCategoryNameRef.current = selectedCategory.name;
       lastCategoryFilteredCountRef.current = currentFiltered.length;
       setPage(prev => prev + 1);
     }
@@ -480,29 +484,29 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   }, [isFetching, refreshing]);
 
   const handleSearch = (textInput: string) => {
-  if (textInput === '' || allArticlesRef.current.length === 0) {
-    dispatch(setSearchedArticles({ searchedArticles: [] }));
-    dispatch(setSearchMode({ searchMode: false }));
-  } else {
-    dispatch(setSearchMode({ searchMode: true }));
-    const matchesSearch = allArticlesRef.current.filter(article => {  // ✅ use full accumulated list
-      const matchesTitle =
-        article.title && typeof article.title === 'string'
-          ? article.title.toLowerCase().includes((textInput || '').toLowerCase())
-          : false;
-      const matchesTags =
-        article.tags && Array.isArray(article.tags)
-          ? article.tags.some(
+    if (textInput === '' || allArticlesRef.current.length === 0) {
+      dispatch(setSearchedArticles({ searchedArticles: [] }));
+      dispatch(setSearchMode({ searchMode: false }));
+    } else {
+      dispatch(setSearchMode({ searchMode: true }));
+      const matchesSearch = allArticlesRef.current.filter(article => {  // ✅ use full accumulated list
+        const matchesTitle =
+          article.title && typeof article.title === 'string'
+            ? article.title.toLowerCase().includes((textInput || '').toLowerCase())
+            : false;
+        const matchesTags =
+          article.tags && Array.isArray(article.tags)
+            ? article.tags.some(
               tag =>
                 tag && tag.name && typeof tag.name === 'string' &&
                 tag.name.toLowerCase().includes((textInput || '').toLowerCase()),
             )
-          : false;
-      return matchesTitle || matchesTags;
-    });
-    dispatch(setSearchedArticles({ searchedArticles: matchesSearch }));
-  }
-};
+            : false;
+        return matchesTitle || matchesTags;
+      });
+      dispatch(setSearchedArticles({ searchedArticles: matchesSearch }));
+    }
+  };
 
   const listData = useMemo(() => {
     if (showSavedOnly) {
@@ -636,7 +640,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
-            //contentContainerStyle={{flex:1}}
+          //contentContainerStyle={{flex:1}}
           >
             {selectedTags &&
               selectedTags.length > 0 &&
@@ -685,27 +689,27 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <HomeScreenHeader
-            handlePresentModalPress={handlePresentModalPress}
-            onTextInputChange={(text) => {
-              setSearchText(text);
-              handleSearch(text);
-            }}
-            onNotificationClick={() => {
-              if (isGuest) {
-                navigation.navigate('GuestPlaceholderScreen', {
-                  title: 'Notifications',
-                  description: 'Sign in to see your notifications.',
-                  iconName: 'bell',
-                });
-              } else {
-                navigation.navigate('NotificationScreen');
-              }
-            }}
-            unreadCount={unreadCount ? unreadCount : 0}
-            hasActiveFilters={selectedCategory !== '' || sortingType !== '' || searchText !== ''}
-            onFilterReset={handleClearAllFilters}
-            searchText={searchText}
-          />
+        handlePresentModalPress={handlePresentModalPress}
+        onTextInputChange={(text: string) => {
+          setSearchText(text);
+          handleSearch(text);
+        }}
+        onNotificationClick={() => {
+          if (isGuest) {
+            navigation.navigate('GuestPlaceholderScreen', {
+              title: 'Notifications',
+              description: 'Sign in to see your notifications.',
+              iconName: 'bell',
+            });
+          } else {
+            navigation.navigate('NotificationScreen');
+          }
+        }}
+        unreadCount={unreadCount ? unreadCount : 0}
+        hasActiveFilters={selectedCategory !== '' || sortingType !== '' || searchText !== ''}
+        onFilterReset={handleClearAllFilters}
+        searchText={searchText}
+      />
       <FilterModal
         bottomSheetModalRef={bottomSheetModalRef}
         categories={articleCategories}
@@ -722,7 +726,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          //contentContainerStyle={{flex:1}}
+        //contentContainerStyle={{flex:1}}
         >
           {!isGuest && (
             <TouchableOpacity
@@ -770,9 +774,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                   }}
                   onPress={() => handleCategoryClick(item)}
                   accessibilityRole="button"
-                  accessibilityLabel={`Filter by ${item.name}${
-                    isActive ? ', currently active' : ''
-                  }`}>
+                  accessibilityLabel={`Filter by ${item.name}${isActive ? ', currently active' : ''
+                    }`}>
                   <Text
                     style={{
                       ...styles.labelStyle,
@@ -789,7 +792,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         <FlatList
           data={listData}
           renderItem={renderItem}
-          keyExtractor={item => item._id.toString()}
+          keyExtractor={(item: { _id: { toString: () => any; }; }) => item._id.toString()}
           contentContainerStyle={styles.flatListContentContainer}
           refreshing={refreshing}
           onRefresh={onRefresh}
@@ -908,7 +911,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
     shadowColor: PRIMARY_COLOR,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 12,
     elevation: 8,
@@ -957,7 +960,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 8,
     shadowColor: PRIMARY_COLOR,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 6,
@@ -987,7 +990,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
     shadowColor: '#9C27B0',
-    shadowOffset: {width: 0, height: 3},
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.12,
     shadowRadius: 10,
     elevation: 5,
