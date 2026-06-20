@@ -4,6 +4,7 @@ import { format, parseISO } from "date-fns";
 import { withBasePath } from "@/lib/basePath";
 import { articles } from "@/lib/article-data";
 import type { Article } from "@/types/article";
+import Navbar from "@/components/layout/Navbar";
 
 export const metadata: Metadata = {
   title: "Health Articles | UltimateHealth",
@@ -13,25 +14,8 @@ export const metadata: Metadata = {
 
 export default function ArticlesPage() {
   return (
-    <main className="min-h-screen bg-white">
-      {/* ── Header ── */}
-      <header className="border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <Link
-            href={withBasePath("/")}
-            className="font-extrabold text-lg"
-            style={{ background: "linear-gradient(135deg,#667eea,#764ba2)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
-          >
-            UltimateHealth
-          </Link>
-          <Link
-            href={withBasePath("/medical-glossary")}
-            className="text-sm font-semibold text-slate-600 hover:text-[#667eea] transition-colors"
-          >
-            Medical Glossary
-          </Link>
-        </div>
-      </header>
+    <main className="min-h-screen bg-white pt-20">
+      <Navbar />
 
       {/* ── Hero ── */}
       <section className="bg-gradient-to-br from-[#667eea] to-[#764ba2] py-16 px-4">

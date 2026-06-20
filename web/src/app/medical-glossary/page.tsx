@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-
+import Navbar from "@/components/layout/Navbar";
 import { withBasePath } from "@/lib/basePath";
 import { MedicalGlossaryExplorer } from "./MedicalGlossaryExplorer";
 
@@ -12,21 +12,8 @@ export const metadata: Metadata = {
 
 export default function MedicalGlossaryPage() {
   return (
-    <main className="min-h-screen bg-[linear-gradient(180deg,#f8fafc_0%,#ecfdf5_55%,#f8fafc_100%)] text-slate-950">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
-        <Link
-          href={withBasePath("/")}
-          className="text-sm font-semibold text-slate-600 transition hover:text-emerald-700"
-        >
-          UltimateHealth
-        </Link>
-        <Link
-          href={withBasePath("/contribute")}
-          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-emerald-200 hover:text-emerald-700"
-        >
-          Contribute
-        </Link>
-      </header>
+    <main className="min-h-screen bg-[linear-gradient(180deg,#f8fafc_0%,#ecfdf5_55%,#f8fafc_100%)] text-slate-950 pt-20">
+      <Navbar />
 
       <section className="mx-auto w-full max-w-6xl px-4 pb-8 pt-8 text-center sm:px-6 lg:px-8 lg:pt-14">
         <p className="text-sm font-semibold uppercase tracking-[0.28em] text-emerald-700">
