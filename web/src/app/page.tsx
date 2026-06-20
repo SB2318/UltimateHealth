@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
