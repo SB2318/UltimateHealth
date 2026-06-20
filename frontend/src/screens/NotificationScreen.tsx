@@ -54,17 +54,13 @@ const NotificationScreen = ({ navigation }: any) => {
     if (notificationsRes) {
       if (Number(page) === 1) {
         if (notificationsRes.totalPages) {
-          const totalPage = notificationsRes.totalPages;
-          setTotalPages(totalPage);
+          setTotalPages(notificationsRes.totalPages);
         }
         setNotificationsData(notificationsRes.notifications);
       } else {
         if (notificationsRes.notifications) {
           const oldNotif = notificationsData ?? [];
-          setNotificationsData([
-            ...oldNotif,
-            ...notificationsRes.notifications,
-          ]);
+          setNotificationsData([...oldNotif, ...notificationsRes.notifications]);
         }
       }
     }
@@ -82,7 +78,9 @@ const NotificationScreen = ({ navigation }: any) => {
   }, [deleteNotification]);
 
   useEffect(() => {
-    if (isConnected) {
+    const hasUnread = notificationsData.some(n => !n.read);
+
+    if (isConnected && notificationsData.length > 0 && hasUnread) {
       markNotification(
         {},
         {
@@ -92,7 +90,6 @@ const NotificationScreen = ({ navigation }: any) => {
               duration: Snackbar.LENGTH_SHORT,
             });
           },
-
           onError: error => {
             console.log(error);
             Snackbar.show({
@@ -132,7 +129,6 @@ const NotificationScreen = ({ navigation }: any) => {
 
   const clearPendingDelete = useCallback((id: string) => {
     const pendingDelete = pendingDeletesRef.current.get(id);
-
     if (pendingDelete) {
       clearTimeout(pendingDelete.timer);
       pendingDeletesRef.current.delete(id);
@@ -144,16 +140,13 @@ const NotificationScreen = ({ navigation }: any) => {
       deleteNotification(snapshot.item._id, {
         onSuccess: () => {
           pendingDeletesRef.current.delete(snapshot.item._id);
-
           if (isMountedRef.current) {
             refetch();
           }
         },
-
         onError: error => {
           console.log(error);
           pendingDeletesRef.current.delete(snapshot.item._id);
-
           if (isMountedRef.current) {
             restoreDeletedNotification(snapshot);
             Snackbar.show({
@@ -166,6 +159,7 @@ const NotificationScreen = ({ navigation }: any) => {
     },
     [deleteNotification, refetch, restoreDeletedNotification],
   );
+  
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state: string) => {
       if (state === 'active') {
@@ -188,8 +182,6 @@ const NotificationScreen = ({ navigation }: any) => {
 
   const handleDeleteAction = useCallback(
     (item: Notification) => {
-      console.log('Notification ID', item?._id);
-
       if (!isConnected) {
         Snackbar.show({
           text: 'Please check your internet connection',
@@ -215,13 +207,8 @@ const NotificationScreen = ({ navigation }: any) => {
         if (index === -1) {
           return current;
         }
-
-        snapshot = {
-          item,
-          index,
-        };
-
-        return current.filter(notification => notification._id !== item._id);
+        snapshot = {item, index};
+        return current.filter(n => n._id !== item._id);
       });
 
       if (!snapshot) {
@@ -230,11 +217,9 @@ const NotificationScreen = ({ navigation }: any) => {
 
       const timer = setTimeout(() => {
         const pendingDelete = pendingDeletesRef.current.get(item._id);
-
         if (!pendingDelete) {
           return;
         }
-
         commitDeleteNotification(pendingDelete);
       }, UNDO_TIMEOUT_MS);
 
@@ -251,11 +236,9 @@ const NotificationScreen = ({ navigation }: any) => {
           textColor: '#ffffff',
           onPress: () => {
             const pendingDelete = pendingDeletesRef.current.get(item._id);
-
             if (!pendingDelete) {
               return;
             }
-
             clearPendingDelete(item._id);
             restoreDeletedNotification(pendingDelete);
             Snackbar.show({
@@ -330,6 +313,7 @@ const NotificationScreen = ({ navigation }: any) => {
         navigation.navigate('CommentScreen', {
           articleId: item.articleId._id,
           mentionedUsers: item.articleId.mentionedUsers,
+          article: item.articleId,
         });
       }
     } else if (item.type === NotificationType.ArticleReview) {
@@ -372,8 +356,7 @@ const NotificationScreen = ({ navigation }: any) => {
   }
 
   return (
-    // Main container
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={StyleSheet.flatten(styles.container)}>
       <FlatList
         data={notificationsData}
         renderItem={renderItem}
@@ -406,14 +389,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: ON_PRIMARY_COLOR,
     justifyContent: 'center',
-    //marginTop: 16,
   },
   header: {
     backgroundColor: PRIMARY_COLOR,
     paddingHorizontal: 16,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
-    // paddingBottom: hp(3),
   },
   content: {
     marginTop: hp(3),
@@ -435,10 +416,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-
   flatListContentContainer: {
     paddingHorizontal: 16,
     marginTop: 4,
     paddingBottom: 120,
   },
 });
+

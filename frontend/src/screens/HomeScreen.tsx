@@ -555,7 +555,7 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
           }}
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
         <LoadingState />
@@ -582,7 +582,7 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
           }}
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
         <ErrorState onRetry={refetch} />
@@ -609,7 +609,7 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
           }}
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
         <OfflineState />
@@ -633,7 +633,7 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
           }}
           unreadCount={unreadCount ? unreadCount : 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
         <View style={styles.buttonContainer}>
