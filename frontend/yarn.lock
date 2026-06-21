@@ -3016,6 +3016,11 @@
   dependencies:
     "@tamagui/animate-presence" "1.144.4"
 
+"@tamagui/animation-helpers@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/animation-helpers/-/animation-helpers-2.3.1.tgz#fa84d6ae22516e4c43bb72249372d903c171d6b2"
+  integrity sha512-VvSEU3yWjr8C/3tVnIXdMi2H6dkQLwfvzZG542/vKjMDIax4uxZUSnpazB8N9t8MxKLlgU9EzqnV64vgiGyBcA==
+
 "@tamagui/animations-css@1.144.4":
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/animations-css/-/animations-css-1.144.4.tgz"
@@ -3026,7 +3031,7 @@
     "@tamagui/use-presence" "1.144.4"
     "@tamagui/web" "1.144.4"
 
-"@tamagui/animations-react-native@1.144.4", "@tamagui/animations-react-native@^1.135.6":
+"@tamagui/animations-react-native@1.144.4":
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/animations-react-native/-/animations-react-native-1.144.4.tgz"
   integrity sha512-l83+Y9IpXZoI7Pyylop5tDrVGBRxxf9ZQLoxhhZyhGJMQBQVZith1SxpawmvMdEA4lxbl/W+R3wM3cjce14kyg==
@@ -3034,6 +3039,16 @@
     "@tamagui/constants" "1.144.4"
     "@tamagui/use-presence" "1.144.4"
     "@tamagui/web" "1.144.4"
+
+"@tamagui/animations-react-native@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/animations-react-native/-/animations-react-native-2.3.1.tgz#f0ec67bdba774eae939ef9a8f850f6c333e91948"
+  integrity sha512-HkUwJyPx//5ytC3YIacfKX/WUzYnBmFwv3LF1U5qwc/xBvisBUFHruHSOpKjFM7g5nNrxD8POeLJHCjBb7/gzQ==
+  dependencies:
+    "@tamagui/animation-helpers" "2.3.1"
+    "@tamagui/constants" "2.3.1"
+    "@tamagui/use-presence" "2.3.1"
+    "@tamagui/web" "2.3.1"
 
 "@tamagui/avatar@1.144.4":
   version "1.144.4"
@@ -3146,6 +3161,11 @@
   resolved "https://registry.npmjs.org/@tamagui/compose-refs/-/compose-refs-1.144.4.tgz"
   integrity sha512-AXBm7YOCNk0J4MD3rIQySMyQ0jEPP9LooEalOrS3/gdGF2AGjRh7PhdFcG0Gx5S0kO9zOf0fq0keFd3Qi3FJKQ==
 
+"@tamagui/compose-refs@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/compose-refs/-/compose-refs-2.3.1.tgz#921f73845cf87e912d651895e3d48aa070e84e0a"
+  integrity sha512-U50dyObpm+ZGOoP26/40+MNXZo4MzhVsfZG16caBk27LQH1Qac3UKcRFQwxJx7bwxOCbdrEi7f1mBIh2e8cEPQ==
+
 "@tamagui/config-default@1.144.4":
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/config-default/-/config-default-1.144.4.tgz"
@@ -3161,6 +3181,11 @@
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/constants/-/constants-1.144.4.tgz"
   integrity sha512-8Ql9PwJYuuBZ/Ss27759dDZMMFLQckUnyo7gm5/P5DclGVoaIklEj/sxM0o7inoaZArr3dPm8fxdtgb11z2Qmg==
+
+"@tamagui/constants@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/constants/-/constants-2.3.1.tgz#63ca8b902ad2fec7151218542d18bf2a12d27142"
+  integrity sha512-KzFdDnNQgAqB3+LImkWv3wE6vpUrxfchOJTThBoiOqv8WEuEKbCuEjsmQGJo3nnVCgB00LozjJpQKxp6TodVfQ==
 
 "@tamagui/core@1.144.4":
   version "1.144.4"
@@ -3337,6 +3362,14 @@
     "@tamagui/constants" "1.144.4"
     "@tamagui/simple-hash" "1.144.4"
 
+"@tamagui/helpers@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/helpers/-/helpers-2.3.1.tgz#f4e205a1e09991d33951575a402791a791b57422"
+  integrity sha512-fyHbeXwS8TLSpCYy3COBUAGSs2oWBDXaSCozFkIyi+cugNZBop63FFjk03LwcqgAmu0WcHslof46pf+nQJK1HA==
+  dependencies:
+    "@tamagui/constants" "2.3.1"
+    "@tamagui/simple-hash" "2.3.1"
+
 "@tamagui/image@1.144.4":
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/image/-/image-1.144.4.tgz"
@@ -3349,6 +3382,11 @@
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/is-equal-shallow/-/is-equal-shallow-1.144.4.tgz"
   integrity sha512-DfujzgfJnG4Shgd+SHmdgqnT51e2zqE+dFjd0cN3481PMekDtKfFQkcMp7nhew757SJMViNS8o4hB/ans6JrJg==
+
+"@tamagui/is-equal-shallow@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/is-equal-shallow/-/is-equal-shallow-2.3.1.tgz#257bc086773bb8f71c7d8427a1a3ca70c2392849"
+  integrity sha512-mbRhqPsi6ua2jrHv19hS12GhkHezaOKor30PFAKOt0OQSZ5mP5ADVmQmMqC7tS+hFaEuIfzUhHdxzTHbY651yA==
 
 "@tamagui/label@1.144.4":
   version "1.144.4"
@@ -3386,10 +3424,22 @@
     "@tamagui/text" "1.144.4"
     "@tamagui/web" "1.144.4"
 
+"@tamagui/native@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/native/-/native-2.3.1.tgz#f13b55465ba9628f97982d69ea2a54ca7c6ae26e"
+  integrity sha512-rF41UrRZFI1lG59a8hN9MPmtEzxjf3C+0zQ453sZzCJhARuTfptjxSiBMRTw89qIzJ4LOYR5QyiNg3pKiPyZVw==
+
 "@tamagui/normalize-css-color@1.144.4":
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/normalize-css-color/-/normalize-css-color-1.144.4.tgz"
   integrity sha512-QkdqzgZM5q0sZzP7KITD0xDg1p6Yac4YCqFpqPY6iZcS2snbbsU+iejWRK00itqIsisim9CHyzyPrO7OV5Dalw==
+  dependencies:
+    "@react-native/normalize-color" "^2.1.0"
+
+"@tamagui/normalize-css-color@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/normalize-css-color/-/normalize-css-color-2.3.1.tgz#9b1110b20ae499799f3e964f756a61f559b3ad85"
+  integrity sha512-fcWUShCaMN4aBloblQayf9BvkcGCWIuyKfcOFtrLW1OblYsL6aHmiOS6eRnj+3GHivTzayJY6K/ITCmbwTfikA==
   dependencies:
     "@react-native/normalize-color" "^2.1.0"
 
@@ -3624,6 +3674,11 @@
   resolved "https://registry.npmjs.org/@tamagui/simple-hash/-/simple-hash-1.144.4.tgz"
   integrity sha512-qNFLORvxKt1pIjqQb8eaNOK2Exdronww57BnJy2OmsSNVK/j4A5e/MqvmstttwmtLrOqw8hhoT8gXP+fQLhO+A==
 
+"@tamagui/simple-hash@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/simple-hash/-/simple-hash-2.3.1.tgz#fb2dfe1e341982eda215096688349c67ea86366b"
+  integrity sha512-hFgJlxVLOuVjDuOmaOqau2dY/Mmx0ASMFTtfaR1yIpDHIwjHdV5OSPDaMT2UFQ0J0AjmaXEDBWMmMo8/r5RDJA==
+
 "@tamagui/slider@1.144.4":
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/slider/-/slider-1.144.4.tgz"
@@ -3742,6 +3797,11 @@
   resolved "https://registry.npmjs.org/@tamagui/timer/-/timer-1.144.4.tgz"
   integrity sha512-023miTGlare9nZ8e5sKoFTCA9R+Ek1Wf1yiS1/uDxZWVY2Qz1Ix3yPU5d/CpUsjqs5ghiJ3fcvzsvwaEdjIXDg==
 
+"@tamagui/timer@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/timer/-/timer-2.3.1.tgz#68f6cf246f18e2d9c630666f3e9ed5752ea7a316"
+  integrity sha512-g8ULCoe9+bybU5Y175O0LJERb1uV1BmcUVdjkgfKH5rJg5xdNMODDz6Ot6qa17do/Nn+UldPjLvNmRNHve8mVw==
+
 "@tamagui/toggle-group@1.144.4":
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/toggle-group/-/toggle-group-1.144.4.tgz"
@@ -3785,6 +3845,11 @@
   resolved "https://registry.npmjs.org/@tamagui/types/-/types-1.144.4.tgz"
   integrity sha512-/vmKoj2ytDDYh4Y7Mq/Wjiq4rU1ZAIh0PHpt5KLby5Pxks78GAQ8fQQzLff2H4Mdvzm0ei7zQ6pSo6iM6zJpMQ==
 
+"@tamagui/types@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/types/-/types-2.3.1.tgz#02db6e0af802b098079763709fe68257de186347"
+  integrity sha512-+DTr+5NrQEtx357+prRrMXeJyCjC6bGzw4kfMFZywp6Ga5kip7Cg6k2bQSmLXs35q/MY9/MldWbOKSTvMSUeCQ==
+
 "@tamagui/use-async@1.144.4":
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/use-async/-/use-async-1.144.4.tgz"
@@ -3818,6 +3883,11 @@
   resolved "https://registry.npmjs.org/@tamagui/use-did-finish-ssr/-/use-did-finish-ssr-1.144.4.tgz"
   integrity sha512-Lyhtf9UoWYb4o6x4AlRNbDoIyRELzFfBYEWNGDmsmnJ59LMueKEUdNqXZPDRMKEftBtCCuVrFmIGKNe25v7XwQ==
 
+"@tamagui/use-did-finish-ssr@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/use-did-finish-ssr/-/use-did-finish-ssr-2.3.1.tgz#39b84044c489abb72c41437d159a1c1b0d7db3d6"
+  integrity sha512-NTho9UgDkO1aeqT8JY5Ka5DewEfM/Zwh1p3n66N2iko6g/6406aozcHf5dE71KpmhQjKsKaF3sW75qKgHNswwA==
+
 "@tamagui/use-direction@1.144.4":
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/use-direction/-/use-direction-1.144.4.tgz"
@@ -3845,10 +3915,20 @@
   dependencies:
     "@tamagui/constants" "1.144.4"
 
+"@tamagui/use-event@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/use-event/-/use-event-2.3.1.tgz#65d417b1422dbbc5a66562f7c1bc6e710cdf4743"
+  integrity sha512-Qzj+gqiHhviw49QrhoSgg/fMsVXkSqDTw31svhgX57C/2/LkgaC77HLqQZIIkm6KUoPq9XZJ5EZYAWS/2DlFtw==
+
 "@tamagui/use-force-update@1.144.4":
   version "1.144.4"
   resolved "https://registry.npmjs.org/@tamagui/use-force-update/-/use-force-update-1.144.4.tgz"
   integrity sha512-CIsdCY31blRqm6FYQ7VzuqHVOvnmqjL6L4b7eBBLwFwPZ9BE5jv8aTV8gm+D6cMgZvuSNz0SrIJpWPo0TclwDQ==
+
+"@tamagui/use-force-update@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/use-force-update/-/use-force-update-2.3.1.tgz#a4b304991ec6c42add0411dd289be7b4ae5c9edd"
+  integrity sha512-TICYXGrLeO0kzqii3drq2Y+9h3jv220Nr9RCv0F+KfH9FQhu8mKQSRjZoXTT6WcWmKE2Rl7FggIm433G3oBJmA==
 
 "@tamagui/use-keyboard-visible@1.144.4":
   version "1.144.4"
@@ -3861,6 +3941,13 @@
   integrity sha512-2sJxOcoSCIqzClv05XPnkFlqTOsDOMh8kuNvtFI/IDApq/kKj5rybr5lBt77PW1FMmz0/+wZCOOmLjNCirxZqA==
   dependencies:
     "@tamagui/web" "1.144.4"
+
+"@tamagui/use-presence@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/use-presence/-/use-presence-2.3.1.tgz#cb22e15847676262bc9af93ef28b7410cbc4af22"
+  integrity sha512-nbLOOFo4C7kOw6lebgSRPtFAYPxCYyaGKj57Zm+cPoguI2wtqUj9fwCIkXT3MHZ4G+/VmYx8LUzGhVXWa3TGCQ==
+  dependencies:
+    "@tamagui/web" "2.3.1"
 
 "@tamagui/use-previous@1.144.4":
   version "1.144.4"
@@ -3896,6 +3983,23 @@
     "@tamagui/use-did-finish-ssr" "1.144.4"
     "@tamagui/use-event" "1.144.4"
     "@tamagui/use-force-update" "1.144.4"
+
+"@tamagui/web@2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@tamagui/web/-/web-2.3.1.tgz#d7e5d8c703efe3beccb2982e50c2e843b18bc696"
+  integrity sha512-KVmRBslUp2baRGwK0fd4W4pSKGny7rz8tnzFH6FkIfXAjDc+N4htRn0GyNfNhzHzxhzOewsN8IeTCG3sN9ignw==
+  dependencies:
+    "@tamagui/compose-refs" "2.3.1"
+    "@tamagui/constants" "2.3.1"
+    "@tamagui/helpers" "2.3.1"
+    "@tamagui/is-equal-shallow" "2.3.1"
+    "@tamagui/native" "2.3.1"
+    "@tamagui/normalize-css-color" "2.3.1"
+    "@tamagui/timer" "2.3.1"
+    "@tamagui/types" "2.3.1"
+    "@tamagui/use-did-finish-ssr" "2.3.1"
+    "@tamagui/use-event" "2.3.1"
+    "@tamagui/use-force-update" "2.3.1"
 
 "@tamagui/z-index-stack@1.144.4":
   version "1.144.4"
@@ -8331,16 +8435,6 @@ metro-cache@0.83.7:
     https-proxy-agent "^7.0.5"
     metro-core "0.83.7"
 
-metro-cache@0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro-cache/-/metro-cache-0.84.4.tgz"
-  integrity sha512-gpcFQdSLUwUCk71saKoE64jLFbx2nwTfVCcPSULMNT8QYq0p1eZZE29Jvd0HtT/UlhC3ZOutLxJME5xqD2JUZg==
-  dependencies:
-    exponential-backoff "^3.1.1"
-    flow-enums-runtime "^0.0.6"
-    https-proxy-agent "^7.0.5"
-    metro-core "0.84.4"
-
 metro-config@0.83.3:
   version "0.83.3"
   resolved "https://registry.npmjs.org/metro-core/-/metro-core-0.83.3.tgz"
@@ -8364,20 +8458,6 @@ metro-config@0.83.7, metro-config@^0.83.1:
     metro-runtime "0.83.7"
     yaml "^2.6.1"
 
-metro-config@0.84.4, metro-config@^0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro-config/-/metro-config-0.84.4.tgz"
-  integrity sha512-PMotGDjXcXLWo2TMRH+VR99phFNgYTwqh4OoieIKK3yTJa1Jmkl+fZJxDO0jfBvNF+WESHciHvpNuBtXaF3B0Q==
-  dependencies:
-    connect "^3.6.5"
-    flow-enums-runtime "^0.0.6"
-    jest-validate "^29.7.0"
-    metro "0.84.4"
-    metro-cache "0.84.4"
-    metro-core "0.84.4"
-    metro-runtime "0.84.4"
-    yaml "^2.6.1"
-
 metro-core@0.83.3:
   version "0.83.3"
   resolved "https://registry.npmjs.org/metro-core/-/metro-core-0.83.3.tgz"
@@ -8395,15 +8475,6 @@ metro-core@0.83.7, metro-core@^0.83.1:
     flow-enums-runtime "^0.0.6"
     lodash.throttle "^4.1.1"
     metro-resolver "0.83.7"
-
-metro-core@0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro-core/-/metro-core-0.84.4.tgz"
-  integrity sha512-HONpWC5LGXZn3ffkd4Hu6AIrfE7j4Z0g0wMo/goV24WOB3lhuFZ40KgvaDiSw8iyQHloMYay5N/wPX+z8oN/PQ==
-  dependencies:
-    flow-enums-runtime "^0.0.6"
-    lodash.throttle "^4.1.1"
-    metro-resolver "0.84.4"
 
 metro-file-map@0.83.3:
   version "0.83.3"
@@ -8465,13 +8536,6 @@ metro-resolver@0.83.7:
   dependencies:
     flow-enums-runtime "^0.0.6"
 
-metro-resolver@0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro-resolver/-/metro-resolver-0.84.4.tgz"
-  integrity sha512-1qLgbxQ5ZGhhutuPot1Yp348ofDsATL2WkrHF65TobqTT9K3P9qJXw38bomk7ncp5B7OYMfWwtyBZo1lCV792A==
-  dependencies:
-    flow-enums-runtime "^0.0.6"
-
 metro-runtime@0.83.3, metro-runtime@^0.83.1:
   version "0.83.3"
   resolved "https://registry.npmjs.org/metro-runtime/-/metro-runtime-0.83.3.tgz"
@@ -8488,7 +8552,7 @@ metro-runtime@0.83.7:
     "@babel/runtime" "^7.25.0"
     flow-enums-runtime "^0.0.6"
 
-metro-source-map@^0.83.1, metro-source-map@0.83.3:
+metro-source-map@0.83.3, metro-source-map@^0.83.1:
   version "0.83.3"
   resolved "https://registry.npmjs.org/metro-source-map/-/metro-source-map-0.83.3.tgz"
   integrity sha512-xkC3qwUBh2psVZgVavo8+r2C9Igkk3DibiOXSAht1aYRRcztEZNFtAMtfSB7sdO2iFMx2Mlyu++cBxz/fhdzQg==
@@ -8605,25 +8669,6 @@ metro-transform-worker@0.83.7:
     metro-transform-plugins "0.83.7"
     nullthrows "^1.1.1"
 
-metro-transform-worker@0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro-transform-worker/-/metro-transform-worker-0.84.4.tgz"
-  integrity sha512-W1IYMvvXTu4MxYr7d9h7CeG2vpIr3bmLLIavkPY4O1ilzDrvS8z/NEe6y+pC44Ff7raMXQgYSfdqDUwN/i39gg==
-  dependencies:
-    "@babel/core" "^7.25.2"
-    "@babel/generator" "^7.29.1"
-    "@babel/parser" "^7.29.0"
-    "@babel/types" "^7.29.0"
-    flow-enums-runtime "^0.0.6"
-    metro "0.84.4"
-    metro-babel-transformer "0.84.4"
-    metro-cache "0.84.4"
-    metro-cache-key "0.84.4"
-    metro-minify-terser "0.84.4"
-    metro-source-map "0.84.4"
-    metro-transform-plugins "0.84.4"
-    nullthrows "^1.1.1"
-
 metro@0.83.3:
   version "0.83.3"
   resolved "https://registry.npmjs.org/metro/-/metro-0.83.3.tgz"
@@ -8707,51 +8752,6 @@ metro@0.83.7, metro@^0.83.1:
     metro-symbolicate "0.83.7"
     metro-transform-plugins "0.83.7"
     metro-transform-worker "0.83.7"
-    mime-types "^3.0.1"
-    nullthrows "^1.1.1"
-    serialize-error "^2.1.0"
-    source-map "^0.5.6"
-    throat "^5.0.0"
-    ws "^7.5.10"
-    yargs "^17.6.2"
-
-metro@0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro/-/metro-0.84.4.tgz"
-  integrity sha512-8ETTubqfD6ornDy2zYDvRcKnVDOXdFJsjetYDBsY4oAsb6NJkiwFR+FaMESyGppFmQUyBQA4H4sFGxzcQSGtFA==
-  dependencies:
-    "@babel/code-frame" "^7.29.0"
-    "@babel/core" "^7.25.2"
-    "@babel/generator" "^7.29.1"
-    "@babel/parser" "^7.29.0"
-    "@babel/template" "^7.28.6"
-    "@babel/traverse" "^7.29.0"
-    "@babel/types" "^7.29.0"
-    accepts "^2.0.0"
-    ci-info "^2.0.0"
-    connect "^3.6.5"
-    debug "^4.4.0"
-    error-stack-parser "^2.0.6"
-    flow-enums-runtime "^0.0.6"
-    graceful-fs "^4.2.4"
-    hermes-parser "0.35.0"
-    image-size "^1.0.2"
-    invariant "^2.2.4"
-    jest-worker "^29.7.0"
-    jsc-safe-url "^0.2.2"
-    lodash.throttle "^4.1.1"
-    metro-babel-transformer "0.84.4"
-    metro-cache "0.84.4"
-    metro-cache-key "0.84.4"
-    metro-config "0.84.4"
-    metro-core "0.84.4"
-    metro-file-map "0.84.4"
-    metro-resolver "0.84.4"
-    metro-runtime "0.84.4"
-    metro-source-map "0.84.4"
-    metro-symbolicate "0.84.4"
-    metro-transform-plugins "0.84.4"
-    metro-transform-worker "0.84.4"
     mime-types "^3.0.1"
     nullthrows "^1.1.1"
     serialize-error "^2.1.0"
