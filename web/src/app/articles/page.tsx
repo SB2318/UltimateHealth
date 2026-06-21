@@ -16,7 +16,7 @@ export default function ArticlesPage() {
     <main className="min-h-screen bg-white">
       {/* ── Header ── */}
       <header className="border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <Link
             href={withBasePath("/")}
             className="font-extrabold text-lg"
@@ -50,12 +50,12 @@ export default function ArticlesPage() {
       </section>
 
       {/* ── Articles grid ── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <p className="text-sm text-slate-500 mb-8">
           {articles.length} articles
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {articles.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}

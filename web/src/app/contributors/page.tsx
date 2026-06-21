@@ -1,6 +1,6 @@
-
-
 import Image from "next/image";
+import Link from "next/link";
+import { withBasePath } from "@/lib/basePath";
 
 interface GitHubContributor {
   login?: string;
@@ -331,6 +331,21 @@ export default async function ContributorsPage() {
       `}</style>
 
       <main>
+        <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
+          <Link
+            href={withBasePath("/")}
+            className="text-sm font-semibold text-slate-600 transition hover:text-emerald-700 dark:text-slate-300 dark:hover:text-emerald-500"
+          >
+            UltimateHealth
+          </Link>
+          <Link
+            href={withBasePath("/contribute")}
+            className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-emerald-200 hover:text-emerald-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-emerald-500 dark:hover:text-emerald-500"
+          >
+            Contribute
+          </Link>
+        </header>
+
         {/* Hero Section */}
         <section className="hero" aria-labelledby="contributors-heading">
           <div className="container">
