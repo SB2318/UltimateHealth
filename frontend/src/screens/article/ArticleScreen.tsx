@@ -84,6 +84,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontScale, setFontScale] = useState(1);
+  const [isDyslexiaMode, setIsDyslexiaMode] = useState(false);
+  const DYSLEXIA_MODE_KEY = 'article_dyslexia_mode';
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
@@ -174,6 +176,15 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     debouncedPersistFontScale(nextValue);
   };
 
+  // Toggle dyslexia mode and save user preference
+  const toggleDyslexiaMode = () => {
+    const nextValue = !isDyslexiaMode;
+    setIsDyslexiaMode(nextValue);
+    storeItem(DYSLEXIA_MODE_KEY, String(nextValue)).catch(err => 
+      console.error('Failed to save dyslexia mode:', err)
+    );
+  };
+
   useEffect(() => {
     if (!isGuest) {
       updateViewCount(articleId, {
@@ -223,7 +234,21 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       }
     };
 
+    // Restore dyslexia mode preference
+    const loadDyslexiaMode = async () => {
+      try {
+        const storedValue = await retrieveItem(DYSLEXIA_MODE_KEY);
+        if (!isMounted || !storedValue) return;
+        if (storedValue === 'true') {
+          setIsDyslexiaMode(true);
+        }
+      } catch (error) {
+        console.error('Failed to load dyslexia mode:', error);
+      }
+    };
+
     loadFontScale();
+    loadDyslexiaMode();
 
     return () => {
       isMounted = false;
@@ -677,9 +702,26 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
+  // Dyslexia mode overrides
+  const dyslexiaFontFamily = "'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif";
+  const defaultFontFamily = "'Times New Roman'";
+  
   const articleCustomStyle = `
-    body { font-family: 'Times New Roman'; font-size: ${articleFontSize}px; line-height: 1.6; }
-    p, li { font-size: ${articleFontSize}px; }
+    body { 
+      font-family: ${isDyslexiaMode ? dyslexiaFontFamily : defaultFontFamily}; 
+      font-size: ${articleFontSize}px; 
+      line-height: ${isDyslexiaMode ? 2.0 : 1.6};
+      ${isDyslexiaMode ? `
+        letter-spacing: 0.15em;
+        word-spacing: 0.35em;
+        background-color: ${isDarkMode ? '#2D2D2D' : '#FDF4E3'}; 
+        color: ${isDarkMode ? '#E0E0E0' : '#1A1A1A'}; 
+      ` : ''}
+    }
+    p, li { 
+      font-size: ${articleFontSize}px; 
+      ${isDyslexiaMode ? 'margin-bottom: 1.5em;' : ''}
+    }
     img, video, iframe { max-width: 100%; height: auto; }
   `;
 
@@ -836,6 +878,31 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     <Text style={styles.fontSizeButtonText}>A+</Text>
                   </TouchableOpacity>
                 </View>
+
+                {/* Dyslexia Mode Toggle */}
+                <TouchableOpacity
+                  onPress={toggleDyslexiaMode}
+                  accessibilityRole="switch"
+                  accessibilityState={{ checked: isDyslexiaMode }}
+                  accessibilityLabel="Toggle Dyslexia-Friendly Reading Mode"
+                  style={[
+                    styles.dyslexiaButton,
+                    isDyslexiaMode && styles.dyslexiaButtonActive,
+                  ]}>
+                  <MaterialCommunityIcons
+                    name="glasses"
+                    size={20}
+                    color={isDyslexiaMode ? '#FFFFFF' : '#333333'}
+                  />
+                  <Text
+                    style={[
+                      styles.dyslexiaButtonText,
+                      isDyslexiaMode && styles.dyslexiaButtonTextActive,
+                    ]}>
+                    Dyslexia Mode
+                  </Text>
+                </TouchableOpacity>
+              </View>
               </View>
               {totalLikes > 0 && (
                 <View style={styles.avatarsContainer}>
@@ -1351,6 +1418,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333333',
     fontWeight: '600',
+  },
+  dyslexiaButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#FFFFFF',
+    gap: 6,
+  },
+  dyslexiaButtonActive: {
+    backgroundColor: PRIMARY_COLOR,
+    borderColor: PRIMARY_COLOR,
+  },
+  dyslexiaButtonText: {
+    fontSize: 14,
+    color: '#333333',
+    fontWeight: '600',
+  },
+  dyslexiaButtonTextActive: {
+    color: '#FFFFFF',
   },
   avatarsContainer: {
     position: 'relative',
