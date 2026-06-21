@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
+import React from "react";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
@@ -27,7 +28,7 @@ const userScreenshots = [
   { src: "/assets/podcast-recording.jpeg", caption: "Podcast Recorder" },
   { src: "/assets/podcast-upload.jpeg", caption: "Podcast Upload" },
   { src: "/assets/notification-screen.jpeg", caption: "Notification" },
-  { src: "/assets/UltimateHealth-about.jpeg", caption: "App Info" },
+  { src: "/assets/ultimate-health-about.jpeg", caption: "App Info" },
   { src: "/assets/terms_cond_page.jpeg", caption: "Terms And Condition" },
 ];
 
@@ -122,6 +123,7 @@ export default function Home() {
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
+  const autoSlideTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const openComingSoonModal = useCallback(() => {
     setComingSoonModal(true);
@@ -390,17 +392,20 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
     behavior: "smooth",
   });
 };
-  useEffect(() => {
-    const interval = setInterval(() => {
+ const startAutoSlide = useCallback(() => {
+    if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
+    autoSlideTimerRef.current = setInterval(() => {
       moveSlider(userSliderRef, 1);
-
-      if (adminSliderOpen) {
-        moveSlider(adminSliderRef, 1);
-      }
-    }, 1500);
-
-    return () => clearInterval(interval);
+      if (adminSliderOpen) moveSlider(adminSliderRef, 1);
+    }, 3000);
   }, [adminSliderOpen]);
+
+  useEffect(() => {
+    startAutoSlide();
+    return () => {
+      if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
+    };
+  }, [startAutoSlide]);
 
   // ── TestFlight invite ──
   const sendTesterEmail = async () => {
@@ -638,8 +643,12 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                   </div>
                 </div>
                 <div className="slider-nav">
-                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => moveSlider(userSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => moveSlider(userSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => { if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current); moveSlider(userSliderRef, -1); setTimeout(startAutoSlide, 5000); }}>
+                      <i className="fas fa-chevron-left"></i>
+                  </button>
+                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => { if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current); moveSlider(userSliderRef, 1); setTimeout(startAutoSlide, 5000); }}>
+                    <i className="fas fa-chevron-right"></i>
+                  </button>
                 </div>
               </div>
             )}
@@ -680,8 +689,8 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                   </div>
                 </div>
                 <div className="slider-nav">
-                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => moveSlider(adminSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => moveSlider(adminSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => { if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current); moveSlider(adminSliderRef, -1); setTimeout(startAutoSlide, 5000); }}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => { if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current); moveSlider(adminSliderRef, 1); setTimeout(startAutoSlide, 5000); }}><i className="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             )}
