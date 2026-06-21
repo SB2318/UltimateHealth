@@ -1255,6 +1255,8 @@ function CommunitySection() {
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                     href={card.link}
+                    target={card.link.startsWith("mailto:") ? undefined : "_blank"}
+                    rel={card.link.startsWith("mailto:") ? undefined : "noopener noreferrer"}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
