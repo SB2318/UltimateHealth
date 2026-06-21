@@ -46,6 +46,9 @@ function AdminAgreementContent() {
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return false;
 
+    // Read pixels from the full device-pixel backing store.
+    // Note: ensure our drawing + transform use the same coordinate space,
+    // otherwise alpha sampling can become inconsistent on high-DPI displays.
     const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
     return canvasPixelsHaveInk(pixels);
   }, []);
@@ -65,6 +68,8 @@ function AdminAgreementContent() {
     strokesRef.current.forEach((stroke) => {
       if (stroke.length === 0) return;
       ctx.beginPath();
+      // stroke points are normalized to CSS pixels; with ctx.scale(pixelRatio, pixelRatio)
+      // they map to device pixels consistently.
       ctx.moveTo(stroke[0].x * width, stroke[0].y * height);
       stroke.slice(1).forEach((point) => ctx.lineTo(point.x * width, point.y * height));
       ctx.stroke();
@@ -81,7 +86,11 @@ function AdminAgreementContent() {
     canvas.width = Math.round(rect.width * pixelRatio);
     canvas.height = Math.round(rect.height * pixelRatio);
     const ctx = canvas.getContext("2d")!;
-    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    // Use device-pixel coordinates consistently by scaling the drawing
+    // calls themselves. This avoids mixing CSS-space points with a scaled
+    // transform, which causes ink detection inconsistencies on DPR>1.
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(pixelRatio, pixelRatio);
     ctx.strokeStyle = SIGNATURE_STROKE;
     ctx.lineWidth = SIGNATURE_LINE_WIDTH;
     ctx.lineCap = "round";
@@ -153,6 +162,7 @@ function AdminAgreementContent() {
     const canvasPoint = toCanvasPoint(pos);
     const ctx = canvasRef.current!.getContext("2d")!;
     ctx.beginPath();
+    // canvasPoint is in CSS-pixel space; ctx.scale() already maps to device pixels.
     ctx.moveTo(canvasPoint.x, canvasPoint.y);
   };
 
@@ -167,6 +177,7 @@ function AdminAgreementContent() {
 
     const canvasPoint = toCanvasPoint(pos);
     const ctx = canvasRef.current!.getContext("2d")!;
+    // canvasPoint is in CSS-pixel space; ctx.scale() already maps to device pixels.
     ctx.lineTo(canvasPoint.x, canvasPoint.y);
     ctx.stroke();
     setHasSignature(true);

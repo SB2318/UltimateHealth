@@ -28,16 +28,8 @@ export default function ArticleBreadcrumbs({
   categoryHref,
 }: ArticleBreadcrumbsProps) {
   return (
-    <nav aria-label="Page navigation" className="space-y-2">
-      {/* Back link */}
-      <Link
-        href={withBasePath("/articles")}
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-[#667eea] hover:text-[#5568d3] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#667eea] rounded"
-      >
-        <i className="fas fa-arrow-left text-xs" aria-hidden="true" />
-        Back to Articles
-      </Link>
-
+    <nav aria-label="Page navigation" className=" flex items-center justify-between ">
+     
       {/* Breadcrumb trail */}
       <Breadcrumb>
         <BreadcrumbList>
@@ -76,7 +68,7 @@ export default function ArticleBreadcrumbs({
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
-      </Breadcrumb>
+      </Breadcrumb> 
     </nav>
   );
 }
