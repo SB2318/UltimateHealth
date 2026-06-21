@@ -556,10 +556,10 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               </Link>
             </li>
             <li>
-              <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
+              <a href={withBasePath("/medical-glossary")} className="nav-link-item">
                 <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Medical Glossary</span>
-              </Link>
+              </a>
             </li>
             <li>
               <Link href={withBasePath("/contribute")} className="nav-link-item">
