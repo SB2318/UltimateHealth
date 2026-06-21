@@ -109,9 +109,9 @@ const CALLOUT_CONFIG: Record<CalloutVariant, CalloutConfig> = {
 // ─── Block renderers ──────────────────────────────────────────────────────────
 
 const HEADING_CLASSES: Record<HeadingLevel, string> = {
-  2: "text-2xl md:text-3xl font-bold text-[#1a202c] mt-12 mb-5 pb-2 border-b border-gray-100 scroll-mt-20",
-  3: "text-xl md:text-2xl font-semibold text-[#2d3748] mt-9 mb-3 scroll-mt-20",
-  4: "text-lg md:text-xl font-semibold text-[#4a5568] mt-7 mb-2 scroll-mt-20",
+  2: "text-2xl md:text-3xl font-bold text-[#1a202c] mt-12 mb-5 pb-2 border-b border-gray-100 scroll-mt-[var(--article-sticky-header-height,85px)]",
+  3: "text-xl md:text-2xl font-semibold text-[#2d3748] mt-9 mb-3 scroll-mt-[var(--article-sticky-header-height,85px)]",
+  4: "text-lg md:text-xl font-semibold text-[#4a5568] mt-7 mb-2 scroll-mt-[var(--article-sticky-header-height,85px)]",
 };
 
 const HEADING_TAGS: Record<HeadingLevel, "h2" | "h3" | "h4"> = {

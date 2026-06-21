@@ -12,10 +12,6 @@ import { PageWrapper, Section } from "../components/layout";
 
 import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Toggle } from "@/components/ui/toggle";
-import { Footer } from "@/components/ui/footer";
-
 
 
 const userScreenshots = [
@@ -468,7 +464,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
     <>
 
       {/* ── Header ── */}
-      <header className={`header${scrolled ? " scrolled" : ""}bg-white dark:bg-slate-900 transition-colors duration-300 h-[80px]`} id="header">
+      <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
         <PageWrapper as="div" className="nav">
           <Link href={withBasePath("/")} className="logo">
             <div className="logo-icon">
@@ -481,7 +477,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
             Ultimate-Health
           </Link>
 
-          <ul className="nav-links text-black dark:text-white">
+          <ul className="nav-links">
             <li>
               <a
                 href="#features"
@@ -489,7 +485,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                 aria-current={activeSection === "features" ? "location" : undefined}
               >
                 <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text ">Platform Highlights</span>
+                <span className="nav-item-text">Platform Highlights</span>
               </a>
             </li>
             <li>
@@ -519,19 +515,18 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               </Link>
             </li>
             <li>
-              <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
+              <a href={withBasePath("/medical-glossary")} className="nav-link-item">
                 <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Medical Glossary</span>
-              </Link>
+              </a>
             </li>
             <li>
-              <Link href="/contribute" className="nav-link-item">
+              <Link href={withBasePath("/contribute")} className="nav-link-item">
                 <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
                 <span className="nav-item-text">Join Us to Contribute</span>
               </Link>
             </li>
-            <ModeToggle/>
-            <li>
+            <li style={{ display: "flex", alignItems: "center" }}>
               <a href="#downloads" className="nav-btn-sm">
                 <i className="fas fa-user" aria-hidden="true"></i>
                 <span>Login / Register</span>
@@ -548,33 +543,29 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">Read Articles</a>
-          <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
-          <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
+          <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
+          <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
+          <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
           <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         </nav>
       </header>
 
- {/* fix-unreachable-launching-soon-modal */}
       {/* ── Hero ── */}
       <HeroAndDownload
-        onJoinTestFlight={() => setAppleModal(true)}
+        onJoinTestFlight={openAppleModal}
         onShowComingSoon={openComingSoonModal}
       />
 
-      {/* ── Hero + Downloads (new premium design) ── */}
-      {/* <HeroAndDownload onJoinTestFlight={() => setAppleModal(true)} /> */}
       {/* ── Screenshots ── */}
-      <Section id="screenshots" className="bg-[#F7FAFC] dark:!bg-slate-800">
+      <Section id="screenshots">
         <PageWrapper>
           <h2>App Screenshots</h2>
           <p className="center">Take a look inside the UltimateHealth experience</p>
 
-           {/* UltimateHealth App Slider */}
-          <div className="screenshot-details bg-white dark:bg-gray-800 border border-white dark:border-gray-600 shadow-md dark:shadow-black/40 transition-all duration-300 hover:-translate-y-1">
-            <div className="screenshot-summary text-black dark:text-white" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
+          <div className="screenshot-details">
+            <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setUserSliderOpen((o) => !o); }}>
-              <span style={{ color: "var(--primary)" }}>{userSliderOpen ? "▼" : "▶"}</span> <span className="text-black dark:text-white">UltimateHealth App</span>
+              <span style={{ color: "var(--primary)" }}>{userSliderOpen ? "▼" : "▶"}</span> UltimateHealth App
             </div>
             {userSliderOpen && (
               <div className="screenshot-slider-container">
@@ -613,11 +604,10 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
             )}
           </div>
 
-            {/* UHealth Admin App Slider */}
-          <div className="screenshot-details bg-white dark:bg-gray-800 border border-white dark:border-gray-600 shadow-md dark:shadow-black/40 transition-all duration-300 hover:-translate-y-1">
+          <div className="screenshot-details">
             <div className="screenshot-summary" onClick={() => setAdminSliderOpen((o) => !o)} role="button" tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setAdminSliderOpen((o) => !o); }}>
-              <span style={{ color: "var(--primary)" }}>{adminSliderOpen ? "▼" : "▶"}</span> <span className="text-black dark:text-white">UHealth Admin App</span>
+              <span style={{ color: "var(--primary)" }}>{adminSliderOpen ? "▼" : "▶"}</span> UHealth Admin App
             </div>
             {adminSliderOpen && (
               <div className="screenshot-slider-container">
@@ -659,7 +649,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       </Section>
 
       {/* ── Features ── */}
-      <Section id="features" className="scroll-reveal dark:!bg-slate-900">
+      <Section id="features" className="feature-section-premium scroll-reveal">
         <PageWrapper>
           <h2>UltimateHealth Features</h2>
           <p className="center">
@@ -691,11 +681,11 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                 { icon: "fa-shield-alt", title: "Trusted Wellness Repository", desc: "A heavily moderated, safe, and accurate knowledge base.", span: "md:col-span-2 lg:col-span-2" },
                 { icon: "fa-globe", title: "Open-Source Platform", desc: "Join our global initiative for a healthier community.", span: "col-span-1" },
               ].map((f, i) => (
-                <div
-            className="feature-item w-full bg-stone-50 dark:bg-gray-800 border border-stone-200 dark:border-gray-800 shadow-md shadow-stone-200/50 dark:shadow-none "
-            key={i}
-          >
-                  <h3 className="text-black dark:!text-white"> <i className={`fas ${f.icon}`}></i> {f.title}</h3>
+                <div className={`feature-card-premium w-full fade-in ${f.span}`} key={i}>
+                  <div className="feature-icon-wrapper">
+                    <i className={`fas ${f.icon}`}></i>
+                  </div>
+                  <h3>{f.title}</h3>
                   <p>{f.desc}</p>
                 </div>
               ))
@@ -705,31 +695,43 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       </Section>
 
       {/* ── Moderator Features ── */}
-      <Section className="member-section scroll-reveal bg-[#F7FAFC] dark:!bg-gray-600">
+      <Section className="member-section scroll-reveal">
         <PageWrapper>
-          <h2 className="dark:!text-red-500">Be a Member: Guardian of Content Integrity</h2>
+          <h2>Be a Member: Guardian of Content Integrity</h2>
           <p className="center">Help maintain quality and safety across the platform</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
-            {[
-              { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
-              { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
-              { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
-              { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
-              { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
-            ].map((f, i) => (
-              <div
-className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
-                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
-                <h3 className="dark:!text-white">{f.title}</h3>
-                <p className="dark:text-slate-400">{f.desc}</p>
-              </div>
-            ))}
-          </div>
+          {/* Top row — 3 cards */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
+  {[
+    { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
+    { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
+    { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
+  ].map((f, i) => (
+    <div className="feature-card mod-card w-full fade-in" key={i}>
+      <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+      <h3>{f.title}</h3>
+      <p>{f.desc}</p>
+    </div>
+  ))}
+</div>
+
+{/* Bottom row — 2 cards centered under the top row */}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 mx-auto" style={{ maxWidth: "66.666%", marginLeft: "auto", marginRight: "auto" , marginTop: "20px"}}>
+  {[
+    { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
+    { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
+  ].map((f, i) => (
+    <div className="feature-card mod-card w-full fade-in" key={i}>
+      <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+      <h3>{f.title}</h3>
+      <p>{f.desc}</p>
+    </div>
+  ))}
+</div>
         </PageWrapper>
       </Section>
 
       {/* ── Programs ── */}
-      <Section id="programs" className="scroll-reveal dark:bg-slate-900">
+      <Section id="programs" className="scroll-reveal">
         <PageWrapper>
           <h2>Programs Participated In</h2>
           <p className="center">We are proud to have collaborated with and contributed to these prestigious tech and open-source initiatives</p>
@@ -739,11 +741,7 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
               { logo: "https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00", alt: "Vultr Logo", badge: "Cloud Hackathon", title: "Vultr Cloud Innovate", desc: "Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power." },
               { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2024", title: "GirlScript Summer of Code", desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship." },
             ].map((p, i) => (
-              <div
-                className="program-card w-full fade-in bg-white dark:bg-gray-800 border-2 border-black/5 dark:border-gray-800 text-white dark:text-black dark:hover:border-purple-500 hover:border-2 "
-                key={i}
-              >
-
+              <div className="program-card w-full fade-in" key={i}>
                 <div className="program-logo-wrapper">
                   <Image
                     src={p.logo}
@@ -754,9 +752,9 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
                     className="program-logo"
                   />
                 </div>
-                <span className="program-badge bg-[#1e2736] dark:text-white">{p.badge}</span>
-                <h3 className="dark:!text-white">{p.title}</h3>
-                <p className="!text-gray-400">{p.desc}</p>
+                <span className="program-badge">{p.badge}</span>
+                <h3>{p.title}</h3>
+                <p>{p.desc}</p>
               </div>
             ))}
           </div>
@@ -764,7 +762,7 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
       </Section>
 
       {/* ── Contact ── */}
-      <Section className="contact-section scroll-reveal bg-white dark:!bg-gray-900" id="contact">
+      <Section className="contact-section scroll-reveal" id="contact">
         <PageWrapper>
           <h2>Connect With Us</h2>
           <p className="center" style={{ marginBottom: 56 }}>
@@ -774,7 +772,7 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
           <div className="contact-dark-card">
             {/* Left panel */}
             <div className="contact-dark-left">
-              <div className="contact-left-badge ">✦ UltimateHealth</div>
+              <div className="contact-left-badge">✦ UltimateHealth</div>
               <h3 className="contact-dark-title">Let&apos;s Talk<br />Health Together</h3>
               <p className="contact-dark-subtitle">
                 Questions about our platform? We&apos;re here to help. Reach out and we&apos;ll respond promptly.
@@ -823,12 +821,12 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
             </div>
 
             {/* Right panel — fully wired form */}
-            <div className="bg-white dark:bg-gray-800 contact-dark-right">
-              <h3 className="contact-form-title text-[#1a202c] dark:!text-white">Send us a Message</h3>
-              <p className="contact-form-subtitle text-gray-400 dark:text-gray-400">We typically respond within 24 hours</p>
+            <div className="contact-dark-right">
+              <h3 className="contact-form-title">Send us a Message</h3>
+              <p className="contact-form-subtitle">We typically respond within 24 hours</p>
 
               {contactStatus === "success" ? (
-                <div className="contact-success-box dark:!bg-green-900/20 dark:!border-green-700">
+                <div className="contact-success-box">
                   <div className="contact-success-icon"><i className="fas fa-check-circle"></i></div>
                   <h4>Message Sent!</h4>
                   <p>Thank you for reaching out. We&apos;ll get back to you within 24 hours.</p>
@@ -838,43 +836,34 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
                 </div>
               ) : (
                 <form className="contact-dark-form" autoComplete="off" onSubmit={handleContactSubmit}>
-                   <div className="dark-field-group ">
-                      <span className="dark-field-icon dark:text-gray-400 group-focus-within:text-purple-500 transition-colors duration-300">
-                        <i className="fas fa-user"></i>
-                      </span>
-                      <input
-                        type="text"
-                        className="dark-input bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                        placeholder="Your Name *"
-                        required
-                      />
-                  </div>
-
-                  <div className="dark-field-group group">
-                    <span className="dark-field-icon dark:text-gray-400 group-focus-within:text-purple-500 transition-colors duration-300"><i className="fas fa-envelope"></i></span>
+                  <div className="dark-field-group">
+                    <span className="dark-field-icon"><i className="fas fa-user"></i></span>
                     <input
-                      type="email"
-                      className="dark-input bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                      placeholder="Email Address *" required
+                      type="text" className="dark-input" placeholder="Your Name *" required
+                      maxLength={80}
+                      value={contactName} onChange={(e) => setContactName(e.target.value)}
+                    />
+                  </div>
+                  <div className="dark-field-group">
+                    <span className="dark-field-icon"><i className="fas fa-envelope"></i></span>
+                    <input
+                      type="email" className="dark-input" placeholder="Email Address *" required
                       maxLength={120}
                       value={contactEmail} onChange={(e) => setContactEmail(e.target.value)}
                     />
                   </div>
-
-                  <div className="dark-field-group group">
-                    <span className="dark-field-icon dark:text-gray-400 group-focus-within:text-purple-500 transition-colors duration-300"><i className="fas fa-tag"></i></span>
+                  <div className="dark-field-group">
+                    <span className="dark-field-icon"><i className="fas fa-tag"></i></span>
                     <input
-                      type="text" className="dark-input bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                      placeholder="Subject *" required
+                      type="text" className="dark-input" placeholder="Subject *" required
                       maxLength={120}
                       value={contactSubject} onChange={(e) => setContactSubject(e.target.value)}
                     />
                   </div>
-                  <div className="dark-field-group group dark-field-textarea">
-                    <span className="dark-field-icon dark-field-icon-top mt-3 dark:text-gray-400 group-focus-within:text-purple-500 transition-colors duration-300"><i className="fas fa-comment"></i></span>
+                  <div className="dark-field-group dark-field-textarea">
+                    <span className="dark-field-icon dark-field-icon-top"><i className="fas fa-comment"></i></span>
                     <textarea
-                      className="dark-input bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-                      placeholder="Your Message *" required
+                      className="dark-input dark-textarea" placeholder="Your Message *" required
                       maxLength={1500}
                       value={contactMessage} onChange={(e) => setContactMessage(e.target.value)}
                     ></textarea>
@@ -906,7 +895,137 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
       </Section>
 
       {/* ── Footer ── */}
-     <Footer />
+      <footer>
+        <PageWrapper className="footer-grid">
+          {/* Brand column */}
+          <div className="footer-brand">
+            <h2>UltimateHealth</h2>
+            <p className="footer-note">Open-source health and wellness for everyone.</p>
+
+            {/* Newsletter — wired to API */}
+            <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit} noValidate>
+            {newsletterStatus === "success" ? (
+            <div className="newsletter-success">
+            <i className="fas fa-check-circle"></i> You have successfully subscribed!
+           </div>
+            ) : (
+             <>
+              <div className="footer-subscribe-row">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="footer-subscribe-input"
+                maxLength={120}
+                value={newsletterEmail}
+                required
+                aria-label="Newsletter email address"
+                aria-describedby="newsletter-feedback"
+                onChange={(e) => {
+                setNewsletterEmail(e.target.value);
+                if (
+                  newsletterStatus !== "idle" &&
+                  newsletterStatus !== "sending"
+                ) {
+                setNewsletterStatus("idle");
+              }
+            }}
+            />
+            <button
+              type="submit"
+              className="footer-subscribe-btn"
+              aria-label="Subscribe to UltimateHealth newsletter"
+              disabled={newsletterStatus === "sending"}
+            >
+            {newsletterStatus === "sending" ? "Subscribing..." : "Subscribe"}
+           </button>
+           </div>
+
+          <div id="newsletter-feedback" aria-live="polite">
+            {newsletterStatus === "empty" && (
+            <p className="newsletter-error">
+              <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
+            </p>
+            )}
+            {newsletterStatus === "invalid" && (
+              <p className="newsletter-error">
+               <i className="fas fa-exclamation-circle"></i> Invalid email format.
+               </p>
+            )}
+              {newsletterStatus === "duplicate" && (
+              <p className="newsletter-error">
+               <i className="fas fa-info-circle"></i> This email is already subscribed.
+              </p>
+              )}
+            {newsletterStatus === "error" && (
+            <p className="newsletter-error">
+              <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
+             </p>
+            )}
+      </div>
+
+      <small className="footer-subscribe-note">
+        We respect your privacy. Unsubscribe at any time.
+      </small>
+    </>
+  )}
+</form>
+            {/* Social icons */}
+            <div style={{ marginTop: 20 }}>
+              <span className="footer-follow-label">Follow Us</span>
+              <div className="footer-social-links">
+                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
+                  <i className="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
+                  <i className="fab fa-linkedin-in"></i>
+                </a>
+                {TELEGRAM_URL && (
+                  <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Telegram" aria-label="Open UltimateHealth Telegram link">
+                    <i className="fab fa-telegram-plane"></i>
+                  </a>
+                )}
+                {INSTAGRAM_URL && (
+                  <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Instagram" aria-label="Open UltimateHealth Instagram link">
+                    <i className="fab fa-instagram"></i>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="footer-links-col">
+            <h3>Quick Links</h3>
+            <Link href={withBasePath("/")}>Home</Link>
+            <a href="#features">Features</a>
+            <a href="#programs">Programs</a>
+            <a href="#screenshots">Screenshots</a>
+            <a href="#contact">Contact</a>
+            <Link href={withBasePath("/articles")}>Health Articles</Link>
+            <Link href={withBasePath("/contribute")}>Join Us &amp; Contribute</Link>
+          </div>
+
+          {/* Support */}
+          <div className="footer-links-col">
+            <h3>Support</h3>
+            <a href={HELP_CENTER_URL} target="_blank" rel="noopener noreferrer">Help Center</a>
+            <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
+            <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">Feedback</a>
+            <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer">API Docs</a>
+          </div>
+        </PageWrapper>
+
+        {/* Bottom bar */}
+        <div className="footer-bottom">
+          <div className="footer-bottom-inner">
+            <p>© 2026 UltimateHealth. Built with passion for a healthier community.</p>
+            <div className="footer-bottom-links">
+              <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>
+              <a href={TERMS_OF_USE_URL}>Terms of Use</a>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       {/* ── Coming Soon Modal ── */}
       {comingSoonModal && (
@@ -930,21 +1049,47 @@ className="feature-card mod-card w-full fade-in bg-white dark:bg-slate-800 ">
       )}
 
       {/* ── TestFlight Modal ── */}
-      <div className={`modal-overlay${appleModal ? " active" : ""}`}
-        onClick={() => { setAppleModal(false); setTesterSuccess(false); setTesterEmail(""); }}>
-        <div className="modal-content dark:!bg-slate-800" onClick={(e) => e.stopPropagation()}>
-          <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>✈️</div>
-          <h2>Join the iOS TestFlight</h2>
-          <p style={{ color: "var(--text-muted)", marginBottom: 24 }}>Help us build the ultimate experience</p>
-          <div style={{ textAlign: "left", fontSize: "0.95rem", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }} className="bg-[#f8fafc] dark:bg-slate-700 text-black dark:text-white">
-            <p style={{ marginBottom: 12 }}>We have decided to release via <strong>TestFlight</strong> first before moving to a full App Store launch.</p>
-            <p style={{ marginBottom: 12 }}><strong>🔹 Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
-            <p style={{ marginBottom: 12 }}><strong>🔹 What this means:</strong> The app will be available to invited testers only via TestFlight.</p>
-            <p><strong>Are you ready to test?</strong> Enter your email below to request an invitation.</p>
+      {appleModal && (
+        <div
+          className="modal-overlay active"
+          onClick={closeAppleModal}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="testflight-modal-title"
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>✈️</div>
+            <h2 id="testflight-modal-title">Join the iOS TestFlight</h2>
+            <p style={{ color: "var(--text-muted)", marginBottom: 24 }}>Help us build the ultimate experience</p>
+            <div style={{ textAlign: "left", fontSize: "0.95rem", color: "var(--text-dark)", background: "#f8fafc", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }}>
+              <p style={{ marginBottom: 12 }}>We have decided to release via <strong>TestFlight</strong> first before moving to a full App Store launch.</p>
+              <p style={{ marginBottom: 12 }}><strong>🔹 Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
+              <p style={{ marginBottom: 12 }}><strong>🔹 What this means:</strong> The app will be available to invited testers only via TestFlight.</p>
+              <p><strong>Are you ready to test?</strong> Enter your email below to request an invitation.</p>
+            </div>
+            {!testerSuccess ? (
+              <div>
+                <input type="email" placeholder="Enter your Apple ID email" className="waitlist-input"
+                  maxLength={120}
+                  value={testerEmail} onChange={(e) => setTesterEmail(e.target.value)} />
+                <button className="nav-btn-sm"
+                  type="button"
+                  style={{ width: "100%", height: 48, border: "none", cursor: "pointer", fontWeight: "bold", fontSize: "1rem" }}
+                  onClick={sendTesterEmail}>
+                  Send Invitation Request
+                </button>
+              </div>
+            ) : (
+              <div style={{ padding: 24, color: "#059669", background: "#d1fae5", borderRadius: 12 }}>
+                <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We&apos;ll notify you as soon as the test link is ready.</p>
+              </div>
+            )}
+            <button type="button" className="close-modal-btn" onClick={closeAppleModal}>
+              Maybe later
+            </button>
           </div>
         </div>
-        </div>
-
+      )}
 
       {/* ── Screenshot Modal ── */}
       {screenshotModal && (
