@@ -12,7 +12,7 @@ import {SocialScreenProps} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from 'react-redux';
 import {useQueryClient} from '@tanstack/react-query';
 import {useSocket} from '../contexts/SocketContext';
 import Loader from '../components/Loader';
@@ -32,7 +32,7 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
   const {mutate: followMutate, isPending: followMutationPending} =
     useUpdateFollowStatus();
 
-  const {user_id, user_handle} = useSelector(
+  const {user_id, user_handle} = useAppSelector(
     (state: any) => state.user,
   );
 

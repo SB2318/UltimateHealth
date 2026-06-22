@@ -7,7 +7,7 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from 'react-redux';
 import {
   Alert,
   View,
@@ -49,14 +49,14 @@ import Snackbar from 'react-native-snackbar';
 // }
 
 const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
-  const {user_id, user_token} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_id, user_token} = useAppSelector((state: any) => state.user);
+  const {isConnected} = useAppSelector((state: any) => state.network);
 
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const isMountedRef = useRef(true);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const {data: user} = useGetProfile();
   // const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA'; //token
 

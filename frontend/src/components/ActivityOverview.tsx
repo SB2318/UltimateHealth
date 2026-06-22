@@ -17,7 +17,7 @@ import {PRIMARY_COLOR} from '../helper/Theme';
 import {BarChart} from 'react-native-chart-kit';
 import { getCurrentYear, formatDateShortYear } from '../helper/dateUtils';
 import {fp, hp} from '../helper/Metric';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from 'react-redux';
 import {GET_IMAGE} from '../helper/APIUtils';
 import {ArticleData, MonthStatus, YearStatus} from '../type';
 import Loader from './Loader';
@@ -75,10 +75,10 @@ const ActivityOverview = ({
   user_handle,
 }: Props) => {
   const [userState, setUserState] = useState<number>(0);
-  const {user_token, user_id} = useSelector((state: any) => state.user);
+  const {user_token, user_id} = useAppSelector((state: any) => state.user);
   const [, setIsFocus] = useState<boolean>(false);
   // const [selectedDay, setSelectedDay] = useState<number>(new Date().getDay());
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [selectedMonth, setSelectedMonth] = useState<number>(
     new Date().getMonth(),
   );

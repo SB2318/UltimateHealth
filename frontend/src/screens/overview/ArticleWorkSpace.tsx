@@ -7,7 +7,7 @@ import {
   FlatList,
 } from 'react-native';
 import {ArticleData} from '../../type';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from 'react-redux';
 import ReviewCard from '../../components/ReviewCard';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
@@ -20,7 +20,7 @@ export default function ArticleWorkSpace({
 }: {
   handleClickAction: (item: ArticleData) => void;
 }) {
-  useSelector((state: any) => state.user);
+  useAppSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);

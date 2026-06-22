@@ -10,7 +10,7 @@ import * as z from 'zod';
 import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
-import {useDispatch} from 'react-redux';
+import {useAppDispatch} from 'react-redux';
 import {
   Button,
   Input,
@@ -48,7 +48,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   const inset = useSafeAreaInsets();
   const {redirectTo} = route.params || {};
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isDarkMode = useColorScheme() === 'dark';
   const [emailInputVisible, setEmailInputVisible] = useState(false);
   const [requestVerificationMode, setRequestVerification] = useState(false);

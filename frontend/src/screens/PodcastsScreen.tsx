@@ -11,7 +11,7 @@ import {YStack, View, XStack} from 'tamagui';
 import PodcastCard from '../components/PodcastCard';
 import {hp} from '../helper/Metric';
 import {PodcastData, PodcastScreenProps} from '../type';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from 'react-redux';
 import {downloadAudio, msToTime} from '../helper/Utils';
 import Snackbar from 'react-native-snackbar';
 import {setaddedPodcastId, setPodcasts, appendPodcasts} from '../store/dataSlice';
@@ -32,12 +32,12 @@ const {WavAudioRecorder} = NativeModules;
 //const recorderEvents = new NativeEventEmitter(WavAudioRecorder);
 
 const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
-  const dispatch = useDispatch();
-  const {user_id, isGuest} = useSelector((state: any) => state.user);
-  // const {selectedTags, sortType} = useSelector((state: any) => state.data);
+  const dispatch = useAppDispatch();
+  const {user_id, isGuest} = useAppSelector((state: any) => state.user);
+  // const {selectedTags, sortType} = useAppSelector((state: any) => state.data);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const {podcasts} = useSelector((state: any) => state.data);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {podcasts} = useAppSelector((state: any) => state.data);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [playlistModalOpen, setPlaylistModalOpen] = useState<boolean>(false);
   // const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [page, setPage] = useState(1);

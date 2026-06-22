@@ -2,7 +2,7 @@ import axios, {AxiosError} from 'axios';
 import {ArticleData} from '../type';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {LIKE_ARTICLE} from '../helper/APIUtils';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from 'react-redux';
 
 export const useLikeArticle = (
   articleId: number,
@@ -13,7 +13,7 @@ export const useLikeArticle = (
   },
   AxiosError
 > => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
 
   return useMutation({
     mutationKey: ['update-like-status', articleId],

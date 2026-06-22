@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'react-redux';
 import { H3, Image, Paragraph, Text, YStack, TextArea, XStack, Button } from 'tamagui';
 
 import CommentItem from '../components/CommentItem';
@@ -61,7 +61,7 @@ const CommentScreen = ({
   const [newComment, setNewComment] =
     useState('');
 
-  const {user_id} = useSelector(
+  const {user_id} = useAppSelector(
     (state: any) => state.user,
   );
 
@@ -110,7 +110,7 @@ const CommentScreen = ({
     User[]
   >([]);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const triggersConfig: TriggersConfig<
     'mention' | 'hashtag'

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { EditRequest } from '../type';
 import { GET_ALL_IMPROVEMENTS_FOR_USER } from '../helper/APIUtils';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from 'react-redux';
 
 interface Props {
   page: number;
@@ -27,7 +27,7 @@ export const useGetAllImprovementsForReview = ({
   setProgressLabel,
   setDiscardLabel,
 }: Props) => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-all-improvements-for-review', page, selectedStatus],

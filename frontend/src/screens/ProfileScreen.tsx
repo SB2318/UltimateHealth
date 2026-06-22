@@ -4,7 +4,7 @@ import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
 import ArticleCard from '../components/ArticleCard';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from 'react-redux';
 import { useTheme } from 'tamagui';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -22,14 +22,14 @@ import { NoArticleState } from '../components/EmptyStates';
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
-  const {user_id} = useSelector((state: any) => state.user);
+  const {user_id} = useAppSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [articleId, setArticleId] = useState<number>();
   const [authorId, setAuthorId] = useState<string>('');
   const [recordId, setRecordId] = useState<string>('');
   const [selectedCardId, setSelectedCardId] = useState<string>('');
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const {mutate: updateViewCount} =
     useUpdateViewCount(articleId ?? 0);
 

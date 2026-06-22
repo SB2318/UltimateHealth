@@ -12,7 +12,7 @@ import ActivityOverview from '../components/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
 import { useTheme } from 'tamagui';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileHeader from '../components/ProfileHeader';
 import {ArticleData, UserProfileScreenProp} from '../type';
@@ -33,10 +33,10 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const isDarkMode = useColorScheme() === 'dark';
   const {authorId, userId, author_handle} = (route.params || {}) as any;
   const {userId: routeUserId, userHandle: routeUserHandle} = (route.params || {}) as any; 
-  const {user_id, user_handle} = useSelector(
+  const {user_id, user_handle} = useAppSelector(
     (state: any) => state.user,
   );
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const [articleId, setArticleId] = useState<number>();
