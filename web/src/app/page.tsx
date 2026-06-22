@@ -2,13 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
 
-import { PageWrapper, Section } from "../components/layout";
+import { PageWrapper, Section, Navbar } from "../components/layout";
 
 import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
@@ -561,92 +560,7 @@ export default function Home() {
   return (
     <>
 
-      {/* ── Header ── */}
-      <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
-        <PageWrapper as="div" className="nav">
-          <Link href={withBasePath("/")} className="logo">
-            <div className="logo-icon">
-              <Image
-                src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
-                alt="UltimateHealth Logo" width={48} height={48}
-                priority
-              />
-            </div>
-            Ultimate-Health
-          </Link>
-
-          <ul className="nav-links">
-            <li>
-              <a
-                href="#features"
-                className={`nav-link-item${activeSection === "features" ? " active" : ""}`}
-                aria-current={activeSection === "features" ? "location" : undefined}
-              >
-                <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Platform Highlights</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#screenshots"
-                className={`nav-link-item${activeSection === "screenshots" ? " active" : ""}`}
-                aria-current={activeSection === "screenshots" ? "location" : undefined}
-              >
-                <i className="fas fa-image nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Screenshots</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#programs"
-                className={`nav-link-item${activeSection === "programs" ? " active" : ""}`}
-                aria-current={activeSection === "programs" ? "location" : undefined}
-              >
-                <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Community Programs</span>
-              </a>
-            </li>
-            <li>
-              <Link href={withBasePath("/articles")} className="nav-link-item">
-                <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Read Articles</span>
-              </Link>
-            </li>
-            <li>
-              <a href={withBasePath("/medical-glossary")} className="nav-link-item">
-                <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Medical Glossary</span>
-              </a>
-            </li>
-            <li>
-              <Link href={withBasePath("/contribute")} className="nav-link-item">
-                <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Join Us to Contribute</span>
-              </Link>
-            </li>
-            <li style={{ display: "flex", alignItems: "center" }}>
-              <a href="#downloads" className="nav-btn-sm">
-                <i className="fas fa-user" aria-hidden="true"></i>
-                <span>Login / Register</span>
-              </a>
-            </li>
-          </ul>
-
-          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileMenuOpen}>
-            <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
-          </button>
-        </PageWrapper>
-
-        <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
-          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-          <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
-          <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
-          <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
-          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
-        </nav>
-      </header>
+      <Navbar />
 
       {/* ── Hero ── */}
       <HeroAndDownload
