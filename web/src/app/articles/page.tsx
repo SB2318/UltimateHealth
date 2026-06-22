@@ -46,9 +46,13 @@ export default function ArticlesPage() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
-      <footer className="border-t border-gray-100 py-8 text-center text-sm text-slate-400">
-        <Link href={withBasePath("/")} className="hover:text-[#667eea] transition-colors">
+    
+        {/* ── Footer ── */}
+      <footer className="border-t border-gray-100 py-8 text-center">
+        <Link
+          href={withBasePath("/")}
+          className="inline-flex items-center gap-2 px-5 py-2 rounded-full border border-[#667eea] text-[#667eea] text-sm font-semibold hover:bg-[#667eea] hover:text-white transition-all duration-300"
+        >
           ← Back to UltimateHealth
         </Link>
       </footer>
