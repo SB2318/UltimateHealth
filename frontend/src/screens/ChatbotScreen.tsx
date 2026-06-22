@@ -43,11 +43,7 @@ import Snackbar from 'react-native-snackbar';
 //   total_tokens: number;
 // }
 
-// interface Choice {
-//   index: number;
-//   message: Message;
-//   finish_reason: string;
-// }
+const ASSISTANT_USER_ID = 2;
 
 const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
   const {user_id, user_token} = useSelector((state: any) => state.user);
@@ -63,20 +59,6 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
 
   const [activeSpeakingId, setActiveSpeakingId] = useState<string | number | null>(null);
 
-  const removeTtsSubscription = (
-    subscription: any,
-    eventName: string,
-    handler: any,
-  ) => {
-    if (subscription?.remove) {
-      subscription.remove();
-      return;
-    }
-    if (typeof Tts.removeEventListener === 'function') {
-      Tts.removeEventListener(eventName, handler);
-    }
-  };
-
   const initTts = async () => {
     try {
       await Tts.getInitStatus();
@@ -88,12 +70,15 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
           (v.language === 'en-IN' || v.language === 'en-US' || v.language.startsWith('en')),
       );
       if (availableVoices && availableVoices.length > 0) {
-        try {
-          await Tts.setDefaultLanguage(availableVoices[0].language);
-        } catch (err) {
-          console.warn(`Failed to set TTS language to ${availableVoices[0].language}`, err);
+        const defaultVoice = availableVoices[0];
+        if (defaultVoice) {
+          try {
+            await Tts.setDefaultLanguage(defaultVoice.language);
+          } catch (err) {
+            console.warn(`Failed to set TTS language to ${defaultVoice.language}`, err);
+          }
+          await Tts.setDefaultVoice(defaultVoice.id);
         }
-        await Tts.setDefaultVoice(availableVoices[0].id);
       }
       Tts.setDefaultRate(0.5);
       Tts.setDefaultPitch(1.0);
@@ -123,10 +108,10 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
 
     return () => {
       Tts.stop();
-      removeTtsSubscription(startSub, 'tts-start', onStart);
-      removeTtsSubscription(finishSub, 'tts-finish', onFinish);
-      removeTtsSubscription(cancelSub, 'tts-cancel', onCancel);
-      removeTtsSubscription(errorSub, 'tts-error', onError);
+      if (startSub) startSub.remove();
+      if (finishSub) finishSub.remove();
+      if (cancelSub) cancelSub.remove();
+      if (errorSub) errorSub.remove();
     };
   }, []);
 
@@ -136,8 +121,10 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       setActiveSpeakingId(null);
     } else {
       Tts.stop();
-      setActiveSpeakingId(message._id);
-      Tts.speak(message.text);
+      if (message.text) {
+        setActiveSpeakingId(message._id);
+        Tts.speak(message.text);
+      }
     }
   }, [activeSpeakingId]);
 
@@ -179,7 +166,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
           text: "Hello! 👋 I'm here to assist you. How can I help you today?",
           createdAt: new Date(),
           user: {
-            _id: 2,
+            _id: ASSISTANT_USER_ID,
             avatar:
               'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
           },
@@ -197,7 +184,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       text: m.text,
       createdAt: new Date(m.timestamp),
       user: {
-        _id: m.role === 'user' ? 1 : 2,
+        _id: m.role === 'user' ? 1 : ASSISTANT_USER_ID,
         avatar: m.profileImage
           ? `${GET_STORAGE_DATA}/${m.profileImage}`
           : m.role === 'assistant'
@@ -218,7 +205,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
             text: 'Unable to connect. Please check your internet connection and try again.',
             createdAt: new Date(),
             user: {
-              _id: 2,
+              _id: ASSISTANT_USER_ID,
               avatar:
                 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
             },
@@ -246,7 +233,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
               text: responseData.text,
               createdAt: new Date(),
               user: {
-                _id: 2,
+                _id: ASSISTANT_USER_ID,
                 avatar:
                   'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
               },
@@ -284,7 +271,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
         text: "⚠️ AI service is temporarily unavailable. Please try again later.",
         createdAt: new Date(),
         user: {
-          _id: 2,
+          _id: ASSISTANT_USER_ID,
           avatar:
             'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo.jpg',
         },
@@ -310,7 +297,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
               text: errorMsg,
               createdAt: new Date(),
               user: {
-                _id: 2,
+                _id: ASSISTANT_USER_ID,
                 avatar:
                   'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
               },
@@ -472,7 +459,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
                   </View>
                 );
               }
-              const isAssistant = currentMessage.user?._id === 2;
+              const isAssistant = currentMessage.user?._id === ASSISTANT_USER_ID;
               const isSpeaking = activeSpeakingId === currentMessage._id;
               return (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -497,6 +484,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
                         alignItems: 'center',
                       }}
                       activeOpacity={0.7}
+                      accessibilityLabel={isSpeaking ? 'Stop speaking message' : 'Listen to message'}
                     >
                       <Ionicons
                         name={isSpeaking ? 'stop-circle' : 'volume-medium'}
