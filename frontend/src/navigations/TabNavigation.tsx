@@ -135,20 +135,11 @@ const TabNavigation = () => {
 
     
     <Tab.Screen
-     name="Wellness"
-  component={WellnessDashboardScreen}
-  options={{
-    headerShown: false,
-    headerTransparent: true,
-    headerStyle: {
-      backgroundColor: '#000A60',
-    },
-    headerTitleStyle: {
-      fontSize: 23,
-      marginBottom: 12,
-      color: 'white',
-    },
-  }}
+      name="Wellness"
+      component={WellnessDashboardScreen}
+      options={{
+        headerShown: false,
+      }}
     />
     </Tab.Navigator>
 
