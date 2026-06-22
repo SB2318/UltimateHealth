@@ -6,7 +6,7 @@ import Link from "next/link";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
-
+import { ModeToggle } from "@/components/mode-toggle";
 import { PageWrapper, Section, Navbar } from "../components/layout";
 
 import { withBasePath } from "@/lib/basePath";
@@ -581,6 +581,8 @@ export default function Home() {
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
+          <h2>App Experience</h2>
+          <p className="center">A closer look at what UltimateHealth offers, screen by screen</p>
           <h2>App Screenshots</h2>
           <p className="center">
             Take a look inside the UltimateHealth experience
