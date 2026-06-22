@@ -294,14 +294,15 @@ function AnimateWhenVisible({
     once: true,
     margin: '-60px' as `${number}px`,
   })
+
   return (
     <motion.div
-    ref={ref}
-    variants={staggerContainer}
-    initial="hidden"
-    animate={inView ? 'visible' : 'hidden'}
-    className={className}
-    style={style}
+      ref={ref}
+      variants={staggerContainer}
+      initial="hidden"
+      animate={inView ? 'visible' : 'hidden'}
+      className={className}
+      style={style}
     >
       {children}
     </motion.div>
@@ -1667,8 +1668,9 @@ export default function ContributePage() {
   }, [])
 
   const [navOpen, setNavOpen] = useState(false)
-        const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact']
+  const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact']
 
+  const [navOpen, setNavOpen] = useState(false)
   return (
     <>
       <style>{`
