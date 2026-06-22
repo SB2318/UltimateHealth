@@ -319,6 +319,7 @@ function SectionHeading({
   title: string
   subtitle: string
 }) {
+  const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact'];
   return (
     <motion.div
       variants={fadeUp}
@@ -1667,6 +1668,9 @@ export default function ContributePage() {
   }, [])
 
   const [navOpen, setNavOpen] = useState(false)
+  const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact']
+
+  const [navOpen, setNavOpen] = useState(false)
   return (
     <>
       <style>{`
@@ -1811,7 +1815,7 @@ export default function ContributePage() {
       `}</style>
 
       {/* ── Floating hamburger nav ── */}
-      <Navbar />
+      <Navbar tracking_id = {TRACKED_SECTION_IDS} />
 
       <main>
         <HeroSection />

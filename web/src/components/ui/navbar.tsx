@@ -10,11 +10,11 @@ import { withBasePath } from '@/lib/basePath'
 import { ModeToggle } from '@/components/mode-toggle'
 import { useEffect, useState } from 'react'
 
-export const Navbar = () => {
+export const Navbar = (props: { tracking_id: any }) => {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState<string>('')
-  const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact']
+  const TRACKED_SECTION_IDS = props.tracking_id;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
@@ -36,16 +36,16 @@ export const Navbar = () => {
         })
 
         if (visibleSections.size > 0) {
-          const topSection = TRACKED_SECTION_IDS.filter((id) =>
+          const topSection = TRACKED_SECTION_IDS.filter((id: string) =>
             visibleSections.has(id),
           )
-            .map((id) => ({
+            .map((id: string) => ({
               id,
               top:
                 document.getElementById(id)?.getBoundingClientRect().top ??
                 Infinity,
             }))
-            .sort((a, b) => Math.abs(a.top) - Math.abs(b.top))[0]
+            .sort((a: { top: number }, b: { top: number }) => Math.abs(a.top) - Math.abs(b.top))[0]
 
           if (topSection) setActiveSection(topSection.id)
         } else {
@@ -55,7 +55,7 @@ export const Navbar = () => {
       { threshold: 0.3 },
     )
 
-    TRACKED_SECTION_IDS.forEach((id) => {
+    TRACKED_SECTION_IDS.forEach((id: string) => {
       const el = document.getElementById(id)
       if (el) observer.observe(el)
     })
@@ -86,7 +86,7 @@ export const Navbar = () => {
           <ul className="nav-links text-black dark:text-white">
             <li>
               <a
-                href="#feature"
+                href={withBasePath('/#feature')}
                 className={`nav-link-item${activeSection === 'features' ? ' active' : ''}`}
                 aria-current={
                   activeSection === 'features' ? 'location' : undefined
@@ -98,22 +98,22 @@ export const Navbar = () => {
             </li>
             <li>
               <a
-                href="#screenshots"
-                className={`nav-link-item${activeSection === 'screenshots' ? ' active' : ''}`}
-                aria-current={
-                  activeSection === 'screenshots' ? 'location' : undefined
-                }
-              >
+                 href={withBasePath('/#screenshots')}
+                 className={`nav-link-item${activeSection === 'screenshots' ? ' active' : ''}`}
+                 aria-current={
+                   activeSection === 'screenshots' ? 'location' : undefined
+                  }
+                  >
                 <i
                   className="fas fa-image nav-item-icon"
                   aria-hidden="true"
-                ></i>
+                  ></i>
                 <span className="nav-item-text">Screenshots</span>
               </a>
             </li>
             <li>
               <a
-                href="#programs"
+                href={withBasePath('/#programs')}
                 className={`nav-link-item${activeSection === 'programs' ? ' active' : ''}`}
                 aria-current={
                   activeSection === 'programs' ? 'location' : undefined
@@ -148,7 +148,7 @@ export const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link href="/contribute" className="nav-link-item">
+              <Link href={withBasePath('/contribute')} className="nav-link-item">
                 <i
                   className="fas fa-users nav-item-icon"
                   aria-hidden="true"
@@ -158,7 +158,7 @@ export const Navbar = () => {
             </li>
             <ModeToggle />
             <li>
-              <a href="#downloads" className="nav-btn-sm">
+              <a href={withBasePath('/#downloads')} className="nav-btn-sm">
                 <i className="fas fa-user" aria-hidden="true"></i>
                 <span>Login / Register</span>
               </a>
