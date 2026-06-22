@@ -4,7 +4,13 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { PageWrapper, Section } from "@/components/layout";
-import { canvasPixelsHaveInk, isSignatureValid as hasValidSignatureBounds } from "./signatureValidation";
+import {
+  canvasPixelsHaveInk,
+  denormalizeCanvasPoint,
+  isSignatureValid as hasValidSignatureBounds,
+  isValidCanvasRect,
+  normalizeCanvasPoint,
+} from "./signatureValidation";
 
 /* ---------- types ---------- */
 interface Point { x: number; y: number }
@@ -82,6 +88,8 @@ function AdminAgreementContent() {
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
+    if (!isValidCanvasRect(rect)) return;
+
     const pixelRatio = window.devicePixelRatio || 1;
     canvas.width = Math.round(rect.width * pixelRatio);
     canvas.height = Math.round(rect.height * pixelRatio);
@@ -126,23 +134,22 @@ function AdminAgreementContent() {
   }, [searchParams]);
 
   /* ---------- canvas drawing ---------- */
-  const getPos = (e: React.MouseEvent | React.TouchEvent): Point => {
-    const canvas = canvasRef.current!;
+  const getPos = (e: React.MouseEvent | React.TouchEvent): Point | null => {
+    const canvas = canvasRef.current;
+    if (!canvas) return null;
+
     const rect = canvas.getBoundingClientRect();
     const clientPoint = "touches" in e ? e.touches[0] : e;
+    if (!clientPoint) return null;
 
-    return {
-      x: (clientPoint.clientX - rect.left) / rect.width,
-      y: (clientPoint.clientY - rect.top) / rect.height,
-    };
+    return normalizeCanvasPoint(clientPoint.clientX, clientPoint.clientY, rect);
   };
 
-  const toCanvasPoint = (point: Point): Point => {
-    const rect = canvasRef.current!.getBoundingClientRect();
-    return {
-      x: point.x * rect.width,
-      y: point.y * rect.height,
-    };
+  const toCanvasPoint = (point: Point): Point | null => {
+    const canvas = canvasRef.current;
+    if (!canvas) return null;
+
+    return denormalizeCanvasPoint(point, canvas.getBoundingClientRect());
   };
 
   const updateStrokes = (nextStrokes: Stroke[]) => {
@@ -155,11 +162,15 @@ function AdminAgreementContent() {
     if (locked) return;
 
     const pos = getPos(e);
+    if (!pos) return;
+
+    const canvasPoint = toCanvasPoint(pos);
+    if (!canvasPoint) return;
+
     activeStrokeRef.current = [pos];
     updateStrokes([...strokesRef.current, activeStrokeRef.current]);
     setIsDrawing(true);
 
-    const canvasPoint = toCanvasPoint(pos);
     const ctx = canvasRef.current!.getContext("2d")!;
     ctx.beginPath();
     // canvasPoint is in CSS-pixel space; ctx.scale() already maps to device pixels.
@@ -171,11 +182,15 @@ function AdminAgreementContent() {
     if (!isDrawing || locked) return;
 
     const pos = getPos(e);
+    if (!pos) return;
+
     const activeStroke = [...activeStrokeRef.current, pos];
     activeStrokeRef.current = activeStroke;
     updateStrokes([...strokesRef.current.slice(0, -1), activeStroke]);
 
     const canvasPoint = toCanvasPoint(pos);
+    if (!canvasPoint) return;
+
     const ctx = canvasRef.current!.getContext("2d")!;
     // canvasPoint is in CSS-pixel space; ctx.scale() already maps to device pixels.
     ctx.lineTo(canvasPoint.x, canvasPoint.y);
