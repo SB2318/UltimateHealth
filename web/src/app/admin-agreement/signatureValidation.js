@@ -9,6 +9,15 @@ export function canvasPixelsHaveInk(pixels) {
   return false;
 }
 
+function isFinitePoint(point) {
+  return (
+    typeof point?.x === "number" &&
+    typeof point?.y === "number" &&
+    Number.isFinite(point.x) &&
+    Number.isFinite(point.y)
+  );
+}
+
 export function isSignatureValid(
   strokes,
   {
@@ -18,6 +27,12 @@ export function isSignatureValid(
   } = {},
 ) {
   const points = strokes.flat();
+
+  // Determinism guard: if any point is corrupted (NaN/Infinity), reject.
+  // This prevents timing/layout-dependent acceptance when canvas geometry
+  // is temporarily invalid during resize/visibility transitions.
+  if (points.some((p) => !isFinitePoint(p))) return false;
+
   if (points.length < minPointCount) return false;
 
   let minX = Infinity;
@@ -32,5 +47,12 @@ export function isSignatureValid(
     maxY = Math.max(maxY, point.y);
   });
 
-  return maxX - minX > minWidthRatio && maxY - minY > minHeightRatio;
+  const width = maxX - minX;
+  const height = maxY - minY;
+
+  // Extra safety: if bounds become non-finite for any reason, reject.
+  if (!Number.isFinite(width) || !Number.isFinite(height)) return false;
+
+  return width > minWidthRatio && height > minHeightRatio;
 }
+
