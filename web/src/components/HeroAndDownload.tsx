@@ -64,6 +64,7 @@ export default function HeroAndDownload({ onJoinTestFlight, onShowComingSoon }: 
         <div className="uh-hero-bg-glow" aria-hidden="true" />
         <div className="uh-hero-bg-stars" aria-hidden="true" />
         <div className="uh-hero-bg-lightstreak" aria-hidden="true" />
+        <div className="uh-hero-bg-particles" aria-hidden="true" />
         <div className="uh-hero-orb uh-orb-1" aria-hidden="true" />
         <div className="uh-hero-orb uh-orb-2" aria-hidden="true" />
         <div className="uh-hero-orb uh-orb-3" aria-hidden="true" />
@@ -101,18 +102,16 @@ export default function HeroAndDownload({ onJoinTestFlight, onShowComingSoon }: 
                 </a>
               </div>
 
-              <div className="uh-hero-stats">
-                {heroStats.map((stat) => (
-                  <div className="uh-stat-card" key={stat.label}>
-                    <div className="uh-stat-icon">
-                      <i className={`fas ${stat.icon}`} aria-hidden="true" />
-                    </div>
-                    <div>
-                      <strong>{stat.value}</strong>
-                      <span>{stat.label}</span>
-                    </div>
-                  </div>
-                ))}
+             <div className="uh-trust-strip">
+                <div className="uh-trust-avatars" aria-hidden="true">
+                  <div className="uh-trust-avatar">JK</div>
+                  <div className="uh-trust-avatar">AM</div>
+                  <div className="uh-trust-avatar">RS</div>
+                </div>
+                <div className="uh-trust-rating">
+                  <span className="uh-trust-stars">★★★★★</span>
+                  <span className="uh-trust-text">Trusted by 50K+ users worldwide</span>
+                </div>
               </div>
             </div>
 
