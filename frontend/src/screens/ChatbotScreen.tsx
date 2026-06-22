@@ -17,6 +17,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Tts from 'react-native-tts';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
 import {AxiosError} from 'axios';
 import {ChatBotScreenProps, Message} from '../type';
@@ -59,6 +60,86 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
   const dispatch = useDispatch();
   const {data: user} = useGetProfile();
   // const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA'; //token
+
+  const [activeSpeakingId, setActiveSpeakingId] = useState<string | number | null>(null);
+
+  const removeTtsSubscription = (
+    subscription: any,
+    eventName: string,
+    handler: any,
+  ) => {
+    if (subscription?.remove) {
+      subscription.remove();
+      return;
+    }
+    if (typeof Tts.removeEventListener === 'function') {
+      Tts.removeEventListener(eventName, handler);
+    }
+  };
+
+  const initTts = async () => {
+    try {
+      await Tts.getInitStatus();
+      const voices = await Tts.voices();
+      const availableVoices = voices.filter(
+        (v: any) =>
+          !v.networkConnectionRequired &&
+          !v.notInstalled &&
+          (v.language === 'en-IN' || v.language === 'en-US' || v.language.startsWith('en')),
+      );
+      if (availableVoices && availableVoices.length > 0) {
+        try {
+          await Tts.setDefaultLanguage(availableVoices[0].language);
+        } catch (err) {
+          console.warn(`Failed to set TTS language to ${availableVoices[0].language}`, err);
+        }
+        await Tts.setDefaultVoice(availableVoices[0].id);
+      }
+      Tts.setDefaultRate(0.5);
+      Tts.setDefaultPitch(1.0);
+    } catch (error) {
+      console.warn('Failed to initialize TTS voices in ChatbotScreen', error);
+    }
+  };
+
+  useEffect(() => {
+    initTts();
+
+    const onStart = () => {};
+    const onFinish = () => {
+      setActiveSpeakingId(null);
+    };
+    const onCancel = () => {
+      setActiveSpeakingId(null);
+    };
+    const onError = () => {
+      setActiveSpeakingId(null);
+    };
+
+    const startSub = Tts.addEventListener('tts-start', onStart);
+    const finishSub = Tts.addEventListener('tts-finish', onFinish);
+    const cancelSub = Tts.addEventListener('tts-cancel', onCancel);
+    const errorSub = Tts.addEventListener('tts-error', onError);
+
+    return () => {
+      Tts.stop();
+      removeTtsSubscription(startSub, 'tts-start', onStart);
+      removeTtsSubscription(finishSub, 'tts-finish', onFinish);
+      removeTtsSubscription(cancelSub, 'tts-cancel', onCancel);
+      removeTtsSubscription(errorSub, 'tts-error', onError);
+    };
+  }, []);
+
+  const toggleSpeech = useCallback((message: IMessage) => {
+    if (activeSpeakingId === message._id) {
+      Tts.stop();
+      setActiveSpeakingId(null);
+    } else {
+      Tts.stop();
+      setActiveSpeakingId(message._id);
+      Tts.speak(message.text);
+    }
+  }, [activeSpeakingId]);
 
   //console.log("User Token", user_token);
 
@@ -391,18 +472,40 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
                   </View>
                 );
               }
+              const isAssistant = currentMessage.user?._id === 2;
+              const isSpeaking = activeSpeakingId === currentMessage._id;
               return (
-                <Bubble
-                  {...props}
-                  wrapperStyle={{
-                    right: {backgroundColor: PRIMARY_COLOR},
-                    left: {backgroundColor: '#f3f4f6'},
-                  }}
-                  textStyle={{
-                    right: {color: 'white', fontSize: 17, lineHeight: 24},
-                    left: {color: '#111827', fontSize: 17, lineHeight: 24},
-                  }}
-                />
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Bubble
+                    {...props}
+                    wrapperStyle={{
+                      right: {backgroundColor: PRIMARY_COLOR},
+                      left: {backgroundColor: '#f3f4f6'},
+                    }}
+                    textStyle={{
+                      right: {color: 'white', fontSize: 17, lineHeight: 24},
+                      left: {color: '#111827', fontSize: 17, lineHeight: 24},
+                    }}
+                  />
+                  {isAssistant && (
+                    <TouchableOpacity
+                      onPress={() => toggleSpeech(currentMessage)}
+                      style={{
+                        padding: 8,
+                        marginLeft: 4,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons
+                        name={isSpeaking ? 'stop-circle' : 'volume-medium'}
+                        size={24}
+                        color={isSpeaking ? PRIMARY_COLOR : '#6b7280'}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
               );
             }}
             renderInputToolbar={props => (
