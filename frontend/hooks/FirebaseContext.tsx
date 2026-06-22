@@ -60,11 +60,13 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
         );
 
         if (missingFields.length > 0) {
-          logger.warn(
-            `Firebase configuration is incomplete. Missing fields: ${missingFields.join(
-              ', '
-            )}. Skipping Firebase initialization.`
-          );
+          if (__DEV__) {
+            logger.warn(
+              `Firebase configuration is incomplete. Missing fields: ${missingFields.join(
+                ', '
+              )}. Skipping Firebase initialization.`
+            );
+          }
           return;
         }
 
@@ -74,10 +76,14 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
           firebase.app(); // if already initialized, use that one
         }
         const token = await messaging().getToken();
-        logger.log('Firebase Token:', token);
+        if (__DEV__) {
+          logger.log('Firebase Token:', token);
+        }
         setFcmToken(token); // Store the token in state
       } catch (error) {
-        logger.error('Error getting token:', error);
+        if (__DEV__) {
+          logger.error('Error getting token:', error);
+        }
       }
     };
 
