@@ -11,7 +11,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import ArticleShareModal from '../components/ArticleShareModal';
-import React, {useCallback, useEffect, useRef, useState, useMemo} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
@@ -724,10 +724,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
-  const articleCustomStyle = useMemo(
-    () => generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize),
-    [isDyslexiaMode, isDarkMode, articleFontSize]
-  );
+  const articleCustomStyle = generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize);
 
   const footerColors = {
     background: isDarkMode ? '#111827' : '#ffffff',
