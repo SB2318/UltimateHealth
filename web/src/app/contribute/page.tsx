@@ -1,9 +1,13 @@
 'use client'
 
-import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import { Navbar } from "@/components/layout";
-import { motion, useInView, AnimatePresence, type Variants } from "framer-motion";
+import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
+import {
+  motion,
+  useInView,
+  AnimatePresence,
+  type Variants,
+} from 'framer-motion'
 import {
   Code2,
   BookOpen,
@@ -31,6 +35,8 @@ import {
   ArrowRight,
   Mail,
 } from 'lucide-react'
+import { Footer } from '@/components/ui/footer'
+import { PageWrapper } from '@/components/layout'
 import { Navbar } from '@/components/ui/navbar'
 
 // =============================================================================
@@ -1664,7 +1670,20 @@ export default function ContributePage() {
   }, [])
 
   const [navOpen, setNavOpen] = useState(false)
-  const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact']
+
+  const navLinks = [
+    { href: '/', label: 'Home', icon: 'fa-home' },
+    { href: '/#features', label: 'Platform Highlights', icon: 'fa-star' },
+    { href: '/#screenshots', label: 'Screenshots', icon: 'fa-image' },
+    { href: '/#programs', label: 'Community Programs', icon: 'fa-code-branch' },
+    {
+      href: 'https://uhsocial.in/docs',
+      label: 'Read Articles',
+      icon: 'fa-file-lines',
+      external: true,
+    },
+    { href: '/#downloads', label: 'Login / Register', icon: 'fa-user' },
+  ]
 
   const [navOpen, setNavOpen] = useState(false)
   return (
@@ -1729,17 +1748,60 @@ export default function ContributePage() {
       `}</style>
 
       {/* ── Floating hamburger nav ── */}
+      <button
+        className="contrib-fab"
+        onClick={() => setNavOpen((o) => !o)}
+        aria-label="Toggle navigation menu"
+        aria-expanded={navOpen}
+      >
+        <i className={`fas fa-${navOpen ? 'times' : 'bars'}`}></i>
+      </button>
+
+      {navOpen && (
+        <>
+          {/* backdrop — click outside to close */}
+          <div
+            style={{ position: 'fixed', inset: 0, zIndex: 9997 }}
+            onClick={() => setNavOpen(false)}
+            aria-hidden="true"
+          />
+          <nav
+            className="contrib-nav-panel"
+            role="navigation"
+            aria-label="Site navigation"
+          >
+            <div className="contrib-nav-active-label">Navigate to</div>
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target={
+                  'external' in link && link.external ? '_blank' : undefined
+                }
+                rel={
+                  'external' in link && link.external ? 'noreferrer' : undefined
+                }
+                onClick={() => setNavOpen(false)}
+              >
+                <i className={`fas ${link.icon}`}></i>
+                {link.label}
+              </a>
+            ))}
+          </nav>
+        </>
+      )}
       <Navbar tracking_id = {TRACKED_SECTION_IDS} />
 
       <main>
-        <HeroSection />
-        <WhyContributeSection />
-        <WaysToContributeSection />
-        <WorkflowSection />
-        <PRSection />
-        <CommunitySection />
-        <FAQSection />
-        <FinalCTASection />
+          <HeroSection />
+          <WhyContributeSection />
+          <WaysToContributeSection />
+          <WorkflowSection />
+          <PRSection />
+          <CommunitySection />
+          <FAQSection />
+          <FinalCTASection />
+          <Footer />
       </main>
     </>
   )

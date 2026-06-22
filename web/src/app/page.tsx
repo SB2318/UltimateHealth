@@ -32,7 +32,6 @@ const userScreenshots = [
   { src: '/assets/UltimateHealth-about.jpeg', caption: 'App Info' },
   { src: '/assets/terms_cond_page.jpeg', caption: 'Terms And Condition' },
 ]
-
 const adminScreenshots = [
   { src: '/assets/admin_dashboard.jpeg', caption: 'Admin Dashboard' },
   { src: '/assets/admin_dashboard2.jpeg', caption: 'Admin Dashboard Second' },
@@ -52,23 +51,34 @@ const adminScreenshots = [
 ]
 
 const allScreenshots = [...userScreenshots, ...adminScreenshots]
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || 'https://uhsocial.in'
+
 const CURSOR_GLOW_STORAGE_KEY = 'cursorGlowEnabled'
 const CURSOR_GLOW_EVENT = 'cursor-glow-preference-change'
+
 // Owner-configurable frontend URLs (set in deployment env when needed)
 const HELP_CENTER_URL =
   process.env.NEXT_PUBLIC_HELP_CENTER_URL || 'https://uhsocial.in/docs'
+
 const FEEDBACK_URL =
   process.env.NEXT_PUBLIC_FEEDBACK_URL ||
   'https://github.com/SB2318/UltimateHealth/issues'
+
 const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || ''
 const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || ''
-const PRIVACY_POLICY_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || '#'
-const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || '#'
+
+const PRIVACY_POLICY_URL =
+  process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || '#'
+
+const TERMS_OF_USE_URL =
+  process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || '#'
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const SLIDER_SCROLL_AMOUNT = 324
 const DNA_TRAIL_MAX_POINTS = 38
+
 const isValidEmail = (email: string) => EMAIL_PATTERN.test(email.trim())
 
 const getCursorGlowSnapshot = () => {
