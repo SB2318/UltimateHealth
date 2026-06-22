@@ -568,7 +568,7 @@ export default function Home() {
     allScreenshots[currentScreenshot] ?? allScreenshots[0]
 
   return (
-    <>
+    <div className="landing-page">
 
       <Navbar />
 
@@ -1427,6 +1427,6 @@ export default function Home() {
         </div>
       )}
       <ScrollToTop />
-    </>
+    </div>
   )
 }
