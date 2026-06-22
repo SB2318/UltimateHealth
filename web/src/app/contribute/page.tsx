@@ -546,7 +546,6 @@ function FAQAccordionItem({ item, index }: { item: FAQItem; index: number }) {
 }
 
 // =============================================================================
-
 // Hero Section
 // =============================================================================
 function HeroSection() {
@@ -608,7 +607,7 @@ function HeroSection() {
 
             <h1
               style={{
-                fontSize: '3.2rem',
+                fontSize: "clamp(2.2rem, 5vw, 3.2rem)",
                 fontWeight: 900,
                 color: 'white',
                 lineHeight: 1.15,
@@ -616,8 +615,7 @@ function HeroSection() {
                 textShadow: '0 2px 10px rgba(0,0,0,0.2)',
               }}
             >
-              Join Us &amp; Contribute to{' '}
-              <span style={{ whiteSpace: 'nowrap' }}>UltimateHealth</span>
+              Join Us &amp; Contribute to UltimateHealth
             </h1>
 
             <p
@@ -625,8 +623,10 @@ function HeroSection() {
                 fontSize: '1.2rem',
                 color: 'rgba(255,255,255,0.88)',
                 lineHeight: 1.8,
-                marginBottom: '40px',
-                maxWidth: '520px',
+                marginBottom: "40px",
+                maxWidth: "520px",
+                marginLeft: "auto",
+                marginRight: "auto",
               }}
             >
               Build, improve, and grow UltimateHealth with the community. Every
@@ -635,10 +635,11 @@ function HeroSection() {
 
             <div
               style={{
-                display: 'flex',
-                gap: '16px',
-                flexWrap: 'wrap',
-                alignItems: 'center',
+                display: "flex",
+                gap: "16px",
+                flexWrap: "wrap",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <motion.a
@@ -1705,19 +1706,100 @@ export default function ContributePage() {
         }
         .contribute-ways-grid {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
           gap: 20px;
         }
         .contribute-pr-grid {
           grid-template-columns: 1fr 1fr !important;
         }
+/* ── Floating hamburger button ── */
+.contrib-fab {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 9999;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(30,30,50,0.85);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(102,126,234,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #667eea;
+  font-size: 1.1rem;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
 
-        @media (max-width: 1100px) {
-          .contribute-ways-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-        @media (max-width: 900px) {
+.contrib-fab:hover {
+  background: rgba(102,126,234,0.2);
+  transform: scale(1.07);
+}
+
+/* ── Dropdown nav panel ── */
+.contrib-nav-panel {
+  position: fixed;
+  top: 74px;
+  right: 24px;
+  z-index: 9998;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  border: 1px solid rgba(0,0,0,0.07);
+  padding: 8px;
+  min-width: 230px;
+  overflow: hidden;
+}
+
+.contrib-nav-panel a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  color: #1a202c;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.15s, color 0.15s;
+}
+
+.contrib-nav-panel a:hover {
+  background: rgba(102,126,234,0.08);
+  color: #667eea;
+}
+
+.contrib-nav-panel a i {
+  width: 18px;
+  text-align: center;
+  color: #667eea;
+  font-size: 0.85rem;
+}
+
+.contrib-nav-divider {
+  height: 1px;
+  background: rgba(0,0,0,0.06);
+  margin: 6px 8px;
+}
+
+.contrib-nav-active-label {
+  padding: 6px 14px 4px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #a0aec0;
+}
+
+@media (max-width: 1100px) {
+  .contribute-ways-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+     @media (max-width: 900px) {
           .contribute-hero-grid {
             grid-template-columns: 1fr;
             text-align: center;
@@ -1733,16 +1815,16 @@ export default function ContributePage() {
           .contribute-pr-grid {
             grid-template-columns: 1fr !important;
           }
-          .contribute-ways-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
         }
         @media (max-width: 600px) {
           .contribute-hero-grid h1 {
             font-size: 2.2rem !important;
           }
-          .contribute-ways-grid {
-            grid-template-columns: 1fr;
+          .contrib-nav-panel {
+            right: 12px;
+          }
+          .contrib-fab {
+            right: 12px;
           }
         }
       `}</style>
