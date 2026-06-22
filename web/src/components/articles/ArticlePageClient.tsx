@@ -40,7 +40,9 @@ export default function ArticlePageClient({
   return (
     <GlossaryProvider terms={defaultGlossaryTerms}>
       {/* Sticky reading progress indicator */}
+      <div className="print:hidden">
       <ReadingProgressBar />
+      </div>
 
       
 
@@ -53,7 +55,7 @@ export default function ArticlePageClient({
         }
       >
         {/* ── Sticky top navigation bar ── */}
-        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm flex items-center p-2 border border-gray-200 rounded-full m-3 ">
+        <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100 shadow-sm flex items-center p-2 border border-gray-200 rounded-full m-3 print:hidden">
            {/* Back link */}
           <div className="ml-4">
               <Link
@@ -103,7 +105,7 @@ export default function ArticlePageClient({
             </div>
 
             {/* ── Table of Contents Sidebar ── */}
-            <aside className="hidden lg:block lg:w-[250px]">
+            <aside className="hidden lg:block lg:w-[250px] print:hidden">
               <div className="sticky top-[var(--article-sticky-header-height)] max-h-[calc(100vh-var(--article-sticky-header-height))] overflow-y-auto pr-2">
                 <TableOfContents content={article.content} />
               </div>
@@ -112,17 +114,30 @@ export default function ArticlePageClient({
         </main>
 
         {/* ── Related articles ── */}
+        <div className="print:hidden">
         <RelatedArticles articles={relatedArticles} />
-
+        </div>
         {/* ── Platform footer ── */}
+        <div className="print:hidden">
         <ArticlePageFooter />
+        </div>
       </div>
-
+      {/* ── Floating print/export button ── */}
+      <button
+        onClick={() => window.print()}
+        className="fixed bottom-24 right-6 z-50 w-12 h-12 rounded-full bg-white shadow-lg border border-gray-300 flex items-center justify-center text-[#4c51bf] hover:bg-[#4c51bf] hover:text-white transition-colors print:hidden"
+        aria-label="Print or save article as PDF"
+        title="Print / Save as PDF"
+      >
+      <i className="fas fa-print text-lg" aria-hidden="true" />
+      </button>
       {/* ── Floating accessibility controls ── */}
+      <div className="print:hidden">
       <AccessibilityControls
         fontSize={fontSize}
         onFontSizeChange={setFontSize}
       />
+      </div>
     </GlossaryProvider>
   );
 }
