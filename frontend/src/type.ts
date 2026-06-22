@@ -558,6 +558,7 @@ export type Article = {
   author_name: string;
   lastUpdatedAt: string;
   imageUtils: string;
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
 };
 
 export type ArticleSummary = {
@@ -609,6 +610,8 @@ export type ArticleData = {
   translatedArticles?: ArticleData[];
   summaryData?: ArticleSummary;
   relatedPodcasts?: RelatedPodcast[];
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+  body?: string;
 };
 
 export type ArticleTranslationSource = {

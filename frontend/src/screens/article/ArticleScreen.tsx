@@ -14,6 +14,7 @@ import ArticleShareModal from '../../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
+import GlobalStyles from '../../styles/GlobalStyle';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData, ArticleScreenProp} from '../../type';
 import {useDispatch, useSelector} from 'react-redux';
@@ -58,6 +59,7 @@ import {useTrustArticle} from '@/src/hooks/useTrustArticle';
 import TrustedUsersModal from '../../components/TrustedUsersModal';
 import {useSocket} from '../../contexts/SocketContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -241,13 +243,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   // Generate AI summary using Gemini
   useEffect(() => {
-    if (!article?.content) {
+    if (!article?.content && !articleContent) {
       setSummary(null);
       return;
     }
 
-    const rawText = article?.content || '';
-
+    const rawText = article?.content || articleContent || '';
+    
     // Only call API if there's enough text
     if (!rawText || rawText.length < 100) {
       setSummary(null);
@@ -262,7 +264,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       .then(result => setSummary(result))
       .catch(() => setSummary(null))
       .finally(() => setSummaryLoading(false));
-  }, [article?.content]);
+
+  }, [article?.content, articleContent]);
 
   // --- Settings ---
   const handleLike = () => {
@@ -849,11 +852,17 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               </Text>
             </TouchableOpacity>
           )}
-          {article && article?.tags && (
-            <Text style={[styles.categoryText, {fontSize: 12 * fontScale}]}>
-              {article.tags.map(tag => tag.name).join(' | ')}
-            </Text>
-          )}
+
+          <View style={GlobalStyles.badgeRow}>
+            {article && article?.tags && (
+              <Text style={styles.categoryText}>
+                {article.tags.map(tag => tag.name).join(' | ')}
+              </Text>
+            )}
+            {article && (
+              <ReadingDifficulty difficulty={getArticleDifficulty(article)} />
+            )}
+          </View>
 
           {article && (
             <>
