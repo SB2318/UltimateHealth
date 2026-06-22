@@ -28,6 +28,7 @@ import {
   generateArticleSummary,
   ArticleSummary,
 } from '../../services/SummaryService';
+import {recordArticleView} from '../../services/ReadingHistoryService';
 
 import {
   formatCount,
@@ -56,6 +57,7 @@ import {getReadTime} from '../../utils/readTime';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
+import { copyArticleShareLink } from '../../helper/shareUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
 import { useDyslexiaMode } from '../../hooks/useDyslexiaMode';
@@ -220,6 +222,17 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     setFontScale(nextValue);
     debouncedPersistFontScale(nextValue);
   };
+
+  useEffect(() => {
+    if (!article) return;
+    recordArticleView({
+      articleId: String(article._id),
+      title: article.title ?? '',
+      authorName: article.authorName ?? '',
+      category: article.tags?.[0]?.name ?? '',
+      coverImage: article.imageUtils?.[0] ?? '',
+    });
+  }, [article]);
 
   useEffect(() => {
     if (!isGuest) {
@@ -412,6 +425,22 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
     } else {
       Alert.alert('Article not found');
+    }
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      copyArticleShareLink(articleId, authorId, resolvedRecordId);
+      Snackbar.show({
+        text: 'Link copied',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    } catch (error) {
+      console.log('Error copying link:', error);
+      Snackbar.show({
+        text: 'Failed to copy link',
+        duration: Snackbar.LENGTH_SHORT,
+      });
     }
   };
 
@@ -1078,6 +1107,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             <FontAwesome name="share" size={18} color={footerColors.text} />
             <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
               Share
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.actionButtonFooter,
+              {backgroundColor: footerColors.pillBackground},
+            ]}
+            onPress={handleCopyLink}>
+            <FontAwesome name="link" size={18} color={footerColors.text} />
+            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+              Copy Link
             </Text>
           </TouchableOpacity>
 
