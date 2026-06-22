@@ -11,7 +11,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import ArticleShareModal from '../components/ArticleShareModal';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState, useMemo} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
@@ -70,14 +70,14 @@ import Animated, {
 
 const CHUNK_SIZE = 120;
 
+export const DYSLEXIA_FONT_FAMILY = "'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif";
+export const DEFAULT_FONT_FAMILY = "'Times New Roman'";
+
 export const generateArticleStyles = (
   isDyslexiaMode: boolean,
   isDarkMode: boolean,
   articleFontSize: number,
 ) => {
-  const dyslexiaFontFamily = "'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif";
-  const defaultFontFamily = "'Times New Roman'";
-
   const backgroundColor = isDarkMode ? '#2D2D2D' : '#FDF4E3';
   const textColor = isDarkMode ? '#E0E0E0' : '#1A1A1A';
 
@@ -89,7 +89,7 @@ export const generateArticleStyles = (
       font-style: normal;
     }
     body { 
-      font-family: ${isDyslexiaMode ? dyslexiaFontFamily : defaultFontFamily} !important; 
+      font-family: ${isDyslexiaMode ? DYSLEXIA_FONT_FAMILY : DEFAULT_FONT_FAMILY} !important; 
       font-size: ${articleFontSize}px !important; 
       line-height: ${isDyslexiaMode ? 2.0 : 1.6} !important;
       ${isDyslexiaMode ? `
@@ -101,7 +101,7 @@ export const generateArticleStyles = (
     }
     p, li, h1, h2, h3, h4, h5, h6, span, div, a { 
       ${isDyslexiaMode ? `
-        font-family: ${dyslexiaFontFamily} !important;
+        font-family: ${DYSLEXIA_FONT_FAMILY} !important;
         color: ${textColor} !important;
         line-height: 2.0 !important;
         letter-spacing: 0.15em !important;
@@ -724,7 +724,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
-  const articleCustomStyle = generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize);
+  const articleCustomStyle = useMemo(
+    () => generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize),
+    [isDyslexiaMode, isDarkMode, articleFontSize]
+  );
 
   const footerColors = {
     background: isDarkMode ? '#111827' : '#ffffff',
@@ -886,6 +889,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   accessibilityRole="switch"
                   accessibilityState={{ checked: isDyslexiaMode }}
                   accessibilityLabel="Toggle Dyslexia-Friendly Reading Mode"
+                  accessibilityHint="Toggles the reading mode to use a dyslexia-friendly font and spacing"
                   style={[
                     styles.dyslexiaButton,
                     isDyslexiaMode && styles.dyslexiaButtonActive,

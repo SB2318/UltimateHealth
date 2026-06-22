@@ -1,8 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { retrieveItem, storeItem } from '../helper/Utils';
 
 export const DYSLEXIA_MODE_KEY = 'article_dyslexia_mode';
 
+/**
+ * Custom hook to manage the state and persistence of Dyslexia-Friendly Reading Mode.
+ * Handles loading from and saving to localStorage (AsyncStorage).
+ */
 export const useDyslexiaMode = () => {
   const [isDyslexiaMode, setIsDyslexiaMode] = useState(false);
 
@@ -16,7 +20,7 @@ export const useDyslexiaMode = () => {
           setIsDyslexiaMode(true);
         }
       } catch (error) {
-        console.error('Failed to load dyslexia mode:', error);
+        console.error('Failed to load dyslexia mode preference:', error);
       }
     };
     loadDyslexiaMode();
@@ -25,13 +29,18 @@ export const useDyslexiaMode = () => {
     };
   }, []);
 
-  const toggleDyslexiaMode = () => {
+  const toggleDyslexiaMode = useCallback(async () => {
     const nextValue = !isDyslexiaMode;
+    // Optimistic UI update
     setIsDyslexiaMode(nextValue);
-    storeItem(DYSLEXIA_MODE_KEY, String(nextValue)).catch(err => 
-      console.error('Failed to save dyslexia mode:', err)
-    );
-  };
+    try {
+      await storeItem(DYSLEXIA_MODE_KEY, String(nextValue));
+    } catch (err) {
+      console.error('Failed to save dyslexia mode preference:', err);
+      // Revert state if persistence fails
+      setIsDyslexiaMode(!nextValue);
+    }
+  }, [isDyslexiaMode]);
 
   return { isDyslexiaMode, toggleDyslexiaMode };
 };
