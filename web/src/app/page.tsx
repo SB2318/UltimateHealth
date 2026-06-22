@@ -476,8 +476,7 @@ export default function Home() {
   }
 
   // ── Contact form submit → uhsocial.in API ──
-  // Backend route needed: POST /api/contact/send on NEXT_PUBLIC_API_BASE_URL
-  // See /contact_newsletter_guide.md for the Express route implementation
+  // Contact form submits to POST /api/contact on NEXT_PUBLIC_API_BASE_URL
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const trimmedName = contactName.trim()
@@ -495,7 +494,7 @@ export default function Home() {
     }
     setContactStatus('sending')
     try {
-      const res = await fetch(`${API_BASE_URL}/api/contact/send`, {
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
