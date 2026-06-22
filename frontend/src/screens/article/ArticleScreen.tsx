@@ -58,6 +58,7 @@ import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
+import { useDyslexiaMode } from '../../hooks/useDyslexiaMode';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -69,6 +70,51 @@ import Animated, {
 
 const CHUNK_SIZE = 120;
 
+export const generateArticleStyles = (
+  isDyslexiaMode: boolean,
+  isDarkMode: boolean,
+  articleFontSize: number,
+) => {
+  const dyslexiaFontFamily = "'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif";
+  const defaultFontFamily = "'Times New Roman'";
+
+  const backgroundColor = isDarkMode ? '#2D2D2D' : '#FDF4E3';
+  const textColor = isDarkMode ? '#E0E0E0' : '#1A1A1A';
+
+  return `
+    @font-face {
+      font-family: 'OpenDyslexic';
+      src: url('https://cdn.jsdelivr.net/npm/opendyslexic@3/Compiled/OpenDyslexic-Regular.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+    body { 
+      font-family: ${isDyslexiaMode ? dyslexiaFontFamily : defaultFontFamily} !important; 
+      font-size: ${articleFontSize}px !important; 
+      line-height: ${isDyslexiaMode ? 2.0 : 1.6} !important;
+      ${isDyslexiaMode ? `
+        letter-spacing: 0.15em !important;
+        word-spacing: 0.35em !important;
+        background-color: ${backgroundColor} !important; 
+        color: ${textColor} !important; 
+      ` : ''}
+    }
+    p, li, h1, h2, h3, h4, h5, h6, span, div, a { 
+      ${isDyslexiaMode ? `
+        font-family: ${dyslexiaFontFamily} !important;
+        color: ${textColor} !important;
+        line-height: 2.0 !important;
+        letter-spacing: 0.15em !important;
+        word-spacing: 0.35em !important;
+      ` : ''}
+    }
+    p, li { 
+      font-size: ${articleFontSize}px !important; 
+      ${isDyslexiaMode ? 'margin-bottom: 1.5em !important;' : ''}
+    }
+    img, video, iframe { max-width: 100%; height: auto; }
+  `;
+};
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
   const getProfileImageUri = (profileImage?: string) => {
@@ -84,8 +130,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontScale, setFontScale] = useState(1);
-  const [isDyslexiaMode, setIsDyslexiaMode] = useState(false);
-  const DYSLEXIA_MODE_KEY = 'article_dyslexia_mode';
+  const { isDyslexiaMode, toggleDyslexiaMode } = useDyslexiaMode();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
@@ -176,15 +221,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     debouncedPersistFontScale(nextValue);
   };
 
-  // Toggle dyslexia mode and save user preference
-  const toggleDyslexiaMode = () => {
-    const nextValue = !isDyslexiaMode;
-    setIsDyslexiaMode(nextValue);
-    storeItem(DYSLEXIA_MODE_KEY, String(nextValue)).catch(err => 
-      console.error('Failed to save dyslexia mode:', err)
-    );
-  };
-
   useEffect(() => {
     if (!isGuest) {
       updateViewCount(articleId, {
@@ -234,21 +270,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       }
     };
 
-    // Restore dyslexia mode preference
-    const loadDyslexiaMode = async () => {
-      try {
-        const storedValue = await retrieveItem(DYSLEXIA_MODE_KEY);
-        if (!isMounted || !storedValue) return;
-        if (storedValue === 'true') {
-          setIsDyslexiaMode(true);
-        }
-      } catch (error) {
-        console.error('Failed to load dyslexia mode:', error);
-      }
-    };
-
     loadFontScale();
-    loadDyslexiaMode();
 
     return () => {
       isMounted = false;
@@ -702,28 +724,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
-  // Dyslexia mode overrides
-  const dyslexiaFontFamily = "'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif";
-  const defaultFontFamily = "'Times New Roman'";
-  
-  const articleCustomStyle = `
-    body { 
-      font-family: ${isDyslexiaMode ? dyslexiaFontFamily : defaultFontFamily}; 
-      font-size: ${articleFontSize}px; 
-      line-height: ${isDyslexiaMode ? 2.0 : 1.6};
-      ${isDyslexiaMode ? `
-        letter-spacing: 0.15em;
-        word-spacing: 0.35em;
-        background-color: ${isDarkMode ? '#2D2D2D' : '#FDF4E3'}; 
-        color: ${isDarkMode ? '#E0E0E0' : '#1A1A1A'}; 
-      ` : ''}
-    }
-    p, li { 
-      font-size: ${articleFontSize}px; 
-      ${isDyslexiaMode ? 'margin-bottom: 1.5em;' : ''}
-    }
-    img, video, iframe { max-width: 100%; height: auto; }
-  `;
+  const articleCustomStyle = generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize);
 
   const footerColors = {
     background: isDarkMode ? '#111827' : '#ffffff',
