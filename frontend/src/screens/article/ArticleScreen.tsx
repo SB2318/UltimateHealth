@@ -908,7 +908,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              </View>
               {totalLikes > 0 && (
                 <View style={styles.avatarsContainer}>
                   {likedUsers
