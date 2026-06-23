@@ -1,4 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
+import PodcastDetailSkeleton from '../components/PodcastDetailSkeleton';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -417,7 +418,7 @@ useEffect(() => {
 };
   
  if (isPodcastLoading || isLoading) {
-    return <Loader />;
+    return <PodcastDetailSkeleton />;
   }
 
   if (isPodcastError || !podcast) {

@@ -1,4 +1,5 @@
 import {useEffect, useState, useMemo} from 'react';
+import PodcastSkeletonCard from '../components/podcastSkeletonCard';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -211,7 +212,11 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
 
       <YStack flex={1} paddingHorizontal="$3">
         {isLoading && !podcasts?.length ? (
-          renderLoadingState()
+          <>
+  {[1,2,3,4,5].map((_, i) => (
+    <PodcastSkeletonCard key={i} />
+  ))}
+</>
         ) : (
           <FlatList
             data={filteredPodcasts}
