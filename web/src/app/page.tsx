@@ -521,7 +521,7 @@ const userSliderRef = useRef<HTMLDivElement>(null)
     }
     setContactStatus('sending')
     try {
-      const res = await fetch(`${API_BASE_URL}/api/contact/send`, {
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
