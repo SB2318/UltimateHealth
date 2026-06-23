@@ -7,8 +7,6 @@ import { logger } from '../src/services/monitoring/logger';
 
 const extra = Constants.expoConfig?.extra ?? {};
 
-// Firebase configuration loaded dynamically from environment variables via expo-constants.
-// This single configuration object is platform-agnostic and serves both iOS and Android.
 const firebaseConfig = {
   appId: Platform.select({
     ios: extra.FIREBASE_APP_ID_IOS,
@@ -29,14 +27,11 @@ const firebaseConfig = {
   persistence: true,
 };
 
-
-// Define the type for the FirebaseContext
 const FirebaseContext = createContext<{
   messaging: typeof messaging | null;
   fcmToken: string | null;
-}>({ messaging: null, fcmToken: null }); // We add fcmToken to the context
+}>({ messaging: null, fcmToken: null });
 
-// Define the type for FirebaseProvider props (expecting children)
 interface FirebaseProviderProps {
   children: ReactNode;
 }
@@ -45,50 +40,65 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
   const [fcmToken, setFcmToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const initializeFirebase = async () => {
-      // Initialize Firebase
-      try {
-        const requiredFields = [
-          'apiKey',
-          'appId',
-          'projectId',
-          'messagingSenderId',
-        ];
+    let unsubscribeTokenRefresh: (() => void) | null = null;
 
+    const initializeFirebase = async () => {
+      try {
+        const requiredFields = ['apiKey', 'appId', 'projectId', 'messagingSenderId'];
         const missingFields = requiredFields.filter(
           (field) => !firebaseConfig[field as keyof typeof firebaseConfig]
         );
 
         if (missingFields.length > 0) {
           logger.warn(
-            `Firebase configuration is incomplete. Missing fields: ${missingFields.join(
-              ', '
-            )}. Skipping Firebase initialization.`
+            `Firebase configuration is incomplete. Missing fields: ${missingFields.join(', ')}. Skipping Firebase initialization.`
           );
           return;
         }
 
+        // 1. Initialize core Firebase client application instance securely
         if (!firebase.apps.length) {
           await firebase.initializeApp(firebaseConfig);
         } else {
-          firebase.app(); // if already initialized, use that one
+          firebase.app();
         }
+
+        // 2. Request explicit push notification permissions (Required for iOS & Android 13+)
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+        if (!enabled) {
+          logger.warn('Push notification permissions were denied by the user.');
+          return;
+        }
+
+        // 3. Fetch current registration token
         const token = await messaging().getToken();
         if (token) {
-          logger.log('Firebase Token:', token);
+          logger.log('Firebase Token initialized successfully:', token);
+          setFcmToken(token);
         }
-        setFcmToken(token); // Store the token in state
+
+        // 4. Register structural runtime listener to watch for push token rotations
+        unsubscribeTokenRefresh = messaging().onTokenRefresh((newToken) => {
+          logger.log('FCM Token automatically rotated/refreshed:', newToken);
+          setFcmToken(newToken);
+        });
+
       } catch (error) {
-        if (logger) {
-          logger.error('Error getting token:', error);
-        }
+        logger.error('Error during Firebase initialization or token retrieval:', error);
       }
     };
 
     initializeFirebase();
 
+    // Clean up event tracking listeners on unmount boundary
     return () => {
-      // Cleanup if necessary (e.g., unsubscribe from listeners)
+      if (unsubscribeTokenRefresh) {
+        unsubscribeTokenRefresh();
+      }
     };
   }, []);
 
@@ -99,7 +109,6 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
   );
 };
 
-// Custom hook to access Firebase messaging and token
-export const useFirebaseMessaging = (): { messaging: typeof messaging | null; fcmToken: string | null } => {
+export const useFirebaseMessaging = () => {
   return useContext(FirebaseContext);
 };
