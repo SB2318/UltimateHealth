@@ -32,6 +32,14 @@ export default function AdminLoginPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!email.trim() || !password.trim()) {
+      setMessage({
+        title: "Validation Error",
+        description: "Email and password are required.",
+        variant: "destructive",
+      });
+      return; // This stops the code from proceeding to the API call
+    }
     setMessage({ title: "Processing", description: "Signing you in." });
     setLoading(true);
 
