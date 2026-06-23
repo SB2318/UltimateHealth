@@ -9,13 +9,47 @@ export function canvasPixelsHaveInk(pixels) {
   return false;
 }
 
-function isFinitePoint(point) {
+export function isFinitePoint(point) {
   return (
     typeof point?.x === "number" &&
     typeof point?.y === "number" &&
     Number.isFinite(point.x) &&
     Number.isFinite(point.y)
   );
+}
+
+export function isValidCanvasRect(rect) {
+  return (
+    rect != null &&
+    Number.isFinite(rect.left) &&
+    Number.isFinite(rect.top) &&
+    Number.isFinite(rect.width) &&
+    Number.isFinite(rect.height) &&
+    rect.width > 0 &&
+    rect.height > 0
+  );
+}
+
+/** Normalized [0,1] canvas coordinates, or null when geometry is invalid. */
+export function normalizeCanvasPoint(clientX, clientY, rect) {
+  if (!isValidCanvasRect(rect)) return null;
+
+  const x = (clientX - rect.left) / rect.width;
+  const y = (clientY - rect.top) / rect.height;
+
+  if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+
+  return { x, y };
+}
+
+/** CSS-pixel canvas coordinates, or null when point/geometry is invalid. */
+export function denormalizeCanvasPoint(point, rect) {
+  if (!isFinitePoint(point) || !isValidCanvasRect(rect)) return null;
+
+  return {
+    x: point.x * rect.width,
+    y: point.y * rect.height,
+  };
 }
 
 export function isSignatureValid(

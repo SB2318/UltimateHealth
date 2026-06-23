@@ -23,7 +23,7 @@ export default function RelatedArticles({ articles }: RelatedArticlesProps) {
   return (
     <aside aria-labelledby="related-articles-heading">
       <div className="border-t border-gray-100 bg-[#f7fafc]">
-        <div className="max-w-275 mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
           {/* Section heading */}
           <div className="mb-10">
             <p className="text-xs font-bold uppercase tracking-widest text-[#667eea] mb-2">
