@@ -14,7 +14,7 @@ import { Skeleton } from "../components/ui";
 
 
 const userScreenshots = [
-  { src: '/assets/article-home-screen.jpeg', caption: 'Home Screen' },
+{ src: '/assets/article-home-screen.jpeg', caption: 'Home Screen' },
   { src: '/assets/article-detail-screen.jpeg', caption: 'Reading View' },
   {
     src: '/assets/article-discussion-screen-for-user.jpeg',
@@ -29,7 +29,7 @@ const userScreenshots = [
   { src: '/assets/podcast-recording.jpeg', caption: 'Podcast Recorder' },
   { src: '/assets/podcast-upload.jpeg', caption: 'Podcast Upload' },
   { src: '/assets/notification-screen.jpeg', caption: 'Notification' },
-  { src: '/assets/UltimateHealth-about.jpeg', caption: 'App Info' },
+  { src: '/assets/ultimate-health-about.jpeg', caption: 'App Info' },
   { src: '/assets/terms_cond_page.jpeg', caption: 'Terms And Condition' },
 ]
 const adminScreenshots = [
@@ -146,8 +146,9 @@ export default function Home() {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error" | "invalid" | "empty" | "duplicate">("idle");
 
-  const userSliderRef = useRef<HTMLDivElement>(null)
+const userSliderRef = useRef<HTMLDivElement>(null)
   const adminSliderRef = useRef<HTMLDivElement>(null)
+  const autoSlideTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const openComingSoonModal = useCallback(() => {
     setComingSoonModal(true)
@@ -412,46 +413,51 @@ export default function Home() {
   const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
     const slider = ref.current
     if (!slider) return
-
     const maxScroll = slider.scrollWidth - slider.clientWidth
     const currentScroll = slider.scrollLeft
     const targetScroll = currentScroll + dir * SLIDER_SCROLL_AMOUNT
-
     if (dir === 1) {
       if (currentScroll >= maxScroll) {
         slider.scrollTo({ left: 0, behavior: 'auto' })
         return
       }
-
       if (targetScroll > maxScroll) {
         slider.scrollTo({ left: maxScroll, behavior: 'smooth' })
         return
       }
     }
-
     if (dir === -1) {
       if (currentScroll <= 0 || targetScroll < 0) {
         slider.scrollTo({ left: maxScroll, behavior: 'auto' })
         return
       }
     }
-
     slider.scrollTo({
       left: Math.max(0, Math.min(targetScroll, maxScroll)),
       behavior: 'smooth',
     })
   }
-  useEffect(() => {
-    const interval = setInterval(() => {
+
+  const startAutoSlide = useCallback(() => {
+    if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current)
+    autoSlideTimerRef.current = setInterval(() => {
       moveSlider(userSliderRef, 1)
-
-      if (adminSliderOpen) {
-        moveSlider(adminSliderRef, 1)
-      }
-    }, 1500)
-
-    return () => clearInterval(interval)
+      if (adminSliderOpen) moveSlider(adminSliderRef, 1)
+    }, 3000)
   }, [adminSliderOpen])
+
+  const handleManualSlide = useCallback((ref: RefObject<HTMLDivElement | null>, direction: number) => {
+    if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current)
+    moveSlider(ref, direction)
+    setTimeout(startAutoSlide, 5000)
+  }, [startAutoSlide])
+
+  useEffect(() => {
+    startAutoSlide()
+    return () => {
+      if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current)
+    }
+  }, [startAutoSlide])
 
   // ── TestFlight invite ──
   const sendTesterEmail = async () => {
@@ -649,7 +655,7 @@ export default function Home() {
                     className="nav-btn"
                     type="button"
                     aria-label="Previous UltimateHealth screenshot"
-                    onClick={() => moveSlider(userSliderRef, -1)}
+                    onClick={() => handleManualSlide(userSliderRef, -1)}
                   >
                     <i className="fas fa-chevron-left"></i>
                   </button>
@@ -657,7 +663,7 @@ export default function Home() {
                     className="nav-btn"
                     type="button"
                     aria-label="Next UltimateHealth screenshot"
-                    onClick={() => moveSlider(userSliderRef, 1)}
+                    onClick={() => handleManualSlide(userSliderRef, 1)}
                   >
                     <i className="fas fa-chevron-right"></i>
                   </button>
@@ -716,7 +722,7 @@ export default function Home() {
                     className="nav-btn"
                     type="button"
                     aria-label="Previous UHealth Admin screenshot"
-                    onClick={() => moveSlider(adminSliderRef, -1)}
+                    onClick={() => handleManualSlide(adminSliderRef, -1)}
                   >
                     <i className="fas fa-chevron-left"></i>
                   </button>
@@ -724,7 +730,7 @@ export default function Home() {
                     className="nav-btn"
                     type="button"
                     aria-label="Next UHealth Admin screenshot"
-                    onClick={() => moveSlider(adminSliderRef, 1)}
+                    onClick={() => handleManualSlide(adminSliderRef, 1)}
                   >
                     <i className="fas fa-chevron-right"></i>
                   </button>
