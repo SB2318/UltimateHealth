@@ -1,10 +1,10 @@
 import * as z from 'zod';
 
 export const generalSchema = z.object({
-  username: z.string().min(3, 'Username must be at least 3 characters').max(20, 'Username must be at most 20 characters'),
+  username: z.string().min(1, 'Username is required'),
   userHandle: z.string().min(1, 'User handle is required'),
   email: z.string().email('Please enter a valid email'),
-  about: z.string().min(1, 'About is required').max(160, 'About must be at most 160 characters'),
+  about: z.string().min(1, 'About is required'),
 });
 
 export type GeneralFormData = z.infer<typeof generalSchema>;

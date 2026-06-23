@@ -39,7 +39,7 @@ export function NetworkBanner() {
         )
       );
     }
-  }, [isOffline, hasBeenOffline, translateY]);
+  }, [isOffline, hasBeenOffline]);
 
   if (!isVisible && !isOffline && !hasBeenOffline) return null;
 
