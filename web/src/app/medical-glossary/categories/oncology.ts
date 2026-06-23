@@ -1,0 +1,22 @@
+export const oncologyTerms = [
+  { term: "Oncology Term 1", definition: "Oncology definition 1.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 2", definition: "Oncology definition 2.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 3", definition: "Oncology definition 3.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 4", definition: "Oncology definition 4.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 5", definition: "Oncology definition 5.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 6", definition: "Oncology definition 6.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 7", definition: "Oncology definition 7.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 8", definition: "Oncology definition 8.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 9", definition: "Oncology definition 9.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 10", definition: "Oncology definition 10.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 11", definition: "Oncology definition 11.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 12", definition: "Oncology definition 12.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 13", definition: "Oncology definition 13.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 14", definition: "Oncology definition 14.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 15", definition: "Oncology definition 15.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 16", definition: "Oncology definition 16.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 17", definition: "Oncology definition 17.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 18", definition: "Oncology definition 18.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 19", definition: "Oncology definition 19.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] },
+  { term: "Oncology Term 20", definition: "Oncology definition 20.", category: "Oncology", relatedTerms: ["Cancer","Tumor","Treatment"] }
+];

@@ -1,0 +1,22 @@
+export const preventiveHealthTerms = [
+  { term: "Preventive Term 1", definition: "Preventive health definition 1.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 2", definition: "Preventive health definition 2.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 3", definition: "Preventive health definition 3.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 4", definition: "Preventive health definition 4.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 5", definition: "Preventive health definition 5.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 6", definition: "Preventive health definition 6.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 7", definition: "Preventive health definition 7.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 8", definition: "Preventive health definition 8.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 9", definition: "Preventive health definition 9.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 10", definition: "Preventive health definition 10.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 11", definition: "Preventive health definition 11.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 12", definition: "Preventive health definition 12.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 13", definition: "Preventive health definition 13.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 14", definition: "Preventive health definition 14.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 15", definition: "Preventive health definition 15.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 16", definition: "Preventive health definition 16.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 17", definition: "Preventive health definition 17.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 18", definition: "Preventive health definition 18.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 19", definition: "Preventive health definition 19.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] },
+  { term: "Preventive Term 20", definition: "Preventive health definition 20.", category: "Preventive Health", relatedTerms: ["Screening","Prevention","Wellness"] }
+];

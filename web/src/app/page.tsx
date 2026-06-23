@@ -2,20 +2,19 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import "./globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
-
-import { PageWrapper, Section } from "../components/layout";
+import { ModeToggle } from "@/components/mode-toggle";
+import { PageWrapper, Section, Navbar } from "../components/layout";
 
 import { withBasePath } from "@/lib/basePath";
 import { Skeleton } from "../components/ui";
 
 
 const userScreenshots = [
-  { src: '/assets/article-home-screen.jpeg', caption: 'Home Screen' },
+{ src: '/assets/article-home-screen.jpeg', caption: 'Home Screen' },
   { src: '/assets/article-detail-screen.jpeg', caption: 'Reading View' },
   {
     src: '/assets/article-discussion-screen-for-user.jpeg',
@@ -30,10 +29,9 @@ const userScreenshots = [
   { src: '/assets/podcast-recording.jpeg', caption: 'Podcast Recorder' },
   { src: '/assets/podcast-upload.jpeg', caption: 'Podcast Upload' },
   { src: '/assets/notification-screen.jpeg', caption: 'Notification' },
-  { src: '/assets/UltimateHealth-about.jpeg', caption: 'App Info' },
+  { src: '/assets/ultimate-health-about.jpeg', caption: 'App Info' },
   { src: '/assets/terms_cond_page.jpeg', caption: 'Terms And Condition' },
 ]
-
 const adminScreenshots = [
   { src: '/assets/admin_dashboard.jpeg', caption: 'Admin Dashboard' },
   { src: '/assets/admin_dashboard2.jpeg', caption: 'Admin Dashboard Second' },
@@ -53,23 +51,34 @@ const adminScreenshots = [
 ]
 
 const allScreenshots = [...userScreenshots, ...adminScreenshots]
+
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || 'https://uhsocial.in'
+
 const CURSOR_GLOW_STORAGE_KEY = 'cursorGlowEnabled'
 const CURSOR_GLOW_EVENT = 'cursor-glow-preference-change'
+
 // Owner-configurable frontend URLs (set in deployment env when needed)
 const HELP_CENTER_URL =
   process.env.NEXT_PUBLIC_HELP_CENTER_URL || 'https://uhsocial.in/docs'
+
 const FEEDBACK_URL =
   process.env.NEXT_PUBLIC_FEEDBACK_URL ||
   'https://github.com/SB2318/UltimateHealth/issues'
+
 const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || ''
 const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || ''
-const PRIVACY_POLICY_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || '#'
-const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || '#'
+
+const PRIVACY_POLICY_URL =
+  process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || '#'
+
+const TERMS_OF_USE_URL =
+  process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || '#'
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const SLIDER_SCROLL_AMOUNT = 324
 const DNA_TRAIL_MAX_POINTS = 38
+
 const isValidEmail = (email: string) => EMAIL_PATTERN.test(email.trim())
 
 const getCursorGlowSnapshot = () => {
@@ -78,7 +87,7 @@ const getCursorGlowSnapshot = () => {
 }
 
 const subscribeToCursorGlow = (callback: () => void) => {
-  if (typeof window === 'undefined') return () => {}
+  if (typeof window === "undefined") return () => { };
 
   const onStorage = (event: StorageEvent) => {
     if (
@@ -126,22 +135,20 @@ export default function Home() {
   const dnaEnabledRef = useRef(false)
 
   // ── Contact form state ──
-  const [contactName, setContactName] = useState('')
-  const [contactEmail, setContactEmail] = useState('')
-  const [contactSubject, setContactSubject] = useState('')
-  const [contactMessage, setContactMessage] = useState('')
-  const [contactStatus, setContactStatus] = useState<
-    'idle' | 'sending' | 'success' | 'error'
-  >('idle')
+  const [contactName, setContactName] = useState("");
+  const [contactNameError, setContactNameError] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactSubject, setContactSubject] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+  const [contactStatus, setContactStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   // ── Newsletter state ──
-  const [newsletterEmail, setNewsletterEmail] = useState('')
-  const [newsletterStatus, setNewsletterStatus] = useState<
-    'idle' | 'sending' | 'success' | 'error' | 'invalid' | 'empty' | 'duplicate'
-  >('idle')
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error" | "invalid" | "empty" | "duplicate">("idle");
 
-  const userSliderRef = useRef<HTMLDivElement>(null)
+const userSliderRef = useRef<HTMLDivElement>(null)
   const adminSliderRef = useRef<HTMLDivElement>(null)
+  const autoSlideTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const openComingSoonModal = useCallback(() => {
     setComingSoonModal(true)
@@ -406,46 +413,51 @@ export default function Home() {
   const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
     const slider = ref.current
     if (!slider) return
-
     const maxScroll = slider.scrollWidth - slider.clientWidth
     const currentScroll = slider.scrollLeft
     const targetScroll = currentScroll + dir * SLIDER_SCROLL_AMOUNT
-
     if (dir === 1) {
       if (currentScroll >= maxScroll) {
         slider.scrollTo({ left: 0, behavior: 'auto' })
         return
       }
-
       if (targetScroll > maxScroll) {
         slider.scrollTo({ left: maxScroll, behavior: 'smooth' })
         return
       }
     }
-
     if (dir === -1) {
       if (currentScroll <= 0 || targetScroll < 0) {
         slider.scrollTo({ left: maxScroll, behavior: 'auto' })
         return
       }
     }
-
     slider.scrollTo({
       left: Math.max(0, Math.min(targetScroll, maxScroll)),
       behavior: 'smooth',
     })
   }
-  useEffect(() => {
-    const interval = setInterval(() => {
+
+  const startAutoSlide = useCallback(() => {
+    if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current)
+    autoSlideTimerRef.current = setInterval(() => {
       moveSlider(userSliderRef, 1)
-
-      if (adminSliderOpen) {
-        moveSlider(adminSliderRef, 1)
-      }
-    }, 1500)
-
-    return () => clearInterval(interval)
+      if (adminSliderOpen) moveSlider(adminSliderRef, 1)
+    }, 3000)
   }, [adminSliderOpen])
+
+  const handleManualSlide = useCallback((ref: RefObject<HTMLDivElement | null>, direction: number) => {
+    if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current)
+    moveSlider(ref, direction)
+    setTimeout(startAutoSlide, 5000)
+  }, [startAutoSlide])
+
+  useEffect(() => {
+    startAutoSlide()
+    return () => {
+      if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current)
+    }
+  }, [startAutoSlide])
 
   // ── TestFlight invite ──
   const sendTesterEmail = async () => {
@@ -476,7 +488,22 @@ export default function Home() {
   }
 
   // ── Contact form submit → uhsocial.in API ──
-  // Contact form submits to POST /api/contact on NEXT_PUBLIC_API_BASE_URL
+  // Backend route needed: POST /api/contact/send on NEXT_PUBLIC_API_BASE_URL
+  // See /contact_newsletter_guide.md for the Express route implementation
+
+  // ── Name validation ──
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setContactName(value);
+    const invalidChars = /[^a-zA-Z\s\-']/;
+    if (value.trim() === "") {
+      setContactNameError("Name is required.");
+    } else if (invalidChars.test(value)) {
+      setContactNameError("Name can only contain letters, spaces, hyphens, and apostrophes.");
+    } else {
+      setContactNameError("");
+    }
+  };
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const trimmedName = contactName.trim()
@@ -558,94 +585,9 @@ export default function Home() {
     allScreenshots[currentScreenshot] ?? allScreenshots[0]
 
   return (
-    <>
+    <div className="landing-page">
 
-      {/* ── Header ── */}
-      <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
-        <PageWrapper as="div" className="nav">
-          <Link href={withBasePath("/")} className="logo">
-            <div className="logo-icon">
-              <Image
-                src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
-                alt="UltimateHealth Logo" width={48} height={48}
-                priority
-              />
-            </div>
-            Ultimate-Health
-          </Link>
-
-          <ul className="nav-links">
-            <li>
-              <a
-                href="#features"
-                className={`nav-link-item${activeSection === "features" ? " active" : ""}`}
-                aria-current={activeSection === "features" ? "location" : undefined}
-              >
-                <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Platform Highlights</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#screenshots"
-                className={`nav-link-item${activeSection === "screenshots" ? " active" : ""}`}
-                aria-current={activeSection === "screenshots" ? "location" : undefined}
-              >
-                <i className="fas fa-image nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Screenshots</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#programs"
-                className={`nav-link-item${activeSection === "programs" ? " active" : ""}`}
-                aria-current={activeSection === "programs" ? "location" : undefined}
-              >
-                <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Community Programs</span>
-              </a>
-            </li>
-            <li>
-              <Link href={withBasePath("/articles")} className="nav-link-item">
-                <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Read Articles</span>
-              </Link>
-            </li>
-            <li>
-              <a href={withBasePath("/medical-glossary")} className="nav-link-item">
-                <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Medical Glossary</span>
-              </a>
-            </li>
-            <li>
-              <Link href={withBasePath("/contribute")} className="nav-link-item">
-                <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
-                <span className="nav-item-text">Join Us to Contribute</span>
-              </Link>
-            </li>
-            <li style={{ display: "flex", alignItems: "center" }}>
-              <a href="#downloads" className="nav-btn-sm">
-                <i className="fas fa-user" aria-hidden="true"></i>
-                <span>Login / Register</span>
-              </a>
-            </li>
-          </ul>
-
-          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileMenuOpen}>
-            <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
-          </button>
-        </PageWrapper>
-
-        <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
-          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-          <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
-          <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
-          <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
-          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
-        </nav>
-      </header>
+      <Navbar />
 
       {/* ── Hero ── */}
       <HeroAndDownload
@@ -656,6 +598,8 @@ export default function Home() {
       {/* ── Screenshots ── */}
       <Section id="screenshots">
         <PageWrapper>
+          <h2>App Experience</h2>
+          <p className="center">A closer look at what UltimateHealth offers, screen by screen</p>
           <h2>App Screenshots</h2>
           <p className="center">
             Take a look inside the UltimateHealth experience
@@ -711,7 +655,7 @@ export default function Home() {
                     className="nav-btn"
                     type="button"
                     aria-label="Previous UltimateHealth screenshot"
-                    onClick={() => moveSlider(userSliderRef, -1)}
+                    onClick={() => handleManualSlide(userSliderRef, -1)}
                   >
                     <i className="fas fa-chevron-left"></i>
                   </button>
@@ -719,7 +663,7 @@ export default function Home() {
                     className="nav-btn"
                     type="button"
                     aria-label="Next UltimateHealth screenshot"
-                    onClick={() => moveSlider(userSliderRef, 1)}
+                    onClick={() => handleManualSlide(userSliderRef, 1)}
                   >
                     <i className="fas fa-chevron-right"></i>
                   </button>
@@ -778,7 +722,7 @@ export default function Home() {
                     className="nav-btn"
                     type="button"
                     aria-label="Previous UHealth Admin screenshot"
-                    onClick={() => moveSlider(adminSliderRef, -1)}
+                    onClick={() => handleManualSlide(adminSliderRef, -1)}
                   >
                     <i className="fas fa-chevron-left"></i>
                   </button>
@@ -786,7 +730,7 @@ export default function Home() {
                     className="nav-btn"
                     type="button"
                     aria-label="Next UHealth Admin screenshot"
-                    onClick={() => moveSlider(adminSliderRef, 1)}
+                    onClick={() => handleManualSlide(adminSliderRef, 1)}
                   >
                     <i className="fas fa-chevron-right"></i>
                   </button>
@@ -927,33 +871,33 @@ export default function Home() {
           <h2>Be a Member: Guardian of Content Integrity</h2>
           <p className="center">Help maintain quality and safety across the platform</p>
           {/* Top row — 3 cards */}
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
-  {[
-    { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
-    { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
-    { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
-  ].map((f, i) => (
-    <div className="feature-card mod-card w-full fade-in" key={i}>
-      <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
-      <h3>{f.title}</h3>
-      <p>{f.desc}</p>
-    </div>
-  ))}
-</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
+            {[
+              { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
+              { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
+              { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
+            ].map((f, i) => (
+              <div className="feature-card mod-card w-full fade-in" key={i}>
+                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
 
-{/* Bottom row — 2 cards centered under the top row */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 mx-auto" style={{ maxWidth: "66.666%", marginLeft: "auto", marginRight: "auto" , marginTop: "20px"}}>
-  {[
-    { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
-    { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
-  ].map((f, i) => (
-    <div className="feature-card mod-card w-full fade-in" key={i}>
-      <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
-      <h3>{f.title}</h3>
-      <p>{f.desc}</p>
-    </div>
-  ))}
-</div>
+          {/* Bottom row — 2 cards centered under the top row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 mx-auto" style={{ maxWidth: "66.666%", marginLeft: "auto", marginRight: "auto", marginTop: "20px" }}>
+            {[
+              { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
+              { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
+            ].map((f, i) => (
+              <div className="feature-card mod-card w-full fade-in" key={i}>
+                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
         </PageWrapper>
       </Section>
 
@@ -1117,11 +1061,21 @@ export default function Home() {
                   <div className="dark-field-group">
                     <span className="dark-field-icon"><i className="fas fa-user"></i></span>
                     <input
-                      type="text" className="dark-input" placeholder="Your Name *" required
+                      type="text"
+                      className={`dark-input${contactNameError ? " input-error" : ""}`}
+                      placeholder="Your Name *"
+                      required
                       maxLength={80}
-                      value={contactName} onChange={(e) => setContactName(e.target.value)}
+                      value={contactName}
+                      onChange={handleNameChange}
+                      aria-describedby="contact-name-error"
                     />
                   </div>
+                  {contactNameError && (
+                    <p id="contact-name-error" className="contact-error-msg" style={{ marginTop: "-8px", marginBottom: "4px" }}>
+                      <i className="fas fa-exclamation-circle"></i> {contactNameError}
+                    </p>
+                  )}
                   <div className="dark-field-group">
                     <span className="dark-field-icon"><i className="fas fa-envelope"></i></span>
                     <input
@@ -1502,6 +1456,6 @@ export default function Home() {
         </div>
       )}
       <ScrollToTop />
-    </>
+    </div>
   )
 }
