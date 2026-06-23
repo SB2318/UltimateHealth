@@ -12,8 +12,15 @@ import * as z from 'zod';
 import {PRIMARY_COLOR} from '../helper/Theme';
 
 const contactSchema = z.object({
-  phone_number: z.string().min(10, 'Please enter a valid phone number'),
-  contact_email: z.string().email('Please enter a valid email'),
+  phone_number: z
+    .string()
+    .min(1, 'Phone number is required.')
+    .min(10, 'Please enter a valid phone number.')
+    .regex(/^\+?[\d\s\-()]{10,}$/, 'Please enter a valid phone number (e.g. +1234567890).'),
+  contact_email: z
+    .string()
+    .min(1, 'Email address is required.')
+    .email('Please enter a valid email address.'),
 });
 export type ContactFormData = z.infer<typeof contactSchema>;
 
@@ -55,12 +62,12 @@ const ContactTab = ({
               <>
                 <TextInput
                   clearButtonMode="while-editing"
-                  placeholder="Enter your contact phone number"
+                  placeholder="Enter phone number with country code (e.g. +1234567890)"
                   placeholderTextColor="#6b7280"
-                  style={[styles.inputControl, error && { borderColor: 'red' }]}
+                  style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                   value={value}
-                  keyboardType="number-pad"
-                  maxLength={10}
+                  keyboardType="phone-pad"
+                  maxLength={15}
                   onChangeText={onChange}
                   onBlur={onBlur}
                 />
@@ -80,11 +87,12 @@ const ContactTab = ({
               <>
                 <TextInput
                   clearButtonMode="while-editing"
-                  placeholder="Enter your contact email"
+                  placeholder="Enter your contact email address"
                   placeholderTextColor="#6b7280"
-                  style={[styles.inputControl, error && { borderColor: 'red' }]}
+                  style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                   value={value}
                   keyboardType="email-address"
+                  autoCapitalize="none"
                   onChangeText={onChange}
                   onBlur={onBlur}
                 />

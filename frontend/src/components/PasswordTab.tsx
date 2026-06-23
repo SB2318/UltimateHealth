@@ -13,16 +13,19 @@ import * as z from 'zod';
 import {PRIMARY_COLOR} from '../helper/Theme';
 
 const passwordSchema = z.object({
-  old_password: z.string().min(1, 'Old password is required'),
-  new_password: z.string()
-    .min(6, 'At least 6 characters')
-    .regex(/(?=.*[a-z]).{6,}/, 'At least 6 characters with lowercase letter'),
-  confirm_password: z.string().min(1, 'Please confirm your new password'),
+  old_password: z.string().min(1, 'Current password is required.'),
+  new_password: z
+    .string()
+    .min(1, 'New password is required.')
+    .min(8, 'Password must contain at least 8 characters.')
+    .regex(/(?=.*[a-z])/, 'Password must contain at least one lowercase letter.')
+    .regex(/(?=.*[0-9]|.*[!@#$%^&*])/, 'Password must contain at least one number or special character.'),
+  confirm_password: z.string().min(1, 'Please confirm your new password.'),
 }).refine((data) => data.new_password === data.confirm_password, {
-  message: "Passwords don't match",
+  message: "Passwords do not match. Please re-enter.",
   path: ['confirm_password'],
 }).refine((data) => data.new_password !== data.old_password, {
-  message: "New password must be different from old password",
+  message: "New password must be different from the current password.",
   path: ['new_password'],
 });
 
@@ -74,9 +77,9 @@ const PasswordTab = ({
                 <View style={styles.passwordContainer}>
                   <TextInput
                     secureTextEntry={!isVisibleOldPassword}
-                    placeholder="Enter your old password"
+                    placeholder="Enter your current password"
                     placeholderTextColor="#6b7280"
-                    style={[styles.inputControl, error && { borderColor: 'red' }]}
+                    style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -108,9 +111,9 @@ const PasswordTab = ({
                 <View style={styles.passwordContainer}>
                   <TextInput
                     secureTextEntry={!isVisibleNewPassword}
-                    placeholder="Enter your new password"
+                    placeholder="At least 8 characters"
                     placeholderTextColor="#6b7280"
-                    style={[styles.inputControl, error && { borderColor: 'red' }]}
+                    style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -142,9 +145,9 @@ const PasswordTab = ({
                 <View style={styles.passwordContainer}>
                   <TextInput
                     secureTextEntry={!isVisibleConfirmPassword}
-                    placeholder="Enter your confirm password"
+                    placeholder="Re-enter your new password"
                     placeholderTextColor="#6b7280"
-                    style={[styles.inputControl, error && { borderColor: 'red' }]}
+                    style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}

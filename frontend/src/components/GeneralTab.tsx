@@ -14,10 +14,16 @@ import * as z from 'zod';
 import {PRIMARY_COLOR} from '../helper/Theme';
 
 const generalSchema = z.object({
-  username: z.string().min(1, 'Username is required'),
-  userHandle: z.string().min(1, 'User handle is required'),
-  email: z.string().email('Please enter a valid email'),
-  about: z.string().min(1, 'About is required'),
+  username: z
+    .string()
+    .min(1, 'Please enter your full name.')
+    .min(2, 'Name must be at least 2 characters.'),
+  userHandle: z.string().min(1, 'User handle is required.'),
+  email: z
+    .string()
+    .min(1, 'Email address is required.')
+    .email('Please enter a valid email address.'),
+  about: z.string().min(1, 'Please tell us something about yourself.'),
 });
 export type GeneralFormData = z.infer<typeof generalSchema>;
 
@@ -87,9 +93,9 @@ const GeneralTab = ({
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
               <>
                 <TextInput
-                  placeholder="Enter your username"
+                  placeholder="Enter your full name"
                   placeholderTextColor="#6b7280"
-                  style={[styles.inputControl, error && { borderColor: 'red' }]}
+                  style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -145,10 +151,10 @@ const GeneralTab = ({
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
               <>
                 <TextInput
-                  placeholder="Enter something about yourself..."
+                  placeholder="Tell us something about yourself..."
                   placeholderTextColor="#6b7280"
                   textAlignVertical="top"
-                  style={[styles.aboutInput, error && { borderColor: 'red' }]}
+                  style={[styles.aboutInput, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                   multiline={true}
                   numberOfLines={4}
                   value={value}
