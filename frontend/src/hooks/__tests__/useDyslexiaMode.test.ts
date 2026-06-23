@@ -62,4 +62,27 @@ describe('useDyslexiaMode hook', () => {
     expect(result.current.isDyslexiaMode).toBe(false);
     expect(storeItem).toHaveBeenCalledWith(DYSLEXIA_MODE_KEY, 'false');
   });
+
+  it('should revert state if storeItem fails (optimistic update fallback)', async () => {
+    (retrieveItem as jest.Mock).mockResolvedValueOnce(null);
+    const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    // Mock storeItem to reject
+    (storeItem as jest.Mock).mockRejectedValueOnce(new Error('Storage error'));
+
+    const { result } = renderHook(() => useDyslexiaMode());
+
+    await waitFor(() => expect(result.current.isDyslexiaMode).toBe(false));
+
+    // Act
+    await act(async () => {
+      await result.current.toggleDyslexiaMode();
+    });
+
+    // Assert state reverted
+    expect(result.current.isDyslexiaMode).toBe(false);
+    expect(mockConsoleError).toHaveBeenCalledWith('Failed to save dyslexia mode preference:', expect.any(Error));
+
+    mockConsoleError.mockRestore();
+  });
 });
