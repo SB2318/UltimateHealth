@@ -43,16 +43,18 @@ export function AppContent() {
     firebaseInit();
     cleanUpDownloads();
 
-    // Securely register push tokens matching active session states
+    // Register push token for authenticated sessions
     if (user_token) {
       registerAndSyncPushToken(user_token);
     }
 
-    // Intercept and buffer cold-start deep links until the navigation ref container binds securely
-    initDeepLinking((url) => {
+    // Buffer incoming deep link URLs until auth state has resolved.
+    // initDeepLinking calls onUrl for both cold-start (getInitialURL) and
+    // foreground ('url' event) deep links. Navigation happens in the effect
+    // below once isLoading is false and auth is known.
+    const unsubscribeDeepLink = initDeepLinking((url) => {
       if (url) {
         pendingDeepLinkRef.current = url;
-        console.log('[Auth Guard] Cached incoming deep link securely inside reference buffer:', url);
       }
     });
 
@@ -61,25 +63,23 @@ export function AppContent() {
     });
 
     return () => {
+      unsubscribeDeepLink();
       onOpenApp();
     };
   }, [user_token]);
 
-  // Asynchronous Router Guard Loop: Defers target navigation loops until token validations resolve
+  // Once auth state has resolved, navigate to the buffered deep link target.
   useEffect(() => {
     if (isLoading || !navigationRef.current || !pendingDeepLinkRef.current) return;
 
     const isAuthenticated = Boolean(tokenRes?.isValid || user_token) && !isGuest;
 
     if (isAuthenticated) {
-      console.log('[Auth Guard] User is verified. Routing deep link payload destination string.');
       navigateDeepLink(navigationRef.current, pendingDeepLinkRef.current, true);
     } else {
-      console.log('[Auth Guard] User is anonymous. Purging buffer and diverting to login gate schemas.');
-      navigationRef.current.navigate('Login');
+      navigationRef.current.navigate('LoginScreen');
     }
-    
-    // Instantly flush pointer reference to block loops
+
     pendingDeepLinkRef.current = null;
   }, [isLoading, tokenRes, user_token, isGuest]);
 
