@@ -26,6 +26,7 @@
     <td align="center"><b>🛠️ Frontend CI</b></td>
     <td align="center"><b>📱 Expo CI</b></td>
     <td align="center"><b>🌟 Stars</b></td>
+    <td align="center"><b>👀 Views</b></td>
   </tr>
   <tr>
     <td align="center">
@@ -43,6 +44,9 @@
       <a href="https://github.com/SB2318/UltimateHealth/stargazers">
         <img alt="Stars" src="https://img.shields.io/github/stars/SB2318/UltimateHealth?style=social"/>
       </a>
+    </td>
+    <td align="center">
+      <img alt="Views" src="https://komarev.com/ghpvc/?username=SB2318&repo=UltimateHealth&label=Views&color=blue&style=flat" />
     </td>
   </tr>
 
@@ -931,6 +935,23 @@ We welcome contributions from everyone — developers, designers, writers, and t
      <td align="center"><a href="https://github.com/anjali62510-star"><img src="https://avatars.githubusercontent.com/u/221178990?v=4" width="120px;" alt=""/><br/><sub><b>anjali62510-star</b></sub></a></td>
      <td align="center"><a href="https://github.com/aspartic-gthb"><img src="https://avatars.githubusercontent.com/u/243364071?v=4" width="120px;" alt=""/><br/><sub><b>Anirudh Sahu</b></sub></a></td>
      <td align="center"><a href="https://github.com/Saylee12R"><img src="https://avatars.githubusercontent.com/u/230833976?v=4" width="120px;" alt=""/><br/><sub><b>Saylee</b></sub></a></td>
+     <td align="center"><a href="https://github.com/abdulhaque2005"><img src="https://avatars.githubusercontent.com/u/225173958?v=4" width="120px;" alt=""/><br/><sub><b>Abdulhaque</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/priyanshu5ingh"><img src="https://avatars.githubusercontent.com/u/98865320?v=4" width="120px;" alt=""/><br/><sub><b>Priyanshu Singh </b></sub></a></td>
+       <td align="center"><a href="https://github.com/Neverask1121"><img src="https://avatars.githubusercontent.com/u/217045060?v=4" width="120px;" alt=""/><br/><sub><b>Aditya Bhandari</b></sub></a></td>
+     <td align="center"><a href="https://github.com/FarishaNA"><img src="https://avatars.githubusercontent.com/u/147705381?v=4" width="120px;" alt=""/><br/><sub><b>Farisha N A</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Ranjana-git7"><img src="https://avatars.githubusercontent.com/u/219678427?v=4" width="120px;" alt=""/><br/><sub><b>tenax</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Bheemeswari497"><img src="https://avatars.githubusercontent.com/u/180012790?v=4" width="120px;" alt=""/><br/><sub><b>Bheeme_497</b></sub></a></td>
+     <td align="center"><a href="https://github.com/arpan-adhikary26"><img src="https://avatars.githubusercontent.com/u/225717254?v=4" width="120px;" alt=""/><br/><sub><b>ARPAN ADHIKARY</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/Pcmhacker-piro"><img src="https://avatars.githubusercontent.com/u/181658297?v=4" width="120px;" alt=""/><br/><sub><b>Prakash Meena</b></sub></a></td>
+       <td align="center"><a href="https://github.com/semanirudh94-lang"><img src="https://avatars.githubusercontent.com/u/224640398?v=4" width="120px;" alt=""/><br/><sub><b>Piyush Semalti</b></sub></a></td>
+     <td align="center"><a href="https://github.com/parthnakum"><img src="https://avatars.githubusercontent.com/u/134558990?v=4" width="120px;" alt=""/><br/><sub><b>Parth Nakum</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Arpita2919"><img src="https://avatars.githubusercontent.com/u/153080323?v=4" width="120px;" alt=""/><br/><sub><b>Arpita Raj</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
