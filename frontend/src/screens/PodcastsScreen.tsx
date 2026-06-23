@@ -9,6 +9,7 @@ import {
 
 import {YStack, View, XStack} from 'tamagui';
 import PodcastCard from '../components/PodcastCard';
+import SkeletonPodcastCard from '../components/SkeletonPodcastCard';
 import {hp} from '../helper/Metric';
 import {PodcastData, PodcastScreenProps} from '../type';
 import {useDispatch, useSelector} from 'react-redux';
@@ -177,9 +178,13 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
   );
 
   const renderLoadingState = () => (
-    <View style={styles.loadingContainer}>
-     <PodcastLoadingState/>
-    </View>
+    <FlatList
+      data={[1, 2, 3]}
+      keyExtractor={item => item.toString()}
+      renderItem={() => <SkeletonPodcastCard />}
+      contentContainerStyle={styles.flatListContentContainer}
+      showsVerticalScrollIndicator={false}
+    />
   );
 
   const renderEmptyState = () => (
