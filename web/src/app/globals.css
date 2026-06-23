@@ -3008,8 +3008,34 @@ i, svg {
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+    gap: 8px;
+  }
+
+  .logo-icon img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+
   .uh-hero-title {
     font-size: 1.75rem;
+  }
+
+  .uh-hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .uh-hero-buttons a {
+    width: 100%;
+    justify-content: center;
   }
 
   .uh-stat-card {
