@@ -5,6 +5,8 @@ import { withBasePath } from "@/lib/basePath";
 import { articles } from "@/lib/article-data";
 import type { Article } from "@/types/article";
 
+import { Navbar, PageWrapper, Section } from "@/components/layout";
+
 export const metadata: Metadata = {
   title: "Health Articles | UltimateHealth",
   description:
@@ -13,60 +15,52 @@ export const metadata: Metadata = {
 
 export default function ArticlesPage() {
   return (
-    <main className="min-h-screen bg-white">
-      {/* ── Header ── */}
-      <header className="border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <Link
-            href={withBasePath("/")}
-            className="font-extrabold text-lg"
-            style={{ background: "linear-gradient(135deg,#667eea,#764ba2)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
-          >
-            UltimateHealth
-          </Link>
-          <Link
-            href={withBasePath("/medical-glossary")}
-            className="text-sm font-semibold text-slate-600 hover:text-[#667eea] transition-colors"
-          >
-            Medical Glossary
-          </Link>
-        </div>
-      </header>
+    <main className="min-h-screen bg-[#f8fafc] text-slate-900">
+      <Navbar />
 
       {/* ── Hero ── */}
-      <section className="bg-gradient-to-br from-[#667eea] to-[#764ba2] py-16 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-xs font-bold uppercase tracking-widest text-white/70 mb-3">
+      <section className="bg-[#f8fafc] pt-32 pb-14 px-4 text-center flex flex-col items-center justify-center">
+        <PageWrapper className="flex flex-col items-center justify-center text-center">
+          <p className="text-xs font-bold uppercase tracking-widest text-[#667eea] mb-3 text-center">
             Health Knowledge Hub
           </p>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight mb-4">
+          <h1 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight mb-4 text-center">
             Health Articles
           </h1>
-          <p className="text-lg text-white/85 max-w-xl mx-auto">
-            Evidence-based articles written by medical professionals — covering
-            cardiovascular health, nutrition, mental wellness, and more.
+          <p className="text-base sm:text-lg text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto text-center">
+            Evidence-based articles written by medical professionals —
+            covering cardiovascular health, nutrition, mental wellness, and more.
           </p>
-        </div>
+        </PageWrapper>
       </section>
 
       {/* ── Articles grid ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <p className="text-sm text-slate-500 mb-8">
-          {articles.length} articles
-        </p>
+      <Section className="bg-white border-t border-slate-100">
+        <div className="w-full px-4 md:px-8 lg:px-12">
+          <div className="mb-10 flex items-center justify-between border-b border-slate-100 pb-5">
+            <h2 className="text-2xl font-black text-slate-900 m-0 leading-none">
+              All Articles
+            </h2>
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
+              {articles.length} articles
+            </span>
+          </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {articles.map((article) => (
-            <ArticleCard key={article.id} article={article} />
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {articles.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
         </div>
-      </section>
+      </Section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-gray-100 py-8 text-center text-sm text-slate-400">
-        <Link href={withBasePath("/")} className="hover:text-[#667eea] transition-colors">
-          ← Back to UltimateHealth
-        </Link>
+      <footer className="border-t border-slate-100 bg-[#f8fafc] py-8 text-center text-sm text-slate-400">
+        <PageWrapper>
+          <Link href={withBasePath("/")} className="hover:text-[#667eea] transition-colors font-semibold">
+            ← Back to UltimateHealth
+          </Link>
+        </PageWrapper>
       </footer>
     </main>
   );
@@ -78,38 +72,38 @@ function ArticleCard({ article }: { article: Article }) {
   return (
     <Link
       href={withBasePath(`/articles/${article.id}`)}
-      className="group flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+      className="group flex flex-col bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 w-full"
     >
-      {/* Thumbnail / gradient */}
-      <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-[#667eea]/20 to-[#764ba2]/30 flex items-center justify-center">
-        <span className="text-5xl opacity-60" aria-hidden="true">
+      {/* Thumbnail */}
+      <div className="relative aspect-video overflow-hidden bg-[#eef2ff] flex items-center justify-center">
+        <span className="text-5xl transform group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
           {CATEGORY_ICONS[article.category] ?? "📋"}
         </span>
-        <span className="absolute top-3 left-3 text-[10px] font-bold uppercase tracking-widest text-white bg-black/35 backdrop-blur-sm px-2.5 py-1 rounded-full">
+        <span className="absolute top-4 left-4 text-[9px] font-bold uppercase tracking-widest text-slate-500 bg-white/95 px-3 py-1.5 rounded-full border border-slate-100/60 shadow-sm">
           {article.category}
         </span>
       </div>
 
       {/* Body */}
-      <div className="flex flex-col flex-1 p-5">
-        <h2 className="font-bold text-[#1a202c] leading-snug line-clamp-2 mb-2 group-hover:text-[#667eea] transition-colors text-base">
+      <div className="flex flex-col flex-1 p-6 md:p-8">
+        <h2 className="font-extrabold text-[#3c3b88] leading-snug line-clamp-2 mb-3 group-hover:text-[#667eea] transition-colors text-xl">
           {article.title}
         </h2>
-        <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1 mb-4">
+        <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1 mb-5">
           {article.excerpt}
         </p>
 
-        <div className="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-gray-50">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between text-xs text-slate-400 pt-4 border-t border-slate-100">
+          <div className="flex items-center gap-2.5">
             <span
-              className="w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px]"
+              className="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-[10px]"
               style={{ background: article.author.avatarColor }}
             >
               {article.author.avatarInitials}
             </span>
-            <span>{article.author.name}</span>
+            <span className="font-semibold text-slate-600">{article.author.name}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 text-slate-400 font-medium">
             <time dateTime={article.publishedAt}>{date}</time>
             <span>·</span>
             <span>{article.readingTime}</span>
