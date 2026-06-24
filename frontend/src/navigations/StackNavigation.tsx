@@ -14,6 +14,7 @@ import NotificationScreen from '../screens/NotificationScreen';
 import EditorScreen from '../screens/article/EditorScreen';
 import PreviewScreen from '../screens/article/PreviewScreen';
 import ArticleScreen from '../screens/article/ArticleScreen';
+import ReadingHistoryScreen from '../screens/ReadingHistoryScreen';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -46,12 +47,21 @@ import PodcastForm from '../screens/PodcastForm';
 import PodcastPlayer from '../screens/PodcastPlayer';
 import PodcastProfile from '../screens/PodcastProfile';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicy';
+import CommunityGuidelinesScreen from '../screens/CommunityGuidelinesScreen';
 import ContributorPage from '../screens/ContributorPage';
 import OpenSourcePage from '../screens/OpenSourcePage';
 import NotificationPreferencesScreen from '../screens/NotificationPreferencesScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
+
+
+const ROOT_SCREENS: string[] = [
+  'TabNavigation',
+  'LoginScreen',
+  'LogoutScreen',
+  'GuestPlaceholderScreen',
+];
 
 const StackNavigation = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -62,30 +72,34 @@ const StackNavigation = () => {
       const currentRoute =
         navigation?.getState()?.routes[navigation?.getState()?.index || 0]
           ?.name;
-      const currTab = nav?.getState().routes[nav?.getState()?.index || 0]?.name;
+      const currTab = nav?.getState()?.routes[nav?.getState()?.index || 0]?.name;
 
-      //console.log('Current Route', currentRoute);
-      //console.log('Current Route', currTab);
-      if (
-        currentRoute === 'TabNavigation' ||
-        currentRoute === 'LoginScreen' ||
+      // Show exit dialog when the user is on a root-level screen (no meaningful
+      // back destination), or when a tab-root is active. ROOT_SCREENS includes
+      // LogoutScreen and GuestPlaceholderScreen so pressing Back mid-logout or
+      // from the guest placeholder doesn't silently fall through.
+      const isRootScreen = currentRoute ? ROOT_SCREENS.includes(currentRoute) : false;
+      const isRootTab =
         currTab === 'Home' ||
         currTab === 'Podcasts' ||
-        currTab === 'Profile'
-      ) {
+        currTab === 'Profile';
+
+      if (isRootScreen || isRootTab) {
         Alert.alert('Warning', 'Do you want to exit?', [
           {text: 'No', onPress: () => null},
           {text: 'Yes', onPress: () => BackHandler.exitApp()},
         ]);
-        return true; // Prevent default behavior
+        return true; // Prevent default back behaviour
       } else if (navigation.canGoBack()) {
-        navigation.goBack(); // Allow back navigation for other screens
+        navigation.goBack(); // Allow back navigation for non-root screens
+        return true;
       } else {
+        // Fallback: no back history and not a known root — treat as exit.
         Alert.alert('Warning', 'Do you want to exit?', [
           {text: 'No', onPress: () => null},
           {text: 'Yes', onPress: () => BackHandler.exitApp()},
         ]);
-        return true; // Prevent default behavior
+        return true;
       }
     };
 
@@ -152,7 +166,7 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -178,7 +192,7 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -252,7 +266,7 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -277,7 +291,7 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -298,7 +312,7 @@ const StackNavigation = () => {
           headerTitle: '',
           headerBackTitleVisible: false,
           headerTransparent: true,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -323,7 +337,7 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -344,7 +358,7 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -365,7 +379,7 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -386,7 +400,7 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -425,7 +439,7 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -450,7 +464,7 @@ const StackNavigation = () => {
             backgroundColor: '#000A60',
           },
           headerBackTitleVisible: false,
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -535,13 +549,39 @@ const StackNavigation = () => {
             shadowOpacity: 0.25,
             shadowRadius: 3.5,
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
               onPress={() => {
                 navigation.goBack();
               }}>
+              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="ReadingHistoryScreen"
+        component={ReadingHistoryScreen}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: 'Reading History',
+          headerTitleAlign: 'center',
+          headerBackTitleVisible: false,
+          headerTintColor: 'white',
+          headerStyle: {
+            elevation: 4,
+            backgroundColor: '#000A60',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.headerLeftButtonCommentScreen}
+              onPress={() => navigation.goBack()}>
               <FontAwesome6 size={25} name="arrow-left" color={'white'} />
             </TouchableOpacity>
           ),
@@ -569,7 +609,37 @@ const StackNavigation = () => {
             shadowOpacity: 0.25,
             shadowRadius: 3.5,
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.headerLeftButtonCommentScreen}
+              onPress={() => {
+                navigation.goBack();
+              }}>
+              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="CommunityGuidelines"
+        component={CommunityGuidelinesScreen}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: 'Community Guidelines',
+          headerTitleAlign: 'center',
+          headerBackTitleVisible: false,
+          headerTintColor: 'white',
+          headerTransparent: false,
+
+          headerStyle: {
+            elevation: 4,
+            backgroundColor: '#000A60',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
+          },
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -598,7 +668,7 @@ const StackNavigation = () => {
             shadowOpacity: 0.25, // Shadow opacity for iOS
             shadowRadius: 3.5, // Shadow radius for iOS
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -628,7 +698,7 @@ const StackNavigation = () => {
             shadowOpacity: 0.25, // Shadow opacity for iOS
             shadowRadius: 3.5, // Shadow radius for iOS
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <Pressable
               style={styles.headerLeftButtonCommentScreen}
@@ -665,7 +735,7 @@ const StackNavigation = () => {
             shadowOpacity: 0.25, // Shadow opacity for iOS
             shadowRadius: 3.5, // Shadow radius for iOS
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -703,7 +773,7 @@ const StackNavigation = () => {
             shadowOpacity: 0.25, // Shadow opacity for iOS
             shadowRadius: 3.5, // Shadow radius for iOS
           },
-          // eslint-disable-next-line react/no-unstable-nested-components
+           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}

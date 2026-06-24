@@ -1,14 +1,25 @@
-// Development vs Production URL configuration
-// Use global __DEV__ from React Native environment
 
-// For local development, uncomment and local backend
-// const DEV_URL = "http://10.0.2.2:3000/api"; // Android emulator
-// const DEV_URL = "http://localhost:3000/api"; // iOS simulator
-const DEV_URL = "https://uhsocial.in/api"; // Use production for now
+declare const __DEV__: boolean;
+// API URL configuration
+// Values are injected at build time from environment variables via app.config.js.
+// To override for local development, set the following in your .env file
+// (see .env.example for the full list):
+//
+//   PROD_URL=http://10.0.2.2:3000/api        # Android emulator
+//   PROD_URL=http://localhost:3000/api        # iOS simulator
+//   SOCKET_PROD=http://10.0.2.2:3000
+//   CONTENT_CHECKER_PROD=http://10.0.2.2:3000/content-intel
+//
+// Production fallbacks are defined in app.config.js and used when the
+// corresponding env var is not set.
 
-const PROD_URL = __DEV__ ? DEV_URL : "https://uhsocial.in/api";
-const SOCKET_PROD = __DEV__ ? (DEV_URL.includes('localhost') || DEV_URL.includes('10.0.2.2') ? DEV_URL.replace('/api', '') : "https://uhsocial.in") : "https://uhsocial.in";
-const CONTENT_CHECKER_PROD = __DEV__ ? `${SOCKET_PROD}/content-intel` : "https://uhsocial.in/content-intel";
+import Constants from "expo-constants";
+const extra = Constants.expoConfig?.extra ?? {};
+
+const PROD_URL: string = extra.PROD_URL;
+const SOCKET_PROD: string = extra.SOCKET_PROD;
+const CONTENT_CHECKER_PROD: string = extra.CONTENT_CHECKER_PROD;
+const SHARE_BASE_URL = 'https://uhsocial.in';
 
 const LOGIN_API = `${PROD_URL}/user/login`;
 const REGISTRATION_API = `${PROD_URL}/user/register`;
@@ -31,6 +42,7 @@ const GET_ARTICLE_TRANSLATIONS = (articleId: string | number) =>
 const GET_USER_DETAILS_API = `${PROD_URL}/user/getdetails`;
 const UPDATE_USER_GENERAL_DETAILS = `${PROD_URL}/user/update-general-details`;
 const UPDATE_READ_EVENT = `${PROD_URL}/article/readEvent`;
+const GET_READ_HISTORY = `${PROD_URL}/article/read-history`;
 const UPDATE_USER_PASSWORD = `${PROD_URL}/user/update-password`;
 const UPDATE_USER_CONTACT_DETAILS = `${PROD_URL}/user/update-contact-details`;
 const UPDATE_USER_PROFESSIONAL_DETAILS = `${PROD_URL}/user/update-professional-details`;
@@ -69,9 +81,10 @@ const GET_IMPROVEMENT_BY_ID = `${PROD_URL}/get-improvement`;
 const SUBMIT_IMPROVEMENT = `${PROD_URL}/article/submit-improvement`;
 const UPLOAD_ARTICLE_TO_POCKETBASE = `${PROD_URL}/upload-pocketbase/article`;
 const UPLOAD_IMPROVEMENT_TO_POCKETBASE = `${PROD_URL}/upload-pocketbase/improvement`;
+const DELETE_POCKETBASE_RECORD = `${PROD_URL}/upload-pocketbase/record`;
 
 /** Content Checker */
-const RENDER_SUGGESTION = `${CONTENT_CHECKER_PROD}/grammar/render-suggestions`;
+const RENDER_SUGGESTION = `${CONTENT_CHECKER_PROD}/readability/check`;
 
 /** PODCAST RELATED */
 const GET_ALL_PODCASTS = `${PROD_URL}/podcast/published-podcasts`;
@@ -83,7 +96,7 @@ const FILTER_PODCAST = `${PROD_URL}/podcast/filter`;
 const UPLOAD_PODCAST = `${PROD_URL}/podcast/create`;
 const GET_PLAYLIST = `${PROD_URL}/podcast/get-my-playlists`;
 const CREATE_PLAYLIST = `${PROD_URL}/podcast/create-playlist`;
-const ADD_TO_PLAYLIST = `${PROD_URL}/podcast/add-podcast-form-playlist`;
+const ADD_TO_PLAYLIST = `${PROD_URL}/podcast/add-podcast-to-playlist`;
 const UPDATE_PODCAST_PLAYLIST = `${PROD_URL}/podcast/update-playlist`;
 
 const DISCARDED_PODCASTS = `${PROD_URL}/podcast/discarded`;
@@ -100,7 +113,7 @@ const SEND_MESSAGE_TO_GEMINI = `${PROD_URL}/gemini/send`;
 /** Notification Preferences */
 const GET_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`;
 const UPDATE_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`;
-
+const REGISTER_PUSH_TOKEN = `${PROD_URL}/user/register-device-token`;
 
 export {
   LOGIN_API,
@@ -161,7 +174,9 @@ export {
   UPLOAD_ARTICLE_TO_POCKETBASE,
   
   UPLOAD_IMPROVEMENT_TO_POCKETBASE,
+  DELETE_POCKETBASE_RECORD,
   RENDER_SUGGESTION,
+  REGISTER_PUSH_TOKEN,
   // PODCAST
   GET_ALL_PODCASTS,
   GET_PODCAST_DETAILS,
@@ -184,4 +199,6 @@ export {
   SEND_MESSAGE_TO_GEMINI,
   GET_NOTIFICATION_PREFERENCES,
   UPDATE_NOTIFICATION_PREFERENCES,
+  GET_READ_HISTORY,
+  SHARE_BASE_URL,
 };

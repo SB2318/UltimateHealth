@@ -19,13 +19,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AboutScreenProps } from '../type';
 import { GlassContainer } from '../components/GlassContainer';
 import { ProfessionalColors, Typography, Spacing } from '../styles/GlassStyles';
-import { useBackToTop } from '../components/BackToTopScrollView';
-import { BackToTopButton } from '../components/BackToTopButton';
+import { useScrollControls } from '../hooks/useScrollControls';
+import { ScrollActionButtons } from '../components/ScrollActionButtons';
 
 const AboutScreen = ({ navigation }: AboutScreenProps) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
-  const { onScroll, visible, opacity, scrollToTop } = useBackToTop({ threshold: 300 });
+  const { scrollRef, onScroll, topVisible, topOpacity, bottomVisible, bottomOpacity, scrollToTop, scrollToBottom } = useScrollControls({ threshold: 300, bottomThreshold: 50 });
   const currentVersion = VersionCheck.getCurrentVersion();
 
   const onShare = async () => {
@@ -54,6 +54,7 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
       <StatusBar style={isDarkMode ? 'light' : 'dark'} backgroundColor="#007AFF" />
 
       <ScrollView
+        ref={scrollRef}
         onScroll={onScroll}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
@@ -164,6 +165,14 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
                       'https://www.freeprivacypolicy.com/live/0b40215e-e456-48cc-a549-424216da1e01',
                     )
                   }
+                  isDarkMode={isDarkMode}
+                />
+
+                <MenuButton
+                  icon="book-outline"
+                  title="Community Guidelines"
+                  iconColor="#a855f7"
+                  onPress={() => navigation.navigate('CommunityGuidelines')}
                   isDarkMode={isDarkMode}
                 />
               </YStack>
@@ -292,10 +301,13 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
           </YStack>
         </View>
       </ScrollView>
-      <BackToTopButton
-        opacity={opacity}
-        onPress={scrollToTop}
-        visible={visible}
+      <ScrollActionButtons
+        topOpacity={topOpacity}
+        onScrollToTop={scrollToTop}
+        topVisible={topVisible}
+        bottomOpacity={bottomOpacity}
+        onScrollToBottom={scrollToBottom}
+        bottomVisible={bottomVisible}
         buttonColor="#007AFF"
         iconColor="#fff"
       />

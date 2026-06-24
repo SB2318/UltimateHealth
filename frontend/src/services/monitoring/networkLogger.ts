@@ -1,4 +1,5 @@
 import { captureException } from './errorHandler';
+import { logger } from './logger';
 
 /**
  * Safely strips sensitive information from headers or payloads.
@@ -19,11 +20,13 @@ const redactSensitiveData = (data: any, visited = new Set<any>()): any => {
   }
 
   const redacted: Record<string, any> = {};
+  // Use substring matching so variants like `authToken` or `userPasswordHash`
+  // are caught in addition to exact-match keys.
   const sensitiveKeys = ['authorization', 'token', 'password', 'secret', 'cookie'];
 
   for (const key in data) {
     if (Object.prototype.hasOwnProperty.call(data, key)) {
-      if (sensitiveKeys.includes(key.toLowerCase())) {
+      if (sensitiveKeys.some(sensitiveKey => key.toLowerCase().includes(sensitiveKey))) {
         redacted[key] = '[REDACTED]';
       } else {
         redacted[key] = redactSensitiveData(data[key], visited);
@@ -57,7 +60,16 @@ export const logApiError = (error: any, url?: string, context?: Record<string, a
     url: endpoint,
     status,
     method: error?.config?.method || 'Unknown Method',
-    headers: error?.config?.headers ? redactSensitiveData(error.config.headers) : undefined,
+    // Rename to `requestHeaders` for clarity and redact any sensitive header values.
+    requestHeaders: error?.config?.headers
+      ? redactSensitiveData(error.config.headers)
+      : undefined,
+    // Redact the request body (e.g. POST/PUT payloads) to prevent PII or
+    // credentials from being forwarded to Sentry.
+    requestData:
+      error?.config?.data && typeof error.config.data === 'object'
+        ? redactSensitiveData(error.config.data)
+        : undefined,
     message: error?.message,
     networkError: !error?.response,
   };
@@ -67,7 +79,7 @@ export const logApiError = (error: any, url?: string, context?: Record<string, a
   // as they are expected client errors, unless explicitly requested
   if (!error.response || (status >= 500 && status < 600)) {
     captureException(error, safeContext);
-  } else if (__DEV__) {
-    console.warn(`[NetworkLogger] Expected client error (Status: ${status}) for ${endpoint}`);
+  } else  {
+   logger.warn(`[NetworkLogger] Expected client error (Status: ${status}) for ${endpoint}`);
   }
 };

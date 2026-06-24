@@ -5,21 +5,30 @@ import {
   Text,
   TouchableOpacity,
   View,
-  ScrollView,
   Alert,
   Dimensions,
   Share,
+  useColorScheme,
 } from 'react-native';
+import ArticleShareModal from '../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
+import {PRIMARY_COLOR} from '../../helper/Theme';
+import GlobalStyles from '../../styles/GlobalStyle';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData, ArticleScreenProp} from '../../type';
 import {useDispatch, useSelector} from 'react-redux';
 import {hp} from '../../helper/Metric';
-import {GET_IMAGE, GET_STORAGE_DATA, SOCKET_PROD} from '../../helper/APIUtils';
+import {GET_IMAGE, GET_STORAGE_DATA} from '../../helper/APIUtils';
 import Loader from '../../components/Loader';
 import Snackbar from 'react-native-snackbar';
+import ResearchSummaryCard from '../../components/ResearchSummaryCard';
+import StructuredPodcastCard from '../../components/StructuredPodcastCard';
+import {
+  generateArticleSummary,
+  ArticleSummary,
+} from '../../services/SummaryService';
+import {recordArticleView} from '../../services/ReadingHistoryService';
 
 import {
   formatCount,
@@ -31,6 +40,7 @@ import {
 //import CommentScreen from '../CommentScreen';
 import Tts from 'react-native-tts';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import FloatingSpeedSelector from '../../components/FloatingSpeedSelector';
 
 import {setUserHandle} from '../../store/UserSlice';
 import {FontAwesome5} from '@expo/vector-icons';
@@ -43,24 +53,55 @@ import {useGetProfile} from '@/src/hooks/useGetProfile';
 import {useLikeArticle} from '@/src/hooks/useLikeArticle';
 import {useUpdateFollowStatusByArticle} from '@/src/hooks/useUpdateFollowStatus';
 import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
+import {getReadTime} from '../../utils/readTime';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
 import {useSocket} from '../../contexts/SocketContext';
+import { copyArticleShareLink } from '../../helper/shareUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  interpolate,
+  Extrapolate,
+  runOnJS,
+} from 'react-native-reanimated';
 
 const CHUNK_SIZE = 120;
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
+  const getProfileImageUri = (profileImage?: string) => {
+    if (!profileImage?.trim()) {
+      return 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
+    }
+
+    return profileImage.startsWith('http')
+      ? profileImage
+      : `${GET_STORAGE_DATA}/${profileImage}`;
+  };
   const {user_id, isGuest} = useSelector((state: any) => state.user);
+  const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontScale, setFontScale] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
+  const [isSpeedSelectorVisible, setIsSpeedSelectorVisible] = useState(false);
   const [playerVisible, setPlayerVisible] = useState(false);
+  const [summary, setSummary] = useState<ArticleSummary | null>(null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [shareModalVisible, setShareModalVisible] = useState(false);
   const chunkIndexRef = useRef(0);
   const wordsRef = useRef<string[]>([]);
+  const readEventFiredRef = useRef(false);
+
+  // Progress Bar Shared Values
+  const scrollY = useSharedValue(0);
+  const contentHeight = useSharedValue(0);
+  const layoutHeight = useSharedValue(0);
 
   const {mutate: followMutation, isPending: followMutationPending} =
     useUpdateFollowStatusByArticle();
@@ -104,6 +145,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const FONT_SCALE_STEP = 0.1;
   const BASE_FONT_SIZE = 16;
 
+  const likedUsers = article?.likedUsers ?? [];
+  const totalLikes = likedUsers.length;
+
   const clampFontScale = (value: number) =>
     Math.min(FONT_SCALE_MAX, Math.max(FONT_SCALE_MIN, value));
 
@@ -141,11 +185,21 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   useEffect(() => {
+    if (!article) return;
+    recordArticleView({
+      articleId: String(article._id),
+      title: article.title ?? '',
+      authorName: article.authorName ?? '',
+      category: article.tags?.[0]?.name ?? '',
+      coverImage: article.imageUtils?.[0] ?? '',
+    });
+  }, [article]);
+
+  useEffect(() => {
     if (!isGuest) {
       updateViewCount(articleId, {
         onError: error => {
           console.log('Update View Count Error', error);
-          //  Alert.alert('Internal server error, try again!');
         },
       });
     }
@@ -157,9 +211,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-error');
     };
-  }, []);
+  }, [articleId, isGuest, updateViewCount]);
 
   useEffect(() => {
+    readEventFiredRef.current = false;
+    setReadEventSave(false);
     refetch();
   }, [articleId, refetch]);
 
@@ -169,7 +225,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     if (user) {
       dispatch(setUserHandle(user.user_handle));
     }
-  }, [user]);
+  }, [dispatch, user]);
 
   useEffect(() => {
     let isMounted = true;
@@ -194,6 +250,32 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       isMounted = false;
     };
   }, []);
+
+  // Generate AI summary using Gemini
+  useEffect(() => {
+    if (!article?.content && !articleContent) {
+      setSummary(null);
+      return;
+    }
+
+    const rawText = article?.content || articleContent || '';
+    
+    // Only call API if there's enough text
+    if (!rawText || rawText.length < 100) {
+      setSummary(null);
+      return;
+    }
+
+    // Reset state then call API
+    setSummary(null);
+    setSummaryLoading(true);
+
+    generateArticleSummary(rawText)
+      .then(result => setSummary(result))
+      .catch(() => setSummary(null))
+      .finally(() => setSummaryLoading(false));
+
+  }, [article?.content, articleContent]);
 
   // --- Settings ---
   const handleLike = () => {
@@ -307,6 +389,22 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
+  const handleCopyLink = async () => {
+    try {
+      copyArticleShareLink(articleId, authorId, resolvedRecordId);
+      Snackbar.show({
+        text: 'Link copied',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    } catch (error) {
+      console.log('Error copying link:', error);
+      Snackbar.show({
+        text: 'Failed to copy link',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+
   const handleTranslateArticle = () => {
     if (isGuest) {
       navigation.navigate('GuestPlaceholderScreen', {
@@ -412,9 +510,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     const words = wordsRef.current;
     const chunkIndex = chunkIndexRef.current;
     if (chunkIndex >= words.length) {
-      // finished all chunks
+      // All chunks spoken — hide the floating player and reset state
       setIsPlaying(false);
       setIsPaused(false);
+      setPlayerVisible(false);
+      Tts.removeAllListeners('tts-finish');
+      Tts.removeAllListeners('tts-error');
       return;
     }
     const chunk = words.slice(chunkIndex, chunkIndex + CHUNK_SIZE).join(' ');
@@ -446,6 +547,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       Tts.addEventListener('tts-error', e => {
         console.log('TTS Error:', e);
         setIsPlaying(false);
+        setIsPaused(false);
+        setPlayerVisible(false);
       });
 
       setIsPlaying(true);
@@ -454,6 +557,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       speakNextChunk();
     } catch (error) {
       console.log('TTS Error:', error);
+      setIsPlaying(false);
+      setIsPaused(false);
+      setPlayerVisible(false);
     }
   };
 
@@ -467,11 +573,27 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const handleTtsPause = async () => {
     try {
       if (isPaused) {
-        await Tts.resume();
+        // Resume
         setIsPlaying(true);
         setIsPaused(false);
+        // Step back one chunk to resume from the interrupted chunk
+        chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
+
+        // Re-attach listeners
+        Tts.addEventListener('tts-finish', speakNextChunk);
+        Tts.addEventListener('tts-error', e => {
+          console.log('TTS Error:', e);
+          setIsPlaying(false);
+          setIsPaused(false);
+          setPlayerVisible(false);
+        });
+
+        speakNextChunk();
       } else {
-        await Tts.pause();
+        // Pause
+        Tts.removeAllListeners('tts-finish');
+        Tts.removeAllListeners('tts-error');
+        await Tts.stop();
         setIsPlaying(false);
         setIsPaused(true);
       }
@@ -495,40 +617,97 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
-  const SPEED_OPTIONS = [0.5, 0.75, 1.0, 1.25, 1.5];
-  const SPEED_LABELS: Record<number, string> = {
-    0.5: '0.5x',
-    0.75: '0.75x',
-    1.0: '1x',
-    1.25: '1.25x',
-    1.5: '1.5x',
-  };
-
-  const handleSpeedChange = () => {
-    const currentIndex = SPEED_OPTIONS.indexOf(speechRate);
-    const nextRate = SPEED_OPTIONS[(currentIndex + 1) % SPEED_OPTIONS.length];
-    setSpeechRate(nextRate);
-    Tts.setDefaultRate(nextRate);
+  const handleSpeedSelect = (selectedSpeed: number) => {
+    setSpeechRate(selectedSpeed);
+    Tts.setDefaultRate(selectedSpeed);
     // Restart current position with new speed if currently playing
     if (isPlaying && !isPaused) {
       Tts.removeAllListeners('tts-finish');
       Tts.removeAllListeners('tts-error');
       // Step back one chunk so we replay current chunk at new speed
       // Note: Rewind is approximate and might read earlier parts of a smaller previous chunk.
-      chunkIndexRef.current = Math.max(
-        0,
-        chunkIndexRef.current - CHUNK_SIZE,
-      );
+      chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
       Tts.stop().then(() => {
         Tts.addEventListener('tts-finish', speakNextChunk);
         Tts.addEventListener('tts-error', e => {
           console.log('TTS Error:', e);
           setIsPlaying(false);
+          setIsPaused(false);
+          setPlayerVisible(false);
         });
         speakNextChunk();
       });
     }
   };
+
+  // Function to handle the Read Status logic (preserved from original onScroll)
+  const handleReadStatusUpdate = (
+    offset: number,
+    height: number,
+    layout: number,
+  ) => {
+    if (layout + offset >= height) {
+      if (
+        article &&
+        !readEventSave &&
+        !isGuest &&
+        article.status === StatusEnum.PUBLISHED
+      ) {
+        updateReadEvent(undefined, {
+          onSuccess: () => {
+            setReadEventSave(true);
+            Snackbar.show({
+              text: 'Your read status updated.',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          },
+          onError: err => {
+            console.log('Update Read Status mutation error', err);
+            Snackbar.show({
+              text: 'Failed to update your read status.',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          },
+        });
+      }
+    }
+  };
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: event => {
+      scrollY.value = event.contentOffset.y;
+      contentHeight.value = event.contentSize.height;
+      layoutHeight.value = event.layoutMeasurement.height;
+
+      // Execute existing read-status logic on JS thread
+      runOnJS(handleReadStatusUpdate)(
+        event.contentOffset.y,
+        event.contentSize.height,
+        event.layoutMeasurement.height,
+      );
+    },
+  });
+
+  const progressStyle = useAnimatedStyle(() => {
+    const scrollableDistance = contentHeight.value - layoutHeight.value;
+
+    if (scrollableDistance <= 0 && contentHeight.value > 0) {
+      return {
+        width: Dimensions.get('window').width,
+      };
+    }
+
+    const width = interpolate(
+      scrollY.value,
+      [0, Math.max(1, scrollableDistance)],
+      [0, Dimensions.get('window').width],
+      Extrapolate.CLAMP,
+    );
+
+    return {
+      width,
+    };
+  });
 
   if (articleLoading) {
     return <Loader />;
@@ -541,8 +720,20 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     img, video, iframe { max-width: 100%; height: auto; }
   `;
 
+  const footerColors = {
+    background: isDarkMode ? '#111827' : '#ffffff',
+    border: isDarkMode ? '#1f2937' : '#E5E5E5',
+    pillBackground: isDarkMode ? '#1f2937' : '#F3F4F6',
+    activePillBackground: isDarkMode ? '#3b82f6' : '#EFF6FF',
+    text: isDarkMode ? '#d1d5db' : '#4b5563',
+    activeText: PRIMARY_COLOR,
+  };
+
   return (
     <SafeAreaView style={styles.container}>
+      {/* Reading Progress Bar */}
+      <Animated.View style={[styles.progressBar, progressStyle]} />
+
       <View style={styles.imageContainer}>
         {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
           <Image
@@ -617,62 +808,36 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         )}
       </View>
 
-      <ScrollView
+      <Animated.ScrollView
         style={styles.scrollView}
-        onScroll={e => {
-          let windowHeight = Dimensions.get('window').height,
-            height = e.nativeEvent.contentSize.height,
-            offset = e.nativeEvent.contentOffset.y;
-          if (windowHeight + offset >= height) {
-            //ScrollEnd,
-            // console.log('ScrollEnd');
-            if (
-              article &&
-              !readEventSave &&
-              !isGuest &&
-              article.status === StatusEnum.PUBLISHED
-            ) {
-              ///updateReadEventMutation.mutate();
-              updateReadEvent(undefined, {
-                onSuccess: () => {
-                  console.log('Read Event Updated');
-                  setReadEventSave(true);
-                  //Alert.alert('Your Read status updated'); For debug purpose
-                  Snackbar.show({
-                    text: 'Your read status updated.',
-                    duration: Snackbar.LENGTH_SHORT,
-                  });
-                },
-
-                onError: err => {
-                  console.log('Update Read Status mutation error', err);
-                  //Alert.alert('Try Again!');
-                  //console.log('Follow Error', err);
-                  Snackbar.show({
-                    text: 'Failed to update your read status.',
-                    duration: Snackbar.LENGTH_SHORT,
-                  });
-                },
-              });
-            }
-          }
-        }}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
         contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.contentContainer}>
           {article && (
-            <Text style={{...styles.viewText, marginBottom: 10}}>
-              {article?.viewCount
-                ? article.viewCount > 1
-                  ? `${formatCount(article.viewCount)} views`
-                  : `${article.viewCount} view`
-                : '0 view'}
+            <Text
+              style={[
+                styles.viewText,
+                {
+                  marginBottom: 10,
+                  fontSize: 14 * fontScale,
+                },
+              ]}>
+              {`${article?.viewCount ?? 0} ${
+                article?.viewCount === 1 ? 'view' : 'views'
+              }`}
             </Text>
           )}
-          {article && article?.tags && (
-            <Text style={styles.categoryText}>
-              {article.tags.map(tag => tag.name).join(' | ')}
-            </Text>
-          )}
+          <View style={GlobalStyles.badgeRow}>
+            {article && article?.tags && (
+              <Text style={styles.categoryText}>
+                {article.tags.map(tag => tag.name).join(' | ')}
+              </Text>
+            )}
+            {article && (
+              <ReadingDifficulty difficulty={getArticleDifficulty(article)} />
+            )}
+          </View>
 
           {article && (
             <>
@@ -716,8 +881,20 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 </View>
               </View>
 
+              <Text style={[styles.titleText, {fontSize: 25 * fontScale}]}>
+                {article?.title}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 13 * fontScale,
+                  color: '#6C6C6D',
+                  marginTop: 6,
+                  marginBottom: 4,
+                  fontWeight: '500',
+                }}>
+                🕐 {getReadTime(articleContent ?? '')}
+              </Text>
               <View style={styles.fontSizeControls}>
-                <Text style={styles.fontSizeLabel}>Text size</Text>
                 <View style={styles.fontSizeButtons}>
                   <TouchableOpacity
                     onPress={handleDecreaseFont}
@@ -737,184 +914,102 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={styles.avatarsContainer}>
-                <View style={styles.avatar}>
-                  {/** 3rd image will be display here */}
-                  {article?.likedUsers && article?.likedUsers.length >= 3 ? (
-                    <Image
-                      source={{
-                        uri: article?.likedUsers[
-                          article?.likedUsers.length - 1
-                        ].Profile_image.startsWith('https')
-                          ? article?.likedUsers[article?.likedUsers.length - 1]
-                              .Profile_image
-                          : `${GET_STORAGE_DATA}/${
-                              article?.likedUsers[
-                                article?.likedUsers.length - 1
-                              ].Profile_image
-                            }`,
-                      }}
-                      style={[
-                        styles.profileImage,
-                        !article?.likedUsers[2].Profile_image && {
-                          borderWidth: 0.5,
-                          borderColor: 'black',
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <>
-                      {article?.likedUsers &&
-                        article?.likedUsers.length >= 1 && (
-                          <Image
-                            source={{
-                              uri: article?.likedUsers[
-                                article?.likedUsers.length - 1
-                              ].Profile_image.startsWith('https')
-                                ? article?.likedUsers[
-                                    article?.likedUsers.length - 1
-                                  ].Profile_image
-                                : `${GET_STORAGE_DATA}/${
-                                    article?.likedUsers[
-                                      article?.likedUsers.length - 1
-                                    ].Profile_image
-                                  }`,
-                            }}
-                            style={[
-                              styles.profileImage,
-                              !article?.likedUsers[
-                                article?.likedUsers.length - 1
-                              ].Profile_image && {
-                                borderWidth: 0.5,
-                                borderColor: 'black',
-                              },
-                            ]}
-                          />
-                        )}
-                    </>
-                  )}
-                </View>
-                <View style={[styles.avatar, styles.avatarOverlap]}>
-                  {/** 2nd image will be display here */}
+              {totalLikes > 0 && (
+                <View style={styles.avatarsContainer}>
+                  {likedUsers
+                    .slice(Math.max(0, totalLikes - 3))
+                    .map((likedUser, index) => {
+                      const profileImage = likedUser.Profile_image;
+                      const uri = getProfileImageUri(profileImage);
 
-                  {article?.likedUsers && article?.likedUsers.length >= 2 ? (
-                    <Image
-                      source={{
-                        uri: article?.likedUsers[
-                          article?.likedUsers.length - 2
-                        ].Profile_image.startsWith('https')
-                          ? article?.likedUsers[article?.likedUsers.length - 2]
-                              .Profile_image
-                          : `${GET_STORAGE_DATA}/${
-                              article?.likedUsers[
-                                article?.likedUsers.length - 2
-                              ].Profile_image
-                            }`,
-                      }}
-                      style={[
-                        styles.profileImage,
-                        !article?.likedUsers[article?.likedUsers.length - 2]
-                          .Profile_image && {
-                          borderWidth: 0.5,
-                          borderColor: 'black',
-                        },
-                      ]}
-                    />
-                  ) : (
-                    <>
-                      {article?.likedUsers &&
-                        article?.likedUsers.length >= 1 && (
+                      return (
+                        <View
+                          key={likedUser._id || index}
+                          style={[styles.avatar, {left: index * 15}]}>
                           <Image
-                            source={{
-                              uri: article?.likedUsers[
-                                article?.likedUsers.length - 1
-                              ].Profile_image.startsWith('https')
-                                ? article?.likedUsers[
-                                    article?.likedUsers.length - 1
-                                  ].Profile_image
-                                : `${GET_STORAGE_DATA}/${
-                                    article?.likedUsers[
-                                      article?.likedUsers.length - 1
-                                    ].Profile_image
-                                  }`,
-                            }}
+                            source={{uri}}
                             style={[
                               styles.profileImage,
-                              !article?.likedUsers[
-                                article?.likedUsers.length - 1
-                              ].Profile_image && {
+                              !profileImage && {
                                 borderWidth: 0.5,
                                 borderColor: 'black',
                               },
                             ]}
                           />
-                        )}
-                    </>
+                        </View>
+                      );
+                    })}
+
+                  {totalLikes > 3 && (
+                    <View style={[styles.avatar, styles.avatarTripleOverlap]}>
+                      <Text style={styles.moreText}>+{totalLikes - 3}</Text>
+                    </View>
                   )}
                 </View>
-                <View style={[styles.avatar, styles.avatarDoubleOverlap]}>
-                  {/** 1st Image  will be display here */}
-                  {article?.likedUsers && article?.likedUsers.length >= 1 && (
-                    <Image
-                      source={{
-                        uri: article?.likedUsers[0].Profile_image.startsWith(
-                          'https',
-                        )
-                          ? article?.likedUsers[0].Profile_image
-                          : `${GET_STORAGE_DATA}/${article?.likedUsers[0].Profile_image}`,
-                      }}
-                      style={[
-                        styles.profileImage,
-                        !article?.likedUsers[0].Profile_image && {
-                          borderWidth: 0.5,
-                          borderColor: 'black',
-                        },
-                      ]}
-                    />
-                  )}
-                </View>
-                <View style={[styles.avatar, styles.avatarTripleOverlap]}>
-                  <Text style={styles.moreText}>
-                    +
-                    {article?.likedUsers
-                      ? formatCount(article.likedUsers.length)
-                      : 0}
-                  </Text>
-                </View>
+              )}
+              <View style={styles.descriptionContainer}>
+                <AutoHeightWebView
+                  style={styles.webView}
+                  customStyle={articleCustomStyle}
+                  files={[
+                    {
+                      href: 'cssfileaddress',
+                      type: 'text/css',
+                      rel: 'stylesheet',
+                    },
+                  ]}
+                  originWhitelist={['*']}
+                  source={{html: articleContent ?? noDataHtml}}
+                  scalesPageToFit={true}
+                  viewportContent={'width=device-width, user-scalable=no'}
+                  onShouldStartLoadWithRequest={handleExternalClick}
+                />
               </View>
+
+              {/* ── Research Summary Card ── */}
+              <ResearchSummaryCard summary={summary} loading={summaryLoading} />
+
+              {article?.relatedPodcasts &&
+                article.relatedPodcasts.length > 0 && (
+                  <StructuredPodcastCard
+                    relatedEpisodes={article.relatedPodcasts}
+                  />
+                )}
             </>
           )}
-
-          <View style={styles.descriptionContainer}>
-            <AutoHeightWebView
-              style={{
-                width: Dimensions.get('window').width - 15,
-                marginTop: 30,
-                marginBottom: 40,
-              }}
-              customStyle={articleCustomStyle}
-              onSizeUpdated={_size => {}}
-              files={[
-                {
-                  href: 'cssfileaddress',
-                  type: 'text/css',
-                  rel: 'stylesheet',
-                },
-              ]}
-              originWhitelist={['*']}
-              source={{html: articleContent ?? noDataHtml}}
-              scalesPageToFit={true}
-              viewportContent={'width=device-width, user-scalable=no'}
-              onShouldStartLoadWithRequest={handleExternalClick}
-            />
-          </View>
         </View>
-      </ScrollView>
-      <View style={styles.footer}>
+      </Animated.ScrollView>
+      <ArticleShareModal
+        visible={shareModalVisible}
+        onClose={() => setShareModalVisible(false)}
+        article={{
+          title: article.title, // string
+          authorName: article.author?.name, // string  — adjust to your model shape
+          category: article.category ?? 'Health', // string
+          coverImageUrl: article.cover_image ?? null,
+          authorAvatarUrl: article.author?.profile_picture ?? null,
+        }}
+      />
+
+      <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
         {/* Action Bar Row */}
-        <View style={styles.actionBarFooter}>
+        <View
+          style={[
+            styles.actionBarFooter,
+            {borderBottomColor: footerColors.border},
+          ]}>
           <TouchableOpacity
-            style={styles.actionButtonFooter}
+            style={[
+              styles.actionButtonFooter,
+              {
+                backgroundColor:
+                  article &&
+                  article?.likedUsers &&
+                  article?.likedUsers?.some(user => user._id === user_id)
+                    ? footerColors.activePillBackground
+                    : footerColors.pillBackground,
+              },
+            ]}
             onPress={handleLike}
             disabled={likeMutationPending}>
             {likeMutationPending ? (
@@ -923,16 +1018,27 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               <>
                 <FontAwesome
                   name="heart"
-                  size={20}
+                  size={18}
                   color={
                     article &&
                     article?.likedUsers &&
                     article?.likedUsers?.some(user => user._id === user_id)
                       ? PRIMARY_COLOR
-                      : '#666'
+                      : footerColors.text
                   }
                 />
-                <Text style={styles.actionTextFooter}>
+                <Text
+                  style={[
+                    styles.actionTextFooter,
+                    {
+                      color:
+                        article &&
+                        article?.likedUsers &&
+                        article?.likedUsers?.some(user => user._id === user_id)
+                          ? PRIMARY_COLOR
+                          : footerColors.text,
+                    },
+                  ]}>
                   {article?.likeCount ? formatCount(article.likeCount) : 0}
                 </Text>
               </>
@@ -940,7 +1046,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.actionButtonFooter}
+            style={[
+              styles.actionButtonFooter,
+              {backgroundColor: footerColors.pillBackground},
+            ]}
             onPress={() => {
               if (isGuest) {
                 navigation.navigate('GuestPlaceholderScreen', {
@@ -961,57 +1070,79 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             }}>
             <MaterialCommunityIcons
               name="comment-outline"
-              size={20}
-              color="#666"
+              size={18}
+              color={footerColors.text}
             />
-            <Text style={styles.actionTextFooter}>Comment</Text>
+            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+              Comment
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.actionButtonFooter}
-            onPress={async () => {
-              try {
-                if (article) {
-                  const result = await Share.share({
-                    message: `Check out this article: ${article.title}\n\n${article.description}`,
-                    title: article.title,
-                  });
-
-                  if (result.action === Share.sharedAction) {
-                    Snackbar.show({
-                      text: 'Article shared successfully!',
-                      duration: Snackbar.LENGTH_SHORT,
-                    });
-                  }
-                }
-              } catch (error) {
-                console.log('Error sharing:', error);
-                Snackbar.show({
-                  text: 'Failed to share article',
-                  duration: Snackbar.LENGTH_SHORT,
-                });
-              }
-            }}>
-            <FontAwesome name="share" size={20} color="#666" />
-            <Text style={styles.actionTextFooter}>Share</Text>
+            style={[
+              styles.actionButtonFooter,
+              {backgroundColor: footerColors.pillBackground},
+            ]}
+            onPress={() => setShareModalVisible(true)}>
+            <FontAwesome name="share" size={18} color={footerColors.text} />
+            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+              Share
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.actionButtonFooter}
+            style={[
+              styles.actionButtonFooter,
+              {backgroundColor: footerColors.pillBackground},
+            ]}
+            onPress={handleCopyLink}>
+            <FontAwesome name="link" size={18} color={footerColors.text} />
+            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+              Copy Link
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.actionButtonFooter,
+              {backgroundColor: footerColors.pillBackground},
+            ]}
             onPress={handleTranslateArticle}>
-            <MaterialCommunityIcons name="translate" size={20} color="#666" />
-            <Text style={styles.actionTextFooter}>Translate</Text>
+            <MaterialCommunityIcons
+              name="translate"
+              size={18}
+              color={footerColors.text}
+            />
+            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+              Translate
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.actionButtonFooter}
+            style={[
+              styles.actionButtonFooter,
+              {backgroundColor: footerColors.pillBackground},
+            ]}
             onPress={handleImproveArticle}>
-            <MaterialCommunityIcons name="auto-fix" size={20} color="#666" />
-            <Text style={styles.actionTextFooter}>Improve</Text>
+            <MaterialCommunityIcons
+              name="auto-fix"
+              size={18}
+              color={footerColors.text}
+            />
+            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+              Improve
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.actionButtonFooter}
+            style={[
+              styles.actionButtonFooter,
+              {
+                backgroundColor: article?.savedUsers?.includes(user_id)
+                  ? footerColors.activePillBackground
+                  : footerColors.pillBackground,
+              },
+            ]}
             onPress={handleSave}
             disabled={saveMutationPending}>
             {saveMutationPending ? (
@@ -1024,14 +1155,24 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                       ? 'bookmark'
                       : 'bookmark-o'
                   }
-                  size={20}
+                  size={18}
                   color={
                     article?.savedUsers?.includes(user_id)
                       ? PRIMARY_COLOR
-                      : '#666'
+                      : footerColors.text
                   }
                 />
-                <Text style={styles.actionTextFooter}>Save</Text>
+                <Text
+                  style={[
+                    styles.actionTextFooter,
+                    {
+                      color: article?.savedUsers?.includes(user_id)
+                        ? PRIMARY_COLOR
+                        : footerColors.text,
+                    },
+                  ]}>
+                  Save
+                </Text>
               </>
             )}
           </TouchableOpacity>
@@ -1079,10 +1220,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               )}
             </TouchableOpacity>
             <View>
-              <Text style={styles.authorName}>
+              <Text style={[styles.authorName, {fontSize: 14 * fontScale}]}>
                 {article ? article?.authorName : ''}
               </Text>
-              <Text style={styles.authorFollowers}>
+              <Text
+                style={[styles.authorFollowers, {fontSize: 11 * fontScale}]}>
                 {(article?.authorId as any)?.followers
                   ? (article?.authorId as any).followers.length > 1
                     ? `${(article?.authorId as any).followers.length} followers`
@@ -1109,7 +1251,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                         social_user_id: undefined,
                       });
                     }}>
-                    <Text style={styles.contributorTextStyle}>
+                    <Text
+                      style={[
+                        styles.contributorTextStyle,
+                        {fontSize: 14 * fontScale},
+                      ]}>
                       See all contributors
                     </Text>
                   </TouchableOpacity>
@@ -1143,15 +1289,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             {/* Speed button */}
             <TouchableOpacity
               style={styles.ttsSpeedButton}
-              onPress={handleSpeedChange}>
-              <Text style={styles.ttsSpeedText}>
-                {SPEED_LABELS[speechRate]}
-              </Text>
+              onPress={() => setIsSpeedSelectorVisible(true)}>
+              <Text style={styles.ttsSpeedText}>{`${speechRate}x`}</Text>
             </TouchableOpacity>
 
-            {/* Play / Pause button */}
+            {/* Play / Pause button — disabled if neither playing nor paused */}
             <TouchableOpacity
-              style={styles.ttsControlButton}
+              style={[
+                styles.ttsControlButton,
+                !isPlaying && !isPaused && {opacity: 0.4},
+              ]}
               onPress={handleTtsPause}
               disabled={!isPlaying && !isPaused}>
               <FontAwesome5
@@ -1175,6 +1322,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </View>
         </View>
       )}
+
+      <FloatingSpeedSelector
+        currentSpeed={speechRate}
+        onSpeedSelect={handleSpeedSelect}
+        visible={isSpeedSelectorVisible}
+        onClose={() => setIsSpeedSelectorVisible(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -1186,6 +1340,16 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     backgroundColor: '#ffffff',
+  },
+  progressBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: 4,
+    backgroundColor: PRIMARY_COLOR,
+    zIndex: 1000,
+    borderBottomRightRadius: 2,
+    borderTopRightRadius: 2,
   },
   scrollView: {
     flex: 0,
@@ -1339,12 +1503,6 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     backgroundColor: '#D9D9D9',
   },
-  avatarOverlap: {
-    left: 15,
-  },
-  avatarDoubleOverlap: {
-    left: 30,
-  },
   avatarTripleOverlap: {
     left: 45,
     alignItems: 'center',
@@ -1374,35 +1532,37 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   footer: {
-    backgroundColor: ON_PRIMARY_COLOR,
     position: 'relative',
     bottom: 0,
     zIndex: 10,
     borderTopEndRadius: 20,
     borderTopStartRadius: 20,
-    paddingTop: 12,
-    paddingBottom: 12,
+    paddingTop: 14,
+    paddingBottom: 14,
     paddingHorizontal: 16,
   },
   actionBarFooter: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 10,
+    paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E5E5',
-    marginBottom: 10,
+    marginBottom: 12,
+    gap: 8,
   },
   actionButtonFooter: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 5,
+    justifyContent: 'center',
+    paddingVertical: 8,
+    borderRadius: 12,
+    gap: 3,
+    minHeight: 52,
   },
   actionTextFooter: {
-    fontSize: 12,
-    color: '#666',
-    fontWeight: '500',
+    fontSize: 10,
+    fontWeight: '600',
   },
   authorRow: {
     flexDirection: 'row',
@@ -1470,49 +1630,49 @@ const styles = StyleSheet.create({
   },
   ttsPlayerContainer: {
     position: 'absolute',
-    bottom: 90,
-    left: 16,
-    right: 16,
+    bottom: 155,
+    left: 12,
+    right: 12,
     zIndex: 200,
-    elevation: 10,
+    elevation: 12,
   },
   ttsPlayerInner: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#0f172a',
     borderRadius: 50,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    gap: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    gap: 20,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOffset: {width: 0, height: 6},
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
   },
   ttsControlButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: '#ffffff15',
     alignItems: 'center',
     justifyContent: 'center',
   },
   ttsSpeedButton: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 16,
     backgroundColor: PRIMARY_COLOR,
   },
   ttsSpeedText: {
     color: 'white',
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '700',
   },
   ttsStatusText: {
     flex: 1,
-    color: '#ffffffaa',
+    color: '#f8fafc',
     fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '600',
     textAlign: 'right',
   },
 

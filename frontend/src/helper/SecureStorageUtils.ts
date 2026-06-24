@@ -1,17 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
 
-/**
- * SecureStorageUtils.ts
- *
- * Abstraction layer for sensitive credential storage.
- * Uses Expo SecureStore for encrypted key-value storage.
- */
-
 export const SECURE_KEYS = {
   USER_TOKEN: 'SECURE_USER_TOKEN',
+  EXPO_PUSH_TOKEN: 'SECURE_EXPO_PUSH_TOKEN',
+  LANGUAGE_PREFERENCES: 'SECURE_LANGUAGE_PREFERENCES',
 } as const;
 
-type SecureKey = (typeof SECURE_KEYS)[keyof typeof SECURE_KEYS];
+export type SecureKey = (typeof SECURE_KEYS)[keyof typeof SECURE_KEYS];
 
 export const secureStoreItem = async (
   key: SecureKey,
@@ -53,5 +48,15 @@ export const secureRemoveItem = async (key: SecureKey): Promise<boolean> => {
   } catch (error) {
     console.error(`[SecureStorage] Error removing key "${key}":`, error);
     return false;
+  }
+};
+
+export const secureClearAllItems = async (): Promise<void> => {
+  try {
+    await Promise.all(
+      Object.values(SECURE_KEYS).map(key => SecureStore.deleteItemAsync(key))
+    );
+  } catch (error) {
+    console.error('[SecureStorage] Error clearing all items:', error);
   }
 };

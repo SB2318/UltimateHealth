@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, Pressable, View, StyleSheet} from 'react-native';
 import {OfflinePodcastListProp, PodcastData} from '../type';
-import {deleteFromDownloads, msToTime, retrieveItem} from '../helper/Utils';
-import {useEffect, useState} from 'react';
+import {deleteFromDownloads, msToTime, readDownloadedPodcasts} from '../helper/Utils';
 import PodcastCard from '../components/PodcastCard';
 import PodcastEmptyComponent from '../components/PodcastEmptyComponent';
 import {hp} from '../helper/Metric';
@@ -11,6 +10,7 @@ import Snackbar from 'react-native-snackbar';
 import {useDispatch, useSelector} from 'react-redux';
 import CreatePlaylist from '../components/CreatePlaylist';
 import { setaddedPodcastId, setRemovePlaylistId } from '../store/dataSlice';
+import { NoOfflinePodcastsState } from '../components/EmptyStates';
 
 export default function OfflinePodcastList({
   navigation,
@@ -41,15 +41,9 @@ export default function OfflinePodcastList({
 
   const loadPodcasts = async () => {
     try {
-      const podCastStr = await retrieveItem('DOWNLOAD_PODCAST_DATA');
-      if (!podCastStr) {
-        return;
-      }
-      const data = JSON.parse(podCastStr);
+      const data = await readDownloadedPodcasts();
 
-      if (!Array.isArray(data)) {
-        return;
-      }
+      if (!Array.isArray(data)) return;
       setPodcasts(data);
     } catch (err) {}
   };
@@ -120,7 +114,11 @@ export default function OfflinePodcastList({
         data={podcasts}
         keyExtractor={item => item._id.toString()}
         renderItem={renderItem}
-        ListEmptyComponent={<PodcastEmptyComponent />}
+        ListEmptyComponent={
+  <NoOfflinePodcastsState
+    onBrowse={() => navigation.navigate('Podcasts')}
+  />
+}
       />
       <CreatePlaylist
         visible={playlistModalOpen}

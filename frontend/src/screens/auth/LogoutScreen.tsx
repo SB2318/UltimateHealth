@@ -16,14 +16,17 @@ import {clearStorage} from '../../helper/Utils';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';
 import {useUserLogout} from '@/src/hooks/useUserLogout';
+import {useTheme} from 'tamagui';
+
+const DEFAULT_PROFILE_IMAGE =
+  'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
 
 const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
   const {profile_image, username} = route.params;
  // const {user_token} = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
-
-  const {mutate: logout} = useUserLogout();
-
+  const theme = useTheme();
+  const {mutate: logout} = useUserLogout();  
 
   const handleLogout = () => {
     logout(
@@ -70,7 +73,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
     );
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor:theme.background.val}}>
       <View style={styles.container}>
         <View style={styles.alert}>
           <View style={styles.alertContent}>
@@ -78,29 +81,37 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
               alt=""
               style={[
                 styles.alertAvatar,
-                !profile_image && {borderWidth: 0.5, borderColor: 'black'},
+                !profile_image && {borderWidth: 0.5, borderColor: theme.black.val},
               ]}
               source={{
-                uri: profile_image.startsWith('https')
-                  ? profile_image
-                  : `${GET_STORAGE_DATA}/${profile_image}`,
+                uri: profile_image
+                  ? profile_image.startsWith('https')
+                    ? profile_image
+                    : `${GET_STORAGE_DATA}/${profile_image}`
+                  : DEFAULT_PROFILE_IMAGE,
               }}
             />
 
-            <Text style={styles.alertTitle}>
+            <Text style={[
+              styles.alertTitle,
+              {color:theme.color.val}]}>
               Log out of
               {'\n'}
               {username}
             </Text>
 
-            <Text style={styles.alertMessage}>
+            <Text style={[
+              styles.alertMessage,
+              {color:theme.gray500.val}]}>
               Are you sure you would like to log out of this account ?
             </Text>
           </View>
 
           <TouchableOpacity onPress={handleLogout}>
             <View style={styles.btn}>
-              <Text style={styles.btnText}>Yes, log me out</Text>
+              <Text style={[
+                styles.btnText,
+                {color:theme.white.val}]}>Yes, log me out</Text>
             </View>
           </TouchableOpacity>
 
@@ -156,7 +167,7 @@ const styles = StyleSheet.create({
     fontSize: 34,
     lineHeight: 44,
     fontWeight: '700',
-    color: '#000',
+    
     textAlign: 'center',
   },
   alertMessage: {
@@ -165,7 +176,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     fontWeight: '500',
-    color: '#9a9a9a',
+   
   },
   /** Button */
   btn: {
@@ -183,7 +194,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 24,
     fontWeight: '600',
-    color: '#fff',
+   
   },
   btnSecondary: {
     flexDirection: 'row',

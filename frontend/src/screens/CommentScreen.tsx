@@ -2,6 +2,7 @@ import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Alert,
   FlatList,
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -12,7 +13,7 @@ import {
 } from 'react-native';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { H3, Image, Paragraph, Text, YStack } from 'tamagui';
+import { H3, Image, Paragraph, Text, YStack, TextArea, XStack, Button } from 'tamagui';
 
 import CommentItem from '../components/CommentItem';
 import Loader from '../components/Loader';
@@ -56,7 +57,7 @@ const CommentScreen = ({
   const [comments, setComments] = useState<
     Comment[]
   >([]);
-
+  const MAX_COMMENT_LENGTH = 500;
   const [newComment, setNewComment] =
     useState('');
 
@@ -67,6 +68,29 @@ const CommentScreen = ({
   const [selectedCommentId, setSelectedCommentId] =
     useState<string>('');
 
+  const [keyboardHeight, setKeyboardHeight] =
+    useState<number>(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      e => {
+        setKeyboardHeight(e.endCoordinates.height);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardHeight(0);
+      },
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const [editMode, setEditMode] =
     useState<boolean>(false);
 
@@ -75,7 +99,8 @@ const CommentScreen = ({
 
   const [commentLoading, setCommentLoading] =
     useState<boolean>(false);
-
+  const [isSubmitting, setIsSubmitting] =
+  useState<boolean>(false);
   const [
     commentLikeLoading,
     setCommentLikeLoading,
@@ -246,9 +271,11 @@ const CommentScreen = ({
   const handleMentionClick = (
     user_handle: string,
   ) => {
+
+    console.log('Mention clicked:', user_handle);
     navigation.navigate('UserProfileScreen', {
-      author_handle: user_handle.substring(1),
-      authorId: undefined,
+      author_handle: user_handle,
+      userHandle: user_handle,
     });
   };
 
@@ -294,45 +321,55 @@ const CommentScreen = ({
   };
 
   const handleCommentSubmit = () => {
-    if (!newComment.trim()) {
-      Alert.alert(
-        'Please enter a comment before submitting.',
-      );
+  if (isSubmitting) return;
 
-      return;
-    }
-
-    const formatted = replaceTriggerValues(
-      newComment,
-      ({name}) => `@${name}`,
+  if (!newComment.trim()) {
+    Alert.alert(
+      'Please enter a comment before submitting.',
     );
+    return;
+  }
 
-    if (!socket) return;
+  setIsSubmitting(true);
 
-    if (editMode && editCommentId) {
-      socket.emit('edit-comment', {
-        commentId: editCommentId,
-        content: formatted,
-        articleId: route.params.articleId,
-        userId: user_id,
-      });
+  const formatted = replaceTriggerValues(
+    newComment,
+    ({name}) => `@${name}`,
+  );
 
-      setEditMode(false);
-      setEditCommentId(null);
-    } else {
-      const newCommentObj = {
-        userId: user_id,
-        articleId: route.params.articleId,
-        content: formatted,
-        parentCommentId: null,
-        mentionedUsers: mentions,
-      };
+  if (!socket) {
+    setIsSubmitting(false);
+    return;
+  }
 
-      socket.emit('comment', newCommentObj);
-    }
+  if (editMode && editCommentId) {
+    socket.emit('edit-comment', {
+      commentId: editCommentId,
+      content: formatted,
+      articleId: route.params.articleId,
+      userId: user_id,
+    });
 
-    setNewComment('');
-  };
+    setEditMode(false);
+    setEditCommentId(null);
+  } else {
+    const newCommentObj = {
+      userId: user_id,
+      articleId: route.params.articleId,
+      content: formatted,
+      parentCommentId: null,
+      mentionedUsers: mentions,
+    };
+
+    socket.emit('comment', newCommentObj);
+  }
+
+  setNewComment('');
+
+  setTimeout(() => {
+    setIsSubmitting(false);
+  }, 1500);
+};
 
   const handleReportAction = (
     commentId: string,
@@ -363,10 +400,13 @@ const CommentScreen = ({
       <View style={styles.suggestionsContainer}>
         {suggestions
           .filter(one =>
+            one &&
+            one.user_handle &&
+            typeof one.user_handle === 'string' &&
             one.user_handle
               .toLowerCase()
               .includes(
-                keyword.toLowerCase(),
+                (keyword || '').toLowerCase(),
               ),
           )
           .map(one => (
@@ -529,32 +569,56 @@ const CommentScreen = ({
                   {...triggers.mention}
                 />
 
-                <TextInput
-                  {...textInputProps}
-                  style={styles.textInput}
-                  placeholder="Add a comment..."
-                  placeholderTextColor="#9CA3AF"
-                  multiline
-                />
+               {/* 1. Updated Input Component with Strict 500 Character Boundary */}
+          <TextInput
+           {...textInputProps}
+            id="article-comment-input"    // 👈 Added unique id attribute
+             name="commentContent"         // 👈 Added explicit name attribute
+             style={styles.textInput}
+               placeholder="Add a comment..."
+               placeholderTextColor="#9CA3AF"
+                         multiline
+                    maxLength={MAX_COMMENT_LENGTH} // 👈 Forces the input boundary cap
+                    />
 
-                {newComment.length > 0 && (
+                {/* 2. Brand New Layout Row for Counter and Submit Button */}
+                <XStack justifyContent="space-between" alignItems="center" mt="$2" px="$2" width="100%">
+                  
+                  {/* Real-time Dynamic Character Counter */}
+                  <Text 
+                    fontSize="$2" 
+                    color={newComment.length >= 480 ? '$red10' : '$colorMuted'} 
+                    fontWeight={newComment.length >= 480 ? '600' : '400'}
+                  >
+                    {newComment.length} / {MAX_COMMENT_LENGTH}
+                  </Text>
+
+                  {/* 3. Submit Button (Always visible but visually disabled/faded when text is empty) */}
                   <TouchableOpacity
-                    style={
-                      styles.submitButton
-                    }
-                    onPress={
-                      handleCommentSubmit
-                    }>
-                    <Text
-                      style={
-                        styles.submitButtonText
-                      }>
-                      {editMode
-                        ? 'Update Comment'
-                        : 'Submit Comment'}
-                    </Text>
+  style={[
+    styles.submitButton,
+    {
+      opacity:
+        newComment.trim().length === 0 || isSubmitting
+          ? 0.5
+          : 1,
+    },
+  ]}
+  disabled={
+    newComment.trim().length === 0 ||
+    isSubmitting
+  }
+  onPress={handleCommentSubmit}
+>
+                    <Text style={styles.submitButtonText}>
+  {isSubmitting
+    ? 'Posting...'
+    : editMode
+    ? 'Update Comment'
+    : 'Submit Comment'}
+</Text>
                   </TouchableOpacity>
-                )}
+                </XStack>
 
                 <View
                   style={
@@ -605,9 +669,15 @@ const CommentScreen = ({
               isFromArticle={false}
             />
           )}
-          contentContainerStyle={
-            styles.scrollContent
-          }
+          contentContainerStyle={[
+            styles.scrollContent,
+            {
+              paddingBottom:
+                keyboardHeight > 0
+                  ? keyboardHeight + (Platform.OS === 'ios' ? 0 : 20)
+                  : 20,
+            },
+          ]}
           showsVerticalScrollIndicator={
             false
           }

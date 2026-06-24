@@ -1,9 +1,8 @@
-import {StyleSheet, View, Text, Alert, useColorScheme} from 'react-native';
+import {StyleSheet, View, Text, Alert, useColorScheme, ScrollView, FlatList, TouchableOpacity} from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
-import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
 import {useDispatch, useSelector} from 'react-redux';
 import { useTheme } from 'tamagui';
@@ -17,7 +16,9 @@ import Snackbar from 'react-native-snackbar';
 import {setUserHandle} from '../store/UserSlice';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
+import {useGetReadHistory, ReadHistoryArticle} from '../hooks/useGetReadHistory';
 import { NoArticleState } from '../components/EmptyStates';
+import Ionicon from '@expo/vector-icons/Ionicons';
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const theme = useTheme();
@@ -205,18 +206,37 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     );
   };
 
-  const renderTabBar = (props: any) => {
-    return (
-      <MaterialTabBar
-        {...props}
-        indicatorStyle={styles.indicatorStyle}
-        style={styles.tabBarStyle}
-        activeColor={PRIMARY_COLOR}
-        inactiveColor="#9098A3"
-        labelStyle={styles.labelStyle}
-        contentContainerStyle={styles.contentContainerStyle}
-      />
-    );
+
+  const [activeTab, setActiveTab] = useState<'Insight' | 'Reposts' | 'Saved' | 'History'>('Insight');
+  const [historyPage, setHistoryPage] = useState<number>(1);
+  const [historyArticles, setHistoryArticles] = useState<ReadHistoryArticle[]>([]);
+  const [historyTotalPages, setHistoryTotalPages] = useState<number>(1);
+
+  const {
+    data: readHistory,
+    isLoading: isHistoryLoading,
+    isFetching: isHistoryFetching,
+    isError: isHistoryError,
+    refetch: refetchHistory,
+  } = useGetReadHistory(historyPage);
+
+  React.useEffect(() => {
+    if (readHistory) {
+      if (historyPage === 1) {
+        setHistoryArticles(readHistory.articles ?? []);
+      } else {
+        setHistoryArticles(prev => [...prev, ...(readHistory.articles ?? [])]);
+      }
+      if (readHistory.totalPages) {
+        setHistoryTotalPages(readHistory.totalPages);
+      }
+    }
+  }, [readHistory, historyPage]);
+
+  const handleLoadMoreHistory = () => {
+    if (!isHistoryFetching && historyPage < historyTotalPages) {
+      setHistoryPage(prev => prev + 1);
+    }
   };
 
   if (isLoading) {
@@ -235,6 +255,13 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     );
   }
 
+  const tabColors = {
+    background: isDarkMode ? '#121212' : '#ffffff',
+    border: isDarkMode ? '#374151' : '#e5e7eb',
+    activeText: PRIMARY_COLOR,
+    inactiveText: isDarkMode ? '#9ca3af' : '#9098A3',
+  };
+
   return (
     <SafeAreaView
       style={[
@@ -245,66 +272,166 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         style={isDarkMode ? 'light' : 'dark'}
         backgroundColor="#007AFF"
       />
-      <View style={[styles.innerContainer]}>
-        <Tabs.Container
-          renderHeader={renderHeader}
-          renderTabBar={renderTabBar}
-          containerStyle={[
-            styles.tabsContainer,
-            {backgroundColor: theme.background.val},
-          ]}>
-          {/* Tab 1 */}
-          <Tabs.Tab name="Insight">
-            <Tabs.ScrollView
-              automaticallyAdjustContentInsets={true}
-              contentInsetAdjustmentBehavior="always"
-              contentContainerStyle={styles.scrollViewContentContainer}>
+      <ScrollView
+        style={styles.innerContainer}
+        contentContainerStyle={{flexGrow: 1, backgroundColor: theme.background.val}}
+        showsVerticalScrollIndicator={false}
+      >
+        {renderHeader()}
+
+        <TouchableOpacity
+      style={styles.historyRow}
+      onPress={() => navigation.navigate('ReadingHistoryScreen')}>
+      <Ionicon name="time-outline" size={22} color={PRIMARY_COLOR} />
+        <Text style={styles.historyRowText}>Reading History</Text>
+        <Ionicon name="chevron-forward" size={20} color="#9ca3af" />
+      </TouchableOpacity>
+
+        {/* Custom Tab Bar */}
+        <View style={[styles.tabBarContainer, { backgroundColor: tabColors.background, borderBottomColor: tabColors.border }]}>
+          <TouchableOpacity 
+            style={[styles.tabButton, activeTab === 'Insight' && { borderBottomColor: tabColors.activeText }]}
+            onPress={() => setActiveTab('Insight')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'Insight' }}
+            accessibilityLabel="Insight tab"
+          >
+            <Text style={[styles.tabButtonText, { color: activeTab === 'Insight' ? tabColors.activeText : tabColors.inactiveText }]}>
+              Insight
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.tabButton, activeTab === 'Reposts' && { borderBottomColor: tabColors.activeText }]}
+            onPress={() => setActiveTab('Reposts')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'Reposts' }}
+            accessibilityLabel={`Reposts tab, ${user?.repostArticles.length || 0} reposts`}
+          >
+            <Text style={[styles.tabButtonText, { color: activeTab === 'Reposts' ? tabColors.activeText : tabColors.inactiveText }]}>
+              Reposts ({user?.repostArticles.length || 0})
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.tabButton, activeTab === 'Saved' && { borderBottomColor: tabColors.activeText }]}
+            onPress={() => setActiveTab('Saved')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'Saved' }}
+            accessibilityLabel={`Saved tab, ${user?.savedArticles.length || 0} saved articles`}
+          >
+            <Text style={[styles.tabButtonText, { color: activeTab === 'Saved' ? tabColors.activeText : tabColors.inactiveText }]}>
+              Saved ({user?.savedArticles.length || 0})
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.tabButton, activeTab === 'History' && { borderBottomColor: tabColors.activeText }]}
+            onPress={() => setActiveTab('History')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'History' }}
+            accessibilityLabel={`History tab, ${historyArticles.length || 0} recently read articles`}
+          >
+            <Text style={[styles.tabButtonText, { color: activeTab === 'History' ? tabColors.activeText : tabColors.inactiveText }]}>
+              History ({historyArticles.length || 0})
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Tab Content */}
+        <View style={styles.tabContentContainer}>
+          {activeTab === 'Insight' && (
+            <View style={styles.scrollViewContentContainer}>
               <ActivityOverview
                 onArticleViewed={onArticleViewed}
                 others={false}
-                
                 user_handle={user?.user_handle || ''}
                 articlePosted={user?.articles ? user.articles.length : 0}
               />
-            </Tabs.ScrollView>
-          </Tabs.Tab>
-          {/* Tab 2 */}
+            </View>
+          )}
 
-          <Tabs.Tab name={`Reposts (${user?.repostArticles.length || 0})`}>
-            <Tabs.FlatList
+          {activeTab === 'Reposts' && (
+            <FlatList
               data={user !== undefined ? user.repostArticles : []}
               renderItem={renderItem}
+              scrollEnabled={false}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={[
                 styles.flatListContentContainer,
                 {paddingBottom: bottomBarHeight + 15},
               ]}
               keyExtractor={item => item?._id}
-              refreshing={refreshing}
               ListEmptyComponent={
                 <NoArticleState/>
               }
             />
-          </Tabs.Tab>
-          {/* Tab 3 */}
-          <Tabs.Tab name={`Saved(${user?.savedArticles.length || 0})`}>
-            <Tabs.FlatList
+          )}
+
+          {activeTab === 'Saved' && (
+            <FlatList
               data={user !== undefined ? user.savedArticles : []}
               renderItem={renderItem}
+              scrollEnabled={false}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={[
                 styles.flatListContentContainer,
                 {paddingBottom: bottomBarHeight + 15},
               ]}
               keyExtractor={item => item?._id}
-              refreshing={refreshing}
               ListEmptyComponent={
                  <NoArticleState/>
               }
             />
-          </Tabs.Tab>
-        </Tabs.Container>
-      </View>
+          )}
+          {activeTab === 'History' && (
+            isHistoryLoading ? (
+              <Loader />
+            ) : isHistoryError ? (
+              <View style={styles.historyErrorContainer}>
+                <Text style={[styles.historyErrorText, {color: theme.color10?.val}]}>
+                  Couldn't load your read history. Please try again.
+                </Text>
+                <TouchableOpacity
+                  style={[styles.historyRetryButton, {borderColor: PRIMARY_COLOR}]}
+                  onPress={() => refetchHistory()}
+                >
+                  <Text style={{color: PRIMARY_COLOR, fontWeight: '600'}}>Retry</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <FlatList
+                data={historyArticles}
+                renderItem={renderItem}
+                scrollEnabled={false}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={[
+                  styles.flatListContentContainer,
+                  {paddingBottom: bottomBarHeight + 15},
+                ]}
+                keyExtractor={item => item?._id}
+                ListEmptyComponent={
+                  <NoArticleState/>
+                }
+                ListFooterComponent={
+                  historyPage < historyTotalPages ? (
+                    <TouchableOpacity
+                      style={[styles.loadMoreButton, {borderColor: PRIMARY_COLOR}]}
+                      onPress={handleLoadMoreHistory}
+                      disabled={isHistoryFetching}
+                    >
+                      {isHistoryFetching ? (
+                        <Loader />
+                      ) : (
+                        <Text style={{color: PRIMARY_COLOR, fontWeight: '600'}}>
+                          Load More
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  ) : null
+                }
+              />
+            )
+          )}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -318,22 +445,35 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     flex: 1,
-    //  backgroundColor: ON_PRIMARY_COLOR,
-  },
-  tabsContainer: {
-    //  backgroundColor: ON_PRIMARY_COLOR,
-    overflow: 'hidden',
-    flex: 1,
   },
   scrollViewContentContainer: {
     paddingHorizontal: 6,
     marginTop: 6,
-    //backgroundColor: ON_PRIMARY_COLOR,
   },
   flatListContentContainer: {
     paddingHorizontal: 16,
   },
-
+  tabBarContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    borderBottomWidth: 1,
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderBottomWidth: 3,
+    borderBottomColor: 'transparent',
+  },
+  tabButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    textTransform: 'capitalize',
+  },
+  tabContentContainer: {
+    flex: 1,
+    width: '100%',
+  },
   profileImage: {
     height: 130,
     width: 130,
@@ -341,41 +481,51 @@ const styles = StyleSheet.create({
     objectFit: 'cover',
     resizeMode: 'contain',
   },
-  indicatorStyle: {
-    backgroundColor: 'white',
-  },
-  tabBarStyle: {
-    //backgroundColor: ON_PRIMARY_COLOR,
-  },
-  labelStyle: {
-    fontWeight: '600',
-    fontSize: 15,
-    color: 'black',
-    textTransform: 'capitalize',
-  },
-  contentContainerStyle: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowOpacity: 0,
-    shadowOffset: {width: 0, height: 0},
-    shadowColor: 'white',
-  },
-  message: {
-    fontSize: 16,
-    color: '#555',
-    textAlign: 'center',
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  historyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+  },
+  historyRowText: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1a1a1a',
+  },
+  loadMoreButton: {
+    marginTop: 12,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  historyErrorContainer: {
+    padding: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  historyErrorText: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  historyRetryButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderRadius: 8,
   },
 });

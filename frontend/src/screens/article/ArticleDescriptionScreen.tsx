@@ -15,6 +15,9 @@ import {useSelector} from 'react-redux';
 import {ArticleDescriptionProp, Category} from '../../type';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../helper/Theme';
+import { useRef, useState, useEffect, useCallback } from "react";
+import { Animated } from "react-native";
+import { saveProgress, getProgress } from "../../services/ReadingProgressService";
 import {
   ImageLibraryOptions,
   ImagePickerResponse,
@@ -26,13 +29,49 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ttsLanguageList } from '@/src/helper/Utils';
 
-
-
+const ARTICLE_TITLE_MAX_LENGTH = 150;
+const ARTICLE_DESCRIPTION_MAX_LENGTH = 500;
+const COUNTER_WARNING_THRESHOLD = 0.9;
+const scrollY = useRef(new Animated.Value(0)).current;
+const [contentHeight, setContentHeight] = useState(0);
+const [viewHeight, setViewHeight] = useState(0);const progress = scrollY.interpolate({
+  inputRange: [0, contentHeight - viewHeight],
+  outputRange: [0, 1],
+  extrapolate: "clamp",
+});const onScrollEnd = useCallback(async () => {
+  const currentY = scrollY.__getValue();
+  const pct = contentHeight > 0 ? Math.min(currentY / (contentHeight - viewHeight), 1) : 0;
+  await saveProgress(article._id, Math.round(pct * 100));
+}, [article?._id, contentHeight, viewHeight]);useEffect(() => {
+  if (article) {
+    getProgress(article._id).then((p) => {
+      if (p && p.scrollPosition > 0.05) {
+        // Optionally show a "Resume from XX%" toast
+        // Scroll to the saved position
+      }
+    });
+  }
+}, [article]);<Animated.View
+  style={{
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 3,
+    backgroundColor: "#4F46E5",
+    opacity: progress.interpolate({
+      inputRange: [0, 0.02],
+      outputRange: [0, 1],
+    }),
+    transform: [{ scaleX: progress }],
+    transformOrigin: "left",
+  }}
+/>
 const ArticleDescriptionScreen = ({
   navigation,
   route,
 }: ArticleDescriptionProp) => {
-  const {article, htmlContent, translationSource} = route.params;
+  const {article, htmlContent, translationSource} = route.params || {};
   const isTranslation = Boolean(translationSource);
   const [title, setTitle] = useState('');
   const [authorName, setAuthorName] = useState('');
@@ -126,7 +165,7 @@ const ArticleDescriptionScreen = ({
       if (response.didCancel) {
         //console.log('User cancelled image picker');
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
+        if (__DEV__) console.log('ImagePicker Error:', response.errorMessage);
       } else if (response.assets) {
         const {uri, fileSize} = response.assets[0];
 
@@ -136,19 +175,16 @@ const ArticleDescriptionScreen = ({
           return;
         }
 
-        // Check dimensions
         if (uri) {
-          ImageResizer.createResizedImage(uri, 1000, 1000, 'JPEG', 100)
-            .then(resizedImageUri => {
-              // If the image is resized successfully, upload it
+          ImageResizer.createResizedImage(uri, 1000, 1000, 'JPEG', 80)
+            .then(resizedImage => {
+              setImageUtils(resizedImage.uri);
             })
             .catch(err => {
-              console.log(err);
-              Alert.alert('Error', 'Could not resize the image.');
+              if (__DEV__) console.log('Image resize failed, using original:', err);
+              setImageUtils(uri);
             });
         }
-
-        setImageUtils(uri ? uri : '');
       }
     });
   };
@@ -158,6 +194,17 @@ const ArticleDescriptionScreen = ({
         lang => lang.code !== translationSource?.sourceLanguage,
       )
     : ttsLanguageList;
+
+  const isNearLimit = (value: string, limit: number) =>
+    value.length >= limit * COUNTER_WARNING_THRESHOLD;
+
+  const handleTitleChange = (text: string) => {
+    setTitle(text.slice(0, ARTICLE_TITLE_MAX_LENGTH));
+  };
+
+  const handleDescriptionChange = (text: string) => {
+    setDescription(text.slice(0, ARTICLE_DESCRIPTION_MAX_LENGTH));
+  };
 
   const getLanguageLabel = (value: string) => {
     return ttsLanguageList.find(lang => lang.code === value)?.name || 'Select language';
@@ -302,8 +349,17 @@ const ArticleDescriptionScreen = ({
               placeholderTextColor="#6b7280"
               style={styles.inputControl}
               value={title}
-              onChangeText={setTitle}
+              onChangeText={handleTitleChange}
+              maxLength={ARTICLE_TITLE_MAX_LENGTH}
             />
+            <Text
+              style={[
+                styles.charCounter,
+                isNearLimit(title, ARTICLE_TITLE_MAX_LENGTH) &&
+                  styles.charCounterWarning,
+              ]}>
+              {title.length} / {ARTICLE_TITLE_MAX_LENGTH}
+            </Text>
           </View>
 
           {/* Author Name */}
@@ -352,8 +408,17 @@ const ArticleDescriptionScreen = ({
               numberOfLines={4}
               autoCapitalize="sentences"
               value={description}
-              onChangeText={setDescription}
+              onChangeText={handleDescriptionChange}
+              maxLength={ARTICLE_DESCRIPTION_MAX_LENGTH}
             />
+            <Text
+              style={[
+                styles.charCounter,
+                isNearLimit(description, ARTICLE_DESCRIPTION_MAX_LENGTH) &&
+                  styles.charCounterWarning,
+              ]}>
+              {description.length} / {ARTICLE_DESCRIPTION_MAX_LENGTH}
+            </Text>
           </View>
         </View>
 
@@ -509,6 +574,17 @@ const styles = StyleSheet.create({
     color: '#222',
     borderWidth: 1,
     borderColor: '#E5E7EB',
+  },
+  charCounter: {
+    marginTop: 6,
+    alignSelf: 'flex-end',
+    color: '#6b7280',
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  charCounterWarning: {
+    color: '#EA580C',
+    fontWeight: '700',
   },
   imageContainer: {
     width: '100%',

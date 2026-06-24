@@ -2,7 +2,7 @@ import type {CompositeScreenProps} from '@react-navigation/native';
 import type {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import type {StackScreenProps} from '@react-navigation/stack';
 import {Dispatch, RefObject, SetStateAction} from 'react';
-import {BottomSheetModal} from '@gorhom/bottom-sheet'; // Adjust this import based on your actual BottomSheetModal component
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
@@ -70,7 +70,6 @@ export type RootStackParamList = {
     description?: string;
     iconName?: string;
   };
-  // ConversationScreen: undefined;
   SocialScreen: {
     type: number;
     articleId: number | undefined;
@@ -95,13 +94,17 @@ export type RootStackParamList = {
   NotificationScreen: undefined;
   UserProfileScreen: {
     authorId?: User | string;
+    userId?: string;
     author_handle?: string;
+    userHandle?: string; 
   };
   ProfileEditScreen: undefined;
   NotificationPreferencesScreen: undefined;
   LogoutScreen: {profile_image: string; username: string};
   RenderSuggestion: {
     htmlContent: string;
+    readability_score?: number;
+    reading_time?: string;
   };
   PodcastDetail: {
     trackId: string;
@@ -119,7 +122,6 @@ export type RootStackParamList = {
     selectedGenres: Category[];
     imageUtils: string;
   };
-
   PodcastPlayer: {
     filePath: string;
     title: string;
@@ -128,9 +130,10 @@ export type RootStackParamList = {
     imageUtils: string;
   };
   Privacy: undefined;
+  CommunityGuidelines: undefined;
   ContributorPage: undefined;
   OpenSourcePage: undefined;
-  //ChatbotScreen: undefined;
+  ReadingHistoryScreen: undefined;
 };
 
 export type RedirectTo = {
@@ -146,8 +149,8 @@ export type Message = {
   role: string;
   conversationId: string;
   timestamp: string;
-  userHandle: string | null; // for bot null
-  profileImage: string | null; // for bot null
+  userHandle: string | null;
+  profileImage: string | null;
 };
 
 export type UserDetail = {
@@ -157,6 +160,7 @@ export type UserDetail = {
   password: string;
   profile_image: string;
 };
+
 export type TabParamList = {
   Home: undefined;
   Podcasts: undefined;
@@ -225,6 +229,7 @@ export type PodcastDetailScreenProp = StackScreenProps<
   RootStackParamList,
   'PodcastDetail'
 >;
+
 export type ReviewScreenProp = StackScreenProps<
   RootStackParamList,
   'ReviewScreen'
@@ -254,6 +259,7 @@ export type CommentScreenProp = StackScreenProps<
   RootStackParamList,
   'CommentScreen'
 >;
+
 export type PodcastDiscussionProp = StackScreenProps<
   RootStackParamList,
   'PodcastDiscussion'
@@ -268,6 +274,7 @@ export type ReportConfirmationScreenProp = StackScreenProps<
   RootStackParamList,
   'ReportConfirmationScreen'
 >;
+
 export type NotificationScreenProp = StackScreenProps<
   RootStackParamList,
   'NotificationScreen'
@@ -277,7 +284,6 @@ export type NotificationPreferencesScreenProp = StackScreenProps<
   RootStackParamList,
   'NotificationPreferencesScreen'
 >;
-//StackScreenProps<RootStackParamList, 'UserProfileScreen'>;
 
 export type EditorScreenProp = StackScreenProps<
   RootStackParamList,
@@ -311,10 +317,6 @@ export type OverviewScreenProps = StackScreenProps<
   RootStackParamList,
   'OverviewScreen'
 >;
-// export type ConversationScreenProps = StackScreenProps<
-//   RootStackParamList,
-//   'ConversationScreen'
-// >;
 
 export type SocialScreenProps = StackScreenProps<
   RootStackParamList,
@@ -325,6 +327,7 @@ export type PodcastScreenProps = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, 'Podcasts'>,
   StackScreenProps<RootStackParamList, 'PodcastDetail'>
 >;
+
 export type ProfileScreenProps = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, 'Profile'>,
   | StackScreenProps<RootStackParamList, 'ProfileEditScreen'>
@@ -333,7 +336,8 @@ export type ProfileScreenProps = CompositeScreenProps<
 
 export type AboutScreenProps = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, 'About'>,
-  StackScreenProps<RootStackParamList, 'Privacy'>
+  | StackScreenProps<RootStackParamList, 'Privacy'>
+  | StackScreenProps<RootStackParamList, 'CommunityGuidelines'>
 >;
 
 export type PodcastRecorderScreenProps = StackScreenProps<
@@ -354,6 +358,11 @@ export type ContributorScreenProps = StackScreenProps<
 export type OpenSourceScreenProps = StackScreenProps<
   RootStackParamList,
   'OpenSourcePage'
+>;
+
+export type CommunityGuidelinesScreenProps = StackScreenProps<
+  RootStackParamList,
+  'CommunityGuidelines'
 >;
 
 export type PodcastPlayerScreenProps = StackScreenProps<
@@ -395,6 +404,7 @@ export type ReviewCardProps = {
   isSelected: boolean;
   setSelectedCardId: (id: string) => void;
 };
+
 export type Admin = {
   _id: string;
   user_name: string;
@@ -443,6 +453,7 @@ export type PocketBaseResponse = {
   recordId: string;
   html_file: string;
 };
+
 export type ProfileHeaderProps = {
   isDoctor: boolean;
   username: string;
@@ -548,6 +559,22 @@ export type Article = {
   author_name: string;
   lastUpdatedAt: string;
   imageUtils: string;
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+};
+
+export type ArticleSummary = {
+  simplifiedExplanation: string;
+  keyFindings: string[];
+  beginnerTakeaways: string[];
+  whyItMatters: string;
+};
+
+export type RelatedPodcast = {
+  id: string;
+  title: string;
+  description: string;
+  durationMinutes: number;
+  topic: string;
 };
 
 export type ArticleData = {
@@ -581,6 +608,10 @@ export type ArticleData = {
   sourceLanguage?: string;
   translationOf?: string | number | ArticleData | null;
   translatedArticles?: ArticleData[];
+  summaryData?: ArticleSummary;
+  relatedPodcasts?: RelatedPodcast[];
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+  body?: string;
 };
 
 export type ArticleTranslationSource = {
@@ -614,7 +645,7 @@ export type PodcastData = {
   filePath: string | undefined;
   downloadAt: Date | null;
   commentCount: number | 0;
-  //podcasts: string[];
+  language?: string;
 };
 
 export type UserStatus = {
@@ -754,10 +785,14 @@ export type ImprovementCardProps = {
   onNavigate: (item: EditRequest) => void;
 };
 
-export type ContentSuggestionResponse = {
-  full_html: string;
-  suggestion: string;
-};
+export interface ContentSuggestionResponse {
+  readability_score?: number;
+  reading_time?: string;
+  suggested_html?: string;
+  full_html?: string;
+  suggestion?: string;
+}
+
 export type PlayList = {
   _id: string;
   title: string;

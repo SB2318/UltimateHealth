@@ -1,5 +1,5 @@
 import { format, isValid, getYear, parse, parseISO } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { enUS, es, fr, de, hi } from 'date-fns/locale';
 import type { Locale } from 'date-fns';
 import { TZDateMini } from '@date-fns/tz';
 import { getCalendars, getLocales } from 'expo-localization';
@@ -9,9 +9,29 @@ export const deviceLocale = getLocales()[0]?.languageTag ?? 'en-US';
 
 const localeMap: Record<string, Locale> = {
   'en-US': enUS,
+  'en': enUS,
+  'es-ES': es,
+  'es': es,
+  'fr-FR': fr,
+  'fr': fr,
+  'de-DE': de,
+  'de': de,
+  'hi-IN': hi,
+  'hi': hi,
 };
 
-const activeLocale = localeMap[deviceLocale] ?? enUS;
+const getActiveLocale = (localeTag: string): Locale => {
+  if (localeMap[localeTag]) {
+    return localeMap[localeTag];
+  }
+  const primaryLang = localeTag.split('-')[0];
+  if (localeMap[primaryLang]) {
+    return localeMap[primaryLang];
+  }
+  return enUS;
+};
+
+const activeLocale = getActiveLocale(deviceLocale);
 
 const COMMON_DATE_FORMATS = [
   'yyyy-MM-dd HH:mm:ss',
@@ -25,8 +45,10 @@ export const parseDbTimestamp = (timestamp: string): Date | null => {
   const hasTimezoneOffset = /Z|[+-]\d{2}:?\d{2}$/.test(timestamp);
   
   let dateStr = timestamp;
+  // If the backend timestamp has no timezone offset, we parse it as local time 
+  // to align with Moment.js's original behavior.
   if (!hasTimezoneOffset) {
-    dateStr = dateStr.includes(' ') ? dateStr.replace(' ', 'T') + 'Z' : dateStr + 'Z';
+    dateStr = dateStr.includes(' ') ? dateStr.replace(' ', 'T') : dateStr;
   }
 
   let parsedDate = parseISO(dateStr);
@@ -76,9 +98,11 @@ const getValidDate = (date: Date | string | number | null | undefined): Date | n
 export const formatDateWithTime = (date: Date | string | number | null | undefined): string => {
   const validDate = getValidDate(date);
   if (!validDate) return '';
-  return format(validDate, "MMMM do yyyy, h:mm a", {
+  const formatted = format(validDate, "MMMM do yyyy, h:mm a", {
     locale: activeLocale,
   });
+  // Handle potential '0:mm AM' display bug
+  return formatted.replace(/\b0:(\d{2}) AM\b/g, '12:$1 AM');
 };
 
 /**
@@ -88,9 +112,11 @@ export const formatDateWithTime = (date: Date | string | number | null | undefin
 export const formatTimeWithDate = (date: Date | string | number | null | undefined): string => {
   const validDate = getValidDate(date);
   if (!validDate) return '';
-  return format(validDate, "hh:mm a dd/MM/yyyy", {
+  const formatted = format(validDate, "hh:mm a dd/MM/yyyy", {
     locale: activeLocale,
   });
+  // Handle potential '00:mm AM' display bug
+  return formatted.replace(/\b00:(\d{2}) AM\b/g, '12:$1 AM');
 };
 
 /**
@@ -112,9 +138,11 @@ export const formatDateShortYear = (date: Date | string | number | null | undefi
 export const formatWithOrdinalAndDay = (date: Date | string | number | null | undefined): string => {
   const validDate = getValidDate(date);
   if (!validDate) return '';
-  return format(validDate, "d MMM, EEE, h:mm a", {
+  const formatted = format(validDate, "d MMM, EEE, h:mm a", {
     locale: activeLocale,
   });
+  // Handle potential '0:mm AM' display bug
+  return formatted.replace(/\b0:(\d{2}) AM\b/g, '12:$1 AM');
 };
 
 /**
@@ -134,5 +162,5 @@ export const formatDateShort = (date: Date | string | number | null | undefined)
  * Example: 2026
  */
 export const getCurrentYear = (): number => {
-  return getYear(new TZDateMini(new Date(), deviceTimeZone));
+  return getYear(new Date());
 };
