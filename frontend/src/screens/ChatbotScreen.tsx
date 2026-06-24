@@ -28,6 +28,7 @@ import {useGetProfile} from '../hooks/useGetProfile';
 import {useSendMessageToGemini} from '../hooks/useSendMessageToGemini';
 import {useLoadAIConversations} from '../hooks/useLoadAIChats';
 import Snackbar from 'react-native-snackbar';
+import {verifyChatbotResponse} from '../chatbot-response-verification';
 
 // interface ChatbotResponse {
 //   id: string;
@@ -220,12 +221,12 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       });
       return;
     }
-
     setIsLoading(true);
 
     sendMessageToAI(prompt, {
       onSuccess: (responseData: Message) => {
         setIsLoading(false);
+        const verification = verifyChatbotResponse(responseData.text);
         safeSetMessages(previousMessages =>
           GiftedChat.append(previousMessages, [
             {
@@ -237,7 +238,11 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
                 avatar:
                   'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
               },
-            },
+              metadata: {
+                status: verification.status,
+                confidence: verification.confidence,
+              },
+            } as any,
           ]),
         );
       },
