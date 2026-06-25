@@ -334,13 +334,16 @@ npx expo start
 
 **Android SDK Setup (Linux/macOS)**
 ```bash
+# Return to project root to run the setup script
+cd ..
 chmod +x setup-android.sh
 ./setup-android.sh
 ```
 
 **Install Expo and EAS CLI**
 ```bash
-npm install -g expo-cli eas-cli
+# Note: global expo-cli is deprecated. Use npx expo for local Expo commands.
+npm install -g eas-cli
 ```
 
 ---
