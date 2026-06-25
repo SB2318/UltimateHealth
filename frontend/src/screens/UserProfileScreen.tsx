@@ -31,8 +31,8 @@ import { NoArticleState } from '../components/EmptyStates';
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
-  const {authorId, userId, author_handle} = (route.params || {}) as any;
-  const {userId: routeUserId, userHandle: routeUserHandle} = (route.params || {}) as any; 
+  const {authorId, userId: routeUserId, author_handle, userHandle} =
+    route.params || {};
   const {user_id, user_handle} = useSelector(
     (state: any) => state.user,
   );
@@ -52,14 +52,20 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
 
-  // Get the actual authorId string
- // const actualAuthorId = typeof authorId === 'string' ? authorId : authorId?._id || userId || '';
-  const actualAuthorId = routeUserId || user_id; // Prioritize routeUserId, fallback to current user_id
+  const routeAuthorId =
+    typeof authorId === 'string' ? authorId : authorId?._id;
+  const routeUserHandle = userHandle || author_handle;
+  const hasExternalProfileTarget = Boolean(
+    routeAuthorId || routeUserId || routeUserHandle,
+  );
+  const actualAuthorId =
+    routeAuthorId || routeUserId || (hasExternalProfileTarget ? '' : user_id);
   const {
     data: user,
     refetch,
     isLoading,
   } = useGetAuthorProfile(actualAuthorId, routeUserHandle, user_id, isConnected);
+  const profileUserId = actualAuthorId || user?._id || '';
 
   const isDoctor = user !== undefined ? user.isDoctor : false;
   //const bottomBarHeight = useBottomTabBarHeight();
@@ -67,7 +73,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   // Fetch statistics data for the user being viewed
   const {data: statsData} = useGetTotalLikeViewStatus({
     user_id: user_id,
-    userId: actualAuthorId,
+    userId: profileUserId,
     others: true,
     isConnected: isConnected,
   });
@@ -117,9 +123,8 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('Current authorId:', authorId); // Check if authorId changes
       refetch();
-    }, [refetch, authorId]), // Ensure authorId is a stable value
+    }, [refetch, routeAuthorId, routeUserHandle]),
   );
 
   const handleReportAction = useCallback(
@@ -221,14 +226,14 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   const handleFollow = () => {
     if (isConnected) {
-      if (actualAuthorId) {
-        followMutate(actualAuthorId, {
+      if (profileUserId) {
+        followMutate(profileUserId, {
           onSuccess: data => {
             if (data) {
               if (socket) {
                 socket.emit('notification', {
                   type: 'userFollow',
-                  userId: actualAuthorId,
+                  userId: profileUserId,
                   message: {
                     title: `${user_handle ? user_handle : 'Someone'} has followed you`,
                     body: '',
