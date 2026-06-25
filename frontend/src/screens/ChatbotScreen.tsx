@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
+import Tts from 'react-native-tts';
 import {
   Bubble,
   GiftedChat,
@@ -56,6 +57,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [playingMessageId, setPlayingMessageId] = useState<string | null>(null);
   const isMountedRef = useRef(true);
   const dispatch = useDispatch();
   const {data: user} = useGetProfile();
@@ -74,6 +76,22 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       isMountedRef.current = false;
     };
   }, []);
+
+  // NEW: TTS setup
+useEffect(() => {
+  Tts.setDefaultLanguage('en-US');
+  Tts.setDefaultRate(0.5);
+  Tts.setDefaultPitch(1.0);
+
+  const finishListener = Tts.addEventListener('tts-finish', () => {
+    setPlayingMessageId(null);
+  });
+
+  return () => {
+    Tts.stop();
+    finishListener.remove();
+  };
+}, []);
 
   const safeSetMessages = useCallback(
     (updater: React.SetStateAction<IMessage[]>) => {
@@ -263,6 +281,20 @@ metadata: {
     performSendMessage(prompt);
   }, [isPending, safeSetMessages, performSendMessage]);
 
+  const handleSpeak = useCallback((messageId: string, messageText: string) => {
+  if (playingMessageId === messageId) {
+    Tts.stop();
+    setPlayingMessageId(null);
+    return;
+  }
+  if (playingMessageId !== null) {
+    Tts.stop();
+  }
+  setPlayingMessageId(messageId);
+  Tts.speak(messageText);
+}, [playingMessageId]);
+
+
   const handleRetry = useCallback((failedMessage: any) => {
     if (isPending) {
       return;
@@ -399,18 +431,56 @@ metadata: {
                   </View>
                 );
               }
+              const isAI = props.currentMessage?.user._id === 2;
+              const msgId = String(props.currentMessage?._id);
+              const isPlaying = playingMessageId === msgId;
+
               return (
-                <Bubble
-                  {...props}
-                  wrapperStyle={{
-                    right: {backgroundColor: PRIMARY_COLOR},
-                    left: {backgroundColor: '#f3f4f6'},
-                  }}
-                  textStyle={{
-                    right: {color: 'white', fontSize: 17, lineHeight: 24},
-                    left: {color: '#111827', fontSize: 17, lineHeight: 24},
-                  }}
-                />
+                <View>
+                  <Bubble
+                    {...props}
+                    wrapperStyle={{
+                      right: {backgroundColor: PRIMARY_COLOR},
+                      left: {backgroundColor: '#f3f4f6'},
+                    }}
+                    textStyle={{
+                      right: {color: 'white', fontSize: 17, lineHeight: 24},
+                      left: {color: '#111827', fontSize: 17, lineHeight: 24},
+                    }}
+                  />
+                  {isAI && (
+                    <TouchableOpacity
+                      onPress={() => handleSpeak(msgId, props.currentMessage?.text ?? '')}
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 4,
+                        marginTop: 4,
+                        marginLeft: 8,
+                        paddingHorizontal: 10,
+                        paddingVertical: 4,
+                        backgroundColor: isPlaying ? '#fee2e2' : '#fff',
+                        borderWidth: 0.5,
+                        borderColor: isPlaying ? '#fca5a5' : '#d1d5db',
+                        borderRadius: 20,
+                        alignSelf: 'flex-start',
+                      }}
+                      accessibilityLabel={isPlaying ? 'Stop reading' : 'Listen to message'}
+                    >
+                      <Ionicons
+                        name={isPlaying ? 'stop-circle' : 'volume-medium'}
+                        size={14}
+                        color={isPlaying ? '#dc2626' : '#6b7280'}
+                      />
+                      <Text style={{
+                        fontSize: 12,
+                        color: isPlaying ? '#dc2626' : '#6b7280',
+                      }}>
+                        {isPlaying ? 'Stop' : 'Listen'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               );
             }}
             renderInputToolbar={props => (
