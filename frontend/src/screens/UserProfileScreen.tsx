@@ -27,12 +27,11 @@ import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
 import { useGetAuthorProfile } from '../hooks/useGetAuthorProfile';
 import {useGetTotalLikeViewStatus} from '../hooks/useGetTotalLikeViewStatus';
 import { NoArticleState } from '../components/EmptyStates';
+import {resolveProfileTarget} from '../helper/profileRouteUtils';
 
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
-  const {authorId, userId: routeUserId, author_handle, userHandle} =
-    route.params || {};
   const {user_id, user_handle} = useSelector(
     (state: any) => state.user,
   );
@@ -52,14 +51,10 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
 
-  const routeAuthorId =
-    typeof authorId === 'string' ? authorId : authorId?._id;
-  const routeUserHandle = userHandle || author_handle;
-  const hasExternalProfileTarget = Boolean(
-    routeAuthorId || routeUserId || routeUserHandle,
-  );
-  const actualAuthorId =
-    routeAuthorId || routeUserId || (hasExternalProfileTarget ? '' : user_id);
+  const {
+    authorId: actualAuthorId,
+    userHandle: routeUserHandle,
+  } = resolveProfileTarget(route.params, user_id);
   const {
     data: user,
     refetch,
@@ -124,7 +119,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   useFocusEffect(
     useCallback(() => {
       refetch();
-    }, [refetch, routeAuthorId, routeUserHandle]),
+    }, [refetch, actualAuthorId, routeUserHandle]),
   );
 
   const handleReportAction = useCallback(
@@ -267,7 +262,10 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
       return null;
     } // Safeguard to prevent rendering if user is undefined
 
-    const authorUser = typeof authorId === 'string' ? user : authorId;
+    const authorUser =
+      typeof route.params?.authorId === 'string'
+        ? user
+        : route.params?.authorId;
 
     return (
       <ProfileHeader
