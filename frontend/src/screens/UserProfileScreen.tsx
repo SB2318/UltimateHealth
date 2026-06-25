@@ -1,0 +1,473 @@
+import {
+  StyleSheet,
+  View,
+  Alert,
+  TouchableOpacity,
+  useColorScheme,
+} from 'react-native';
+import React, {useCallback, useState} from 'react';
+import {StatusBar} from 'expo-status-bar';
+import {PRIMARY_COLOR} from '../helper/Theme';
+import ActivityOverview from '../components/ActivityOverview';
+import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
+import ArticleCard from '../components/ArticleCard';
+import { useTheme } from 'tamagui';
+import {useSelector} from 'react-redux';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import ProfileHeader from '../components/ProfileHeader';
+import {ArticleData, UserProfileScreenProp} from '../type';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Loader from '../components/Loader';
+import {useFocusEffect} from '@react-navigation/native';
+import Snackbar from 'react-native-snackbar';
+import {useSocket} from '../contexts/SocketContext';
+import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
+import {useUpdateFollowStatus} from '../hooks/useUpdateFollowStatus';
+import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
+import { useGetAuthorProfile } from '../hooks/useGetAuthorProfile';
+import {useGetTotalLikeViewStatus} from '../hooks/useGetTotalLikeViewStatus';
+import { NoArticleState } from '../components/EmptyStates';
+
+const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
+  const theme = useTheme();
+  const isDarkMode = useColorScheme() === 'dark';
+  const {authorId, userId, author_handle} = (route.params || {}) as any;
+  const {userId: routeUserId, userHandle: routeUserHandle} = (route.params || {}) as any; 
+  const {user_id, user_handle} = useSelector(
+    (state: any) => state.user,
+  );
+  const {isConnected} = useSelector((state: any) => state.network);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  const [articleId, setArticleId] = useState<number>();
+  const [recordId, setRecordId] = useState<string>('');
+  const [selectedCardId, setSelectedCardId] = useState<string>('');
+
+  //const [authorId, setAuthorId] = useState<string>('');
+  const socket = useSocket();
+  const {mutate: requestEdit, isPending: requestEditPending} =
+    useRequestArticleEdit();
+
+  const {mutate: followMutate} = useUpdateFollowStatus();
+
+  const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
+
+  // Get the actual authorId string
+ // const actualAuthorId = typeof authorId === 'string' ? authorId : authorId?._id || userId || '';
+  const actualAuthorId = routeUserId || user_id; // Prioritize routeUserId, fallback to current user_id
+  const {
+    data: user,
+    refetch,
+    isLoading,
+  } = useGetAuthorProfile(actualAuthorId, routeUserHandle, user_id, isConnected);
+
+  const isDoctor = user !== undefined ? user.isDoctor : false;
+  //const bottomBarHeight = useBottomTabBarHeight();
+
+  // Fetch statistics data for the user being viewed
+  const {data: statsData} = useGetTotalLikeViewStatus({
+    user_id: user_id,
+    userId: actualAuthorId,
+    others: true,
+    isConnected: isConnected,
+  });
+
+
+  const onArticleViewed = ({
+    articleId,
+    authorId: viewedAuthorId,
+    recordId,
+  }: {
+    articleId: number;
+    authorId: string;
+    recordId: string;
+  }) => {
+    if (isConnected) {
+      setArticleId(articleId);
+      setRecordId(recordId);
+
+      updateViewCount(undefined, {
+        onSuccess: async () => {
+          navigation.navigate('ArticleScreen', {
+            articleId: Number(articleId),
+            authorId: viewedAuthorId,
+            recordId: recordId,
+          });
+        },
+
+        onError: error => {
+          console.log('Update View Count Error', error);
+          Alert.alert('Internal server error, try again!');
+        },
+      });
+    } else {
+      Snackbar.show({
+        text: 'Please check your internet connection!',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    refetch();
+
+    setRefreshing(false);
+  }, [refetch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log('Current authorId:', authorId); // Check if authorId changes
+      refetch();
+    }, [refetch, authorId]), // Ensure authorId is a stable value
+  );
+
+  const handleReportAction = useCallback(
+    (item: ArticleData) => {
+      navigation.navigate('ReportScreen', {
+        articleId: item._id,
+        authorId: item.authorId as string,
+        commentId: null,
+        podcastId: null,
+      });
+    },
+    [navigation],
+  );
+
+  const renderItem = useCallback(
+    ({item}: {item: ArticleData}) => {
+      return (
+        <ArticleCard
+          item={item}
+          navigation={navigation}
+          success={onRefresh}
+          isSelected={selectedCardId.toString() === item._id.toString()}
+          setSelectedCardId={setSelectedCardId}
+          handleRepostAction={()=>{}}
+          handleReportAction={handleReportAction}
+          handleEditRequestAction={(item, index, reason) => {
+            if (isConnected) {
+              requestEdit(
+                {
+                  articleId: item._id,
+                  reason: reason,
+                  articleRecordId: item.pb_recordId,
+                },
+                {
+                  onSuccess: data => {
+                    Snackbar.show({
+                      text: data,
+                      duration: Snackbar.LENGTH_SHORT,
+                    });
+                  },
+                  onError: err => {
+                    console.log(err);
+                    Snackbar.show({
+                      text: 'Try again!',
+                      duration: Snackbar.LENGTH_LONG,
+                    });
+                  },
+                },
+              );
+            } else {
+              Snackbar.show({
+                text: 'Please check your internet connection!',
+                duration: Snackbar.LENGTH_SHORT,
+              });
+            }
+          }}
+          source="user-profile"
+        />
+      );
+    },
+    [
+      handleReportAction,
+      isConnected,
+      navigation,
+      onRefresh,
+      selectedCardId,
+      requestEdit,
+    ],
+  );
+
+  const onFollowerClick = () => {
+    if (user && user.followers.length > 0) {
+      // dispatch(setSocialUserId(user._id));
+      navigation.navigate('SocialScreen', {
+        type: 1,
+        articleId: undefined,
+        social_user_id: user._id,
+      });
+    }
+  };
+
+  const onFollowingClick = () => {
+    if (isConnected) {
+      if (user && user.followings.length > 0) {
+        // dispatch(setSocialUserId(user._id));
+        navigation.navigate('SocialScreen', {
+          type: 2,
+          articleId: undefined,
+          social_user_id: user._id,
+        });
+      }
+    } else {
+      Snackbar.show({
+        text: 'Please check your internet connection!',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+
+  const handleFollow = () => {
+    if (isConnected) {
+      if (actualAuthorId) {
+        followMutate(actualAuthorId, {
+          onSuccess: data => {
+            if (data) {
+              if (socket) {
+                socket.emit('notification', {
+                  type: 'userFollow',
+                  userId: actualAuthorId,
+                  message: {
+                    title: `${user_handle ? user_handle : 'Someone'} has followed you`,
+                    body: '',
+                  },
+                });
+              }
+
+              onRefresh();
+            }
+          },
+
+          onError: err => {
+            console.log('Update Follow mutation error', err);
+            Snackbar.show({
+              text: 'Try again!',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          },
+        });
+      }
+    } else {
+      Snackbar.show({
+        text: 'Please check your internet connection!',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+
+  const renderHeader = () => {
+    if (user === undefined) {
+      return null;
+    } // Safeguard to prevent rendering if user is undefined
+
+    const authorUser = typeof authorId === 'string' ? user : authorId;
+
+    return (
+      <ProfileHeader
+        isDoctor={isDoctor}
+        username={authorUser?.user_name || user?.user_name || ''}
+        userhandle={authorUser?.user_handle || user?.user_handle || ''}
+        profileImg={
+          authorUser?.Profile_image || user?.Profile_image ||
+          'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+        }
+        articlesPosted={user.articles ? user.articles.length : 0}
+        articlesSaved={user.savedArticles ? user.savedArticles.length : 0}
+        userPhoneNumber={isDoctor ? user.contact_detail?.phone_no || '' : ''}
+        userEmailID={isDoctor ? user.contact_detail?.email_id || '' : ''}
+        specialization={user.specialization || ''}
+        experience={user.Years_of_experience || 0}
+        qualification={user.qualification || ''}
+        navigation={navigation}
+        other={false}
+        followers={user ? user.followers.length : 0}
+        followings={user ? user.followings.length : 0}
+        onFollowerPress={onFollowerClick}
+        onFollowingPress={onFollowingClick}
+        isFollowing={
+          user && user.followers.some(follower => follower === user_id)
+            ? true
+            : false
+        }
+        onFollowClick={handleFollow}
+        onOverviewClick={() => {}}
+      />
+    );
+  };
+
+  const renderTabBar = (props: any) => {
+    return (
+      <MaterialTabBar
+        {...props}
+        indicatorStyle={styles.indicatorStyle}
+        style={styles.tabBarStyle}
+        activeColor={PRIMARY_COLOR}
+        inactiveColor="#9098A3"
+        labelStyle={styles.labelStyle}
+        contentContainerStyle={styles.contentContainerStyle}
+      />
+    );
+  };
+
+  if (isLoading || requestEditPending) {
+    return (
+      <SafeAreaView
+        style={[
+          styles.loadingContainer,
+          {backgroundColor: theme.background.val},
+        ]}>
+        <StatusBar
+          style={isDarkMode ? 'light' : 'dark'}
+          backgroundColor="#007AFF"
+        />
+        <Loader />
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView
+      style={[
+        styles.container,
+        {backgroundColor: '#007AFF'},
+      ]}>
+      <StatusBar style="light" backgroundColor="#007AFF" />
+      <TouchableOpacity
+        style={styles.headerLeftButtonEditorScreen}
+        onPress={() => {
+          navigation.goBack();
+        }}>
+        <FontAwesome6 size={25} name="arrow-left" color="white" />
+      </TouchableOpacity>
+      <View
+        style={[
+          styles.innerContainer,
+          {backgroundColor: theme.background.val},
+        ]}>
+        <Tabs.Container
+          renderHeader={renderHeader}
+          renderTabBar={renderTabBar}
+          containerStyle={[
+            styles.tabsContainer,
+            {backgroundColor: theme.background.val},
+          ]}>
+          {/* Tab 1 */}
+          <Tabs.Tab name="User Insight">
+            <Tabs.ScrollView
+              automaticallyAdjustContentInsets={true}
+              contentInsetAdjustmentBehavior="always"
+              contentContainerStyle={styles.scrollViewContentContainer}>
+              <ActivityOverview
+                onArticleViewed={onArticleViewed}
+                others={true}
+                userId={actualAuthorId || user?._id}
+                user_handle={user?.user_handle || ''}
+                articlePosted={user?.articles ? user.articles.length : 0}
+              />
+            </Tabs.ScrollView>
+          </Tabs.Tab>
+          {/* Tab 2 */}
+          <Tabs.Tab name="User Article">
+            <Tabs.FlatList
+              data={user !== undefined ? user.articles : []}
+              renderItem={renderItem}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={[
+                styles.flatListContentContainer,
+                {paddingBottom: 15},
+              ]}
+              keyExtractor={item => item?._id}
+              refreshing={refreshing}
+              ListEmptyComponent={
+                 <NoArticleState/>
+              }
+            />
+          </Tabs.Tab>
+
+          <Tabs.Tab name="User Reposts">
+            <Tabs.FlatList
+              data={user !== undefined ? user.repostArticles : []}
+              renderItem={renderItem}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={[
+                styles.flatListContentContainer,
+                {paddingBottom: 15},
+              ]}
+              keyExtractor={item => item?._id}
+              refreshing={refreshing}
+              ListEmptyComponent={
+                <NoArticleState/>
+              }
+            />
+          </Tabs.Tab>
+        </Tabs.Container>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default UserProfileScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  innerContainer: {
+    flex: 1,
+  },
+  tabsContainer: {
+    overflow: 'hidden',
+  },
+  scrollViewContentContainer: {
+    paddingHorizontal: 6,
+    marginTop: 16,
+    flexGrow: 1,
+  },
+  flatListContentContainer: {
+    paddingHorizontal: 10,
+  },
+  indicatorStyle: {
+    backgroundColor: 'white',
+  },
+  tabBarStyle: {
+    backgroundColor: 'white',
+  },
+  labelStyle: {
+    fontWeight: '600',
+    fontSize: 13,
+    //color: 'black',
+    textTransform: 'capitalize',
+  },
+  contentContainerStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowOpacity: 0,
+    shadowOffset: {width: 0, height: 0},
+    shadowColor: 'white',
+  },
+  message: {
+    fontSize: 16,
+    color: '#555',
+    textAlign: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerLeftButtonEditorScreen: {
+    marginLeft: 15,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+});

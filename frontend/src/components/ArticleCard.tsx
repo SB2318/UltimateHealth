@@ -1,0 +1,1081 @@
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  Alert,
+  Platform,
+} from 'react-native';
+import {useEffect, useRef, useState} from 'react';
+import AccessibleTouchable from './common/AccessibleTouchable';
+import {fp} from '../helper/Metric';
+import {ArticleCardProps, ArticleData} from '../type';
+import { formatDateShort } from '../helper/dateUtils';
+import { getReadTime, calculateReadTime } from '../utils/readTime';
+import {useSelector} from 'react-redux';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import IonIcons from '@expo/vector-icons/Ionicons';
+import {GET_IMAGE} from '../helper/APIUtils';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import GlobalStyles from '../styles/GlobalStyle';
+
+import {
+  formatCount,
+  requestStoragePermissions,
+  StatusEnum,
+} from '../helper/Utils';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSequence,
+  withSpring,
+  withDelay,
+} from 'react-native-reanimated';
+import ArticleFloatingMenu from './ArticleFloatingMenu';
+
+import { generateArticleShareUrl, copyArticleShareLink } from '../helper/shareUtils';
+import Entypo from '@expo/vector-icons/Entypo';
+import Share from 'react-native-share';
+import RNFS from 'react-native-fs';
+import {generatePDF} from 'react-native-html-to-pdf';
+import {useSocket} from '../contexts/SocketContext';
+import EditRequestModal from './EditRequestModal';
+import {FontAwesome, FontAwesome6} from '@expo/vector-icons';
+import LoadingSpinner from './LoadingSpinner';
+import Snackbar from 'react-native-snackbar';
+import {useGetProfile} from '../hooks/useGetProfile';
+import {useLikeArticle} from '../hooks/useLikeArticle';
+import {useSaveArticle} from '../hooks/useSaveArticle';
+import {useLazyGetArticleContent} from '../hooks/useLazyGetArticleContent';
+import {useRepostArticle} from '../hooks/useArticleRepost';
+import { ReadingDifficulty, getArticleDifficulty } from './ReadingDifficulty';
+import {useDoubleTap} from '../hooks/useDoubleTap';
+import { ImageFallback } from './ImageFallback';
+
+const ArticleCard = ({
+  item,
+  navigation,
+  setSelectedCardId,
+  handleReportAction,
+  handleEditRequestAction,
+  source,
+}: ArticleCardProps) => {
+  const {user_id, user_handle, isGuest} = useSelector((state: any) => state.user);
+  const {isConnected} = useSelector((state: any) => state.network);
+  const readTime = calculateReadTime(item.content || item.body || '');
+  const socket = useSocket();
+  const width = useSharedValue(0);
+  const yValue = useSharedValue(60);
+  const [requestModalVisible, setRequestModalVisible] =
+    useState<boolean>(false);
+  const [menuVisible, setMenuVisible] = useState(false);
+  const menuTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const {data: user} = useGetProfile();
+
+  const [isLiked, setIsLiked] = useState(
+    item.likedUsers.some(
+      it =>
+        (it._id && it._id.toString() === user_id) || it.toString() === user_id,
+    ),
+  );
+  const [likeCount, setLikeCount] = useState(item.likedUsers.length);
+  const [repostCount, setRepostCount] = useState(item.repostUsers.length);
+
+  const [saved, setSaved] = useState(item.savedUsers.includes(user_id));
+  const [reposted, setReposted] = useState(
+    item.repostUsers.some(user => user.toString() === user_id),
+  );
+
+  const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
+    Number(item._id),
+  );
+  const {mutate: saveMutation, isPending: saveMutationPending} = useSaveArticle(
+    Number(item._id),
+  );
+
+  const {mutate: repost, isPending: repostPending} = useRepostArticle();
+
+  const {mutate: getArticleContent, isPending: getArticleContentPending} =
+    useLazyGetArticleContent();
+
+  const heartScale = useSharedValue(0);
+
+  const heartStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: heartScale.value }],
+      opacity: heartScale.value,
+    };
+  });
+
+  const handleLikeAction = (isDoubleTap = false) => {
+    if (isGuest) {
+      (navigation as any).navigate('GuestPlaceholderScreen', {
+        title: 'Sign In Required',
+        description: 'Please sign in or sign up to like this article.',
+        iconName: 'heart',
+      });
+      return;
+    }
+
+    if (isDoubleTap) {
+      if (isLiked) return;
+
+      heartScale.value = withSequence(
+        withSpring(1.2, { damping: 10, stiffness: 100 }),
+        withTiming(1, { duration: 100 }),
+        withDelay(500, withSpring(0, { damping: 12, stiffness: 100 }))
+      );
+    }
+
+    if (isConnected) {
+      const previousIsLiked = isLiked;
+      const previousLikeCount = likeCount;
+
+      setIsLiked(isDoubleTap ? true : !isLiked);
+      setLikeCount(prev =>
+        (isDoubleTap ? true : !isLiked) ? prev + 1 : (prev - 1 > 0 ? prev - 1 : 0)
+      );
+
+      likeMutation(undefined, {
+        onSuccess: (data: {
+          article: ArticleData;
+          likeStatus: boolean;
+        }) => {
+          console.log('Article like success', data.likeStatus);
+          setIsLiked(data?.likeStatus);
+
+          if (data?.likeStatus) {
+            if (socket) {
+              socket.emit('notification', {
+                type: 'likePost',
+                userId: data?.article?.authorId,
+                articleId: data?.article?._id,
+                podcastId: null,
+                articleRecordId: data?.article?.pb_recordId,
+                title: user
+                  ? `${user?.user_handle} liked your post`
+                  : 'Someone liked your post',
+                message: data?.article?.title,
+              });
+            }
+          }
+        },
+        onError: (err: any) => {
+          console.log('Like error', err);
+          setIsLiked(previousIsLiked);
+          setLikeCount(previousLikeCount);
+          Snackbar.show({
+            text: 'something went wrong, try again!',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+      });
+    } else {
+      Snackbar.show({
+        text: 'Please check your network connection',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+
+  const handleCardPress = () => {
+    if (isConnected) {
+      width.value = withTiming(0, {duration: 250});
+      yValue.value = withTiming(100, {duration: 250});
+      setSelectedCardId('');
+      (navigation as any).navigate('ArticleScreen', {
+        articleId: Number(item._id),
+        authorId: item.authorId,
+        recordId: item.pb_recordId,
+      });
+    } else {
+      Snackbar.show({
+        text: 'Please connect to the internet to view this article.',
+        duration: Snackbar.LENGTH_LONG,
+      });
+      Alert.alert(
+        'No Internet 🚫',
+        'Internet connection required. Offline mode will be available in the next update.',
+        [{text: 'OK'}],
+      );
+    }
+  };
+
+  const handleImagePressRaw = useDoubleTap(handleCardPress, () => handleLikeAction(true), 300);
+
+  const handleImagePress = (e: any) => {
+    e?.stopPropagation?.();
+    handleImagePressRaw();
+  };
+
+  const handleShare = async () => {
+    try {
+      const resolvedAuthorId = (item.authorId as any)?._id || item.authorId;
+      const url = generateArticleShareUrl(item._id, resolvedAuthorId, item.pb_recordId);
+
+      const result = await Share.open({
+        title: item.title,
+        message: `${item.title} : Check out this awesome post on UltimateHealth app!`,
+        // Most Recent APK: 0.7.4
+        url: url,
+        subject: 'Article Post',
+      });
+      setMenuVisible(false);
+    } catch (error) {
+      Alert.alert('Error', 'Something went wrong while sharing.');
+      setMenuVisible(false);
+    }
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      const resolvedAuthorId = (item.authorId as any)?._id || item.authorId;
+      copyArticleShareLink(item._id, resolvedAuthorId, item.pb_recordId);
+      Snackbar.show({
+        text: 'Link copied',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    } catch (error) {
+      console.log('Error copying link:', error);
+      Snackbar.show({
+        text: 'Failed to copy link',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleConnect = () => {
+    };
+
+    socket.on('connect', handleConnect);
+
+    return () => {
+      socket.off('connect', handleConnect);
+    };
+  }, [socket]);
+
+  // Cleanup timer and close menu when card unmounts (FlatList recycling)
+  useEffect(() => {
+    return () => {
+      if (menuTimerRef.current) clearTimeout(menuTimerRef.current);
+      setMenuVisible(false);
+    };
+  }, []);
+
+  const onChange = () => {
+    // Force a false → true transition so the child Sheet's useEffect
+    // always sees a value change, even if menuVisible was already true.
+    if (menuVisible) {
+      setMenuVisible(false);
+      menuTimerRef.current = setTimeout(() => {
+        setMenuVisible(true);
+      }, 50);
+    } else {
+      setMenuVisible(true);
+    }
+  };
+
+  const generatePDFFromUrl = async (recordId: string, title: string) => {
+    try {
+      const storageGranted = await requestStoragePermissions();
+      if (!storageGranted) {
+        return;
+      }
+      if (!isConnected) {
+        Snackbar.show({
+          text: 'Please check your internet connection!',
+          duration: Snackbar.LENGTH_SHORT,
+        });
+        return;
+      }
+
+      getArticleContent(recordId, {
+        onSuccess: async (htmlContent: string) => {
+          if (htmlContent) {
+            await generatePDFData(title, htmlContent);
+            setMenuVisible(false);
+          }
+        },
+        onError: error => {
+          console.error('Error generating PDF:', error);
+          Alert.alert('Error', 'Something went wrong while creating the PDF.');
+        },
+      });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      Alert.alert('Error', 'Something went wrong while creating the PDF.');
+    }
+  };
+
+  const generatePDFData = async (title: string, htmlContent: string) => {
+    try {
+      const safeTitle = title.substring(0, 15).replace(/[^a-zA-Z0-9]/g, '_');
+      const fileName = `${safeTitle}.pdf`;
+
+      const customDirectory =
+        Platform.OS === 'android'
+          ? RNFS.ExternalDirectoryPath
+          : RNFS.DocumentDirectoryPath;
+
+      const filePath = `${customDirectory}/${fileName}`;
+
+      const directoryExists = await RNFS.exists(customDirectory);
+
+      if (!directoryExists) {
+        await RNFS.mkdir(customDirectory);
+      }
+
+      const options = {
+        html: htmlContent,
+        fileName: safeTitle,
+        directory: '',
+        base64: true,
+      };
+
+      const file = await generatePDF(options);
+
+      await RNFS.moveFile(file.filePath, filePath);
+
+      Alert.alert('PDF created successfully!', `Saved at: ${filePath}`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      Alert.alert('Error', 'Something went wrong while creating the PDF.');
+    }
+  };
+
+  const repostAction = () => {
+    if (isGuest) {
+      (navigation as any).navigate('GuestPlaceholderScreen', {
+        title: 'Sign In Required',
+        description: 'Please sign in or sign up to repost this article.',
+        iconName: 'arrows-rotate',
+      });
+      return;
+    }
+    if (isConnected) {
+      repost(Number(item._id), {
+        onSuccess: data => {
+          if (reposted === false) {
+
+            setReposted(true);
+            const body = {
+              type: 'repost',
+              userId: user_id,
+              authorId: item.authorId,
+              postId: item._id,
+              articleRecordId: item.pb_recordId,
+              message: {
+                title: `${user_handle} reposted`,
+                message: `${item.title}`,
+              },
+              authorMessage: {
+                title: `${user_handle} reposted your article`,
+                message: `${item.title}`,
+              },
+            };
+
+            setRepostCount(prev => prev + 1);
+            if (socket) {
+              socket.emit('notification', body);
+            }
+          }
+
+          Snackbar.show({
+            text: data.message,
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+        onError: err => {
+          Snackbar.show({
+            text: 'Something went wrong, try again!',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+      });
+    } else {
+      Snackbar.show({
+        text: 'Please check your internet connection',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+  return (
+  <Pressable
+    accessibilityRole="button"
+    accessibilityLabel={`Open article ${item?.title}`}
+    accessibilityHint="Opens full article"
+    onPress={handleCardPress}>
+      <View style={styles.cardContainer}>
+        {/* Image Section */}
+<Pressable onPress={handleImagePress} style={styles.imageWrapper}>
+  <ImageFallback
+    source={{
+      uri: item?.imageUtils[0]
+        ? item?.imageUtils[0].startsWith('http')
+          ? item?.imageUtils[0]
+          : `${GET_IMAGE}/${item?.imageUtils[0]}`
+        : undefined,
+    }}
+    fallbackSource={require('../assets/images/article_default.jpg')}
+    style={styles.coverImage}
+  />
+
+  <Animated.View style={[styles.heartOverlay, heartStyle]}>
+    <AntDesign name="heart" size={80} color="white" />
+  </Animated.View>
+</Pressable>
+
+        <View style={styles.contentContainer}>
+          {/* Share Icon */}
+
+          {source === 'home' && item.status === StatusEnum.PUBLISHED && (
+            <ArticleFloatingMenu
+              items={[
+                {
+                  articleId: item._id,
+                  name: 'Share this post',
+                  action: () => {
+                    handleShare();
+                    //handleAnimation();
+                  },
+                  icon: 'share-alt',
+                },
+                {
+                  articleId: item._id,
+                  name: 'Repost in your feed',
+                  action: () => {
+                    repostAction();
+                    //handleAnimation();
+                    setMenuVisible(false);
+                  },
+                  icon: 'fork',
+                },
+                {
+                  articleId: item._id,
+                  name: 'Download as pdf',
+                  action: () => {
+                    //handleAnimation();
+
+                    generatePDFFromUrl(item?.pb_recordId, item?.title);
+                  },
+                  icon: 'download',
+                },
+                {
+                  articleId: item._id,
+                  name: 'Request to edit',
+                  action: () => {
+                    if (!isConnected) {
+                      Snackbar.show({
+                        text: 'Please check your internet connection',
+                        duration: Snackbar.LENGTH_SHORT,
+                      });
+                      return;
+                    }
+                    setMenuVisible(false);
+                    setRequestModalVisible(true);
+                    // handleAnimation();
+                  },
+                  icon: 'edit',
+                },
+                {
+                  articleId: item._id,
+                  name: 'Improve Article',
+                  icon: 'tool',
+                  action: () => {
+                    setMenuVisible(false);
+                    if (!isConnected) {
+                      Snackbar.show({
+                        text: 'Please check your internet connection',
+                        duration: Snackbar.LENGTH_SHORT,
+                      });
+                      return;
+                    }
+                    if (isGuest) {
+                      (navigation as any).navigate('GuestPlaceholderScreen', {
+                        title: 'Sign In Required',
+                        description: 'Please sign in or sign up to improve this article.',
+                        iconName: 'tool',
+                      });
+                      return;
+                    }
+                    // Open article in ArticleScreen where user can tap Improve
+                    (navigation as any).navigate('ArticleScreen', {
+                      articleId: Number(item._id),
+                      authorId: item.authorId,
+                      recordId: item.pb_recordId,
+                    });
+                  },
+                },
+                {
+                  articleId: item._id,
+                  name: 'Report this post',
+                  action: () => {
+                    setMenuVisible(false);
+                    handleReportAction(item);
+                    // handleAnimation();
+                  },
+                  icon: 'aim',
+                },
+              ]}
+              visible={menuVisible}
+              onDismiss={() => {
+                setMenuVisible(false);
+              }}
+            />
+          )}
+
+          {/* Title & Footer Text */}
+          <View style={GlobalStyles.badgeRow}>
+            {item?.tags && item.tags.length > 0 && (
+              <Text style={styles.footerText}>
+                {item?.tags.map(tag => tag.name).join(' | ')}
+              </Text>
+            )}
+            <ReadingDifficulty difficulty={getArticleDifficulty(item)} />
+          </View>
+          <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">{item?.title}</Text>
+
+
+          <View style={styles.metaRow}>
+  <Text style={styles.footerText1}>{item?.authorName}</Text>
+  <Text style={styles.dot}>•</Text>
+  <Text style={styles.footerText1}>
+    {formatCount(item?.viewCount || 0)} views
+  </Text>
+  <Text style={styles.dot}>•</Text>
+  <Text style={styles.footerText1}>
+    {formatDateShort(item?.lastUpdated)}
+  </Text>
+  <Text style={styles.dot}>•</Text>
+  <Text style={styles.footerText1}>
+    {getReadTime(item?.title + ' ' + (item?.description || ''))}
+  </Text>
+</View>
+          <Text style={styles.readTime}>{readTime} min read</Text>
+          <EditRequestModal
+            visible={requestModalVisible}
+            callback={(reason: string) => {
+              //onclick(item, 1, reason);
+              handleEditRequestAction(item, 1, reason);
+              setRequestModalVisible(false);
+            }}
+            dismiss={() => {
+              setRequestModalVisible(false);
+            }}
+          />
+
+          {/* Like, Save, and Comment Actions */}
+          <View style={styles.likeSaveContainer}>
+            {likeMutationPending ? (
+              <LoadingSpinner size="small" />
+            ) : (
+              <AccessibleTouchable
+                accessibilityLabel="Like article"
+                accessibilityHint="Likes or unlikes this article"
+                onPress={(e) => {
+                  e?.stopPropagation?.();
+                  if (isGuest) {
+                    (navigation as any).navigate('GuestPlaceholderScreen', {
+                      title: 'Sign In Required',
+                      description: 'Please sign in or sign up to like this article.',
+                      iconName: 'heart',
+                    });
+                    return;
+                  }
+                  if (isConnected) {
+                    const previousIsLiked = isLiked;
+                    const previousLikeCount = likeCount;
+
+                    // Optimistic update
+                    setIsLiked(!isLiked);
+                    setLikeCount(prev =>
+                      isLiked ? (prev - 1 > 0 ? prev - 1 : 0) : prev + 1,
+                    );
+
+                    likeMutation(undefined, {
+                      onSuccess: (data: {
+                        article: ArticleData;
+                        likeStatus: boolean;
+                      }) => {
+                        setIsLiked(data?.likeStatus);
+
+                        if (data?.likeStatus) {
+                          if (socket) {
+                            socket.emit('notification', {
+                              type: 'likePost',
+                              userId: data?.article?.authorId,
+                              articleId: data?.article?._id,
+                              podcastId: null,
+                              articleRecordId: data?.article?.pb_recordId,
+                              title: user
+                                ? `${user?.user_handle} liked your post`
+                                : 'Someone liked your post',
+                              message: data?.article?.title,
+                            });
+                          }
+                        }
+                      },
+                      onError: (err: any) => {
+                        // Rollback optimistic update
+                        setIsLiked(previousIsLiked);
+                        setLikeCount(previousLikeCount);
+                        Snackbar.show({
+                          text: 'something went wrong, try again!',
+                          duration: Snackbar.LENGTH_SHORT,
+                        });
+                      },
+                    });
+                  } else {
+                    Snackbar.show({
+                      text: 'Please check your network connection',
+                      duration: Snackbar.LENGTH_SHORT,
+                    });
+                  }
+                }}
+                style={styles.likeSaveChildContainer}>
+                {isLiked ? (
+                  <AntDesign name="heart" size={24} color={PRIMARY_COLOR} />
+                ) : (
+                  <FontAwesome name="heart-o" size={24} color={'black'} />
+                )}
+                <Text
+                  style={{
+                    ...styles.title,
+                    marginStart: 3,
+                    fontWeight: '500',
+                    color: 'black',
+                  }}>
+                  {formatCount(likeCount)}
+                </Text>
+              </AccessibleTouchable>
+            )}
+
+            <AccessibleTouchable
+              accessibilityLabel="Open comments"
+              accessibilityHint="Opens article comments"
+              onPress={(e) => {
+                e?.stopPropagation?.();
+                if (isGuest) {
+                  (navigation as any).navigate('GuestPlaceholderScreen', {
+                    title: 'Sign In Required',
+                    description: 'Please sign in or sign up to view or post comments.',
+                    iconName: 'comment',
+                  });
+                  return;
+                }
+                (navigation as any).navigate('CommentScreen', {
+                  articleId: item._id,
+                  mentionedUsers: item.mentionedUsers
+                    ? item.mentionedUsers
+                    : [],
+                  article: item,
+                });
+              }}
+              style={styles.likeSaveChildContainer}>
+              <FontAwesome name="commenting" size={27} color={'#414A4C'} />
+            </AccessibleTouchable>
+
+            {source === 'home' && (
+              <>
+                {repostPending ? (
+                  <LoadingSpinner size="small" />
+                ) : (
+                  <AccessibleTouchable
+                    accessibilityLabel="Repost article"
+                    accessibilityHint="Reposts this article to your feed"
+                    onPress={(e) => {
+                      e?.stopPropagation?.();
+                      repostAction();
+                    }}
+                    style={styles.likeSaveChildContainer}>
+                    <FontAwesome6
+                      name="arrows-rotate"
+                      size={24}
+                      color={!reposted ? '#414A4C' : PRIMARY_COLOR}
+                    />
+                    <Text
+                      style={{
+                        ...styles.title,
+                        fontWeight: '500',
+                        marginStart: 3,
+                        color: 'black',
+                      }}>
+                      {formatCount(repostCount)}
+                    </Text>
+                  </AccessibleTouchable>
+                )}
+              </>
+            )}
+
+            {source === 'home' && (
+              <AccessibleTouchable
+                accessibilityLabel="Share article"
+                accessibilityHint="Shares this article"
+                onPress={(e) => {
+                  e?.stopPropagation?.();
+                  handleShare();
+                }}
+                style={styles.likeSaveChildContainer}>
+                <FontAwesome name="share-alt" size={24} color={'#414A4C'} />
+              </AccessibleTouchable>
+            )}
+
+            {source === 'home' && (
+              <AccessibleTouchable
+                accessibilityLabel="Copy link"
+                accessibilityHint="Copies this article link to clipboard"
+                onPress={(e) => {
+                  e?.stopPropagation?.();
+                  handleCopyLink();
+                }}
+                style={styles.likeSaveChildContainer}>
+                <FontAwesome name="link" size={24} color={'#414A4C'} />
+              </AccessibleTouchable>
+            )}
+
+            {saveMutationPending ? (
+              <LoadingSpinner size="small" />
+            ) : (
+              <AccessibleTouchable
+                accessibilityLabel="Save article"
+                accessibilityHint="Saves this article for later"
+                onPress={(e) => {
+                  e?.stopPropagation?.();
+                  if (isGuest) {
+                    (navigation as any).navigate('GuestPlaceholderScreen', {
+                      title: 'Sign In Required',
+                      description: 'Please sign in or sign up to save this article.',
+                      iconName: 'bookmark',
+                    });
+                    return;
+                  }
+                  if (isConnected) {
+                    width.value = withTiming(0, {duration: 250});
+                    yValue.value = withTiming(100, {duration: 250});
+                    saveMutation(undefined, {
+                      onSuccess: async data => {
+                        Snackbar.show({
+                          text: data.message,
+                          duration: Snackbar.LENGTH_SHORT,
+                        });
+                        setSaved(!saved);
+                      },
+
+                      onError: () => {
+                        Snackbar.show({
+                          text: 'Something went wrong, try again!',
+                          duration: Snackbar.LENGTH_SHORT,
+                        });
+                      },
+                    });
+                  } else {
+                    Snackbar.show({
+                      text: 'Please check your network connection',
+                      duration: Snackbar.LENGTH_SHORT,
+                    });
+                  }
+                }}
+                style={styles.likeSaveChildContainer}>
+                {saved ? (
+                  <IonIcons name="bookmark" size={24} color={PRIMARY_COLOR} />
+                ) : (
+                  <IonIcons
+                    name="bookmark-outline"
+                    size={24}
+                    color={'#414A4C'}
+                  />
+                )}
+              </AccessibleTouchable>
+            )}
+
+            {source === 'home' && item.status === StatusEnum.PUBLISHED && (
+              <AccessibleTouchable
+                accessibilityLabel="More options"
+                accessibilityHint="Opens article action menu"
+                style={styles.likeSaveChildContainer}
+                onPress={(e) => {
+                  e?.stopPropagation?.();
+                  if (isGuest) {
+                    (navigation as any).navigate('GuestPlaceholderScreen', {
+                      title: 'Sign In Required',
+                      description: 'Please sign in or sign up for more actions.',
+                      iconName: 'ellipsis-v',
+                    });
+                    return;
+                  }
+                  onChange();
+                }}>
+                <Entypo
+                  name="dots-three-vertical"
+                  size={20}
+                  color={'#414A4C'}
+                />
+              </AccessibleTouchable>
+            )}
+          </View>
+        </View>
+      </View>
+    </Pressable>
+  );
+};
+
+export default ArticleCard;
+
+// const styles = StyleSheet.create({
+//   cardContainer: {
+//     width: '100%',
+//     backgroundColor: '#ffffff',
+//     flexDirection: 'row',
+//     marginVertical: 10,
+//     borderRadius: 12,
+//     overflow: 'hidden',
+//     elevation: 2,
+//     borderWidth: 1,
+//     borderColor: '#E0E0E0',
+//   },
+//   image: {
+//     flex: 0.4,
+//     height: '100%',
+//     resizeMode: 'cover',
+//   },
+//   textContainer: {
+//     flex: 0.6,
+//     backgroundColor: 'white',
+//     paddingHorizontal: 12,
+//     paddingVertical: 12,
+//     justifyContent: 'space-between',
+//   },
+
+//   title: {
+//     fontSize: fp(5.5),
+//     fontWeight: '700',
+//     color: '#191C1B',
+//     marginBottom: 4,
+//   },
+//   footerText: {
+//     fontSize: fp(3.5),
+//     fontWeight: '600',
+//     color: PRIMARY_COLOR,
+//     marginBottom: 3,
+//   },
+//   footerText1: {
+//     fontSize: fp(3.5),
+//     fontWeight: '400',
+//     color: '#778599',
+//     marginBottom: 2,
+//   },
+//   likeSaveContainer: {
+//     flexDirection: 'row',
+//     width: '100%',
+//     marginTop: 10,
+//     justifyContent: 'space-between',
+//   },
+//   likeSaveChildContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//   },
+//   shareIconContainer: {
+//     position: 'absolute',
+//     top: 5,
+//     right: 5,
+//     zIndex: 1,
+//   },
+// });
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    marginVertical: 12,
+    overflow: 'hidden',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    shadowOffset: {width: 0, height: 4},
+  },
+
+  imageWrapper: {
+    width: '100%',
+    height: 180,
+    position: 'relative',
+  },
+  heartOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  coverImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+
+  contentContainer: {
+    padding: 14,
+  },
+
+  footerText: {
+    fontSize: fp(3.4),
+    fontWeight: '600',
+    color: PRIMARY_COLOR,
+    marginBottom: 6,
+  },
+
+  title: {
+    fontSize: fp(5.8),
+    fontWeight: '700',
+    color: '#121212',
+    lineHeight: 26,
+    marginBottom: 6,
+  },
+
+  footerText1: {
+    fontSize: fp(3.5),
+    color: '#7A869A',
+    marginBottom: 2,
+  },
+
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: 6,
+    rowGap: 4,
+  },
+
+  dot: {
+    marginHorizontal: 6,
+    color: '#B0B0B0',
+  },
+
+  likeSaveContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 14,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
+  },
+
+  likeSaveChildContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+
+  shareIconContainer: {
+    position: 'absolute',
+    top: 2,
+    right: 12,
+    backgroundColor: ON_PRIMARY_COLOR,
+    padding: 6,
+    borderRadius: 20,
+  },
+  readTime: {
+    fontSize: 12,
+    color: "#6B7280", // Gray text
+    marginTop: 4,
+  },
+});
+
+/*
+const styles = StyleSheet.create({
+  cardContainer: {
+    flex: 0,
+    width: '100%',
+    maxHeight: 390,
+    backgroundColor: '#ffffff',
+    flexDirection: 'row',
+    marginVertical: 14,
+    overflow: 'hidden',
+    elevation: 4,
+
+    borderRadius: 12,
+  },
+  image: {
+    flex: 0.8,
+    resizeMode: 'cover',
+  },
+
+  likeSaveContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    marginTop: 6,
+    justifyContent: 'space-between',
+  },
+
+  likeSaveChildContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginHorizontal: hp(0),
+    marginVertical: hp(1),
+  },
+  textContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+    paddingHorizontal: 10,
+    paddingVertical: 13,
+  },
+  title: {
+    fontSize: fp(5.5),
+    fontWeight: 'bold',
+    color: '#121a26',
+    marginBottom: 4,
+    fontFamily: 'Lobster-Regular',
+  },
+  description: {
+    fontSize: fp(3),
+    fontWeight: '500',
+    lineHeight: 18,
+    color: '#778599',
+    marginBottom: 10,
+    fontFamily: 'monospace',
+  },
+  footerText: {
+    fontSize: fp(3.9),
+    fontWeight: '700',
+    color: BUTTON_COLOR,
+    marginBottom: 3,
+  },
+
+  footerText1: {
+    fontSize: fp(3.5),
+    fontWeight: '600',
+    color: '#121a26',
+    marginBottom: 3,
+  },
+
+  footerContainer: {
+    flex: 0,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  shareIconContainer: {
+    position: 'absolute',
+    top: 2,
+    right: 1,
+    zIndex: 1,
+  },
+ 
+});
+*/

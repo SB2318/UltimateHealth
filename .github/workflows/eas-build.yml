@@ -1,0 +1,58 @@
+name: EAS Build (Android & iOS)
+
+on:
+  workflow_dispatch:           # Manual trigger (best for builds)
+  push:
+    branches: [ main ]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Expo & EAS
+        uses: expo/expo-github-action@v9
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Detect Package Manager & Install Dependencies
+        working-directory: ./frontend
+        run: |
+          echo "🔍 Detecting package manager..."
+          
+          if [ -f "bun.lockb" ]; then
+            echo "Using Bun"
+            curl -fsSL https://bun.sh/install | bash
+            bun install
+          elif [ -f "pnpm-lock.yaml" ]; then
+            echo "Using pnpm"
+            npm install -g pnpm
+            pnpm install --frozen-lockfile
+          elif [ -f "yarn.lock" ]; then
+            echo "Using Yarn"
+            npm install -g yarn
+            yarn install --frozen-lockfile
+          else
+            echo "Using npm"
+            npm ci --legacy-peer-deps
+          fi
+          
+      -  name: Setup Firebase iOS Config
+         working-directory: ./frontend
+         run: |
+          echo '${{ secrets.GOOGLE_SERVICE_INFO_PILIST }}' | base64 -d > GoogleService-Info.plist
+          
+      -  name: Setup Firebase Android Config
+         working-directory: ./frontend
+         run: |
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' | base64 -d > google-services.json
+          
+      - name: Build Android with EAS
+        working-directory: ./frontend
+        run: npx expo prebuild --clean

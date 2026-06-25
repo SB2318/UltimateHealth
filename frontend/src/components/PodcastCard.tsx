@@ -1,0 +1,262 @@
+import React, {useRef} from 'react';
+import {TouchableOpacity, Alert, StyleSheet, View} from 'react-native';
+import {YStack, XStack, Image, Text} from 'tamagui';
+import {Entypo, Ionicons} from '@expo/vector-icons';
+import {formatCount} from '../helper/Utils';
+import {Category} from '../type';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import PodcastActions from './PodcastActions';
+import Share from 'react-native-share';
+import {GET_STORAGE_DATA} from '../helper/APIUtils';
+import {GlassStyles, ProfessionalColors, BorderRadius} from '../styles/GlassStyles';
+import {useSelector} from 'react-redux';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import { PODCAST_CARD } from '@/constants/podcastCard';
+import {getPlaybackPosition, PlaybackPosition} from '../helper/PlaybackManager';
+
+interface PodcastProps {
+  id: string;
+  downloaded: boolean;
+  display: boolean;
+  title: string;
+  host: string;
+  audioUrl: string;
+  imageUri: string;
+  views: number;
+  tags: Category[];
+  duration: string;
+  handleClick: () => void;
+  downLoadAudio: () => void;
+  handleReport: () => void;
+  playlistAct: (id: string) => void;
+}
+
+const PodcastCard = ({
+  id,
+  title,
+  host,
+  imageUri,
+  views,
+  duration,
+  tags,
+  audioUrl,
+  handleClick,
+  downLoadAudio,
+  handleReport,
+  downloaded,
+  display,
+  playlistAct,
+}: PodcastProps) => {
+  const sheetRef = useRef<BottomSheetModal>(null);
+  const {isGuest} = useSelector((state: any) => state.user);
+  const navigation = useNavigation<any>();
+  const [progress, setProgress] = React.useState<PlaybackPosition | null>(null);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isMounted = true;
+      getPlaybackPosition(id).then(pos => {
+        if (isMounted) {
+          setProgress(pos);
+        }
+      });
+      return () => {
+        isMounted = false;
+      };
+    }, [id])
+  );
+
+  const handleOpenSheet = () => {
+    if (isGuest) {
+      navigation.navigate('GuestPlaceholderScreen', {
+        title: 'Sign In Required',
+        description: 'Please sign in or sign up for more actions.',
+        iconName: 'ellipsis-v',
+      });
+      return;
+    }
+    sheetRef.current?.present();
+  };
+
+  const handleShare = async () => {
+    try {
+      const url = `https://uhsocial.in/api/share/podcast?trackId=${id}&audioUrl=${audioUrl}`;
+      const result = await Share.open({
+        title: title,
+        message: `${title} : Check out this awesome podcast on UltimateHealth app!`,
+        url: url,
+        subject: 'Podcast Sharing',
+      });
+      console.log(result);
+    } catch (error) {
+      console.log('Error sharing:', error);
+      Alert.alert('Error', 'Something went wrong while sharing.');
+    }
+  };
+
+  const uri =
+    imageUri && imageUri !== ''
+      ? imageUri.startsWith('https')
+        ? imageUri
+        : `${GET_STORAGE_DATA}/${imageUri}`
+      : 'https://t3.ftcdn.net/jpg/05/10/75/30/360_F_510753092_f4AOmCJAczuGgRLCmHxmowga2tC9VYQP.jpg';
+
+  return (
+    <TouchableOpacity onPress={handleClick} activeOpacity={0.9} style={styles.cardWrapper}>
+      <View style={[GlassStyles.glassCardElevated, styles.cardContainer]}>
+        <View style={styles.imageContainer}>
+          <Image
+            source={{uri}}
+            style={styles.coverImage}
+            borderRadius={BorderRadius.lg}
+          />
+          <View style={styles.imageOverlay}>
+            <View style={[styles.playButton, GlassStyles.glassContainer]}>
+              <Ionicons name="play" size={24} color={ProfessionalColors.white} />
+            </View>
+          </View>
+          {progress && progress.duration > 0 && (
+            <View style={styles.progressBarContainer}>
+              <View style={[styles.progressBar, { width: `${(progress.position / progress.duration) * 100}%` }]} />
+            </View>
+          )}
+        </View>
+
+        <YStack padding="$3" gap="$2" flex={1}>
+          <Text
+            fontSize={17}
+            fontWeight="700"
+            color={ProfessionalColors.gray900}
+            numberOfLines={2}
+            ellipsizeMode="tail">
+            {title}
+          </Text>
+
+          <XStack alignItems="center" gap="$2">
+            <Ionicons name="person-circle-outline" size={18} color={ProfessionalColors.gray600} />
+            <Text fontSize={14} fontWeight="500" color={ProfessionalColors.gray700}>
+              {host}
+            </Text>
+          </XStack>
+
+          <XStack flexWrap="wrap" gap="$1.5" marginTop="$1">
+            {tags?.slice(0, 3).map((tag, i) => (
+              <View key={i} style={styles.tag}>
+                <Text style={styles.tagText}>#{tag.name}</Text>
+              </View>
+            ))}
+          </XStack>
+
+          <XStack alignItems="center" justifyContent="space-between" marginTop="$2">
+            <XStack alignItems="center" gap="$1">
+              <Ionicons name="eye-outline" size={16} color={ProfessionalColors.gray600} />
+              <Text fontSize={13} fontWeight="500" color={ProfessionalColors.gray600}>
+                {views <= 1 ? `${views} view` : `${formatCount(views)} views`}
+              </Text>
+            </XStack>
+
+            <XStack alignItems="center" gap="$1">
+              <Ionicons name="time-outline" size={16} color={ProfessionalColors.gray600} />
+              <Text fontSize={13} fontWeight="500" color={ProfessionalColors.gray600}>
+                {duration}
+              </Text>
+            </XStack>
+          </XStack>
+        </YStack>
+
+        {display && !isGuest && (
+          <TouchableOpacity
+            style={[styles.menuButton, GlassStyles.glassContainer]}
+            onPress={handleOpenSheet}
+            activeOpacity={0.7}>
+            <Entypo name="dots-three-vertical" size={18} color={ProfessionalColors.gray800} />
+          </TouchableOpacity>
+        )}
+
+        <PodcastActions
+          ref={sheetRef}
+          downloaded={downloaded}
+          onShare={handleShare}
+          onReport={handleReport}
+          onDownload={downLoadAudio}
+          onSave={() => playlistAct(id)}
+        />
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const styles = StyleSheet.create({
+  cardWrapper: {
+    marginVertical: 8,
+    width: '100%',
+  },
+  cardContainer: {
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  imageContainer: {
+    width: '100%',
+    height: PODCAST_CARD.imageHeight,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  coverImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  imageOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 191, 255, 0.9)',
+  },
+  tag: {
+    backgroundColor: ProfessionalColors.primaryGlass,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: BorderRadius.lg,
+    borderWidth: 1,
+    borderColor: ProfessionalColors.primary + '30',
+  },
+  tagText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: ProfessionalColors.primary,
+    textTransform: 'capitalize',
+  },
+  menuButton: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  progressBarContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: ProfessionalColors.primary,
+  },
+});
+
+export default PodcastCard;
