@@ -22,6 +22,22 @@ type PendingDelete = {
 
 const UNDO_TIMEOUT_MS = 3500;
 
+const mergeNotificationsById = (
+  current: Notification[],
+  incoming: Notification[],
+): Notification[] => {
+  const notifications = new Map<string, Notification>();
+
+  current.forEach(notification => {
+    notifications.set(notification._id, notification);
+  });
+  incoming.forEach(notification => {
+    notifications.set(notification._id, notification);
+  });
+
+  return Array.from(notifications.values());
+};
+
 const NotificationScreen = ({navigation}: any) => {
   const {user_token} = useSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -53,8 +69,12 @@ const NotificationScreen = ({navigation}: any) => {
         setNotificationsData(notificationsRes.notifications);
       } else {
         if (notificationsRes.notifications) {
-          const oldNotif = notificationsData ?? [];
-          setNotificationsData([...oldNotif, ...notificationsRes.notifications]);
+          setNotificationsData(previous =>
+            mergeNotificationsById(
+              previous ?? [],
+              notificationsRes.notifications,
+            ),
+          );
         }
       }
     }
