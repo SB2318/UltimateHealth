@@ -131,6 +131,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     Number(articleId),
   );
 
+  // TEMP MOCK DATA — to be replaced by real /content-intel/readability/analyze response
+  // Shape mirrors the VeriWise-Content-Check API: { score, level, approved }
+  const mockReadability = {
+    score: 78,
+    level: 'Beginner Friendly' as 'Beginner Friendly' | 'Intermediate' | 'Advanced',
+    approved: true,
+  };
+
   const FONT_SCALE_KEY = 'article_font_scale';
   const FONT_SCALE_MIN = 0.8;
   const FONT_SCALE_MAX = 1.6;
@@ -833,6 +841,46 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
           {article && (
             <>
+              <Text style={styles.titleText}>{article?.title}</Text>
+
+              {/* Readability & Accessibility indicators (mock data, issue #845) */}
+              <View style={styles.readabilityRow}>
+                <View style={styles.readabilityBadge}>
+                  <Text style={styles.readabilityText}>
+                    {mockReadability.level}
+                  </Text>
+                </View>
+
+                <View style={styles.scoreBadge}>
+                  <Text style={styles.scoreText}>
+                    Score: {mockReadability.score}
+                  </Text>
+                </View>
+
+                <View
+                  style={[
+                    styles.statusChip,
+                    {
+                      backgroundColor: mockReadability.approved
+                        ? '#E8F5E9'
+                        : '#FFF3E0',
+                    },
+                  ]}>
+                  <Text
+                    style={{
+                      color: mockReadability.approved
+                        ? '#2E7D32'
+                        : '#EF6C00',
+                      fontWeight: '600',
+                      fontSize: 12,
+                    }}>
+                    {mockReadability.approved
+                      ? 'Approved'
+                      : 'Needs Improvement'}
+                  </Text>
+                </View>
+              </View>
+
               <Text style={[styles.titleText, {fontSize: 25 * fontScale}]}>
                 {article?.title}
               </Text>
@@ -1363,6 +1411,45 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     marginTop: 5,
+  },
+  readabilityRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 4,
+  },
+  readabilityBadge: {
+    backgroundColor: '#E3F2FD',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginRight: 6,
+    marginBottom: 6,
+  },
+  readabilityText: {
+    color: '#1565C0',
+    fontWeight: '600',
+    fontSize: 12,
+  },
+  scoreBadge: {
+    backgroundColor: '#F3E5F5',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginRight: 6,
+    marginBottom: 6,
+  },
+  scoreText: {
+    color: '#6A1B9A',
+    fontWeight: '600',
+    fontSize: 12,
+  },
+  statusChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginBottom: 6,
   },
   fontSizeControls: {
     marginTop: 12,
