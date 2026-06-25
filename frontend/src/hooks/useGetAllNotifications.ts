@@ -8,6 +8,21 @@ type NotificationRes = {
   totalPages: number;
   notifications: Notification[];
 };
+
+export const fetchNotifications = async (
+  page: number,
+): Promise<NotificationRes | null> => {
+  try {
+    const response = await axios.get(
+      `${PROD_URL}/notifications?role=2&page=${page}`,
+    );
+    return response.data as NotificationRes;
+  } catch (err) {
+    console.error('Error fetching notifications:', err);
+    return null;
+  }
+};
+
 export const useGetAllNotifications = (
   page: number,
   isConnected: boolean,
@@ -16,17 +31,7 @@ export const useGetAllNotifications = (
 
   return useQuery({
     queryKey: ['get-all-notifications', page],
-    queryFn: async () => {
-      try {
-        const response = await axios.get(
-          `${PROD_URL}/notifications?role=2&page=${page}`,
-        );
-        return response.data as NotificationRes;
-      } catch (err) {
-        console.error('Error fetching articles:', err);
-        return null;
-      }
-    },
+    queryFn: () => fetchNotifications(page),
     enabled: !!isConnected && !!page && !isGuest,
   });
 };
