@@ -40,6 +40,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 
   const timerRef = useRef<number | null>(null);
   const recordStartTimeRef = useRef<number | null>(null);
+  const isRecordingRef = useRef(false);
   
   // Stores the latest native duration for use in AppState listener and other effects, preventing stale closures.
   const durationMillisRef = useRef<number>(0);
@@ -84,12 +85,14 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   const record = async () => {
     await audioRecorder.prepareToRecordAsync();
     audioRecorder.record();
+    isRecordingRef.current = true;
     startTimer();
   };
 
   const stopRecording = async () => {
     // The recording will be available on `audioRecorder.uri`.
     await audioRecorder.stop();
+    isRecordingRef.current = false;
     setRecording(false);
     stopTimer();
     setFilePath(audioModule.uri);
@@ -267,8 +270,14 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   useEffect(() => {
     return () => {
       stopTimer();
+      if (isRecordingRef.current) {
+        isRecordingRef.current = false;
+        void audioRecorder.stop().catch(error => {
+          console.warn('Failed to stop recording during cleanup:', error);
+        });
+      }
     };
-  }, []);
+  }, [audioRecorder]);
 
   return (
     <Theme name="dark">
