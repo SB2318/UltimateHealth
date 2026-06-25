@@ -17,6 +17,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';
 import {useUserLogout} from '@/src/hooks/useUserLogout';
 import {useTheme} from 'tamagui';
+import {useQueryClient} from '@tanstack/react-query';
 
 const DEFAULT_PROFILE_IMAGE =
   'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
@@ -26,6 +27,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
  // const {user_token} = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
   const theme = useTheme();
+  const queryClient = useQueryClient();
   const {mutate: logout} = useUserLogout();  
 
   const handleLogout = () => {
@@ -35,6 +37,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
         onSuccess: async () => {
           Alert.alert('Success', 'Logout successfully');
           await clearStorage();
+          queryClient.clear();
           dispatch(resetUserState());
           navigation.reset({
             index: 0,
