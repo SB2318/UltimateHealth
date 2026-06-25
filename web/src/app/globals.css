@@ -1451,6 +1451,12 @@ footer {
   gap: 16px;
 }
 
+@media (min-width: 601px) and (max-width: 1296px) {
+  .footer-bottom-inner {
+    padding-right: 96px;
+  }
+}
+
 .footer-bottom-inner p {
   font-size: 0.82rem;
   color: #334155;
