@@ -1,27 +1,38 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  deleteReadingProgressItem,
+  getReadingProgressItem,
+  setReadingProgressItem,
+} from '../helper/MMKVUtils';
 import {
   clearProgress,
   getProgress,
   saveProgress,
 } from './ReadingProgressService';
 
-jest.mock('@react-native-async-storage/async-storage', () => ({
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
+jest.mock('../helper/MMKVUtils', () => ({
+  deleteReadingProgressItem: jest.fn(),
+  getReadingProgressItem: jest.fn(),
+  setReadingProgressItem: jest.fn(),
 }));
 
-const storage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
+const mockedGetReadingProgressItem =
+  getReadingProgressItem as jest.MockedFunction<typeof getReadingProgressItem>;
+const mockedSetReadingProgressItem =
+  setReadingProgressItem as jest.MockedFunction<typeof setReadingProgressItem>;
+const mockedDeleteReadingProgressItem =
+  deleteReadingProgressItem as jest.MockedFunction<
+    typeof deleteReadingProgressItem
+  >;
 
 describe('ReadingProgressService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    storage.removeItem.mockResolvedValue();
-    storage.setItem.mockResolvedValue();
+    mockedDeleteReadingProgressItem.mockResolvedValue();
+    mockedSetReadingProgressItem.mockResolvedValue();
   });
 
   it('returns valid progress for the requested article', async () => {
-    storage.getItem.mockResolvedValue(
+    mockedGetReadingProgressItem.mockResolvedValue(
       JSON.stringify({
         articleId: 'article-1',
         scrollPosition: 42,
@@ -37,16 +48,16 @@ describe('ReadingProgressService', () => {
   });
 
   it('removes malformed JSON and returns null', async () => {
-    storage.getItem.mockResolvedValue('{broken');
+    mockedGetReadingProgressItem.mockResolvedValue('{broken');
 
     await expect(getProgress('article-1')).resolves.toBeNull();
-    expect(storage.removeItem).toHaveBeenCalledWith(
+    expect(mockedDeleteReadingProgressItem).toHaveBeenCalledWith(
       'reading_progress_article-1',
     );
   });
 
   it('rejects progress saved for another article', async () => {
-    storage.getItem.mockResolvedValue(
+    mockedGetReadingProgressItem.mockResolvedValue(
       JSON.stringify({
         articleId: 'article-2',
         scrollPosition: 42,
@@ -55,12 +66,15 @@ describe('ReadingProgressService', () => {
     );
 
     await expect(getProgress('article-1')).resolves.toBeNull();
+    expect(mockedDeleteReadingProgressItem).toHaveBeenCalledWith(
+      'reading_progress_article-1',
+    );
   });
 
   it('clamps saved progress to the supported range', async () => {
     await saveProgress('article-1', 150);
 
-    const [, serialized] = storage.setItem.mock.calls[0];
+    const [, serialized] = mockedSetReadingProgressItem.mock.calls[0];
     expect(JSON.parse(serialized)).toMatchObject({
       articleId: 'article-1',
       scrollPosition: 100,
@@ -70,7 +84,7 @@ describe('ReadingProgressService', () => {
   it('clears the requested article progress', async () => {
     await clearProgress('article-1');
 
-    expect(storage.removeItem).toHaveBeenCalledWith(
+    expect(mockedDeleteReadingProgressItem).toHaveBeenCalledWith(
       'reading_progress_article-1',
     );
   });

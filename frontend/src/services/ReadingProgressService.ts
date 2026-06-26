@@ -1,4 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  deleteReadingProgressItem,
+  getReadingProgressItem,
+  setReadingProgressItem,
+} from '../helper/MMKVUtils';
 
 const PROGRESS_KEY_PREFIX = 'reading_progress_';
 
@@ -42,7 +46,7 @@ export const saveProgress = async (
     updatedAt: Date.now(),
   };
 
-  await AsyncStorage.setItem(
+  await setReadingProgressItem(
     getProgressKey(articleId),
     JSON.stringify(progress),
   );
@@ -52,7 +56,7 @@ export const getProgress = async (
   articleId: string,
 ): Promise<ReadingProgress | null> => {
   const key = getProgressKey(articleId);
-  const raw = await AsyncStorage.getItem(key);
+  const raw = await getReadingProgressItem(key);
 
   if (!raw) {
     return null;
@@ -67,10 +71,10 @@ export const getProgress = async (
     // Invalid persisted data is removed below.
   }
 
-  await AsyncStorage.removeItem(key).catch(() => undefined);
+  await deleteReadingProgressItem(key).catch(() => undefined);
   return null;
 };
 
 export const clearProgress = async (articleId: string): Promise<void> => {
-  await AsyncStorage.removeItem(getProgressKey(articleId));
+  await deleteReadingProgressItem(getProgressKey(articleId));
 };
