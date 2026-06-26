@@ -40,7 +40,8 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 
   const timerRef = useRef<number | null>(null);
   const recordStartTimeRef = useRef<number | null>(null);
-  
+  const isRecordingRef = useRef(false);
+
   // Stores the latest native duration for use in AppState listener and other effects, preventing stale closures.
   const durationMillisRef = useRef<number>(0);
 
@@ -51,49 +52,84 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   }, [recorderState?.durationMillis]);
 
   useEffect(() => {
-    if (recording && recorderState?.durationMillis && recorderState.durationMillis > 0) {
-      // Keep recordStartTimeRef in sync with the actual duration
-      recordStartTimeRef.current = Date.now() - recorderState.durationMillis;
+    if (
+      recording &&
+      recorderState?.durationMillis &&
+      recorderState.durationMillis > 0
+    ) {
+      recordStartTimeRef.current =
+        Date.now() - recorderState.durationMillis;
       setRecordTime(formatTime(recorderState.durationMillis));
     }
   }, [recorderState?.durationMillis, recording]);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', (nextState: AppStateStatus) => {
-      if (nextState === 'active' && recording) {
-        // Re-sync timer immediately on app foreground using actual tracked duration
-        if (durationMillisRef.current > 0) {
-          recordStartTimeRef.current = Date.now() - durationMillisRef.current;
-          setRecordTime(formatTime(durationMillisRef.current));
-        } else if (recordStartTimeRef.current) {
-          // Fallback to JS-based calculation if native duration hasn't been reported yet (e.g., very early in the recording session)
-          const elapsed = Date.now() - recordStartTimeRef.current;
-          setRecordTime(formatTime(elapsed));
+    const subscription = AppState.addEventListener(
+      'change',
+      (nextState: AppStateStatus) => {
+        if (nextState === 'active' && recording) {
+          if (durationMillisRef.current > 0) {
+            recordStartTimeRef.current =
+              Date.now() - durationMillisRef.current;
+            setRecordTime(formatTime(durationMillisRef.current));
+          } else if (recordStartTimeRef.current) {
+            const elapsed = Date.now() - recordStartTimeRef.current;
+            setRecordTime(formatTime(elapsed));
+          }
         }
-      }
-    });
+      },
+    );
+
     return () => subscription.remove();
   }, [recording]);
+ useFocusEffect(
+  useCallback(() => {
+    handleUpload();
 
-  useFocusEffect(
-    useCallback(() => {
-      handleUpload();
-    }, []),
-  );
+    return () => {
+      stopTimer();
 
-  const record = async () => {
+      if (isRecordingRef.current) {
+        audioRecorder
+          .stop()
+          .catch(err =>
+            console.warn('Error stopping recorder on screen exit:', err),
+          );
+
+        isRecordingRef.current = false;
+      }
+    };
+  }, [audioRecorder, handleUpload]),
+);
+
+ const record = async () => {
+  try {
     await audioRecorder.prepareToRecordAsync();
     audioRecorder.record();
+
+    isRecordingRef.current = true;
     startTimer();
-  };
+  } catch (error) {
+    console.warn('Failed to start recording:', error);
+
+    isRecordingRef.current = false;
+    stopTimer();
+  }
+};
 
   const stopRecording = async () => {
-    // The recording will be available on `audioRecorder.uri`.
+  try {
     await audioRecorder.stop();
-    setRecording(false);
-    stopTimer();
-    setFilePath(audioModule.uri);
-  };
+  } catch (error) {
+    console.warn('Failed to stop recording:', error);
+  }
+
+  isRecordingRef.current = false;
+
+  setRecording(false);
+  stopTimer();
+  setFilePath(audioModule.uri);
+};
 
   useEffect(() => {
     (async () => {
@@ -264,11 +300,6 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   //   };
   // }, []);
 
-  useEffect(() => {
-    return () => {
-      stopTimer();
-    };
-  }, []);
 
   return (
     <Theme name="dark">
