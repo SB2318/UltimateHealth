@@ -40,26 +40,50 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const recordStartTimeRef = useRef<number | null>(null);
+  const isRecordingRef = useRef(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      handleUpload();
-    }, []),
-  );
+ useFocusEffect(
+  useCallback(() => {
+    handleUpload();
+
+    return () => {
+      stopTimer();
+
+      if (isRecordingRef.current) {
+        audioRecorder
+          .stop()
+          .catch(err =>
+            console.warn('Error stopping recorder on screen exit:', err),
+          );
+
+        isRecordingRef.current = false;
+      }
+    };
+  }, [audioRecorder, handleUpload]),
+);
 
   const record = async () => {
-    await audioRecorder.prepareToRecordAsync();
-    audioRecorder.record();
-    startTimer();
-  };
+  await audioRecorder.prepareToRecordAsync();
+  audioRecorder.record();
+
+  isRecordingRef.current = true;
+
+  startTimer();
+};
 
   const stopRecording = async () => {
-    // The recording will be available on `audioRecorder.uri`.
+  try {
     await audioRecorder.stop();
-    setRecording(false);
-    stopTimer();
-    setFilePath(audioModule.uri);
-  };
+  } catch (error) {
+    console.warn('Failed to stop recording:', error);
+  }
+
+  isRecordingRef.current = false;
+
+  setRecording(false);
+  stopTimer();
+  setFilePath(audioModule.uri);
+};
 
   useEffect(() => {
     (async () => {
@@ -231,11 +255,6 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   //   };
   // }, []);
 
-  useEffect(() => {
-    return () => {
-      stopTimer();
-    };
-  }, []);
 
   return (
     <Theme name="dark">
