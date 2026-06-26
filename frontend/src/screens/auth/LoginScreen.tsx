@@ -7,7 +7,7 @@ import React, {useEffect, useState} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {Alert, Image, useColorScheme} from 'react-native';
+import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch} from 'react-redux';
@@ -70,6 +70,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   });
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {mutate: resendVerification, isPending: resendVerificationPending} =
     useRequestVerification();
 
@@ -213,17 +214,16 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                     'Email not verified. Please check your email.',
                   );
                   break;
-                case 404:
-                  Alert.alert('Error', 'User not found');
-                  break;
                 default:
-                  Alert.alert('Error', 'Internal server error');
+                  Alert.alert('Error', 'Something went wrong. Please try again.');
+                  break;
               }
             } else {
-              Alert.alert('Error', 'User not found');
+              Alert.alert('Error', 'Network error or server unavailable');
             }
+            setIsSubmitting(false);
           },
-        },
+        }
       );
   };
 
@@ -415,7 +415,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               </Text>
             </XStack>
 
-            <Button
+          <Button
               backgroundColor="$blue10"
               theme="blue"
               marginTop="$5"
@@ -427,9 +427,13 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               disabled={loginPending || !isValid}
               opacity={loginPending || !isValid ? 0.5 : 1}
               width="100%">
-              <Text fontSize={18} color="$white" fontWeight="600">
-                Login
-              </Text>
+              {isSubmitting || loginPending ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text fontSize={18} color="$white" fontWeight="600">
+                  Login
+                </Text>
+              )}
             </Button>
           </YStack>
 

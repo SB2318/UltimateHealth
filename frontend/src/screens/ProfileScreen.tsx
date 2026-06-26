@@ -16,7 +16,9 @@ import Snackbar from 'react-native-snackbar';
 import {setUserHandle} from '../store/UserSlice';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
+import {useGetReadHistory, ReadHistoryArticle} from '../hooks/useGetReadHistory';
 import { NoArticleState } from '../components/EmptyStates';
+import Ionicon from '@expo/vector-icons/Ionicons';
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const theme = useTheme();
@@ -205,7 +207,37 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   };
 
 
-  const [activeTab, setActiveTab] = useState<'Insight' | 'Reposts' | 'Saved'>('Insight');
+  const [activeTab, setActiveTab] = useState<'Insight' | 'Reposts' | 'Saved' | 'History'>('Insight');
+  const [historyPage, setHistoryPage] = useState<number>(1);
+  const [historyArticles, setHistoryArticles] = useState<ReadHistoryArticle[]>([]);
+  const [historyTotalPages, setHistoryTotalPages] = useState<number>(1);
+
+  const {
+    data: readHistory,
+    isLoading: isHistoryLoading,
+    isFetching: isHistoryFetching,
+    isError: isHistoryError,
+    refetch: refetchHistory,
+  } = useGetReadHistory(historyPage);
+
+  React.useEffect(() => {
+    if (readHistory) {
+      if (historyPage === 1) {
+        setHistoryArticles(readHistory.articles ?? []);
+      } else {
+        setHistoryArticles(prev => [...prev, ...(readHistory.articles ?? [])]);
+      }
+      if (readHistory.totalPages) {
+        setHistoryTotalPages(readHistory.totalPages);
+      }
+    }
+  }, [readHistory, historyPage]);
+
+  const handleLoadMoreHistory = () => {
+    if (!isHistoryFetching && historyPage < historyTotalPages) {
+      setHistoryPage(prev => prev + 1);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -247,6 +279,14 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
       >
         {renderHeader()}
 
+        <TouchableOpacity
+      style={styles.historyRow}
+      onPress={() => navigation.navigate('ReadingHistoryScreen')}>
+      <Ionicon name="time-outline" size={22} color={PRIMARY_COLOR} />
+        <Text style={styles.historyRowText}>Reading History</Text>
+        <Ionicon name="chevron-forward" size={20} color="#9ca3af" />
+      </TouchableOpacity>
+
         {/* Custom Tab Bar */}
         <View style={[styles.tabBarContainer, { backgroundColor: tabColors.background, borderBottomColor: tabColors.border }]}>
           <TouchableOpacity 
@@ -280,6 +320,17 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
           >
             <Text style={[styles.tabButtonText, { color: activeTab === 'Saved' ? tabColors.activeText : tabColors.inactiveText }]}>
               Saved ({user?.savedArticles.length || 0})
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.tabButton, activeTab === 'History' && { borderBottomColor: tabColors.activeText }]}
+            onPress={() => setActiveTab('History')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'History' }}
+            accessibilityLabel={`History tab, ${historyArticles.length || 0} recently read articles`}
+          >
+            <Text style={[styles.tabButtonText, { color: activeTab === 'History' ? tabColors.activeText : tabColors.inactiveText }]}>
+              History ({historyArticles.length || 0})
             </Text>
           </TouchableOpacity>
         </View>
@@ -329,6 +380,55 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
                  <NoArticleState/>
               }
             />
+          )}
+          {activeTab === 'History' && (
+            isHistoryLoading ? (
+              <Loader />
+            ) : isHistoryError ? (
+              <View style={styles.historyErrorContainer}>
+                <Text style={[styles.historyErrorText, {color: theme.color10?.val}]}>
+                  Couldn't load your read history. Please try again.
+                </Text>
+                <TouchableOpacity
+                  style={[styles.historyRetryButton, {borderColor: PRIMARY_COLOR}]}
+                  onPress={() => refetchHistory()}
+                >
+                  <Text style={{color: PRIMARY_COLOR, fontWeight: '600'}}>Retry</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <FlatList
+                data={historyArticles}
+                renderItem={renderItem}
+                scrollEnabled={false}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={[
+                  styles.flatListContentContainer,
+                  {paddingBottom: bottomBarHeight + 15},
+                ]}
+                keyExtractor={item => item?._id}
+                ListEmptyComponent={
+                  <NoArticleState/>
+                }
+                ListFooterComponent={
+                  historyPage < historyTotalPages ? (
+                    <TouchableOpacity
+                      style={[styles.loadMoreButton, {borderColor: PRIMARY_COLOR}]}
+                      onPress={handleLoadMoreHistory}
+                      disabled={isHistoryFetching}
+                    >
+                      {isHistoryFetching ? (
+                        <Loader />
+                      ) : (
+                        <Text style={{color: PRIMARY_COLOR, fontWeight: '600'}}>
+                          Load More
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  ) : null
+                }
+              />
+            )
           )}
         </View>
       </ScrollView>
@@ -385,5 +485,47 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  historyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    backgroundColor: '#ffffff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f3f4f6',
+  },
+  historyRowText: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1a1a1a',
+  },
+  loadMoreButton: {
+    marginTop: 12,
+    paddingVertical: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  historyErrorContainer: {
+    padding: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  historyErrorText: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  historyRetryButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderRadius: 8,
   },
 });

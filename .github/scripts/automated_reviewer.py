@@ -5,6 +5,7 @@ import urllib.request
 import urllib.error
 import time
 from datetime import datetime, timezone
+import re
 
 MAX_DIFF_SIZE = 300000        # max diff bytes sent to Gemini per PR
 API_TIMEOUT = 30              # seconds for all GitHub API calls
@@ -135,6 +136,29 @@ def fetch_pr_metadata(repo, pr_number, github_token):
         return title, body, labels, author
     return "Unknown Title", "Unknown Description", [], ""
 
+def check_author_authorization(repo, pr_body, pr_author, github_token):
+    if not pr_body:
+        return False, "No PR description provided to link issues."
+
+    pattern = r'(?i)(?:fix|fixes|fixed|close|closes|closed|resolve|resolves|resolved|issue|#)\s*#?(\d+)'
+    issue_numbers = re.findall(pattern, pr_body)
+
+    if not issue_numbers:
+        return False, "No linked issues found in the PR description using standard keywords (e.g., 'Fixes #123', 'Issue #123')."
+
+    for issue_num in issue_numbers:
+        url = f"https://api.github.com/repos/{repo}/issues/{issue_num}"
+        headers = {"Authorization": f"token {github_token}", "Accept": "application/vnd.github.v3+json"}
+        issue_data = make_github_request(url, headers, is_json=True)
+        if issue_data:
+            issue_author = issue_data.get("user", {}).get("login", "")
+            assignees = [a.get("login", "") for a in issue_data.get("assignees", [])]
+            
+            if pr_author == issue_author or pr_author in assignees:
+                return True, "Authorized"
+
+    return False, "You are not the author or an assignee of the linked issue(s)."
+
 def fetch_pr_comments(repo, pr_number, github_token):
     comments = []
     page = 1
@@ -231,8 +255,13 @@ def generate_review(pr_title, pr_body, diff_text, previous_reviews_text, availab
         "generationConfig": {"temperature": 0.2, "topP": 0.8, "topK": 40, "maxOutputTokens": 8192}
     }
     max_retries = max(3, len(api_keys) + 1)
+    base_wait = 5 if len(api_keys) > 1 else 50
+    print(f"[INFO] Starting Gemini call. Keys available: {len(api_keys)}, max_retries: {max_retries}", flush=True)
+
     for attempt in range(max_retries):
         current_key = api_keys[attempt % len(api_keys)]
+        key_index = attempt % len(api_keys) + 1
+        print(f"[INFO] Attempt {attempt+1}/{max_retries} using key #{key_index}", flush=True)
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={current_key}"
         request = urllib.request.Request(
             url,
@@ -247,22 +276,23 @@ def generate_review(pr_title, pr_body, diff_text, previous_reviews_text, availab
             error_body = e.read().decode("utf-8")
             print(f"HTTP Error from Gemini API (Attempt {attempt+1}): {e.code} - {error_body}")
             if e.code in [403, 429, 500, 502, 503, 504] and attempt < max_retries - 1:
-                # Exponential back-off: 60 s, 120 s, 240 s — much longer for rate limits
-                sleep_time = RATE_LIMIT_SLEEP_BASE * (2 ** attempt)
-                print(f"Retrying in {sleep_time} seconds with alternative key...")
+                sleep_time = base_wait * (2 ** attempt)
+                print(f"[WARN] Gemini API Error ({e.code}). Retrying in {sleep_time}s with alternative key...", flush=True)
                 time.sleep(sleep_time)
             else:
+                if attempt == max_retries - 1:
+                    print(f"[ERROR] Gemini API quota exceeded after {max_retries} retries across {len(api_keys)} keys.", flush=True)
                 raise e
         except (socket.timeout, urllib.error.URLError) as e:
             print(f"Gemini API timed out (Attempt {attempt+1}): {e}")
             if attempt < max_retries - 1:
-                time.sleep(15)
+                time.sleep(10)
             else:
                 raise e
         except Exception as e:
             print(f"Failed to fetch review from Gemini API (Attempt {attempt+1}): {e}")
             if attempt < max_retries - 1:
-                time.sleep(15)
+                time.sleep(10)
             else:
                 raise e
 
@@ -335,6 +365,23 @@ def run_review_for_pr(repo, pr_number, github_token, api_keys, is_scheduled=Fals
         msg = "Skipped: PR has 'gssoc:invalid' label."
         print(msg)
         return "skipped", msg
+
+    # 2. Check Author Authorization (GSSoC logic)
+    maintainers = ["SB2318", "rushiii3"]
+    if pr_author not in maintainers:
+        is_authorized, auth_reason = check_author_authorization(repo, pr_body, pr_author, github_token)
+        if not is_authorized:
+            msg = f"Skipped: {auth_reason}"
+            print(msg)
+            add_pr_labels(repo, pr_number, github_token, ["gssoc:invalid"])
+            comment = (
+                "### ❌ PR Validation Failed\n\n"
+                f"This PR was marked as `gssoc:invalid` because: **{auth_reason}**\n\n"
+                "To resolve this, please ensure your PR description links an issue (e.g., `Fixes #123`) and that you are either the **creator** or an **assignee** of that issue.\n\n"
+                "<!-- automated-ai-reviewer-bot-v2 -->"
+            )
+            post_review(repo, pr_number, github_token, comment)
+            return "skipped", msg
 
     print("Fetching PR comments...")
     comments = fetch_pr_comments(repo, pr_number, github_token)
