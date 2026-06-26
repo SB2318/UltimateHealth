@@ -8,22 +8,8 @@ import {
 import React, {useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {PRIMARY_COLOR} from '../helper/Theme';
-
-const profSchema = z.object({
-  specialization: z
-    .string()
-    .min(1, 'Please enter your area of specialization.'),
-  qualification: z
-    .string()
-    .min(1, 'Please enter your educational qualification.'),
-  experience: z
-    .string()
-    .min(1, 'Please enter your years of experience.')
-    .regex(/^\d+(\.\d+)?$/, 'Please enter a valid number for years of experience.'),
-});
-export type ProfFormData = z.infer<typeof profSchema>;
+import { profSchema, ProfFormData } from '../schemas/profileSchemas';
 
 export interface ProfileEditProfessionalTab {
   user: any;

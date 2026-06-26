@@ -9,27 +9,8 @@ import React, {useState} from 'react';
 import Feather from '@expo/vector-icons/Feather';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {PRIMARY_COLOR} from '../helper/Theme';
-
-const passwordSchema = z.object({
-  old_password: z.string().min(1, 'Current password is required.'),
-  new_password: z
-    .string()
-    .min(1, 'New password is required.')
-    .min(8, 'Password must contain at least 8 characters.')
-    .regex(/(?=.*[a-z])/, 'Password must contain at least one lowercase letter.')
-    .regex(/(?=.*[0-9]|.*[!@#$%^&*])/, 'Password must contain at least one number or special character.'),
-  confirm_password: z.string().min(1, 'Please confirm your new password.'),
-}).refine((data) => data.new_password === data.confirm_password, {
-  message: "Passwords do not match. Please re-enter.",
-  path: ['confirm_password'],
-}).refine((data) => data.new_password !== data.old_password, {
-  message: "New password must be different from the current password.",
-  path: ['new_password'],
-});
-
-export type PasswordFormData = z.infer<typeof passwordSchema>;
+import { passwordSchema, PasswordFormData } from '../schemas/profileSchemas';
 
 interface PasswordTabProps {
   handleSubmitPassword: (data: PasswordFormData) => void;

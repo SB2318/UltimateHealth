@@ -10,22 +10,8 @@ import React, {memo, useEffect} from 'react';
 import Feather from '@expo/vector-icons/Feather';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {PRIMARY_COLOR} from '../helper/Theme';
-
-const generalSchema = z.object({
-  username: z
-    .string()
-    .min(1, 'Please enter your full name.')
-    .min(2, 'Name must be at least 2 characters.'),
-  userHandle: z.string().min(1, 'User handle is required.'),
-  email: z
-    .string()
-    .min(1, 'Email address is required.')
-    .email('Please enter a valid email address.'),
-  about: z.string().min(1, 'Please tell us something about yourself.'),
-});
-export type GeneralFormData = z.infer<typeof generalSchema>;
+import { generalSchema, GeneralFormData } from '../schemas/profileSchemas';
 
 interface ProfileEditGeneralTab {
   user: any;
