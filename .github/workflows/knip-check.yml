@@ -50,18 +50,18 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: "yarn"
-          cache-dependency-path: frontend/yarn.lock
+          cache: "pnpm"
+          cache-dependency-path: frontend/pnpm-lock.yaml
       - name: Cache node_modules
         id: node-cache
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
 
       - name: Install dependencies
         if: steps.node-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Run Knip analyses
         id: knip
@@ -87,10 +87,10 @@ jobs:
             fi
           }
 
-          run_check full yarn knip
-          run_check dependencies yarn knip --dependencies
-          run_check files yarn knip --files
-          run_check exports yarn knip --exports
+          run_check full pnpm knip
+          run_check dependencies pnpm knip --dependencies
+          run_check files pnpm knip --files
+          run_check exports pnpm knip --exports
 
           exit 0
 
