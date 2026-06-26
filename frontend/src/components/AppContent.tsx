@@ -20,23 +20,40 @@ import { registerAndSyncPushToken } from '../helper/PushNotificationService';
 import { initDeepLinking, navigateDeepLink, resolveNotificationTarget } from '../helper/DeepLinkService';
 import { firebaseInit } from '../helper/firebase';
 import { cleanUpDownloads } from '../helper/Utils';
-import { SECURE_KEYS, secureRetrieveItem } from '../helper/SecureStorageUtils';
-import { setUserToken, setGuestMode } from '../store/UserSlice';
-import { RootState } from '../store/ReduxStore';
+import {
+  SECURE_KEYS,
+  secureRetrieveItem,
+} from '../helper/SecureStorageUtils';
 import { setupAxiosInterceptor } from '../helper/setupAxiosInterceptor';
 import { initMonitoring } from '../services/monitoring/sentry';
+
+import { setUserToken, setGuestMode } from '../store/UserSlice';
 import { setConnected } from '../store/NetworkSlice';
+import { RootState } from '../store/ReduxStore';
+
 import StackNavigation from '../navigations/StackNavigation';
 import { CustomAlertDialog } from './CustomAlert';
 import UpdateModal from './UpdateModal';
+import { NetworkBanner } from './NetworkBanner';
 
 export default function AppContent() {
   const navigationRef = useRef<NavigationContainerRef<any> | null>(null);
   const hasInitialized = useRef(false);
+  const pendingDeepLinkRef = useRef<string | null>(null);
+
   const isDarkMode = useColorScheme() === 'dark';
 
+  // Keep your existing API if this is what the project uses
   const { data: tokenRes = null } = useCheckTokenStatus();
-  const { user_token, isGuest } = useSelector((state: RootState) => state.user);
+
+  const { user_token, isGuest } = useSelector(
+    (state: RootState) => state.user,
+  );
+
+  // Bring over hooks introduced on main
+  useVersionCheck();
+  useNotificationListeners();
+
 
   useEffect(() => {
     initMonitoring();
@@ -130,15 +147,30 @@ export default function AppContent() {
   useNotificationListeners();
 
   return (
-    <TamaguiProvider
-      config={config}
-      defaultTheme={isDarkMode ? 'dark' : 'light'}>
-      <AppInner
-        navigationRef={navigationRef}
-        visible={visible}
-        storeUrl={storeUrl}
-      />
-    </TamaguiProvider>
+<SafeAreaProvider>
+  <TamaguiProvider
+    config={config}
+    defaultTheme={isDarkMode ? 'dark' : 'light'}>
+    <PaperProvider>
+      <FirebaseProvider>
+        <PreferencesProvider>
+          <SocketProvider>
+            <View style={{ flex: 1 }}>
+              <NetworkBanner />
+
+              <AppInner
+                navigationRef={navigationRef}
+                visible={visible}
+                storeUrl={storeUrl}
+              />
+            </View>
+          </SocketProvider>
+        </PreferencesProvider>
+      </FirebaseProvider>
+    </PaperProvider>
+  </TamaguiProvider>
+</SafeAreaProvider>
+
   );
 }
 
