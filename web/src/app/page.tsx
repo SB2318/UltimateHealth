@@ -111,18 +111,17 @@ const subscribeToCursorGlow = (callback: () => void) => {
 const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact']
 
 export default function Home() {
-  const [scrolled, setScrolled] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [comingSoonModal, setComingSoonModal] = useState(false)
-  const [appleModal, setAppleModal] = useState(false)
-  const [testerEmail, setTesterEmail] = useState('')
-  const [testerSuccess, setTesterSuccess] = useState(false)
-  const [screenshotModal, setScreenshotModal] = useState(false)
-  const [currentScreenshot, setCurrentScreenshot] = useState(0)
-  const [userSliderOpen, setUserSliderOpen] = useState(true)
-  const [adminSliderOpen, setAdminSliderOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState<string>('')
-  const [featuresLoading, setFeaturesLoading] = useState(true)
+
+  const [comingSoonModal, setComingSoonModal] = useState(false);
+  const [appleModal, setAppleModal] = useState(false);
+  const [testerEmail, setTesterEmail] = useState("");
+  const [testerSuccess, setTesterSuccess] = useState(false);
+  const [screenshotModal, setScreenshotModal] = useState(false);
+  const [currentScreenshot, setCurrentScreenshot] = useState(0);
+  const [userSliderOpen, setUserSliderOpen] = useState(true);
+  const [adminSliderOpen, setAdminSliderOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
+  const [featuresLoading, setFeaturesLoading] = useState(true);
 
   // ── DNA helix cursor ──
   const cursorGlowEnabled = useSyncExternalStore(
