@@ -17,7 +17,12 @@ import { SocketProvider } from '../contexts/SocketContext';
 import { PreferencesProvider } from '../contexts/PreferencesContext';
 import config from '../../tamagui.config';
 import { registerAndSyncPushToken } from '../helper/PushNotificationService';
-import { initDeepLinking, navigateDeepLink, resolveNotificationTarget } from '../helper/DeepLinkService';
+import {
+  initDeepLinking,
+  navigateDeepLink,
+  resolveDeepLinkTarget,
+  resolveNotificationTarget,
+} from '../helper/DeepLinkService';
 import { firebaseInit } from '../helper/firebase';
 import { cleanUpDownloads } from '../helper/Utils';
 import {
@@ -42,26 +47,21 @@ export default function AppContent() {
   const pendingDeepLinkRef = useRef<string | null>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
+  const { visible, storeUrl } = useVersionCheck();
+  const dispatch = useDispatch();
 
-  // Keep your existing API if this is what the project uses
   const { data: tokenRes = null } = useCheckTokenStatus();
 
   const { user_token, isGuest } = useSelector(
     (state: RootState) => state.user,
   );
 
-  // Bring over hooks introduced on main
-  useVersionCheck();
   useNotificationListeners();
-
 
   useEffect(() => {
     initMonitoring();
     setupAxiosInterceptor();
   }, []);
-
-  const { visible, storeUrl } = useVersionCheck();
-  const dispatch = useDispatch();
 
   const checkToken = useCallback(async () => {
     const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
@@ -79,11 +79,10 @@ export default function AppContent() {
   }, [checkToken, tokenRes]);
 
   useEffect(() => {
-    if (!navigationRef.current) return;
-    if (!isGuest && tokenRes === null && !user_token) return;
-    const isAuthenticated = Boolean(tokenRes?.isValid || user_token) && !isGuest;
-    return initDeepLinking(navigationRef.current, isAuthenticated);
-  }, [isGuest, tokenRes, user_token]);
+    return initDeepLinking(url => {
+      pendingDeepLinkRef.current = url;
+    });
+  }, []);
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -118,6 +117,20 @@ export default function AppContent() {
   }, [user_token]);
 
   useEffect(() => {
+    if (!navigationRef.current || !pendingDeepLinkRef.current) return;
+    if (!isGuest && tokenRes === null && !user_token) return;
+
+    const isAuthenticated = Boolean(tokenRes?.isValid || user_token) && !isGuest;
+    const target = resolveDeepLinkTarget(pendingDeepLinkRef.current);
+
+    if (target) {
+      navigateDeepLink(navigationRef.current, target, isAuthenticated);
+    }
+
+    pendingDeepLinkRef.current = null;
+  }, [tokenRes, user_token, isGuest]);
+
+  useEffect(() => {
     const handleNotificationResponse = async (
       response: Notifications.NotificationResponse,
     ) => {
@@ -143,8 +156,6 @@ export default function AppContent() {
     firebaseInit();
     cleanUpDownloads();
   }, []);
-
-  useNotificationListeners();
 
   return (
 <SafeAreaProvider>
