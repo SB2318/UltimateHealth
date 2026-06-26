@@ -4,6 +4,7 @@ import * as ExpoLinking from 'expo-linking';
 // Mock expo-linking just in case it relies on native modules during tests
 jest.mock('expo-linking', () => {
   return {
+    createURL: jest.fn((path: string) => `ultimatehealth://${path}`),
     parse: jest.fn((url: string) => {
       // Very basic mock of ExpoLinking.parse
       const urlObject = new URL(url);
