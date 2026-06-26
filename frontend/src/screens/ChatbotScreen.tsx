@@ -153,12 +153,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       });
       return;
     }
-  safeSetMessages(previousMessages =>
-  GiftedChat.append(previousMessages, messages),
-);
-
-const prompt = messages?.[0]?.text ?? 'AI in health within 100 words';
-sendMessageToAI(prompt, {
+  sendMessageToAI(prompt, {
      onSuccess: (responseData: Message) => {
   const verification = verifyChatbotResponse(responseData.text);
 
