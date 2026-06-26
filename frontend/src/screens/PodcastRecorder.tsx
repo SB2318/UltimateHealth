@@ -62,13 +62,19 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   }, [audioRecorder, handleUpload]),
 );
 
-  const record = async () => {
-  await audioRecorder.prepareToRecordAsync();
-  audioRecorder.record();
+ const record = async () => {
+  try {
+    await audioRecorder.prepareToRecordAsync();
+    audioRecorder.record();
 
-  isRecordingRef.current = true;
+    isRecordingRef.current = true;
+    startTimer();
+  } catch (error) {
+    console.warn('Failed to start recording:', error);
 
-  startTimer();
+    isRecordingRef.current = false;
+    stopTimer();
+  }
 };
 
   const stopRecording = async () => {
