@@ -8,14 +8,8 @@ import {
 import React, {useEffect} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {PRIMARY_COLOR} from '../helper/Theme';
-
-const contactSchema = z.object({
-  phone_number: z.string().min(10, 'Please enter a valid phone number'),
-  contact_email: z.string().email('Please enter a valid email'),
-});
-export type ContactFormData = z.infer<typeof contactSchema>;
+import { contactSchema, ContactFormData } from '../schemas/profileSchemas';
 
 export interface ProfileEditContactTab {
   user: any;
@@ -55,12 +49,12 @@ const ContactTab = ({
               <>
                 <TextInput
                   clearButtonMode="while-editing"
-                  placeholder="Enter your contact phone number"
+                  placeholder="Enter phone number with country code (e.g. +1234567890)"
                   placeholderTextColor="#6b7280"
-                  style={[styles.inputControl, error && { borderColor: 'red' }]}
+                  style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                   value={value}
-                  keyboardType="number-pad"
-                  maxLength={10}
+                  keyboardType="phone-pad"
+                  maxLength={15}
                   onChangeText={onChange}
                   onBlur={onBlur}
                 />
@@ -80,11 +74,12 @@ const ContactTab = ({
               <>
                 <TextInput
                   clearButtonMode="while-editing"
-                  placeholder="Enter your contact email"
+                  placeholder="Enter your contact email address"
                   placeholderTextColor="#6b7280"
-                  style={[styles.inputControl, error && { borderColor: 'red' }]}
+                  style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                   value={value}
                   keyboardType="email-address"
+                  autoCapitalize="none"
                   onChangeText={onChange}
                   onBlur={onBlur}
                 />

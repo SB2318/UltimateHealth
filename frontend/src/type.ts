@@ -133,6 +133,7 @@ export type RootStackParamList = {
   CommunityGuidelines: undefined;
   ContributorPage: undefined;
   OpenSourcePage: undefined;
+  ReadingHistoryScreen: undefined;
 };
 
 export type RedirectTo = {
@@ -558,6 +559,7 @@ export type Article = {
   author_name: string;
   lastUpdatedAt: string;
   imageUtils: string;
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
 };
 
 export type ArticleSummary = {
@@ -591,6 +593,7 @@ export type ArticleData = {
   repostUsers: string[];
   likeCount: number;
   likedUsers: User[];
+  trustUsers: string[];
   savedUsers: string[];
   mentionedUsers: User[];
   language: string;
@@ -608,6 +611,8 @@ export type ArticleData = {
   translatedArticles?: ArticleData[];
   summaryData?: ArticleSummary;
   relatedPodcasts?: RelatedPodcast[];
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+  body?: string;
 };
 
 export type ArticleTranslationSource = {
@@ -684,6 +689,7 @@ export type CategoryType = {
 export type TokenStatus = {
   isValid: boolean;
   message: string;
+  isNetworkError?: boolean;
 };
 
 export type User = {
@@ -720,6 +726,14 @@ export type User = {
   improvements: string[];
   isBlockUser: boolean;
   isBannedUser: boolean;
+};
+
+export type TrustedUser = {
+  _id: string;
+  user_handle: string;
+  user_name: string;
+  Profile_image?: string;
+  bio?: string;
 };
 
 export type Contactdetail = {

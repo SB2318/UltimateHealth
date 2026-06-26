@@ -159,6 +159,19 @@ export const OfflineArticleState = () => (
     infoText="💡 Offline reading coming soon!"
   />
 );
+export const NoOfflinePodcastsState = ({
+  onBrowse,
+}: {
+  onBrowse?: () => void;
+}) => (
+  <BaseEmptyState
+    iconEmoji="🎧"
+    title="No Offline Podcasts Yet"
+    description="Download podcasts to listen anytime, even without an internet connection."
+    actionText={onBrowse ? "Browse Podcasts" : undefined}
+    onAction={onBrowse}
+  />
+);
 
 export const OfflinePodcastState = () => (
   <BaseEmptyState
@@ -171,20 +184,25 @@ export const OfflinePodcastState = () => (
 
 export const NoArticleState = ({ onRefresh }: { onRefresh?: () => void }) => (
   <BaseEmptyState
-    iconEmoji="📭"
-    title="No Articles Available"
-    description="There are no articles to display right now. Check back later for new health insights!"
+    iconEmoji="🔍"
+    title="No Articles Found"
+    description="We couldn't find any articles matching your current search or filter. Try adjusting your keywords, changing filters, or refreshing the article list."
+    infoText="Tip: Use broader health topics or reset filters to discover more articles."
     actionText={onRefresh ? "Refresh Articles" : undefined}
     onAction={onRefresh}
   />
 );
 
-export const NoPodcastState = ({ onRefresh }: { onRefresh?: () => void }) => (
+export const NoPodcastState = ({
+  onRefresh,
+}: {
+  onRefresh?: () => void;
+}) => (
   <BaseEmptyState
-    iconEmoji="🎧"
+    iconEmoji="🎙️"
     title="No Podcasts Available"
-    description="There are no podcasts to display right now. Check back later for new audio content!"
-    actionText={onRefresh ? "Refresh Podcasts" : undefined}
+    description="There are no podcasts available right now. Check back later for new content."
+    actionText={onRefresh ? 'Refresh Podcasts' : undefined}
     onAction={onRefresh}
   />
 );

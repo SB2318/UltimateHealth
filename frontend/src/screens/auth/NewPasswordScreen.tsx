@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
@@ -24,14 +23,18 @@ import Icon from '@expo/vector-icons/Ionicons';
 import { AxiosError } from 'axios';
 import Loader from '../../components/Loader';
 import { NewPasswordScreenProp } from '../../type';
+import {Alert, ActivityIndicator} from 'react-native';
 
 const newPasswordSchema = z.object({
-  password: z.string()
-    .min(6, 'At least 6 characters with lowercase letter')
-    .regex(/(?=.*[a-z]).{6,}/, 'At least 6 characters with lowercase letter'),
-  confirmPassword: z.string().min(1, 'Please confirm your password'),
+  password: z
+    .string()
+    .min(1, 'Password is required.')
+    .min(8, 'Password must contain at least 8 characters.')
+    .regex(/(?=.*[a-z])/, 'Password must contain at least one lowercase letter.')
+    .regex(/(?=.*[0-9]|.*[!@#$%^&*])/, 'Password must contain at least one number or special character.'),
+  confirmPassword: z.string().min(1, 'Please confirm your password.'),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
+  message: "Passwords do not match. Please re-enter.",
   path: ['confirmPassword'],
 });
 type NewPasswordFormData = z.infer<typeof newPasswordSchema>;
@@ -58,7 +61,7 @@ export default function NewPasswordScreen({
 
   const password = watch('password');
   const confirmPassword = watch('confirmPassword');
-  const passwordVerify = !errors.password && password.length >= 6;
+  const passwordVerify = !errors.password && password.length >= 8;
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureNewTextEntry, setSecureNewTextEntry] = useState(true);
@@ -77,32 +80,18 @@ export default function NewPasswordScreen({
   const handlePasswordSubmit = (data: NewPasswordFormData) => {
 
     changePassword(
-      {
-        email,
-        newPassword: password,
-      },
+      {email, newPassword: password},
       {
         onSuccess: () => {
           Alert.alert('Password reset successfully');
           navigation.navigate('LoginScreen', {});
         },
-
         onError: (error: AxiosError) => {
           if (error.response) {
             switch (error.response.status) {
-              case 400:
-                Alert.alert('Error', 'User not found');
-                break;
-
-              case 402:
-                Alert.alert(
-                  'Error',
-                  'New password should not be same as old password',
-                );
-                break;
-
-              default:
-                Alert.alert('Error', 'Something went wrong. Please try again.');
+              case 400: Alert.alert('Error', 'User not found'); break;
+              case 402: Alert.alert('Error', 'New password should not be same as old password.'); break;
+              default: Alert.alert('Error', 'Something went wrong. Please try again.');
             }
           } else {
             Alert.alert('Error', 'Something went wrong. Please try again.');
@@ -112,8 +101,6 @@ export default function NewPasswordScreen({
     );
   };
 
-    );
-  };
 
   const insets = useSafeAreaInsets();
   if (isPending) {
@@ -252,13 +239,6 @@ export default function NewPasswordScreen({
                   </XStack>
                 )}
               />
-                  <Icon
-                    name={secureTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray700.val}
-                  />
-                </Button>
-              </XStack>
 
               {/* Password Requirements */}
               <XStack gap="$2" alignItems="center" paddingLeft="$2">
@@ -282,7 +262,7 @@ export default function NewPasswordScreen({
                   </>
                 ) : (
                   <Text fontSize={13} color="$gray400" fontWeight="500">
-                    At least 6 characters with lowercase letter
+                    At least 8 characters with a number or special character
                   </Text>
                 )}
               </XStack>
@@ -365,13 +345,6 @@ export default function NewPasswordScreen({
                   </XStack>
                 )}
               />
-                  <Icon
-                    name={secureNewTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray600.val}
-                  />
-                </Button>
-              </XStack>
 
               {/* Confirmation Status */}
               {confirmPassword && (
@@ -427,26 +400,9 @@ export default function NewPasswordScreen({
             </Button>
           </YStack>
 
-          {/* Return Link */}
-          <Button
-            chromeless
-            marginTop="$5"
-            onPress={() => navigation.navigate('LoginScreen', {})}
-            padding="$2"
-            height="auto">
-            <XStack ai="center" gap="$2">
-              <Icon
-                color="$gray400"
-                name="arrow-back-circle-outline"
-                size={24}
-              />
-              <Text color="$blue10" fontWeight="600" fontSize={15}>
-                Back to Login
-              </Text>
-            </XStack>
-          </Button>
         </Card>
       </YStack>
     </YStack>
   );
 }
+
