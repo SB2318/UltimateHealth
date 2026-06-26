@@ -3,7 +3,7 @@ import { Input, XStack, YStack, Button, Text } from "tamagui";
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { HomeScreenHeaderProps } from '../types'; // Purani types file mapping back as bot requested
+import { HomeScreenHeaderProps } from '../type';
 
 const HomeScreenHeader = ({
   handlePresentModalPress,
@@ -18,12 +18,12 @@ const HomeScreenHeader = ({
     <YStack backgroundColor="#000A60" width="100%" paddingHorizontal="$3" paddingVertical="$3" elevation={1}>
       <XStack alignItems="center" justifyContent="space-between" gap="$3">
         
-        {/* Left Side Menu Button - Restored! */}
+        {/* Left side menu button */}
         <Button chromeless onPress={handlePresentModalPress} padding="$0">
           <AntDesign name="menu-fold" size={24} color="white" />
         </Button>
 
-        {/* Center Search Bar Wrapper */}
+        {/* Center search bar wrapper */}
         <XStack 
           flex={1} 
           alignItems="center" 
@@ -67,7 +67,7 @@ const HomeScreenHeader = ({
           )}
         </XStack>
 
-        {/* Right Side Notification Bell with Unread Badge - Restored! */}
+        {/* Right side notification bell with unread badge */}
         <Button chromeless onPress={onNotificationClick} padding="$0" position="relative">
           <Ionicons name="notifications-outline" size={24} color="white" />
           {unreadCount > 0 && (
@@ -94,4 +94,4 @@ const HomeScreenHeader = ({
   );
 };
 
-export default HomeScreenHeader; // Restored default export to prevent component breaking!
+export default HomeScreenHeader;
