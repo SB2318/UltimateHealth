@@ -91,11 +91,7 @@ html { scroll-behavior: smooth; }
   box-sizing: border-box;
 }
 
-& {
-  --primary: #667eea;
-  --primary-dark: #5568d3;
-  --secondary: #764ba2;
-  --accent: #f093fb;
+:root {
   --text-dark: #1a202c;
   --text-light: #4a5568;
   --text-muted: #718096;
@@ -107,16 +103,10 @@ html { scroll-behavior: smooth; }
   --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  font-family: var(--font-inter);
-  color: var(--text-dark);
-  line-height: 1.5;
-  background: var(--bg-white);
-  overflow-x: hidden;
-  letter-spacing: -0.01em;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  --primary: #667eea;
+  --primary-dark: #5568d3;
+  --secondary: #764ba2;
+  --accent: #f093fb;
 }
 
 .container {
@@ -360,6 +350,11 @@ body.touch-device .dna-cursor-canvas {
 
 .nav-item-text {
   line-height: 1.25;
+}
+
+.nav-toggle-item {
+  display: flex;
+  align-items: center;
 }
 
 .nav-links a::after {
@@ -3068,6 +3063,7 @@ i, svg {
     transition: none !important;
   }
 }
+}
 
 /* ==================== DARK MODE ==================== */
 html.dark {
@@ -3097,7 +3093,9 @@ html.dark .screenshot-details {
 }
 html.dark .screenshot-summary { color: #f1f5f9; }
 html.dark .screenshot-card-caption { background: #1e293b; }
-html.dark .feature-section-premium,
+html.dark .feature-section-premium {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
 html.dark .member-section {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
 }
@@ -3123,4 +3121,34 @@ html.dark .dark-field-group {
 }
 html.dark .dark-input { color: #f1f5f9; }
 html.dark .dark-input::placeholder { color: #475569; }
+
+html.dark .nav-links a {
+  color: #f1f5f9;
+}
+
+html.dark .nav-links a:hover {
+  color: #a78bfa;
+}
+
+html.dark .logo {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html.dark .mobile-menu-toggle {
+  color: #f1f5f9;
+}
+
+html.dark .nav-item-icon {
+  color: #D4AF37;
+}
+
+html.dark .glow-toggle-btn {
+  color: #94a3b8;
+}
+/* Fix nav button visibility in both modes */
+.nav-btn-sm {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
 }
