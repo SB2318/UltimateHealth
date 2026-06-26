@@ -10855,5 +10855,5 @@ yocto-queue@^0.1.0:
 
 zod@^4.1.11, zod@^4.4.3:
   version "4.4.3"
-  resolved "https://registry.npmjs.org/zod/-/zod-4.4.3.tgz"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-4.4.3.tgz#b680f172885d18bbebf21a834ea25e55a1bbf356"
   integrity sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==
