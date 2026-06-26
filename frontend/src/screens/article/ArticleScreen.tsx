@@ -10,7 +10,7 @@ import {
   Share,
   useColorScheme,
 } from 'react-native';
-import ArticleShareModal from '../components/ArticleShareModal';
+import ArticleShareModal from '../../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
@@ -56,6 +56,8 @@ import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
 import {getReadTime} from '../../utils/readTime';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
+import {useTrustArticle} from '@/src/hooks/useTrustArticle';
+import TrustedUsersModal from '../../components/TrustedUsersModal';
 import {useSocket} from '../../contexts/SocketContext';
 import { copyArticleShareLink } from '../../helper/shareUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -70,6 +72,10 @@ import Animated, {
 } from 'react-native-reanimated';
 
 const CHUNK_SIZE = 120;
+
+type TtsSubscription = {
+  remove?: () => void;
+};
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
@@ -94,9 +100,40 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [summary, setSummary] = useState<ArticleSummary | null>(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [shareModalVisible, setShareModalVisible] = useState(false);
+  const [trustedUsersModalVisible, setTrustedUsersModalVisible] =
+    useState(false);
   const chunkIndexRef = useRef(0);
   const wordsRef = useRef<string[]>([]);
   const readEventFiredRef = useRef(false);
+  const finishSubscriptionRef = useRef<TtsSubscription | null>(null);
+  const errorSubscriptionRef = useRef<TtsSubscription | null>(null);
+  const finishHandlerRef = useRef<(() => void) | null>(null);
+  const errorHandlerRef = useRef<((event: unknown) => void) | null>(null);
+
+  const clearArticleTtsSubscriptions = useCallback(() => {
+    if (finishSubscriptionRef.current?.remove) {
+      finishSubscriptionRef.current.remove();
+    } else if (
+      finishHandlerRef.current &&
+      typeof Tts.removeEventListener === 'function'
+    ) {
+      Tts.removeEventListener('tts-finish', finishHandlerRef.current as any);
+    }
+
+    if (errorSubscriptionRef.current?.remove) {
+      errorSubscriptionRef.current.remove();
+    } else if (
+      errorHandlerRef.current &&
+      typeof Tts.removeEventListener === 'function'
+    ) {
+      Tts.removeEventListener('tts-error', errorHandlerRef.current as any);
+    }
+
+    finishSubscriptionRef.current = null;
+    errorSubscriptionRef.current = null;
+    finishHandlerRef.current = null;
+    errorHandlerRef.current = null;
+  }, []);
 
   // Progress Bar Shared Values
   const scrollY = useSharedValue(0);
@@ -131,6 +168,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     Number(articleId),
   );
 
+  const {mutate: trustMutation, isPending: trustMutationPending} =
+    useTrustArticle(Number(articleId));
+
   const FONT_SCALE_KEY = 'article_font_scale';
   const FONT_SCALE_MIN = 0.8;
   const FONT_SCALE_MAX = 1.6;
@@ -139,6 +179,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   const likedUsers = article?.likedUsers ?? [];
   const totalLikes = likedUsers.length;
+
+  const trustUsers = article?.trustUsers ?? [];
+  const trustCount = trustUsers.length;
+  const isTrusted = !!user_id && trustUsers.includes(user_id);
 
   const clampFontScale = (value: number) =>
     Math.min(FONT_SCALE_MAX, Math.max(FONT_SCALE_MIN, value));
@@ -200,10 +244,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       setIsPaused(false);
       setPlayerVisible(false);
       Tts.stop();
-      Tts.removeAllListeners('tts-finish');
-      Tts.removeAllListeners('tts-error');
+      clearArticleTtsSubscriptions();
     };
-  }, [articleId, isGuest, updateViewCount]);
+  }, [
+    articleId,
+    clearArticleTtsSubscriptions,
+    isGuest,
+    updateViewCount,
+  ]);
 
   useEffect(() => {
     readEventFiredRef.current = false;
@@ -381,6 +429,34 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
+  const handleTrust = () => {
+    if (isGuest) {
+      navigation.navigate('GuestPlaceholderScreen', {
+        title: 'Sign In Required',
+        description: 'Please sign in or sign up to trust this article.',
+        iconName: 'shield',
+      });
+      return;
+    }
+    if (article) {
+      trustMutation(undefined, {
+        onSuccess: (data: {isTrusted: boolean}) => {
+          refetch();
+          Snackbar.show({
+            text: data?.isTrusted ? 'Marked as trusted!' : 'Trust removed',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+        onError: (err: any) => {
+          console.log('error', err);
+          Snackbar.show({
+            text: 'Something went wrong, try again!',
+            duration: Snackbar.LENGTH_LONG,
+          });
+        },
+      });
+    } else {
+      Alert.alert('Article not found');
   const handleCopyLink = async () => {
     try {
       copyArticleShareLink(articleId, authorId, resolvedRecordId);
@@ -498,7 +574,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     return false;
   };
 
-  const speakNextChunk = () => {
+  const handleTtsError = useCallback((event: unknown) => {
+    console.log('TTS Error:', event);
+    setIsPlaying(false);
+    setIsPaused(false);
+    setPlayerVisible(false);
+  }, []);
+
+  const speakNextChunk = useCallback(() => {
     const words = wordsRef.current;
     const chunkIndex = chunkIndexRef.current;
     if (chunkIndex >= words.length) {
@@ -506,20 +589,36 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       setIsPlaying(false);
       setIsPaused(false);
       setPlayerVisible(false);
-      Tts.removeAllListeners('tts-finish');
-      Tts.removeAllListeners('tts-error');
+      clearArticleTtsSubscriptions();
       return;
     }
     const chunk = words.slice(chunkIndex, chunkIndex + CHUNK_SIZE).join(' ');
     chunkIndexRef.current = chunkIndex + CHUNK_SIZE;
     Tts.speak(chunk);
-  };
+  }, [clearArticleTtsSubscriptions]);
+
+  const attachArticleTtsSubscriptions = useCallback(() => {
+    clearArticleTtsSubscriptions();
+    finishHandlerRef.current = speakNextChunk;
+    errorHandlerRef.current = handleTtsError;
+    finishSubscriptionRef.current = Tts.addEventListener(
+      'tts-finish',
+      speakNextChunk,
+    ) as TtsSubscription;
+    errorSubscriptionRef.current = Tts.addEventListener(
+      'tts-error',
+      handleTtsError,
+    ) as TtsSubscription;
+  }, [
+    clearArticleTtsSubscriptions,
+    handleTtsError,
+    speakNextChunk,
+  ]);
 
   const speakSection = async (_language = 'en-IN', content: string) => {
     try {
       await Tts.stop();
-      Tts.removeAllListeners('tts-finish');
-      Tts.removeAllListeners('tts-error');
+      clearArticleTtsSubscriptions();
 
       const ready = await ensureLanguageInstalled(_language);
       if (!ready) return;
@@ -535,13 +634,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       wordsRef.current = words;
       chunkIndexRef.current = 0;
 
-      Tts.addEventListener('tts-finish', speakNextChunk);
-      Tts.addEventListener('tts-error', e => {
-        console.log('TTS Error:', e);
-        setIsPlaying(false);
-        setIsPaused(false);
-        setPlayerVisible(false);
-      });
+      attachArticleTtsSubscriptions();
 
       setIsPlaying(true);
       setIsPaused(false);
@@ -571,20 +664,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         // Step back one chunk to resume from the interrupted chunk
         chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
 
-        // Re-attach listeners
-        Tts.addEventListener('tts-finish', speakNextChunk);
-        Tts.addEventListener('tts-error', e => {
-          console.log('TTS Error:', e);
-          setIsPlaying(false);
-          setIsPaused(false);
-          setPlayerVisible(false);
-        });
+        attachArticleTtsSubscriptions();
 
         speakNextChunk();
       } else {
         // Pause
-        Tts.removeAllListeners('tts-finish');
-        Tts.removeAllListeners('tts-error');
+        clearArticleTtsSubscriptions();
         await Tts.stop();
         setIsPlaying(false);
         setIsPaused(true);
@@ -597,8 +682,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const handleTtsStop = async () => {
     try {
       await Tts.stop();
-      Tts.removeAllListeners('tts-finish');
-      Tts.removeAllListeners('tts-error');
+      clearArticleTtsSubscriptions();
       wordsRef.current = [];
       chunkIndexRef.current = 0;
       setIsPlaying(false);
@@ -614,19 +698,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     Tts.setDefaultRate(selectedSpeed);
     // Restart current position with new speed if currently playing
     if (isPlaying && !isPaused) {
-      Tts.removeAllListeners('tts-finish');
-      Tts.removeAllListeners('tts-error');
+      clearArticleTtsSubscriptions();
       // Step back one chunk so we replay current chunk at new speed
       // Note: Rewind is approximate and might read earlier parts of a smaller previous chunk.
       chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
       Tts.stop().then(() => {
-        Tts.addEventListener('tts-finish', speakNextChunk);
-        Tts.addEventListener('tts-error', e => {
-          console.log('TTS Error:', e);
-          setIsPlaying(false);
-          setIsPaused(false);
-          setPlayerVisible(false);
-        });
+        attachArticleTtsSubscriptions();
         speakNextChunk();
       });
     }
@@ -820,6 +897,26 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               }`}
             </Text>
           )}
+          {article && trustCount > 0 && (
+            <TouchableOpacity
+              onPress={() => setTrustedUsersModalVisible(true)}
+              accessibilityRole="button"
+              accessibilityLabel="View trusted readers">
+              <Text
+                style={[
+                  styles.viewText,
+                  {
+                    marginBottom: 10,
+                    fontSize: 13 * fontScale,
+                  },
+                ]}>
+                {`🛡️ Trusted by ${formatCount(trustCount)} ${
+                  trustCount === 1 ? 'reader' : 'readers'
+                }`}
+              </Text>
+            </TouchableOpacity>
+          )}
+
           <View style={GlobalStyles.badgeRow}>
             {article && article?.tags && (
               <Text style={styles.categoryText}>
@@ -941,6 +1038,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           coverImageUrl: article.cover_image ?? null,
           authorAvatarUrl: article.author?.profile_picture ?? null,
         }}
+      />
+      <TrustedUsersModal
+        visible={trustedUsersModalVisible}
+        articleId={Number(articleId)}
+        onClose={() => setTrustedUsersModalVisible(false)}
       />
 
       <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
@@ -1124,6 +1226,40 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     },
                   ]}>
                   Save
+                </Text>
+              </>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.actionButtonFooter,
+              {
+                backgroundColor: isTrusted
+                  ? footerColors.activePillBackground
+                  : footerColors.pillBackground,
+              },
+            ]}
+            onPress={handleTrust}
+            disabled={trustMutationPending}
+            accessibilityRole="button"
+            accessibilityLabel="Trust this article"
+            accessibilityHint="Marks or unmarks this article as trusted">
+            {trustMutationPending ? (
+              <LoadingSpinner size={18} />
+            ) : (
+              <>
+                <MaterialCommunityIcons
+                  name={isTrusted ? 'shield-check' : 'shield-outline'}
+                  size={18}
+                  color={isTrusted ? PRIMARY_COLOR : footerColors.text}
+                />
+                <Text
+                  style={[
+                    styles.actionTextFooter,
+                    {color: isTrusted ? PRIMARY_COLOR : footerColors.text},
+                  ]}>
+                  {isTrusted ? 'Trusted' : 'Trust'}
                 </Text>
               </>
             )}
