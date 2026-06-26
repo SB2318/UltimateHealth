@@ -17,6 +17,7 @@ import {
 } from '../hooks/useGetAllNotifications';
 import { useMarkNotificationAsRead } from '../hooks/useMarkNoticationAsRead';
 import {useQueryClient} from '@tanstack/react-query';
+import {mergeNotificationsById} from '../helper/notificationUtils';
 
 type PendingDelete = {
   item: Notification;
@@ -58,8 +59,12 @@ const NotificationScreen = ({navigation}: any) => {
         setNotificationsData(notificationsRes.notifications);
       } else {
         if (notificationsRes.notifications) {
-          const oldNotif = notificationsData ?? [];
-          setNotificationsData([...oldNotif, ...notificationsRes.notifications]);
+          setNotificationsData(previous =>
+            mergeNotificationsById(
+              previous ?? [],
+              notificationsRes.notifications,
+            ),
+          );
         }
       }
     }
