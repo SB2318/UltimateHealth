@@ -4,6 +4,7 @@ import { format, parseISO } from "date-fns";
 import { withBasePath } from "@/lib/basePath";
 import { articles } from "@/lib/article-data";
 import type { Article } from "@/types/article";
+import Navbar from "@/components/layout/Navbar";
 
 import { Navbar, PageWrapper, Section } from "@/components/layout";
 

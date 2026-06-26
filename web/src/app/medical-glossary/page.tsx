@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-
+import Link from "next/link";
+import Navbar from "@/components/layout/Navbar";
+import { withBasePath } from "@/lib/basePath";
 import { MedicalGlossaryExplorer } from "./MedicalGlossaryExplorer";
 import { Navbar, PageWrapper, Section } from "@/components/layout";
 
@@ -11,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function MedicalGlossaryPage() {
   return (
-    <main className="min-h-screen bg-[#f8fafc] text-slate-950">
+    <main className="min-h-screen bg-[linear-gradient(180deg,#f8fafc_0%,#ecfdf5_55%,#f8fafc_100%)] text-slate-950 pt-20">
       <Navbar />
 
       <section className="pt-32 pb-8 text-center">

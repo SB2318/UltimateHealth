@@ -92,6 +92,7 @@ export default function Home() {
   const [currentScreenshot, setCurrentScreenshot] = useState(0);
   const [userSliderOpen, setUserSliderOpen] = useState(true);
   const [adminSliderOpen, setAdminSliderOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
   const [featuresLoading, setFeaturesLoading] = useState(true);
 
   // ── DNA helix cursor ──
@@ -661,6 +662,7 @@ export default function Home() {
               { logo: "https://github.com/user-attachments/assets/e0a40d06-f5b8-42a7-a5a0-033280f842be", alt: "IEEE IGDTUW Logo", badge: "Open Source Week", title: "IEEE IGDTUW", desc: "A week-long intensive event aimed at fostering global collaboration and high-level skill-building in the open-source ecosystem." },
               { logo: "https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00", alt: "Vultr Logo", badge: "Cloud Hackathon", title: "Vultr Cloud Innovate", desc: "Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power." },
               { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2024", title: "GirlScript Summer of Code", desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship." },
+              { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo",badge: "Summer 2026", title: "GirlScript Summer of Code 2026", desc: "A large-scale open-source program that provides mentorship, real-world project experience, and collaboration opportunities for contributors worldwide."}
             ].map((p, i) => (
               <div className="program-card w-full fade-in" key={i}>
                 <div className="program-logo-wrapper">
