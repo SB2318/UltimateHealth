@@ -88,7 +88,7 @@ export default function TrustedUsersModal({
           ) : isError ? (
             <View style={styles.centered}>
               <Text style={styles.emptyText}>
-                Couldn't load trusted readers. Please try again.
+                Could not load trusted readers. Please try again.
               </Text>
             </View>
           ) : !renderableTrustedUsers || renderableTrustedUsers.length === 0 ? (
