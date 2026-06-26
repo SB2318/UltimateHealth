@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useNetInfo } from '@react-native-community/netinfo';
 import Animated, {
   useSharedValue,
