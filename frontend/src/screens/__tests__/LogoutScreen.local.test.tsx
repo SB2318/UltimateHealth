@@ -5,11 +5,18 @@ import LogoutScreen from '../auth/LogoutScreen';
 
 const mockDispatch = jest.fn();
 const mockReset = jest.fn();
+const mockClearQueryCache = jest.fn();
 const mockClearStorage = jest.fn(() => Promise.resolve());
 const mockLogout = jest.fn();
 
 jest.mock('react-redux', () => ({
   useDispatch: () => mockDispatch,
+}));
+
+jest.mock('@tanstack/react-query', () => ({
+  useQueryClient: () => ({
+    clear: mockClearQueryCache,
+  }),
 }));
 
 jest.mock('../../hooks/useUserLogout', () => ({
