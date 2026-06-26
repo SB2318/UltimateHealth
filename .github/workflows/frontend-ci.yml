@@ -1,194 +1,388 @@
 name: Frontend CI
 
+
+
 on:
+
   workflow_dispatch:
+
   push:
+
     branches: [main]
+
     paths:
+
       - "frontend/**"
+
       - ".github/workflows/frontend-ci.yml"
+
   pull_request:
+
     branches: [main]
+
     paths:
+
       - "frontend/**"
+
       - ".github/workflows/frontend-ci.yml"
+
+
 
 concurrency:
+
   group: ${{ github.workflow }}-${{ github.ref }}
+
   cancel-in-progress: true
 
+
+
 permissions:
+
   contents: read
 
+
+
 env:
+
   NODE_VERSION: "24"
 
+
+
 jobs:
+
   setup:
+
     name: Install Dependencies
+
     runs-on: ubuntu-latest
+
     timeout-minutes: 10
+
     defaults:
+
       run:
+
         working-directory: ./frontend
 
+
+
     steps:
+
       - name: Checkout repository
+
         uses: actions/checkout@v6
+
+
 
       - name: Setup Node & Cache pnpm Store
+
         uses: actions/setup-node@v6
+
         with:
+
           node-version: ${{ env.NODE_VERSION }}
+
           cache: "pnpm"
+
           cache-dependency-path: frontend/pnpm-lock.yaml
 
+
+
       - name: Cache node_modules
+
         id: node-cache
+
         uses: actions/cache@v4
+
         with:
+
           path: frontend/node_modules
+
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+
+
 
       - name: Install Dependencies
+
         if: steps.node-cache.outputs.cache-hit != 'true'
+
         run: pnpm install --frozen-lockfile
 
+
+
   lint:
+
     name: Lint
+
     needs: setup
+
     runs-on: ubuntu-latest
+
     timeout-minutes: 5
+
     defaults:
+
       run:
+
         working-directory: ./frontend
+
     env:
+
       CI: true
 
+
+
     steps:
+
       - name: Checkout repository
+
         uses: actions/checkout@v6
 
+
+
       - name: Setup Node
+
         uses: actions/setup-node@v6
+
         with:
+
           node-version: ${{ env.NODE_VERSION }}
 
+
+
       - name: Restore node_modules
+
         uses: actions/cache@v4
+
         with:
+
           path: frontend/node_modules
+
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+
+
 
       - name: Run ESLint
+
         run: pnpm lint
 
+
+
   typecheck:
+
     name: Typecheck
+
     needs: setup
+
     runs-on: ubuntu-latest
+
     timeout-minutes: 5
+
     defaults:
+
       run:
+
         working-directory: ./frontend
+
     env:
+
       CI: true
 
+
+
     steps:
+
       - name: Checkout repository
+
         uses: actions/checkout@v6
 
+
+
       - name: Setup Node
+
         uses: actions/setup-node@v6
+
         with:
+
           node-version: ${{ env.NODE_VERSION }}
 
+
+
       - name: Restore node_modules
+
         uses: actions/cache@v4
+
         with:
+
           path: frontend/node_modules
+
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+
+
 
       - name: Run TypeScript Check
+
         run: pnpm type-check
 
+
+
   test:
+
     name: Unit Tests
+
     needs: setup
+
     runs-on: ubuntu-latest
+
     timeout-minutes: 10
+
     defaults:
+
       run:
+
         working-directory: ./frontend
+
     env:
+
       CI: true
 
+
+
     steps:
+
       - name: Checkout repository
+
         uses: actions/checkout@v6
 
+
+
       - name: Setup Node
+
         uses: actions/setup-node@v6
+
         with:
+
           node-version: ${{ env.NODE_VERSION }}
 
+
+
       - name: Restore node_modules
+
         uses: actions/cache@v4
+
         with:
+
           path: frontend/node_modules
+
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+
+
 
       - name: Run Unit Tests
+
         run: pnpm test
 
+
+
   expo-doctor:
+
     name: Expo Doctor
+
     needs: setup
+
     runs-on: ubuntu-latest
+
     timeout-minutes: 5
+
     defaults:
+
       run:
+
         working-directory: ./frontend
+
     env:
+
       CI: true
 
+
+
     steps:
+
       - name: Checkout repository
+
         uses: actions/checkout@v6
 
+
+
       - name: Setup Node
+
         uses: actions/setup-node@v6
+
         with:
+
           node-version: ${{ env.NODE_VERSION }}
 
+
+
       - name: Restore node_modules
+
         uses: actions/cache@v4
+
         with:
+
           path: frontend/node_modules
+
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/pnpm-lock.yaml') }}
 
+
+
       - name: Run Expo Doctor
+
         shell: bash
+
         run: |
+
           set +e
+
           OUTPUT=$(npx expo-doctor 2>&1)
+
           STATUS=$?
+
           set -e
+
+
 
           echo "$OUTPUT"
 
+
+
           if [ $STATUS -eq 0 ]; then
+
             exit 0
+
           fi
+
+
 
           set +e
+
           set +o pipefail
+
           CRITICAL_FAILS=$(echo "$OUTPUT" | grep "Check " | grep -v "app config fields that may not be synced" | grep -v "duplicate dependencies" | grep -v "common issues" | grep -v "installed Expo SDK" | wc -l | tr -d '[:space:]')
+
           set -e
+
           set -o pipefail
+
           if [ "$CRITICAL_FAILS" -eq 0 ]; then
+
             echo "Ignoring known non-critical Expo Doctor warnings (non-CNG, duplicate dependencies, and package version warnings)"
+
             exit 0
+
           fi
 
+
+
           exit $STATUS
+
