@@ -941,6 +941,19 @@ We welcome contributions from everyone — developers, designers, writers, and t
    <tr>
     <td align="center"><a href="https://github.com/priyanshu5ingh"><img src="https://avatars.githubusercontent.com/u/98865320?v=4" width="120px;" alt=""/><br/><sub><b>Priyanshu Singh </b></sub></a></td>
        <td align="center"><a href="https://github.com/Neverask1121"><img src="https://avatars.githubusercontent.com/u/217045060?v=4" width="120px;" alt=""/><br/><sub><b>Aditya Bhandari</b></sub></a></td>
+     <td align="center"><a href="https://github.com/FarishaNA"><img src="https://avatars.githubusercontent.com/u/147705381?v=4" width="120px;" alt=""/><br/><sub><b>Farisha N A</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Ranjana-git7"><img src="https://avatars.githubusercontent.com/u/219678427?v=4" width="120px;" alt=""/><br/><sub><b>tenax</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Bheemeswari497"><img src="https://avatars.githubusercontent.com/u/180012790?v=4" width="120px;" alt=""/><br/><sub><b>Bheeme_497</b></sub></a></td>
+     <td align="center"><a href="https://github.com/arpan-adhikary26"><img src="https://avatars.githubusercontent.com/u/225717254?v=4" width="120px;" alt=""/><br/><sub><b>ARPAN ADHIKARY</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/Pcmhacker-piro"><img src="https://avatars.githubusercontent.com/u/181658297?v=4" width="120px;" alt=""/><br/><sub><b>Prakash Meena</b></sub></a></td>
+       <td align="center"><a href="https://github.com/semanirudh94-lang"><img src="https://avatars.githubusercontent.com/u/224640398?v=4" width="120px;" alt=""/><br/><sub><b>Piyush Semalti</b></sub></a></td>
+     <td align="center"><a href="https://github.com/parthnakum"><img src="https://avatars.githubusercontent.com/u/134558990?v=4" width="120px;" alt=""/><br/><sub><b>Parth Nakum</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Arpita2919"><img src="https://avatars.githubusercontent.com/u/153080323?v=4" width="120px;" alt=""/><br/><sub><b>Arpita Raj</b></sub></a></td>
+     <td align="center"><a href="https://github.com/pratik-dev01"><img src="https://avatars.githubusercontent.com/u/180295981?v=4" width="120px;" alt=""/><br/><sub><b>pratik ankush bandgar</b></sub></a></td>
+     <td align="center"><a href="https://github.com/vanshikaMaheshwari"><img src="https://avatars.githubusercontent.com/u/73647007?v=4" width="120px;" alt=""/><br/><sub><b>Vanshika Maheshwari</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->

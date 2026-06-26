@@ -10,7 +10,7 @@ import {
   Share,
   useColorScheme,
 } from 'react-native';
-import ArticleShareModal from '../components/ArticleShareModal';
+import ArticleShareModal from '../../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
@@ -28,6 +28,7 @@ import {
   generateArticleSummary,
   ArticleSummary,
 } from '../../services/SummaryService';
+import {recordArticleView} from '../../services/ReadingHistoryService';
 
 import {
   formatCount,
@@ -55,7 +56,10 @@ import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
 import {getReadTime} from '../../utils/readTime';
 import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/useSaveArticle';
+import {useTrustArticle} from '@/src/hooks/useTrustArticle';
+import TrustedUsersModal from '../../components/TrustedUsersModal';
 import {useSocket} from '../../contexts/SocketContext';
+import { copyArticleShareLink } from '../../helper/shareUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
 import Animated, {
@@ -92,6 +96,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [summary, setSummary] = useState<ArticleSummary | null>(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [shareModalVisible, setShareModalVisible] = useState(false);
+  const [trustedUsersModalVisible, setTrustedUsersModalVisible] =
+    useState(false);
   const chunkIndexRef = useRef(0);
   const wordsRef = useRef<string[]>([]);
   const readEventFiredRef = useRef(false);
@@ -129,6 +135,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     Number(articleId),
   );
 
+  const {mutate: trustMutation, isPending: trustMutationPending} =
+    useTrustArticle(Number(articleId));
+
   const FONT_SCALE_KEY = 'article_font_scale';
   const FONT_SCALE_MIN = 0.8;
   const FONT_SCALE_MAX = 1.6;
@@ -137,6 +146,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   const likedUsers = article?.likedUsers ?? [];
   const totalLikes = likedUsers.length;
+
+  const trustUsers = article?.trustUsers ?? [];
+  const trustCount = trustUsers.length;
+  const isTrusted = !!user_id && trustUsers.includes(user_id);
 
   const clampFontScale = (value: number) =>
     Math.min(FONT_SCALE_MAX, Math.max(FONT_SCALE_MIN, value));
@@ -173,6 +186,17 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     setFontScale(nextValue);
     debouncedPersistFontScale(nextValue);
   };
+
+  useEffect(() => {
+    if (!article) return;
+    recordArticleView({
+      articleId: String(article._id),
+      title: article.title ?? '',
+      authorName: article.authorName ?? '',
+      category: article.tags?.[0]?.name ?? '',
+      coverImage: article.imageUtils?.[0] ?? '',
+    });
+  }, [article]);
 
   useEffect(() => {
     if (!isGuest) {
@@ -365,6 +389,50 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
     } else {
       Alert.alert('Article not found');
+    }
+  };
+
+  const handleTrust = () => {
+    if (isGuest) {
+      navigation.navigate('GuestPlaceholderScreen', {
+        title: 'Sign In Required',
+        description: 'Please sign in or sign up to trust this article.',
+        iconName: 'shield',
+      });
+      return;
+    }
+    if (article) {
+      trustMutation(undefined, {
+        onSuccess: (data: {isTrusted: boolean}) => {
+          refetch();
+          Snackbar.show({
+            text: data?.isTrusted ? 'Marked as trusted!' : 'Trust removed',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+        onError: (err: any) => {
+          console.log('error', err);
+          Snackbar.show({
+            text: 'Something went wrong, try again!',
+            duration: Snackbar.LENGTH_LONG,
+          });
+        },
+      });
+    } else {
+      Alert.alert('Article not found');
+  const handleCopyLink = async () => {
+    try {
+      copyArticleShareLink(articleId, authorId, resolvedRecordId);
+      Snackbar.show({
+        text: 'Link copied',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    } catch (error) {
+      console.log('Error copying link:', error);
+      Snackbar.show({
+        text: 'Failed to copy link',
+        duration: Snackbar.LENGTH_SHORT,
+      });
     }
   };
 
@@ -791,6 +859,26 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               }`}
             </Text>
           )}
+          {article && trustCount > 0 && (
+            <TouchableOpacity
+              onPress={() => setTrustedUsersModalVisible(true)}
+              accessibilityRole="button"
+              accessibilityLabel="View trusted readers">
+              <Text
+                style={[
+                  styles.viewText,
+                  {
+                    marginBottom: 10,
+                    fontSize: 13 * fontScale,
+                  },
+                ]}>
+                {`🛡️ Trusted by ${formatCount(trustCount)} ${
+                  trustCount === 1 ? 'reader' : 'readers'
+                }`}
+              </Text>
+            </TouchableOpacity>
+          )}
+
           <View style={GlobalStyles.badgeRow}>
             {article && article?.tags && (
               <Text style={styles.categoryText}>
@@ -913,6 +1001,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           authorAvatarUrl: article.author?.profile_picture ?? null,
         }}
       />
+      <TrustedUsersModal
+        visible={trustedUsersModalVisible}
+        articleId={Number(articleId)}
+        onClose={() => setTrustedUsersModalVisible(false)}
+      />
 
       <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
         {/* Action Bar Row */}
@@ -1018,6 +1111,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               styles.actionButtonFooter,
               {backgroundColor: footerColors.pillBackground},
             ]}
+            onPress={handleCopyLink}>
+            <FontAwesome name="link" size={18} color={footerColors.text} />
+            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+              Copy Link
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.actionButtonFooter,
+              {backgroundColor: footerColors.pillBackground},
+            ]}
             onPress={handleTranslateArticle}>
             <MaterialCommunityIcons
               name="translate"
@@ -1083,6 +1188,40 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     },
                   ]}>
                   Save
+                </Text>
+              </>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.actionButtonFooter,
+              {
+                backgroundColor: isTrusted
+                  ? footerColors.activePillBackground
+                  : footerColors.pillBackground,
+              },
+            ]}
+            onPress={handleTrust}
+            disabled={trustMutationPending}
+            accessibilityRole="button"
+            accessibilityLabel="Trust this article"
+            accessibilityHint="Marks or unmarks this article as trusted">
+            {trustMutationPending ? (
+              <LoadingSpinner size={18} />
+            ) : (
+              <>
+                <MaterialCommunityIcons
+                  name={isTrusted ? 'shield-check' : 'shield-outline'}
+                  size={18}
+                  color={isTrusted ? PRIMARY_COLOR : footerColors.text}
+                />
+                <Text
+                  style={[
+                    styles.actionTextFooter,
+                    {color: isTrusted ? PRIMARY_COLOR : footerColors.text},
+                  ]}>
+                  {isTrusted ? 'Trusted' : 'Trust'}
                 </Text>
               </>
             )}

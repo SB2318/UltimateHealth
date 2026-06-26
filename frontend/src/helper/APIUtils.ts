@@ -19,10 +19,11 @@ const extra = Constants.expoConfig?.extra ?? {};
 const PROD_URL: string = extra.PROD_URL;
 const SOCKET_PROD: string = extra.SOCKET_PROD;
 const CONTENT_CHECKER_PROD: string = extra.CONTENT_CHECKER_PROD;
+const SHARE_BASE_URL = 'https://uhsocial.in';
 
 const LOGIN_API = `${PROD_URL}/user/login`;
 const REGISTRATION_API = `${PROD_URL}/user/register`;
-const ARTICLE_TAGS_API = '/articles/tags';
+const ARTICLE_TAGS_API = `${PROD_URL}/articles/tags`;
 const GET_PROFILE_API = `${PROD_URL}/user/getprofile`;
 const VERIFICATION_MAIL_API = `${PROD_URL}/user/verifyEmail`;
 const RESEND_VERIFICATION = `${PROD_URL}/user/resend-verification-mail`;
@@ -34,6 +35,8 @@ const FOLLOW_USER = `${PROD_URL}/user/follow`;
 const UPDATE_VIEW_COUNT = `${PROD_URL}/articles/updateViewCount`;
 const SAVE_ARTICLE = `${PROD_URL}/articles/saveArticle`;
 const LIKE_ARTICLE = `${PROD_URL}/articles/likeArticle`;
+const TRUST_ARTICLE = `${PROD_URL}/articles/trust`;
+const GET_TRUSTED_USERS = `${PROD_URL}/articles/trusted-users`;
 const POST_ARTICLE = `${PROD_URL}/articles`;
 const GET_ARTICLE_BY_ID = `${PROD_URL}/articles`;
 const GET_ARTICLE_TRANSLATIONS = (articleId: string | number) =>
@@ -129,6 +132,8 @@ export {
   UPDATE_VIEW_COUNT,
   SAVE_ARTICLE,
   LIKE_ARTICLE,
+  TRUST_ARTICLE,
+  GET_TRUSTED_USERS,
   POST_ARTICLE,
   GET_ARTICLE_BY_ID,
   GET_ARTICLE_TRANSLATIONS,
@@ -199,4 +204,5 @@ export {
   GET_NOTIFICATION_PREFERENCES,
   UPDATE_NOTIFICATION_PREFERENCES,
   GET_READ_HISTORY,
+  SHARE_BASE_URL,
 };
