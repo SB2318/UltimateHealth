@@ -31,13 +31,13 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
 
   useFocusEffect(
     useCallback(() => {
-      // Reset local search state when entering the screen to avoid stale queries.
-      setQuery('');
-      setDebouncedQuery('');
-      setPage(1);
-      setTotalPages(0);
-      setSearchData([]);
       return () => {
+        // Reset local search state when leaving the screen to avoid stale queries.
+        setQuery('');
+        setDebouncedQuery('');
+        setPage(1);
+        setTotalPages(0);
+        setSearchData([]);
         if (debounceTimer.current) clearTimeout(debounceTimer.current);
       };
     }, []),
@@ -282,7 +282,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                   alignItems="center"
                   justifyContent="center"
                   paddingVertical="$8">
-                  <NoResults />
+                  <NoResult />
                 </YStack>
               )
             }

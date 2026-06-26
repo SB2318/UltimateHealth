@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {ScrollView, YStack, XStack, Text, Input, Button, Image, useTheme} from 'tamagui';
 import Icon from '@expo/vector-icons/MaterialIcons';
+import { Alert } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Dropdown} from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -64,6 +65,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 
   const username = watch('username');
   const userHandle = username?.trim();
+  const email = watch('email');
 
   const {data: handleAvailability, isLoading: isCheckingHandle} =
     useCheckUserHandleAvailability(userHandle);
