@@ -5,19 +5,20 @@ import * as Sentry from '@sentry/react-native';
 import { logger } from './src/services/monitoring/logger';
 
 import AppContent from './src/components/AppContent';
+import { AudioProvider } from './src/store/AudioContext';
 
 function App() {
-const [queryClient] = useState(
-() =>
-new QueryClient({
-defaultOptions: {
-queries: {
-retry: 2,
-staleTime: 1000 * 60,
-},
-},
-})
-);
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 2,
+            staleTime: 1000 * 60,
+          },
+        },
+      })
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -53,10 +54,11 @@ staleTime: 1000 * 60,
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AppContent />
+      <AudioProvider>
+        <AppContent />
+      </AudioProvider>
     </QueryClientProvider>
   );
 }
 
-// 3. Using standard Sentry wrapping (or keep your custom one if verified)
 export default Sentry.wrap(App);
