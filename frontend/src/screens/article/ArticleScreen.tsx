@@ -457,6 +457,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
     } else {
       Alert.alert('Article not found');
+    }
+  };
+
   const handleCopyLink = async () => {
     try {
       copyArticleShareLink(articleId, authorId, resolvedRecordId);
