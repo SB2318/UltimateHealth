@@ -10,7 +10,7 @@ import {
   Share,
   useColorScheme,
 } from 'react-native';
-import ArticleShareModal from '../components/ArticleShareModal';
+import ArticleShareModal from '../../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
@@ -409,7 +409,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   const handleCopyLink = async () => {
     try {
-      copyArticleShareLink(articleId, authorId, resolvedRecordId);
+      copyArticleShareLink(articleId, authorId, resolvedRecordId || '');
       Snackbar.show({
         text: 'Link copied',
         duration: Snackbar.LENGTH_SHORT,
@@ -1000,17 +1000,27 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           )}
         </View>
       </Animated.ScrollView>
-      <ArticleShareModal
-        visible={shareModalVisible}
-        onClose={() => setShareModalVisible(false)}
-        article={{
-          title: article.title, // string
-          authorName: article.author?.name, // string  — adjust to your model shape
-          category: article.category ?? 'Health', // string
-          coverImageUrl: article.cover_image ?? null,
-          authorAvatarUrl: article.author?.profile_picture ?? null,
-        }}
-      />
+      {article && (
+        <ArticleShareModal
+          visible={shareModalVisible}
+          onClose={() => setShareModalVisible(false)}
+          article={{
+            title: article.title || '',
+            authorName: article.authorName || 'Anonymous',
+            category: article.tags?.[0]?.name || 'Health',
+            coverImageUrl: (article.imageUtils && article.imageUtils.length > 0)
+              ? (article.imageUtils[0].startsWith('http')
+                ? article.imageUtils[0]
+                : `${GET_IMAGE}/${article.imageUtils[0]}`)
+              : null,
+            authorAvatarUrl: (typeof article.authorId === 'object' && article.authorId?.Profile_image)
+              ? (article.authorId.Profile_image.startsWith('http')
+                ? article.authorId.Profile_image
+                : `${GET_STORAGE_DATA}/${article.authorId.Profile_image}`)
+              : null,
+          }}
+        />
+      )}
 
       <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
         {/* Action Bar Row */}
