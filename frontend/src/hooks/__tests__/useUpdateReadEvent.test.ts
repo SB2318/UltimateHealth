@@ -12,8 +12,14 @@ function makeWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
   });
-  return ({children}: {children: React.ReactNode}) =>
-    React.createElement(QueryClientProvider, {client: queryClient}, children);
+  function QueryWrapper({children}: {children: React.ReactNode}) {
+    return React.createElement(
+      QueryClientProvider,
+      {client: queryClient},
+      children,
+    );
+  }
+  return QueryWrapper;
 }
 
 describe('useUpdateReadEvent', () => {
