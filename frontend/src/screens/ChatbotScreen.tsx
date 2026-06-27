@@ -107,17 +107,17 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
       setActiveSpeakingId(null);
     };
 
-    const startSub = Tts.addEventListener('tts-start', onStart);
-    const finishSub = Tts.addEventListener('tts-finish', onFinish);
-    const cancelSub = Tts.addEventListener('tts-cancel', onCancel);
-    const errorSub = Tts.addEventListener('tts-error', onError);
+    const startSub = Tts.addEventListener('tts-start', onStart) as unknown as {remove?: () => void};
+    const finishSub = Tts.addEventListener('tts-finish', onFinish) as unknown as {remove?: () => void};
+    const cancelSub = Tts.addEventListener('tts-cancel', onCancel) as unknown as {remove?: () => void};
+    const errorSub = Tts.addEventListener('tts-error', onError) as unknown as {remove?: () => void};
 
     return () => {
       Tts.stop();
-      if (startSub) startSub.remove();
-      if (finishSub) finishSub.remove();
-      if (cancelSub) cancelSub.remove();
-      if (errorSub) errorSub.remove();
+      startSub.remove?.();
+      finishSub.remove?.();
+      cancelSub.remove?.();
+      errorSub.remove?.();
     };
   }, []);
 
