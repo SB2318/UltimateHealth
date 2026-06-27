@@ -9,6 +9,7 @@ import {
   Image,
   Modal,
   FlatList,
+  Alert,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {PodcastFormProp, Category} from '../type';
