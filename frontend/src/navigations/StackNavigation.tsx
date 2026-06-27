@@ -111,7 +111,7 @@ const StackNavigation = () => {
     return () => backHandler.remove();
   }, [navigation, nav]);
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined as never}>
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}

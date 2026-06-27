@@ -1,5 +1,4 @@
-// filepath: frontend/src/services/ReadingProgressService.ts
-import { MMKVUtils } from "../helper/MMKVUtils";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PROGRESS_KEY_PREFIX = "reading_progress_";
 
@@ -11,7 +10,7 @@ interface ReadingProgress {
 
 export const saveProgress = async (articleId: string, percentage: number): Promise<void> => {
   const key = `${PROGRESS_KEY_PREFIX}${articleId}`;
-  await MMKVUtils.setItem(key, JSON.stringify({
+  await AsyncStorage.setItem(key, JSON.stringify({
     articleId,
     scrollPosition: percentage,
     updatedAt: Date.now(),
@@ -20,11 +19,11 @@ export const saveProgress = async (articleId: string, percentage: number): Promi
 
 export const getProgress = async (articleId: string): Promise<ReadingProgress | null> => {
   const key = `${PROGRESS_KEY_PREFIX}${articleId}`;
-  const raw = await MMKVUtils.getItem(key);
+  const raw = await AsyncStorage.getItem(key);
   return raw ? JSON.parse(raw) : null;
 };
 
 export const clearProgress = async (articleId: string): Promise<void> => {
   const key = `${PROGRESS_KEY_PREFIX}${articleId}`;
-  await MMKVUtils.removeItem(key);
+  await AsyncStorage.removeItem(key);
 };
