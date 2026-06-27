@@ -184,7 +184,10 @@ describe('ChatbotScreen', () => {
     const giftedChat = getByTestId('mock-gifted-chat');
     fireEvent(giftedChat, 'onSend', [{text: 'What is stress?', _id: 1, createdAt: new Date(), user: {_id: 1}}]);
 
-    expect(mockSendMessageToAI).toHaveBeenCalledWith('What is stress?', expect.any(Object));
+    expect(mockSendMessageToAI).toHaveBeenCalledWith(
+      {text: 'What is stress?', character: undefined},
+      expect.any(Object),
+    );
 
     // Simulate API Error
     const mockAxiosError = {
@@ -236,7 +239,10 @@ describe('ChatbotScreen', () => {
 
     // Verify error card is removed and message is re-sent
     expect(queryByText('Failed to send message')).toBeNull();
-    expect(mockSendMessageToAI).toHaveBeenCalledWith('My knee hurts', expect.any(Object));
+    expect(mockSendMessageToAI).toHaveBeenCalledWith(
+      {text: 'My knee hurts', character: undefined},
+      expect.any(Object),
+    );
   });
 
   it('shows an error bubble and snackbar if message sent when offline', async () => {
