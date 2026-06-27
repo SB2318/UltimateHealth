@@ -16,6 +16,7 @@ import {
   Text,
   TouchableOpacity,
   Modal,
+  Image,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Tts from 'react-native-tts';
@@ -107,17 +108,17 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
       setActiveSpeakingId(null);
     };
 
-    const startSub = Tts.addEventListener('tts-start', onStart);
-    const finishSub = Tts.addEventListener('tts-finish', onFinish);
-    const cancelSub = Tts.addEventListener('tts-cancel', onCancel);
-    const errorSub = Tts.addEventListener('tts-error', onError);
+    const startSub = Tts.addEventListener('tts-start', onStart) as unknown as {remove?: () => void};
+    const finishSub = Tts.addEventListener('tts-finish', onFinish) as unknown as {remove?: () => void};
+    const cancelSub = Tts.addEventListener('tts-cancel', onCancel) as unknown as {remove?: () => void};
+    const errorSub = Tts.addEventListener('tts-error', onError) as unknown as {remove?: () => void};
 
     return () => {
       Tts.stop();
-      if (startSub) startSub.remove();
-      if (finishSub) finishSub.remove();
-      if (cancelSub) cancelSub.remove();
-      if (errorSub) errorSub.remove();
+      startSub.remove?.();
+      finishSub.remove?.();
+      cancelSub.remove?.();
+      errorSub.remove?.();
     };
   }, []);
 
@@ -420,9 +421,11 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               paddingTop: 10,
               paddingBottom: 20,
             }}
-            placeholder={isQuotaExceeded ? "Come back tomorrow for more advice!" : `Ask ${characterName || 'the AI'} a question...`}
             textInputProps={{
               editable: !isPending && !isQuotaExceeded,
+              placeholder: isQuotaExceeded
+                ? 'Come back tomorrow for more advice!'
+                : `Ask ${characterName || 'the AI'} a question...`,
             }}
             renderBubble={props => {
               const currentMessage = props.currentMessage as any;
@@ -553,7 +556,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               Daily Limit Reached
             </Text>
             <Text style={{ fontSize: 16, color: '#4b5563', textAlign: 'center', marginBottom: 24, lineHeight: 24 }}>
-              You've used all your messages for {characterName || 'this character'} today. Please come back tomorrow for more advice!
+              You have used all your messages for {characterName || 'this character'} today. Please come back tomorrow for more advice!
             </Text>
             <TouchableOpacity
               onPress={() => setShowQuotaModal(false)}
