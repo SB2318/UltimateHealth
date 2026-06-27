@@ -607,11 +607,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     finishSubscriptionRef.current = Tts.addEventListener(
       'tts-finish',
       speakNextChunk,
-    ) as TtsSubscription;
+    ) as unknown as TtsSubscription;
     errorSubscriptionRef.current = Tts.addEventListener(
       'tts-error',
       handleTtsError,
-    ) as TtsSubscription;
+    ) as unknown as TtsSubscription;
   }, [
     clearArticleTtsSubscriptions,
     handleTtsError,

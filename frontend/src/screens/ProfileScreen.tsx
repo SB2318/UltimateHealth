@@ -387,7 +387,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
             ) : isHistoryError ? (
               <View style={styles.historyErrorContainer}>
                 <Text style={[styles.historyErrorText, {color: theme.color10?.val}]}>
-                  Couldn't load your read history. Please try again.
+                  Could not load your read history. Please try again.
                 </Text>
                 <TouchableOpacity
                   style={[styles.historyRetryButton, {borderColor: PRIMARY_COLOR}]}
