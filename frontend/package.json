@@ -1,6 +1,7 @@
 {
   "name": "ultimatehealth",
   "version": "1.0.0",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
