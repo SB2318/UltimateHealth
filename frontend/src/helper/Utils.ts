@@ -90,7 +90,7 @@ export const retrieveItem = async (key: string) => {
     const value = await AsyncStorage.getItem(key);
     return value;
   } catch (e) {
-    console.log('Error reading value', e);
+    if (__DEV__) console.log('Error reading value', e);
   }
 };
 
@@ -98,7 +98,7 @@ export const storeItem = async (key: string, value: string) => {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (e) {
-    console.log('Async Storage Data error', e);
+    if (__DEV__) console.log('Async Storage Data error', e);
   }
 };
 
@@ -106,7 +106,7 @@ export const removeItem = async (key: string) => {
   try {
     await AsyncStorage.removeItem(key);
   } catch (error) {
-    console.error('Error removing item:', error);
+    if (__DEV__) console.error('Error removing item:', error);
   }
 };
 
@@ -130,9 +130,9 @@ export const clearStorage = async () => {
       AsyncStorage.removeItem(KEYS.USER_HANDLE),
     ]);
     await secureClearAllItems();
-    console.log('All user-related storage cleared successfully.');
+    if (__DEV__) console.log('All user-related storage cleared successfully.');
   } catch (error) {
-    console.error('Error clearing user-related storage:', error);
+    if (__DEV__) console.error('Error clearing user-related storage:', error);
   }
 };
 
