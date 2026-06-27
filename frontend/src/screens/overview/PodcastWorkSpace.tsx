@@ -1,11 +1,10 @@
 import {useCallback, useEffect, useState} from 'react';
-import {
-  View,
+import { View,
   StyleSheet,
   TouchableOpacity,
   Text,
-  FlatList,
-} from 'react-native';
+   FlatList ,
+ } from 'react-native';
 import {PodcastData} from '../../type';
 import {useSelector} from 'react-redux';
 import PodcastReviewCard from '../../components/PodcastReviewCard';
@@ -72,7 +71,7 @@ export default function PodcastWorkSpace({
         }
       }
     }
-  }, [publishedPodcastsData, publishedPage]);
+  }, [publishedPodcastsData, publishedPage, publishedPodcasts]);
 
   useEffect(() => {
     if (pendingPodcastsData) {
@@ -195,7 +194,7 @@ export default function PodcastWorkSpace({
                     : (discardedPodcasts ?? [])
               }
               renderItem={renderItem}
-              keyExtractor={item => item._id.toString()}
+              keyExtractor={(item:PodcastData) => item._id.toString()}
               contentContainerStyle={styles.flatListContentContainer}
               refreshing={refreshing}
               onRefresh={onRefresh}

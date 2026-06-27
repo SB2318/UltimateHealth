@@ -1,15 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  View,
+import { View,
   Text,
   StyleSheet,
-  ScrollView,
+   ScrollView ,
   TouchableOpacity,
   Image,
-  FlatList,
+   FlatList ,
   RefreshControl,
   Dimensions,
-} from 'react-native';
+  } from 'react-native';
 import {PodcastProfileProp, PodcastData, PlayList} from '../type';
 import {MaterialCommunityIcons, Feather, Ionicons} from '@expo/vector-icons';
 import {PRIMARY_COLOR} from '../helper/Theme';
@@ -278,7 +277,7 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
               <FlatList
                 data={podcasts ?? []}
                 renderItem={renderPodcastItem}
-                keyExtractor={(item, index) => `podcast-${item._id}-${index}`}
+                keyExtractor={(item: PodcastData, index: number) => `podcast-${item._id}-${index}`}
                 scrollEnabled={false}
                 showsVerticalScrollIndicator={false}
                 refreshing={refreshing}
@@ -313,7 +312,7 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
             <FlatList
               data={playlists}
               renderItem={renderPlaylistItem}
-              keyExtractor={(item, index) => `playlist-${item._id}-${index}`}
+              keyExtractor={(item: any, index: number) => `playlist-${item._id}-${index}`}
               scrollEnabled={false}
               showsVerticalScrollIndicator={false}
             />

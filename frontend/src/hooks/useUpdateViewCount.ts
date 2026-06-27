@@ -1,4 +1,4 @@
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 import {ArticleData} from '../type';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {UPDATE_VIEW_COUNT} from '../helper/APIUtils';

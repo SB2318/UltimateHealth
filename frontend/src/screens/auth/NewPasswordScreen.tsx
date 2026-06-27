@@ -20,7 +20,7 @@ import { useChangePasswordMutation } from '@/src/hooks/useChangePassword';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
-import { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
 import Loader from '../../components/Loader';
 import { NewPasswordScreenProp } from '../../type';
 import {Alert, ActivityIndicator} from 'react-native';

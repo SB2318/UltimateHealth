@@ -9,7 +9,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {SignUpScreenFirstProp, UserDetail} from '../../type';
-import {AxiosError} from 'axios';
+import type { AxiosError } from 'axios';
 import Snackbar from 'react-native-snackbar';
 import EmailVerifiedModal from '../../components/VerifiedModal';
 import SecurityWarningModal from '../../components/SecurityWarningModal';

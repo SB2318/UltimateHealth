@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TextInput} from 'react-native';
+import { StyleSheet, Text, View,  TextInput  } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import AccessibleTouchable from './common/AccessibleTouchable';
 import {

@@ -1,6 +1,6 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {EditRequest} from '../type';
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 import {GET_IMPROVEMENT_BY_ID} from '../helper/APIUtils';
 import {useSelector} from 'react-redux';
 

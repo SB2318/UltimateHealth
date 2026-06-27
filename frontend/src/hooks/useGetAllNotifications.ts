@@ -1,6 +1,6 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {Notification} from '../type';
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 import {PROD_URL} from '../helper/APIUtils';
 import {useSelector} from 'react-redux';
 

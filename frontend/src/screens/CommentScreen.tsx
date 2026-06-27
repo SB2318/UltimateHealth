@@ -1,16 +1,15 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Alert,
-  FlatList,
+import { Alert,
+   FlatList ,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   StyleSheet,
-  TextInput,
+   TextInput ,
   TouchableOpacity,
   View
-} from 'react-native';
+  } from 'react-native';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { H3, Image, Paragraph, Text, YStack, TextArea, XStack, Button } from 'tamagui';
@@ -52,7 +51,7 @@ const CommentScreen = ({
   useArticleRoom(articleId.toString(), null);
 
   const flatListRef =
-    useRef<FlatList<Comment>>(null);
+    useRef<any>(null);
 
   const [comments, setComments] = useState<
     Comment[]

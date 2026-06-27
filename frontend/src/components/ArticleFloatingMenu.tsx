@@ -2,7 +2,7 @@ import React from 'react';
 import {YStack, XStack, Text, Button} from 'tamagui';
 import {Sheet} from '@tamagui/sheet';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import {ScrollView} from 'react-native';
+import { ScrollView } from 'react-native';
 
 interface ArticleFloatingMenuProp {
   visible: boolean;

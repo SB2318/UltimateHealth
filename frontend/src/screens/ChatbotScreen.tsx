@@ -7,10 +7,10 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {
-  Alert,
   View,
+  Image,
   KeyboardAvoidingView,
   Platform,
   Text,
@@ -20,11 +20,9 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Tts from 'react-native-tts';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
-import {AxiosError} from 'axios';
 import {ChatBotScreenProps, Message} from '../type';
 import {hp} from '../helper/Metric';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useSendMessageToGemini} from '../hooks/useSendMessageToGemini';
 import {useLoadAIConversations} from '../hooks/useLoadAIChats';
@@ -48,7 +46,6 @@ import {verifyChatbotResponse} from '../chatbot-response-verification';
 const ASSISTANT_USER_ID = 2;
 
 const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
-  const {user_id, user_token} = useSelector((state: any) => state.user);
   const {isConnected} = useSelector((state: any) => state.network);
   
   const { characterId, characterName, characterAvatar } = route.params || {};
@@ -59,7 +56,6 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   const [isQuotaExceeded, setIsQuotaExceeded] = useState<boolean>(false);
   const [showQuotaModal, setShowQuotaModal] = useState<boolean>(false);
   const isMountedRef = useRef(true);
-  const dispatch = useDispatch();
   const {data: user} = useGetProfile();
   // const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA'; //token
 
@@ -97,27 +93,21 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     initTts();
 
     const onStart = () => {};
-    const onFinish = () => {
-      setActiveSpeakingId(null);
-    };
-    const onCancel = () => {
-      setActiveSpeakingId(null);
-    };
-    const onError = () => {
-      setActiveSpeakingId(null);
-    };
+    const onFinish = () => { setActiveSpeakingId(null); };
+    const onCancel = () => { setActiveSpeakingId(null); };
+    const onError  = () => { setActiveSpeakingId(null); };
 
-    const startSub = Tts.addEventListener('tts-start', onStart);
-    const finishSub = Tts.addEventListener('tts-finish', onFinish);
-    const cancelSub = Tts.addEventListener('tts-cancel', onCancel);
-    const errorSub = Tts.addEventListener('tts-error', onError);
+    Tts.addEventListener('tts-start',  onStart);
+    Tts.addEventListener('tts-finish', onFinish);
+    Tts.addEventListener('tts-cancel', onCancel);
+    Tts.addEventListener('tts-error',  onError);
 
     return () => {
       Tts.stop();
-      if (startSub) startSub.remove();
-      if (finishSub) finishSub.remove();
-      if (cancelSub) cancelSub.remove();
-      if (errorSub) errorSub.remove();
+      Tts.removeEventListener('tts-start',  onStart);
+      Tts.removeEventListener('tts-finish', onFinish);
+      Tts.removeEventListener('tts-cancel', onCancel);
+      Tts.removeEventListener('tts-error',  onError);
     };
   }, []);
 
@@ -139,7 +129,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   const {mutate: sendMessageToAI, isPending: messageProcessPending} =
     useSendMessageToGemini();
   const isPending = messageProcessPending || isLoading;
-  const {data: conversations, isLoading: conversationLoading} =
+  const {data: conversations, isLoading: _conversationLoading} =
     useLoadAIConversations(isConnected, characterId);
 
   useEffect(() => {
@@ -163,6 +153,22 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     }
   }, []);
 
+  const convertToGiftedFormat = useCallback((items: Message[]): IMessage[] => {
+    return items.map(m => ({
+      _id: m._id,
+      text: m.text,
+      createdAt: new Date(m.timestamp),
+      user: {
+        _id: m.role === 'user' ? 1 : ASSISTANT_USER_ID,
+        avatar: m.profileImage
+          ? `${GET_STORAGE_DATA}/${m.profileImage}`
+          : m.role === 'assistant'
+            ? (characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg')
+            : undefined,
+      },
+    }));
+  }, [characterAvatar]);
+
   useEffect(() => {
     if (conversations) {
       const refined = convertToGiftedFormat(conversations);
@@ -182,23 +188,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
 
       safeSetIsTyping(false);
     }
-  }, [conversations, safeSetIsTyping, safeSetMessages]);
-
-  const convertToGiftedFormat = (items: Message[]): IMessage[] => {
-    return items.map(m => ({
-      _id: m._id,
-      text: m.text,
-      createdAt: new Date(m.timestamp),
-      user: {
-        _id: m.role === 'user' ? 1 : ASSISTANT_USER_ID,
-        avatar: m.profileImage
-          ? `${GET_STORAGE_DATA}/${m.profileImage}`
-          : m.role === 'assistant'
-            ? (characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg')
-            : undefined,
-      },
-    }));
-  };
+  }, [conversations, safeSetIsTyping, safeSetMessages, convertToGiftedFormat]);
 
 
   const performSendMessage = useCallback((prompt: string) => {
@@ -251,7 +241,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
           ]),
         );
       },
-      onError: (error: AxiosError) => {
+      onError: (error: any) => {
         setIsLoading(false);
         if (!isMountedRef.current) {
           return;
@@ -320,7 +310,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
         );
       },
     });
-  }, [isConnected, safeSetMessages, sendMessageToAI, setIsLoading, characterId, characterAvatar]);
+  }, [isConnected, safeSetMessages, sendMessageToAI, setIsLoading, characterId]);
 
   const onSend = useCallback((newMessages: IMessage[] = []) => {
     if (isPending) {
@@ -420,9 +410,9 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               paddingTop: 10,
               paddingBottom: 20,
             }}
-            placeholder={isQuotaExceeded ? "Come back tomorrow for more advice!" : `Ask ${characterName || 'the AI'} a question...`}
             textInputProps={{
               editable: !isPending && !isQuotaExceeded,
+              placeholder: isQuotaExceeded ? 'Come back tomorrow for more advice!' : `Ask ${characterName || 'the AI'} a question...`,
             }}
             renderBubble={props => {
               const currentMessage = props.currentMessage as any;
@@ -553,7 +543,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               Daily Limit Reached
             </Text>
             <Text style={{ fontSize: 16, color: '#4b5563', textAlign: 'center', marginBottom: 24, lineHeight: 24 }}>
-              You've used all your messages for {characterName || 'this character'} today. Please come back tomorrow for more advice!
+              {"You've"} used all your messages for {characterName || 'this character'} today. Please come back tomorrow for more advice!
             </Text>
             <TouchableOpacity
               onPress={() => setShowQuotaModal(false)}

@@ -1,6 +1,6 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {Category, PodcastData} from '../type';
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 import {FILTER_PODCAST} from '../helper/APIUtils';
 
 type FilterReq = {

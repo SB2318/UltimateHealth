@@ -1,13 +1,11 @@
-import {FC, useEffect, useMemo, useRef, useState} from 'react';
-import {
-  TouchableOpacity,
+import React, {FC, useEffect, useMemo, useRef, useState} from 'react';
+import { TouchableOpacity,
   StyleSheet,
-  FlatList,
+   FlatList ,
   Alert,
   Pressable,
-  TextInput,
-} from 'react-native';
- 
+   TextInput ,
+  } from 'react-native';
 import {PodcastDiscussionProp, User, Comment} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 //import io from 'socket.io-client';
@@ -24,22 +22,23 @@ import {
   SuggestionsProvidedProps,
   parseValue,
 } from 'react-native-controlled-mentions';
-import {
-  GET_IMAGE,
-  GET_STORAGE_DATA,
-} from '../helper/APIUtils';
-import {
-  H3,
-  Paragraph,
-  YStack,
-  Text,
-  View,
-  Image,
-} from 'tamagui';
+import {GET_IMAGE, GET_STORAGE_DATA} from '../helper/APIUtils';
+import {H3, Paragraph, YStack, Text, View, Image} from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {wp} from '../helper/Metric';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
-import { useGetSinglePodcastDetails } from '../hooks/useGetSinglePodcastDetails';
+import {useGetSinglePodcastDetails} from '../hooks/useGetSinglePodcastDetails';
+
+type FlatListHandle = {
+  scrollToOffset: (params: {offset: number; animated?: boolean}) => void;
+  scrollToIndex: (params: {index: number; animated?: boolean; viewPosition?: number}) => void;
+};
+
+type TextInputHandle = {
+  focus: () => void;
+  blur: () => void;
+  clear: () => void;
+};
 
 const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const socket = useSocket();
@@ -47,11 +46,11 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const {podcastId, mentionedUsers} = route.params;
 
   // Auto-join podcast room
-  const inputRef = useRef<TextInput>(null);
+  const inputRef = useRef<TextInputHandle>(null);
   useArticleRoom(null, podcastId);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
-  const flatListRef = useRef<FlatList<Comment>>(null);
+  const flatListRef = useRef<FlatListHandle>(null);
   const {user_id, user_token} = useSelector((state: any) => state.user);
   const [selectedCommentId, setSelectedCommentId] = useState<string>('');
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -61,7 +60,6 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const [mentions, setMentions] = useState<User[]>([]);
 
   const {data: podcast, refetch} = useGetSinglePodcastDetails(podcastId);
-
 
   const triggersConfig: TriggersConfig<'mention' | 'hashtag'> = {
     mention: {
@@ -169,8 +167,6 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
     [mentionedUsers, usedUserIds],
   );
 
- 
-
   useEffect(() => {
     if (!socket) return;
     //console.log('Fetching comments for articleId:', route.params.articleId);
@@ -206,7 +202,10 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
         setComments(prevComments => {
           const newComments = [data.comment, ...prevComments];
           if (flatListRef.current && newComments.length > 1) {
-            flatListRef?.current.scrollToIndex({index: 0, animated: true});
+            flatListRef.current?.scrollToOffset({
+              offset: 0,
+              animated: true,
+            });
           }
 
           return newComments;
@@ -271,7 +270,6 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
     setEditCommentId(comment._id);
   };
 
-  
   const handleDeleteAction = (comment: Comment) => {
     //commentId, articleId, userId
     Alert.alert(
@@ -341,7 +339,6 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
         setEditMode(false);
       } else {
         Alert.alert('Error: Comment Not Found');
-       
       }
     } else {
       const formatted = replaceTriggerValues(
@@ -356,7 +353,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
         mentionedUsers: mentions,
       };
 
-     // console.log('Comment emitting', newCommentObj);
+      // console.log('Comment emitting', newCommentObj);
       // Emit the new comment to the backend via socket
       socket.emit('comment', newCommentObj);
 
@@ -378,15 +375,15 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-    <KeyboardAwareScrollView
-      style={styles.scrollView}
-      bottomOffset={50}
-      showsVerticalScrollIndicator={false}
-      extraKeyboardSpace={20}
-      keyboardShouldPersistTaps="handled"
-      //enableOnAndroid={true}
-     // enableAutomaticScroll={true}
-      contentContainerStyle={styles.scrollContent}>
+      <KeyboardAwareScrollView
+        style={styles.scrollView}
+        bottomOffset={50}
+        showsVerticalScrollIndicator={false}
+        extraKeyboardSpace={20}
+        keyboardShouldPersistTaps="handled"
+        //enableOnAndroid={true}
+        // enableAutomaticScroll={true}
+        contentContainerStyle={styles.scrollContent}>
         <YStack gap="$3">
           {/* Article Title Card */}
           <View style={styles.podcastTitleCard}>
@@ -432,7 +429,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
 
           {/* Comment Input */}
           <TextInput
-            ref = {inputRef}
+            ref={inputRef}
             {...textInputProps}
             style={styles.textInput}
             placeholder="Add a comment..."
@@ -461,28 +458,30 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
 
           {/* Comments List */}
           {comments.length === 0 && (
-  <View style={styles.emptyContainer}>
-    <Text style={styles.emptyIcon}>🎙️</Text>
-    <Text style={styles.emptyTitle}>
-      No discussions yet!
-    </Text>
-    <Text style={styles.emptySubtitle}>
-      Be the first to start the conversation
-    </Text>
-    <TouchableOpacity
-      style={styles.emptyButton}
-      onPress={() => inputRef.current?.focus()}
-    >
-      <Text style={styles.emptyButtonText}>
-        Start Discussion
-      </Text>
-    </TouchableOpacity>
-  </View>
-)}
-          <YStack marginTop="$2" gap="$3">
-            {comments.map(item => (
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyIcon}>🎙️</Text>
+              <Text style={styles.emptyTitle}>No discussions yet!</Text>
+              <Text style={styles.emptySubtitle}>
+                Be the first to start the conversation
+              </Text>
+              <TouchableOpacity
+                style={styles.emptyButton}
+                onPress={() => inputRef.current?.focus()}>
+                <Text style={styles.emptyButtonText}>Start Discussion</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          <FlatList
+            ref={flatListRef}
+            data={comments}
+            keyExtractor={(item: Comment) => item._id}
+            contentContainerStyle={{
+              marginTop: 8,
+              rowGap: 12,
+            }}
+            keyboardShouldPersistTaps="handled"
+            renderItem={({item}: {item: Comment}) => (
               <CommentItem
-                key={item._id}
                 item={item}
                 isSelected={selectedCommentId === item._id}
                 userId={user_id}
@@ -491,7 +490,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
                 deleteAction={handleDeleteAction}
                 handleLikeAction={handleLikeAction}
                 commentLikeLoading={commentLikeLoading}
-                handleMentionClick={(user_handle)=>{
+                handleMentionClick={user_handle => {
                   navigation.navigate('UserProfileScreen', {
                     author_handle: user_handle,
                     userHandle: user_handle,
@@ -500,13 +499,12 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
                 handleReportAction={handleReportAction}
                 isFromArticle={false}
               />
-            ))}
-          </YStack>
+            )}
+          />
         </YStack>
-    </KeyboardAwareScrollView>
-      </SafeAreaView>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
-
 };
 
 const styles = StyleSheet.create({
@@ -720,39 +718,39 @@ const styles = StyleSheet.create({
   },
 
   emptyContainer: {
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingVertical: 60,
-  paddingHorizontal: 20,
-},
-emptyIcon: {
-  fontSize: 60,
-  marginBottom: 16,
-},
-emptyTitle: {
-  fontSize: 20,
-  fontWeight: 'bold',
-  color: PRIMARY_COLOR,
-  marginBottom: 8,
-  textAlign: 'center',
-},
-emptySubtitle: {
-  fontSize: 14,
-  color: '#888',
-  marginBottom: 24,
-  textAlign: 'center',
-},
-emptyButton: {
-  backgroundColor: PRIMARY_COLOR,
-  paddingHorizontal: 24,
-  paddingVertical: 12,
-  borderRadius: 8,
-},
-emptyButtonText: {
-  color: '#fff',
-  fontWeight: 'bold',
-  fontSize: 14,
-},
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+    paddingHorizontal: 20,
+  },
+  emptyIcon: {
+    fontSize: 60,
+    marginBottom: 16,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: PRIMARY_COLOR,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    color: '#888',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  emptyButton: {
+    backgroundColor: PRIMARY_COLOR,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  emptyButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
 });
 
 export default PodcastDiscussion;

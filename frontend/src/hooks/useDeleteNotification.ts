@@ -1,6 +1,6 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {PROD_URL} from '../helper/APIUtils';
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 
 export const useDeleteNotification = (): UseMutationResult<
   any,

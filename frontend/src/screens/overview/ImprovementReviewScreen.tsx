@@ -1,13 +1,12 @@
-import {
-  Image,
+import { Image,
   Platform,
   StyleSheet,
   TouchableOpacity,
   View,
-  ScrollView,
-  FlatList,
+   ScrollView ,
+   FlatList ,
   Dimensions,
-} from 'react-native';
+  } from 'react-native';
 import {useEffect, useRef, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -48,7 +47,7 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
 
   const [comments, setComments] = useState<Comment[]>([]);
 
-  const flatListRef = useRef<FlatList<Comment>>(null);
+ // const flatListRef = useRef<FlatList<Comment>>(null);
 
   const {data: user} = useGetProfile();
   const {data: improvement} = useGetImprovementById(requestId);
@@ -99,9 +98,9 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
       setComments(prevComments => {
         const newComments = [data, ...prevComments];
         // Scroll to the first index after adding the new comment
-        if (flatListRef.current && newComments.length > 1) {
-          flatListRef?.current.scrollToIndex({index: 0, animated: true});
-        }
+        // if (flatListRef.current && newComments.length > 1) {
+        //   flatListRef?.current.scrollToIndex({index: 0, animated: true});
+        // }
 
         return newComments;
       });

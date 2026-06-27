@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Alert,
   StyleSheet,
@@ -118,6 +119,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       const confirmation = await showConfirmationAlert();
       if (!confirmation) {
         Alert.alert('Post discarded');
+        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
         navigation.navigate('TabNavigation');
         return;
       }
@@ -186,6 +188,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                         duration: Snackbar.LENGTH_SHORT,
                       });
 
+                      AsyncStorage.removeItem('@article_description_draft').catch(() => {});
                       navigation.navigate('TabNavigation');
                     },
                     onError: error => {
@@ -261,6 +264,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                           duration: Snackbar.LENGTH_SHORT,
                         });
 
+                        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
                         navigation.navigate('TabNavigation');
                       },
                       onError: error => {
@@ -313,6 +317,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                           duration: Snackbar.LENGTH_SHORT,
                         });
 
+                        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
                         navigation.navigate('TabNavigation');
                       },
 

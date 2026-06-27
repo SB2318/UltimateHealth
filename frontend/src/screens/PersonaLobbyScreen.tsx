@@ -1,13 +1,12 @@
 import React from 'react';
-import {
-  View,
+import { View,
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  FlatList,
+   FlatList ,
   Image,
   Dimensions,
-} from 'react-native';
+ } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { useGetCharacters } from '../hooks/useGetCharacters';
@@ -130,13 +129,13 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
             <Ionicons name="alert-circle-outline" size={48} color="#ef4444" style={{ marginBottom: 16 }} />
             <Text style={{ fontSize: 16, color: '#4b5563', textAlign: 'center' }}>
-              Oops! We couldn't load your health team. Please check your connection and try again.
+              Oops! We couldn&apos;t load your health team. Please check your connection and try again.
             </Text>
           </View>
         ) : (
           <FlatList
             data={characters}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item:any) => item.id}
             renderItem={renderCharacterCard}
             numColumns={2}
             contentContainerStyle={{ paddingVertical: 16 }}

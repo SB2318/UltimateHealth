@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
-import {
-  Modal,
+import { Modal,
   View,
   Text,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  TextInput,
-} from 'react-native';
+   TextInput ,
+ } from 'react-native';
 import {useSelector} from 'react-redux';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import Entypo from '@expo/vector-icons/Entypo';

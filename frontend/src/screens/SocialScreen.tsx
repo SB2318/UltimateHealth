@@ -1,13 +1,12 @@
 import {useEffect, useState} from 'react';
-import {
-  View,
+import { View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   Platform,
-  ScrollView,
-} from 'react-native';
+   ScrollView ,
+ } from 'react-native';
 import {SocialScreenProps} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';

@@ -6,14 +6,13 @@ import React, {
   Dispatch,
   SetStateAction,
 } from 'react';
-import {
-  FlatList,
+import { FlatList ,
   StyleSheet,
   Text,
   TouchableOpacity,
   Modal,
   View,
-} from 'react-native';
+ } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AddSpecializationModal from './AddSpecializationModal';
 

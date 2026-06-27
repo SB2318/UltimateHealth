@@ -1,4 +1,4 @@
-import {StyleSheet, View, Text, Alert, useColorScheme, ScrollView, FlatList, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, Alert, useColorScheme,  ScrollView ,  FlatList , TouchableOpacity  } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../helper/Theme';
@@ -358,7 +358,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
                 styles.flatListContentContainer,
                 {paddingBottom: bottomBarHeight + 15},
               ]}
-              keyExtractor={item => item?._id}
+              keyExtractor={(item: ArticleData) => item?._id}
               ListEmptyComponent={
                 <NoArticleState/>
               }
@@ -375,7 +375,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
                 styles.flatListContentContainer,
                 {paddingBottom: bottomBarHeight + 15},
               ]}
-              keyExtractor={item => item?._id}
+              keyExtractor={(item: ArticleData) => item?._id}
               ListEmptyComponent={
                  <NoArticleState/>
               }
@@ -406,7 +406,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
                   styles.flatListContentContainer,
                   {paddingBottom: bottomBarHeight + 15},
                 ]}
-                keyExtractor={item => item?._id}
+                keyExtractor={(item: ArticleData) => item?._id}
                 ListEmptyComponent={
                   <NoArticleState/>
                 }

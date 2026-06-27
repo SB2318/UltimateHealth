@@ -7,7 +7,6 @@ import {
   View,
   Alert,
   Dimensions,
-  Share,
   useColorScheme,
 } from 'react-native';
 import ArticleShareModal from '../../components/ArticleShareModal';
@@ -40,7 +39,7 @@ import {
 //import CommentScreen from '../CommentScreen';
 import Tts from 'react-native-tts';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import FloatingSpeedSelector from '../../components/FloatingSpeedSelector';
+import SpeedSelector from '../../components/FloatingSpeedSelector';
 
 import {setUserHandle} from '../../store/UserSlice';
 import {FontAwesome5} from '@expo/vector-icons';
@@ -204,7 +203,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   const debouncedPersistFontScale = useCallback(
-    debounce(persistFontScale, 300),
+    (nextValue: number) => debounce(persistFontScale, 300)(nextValue),
     [],
   );
 
@@ -457,9 +456,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
     } else {
       Alert.alert('Article not found');
+    }
+  };
+
   const handleCopyLink = async () => {
     try {
-      copyArticleShareLink(articleId, authorId, resolvedRecordId);
+      copyArticleShareLink(articleId, authorId ??"", resolvedRecordId as string);
       Snackbar.show({
         text: 'Link copied',
         duration: Snackbar.LENGTH_SHORT,
@@ -601,14 +603,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     clearArticleTtsSubscriptions();
     finishHandlerRef.current = speakNextChunk;
     errorHandlerRef.current = handleTtsError;
-    finishSubscriptionRef.current = Tts.addEventListener(
+    Tts.addEventListener(
       'tts-finish',
       speakNextChunk,
-    ) as TtsSubscription;
-    errorSubscriptionRef.current = Tts.addEventListener(
+    );
+    Tts.addEventListener(
       'tts-error',
       handleTtsError,
-    ) as TtsSubscription;
+    );
   }, [
     clearArticleTtsSubscriptions,
     handleTtsError,
@@ -1031,13 +1033,29 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       <ArticleShareModal
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}
-        article={{
-          title: article.title, // string
-          authorName: article.author?.name, // string  — adjust to your model shape
-          category: article.category ?? 'Health', // string
-          coverImageUrl: article.cover_image ?? null,
-          authorAvatarUrl: article.author?.profile_picture ?? null,
-        }}
+        article={
+          article
+            ? {
+                title: article.title,
+                authorName:
+                  typeof article.authorId === 'object'
+                    ? article.authorId.user_name
+                    : '',
+                category: 'Health',
+                coverImageUrl: article.imageUtils?.[0] ?? null,
+                authorAvatarUrl:
+                  typeof article.authorId === 'object'
+                    ? article.authorId.Profile_image
+                    : null,
+              }
+            : {
+                title: '',
+                authorName: '',
+                category: 'Health',
+                coverImageUrl: null,
+                authorAvatarUrl: null,
+              }
+        }
       />
       <TrustedUsersModal
         visible={trustedUsersModalVisible}
@@ -1411,7 +1429,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         </View>
       )}
 
-      <FloatingSpeedSelector
+      <SpeedSelector
         currentSpeed={speechRate}
         onSpeedSelect={handleSpeedSelect}
         visible={isSpeedSelectorVisible}

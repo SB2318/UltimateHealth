@@ -1,12 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  FlatList,
+import { FlatList ,
   TouchableOpacity,
   View,
   Text,
   StyleSheet,
   useColorScheme,
-} from 'react-native';
+ } from 'react-native';
 import { useTheme } from 'tamagui';
 import {EditRequest} from '../../type';
 import {useSelector} from 'react-redux';
@@ -131,7 +130,7 @@ export default function ImprovementWorkspace({
             <FlatList
               data={improvementData ? improvementData : []}
               renderItem={renderItem}
-              keyExtractor={item => item._id.toString()}
+              keyExtractor={(item: EditRequest) => item._id.toString()}
               contentContainerStyle={styles.flatListContentContainer}
               refreshing={refreshing}
               onRefresh={onRefresh}

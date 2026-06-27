@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
-import {
-  View,
-  ScrollView,
+import { View,
+   ScrollView ,
   Text,
   StyleSheet,
   Alert,
   TouchableOpacity,
-} from 'react-native';
+ } from 'react-native';
 import {ReportScreenProp} from '../../type';
 import {useSelector} from 'react-redux';
 import Loader from '../../components/Loader';

@@ -1,6 +1,6 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {REPOST_ARTICLE} from '../helper/APIUtils';
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 import {useSelector} from 'react-redux';
 
 export const useRepostArticle = (

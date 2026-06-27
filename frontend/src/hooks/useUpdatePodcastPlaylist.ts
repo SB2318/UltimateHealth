@@ -1,6 +1,6 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {UPDATE_PODCAST_PLAYLIST} from '../helper/APIUtils';
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 
 type UpdatePlaylistReq = {
   addPlaylistIds: string[];

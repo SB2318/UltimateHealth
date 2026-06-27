@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
-import {
-  Dimensions,
+import { Dimensions,
   Modal,
   StyleSheet,
   Text,
-  TextInput,
+   TextInput ,
   TouchableOpacity,
   View,
-} from 'react-native';
+ } from 'react-native';
 import {PRIMARY_COLOR} from '../helper/Theme';
 
 interface AddSpecializationModalProps {

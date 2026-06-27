@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import {
-  TextInput,
+import { TextInput ,
   View,
   Text,
   ViewStyle,
@@ -8,7 +7,7 @@ import {
   StyleProp,
   TextInputProps,
   useColorScheme,
-} from 'react-native';
+ } from 'react-native';
 import { GlassStyles, ProfessionalColors, Typography, Spacing } from '../styles/GlassStyles';
 
 interface GlassInputProps extends TextInputProps {

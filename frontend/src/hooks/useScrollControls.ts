@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Animated, NativeScrollEvent, NativeSyntheticEvent, ScrollView } from 'react-native';
+import { Animated, any, any,  ScrollView   } from 'react-native';
 
 export interface UseScrollControlsOptions {
   threshold?: number;
@@ -7,7 +7,7 @@ export interface UseScrollControlsOptions {
 }
 
 export function useScrollControls({ threshold = 300, bottomThreshold = 50 }: UseScrollControlsOptions = {}) {
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<any>(null);
   const [topVisible, setTopVisible] = useState(false);
   const [bottomVisible, setBottomVisible] = useState(true);
 
@@ -59,7 +59,7 @@ export function useScrollControls({ threshold = 300, bottomThreshold = 50 }: Use
     }).start(() => setBottomVisible(false));
   };
 
-  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const onScroll = (e: any) => {
     const { contentOffset, layoutMeasurement, contentSize } = e.nativeEvent;
     const y = contentOffset.y;
 

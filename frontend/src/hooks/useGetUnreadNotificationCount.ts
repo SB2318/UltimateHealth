@@ -1,6 +1,6 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {PROD_URL} from '../helper/APIUtils';
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 import {useSelector} from 'react-redux';
 
 export const useGetUnreadNotificationCount = (

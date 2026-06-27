@@ -378,7 +378,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
                 styles.flatListContentContainer,
                 {paddingBottom: 15},
               ]}
-              keyExtractor={item => item?._id}
+              keyExtractor={(item: ArticleData) => item?._id}
               refreshing={refreshing}
               ListEmptyComponent={
                  <NoArticleState/>
@@ -395,7 +395,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
                 styles.flatListContentContainer,
                 {paddingBottom: 15},
               ]}
-              keyExtractor={item => item?._id}
+              keyExtractor={(item: ArticleData) => item?._id}
               refreshing={refreshing}
               ListEmptyComponent={
                 <NoArticleState/>

@@ -1,7 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {Message} from '../type';
 import {SEND_MESSAGE_TO_GEMINI} from '../helper/APIUtils';
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 
 export const useSendMessageToGemini = (): UseMutationResult<
   Message,

@@ -1,5 +1,5 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 import {LOAD_REVIEW_COMMENTS} from '../helper/APIUtils';
 import {Comment} from '../type';
 import {useSelector} from 'react-redux';

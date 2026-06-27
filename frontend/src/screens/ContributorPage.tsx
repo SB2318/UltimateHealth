@@ -1,5 +1,5 @@
 import React, {useState, useMemo} from 'react';
-import {Linking, FlatList} from 'react-native';
+import { Linking,  FlatList  } from 'react-native';
 import {
   YStack,
   XStack,

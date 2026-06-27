@@ -2,6 +2,7 @@
   "compilerOptions": {
     "jsx": "react-native",
     "strict": true,
+    "module": "esnext",
     "paths": {
       "@/*": [
         "./*"

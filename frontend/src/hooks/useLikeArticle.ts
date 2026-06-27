@@ -1,4 +1,4 @@
-import axios, {AxiosError} from 'axios';
+import axios, { type AxiosError } from 'axios';
 import {ArticleData} from '../type';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {LIKE_ARTICLE} from '../helper/APIUtils';
