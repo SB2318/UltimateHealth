@@ -11,8 +11,12 @@ import Loader from '../components/Loader';
 import NotificationItem from '../components/NotificationItem';
 import {Notification, NotificationType} from '../type';
 import { useDeleteNotification } from '../hooks/useDeleteNotification';
-import { useGetAllNotifications } from '../hooks/useGetAllNotifications';
+import {
+  fetchNotifications,
+  useGetAllNotifications,
+} from '../hooks/useGetAllNotifications';
 import { useMarkNotificationAsRead } from '../hooks/useMarkNoticationAsRead';
+import {useQueryClient} from '@tanstack/react-query';
 import {mergeNotificationsById} from '../helper/notificationUtils';
 
 type PendingDelete = {
@@ -24,6 +28,7 @@ type PendingDelete = {
 const UNDO_TIMEOUT_MS = 3500;
 
 const NotificationScreen = ({navigation}: any) => {
+  const queryClient = useQueryClient();
   const {user_token} = useSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = React.useState(false);
   const [page, setPage] = React.useState(1);
@@ -103,10 +108,29 @@ const NotificationScreen = ({navigation}: any) => {
     return () => {};
   }, [notificationsData, isConnected]);
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    refetch();
-    setRefreshing(false);
+    setPage(1);
+
+    try {
+      const firstPage = await queryClient.fetchQuery({
+        queryKey: ['get-all-notifications', 1],
+        queryFn: () => fetchNotifications(1),
+        staleTime: 0,
+      });
+
+      if (firstPage) {
+        setTotalPages(firstPage.totalPages ?? 0);
+        setNotificationsData(firstPage.notifications ?? []);
+      } else {
+        Snackbar.show({
+          text: 'Could not refresh notifications. Please try again.',
+          duration: Snackbar.LENGTH_SHORT,
+        });
+      }
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   const restoreDeletedNotification = useCallback((snapshot: PendingDelete) => {
