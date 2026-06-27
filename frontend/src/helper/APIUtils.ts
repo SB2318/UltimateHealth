@@ -64,7 +64,6 @@ const GET_YEARLY_READ_REPORT = `${PROD_URL}/analytics/yearly-reads/`;
 const GET_MONTHLY_WRITES_REPORT = `${PROD_URL}/analytics/monthly-writes/`;
 const GET_YEARLY_WRITES_REPORT = `${PROD_URL}/analytics/yearly-writes/`;
 
-const VULTR_CHAT_URL = 'https://api.vultrinference.com/v1/chat/completions';
 const GET_ARTICLE_CONTENT = `${PROD_URL}/articles/get-article-content`;
 const GET_IMPROVEMENT_CONTENT = `${PROD_URL}/article/get-improve-content`;
 
@@ -111,6 +110,7 @@ const GET_TOKEN_STATUS = `${PROD_URL}/tokenstatus`;
 // chat url
 const CHAT_URL = `${PROD_URL}/gemini/messages`;
 const SEND_MESSAGE_TO_GEMINI = `${PROD_URL}/gemini/send`;
+const GET_CHARACTERS_API = `${PROD_URL}/gemini/characters`;
 
 /** Notification Preferences */
 const GET_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`;
@@ -158,7 +158,6 @@ export {
   GET_MONTHLY_WRITES_REPORT,
   GET_YEARLY_READ_REPORT,
   GET_YEARLY_WRITES_REPORT,
-  VULTR_CHAT_URL,
   CHAT_URL,
   REPOST_ARTICLE,
   CHECK_USER_HANDLE,
@@ -201,6 +200,7 @@ export {
   CONTENT_CHECKER_PROD,
   LOAD_REVIEW_COMMENTS,
   SEND_MESSAGE_TO_GEMINI,
+  GET_CHARACTERS_API,
   GET_NOTIFICATION_PREFERENCES,
   UPDATE_NOTIFICATION_PREFERENCES,
   GET_READ_HISTORY,
