@@ -48,6 +48,7 @@ describe('SplashScreen - Offline Session and Auto-Login Tests', () => {
     render(
       <SplashScreen
         navigation={{navigate: mockNavigate, reset: mockReset} as any}
+        route={{} as any}
       />,
     );
 
