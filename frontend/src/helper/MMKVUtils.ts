@@ -45,7 +45,7 @@ const initializeMMKV = (): MMKVStorageLike | null => {
       podcastMMKV = mmkvModule.createMMKV({id: PODCAST_CACHE_ID});
     }
   } catch (error) {
-    console.log('MMKV module not available, falling back to AsyncStorage', error);
+    if (__DEV__) console.log('MMKV module not available, falling back to AsyncStorage', error);
     podcastMMKV = null;
   }
 
@@ -70,7 +70,7 @@ const initializeReadingProgressMMKV = (): MMKVStorageLike | null => {
       });
     }
   } catch (error) {
-    console.log('Reading progress MMKV module not available', error);
+    if (__DEV__) console.log('Reading progress MMKV module not available', error);
     readingProgressMMKV = null;
   }
 
@@ -96,7 +96,7 @@ const parsePodcastData = (
       downloadAt: new Date(item.downloadAt),
     }));
   } catch (error) {
-    console.log('Podcast cache parse error', error);
+    if (__DEV__) console.log('Podcast cache parse error', error);
     return [];
   }
 };
@@ -109,7 +109,7 @@ const persistPodcastData = async (value: string): Promise<void> => {
       mmkv.set(PODCAST_STORAGE_KEY, value);
       return;
     } catch (error) {
-      console.log('MMKV write error', error);
+      if (__DEV__) console.log('MMKV write error', error);
     }
   }
 
@@ -126,10 +126,10 @@ export const retrieveItem = async (): Promise<PodcastDownloadRecord[]> => {
   const mmkv = initializeMMKV();
 
   if (mmkv) {
-    console.log('Retrieving podcast data from MMKV');
+    if (__DEV__) console.log('Retrieving podcast data from MMKV');
     return parsePodcastData(mmkv.getString(PODCAST_STORAGE_KEY));
   }
-  console.log('Retrieving podcast data from AsyncStorage');
+  if (__DEV__) console.log('Retrieving podcast data from AsyncStorage');
   const storedValue = await AsyncStorage.getItem(PODCAST_STORAGE_KEY);
   return parsePodcastData(storedValue);
 };
@@ -142,7 +142,7 @@ export const deleteItem = async (): Promise<void> => {
       mmkv.delete(PODCAST_STORAGE_KEY);
       return;
     } catch (error) {
-      console.log('MMKV delete error', error);
+      if (__DEV__) console.log('MMKV delete error', error);
     }
   }
 
@@ -157,7 +157,7 @@ export const clearMMKV = async (): Promise<void> => {
       mmkv.clearAll();
       return;
     } catch (error) {
-      console.log('MMKV clear error', error);
+      if (__DEV__) console.log('MMKV clear error', error);
     }
   }
 
