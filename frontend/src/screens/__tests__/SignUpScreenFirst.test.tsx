@@ -7,7 +7,9 @@ const mockNavigate = jest.fn();
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({top: 0, bottom: 0, left: 0, right: 0}),
-  SafeAreaView: ({children}: any) => children,
+  SafeAreaView: function MockSafeAreaView({children}: any) {
+    return children;
+  },
 }));
 
 jest.mock('tamagui', () => {
@@ -81,13 +83,17 @@ jest.mock('react-native-snackbar', () => ({
 jest.mock('@expo/vector-icons/MaterialIcons', () => {
   const React = require('react');
   const {Text} = require('react-native');
-  return () => React.createElement(Text, null, 'Icon');
+  const MockIcon = () => React.createElement(Text, null, 'Icon');
+  MockIcon.displayName = 'MaterialIcons';
+  return MockIcon;
 });
 
 jest.mock('@expo/vector-icons/AntDesign', () => {
   const React = require('react');
   const {Text} = require('react-native');
-  return () => React.createElement(Text, null, 'AntDesign');
+  const MockIcon = () => React.createElement(Text, null, 'AntDesign');
+  MockIcon.displayName = 'AntDesign';
+  return MockIcon;
 });
 
 const mockRegisterMutate = jest.fn();
@@ -117,8 +123,8 @@ jest.mock('../../hooks/useUploadImage', () => () => ({
 // Mock modal components to trigger their callback when mocked buttons are pressed
 jest.mock('../../components/VerifiedModal', () => {
   const React = require('react');
-  const {Button, Text} = require('react-native');
-  return ({visible, onClick, message}: any) => {
+  const {Button} = require('react-native');
+  const MockVerifiedModal = ({visible, onClick, message}: any) => {
     if (!visible) return null;
     return React.createElement(
       Button,
@@ -129,12 +135,14 @@ jest.mock('../../components/VerifiedModal', () => {
       }
     );
   };
+  MockVerifiedModal.displayName = 'VerifiedModal';
+  return MockVerifiedModal;
 });
 
 jest.mock('../../components/SecurityWarningModal', () => {
   const React = require('react');
   const {Button} = require('react-native');
-  return ({visible, onContinue}: any) => {
+  const MockSecurityWarningModal = ({visible, onContinue}: any) => {
     if (!visible) return null;
     return React.createElement(
       Button,
@@ -145,12 +153,16 @@ jest.mock('../../components/SecurityWarningModal', () => {
       }
     );
   };
+  MockSecurityWarningModal.displayName = 'SecurityWarningModal';
+  return MockSecurityWarningModal;
 });
 
 jest.mock('../../components/Loader', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View);
+  const MockLoader = () => React.createElement(View);
+  MockLoader.displayName = 'Loader';
+  return MockLoader;
 });
 
 describe('SignUpScreenFirst - Crash Prevention and Field Verification Tests', () => {
@@ -169,15 +181,16 @@ describe('SignUpScreenFirst - Crash Prevention and Field Verification Tests', ()
     render(
       <SignupPageFirst
         navigation={{navigate: mockNavigate} as any}
+        route={{} as any}
       />,
     );
 
   it('renders sign up form inputs correctly', () => {
     const {getByPlaceholderText, getByText} = renderScreen();
-    expect(getByPlaceholderText('Name')).toBeTruthy();
-    expect(getByPlaceholderText('User Handle')).toBeTruthy();
-    expect(getByPlaceholderText('Email')).toBeTruthy();
-    expect(getByPlaceholderText('Password')).toBeTruthy();
+    expect(getByPlaceholderText('Enter your full name')).toBeTruthy();
+    expect(getByPlaceholderText('Choose a unique handle (e.g. john_doe)')).toBeTruthy();
+    expect(getByPlaceholderText('Enter your email address')).toBeTruthy();
+    expect(getByPlaceholderText('At least 8 characters')).toBeTruthy();
     expect(getByText('Select your role')).toBeTruthy();
   });
 
@@ -185,10 +198,10 @@ describe('SignUpScreenFirst - Crash Prevention and Field Verification Tests', ()
     const {getByPlaceholderText, getByText, getByTestId, queryByTestId} = renderScreen();
 
     // Fill form
-    fireEvent.changeText(getByPlaceholderText('Name'), 'John Doe');
-    fireEvent.changeText(getByPlaceholderText('User Handle'), 'johndoe');
-    fireEvent.changeText(getByPlaceholderText('Email'), 'johndoe@example.com');
-    fireEvent.changeText(getByPlaceholderText('Password'), 'password123');
+    fireEvent.changeText(getByPlaceholderText('Enter your full name'), 'John Doe');
+    fireEvent.changeText(getByPlaceholderText('Choose a unique handle (e.g. john_doe)'), 'johndoe');
+    fireEvent.changeText(getByPlaceholderText('Enter your email address'), 'johndoe@example.com');
+    fireEvent.changeText(getByPlaceholderText('At least 8 characters'), 'password123');
 
     // Select General User role from mocked dropdown
     fireEvent.press(getByText('General User'));
