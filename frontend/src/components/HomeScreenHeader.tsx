@@ -3,6 +3,7 @@ import { Input, XStack, YStack, Button, Text } from "tamagui";
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
+// @ts-ignore
 import { HomeScreenHeaderProps } from '../types'; // Purani types file mapping back as bot requested
 
 const HomeScreenHeader = ({

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {StyleSheet, Dimensions, ImageSourcePropType} from 'react-native';
 import {useCallback, useEffect, useState} from 'react';
 

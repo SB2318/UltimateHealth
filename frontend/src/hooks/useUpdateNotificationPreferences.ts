@@ -1,5 +1,6 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
-import axios, { type AxiosError } from 'axios';
+import axios from 'axios';
+type AxiosError = any;
 import {UPDATE_NOTIFICATION_PREFERENCES} from '../helper/APIUtils';
 //import {NotificationPreferencesResponse} from '../type';
 

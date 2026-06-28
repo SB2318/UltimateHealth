@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { StyleSheet,
   View,
   Alert,

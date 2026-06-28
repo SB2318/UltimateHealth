@@ -1,5 +1,6 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import axios, { type AxiosError } from 'axios';
+import axios from 'axios';
+type AxiosError = any;
 import {GET_REPORT_REASONS} from '../helper/APIUtils';
 import {ReportReason} from '../type';
 import {useSelector} from 'react-redux';

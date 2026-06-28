@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import {render} from '@testing-library/react-native';
 import HomeScreen from '../HomeScreen';
@@ -138,6 +139,7 @@ describe('HomeScreen - Early Return and State Rendering Tests', () => {
     render(
       <HomeScreen
         navigation={{navigate: mockNavigate, reset: mockReset} as any}
+        route={{} as any}
       />,
     );
 

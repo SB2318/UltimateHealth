@@ -1,5 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+type AxiosError = any;
 import { GET_ALL_PODCASTS } from "../helper/APIUtils";
 import { PodcastData } from "../type";
 

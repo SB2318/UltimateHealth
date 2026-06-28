@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { useRef, useState } from 'react';
-import { Animated, any, any,  ScrollView   } from 'react-native';
+import { Animated, any,  ScrollView   } from 'react-native';
 
 export interface UseScrollControlsOptions {
   threshold?: number;

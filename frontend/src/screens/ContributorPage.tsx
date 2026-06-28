@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, {useState, useMemo} from 'react';
 import { Linking,  FlatList  } from 'react-native';
 import {

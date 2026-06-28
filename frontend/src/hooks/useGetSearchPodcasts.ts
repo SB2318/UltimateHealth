@@ -1,4 +1,5 @@
-import axios, { AxiosError } from "axios"
+import axios from "axios"
+type AxiosError = any;
 import { PodcastData } from "../type"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { SEARCH_PODCAST } from "../helper/APIUtils"

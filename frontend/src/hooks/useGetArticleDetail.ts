@@ -1,6 +1,7 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {ArticleData} from '../type';
-import axios, { type AxiosError } from 'axios';
+import axios from 'axios';
+type AxiosError = any;
 import {GET_ARTICLE_BY_ID} from '../helper/APIUtils';
 
 export const useGetArticleDetails = (

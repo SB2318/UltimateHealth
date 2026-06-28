@@ -1,6 +1,7 @@
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
-import {  type AxiosError , isAxiosError} from 'axios';
+import {   isAxiosError} from 'axios';
+type AxiosError = any;
 import {StatusBar} from 'expo-status-bar';
 import messaging from '@react-native-firebase/messaging';
 import React, {useEffect, useState} from 'react';

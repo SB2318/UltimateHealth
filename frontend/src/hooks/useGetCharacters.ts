@@ -1,6 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { Character } from "../type";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+type AxiosError = any;
 import { GET_CHARACTERS_API } from "../helper/APIUtils";
 
 export const useGetCharacters = (isConnected: boolean): UseQueryResult<

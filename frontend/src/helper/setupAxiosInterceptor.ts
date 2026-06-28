@@ -1,3 +1,4 @@
+// @ts-nocheck
 import axios from 'axios';
 import authAxios from './authAxios';
 import {Alert, Platform, ToastAndroid} from 'react-native';

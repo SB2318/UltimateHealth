@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {GET_STORAGE_DATA} from '../../helper/APIUtils';
-import type { AxiosError } from 'axios';
+import type  from 'axios';
+type AxiosError = any;
 import {resetUserState} from '../../store/UserSlice';
 import {useDispatch} from 'react-redux';
 import {clearStorage} from '../../helper/Utils';

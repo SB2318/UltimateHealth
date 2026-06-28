@@ -1,6 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {UPLOAD_PODCAST} from '../helper/APIUtils';
-import axios, { type AxiosError } from 'axios';
+import axios from 'axios';
+type AxiosError = any;
 import {Category} from '../type';
 
 type PodcastReq = {

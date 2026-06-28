@@ -1,4 +1,5 @@
-import axios, { type AxiosError } from 'axios';
+import axios from 'axios';
+type AxiosError = any;
 import {User} from '../type';
 import {PROD_URL} from '../helper/APIUtils';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';

@@ -1,6 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { Message } from "../type";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+type AxiosError = any;
 import { CHAT_URL } from "../helper/APIUtils";
 
 

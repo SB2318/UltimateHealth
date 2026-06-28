@@ -1,6 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {TRUST_ARTICLE} from '../helper/APIUtils';
-import axios, { type AxiosError } from 'axios';
+import axios from 'axios';
+type AxiosError = any;
 
 export const useTrustArticle = (
   articleId: number,

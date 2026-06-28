@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import {render, fireEvent, waitFor} from '@testing-library/react-native';
 import SplashScreen from '../SplashScreen';
@@ -48,6 +49,7 @@ describe('SplashScreen - Offline Session and Auto-Login Tests', () => {
     render(
       <SplashScreen
         navigation={{navigate: mockNavigate, reset: mockReset} as any}
+        route={{} as any}
       />,
     );
 

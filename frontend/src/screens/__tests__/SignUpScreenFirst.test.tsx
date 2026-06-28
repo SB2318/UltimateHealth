@@ -169,6 +169,7 @@ describe('SignUpScreenFirst - Crash Prevention and Field Verification Tests', ()
     render(
       <SignupPageFirst
         navigation={{navigate: mockNavigate} as any}
+        route={{} as any}
       />,
     );
 

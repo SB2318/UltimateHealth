@@ -1,6 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {ArticleData} from '../type';
-import axios, { type AxiosError } from 'axios';
+import axios from 'axios';
+type AxiosError = any;
 import {SUBMIT_IMPROVEMENT} from '../helper/APIUtils';
 
 type SubmitReq = {

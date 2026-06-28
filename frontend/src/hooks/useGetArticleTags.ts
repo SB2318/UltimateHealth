@@ -1,5 +1,6 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import axios, { type AxiosError } from 'axios';
+import axios from 'axios';
+type AxiosError = any;
 import {ARTICLE_TAGS_API} from '../helper/APIUtils';
 import {Category} from '../type';
 

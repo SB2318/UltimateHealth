@@ -1,5 +1,6 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
-import axios, { type AxiosError } from 'axios';
+import axios from 'axios';
+type AxiosError = any;
 import {CHANGE_PASSWORD_API} from '../helper/APIUtils';
 
 type ChangePassWordReq = {

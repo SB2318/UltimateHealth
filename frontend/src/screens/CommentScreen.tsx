@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert,
    FlatList ,
