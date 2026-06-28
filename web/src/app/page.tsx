@@ -8,6 +8,7 @@ import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExtern
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
 import { ModeToggle } from "@/components/mode-toggle";
+import Navbar from "../components/Navbar";
 import { PageWrapper, Section } from "../components/layout";
 
 import { withBasePath } from "@/lib/basePath";
@@ -425,7 +426,9 @@ export default function Home() {
     }
   };
 
-  // ── Contact form submit ──
+  // ── Contact form submit → uhsocial.in API ──
+  // Backend route needed: POST /api/contact/send on NEXT_PUBLIC_API_BASE_URL
+  // See /contact_newsletter_guide.md for the Express route implementation
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = contactName.trim();
@@ -1136,6 +1139,6 @@ export default function Home() {
         </div>
       )}
       <ScrollToTop />
-    </>
+    </div>
   );
 }

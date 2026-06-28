@@ -83,6 +83,7 @@ html { scroll-behavior: smooth; }
 /* =============================================================
    LANDING PAGE SCOPED STYLES
    ============================================================= */
+.landing-page {
 
 * {
   margin: 0;
@@ -3151,4 +3152,9 @@ html.dark .nav-item-icon {
 
 html.dark .glow-toggle-btn {
   color: #94a3b8;
+}
+/* Fix nav button visibility in both modes */
+.nav-btn-sm {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
 }
