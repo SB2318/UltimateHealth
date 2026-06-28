@@ -1,5 +1,5 @@
 import React, {useState, useMemo} from 'react';
-import {Linking, FlatList} from 'react-native';
+import {FlatList} from 'react-native';
 import {
   YStack,
   XStack,
@@ -13,6 +13,7 @@ import {
 } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {MaterialCommunityIcons, FontAwesome5} from '@expo/vector-icons';
+import {openExternalUrl} from '../helper/Utils';
 
 
 const CONTRIBUTORS = [
@@ -333,7 +334,7 @@ const ContributorPage = () => {
   const [search, setSearch] = useState('');
 
   const openLink = (url: string) => {
-    Linking.openURL(url);
+    void openExternalUrl(url, 'Could not open this contributor link.');
   };
 
   // 🔍 Filter contributors

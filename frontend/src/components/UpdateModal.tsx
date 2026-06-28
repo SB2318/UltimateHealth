@@ -1,4 +1,5 @@
-import { Modal, View, Text, Pressable, Linking } from 'react-native';
+import { Modal, View, Text, Pressable } from 'react-native';
+import {openExternalUrl} from '../helper/Utils';
 
 export default function UpdateModal({ visible, storeUrl }: any) {
   return (
@@ -29,7 +30,9 @@ export default function UpdateModal({ visible, storeUrl }: any) {
           </Text>
 
           <Pressable
-            onPress={() => Linking.openURL(storeUrl)}
+            onPress={() => {
+              void openExternalUrl(storeUrl, 'Could not open the app store link.');
+            }}
             accessibilityRole="button"
             accessibilityLabel="Update Now"
             style={{
