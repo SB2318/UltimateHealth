@@ -80,6 +80,18 @@ const NotificationPreferencesScreen = ({
     );
   };
 
+  const hasActiveSearch = searchQuery.trim().length > 0;
+
+  const clearSelectedTopics = () => {
+    if (!hasActiveSearch) {
+      setSelectedIds([]);
+      return;
+    }
+
+    const visibleIds = new Set(filteredCategories.map(tag => tag._id));
+    setSelectedIds(prev => prev.filter(id => !visibleIds.has(id)));
+  };
+
   const handleSave = () => {
     if (isGuest) {
       navigation.navigate('GuestPlaceholderScreen', {
@@ -238,9 +250,9 @@ const NotificationPreferencesScreen = ({
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.bulkBtn, styles.bulkBtnClear]}
-                    onPress={() => setSelectedIds([])}>
+                    onPress={clearSelectedTopics}>
                     <Text style={[styles.bulkBtnText, {color: '#6b7280'}]}>
-                      Clear All
+                      {hasActiveSearch ? 'Clear Visible' : 'Clear All'}
                     </Text>
                   </TouchableOpacity>
                 </View>
