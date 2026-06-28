@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   View,
   Text,
@@ -38,6 +38,14 @@ const NotificationPreferencesScreen = ({
   const {data: preferencesData, isLoading: prefsLoading} =
     useGetNotificationPreferences(isConnected);
 
+  const savedPreferenceTopics = useMemo(
+    () =>
+      preferencesData?.preferences?.contentClusters ||
+      preferencesData?.contentClusters ||
+      [],
+    [preferencesData],
+  );
+
   console.log("Preference data", preferencesData);
   // Mutation to save
   const {mutate: updatePreferences, isPending: isSaving} =
@@ -48,9 +56,7 @@ const NotificationPreferencesScreen = ({
     console.log('Fetched Preferences Data:', preferencesData);
     if (preferencesData) {
       // Support both { preferences: { contentClusters: [] } } and { contentClusters: [] }
-      const clusters =
-        preferencesData.preferences?.contentClusters ||
-        preferencesData.contentClusters;
+      const clusters = savedPreferenceTopics;
 
       console.log("Clusters", clusters);
 
@@ -58,7 +64,7 @@ const NotificationPreferencesScreen = ({
         setSelectedIds(clusters.map(cluster => cluster._id));
       }
     }
-  }, [preferencesData]);
+  }, [preferencesData, savedPreferenceTopics]);
 
   const filteredCategories = (categories ?? []).filter((tag: Category) => {
     if (!searchQuery.trim()) return true;
@@ -98,9 +104,16 @@ const NotificationPreferencesScreen = ({
       return;
     }
 
-    const payload = (categories ?? []).filter(cat =>
+    const loadedSelections = (categories ?? []).filter(cat =>
       selectedIds.includes(cat._id),
     );
+    const loadedSelectionIds = new Set(
+      loadedSelections.map(topic => topic._id),
+    );
+    const preservedSelections = savedPreferenceTopics.filter(
+      topic => selectedIds.includes(topic._id) && !loadedSelectionIds.has(topic._id),
+    );
+    const payload = [...loadedSelections, ...preservedSelections];
 
     updatePreferences(
       {contentClusters: payload},
