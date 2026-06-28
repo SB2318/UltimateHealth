@@ -190,7 +190,13 @@ const mockUseGetSinglePodcastDetails = require('../../hooks/useGetSinglePodcastD
 const mockUseLikePodcast = require('../../hooks/useLikePodcast').useLikePodcast as jest.Mock;
 
 const setConnectedStatus = (value: boolean) => {
-  mockState.network.isConnected = value;
+  mockState = {
+    ...mockState,
+    network: {
+      isConnected: value,
+    },
+  };
+  mockUseSelector.mockImplementation((selector: any) => selector(mockState));
 };
 
 describe('PodcastDetail', () => {
@@ -240,7 +246,7 @@ describe('PodcastDetail', () => {
     render(
       <PodcastDetail
         navigation={{navigate: mockNavigate} as any}
-        route={{params: {trackId: 'podcast-1', audioUrl: 'https://example.com/audio.mp3'}} as any}
+        route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
       />,
     );
 
@@ -318,7 +324,7 @@ describe('PodcastDetail', () => {
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://example.com/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
     });
@@ -339,7 +345,7 @@ describe('PodcastDetail', () => {
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://example.com/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
     });
@@ -352,7 +358,7 @@ describe('PodcastDetail', () => {
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://example.com/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
     });
@@ -372,7 +378,7 @@ describe('PodcastDetail', () => {
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://example.com/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
     });
@@ -384,14 +390,14 @@ describe('PodcastDetail', () => {
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://example.com/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
       setConnectedStatus(true);
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://example.com/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
     });

@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
-type AxiosError = any;
 import { UPDATE_PROFILE_IMAGE } from "../helper/APIUtils";
+type AxiosError = any;
 
 
 export const useUpdateProfileImage = (): UseMutationResult<

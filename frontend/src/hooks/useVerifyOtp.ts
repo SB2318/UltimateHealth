@@ -1,7 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import axios from 'axios';
-type AxiosError = any;
 import {CHECK_OTP} from '../helper/APIUtils';
+type AxiosError = any;
 
 type VerifyReq = {
   email: string;

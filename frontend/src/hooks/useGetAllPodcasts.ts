@@ -1,8 +1,8 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
-type AxiosError = any;
 import { GET_ALL_PODCASTS } from "../helper/APIUtils";
 import { PodcastData } from "../type";
+type AxiosError = any;
 
 type PodcastResponse = {
     totalPages: number;

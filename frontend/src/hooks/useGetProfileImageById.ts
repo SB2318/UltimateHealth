@@ -1,7 +1,7 @@
 import axios from "axios";
-type AxiosError = any;
 import { GET_PROFILE_IMAGE_BY_ID } from "../helper/APIUtils";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
+type AxiosError = any;
 
 export const useGetUserProfileImage = (authorId: string): UseQueryResult<
  string,

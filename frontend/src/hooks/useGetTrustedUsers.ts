@@ -1,8 +1,8 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {TrustedUser} from '../type';
 import axios from 'axios';
-type AxiosError = any;
 import {GET_TRUSTED_USERS} from '../helper/APIUtils';
+type AxiosError = any;
 
 export const useGetTrustedUsers = (
   articleId: number,

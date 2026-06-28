@@ -1,8 +1,8 @@
 import axios from 'axios';
-type AxiosError = any;
 import {ArticleData} from '../type';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {UPDATE_VIEW_COUNT} from '../helper/APIUtils';
+type AxiosError = any;
 
 export const useUpdateViewCount = (articleId: number): UseMutationResult<
   ArticleData | null,

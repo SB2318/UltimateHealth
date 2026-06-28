@@ -11,8 +11,6 @@ import {OfflinePodcastDetailProp, PodcastData} from '../type';
 import {hp} from '../helper/Metric';
 import {ON_PRIMARY_COLOR, BUTTON_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import SliderRN from '@react-native-community/slider';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Slider = SliderRN as any;
 import { formatDateWithTime } from '../helper/dateUtils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // eslint-disable-next-line import/no-duplicates
@@ -32,6 +30,8 @@ import {useSocket} from '../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import {useAudioPlayer} from 'expo-audio';
 import {useLikePodcast} from '../hooks/useLikePodcast';
+ 
+const Slider = SliderRN as any;
 
 export default function OfflinePodcastDetail({
   route,

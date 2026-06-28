@@ -1,7 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import axios from 'axios';
-type AxiosError = any;
 import {UPDATE_USER_CONTACT_DETAILS} from '../helper/APIUtils';
+type AxiosError = any;
 
 type UpdateReq = {
   phone: string;

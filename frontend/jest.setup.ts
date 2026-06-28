@@ -103,3 +103,13 @@ jest.mock('tamagui', () => {
   };
 });
 
+jest.mock('react-native-tts', () => ({
+  getInitStatus: jest.fn(() => Promise.resolve()),
+  setDefaultLanguage: jest.fn(() => Promise.resolve()),
+  setDefaultRate: jest.fn(),
+  setDefaultPitch: jest.fn(),
+  speak: jest.fn(() => Promise.resolve()),
+  stop: jest.fn(() => Promise.resolve()),
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+}));

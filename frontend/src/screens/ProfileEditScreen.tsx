@@ -8,13 +8,13 @@ import { ScrollView ,
 import React, {useEffect, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import GeneralTab from '../components/GeneralTab';
-import {GeneralFormData} from '../schemas/profileSchemas';
+import {GeneralFormData,ContactFormData,ProfFormData,PasswordFormData} from '../schemas/profileSchemas';
 import ContactTab from '../components/ContactTab';
-import {ContactFormData} from '../schemas/profileSchemas';
+
 import ProfessionalTab from '../components/ProfessionalTab';
-import {ProfFormData} from '../schemas/profileSchemas';
+
 import PasswordTab from '../components/PasswordTab';
-import {PasswordFormData} from '../schemas/profileSchemas';
+
 import LanguagePreferenceSelector from '../components/LanguagePreferenceSelector';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
@@ -38,7 +38,7 @@ import {useUpdateUserContactDetail} from '../hooks/useUpdateUserContactDetail';
 import {useUpdateUserGeneralDetails} from '../hooks/useUpdateUserGeneralDetails';
 import {useUpdateUserProfDetails} from '../hooks/useUpdateUserProfDetails';
 import LoadingSpinner from '../components/LoadingSpinner';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+ 
 // let validator = require('email-validator');
 // let expr = /^(0|91)?[6-9][0-9]{9}$/;
 

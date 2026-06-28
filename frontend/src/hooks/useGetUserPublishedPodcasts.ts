@@ -1,8 +1,8 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { PodcastData } from "../type";
 import axios from "axios";
-type AxiosError = any;
 import { USER_PUBLISHED_PODCASTS } from "../helper/APIUtils";
+type AxiosError = any;
 
 
 type PublishRes = {

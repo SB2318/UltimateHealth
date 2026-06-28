@@ -1,8 +1,8 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
-type AxiosError = any;
 import { SUBMIT_SUGGESTED_CHANGES } from "../helper/APIUtils";
 import { Category } from "../type";
+type AxiosError = any;
 
 type SubmitSuggestedChangesParams = {
   article: string;

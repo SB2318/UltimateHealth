@@ -21,10 +21,10 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
 import type  from 'axios';
-type AxiosError = any;
 import Loader from '../../components/Loader';
 import { NewPasswordScreenProp } from '../../type';
 import {Alert, ActivityIndicator} from 'react-native';
+type AxiosError = any;
 
 const newPasswordSchema = z.object({
   password: z

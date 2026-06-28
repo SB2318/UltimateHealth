@@ -13,6 +13,7 @@ import {Alert} from 'react-native';
 import {render, fireEvent, waitFor} from '@testing-library/react-native';
 import {Provider} from 'react-redux';
 import {configureStore} from '@reduxjs/toolkit';
+import PreviewScreen from '../screens/article/PreviewScreen';
 
 // ── mocks ──────────────────────────────────────────────────────────────────
 
@@ -133,11 +134,7 @@ function makeRoute(overrides = {}) {
   };
 }
 
-// Lazy import after mocks are set up
-let PreviewScreen: React.ComponentType<any>;
-beforeAll(async () => {
-  PreviewScreen = (await import('../screens/article/PreviewScreen')).default;
-});
+
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -149,12 +146,17 @@ describe('PreviewScreen compensating delete — new article path', () => {
   function setupAndSubmit() {
     const store = makeStore();
     const nav = makeNav();
-    const {getByText} = render(
+    render(
       <Provider store={store}>
         <PreviewScreen navigation={nav} route={makeRoute()} />
       </Provider>,
     );
-    fireEvent.press(getByText('Submit'));
+    // Submit button is a navigation header — trigger via setOptions callback
+    const headerRight = nav.setOptions.mock.calls[0]?.[0]?.headerRight;
+    if (headerRight) {
+      const {getByText: getHeader} = render(headerRight());
+      fireEvent.press(getHeader('Submit'));
+    }
     return {nav};
   }
 
@@ -208,7 +210,7 @@ describe('PreviewScreen compensating delete — improvement path', () => {
   function setupAndSubmit() {
     const store = makeStore();
     const nav = makeNav();
-    const {getByText} = render(
+    render(
       <Provider store={store}>
         <PreviewScreen
           navigation={nav}
@@ -216,7 +218,12 @@ describe('PreviewScreen compensating delete — improvement path', () => {
         />
       </Provider>,
     );
-    fireEvent.press(getByText('Submit'));
+    // Submit button is a navigation header — trigger via setOptions callback
+    const headerRight = nav.setOptions.mock.calls[0]?.[0]?.headerRight;
+    if (headerRight) {
+      const {getByText: getHeader} = render(headerRight());
+      fireEvent.press(getHeader('Submit'));
+    }
     return {nav};
   }
 
@@ -265,7 +272,7 @@ describe('PreviewScreen compensating delete — edit/suggested-changes path', ()
   function setupAndSubmit() {
     const store = makeStore();
     const nav = makeNav();
-    const {getByText} = render(
+    render(
       <Provider store={store}>
         <PreviewScreen
           navigation={nav}
@@ -273,7 +280,12 @@ describe('PreviewScreen compensating delete — edit/suggested-changes path', ()
         />
       </Provider>,
     );
-    fireEvent.press(getByText('Submit'));
+    // Submit button is a navigation header — trigger via setOptions callback
+    const headerRight = nav.setOptions.mock.calls[0]?.[0]?.headerRight;
+    if (headerRight) {
+      const {getByText: getHeader} = render(headerRight());
+      fireEvent.press(getHeader('Submit'));
+    }
     return {nav};
   }
 

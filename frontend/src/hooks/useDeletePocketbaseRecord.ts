@@ -1,7 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import axios from 'axios';
-type AxiosError = any;
 import {DELETE_POCKETBASE_RECORD} from '../helper/APIUtils';
+type AxiosError = any;
 
 /**
  * Compensating-delete hook.

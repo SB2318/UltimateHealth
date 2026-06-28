@@ -1,9 +1,9 @@
 import axios from 'axios';
-type AxiosError = any;
 import {ArticleData} from '../type';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {LIKE_ARTICLE} from '../helper/APIUtils';
 import {useSelector} from 'react-redux';
+type AxiosError = any;
 
 export const useLikeArticle = (
   articleId: number,

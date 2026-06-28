@@ -1,9 +1,9 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {Notification} from '../type';
 import axios from 'axios';
-type AxiosError = any;
 import {PROD_URL} from '../helper/APIUtils';
 import {useSelector} from 'react-redux';
+type AxiosError = any;
 
 type NotificationRes = {
   totalPages: number;

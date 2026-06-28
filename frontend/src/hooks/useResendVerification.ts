@@ -1,7 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import axios from 'axios';
-type AxiosError = any;
 import {RESEND_VERIFICATION} from '../helper/APIUtils';
+type AxiosError = any;
 
 export const useRequestVerification = (): UseMutationResult<
   string,

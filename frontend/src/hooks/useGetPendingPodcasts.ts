@@ -1,8 +1,8 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { PodcastData } from "../type";
 import axios from "axios";
-type AxiosError = any;
 import { PENDING_PODCASTS } from "../helper/APIUtils";
+type AxiosError = any;
 
 type PendingRes = {
  totalPages: number;

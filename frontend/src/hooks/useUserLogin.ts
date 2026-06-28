@@ -1,9 +1,9 @@
 // @ts-nocheck
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import axios from 'axios';
-type AxiosError = any;
 import {LOGIN_API} from '../helper/APIUtils';
 import {User} from '../type';
+type AxiosError = any;
 
 type LoginReq = {
   email: string;

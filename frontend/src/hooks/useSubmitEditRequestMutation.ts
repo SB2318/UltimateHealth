@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
-type AxiosError = any;
 import { REQUEST_EDIT } from "../helper/APIUtils";
+type AxiosError = any;
 
 type SubmitEditRequestParams = {
   articleId: string;

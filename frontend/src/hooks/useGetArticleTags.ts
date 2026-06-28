@@ -1,8 +1,8 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
-type AxiosError = any;
 import {ARTICLE_TAGS_API} from '../helper/APIUtils';
 import {Category} from '../type';
+type AxiosError = any;
 
 const categoryFunc = async () => {
   try{

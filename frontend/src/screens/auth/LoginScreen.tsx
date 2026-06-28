@@ -1,7 +1,6 @@
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
 import {   isAxiosError} from 'axios';
-type AxiosError = any;
 import {StatusBar} from 'expo-status-bar';
 import messaging from '@react-native-firebase/messaging';
 import React, {useEffect, useState} from 'react';
@@ -38,6 +37,7 @@ import {
 } from '../../store/UserSlice';
 
 import { AuthData, LoginScreenProp } from '../../type';
+type AxiosError = any;
 
 const loginSchema = z.object({
   email: z

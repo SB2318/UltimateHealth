@@ -1,8 +1,8 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {PodcastData} from '../type';
 import axios from 'axios';
-type AxiosError = any;
 import {UPDATE_PODCAST_VIEW_COUNT} from '../helper/APIUtils';
+type AxiosError = any;
 
 export const useUpdatePodcastViewcount = (): UseMutationResult<
   PodcastData,

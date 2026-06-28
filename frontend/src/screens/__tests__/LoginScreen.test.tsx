@@ -180,8 +180,8 @@ describe('LoginScreen - Security Bypass and Validation Tests', () => {
     jest.useFakeTimers();
     const {getByPlaceholderText, getByText} = renderScreen();
 
-    fireEvent.changeText(getByPlaceholderText('Enter your email'), 'correct@example.com');
-    fireEvent.changeText(getByPlaceholderText('Password'), 'validpassword');
+    fireEvent.changeText(getByPlaceholderText('Enter your email address'), 'correct@example.com');
+    fireEvent.changeText(getByPlaceholderText('Enter your password'), 'validpassword');
 
     // Mock successful response
     mockLoginMutate.mockImplementationOnce((variables, options) => {
