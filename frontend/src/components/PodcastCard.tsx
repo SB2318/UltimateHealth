@@ -12,7 +12,11 @@ import {GlassStyles, ProfessionalColors, BorderRadius} from '../styles/GlassStyl
 import {useSelector} from 'react-redux';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import { PODCAST_CARD } from '@/constants/podcastCard';
-import {getPlaybackPosition, PlaybackPosition} from '../helper/PlaybackManager';
+import {
+  getPlaybackPosition,
+  getPlaybackProgressPercent,
+  PlaybackPosition,
+} from '../helper/PlaybackManager';
 
 interface PodcastProps {
   id: string;
@@ -115,9 +119,9 @@ const PodcastCard = ({
               <Ionicons name="play" size={24} color={ProfessionalColors.white} />
             </View>
           </View>
-          {progress && progress.duration > 0 && (
+          {progress && (
             <View style={styles.progressBarContainer}>
-              <View style={[styles.progressBar, { width: `${(progress.position / progress.duration) * 100}%` }]} />
+              <View style={[styles.progressBar, { width: `${getPlaybackProgressPercent(progress)}%` }]} />
             </View>
           )}
         </View>

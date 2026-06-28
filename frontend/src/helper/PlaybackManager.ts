@@ -5,6 +5,17 @@ export interface PlaybackPosition {
   duration: number;
 }
 
+export const getPlaybackProgressPercent = ({
+  position,
+  duration,
+}: PlaybackPosition): number => {
+  if (!Number.isFinite(position) || !Number.isFinite(duration) || duration <= 0) {
+    return 0;
+  }
+
+  return Math.min(Math.max((position / duration) * 100, 0), 100);
+};
+
 const PODCAST_PROGRESS_KEY = '@podcast_positions';
 
 // Get the full position map
