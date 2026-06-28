@@ -108,11 +108,13 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     }
   };
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    refetch();
-
-    setRefreshing(false);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
   }, [refetch]);
 
   useFocusEffect(
