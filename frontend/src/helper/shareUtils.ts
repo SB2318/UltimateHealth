@@ -16,6 +16,18 @@ export const generateArticleShareUrl = (
   return `${SHARE_BASE_URL}/api/share/article?articleId=${articleId}&authorId=${authorId}&recordId=${recordId}`;
 };
 
+export const generatePodcastShareUrl = (
+  trackId: string | number,
+  audioUrl: string
+): string => {
+  const params = [
+    `trackId=${encodeURIComponent(String(trackId))}`,
+    `audioUrl=${encodeURIComponent(audioUrl)}`,
+  ].join('&');
+
+  return `${SHARE_BASE_URL}/api/share/podcast?${params}`;
+};
+
 /**
  * Copies the article share link to the Clipboard.
  * @param articleId The ID of the article.
