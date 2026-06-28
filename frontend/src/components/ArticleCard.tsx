@@ -88,6 +88,20 @@ const ArticleCard = ({
     item.repostUsers.some(user => user.toString() === user_id),
   );
 
+  useEffect(() => {
+    setIsLiked(
+      item.likedUsers.some(
+        it =>
+          (it._id && it._id.toString() === user_id) ||
+          it.toString() === user_id,
+      ),
+    );
+    setLikeCount(item.likedUsers.length);
+    setRepostCount(item.repostUsers.length);
+    setSaved(item.savedUsers.includes(user_id));
+    setReposted(item.repostUsers.some(user => user.toString() === user_id));
+  }, [item, user_id]);
+
   const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
     Number(item._id),
   );
