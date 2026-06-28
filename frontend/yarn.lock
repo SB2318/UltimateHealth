@@ -2659,142 +2659,142 @@
   resolved "https://registry.npmjs.org/@rtsao/scc/-/scc-1.1.0.tgz"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
 
-"@sentry-internal/browser-utils@10.53.1":
-  version "10.53.1"
-  resolved "https://registry.npmjs.org/@sentry-internal/browser-utils/-/browser-utils-10.53.1.tgz"
-  integrity sha512-X4d6y8sBMjmNhcDW4eMBU3ASsNIMz8dqaFkhyIMN/dkYr/yZKnbRZPaVuVUGvHKjnlficPpIH0/HK9KBjrYxPw==
-  dependencies:
-    "@sentry/core" "10.53.1"
-
-"@sentry-internal/feedback@10.53.1":
-  version "10.53.1"
-  resolved "https://registry.npmjs.org/@sentry-internal/feedback/-/feedback-10.53.1.tgz"
-  integrity sha512-vVpTI/aEYN5d9IgZeYJWMqVaN0+iFgidSrYNAsZTh1US5sJUzF/wrl+68KdpmCtFROrN3jiAn1oPSwL5CKvEJA==
-  dependencies:
-    "@sentry/core" "10.53.1"
-
-"@sentry-internal/replay-canvas@10.53.1":
-  version "10.53.1"
-  resolved "https://registry.npmjs.org/@sentry-internal/replay-canvas/-/replay-canvas-10.53.1.tgz"
-  integrity sha512-aueLaf/2prExwA76BGU5/bOXCKWqtt6jQXWA6WJQNrmKpPEtZJB4ypnpsou0McXQCF8tur2Y8U0TEkwQP13yJQ==
-  dependencies:
-    "@sentry-internal/replay" "10.53.1"
-    "@sentry/core" "10.53.1"
-
-"@sentry-internal/replay@10.53.1":
-  version "10.53.1"
-  resolved "https://registry.npmjs.org/@sentry-internal/replay/-/replay-10.53.1.tgz"
-  integrity sha512-wZNzTBYkgGUPWMuUQv7L64+OJmoCnz7GQNiTrTFK6EVAjJXFBCSsPp/nhif0bLhbk8+0g4xz633uOhpXuQbFdw==
-  dependencies:
-    "@sentry-internal/browser-utils" "10.53.1"
-    "@sentry/core" "10.53.1"
-
 "@sentry/babel-plugin-component-annotate@5.3.0":
   version "5.3.0"
   resolved "https://registry.npmjs.org/@sentry/babel-plugin-component-annotate/-/babel-plugin-component-annotate-5.3.0.tgz"
   integrity sha512-p4q8gn8wcFqZGP/s2MnJCAAd8fTikaU6A0mM97RDHQgStcrYiaS0Sc5zUNfb1V+UOLPuvdEdL6MwyxfzjYJQTA==
 
-"@sentry/browser@10.53.1":
-  version "10.53.1"
-  resolved "https://registry.npmjs.org/@sentry/browser/-/browser-10.53.1.tgz"
-  integrity sha512-zXF373hzUOGzUOrqd8xb1U3LQi5uYC3mwv+z5OMKUUinQlu30tTWBs7ypy6YTchtix9QlYaHWlayUF8vBZ5UjA==
+"@sentry/browser-utils@10.61.0":
+  version "10.61.0"
+  resolved "https://registry.yarnpkg.com/@sentry/browser-utils/-/browser-utils-10.61.0.tgz#2db07c54bd20a5f6389d290e2a57811955b42c8e"
+  integrity sha512-kj/Qs5hz/VQPOLesgv9wq8O1z3aKSHSkyFiCSzaOthb8ARISchk8Eiukbvw9GxX2gmgsCd0L35gD6gxnhlE9ag==
   dependencies:
-    "@sentry-internal/browser-utils" "10.53.1"
-    "@sentry-internal/feedback" "10.53.1"
-    "@sentry-internal/replay" "10.53.1"
-    "@sentry-internal/replay-canvas" "10.53.1"
-    "@sentry/core" "10.53.1"
+    "@sentry/core" "10.61.0"
 
-"@sentry/cli-darwin@3.4.3":
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-darwin/-/cli-darwin-3.4.3.tgz#b47d82e9a54844452acb09702a7759fc143d8eb0"
-  integrity sha512-KUeP9d0rQ9L/A4SU9U6K8fMeRaWLV24FVH9JE6V6tbi4S9feJwKjfXXCpsqTk87Do5k0sohaz4SFiOkbypePLA==
+"@sentry/browser@10.61.0":
+  version "10.61.0"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-10.61.0.tgz#88a150dccb4b52a2a7f36a278dc5831cba08e850"
+  integrity sha512-I02k3/tpCbQ+Dm3d1eA+JHVS452gY4fCTh+fT3FcfZkovB/WaeJcwc+ywQN1jpTYBRKZ1HbXXZQhEhXYvb8MkA==
+  dependencies:
+    "@sentry/browser-utils" "10.61.0"
+    "@sentry/core" "10.61.0"
+    "@sentry/feedback" "10.61.0"
+    "@sentry/replay" "10.61.0"
+    "@sentry/replay-canvas" "10.61.0"
 
-"@sentry/cli-linux-arm64@3.4.3":
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-arm64/-/cli-linux-arm64-3.4.3.tgz#678a52861b0775496829bb67f5f06fb165255a5c"
-  integrity sha512-DPu03ywFtmBC/mtQ2+oWZDPHn9hYPLCYNgSxgBkHKrbYcgv4uJLTrl84at3NI/CU8VnpUbx+oeq03chmezZBPA==
+"@sentry/cli-darwin@3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-darwin/-/cli-darwin-3.5.1.tgz#a5493c3f9636a5c14fc47f95e59224cb59ed6481"
+  integrity sha512-GxHAtZaXRA650egcepQXU0pR0dZ8ZNvQS8eq3wBxhCK8os5VQpLyBABIaN6AdrE/b8M7UvqGjsuVm0giI1GZ7w==
 
-"@sentry/cli-linux-arm@3.4.3":
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-arm/-/cli-linux-arm-3.4.3.tgz#131dd95073fc7fafd00ef2310ed7da3cbcde500f"
-  integrity sha512-3dPFWfaB5g31KnwKuQwHboXfh9+m2Gzk/i6eoQsbMamGQWVguQRHn1mZ1PmGykEMvWH3YFopMcfjPt4euNG/ag==
+"@sentry/cli-linux-arm64@3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-arm64/-/cli-linux-arm64-3.5.1.tgz#48637c57bb8c278ab9605948a01c509d8a8593ac"
+  integrity sha512-Qa0NLXG/FSYWGhKjdm2mxp/GgpluFFkj/J+CpmVzwvezNC/Uy1omquv7J+VficqskNYuptjsoB4dNIPPcXpbxg==
 
-"@sentry/cli-linux-i686@3.4.3":
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-i686/-/cli-linux-i686-3.4.3.tgz#b0e290ac72ba0af93d19134fc54210f5541e512d"
-  integrity sha512-7Jvx+TZLWJJiKCua6YRDXnE+juSuHP4Tw80HzVtEGTgrgGVJTn2VRCwgDQjPKNrRvjeOK7M6/TnFECOqa750xw==
+"@sentry/cli-linux-arm@3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-arm/-/cli-linux-arm-3.5.1.tgz#4cec807c212772636869d3d5d43a1aa69756ee30"
+  integrity sha512-JOfgXCDZKbxQpw8Z4Kbkt8Hl+ASW5pYVUYw8Hc2msPN3HtfTmsc1z0y6jq3TCUWDWbWpWbI1zfXa0v02vQf3gw==
 
-"@sentry/cli-linux-x64@3.4.3":
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-x64/-/cli-linux-x64-3.4.3.tgz#fe52ab67e6674de4001d9670f13f71f690a9be5f"
-  integrity sha512-2opnMFIx/c1lRqW0SiKMy2q3ChuB7tCadfS8WEJKAMdfQLQrSQmyW/9fhBGK9fDSMqGFVoxU6aaSS89GKnkN8g==
+"@sentry/cli-linux-i686@3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-i686/-/cli-linux-i686-3.5.1.tgz#c2cfc1ddddf471371a59955ad5b8eeb096f1d778"
+  integrity sha512-/Bqcl8EyS6T8RIjBeeMYUPgjMJ8kb4plF0w3QOG6TY+bUEqHEnZyfzKJWZY/OqhmrSgj+ZYynaSHIIR6dWluMA==
 
-"@sentry/cli-win32-arm64@3.4.3":
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-arm64/-/cli-win32-arm64-3.4.3.tgz#e80c6fdf9290f6d32cb0403ef988a4301363394c"
-  integrity sha512-7Nup5qlbogV99zGcgreTqkUy3IRK1C4T3NYTDVO4iu36E31V0pOqyjqh5WSS/6jf9TkDugmkieSv+UjfKwZMFQ==
+"@sentry/cli-linux-x64@3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-linux-x64/-/cli-linux-x64-3.5.1.tgz#a1a64b5409db64ffd0c92388cb46bd83b50dba94"
+  integrity sha512-iUJT2GI/soc0myi1sSnXdu71oBkUER3fBeXn10bcEZX+UK9GomsqL40OLlygDipZZ6FqhODORqLeTxHdHbRuOw==
 
-"@sentry/cli-win32-i686@3.4.3":
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-i686/-/cli-win32-i686-3.4.3.tgz#c676fd093eef56529b0b7e25dfdcad02e0829509"
-  integrity sha512-ENQtxeeH/jc2FRDSbPDs7RSy4+27RFFa8SxYnQUjWVCxCTgh0w3lfE61RzqWcvQ+4D04g/tPbb3TKMtTQIdcRw==
+"@sentry/cli-win32-arm64@3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-arm64/-/cli-win32-arm64-3.5.1.tgz#2db5c7658b79b8ce6f5597cfa9fa9dda0da015e4"
+  integrity sha512-Hs4jHOsTKrrI2W8c4wEIvQzSuHqvrjsDHT7iwujHjp4oeAOnYjBUm+/BgDH2Eg1/jL5ilEnJbpnAn2AE2KQUXQ==
 
-"@sentry/cli-win32-x64@3.4.3":
-  version "3.4.3"
-  resolved "https://registry.npmjs.org/@sentry/cli-win32-x64/-/cli-win32-x64-3.4.3.tgz"
-  integrity sha512-pd69Woj4U1L/T+t0kmxNx+1GM096tcQg1NQH34IqwrE+tRiui0IKW3euu2E3bcu4ckJWlNmNHwXpONgZELK4EQ==
+"@sentry/cli-win32-i686@3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-i686/-/cli-win32-i686-3.5.1.tgz#2512439eb1bcb35fcad5ee6de714dd636f4fb789"
+  integrity sha512-Op+9MYAg0RbVWOQ9/NtFunWcknS8MlqhEa03ENFUrRDQE0m+iHioknGOagKrNXYXj1UbGEf0G9UzIMcRwB/UCQ==
 
-"@sentry/cli@3.4.3":
-  version "3.4.3"
-  resolved "https://registry.npmjs.org/@sentry/cli/-/cli-3.4.3.tgz"
-  integrity sha512-sUhfoIWwkVdM2SVtUdIgfY/3p1z369dYYNOZqPjB/7mpiv4owVVS0BD2Aedx8LdBJaTzRcIzSJMhuJ6vcIiSCg==
+"@sentry/cli-win32-x64@3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@sentry/cli-win32-x64/-/cli-win32-x64-3.5.1.tgz#7ebcf29759a994ada669f84f1ba7d0c20da5dcdd"
+  integrity sha512-Vf+CtFPkuGzjddD6dJoAVKszw5QB7P1ffc++yAbU54ditqJdgswo45oyTFOiQFO2isCmhgICzimqe8SkU+p2Mw==
+
+"@sentry/cli@3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-3.5.1.tgz#f786c3cc2c4383023b0e8ca9bcdb1b09f8a70f3e"
+  integrity sha512-h710aEXT8At4lg7GbXDZkatDDq0uA5QKZmSiF/8Hy6jJZ/9dh6EBDZZpTYnDpNrwRvE8tqhnwEjTZDlHjOhPNQ==
   dependencies:
     progress "^2.0.3"
     proxy-from-env "^1.1.0"
     undici "^6.22.0"
     which "^2.0.2"
   optionalDependencies:
-    "@sentry/cli-darwin" "3.4.3"
-    "@sentry/cli-linux-arm" "3.4.3"
-    "@sentry/cli-linux-arm64" "3.4.3"
-    "@sentry/cli-linux-i686" "3.4.3"
-    "@sentry/cli-linux-x64" "3.4.3"
-    "@sentry/cli-win32-arm64" "3.4.3"
-    "@sentry/cli-win32-i686" "3.4.3"
-    "@sentry/cli-win32-x64" "3.4.3"
+    "@sentry/cli-darwin" "3.5.1"
+    "@sentry/cli-linux-arm" "3.5.1"
+    "@sentry/cli-linux-arm64" "3.5.1"
+    "@sentry/cli-linux-i686" "3.5.1"
+    "@sentry/cli-linux-x64" "3.5.1"
+    "@sentry/cli-win32-arm64" "3.5.1"
+    "@sentry/cli-win32-i686" "3.5.1"
+    "@sentry/cli-win32-x64" "3.5.1"
 
-"@sentry/core@10.53.1":
-  version "10.53.1"
-  resolved "https://registry.npmjs.org/@sentry/core/-/core-10.53.1.tgz"
-  integrity sha512-XG4ezlkyuAPjBC5+9kXC94rXXuqYTw9NRhfaDHssbTFaGnqBR8vQX2UUgZfY7ucbeelRDGfBu1sywoU+mB04uA==
+"@sentry/core@10.61.0":
+  version "10.61.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-10.61.0.tgz#115f6a12342c23b4bc8544694eee20e21e1b456c"
+  integrity sha512-Edg8t2w45qEKiFnjeA6zRmU47R6la5FEMG+maZEOB2oTyJ+ujmh8LGaZ3G8aC0VdkKn8CXhHtDesze6oDc1oTA==
 
-"@sentry/expo-upload-sourcemaps@8.13.0":
-  version "8.13.0"
-  resolved "https://registry.npmjs.org/@sentry/expo-upload-sourcemaps/-/expo-upload-sourcemaps-8.13.0.tgz"
-  integrity sha512-WzbQhqOrOKOnhYyYdN0sTbcxE78QfvzUpDXbOHxq9nzNu3DsSYkKqyuuGWiD/um67KqzHZHy7kjwXyHwr0UkhA==
+"@sentry/expo-upload-sourcemaps@8.16.0":
+  version "8.16.0"
+  resolved "https://registry.yarnpkg.com/@sentry/expo-upload-sourcemaps/-/expo-upload-sourcemaps-8.16.0.tgz#0f72a31078dc273dc2820d5c890540fbb4dbb613"
+  integrity sha512-yuC6ZN//LtS9oi6+k4IbLK1Ffb2vhxBMuDby2Ql56SkPVnNnZ2YhsJ1lJjMnndI6XRiuVE5UW4onjo4/v3I9Ag==
   dependencies:
-    "@sentry/cli" "3.4.3"
+    "@sentry/cli" "3.5.1"
 
-"@sentry/react-native@^8.13.0":
-  version "8.13.0"
-  resolved "https://registry.npmjs.org/@sentry/react-native/-/react-native-8.13.0.tgz"
-  integrity sha512-4cXHjbZ5ioXWRIUDAqz5S6JC3jjm+/rElXP9cQcPj3e5Shh5mrV32YMgHljbOuICMkMxgqe0QOtMWL++T9DYGA==
+"@sentry/feedback@10.61.0":
+  version "10.61.0"
+  resolved "https://registry.yarnpkg.com/@sentry/feedback/-/feedback-10.61.0.tgz#e580c0d4f00c6df7e935ad69898a693d294d60af"
+  integrity sha512-DvG5pc2BibQjdvFC75u1S5DzghcFZ/juCDb2UnRKjiWnNhiUUAweAkUv4mMednrbuOeGOgO2R3CaiqIvDrAUAw==
+  dependencies:
+    "@sentry/core" "10.61.0"
+
+"@sentry/react-native@^8.16.0":
+  version "8.16.0"
+  resolved "https://registry.yarnpkg.com/@sentry/react-native/-/react-native-8.16.0.tgz#7b33511a4e5959abe6ab436f8e1eed2132d0279c"
+  integrity sha512-5fAEyAO+Nr+na778Q/Kc33YNBdUcvE/r2UACaklcZCHdTMcjLrvlQXrlK4sOkXVKQBmdc6RWNoMSBg1Nc3jXEw==
   dependencies:
     "@sentry/babel-plugin-component-annotate" "5.3.0"
-    "@sentry/browser" "10.53.1"
-    "@sentry/cli" "3.4.3"
-    "@sentry/core" "10.53.1"
-    "@sentry/expo-upload-sourcemaps" "8.13.0"
-    "@sentry/react" "10.53.1"
+    "@sentry/browser" "10.61.0"
+    "@sentry/cli" "3.5.1"
+    "@sentry/core" "10.61.0"
+    "@sentry/expo-upload-sourcemaps" "8.16.0"
+    "@sentry/react" "10.61.0"
 
-"@sentry/react@10.53.1":
-  version "10.53.1"
-  resolved "https://registry.npmjs.org/@sentry/react/-/react-10.53.1.tgz"
-  integrity sha512-lrwNq5T/zW84l60894TpKHPcvFuc1I/Hnohecc0TfYVpIcYYuw2orCHoU4v4wgkFaJUpegVetbgdOphViyLVjA==
+"@sentry/react@10.61.0":
+  version "10.61.0"
+  resolved "https://registry.yarnpkg.com/@sentry/react/-/react-10.61.0.tgz#4b23fedd1584417746ed42d433d68bec1f58cb66"
+  integrity sha512-p1Ay3ZfDONSxU2rnX5sMxvxJ9TUi9XzczTN87lVQ29V/PColaRzmRoYVRfrBjffG17ksxYoYhbqipurJk+45cg==
   dependencies:
-    "@sentry/browser" "10.53.1"
-    "@sentry/core" "10.53.1"
+    "@sentry/browser" "10.61.0"
+    "@sentry/core" "10.61.0"
+
+"@sentry/replay-canvas@10.61.0":
+  version "10.61.0"
+  resolved "https://registry.yarnpkg.com/@sentry/replay-canvas/-/replay-canvas-10.61.0.tgz#83e6f7e17199c1953e72c9c8f81054bb9350d109"
+  integrity sha512-n6QUN+qylEdKLcijpJsJ58ekY58kg0nG0dKxkD2wecKubl7B1mj/gwP35NmJOZ35vJTk/KbJeWB//finspJqYg==
+  dependencies:
+    "@sentry/core" "10.61.0"
+    "@sentry/replay" "10.61.0"
+
+"@sentry/replay@10.61.0":
+  version "10.61.0"
+  resolved "https://registry.yarnpkg.com/@sentry/replay/-/replay-10.61.0.tgz#a396711b17db1bd951119be9a5f695d3189c7c4c"
+  integrity sha512-EkLaPR7A89mRGucZY9WxKLGeiRKMuNeGfIthLrs9cumUP8Smc80qxSAsF3NggRHSQEeYHDAifY/1q1qW16yvJg==
+  dependencies:
+    "@sentry/browser-utils" "10.61.0"
+    "@sentry/core" "10.61.0"
 
 "@shopify/flash-list@2.0.2":
   version "2.0.2"
@@ -4680,10 +4680,6 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
-
-"audio-module@workspace:*":
-  version "1.0.0"
-  resolved "file:modules/audio-module"
 
 available-typed-arrays@^1.0.7:
   version "1.0.7"
@@ -8331,16 +8327,6 @@ metro-cache@0.83.7:
     https-proxy-agent "^7.0.5"
     metro-core "0.83.7"
 
-metro-cache@0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro-cache/-/metro-cache-0.84.4.tgz"
-  integrity sha512-gpcFQdSLUwUCk71saKoE64jLFbx2nwTfVCcPSULMNT8QYq0p1eZZE29Jvd0HtT/UlhC3ZOutLxJME5xqD2JUZg==
-  dependencies:
-    exponential-backoff "^3.1.1"
-    flow-enums-runtime "^0.0.6"
-    https-proxy-agent "^7.0.5"
-    metro-core "0.84.4"
-
 metro-config@0.83.3:
   version "0.83.3"
   resolved "https://registry.npmjs.org/metro-core/-/metro-core-0.83.3.tgz"
@@ -8364,20 +8350,6 @@ metro-config@0.83.7, metro-config@^0.83.1:
     metro-runtime "0.83.7"
     yaml "^2.6.1"
 
-metro-config@0.84.4, metro-config@^0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro-config/-/metro-config-0.84.4.tgz"
-  integrity sha512-PMotGDjXcXLWo2TMRH+VR99phFNgYTwqh4OoieIKK3yTJa1Jmkl+fZJxDO0jfBvNF+WESHciHvpNuBtXaF3B0Q==
-  dependencies:
-    connect "^3.6.5"
-    flow-enums-runtime "^0.0.6"
-    jest-validate "^29.7.0"
-    metro "0.84.4"
-    metro-cache "0.84.4"
-    metro-core "0.84.4"
-    metro-runtime "0.84.4"
-    yaml "^2.6.1"
-
 metro-core@0.83.3:
   version "0.83.3"
   resolved "https://registry.npmjs.org/metro-core/-/metro-core-0.83.3.tgz"
@@ -8395,15 +8367,6 @@ metro-core@0.83.7, metro-core@^0.83.1:
     flow-enums-runtime "^0.0.6"
     lodash.throttle "^4.1.1"
     metro-resolver "0.83.7"
-
-metro-core@0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro-core/-/metro-core-0.84.4.tgz"
-  integrity sha512-HONpWC5LGXZn3ffkd4Hu6AIrfE7j4Z0g0wMo/goV24WOB3lhuFZ40KgvaDiSw8iyQHloMYay5N/wPX+z8oN/PQ==
-  dependencies:
-    flow-enums-runtime "^0.0.6"
-    lodash.throttle "^4.1.1"
-    metro-resolver "0.84.4"
 
 metro-file-map@0.83.3:
   version "0.83.3"
@@ -8465,13 +8428,6 @@ metro-resolver@0.83.7:
   dependencies:
     flow-enums-runtime "^0.0.6"
 
-metro-resolver@0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro-resolver/-/metro-resolver-0.84.4.tgz"
-  integrity sha512-1qLgbxQ5ZGhhutuPot1Yp348ofDsATL2WkrHF65TobqTT9K3P9qJXw38bomk7ncp5B7OYMfWwtyBZo1lCV792A==
-  dependencies:
-    flow-enums-runtime "^0.0.6"
-
 metro-runtime@0.83.3, metro-runtime@^0.83.1:
   version "0.83.3"
   resolved "https://registry.npmjs.org/metro-runtime/-/metro-runtime-0.83.3.tgz"
@@ -8488,7 +8444,7 @@ metro-runtime@0.83.7:
     "@babel/runtime" "^7.25.0"
     flow-enums-runtime "^0.0.6"
 
-metro-source-map@^0.83.1, metro-source-map@0.83.3:
+metro-source-map@0.83.3, metro-source-map@^0.83.1:
   version "0.83.3"
   resolved "https://registry.npmjs.org/metro-source-map/-/metro-source-map-0.83.3.tgz"
   integrity sha512-xkC3qwUBh2psVZgVavo8+r2C9Igkk3DibiOXSAht1aYRRcztEZNFtAMtfSB7sdO2iFMx2Mlyu++cBxz/fhdzQg==
@@ -8605,25 +8561,6 @@ metro-transform-worker@0.83.7:
     metro-transform-plugins "0.83.7"
     nullthrows "^1.1.1"
 
-metro-transform-worker@0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro-transform-worker/-/metro-transform-worker-0.84.4.tgz"
-  integrity sha512-W1IYMvvXTu4MxYr7d9h7CeG2vpIr3bmLLIavkPY4O1ilzDrvS8z/NEe6y+pC44Ff7raMXQgYSfdqDUwN/i39gg==
-  dependencies:
-    "@babel/core" "^7.25.2"
-    "@babel/generator" "^7.29.1"
-    "@babel/parser" "^7.29.0"
-    "@babel/types" "^7.29.0"
-    flow-enums-runtime "^0.0.6"
-    metro "0.84.4"
-    metro-babel-transformer "0.84.4"
-    metro-cache "0.84.4"
-    metro-cache-key "0.84.4"
-    metro-minify-terser "0.84.4"
-    metro-source-map "0.84.4"
-    metro-transform-plugins "0.84.4"
-    nullthrows "^1.1.1"
-
 metro@0.83.3:
   version "0.83.3"
   resolved "https://registry.npmjs.org/metro/-/metro-0.83.3.tgz"
@@ -8707,51 +8644,6 @@ metro@0.83.7, metro@^0.83.1:
     metro-symbolicate "0.83.7"
     metro-transform-plugins "0.83.7"
     metro-transform-worker "0.83.7"
-    mime-types "^3.0.1"
-    nullthrows "^1.1.1"
-    serialize-error "^2.1.0"
-    source-map "^0.5.6"
-    throat "^5.0.0"
-    ws "^7.5.10"
-    yargs "^17.6.2"
-
-metro@0.84.4:
-  version "0.84.4"
-  resolved "https://registry.npmjs.org/metro/-/metro-0.84.4.tgz"
-  integrity sha512-8ETTubqfD6ornDy2zYDvRcKnVDOXdFJsjetYDBsY4oAsb6NJkiwFR+FaMESyGppFmQUyBQA4H4sFGxzcQSGtFA==
-  dependencies:
-    "@babel/code-frame" "^7.29.0"
-    "@babel/core" "^7.25.2"
-    "@babel/generator" "^7.29.1"
-    "@babel/parser" "^7.29.0"
-    "@babel/template" "^7.28.6"
-    "@babel/traverse" "^7.29.0"
-    "@babel/types" "^7.29.0"
-    accepts "^2.0.0"
-    ci-info "^2.0.0"
-    connect "^3.6.5"
-    debug "^4.4.0"
-    error-stack-parser "^2.0.6"
-    flow-enums-runtime "^0.0.6"
-    graceful-fs "^4.2.4"
-    hermes-parser "0.35.0"
-    image-size "^1.0.2"
-    invariant "^2.2.4"
-    jest-worker "^29.7.0"
-    jsc-safe-url "^0.2.2"
-    lodash.throttle "^4.1.1"
-    metro-babel-transformer "0.84.4"
-    metro-cache "0.84.4"
-    metro-cache-key "0.84.4"
-    metro-config "0.84.4"
-    metro-core "0.84.4"
-    metro-file-map "0.84.4"
-    metro-resolver "0.84.4"
-    metro-runtime "0.84.4"
-    metro-source-map "0.84.4"
-    metro-symbolicate "0.84.4"
-    metro-transform-plugins "0.84.4"
-    metro-transform-worker "0.84.4"
     mime-types "^3.0.1"
     nullthrows "^1.1.1"
     serialize-error "^2.1.0"
