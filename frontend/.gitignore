@@ -90,5 +90,5 @@ expo-env.d.ts
 dist/
 
 # Native folders managed by Expo CNG
-android/
-ios/
+#android/
+#ios/
