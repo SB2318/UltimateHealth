@@ -83,6 +83,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const [isWaitingForNetwork, setIsWaitingForNetwork] = useState(false);
   const [resumePosition, setResumePosition] = useState<number | null>(null);
   const resumeAttemptedRef = useRef(false);
+  const userPlaybackInteractedRef = useRef(false);
 
   const [isLike, setLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -259,7 +260,12 @@ useEffect(() => {
   const checkResume = async () => {
     const saved = await getPlaybackPosition(trackId);
 
-    if (!isCancelled && saved && saved.position > 5) {
+    if (
+      !isCancelled &&
+      !userPlaybackInteractedRef.current &&
+      saved &&
+      saved.position > 5
+    ) {
       Alert.alert(
         'Resume Podcast',
         `Do you want to resume from ${formatSecTime(saved.position)}?`,
@@ -308,6 +314,7 @@ useEffect(() => {
 
   const handleForward = async () => {
     if (!player) return;
+    userPlaybackInteractedRef.current = true;
 
     let next = position + SKIP_TIME;
 
@@ -321,6 +328,7 @@ useEffect(() => {
 
   const handleBackward = async () => {
     if (!player) return;
+    userPlaybackInteractedRef.current = true;
 
     let next = position - SKIP_TIME;
 
@@ -370,6 +378,7 @@ useEffect(() => {
   };
 
   const handlePlay = async () => {
+    userPlaybackInteractedRef.current = true;
     if (!player || !isConnected) {
       return;
     }
@@ -396,6 +405,7 @@ useEffect(() => {
 
  const handlePause = async () => {
   if (!player) return;
+  userPlaybackInteractedRef.current = true;
 
   try {
     player.pause();
