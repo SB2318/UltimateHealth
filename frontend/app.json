@@ -4,6 +4,9 @@
     "slug": "UltimateHealth",
 
     "version": "2.2.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
     "orientation": "portrait",
     "icon": "./assets/images/ic_ultimatehealth_appicon.png",
     "scheme": "ultimatehealth",
