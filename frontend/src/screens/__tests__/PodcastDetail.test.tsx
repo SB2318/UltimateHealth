@@ -204,6 +204,8 @@ describe('PodcastDetail', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // clearAllMocks wipes jest.fn() implementations — restore useAudioPlayer
+    require('expo-audio').useAudioPlayer.mockReturnValue(mockPlayer);
     warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     mockPlayer.playing = false;
     mockPlayer.currentStatus.playing = false;
