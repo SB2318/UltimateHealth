@@ -27,7 +27,7 @@ const userScreenshots = [
   { src: "/assets/podcast-recording.jpeg", caption: "Podcast Recorder" },
   { src: "/assets/podcast-upload.jpeg", caption: "Podcast Upload" },
   { src: "/assets/notification-screen.jpeg", caption: "Notification" },
-  { src: "/assets/UltimateHealth-about.jpeg", caption: "App Info" },
+  { src: "/assets/ultimate-health-about.jpeg", caption: "App Info" },
   { src: "/assets/terms_cond_page.jpeg", caption: "Terms And Condition" },
 ];
 
@@ -47,7 +47,6 @@ const allScreenshots = [...userScreenshots, ...adminScreenshots];
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://uhsocial.in";
 const CURSOR_GLOW_STORAGE_KEY = "cursorGlowEnabled";
 const CURSOR_GLOW_EVENT = "cursor-glow-preference-change";
-// Owner-configurable frontend URLs (set in deployment env when needed)
 const HELP_CENTER_URL = process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https://uhsocial.in/docs";
 const FEEDBACK_URL = process.env.NEXT_PUBLIC_FEEDBACK_URL || "https://github.com/SB2318/UltimateHealth/issues";
 const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "";
@@ -83,11 +82,7 @@ const subscribeToCursorGlow = (callback: () => void) => {
   };
 };
 
-const TRACKED_SECTION_IDS = ["screenshots", "features", "programs", "contact"];
-
 export default function Home() {
-  const [scrolled, setScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [comingSoonModal, setComingSoonModal] = useState(false);
   const [appleModal, setAppleModal] = useState(false);
   const [testerEmail, setTesterEmail] = useState("");
@@ -98,6 +93,8 @@ export default function Home() {
   const [adminSliderOpen, setAdminSliderOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
   const [featuresLoading, setFeaturesLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // ── DNA helix cursor ──
   const cursorGlowEnabled = useSyncExternalStore(
@@ -111,6 +108,7 @@ export default function Home() {
 
   // ── Contact form state ──
   const [contactName, setContactName] = useState("");
+  const [contactNameError, setContactNameError] = useState("");
   const [contactEmail, setContactEmail] = useState("");
   const [contactSubject, setContactSubject] = useState("");
   const [contactMessage, setContactMessage] = useState("");
@@ -118,10 +116,11 @@ export default function Home() {
 
   // ── Newsletter state ──
   const [newsletterEmail, setNewsletterEmail] = useState("");
-  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error"| "invalid" | "empty" | "duplicate">("idle");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error" | "invalid" | "empty" | "duplicate">("idle");
 
   const userSliderRef = useRef<HTMLDivElement>(null);
   const adminSliderRef = useRef<HTMLDivElement>(null);
+  const autoSlideTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const openComingSoonModal = useCallback(() => {
     setComingSoonModal(true);
@@ -139,6 +138,29 @@ export default function Home() {
     setAppleModal(false);
     setTesterSuccess(false);
     setTesterEmail("");
+  }, []);
+
+  // ── Scroll listener ──
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // ── Active section observer ──
+  useEffect(() => {
+    const sections = ["features", "screenshots", "programs", "contact"];
+    const observers = sections.map((id) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const observer = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { threshold: 0.4 }
+      );
+      observer.observe(el);
+      return observer;
+    });
+    return () => observers.forEach((o) => o?.disconnect());
   }, []);
 
   useEffect(() => {
@@ -224,13 +246,6 @@ export default function Home() {
     };
   }, []);
 
-  // ── Scroll header ──
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   // ── Scroll reveal ──
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -248,50 +263,9 @@ export default function Home() {
   }, []);
 
   // ── Features loading state ──
-  // TODO: Replace this simulated delay with real data fetching (e.g. an API call or
-  // a server action) once the features section is backed by dynamic content.
   useEffect(() => {
     const timer = setTimeout(() => setFeaturesLoading(false), 1500);
     return () => clearTimeout(timer);
-  }, []);
-
-  // Active section tracking via IntersectionObserver
-  useEffect(() => {
-    const visibleSections = new Set<string>();
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            visibleSections.add(entry.target.id);
-          } else {
-            visibleSections.delete(entry.target.id);
-          }
-        });
-
-        if (visibleSections.size > 0) {
-          const topSection = TRACKED_SECTION_IDS
-            .filter((id) => visibleSections.has(id))
-            .map((id) => ({
-              id,
-              top: document.getElementById(id)?.getBoundingClientRect().top ?? Infinity,
-            }))
-            .sort((a, b) => Math.abs(a.top) - Math.abs(b.top))[0];
-
-          if (topSection) setActiveSection(topSection.id);
-        } else {
-          setActiveSection("");
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    TRACKED_SECTION_IDS.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
   }, []);
 
   // Screenshot keyboard nav
@@ -358,49 +332,59 @@ export default function Home() {
     }
   };
 
-const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
-  const slider = ref.current;
-  if (!slider) return;
+  const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
+    const slider = ref.current;
+    if (!slider) return;
 
-  const maxScroll = slider.scrollWidth - slider.clientWidth;
-  const currentScroll = slider.scrollLeft;
-  const targetScroll = currentScroll + dir * SLIDER_SCROLL_AMOUNT;
+    const maxScroll = slider.scrollWidth - slider.clientWidth;
+    const currentScroll = slider.scrollLeft;
+    const targetScroll = currentScroll + dir * SLIDER_SCROLL_AMOUNT;
 
-  if (dir === 1) {
-    if (currentScroll >= maxScroll) {
-      slider.scrollTo({ left: 0, behavior: "auto" });
-      return;
-    }
-
-    if (targetScroll > maxScroll) {
-      slider.scrollTo({ left: maxScroll, behavior: "smooth" });
-      return;
-    }
-  }
-
-  if (dir === -1) {
-    if (currentScroll <= 0 || targetScroll < 0) {
-      slider.scrollTo({ left: maxScroll, behavior: "auto" });
-      return;
-    }
-  }
-
-  slider.scrollTo({
-    left: Math.max(0, Math.min(targetScroll, maxScroll)),
-    behavior: "smooth",
-  });
-};
-  useEffect(() => {
-    const interval = setInterval(() => {
-      moveSlider(userSliderRef, 1);
-
-      if (adminSliderOpen) {
-        moveSlider(adminSliderRef, 1);
+    if (dir === 1) {
+      if (currentScroll >= maxScroll) {
+        slider.scrollTo({ left: 0, behavior: "auto" });
+        return;
       }
-    }, 1500);
 
-    return () => clearInterval(interval);
+      if (targetScroll > maxScroll) {
+        slider.scrollTo({ left: maxScroll, behavior: "smooth" });
+        return;
+      }
+    }
+
+    if (dir === -1) {
+      if (currentScroll <= 0 || targetScroll < 0) {
+        slider.scrollTo({ left: maxScroll, behavior: "auto" });
+        return;
+      }
+    }
+
+    slider.scrollTo({
+      left: Math.max(0, Math.min(targetScroll, maxScroll)),
+      behavior: "smooth",
+    });
+  };
+
+  const startAutoSlide = useCallback(() => {
+    if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
+    autoSlideTimerRef.current = setInterval(() => {
+      moveSlider(userSliderRef, 1);
+      if (adminSliderOpen) moveSlider(adminSliderRef, 1);
+    }, 3000);
   }, [adminSliderOpen]);
+
+  const handleManualSlide = useCallback((ref: RefObject<HTMLDivElement | null>, direction: number) => {
+    if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
+    moveSlider(ref, direction);
+    setTimeout(startAutoSlide, 5000);
+  }, [startAutoSlide]);
+
+  useEffect(() => {
+    startAutoSlide();
+    return () => {
+      if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
+    };
+  }, [startAutoSlide]);
 
   // ── TestFlight invite ──
   const sendTesterEmail = async () => {
@@ -427,9 +411,21 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
     setTesterSuccess(true);
   };
 
-  // ── Contact form submit → uhsocial.in API ──
-  // Backend route needed: POST /api/contact/send on NEXT_PUBLIC_API_BASE_URL
-  // See /contact_newsletter_guide.md for the Express route implementation
+  // ── Contact name validation ──
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setContactName(value);
+    const invalidChars = /[^a-zA-Z\s\-']/;
+    if (value.trim() === "") {
+      setContactNameError("Name is required.");
+    } else if (invalidChars.test(value)) {
+      setContactNameError("Name can only contain letters, spaces, hyphens, and apostrophes.");
+    } else {
+      setContactNameError("");
+    }
+  };
+
+  // ── Contact form submit ──
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = contactName.trim();
@@ -442,7 +438,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
     }
     setContactStatus("sending");
     try {
-      const res = await fetch(`${API_BASE_URL}/api/contact/send`, {
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -456,20 +452,16 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       setContactStatus("success");
       setContactName(""); setContactEmail(""); setContactSubject(""); setContactMessage("");
     } catch {
-      // Fallback: open mailto if API not yet implemented
       window.location.href = `mailto:ultimate.health25@gmail.com?subject=${encodeURIComponent(trimmedSubject)}&body=${encodeURIComponent(`From: ${trimmedName} (${trimmedEmail})\n\n${trimmedMessage}`)}`;
       setContactStatus("error");
     }
   };
 
   // ── Newsletter subscribe ──
-  // Backend route needed: POST /api/newsletter/subscribe on NEXT_PUBLIC_API_BASE_URL
-  // See /contact_newsletter_guide.md — owner fills DB / Mailchimp credentials
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedNewsletterEmail = newsletterEmail.trim();
 
-    // Bug fix 1: Show specific validation error for empty or invalid email
     if (!trimmedNewsletterEmail) {
       setNewsletterStatus("empty");
       return;
@@ -478,7 +470,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       setNewsletterStatus("invalid");
       return;
     }
-     setNewsletterStatus("sending");
+    setNewsletterStatus("sending");
     try {
       const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
         method: "POST",
@@ -503,7 +495,6 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
 
   return (
     <>
-
       {/* ── Header ── */}
       <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
         <PageWrapper as="div" className="nav">
@@ -627,6 +618,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                       tabIndex={0}
                       aria-label={`Open ${s.caption} screenshot`}
                     >
+                    <div className="screenshot-image-frame">
                       <Image
                         src={s.src}
                         alt={s.caption}
@@ -634,6 +626,8 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                         sizes="(max-width: 768px) 260px, 300px"
                         className="screenshot-image"
                       />
+                    </div>
+                      <div className="screenshot-card-caption">{s.caption}</div>
                     </div>
                   ))}
                   <div className="screenshot-box">
@@ -644,8 +638,8 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                   </div>
                 </div>
                 <div className="slider-nav">
-                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => moveSlider(userSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => moveSlider(userSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             )}
@@ -676,6 +670,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                         sizes="(max-width: 768px) 260px, 300px"
                         className="screenshot-image"
                       />
+                      <div className="screenshot-card-caption">{s.caption}</div>
                     </div>
                   ))}
                   <div className="screenshot-box">
@@ -686,8 +681,8 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                   </div>
                 </div>
                 <div className="slider-nav">
-                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => moveSlider(adminSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => moveSlider(adminSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             )}
@@ -709,22 +704,17 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               [
                 { icon: "fa-robot", title: "AI Health Chat Assistant", desc: "Get instant, AI-powered health guidance and support.", span: "md:col-span-2 lg:col-span-2" },
                 { icon: "fa-book-medical", title: "Centralized Library", desc: "Access a vast repository of trusted health articles.", span: "col-span-1" },
-                
                 { icon: "fa-edit", title: "CRUD Articles", desc: "Create, read, update, and delete your health content seamlessly.", span: "col-span-1" },
                 { icon: "fa-podcast", title: "Health Podcasts", desc: "Stream and share verified health audio content worldwide.", span: "md:col-span-2 lg:col-span-2" },
-                
                 { icon: "fa-tags", title: "Smart Categorization", desc: "Organize articles with intuitive categorization and tagging.", span: "col-span-1" },
                 { icon: "fa-search", title: "Advanced Search", desc: "Quickly find the specific health information you need.", span: "col-span-1" },
                 { icon: "fa-users", title: "Community Contributions", desc: "Collaborate and drive open-source content creation.", span: "col-span-1" },
-                
                 { icon: "fa-code-branch", title: "Edit Request Workflow", desc: "Propose and review changes to maintain content quality.", span: "col-span-1" },
                 { icon: "fa-language", title: "Multilingual Resources", desc: "Read and write content in multiple languages globally.", span: "col-span-1" },
                 { icon: "fa-mobile-alt", title: "Cross-Platform Support", desc: "Available on both Android mobile and Web platforms.", span: "col-span-1" },
-                
                 { icon: "fa-user-shield", title: "Authentication & Users", desc: "Secure role-based access and robust user management.", span: "col-span-1" },
                 { icon: "fa-cloud", title: "Cloud Content Management", desc: "Reliable cloud infrastructure for all your health data.", span: "col-span-1" },
                 { icon: "fa-graduation-cap", title: "Educational Content", desc: "Spread health awareness through verified information.", span: "col-span-1" },
-                
                 { icon: "fa-shield-alt", title: "Trusted Wellness Repository", desc: "A heavily moderated, safe, and accurate knowledge base.", span: "md:col-span-2 lg:col-span-2" },
                 { icon: "fa-globe", title: "Open-Source Platform", desc: "Join our global initiative for a healthier community.", span: "col-span-1" },
               ].map((f, i) => (
@@ -746,34 +736,32 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
         <PageWrapper>
           <h2>Be a Member: Guardian of Content Integrity</h2>
           <p className="center">Help maintain quality and safety across the platform</p>
-          {/* Top row — 3 cards */}
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
-  {[
-    { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
-    { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
-    { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
-  ].map((f, i) => (
-    <div className="feature-card mod-card w-full fade-in" key={i}>
-      <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
-      <h3>{f.title}</h3>
-      <p>{f.desc}</p>
-    </div>
-  ))}
-</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
+            {[
+              { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
+              { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
+              { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
+            ].map((f, i) => (
+              <div className="feature-card mod-card w-full fade-in" key={i}>
+                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
 
-{/* Bottom row — 2 cards centered under the top row */}
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 mx-auto" style={{ maxWidth: "66.666%", marginLeft: "auto", marginRight: "auto" , marginTop: "20px"}}>
-  {[
-    { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
-    { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
-  ].map((f, i) => (
-    <div className="feature-card mod-card w-full fade-in" key={i}>
-      <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
-      <h3>{f.title}</h3>
-      <p>{f.desc}</p>
-    </div>
-  ))}
-</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 mx-auto" style={{ maxWidth: "66.666%", marginLeft: "auto", marginRight: "auto", marginTop: "20px" }}>
+            {[
+              { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
+              { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
+            ].map((f, i) => (
+              <div className="feature-card mod-card w-full fade-in" key={i}>
+                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
         </PageWrapper>
       </Section>
 
@@ -787,6 +775,7 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
               { logo: "https://github.com/user-attachments/assets/e0a40d06-f5b8-42a7-a5a0-033280f842be", alt: "IEEE IGDTUW Logo", badge: "Open Source Week", title: "IEEE IGDTUW", desc: "A week-long intensive event aimed at fostering global collaboration and high-level skill-building in the open-source ecosystem." },
               { logo: "https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00", alt: "Vultr Logo", badge: "Cloud Hackathon", title: "Vultr Cloud Innovate", desc: "Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power." },
               { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2024", title: "GirlScript Summer of Code", desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship." },
+              { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2026", title: "GirlScript Summer of Code 2026", desc: "A large-scale open-source program that provides mentorship, real-world project experience, and collaboration opportunities for contributors worldwide." },
             ].map((p, i) => (
               <div className="program-card w-full fade-in" key={i}>
                 <div className="program-logo-wrapper">
@@ -817,7 +806,6 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           </p>
 
           <div className="contact-dark-card">
-            {/* Left panel */}
             <div className="contact-dark-left">
               <div className="contact-left-badge">✦ UltimateHealth</div>
               <h3 className="contact-dark-title">Let&apos;s Talk<br />Health Together</h3>
@@ -853,21 +841,21 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                 <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub">
                   <i className="fab fa-github"></i>
                 </a>
-               <a
-                 href="mailto:ultimate.health25@gmail.com?subject=Hello%20UltimateHealth&body=Hi%20UltimateHealth%20Team%2C"
-                 className="dark-social-icon"
-                 title="Email"
-                 aria-label="Send email to UltimateHealth via mail client"
-                 style={{ cursor: "pointer" }}>
-                 <i className="fas fa-envelope"></i>
-                 </a>
+                <a
+                  href="mailto:ultimate.health25@gmail.com?subject=Hello%20UltimateHealth&body=Hi%20UltimateHealth%20Team%2C"
+                  className="dark-social-icon"
+                  title="Email"
+                  aria-label="Send email to UltimateHealth via mail client"
+                  style={{ cursor: "pointer" }}
+                >
+                  <i className="fas fa-envelope"></i>
+                </a>
                 <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn">
                   <i className="fab fa-linkedin-in"></i>
                 </a>
               </div>
             </div>
 
-            {/* Right panel — fully wired form */}
             <div className="contact-dark-right">
               <h3 className="contact-form-title">Send us a Message</h3>
               <p className="contact-form-subtitle">We typically respond within 24 hours</p>
@@ -886,11 +874,21 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
                   <div className="dark-field-group">
                     <span className="dark-field-icon"><i className="fas fa-user"></i></span>
                     <input
-                      type="text" className="dark-input" placeholder="Your Name *" required
+                      type="text"
+                      className={`dark-input${contactNameError ? " input-error" : ""}`}
+                      placeholder="Your Name *"
+                      required
                       maxLength={80}
-                      value={contactName} onChange={(e) => setContactName(e.target.value)}
+                      value={contactName}
+                      onChange={handleNameChange}
+                      aria-describedby="contact-name-error"
                     />
                   </div>
+                  {contactNameError && (
+                    <p id="contact-name-error" className="contact-error-msg" style={{ marginTop: "-8px", marginBottom: "4px" }}>
+                      <i className="fas fa-exclamation-circle"></i> {contactNameError}
+                    </p>
+                  )}
                   <div className="dark-field-group">
                     <span className="dark-field-icon"><i className="fas fa-envelope"></i></span>
                     <input
@@ -944,79 +942,73 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
       {/* ── Footer ── */}
       <footer>
         <PageWrapper className="footer-grid">
-          {/* Brand column */}
           <div className="footer-brand">
             <h2>UltimateHealth</h2>
             <p className="footer-note">Open-source health and wellness for everyone.</p>
 
-            {/* Newsletter — wired to API */}
             <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit} noValidate>
-            {newsletterStatus === "success" ? (
-            <div className="newsletter-success">
-            <i className="fas fa-check-circle"></i> You have successfully subscribed!
-           </div>
-            ) : (
-             <>
-              <div className="footer-subscribe-row">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="footer-subscribe-input"
-                maxLength={120}
-                value={newsletterEmail}
-                required
-                aria-label="Newsletter email address"
-                aria-describedby="newsletter-feedback"
-                onChange={(e) => {
-                setNewsletterEmail(e.target.value);
-                if (
-                  newsletterStatus !== "idle" &&
-                  newsletterStatus !== "sending"
-                ) {
-                setNewsletterStatus("idle");
-              }
-            }}
-            />
-            <button
-              type="submit"
-              className="footer-subscribe-btn"
-              aria-label="Subscribe to UltimateHealth newsletter"
-              disabled={newsletterStatus === "sending"}
-            >
-            {newsletterStatus === "sending" ? "Subscribing..." : "Subscribe"}
-           </button>
-           </div>
+              {newsletterStatus === "success" ? (
+                <div className="newsletter-success">
+                  <i className="fas fa-check-circle"></i> You have successfully subscribed!
+                </div>
+              ) : (
+                <>
+                  <div className="footer-subscribe-row">
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="footer-subscribe-input"
+                      maxLength={120}
+                      value={newsletterEmail}
+                      required
+                      aria-label="Newsletter email address"
+                      aria-describedby="newsletter-feedback"
+                      onChange={(e) => {
+                        setNewsletterEmail(e.target.value);
+                        if (newsletterStatus !== "idle" && newsletterStatus !== "sending") {
+                          setNewsletterStatus("idle");
+                        }
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      className="footer-subscribe-btn"
+                      aria-label="Subscribe to UltimateHealth newsletter"
+                      disabled={newsletterStatus === "sending"}
+                    >
+                      {newsletterStatus === "sending" ? "Subscribing..." : "Subscribe"}
+                    </button>
+                  </div>
 
-          <div id="newsletter-feedback" aria-live="polite">
-            {newsletterStatus === "empty" && (
-            <p className="newsletter-error">
-              <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
-            </p>
-            )}
-            {newsletterStatus === "invalid" && (
-              <p className="newsletter-error">
-               <i className="fas fa-exclamation-circle"></i> Invalid email format.
-               </p>
-            )}
-              {newsletterStatus === "duplicate" && (
-              <p className="newsletter-error">
-               <i className="fas fa-info-circle"></i> This email is already subscribed.
-              </p>
+                  <div id="newsletter-feedback" aria-live="polite">
+                    {newsletterStatus === "empty" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
+                      </p>
+                    )}
+                    {newsletterStatus === "invalid" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-exclamation-circle"></i> Invalid email format.
+                      </p>
+                    )}
+                    {newsletterStatus === "duplicate" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-info-circle"></i> This email is already subscribed.
+                      </p>
+                    )}
+                    {newsletterStatus === "error" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
+                      </p>
+                    )}
+                  </div>
+
+                  <small className="footer-subscribe-note">
+                    We respect your privacy. Unsubscribe at any time.
+                  </small>
+                </>
               )}
-            {newsletterStatus === "error" && (
-            <p className="newsletter-error">
-              <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
-             </p>
-            )}
-      </div>
-
-      <small className="footer-subscribe-note">
-        We respect your privacy. Unsubscribe at any time.
-      </small>
-    </>
-  )}
-</form>
-            {/* Social icons */}
+            </form>
             <div style={{ marginTop: 20 }}>
               <span className="footer-follow-label">Follow Us</span>
               <div className="footer-social-links">
@@ -1040,7 +1032,6 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
             </div>
           </div>
 
-          {/* Quick Links */}
           <div className="footer-links-col">
             <h3>Quick Links</h3>
             <Link href={withBasePath("/")}>Home</Link>
@@ -1052,7 +1043,6 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
             <Link href={withBasePath("/contribute")}>Join Us &amp; Contribute</Link>
           </div>
 
-          {/* Support */}
           <div className="footer-links-col">
             <h3>Support</h3>
             <a href={HELP_CENTER_URL} target="_blank" rel="noopener noreferrer">Help Center</a>
@@ -1062,7 +1052,6 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
           </div>
         </PageWrapper>
 
-        {/* Bottom bar */}
         <div className="footer-bottom">
           <div className="footer-bottom-inner">
             <p>© 2026 UltimateHealth. Built with passion for a healthier community.</p>
@@ -1074,15 +1063,8 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
         </div>
       </footer>
 
-      {/* ── Coming Soon Modal ── */}
       {comingSoonModal && (
-        <div
-          className="modal-overlay active"
-          onClick={closeComingSoonModal}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="coming-soon-modal-title"
-        >
+        <div className="modal-overlay active" onClick={closeComingSoonModal} role="dialog" aria-modal="true" aria-labelledby="coming-soon-modal-title">
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
             <h2 id="coming-soon-modal-title">Launching Soon!</h2>
@@ -1095,15 +1077,8 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
         </div>
       )}
 
-      {/* ── TestFlight Modal ── */}
       {appleModal && (
-        <div
-          className="modal-overlay active"
-          onClick={closeAppleModal}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="testflight-modal-title"
-        >
+        <div className="modal-overlay active" onClick={closeAppleModal} role="dialog" aria-modal="true" aria-labelledby="testflight-modal-title">
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>✈️</div>
             <h2 id="testflight-modal-title">Join the iOS TestFlight</h2>
@@ -1138,7 +1113,6 @@ const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
         </div>
       )}
 
-      {/* ── Screenshot Modal ── */}
       {screenshotModal && (
         <div className="screenshot-modal active" onClick={closeScreenshotModal}>
           <div className="screenshot-modal-content" onClick={(e) => e.stopPropagation()}>

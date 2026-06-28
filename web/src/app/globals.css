@@ -1,3 +1,4 @@
+/* Unified global stylesheet compiled on Next.js setup */
 @import "tailwindcss";
 @config "../../tailwind.config.ts";
 
@@ -9,6 +10,80 @@
   --container-padding-xl: 3rem;
 }
 
+html { scroll-behavior: smooth; }
+
+/* =============================================================
+   EXTRACTED ANIMATIONS (GLOBAL LEVEL)
+   ============================================================= */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes modalAppear {
+  from { transform: scale(0.8); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes progressAnimation {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.15); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes uh-orb-float {
+  from { transform: translateY(0) scale(1); }
+  to   { transform: translateY(-40px) scale(1.08); }
+}
+
+@keyframes uh-pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.6; transform: scale(1.3); }
+}
+
+@keyframes uh-phone-float {
+  from { transform: translateY(0) rotate(-1.5deg); }
+  to   { transform: translateY(-18px) rotate(1.5deg); }
+}
+
+@keyframes uh-float-bob {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-10px); }
+}
+
+@keyframes uh-fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes uh-slide-left {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes uh-slide-right {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* =============================================================
+   LANDING PAGE SCOPED STYLES
+   ============================================================= */
+
 * {
   margin: 0;
   padding: 0;
@@ -16,10 +91,6 @@
 }
 
 :root {
-  --primary: #667eea;
-  --primary-dark: #5568d3;
-  --secondary: #764ba2;
-  --accent: #f093fb;
   --text-dark: #1a202c;
   --text-light: #4a5568;
   --text-muted: #718096;
@@ -31,20 +102,10 @@
   --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --gradient-accent: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: var(--font-inter);
-  color: var(--text-dark);
-  line-height: 1.5;
-  background: var(--bg-white);
-  overflow-x: hidden;
-  letter-spacing: -0.01em;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
+  --primary: #667eea;
+  --primary-dark: #5568d3;
+  --secondary: #764ba2;
+  --accent: #f093fb;
 }
 
 .container {
@@ -55,30 +116,12 @@ body {
 }
 
 /* ==================== ANIMATIONS ==================== */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes zoomIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to   { transform: scale(1);   opacity: 1; }
-}
-@keyframes modalAppear {
-  from { transform: scale(0.8); opacity: 0; }
-  to   { transform: scale(1);   opacity: 1; }
-}
-@keyframes progressAnimation {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.7; }
-}
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.15); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+
+
+
+
+
+
 
 /* ==================== SCROLL ANIMATIONS ==================== */
 .fade-in {
@@ -306,6 +349,11 @@ body.touch-device .dna-cursor-canvas {
 
 .nav-item-text {
   line-height: 1.25;
+}
+
+.nav-toggle-item {
+  display: flex;
+  align-items: center;
 }
 
 .nav-links a::after {
@@ -755,6 +803,12 @@ p.center {
   color: var(--text-dark);
   text-align: center;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.screenshot-image-frame {
+  position: relative;
+  flex: 1;
+  min-height: 200px;
 }
 
 .screenshot-empty {
@@ -1888,6 +1942,7 @@ i, svg {
 }
 
 /* ── CSS Variables ── */
+/* ── CSS Variables ── */
 :root {
   --uh-primary:       #2563eb;
   --uh-primary-deep:  #1d4ed8;
@@ -2042,10 +2097,7 @@ i, svg {
   animation-delay: -5s;
 }
 
-@keyframes uh-orb-float {
-  from { transform: translateY(0) scale(1); }
-  to   { transform: translateY(-40px) scale(1.08); }
-}
+
 
 /* Inner layout */
 .uh-hero-inner {
@@ -2089,10 +2141,7 @@ i, svg {
   animation: uh-pulse 2s ease infinite;
 }
 
-@keyframes uh-pulse {
-  0%,100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.6; transform: scale(1.3); }
-}
+
 
 .uh-hero-title {
   font-family: var(--uh-font-head);
@@ -2279,10 +2328,7 @@ i, svg {
   animation: uh-phone-float 5s ease-in-out infinite alternate;
 }
 
-@keyframes uh-phone-float {
-  from { transform: translateY(0) rotate(-1.5deg); }
-  to   { transform: translateY(-18px) rotate(1.5deg); }
-}
+
 
 .uh-phone-notch {
   width: 90px; height: 22px;
@@ -2550,10 +2596,7 @@ i, svg {
 .uh-float-group  { bottom: 28%; left: -22%; animation: uh-float-bob 4.5s ease-in-out infinite alternate; animation-delay: -2s; }
 .uh-float-sparkle { bottom: 20%; right: -22%; animation: uh-float-bob 6s ease-in-out infinite alternate; animation-delay: -0.5s; }
 
-@keyframes uh-float-bob {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-10px); }
-}
+
 
 /* ── Scroll reveal animations ── */
 .scroll-reveal-left  { animation: uh-slide-left  0.8s cubic-bezier(.22,1,.36,1) both; }
@@ -2562,18 +2605,9 @@ i, svg {
 .fade-in             { animation: uh-fade-up 0.8s cubic-bezier(.22,1,.36,1) both; }
 .fade-in:nth-child(2) { animation-delay: 0.15s; }
 
-@keyframes uh-fade-up {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes uh-slide-left {
-  from { opacity: 0; transform: translateX(-40px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes uh-slide-right {
-  from { opacity: 0; transform: translateX(40px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
+
+
+
 
 /* =============================================================
    DOWNLOAD SECTION
@@ -2975,8 +3009,34 @@ i, svg {
 }
 
 @media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+    gap: 8px;
+  }
+
+  .logo-icon img {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+
   .uh-hero-title {
     font-size: 1.75rem;
+  }
+
+  .uh-hero-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .uh-hero-buttons a {
+    width: 100%;
+    justify-content: center;
   }
 
   .uh-stat-card {
@@ -3009,7 +3069,6 @@ i, svg {
     transition: none !important;
   }
 }
-
 /* ==================== DARK MODE ==================== */
 html.dark {
   --text-dark: #f1f5f9;
@@ -3038,7 +3097,9 @@ html.dark .screenshot-details {
 }
 html.dark .screenshot-summary { color: #f1f5f9; }
 html.dark .screenshot-card-caption { background: #1e293b; }
-html.dark .feature-section-premium,
+html.dark .feature-section-premium {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
 html.dark .member-section {
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
 }
@@ -3055,6 +3116,7 @@ html.dark .modal-content {
   background: #1e293b;
   border-color: rgba(255,255,255,0.05);
 }
+
 html.dark section#contact.contact-section { background: #0f172a; }
 html.dark .contact-dark-right { background: #1e293b; }
 html.dark .contact-form-title { color: #f1f5f9; }
@@ -3064,3 +3126,29 @@ html.dark .dark-field-group {
 }
 html.dark .dark-input { color: #f1f5f9; }
 html.dark .dark-input::placeholder { color: #475569; }
+
+html.dark .nav-links a {
+  color: #f1f5f9;
+}
+
+html.dark .nav-links a:hover {
+  color: #a78bfa;
+}
+
+html.dark .logo {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html.dark .mobile-menu-toggle {
+  color: #f1f5f9;
+}
+
+html.dark .nav-item-icon {
+  color: #D4AF37;
+}
+
+html.dark .glow-toggle-btn {
+  color: #94a3b8;
+}

@@ -34,9 +34,8 @@ export const articles: Article[] = [
       "Evidence-based strategies for protecting your most vital organ through lifestyle, nutrition, and proactive care",
     excerpt:
       "Learn how to protect your cardiovascular system with proven lifestyle strategies, dietary choices, and early warning signs you should never ignore.",
-    imageUrl: "/assets/ultimate-health-about.jpeg",
-    imageAlt:
-      "Healthcare professionals reviewing cardiovascular health data and diagnostic information",
+    imageUrl: null,
+    imageAlt: "",
     author: {
       name: "Dr. Sarah Mitchell",
       role: "Cardiologist, MD",
