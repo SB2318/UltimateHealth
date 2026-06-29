@@ -143,7 +143,10 @@ const ArticleCard = ({
           article: ArticleData;
           likeStatus: boolean;
         }) => {
-          console.log('Article like success', data.likeStatus);
+   if (__DEV__) {
+  console.log("Article like success", data.likeStatus);
+}
+
           setIsLiked(data?.likeStatus);
 
           if (data?.likeStatus) {
