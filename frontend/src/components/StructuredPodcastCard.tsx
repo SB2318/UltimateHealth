@@ -8,7 +8,11 @@ import {
 } from 'react-native';
 import { NavigationProp, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '../type';
-import { getPlaybackPosition, PlaybackPosition } from '../helper/PlaybackManager';
+import {
+  getPlaybackPosition,
+  getPlaybackProgressPercent,
+  PlaybackPosition,
+} from '../helper/PlaybackManager';
 
 interface PodcastEpisode {
   id: string;
@@ -85,9 +89,9 @@ const StructuredPodcastCard: React.FC<StructuredPodcastCardProps> = ({
               {episode.description}
             </Text>
             <Text style={[styles.episodeMeta, { color: accentColor }]}>🕐 {episode.durationMinutes} min · {episode.topic}</Text>
-            {progresses[episode.id] && progresses[episode.id].duration > 0 && (
+            {progresses[episode.id] && (
               <View style={styles.progressBarContainer}>
-                <View style={[styles.progressBar, { width: `${(progresses[episode.id].position / progresses[episode.id].duration) * 100}%`, backgroundColor: accentColor }]} />
+                <View style={[styles.progressBar, { width: `${getPlaybackProgressPercent(progresses[episode.id])}%`, backgroundColor: accentColor }]} />
               </View>
             )}
           </View>
