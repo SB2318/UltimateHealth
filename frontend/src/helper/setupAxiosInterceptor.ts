@@ -146,7 +146,12 @@ export const setupAxiosInterceptor = () => {
   _axiosReqId = axios.interceptors.request.use(
     async config => {
       config.headers ??= {} as typeof config.headers;
-      const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
+      
+      let token = store.getState().user.user_token;
+      if (!token) {
+        token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
+      }
+      
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       } else {

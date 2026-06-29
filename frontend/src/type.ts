@@ -175,6 +175,7 @@ export type TabParamList = {
   Profile: undefined;
   Chatbot: undefined;
   About: undefined;
+  Wellness: undefined;
 };
 
 export type SplashScreenProp =

@@ -160,8 +160,8 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               user_handle: data?.user_handle,
             };
             try {
-              await storeItem(KEYS.USER_ID, auth.userId.toString());
-              await storeItem(KEYS.USER_HANDLE, data?.user_handle);
+              await storeItem(KEYS.USER_ID, auth.userId?.toString() || '');
+              await storeItem(KEYS.USER_HANDLE, data?.user_handle || '');
               if (auth.token) {
                 await secureStoreItem(
                   SECURE_KEYS.USER_TOKEN,
@@ -177,20 +177,17 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                 dispatch(setGuestMode(false));
                 // Reset so the next session expiry triggers the notification again.
                 resetSessionExpiredNotification();
-                setTimeout(() => {
-                  if (redirectTo) {
-                    (navigation as any).navigate(
-                      redirectTo.name,
-                      redirectTo.params,
-                    );
-
-                    return;
-                  }
+                if (redirectTo) {
+                  (navigation as any).navigate(
+                    redirectTo.name,
+                    redirectTo.params,
+                  );
+                } else {
                   navigation.reset({
                     index: 0,
                     routes: [{name: 'TabNavigation'}],
                   });
-                }, 1000);
+                }
               } else {
                 Alert.alert('Token not found');
               }
