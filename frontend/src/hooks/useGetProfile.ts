@@ -12,7 +12,8 @@ export const useGetProfile = (): UseQueryResult<User, AxiosError> => {
     queryKey: ['get-my-profile'],
     queryFn: async () => {
       const response = await axios.get(`${GET_PROFILE_API}`);
-      return response.data.profile as User;
+    //  console.log('profile response: ', response.data);
+      return response.data.data as User;
     },
     enabled: !isGuest,
   });
