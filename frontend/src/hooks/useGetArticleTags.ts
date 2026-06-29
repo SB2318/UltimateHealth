@@ -4,18 +4,12 @@ import {ARTICLE_TAGS_API} from '../helper/APIUtils';
 import {Category} from '../type';
 
 const categoryFunc = async () => {
-  try{
-     const {data: categoryData} = await axios.get(ARTICLE_TAGS_API);
-
+  const {data: categoryData} = await axios.get(ARTICLE_TAGS_API);
   return categoryData as Category[];
-  }catch(err){
-    console.log("GET CATEGORY ERR", err);
-    return null;
-  }
 };
 
 export const useGetCategories = (isConnected: boolean): UseQueryResult<
-  Category[] | null,
+  Category[],
   AxiosError
 > => {
   return useQuery({

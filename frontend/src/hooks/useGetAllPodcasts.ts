@@ -8,19 +8,14 @@ type PodcastResponse = {
     allPodcasts: PodcastData[];
 }
 export const useGetAllPodcasts = (isConnected: boolean, page: number): UseQueryResult<
-PodcastResponse | null,
+PodcastResponse,
 AxiosError
 >=>{
     return useQuery({
     queryKey: ['get-all-podcasts', page],
     queryFn: async () => {
-      try {
-        const response = await axios.get(`${GET_ALL_PODCASTS}?page=${page}`);
-        return response.data as PodcastResponse
-      } catch (err) {
-        console.error('Error fetching podcasts:', err);
-        return null;
-      }
+      const response = await axios.get(`${GET_ALL_PODCASTS}?page=${page}`);
+      return response.data as PodcastResponse;
     },
     enabled: isConnected  && !!page,
   });

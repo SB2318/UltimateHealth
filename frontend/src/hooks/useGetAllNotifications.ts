@@ -11,21 +11,16 @@ type NotificationRes = {
 export const useGetAllNotifications = (
   page: number,
   isConnected: boolean,
-): UseQueryResult<NotificationRes | null, AxiosError> => {
+): UseQueryResult<NotificationRes, AxiosError> => {
   const isGuest = useSelector((state: any) => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-all-notifications', page],
     queryFn: async () => {
-      try {
-        const response = await axios.get(
-          `${PROD_URL}/notifications?role=2&page=${page}`,
-        );
-        return response.data as NotificationRes;
-      } catch (err) {
-        console.error('Error fetching articles:', err);
-        return null;
-      }
+      const response = await axios.get(
+        `${PROD_URL}/notifications?role=2&page=${page}`,
+      );
+      return response.data as NotificationRes;
     },
     enabled: !!isConnected && !!page && !isGuest,
   });

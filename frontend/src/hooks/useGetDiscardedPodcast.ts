@@ -9,20 +9,15 @@ type DiscardResponse = {
 }
 
 export const useGetDiscardedPodcasts = (discardedPage: number, isConnected: boolean): UseQueryResult<
-DiscardResponse | null,
+DiscardResponse,
 AxiosError
 >=>{
 
     return useQuery({
     queryKey: ['get-discarded-podcasts-for-user', discardedPage],
     queryFn: async () => {
-      try {
-        const res = await axios.get(`${DISCARDED_PODCASTS}?page=${discardedPage}`);
-        return res.data as DiscardResponse;
-      } catch (err) {
-        console.error('Error fetching podcasts:', err);
-        return null;
-      }
+      const res = await axios.get(`${DISCARDED_PODCASTS}?page=${discardedPage}`);
+      return res.data as DiscardResponse;
     },
     enabled: !!discardedPage && !!isConnected,
   });
