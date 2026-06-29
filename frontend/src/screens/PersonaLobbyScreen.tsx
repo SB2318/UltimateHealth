@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
+import { useSelector } from "@/src/store/hooks";
 import { useGetCharacters } from '../hooks/useGetCharacters';
 import { PRIMARY_COLOR } from '../helper/Theme';
 import { PersonaLobbyScreenProps, Character } from '../type';

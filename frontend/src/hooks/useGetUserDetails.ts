@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { User } from "../type";
 import { GET_USER_DETAILS_API } from "../helper/APIUtils";
-import { useAppSelector } from "react-redux";
+import { useAppSelector, useAppDispatch } from "@/src/store/hooks";
 
 export const useGetUserDetails = (isConnected: boolean): UseQueryResult<
 User,

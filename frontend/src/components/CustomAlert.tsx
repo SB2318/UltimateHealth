@@ -1,5 +1,5 @@
 import { AlertDialog, Button, XStack, YStack } from "tamagui";
-import { useAppDispatch, useAppSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { hideAlert } from "../store/alertSlice";
 
 export function CustomAlertDialog() {
