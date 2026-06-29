@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import { showAlert } from '@/src/store/alertSlice';
-import { useAppDispatch } from 'react-redux';
+import { useAppDispatch } from '../store/hooks';
 import { Alert } from 'react-native';
 import { UPLOAD_STORAGE } from '../helper/APIUtils';
 import { fetchWithTimeout } from '../helper/ApiTimeout';

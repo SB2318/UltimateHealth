@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { EditRequest } from '../type';
 import { GET_ALL_IMPROVEMENTS_FOR_USER } from '../helper/APIUtils';
-import { useAppSelector } from 'react-redux';
+import { useAppSelector } from '../store/hooks';
 
 interface Props {
   page: number;

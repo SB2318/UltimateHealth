@@ -1,7 +1,7 @@
 import {Alert, View} from 'react-native';
 import React, {useState} from 'react';
 import Dropdown from './Dropdown';
-import { useAppDispatch } from 'react-redux';
+import { useAppDispatch } from '../store/hooks';
 import { showAlert } from '../store/alertSlice';
 
 const DropDownComponent = ({data}: {data: any[]}) => {

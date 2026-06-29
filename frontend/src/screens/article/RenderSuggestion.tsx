@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { RenderSuggestionProp } from '../../type';
-import { useAppDispatch } from 'react-redux';
+import { useAppDispatch } from '../store/hooks';
 import { setSuggestionAccepted } from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 // ✅ Re-introduced original project helpers for security sanitization and link safety

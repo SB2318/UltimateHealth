@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-import { useAppDispatch, useAppSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { H3, Image, Paragraph, Text, YStack, TextArea, XStack, Button } from 'tamagui';
 
 import CommentItem from '../components/CommentItem';

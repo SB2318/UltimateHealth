@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { GET_SOCIALS } from '../helper/APIUtils';
 import { User } from '../type';
-import { useAppSelector } from 'react-redux';
+import { useAppSelector } from '../store/hooks';
 
 interface Props {
   type: number;

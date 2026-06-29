@@ -79,7 +79,7 @@ jest.mock('react-native-snackbar', () => ({
   LENGTH_SHORT: 0,
 }));
 
-jest.mock('react-redux', () => ({
+jest.mock('../store/hooks', () => ({
   useAppSelector: jest.fn(),
   useAppDispatch: jest.fn(() => jest.fn()),
 }));
@@ -98,7 +98,7 @@ jest.mock('../../hooks/useLoadAIChats', () => ({
   useLoadAIConversations: jest.fn(),
 }));
 
-const mockuseAppSelector = require('react-redux').useAppSelector as jest.Mock;
+const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
 const mockUseSendMessageToGemini = require('../../hooks/useSendMessageToGemini').useSendMessageToGemini as jest.Mock;
 const mockUseLoadAIConversations = require('../../hooks/useLoadAIChats').useLoadAIConversations as jest.Mock;
 

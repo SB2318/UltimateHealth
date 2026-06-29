@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import axios from 'axios';
-import { useAppSelector } from 'react-redux';
+import { useAppSelector } from '../store/hooks';
 import { GET_READ_HISTORY } from '../helper/APIUtils';
 import { ArticleData } from '../type';
 

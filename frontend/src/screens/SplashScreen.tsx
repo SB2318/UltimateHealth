@@ -8,7 +8,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import {SplashScreenProp} from '../type';
-import {useAppDispatch} from 'react-redux';
+import {useAppDispatch} from '../store/hooks';
 import {KEYS, clearStorage, retrieveItem} from '../helper/Utils';
 import {setUserId, setUserToken, setUserHandle} from '../store/UserSlice';
 import { useCheckTokenStatus } from '@/src/hooks/useGetTokenStatus';

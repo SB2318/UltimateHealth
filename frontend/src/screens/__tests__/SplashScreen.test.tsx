@@ -7,7 +7,7 @@ const mockNavigate = jest.fn();
 const mockReset = jest.fn();
 const mockDispatch = jest.fn();
 
-jest.mock('react-redux', () => ({
+jest.mock('../store/hooks', () => ({
   useAppDispatch: () => mockDispatch,
 }));
 

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { GET_IMPROVEMENT_CONTENT } from '../helper/APIUtils';
-import { useAppSelector } from 'react-redux';
+import { useAppSelector } from '../store/hooks';
 
 interface Props {
   recordId?: string;

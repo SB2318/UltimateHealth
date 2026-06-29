@@ -17,7 +17,7 @@ import {PRIMARY_COLOR} from '../../helper/Theme';
 import {EditorScreenProp} from '../../type';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useAppDispatch} from 'react-redux';
+import {useAppDispatch} from '../store/hooks';
 import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
 
 // Feature:

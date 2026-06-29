@@ -5,7 +5,7 @@ import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../helper/SecureStor
 import { TokenStatus } from '@/src/type';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
-import { useAppSelector } from 'react-redux';
+import { useAppSelector } from '../store/hooks';
 
  const checkTokenStatusApi = async (
   token: string,

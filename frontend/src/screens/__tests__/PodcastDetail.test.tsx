@@ -61,7 +61,7 @@ jest.mock('react-native-share', () => ({
   open: jest.fn(),
 }));
 
-jest.mock('react-redux', () => ({
+jest.mock('../store/hooks', () => ({
   useAppSelector: jest.fn(),
   useAppDispatch: jest.fn(() => jest.fn()),
 }));
@@ -185,7 +185,7 @@ let mockState: any = {
   },
 };
 
-const mockuseAppSelector = require('react-redux').useAppSelector as jest.Mock;
+const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
 const mockUseGetSinglePodcastDetails = require('../../hooks/useGetSinglePodcastDetails').useGetSinglePodcastDetails as jest.Mock;
 const mockUseLikePodcast = require('../../hooks/useLikePodcast').useLikePodcast as jest.Mock;
 

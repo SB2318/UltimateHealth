@@ -21,7 +21,7 @@ import audioModule from '@/modules/audio-module';
 import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
-import {useAppDispatch} from 'react-redux';
+import {useAppDispatch} from '../store/hooks';
 import {requestStoragePermissions} from '../helper/Utils';
 
 //const AudioModule = requireNativeModule('AudioModule');
