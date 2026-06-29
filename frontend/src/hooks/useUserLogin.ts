@@ -26,6 +26,10 @@ const loginFunc = async ({email, password, fcmToken}: LoginReq): Promise<LoginRe
     email,
     password,
     fcmToken,
+  }, {
+    headers: {
+      'x-client-type': 'mobile',
+    },
   });
 
   if (__DEV__) {
