@@ -10,6 +10,7 @@ import {PRIMARY_COLOR} from '../helper/Theme';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   Alert,
+  Image,
   View,
   KeyboardAvoidingView,
   Platform,
@@ -420,9 +421,9 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               paddingTop: 10,
               paddingBottom: 20,
             }}
-            placeholder={isQuotaExceeded ? "Come back tomorrow for more advice!" : `Ask ${characterName || 'the AI'} a question...`}
             textInputProps={{
               editable: !isPending && !isQuotaExceeded,
+              placeholder: isQuotaExceeded ? 'Come back tomorrow for more advice!' : `Ask ${characterName || 'the AI'} a question...`,
             }}
             renderBubble={props => {
               const currentMessage = props.currentMessage as any;
@@ -553,7 +554,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               Daily Limit Reached
             </Text>
             <Text style={{ fontSize: 16, color: '#4b5563', textAlign: 'center', marginBottom: 24, lineHeight: 24 }}>
-              You've used all your messages for {characterName || 'this character'} today. Please come back tomorrow for more advice!
+              You have used all your messages for {characterName || 'this character'} today. Please come back tomorrow for more advice!
             </Text>
             <TouchableOpacity
               onPress={() => setShowQuotaModal(false)}
