@@ -5,20 +5,15 @@ import {ReportReason} from '../type';
 import {useSelector} from 'react-redux';
 
 const reasonsFunc = async () => {
-  try{
-    const {data: categoryData} = await axios.get(
+  const {data: categoryData} = await axios.get(
     GET_REPORT_REASONS
   );
 
   return categoryData as ReportReason[];
-  }catch(err){
-    console.log("GET CATEGORY ERR", err);
-    return null;
-  }
 };
 
 export const useGetReasons = (isConnected: boolean): UseQueryResult<
-  ReportReason[] | null,
+  ReportReason[],
   AxiosError
 > => {
   const isGuest = useSelector((state: any) => state.user.isGuest);

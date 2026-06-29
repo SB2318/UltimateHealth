@@ -10,17 +10,12 @@ type ArticleRes = {
 export const useGetPaginatedArticle = (
   isConnected: boolean,
   page: number,
-): UseQueryResult<ArticleRes | null, AxiosError> => {
+): UseQueryResult<ArticleRes, AxiosError> => {
   return useQuery({
     queryKey: ['get-all-articles', page],
     queryFn: async () => {
-      try {
-        const response = await axios.get(`${PROD_URL}/articles?page=${page}`);
-        return response.data as ArticleRes;
-      } catch (err) {
-        console.error('Error fetching articles:', err);
-        return null;
-      }
+      const response = await axios.get(`${PROD_URL}/articles?page=${page}`);
+      return response.data as ArticleRes;
     },
     enabled: !!isConnected && !!page,
   });
