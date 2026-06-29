@@ -79,9 +79,15 @@ jest.mock('react-native-snackbar', () => ({
   LENGTH_SHORT: 0,
 }));
 
+<<<<<<< HEAD
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
   useDispatch: jest.fn(() => jest.fn()),
+=======
+jest.mock('../store/hooks', () => ({
+  useAppSelector: jest.fn(),
+  useAppDispatch: jest.fn(() => jest.fn()),
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 }));
 
 jest.mock('../../hooks/useGetProfile', () => ({
@@ -98,7 +104,11 @@ jest.mock('../../hooks/useLoadAIChats', () => ({
   useLoadAIConversations: jest.fn(),
 }));
 
+<<<<<<< HEAD
 const mockUseSelector = require('react-redux').useSelector as jest.Mock;
+=======
+const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 const mockUseSendMessageToGemini = require('../../hooks/useSendMessageToGemini').useSendMessageToGemini as jest.Mock;
 const mockUseLoadAIConversations = require('../../hooks/useLoadAIChats').useLoadAIConversations as jest.Mock;
 

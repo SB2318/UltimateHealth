@@ -10,11 +10,32 @@ const mockReset = jest.fn();
 // SplashScreen reads user_token via useSelector. We control it here.
 let mockUserToken: string | null = 'valid-token';
 
+<<<<<<< HEAD
 jest.mock('react-redux', () => ({
   useSelector: (selector: any) =>
     selector({
       user: {user_token: mockUserToken},
       network: {isConnected: true},
+=======
+jest.mock('../store/hooks', () => ({
+  useAppDispatch: () => mockDispatch,
+}));
+
+const mockCheckTokenStatus = jest.fn();
+jest.mock('@/src/hooks/useGetTokenStatus', () => ({
+  useCheckTokenStatus: () => mockCheckTokenStatus(),
+}));
+
+jest.mock('../../helper/Utils', () => {
+  const original = jest.requireActual('../../helper/Utils');
+  return {
+    ...original,
+    clearStorage: jest.fn(() => Promise.resolve()),
+    retrieveItem: jest.fn((key) => {
+      if (key === 'USER_ID') return Promise.resolve('user-id-123');
+      if (key === 'USER_HANDLE') return Promise.resolve('john_doe');
+      return Promise.resolve(null);
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
     }),
   useDispatch: () => jest.fn(),
 }));

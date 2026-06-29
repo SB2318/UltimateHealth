@@ -18,7 +18,11 @@ import {PRIMARY_COLOR} from '../../helper/Theme';
 import {EditorScreenProp} from '../../type';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+<<<<<<< HEAD
 import {useDispatch} from 'react-redux';
+=======
+import {useAppDispatch} from '../store/hooks';
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 import {createHTMLStructure} from '../../helper/Utils';

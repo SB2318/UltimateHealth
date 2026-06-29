@@ -10,7 +10,11 @@ import * as z from 'zod';
 import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
+<<<<<<< HEAD
 import {useDispatch} from 'react-redux';
+=======
+import {useAppDispatch} from '../store/hooks';
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 import {
   Button,
   Input,

@@ -8,8 +8,16 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import {SplashScreenProp} from '../type';
+<<<<<<< HEAD
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/ReduxStore';
+=======
+import {useAppDispatch} from '../store/hooks';
+import {KEYS, clearStorage, retrieveItem} from '../helper/Utils';
+import {setUserId, setUserToken, setUserHandle} from '../store/UserSlice';
+import { useCheckTokenStatus } from '@/src/hooks/useGetTokenStatus';
+import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../helper/SecureStorageUtils';
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 
 export default function SplashScreen({navigation}: SplashScreenProp) {
   const opacity = useSharedValue(0);

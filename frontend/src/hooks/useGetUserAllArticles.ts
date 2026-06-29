@@ -2,7 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { ArticleData } from '../type';
 import { GET_ALL_ARTICLES_FOR_USER } from '../helper/APIUtils';
+<<<<<<< HEAD
 import { useSelector } from 'react-redux';
+=======
+import { useAppSelector } from '../store/hooks';
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 
 interface Props {
   page: number;

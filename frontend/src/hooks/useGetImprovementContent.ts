@@ -1,7 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { GET_IMPROVEMENT_CONTENT } from '../helper/APIUtils';
+<<<<<<< HEAD
 import { useSelector } from 'react-redux';
+=======
+import { useAppSelector } from '../store/hooks';
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 
 interface Props {
   recordId?: string;

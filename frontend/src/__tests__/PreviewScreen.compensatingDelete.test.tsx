@@ -10,8 +10,13 @@
 
 import React from 'react';
 import {Alert} from 'react-native';
+<<<<<<< HEAD
 import {render, fireEvent, waitFor, act} from '@testing-library/react-native';
 import {Provider} from 'react-redux';
+=======
+import {render, fireEvent, waitFor} from '@testing-library/react-native';
+import {Provider} from '../store/hooks';
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 import {configureStore} from '@reduxjs/toolkit';
 import PreviewScreen from '../screens/article/PreviewScreen';
 

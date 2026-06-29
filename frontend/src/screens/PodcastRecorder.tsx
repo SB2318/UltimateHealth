@@ -24,7 +24,11 @@ import audioModule from '@/modules/audio-module';
 import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
+<<<<<<< HEAD
 //import {useDispatch} from 'react-redux';
+=======
+import {useAppDispatch} from '../store/hooks';
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 import {requestStoragePermissions} from '../helper/Utils';
 
 

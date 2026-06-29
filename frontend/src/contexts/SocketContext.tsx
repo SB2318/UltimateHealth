@@ -1,7 +1,11 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
 
+<<<<<<< HEAD
 import { useSelector } from 'react-redux';
+=======
+import { useAppSelector } from '../store/hooks';
+>>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 import { Socket } from 'socket.io-client';
 import { initializeSocket, disconnectSocket } from '../helper/socket';
 
