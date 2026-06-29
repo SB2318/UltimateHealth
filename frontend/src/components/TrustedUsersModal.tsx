@@ -27,6 +27,13 @@ const getProfileImageUri = (profileImage?: string) => {
     : `${GET_STORAGE_DATA}/${profileImage}`;
 };
 
+const getTrustedUserKey = (item: TrustedUser) =>
+  item._id ||
+  item.user_handle ||
+  item.user_name ||
+  item.Profile_image ||
+  '';
+
 export default function TrustedUsersModal({
   visible,
   articleId,
@@ -41,6 +48,9 @@ export default function TrustedUsersModal({
     isLoading,
     isError,
   } = useGetTrustedUsers(articleId, visible);
+  const renderableTrustedUsers = trustedUsers?.filter(
+    user => getTrustedUserKey(user) !== '',
+  );
 
   const renderItem = ({item}: {item: TrustedUser}) => (
     <View style={styles.userRow}>
@@ -78,10 +88,10 @@ export default function TrustedUsersModal({
           ) : isError ? (
             <View style={styles.centered}>
               <Text style={styles.emptyText}>
-                Couldn't load trusted readers. Please try again.
+                Could not load trusted readers. Please try again.
               </Text>
             </View>
-          ) : !trustedUsers || trustedUsers.length === 0 ? (
+          ) : !renderableTrustedUsers || renderableTrustedUsers.length === 0 ? (
             <View style={styles.centered}>
               <Text style={styles.emptyText}>
                 No one has trusted this article yet.
@@ -89,8 +99,8 @@ export default function TrustedUsersModal({
             </View>
           ) : (
             <FlatList
-              data={trustedUsers}
-              keyExtractor={(item, index) => item._id || String(index)}
+              data={renderableTrustedUsers}
+              keyExtractor={getTrustedUserKey}
               renderItem={renderItem}
               contentContainerStyle={styles.listContent}
             />

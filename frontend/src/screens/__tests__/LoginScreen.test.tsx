@@ -110,12 +110,16 @@ jest.mock('../../helper/Utils', () => ({
 jest.mock('../../components/EmailInputModal', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View);
+  const MockEmailInputModal = () => React.createElement(View);
+  MockEmailInputModal.displayName = 'EmailInputModal';
+  return MockEmailInputModal;
 });
 jest.mock('../../components/Loader', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View);
+  const MockLoader = () => React.createElement(View);
+  MockLoader.displayName = 'Loader';
+  return MockLoader;
 });
 
 describe('LoginScreen - Security Bypass and Validation Tests', () => {
@@ -140,8 +144,8 @@ describe('LoginScreen - Security Bypass and Validation Tests', () => {
 
   it('renders email and password inputs and a login button', () => {
     const {getByPlaceholderText, getByText} = renderScreen();
-    expect(getByPlaceholderText('Enter your email')).toBeTruthy();
-    expect(getByPlaceholderText('Password')).toBeTruthy();
+    expect(getByPlaceholderText('Enter your email address')).toBeTruthy();
+    expect(getByPlaceholderText('Enter your password')).toBeTruthy();
     expect(getByText('Login')).toBeTruthy();
   });
 
@@ -149,8 +153,8 @@ describe('LoginScreen - Security Bypass and Validation Tests', () => {
     const {getByPlaceholderText, getByText} = renderScreen();
 
     // Type email & password
-    fireEvent.changeText(getByPlaceholderText('Enter your email'), 'test@example.com');
-    fireEvent.changeText(getByPlaceholderText('Password'), 'wrongpassword');
+    fireEvent.changeText(getByPlaceholderText('Enter your email address'), 'test@example.com');
+    fireEvent.changeText(getByPlaceholderText('Enter your password'), 'wrongpassword');
 
     // Mock login mutation failure with 401 response
     mockLoginMutate.mockImplementationOnce((variables, options) => {
@@ -180,8 +184,8 @@ describe('LoginScreen - Security Bypass and Validation Tests', () => {
     jest.useFakeTimers();
     const {getByPlaceholderText, getByText} = renderScreen();
 
-    fireEvent.changeText(getByPlaceholderText('Enter your email'), 'correct@example.com');
-    fireEvent.changeText(getByPlaceholderText('Password'), 'validpassword');
+    fireEvent.changeText(getByPlaceholderText('Enter your email address'), 'correct@example.com');
+    fireEvent.changeText(getByPlaceholderText('Enter your password'), 'validpassword');
 
     // Mock successful response
     mockLoginMutate.mockImplementationOnce((variables, options) => {
