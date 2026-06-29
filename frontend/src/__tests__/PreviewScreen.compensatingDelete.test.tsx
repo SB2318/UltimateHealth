@@ -10,8 +10,6 @@
 import React from 'react';
 import {Alert} from 'react-native';
 import {render, fireEvent, waitFor} from '@testing-library/react-native';
-import {Provider} from 'react-redux';
-import {configureStore} from '@reduxjs/toolkit';
 
 // ── mocks ──────────────────────────────────────────────────────────────────
 
@@ -21,6 +19,17 @@ const mockDeletePocketbaseRecord = jest.fn();
 const mockUploadImprovementToPocketbase = jest.fn();
 const mockImprovementMutation = jest.fn();
 const mockSubmitChangesMutation = jest.fn();
+const mockDispatch = jest.fn();
+const mockReduxState = {
+  user: {user_token: 'tok', user_id: 'user-1'},
+  data: {suggestion: '', suggestionAccepted: false},
+  network: {isConnected: true},
+};
+
+jest.mock('react-redux', () => ({
+  useSelector: (selectorFn: any) => selectorFn(mockReduxState),
+  useDispatch: () => mockDispatch,
+}));
 
 jest.mock('@/src/hooks/useUploadArticlePocketbase', () => ({
   useUploadArticleToPocketbase: () => ({
@@ -86,7 +95,8 @@ jest.mock('@bam.tech/react-native-image-resizer', () => ({
 jest.spyOn(Alert, 'alert').mockImplementation(
   (_title, _msg, buttons) => {
     // Auto-confirm the "Create Post" dialog (press OK)
-    const ok = buttons?.find(b => b.text === 'OK');
+    const ok = (buttons as {text?: string; onPress?: () => void}[] | undefined)
+      ?.find(b => b.text === 'OK');
     ok?.onPress?.();
   },
 );
@@ -98,16 +108,6 @@ const FAKE_PB_RESPONSE = {
   recordId: 'pb-record-42',
   html_file: 'https://pb.example.com/article.html',
 };
-
-function makeStore() {
-  return configureStore({
-    reducer: {
-      user: () => ({user_token: 'tok', user_id: 'user-1'}),
-      data: () => ({suggestion: '', suggestionAccepted: false}),
-      network: () => ({isConnected: true}),
-    },
-  });
-}
 
 function makeNav() {
   return {navigate: jest.fn(), setOptions: jest.fn()};
@@ -132,33 +132,36 @@ function makeRoute(overrides = {}) {
   };
 }
 
-// Lazy import after mocks are set up
-let PreviewScreen: React.ComponentType<any>;
-beforeAll(async () => {
-  PreviewScreen = (await import('../screens/article/PreviewScreen')).default;
-});
+const PreviewScreen = require('../screens/article/PreviewScreen')
+  .default as React.ComponentType<any>;
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
+async function pressHeaderSubmit(nav: ReturnType<typeof makeNav>) {
+  await waitFor(() => expect(nav.setOptions).toHaveBeenCalled());
+  const options =
+    nav.setOptions.mock.calls[nav.setOptions.mock.calls.length - 1]?.[0];
+  const headerRight = options?.headerRight;
+  expect(headerRight).toEqual(expect.any(Function));
+
+  const {getByText} = render(headerRight());
+  fireEvent.press(getByText('Submit'));
+}
+
 // ── tests ──────────────────────────────────────────────────────────────────
 
 describe('PreviewScreen compensating delete — new article path', () => {
-  function setupAndSubmit() {
-    const store = makeStore();
+  async function setupAndSubmit() {
     const nav = makeNav();
-    const {getByText} = render(
-      <Provider store={store}>
-        <PreviewScreen navigation={nav} route={makeRoute()} />
-      </Provider>,
-    );
-    fireEvent.press(getByText('Submit'));
+    render(<PreviewScreen navigation={nav} route={makeRoute()} />);
+    await pressHeaderSubmit(nav);
     return {nav};
   }
 
   it('calls deletePocketbaseRecord with the correct recordId when postMutation fails', async () => {
-    setupAndSubmit();
+    await setupAndSubmit();
 
     // Step 1 succeeds
     const pbOnSuccess = mockUploadPocketbase.mock.calls[0][1].onSuccess;
@@ -178,7 +181,7 @@ describe('PreviewScreen compensating delete — new article path', () => {
   });
 
   it('does NOT call deletePocketbaseRecord when postMutation succeeds', async () => {
-    setupAndSubmit();
+    await setupAndSubmit();
 
     const pbOnSuccess = mockUploadPocketbase.mock.calls[0][1].onSuccess;
     pbOnSuccess(FAKE_PB_RESPONSE);
@@ -192,7 +195,7 @@ describe('PreviewScreen compensating delete — new article path', () => {
   });
 
   it('does NOT call deletePocketbaseRecord when the PocketBase upload itself fails', async () => {
-    setupAndSubmit();
+    await setupAndSubmit();
 
     const pbOnError = mockUploadPocketbase.mock.calls[0][1].onError;
     pbOnError(new Error('PB network error'));
@@ -204,23 +207,20 @@ describe('PreviewScreen compensating delete — new article path', () => {
 });
 
 describe('PreviewScreen compensating delete — improvement path', () => {
-  function setupAndSubmit() {
-    const store = makeStore();
+  async function setupAndSubmit() {
     const nav = makeNav();
-    const {getByText} = render(
-      <Provider store={store}>
-        <PreviewScreen
-          navigation={nav}
-          route={makeRoute({requestId: 'req-99'})}
-        />
-      </Provider>,
+    render(
+      <PreviewScreen
+        navigation={nav}
+        route={makeRoute({requestId: 'req-99'})}
+      />,
     );
-    fireEvent.press(getByText('Submit'));
+    await pressHeaderSubmit(nav);
     return {nav};
   }
 
   it('calls deletePocketbaseRecord with correct recordId when improvementMutation fails', async () => {
-    setupAndSubmit();
+    await setupAndSubmit();
 
     const pbOnSuccess =
       mockUploadImprovementToPocketbase.mock.calls[0][1].onSuccess;
@@ -239,7 +239,7 @@ describe('PreviewScreen compensating delete — improvement path', () => {
   });
 
   it('does NOT call deletePocketbaseRecord when improvementMutation succeeds', async () => {
-    setupAndSubmit();
+    await setupAndSubmit();
 
     const pbOnSuccess =
       mockUploadImprovementToPocketbase.mock.calls[0][1].onSuccess;
@@ -261,23 +261,20 @@ describe('PreviewScreen compensating delete — edit/suggested-changes path', ()
     authorId: 'user-1',
   };
 
-  function setupAndSubmit() {
-    const store = makeStore();
+  async function setupAndSubmit() {
     const nav = makeNav();
-    const {getByText} = render(
-      <Provider store={store}>
-        <PreviewScreen
-          navigation={nav}
-          route={makeRoute({articleData: ARTICLE_DATA})}
-        />
-      </Provider>,
+    render(
+      <PreviewScreen
+        navigation={nav}
+        route={makeRoute({articleData: ARTICLE_DATA})}
+      />,
     );
-    fireEvent.press(getByText('Submit'));
+    await pressHeaderSubmit(nav);
     return {nav};
   }
 
   it('calls deletePocketbaseRecord with correct recordId when submitChangesMutation fails', async () => {
-    setupAndSubmit();
+    await setupAndSubmit();
 
     const pbOnSuccess = mockUploadPocketbase.mock.calls[0][1].onSuccess;
     pbOnSuccess(FAKE_PB_RESPONSE);

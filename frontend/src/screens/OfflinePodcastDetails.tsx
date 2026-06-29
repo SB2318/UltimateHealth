@@ -30,6 +30,7 @@ import {useSocket} from '../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import {useAudioPlayer} from 'expo-audio';
 import {useLikePodcast} from '../hooks/useLikePodcast';
+import {generatePodcastShareUrl} from '../helper/shareUtils';
 
 export default function OfflinePodcastDetail({
   route,
@@ -88,7 +89,7 @@ export default function OfflinePodcastDetail({
 
   const handleShare = async () => {
     try {
-      const url = `https://uhsocial.in/api/share/podcast?trackId=${podcast._id}&audioUrl=${podcast.audio_url}`;
+      const url = generatePodcastShareUrl(podcast._id, podcast.audio_url);
       await Share.open({
         title: podcast?.title,
         message: `${podcast?.title} : Check out this awesome podcast on UltimateHealth app!`,
