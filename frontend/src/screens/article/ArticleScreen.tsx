@@ -135,6 +135,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     errorHandlerRef.current = null;
   }, []);
 
+  // Scroll position persistence (Issue #1834)
+  // useRef<Animated.ScrollView> — typed to match the JSX ref prop on
+  // Animated.ScrollView. The underlying ScrollView.scrollTo() is called
+  // via a safe cast through the ref for imperative scroll restoration.
+  const scrollViewRef = useRef<Animated.ScrollView>(null);
+  // Tracks whether we have already restored the saved position for the
+  // current article. Prevents the initial layout scroll events from
+  // immediately overwriting the stored value before restoration runs.
+  const scrollRestoredRef = useRef(false);
+  // Key pattern: article_scroll_position_<articleId>
+  const scrollStorageKey = `article_scroll_position_${articleId}`;
+
   // Progress Bar Shared Values
   const scrollY = useSharedValue(0);
   const contentHeight = useSharedValue(0);
@@ -256,8 +268,22 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   useEffect(() => {
     readEventFiredRef.current = false;
     setReadEventSave(false);
+    // Reset scroll restoration flag when article changes so a new article
+    // always starts from the top until its own saved position is loaded.
+    scrollRestoredRef.current = false;
     refetch();
   }, [articleId, refetch]);
+
+  // Cleanup: cancel any pending debounce timer when the component unmounts.
+  // Prevents a stale AsyncStorage write after navigation or unmount.
+  useEffect(() => {
+    return () => {
+      if (saveScrollPositionRef.current) {
+        clearTimeout(saveScrollPositionRef.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const noDataHtml = '<p>No Data found</p>';
 
@@ -459,7 +485,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       Alert.alert('Article not found');
   const handleCopyLink = async () => {
     try {
-      copyArticleShareLink(articleId, authorId, resolvedRecordId);
+      copyArticleShareLink(articleId, authorId, resolvedRecordId || '');
       Snackbar.show({
         text: 'Link copied',
         duration: Snackbar.LENGTH_SHORT,
@@ -709,6 +735,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
+  // Debounced save: writes scroll offset to AsyncStorage at most once per 500 ms.
+  // Only runs after the position has been restored to avoid clobbering saved state
+  // with the initial mount scroll events.
+  const saveScrollPositionRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleSaveScrollPosition = (offset: number) => {
+    if (!scrollRestoredRef.current) return;
+    if (saveScrollPositionRef.current) clearTimeout(saveScrollPositionRef.current);
+    saveScrollPositionRef.current = setTimeout(() => {
+      storeItem(scrollStorageKey, String(Math.round(offset)));
+    }, 500);
+  };
+
   // Function to handle the Read Status logic (preserved from original onScroll)
   const handleReadStatusUpdate = (
     offset: number,
@@ -742,6 +780,30 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
+  // Restore saved scroll position once the WebView content has fully sized.
+  // Triggered from onSizeUpdated so we know the scrollable height is available.
+  const restoreScrollPosition = useCallback(async () => {
+    if (scrollRestoredRef.current) return; // already restored for this article
+    try {
+      const stored = await retrieveItem(scrollStorageKey);
+      const offset = stored ? Number(stored) : 0;
+      if (offset > 0 && scrollViewRef.current) {
+        // Imperative scroll after a 100ms settle delay so the layout is stable.
+        // Cast through `any` to access the underlying ScrollView.scrollTo()
+        // method — Reanimated's AnimatedScrollView wraps but re-exposes it
+        // at runtime. The cast is safe: verified at the `scrollViewRef.current`
+        // guard above.
+        setTimeout(() => {
+          (scrollViewRef.current as any)?.scrollTo({y: offset, animated: false});
+        }, 100);
+      }
+    } catch {
+      // Corrupted or missing data — start from the top.
+    } finally {
+      scrollRestoredRef.current = true;
+    }
+  }, [scrollStorageKey]);
+
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
       scrollY.value = event.contentOffset.y;
@@ -754,6 +816,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         event.contentSize.height,
         event.layoutMeasurement.height,
       );
+
+      // Persist scroll offset (debounced, only after restoration completes)
+      runOnJS(handleSaveScrollPosition)(event.contentOffset.y);
     },
   });
 
@@ -878,6 +943,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       </View>
 
       <Animated.ScrollView
+        ref={scrollViewRef}
         style={styles.scrollView}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
@@ -1012,6 +1078,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   scalesPageToFit={true}
                   viewportContent={'width=device-width, user-scalable=no'}
                   onShouldStartLoadWithRequest={handleExternalClick}
+                  // Once the WebView reports its final rendered height, we know
+                  // the ScrollView has enough content to scroll to the saved position.
+                  onSizeUpdated={restoreScrollPosition}
                 />
               </View>
 
