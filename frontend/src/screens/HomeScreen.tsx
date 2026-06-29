@@ -4,9 +4,10 @@ import {
   Alert,
   Text,
   TouchableOpacity,
-  FlatList,
+  FlatList
   ScrollView,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
