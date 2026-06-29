@@ -42,7 +42,7 @@ import Snackbar from 'react-native-snackbar';
 import {useFocusEffect} from '@react-navigation/native';
 import InactiveUserModal from '../components/InactiveUserModal';
 import {StatusBar} from 'expo-status-bar';
-import {width, wp} from '../helper/Metric';
+import { wp} from '../helper/Metric';
 import {useGetCategories} from '../hooks/useGetArticleTags';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
