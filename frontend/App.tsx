@@ -19,37 +19,33 @@ staleTime: 1000 * 60,
 })
 );
 
-  useEffect(() => {
-    let isMounted = true;
+ useEffect(() => {
+  let isMounted = true;
 
-    const configureAudio = async () => {
-      try {
-        await setAudioModeAsync({
-          playsInSilentMode: true,
-          allowsRecording: true,
-        });
-      } catch (error) {
-        // Prevent state/logging side-effects if unmounted
-        if (!isMounted) return;
+  const configureAudio = async () => {
+    try {
+      await setAudioModeAsync({
+        playsInSilentMode: true,
+        allowsRecording: true,
+      });
+    } catch (error) {
+      if (!isMounted) return;
 
-        Sentry.captureException(error, {
-          tags: { feature: 'audio_playback' },
-          extra: { context: 'App startup audio configuration' },
-        });
+      Sentry.captureException(error, {
+        tags: { feature: 'audio_playback' },
+        extra: { context: 'App startup audio configuration' },
+      });
 
-        
-          logger.error('[App] Failed to configure audio mode:', error);
-        }
-      }
-    };
+      logger.error('[App] Failed to configure audio mode:', error);
+    }
+  };
 
-    configureAudio();
+  configureAudio();
 
-    // Cleanup function
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  return () => {
+    isMounted = false;
+  };
+}, []);
 
   return (
     <QueryClientProvider client={queryClient}>
