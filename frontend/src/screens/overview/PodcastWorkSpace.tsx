@@ -15,7 +15,7 @@ import Loader from '../../components/Loader';
 import {useGetPendingPodcasts} from '@/src/hooks/useGetPendingPodcasts';
 import {useGetDiscardedPodcasts} from '@/src/hooks/useGetDiscardedPodcast';
 import {useGetUserPublishedPodcasts} from '@/src/hooks/useGetUserPublishedPodcasts';
-import {NoPodcastState} from '../../components/EmptyStates';
+import {NoPodcastState, ErrorState} from '../../components/EmptyStates';
 
 export default function PodcastWorkSpace({
   handleClickAction,
@@ -40,18 +40,21 @@ export default function PodcastWorkSpace({
   const {
     data: publishedPodcastsData,
     isLoading: publishedPodcastsLoading,
+    isError: publishedPodcastsError,
     refetch: publishedPodcastsRefetch,
   } = useGetUserPublishedPodcasts(publishedPage, isConnected);
 
   const {
     data: pendingPodcastsData,
     isLoading: pendingPodcastsLoading,
+    isError: pendingPodcastsError,
     refetch: pendingPodcastsRefetch,
   } = useGetPendingPodcasts(pendingPage, isConnected);
 
   const {
     data: discardedPodcastsData,
     isLoading: discardedPodcastsLoading,
+    isError: discardedPodcastsError,
     refetch: discardedPodcastsRefetch,
   } = useGetDiscardedPodcasts(discardedPage, isConnected);
 
@@ -184,6 +187,16 @@ export default function PodcastWorkSpace({
         pendingPodcastsLoading ||
         discardedPodcastsLoading ? (
           <Loader />
+        ) : (selectedStatus === 1 && publishedPodcastsError) ||
+            (selectedStatus === 2 && pendingPodcastsError) ||
+            (selectedStatus === 3 && discardedPodcastsError) ? (
+          <ErrorState
+            onRetry={() => {
+              if (selectedStatus === 1) publishedPodcastsRefetch();
+              else if (selectedStatus === 2) pendingPodcastsRefetch();
+              else if (selectedStatus === 3) discardedPodcastsRefetch();
+            }}
+          />
         ) : (
           <View style={styles.articleContainer}>
             <FlatList

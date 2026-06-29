@@ -282,6 +282,37 @@ export const PodcastLoadingState = () => {
   );
 };
 
+export const ErrorState = ({
+  onRetry,
+  message = "Something went wrong. Please try again.",
+}: {
+  onRetry?: () => void;
+  message?: string;
+}) => (
+  <BaseEmptyState
+    iconEmoji="⚠️"
+    title="Oops! An Error Occurred"
+    description={message}
+    actionText={onRetry ? "Try Again" : undefined}
+    onAction={onRetry}
+  />
+);
+
+export const LoadingState = ({
+  message = "Loading...",
+  description = "Please wait a moment.",
+}: {
+  message?: string;
+  description?: string;
+}) => (
+  <BaseEmptyState
+    iconEmoji="⏳"
+    title={message}
+    description={description}
+    loading={true}
+  />
+);
+
 const styles = StyleSheet.create({
   stateContainer: {
     width: '100%',

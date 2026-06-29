@@ -13,7 +13,7 @@ import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
 import Loader from '../../components/Loader';
 import {useGetAllArticlesForUser} from '@/src/hooks/useGetUserAllArticles';
-import {NoArticleState} from '../../components/EmptyStates';
+import {NoArticleState, ErrorState} from '../../components/EmptyStates';
 
 export default function ArticleWorkSpace({
   handleClickAction,
@@ -33,7 +33,7 @@ export default function ArticleWorkSpace({
 
   const [pageLoading, setPageLoading] = useState(false);
 
-  const {isLoading, refetch} = useGetAllArticlesForUser({
+  const {isLoading, isError, refetch} = useGetAllArticlesForUser({
     page,
     selectedStatus,
     visit,
@@ -125,6 +125,8 @@ export default function ArticleWorkSpace({
 
         {isLoading || pageLoading ? (
           <Loader />
+        ) : isError ? (
+          <ErrorState onRetry={refetch} />
         ) : (
           <View style={styles.articleContainer}>
             <FlatList
