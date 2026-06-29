@@ -42,7 +42,7 @@ import Snackbar from 'react-native-snackbar';
 import {useFocusEffect} from '@react-navigation/native';
 import InactiveUserModal from '../components/InactiveUserModal';
 import {StatusBar} from 'expo-status-bar';
-import {wp} from '../helper/Metric';
+import {width, wp} from '../helper/Metric';
 import {useGetCategories} from '../hooks/useGetArticleTags';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
@@ -754,6 +754,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       <View style={styles.buttonContainer}>
         <ScrollView
           horizontal={true}
+          style={{width: '100%'}}
           showsHorizontalScrollIndicator={false}
           //contentContainerStyle={{flex:1}}
         >
@@ -859,6 +860,7 @@ const styles = StyleSheet.create({
 
   blockContainer: {
     flex: 0,
+    width: '100%',
     backgroundColor: '#F0F8FF',
     justifyContent: 'center',
     //alignItems: 'center',
@@ -912,7 +914,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: ON_PRIMARY_COLOR,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     padding: 20,
     top: 30,
   },
@@ -928,7 +930,7 @@ const styles = StyleSheet.create({
   stateContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     padding: 32,
     backgroundColor: '#F0F8FF',
   },
