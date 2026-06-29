@@ -13,7 +13,7 @@ import {BUTTON_COLOR} from '../helper/Theme';
 import HeaderRightMenu from '../components/HeaderRightMenu';
 import ChatbotScreen from '../screens/ChatbotScreen';
 import AboutScreen from '../screens/AboutPage';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../store/hooks';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -22,7 +22,7 @@ const ChatbotGuestScreen = () => <GuestPlaceholderScreen title="AI Chatbot" desc
 const ProfileGuestScreen = () => <GuestPlaceholderScreen title="Your Profile" description="Create an account to manage your details and preferences." />;
 
 const TabNavigation = () => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector(state => state.user.isGuest);
   return (
     <Tab.Navigator
       initialRouteName="Home"

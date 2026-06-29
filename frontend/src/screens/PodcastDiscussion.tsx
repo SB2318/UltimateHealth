@@ -11,7 +11,7 @@ import {
 import {PodcastDiscussionProp, User, Comment} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 //import io from 'socket.io-client';
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import Loader from '../components/Loader';
 import CommentItem from '../components/CommentItem';
 import {useSocket} from '../contexts/SocketContext';
@@ -52,7 +52,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const flatListRef = useRef<FlatList<Comment>>(null);
-  const {user_id, user_token} = useAppSelector((state: any) => state.user);
+  const {user_id, user_token} = useAppSelector(state => state.user);
   const [selectedCommentId, setSelectedCommentId] = useState<string>('');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [editCommentId, setEditCommentId] = useState<string | null>(null);

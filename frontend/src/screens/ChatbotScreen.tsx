@@ -7,7 +7,7 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   Alert,
   View,
@@ -50,8 +50,8 @@ import {verifyChatbotResponse} from '../chatbot-response-verification';
 // }
 
 const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
-  const {user_id, user_token} = useAppSelector((state: any) => state.user);
-  const {isConnected} = useAppSelector((state: any) => state.network);
+  const {user_id, user_token} = useAppSelector(state => state.user);
+  const {isConnected} = useAppSelector(state => state.network);
 
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(true);

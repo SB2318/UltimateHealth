@@ -15,7 +15,7 @@ import PasswordTab, { PasswordFormData } from '../components/PasswordTab';
 import LanguagePreferenceSelector from '../components/LanguagePreferenceSelector';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {AxiosError} from 'axios';
 import {ProfileEditScreenProp} from '../type';
 import {
@@ -72,8 +72,8 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
 
   // Initialize state variables
   const [user_profile_image, setUserProfileImage] = useState('');
-  const {user_token} = useAppSelector((state: any) => state.user);
-  const {isConnected} = useAppSelector((state: any) => state.network);
+  const {user_token} = useAppSelector(state => state.user);
+  const {isConnected} = useAppSelector(state => state.network);
 
   const {data: user} = useGetUserDetails(isConnected);
 

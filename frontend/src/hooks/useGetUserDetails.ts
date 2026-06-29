@@ -8,7 +8,7 @@ export const useGetUserDetails = (isConnected: boolean): UseQueryResult<
 User,
 AxiosError
 >=>{
-    const isGuest = useAppSelector((state: any) => state.user.isGuest);
+    const isGuest = useAppSelector(state => state.user.isGuest);
    
     return useQuery({
     queryKey: ['get-user-details-by-id'],

@@ -21,7 +21,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
     const [isConnected, setIsConnected] = useState(false);
 
     // Get token and user info from Redux
-    const { user_token, user_id } = useAppSelector((state: any) => state.user);
+    const { user_token, user_id } = useAppSelector(state => state.user);
 
     // Track the token that this provider instance initialized with.
     // This lets us disconnect safely on unmount/auth removal without thrashing the singleton.

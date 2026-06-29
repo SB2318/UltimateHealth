@@ -13,7 +13,7 @@ import {
 import {PodcastProfileProp, PodcastData, PlayList} from '../type';
 import {MaterialCommunityIcons, Feather, Ionicons} from '@expo/vector-icons';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../store/hooks';
 import {useFocusEffect} from '@react-navigation/native';
 import {useGetPlaylists} from '../hooks/useGetPlaylists';
 import {useGetUserPublishedPodcasts} from '../hooks/useGetUserPublishedPodcasts';
@@ -35,9 +35,9 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
   );
   const [refreshing, setRefreshing] = useState(false);
   const {user_name, Profile_image, user_handle} = useAppSelector(
-    (state: any) => state.user,
+    state => state.user,
   );
-  const {isConnected} = useAppSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector(state => state.network);
 
   const [publishedPage, setPublishedPage] = useState(1);
   const [totalPublishPages, setTotalPublishPages] = useState(0);

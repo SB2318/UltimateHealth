@@ -16,7 +16,7 @@ export const useGetUserSocials = ({
   articleId,
   social_user_id,
 }: Props) => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector(state => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-user-socials', type, articleId, social_user_id],

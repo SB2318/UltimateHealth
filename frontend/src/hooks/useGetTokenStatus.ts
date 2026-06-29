@@ -38,7 +38,7 @@ import { useAppSelector } from 'react-redux';
   }
 };
 export const useCheckTokenStatus = () => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector(state => state.user.isGuest);
 
   return useQuery<TokenStatus>({
     queryKey: ['token-status'],

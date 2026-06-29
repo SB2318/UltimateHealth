@@ -5,7 +5,7 @@ import { hideAlert } from "../store/alertSlice";
 export function CustomAlertDialog() {
   const dispatch = useAppDispatch();
   const { visible, title, message, onConfirm, onCancel } = useAppSelector(
-    (state: any) => state.alert
+    state => state.alert
   );
 
   const close = () => dispatch(hideAlert());

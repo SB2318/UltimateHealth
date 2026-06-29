@@ -27,7 +27,7 @@ export const useGetAllArticlesForUser = ({
   setProgressLabel,
   setDiscardLabel,
 }: Props) => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector(state => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-all-articles-for-user', page, selectedStatus],

@@ -2,10 +2,10 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {User} from '../type';
 import axios, {AxiosError} from 'axios';
 import {GET_PROFILE_API} from '../helper/APIUtils';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../store/hooks';
 
 export const useGetProfile = (): UseQueryResult<User, AxiosError> => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector(state => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-my-profile'],

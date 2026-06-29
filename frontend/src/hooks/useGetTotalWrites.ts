@@ -18,7 +18,7 @@ export const useGetTotalWrites = (
   isConnected?: boolean
  }
 ): UseQueryResult<WriteStatus> => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector(state => state.user.isGuest);
 
   return useQuery<WriteStatus>({
     queryKey: ["get-total-writes", user_id, userId, others],

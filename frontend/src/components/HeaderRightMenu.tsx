@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {useCallback, useRef, useState} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import Snackbar from 'react-native-snackbar';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {setPodcasts} from '../store/dataSlice';
@@ -32,9 +32,9 @@ const HeaderRightMenu = ({onClick}: Props) => {
     [],
   );
 
-  const {categories} = useAppSelector((state: any) => state.data);
-  const {user_token, isGuest} = useAppSelector((state: any) => state.user);
-  const {isConnected} = useAppSelector((state: any) => state.network);
+  const {categories} = useAppSelector(state => state.data);
+  const {user_token, isGuest} = useAppSelector(state => state.user);
+  const {isConnected} = useAppSelector(state => state.network);
   const dispatch = useAppDispatch();
 
   const {mutate: filterPodcast, isPending: filterPodcastPending} =

@@ -16,7 +16,7 @@ interface ReadHistoryResponse {
 export const useGetReadHistory = (
   page: number = 1,
 ): UseQueryResult<ReadHistoryResponse, Error> => {
-  const { user_id, isGuest } = useAppSelector((state: any) => state.user);
+  const { user_id, isGuest } = useAppSelector(state => state.user);
 
   return useQuery({
     queryKey: ['get-read-history', user_id, page],

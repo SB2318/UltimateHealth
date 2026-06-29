@@ -19,7 +19,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 import {formatCount, updateOfflinePodcastLikeStatus} from '../helper/Utils';
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {useEffect, useState} from 'react';
 import Snackbar from 'react-native-snackbar';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
@@ -44,9 +44,9 @@ export default function OfflinePodcastDetail({
   //const playbackState = usePlaybackState();
   //const progress = useProgress();
   const {user_id, user_token, user_handle} = useAppSelector(
-    (state: any) => state.user,
+    state => state.user,
   );
-  const {isConnected} = useAppSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector(state => state.network);
   //const [isLoading, setLoading] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [currentPodcast, setCurrentPodcast] = useState<PodcastData>(podcast);

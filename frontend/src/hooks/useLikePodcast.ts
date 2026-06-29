@@ -8,7 +8,7 @@ any,
 AxiosError,
 string
 >=>{
-    const isGuest = useAppSelector((state: any) => state.user.isGuest);
+    const isGuest = useAppSelector(state => state.user.isGuest);
 
     return useMutation({
     mutationKey: ['update-podcast-like-count'],

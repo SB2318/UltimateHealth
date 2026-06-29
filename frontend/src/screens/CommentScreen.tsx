@@ -62,7 +62,7 @@ const CommentScreen = ({
     useState('');
 
   const {user_id} = useAppSelector(
-    (state: any) => state.user,
+    state => state.user,
   );
 
   const [selectedCommentId, setSelectedCommentId] =

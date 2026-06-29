@@ -11,7 +11,7 @@ import {PRIMARY_COLOR} from '../../helper/Theme';
 import {GET_STORAGE_DATA, USER_LOGOUT} from '../../helper/APIUtils';
 import axios, {AxiosError} from 'axios';
 import {resetUserState} from '../../store/UserSlice';
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {clearStorage} from '../../helper/Utils';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';
@@ -23,7 +23,7 @@ const DEFAULT_PROFILE_IMAGE =
 
 const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
   const {profile_image, username} = route.params;
- // const {user_token} = useAppSelector((state: any) => state.user);
+ // const {user_token} = useAppSelector(state => state.user);
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const {mutate: logout} = useUserLogout();  

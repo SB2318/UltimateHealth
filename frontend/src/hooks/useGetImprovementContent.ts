@@ -12,7 +12,7 @@ export const useGetImprovementContent = ({
   recordId,
   articleRecordId,
 }: Props) => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector(state => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-improvement-content', recordId, articleRecordId],
