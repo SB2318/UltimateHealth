@@ -1,5 +1,6 @@
 import React from 'react';
 import {render, fireEvent, act} from '@testing-library/react-native';
+import {Alert} from 'react-native';
 import PodcastDetail from '../PodcastDetail';
 
 const mockNavigate = jest.fn();
@@ -78,6 +79,12 @@ jest.mock('../../helper/Utils', () => ({
   StatusEnum: {
     PUBLISHED: 'PUBLISHED',
   },
+}));
+
+jest.mock('../../helper/PlaybackManager', () => ({
+  __esModule: true,
+  getPlaybackPosition: jest.fn(),
+  savePlaybackPosition: jest.fn(),
 }));
 
 jest.mock('../../helper/Theme', () => ({
@@ -188,6 +195,7 @@ let mockState: any = {
 const mockUseSelector = require('react-redux').useSelector as jest.Mock;
 const mockUseGetSinglePodcastDetails = require('../../hooks/useGetSinglePodcastDetails').useGetSinglePodcastDetails as jest.Mock;
 const mockUseLikePodcast = require('../../hooks/useLikePodcast').useLikePodcast as jest.Mock;
+const mockGetPlaybackPosition = require('../../helper/PlaybackManager').getPlaybackPosition as jest.Mock;
 
 const setConnectedStatus = (value: boolean) => {
   mockState.network.isConnected = value;
@@ -203,6 +211,7 @@ describe('PodcastDetail', () => {
     mockPlayer.currentStatus.playing = false;
     mockPlayer.currentStatus.currentTime = 12;
     mockPlayer.currentStatus.duration = 245;
+    mockGetPlaybackPosition.mockResolvedValue(null);
     mockState = {
       user: {
         user_token: 'token',
@@ -397,6 +406,37 @@ describe('PodcastDetail', () => {
     });
 
     expect(mockPlayer.play).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not show the saved-position resume prompt after playback controls are used', async () => {
+    jest.useFakeTimers();
+    mockGetPlaybackPosition.mockResolvedValue({
+      position: 42,
+      duration: 245,
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    });
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(jest.fn());
+
+    const {getByLabelText} = renderScreen();
+
+    await act(async () => {
+      fireEvent.press(getByLabelText('podcast-play-pause-button'));
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(500);
+      await Promise.resolve();
+    });
+
+    expect(mockGetPlaybackPosition).toHaveBeenCalledWith('podcast-1');
+    expect(alertSpy).not.toHaveBeenCalledWith(
+      'Resume Podcast',
+      expect.any(String),
+      expect.any(Array),
+    );
+
+    alertSpy.mockRestore();
+    jest.useRealTimers();
   });
 
   it('truncates long description and toggles between Read More and Read Less', () => {
