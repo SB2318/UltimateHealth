@@ -26,6 +26,7 @@ const TabNavigation = () => {
   const isGuest = useSelector((state: any) => state.user.isGuest);
   return (
     <Tab.Navigator
+      id={undefined as never}
       initialRouteName="Home"
       tabBar={props => <TabBar {...props} />}>
       <Tab.Screen
