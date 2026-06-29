@@ -42,7 +42,7 @@ import Snackbar from 'react-native-snackbar';
 import {useFocusEffect} from '@react-navigation/native';
 import InactiveUserModal from '../components/InactiveUserModal';
 import {StatusBar} from 'expo-status-bar';
-import {wp} from '../helper/Metric';
+import { wp} from '../helper/Metric';
 import {useGetCategories} from '../hooks/useGetArticleTags';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
@@ -170,10 +170,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 
   const handleCategorySelection = (category: Category) => {
     // Update Redux State
-    setSelectCategoryList(prevList => {
-       const isAlreadySelected = prevList.some(p => p._id === category._id);
+    setSelectCategoryList((prevList: any) => {
+       const isAlreadySelected = prevList.some((p: any) => p._id === category._id);
       const updatedList = isAlreadySelected
-        ? prevList.filter(item => item._id !== category._id)
+        ? prevList.filter((item: any) => item._id !== category._id)
         : [...prevList, category];
       return updatedList;
     });
@@ -227,7 +227,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
    * Toggles the "Saved" filter chip.
    */
   const handleToggleSavedOnly = () => {
-    setShowSavedOnly(prev => !prev);
+    setShowSavedOnly((prev: any) => !prev);
   };
 
   const handleCategoryClick = (category: Category) => {
@@ -269,13 +269,14 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
               articleRecordId: item.pb_recordId,
             },
             {
-              onSuccess: data => {
+              onSuccess: (data: any) => {
                 Snackbar.show({
                   text: data,
                   duration: Snackbar.LENGTH_SHORT,
                 });
               },
-              onError: err => {
+              onError: (err: any) => {
+                // @ts-ignore
                 if (__DEV__) console.log(err);
                 Snackbar.show({
                   text: 'Try again!',
@@ -320,6 +321,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     }
 
     if (sortingType && sortingType !== '') {
+      // @ts-ignore
       if (__DEV__) console.log('Sort type', sortType);
       dispatch(setSortType({sortType: sortingType}));
     }
@@ -441,7 +443,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     ) {
        prevSelectedCategoryNameRef.current = selectedCategory.name; 
       lastCategoryFilteredCountRef.current = currentFiltered.length;
-      setPage(prev => prev + 1);
+      setPage((prev: number) => prev + 1);
     }
   }, [
     showSavedOnly,
@@ -485,7 +487,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     dispatch(setSearchMode({ searchMode: false }));
   } else {
     dispatch(setSearchMode({ searchMode: true }));
-    const matchesSearch = allArticlesRef.current.filter(article => {  // ✅ use full accumulated list
+    const matchesSearch = allArticlesRef.current.filter((article: any) => {  // ✅ use full accumulated list
       const matchesTitle =
         article.title && typeof article.title === 'string'
           ? article.title.toLowerCase().includes((textInput || '').toLowerCase())
@@ -493,7 +495,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       const matchesTags =
         article.tags && Array.isArray(article.tags)
           ? article.tags.some(
-              tag =>
+              (tag: any) =>
                 tag && tag.name && typeof tag.name === 'string' &&
                 tag.name.toLowerCase().includes((textInput || '').toLowerCase()),
             )
@@ -510,7 +512,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       return savedArticles
         .slice()
         .sort(
-          (a, b) =>
+          (a: any, b: any) =>
             new Date(b.lastUpdated).getTime() -
             new Date(a.lastUpdated).getTime(),
         );
@@ -719,7 +721,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     <SafeAreaView style={styles.container}>
       <HomeScreenHeader
             handlePresentModalPress={handlePresentModalPress}
-            onTextInputChange={(text) => {
+            onTextInputChange={(text: string) => {
               setSearchText(text);
               handleSearch(text);
             }}
@@ -754,6 +756,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       <View style={styles.buttonContainer}>
         <ScrollView
           horizontal={true}
+          style={{width: '100%'}}
           showsHorizontalScrollIndicator={false}
           //contentContainerStyle={{flex:1}}
         >
@@ -822,7 +825,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         <FlatList
           data={listData}
           renderItem={renderItem}
-          keyExtractor={item => item._id.toString()}
+          keyExtractor={(item:any) => item._id.toString()}
           contentContainerStyle={styles.flatListContentContainer}
           refreshing={refreshing}
           onRefresh={onRefresh}
@@ -833,7 +836,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
             // Only paginate the main feed — saved articles are a
             // finite local list and do not use server-side pagination.
             if (!showSavedOnly && page < totalPages) {
-              setPage(prev => prev + 1);
+              setPage((prev: number) => prev + 1);
             }
           }}
           onEndReachedThreshold={0.5}
@@ -859,6 +862,7 @@ const styles = StyleSheet.create({
 
   blockContainer: {
     flex: 0,
+    width: '100%',
     backgroundColor: '#F0F8FF',
     justifyContent: 'center',
     //alignItems: 'center',
@@ -912,7 +916,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: ON_PRIMARY_COLOR,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     padding: 20,
     top: 30,
   },
@@ -928,7 +932,7 @@ const styles = StyleSheet.create({
   stateContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     padding: 32,
     backgroundColor: '#F0F8FF',
   },
