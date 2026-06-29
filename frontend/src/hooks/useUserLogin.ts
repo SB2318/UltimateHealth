@@ -38,10 +38,15 @@ const loginFunc = async ({email, password, fcmToken}: LoginReq): Promise<LoginRe
     console.log('[Login] res.data.token:', res.data?.token);
     console.log('[Login] res.data.refreshToken:', res.data?.refreshToken);
     console.log('[Login] res.data.user?.refreshToken:', res.data?.user?.refreshToken);
+    console.log('[Login] res.data.data keys:', res.data?.data ? Object.keys(res.data.data) : null);
   }
 
-  // Return the full response so LoginScreen can pick up the token
-  return res.data as LoginResponse;
+  // The backend now wraps the response inside an extra "data" object.
+  // res.data is from Axios. res.data.data is from the backend response envelope.
+  const responseData = res.data?.data ?? res.data;
+
+  // Return the unwrapped response so LoginScreen can pick up the token
+  return responseData as LoginResponse;
 };
 
 export const useLoginMutation = (): UseMutationResult<
