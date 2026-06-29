@@ -1,12 +1,12 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {REPOST_ARTICLE} from '../helper/APIUtils';
 import axios, {AxiosError} from 'axios';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../store/hooks';
 
 export const useRepostArticle = (
  
 ): UseMutationResult<any, AxiosError, number> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector(state => state.user.isGuest);
 
   return useMutation({
     mutationKey: [`repost-article`],

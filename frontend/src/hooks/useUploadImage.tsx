@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import { showAlert } from '@/src/store/alertSlice';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../store/hooks';
 import { Alert } from 'react-native';
 import { UPLOAD_STORAGE } from '../helper/APIUtils';
 import { fetchWithTimeout } from '../helper/ApiTimeout';
@@ -8,7 +8,7 @@ import { fetchWithTimeout } from '../helper/ApiTimeout';
 const useUploadImage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const uploadImage = async (uri: string) => {
 

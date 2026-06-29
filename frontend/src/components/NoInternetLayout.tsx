@@ -6,7 +6,7 @@ import {BUTTON_COLOR} from '../helper/Theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function NoInternetLayout(): JSX.Element {
-  // Use useSelector with the proper type
+  // Use useAppSelector with the proper type
 
   return (
     <SafeAreaView

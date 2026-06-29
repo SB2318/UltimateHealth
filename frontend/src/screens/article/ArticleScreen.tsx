@@ -17,7 +17,7 @@ import {PRIMARY_COLOR} from '../../helper/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData, ArticleScreenProp} from '../../type';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {hp} from '../../helper/Metric';
 import {GET_IMAGE, GET_STORAGE_DATA} from '../../helper/APIUtils';
 import Loader from '../../components/Loader';
@@ -88,7 +88,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       ? profileImage
       : `${GET_STORAGE_DATA}/${profileImage}`;
   };
-  const {user_id, isGuest} = useSelector((state: any) => state.user);
+  const {user_id, isGuest} = useAppSelector(state => state.user);
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontScale, setFontScale] = useState(1);
@@ -148,7 +148,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
 
   const socket = useSocket();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {data: user} = useGetProfile();
   const {
@@ -429,34 +429,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
-  const handleTrust = () => {
-    if (isGuest) {
-      navigation.navigate('GuestPlaceholderScreen', {
-        title: 'Sign In Required',
-        description: 'Please sign in or sign up to trust this article.',
-        iconName: 'shield',
-      });
-      return;
-    }
-    if (article) {
-      trustMutation(undefined, {
-        onSuccess: (data: {isTrusted: boolean}) => {
-          refetch();
-          Snackbar.show({
-            text: data?.isTrusted ? 'Marked as trusted!' : 'Trust removed',
-            duration: Snackbar.LENGTH_SHORT,
-          });
-        },
-        onError: (err: any) => {
-          console.log('error', err);
-          Snackbar.show({
-            text: 'Something went wrong, try again!',
-            duration: Snackbar.LENGTH_LONG,
-          });
-        },
-      });
-    } else {
-      Alert.alert('Article not found');
   const handleCopyLink = async () => {
     try {
       copyArticleShareLink(articleId, authorId, resolvedRecordId);

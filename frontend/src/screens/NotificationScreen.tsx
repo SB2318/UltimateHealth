@@ -3,7 +3,7 @@ import {AppState, FlatList, StyleSheet, View} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import { hp } from '../helper/Metric';
 import {NoNotificationState} from '../components/EmptyStates';
@@ -24,11 +24,11 @@ type PendingDelete = {
 const UNDO_TIMEOUT_MS = 3500;
 
 const NotificationScreen = ({navigation}: any) => {
-  const {user_token} = useSelector((state: any) => state.user);
+  const {user_token} = useAppSelector(state => state.user);
   const [refreshing, setRefreshing] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(0);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector(state => state.network);
   const [notificationsData, setNotificationsData] = React.useState<
     Notification[]
   >([]);

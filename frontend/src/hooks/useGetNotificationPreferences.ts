@@ -2,7 +2,7 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios, {AxiosError} from 'axios';
 import {GET_NOTIFICATION_PREFERENCES} from '../helper/APIUtils';
 import {NotificationPreferencesResponse} from '../type';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../store/hooks';
 
 const fetchNotificationPreferences = async (): Promise<NotificationPreferencesResponse> => {
   const {data} = await axios.get(GET_NOTIFICATION_PREFERENCES);
@@ -12,7 +12,7 @@ const fetchNotificationPreferences = async (): Promise<NotificationPreferencesRe
 export const useGetNotificationPreferences = (
   isConnected: boolean,
 ): UseQueryResult<NotificationPreferencesResponse, AxiosError> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector(state => state.user.isGuest);
 
   return useQuery({
     queryKey: ['notification-preferences'],

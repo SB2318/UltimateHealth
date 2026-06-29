@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {ReportScreenProp} from '../../type';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../store/hooks';
 import Loader from '../../components/Loader';
 import {RadioButton} from 'react-native-paper';
 import Snackbar from 'react-native-snackbar';
@@ -22,8 +22,8 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function ReportScreen({navigation, route}: ReportScreenProp) {
   const {articleId, commentId, authorId, podcastId} = route.params;
-  const {user_token, user_id} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_token, user_id} = useAppSelector(state => state.user);
+  const {isConnected} = useAppSelector(state => state.network);
   const [selectedReasonId, setSelectedReasonId] = useState<string>('');
 
   const {data: reasons, isLoading} = useGetReasons(isConnected);

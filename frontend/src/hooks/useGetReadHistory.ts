@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../store/hooks';
 import { GET_READ_HISTORY } from '../helper/APIUtils';
 import { ArticleData } from '../type';
 
@@ -16,7 +16,7 @@ interface ReadHistoryResponse {
 export const useGetReadHistory = (
   page: number = 1,
 ): UseQueryResult<ReadHistoryResponse, Error> => {
-  const { user_id, isGuest } = useSelector((state: any) => state.user);
+  const { user_id, isGuest } = useAppSelector(state => state.user);
 
   return useQuery({
     queryKey: ['get-read-history', user_id, page],

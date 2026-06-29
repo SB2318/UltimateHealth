@@ -36,7 +36,7 @@ const mockCategories = [
   { _id: 'cat-6', id: 6, name: 'Diseases' },
 ];
 
-jest.mock('react-redux', () => ({
+jest.mock('@/src/store/hooks', () => ({
   useSelector: (selectorFn: any) => selectorFn({
     data: {
       categories: mockCategories,

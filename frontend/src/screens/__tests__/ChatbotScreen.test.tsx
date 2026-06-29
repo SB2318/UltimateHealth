@@ -79,9 +79,9 @@ jest.mock('react-native-snackbar', () => ({
   LENGTH_SHORT: 0,
 }));
 
-jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
-  useDispatch: jest.fn(() => jest.fn()),
+jest.mock('../store/hooks', () => ({
+  useAppSelector: jest.fn(),
+  useAppDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('../../hooks/useGetProfile', () => ({
@@ -98,7 +98,7 @@ jest.mock('../../hooks/useLoadAIChats', () => ({
   useLoadAIConversations: jest.fn(),
 }));
 
-const mockUseSelector = require('react-redux').useSelector as jest.Mock;
+const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
 const mockUseSendMessageToGemini = require('../../hooks/useSendMessageToGemini').useSendMessageToGemini as jest.Mock;
 const mockUseLoadAIConversations = require('../../hooks/useLoadAIChats').useLoadAIConversations as jest.Mock;
 
@@ -109,7 +109,7 @@ describe('ChatbotScreen', () => {
     jest.clearAllMocks();
     initialConversations = [];
 
-    mockUseSelector.mockImplementation((selector: any) =>
+    mockuseAppSelector.mockImplementation((selector: any) =>
       selector({
         user: {
           user_id: 'user-1',
@@ -224,7 +224,7 @@ describe('ChatbotScreen', () => {
   });
 
   it('shows an error bubble and snackbar if message sent when offline', async () => {
-    mockUseSelector.mockImplementation((selector: any) =>
+    mockuseAppSelector.mockImplementation((selector: any) =>
       selector({
         user: {
           user_id: 'user-1',

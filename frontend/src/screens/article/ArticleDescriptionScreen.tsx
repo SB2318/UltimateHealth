@@ -11,7 +11,7 @@ import {
   Modal,
   FlatList,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../store/hooks';
 import {ArticleDescriptionProp, Category} from '../../type';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../helper/Theme';
@@ -79,7 +79,7 @@ const ArticleDescriptionScreen = ({
   const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
   const [language, setLanguage] = useState('en-IN');
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
-  const {categories} = useSelector((state: any) => state.data);
+  const {categories} = useAppSelector(state => state.data);
   const [imageUtils, setImageUtils] = useState('');
 
   /** Set Initial Value */

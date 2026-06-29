@@ -17,7 +17,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 import Loader from '../../components/Loader';
 import {GET_IMAGE} from '../../helper/APIUtils';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import useUploadImage from '../../hooks/useUploadImage';
 import {setSuggestion} from '../../store/dataSlice';
 import Snackbar from 'react-native-snackbar';
@@ -49,13 +49,13 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const [imageUtil, setImageUtil] = useState<string>('');
   const [imageUtils, setImageUtils] = useState<string[]>([]);
 
-  const {user_token, user_id} = useSelector((state: any) => state.user);
-  const {suggestion, suggestionAccepted} = useSelector(
-    (state: any) => state.data,
+  const {user_token, user_id} = useAppSelector(state => state.user);
+  const {suggestion, suggestionAccepted} = useAppSelector(
+    state => state.data,
   );
 
-  const {isConnected} = useSelector((state: any) => state.network);
-  const dispatch = useDispatch();
+  const {isConnected} = useAppSelector(state => state.network);
+  const dispatch = useAppDispatch();
 
   const {mutate: postMutation, isPending: postMutationPending} =
     usePostArticleData();

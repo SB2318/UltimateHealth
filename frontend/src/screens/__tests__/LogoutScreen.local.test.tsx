@@ -8,7 +8,7 @@ const mockReset = jest.fn();
 const mockClearStorage = jest.fn(() => Promise.resolve());
 const mockLogout = jest.fn();
 
-jest.mock('react-redux', () => ({
+jest.mock('@/src/store/hooks', () => ({
   useDispatch: () => mockDispatch,
 }));
 

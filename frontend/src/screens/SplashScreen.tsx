@@ -8,7 +8,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import {SplashScreenProp} from '../type';
-import {useDispatch} from 'react-redux';
+import {useAppDispatch} from '../store/hooks';
 import {KEYS, clearStorage, retrieveItem} from '../helper/Utils';
 import {setUserId, setUserToken, setUserHandle} from '../store/UserSlice';
 import { useCheckTokenStatus } from '@/src/hooks/useGetTokenStatus';
@@ -19,7 +19,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
   const scale = useSharedValue(0.8);
   const translateY = useSharedValue(20);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {data: tokenRes, isLoading} = useCheckTokenStatus();
 

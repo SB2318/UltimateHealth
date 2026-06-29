@@ -11,7 +11,7 @@ import {
 import {useQueryClient} from '@tanstack/react-query';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../store/hooks';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import {fp, hp, wp} from '../helper/Metric';
@@ -25,8 +25,8 @@ const NotificationPreferencesScreen = ({
   navigation,
 }: NotificationPreferencesScreenProp) => {
   const queryClient = useQueryClient();
-  const {isConnected} = useSelector((state: any) => state.network);
-  const {isGuest} = useSelector((state: any) => state.user);
+  const {isConnected} = useAppSelector(state => state.network);
+  const {isGuest} = useAppSelector(state => state.user);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 

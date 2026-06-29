@@ -61,9 +61,9 @@ jest.mock('react-native-share', () => ({
   open: jest.fn(),
 }));
 
-jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
-  useDispatch: jest.fn(() => jest.fn()),
+jest.mock('../store/hooks', () => ({
+  useAppSelector: jest.fn(),
+  useAppDispatch: jest.fn(() => jest.fn()),
 }));
 
 jest.mock('../../contexts/SocketContext', () => ({
@@ -185,7 +185,7 @@ let mockState: any = {
   },
 };
 
-const mockUseSelector = require('react-redux').useSelector as jest.Mock;
+const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
 const mockUseGetSinglePodcastDetails = require('../../hooks/useGetSinglePodcastDetails').useGetSinglePodcastDetails as jest.Mock;
 const mockUseLikePodcast = require('../../hooks/useLikePodcast').useLikePodcast as jest.Mock;
 
@@ -214,7 +214,7 @@ describe('PodcastDetail', () => {
         isConnected: true,
       },
     };
-    mockUseSelector.mockImplementation((selector: any) => selector(mockState));
+    mockuseAppSelector.mockImplementation((selector: any) => selector(mockState));
     mockUseGetSinglePodcastDetails.mockReturnValue({
       data: mockPodcast,
       refetch: mockRefetch,

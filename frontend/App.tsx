@@ -8,15 +8,15 @@ import AppContent from './src/components/AppContent';
 
 function App() {
 const [queryClient] = useState(
-() =>
-new QueryClient({
-defaultOptions: {
-queries: {
-retry: 2,
-staleTime: 1000 * 60,
-},
-},
-})
+  () =>
+    new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: 2,
+          staleTime: 1000 * 60,
+        },
+      },
+    }),
 );
 
   useEffect(() => {
@@ -29,7 +29,6 @@ staleTime: 1000 * 60,
           allowsRecording: true,
         });
       } catch (error) {
-        // Prevent state/logging side-effects if unmounted
         if (!isMounted) return;
 
         Sentry.captureException(error, {
@@ -37,10 +36,9 @@ staleTime: 1000 * 60,
           extra: { context: 'App startup audio configuration' },
         });
 
-        
-          logger.error('[App] Failed to configure audio mode:', error);
-        }
+        logger.error('[App] Failed to configure audio mode:', error);
       }
+      
     };
 
     configureAudio();

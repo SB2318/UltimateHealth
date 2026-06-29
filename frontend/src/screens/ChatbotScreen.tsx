@@ -7,7 +7,7 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
 import {
   Alert,
   View,
@@ -48,8 +48,8 @@ import {verifyChatbotResponse} from '../chatbot-response-verification';
 const ASSISTANT_USER_ID = 2;
 
 const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
-  const {user_id, user_token} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_id, user_token} = useAppSelector(state => state.user);
+  const {isConnected} = useAppSelector(state => state.network);
   
   const { characterId, characterName, characterAvatar } = route.params || {};
 
@@ -59,7 +59,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   const [isQuotaExceeded, setIsQuotaExceeded] = useState<boolean>(false);
   const [showQuotaModal, setShowQuotaModal] = useState<boolean>(false);
   const isMountedRef = useRef(true);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const {data: user} = useGetProfile();
   // const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA'; //token
 
