@@ -11,17 +11,37 @@ type LoginReq = {
   fcmToken: string;
 };
 
-const loginFunc = async ({email, password, fcmToken}: LoginReq) => {
+// Full shape of what the backend /user/login endpoint returns.
+// The token lives at the TOP level of the response, NOT inside the user object.
+export type LoginResponse = {
+  user: User;
+  token?: string;           // access / JWT token (primary)
+  refreshToken?: string;    // refresh token (fallback field name)
+  accessToken?: string;     // some backends use this name
+  message?: string;
+};
+
+const loginFunc = async ({email, password, fcmToken}: LoginReq): Promise<LoginResponse> => {
   const res = await axios.post(LOGIN_API, {
     email,
     password,
     fcmToken,
   });
-  return res.data.user as User;
+
+  if (__DEV__) {
+    // Log the raw response shape so we can confirm the token field name
+    console.log('[Login] Raw API response keys:', Object.keys(res.data || {}));
+    console.log('[Login] res.data.token:', res.data?.token);
+    console.log('[Login] res.data.refreshToken:', res.data?.refreshToken);
+    console.log('[Login] res.data.user?.refreshToken:', res.data?.user?.refreshToken);
+  }
+
+  // Return the full response so LoginScreen can pick up the token
+  return res.data as LoginResponse;
 };
 
 export const useLoginMutation = (): UseMutationResult<
-  User,
+  LoginResponse,
   AxiosError,
   LoginReq
 > => {
