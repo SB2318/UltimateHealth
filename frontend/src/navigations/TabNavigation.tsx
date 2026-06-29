@@ -11,10 +11,11 @@ import {TabParamList} from '../type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import {BUTTON_COLOR} from '../helper/Theme';
 import HeaderRightMenu from '../components/HeaderRightMenu';
-import ChatbotScreen from '../screens/ChatbotScreen';
+import PersonaLobbyScreen from '../screens/PersonaLobbyScreen';
 import AboutScreen from '../screens/AboutPage';
 import {useAppSelector} from '../store/hooks';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import WellnessDashboardScreen from '../screens/WellnessDashboard/WellnessDashboardScreen';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -67,7 +68,7 @@ const TabNavigation = () => {
 
       <Tab.Screen
         name="Chatbot"
-        component={isGuest ? ChatbotGuestScreen : ChatbotScreen}
+        component={isGuest ? ChatbotGuestScreen : PersonaLobbyScreen}
         options={({navigation}) => ({
           headerTitleAlign: 'center',
           title: 'Chatbot',
@@ -128,10 +129,21 @@ const TabNavigation = () => {
             fontSize: 23,
             marginBottom: 12,
             color: 'white',
-          },
+          }
         }}
       />
+
+    
+    <Tab.Screen
+      name="Wellness"
+      component={WellnessDashboardScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
     </Tab.Navigator>
+
+    
   );
 };
 export default TabNavigation;

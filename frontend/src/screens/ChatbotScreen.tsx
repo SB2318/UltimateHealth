@@ -15,8 +15,10 @@ import {
   Platform,
   Text,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Tts from 'react-native-tts';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
 import {AxiosError} from 'axios';
 import {ChatBotScreenProps, Message} from '../type';
@@ -43,23 +45,94 @@ import {verifyChatbotResponse} from '../chatbot-response-verification';
 //   total_tokens: number;
 // }
 
-// interface Choice {
-//   index: number;
-//   message: Message;
-//   finish_reason: string;
-// }
+const ASSISTANT_USER_ID = 2;
 
-const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
-  const {user_id, user_token} = useAppSelector(state => state.user);
-  const {isConnected} = useAppSelector(state => state.network);
+const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
+  const {user_id, user_token} = useSelector((state: any) => state.user);
+  const {isConnected} = useSelector((state: any) => state.network);
+  
+  const { characterId, characterName, characterAvatar } = route.params || {};
 
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isQuotaExceeded, setIsQuotaExceeded] = useState<boolean>(false);
+  const [showQuotaModal, setShowQuotaModal] = useState<boolean>(false);
   const isMountedRef = useRef(true);
   const dispatch = useAppDispatch();
   const {data: user} = useGetProfile();
   // const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA'; //token
+
+  const [activeSpeakingId, setActiveSpeakingId] = useState<string | number | null>(null);
+
+  const initTts = async () => {
+    try {
+      await Tts.getInitStatus();
+      const voices = await Tts.voices();
+      const availableVoices = voices.filter(
+        (v: any) =>
+          !v.networkConnectionRequired &&
+          !v.notInstalled &&
+          (v.language === 'en-IN' || v.language === 'en-US' || v.language.startsWith('en')),
+      );
+      if (availableVoices && availableVoices.length > 0) {
+        const defaultVoice = availableVoices[0];
+        if (defaultVoice) {
+          try {
+            await Tts.setDefaultLanguage(defaultVoice.language);
+          } catch (err) {
+            console.warn(`Failed to set TTS language to ${defaultVoice.language}`, err);
+          }
+          await Tts.setDefaultVoice(defaultVoice.id);
+        }
+      }
+      Tts.setDefaultRate(0.5);
+      Tts.setDefaultPitch(1.0);
+    } catch (error) {
+      console.warn('Failed to initialize TTS voices in ChatbotScreen', error);
+    }
+  };
+
+  useEffect(() => {
+    initTts();
+
+    const onStart = () => {};
+    const onFinish = () => {
+      setActiveSpeakingId(null);
+    };
+    const onCancel = () => {
+      setActiveSpeakingId(null);
+    };
+    const onError = () => {
+      setActiveSpeakingId(null);
+    };
+
+    const startSub = Tts.addEventListener('tts-start', onStart);
+    const finishSub = Tts.addEventListener('tts-finish', onFinish);
+    const cancelSub = Tts.addEventListener('tts-cancel', onCancel);
+    const errorSub = Tts.addEventListener('tts-error', onError);
+
+    return () => {
+      Tts.stop();
+      if (startSub) startSub.remove();
+      if (finishSub) finishSub.remove();
+      if (cancelSub) cancelSub.remove();
+      if (errorSub) errorSub.remove();
+    };
+  }, []);
+
+  const toggleSpeech = useCallback((message: IMessage) => {
+    if (activeSpeakingId === message._id) {
+      Tts.stop();
+      setActiveSpeakingId(null);
+    } else {
+      Tts.stop();
+      if (message.text) {
+        setActiveSpeakingId(message._id);
+        Tts.speak(message.text);
+      }
+    }
+  }, [activeSpeakingId]);
 
   //console.log("User Token", user_token);
 
@@ -67,7 +140,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
     useSendMessageToGemini();
   const isPending = messageProcessPending || isLoading;
   const {data: conversations, isLoading: conversationLoading} =
-    useLoadAIConversations(isConnected);
+    useLoadAIConversations(isConnected, characterId);
 
   useEffect(() => {
     return () => {
@@ -99,7 +172,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
           text: "Hello! 👋 I'm here to assist you. How can I help you today?",
           createdAt: new Date(),
           user: {
-            _id: 2,
+            _id: ASSISTANT_USER_ID,
             avatar:
               'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
           },
@@ -117,11 +190,11 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       text: m.text,
       createdAt: new Date(m.timestamp),
       user: {
-        _id: m.role === 'user' ? 1 : 2,
+        _id: m.role === 'user' ? 1 : ASSISTANT_USER_ID,
         avatar: m.profileImage
           ? `${GET_STORAGE_DATA}/${m.profileImage}`
           : m.role === 'assistant'
-            ? 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg'
+            ? (characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg')
             : undefined,
       },
     }));
@@ -138,7 +211,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
             text: 'Unable to connect. Please check your internet connection and try again.',
             createdAt: new Date(),
             user: {
-              _id: 2,
+              _id: ASSISTANT_USER_ID,
               avatar:
                 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
             },
@@ -153,34 +226,31 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
       });
       return;
     }
-  safeSetMessages(previousMessages =>
-  GiftedChat.append(previousMessages, messages),
-);
+    setIsLoading(true);
 
-const prompt = messages?.[0]?.text ?? 'AI in health within 100 words';
-sendMessageToAI(prompt, {
-     onSuccess: (responseData: Message) => {
-  const verification = verifyChatbotResponse(responseData.text);
-
-  safeSetMessages(previousMessages =>
-    GiftedChat.append(previousMessages, [
-      {
-        _id: responseData._id,
-       text: responseData.text,
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          avatar:
-            'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-design-template-vector.jpg',
-        },
-metadata: {
-  status: verification.status,
-  confidence: verification.confidence,
-},
+    sendMessageToAI({ text: prompt, character: characterId }, {
+      onSuccess: (responseData: Message) => {
+        setIsLoading(false);
+        const verification = verifyChatbotResponse(responseData.text);
+        safeSetMessages(previousMessages =>
+          GiftedChat.append(previousMessages, [
+            {
+              _id: responseData._id,
+              text: responseData.text,
+              createdAt: new Date(),
+              user: {
+                _id: ASSISTANT_USER_ID,
+                avatar:
+                  'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+              },
+              metadata: {
+                status: verification.status,
+                confidence: verification.confidence,
+              },
+            } as any,
+          ]),
+        );
       },
-    ]),
-  );
-},
       onError: (error: AxiosError) => {
         setIsLoading(false);
         if (!isMountedRef.current) {
@@ -198,7 +268,9 @@ metadata: {
               errorMsg = 'Invalid request. Please check your input.';
               break;
             case 429:
-              errorMsg = 'You’ve reached your daily limit. You can ask up to 5 questions per day';
+              errorMsg = 'Daily quota exceeded for this character. Come back tomorrow for more advice!';
+              setIsQuotaExceeded(true);
+              setShowQuotaModal(true);
               break;
             case 500:
               errorMsg = 'An internal server error occurred. Please try again later.';
@@ -211,7 +283,7 @@ metadata: {
         text: "⚠️ AI service is temporarily unavailable. Please try again later.",
         createdAt: new Date(),
         user: {
-          _id: 2,
+          _id: ASSISTANT_USER_ID,
           avatar:
             'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo.jpg',
         },
@@ -237,7 +309,7 @@ metadata: {
               text: errorMsg,
               createdAt: new Date(),
               user: {
-                _id: 2,
+                _id: ASSISTANT_USER_ID,
                 avatar:
                   'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
               },
@@ -248,7 +320,7 @@ metadata: {
         );
       },
     });
-  }, [isConnected, safeSetMessages, sendMessageToAI, setIsLoading]);
+  }, [isConnected, safeSetMessages, sendMessageToAI, setIsLoading, characterId, characterAvatar]);
 
   const onSend = useCallback((newMessages: IMessage[] = []) => {
     if (isPending) {
@@ -302,17 +374,16 @@ metadata: {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <MaterialCommunityIcons
-              name="robot-outline"
-              size={20}
-              color="#3b82f6"
+            <Image
+              source={{ uri: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg' }}
+              style={{ width: 44, height: 44, borderRadius: 22 }}
             />
           </View>
         </View>
 
         <View style={{flex: 1}}>
           <Text style={{fontSize: 18, fontWeight: '600', color: '#111827'}}>
-            Care Companion AI
+            {characterName || 'Care Companion AI'}
           </Text>
 
           {(isTyping || isPending) && (
@@ -349,8 +420,9 @@ metadata: {
               paddingTop: 10,
               paddingBottom: 20,
             }}
+            placeholder={isQuotaExceeded ? "Come back tomorrow for more advice!" : `Ask ${characterName || 'the AI'} a question...`}
             textInputProps={{
-              editable: !isPending,
+              editable: !isPending && !isQuotaExceeded,
             }}
             renderBubble={props => {
               const currentMessage = props.currentMessage as any;
@@ -399,18 +471,41 @@ metadata: {
                   </View>
                 );
               }
+              const isAssistant = currentMessage.user?._id === ASSISTANT_USER_ID;
+              const isSpeaking = activeSpeakingId === currentMessage._id;
               return (
-                <Bubble
-                  {...props}
-                  wrapperStyle={{
-                    right: {backgroundColor: PRIMARY_COLOR},
-                    left: {backgroundColor: '#f3f4f6'},
-                  }}
-                  textStyle={{
-                    right: {color: 'white', fontSize: 17, lineHeight: 24},
-                    left: {color: '#111827', fontSize: 17, lineHeight: 24},
-                  }}
-                />
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Bubble
+                    {...props}
+                    wrapperStyle={{
+                      right: {backgroundColor: PRIMARY_COLOR},
+                      left: {backgroundColor: '#f3f4f6'},
+                    }}
+                    textStyle={{
+                      right: {color: 'white', fontSize: 17, lineHeight: 24},
+                      left: {color: '#111827', fontSize: 17, lineHeight: 24},
+                    }}
+                  />
+                  {isAssistant && (
+                    <TouchableOpacity
+                      onPress={() => toggleSpeech(currentMessage)}
+                      style={{
+                        padding: 8,
+                        marginLeft: 4,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      activeOpacity={0.7}
+                      accessibilityLabel={isSpeaking ? 'Stop speaking message' : 'Listen to message'}
+                    >
+                      <Ionicons
+                        name={isSpeaking ? 'stop-circle' : 'volume-medium'}
+                        size={24}
+                        color={isSpeaking ? PRIMARY_COLOR : '#6b7280'}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
               );
             }}
             renderInputToolbar={props => (
@@ -448,6 +543,27 @@ metadata: {
           />
         </View>
       </KeyboardAvoidingView>
+
+      <Modal visible={showQuotaModal} transparent animationType="slide">
+        <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+          <View style={{ backgroundColor: 'white', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, alignItems: 'center' }}>
+            <View style={{ width: 48, height: 4, backgroundColor: '#e5e7eb', borderRadius: 2, marginBottom: 24 }} />
+            <Ionicons name="time-outline" size={48} color="#f59e0b" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 20, fontWeight: '700', color: '#111827', marginBottom: 8, textAlign: 'center' }}>
+              Daily Limit Reached
+            </Text>
+            <Text style={{ fontSize: 16, color: '#4b5563', textAlign: 'center', marginBottom: 24, lineHeight: 24 }}>
+              You've used all your messages for {characterName || 'this character'} today. Please come back tomorrow for more advice!
+            </Text>
+            <TouchableOpacity
+              onPress={() => setShowQuotaModal(false)}
+              style={{ backgroundColor: PRIMARY_COLOR, paddingVertical: 14, width: '100%', borderRadius: 12, alignItems: 'center' }}
+            >
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>Got it</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
