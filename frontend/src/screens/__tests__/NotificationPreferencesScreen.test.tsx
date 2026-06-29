@@ -254,4 +254,62 @@ describe('NotificationPreferencesScreen', () => {
       expect.any(Object),
     );
   });
+
+  it('preserves saved preferences that are missing from the loaded category list', () => {
+    const missingCategory = {_id: 'cat-4', id: 4, name: 'Sleep', __v: 0};
+
+    mockUseGetNotificationPreferences.mockReturnValue({
+      data: {
+        preferences: {
+          contentClusters: [mockCategories[0], missingCategory],
+        },
+      },
+      isLoading: false,
+    });
+
+    const {getByText} = renderScreen();
+
+    fireEvent.press(getByText('Save Preferences'));
+
+    expect(mockUpdatePreferences).toHaveBeenLastCalledWith(
+      {contentClusters: [mockCategories[0], missingCategory]},
+      expect.any(Object),
+    );
+  });
+
+  it('keeps all saved preferences when none of them are in the loaded category list', () => {
+    const missingCategories = [
+      {_id: 'cat-4', id: 4, name: 'Sleep', __v: 0},
+      {_id: 'cat-5', id: 5, name: 'Hydration', __v: 0},
+    ];
+
+    mockUseGetNotificationPreferences.mockReturnValue({
+      data: {
+        preferences: {
+          contentClusters: missingCategories,
+        },
+      },
+      isLoading: false,
+    });
+
+    const {getByText} = renderScreen();
+
+    fireEvent.press(getByText('Save Preferences'));
+
+    expect(mockUpdatePreferences).toHaveBeenLastCalledWith(
+      {contentClusters: missingCategories},
+      expect.any(Object),
+    );
+  });
+
+  it('does not duplicate saved preferences that are already loaded', () => {
+    const {getByText} = renderScreen();
+
+    fireEvent.press(getByText('Save Preferences'));
+
+    expect(mockUpdatePreferences).toHaveBeenLastCalledWith(
+      {contentClusters: [mockCategories[0]]},
+      expect.any(Object),
+    );
+  });
 });
