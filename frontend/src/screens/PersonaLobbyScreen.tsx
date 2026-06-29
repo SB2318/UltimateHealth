@@ -130,7 +130,7 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
             <Ionicons name="alert-circle-outline" size={48} color="#ef4444" style={{ marginBottom: 16 }} />
             <Text style={{ fontSize: 16, color: '#4b5563', textAlign: 'center' }}>
-              Oops! We couldn't load your health team. Please check your connection and try again.
+              Oops! We could not load your health team. Please check your connection and try again.
             </Text>
           </View>
         ) : (
