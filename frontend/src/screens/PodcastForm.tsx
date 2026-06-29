@@ -10,7 +10,7 @@ import {
   Modal,
   FlatList,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../store/hooks';
 import {PodcastFormProp, Category} from '../type';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../helper/Theme';
@@ -34,9 +34,6 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const {categories} = useAppSelector(state => state.data);
   const [imageUtils, setImageUtils] = useState('');
-<<<<<<< HEAD
-  const dispatch = useAppDispatch();
-=======
 
   // Inline validation error state
   const [titleError, setTitleError] = useState('');
@@ -44,7 +41,6 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
   const [genresError, setGenresError] = useState('');
   const [imageError, setImageError] = useState('');
   const [submitted, setSubmitted] = useState(false);
->>>>>>> upstream/main
 
   const handleGenrePress = (genre: Category) => {
     if (isSelected(genre)) {

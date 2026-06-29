@@ -48,8 +48,8 @@ import {verifyChatbotResponse} from '../chatbot-response-verification';
 const ASSISTANT_USER_ID = 2;
 
 const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
-  const {user_id, user_token} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_id, user_token} = useAppSelector(state => state.user);
+  const {isConnected} = useAppSelector(state => state.network);
   
   const { characterId, characterName, characterAvatar } = route.params || {};
 
