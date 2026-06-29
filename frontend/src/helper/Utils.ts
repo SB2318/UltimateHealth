@@ -67,10 +67,27 @@ export function formatCount(count: number) {
 export const handleExternalClick = (request: any) => {
   const {url} = request;
   if (url.startsWith('http')) {
-    Linking.openURL(url);
+    void openExternalUrl(url);
     return false;
   }
   return true;
+};
+
+export const openExternalUrl = async (
+  url: string,
+  errorMessage = 'Unable to open this link. Please try again later.',
+) => {
+  try {
+    const supported = await Linking.canOpenURL(url);
+    if (!supported) {
+      Alert.alert('Link Unavailable', errorMessage);
+      return;
+    }
+
+    await Linking.openURL(url);
+  } catch {
+    Alert.alert('Link Unavailable', errorMessage);
+  }
 };
 
 export function msToTime(ms: number): string {

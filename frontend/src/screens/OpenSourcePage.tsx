@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Image, Linking } from 'react-native';
+import { ScrollView, Image } from 'react-native';
 import { 
   YStack, 
   XStack, 
@@ -15,6 +15,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 // Corrected Icon Imports
 import { FontAwesome5, Ionicons, Entypo, MaterialIcons } from '@expo/vector-icons';
+import {openExternalUrl} from '../helper/Utils';
 
 const PROGRAMS = [
   {
@@ -56,7 +57,9 @@ const PROGRAMS = [
 ];
 
 const ProgramsPage = () => {
-  const handlePress = (url: string) => Linking.openURL(url);
+  const handlePress = (url: string) => {
+    void openExternalUrl(url, 'Could not open this program link.');
+  };
 
   return (
     <Theme name="light">
