@@ -14,7 +14,7 @@ export default function ManualLogCard() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Today's Log</Text>
+      <Text style={styles.sectionTitle}>Today&apos;s Log</Text>
 
       {/* Water */}
       <View style={styles.card}>

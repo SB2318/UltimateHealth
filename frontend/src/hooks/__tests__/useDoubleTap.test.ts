@@ -89,4 +89,26 @@ describe('useDoubleTap hook', () => {
     expect(onSingleTap).toHaveBeenCalledTimes(2);
     expect(onDoubleTap).not.toHaveBeenCalled();
   });
+
+  it('clears a pending single-tap timer when unmounted', () => {
+    const onSingleTap = jest.fn();
+    const onDoubleTap = jest.fn();
+
+    const {result, unmount} = renderHook(() =>
+      useDoubleTap(onSingleTap, onDoubleTap, 300),
+    );
+
+    act(() => {
+      result.current();
+    });
+
+    unmount();
+
+    act(() => {
+      jest.advanceTimersByTime(300);
+    });
+
+    expect(onSingleTap).not.toHaveBeenCalled();
+    expect(onDoubleTap).not.toHaveBeenCalled();
+  });
 });
