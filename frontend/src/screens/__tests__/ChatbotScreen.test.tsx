@@ -65,18 +65,34 @@ const mockSendMessageToAI = jest.fn();
 jest.mock('@expo/vector-icons/Ionicons', () => {
   const React = require('react');
   const {Text} = require('react-native');
-  return ({name}: any) => React.createElement(Text, null, name);
+  const MockIcon = ({name}: any) => React.createElement(Text, null, name);
+  MockIcon.displayName = 'Ionicons';
+  return MockIcon;
 });
 
 jest.mock('@expo/vector-icons/MaterialCommunityIcons', () => {
   const React = require('react');
   const {Text} = require('react-native');
-  return ({name}: any) => React.createElement(Text, null, name);
+  const MockIcon = ({name}: any) => React.createElement(Text, null, name);
+  MockIcon.displayName = 'MaterialCommunityIcons';
+  return MockIcon;
 });
 
 jest.mock('react-native-snackbar', () => ({
   show: jest.fn(),
   LENGTH_SHORT: 0,
+}));
+
+jest.mock('react-native-tts', () => ({
+  getInitStatus: jest.fn(() => Promise.resolve()),
+  voices: jest.fn(() => Promise.resolve([])),
+  setDefaultLanguage: jest.fn(),
+  setDefaultRate: jest.fn(),
+  setDefaultPitch: jest.fn(),
+  addEventListener: jest.fn(() => ({remove: jest.fn()})),
+  removeEventListener: jest.fn(),
+  stop: jest.fn(),
+  speak: jest.fn(),
 }));
 
 jest.mock('react-redux', () => ({
@@ -168,7 +184,10 @@ describe('ChatbotScreen', () => {
     const giftedChat = getByTestId('mock-gifted-chat');
     fireEvent(giftedChat, 'onSend', [{text: 'What is stress?', _id: 1, createdAt: new Date(), user: {_id: 1}}]);
 
-    expect(mockSendMessageToAI).toHaveBeenCalledWith('What is stress?', expect.any(Object));
+    expect(mockSendMessageToAI).toHaveBeenCalledWith(
+      {text: 'What is stress?', character: undefined},
+      expect.any(Object),
+    );
 
     // Simulate API Error
     const mockAxiosError = {
@@ -220,7 +239,10 @@ describe('ChatbotScreen', () => {
 
     // Verify error card is removed and message is re-sent
     expect(queryByText('Failed to send message')).toBeNull();
-    expect(mockSendMessageToAI).toHaveBeenCalledWith('My knee hurts', expect.any(Object));
+    expect(mockSendMessageToAI).toHaveBeenCalledWith(
+      {text: 'My knee hurts', character: undefined},
+      expect.any(Object),
+    );
   });
 
   it('shows an error bubble and snackbar if message sent when offline', async () => {
