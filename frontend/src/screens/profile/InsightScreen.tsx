@@ -10,13 +10,13 @@ import Loader from '../../components/Loader';
 import {useGetProfile} from '../../hooks/useGetProfile';
 import {useUpdateViewCount} from '../../hooks/useUpdateViewCount';
 import Snackbar from 'react-native-snackbar';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from 'react-redux';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 const InsightScreen = ({navigation}: InsightScreenProp) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   
   const [articleId, setArticleId] = useState<number>();
   const [authorId, setAuthorId] = useState<string>('');

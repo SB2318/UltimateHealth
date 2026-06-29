@@ -42,8 +42,8 @@ const mockCategories = [
   { _id: 'cat-6', id: 6, name: 'Diseases' },
 ];
 
-jest.mock('react-redux', () => ({
-  useSelector: (selectorFn: any) => selectorFn({
+jest.mock('@/src/store/hooks', () => ({
+  useAppSelector: (selectorFn: any) => selectorFn({
     data: {
       categories: mockCategories,
     },
@@ -128,7 +128,7 @@ describe('ArticleDescriptionScreen - Tag Selection and Deselection Tests', () =>
     };
     
     const redux = require('react-redux');
-    jest.spyOn(redux, 'useSelector').mockImplementation((fn: any) => fn(stateWithDbIds));
+    jest.spyOn(redux, 'useAppSelector').mockImplementation((fn: any) => fn(stateWithDbIds));
 
     const {getAllByText} = render(
       <ArticleDescriptionScreen
@@ -165,7 +165,7 @@ describe('ArticleDescriptionScreen - Tag Selection and Deselection Tests', () =>
     };
     
     const redux = require('react-redux');
-    jest.spyOn(redux, 'useSelector').mockImplementation((fn: any) => fn(stateWithIds));
+    jest.spyOn(redux, 'useAppSelector').mockImplementation((fn: any) => fn(stateWithIds));
 
     const {getAllByText} = render(
       <ArticleDescriptionScreen

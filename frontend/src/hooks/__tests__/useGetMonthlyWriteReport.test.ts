@@ -10,10 +10,10 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
+  useAppSelector: jest.fn(),
 }));
-import { useSelector } from 'react-redux';
-const mockedUseSelector = useSelector as jest.Mock;
+import { useAppSelector } from 'react-redux';
+const mockeduseAppSelector = useAppSelector as jest.Mock;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -35,7 +35,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 1. Hook initialisation & query state ────────────────────────────────
 
   it('should initialise in loading state when enabled', async () => {
-    mockedUseSelector.mockReturnValue(false); // not a guest
+    mockeduseAppSelector.mockReturnValue(false); // not a guest
 
     const mockData = [
       { date: '2024-01-01', value: 3 },
@@ -62,7 +62,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 2. Successful query execution ────────────────────────────────────────
 
   it('should fetch monthly write report data successfully', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const mockData = [
       { date: '2024-03-05', value: 2 },
@@ -89,7 +89,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 3. Returned data shape validation ───────────────────────────────────
 
   it('should return data matching the MonthStatus[] shape', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const mockData = [{ date: '2024-05-10', value: 4 }];
     mockedAxios.get.mockResolvedValueOnce({ data: { monthlyWrites: mockData } });
@@ -114,7 +114,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 4. Handling invalid month selection (selectedMonth === -1) ───────────
 
   it('should return an empty array when selectedMonth is -1', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     // axios.get should not be called at all when selectedMonth === -1
     const { result } = renderHook(
@@ -136,7 +136,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 5. "others" mode – fetches by userId instead of user_id ─────────────
 
   it('should include userId in the URL when others=true', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const mockData = [{ date: '2024-06-01', value: 1 }];
     mockedAxios.get.mockResolvedValueOnce({ data: { monthlyWrites: mockData } });
@@ -164,7 +164,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   });
 
   it('should include user_id in the URL when others=false', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const mockData = [{ date: '2024-07-15', value: 9 }];
     mockedAxios.get.mockResolvedValueOnce({ data: { monthlyWrites: mockData } });
@@ -193,7 +193,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 6. Conditional execution – not connected ─────────────────────────────
 
   it('should NOT execute the query when isConnected=false', () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const { result } = renderHook(
       () =>
@@ -212,7 +212,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 7. Conditional execution – guest user ───────────────────────────────
 
   it('should NOT execute the query when the user is a guest', () => {
-    mockedUseSelector.mockReturnValue(true); // isGuest = true
+    mockeduseAppSelector.mockReturnValue(true); // isGuest = true
 
     const { result } = renderHook(
       () =>
@@ -231,7 +231,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 8. Conditional execution – missing user_id ───────────────────────────
 
   it('should NOT execute the query when user_id is empty', () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const { result } = renderHook(
       () =>
@@ -250,7 +250,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 9. Conditional execution – others=true but userId missing ────────────
 
   it('should NOT execute the query when others=true but userId is absent', () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const { result } = renderHook(
       () =>
@@ -271,7 +271,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 10. Error handling ───────────────────────────────────────────────────
 
   it('should transition to error state when the request fails', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
 
@@ -293,7 +293,7 @@ describe('useGetAuthorMonthlyWriteReport', () => {
   // ── 11. Returns an empty array for server response with no data ──────────
 
   it('should return empty array when server responds with empty monthlyWrites', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     mockedAxios.get.mockResolvedValueOnce({ data: { monthlyWrites: [] } });
 

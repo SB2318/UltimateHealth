@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { RenderSuggestionProp } from '../../type';
 <<<<<<< HEAD
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'react-redux';
 =======
 import { useAppDispatch } from '../store/hooks';
 >>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
@@ -16,7 +16,7 @@ export default function RenderSuggestion({
   route,
 }: RenderSuggestionProp) {
   const { htmlContent, readability_score, reading_time } = route.params;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const readabilityScore = readability_score ?? 0;
 
   const handleAccept = () => {

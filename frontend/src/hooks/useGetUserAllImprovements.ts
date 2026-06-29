@@ -3,7 +3,7 @@ import axios from 'axios';
 import { EditRequest } from '../type';
 import { GET_ALL_IMPROVEMENTS_FOR_USER } from '../helper/APIUtils';
 <<<<<<< HEAD
-import { useSelector } from 'react-redux';
+import { useAppSelector } from 'react-redux';
 =======
 import { useAppSelector } from '../store/hooks';
 >>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
@@ -31,7 +31,7 @@ export const useGetAllImprovementsForReview = ({
   setProgressLabel,
   setDiscardLabel,
 }: Props) => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-all-improvements-for-review', page, selectedStatus],

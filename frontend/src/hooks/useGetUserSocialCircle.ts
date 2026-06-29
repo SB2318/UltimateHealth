@@ -4,7 +4,7 @@ import axios from 'axios';
 import { GET_SOCIALS } from '../helper/APIUtils';
 import { User } from '../type';
 <<<<<<< HEAD
-import { useSelector } from 'react-redux';
+import { useAppSelector } from 'react-redux';
 =======
 import { useAppSelector } from '../store/hooks';
 >>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
@@ -20,7 +20,7 @@ export const useGetUserSocials = ({
   articleId,
   social_user_id,
 }: Props) => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-user-socials', type, articleId, social_user_id],

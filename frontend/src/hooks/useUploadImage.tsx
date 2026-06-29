@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import { showAlert } from '@/src/store/alertSlice';
 <<<<<<< HEAD
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from 'react-redux';
 =======
 import { useAppDispatch } from '../store/hooks';
 >>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
@@ -12,7 +12,7 @@ import { fetchWithTimeout } from '../helper/ApiTimeout';
 const useUploadImage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const uploadImage = async (uri: string) => {
 

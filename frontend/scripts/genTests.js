@@ -53,8 +53,8 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 ${hasRedux ? `jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
-  useDispatch: jest.fn(),
+  useAppSelector: jest.fn(),
+  useAppDispatch: jest.fn(),
 }));` : ''}
 
 function makeWrapper() {
@@ -69,7 +69,7 @@ describe('${hookName}', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('executes successfully', async () => {
-    ${hasRedux ? `(ReactRedux.useSelector as unknown as jest.Mock).mockReturnValue(false);` : ''}
+    ${hasRedux ? `(ReactRedux.useAppSelector as unknown as jest.Mock).mockReturnValue(false);` : ''}
     
     mockedAxios.get.mockResolvedValueOnce({ data: { success: true, data: [] } });
     mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });

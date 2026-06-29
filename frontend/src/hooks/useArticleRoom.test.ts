@@ -9,7 +9,7 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
+  useAppSelector: jest.fn(),
 }));
 
 jest.mock('../contexts/SocketContext', () => ({

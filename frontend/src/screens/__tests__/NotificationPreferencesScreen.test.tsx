@@ -12,7 +12,7 @@ jest.mock('react-native-snackbar', () => ({
 
 <<<<<<< HEAD
 jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
+  useAppSelector: jest.fn(),
 =======
 jest.mock('../store/hooks', () => ({
   useAppSelector: jest.fn(),
@@ -78,7 +78,7 @@ const mockPreferences = {
 };
 
 <<<<<<< HEAD
-const mockUseSelector = require('react-redux').useSelector as jest.Mock;
+const mockuseAppSelector = require('react-redux').useAppSelector as jest.Mock;
 =======
 const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
 >>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
@@ -89,7 +89,7 @@ const mockUseUpdateNotificationPreferences = require('../../hooks/useUpdateNotif
 describe('NotificationPreferencesScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockUseSelector.mockImplementation((selector: any) =>
+    mockuseAppSelector.mockImplementation((selector: any) =>
       selector({
         user: {isGuest: false},
         network: {isConnected: true},

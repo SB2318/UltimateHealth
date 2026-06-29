@@ -25,7 +25,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
 <<<<<<< HEAD
-//import {useDispatch} from 'react-redux';
+//import {useAppDispatch} from 'react-redux';
 =======
 import {useAppDispatch} from '../store/hooks';
 >>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
@@ -36,7 +36,7 @@ import {requestStoragePermissions} from '../helper/Utils';
 
 const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   const [recording, setRecording] = useState(false);
-  // const dispatch = useDispatch();
+  // const dispatch = useAppDispatch();
 
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(audioRecorder, 500);

@@ -11,10 +11,10 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 // Mock react-redux so we can control the isGuest selector per test
 jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
+  useAppSelector: jest.fn(),
 }));
-import { useSelector } from 'react-redux';
-const mockedUseSelector = useSelector as jest.Mock;
+import { useAppSelector } from 'react-redux';
+const mockeduseAppSelector = useAppSelector as jest.Mock;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -36,7 +36,7 @@ describe('useGetTotalWrites', () => {
   // ── 1. Hook initialisation & query state ────────────────────────────────
 
   it('should initialise in loading state when enabled', async () => {
-    mockedUseSelector.mockReturnValue(false); // not a guest
+    mockeduseAppSelector.mockReturnValue(false); // not a guest
 
     const mockData = { totalWrites: 5, progress: 50 };
     mockedAxios.get.mockResolvedValueOnce({ data: mockData });
@@ -60,7 +60,7 @@ describe('useGetTotalWrites', () => {
   // ── 2. Successful query execution ────────────────────────────────────────
 
   it('should fetch total writes data successfully for own user', async () => {
-    mockedUseSelector.mockReturnValue(false); // not a guest
+    mockeduseAppSelector.mockReturnValue(false); // not a guest
 
     const mockData = { totalWrites: 12, progress: 75 };
     mockedAxios.get.mockResolvedValueOnce({ data: mockData });
@@ -84,7 +84,7 @@ describe('useGetTotalWrites', () => {
   // ── 3. Returned data shape validation ───────────────────────────────────
 
   it('should return data matching the WriteStatus shape', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const mockData = { totalWrites: 3, progress: 30 };
     mockedAxios.get.mockResolvedValueOnce({ data: mockData });
@@ -107,7 +107,7 @@ describe('useGetTotalWrites', () => {
   // ── 4. "others" mode – fetches by userId instead of user_id ─────────────
 
   it('should use userId in the URL when others=true', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const mockData = { totalWrites: 8, progress: 60 };
     mockedAxios.get.mockResolvedValueOnce({ data: mockData });
@@ -132,7 +132,7 @@ describe('useGetTotalWrites', () => {
   });
 
   it('should use user_id in the URL when others=false', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const mockData = { totalWrites: 4, progress: 40 };
     mockedAxios.get.mockResolvedValueOnce({ data: mockData });
@@ -157,7 +157,7 @@ describe('useGetTotalWrites', () => {
   // ── 5. Conditional execution – not connected ─────────────────────────────
 
   it('should NOT execute the query when isConnected=false', () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const { result } = renderHook(
       () =>
@@ -175,7 +175,7 @@ describe('useGetTotalWrites', () => {
   // ── 6. Conditional execution – guest user ───────────────────────────────
 
   it('should NOT execute the query when the user is a guest', () => {
-    mockedUseSelector.mockReturnValue(true); // isGuest = true
+    mockeduseAppSelector.mockReturnValue(true); // isGuest = true
 
     const { result } = renderHook(
       () =>
@@ -193,7 +193,7 @@ describe('useGetTotalWrites', () => {
   // ── 7. Conditional execution – missing user_id ───────────────────────────
 
   it('should NOT execute the query when user_id is empty', () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const { result } = renderHook(
       () =>
@@ -211,7 +211,7 @@ describe('useGetTotalWrites', () => {
   // ── 8. Conditional execution – others=true but userId missing ────────────
 
   it('should NOT execute the query when others=true but userId is absent', () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     const { result } = renderHook(
       () =>
@@ -231,7 +231,7 @@ describe('useGetTotalWrites', () => {
   // ── 9. Error handling ────────────────────────────────────────────────────
 
   it('should transition to error state when the request fails', async () => {
-    mockedUseSelector.mockReturnValue(false);
+    mockeduseAppSelector.mockReturnValue(false);
 
     mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
 

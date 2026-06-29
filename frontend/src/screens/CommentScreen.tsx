@@ -14,7 +14,7 @@ import { Alert,
   } from 'react-native';
 
 <<<<<<< HEAD
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from 'react-redux';
 =======
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 >>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
@@ -69,7 +69,7 @@ const CommentScreen = ({
   const [newComment, setNewComment] =
     useState('');
 
-  const {user_id} = useSelector(
+  const {user_id} = useAppSelector(
     (state: any) => state.user,
   );
 
@@ -118,7 +118,7 @@ const CommentScreen = ({
     User[]
   >([]);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const triggersConfig: TriggersConfig<
     'mention' | 'hashtag'

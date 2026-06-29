@@ -8,7 +8,7 @@ import { NavigationContainer, type NavigationContainerRef } from '@react-navigat
 import * as Notifications from 'expo-notifications';
 import messaging from '@react-native-firebase/messaging';
 import { addEventListener } from '@react-native-community/netinfo';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 
 import { FirebaseProvider } from '@/hooks/FirebaseContext';
 import { useNotificationListeners } from '@/hooks/useNotificationListener';
@@ -43,9 +43,9 @@ export default function AppContent() {
 
   const isDarkMode = useColorScheme() === 'dark';
   const { visible, storeUrl } = useVersionCheck();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { user_token, isGuest } = useSelector(
+  const { user_token, isGuest } = useAppSelector(
     (state: RootState) => state.user,
   );
 

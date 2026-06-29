@@ -2,7 +2,7 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from 'react-redux';
 import {GET_MONTHLY_WRITES_REPORT, GET_TOTAL_WRITES, GET_YEARLY_WRITES_REPORT} from '../../helper/APIUtils';
 import {useGetAuthorMonthlyWriteReport} from '../useGetMonthlyWriteReport';
 import {useGetTotalWrites} from '../useGetTotalWrites';
@@ -10,11 +10,11 @@ import {useGetAuthorYearlyWriteReport} from '../useGetYearlyWriteReport';
 
 jest.mock('axios');
 jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
+  useAppSelector: jest.fn(),
 }));
 
 const mockedAxios = axios as jest.Mocked<typeof axios>;
-const mockedUseSelector = useSelector as jest.Mock;
+const mockeduseAppSelector = useAppSelector as jest.Mock;
 
 function makeWrapper() {
   const queryClient = new QueryClient({
@@ -27,7 +27,7 @@ function makeWrapper() {
 
 describe('write analytics hooks', () => {
   beforeEach(() => {
-    mockedUseSelector.mockImplementation((selector) =>
+    mockeduseAppSelector.mockImplementation((selector) =>
       selector({user: {isGuest: false}}),
     );
   });
@@ -54,7 +54,7 @@ describe('write analytics hooks', () => {
   });
 
   it('does not run total writes query for guest users', () => {
-    mockedUseSelector.mockImplementation((selector) =>
+    mockeduseAppSelector.mockImplementation((selector) =>
       selector({user: {isGuest: true}}),
     );
 

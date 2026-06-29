@@ -9,8 +9,8 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
-  useDispatch: jest.fn(),
+  useAppSelector: jest.fn(),
+  useAppDispatch: jest.fn(),
 }));
 
 function makeWrapper() {
@@ -25,7 +25,7 @@ describe('useGetTotalWrites', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('executes mutation successfully and calls API', async () => {
-    (ReactRedux.useSelector as unknown as jest.Mock).mockReturnValue(false);
+    (ReactRedux.useAppSelector as unknown as jest.Mock).mockReturnValue(false);
     
     
     mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });

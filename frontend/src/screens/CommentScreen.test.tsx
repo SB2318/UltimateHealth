@@ -17,8 +17,8 @@ jest.mock('../hooks/useArticleRoom', () => ({
 }));
 
 jest.mock('react-redux', () => ({
-  useSelector: () => ({ user_id: 'test-user-id' }),
-  useDispatch: () => jest.fn(),
+  useAppSelector: () => ({ user_id: 'test-user-id' }),
+  useAppDispatch: () => jest.fn(),
 }));
 
 const baseRoute = (articleOverrides = {}) => ({

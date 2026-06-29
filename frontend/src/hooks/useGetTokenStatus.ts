@@ -7,7 +7,7 @@ import { TokenStatus } from '@/src/type';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 <<<<<<< HEAD
-import { useSelector } from 'react-redux';
+import { useAppSelector } from 'react-redux';
 =======
 import { useAppSelector } from '../store/hooks';
 >>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
@@ -43,7 +43,7 @@ import { useAppSelector } from '../store/hooks';
   }
 };
 export const useCheckTokenStatus = () => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
 
   return useQuery<TokenStatus>({
     queryKey: ['token-status'],

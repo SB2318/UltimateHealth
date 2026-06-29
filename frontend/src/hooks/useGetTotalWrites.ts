@@ -3,7 +3,7 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
 import { WriteStatus } from "../type";
 import { GET_TOTAL_WRITES } from "../helper/APIUtils";
-import { useSelector } from "react-redux";
+import { useAppSelector, useAppDispatch } from "@/src/store/hooks";
 
 export const useGetTotalWrites = (
  {
@@ -18,7 +18,7 @@ export const useGetTotalWrites = (
   isConnected?: boolean
  }
 ): UseQueryResult<WriteStatus> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector(state => state.user.isGuest);
 
   return useQuery<WriteStatus>({
     queryKey: ["get-total-writes", user_id, userId, others],

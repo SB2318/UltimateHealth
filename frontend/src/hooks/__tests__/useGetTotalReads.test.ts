@@ -16,7 +16,7 @@ beforeEach(() => {
 });
 
 jest.mock('react-redux', () => ({
-  useSelector: jest.fn(() => false),
+  useAppSelector: jest.fn(() => false),
 }));
 
 function makeWrapper() {

@@ -11,7 +11,7 @@ import { View,
    FlatList ,
   Alert,
    } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from 'react-redux';
 import {PodcastFormProp, Category} from '../type';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../helper/Theme';
@@ -33,7 +33,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
   const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
   const [language, setLanguage] = useState('en');
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
-  const {categories} = useSelector((state: any) => state.data);
+  const {categories} = useAppSelector((state: any) => state.data);
   const [imageUtils, setImageUtils] = useState('');
 
   // Inline validation error state

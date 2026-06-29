@@ -19,7 +19,7 @@ import {EditorScreenProp} from '../../type';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 <<<<<<< HEAD
-import {useDispatch} from 'react-redux';
+import {useAppDispatch} from 'react-redux';
 =======
 import {useAppDispatch} from '../store/hooks';
 >>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
@@ -51,7 +51,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const [htmlImages, setHtmlImages] = useState<string[]>([]);
   const [editorReady, setEditorReady] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     navigation.setOptions({

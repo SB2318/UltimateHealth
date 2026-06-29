@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from "@/src/store/hooks";
 import { useGetCharacters } from '../hooks/useGetCharacters';
 import { PRIMARY_COLOR } from '../helper/Theme';
 import { PersonaLobbyScreenProps, Character } from '../type';
@@ -22,7 +22,7 @@ const { width } = Dimensions.get('window');
 const CARD_WIDTH = width / 2 - 24;
 
 const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
-  const { isConnected } = useSelector((state: any) => state.network);
+  const { isConnected } = useAppSelector((state: any) => state.network);
   const { data: characters, isLoading, error } = useGetCharacters(isConnected);
   const [activeTab, setActiveTab] = useState<'AI' | 'Experts'>('AI');
 

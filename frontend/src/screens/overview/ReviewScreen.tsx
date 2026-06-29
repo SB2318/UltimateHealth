@@ -12,7 +12,7 @@ import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ReviewScreenProp, Comment} from '../../type';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from 'react-redux';
 import {hp, wp} from '../../helper/Metric';
 import {
   GET_IMAGE,
@@ -34,8 +34,8 @@ import {useSocket} from '../../contexts/SocketContext';
 const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   const insets = useSafeAreaInsets();
   const {articleId, authorId, recordId} = route.params;
-  const {user_token} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.isConnected);
+  const {user_token} = useAppSelector((state: any) => state.user);
+  const {isConnected} = useAppSelector((state: any) => state.isConnected);
 
   const [feedback, setFeedback] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   const {data: articleContent} = useGetArticleContent(recordId);
 
   const socket = useSocket();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [comments, setComments] = useState<Comment[]>([]);
 

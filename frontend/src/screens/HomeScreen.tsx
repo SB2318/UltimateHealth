@@ -28,7 +28,7 @@ import HomeScreenHeader from '../components/HomeScreenHeader';
 import {ArticleData, Category, HomeScreenProps} from '../type';
 import FilterModal from '../components/FilterModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useSelector, useDispatch} from 'react-redux';
+import {useAppSelector, useAppDispatch} from 'react-redux';
 import Loader from '../components/Loader';
 import {usePreferences} from '../contexts/PreferencesContext';
 
@@ -101,12 +101,12 @@ const SavedArticleEmptyState = () => (
 
 // Here The purpose of using Redux is to maintain filter state throughout the app session. globally
 const HomeScreen = ({navigation}: HomeScreenProps) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [sortingType, setSortingType] = useState<string>('');
   const [searchText, setSearchText] = useState('');
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   // const [repostItem, setRepostItem] = useState<ArticleData | null>(null);
   const [selectCategoryList, setSelectCategoryList] = useState<Category[]>([]);
@@ -134,9 +134,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     searchMode,
     selectedTags,
     sortType,
-  } = useSelector((state: any) => state.data);
+  } = useAppSelector((state: any) => state.data);
 
-  const {user_token, isGuest} = useSelector(
+  const {user_token, isGuest} = useAppSelector(
     (state: any) => state.user,
   );
 

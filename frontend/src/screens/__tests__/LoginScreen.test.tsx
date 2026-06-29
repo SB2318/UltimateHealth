@@ -9,7 +9,7 @@ const mockDispatch = jest.fn();
 
 <<<<<<< HEAD
 jest.mock('react-redux', () => ({
-  useDispatch: () => mockDispatch,
+  useAppDispatch: () => mockDispatch,
 =======
 jest.mock('../store/hooks', () => ({
   useAppDispatch: () => mockDispatch,

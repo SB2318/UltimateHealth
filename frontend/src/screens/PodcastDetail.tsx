@@ -21,7 +21,7 @@ import {useAudioPlayer} from 'expo-audio';
 // GET_IMAGE is defined as `${PROD_URL}/getfile` (resolves to absolute URL: https://uhsocial.in/api/getfile).
 // This absolute, securely-configured endpoint ensures that relative resource paths cannot access local device files via traversal.
 import {GET_IMAGE} from '../helper/APIUtils';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from 'react-redux';
 
 import {downloadAudio, formatCount, StatusEnum} from '../helper/Utils';
 import Snackbar from 'react-native-snackbar';
@@ -75,10 +75,10 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const socket = useSocket();
-  const {user_token, user_id, user_handle, isGuest} = useSelector(
+  const {user_token, user_id, user_handle, isGuest} = useAppSelector(
     (state: any) => state.user,
   );
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);
