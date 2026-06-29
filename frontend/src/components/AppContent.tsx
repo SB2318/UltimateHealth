@@ -16,7 +16,7 @@ import { useVersionCheck } from '@/hooks/useVersionCheck';
 import { SocketProvider } from '../contexts/SocketContext';
 import { PreferencesProvider } from '../contexts/PreferencesContext';
 import config from '../../tamagui.config';
-import { registerAndSyncPushToken } from '../helper/PushNotificationService';
+
 import { initDeepLinking, navigateDeepLink, resolveNotificationTarget } from '../helper/DeepLinkService';
 import { firebaseInit } from '../helper/firebase';
 import { cleanUpDownloads } from '../helper/Utils';
@@ -110,9 +110,7 @@ export default function AppContent() {
     };
   }, [dispatch]);
 
-  useEffect(() => {
-    registerAndSyncPushToken(user_token);
-  }, [user_token]);
+
 
   useEffect(() => {
     const handleNotificationResponse = async (
