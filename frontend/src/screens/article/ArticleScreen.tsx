@@ -62,6 +62,7 @@ import {useSocket} from '../../contexts/SocketContext';
 import { copyArticleShareLink } from '../../helper/shareUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
+import { ErrorState } from '../../components/EmptyStates';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -154,11 +155,17 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {
     data: article,
     isLoading: articleLoading,
-    refetch,
+    isError: articleError,
+    refetch: articleRefetch,
   } = useGetArticleDetails(articleId);
 
   const resolvedRecordId = article?.pb_recordId || recordId;
-  const {data: articleContent} = useGetArticleContent(resolvedRecordId);
+  const {
+    data: articleContent,
+    isLoading: contentLoading,
+    isError: contentError,
+    refetch: contentRefetch,
+  } = useGetArticleContent(resolvedRecordId);
 
   const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
     Number(articleId),
@@ -256,8 +263,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   useEffect(() => {
     readEventFiredRef.current = false;
     setReadEventSave(false);
-    refetch();
-  }, [articleId, refetch]);
+    articleRefetch();
+  }, [articleId, articleRefetch]);
 
   const noDataHtml = '<p>No Data found</p>';
 
@@ -343,7 +350,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               message: data?.article?.title,
             });
           }
-          refetch();
+          articleRefetch();
         },
         onError: (err: any) => {
           console.log('error', err);
@@ -382,7 +389,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             },
           });
         }
-        refetch();
+        articleRefetch();
         // refetchProfile();
       },
 
@@ -408,7 +415,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     if (article) {
       saveMutation(undefined, {
         onSuccess: () => {
-          refetch();
+          articleRefetch();
           Snackbar.show({
             text: article.savedUsers?.includes(user_id)
               ? 'Article removed from saved'
@@ -441,7 +448,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     if (article) {
       trustMutation(undefined, {
         onSuccess: (data: {isTrusted: boolean}) => {
-          refetch();
+          articleRefetch();
           Snackbar.show({
             text: data?.isTrusted ? 'Marked as trusted!' : 'Trust removed',
             duration: Snackbar.LENGTH_SHORT,
@@ -778,8 +785,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     };
   });
 
-  if (articleLoading) {
+  if (articleLoading || contentLoading) {
     return <Loader />;
+  }
+
+  if (articleError || contentError) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: isDarkMode ? '#111827' : '#ffffff' }}>
+        <ErrorState onRetry={() => { articleRefetch(); contentRefetch(); }} />
+      </View>
+    );
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;

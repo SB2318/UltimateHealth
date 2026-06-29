@@ -51,27 +51,11 @@ import {useGetPaginatedArticle} from '../hooks/useGetPaginatedArticles';
 import {
   OfflineArticleState,
   NoArticleState,
-  BaseEmptyState,
+  ErrorState,
+  LoadingState,
 } from '../components/EmptyStates';
 
-// Loading State Component with Animation
-const LoadingState = () => {
-  return (
-    <BaseEmptyState
-      iconEmoji="📚"
-      title="Loading Articles"
-      description="Gathering the latest health insights for you..."
-      loading={true}
-    />
-  );
-};
 
-// Error State Component
-const ErrorState = ({onRetry}: {onRetry: () => void}) => {
-  return (
-    <NoArticleState onRefresh={onRetry} />
-  );
-};
 
 // Offline State Component
 const OfflineState = () => {
@@ -618,7 +602,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           onFilterReset={handleClearAllFilters}
         />
 
-        <LoadingState />
+        <LoadingState 
+          message="Loading Articles" 
+          description="Gathering the latest health insights for you..." 
+        />
       </SafeAreaView>
     );
   }

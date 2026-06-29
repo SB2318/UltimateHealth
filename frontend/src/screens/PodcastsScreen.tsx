@@ -24,7 +24,7 @@ import {GlassStyles, ProfessionalColors} from '../styles/GlassStyles';
 import CreateIcon from '../components/CreateIcon';
 import {useGetAllPodcasts} from '../hooks/useGetAllPodcasts';
 import {useUpdatePodcastViewcount} from '../hooks/useUpdatePodcastViewcount';
-import { PodcastLoadingState, NoPodcastState } from '../components/EmptyStates';
+import { PodcastLoadingState, NoPodcastState, ErrorState } from '../components/EmptyStates';
 import LoadingSpinner from '../components/LoadingSpinner';
 import {usePreferences} from '../contexts/PreferencesContext';
 
@@ -49,6 +49,7 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
   const {
     data: podcastData,
     isLoading,
+    isError,
     refetch,
   } = useGetAllPodcasts(isConnected, page);
 
@@ -212,6 +213,10 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
       <YStack flex={1} paddingHorizontal="$3">
         {isLoading && !podcasts?.length ? (
           renderLoadingState()
+        ) : isError ? (
+          <View style={styles.loadingContainer}>
+            <ErrorState onRetry={refetch} />
+          </View>
         ) : (
           <FlatList
             data={filteredPodcasts}
