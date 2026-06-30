@@ -12,9 +12,10 @@ import {
   API_REQUEST_TIMEOUT_MS,
   API_TIMEOUT_ERROR_MESSAGE,
 } from './ApiTimeout';
-import {KEYS, removeItem} from './Utils';
-import {SECURE_KEYS, secureRemoveItem, secureRetrieveItem} from './SecureStorageUtils';
+import {KEYS, removeItem, storeItem} from './Utils';
+import {SECURE_KEYS, secureRemoveItem, secureRetrieveItem, secureStoreItem} from './SecureStorageUtils';
 import {logApiError} from '../services/monitoring/networkLogger';
+import {REFRESH_TOKEN_API} from './APIUtils';
 
 /**
  * Module-scoped flag to suppress duplicate "session expired" notifications
@@ -51,37 +52,91 @@ export const resetSessionExpiredNotification = (): void => {
   sessionExpiredNotified = false;
 };
 
-/**
- * Shared error handler used by both axios instances.
- * Logs API errors safely and handles 401 Unauthorized specifically.
- */
-const handleError = (error: any) => {
-  // Log the API error securely without exposing secrets
+// Pending callbacks waiting for a token refresh to complete.
+// When a 401 triggers a refresh, concurrent 401s queue here until resolved.
+type QueueItem = {resolve: (token: string) => void; reject: (err: unknown) => void};
+let isRefreshing = false;
+let failedQueue: QueueItem[] = [];
+
+function processQueue(error: unknown, token: string | null): void {
+  failedQueue.forEach(item =>
+    error ? item.reject(error) : item.resolve(token!),
+  );
+  failedQueue = [];
+}
+
+function clearSession(): void {
+  store.dispatch(setUserToken(''));
+  store.dispatch(setUserId(''));
+  store.dispatch(setUserHandle(''));
+  store.dispatch(setGuestMode(true));
+  secureRemoveItem(SECURE_KEYS.USER_TOKEN);
+  removeItem(KEYS.USER_TOKEN_EXPIRY_DATE);
+  removeItem(KEYS.USER_ID);
+  removeItem(KEYS.USER_HANDLE);
+
+  if (!sessionExpiredNotified) {
+    sessionExpiredNotified = true;
+    const message = 'Your session has expired. You are now browsing as a guest.';
+    if (Platform.OS === 'android') {
+      ToastAndroid.show(message, ToastAndroid.SHORT);
+    } else {
+      Alert.alert('Session Expired', message);
+    }
+  }
+}
+
+// Shared error handler used by both axios instances.
+// On 401: attempts a silent token refresh before falling back to forced logout.
+const handleError = async (error: unknown): Promise<unknown> => {
   logApiError(error, undefined, {handler: 'axiosInterceptor'});
 
-  if (error?.response?.status === 401) {
-    store.dispatch(setUserToken(''));
-    store.dispatch(setUserId(''));
-    store.dispatch(setUserHandle(''));
-    store.dispatch(setGuestMode(true));
+  const axiosError = error as any;
+  const originalRequest = axiosError?.config;
 
-    // Clear token from secure storage to prevent re-attachment by request interceptor.
-    secureRemoveItem(SECURE_KEYS.USER_TOKEN);
-    removeItem(KEYS.USER_TOKEN_EXPIRY_DATE);
-    removeItem(KEYS.USER_ID);
-    removeItem(KEYS.USER_HANDLE);
+  if (axiosError?.response?.status === 401 && originalRequest && !originalRequest._retry) {
+    if (isRefreshing) {
+      // Queue this request until the in-flight refresh resolves.
+      return new Promise<string>((resolve, reject) => {
+        failedQueue.push({resolve, reject});
+      }).then(newToken => {
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return axios(originalRequest);
+      });
+    }
 
-    // Notify once to avoid alert/toast spam if multiple calls fail simultaneously.
-    if (!sessionExpiredNotified) {
-      sessionExpiredNotified = true;
-      const message =
-        'Your session has expired. You are now browsing as a guest.';
+    originalRequest._retry = true;
+    isRefreshing = true;
 
-      if (Platform.OS === 'android') {
-        ToastAndroid.show(message, ToastAndroid.SHORT);
-      } else {
-        Alert.alert('Session Expired', message);
-      }
+    try {
+      const currentToken = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
+      if (!currentToken) throw new Error('No refresh token in storage');
+
+      const res = await fetch(REFRESH_TOKEN_API, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({refreshToken: currentToken}),
+      });
+
+      if (!res.ok) throw new Error(`Token refresh failed: ${res.status}`);
+
+      const data = await res.json() as {refreshToken?: string; token?: string};
+      const newToken = data.refreshToken ?? data.token;
+      if (!newToken) throw new Error('No token in refresh response');
+
+      await secureStoreItem(SECURE_KEYS.USER_TOKEN, newToken);
+      await storeItem(KEYS.USER_TOKEN_EXPIRY_DATE, new Date().toISOString());
+      store.dispatch(setUserToken(newToken));
+      processQueue(null, newToken);
+
+      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      return axios(originalRequest);
+    } catch (refreshError) {
+      processQueue(refreshError, null);
+      clearSession();
+      return Promise.reject(refreshError);
+    } finally {
+      isRefreshing = false;
     }
   }
 
@@ -143,7 +198,7 @@ export const setupAxiosInterceptor = () => {
   // `config.headers ??= {}` guards against the rare case where an Axios adapter
   // or custom config omits the headers object entirely.
   _axiosReqId = axios.interceptors.request.use(
-    async config => {
+    async (config: any) => {
       config.headers ??= {} as typeof config.headers;
       const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
       if (token) {
@@ -154,12 +209,18 @@ export const setupAxiosInterceptor = () => {
       }
       return config;
     },
-    error => Promise.reject(error),
+    (error: unknown) => Promise.reject(error),
   );
 
   // Attach error handler to both the global axios instance (used by existing hooks)
   // and authAxios (used by migrated code with the request interceptor).
   // Store returned IDs so we can eject on the next call.
-  _axiosResId = axios.interceptors.response.use(response => response, handleError);
-  _authAxiosResId = authAxios.interceptors.response.use(response => response, handleError);
+  _axiosResId = axios.interceptors.response.use(
+    (response: any) => response,
+    handleError,
+  );
+  _authAxiosResId = authAxios.interceptors.response.use(
+    (response: any) => response,
+    handleError,
+  );
 };
