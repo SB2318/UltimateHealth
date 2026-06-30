@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
 import authAxios from './authAxios';
 import {Alert, Platform, ToastAndroid} from 'react-native';
 import store from '../store/ReduxStore';
@@ -91,7 +91,7 @@ function clearSession(): void {
 const handleError = async (error: unknown): Promise<unknown> => {
   logApiError(error, undefined, {handler: 'axiosInterceptor'});
 
-  const axiosError = error as any;
+  const axiosError = error as AxiosError;
   const originalRequest = axiosError?.config;
 
   if (axiosError?.response?.status === 401 && originalRequest && !originalRequest._retry) {
@@ -124,8 +124,17 @@ const handleError = async (error: unknown): Promise<unknown> => {
       const newToken = data.refreshToken ?? data.token;
       if (!newToken) throw new Error('No token in refresh response');
 
+      // Decode exp from the refresh token JWT for accurate expiry; fall back to current time.
+      let expiryIso = new Date().toISOString();
+      try {
+        const payload = JSON.parse(atob(newToken.split('.')[1]));
+        if (payload.exp) {
+          expiryIso = new Date(payload.exp * 1000).toISOString();
+        }
+      } catch {}
+
       await secureStoreItem(SECURE_KEYS.USER_TOKEN, newToken);
-      await storeItem(KEYS.USER_TOKEN_EXPIRY_DATE, new Date().toISOString());
+      await storeItem(KEYS.USER_TOKEN_EXPIRY_DATE, expiryIso);
       store.dispatch(setUserToken(newToken));
       processQueue(null, newToken);
 
