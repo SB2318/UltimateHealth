@@ -12,8 +12,13 @@ export const useGetProfile = (): UseQueryResult<User, AxiosError> => {
     queryKey: ['get-my-profile'],
     queryFn: async () => {
       const response = await axios.get(`${GET_PROFILE_API}`);
-    //  console.log('profile response: ', response.data);
-      return response.data.data as User;
+      // console.log('[useGetProfile] status:', response.status);
+      //console.log('[useGetProfile] response.data keys:', Object.keys(response.data || {}));
+      //console.log('[useGetProfile] response.data:', JSON.stringify(response.data).slice(0, 500));
+
+      //console.log('[useGetProfile] response.data.user:', JSON.stringify(response.data.user).slice(0, 500));
+      const data =  response.data.data;
+      return data as User;
     },
     enabled: !isGuest,
   });

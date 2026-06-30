@@ -93,14 +93,10 @@ const TabBar = ({state, descriptors, navigation}: any) => {
                   />
                 )}
                 {label === 'Chatbot' && (
-                  <Image
-                    source={{uri: VULTR_CHAT_PROFILE_AVTARS.assistant}} 
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 25,
-                      //tintColor: isFocused ? 'white' : theme.color.val,
-                    }}
+                  <Ionicons
+                    name="chatbubbles"
+                    size={24}
+                    color={isFocused ? 'white' : theme.color.val}
                   />
                 )}
                 {label === 'Profile' && (

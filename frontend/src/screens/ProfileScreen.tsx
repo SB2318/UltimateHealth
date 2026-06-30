@@ -36,9 +36,13 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 
   const {data: user, refetch, isLoading} = useGetProfile();
 
-  if (user) {
-    dispatch(setUserHandle(user.user_handle));
-  }
+ // console.log('user data in profile screen', user);
+
+  React.useEffect(() => {
+    if (user) {
+      dispatch(setUserHandle(user.user_handle));
+    }
+  }, [dispatch, user]);
   const onArticleViewed = ({
     articleId,
     authorId,
@@ -127,7 +131,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 
   const onFollowerClick = () => {
     if (isConnected) {
-      if (user && user.followers.length > 0) {
+      if (user && (user.followers?.length ?? 0) > 0) {
         //dispatch(setSocialUserId(''));
         navigation.navigate('SocialScreen', {
           type: 1,
@@ -145,7 +149,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 
   const onFollowingClick = () => {
     if (isConnected) {
-      if (user && user.followings.length > 0) {
+      if (user && (user.followings?.length ?? 0) > 0) {
         // dispatch(setSocialUserId(''));
         navigation.navigate('SocialScreen', {
           type: 2,
@@ -169,8 +173,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     return (
       <ProfileHeader
         isDoctor={isDoctor}
-        username={user.user_name || ''}
-        userhandle={user.user_handle || ''}
+        username={user.user_name ||  ""}
+        userhandle={user.user_handle ||  ''}
         profileImg={
           user.Profile_image ||
           'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
@@ -184,8 +188,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         qualification={user.qualification || ''}
         navigation={navigation}
         other={true}
-        followers={user ? user.followers.length : 0}
-        followings={user ? user.followings.length : 0}
+        followers={user ? (user.followers?.length ?? 0) : 0}
+        followings={user ? (user.followings?.length ?? 0) : 0}
         onFollowerPress={onFollowerClick}
         onFollowingPress={onFollowingClick}
         isFollowing={false}
@@ -305,10 +309,10 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
             onPress={() => setActiveTab('Reposts')}
             accessibilityRole="tab"
             accessibilityState={{ selected: activeTab === 'Reposts' }}
-            accessibilityLabel={`Reposts tab, ${user?.repostArticles.length || 0} reposts`}
+            accessibilityLabel={`Reposts tab, ${user?.repostArticles?.length || 0} reposts`}
           >
             <Text style={[styles.tabButtonText, { color: activeTab === 'Reposts' ? tabColors.activeText : tabColors.inactiveText }]}>
-              Reposts ({user?.repostArticles.length || 0})
+              Reposts ({user?.repostArticles?.length || 0})
             </Text>
           </TouchableOpacity>
           <TouchableOpacity 
@@ -316,10 +320,10 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
             onPress={() => setActiveTab('Saved')}
             accessibilityRole="tab"
             accessibilityState={{ selected: activeTab === 'Saved' }}
-            accessibilityLabel={`Saved tab, ${user?.savedArticles.length || 0} saved articles`}
+            accessibilityLabel={`Saved tab, ${user?.savedArticles?.length || 0} saved articles`}
           >
             <Text style={[styles.tabButtonText, { color: activeTab === 'Saved' ? tabColors.activeText : tabColors.inactiveText }]}>
-              Saved ({user?.savedArticles.length || 0})
+              Saved ({user?.savedArticles?.length || 0})
             </Text>
           </TouchableOpacity>
           <TouchableOpacity 
@@ -350,7 +354,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 
           {activeTab === 'Reposts' && (
             <FlatList
-              data={user !== undefined ? user.repostArticles : []}
+              data={user !== undefined ? (user.repostArticles ?? []) : []}
               renderItem={renderItem}
               scrollEnabled={false}
               showsVerticalScrollIndicator={false}
@@ -367,7 +371,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 
           {activeTab === 'Saved' && (
             <FlatList
-              data={user !== undefined ? user.savedArticles : []}
+              data={user !== undefined ? (user.savedArticles ?? []) : []}
               renderItem={renderItem}
               scrollEnabled={false}
               showsVerticalScrollIndicator={false}

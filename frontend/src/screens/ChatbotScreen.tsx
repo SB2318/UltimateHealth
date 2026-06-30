@@ -340,29 +340,51 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}} edges={['top']}>
       <View
         style={{
-          paddingHorizontal: 16,
+          paddingHorizontal: 20,
           paddingVertical: 16,
-          borderBottomWidth: 1,
-          borderColor: '#e5e7eb',
-          backgroundColor: 'white',
+          backgroundColor: PRIMARY_COLOR,
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 12,
+          gap: 16,
+          borderBottomLeftRadius: 24,
+          borderBottomRightRadius: 24,
+          ...Platform.select({
+            ios: {
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+            },
+            android: {
+              elevation: 4,
+            },
+          }),
         }}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#374151" />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Ionicons name="arrow-back" size={24} color="#ffffff" />
         </TouchableOpacity>
 
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
           <View
             style={{
-              width: 44,
-              height: 44,
-              borderRadius: 22,
+              width: 48,
+              height: 48,
+              borderRadius: 24,
               overflow: 'hidden',
-              backgroundColor: '#dbeafe',
+              backgroundColor: '#ffffff',
               alignItems: 'center',
               justifyContent: 'center',
+              borderWidth: 2,
+              borderColor: 'rgba(255,255,255,0.5)',
             }}>
             <Image
               source={{ uri: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg' }}
@@ -372,15 +394,13 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
         </View>
 
         <View style={{flex: 1}}>
-          <Text style={{fontSize: 18, fontWeight: '600', color: '#111827'}}>
+          <Text style={{fontSize: 20, fontWeight: '700', color: '#ffffff'}}>
             {characterName || 'Care Companion AI'}
           </Text>
 
-          {(isTyping || isPending) && (
-            <Text style={{fontSize: 13, color: '#3b82f6'}}>
-              {isPending ? 'Generating response...' : 'typing...'}
-            </Text>
-          )}
+          <Text style={{fontSize: 13, color: 'rgba(255,255,255,0.8)', marginTop: 2}}>
+            {isPending ? 'Generating response...' : isTyping ? 'Typing...' : 'Online'}
+          </Text>
         </View>
       </View>
 
@@ -468,12 +488,34 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                   <Bubble
                     {...props}
                     wrapperStyle={{
-                      right: {backgroundColor: PRIMARY_COLOR},
-                      left: {backgroundColor: '#f3f4f6'},
+                      left: {
+                        backgroundColor: '#ffffff',
+                        borderBottomLeftRadius: 4,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        borderBottomRightRadius: 20,
+                        padding: 4,
+                        ...Platform.select({
+                          ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4 },
+                          android: { elevation: 2 },
+                        }),
+                      },
+                      right: {
+                        backgroundColor: PRIMARY_COLOR,
+                        borderBottomRightRadius: 4,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        borderBottomLeftRadius: 20,
+                        padding: 4,
+                        ...Platform.select({
+                          ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 },
+                          android: { elevation: 2 },
+                        }),
+                      },
                     }}
                     textStyle={{
-                      right: {color: 'white', fontSize: 17, lineHeight: 24},
-                      left: {color: '#111827', fontSize: 17, lineHeight: 24},
+                      left: { color: '#1e293b', fontSize: 16, lineHeight: 24 },
+                      right: { color: '#ffffff', fontSize: 16, lineHeight: 24 },
                     }}
                   />
                   {isAssistant && (
@@ -502,14 +544,17 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               <InputToolbar
                 {...props}
                 containerStyle={{
-                  borderWidth: 0.5,
-                  borderColor: '#ccc',
-                  backgroundColor: 'white',
-                  borderRadius: 12,
-                  paddingVertical: 10,
-                  marginHorizontal: 10,
-                  marginBottom: hp(2),
+                  backgroundColor: '#ffffff',
+                  borderTopWidth: 0,
+                  paddingHorizontal: 8,
+                  paddingVertical: 8,
+                  justifyContent: 'center',
+                  ...Platform.select({
+                    ios: { shadowColor: '#000', shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.05, shadowRadius: 8 },
+                    android: { elevation: 4 },
+                  }),
                 }}
+                primaryStyle={{ alignItems: 'center' }}
               />
             )}
             renderSend={props => (

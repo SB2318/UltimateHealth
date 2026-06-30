@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
   Alert,
-  Dimensions,
+  useWindowDimensions,
   useColorScheme,
 } from 'react-native';
 import ArticleShareModal from '../../components/ArticleShareModal';
@@ -78,6 +78,7 @@ type TtsSubscription = {
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
+  const {width: windowWidth} = useWindowDimensions();
   const getProfileImageUri = (profileImage?: string) => {
     if (!profileImage?.trim()) {
       return 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
@@ -110,22 +111,30 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const errorHandlerRef = useRef<((event: unknown) => void) | null>(null);
 
   const clearArticleTtsSubscriptions = useCallback(() => {
-    if (finishSubscriptionRef.current?.remove) {
+    if (finishSubscriptionRef.current && typeof finishSubscriptionRef.current.remove === 'function') {
       finishSubscriptionRef.current.remove();
     } else if (
       finishHandlerRef.current &&
       typeof Tts.removeEventListener === 'function'
     ) {
-      Tts.removeEventListener('tts-finish', finishHandlerRef.current as any);
+      try {
+        Tts.removeEventListener('tts-finish', finishHandlerRef.current as any);
+      } catch (e) {
+        console.warn('Failed to call Tts.removeEventListener:', e);
+      }
     }
 
-    if (errorSubscriptionRef.current?.remove) {
+    if (errorSubscriptionRef.current && typeof errorSubscriptionRef.current.remove === 'function') {
       errorSubscriptionRef.current.remove();
     } else if (
       errorHandlerRef.current &&
       typeof Tts.removeEventListener === 'function'
     ) {
-      Tts.removeEventListener('tts-error', errorHandlerRef.current as any);
+      try {
+        Tts.removeEventListener('tts-error', errorHandlerRef.current as any);
+      } catch (e) {
+        console.warn('Failed to call Tts.removeEventListener:', e);
+      }
     }
 
     finishSubscriptionRef.current = null;
@@ -764,14 +773,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
     if (scrollableDistance <= 0 && contentHeight.value > 0) {
       return {
-        width: Dimensions.get('window').width,
+        width: windowWidth,
       };
     }
 
     const width = interpolate(
       scrollY.value,
       [0, Math.max(1, scrollableDistance)],
-      [0, Dimensions.get('window').width],
+      [0, windowWidth],
       Extrapolate.CLAMP,
     );
 
