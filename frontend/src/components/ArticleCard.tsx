@@ -63,8 +63,8 @@ const ArticleCard = ({
   handleEditRequestAction,
   source,
 }: ArticleCardProps) => {
-  const {user_id, user_handle, isGuest} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_id, user_handle, isGuest} = useSelector((state: any) => state.user || {});
+  const {isConnected} = useSelector((state: any) => state.network || {});
   const readTime = calculateReadTime(item.content || item.body || '');
   const socket = useSocket();
   const width = useSharedValue(0);

@@ -32,12 +32,12 @@ import { NoArticleState } from '../components/EmptyStates';
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
-  const {authorId, userId, author_handle} = (route.params || {}) as any;
-  const {userId: routeUserId, userHandle: routeUserHandle} = (route.params || {}) as any; 
+  const {authorId, userId, author_handle} = (route?.params || {}) as any;
+  const {userId: routeUserId, userHandle: routeUserHandle} = (route?.params || {}) as any; 
   const {user_id, user_handle} = useSelector(
-    (state: any) => state.user,
+    (state: any) => state.user || {},
   );
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useSelector((state: any) => state.network || {});
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const [articleId, setArticleId] = useState<number>();
@@ -72,6 +72,8 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     isConnected: isConnected,
   });
 
+  console.log('UserProfileScreen - articles:', user?.articles);
+   console.log('UserProfileScreen - reposts:', user?.repostArticles);
 
   const onArticleViewed = ({
     articleId,
@@ -125,8 +127,10 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const handleReportAction = useCallback(
     (item: ArticleData) => {
       navigation.navigate('ReportScreen', {
-        articleId: item._id,
-        authorId: item.authorId as string,
+        articleId: String(item._id),
+        authorId: typeof item.authorId === 'object' && item.authorId !== null 
+          ? String((item.authorId as any)._id) 
+          : String(item.authorId),
         commentId: null,
         podcastId: null,
       });
@@ -141,7 +145,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           item={item}
           navigation={navigation}
           success={onRefresh}
-          isSelected={selectedCardId.toString() === item._id.toString()}
+          isSelected={String(selectedCardId) === String(item?._id)}
           setSelectedCardId={setSelectedCardId}
           handleRepostAction={()=>{}}
           handleReportAction={handleReportAction}
@@ -149,9 +153,9 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
             if (isConnected) {
               requestEdit(
                 {
-                  articleId: item._id,
+                  articleId: String(item._id),
                   reason: reason,
-                  articleRecordId: item.pb_recordId,
+                  articleRecordId: item.pb_recordId || '',
                 },
                 {
                   onSuccess: data => {
@@ -259,7 +263,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   const renderHeader = () => {
     if (user === undefined) {
-      return null;
+      return <View />;
     } // Safeguard to prevent rendering if user is undefined
 
     const authorUser = typeof authorId === 'string' ? user : authorId;
@@ -361,11 +365,11 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           {/* Tab 2 */}
           <Tabs.Tab name="Articles">
             <Tabs.FlatList
-              data={user && user.articles ? user.articles : []}
+              data={user?.articles || []}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={[styles.flatListContentContainer, { paddingBottom: 15 }]}
-              keyExtractor={(item: ArticleData) => item?._id}
+              keyExtractor={(item: ArticleData, index: number) => item?._id?.toString() || index.toString()}
               refreshing={refreshing}
               ListEmptyComponent={<NoArticleState />}
             />
@@ -373,11 +377,11 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
           <Tabs.Tab name="Reposts">
             <Tabs.FlatList
-              data={user !== undefined ? user.repostArticles : []}
+              data={user?.repostArticles || []}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={[styles.flatListContentContainer, { paddingBottom: 15 }]}
-              keyExtractor={(item: ArticleData) => item?._id}
+              keyExtractor={(item: ArticleData, index: number) => item?._id?.toString() || index.toString()}
               refreshing={refreshing}
               ListEmptyComponent={<NoArticleState />}
             />
