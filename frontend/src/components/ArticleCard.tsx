@@ -76,17 +76,17 @@ const ArticleCard = ({
   const {data: user} = useGetProfile();
 
   const [isLiked, setIsLiked] = useState(
-    item.likedUsers.some(
+     item.likedUsers ? item.likedUsers.some(
       it =>
         (it._id && it._id.toString() === user_id) || it.toString() === user_id,
-    ),
+    ): false,
   );
-  const [likeCount, setLikeCount] = useState(item.likedUsers.length);
-  const [repostCount, setRepostCount] = useState(item.repostUsers.length);
+  const [likeCount, setLikeCount] = useState(item.likedUsers ? item.likedUsers.length : 0);
+  const [repostCount, setRepostCount] = useState(item.repostUsers ? item.repostUsers.length : 0);
 
-  const [saved, setSaved] = useState(item.savedUsers.includes(user_id));
+  const [saved, setSaved] = useState(item.savedUsers && item.savedUsers.includes(user_id));
   const [reposted, setReposted] = useState(
-    item.repostUsers.some(user => user.toString() === user_id),
+    item.repostUsers ? item.repostUsers.some(user => user.toString() === user_id) : false
   );
 
   const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
@@ -98,6 +98,7 @@ const ArticleCard = ({
 
   const {mutate: repost, isPending: repostPending} = useRepostArticle();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {mutate: getArticleContent, isPending: getArticleContentPending} =
     useLazyGetArticleContent();
 
@@ -515,6 +516,15 @@ const ArticleCard = ({
                 },
                 {
                   articleId: item._id,
+                  name: 'Copy Link',
+                  action: () => {
+                    handleCopyLink();
+                    setMenuVisible(false);
+                  },
+                  icon: 'link',
+                },
+                {
+                  articleId: item._id,
                   name: 'Report this post',
                   action: () => {
                     setMenuVisible(false);
@@ -732,19 +742,6 @@ const ArticleCard = ({
                 }}
                 style={styles.likeSaveChildContainer}>
                 <FontAwesome name="share-alt" size={24} color={'#414A4C'} />
-              </AccessibleTouchable>
-            )}
-
-            {source === 'home' && (
-              <AccessibleTouchable
-                accessibilityLabel="Copy link"
-                accessibilityHint="Copies this article link to clipboard"
-                onPress={(e: any) => {
-                  e?.stopPropagation?.();
-                  handleCopyLink();
-                }}
-                style={styles.likeSaveChildContainer}>
-                <FontAwesome name="link" size={24} color={'#414A4C'} />
               </AccessibleTouchable>
             )}
 

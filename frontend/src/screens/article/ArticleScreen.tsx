@@ -69,6 +69,7 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated';
+import { ScrollView } from 'react-native';
 
 const CHUNK_SIZE = 120;
 
@@ -814,85 +815,76 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       {/* Reading Progress Bar */}
       <Animated.View style={[styles.progressBar, progressStyle]} />
 
-      <View style={styles.imageContainer}>
-        {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
-          <Image
-            source={{
-              uri: article?.imageUtils[0].startsWith('http')
-                ? article?.imageUtils[0]
-                : `${GET_IMAGE}/${article?.imageUtils[0]}`,
-            }}
-            style={styles.image}
-          />
-        ) : (
-          <Image
-            source={require('../../assets/images/no_results.jpg')}
-            style={styles.image}
-          />
-        )}
-        {likeMutationPending ? (
-          <LoadingSpinner size={40} />
-        ) : (
-          <TouchableOpacity
-            onPress={handleLike}
-            style={[
-              styles.likeButton,
-              {
-                backgroundColor: 'white',
-              },
-            ]}>
-            <FontAwesome
-              name="heart"
-              size={34}
-              color={
-                article &&
-                article?.likedUsers &&
-                article?.likedUsers?.some(user => user._id === user_id)
-                  ? PRIMARY_COLOR
-                  : 'black'
-              }
-            />
-          </TouchableOpacity>
-        )}
-
-        <TouchableOpacity
-          onPress={() => {
-            if (playerVisible) {
-              handleTtsStop();
-            } else {
-              handleTtsPlay();
-            }
-          }}
-          style={[
-            styles.playButton,
-            {
-              backgroundColor: 'white',
-            },
-          ]}>
-          <FontAwesome5
-            name={'headphones'}
-            size={30}
-            color={playerVisible ? PRIMARY_COLOR : 'black'}
-          />
-        </TouchableOpacity>
-
-        {isPlaying && (
-          <View style={styles.botContainer}>
-            <LottieView
-              source={require('../../assets/LottieAnimation/TalkBotAnimation.json')}
-              autoPlay
-              loop={isPlaying}
-              style={{width: 200, height: 200}}
-            />
-          </View>
-        )}
-      </View>
-
       <Animated.ScrollView
         style={styles.scrollView}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         contentContainerStyle={styles.scrollViewContent}>
+
+        {/* Banner Image — scrolls with article */}
+        <View style={styles.imageContainer}>
+          {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
+            <Image
+              source={{
+                uri: article?.imageUtils[0].startsWith('http')
+                  ? article?.imageUtils[0]
+                  : `${GET_IMAGE}/${article?.imageUtils[0]}`,
+              }}
+              style={styles.image}
+            />
+          ) : (
+            <Image
+              source={require('../../assets/images/no_results.jpg')}
+              style={styles.image}
+            />
+          )}
+          {likeMutationPending ? (
+            <LoadingSpinner size={40} />
+          ) : (
+            <TouchableOpacity
+              onPress={handleLike}
+              style={[styles.likeButton, { backgroundColor: 'rgba(255,255,255,0.88)' }]}>
+              <FontAwesome
+                name="heart"
+                size={26}
+                color={
+                  article &&
+                  article?.likedUsers &&
+                  article?.likedUsers?.some(user => user._id === user_id)
+                    ? PRIMARY_COLOR
+                    : '#1f2937'
+                }
+              />
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity
+            onPress={() => {
+              if (playerVisible) {
+                handleTtsStop();
+              } else {
+                handleTtsPlay();
+              }
+            }}
+            style={[styles.playButton, { backgroundColor: 'rgba(255,255,255,0.88)' }]}>
+            <FontAwesome5
+              name={'headphones'}
+              size={24}
+              color={playerVisible ? PRIMARY_COLOR : '#1f2937'}
+            />
+          </TouchableOpacity>
+
+          {isPlaying && (
+            <View style={styles.botContainer}>
+              <LottieView
+                source={require('../../assets/LottieAnimation/TalkBotAnimation.json')}
+                autoPlay
+                loop={isPlaying}
+                style={{width: 200, height: 200}}
+              />
+            </View>
+          )}
+        </View>
         <View style={styles.contentContainer}>
           {article && (
             <Text
@@ -977,7 +969,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               {totalLikes > 0 && (
                 <View style={styles.avatarsContainer}>
                   {likedUsers
-                    .slice(Math.max(0, totalLikes - 3))
+                    .slice(0, 3)
                     .map((likedUser, index) => {
                       const profileImage = likedUser.Profile_image;
                       const uri = getProfileImageUri(profileImage);
@@ -985,14 +977,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                       return (
                         <View
                           key={likedUser._id || index}
-                          style={[styles.avatar, {left: index * 15}]}>
+                          style={[styles.avatar, { marginLeft: index === 0 ? 0 : -12, zIndex: 10 - index }]}>
                           <Image
                             source={{uri}}
                             style={[
                               styles.profileImage,
                               !profileImage && {
                                 borderWidth: 0.5,
-                                borderColor: 'black',
+                                borderColor: '#ccc',
                               },
                             ]}
                           />
@@ -1001,10 +993,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     })}
 
                   {totalLikes > 3 && (
-                    <View style={[styles.avatar, styles.avatarTripleOverlap]}>
+                    <View style={[styles.avatar, styles.avatarTripleOverlap, { marginLeft: -12, zIndex: 0 }]}>
                       <Text style={styles.moreText}>+{totalLikes - 3}</Text>
                     </View>
                   )}
+                  
+                  <Text style={[styles.likedByText, { color: isDarkMode ? '#9ca3af' : '#64748b' }]}>
+                     {totalLikes} {totalLikes === 1 ? 'like' : 'likes'}
+                  </Text>
                 </View>
               )}
               <View style={styles.descriptionContainer}>
@@ -1035,10 +1031,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     relatedEpisodes={article.relatedPodcasts}
                   />
                 )}
+
+
             </>
           )}
         </View>
       </Animated.ScrollView>
+
       <ArticleShareModal
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}
@@ -1073,9 +1072,98 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       />
 
       <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
+        {/* Author Row */}
+        <View style={[styles.authorRow, { borderBottomColor: footerColors.border }]}>
+          <View style={styles.authorContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                if (isGuest) {
+                  navigation.navigate('GuestPlaceholderScreen', {
+                    title: 'Sign In Required',
+                    description: 'Please sign in or sign up to view user profiles.',
+                    iconName: 'user',
+                  });
+                  return;
+                }
+                navigation.navigate('UserProfileScreen', {
+                  authorId: authorId,
+                  author_handle: undefined,
+                });
+              }}>
+              {(article?.authorId as any)?.Profile_image ? (
+                <Image
+                  source={{
+                    uri: (article?.authorId as any).Profile_image.startsWith('http')
+                      ? `${(article?.authorId as any).Profile_image}`
+                      : `${GET_STORAGE_DATA}/${(article?.authorId as any).Profile_image}`,
+                  }}
+                  style={styles.authorImage}
+                />
+              ) : (
+                <Image
+                  source={{
+                    uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                  }}
+                  style={styles.authorImage}
+                />
+              )}
+            </TouchableOpacity>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.authorName, {fontSize: 14 * fontScale, color: footerColors.text}]} numberOfLines={1}>
+                {article ? article?.authorName : ''}
+              </Text>
+              <Text style={[styles.authorFollowers, {fontSize: 11 * fontScale, color: footerColors.text}]}>
+                {(article?.authorId as any)?.followers
+                  ? (article?.authorId as any).followers.length > 1
+                    ? `${(article?.authorId as any).followers.length} followers`
+                    : `${(article?.authorId as any).followers.length} follower`
+                  : '0 follower'}
+              </Text>
+              {article && article.contributors && article.contributors.length > 0 && (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (isGuest) {
+                      navigation.navigate('GuestPlaceholderScreen', {
+                        title: 'Sign In Required',
+                        description: 'Please sign in or sign up to view all contributors.',
+                        iconName: 'users',
+                      });
+                      return;
+                    }
+                    navigation.navigate('SocialScreen', {
+                      type: 3,
+                      articleId: Number(article?._id),
+                      social_user_id: undefined,
+                    });
+                  }}>
+                  <Text style={[styles.contributorTextStyle, {fontSize: 14 * fontScale, marginTop: 4}]}>
+                    See all contributors
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+          {article && user_id !== (article.authorId as any)?._id && (
+            followMutationPending ? (
+              <LoadingSpinner size={40} />
+            ) : (
+              <TouchableOpacity style={styles.followButton} onPress={handleFollow}>
+                <Text style={styles.followButtonText}>
+                  {(article.authorId as any)?.followers &&
+                  (article.authorId as any).followers.some((user: any) => user._id === user_id)
+                    ? 'Following'
+                    : 'Follow'}
+                </Text>
+              </TouchableOpacity>
+            )
+          )}
+        </View>
+
         {/* Action Bar Row */}
-        <View
-          style={[
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={[
             styles.actionBarFooter,
             {borderBottomColor: footerColors.border},
           ]}>
@@ -1291,111 +1379,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               </>
             )}
           </TouchableOpacity>
-        </View>
-
-        {/*Improvement row */}
-
-        {/* Author Row */}
-        <View style={styles.authorRow}>
-          <View style={styles.authorContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                if (isGuest) {
-                  navigation.navigate('GuestPlaceholderScreen', {
-                    title: 'Sign In Required',
-                    description:
-                      'Please sign in or sign up to view user profiles.',
-                    iconName: 'user',
-                  });
-                  return;
-                }
-                navigation.navigate('UserProfileScreen', {
-                  authorId: (article?.authorId as any)?._id || authorId,
-                  author_handle: undefined,
-                });
-              }}>
-              {(article?.authorId as any)?.Profile_image ? (
-                <Image
-                  source={{
-                    uri: (article?.authorId as any).Profile_image.startsWith(
-                      'http',
-                    )
-                      ? `${(article?.authorId as any).Profile_image}`
-                      : `${GET_STORAGE_DATA}/${(article?.authorId as any).Profile_image}`,
-                  }}
-                  style={styles.authorImage}
-                />
-              ) : (
-                <Image
-                  source={{
-                    uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-                  }}
-                  style={styles.authorImage}
-                />
-              )}
-            </TouchableOpacity>
-            <View>
-              <Text style={[styles.authorName, {fontSize: 14 * fontScale}]}>
-                {article ? article?.authorName : ''}
-              </Text>
-              <Text
-                style={[styles.authorFollowers, {fontSize: 11 * fontScale}]}>
-                {(article?.authorId as any)?.followers
-                  ? (article?.authorId as any).followers.length > 1
-                    ? `${(article?.authorId as any).followers.length} followers`
-                    : `${(article?.authorId as any).followers.length} follower`
-                  : '0 follower'}
-              </Text>
-              {article &&
-                article.contributors &&
-                article.contributors.length > 0 && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (isGuest) {
-                        navigation.navigate('GuestPlaceholderScreen', {
-                          title: 'Sign In Required',
-                          description:
-                            'Please sign in or sign up to view all contributors.',
-                          iconName: 'users',
-                        });
-                        return;
-                      }
-                      navigation.navigate('SocialScreen', {
-                        type: 3,
-                        articleId: Number(article?._id),
-                        social_user_id: undefined,
-                      });
-                    }}>
-                    <Text
-                      style={[
-                        styles.contributorTextStyle,
-                        {fontSize: 14 * fontScale},
-                      ]}>
-                      See all contributors
-                    </Text>
-                  </TouchableOpacity>
-                )}
-            </View>
-          </View>
-          {article &&
-            user_id !== (article.authorId as any)?._id &&
-            (followMutationPending ? (
-              <LoadingSpinner size={40} />
-            ) : (
-              <TouchableOpacity
-                style={styles.followButton}
-                onPress={handleFollow}>
-                <Text style={styles.followButtonText}>
-                  {(article.authorId as any)?.followers &&
-                  (article.authorId as any).followers.some(
-                    (user: any) => user._id === user_id,
-                  )
-                    ? 'Following'
-                    : 'Follow'}
-                </Text>
-              </TouchableOpacity>
-            ))}
-        </View>
+        </ScrollView>
       </View>
       {/* Floating TTS Media Player */}
       {playerVisible && (
@@ -1467,45 +1451,59 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 2,
   },
   scrollView: {
-    flex: 0,
-    // marginTop: hp(4),
+    flex: 1,
     borderBottomEndRadius: hp(2),
     backgroundColor: '#ffffff',
     position: 'relative',
   },
   scrollViewContent: {
     marginBottom: 10,
-    flexGrow: 0,
+    flexGrow: 1,
+    paddingBottom: 40,
   },
   imageContainer: {
     width: '100%',
-    height: 200,
+    height: 280,
     position: 'relative',
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
     overflow: 'hidden',
     zIndex: 4,
-    elevation: 4,
+    elevation: 6,
+    backgroundColor: '#000',
   },
   image: {
-    height: 200,
+    height: 280,
     width: '100%',
     objectFit: 'cover',
+    opacity: 0.9,
   },
   likeButton: {
-    padding: 10,
+    padding: 12,
     position: 'absolute',
-    bottom: 4,
-    right: 70,
+    bottom: 20,
+    right: 75,
     borderRadius: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 5,
   },
 
   playButton: {
-    padding: 10,
+    padding: 12,
     position: 'absolute',
-    bottom: 4,
-    right: 15,
+    bottom: 20,
+    right: 20,
     borderRadius: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 5,
   },
   contentContainer: {
     marginTop: 25,
@@ -1523,9 +1521,10 @@ const styles = StyleSheet.create({
     color: '#6C6C6D',
   },
   titleText: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginTop: 5,
+    fontSize: 28,
+    fontWeight: '800',
+    marginTop: 10,
+    lineHeight: 36,
   },
   fontSizeControls: {
     marginTop: 12,
@@ -1557,38 +1556,44 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   avatarsContainer: {
-    position: 'relative',
-    flex: 1,
-    height: 70,
-    marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 5,
   },
-
   profileImage: {
-    height: 70,
-    width: 70,
-    borderRadius: 100,
+    height: '100%',
+    width: '100%',
+    borderRadius: 16,
     objectFit: 'cover',
-    resizeMode: 'contain',
   },
   avatar: {
-    height: 70,
-    width: 70,
-    borderRadius: 100,
-    position: 'absolute',
-    borderWidth: 1,
-    borderColor: 'white',
-    backgroundColor: '#D9D9D9',
+    height: 32,
+    width: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#ffffff',
+    backgroundColor: '#f1f5f9',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   avatarTripleOverlap: {
-    left: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: PRIMARY_COLOR,
   },
   moreText: {
-    fontSize: hp(4),
+    fontSize: 11,
     fontWeight: '700',
-    color: 'white',
+    color: '#ffffff',
+  },
+  likedByText: {
+    marginLeft: 10,
+    fontSize: 13,
+    fontWeight: '500',
   },
   descriptionContainer: {
     flex: 1,
@@ -1608,33 +1613,27 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   footer: {
-    position: 'relative',
-    bottom: 0,
-    zIndex: 10,
-    borderTopEndRadius: 20,
-    borderTopStartRadius: 20,
-    paddingTop: 14,
-    paddingBottom: 14,
-    paddingHorizontal: 16,
+    width: '100%',
+    paddingTop: 10,
+    paddingBottom: 20,
+    paddingHorizontal: 0,
+    marginTop: 20,
   },
   actionBarFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    marginBottom: 12,
     gap: 8,
   },
   actionButtonFooter: {
-    flex: 1,
+    width: 65,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
+    paddingVertical: 6,
     borderRadius: 12,
     gap: 3,
-    minHeight: 52,
+    minHeight: 46,
   },
   actionTextFooter: {
     fontSize: 10,
@@ -1642,18 +1641,25 @@ const styles = StyleSheet.create({
   },
   authorRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
+    paddingBottom: 15,
+    borderBottomWidth: 1,
+    marginBottom: 10,
   },
   authorContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    alignItems: 'flex-start',
+    gap: 12,
+    flex: 1,
+    paddingRight: 10,
   },
   authorImage: {
-    height: 40,
-    width: 40,
-    borderRadius: 40,
+    height: 48,
+    width: 48,
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: '#e2e8f0',
   },
   authorName: {
     fontWeight: '700',

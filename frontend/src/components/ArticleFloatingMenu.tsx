@@ -34,7 +34,7 @@ export default function ArticleFloatingMenuSheet({
       open={visible}
       onOpenChange={handleOpenChange}
       dismissOnSnapToBottom
-      snapPoints={[65, 30, 10]}
+      snapPoints={[60, 40]}
       dismissOnOverlayPress={true}
       zIndex={1000}>
       <Sheet.Handle />
@@ -47,7 +47,7 @@ export default function ArticleFloatingMenuSheet({
               <Button
                 key={`${item.name}-${item.articleId}-${index}`}
                 size="$5"
-                height={'21%'}
+                height={55}
                 onPress={() => {
                   item.action();
                 }}

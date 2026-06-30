@@ -4,6 +4,7 @@ import {
   Alert,
   TouchableOpacity,
   useColorScheme,
+  LinearGradient,
 } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
@@ -53,8 +54,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
 
   // Get the actual authorId string
- // const actualAuthorId = typeof authorId === 'string' ? authorId : authorId?._id || userId || '';
-  const actualAuthorId = routeUserId || user_id; // Prioritize routeUserId, fallback to current user_id
+  const actualAuthorId = (typeof authorId === 'string' ? authorId : authorId?._id) || routeUserId || userId || user_id; // Prioritize authorId, fallback to current user_id
   const {
     data: user,
     refetch,
@@ -287,7 +287,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         onFollowerPress={onFollowerClick}
         onFollowingPress={onFollowingClick}
         isFollowing={
-          user && user.followers.some(follower => follower === user_id)
+          user && user.followers.length > 0 && user.followers.some(follower => follower === user_id)
             ? true
             : false
         }
@@ -301,10 +301,10 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     return (
       <MaterialTabBar
         {...props}
-        indicatorStyle={styles.indicatorStyle}
-        style={styles.tabBarStyle}
+        indicatorStyle={[styles.indicatorStyle, { backgroundColor: PRIMARY_COLOR }]}
+        style={[styles.tabBarStyle, { backgroundColor: isDarkMode ? '#1f2937' : '#ffffff', borderBottomWidth: 1, borderBottomColor: isDarkMode ? '#374151' : '#f1f5f9' }]}
         activeColor={PRIMARY_COLOR}
-        inactiveColor="#9098A3"
+        inactiveColor={isDarkMode ? '#6b7280' : '#9098A3'}
         labelStyle={styles.labelStyle}
         contentContainerStyle={styles.contentContainerStyle}
       />
@@ -328,33 +328,23 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   }
 
   return (
-    <SafeAreaView
-      style={[
-        styles.container,
-        {backgroundColor: '#007AFF'},
-      ]}>
-      <StatusBar style="light" backgroundColor="#007AFF" />
+    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#0a0f1e' : '#0F52BA' }]}>
+      <StatusBar style="light" backgroundColor="transparent" translucent />
+
+      {/* Floating back button over the blue top area */}
       <TouchableOpacity
         style={styles.headerLeftButtonEditorScreen}
-        onPress={() => {
-          navigation.goBack();
-        }}>
-        <FontAwesome6 size={25} name="arrow-left" color="white" />
+        onPress={() => navigation.goBack()}
+        accessibilityLabel="Go back">
+        <FontAwesome6 size={20} name="arrow-left" color="white" />
       </TouchableOpacity>
-      <View
-        style={[
-          styles.innerContainer,
-          {backgroundColor: theme.background.val},
-        ]}>
+      <View style={[styles.innerContainer, { backgroundColor: isDarkMode ? '#111827' : '#ffffff' }]}>
         <Tabs.Container
           renderHeader={renderHeader}
           renderTabBar={renderTabBar}
-          containerStyle={[
-            styles.tabsContainer,
-            {backgroundColor: theme.background.val},
-          ]}>
+          containerStyle={[styles.tabsContainer, { backgroundColor: isDarkMode ? '#111827' : '#ffffff' }]}>
           {/* Tab 1 */}
-          <Tabs.Tab name="User Insight">
+          <Tabs.Tab name="Insight">
             <Tabs.ScrollView
               automaticallyAdjustContentInsets={true}
               contentInsetAdjustmentBehavior="always"
@@ -369,37 +359,27 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
             </Tabs.ScrollView>
           </Tabs.Tab>
           {/* Tab 2 */}
-          <Tabs.Tab name="User Article">
+          <Tabs.Tab name="Articles">
             <Tabs.FlatList
-              data={user !== undefined ? user.articles : []}
+              data={user && user.articles ? user.articles : []}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={[
-                styles.flatListContentContainer,
-                {paddingBottom: 15},
-              ]}
+              contentContainerStyle={[styles.flatListContentContainer, { paddingBottom: 15 }]}
               keyExtractor={(item: ArticleData) => item?._id}
               refreshing={refreshing}
-              ListEmptyComponent={
-                 <NoArticleState/>
-              }
+              ListEmptyComponent={<NoArticleState />}
             />
           </Tabs.Tab>
 
-          <Tabs.Tab name="User Reposts">
+          <Tabs.Tab name="Reposts">
             <Tabs.FlatList
               data={user !== undefined ? user.repostArticles : []}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={[
-                styles.flatListContentContainer,
-                {paddingBottom: 15},
-              ]}
+              contentContainerStyle={[styles.flatListContentContainer, { paddingBottom: 15 }]}
               keyExtractor={(item: ArticleData) => item?._id}
               refreshing={refreshing}
-              ListEmptyComponent={
-                <NoArticleState/>
-              }
+              ListEmptyComponent={<NoArticleState />}
             />
           </Tabs.Tab>
         </Tabs.Container>
@@ -414,8 +394,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerTitle: {
+    color: '#ffffff',
+    fontWeight: '700',
+    fontSize: 17,
+    letterSpacing: 0.3,
+  },
   innerContainer: {
     flex: 1,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    overflow: 'hidden',
   },
   tabsContainer: {
     overflow: 'hidden',
@@ -429,16 +418,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   indicatorStyle: {
-    backgroundColor: 'white',
+    backgroundColor: PRIMARY_COLOR,
+    height: 3,
+    borderRadius: 3,
   },
   tabBarStyle: {
-    backgroundColor: 'white',
+    elevation: 0,
+    shadowOpacity: 0,
   },
   labelStyle: {
-    fontWeight: '600',
+    fontWeight: '700',
     fontSize: 13,
-    //color: 'black',
     textTransform: 'capitalize',
+    letterSpacing: 0.2,
   },
   contentContainerStyle: {
     width: '100%',
@@ -446,8 +438,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     shadowOpacity: 0,
-    shadowOffset: {width: 0, height: 0},
-    shadowColor: 'white',
+    shadowOffset: { width: 0, height: 0 },
+    shadowColor: 'transparent',
   },
   message: {
     fontSize: 16,
@@ -466,8 +458,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerLeftButtonEditorScreen: {
-    marginLeft: 15,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
+    position: 'absolute',
+    top: 12,
+    left: 16,
+    zIndex: 100,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

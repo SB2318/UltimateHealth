@@ -97,17 +97,17 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     const onCancel = () => { setActiveSpeakingId(null); };
     const onError  = () => { setActiveSpeakingId(null); };
 
-    Tts.addEventListener('tts-start',  onStart);
-    Tts.addEventListener('tts-finish', onFinish);
-    Tts.addEventListener('tts-cancel', onCancel);
-    Tts.addEventListener('tts-error',  onError);
+    const startSub = Tts.addEventListener('tts-start',  onStart);
+    const finishSub = Tts.addEventListener('tts-finish', onFinish);
+    const cancelSub = Tts.addEventListener('tts-cancel', onCancel);
+    const errorSub = Tts.addEventListener('tts-error',  onError);
 
     return () => {
       Tts.stop();
-      Tts.removeEventListener('tts-start',  onStart);
-      Tts.removeEventListener('tts-finish', onFinish);
-      Tts.removeEventListener('tts-cancel', onCancel);
-      Tts.removeEventListener('tts-error',  onError);
+      try { startSub?.remove?.(); } catch (e) {}
+      try { finishSub?.remove?.(); } catch (e) {}
+      try { cancelSub?.remove?.(); } catch (e) {}
+      try { errorSub?.remove?.(); } catch (e) {}
     };
   }, []);
 
@@ -179,8 +179,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
           createdAt: new Date(),
           user: {
             _id: ASSISTANT_USER_ID,
-            avatar:
-              'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+            avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
           },
         },
         ...refined.reverse(),
@@ -202,8 +201,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
             createdAt: new Date(),
             user: {
               _id: ASSISTANT_USER_ID,
-              avatar:
-                'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+              avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
             },
             customError: true,
             originalPrompt: prompt,
@@ -230,8 +228,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               createdAt: new Date(),
               user: {
                 _id: ASSISTANT_USER_ID,
-                avatar:
-                  'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+                avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
               },
               metadata: {
                 status: verification.status,
@@ -274,8 +271,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
         createdAt: new Date(),
         user: {
           _id: ASSISTANT_USER_ID,
-          avatar:
-            'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo.jpg',
+          avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
         },
       },
     ]),
@@ -300,8 +296,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               createdAt: new Date(),
               user: {
                 _id: ASSISTANT_USER_ID,
-                avatar:
-                  'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+                avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
               },
               customError: true,
               originalPrompt: prompt,
