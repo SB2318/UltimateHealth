@@ -37,7 +37,8 @@ const UserArticleCard = ({
       ? (item.authorId as any)._id 
       : String(item.authorId);
 
-    navigation.navigate('ArticleScreen', {
+    const nav = navigation as any;
+    nav.navigate('ArticleScreen', {
       articleId: Number(item._id),
       authorId: finalAuthorId,
     });
@@ -46,7 +47,7 @@ const UserArticleCard = ({
   return (
     <Pressable
       onPress={handlePress}
-      style={({ pressed }) => [
+      style={({ pressed }: { pressed: boolean }) => [
         styles.cardContainer,
         {
           backgroundColor: isDarkMode ? '#1F2937' : '#FFFFFF',
@@ -65,7 +66,7 @@ const UserArticleCard = ({
               {authorName}
             </Text>
             <Text style={[styles.metaText, { color: isDarkMode ? '#9CA3AF' : '#6B7280' }]}>
-              {item.status === 'published' ? 'Published' : 'Draft'} • {item.lastUpdatedAt ? new Date(item.lastUpdatedAt).toLocaleDateString() : 'Recent'}
+              {item.status === 'published' ? 'Published' : 'Draft'} • {item.lastUpdated ? new Date(item.lastUpdated).toLocaleDateString() : 'Recent'}
             </Text>
           </View>
         </View>

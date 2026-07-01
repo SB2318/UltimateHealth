@@ -51,6 +51,10 @@ import CommunityGuidelinesScreen from '../screens/CommunityGuidelinesScreen';
 import ContributorPage from '../screens/ContributorPage';
 import OpenSourcePage from '../screens/OpenSourcePage';
 import NotificationPreferencesScreen from '../screens/NotificationPreferencesScreen';
+import InsightScreen from '../screens/profile/InsightScreen';
+import RepostsScreen from '../screens/profile/RepostsScreen';
+import SavedArticlesScreen from '../screens/profile/SavedArticlesScreen';
+import WellnessDashboardScreen from '../screens/WellnessDashboard/WellnessDashboardScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 
 import ChatbotScreen from '../screens/ChatbotScreen';
@@ -843,6 +847,34 @@ const StackNavigation = () => {
             </TouchableOpacity>
           ),
         })}
+      />
+      <Stack.Screen
+        name="InsightScreen"
+        component={InsightScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="RepostsScreen"
+        component={RepostsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="SavedArticlesScreen"
+        component={SavedArticlesScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="WellnessDashboardScreen"
+        component={WellnessDashboardScreen}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="LogoutScreen"

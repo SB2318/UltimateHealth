@@ -16,7 +16,7 @@ import PersonaLobbyScreen from '../screens/PersonaLobbyScreen';
 import AboutScreen from '../screens/AboutPage';
 import {useSelector} from 'react-redux';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
-import WellnessDashboardScreen from '../screens/WellnessDashboard/WellnessDashboardScreen';
+
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -133,19 +133,7 @@ const TabNavigation = () => {
           }
         }}
       />
-
-    
-    <Tab.Screen
-      // @ts-ignore
-name="Wellness"
-      component={WellnessDashboardScreen}
-      options={{
-        headerShown: false,
-      }}
-    />
     </Tab.Navigator>
-
-    
   );
 };
 export default TabNavigation;
