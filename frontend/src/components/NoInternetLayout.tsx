@@ -29,7 +29,7 @@ export default function NoInternetLayout(): JSX.Element {
         color={BUTTON_COLOR}
         style={{marginBottom: 20}}
       />
-      <Text style={GlobalStyles.text}>No internet connection</Text>
+      <Text style={[GlobalStyles.text, { color: BUTTON_COLOR }]}>No internet connection</Text>
     </SafeAreaView>
   );
 }

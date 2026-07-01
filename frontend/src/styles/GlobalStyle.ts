@@ -14,13 +14,13 @@ const GlobalStyles = StyleSheet.create({
   },
   welcomeLabel: {
     fontSize: 24,
-    color: 'white',
+    color: ON_PRIMARY_COLOR,
     fontWeight: '700',
     marginStart: 4,
   },
 
   text: {
-    color: 'black',
+    color: PRIMARY_COLOR,
     fontSize: 20,
     fontWeight: '600',
     alignSelf: 'center',
@@ -36,7 +36,7 @@ const GlobalStyles = StyleSheet.create({
     padding: 3,
   },
   normalText: {
-    color: 'white',
+    color: ON_PRIMARY_COLOR,
     fontSize: 20,
     fontWeight: '600',
     marginTop: 6,
