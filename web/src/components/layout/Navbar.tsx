@@ -110,7 +110,7 @@ export default function Navbar({ activeSection }: NavbarProps) {
         </button>
       </PageWrapper>
 
-      <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
+      <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`} style={{ display: 'none' }}>
         <a href={withBasePath("/#screenshots")} onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
         <a href={withBasePath("/#features")} onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
         <a href={withBasePath("/#programs")} onClick={() => setMobileMenuOpen(false)}>Community Programs</a>

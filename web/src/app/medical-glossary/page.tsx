@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+// import Navbar from "@/components/layout/Navbar";
 import { withBasePath } from "@/lib/basePath";
-import { MedicalGlossaryExplorer } from "./MedicalGlossaryExplorer";
+import MedicalGlossaryExplorer from "./MedicalGlossaryExplorer";
 import { Navbar, PageWrapper, Section } from "@/components/layout";
 
 export const metadata: Metadata = {
@@ -31,10 +32,10 @@ export default function MedicalGlossaryPage() {
       </section>
 
       <div className="pb-20 bg-transparent">
-        <div className="w-full px-4 md:px-8 lg:px-12">
-          <MedicalGlossaryExplorer />
-        </div>
-      </div>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <MedicalGlossaryExplorer />
+  </div>
+</div>
     </main>
   );
 }

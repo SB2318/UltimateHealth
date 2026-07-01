@@ -43,7 +43,7 @@ export default function MedicalGlossaryExplorer() {
       </div>
 
       {/* Search & Filters */}
-      <div className="flex flex-col gap-4 md:flex-row">
+      <div className="flex flex-col gap-4 md:flex-row w-full min-w-0">
         <input
           type="text"
           placeholder="Search medical terms..."
@@ -90,7 +90,7 @@ export default function MedicalGlossaryExplorer() {
           {filteredEntries.map((entry) => (
             <article
               key={entry.term}
-              className="rounded-xl border bg-card p-6 transition hover:shadow-md"
+              className="rounded-xl border bg-white p-6 transition hover:shadow-md"
             >
               {/* Category */}
               <div className="mb-3">
@@ -120,7 +120,7 @@ export default function MedicalGlossaryExplorer() {
                     {entry.relatedTerms.map((term) => (
                       <span
                         key={term}
-                        className="rounded-full bg-muted px-3 py-1 text-xs"
+                        className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-700"
                       >
                         {term}
                       </span>
