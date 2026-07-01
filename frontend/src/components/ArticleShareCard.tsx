@@ -9,7 +9,7 @@
  *   // Attach a ref and call captureRef(ref) to get a shareable image URI.
  */
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import {
   View,
   Text,
@@ -134,13 +134,13 @@ const ArticleShareCard: React.FC<ArticleShareCardProps> = ({
 
 // ─── Sub-component ────────────────────────────────────────────────────────────
 
-const CategoryBadge: React.FC<{ category: string; light: boolean }> = ({
+const CategoryBadge: React.FC<{ category: ReactNode; light: boolean }> = ({
   category,
   light,
 }) => (
   <View style={[styles.badge, light ? styles.badgeLight : styles.badgeDark]}>
     <Text style={[styles.badgeText, light ? styles.badgeTextLight : styles.badgeTextDark]}>
-      {category.toUpperCase()}
+      {typeof category === 'string' ? category.toUpperCase() : category}
     </Text>
   </View>
 );
