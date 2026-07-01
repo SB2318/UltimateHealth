@@ -743,6 +743,36 @@ useEffect(() => {
           onPress={handleShare}>
           <Ionicons name="share-outline" size={26} color="white" />
         </TouchableOpacity>
+
+        {/* LISTEN TOGETHER */}
+        <TouchableOpacity
+          style={styles.actionButton}
+          onPress={() => {
+            if (isGuest) {
+              navigation.navigate('GuestPlaceholderScreen', {
+                title: 'Sign In Required',
+                description: 'Please sign in or sign up to listen together.',
+                iconName: 'people',
+              });
+              return;
+            }
+            if (!isConnected) {
+              Snackbar.show({
+                text: 'You need an internet connection to listen together.',
+                duration: Snackbar.LENGTH_SHORT,
+              });
+              return;
+            }
+            if (podcast) {
+              navigation.navigate('ListenTogetherScreen', {
+                trackId: podcast._id,
+                audioUrl: podcast.audio_url,
+                mode: 'host',
+              });
+            }
+          }}>
+          <Ionicons name="people-outline" size={26} color="white" />
+        </TouchableOpacity>
       </XStack>
     </View>
   ) : (

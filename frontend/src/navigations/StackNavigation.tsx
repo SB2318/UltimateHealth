@@ -52,6 +52,8 @@ import ContributorPage from '../screens/ContributorPage';
 import OpenSourcePage from '../screens/OpenSourcePage';
 import NotificationPreferencesScreen from '../screens/NotificationPreferencesScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import ListenTogetherScreen from '../screens/ListenTogetherScreen';
+import JoinListenTogetherScreen from '../screens/JoinListenTogetherScreen';
 
 import ChatbotScreen from '../screens/ChatbotScreen';
 
@@ -859,6 +861,17 @@ const StackNavigation = () => {
           title: route?.params?.title || 'Sign In Required',
           headerBackTitleVisible: false,
         })}
+      />
+
+      <Stack.Screen
+        name="ListenTogetherScreen"
+        component={ListenTogetherScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="JoinListenTogetherScreen"
+        component={JoinListenTogetherScreen}
+        options={{headerShown: false}}
       />
       {/* <Stack.Screen
         name="ChatbotScreen"
