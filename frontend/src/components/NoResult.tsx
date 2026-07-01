@@ -14,7 +14,7 @@ const NoResult = ({query = ''}) => {
         alignItems="center"
         paddingHorizontal="$4"
         gap="$2">
-        <MaterialIcons name="podcasts" size={64} color="#B0B0B0" />
+        <MaterialIcons name="podcasts" size={64} color="$gray8" />
 
         <Text fontSize="$5" fontWeight="600" color="$gray10">
           No podcasts found
