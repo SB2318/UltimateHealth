@@ -7,6 +7,7 @@ import "./globals.css";
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import HeroAndDownload from "../components/HeroAndDownload";
 import ScrollToTop from "../components/ScrollToTop";
+import { ModeToggle } from "@/components/mode-toggle";
 import Navbar from "../components/Navbar";
 import { PageWrapper, Section } from "../components/layout";
 
@@ -47,7 +48,6 @@ const allScreenshots = [...userScreenshots, ...adminScreenshots];
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://uhsocial.in";
 const CURSOR_GLOW_STORAGE_KEY = "cursorGlowEnabled";
 const CURSOR_GLOW_EVENT = "cursor-glow-preference-change";
-// Owner-configurable frontend URLs (set in deployment env when needed)
 const HELP_CENTER_URL = process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https://uhsocial.in/docs";
 const FEEDBACK_URL = process.env.NEXT_PUBLIC_FEEDBACK_URL || "https://github.com/SB2318/UltimateHealth/issues";
 const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "";
@@ -57,7 +57,20 @@ const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || "#";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const SLIDER_SCROLL_AMOUNT = 324;
 const DNA_TRAIL_MAX_POINTS = 38;
+const CLONE_COUNT = 8; // needs to be >= viewport_width / itemWidth for clone zone to be reachable
 const isValidEmail = (email: string) => EMAIL_PATTERN.test(email.trim());
+
+// Infinite carousel: clone first/last CLONE_COUNT items on each side for seamless looping
+const extendedUserScreenshots = [
+  ...userScreenshots.slice(-CLONE_COUNT),
+  ...userScreenshots,
+  ...userScreenshots.slice(0, CLONE_COUNT),
+];
+const extendedAdminScreenshots = [
+  ...adminScreenshots.slice(-CLONE_COUNT),
+  ...adminScreenshots,
+  ...adminScreenshots.slice(0, CLONE_COUNT),
+];
 
 const getCursorGlowSnapshot = () => {
   if (typeof window === "undefined") return false;
@@ -94,6 +107,8 @@ export default function Home() {
   const [adminSliderOpen, setAdminSliderOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
   const [featuresLoading, setFeaturesLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // ── DNA helix cursor ──
   const cursorGlowEnabled = useSyncExternalStore(
@@ -137,6 +152,29 @@ export default function Home() {
     setAppleModal(false);
     setTesterSuccess(false);
     setTesterEmail("");
+  }, []);
+
+  // ── Scroll listener ──
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // ── Active section observer ──
+  useEffect(() => {
+    const sections = ["features", "screenshots", "programs", "contact"];
+    const observers = sections.map((id) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const observer = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { threshold: 0.4 }
+      );
+      observer.observe(el);
+      return observer;
+    });
+    return () => observers.forEach((o) => o?.disconnect());
   }, []);
 
   useEffect(() => {
@@ -239,8 +277,6 @@ export default function Home() {
   }, []);
 
   // ── Features loading state ──
-  // TODO: Replace this simulated delay with real data fetching (e.g. an API call or
-  // a server action) once the features section is backed by dynamic content.
   useEffect(() => {
     const timer = setTimeout(() => setFeaturesLoading(false), 1500);
     return () => clearTimeout(timer);
@@ -310,52 +346,42 @@ export default function Home() {
     }
   };
 
-  const moveSlider = (ref: RefObject<HTMLDivElement | null>, dir: number) => {
+  // Infinite carousel using the clone trick:
+  // The rendered list is [...lastN clones, ...real items, ...firstN clones]
+  // moveSlider only triggers the smooth scroll; the scroll-event listeners below
+  // handle the silent reset once the animation actually finishes.
+  const moveSlider = (
+    ref: RefObject<HTMLDivElement | null>,
+    dir: number,
+    _realCount: number,
+  ) => {
     const slider = ref.current;
     if (!slider) return;
-
-    const maxScroll = slider.scrollWidth - slider.clientWidth;
+    const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
     const currentScroll = slider.scrollLeft;
-    const targetScroll = currentScroll + dir * SLIDER_SCROLL_AMOUNT;
-
-    if (dir === 1) {
-      if (currentScroll >= maxScroll) {
-        slider.scrollTo({ left: 0, behavior: "auto" });
-        return;
-      }
-
-      if (targetScroll > maxScroll) {
-        slider.scrollTo({ left: maxScroll, behavior: "smooth" });
-        return;
-      }
-    }
-
-    if (dir === -1) {
-      if (currentScroll <= 0 || targetScroll < 0) {
-        slider.scrollTo({ left: maxScroll, behavior: "auto" });
-        return;
-      }
-    }
-
-    slider.scrollTo({
-      left: Math.max(0, Math.min(targetScroll, maxScroll)),
-      behavior: "smooth",
-    });
+    const targetScroll = Math.max(
+      0,
+      Math.min(currentScroll + dir * SLIDER_SCROLL_AMOUNT, maxScrollLeft),
+    );
+    slider.scrollTo({ left: targetScroll, behavior: "smooth" });
   };
 
   const startAutoSlide = useCallback(() => {
     if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
     autoSlideTimerRef.current = setInterval(() => {
-      moveSlider(userSliderRef, 1);
-      if (adminSliderOpen) moveSlider(adminSliderRef, 1);
+      moveSlider(userSliderRef, 1, userScreenshots.length);
+      if (adminSliderOpen) moveSlider(adminSliderRef, 1, adminScreenshots.length);
     }, 3000);
   }, [adminSliderOpen]);
 
-  const handleManualSlide = useCallback((ref: RefObject<HTMLDivElement | null>, direction: number) => {
-    if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
-    moveSlider(ref, direction);
-    setTimeout(startAutoSlide, 5000);
-  }, [startAutoSlide]);
+  const handleManualSlide = useCallback(
+    (ref: RefObject<HTMLDivElement | null>, direction: number, realCount: number) => {
+      if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
+      moveSlider(ref, direction, realCount);
+      setTimeout(startAutoSlide, 5000);
+    },
+    [startAutoSlide],
+  );
 
   useEffect(() => {
     startAutoSlide();
@@ -363,6 +389,83 @@ export default function Home() {
       if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
     };
   }, [startAutoSlide]);
+
+  // Initialise slider scroll positions to show the first REAL item (skip start clones)
+  useEffect(() => {
+    if (!userSliderOpen) return;
+    const timer = setTimeout(() => {
+      const slider = userSliderRef.current;
+      if (!slider) return;
+      const itemWidth = slider.scrollWidth / (userScreenshots.length + CLONE_COUNT * 2);
+      slider.scrollLeft = CLONE_COUNT * itemWidth;
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [userSliderOpen]);
+
+  useEffect(() => {
+    if (!adminSliderOpen) return;
+    const timer = setTimeout(() => {
+      const slider = adminSliderRef.current;
+      if (!slider) return;
+      const itemWidth = slider.scrollWidth / (adminScreenshots.length + CLONE_COUNT * 2);
+      slider.scrollLeft = CLONE_COUNT * itemWidth;
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [adminSliderOpen]);
+
+  // Scroll-event debounce: fires 150ms after scrolling stops (works for any scroll duration)
+  // Silently resets position when the slider lands in the clone zone.
+  useEffect(() => {
+    const slider = userSliderRef.current;
+    if (!slider || !userSliderOpen) return;
+    let debounce: ReturnType<typeof setTimeout> | null = null;
+    const onScroll = () => {
+      if (debounce) clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        const totalItems = userScreenshots.length + CLONE_COUNT * 2;
+        const itemWidth = slider.scrollWidth / totalItems;
+        const startOffset = CLONE_COUNT * itemWidth;
+        const realScrollWidth = userScreenshots.length * itemWidth;
+        const scroll = slider.scrollLeft;
+        if (scroll >= startOffset + realScrollWidth) {
+          slider.scrollTo({ left: startOffset + (scroll - startOffset - realScrollWidth), behavior: "instant" as ScrollBehavior });
+        } else if (scroll < startOffset) {
+          slider.scrollTo({ left: startOffset + realScrollWidth + (scroll - startOffset), behavior: "instant" as ScrollBehavior });
+        }
+      }, 150);
+    };
+    slider.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      slider.removeEventListener("scroll", onScroll);
+      if (debounce) clearTimeout(debounce);
+    };
+  }, [userSliderOpen]);
+
+  useEffect(() => {
+    const slider = adminSliderRef.current;
+    if (!slider || !adminSliderOpen) return;
+    let debounce: ReturnType<typeof setTimeout> | null = null;
+    const onScroll = () => {
+      if (debounce) clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        const totalItems = adminScreenshots.length + CLONE_COUNT * 2;
+        const itemWidth = slider.scrollWidth / totalItems;
+        const startOffset = CLONE_COUNT * itemWidth;
+        const realScrollWidth = adminScreenshots.length * itemWidth;
+        const scroll = slider.scrollLeft;
+        if (scroll >= startOffset + realScrollWidth) {
+          slider.scrollTo({ left: startOffset + (scroll - startOffset - realScrollWidth), behavior: "instant" as ScrollBehavior });
+        } else if (scroll < startOffset) {
+          slider.scrollTo({ left: startOffset + realScrollWidth + (scroll - startOffset), behavior: "instant" as ScrollBehavior });
+        }
+      }, 150);
+    };
+    slider.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      slider.removeEventListener("scroll", onScroll);
+      if (debounce) clearTimeout(debounce);
+    };
+  }, [adminSliderOpen]);
 
   // ── TestFlight invite ──
   const sendTesterEmail = async () => {
@@ -438,8 +541,6 @@ export default function Home() {
   };
 
   // ── Newsletter subscribe ──
-  // Backend route needed: POST /api/newsletter/subscribe on NEXT_PUBLIC_API_BASE_URL
-  // See /contact_newsletter_guide.md — owner fills DB / Mailchimp credentials
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedNewsletterEmail = newsletterEmail.trim();
@@ -476,8 +577,99 @@ export default function Home() {
   const selectedScreenshot = allScreenshots[currentScreenshot] ?? allScreenshots[0];
 
   return (
-    <div className="landing-page">
-      <Navbar />
+    <>
+      {/* ── Header ── */}
+      <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
+        <PageWrapper as="div" className="nav">
+          <Link href={withBasePath("/")} className="logo">
+            <div className="logo-icon">
+              <Image
+                src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
+                alt="UltimateHealth Logo" width={48} height={48}
+                priority
+              />
+            </div>
+            Ultimate-Health
+          </Link>
+
+          <ul className="nav-links">
+            <li>
+              <a
+                href="#features"
+                className={`nav-link-item${activeSection === "features" ? " active" : ""}`}
+                aria-current={activeSection === "features" ? "location" : undefined}
+              >
+                <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Platform Highlights</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#screenshots"
+                className={`nav-link-item${activeSection === "screenshots" ? " active" : ""}`}
+                aria-current={activeSection === "screenshots" ? "location" : undefined}
+              >
+                <i className="fas fa-image nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">App Experience</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#programs"
+                className={`nav-link-item${activeSection === "programs" ? " active" : ""}`}
+                aria-current={activeSection === "programs" ? "location" : undefined}
+              >
+                <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Community Programs</span>
+              </a>
+            </li>
+            <li>
+              <Link href={withBasePath("/articles")} className="nav-link-item">
+                <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Read Articles</span>
+              </Link>
+            </li>
+            <li>
+              <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
+                <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Medical Glossary</span>
+              </Link>
+            </li>
+            <li>
+              <Link href={withBasePath("/contribute")} className="nav-link-item">
+                <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Join Us to Contribute</span>
+              </Link>
+            </li>
+            <li style={{ display: "flex", alignItems: "center" }}>
+              <ModeToggle />
+            </li>
+            <li style={{ display: "flex", alignItems: "center" }}>
+              <a href="#downloads" className="nav-btn-sm">
+                <i className="fas fa-user" aria-hidden="true"></i>
+                <span>Login / Register</span>
+              </a>
+            </li>
+          </ul>
+
+          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileMenuOpen}>
+            <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
+          </button>
+        </PageWrapper>
+
+        <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
+          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>App Experience</a>
+          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
+          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
+          <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
+          <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
+          <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
+          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+          <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
+            <ModeToggle />
+          </div>
+        </nav>
+      </header>
 
       {/* ── Hero ── */}
       <HeroAndDownload
@@ -499,9 +691,9 @@ export default function Home() {
             {userSliderOpen && (
               <div className="screenshot-slider-container">
                 <div className="screenshots-wrapper" ref={userSliderRef}>
-                  {userScreenshots.map((s) => (
+                  {extendedUserScreenshots.map((s, i) => (
                     <div
-                      key={s.src}
+                      key={`user-${i}`}
                       className="screenshot-box"
                       onClick={() => openScreenshotModal(s.src)}
                       onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
@@ -509,6 +701,7 @@ export default function Home() {
                       tabIndex={0}
                       aria-label={`Open ${s.caption} screenshot`}
                     >
+                    <div className="screenshot-image-frame">
                       <Image
                         src={s.src}
                         alt={s.caption}
@@ -517,17 +710,13 @@ export default function Home() {
                         className="screenshot-image"
                       />
                     </div>
-                  ))}
-                  <div className="screenshot-box">
-                    <div className="screenshot-empty">
-                      <i className="fas fa-mobile-alt" style={{ fontSize: "4rem", color: "#cbd5e1" }}></i>
-                      <p style={{ marginTop: "20px", color: "#718096", fontWeight: 600 }}>More Screens Coming Soon</p>
+                      <div className="screenshot-card-caption">{s.caption}</div>
                     </div>
-                  </div>
+                  ))}
                 </div>
                 <div className="slider-nav">
-                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, -1, userScreenshots.length)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, 1, userScreenshots.length)}><i className="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             )}
@@ -541,9 +730,9 @@ export default function Home() {
             {adminSliderOpen && (
               <div className="screenshot-slider-container">
                 <div className="screenshots-wrapper" ref={adminSliderRef}>
-                  {adminScreenshots.map((s) => (
+                  {extendedAdminScreenshots.map((s, i) => (
                     <div
-                      key={s.src}
+                      key={`admin-${i}`}
                       className="screenshot-box"
                       onClick={() => openScreenshotModal(s.src)}
                       onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
@@ -558,18 +747,13 @@ export default function Home() {
                         sizes="(max-width: 768px) 260px, 300px"
                         className="screenshot-image"
                       />
+                      <div className="screenshot-card-caption">{s.caption}</div>
                     </div>
                   ))}
-                  <div className="screenshot-box">
-                    <div className="screenshot-empty">
-                      <i className="fas fa-mobile-alt" style={{ fontSize: "4rem", color: "#cbd5e1" }}></i>
-                      <p style={{ marginTop: "20px", color: "#718096", fontWeight: 600 }}>More Screens Coming Soon</p>
-                    </div>
-                  </div>
                 </div>
                 <div className="slider-nav">
-                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, -1, adminScreenshots.length)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, 1, adminScreenshots.length)}><i className="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             )}
@@ -662,7 +846,7 @@ export default function Home() {
               { logo: "https://github.com/user-attachments/assets/e0a40d06-f5b8-42a7-a5a0-033280f842be", alt: "IEEE IGDTUW Logo", badge: "Open Source Week", title: "IEEE IGDTUW", desc: "A week-long intensive event aimed at fostering global collaboration and high-level skill-building in the open-source ecosystem." },
               { logo: "https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00", alt: "Vultr Logo", badge: "Cloud Hackathon", title: "Vultr Cloud Innovate", desc: "Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power." },
               { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2024", title: "GirlScript Summer of Code", desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship." },
-              { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo",badge: "Summer 2026", title: "GirlScript Summer of Code 2026", desc: "A large-scale open-source program that provides mentorship, real-world project experience, and collaboration opportunities for contributors worldwide."}
+              { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2026", title: "GirlScript Summer of Code 2026", desc: "A large-scale open-source program that provides mentorship, real-world project experience, and collaboration opportunities for contributors worldwide." },
             ].map((p, i) => (
               <div className="program-card w-full fade-in" key={i}>
                 <div className="program-logo-wrapper">

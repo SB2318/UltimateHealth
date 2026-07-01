@@ -806,6 +806,12 @@ p.center {
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.screenshot-image-frame {
+  position: relative;
+  flex: 1;
+  min-height: 200px;
+}
+
 .screenshot-empty {
   display: flex;
   flex-direction: column;
@@ -1030,28 +1036,54 @@ p.center {
   padding: 32px;
   border-radius: 20px;
   box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  /* transition: var(--transition); */
   border: 1px solid rgba(0, 0, 0, 0.05);
   /*changing the layout to flex column */
   display: flex;
   flex-direction: column;
   height: 100%;
+  transition: transform 0.35s ease, box-shadow 0.35s ease,
+  border-color 0.35s ease;
 }
-.feature-item:hover, .feature-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+.feature-item:hover,
+.feature-card:hover {
+  transform: translateY(-15px) !important;
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.25) ;
+  border-color: #667eea;
+}
 .feature-item h3, .feature-card h3 { font-size: 1.3rem; margin-bottom: 12px; color: var(--text-dark); font-weight: 700; }
 .feature-item p, .feature-card p { color: var(--text-muted); line-height: 1.7; }
 
 /* ==================== MODERATOR SECTION ==================== */
 .member-section { background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%) !important; }
+
 .mod-icon {
+  display: flex;
+  justify-content: left;
+  align-items: left;
   font-size: 2.5rem;
   margin-bottom: 20px;
+  color: #667eea ;
+  transition: transform 0.35s ease;
+}
+.mod-icon i {
   background: var(--gradient-primary);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-.mod-card { border: 2px solid rgba(102, 126, 234, 0.1); background: white; }
-.mod-card:hover { border-color: var(--primary); box-shadow: 0 20px 40px -10px rgba(102, 126, 234, 0.25); }
+.mod-card {
+  border: 2px solid rgba(102, 126, 234, 0.1); 
+  transition: all 0.35s ease;
+  border-radius: 16 px;
+}
+.mod-card:hover { 
+  transform: translateY(-10px);
+  border-color: var(--primary); 
+  box-shadow: 0 20px 40px -10px rgba(102, 126, 234, 0.25); 
+}
+.mod-card:hover .mod-icon {
+  transform: rotate(8deg);
+}
 
 /* ==================== PROGRAM CARDS ==================== */
 .program-grid {
@@ -1937,7 +1969,8 @@ i, svg {
 }
 
 /* ── CSS Variables ── */
-& {
+/* ── CSS Variables ── */
+:root {
   --uh-primary:       #2563eb;
   --uh-primary-deep:  #1d4ed8;
   --uh-primary-light: #3b82f6;
@@ -3063,8 +3096,6 @@ i, svg {
     transition: none !important;
   }
 }
-}
-
 /* ==================== DARK MODE ==================== */
 html.dark {
   --text-dark: #f1f5f9;
@@ -3112,6 +3143,7 @@ html.dark .modal-content {
   background: #1e293b;
   border-color: rgba(255,255,255,0.05);
 }
+
 html.dark section#contact.contact-section { background: #0f172a; }
 html.dark .contact-dark-right { background: #1e293b; }
 html.dark .contact-form-title { color: #f1f5f9; }
