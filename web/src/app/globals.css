@@ -806,6 +806,12 @@ p.center {
   border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.screenshot-image-frame {
+  position: relative;
+  flex: 1;
+  min-height: 200px;
+}
+
 .screenshot-empty {
   display: flex;
   flex-direction: column;
@@ -1963,7 +1969,8 @@ i, svg {
 }
 
 /* ── CSS Variables ── */
-& {
+/* ── CSS Variables ── */
+:root {
   --uh-primary:       #2563eb;
   --uh-primary-deep:  #1d4ed8;
   --uh-primary-light: #3b82f6;
@@ -3089,8 +3096,6 @@ i, svg {
     transition: none !important;
   }
 }
-}
-
 /* ==================== DARK MODE ==================== */
 html.dark {
   --text-dark: #f1f5f9;
@@ -3138,6 +3143,7 @@ html.dark .modal-content {
   background: #1e293b;
   border-color: rgba(255,255,255,0.05);
 }
+
 html.dark section#contact.contact-section { background: #0f172a; }
 html.dark .contact-dark-right { background: #1e293b; }
 html.dark .contact-form-title { color: #f1f5f9; }
