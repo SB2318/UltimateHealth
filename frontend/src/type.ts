@@ -134,6 +134,15 @@ export type RootStackParamList = {
   ContributorPage: undefined;
   OpenSourcePage: undefined;
   ReadingHistoryScreen: undefined;
+  ListenTogetherScreen: {
+    trackId: string;
+    audioUrl?: string | null;
+    roomCode?: string;
+    mode: 'host' | 'listener';
+  };
+  JoinListenTogetherScreen: {
+    roomCode?: string;
+  };
 };
 
 export type RedirectTo = {
@@ -368,6 +377,16 @@ export type CommunityGuidelinesScreenProps = StackScreenProps<
 export type PodcastPlayerScreenProps = StackScreenProps<
   RootStackParamList,
   'PodcastPlayer'
+>;
+
+export type ListenTogetherScreenProp = StackScreenProps<
+  RootStackParamList,
+  'ListenTogetherScreen'
+>;
+
+export type JoinListenTogetherScreenProp = StackScreenProps<
+  RootStackParamList,
+  'JoinListenTogetherScreen'
 >;
 
 export type HomeScreenHeaderProps = {
