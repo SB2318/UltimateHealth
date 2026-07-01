@@ -76,6 +76,8 @@ interface FAQItem {
   answer: string
 }
 
+const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact'];
+
 // =============================================================================
 // Constants
 // =============================================================================
@@ -321,7 +323,6 @@ function SectionHeading({
   title: string
   subtitle: string
 }) {
-  const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact'];
   return (
     <motion.div
       variants={fadeUp}
@@ -1403,8 +1404,6 @@ function CommunitySection() {
                     href={card.link}
                     target={card.link.startsWith("mailto:") ? undefined : "_blank"}
                     rel={card.link.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
@@ -1686,7 +1685,6 @@ export default function ContributePage() {
     { href: '/#downloads', label: 'Login / Register', icon: 'fa-user' },
   ]
 
-  const [navOpen, setNavOpen] = useState(false)
   return (
     <>
       <style>{`
