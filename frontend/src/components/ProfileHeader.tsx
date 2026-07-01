@@ -183,18 +183,18 @@ const ProfileHeader = ({
               style={[
                 styles.primaryBtn,
                 {
-                  backgroundColor: isFollowing ? 'transparent' : PRIMARY_COLOR,
-                  borderWidth: isFollowing ? 1.5 : 0,
-                  borderColor: PRIMARY_COLOR,
+                  backgroundColor:   PRIMARY_COLOR,
+                  borderWidth: 1.5,
+                  borderColor: isFollowing ? PRIMARY_COLOR : 'transparent',
                 },
               ]}
             >
               <MaterialIcons
                 name={isFollowing ? 'person-outline' : 'person-add'}
                 size={20}
-                color={isFollowing ? PRIMARY_COLOR : '#ffffff'}
+                color={'white'}
               />
-              <Text style={[styles.primaryBtnText, {color: isFollowing ? PRIMARY_COLOR : '#ffffff'}]}>
+              <Text style={[styles.primaryBtnText, {color:  'white' }]}>
                 {isFollowing ? 'Following' : 'Follow'}
               </Text>
             </AccessibleTouchable>
@@ -497,3 +497,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+

@@ -20,6 +20,8 @@ export const useUpdateFollowStatus = (): UseMutationResult<
           followUserId: userid,
         },
       );
+
+      console.log("followStatus", res.data);
       return res.data.followStatus as boolean;
     },
   });
@@ -42,7 +44,8 @@ export const useUpdateFollowStatusByArticle = (): UseMutationResult<
           articleId: articleId,
         },
       );
-      return res.data.followStatus as boolean;
+      console.log("followStatus", res.data);
+      return res.data.data.followStatus as boolean;
     },
   });
 

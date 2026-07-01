@@ -169,6 +169,15 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const resolvedRecordId = article?.pb_recordId || recordId;
   const {data: articleContent} = useGetArticleContent(resolvedRecordId);
 
+  const [localIsFollowing, setLocalIsFollowing] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (article && (article.authorId as any)?.followers) {
+      const isFollow = (article.authorId as any).followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id);
+      setLocalIsFollowing(isFollow);
+    }
+  }, [article, user_id]);
+
   const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
     Number(articleId),
   );
@@ -380,6 +389,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
     followMutation(articleId.toString(), {
       onSuccess: data => {
+        if (data !== undefined) setLocalIsFollowing(data);
         //console.log('follow success');
         if (data && socket) {
           socket.emit('notification', {
@@ -1149,8 +1159,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             ) : (
               <TouchableOpacity style={styles.followButton} onPress={handleFollow}>
                 <Text style={styles.followButtonText}>
-                  {(article.authorId as any)?.followers &&
-                  (article.authorId as any).followers.some((user: any) => user._id === user_id)
+                  {localIsFollowing
                     ? 'Following'
                     : 'Follow'}
                 </Text>

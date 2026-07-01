@@ -6,12 +6,13 @@ import {
   useColorScheme,
   LinearGradient,
 } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ActivityOverview from '../components/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
+import UserArticleCard from '../components/UserArticleCard';
 import { useTheme } from 'tamagui';
 import {useSelector} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -39,6 +40,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   );
   const {isConnected} = useSelector((state: any) => state.network || {});
   const [refreshing, setRefreshing] = useState<boolean>(false);
+ 
 
   const [articleId, setArticleId] = useState<number>();
   const [recordId, setRecordId] = useState<string>('');
@@ -64,6 +66,17 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const isDoctor = user !== undefined ? user.isDoctor : false;
   //const bottomBarHeight = useBottomTabBarHeight();
 
+  const [localIsFollowing, setLocalIsFollowing] = useState<boolean | null>(null);
+  const [localFollowerCount, setLocalFollowerCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (user && user.followers) {
+      const isFollow = user.followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id);
+      setLocalIsFollowing(isFollow);
+      setLocalFollowerCount(user.followers.length);
+    }
+  }, [user, user_id]);
+
   // Fetch statistics data for the user being viewed
   const {data: statsData} = useGetTotalLikeViewStatus({
     user_id: user_id,
@@ -72,8 +85,10 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     isConnected: isConnected,
   });
 
-  console.log('UserProfileScreen - articles:', user?.articles);
-   console.log('UserProfileScreen - reposts:', user?.repostArticles);
+ // console.log('UserProfileScreen - articles:', user?.articles);
+ //  console.log('UserProfileScreen - reposts:', user?.repostArticles);
+ const articlePosted = user?.articles ? user.articles.length : 0;
+ console.log("User profile article posted", articlePosted);
 
   const onArticleViewed = ({
     articleId,
@@ -113,7 +128,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     refetch();
-
+    console.log("Refetch called");
     setRefreshing(false);
   }, [refetch]);
 
@@ -141,7 +156,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const renderItem = useCallback(
     ({item}: {item: ArticleData}) => {
       return (
-        <ArticleCard
+        <UserArticleCard
           item={item}
           navigation={navigation}
           success={onRefresh}
@@ -228,6 +243,14 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
       if (actualAuthorId) {
         followMutate(actualAuthorId, {
           onSuccess: data => {
+            if (data !== undefined) {
+              if (localIsFollowing === false && data === true) {
+                setLocalFollowerCount(prev => (prev !== null ? prev + 1 : prev));
+              } else if (localIsFollowing === true && data === false) {
+                setLocalFollowerCount(prev => (prev !== null ? prev - 1 : prev));
+              }
+              setLocalIsFollowing(data);
+            }
             if (data) {
               if (socket) {
                 socket.emit('notification', {
@@ -239,9 +262,9 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
                   },
                 });
               }
-
-              onRefresh();
             }
+
+            onRefresh();
           },
 
           onError: err => {
@@ -267,6 +290,9 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     } // Safeguard to prevent rendering if user is undefined
 
     const authorUser = typeof authorId === 'string' ? user : authorId;
+    const articlesPostedCount = user.articles ? user.articles.length : 0;
+
+    //console.log('UserProfileScreen - articles:', articlesPostedCount);
 
     return (
       <ProfileHeader
@@ -277,7 +303,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           authorUser?.Profile_image || user?.Profile_image ||
           'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
         }
-        articlesPosted={user.articles ? user.articles.length : 0}
+        articlesPosted={articlesPostedCount}
         articlesSaved={user.savedArticles ? user.savedArticles.length : 0}
         userPhoneNumber={isDoctor ? user.contact_detail?.phone_no || '' : ''}
         userEmailID={isDoctor ? user.contact_detail?.email_id || '' : ''}
@@ -290,11 +316,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         followings={user ? user.followings.length : 0}
         onFollowerPress={onFollowerClick}
         onFollowingPress={onFollowingClick}
-        isFollowing={
-          user && user.followers.length > 0 && user.followers.some(follower => follower === user_id)
-            ? true
-            : false
-        }
+        isFollowing={user && user.followers ? user.followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id) : false}
         onFollowClick={handleFollow}
         onOverviewClick={() => {}}
       />
@@ -358,7 +380,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
                 others={true}
                 userId={actualAuthorId || user?._id}
                 user_handle={user?.user_handle || ''}
-                articlePosted={user?.articles ? user.articles.length : 0}
+                articlePosted={articlePosted}
               />
             </Tabs.ScrollView>
           </Tabs.Tab>
