@@ -143,6 +143,7 @@ export type RootStackParamList = {
   JoinListenTogetherScreen: {
     roomCode?: string;
   };
+  ChatbotScreen: { characterId: string; characterName?: string; characterAvatar?: string };
 };
 
 export type RedirectTo = {
@@ -161,6 +162,13 @@ export type Message = {
   userHandle: string | null;
   profileImage: string | null;
 };
+
+export interface Character {
+  id: string;
+  name: string;
+  tagline: string;
+  avatarUrl: string;
+}
 
 export type UserDetail = {
   user_name: string;
@@ -321,7 +329,11 @@ export type HomeScreenProps = CompositeScreenProps<
   | StackScreenProps<RootStackParamList, 'NotificationScreen'>
 >;
 
-export type ChatBotScreenProps = BottomTabScreenProps<TabParamList, 'Chatbot'>;
+export type ChatBotScreenProps = StackScreenProps<RootStackParamList, 'ChatbotScreen'>;
+export type PersonaLobbyScreenProps = CompositeScreenProps<
+  BottomTabScreenProps<TabParamList, 'Chatbot'>,
+  StackScreenProps<RootStackParamList, 'ChatbotScreen'>
+>;
 export type OverviewScreenProps = StackScreenProps<
   RootStackParamList,
   'OverviewScreen'
@@ -612,6 +624,7 @@ export type ArticleData = {
   repostUsers: string[];
   likeCount: number;
   likedUsers: User[];
+  trustUsers: string[];
   savedUsers: string[];
   mentionedUsers: User[];
   language: string;
@@ -707,6 +720,7 @@ export type CategoryType = {
 export type TokenStatus = {
   isValid: boolean;
   message: string;
+  isNetworkError?: boolean;
 };
 
 export type User = {
@@ -743,6 +757,14 @@ export type User = {
   improvements: string[];
   isBlockUser: boolean;
   isBannedUser: boolean;
+};
+
+export type TrustedUser = {
+  _id: string;
+  user_handle: string;
+  user_name: string;
+  Profile_image?: string;
+  bio?: string;
 };
 
 export type Contactdetail = {

@@ -55,6 +55,8 @@ import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 import ListenTogetherScreen from '../screens/ListenTogetherScreen';
 import JoinListenTogetherScreen from '../screens/JoinListenTogetherScreen';
 
+import ChatbotScreen from '../screens/ChatbotScreen';
+
 const Stack = createStackNavigator<RootStackParamList>();
 
 
@@ -122,6 +124,11 @@ const StackNavigation = () => {
       <Stack.Screen
         name="TabNavigation"
         component={TabNavigation}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ChatbotScreen"
+        component={ChatbotScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen

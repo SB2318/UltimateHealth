@@ -23,7 +23,7 @@ const SHARE_BASE_URL = 'https://uhsocial.in';
 
 const LOGIN_API = `${PROD_URL}/user/login`;
 const REGISTRATION_API = `${PROD_URL}/user/register`;
-const ARTICLE_TAGS_API = '/articles/tags';
+const ARTICLE_TAGS_API = `${PROD_URL}/articles/tags`;
 const GET_PROFILE_API = `${PROD_URL}/user/getprofile`;
 const VERIFICATION_MAIL_API = `${PROD_URL}/user/verifyEmail`;
 const RESEND_VERIFICATION = `${PROD_URL}/user/resend-verification-mail`;
@@ -35,6 +35,8 @@ const FOLLOW_USER = `${PROD_URL}/user/follow`;
 const UPDATE_VIEW_COUNT = `${PROD_URL}/articles/updateViewCount`;
 const SAVE_ARTICLE = `${PROD_URL}/articles/saveArticle`;
 const LIKE_ARTICLE = `${PROD_URL}/articles/likeArticle`;
+const TRUST_ARTICLE = `${PROD_URL}/articles/trust`;
+const GET_TRUSTED_USERS = `${PROD_URL}/articles/trusted-users`;
 const POST_ARTICLE = `${PROD_URL}/articles`;
 const GET_ARTICLE_BY_ID = `${PROD_URL}/articles`;
 const GET_ARTICLE_TRANSLATIONS = (articleId: string | number) =>
@@ -62,7 +64,6 @@ const GET_YEARLY_READ_REPORT = `${PROD_URL}/analytics/yearly-reads/`;
 const GET_MONTHLY_WRITES_REPORT = `${PROD_URL}/analytics/monthly-writes/`;
 const GET_YEARLY_WRITES_REPORT = `${PROD_URL}/analytics/yearly-writes/`;
 
-const VULTR_CHAT_URL = 'https://api.vultrinference.com/v1/chat/completions';
 const GET_ARTICLE_CONTENT = `${PROD_URL}/articles/get-article-content`;
 const GET_IMPROVEMENT_CONTENT = `${PROD_URL}/article/get-improve-content`;
 
@@ -109,6 +110,7 @@ const GET_TOKEN_STATUS = `${PROD_URL}/tokenstatus`;
 // chat url
 const CHAT_URL = `${PROD_URL}/gemini/messages`;
 const SEND_MESSAGE_TO_GEMINI = `${PROD_URL}/gemini/send`;
+const GET_CHARACTERS_API = `${PROD_URL}/gemini/characters`;
 
 /** Notification Preferences */
 const GET_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`;
@@ -130,6 +132,8 @@ export {
   UPDATE_VIEW_COUNT,
   SAVE_ARTICLE,
   LIKE_ARTICLE,
+  TRUST_ARTICLE,
+  GET_TRUSTED_USERS,
   POST_ARTICLE,
   GET_ARTICLE_BY_ID,
   GET_ARTICLE_TRANSLATIONS,
@@ -154,7 +158,6 @@ export {
   GET_MONTHLY_WRITES_REPORT,
   GET_YEARLY_READ_REPORT,
   GET_YEARLY_WRITES_REPORT,
-  VULTR_CHAT_URL,
   CHAT_URL,
   REPOST_ARTICLE,
   CHECK_USER_HANDLE,
@@ -197,6 +200,7 @@ export {
   CONTENT_CHECKER_PROD,
   LOAD_REVIEW_COMMENTS,
   SEND_MESSAGE_TO_GEMINI,
+  GET_CHARACTERS_API,
   GET_NOTIFICATION_PREFERENCES,
   UPDATE_NOTIFICATION_PREFERENCES,
   GET_READ_HISTORY,
