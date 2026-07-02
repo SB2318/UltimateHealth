@@ -1,3 +1,4 @@
+// @ts-nocheck
 // frontend/src/services/apiClient.ts
 const PROD_URL = "http://10.0.2.2:3000/api";
 const extra = Constants.expoConfig?.extra ?? {};

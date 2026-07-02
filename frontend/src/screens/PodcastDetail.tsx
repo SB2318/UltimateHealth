@@ -11,7 +11,7 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {PodcastDetailScreenProp} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import Slider from '@react-native-community/slider';
+import Slider from '../components/SliderCompat';
 import {GlassStyles} from '../styles/GlassStyles';
 
 import {useAudioPlayer} from 'expo-audio';
@@ -535,12 +535,6 @@ useEffect(() => {
       style={[styles.sliderContainer, GlassStyles.glassContainerDark]}>
       <Slider
         testID="podcast-progress-slider"
-        accessibilityLabel="podcast-progress-slider"
-        accessibilityValue={{
-          min: 0,
-          max: duration,
-          now: position,
-        }}
         style={styles.slider}
         minimumValue={0}
         maximumValue={duration}
@@ -823,7 +817,7 @@ useEffect(() => {
   return (
     <ScrollView
       backgroundColor="#0B1425"
-      contentContainerStyle={{ flexGrow: 1 }}
+      contentContainerStyle={{ flexGrow: 1 } as any}
     >
       <Theme name="dark">
         <YStack

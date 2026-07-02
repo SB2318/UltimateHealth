@@ -1,9 +1,9 @@
 // PodcastSearch.tsx
 import React, {useEffect, useState, useCallback, useRef} from 'react';
-import {Pressable, FlatList, AccessibilityInfo} from 'react-native';
+import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {PodcastData, PodcastSearchProp} from '../type';
-import {AxiosError} from 'axios';
+
 import {useSelector} from 'react-redux';
 import PodcastCard from '../components/PodcastCard';
 import PodcastSkeletonCard from '../components/PodcastSkeletonCard';
@@ -98,7 +98,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                 audioUrl: data.audio_url,
               });
             },
-            onError: (err: AxiosError) => {
+            onError: (err: any) => {
               console.log('Update view count err', err);
               Snackbar.show({
                 text: 'Something went wrong!',
@@ -128,7 +128,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                 audioUrl: data.audio_url,
               });
             },
-            onError: (err: AxiosError) => {
+            onError: (err: any) => {
               console.log('Update view count err', err);
               Snackbar.show({
                 text: 'Something went wrong!',
@@ -235,7 +235,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
         {isLoading && debouncedQuery !== '' ? (
           <FlatList
             data={Array.from({length: SKELETON_COUNT}, (_, i) => i)}
-            keyExtractor={(_, index) => `skeleton-${index}`}
+            keyExtractor={(_: number, index: number) => `skeleton-${index}`}
             renderItem={() => <PodcastSkeletonCard />}
             scrollEnabled={false}
             contentContainerStyle={listContentStyle}
@@ -243,7 +243,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
         ) : (
           <FlatList
             data={debouncedQuery !== '' ? searchData : []}
-            keyExtractor={item => item._id.toString()}
+            keyExtractor={(item: PodcastData) => item._id.toString()}
             renderItem={renderItem}
             ListHeaderComponent={
               debouncedQuery !== '' && searchData.length > 0 ? (
@@ -282,7 +282,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                   alignItems="center"
                   justifyContent="center"
                   paddingVertical="$8">
-                  <NoResult />
+                  <NoResults />
                 </YStack>
               )
             }

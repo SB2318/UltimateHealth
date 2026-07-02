@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Image, Linking } from 'react-native';
+import { ScrollView , Image, Linking  } from 'react-native';
 import { 
   YStack, 
   XStack, 

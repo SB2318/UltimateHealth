@@ -1,8 +1,7 @@
-import {StyleSheet, View, Text, Alert, useColorScheme, ScrollView, FlatList, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, Alert, useColorScheme, ScrollView, TouchableOpacity } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import ActivityOverview from '../components/ActivityOverview';
 import ArticleCard from '../components/ArticleCard';
 import {useDispatch, useSelector} from 'react-redux';
 import { useTheme } from 'tamagui';
@@ -16,9 +15,10 @@ import Snackbar from 'react-native-snackbar';
 import {setUserHandle} from '../store/UserSlice';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useUpdateViewCount} from '../hooks/useUpdateViewCount';
-import {useGetReadHistory, ReadHistoryArticle} from '../hooks/useGetReadHistory';
-import { NoArticleState } from '../components/EmptyStates';
-import Ionicon from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
+import {wp, hp, fp} from '../helper/Metric';
+const AccessibleTouchable = TouchableOpacity as any;
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const theme = useTheme();
@@ -36,9 +36,13 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 
   const {data: user, refetch, isLoading} = useGetProfile();
 
-  if (user) {
-    dispatch(setUserHandle(user.user_handle));
-  }
+ // console.log('user data in profile screen', user);
+
+  React.useEffect(() => {
+    if (user) {
+      dispatch(setUserHandle(user.user_handle));
+    }
+  }, [dispatch, user]);
   const onArticleViewed = ({
     articleId,
     authorId,
@@ -127,7 +131,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 
   const onFollowerClick = () => {
     if (isConnected) {
-      if (user && user.followers.length > 0) {
+      if (user && (user.followers?.length ?? 0) > 0) {
         //dispatch(setSocialUserId(''));
         navigation.navigate('SocialScreen', {
           type: 1,
@@ -145,7 +149,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 
   const onFollowingClick = () => {
     if (isConnected) {
-      if (user && user.followings.length > 0) {
+      if (user && (user.followings?.length ?? 0) > 0) {
         // dispatch(setSocialUserId(''));
         navigation.navigate('SocialScreen', {
           type: 2,
@@ -169,8 +173,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     return (
       <ProfileHeader
         isDoctor={isDoctor}
-        username={user.user_name || ''}
-        userhandle={user.user_handle || ''}
+        username={user.user_name ||  ""}
+        userhandle={user.user_handle ||  ''}
         profileImg={
           user.Profile_image ||
           'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
@@ -184,8 +188,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         qualification={user.qualification || ''}
         navigation={navigation}
         other={true}
-        followers={user ? user.followers.length : 0}
-        followings={user ? user.followings.length : 0}
+        followers={user ? (user.followers?.length ?? 0) : 0}
+        followings={user ? (user.followings?.length ?? 0) : 0}
         onFollowerPress={onFollowerClick}
         onFollowingPress={onFollowingClick}
         isFollowing={false}
@@ -207,37 +211,6 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   };
 
 
-  const [activeTab, setActiveTab] = useState<'Insight' | 'Reposts' | 'Saved' | 'History'>('Insight');
-  const [historyPage, setHistoryPage] = useState<number>(1);
-  const [historyArticles, setHistoryArticles] = useState<ReadHistoryArticle[]>([]);
-  const [historyTotalPages, setHistoryTotalPages] = useState<number>(1);
-
-  const {
-    data: readHistory,
-    isLoading: isHistoryLoading,
-    isFetching: isHistoryFetching,
-    isError: isHistoryError,
-    refetch: refetchHistory,
-  } = useGetReadHistory(historyPage);
-
-  React.useEffect(() => {
-    if (readHistory) {
-      if (historyPage === 1) {
-        setHistoryArticles(readHistory.articles ?? []);
-      } else {
-        setHistoryArticles(prev => [...prev, ...(readHistory.articles ?? [])]);
-      }
-      if (readHistory.totalPages) {
-        setHistoryTotalPages(readHistory.totalPages);
-      }
-    }
-  }, [readHistory, historyPage]);
-
-  const handleLoadMoreHistory = () => {
-    if (!isHistoryFetching && historyPage < historyTotalPages) {
-      setHistoryPage(prev => prev + 1);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -255,11 +228,21 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     );
   }
 
-  const tabColors = {
+  const themeColors = {
     background: isDarkMode ? '#121212' : '#ffffff',
+    card: isDarkMode ? '#1f2937' : '#ffffff',
     border: isDarkMode ? '#374151' : '#e5e7eb',
-    activeText: PRIMARY_COLOR,
-    inactiveText: isDarkMode ? '#9ca3af' : '#9098A3',
+    text: isDarkMode ? '#ffffff' : '#111827',
+    textSecondary: isDarkMode ? '#9ca3af' : '#6b7280',
+    iconBackground: isDarkMode ? '#374151' : '#f3f4f6',
+  };
+
+  const navigate = (screen: any) => {
+    if (isConnected) {
+      navigation.navigate(screen);
+    } else {
+      Snackbar.show({ text: 'Please check your internet connection!', duration: Snackbar.LENGTH_SHORT });
+    }
   };
 
   return (
@@ -274,162 +257,78 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
       />
       <ScrollView
         style={styles.innerContainer}
-        contentContainerStyle={{flexGrow: 1, backgroundColor: theme.background.val}}
+        contentContainerStyle={{flexGrow: 1, backgroundColor: themeColors.background}}
         showsVerticalScrollIndicator={false}
       >
         {renderHeader()}
 
-        <TouchableOpacity
-      style={styles.historyRow}
-      onPress={() => navigation.navigate('ReadingHistoryScreen')}>
-      <Ionicon name="time-outline" size={22} color={PRIMARY_COLOR} />
-        <Text style={styles.historyRowText}>Reading History</Text>
-        <Ionicon name="chevron-forward" size={20} color="#9ca3af" />
-      </TouchableOpacity>
+        <View style={styles.workspaceSection}>
 
-        {/* Custom Tab Bar */}
-        <View style={[styles.tabBarContainer, { backgroundColor: tabColors.background, borderBottomColor: tabColors.border }]}>
-          <TouchableOpacity 
-            style={[styles.tabButton, activeTab === 'Insight' && { borderBottomColor: tabColors.activeText }]}
-            onPress={() => setActiveTab('Insight')}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'Insight' }}
-            accessibilityLabel="Insight tab"
-          >
-            <Text style={[styles.tabButtonText, { color: activeTab === 'Insight' ? tabColors.activeText : tabColors.inactiveText }]}>
-              Insight
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.tabButton, activeTab === 'Reposts' && { borderBottomColor: tabColors.activeText }]}
-            onPress={() => setActiveTab('Reposts')}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'Reposts' }}
-            accessibilityLabel={`Reposts tab, ${user?.repostArticles.length || 0} reposts`}
-          >
-            <Text style={[styles.tabButtonText, { color: activeTab === 'Reposts' ? tabColors.activeText : tabColors.inactiveText }]}>
-              Reposts ({user?.repostArticles.length || 0})
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.tabButton, activeTab === 'Saved' && { borderBottomColor: tabColors.activeText }]}
-            onPress={() => setActiveTab('Saved')}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'Saved' }}
-            accessibilityLabel={`Saved tab, ${user?.savedArticles.length || 0} saved articles`}
-          >
-            <Text style={[styles.tabButtonText, { color: activeTab === 'Saved' ? tabColors.activeText : tabColors.inactiveText }]}>
-              Saved ({user?.savedArticles.length || 0})
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.tabButton, activeTab === 'History' && { borderBottomColor: tabColors.activeText }]}
-            onPress={() => setActiveTab('History')}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'History' }}
-            accessibilityLabel={`History tab, ${historyArticles.length || 0} recently read articles`}
-          >
-            <Text style={[styles.tabButtonText, { color: activeTab === 'History' ? tabColors.activeText : tabColors.inactiveText }]}>
-              History ({historyArticles.length || 0})
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Tab Content */}
-        <View style={styles.tabContentContainer}>
-          {activeTab === 'Insight' && (
-            <View style={styles.scrollViewContentContainer}>
-              <ActivityOverview
-                onArticleViewed={onArticleViewed}
-                others={false}
-                user_handle={user?.user_handle || ''}
-                articlePosted={user?.articles ? user.articles.length : 0}
-              />
+          <AccessibleTouchable
+            activeOpacity={0.7}
+            accessibilityLabel="Insight"
+            accessibilityHint="Opens your activity insight"
+            style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
+            onPress={() => navigate('InsightScreen')}>
+            <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
+              <MaterialCommunityIcon name="chart-line" size={22} color={PRIMARY_COLOR} />
             </View>
-          )}
+            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Activity Insight</Text>
+            <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
+          </AccessibleTouchable>
 
-          {activeTab === 'Reposts' && (
-            <FlatList
-              data={user !== undefined ? user.repostArticles : []}
-              renderItem={renderItem}
-              scrollEnabled={false}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={[
-                styles.flatListContentContainer,
-                {paddingBottom: bottomBarHeight + 15},
-              ]}
-              keyExtractor={item => item?._id}
-              ListEmptyComponent={
-                <NoArticleState/>
-              }
-            />
-          )}
+          <AccessibleTouchable
+            activeOpacity={0.7}
+            accessibilityLabel="Reposts"
+            accessibilityHint="Opens your reposted articles"
+            style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
+            onPress={() => navigate('RepostsScreen')}>
+            <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
+              <MaterialCommunityIcon name="repeat-variant" size={22} color={PRIMARY_COLOR} />
+            </View>
+            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Reposted Articles ({user?.repostArticles?.length || 0})</Text>
+            <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
+          </AccessibleTouchable>
 
-          {activeTab === 'Saved' && (
-            <FlatList
-              data={user !== undefined ? user.savedArticles : []}
-              renderItem={renderItem}
-              scrollEnabled={false}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={[
-                styles.flatListContentContainer,
-                {paddingBottom: bottomBarHeight + 15},
-              ]}
-              keyExtractor={item => item?._id}
-              ListEmptyComponent={
-                 <NoArticleState/>
-              }
-            />
-          )}
-          {activeTab === 'History' && (
-            isHistoryLoading ? (
-              <Loader />
-            ) : isHistoryError ? (
-              <View style={styles.historyErrorContainer}>
-                <Text style={[styles.historyErrorText, {color: theme.color10?.val}]}>
-                  Couldn't load your read history. Please try again.
-                </Text>
-                <TouchableOpacity
-                  style={[styles.historyRetryButton, {borderColor: PRIMARY_COLOR}]}
-                  onPress={() => refetchHistory()}
-                >
-                  <Text style={{color: PRIMARY_COLOR, fontWeight: '600'}}>Retry</Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <FlatList
-                data={historyArticles}
-                renderItem={renderItem}
-                scrollEnabled={false}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={[
-                  styles.flatListContentContainer,
-                  {paddingBottom: bottomBarHeight + 15},
-                ]}
-                keyExtractor={item => item?._id}
-                ListEmptyComponent={
-                  <NoArticleState/>
-                }
-                ListFooterComponent={
-                  historyPage < historyTotalPages ? (
-                    <TouchableOpacity
-                      style={[styles.loadMoreButton, {borderColor: PRIMARY_COLOR}]}
-                      onPress={handleLoadMoreHistory}
-                      disabled={isHistoryFetching}
-                    >
-                      {isHistoryFetching ? (
-                        <Loader />
-                      ) : (
-                        <Text style={{color: PRIMARY_COLOR, fontWeight: '600'}}>
-                          Load More
-                        </Text>
-                      )}
-                    </TouchableOpacity>
-                  ) : null
-                }
-              />
-            )
-          )}
+          <AccessibleTouchable
+            activeOpacity={0.7}
+            accessibilityLabel="Saved Articles"
+            accessibilityHint="Opens your saved articles"
+            style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
+            onPress={() => navigate('SavedArticlesScreen')}>
+            <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
+              <MaterialCommunityIcon name="bookmark-outline" size={22} color={PRIMARY_COLOR} />
+            </View>
+            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Saved Articles ({user?.savedArticles?.length || 0})</Text>
+            <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
+          </AccessibleTouchable>
+
+          <AccessibleTouchable
+            activeOpacity={0.7}
+            accessibilityLabel="Reading History"
+            accessibilityHint="Opens your reading history"
+            style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
+            onPress={() => navigate('ReadingHistoryScreen')}>
+            <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
+              <MaterialCommunityIcon name="history" size={22} color={PRIMARY_COLOR} />
+            </View>
+            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Reading History</Text>
+            <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
+          </AccessibleTouchable>
+
+          <AccessibleTouchable
+            activeOpacity={0.7}
+            accessibilityLabel="Wellness Dashboard"
+            accessibilityHint="Opens your wellness dashboard"
+            style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
+            onPress={() => navigate('WellnessDashboardScreen')}>
+            <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
+              <MaterialCommunityIcon name="heart-pulse" size={22} color={PRIMARY_COLOR} />
+            </View>
+            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Wellness Dashboard</Text>
+            <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
+          </AccessibleTouchable>
+
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -446,86 +345,42 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
   },
-  scrollViewContentContainer: {
-    paddingHorizontal: 6,
-    marginTop: 6,
-  },
-  flatListContentContainer: {
-    paddingHorizontal: 16,
-  },
-  tabBarContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    borderBottomWidth: 1,
-  },
-  tabButton: {
-    flex: 1,
-    paddingVertical: 14,
-    alignItems: 'center',
-    borderBottomWidth: 3,
-    borderBottomColor: 'transparent',
-  },
-  tabButtonText: {
-    fontSize: 15,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-  },
-  tabContentContainer: {
-    flex: 1,
-    width: '100%',
-  },
-  profileImage: {
-    height: 130,
-    width: 130,
-    borderRadius: 100,
-    objectFit: 'cover',
-    resizeMode: 'contain',
-  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-
-  historyRow: {
+  workspaceSection: {
+    width: '100%',
+    paddingHorizontal: wp(4),
+    paddingTop: hp(2.5),
+    paddingBottom: hp(4),
+    gap: hp(1.8),
+  },
+  listButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: '#ffffff',
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
+    borderRadius: 14,
+    paddingVertical: hp(1.8),
+    paddingHorizontal: wp(4),
+    borderWidth: 1,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
+    elevation: 1,
   },
-  historyRowText: {
+  listButtonIconBg: {
+    width: wp(10),
+    height: wp(10),
+    borderRadius: wp(5),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: wp(3.5),
+  },
+  listButtonText: {
     flex: 1,
-    fontSize: 15,
+    fontSize: fp(4.2),
     fontWeight: '600',
-    color: '#1a1a1a',
-  },
-  loadMoreButton: {
-    marginTop: 12,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  historyErrorContainer: {
-    padding: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  historyErrorText: {
-    fontSize: 14,
-    fontWeight: '500',
-    marginBottom: 12,
-    textAlign: 'center',
-  },
-  historyRetryButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 24,
-    borderWidth: 1,
-    borderRadius: 8,
   },
 });

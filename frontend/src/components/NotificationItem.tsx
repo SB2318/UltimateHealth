@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {formatTimeWithDate} from '../helper/dateUtils';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {

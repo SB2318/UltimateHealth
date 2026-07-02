@@ -1,22 +1,24 @@
-import {
-  ScrollView,
+import { ScrollView ,
   Text,
   TouchableOpacity,
   View,
   StyleSheet,
   Alert,
-} from 'react-native';
+ } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
-import GeneralTab, { GeneralFormData } from '../components/GeneralTab';
-import ContactTab, { ContactFormData } from '../components/ContactTab';
-import ProfessionalTab, { ProfFormData } from '../components/ProfessionalTab';
-import PasswordTab, { PasswordFormData } from '../components/PasswordTab';
+import GeneralTab from '../components/GeneralTab';
+import {GeneralFormData,ContactFormData,ProfFormData,PasswordFormData} from '../schemas/profileSchemas';
+import ContactTab from '../components/ContactTab';
+
+import ProfessionalTab from '../components/ProfessionalTab';
+
+import PasswordTab from '../components/PasswordTab';
+
 import LanguagePreferenceSelector from '../components/LanguagePreferenceSelector';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {useDispatch, useSelector} from 'react-redux';
-import {AxiosError} from 'axios';
 import {ProfileEditScreenProp} from '../type';
 import {
   GET_STORAGE_DATA,
@@ -36,7 +38,7 @@ import {useUpdateUserContactDetail} from '../hooks/useUpdateUserContactDetail';
 import {useUpdateUserGeneralDetails} from '../hooks/useUpdateUserGeneralDetails';
 import {useUpdateUserProfDetails} from '../hooks/useUpdateUserProfDetails';
 import LoadingSpinner from '../components/LoadingSpinner';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
+ 
 // let validator = require('email-validator');
 // let expr = /^(0|91)?[6-9][0-9]{9}$/;
 
@@ -116,7 +118,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
           //navigation.goBack();
         },
 
-        onError: (err: AxiosError) => {
+        onError: (err: any) => {
           if (err.response) {
             const statusCode = err.response.status;
             switch (statusCode) {
@@ -193,7 +195,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
          // navigation.goBack();
         },
 
-        onError: (err: AxiosError) => {
+        onError: (err: any) => {
           if (err.response) {
             const statusCode = err.response.status;
             switch (statusCode) {
@@ -268,7 +270,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
         //  navigation.goBack();
         },
 
-        onError: (err: AxiosError) => {
+        onError: (err: any) => {
           if (err.response) {
             const statusCode = err.response.status;
             switch (statusCode) {
@@ -335,7 +337,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
           });
         },
 
-        onError: (err: AxiosError) => {
+        onError: (err: any) => {
           if (err.response) {
             const statusCode = err.response.status;
             switch (statusCode) {
@@ -428,7 +430,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
                                 'Profile updated successfully',
                               );
                             },
-                            onError: (err: AxiosError) => {
+                            onError: (err: any) => {
                               if (err.response) {
                                 const statusCode = err.response.status;
                                 const errorMessage = (err?.response?.data as any)?.error;

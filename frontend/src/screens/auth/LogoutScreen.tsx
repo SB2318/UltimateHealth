@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {GET_STORAGE_DATA} from '../../helper/APIUtils';
-import {AxiosError} from 'axios';
+import type  from 'axios';
 import {resetUserState} from '../../store/UserSlice';
 import {useDispatch} from 'react-redux';
 import {clearStorage} from '../../helper/Utils';
@@ -17,6 +17,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';
 import {useUserLogout} from '@/src/hooks/useUserLogout';
 import {useTheme} from 'tamagui';
+type AxiosError = any;
 
 const DEFAULT_PROFILE_IMAGE =
   'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';

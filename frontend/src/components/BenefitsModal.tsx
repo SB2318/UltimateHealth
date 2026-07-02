@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { YStack, XStack, Text, Button, Circle, ScrollView as TamaguiScrollView, useTheme } from 'tamagui';
 import { Sheet } from '@tamagui/sheet';

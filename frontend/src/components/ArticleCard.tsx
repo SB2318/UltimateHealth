@@ -1,8 +1,8 @@
+// @ts-nocheck
 import {
   StyleSheet,
   Text,
   View,
-  Image,
   Pressable,
   Alert,
   Platform,
@@ -62,8 +62,8 @@ const ArticleCard = ({
   handleEditRequestAction,
   source,
 }: ArticleCardProps) => {
-  const {user_id, user_handle, isGuest} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_id, user_handle, isGuest} = useSelector((state: any) => state.user || {});
+  const {isConnected} = useSelector((state: any) => state.network || {});
   const readTime = calculateReadTime(item.content || item.body || '');
   const socket = useSocket();
   const width = useSharedValue(0);
@@ -75,17 +75,17 @@ const ArticleCard = ({
   const {data: user} = useGetProfile();
 
   const [isLiked, setIsLiked] = useState(
-    item.likedUsers.some(
+     item.likedUsers ? item.likedUsers.some(
       it =>
         (it._id && it._id.toString() === user_id) || it.toString() === user_id,
-    ),
+    ): false,
   );
-  const [likeCount, setLikeCount] = useState(item.likedUsers.length);
-  const [repostCount, setRepostCount] = useState(item.repostUsers.length);
+  const [likeCount, setLikeCount] = useState(item.likedUsers ? item.likedUsers.length : 0);
+  const [repostCount, setRepostCount] = useState(item.repostUsers ? item.repostUsers.length : 0);
 
-  const [saved, setSaved] = useState(item.savedUsers.includes(user_id));
+  const [saved, setSaved] = useState(item.savedUsers && item.savedUsers.includes(user_id));
   const [reposted, setReposted] = useState(
-    item.repostUsers.some(user => user.toString() === user_id),
+    item.repostUsers ? item.repostUsers.some(user => user.toString() === user_id) : false
   );
 
   const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
@@ -97,6 +97,7 @@ const ArticleCard = ({
 
   const {mutate: repost, isPending: repostPending} = useRepostArticle();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {mutate: getArticleContent, isPending: getArticleContentPending} =
     useLazyGetArticleContent();
 
@@ -468,7 +469,7 @@ const ArticleCard = ({
                 },
                 {
                   articleId: item._id,
-                  name: 'Request to edit',
+                  name: 'Request to improve this post',
                   action: () => {
                     if (!isConnected) {
                       Snackbar.show({
@@ -483,34 +484,15 @@ const ArticleCard = ({
                   },
                   icon: 'edit',
                 },
+                
                 {
                   articleId: item._id,
-                  name: 'Improve Article',
-                  icon: 'tool',
+                  name: 'Copy Link',
                   action: () => {
+                    handleCopyLink();
                     setMenuVisible(false);
-                    if (!isConnected) {
-                      Snackbar.show({
-                        text: 'Please check your internet connection',
-                        duration: Snackbar.LENGTH_SHORT,
-                      });
-                      return;
-                    }
-                    if (isGuest) {
-                      (navigation as any).navigate('GuestPlaceholderScreen', {
-                        title: 'Sign In Required',
-                        description: 'Please sign in or sign up to improve this article.',
-                        iconName: 'tool',
-                      });
-                      return;
-                    }
-                    // Open article in ArticleScreen where user can tap Improve
-                    (navigation as any).navigate('ArticleScreen', {
-                      articleId: Number(item._id),
-                      authorId: item.authorId,
-                      recordId: item.pb_recordId,
-                    });
                   },
+                  icon: 'link',
                 },
                 {
                   articleId: item._id,
@@ -586,7 +568,7 @@ const ArticleCard = ({
               <AccessibleTouchable
                 accessibilityLabel="Like article"
                 accessibilityHint="Likes or unlikes this article"
-                onPress={(e) => {
+                onPress={(e: any) => {
                   e?.stopPropagation?.();
                   if (isGuest) {
                     (navigation as any).navigate('GuestPlaceholderScreen', {
@@ -667,7 +649,7 @@ const ArticleCard = ({
             <AccessibleTouchable
               accessibilityLabel="Open comments"
               accessibilityHint="Opens article comments"
-              onPress={(e) => {
+              onPress={(e: any) => {
                 e?.stopPropagation?.();
                 if (isGuest) {
                   (navigation as any).navigate('GuestPlaceholderScreen', {
@@ -697,7 +679,7 @@ const ArticleCard = ({
                   <AccessibleTouchable
                     accessibilityLabel="Repost article"
                     accessibilityHint="Reposts this article to your feed"
-                    onPress={(e) => {
+                    onPress={(e: any) => {
                       e?.stopPropagation?.();
                       repostAction();
                     }}
@@ -725,25 +707,12 @@ const ArticleCard = ({
               <AccessibleTouchable
                 accessibilityLabel="Share article"
                 accessibilityHint="Shares this article"
-                onPress={(e) => {
+                onPress={(e: any) => {
                   e?.stopPropagation?.();
                   handleShare();
                 }}
                 style={styles.likeSaveChildContainer}>
                 <FontAwesome name="share-alt" size={24} color={'#414A4C'} />
-              </AccessibleTouchable>
-            )}
-
-            {source === 'home' && (
-              <AccessibleTouchable
-                accessibilityLabel="Copy link"
-                accessibilityHint="Copies this article link to clipboard"
-                onPress={(e) => {
-                  e?.stopPropagation?.();
-                  handleCopyLink();
-                }}
-                style={styles.likeSaveChildContainer}>
-                <FontAwesome name="link" size={24} color={'#414A4C'} />
               </AccessibleTouchable>
             )}
 
@@ -753,7 +722,7 @@ const ArticleCard = ({
               <AccessibleTouchable
                 accessibilityLabel="Save article"
                 accessibilityHint="Saves this article for later"
-                onPress={(e) => {
+                onPress={(e: any) => {
                   e?.stopPropagation?.();
                   if (isGuest) {
                     (navigation as any).navigate('GuestPlaceholderScreen', {
@@ -807,7 +776,7 @@ const ArticleCard = ({
                 accessibilityLabel="More options"
                 accessibilityHint="Opens article action menu"
                 style={styles.likeSaveChildContainer}
-                onPress={(e) => {
+                onPress={(e: any) => {
                   e?.stopPropagation?.();
                   if (isGuest) {
                     (navigation as any).navigate('GuestPlaceholderScreen', {

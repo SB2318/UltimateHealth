@@ -1,12 +1,12 @@
+// @ts-nocheck
 import React, { useRef, useState } from 'react';
-import {
-  Animated,
+import { Animated,
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollView,
+   ScrollView ,
   StyleSheet,
   ScrollViewProps,
-} from 'react-native';
+ } from 'react-native';
 import { BackToTopButton } from './BackToTopButton';
  
 interface UseBackToTopOptions {

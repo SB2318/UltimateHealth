@@ -1,5 +1,5 @@
 
-import {AppState, FlatList, StyleSheet, View} from 'react-native';
+import { AppState,  FlatList , StyleSheet, View } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
