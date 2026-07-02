@@ -21,7 +21,7 @@ const TAB_CONFIG: Record<
   Podcasts: {active: 'headphones', inactive: 'headphones', label: 'Podcasts'},
   Chatbot: {active: 'robot', inactive: 'robot-outline', label: 'AI'},
   Profile: {active: 'account-circle', inactive: 'account-circle-outline', label: 'Profile'},
-  About: {active: 'information-circle', inactive: 'information-outline', label: 'About'},
+  About: {active: 'information', inactive: 'information-outline', label: 'About'},
 };
 
 interface AnimatedTabItemProps {

@@ -97,7 +97,9 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
       style={styles.playlistCard}
       activeOpacity={0.7}
       onPress={() => {
-     
+        navigation.navigate('PlaylistDetailScreen', {
+          playlist: item,
+        });
       }}>
       <View style={styles.playlistIconContainer}>
         <MaterialCommunityIcons
@@ -471,23 +473,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#ffffff',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
+    marginBottom: 16,
+    shadowColor: PRIMARY_COLOR,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: `${PRIMARY_COLOR}20`,
   },
   playlistIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 12,
-    backgroundColor: `${PRIMARY_COLOR}10`,
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+    backgroundColor: `${PRIMARY_COLOR}15`,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 16,
   },
   playlistInfo: {
     flex: 1,

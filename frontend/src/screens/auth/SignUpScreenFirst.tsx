@@ -473,7 +473,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
             name="email"
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
               <YStack gap="$1">
-                <XStack position="relative">
+                <XStack position="relative" top={8}>
                   <Input
                     flex={1}
                     height="$5"

@@ -197,7 +197,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                       // Step 2 failed — issue a compensating DELETE to remove
                       // the PocketBase record created in step 1 so it does not
                       // become a permanent orphan.
-                      deletePocketbaseRecord(data.recordId, {
+                      deletePocketbaseRecord({
+                       recordId: data.recordId,
+                       collectionName: 'edit_requests',
+                      }, {
                         onError: cleanupErr => {
                           console.warn(
                             'PocketBase orphan cleanup failed for recordId:',
@@ -239,6 +242,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
           {
             onSuccess: (data: PocketBaseResponse) => {
               if (data.html_file) {
+                // Case 1: User is submitting suggested changes to an existing non published article
                 if (articleData) {
                   submitChangesMutation(
                     {
@@ -273,7 +277,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
 
                         // Step 2 failed — compensating DELETE for the PocketBase
                         // record created in step 1.
-                        deletePocketbaseRecord(data.recordId, {
+                        deletePocketbaseRecord({
+                          recordId: data.recordId,
+                          collectionName: 'content',
+                        }, {
                           onError: cleanupErr => {
                             console.warn(
                               'PocketBase orphan cleanup failed for recordId:',
@@ -288,6 +295,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                     },
                   );
                 } else {
+                  // Case 2: User is submitting a new article
                   postMutation(
                     {
                       title: title,
@@ -326,7 +334,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
 
                         // Step 2 failed — compensating DELETE for the PocketBase
                         // article record created in step 1.
-                        deletePocketbaseRecord(data.recordId, {
+                        deletePocketbaseRecord({
+                          recordId: data.recordId,
+                          collectionName: 'content',
+                        }, {
                           onError: cleanupErr => {
                             console.warn(
                               'PocketBase orphan cleanup failed for recordId:',

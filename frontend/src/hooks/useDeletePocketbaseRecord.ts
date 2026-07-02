@@ -17,12 +17,12 @@ type AxiosError = any;
 export const useDeletePocketbaseRecord = (): UseMutationResult<
   void,
   AxiosError,
-  string
+  { recordId: string; collectionName: string }
 > => {
   return useMutation({
     mutationKey: ['delete-pocketbase-record'],
-    mutationFn: async (recordId: string) => {
-      await axios.delete(`${DELETE_POCKETBASE_RECORD}/${recordId}`);
+    mutationFn: async ({ recordId, collectionName }: { recordId: string; collectionName: string }) => {
+      await axios.delete(`${DELETE_POCKETBASE_RECORD}/${collectionName}/${recordId}`);
     },
   });
 };

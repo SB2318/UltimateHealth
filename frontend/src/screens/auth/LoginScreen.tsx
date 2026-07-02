@@ -261,10 +261,10 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
     setEmailInputVisible(false);
   };
 
-  const navigateToOtpScreen = () => {
+  const navigateToOtpScreen = (overrideEmail?: string) => {
     setEmailInputVisible(false);
     navigation.navigate('OtpScreen', {
-      email: otpMail,
+      email: overrideEmail || otpMail,
     });
   };
 
@@ -592,7 +592,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                 {
                   onSuccess: () => {
                     Alert.alert('OTP has sent to your mail');
-                    navigateToOtpScreen();
+                    navigateToOtpScreen(email);
                   },
                   onError: error => {
                     if (isAxiosError(error)) {

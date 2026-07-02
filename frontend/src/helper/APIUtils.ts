@@ -86,7 +86,7 @@ const UPLOAD_IMPROVEMENT_TO_POCKETBASE = `${PROD_URL}/upload-pocketbase/improvem
 const DELETE_POCKETBASE_RECORD = `${PROD_URL}/upload-pocketbase/record`;
 
 /** Content Checker */
-const RENDER_SUGGESTION = `${CONTENT_CHECKER_PROD}/readability/check`;
+const RENDER_SUGGESTION = `${CONTENT_CHECKER_PROD}/grammar/analyze-readability`;
 
 /** PODCAST RELATED */
 const GET_ALL_PODCASTS = `${PROD_URL}/podcast/published-podcasts`;
