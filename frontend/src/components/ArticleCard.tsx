@@ -469,7 +469,7 @@ const ArticleCard = ({
                 },
                 {
                   articleId: item._id,
-                  name: 'Request to edit',
+                  name: 'Request to improve this post',
                   action: () => {
                     if (!isConnected) {
                       Snackbar.show({
@@ -484,35 +484,7 @@ const ArticleCard = ({
                   },
                   icon: 'edit',
                 },
-                {
-                  articleId: item._id,
-                  name: 'Improve Article',
-                  icon: 'tool',
-                  action: () => {
-                    setMenuVisible(false);
-                    if (!isConnected) {
-                      Snackbar.show({
-                        text: 'Please check your internet connection',
-                        duration: Snackbar.LENGTH_SHORT,
-                      });
-                      return;
-                    }
-                    if (isGuest) {
-                      (navigation as any).navigate('GuestPlaceholderScreen', {
-                        title: 'Sign In Required',
-                        description: 'Please sign in or sign up to improve this article.',
-                        iconName: 'tool',
-                      });
-                      return;
-                    }
-                    // Open article in ArticleScreen where user can tap Improve
-                    (navigation as any).navigate('ArticleScreen', {
-                      articleId: Number(item._id),
-                      authorId: item.authorId,
-                      recordId: item.pb_recordId,
-                    });
-                  },
-                },
+                
                 {
                   articleId: item._id,
                   name: 'Copy Link',
