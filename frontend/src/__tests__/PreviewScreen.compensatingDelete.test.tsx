@@ -184,7 +184,7 @@ describe('PreviewScreen compensating delete — new article path', () => {
     await waitFor(() => {
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledTimes(1);
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledWith(
-        'pb-record-42',
+        expect.objectContaining({recordId: 'pb-record-42'}),
         expect.objectContaining({onError: expect.any(Function)}),
       );
     });
@@ -229,7 +229,7 @@ describe('PreviewScreen compensating delete — improvement path', () => {
     await waitFor(() => {
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledTimes(1);
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledWith(
-        'pb-record-42',
+        expect.objectContaining({recordId: 'pb-record-42'}),
         expect.objectContaining({onError: expect.any(Function)}),
       );
     });
@@ -269,7 +269,7 @@ describe('PreviewScreen compensating delete — edit/suggested-changes path', ()
     await waitFor(() => {
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledTimes(1);
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledWith(
-        'pb-record-42',
+        expect.objectContaining({recordId: 'pb-record-42'}),
         expect.objectContaining({onError: expect.any(Function)}),
       );
     });

@@ -93,7 +93,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
     await audioRecorder.stop();
     setRecording(false);
     stopTimer();
-    setFilePath(audioModule.uri);
+    setFilePath(audioRecorder.uri);
   };
 
   useEffect(() => {

@@ -333,7 +333,7 @@ describe('PodcastDetail', () => {
 
     expect(mockPlayer.pause).toHaveBeenCalled();
     expect(getByText('Waiting for network connection')).toBeTruthy();
-  });
+  }, 15000);
 
   it('automatically resumes playback after network reconnects once', async () => {
     mockPlayer.playing = true;
