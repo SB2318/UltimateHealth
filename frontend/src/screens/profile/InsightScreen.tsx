@@ -70,7 +70,6 @@ const InsightScreen = ({navigation}: InsightScreenProp) => {
         ]}>
         <StatusBar
           style={isDarkMode ? 'light' : 'dark'}
-          backgroundColor={isDarkMode ? '#000000' : '#ffffff'}
         />
         <Loader />
       </SafeAreaView>
@@ -85,7 +84,6 @@ const InsightScreen = ({navigation}: InsightScreenProp) => {
       ]}>
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
-        backgroundColor={isDarkMode ? '#121212' : '#ffffff'}
       />
       {/* Header */}
       <View style={[styles.header, {borderBottomColor: isDarkMode ? '#374151' : '#e5e7eb'}]}>

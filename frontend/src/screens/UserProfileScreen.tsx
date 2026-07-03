@@ -346,7 +346,6 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         ]}>
         <StatusBar
           style={isDarkMode ? 'light' : 'dark'}
-          backgroundColor="#007AFF"
         />
         <Loader />
       </SafeAreaView>
@@ -355,7 +354,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#0a0f1e' : '#0F52BA' }]}>
-      <StatusBar style="light" backgroundColor="transparent" translucent />
+      <StatusBar style="light" translucent />
 
       {/* Floating back button over the blue top area */}
       <TouchableOpacity

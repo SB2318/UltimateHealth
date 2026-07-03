@@ -275,7 +275,6 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
     <YStack flex={1} backgroundColor={'$background'}>
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
-        backgroundColor={theme.blue10.val}
       />
 
       <YStack

@@ -29,7 +29,7 @@ const CustomStatusBar: React.FC<CustomStatusBarProps> = ({
 
   return (
     <Fragment>
-      <StatusBar style={finalBarStyle} backgroundColor={finalStatusBgColor} translucent={false} />
+      <StatusBar style={finalBarStyle} translucent={false} />
       <SafeAreaView style={{flex: 0, backgroundColor: finalStatusBgColor}} />
       <SafeAreaView style={{flex: 1, backgroundColor: finalBgColor}}>
         {children}

@@ -52,7 +52,7 @@ const RepostsScreen = ({navigation}: RepostsScreenProp) => {
   if (isLoading) {
     return (
       <SafeAreaView style={[styles.loadingContainer, {backgroundColor: theme.background.val}]}>
-        <StatusBar style={isDarkMode ? 'light' : 'dark'} backgroundColor={isDarkMode ? '#000000' : '#ffffff'} />
+        <StatusBar style={isDarkMode ? 'light' : 'dark'} />
         <Loader />
       </SafeAreaView>
     );
@@ -60,7 +60,7 @@ const RepostsScreen = ({navigation}: RepostsScreenProp) => {
 
   return (
     <SafeAreaView style={[styles.container, {backgroundColor: isDarkMode ? '#121212' : '#ffffff'}]}>
-      <StatusBar style={isDarkMode ? 'light' : 'dark'} backgroundColor={isDarkMode ? '#121212' : '#ffffff'} />
+      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
       
       {/* Header */}
       <View style={[styles.header, {borderBottomColor: isDarkMode ? '#374151' : '#e5e7eb'}]}>

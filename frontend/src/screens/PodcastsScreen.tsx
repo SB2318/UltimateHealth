@@ -187,7 +187,7 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="light" backgroundColor="#007AFF" />
+      <StatusBar style="light" />
 
       {/* Header Section */}
       <View style={[GlassStyles.glassCard, styles.header]}>
