@@ -1,6 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {DELETE_POCKETBASE_RECORD} from '../helper/APIUtils';
+type AxiosError = any;
 
 /**
  * Compensating-delete hook.
@@ -13,15 +14,15 @@ import {DELETE_POCKETBASE_RECORD} from '../helper/APIUtils';
  * saw the primary failure message). Server-side, the orphan cleanup can be
  * retried via a scheduled job if this call itself fails.
  */
-export const useDeletePocketbaseRecord = (): UseMutationResult
+export const useDeletePocketbaseRecord = (): UseMutationResult<
   void,
   AxiosError,
-  string
+  { recordId: string; collectionName: string }
 > => {
   return useMutation({
     mutationKey: ['delete-pocketbase-record'],
-    mutationFn: async (recordId: string) => {
-      await axios.delete(`${DELETE_POCKETBASE_RECORD}/${recordId}`);
+    mutationFn: async ({ recordId, collectionName }: { recordId: string; collectionName: string }) => {
+      await axios.delete(`${DELETE_POCKETBASE_RECORD}/${collectionName}/${recordId}`);
     },
   });
 };

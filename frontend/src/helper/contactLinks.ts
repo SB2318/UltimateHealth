@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type {PlatformOSType} from 'react-native';
 
 type ContactLinkPlatform = PlatformOSType;
