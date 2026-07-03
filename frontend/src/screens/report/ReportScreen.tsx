@@ -21,7 +21,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function ReportScreen({navigation, route}: ReportScreenProp) {
   const {articleId, commentId, authorId, podcastId} = route.params;
-  const {user_token, user_id} = useSelector((state: any) => state.user);
+  const {user_id} = useSelector((state: any) => state.user);
   const {isConnected} = useSelector((state: any) => state.network);
   const [selectedReasonId, setSelectedReasonId] = useState<string>('');
 
@@ -151,7 +151,7 @@ export default function ReportScreen({navigation, route}: ReportScreenProp) {
                               });
                               navigation.navigate('ReportConfirmationScreen');
                             },
-                            onError: error => {
+                            onError: () => {
                               Alert.alert('Error', 'Something went wrong. Please try again.');
                             },
                           },

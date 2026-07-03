@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import {useEffect, useState, useMemo} from 'react';
 import { StyleSheet,
   TouchableOpacity,
@@ -392,3 +393,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+

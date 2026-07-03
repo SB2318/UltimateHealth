@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 import React, {useState} from 'react';
 import {ScrollView, YStack, XStack, Text, Input, Button, Image, useTheme} from 'tamagui';
 import Icon from '@expo/vector-icons/MaterialIcons';
@@ -367,7 +368,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               <AntDesign
                 name="camera"
                 size={26}
-                color={theme.white.val}
+                color={theme.white?.val}
                 style={{transform: [{scaleX: -1}]}}
               />
             ) : (
@@ -414,7 +415,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     onBlur={onBlur}
                   />
                   <YStack position="absolute" right={14} top={10}>
-                    <Icon name="person" size={20} color={theme.black.val} />
+                    <Icon name="person" size={20} color={theme.black?.val} />
                   </YStack>
                 </XStack>
                 {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
@@ -442,7 +443,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     autoCapitalize="none"
                   />
                   <YStack position="absolute" right={14} top={10}>
-                    <Icon name="person" size={20} color={theme.black.val} />
+                    <Icon name="person" size={20} color={theme.black?.val} />
                   </YStack>
                 </XStack>
                 {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
@@ -488,7 +489,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     autoCapitalize="none"
                   />
                   <YStack position="absolute" right={14} top={10}>
-                    <Icon name="email" size={20} color={theme.black.val} />
+                    <Icon name="email" size={20} color={theme.black?.val} />
                   </YStack>
                 </XStack>
                 {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
@@ -525,7 +526,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     <AntDesign
                       name={isSecureEntry ? 'eye-invisible' : 'eye'}
                       size={17}
-                      color={theme.black.val}
+                      color={theme.black?.val}
                     />
                   </Button>
                 </XStack>
@@ -543,7 +544,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                 <Dropdown
                   style={{
                     height: 40,
-                    borderColor: error ? 'red' : theme.blue10.val,
+                    borderColor: error ? 'red' : theme.blue10?.val,
                     borderWidth: 1,
                     borderRadius: 5,
                     paddingHorizontal: 10,
@@ -609,3 +610,4 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 };
 
 export default SignupPageFirst;
+

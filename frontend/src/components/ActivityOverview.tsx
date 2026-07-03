@@ -352,7 +352,7 @@ const ActivityOverview = ({
     ];
   };
 
-  const YearlyChartSection = () => {
+  const renderYearlyChartSection = () => {
     const yearlyData =
       userState === 0 ? (yearlyReadReport ?? []) : (yearlyWriteReport ?? []);
     console.log('Raw yearly Data:', yearlyData);
@@ -441,7 +441,7 @@ const ActivityOverview = ({
     );
   };
 
-  const WeeklyChartSection = () => {
+  const renderWeeklyChartSection = () => {
     const rawMonthlyData =
       userState === 0 ? (monthlyReadReport ?? []) : (monthlyWriteReport ?? []);
 
@@ -496,13 +496,13 @@ const ActivityOverview = ({
     );
   };
 
-  const BarChartSection = () => {
+  const renderBarChartSection = () => {
     return (
       <View background="$background" paddingHorizontal="$4" marginTop="$6">
         <Text fontSize={19} fontWeight="700" marginBottom="$3">
           {userState === 0 ? 'Reading Trend' : 'Writing Trend'}
         </Text>
-        {selectedMonth !== -1 ? <WeeklyChartSection /> : <YearlyChartSection />}
+        {selectedMonth !== -1 ? renderWeeklyChartSection() : renderYearlyChartSection()}
       </View>
     );
   };
@@ -635,7 +635,7 @@ const ActivityOverview = ({
       {/* ===== CHART ===== */}
       {(selectedMonth !== -1 || selectedYear !== -1) && (
         <View>
-          <BarChartSection />
+          {renderBarChartSection()}
         </View>
       )}
 

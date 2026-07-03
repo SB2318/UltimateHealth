@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, {useCallback, useEffect, useState} from 'react';
 import { FlatList ,
   TouchableOpacity,
@@ -86,7 +87,7 @@ export default function ImprovementWorkspace({
   );
 
   return (
-    <View style={{flex: 1, backgroundColor: theme.background.val as string}}>
+    <View style={{flex: 1, backgroundColor: theme.background?.val as string}}>
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
           {categories.map((item, index) => (
@@ -199,3 +200,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+

@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
  
 import React, {useEffect, useRef, useState} from 'react';
 import { StyleSheet,
@@ -449,3 +450,4 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
 });
+

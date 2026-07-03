@@ -12,8 +12,8 @@ export function useScrollControls({ threshold = 300, bottomThreshold = 50 }: Use
   const [topVisible, setTopVisible] = useState(false);
   const [bottomVisible, setBottomVisible] = useState(true);
 
-  const topOpacity = useRef(new Animated.Value(0)).current;
-  const bottomOpacity = useRef(new Animated.Value(1)).current;
+  const [topOpacity] = useState(() => new Animated.Value(0));
+  const [bottomOpacity] = useState(() => new Animated.Value(1));
 
   const topVisibleRef = useRef(false);
   const bottomVisibleRef = useRef(true);

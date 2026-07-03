@@ -17,6 +17,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';
 import {useUserLogout} from '@/src/hooks/useUserLogout';
 import {useTheme} from 'tamagui';
+import { useColorScheme } from 'react-native-gifted-chat/lib/hooks/useColorScheme';
 type AxiosError = any;
 
 const DEFAULT_PROFILE_IMAGE =
@@ -28,6 +29,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const {mutate: logout} = useUserLogout();  
+  const isDarkMode = useColorScheme() === 'dark';
 
   const completeLocalLogout = useCallback(async () => {
     await clearStorage();
@@ -67,7 +69,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
     );
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor:theme.background.val}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')}}>
       <View style={styles.container}>
         <View style={styles.alert}>
           <View style={styles.alertContent}>
@@ -75,7 +77,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
               alt=""
               style={[
                 styles.alertAvatar,
-                !profile_image && {borderWidth: 0.5, borderColor: theme.black.val},
+                !profile_image && {borderWidth: 0.5, borderColor: theme.black?.val},
               ]}
               source={{
                 uri: profile_image
@@ -88,7 +90,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
 
             <Text style={[
               styles.alertTitle,
-              {color:theme.color.val}]}>
+              {color:theme.color?.val}]}>
               Log out of
               {'\n'}
               {username}
@@ -96,7 +98,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
 
             <Text style={[
               styles.alertMessage,
-              {color:theme.gray500.val}]}>
+              {color:theme.gray500?.val}]}>
               Are you sure you would like to log out of this account ?
             </Text>
           </View>
@@ -105,7 +107,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
             <View style={styles.btn}>
               <Text style={[
                 styles.btnText,
-                {color:theme.white.val}]}>Yes, log me out</Text>
+                {color:theme.white?.val}]}>Yes, log me out</Text>
             </View>
           </TouchableOpacity>
 

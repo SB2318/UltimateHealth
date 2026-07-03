@@ -395,7 +395,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
                       maxLength={field.maxLength}
                     />
                     <YStack position="absolute" right={14} top={12}>
-                      <Icon name={field.icon as any} size={20} color={theme.black.val} />
+                      <Icon name={field.icon as any} size={20} color={theme.black?.val} />
                     </YStack>
                   </XStack>
                   {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}

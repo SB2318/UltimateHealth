@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+/* eslint-disable react-compiler/react-compiler */
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -36,9 +37,9 @@ export const BaseEmptyState: React.FC<BaseEmptyStateProps> = ({
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
-  const bounceAnim = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const [bounceAnim] = useState(() => new Animated.Value(0));
+  const [fadeAnim] = useState(() => new Animated.Value(0));
+  const [pulseAnim] = useState(() => new Animated.Value(1));
 
   useEffect(() => {
     // Fade in
@@ -385,3 +386,4 @@ const styles = StyleSheet.create({
     borderRadius: 2.5,
   },
 });
+

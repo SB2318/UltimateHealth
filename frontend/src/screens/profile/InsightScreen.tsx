@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Alert, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, Alert, TouchableOpacity,useColorScheme} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import {useTheme} from 'tamagui';
-import {useColorScheme} from 'react-native';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {InsightScreenProp} from '../../type';
 import ActivityOverview from '../../components/ActivityOverview';
@@ -66,7 +65,7 @@ const InsightScreen = ({navigation}: InsightScreenProp) => {
       <SafeAreaView
         style={[
           styles.loadingContainer,
-          {backgroundColor: theme.background.val},
+          {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')},
         ]}>
         <StatusBar
           style={isDarkMode ? 'light' : 'dark'}
@@ -80,7 +79,7 @@ const InsightScreen = ({navigation}: InsightScreenProp) => {
     <SafeAreaView
       style={[
         styles.container,
-        {backgroundColor: isDarkMode ? '#121212' : '#ffffff'},
+        {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')},
       ]}>
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}

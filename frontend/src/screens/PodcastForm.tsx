@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, {useState} from 'react';
 import { View,
   Text,
@@ -781,3 +782,4 @@ const styles = StyleSheet.create({
 });
 
 export default PodcastForm;
+

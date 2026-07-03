@@ -19,7 +19,7 @@ import config from '../../tamagui.config';
 
 import { initDeepLinking, navigateDeepLink, resolveNotificationTarget } from '../helper/DeepLinkService';
 import { firebaseInit } from '../helper/firebase';
-import { cleanUpDownloads } from '../helper/Utils';
+import { cleanUpDownloads , KEYS, retrieveItem } from '../helper/Utils';
 import {
   SECURE_KEYS,
   secureRetrieveItem,
@@ -35,10 +35,10 @@ import StackNavigation from '../navigations/StackNavigation';
 import { CustomAlertDialog } from './CustomAlert';
 import UpdateModal from './UpdateModal';
 import { NetworkBanner } from './NetworkBanner';
-import { KEYS, retrieveItem } from '../helper/Utils';
 
 export default function AppContent() {
   const navigationRef = useRef<NavigationContainerRef<any> | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const pendingDeepLinkRef = useRef<string | null>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -175,9 +175,10 @@ function AppInner({
   storeUrl: string;
 }) {
   const theme = useTheme();
+  const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.background.val }}>
+    <View style={{ flex: 1, backgroundColor: theme?.background?.get() ?? (isDarkMode ? '#121212' : '#ffffff') }}>
       <NavigationContainer ref={navigationRef}>
         <StackNavigation />
       </NavigationContainer>

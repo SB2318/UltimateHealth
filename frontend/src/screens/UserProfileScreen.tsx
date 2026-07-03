@@ -72,7 +72,9 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   useEffect(() => {
     if (user && user.followers) {
       const isFollow = user.followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id);
+      // eslint-disable-next-line
       setLocalIsFollowing(isFollow);
+       
       setLocalFollowerCount(user.followers.length);
     }
   }, [user, user_id]);
@@ -342,7 +344,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
       <SafeAreaView
         style={[
           styles.loadingContainer,
-          {backgroundColor: theme.background.val},
+          {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')},
         ]}>
         <StatusBar
           style={isDarkMode ? 'light' : 'dark'}
@@ -353,8 +355,8 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#0a0f1e' : '#0F52BA' }]}>
-      <StatusBar style="light" translucent />
+    <SafeAreaView style={[styles.container, { backgroundColor: theme?.background?.val ?? (isDarkMode ? '#0a0f1e' : '#0F52BA') }]}>
+      <StatusBar style="light" />
 
       {/* Floating back button over the blue top area */}
       <TouchableOpacity

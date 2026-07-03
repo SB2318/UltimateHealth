@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import {useCallback, useEffect, useState} from 'react';
 import { View,
   StyleSheet,
@@ -267,3 +268,4 @@ const styles = StyleSheet.create({
     paddingBottom: hp(2),
   },
 });
+

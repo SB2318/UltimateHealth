@@ -44,7 +44,7 @@ interface Props {
    onSave: ()=> void;
    downloaded: boolean;
 }
-// eslint-disable-next-line react/display-name
+ 
 const PodcastActions = React.forwardRef(
   ({ onShare, onReport, onDownload, onSave, downloaded}: Props, ref: any) => {
     const snapPoints = useMemo(() => ['40%'], []);

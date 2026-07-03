@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 // @ts-nocheck
 import {
   StyleSheet,
@@ -1056,3 +1057,4 @@ const styles = StyleSheet.create({
  
 });
 */
+

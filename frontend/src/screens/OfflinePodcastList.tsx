@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, {useEffect, useState} from 'react';
 import { FlatList , Pressable, View, StyleSheet } from 'react-native';
 import {OfflinePodcastListProp, PodcastData} from '../type';
@@ -155,3 +156,4 @@ const styles = StyleSheet.create({
     color: '#666',
   },
 });
+

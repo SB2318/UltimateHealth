@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {
   View,
   Pressable,
@@ -32,8 +32,8 @@ interface AnimatedTabItemProps {
 }
 
 const AnimatedTabItem = ({label, isFocused, onPress, isDark}: AnimatedTabItemProps) => {
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const pillWidthAnim = useRef(new Animated.Value(isFocused ? 1 : 0)).current;
+  const [scaleAnim] = useState(() => new Animated.Value(1));
+  const [pillWidthAnim] = useState(() => new Animated.Value(isFocused ? 1 : 0));
 
   useEffect(() => {
     Animated.spring(pillWidthAnim, {

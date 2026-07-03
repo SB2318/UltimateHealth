@@ -383,14 +383,12 @@ const CommentScreen = ({
     });
   };
 
-  const Suggestions: FC<
-    SuggestionsProvidedProps & {
-      suggestions: User[];
-    }
-  > = ({
+  const renderSuggestions = ({
     keyword,
     onSelect,
     suggestions,
+  }: SuggestionsProvidedProps & {
+    suggestions: User[];
   }) => {
     if (keyword == null) {
       return null;
@@ -562,12 +560,10 @@ const CommentScreen = ({
                   </Paragraph>
                 </View>
 
-                <Suggestions
-                  suggestions={
-                    filteredUsers
-                  }
-                  {...triggers.mention}
-                />
+                {renderSuggestions({
+                  suggestions: filteredUsers,
+                  ...triggers.mention
+                })}
 
                {/* 1. Updated Input Component with Strict 500 Character Boundary */}
           <TextInput

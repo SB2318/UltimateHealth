@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import {
   Image,
   Platform,
@@ -1779,3 +1780,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+

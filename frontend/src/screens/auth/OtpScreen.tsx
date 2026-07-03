@@ -89,7 +89,7 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
       <SafeAreaView
         style={{
           flex: 1,
-          backgroundColor: theme.gray100.val,
+          backgroundColor: theme.gray100?.val,
           justifyContent: 'center',
           alignItems: 'center',
         }}>

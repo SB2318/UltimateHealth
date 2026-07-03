@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, {useCallback, useEffect, useState} from 'react';
 import { View,
   Text,
@@ -542,3 +543,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+

@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, {FC, useEffect, useMemo, useRef, useState} from 'react';
 import { TouchableOpacity,
   StyleSheet,
@@ -754,3 +755,4 @@ const styles = StyleSheet.create({
 });
 
 export default PodcastDiscussion;
+

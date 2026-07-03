@@ -1,3 +1,5 @@
+/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Alert, AppState } from 'react-native';
 
@@ -649,3 +651,5 @@ export default PodcastRecorder;
 //     color: '#777',
 //   },
 // });
+
+

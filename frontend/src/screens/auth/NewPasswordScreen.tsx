@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 import React, { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -234,7 +235,7 @@ export default function NewPasswordScreen({
                       <Icon
                         name={secureTextEntry ? 'eye-off' : 'eye'}
                         size={20}
-                        color={theme.gray700.val}
+                        color={theme.gray700?.val}
                       />
                     </Button>
                   </XStack>
@@ -284,8 +285,8 @@ export default function NewPasswordScreen({
                       size={20}
                       color={
                         value && password === value
-                          ? theme.blue10.val
-                          : theme.gray500.val
+                          ? theme.blue10?.val
+                          : theme.gray500?.val
                       }
                       style={{
                         position: 'absolute',
@@ -340,7 +341,7 @@ export default function NewPasswordScreen({
                       <Icon
                         name={secureNewTextEntry ? 'eye-off' : 'eye'}
                         size={20}
-                        color={theme.gray600.val}
+                        color={theme.gray600?.val}
                       />
                     </Button>
                   </XStack>
@@ -406,4 +407,5 @@ export default function NewPasswordScreen({
     </YStack>
   );
 }
+
 

@@ -40,6 +40,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
 
   React.useEffect(() => {
     if (user) {
+       
       dispatch(setUserHandle(user.user_handle));
     }
   }, [dispatch, user]);
@@ -217,7 +218,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
       <SafeAreaView
         style={[
           styles.loadingContainer,
-          {backgroundColor: theme.background.val},
+          {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')},
         ]}>
         <StatusBar
           style={isDarkMode ? 'light' : 'dark'}
@@ -248,7 +249,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     <SafeAreaView
       style={[
         styles.container,
-        {backgroundColor: isDarkMode ? '#000A60' : PRIMARY_COLOR},
+        {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#000A60' : PRIMARY_COLOR)},
       ]}>
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}

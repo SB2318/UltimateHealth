@@ -4,10 +4,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import {useTheme} from 'tamagui';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import {PRIMARY_COLOR} from '../../helper/Theme';
 import {SavedArticlesScreenProp, ArticleData} from '../../type';
 import {useGetProfile} from '../../hooks/useGetProfile';
-import Loader from '../../components/Loader';
 import {NoArticleState} from '../../components/EmptyStates';
 import UserArticleCard from '../../components/UserArticleCard';
 import {useFocusEffect} from '@react-navigation/native';
@@ -25,10 +23,10 @@ const SavedArticlesScreen = ({navigation}: SavedArticlesScreenProp) => {
     }, [refetch])
   );
 
-  const onRefresh = () => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     refetch().finally(() => setRefreshing(false));
-  };
+  }, [refetch]);
 
   const renderItem = useCallback(
     ({item}: {item: ArticleData}) => {
@@ -51,9 +49,7 @@ const SavedArticlesScreen = ({navigation}: SavedArticlesScreenProp) => {
 
   if (isLoading) {
     return (
-      <SafeAreaView style={[styles.loadingContainer, {backgroundColor: theme.background.val}]}>
-        <StatusBar style={isDarkMode ? 'light' : 'dark'} />
-        <Loader />
+      <SafeAreaView style={[styles.loadingContainer, {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')}]}>
       </SafeAreaView>
     );
   }

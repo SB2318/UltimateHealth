@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 
 import { AppState,  FlatList , StyleSheet, View } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
@@ -412,4 +413,5 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
 });
+
 

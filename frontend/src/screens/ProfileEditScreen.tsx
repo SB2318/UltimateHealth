@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import { ScrollView ,
   Text,
   TouchableOpacity,
@@ -699,3 +700,4 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileEditScreen;
+

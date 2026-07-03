@@ -1,3 +1,4 @@
+ 
 import React, { useEffect, useState } from 'react';
 import { YStack, Button, Input, Spacer, Text, XStack, Card, Circle, Paragraph, ScrollView as TamaguiScrollView } from 'tamagui';
 import { Sheet } from '@tamagui/sheet';
@@ -276,3 +277,4 @@ export default function EmailInputBottomSheet({
     </Sheet>
   );
 }
+

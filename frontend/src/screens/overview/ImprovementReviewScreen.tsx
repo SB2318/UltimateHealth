@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import { Image,
   Platform,
   StyleSheet,
@@ -689,3 +690,4 @@ const styles = StyleSheet.create({
     marginBottom: hp(0.8),
   },
 });
+

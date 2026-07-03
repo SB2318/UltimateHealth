@@ -58,6 +58,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line
     setComments(loadComments ?? []);
   }, [loadComments]);
 

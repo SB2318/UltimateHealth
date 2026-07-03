@@ -16,7 +16,7 @@ interface UseBackToTopOptions {
 export function useBackToTop({ threshold = 300 }: UseBackToTopOptions = {}) {
   const scrollRef = useRef<ScrollView>(null);
   const [visible, setVisible] = useState(false);
-  const opacity = useRef(new Animated.Value(0)).current;
+  const [opacity] = useState(() => new Animated.Value(0));
  
   const show = () => {
     setVisible(true);

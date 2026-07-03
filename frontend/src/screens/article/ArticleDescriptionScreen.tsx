@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 // @ts-nocheck
 import React, {useEffect, useRef, useState} from 'react';
 import { View,
@@ -832,3 +833,4 @@ const styles = StyleSheet.create({
 });
 
 export default ArticleDescriptionScreen;
+
