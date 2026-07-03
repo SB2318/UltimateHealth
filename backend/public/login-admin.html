@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login to Continue</title>
+  <style>
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      background: #f4f7fc;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      width: 420px;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .icon {
+      width: 55px;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+
+    p {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .input-group {
+      margin-bottom: 18px;
+      text-align: left;
+    }
+
+    .input-group label {
+      font-size: 14px;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d9d9d9;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-group input:focus {
+      border-color: #4da3ff;
+    }
+
+    .login-btn {
+      width: 100%;
+      background: #4d7cff;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.2s ease;
+    }
+
+    .login-btn:hover {
+      background: #2f5bdb;
+    }
+
+    #msg {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <img src="https://cdn-icons-png.flaticon.com/512/295/295128.png" class="icon">
+
+    <h2>Login Required</h2>
+    <p>Please log in to continue to account deletion.</p>
+
+    <form id="loginForm">
+
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" id="email" required placeholder="Enter your email">
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="password" required placeholder="Password">
+      </div>
+
+      <button class="login-btn" type="submit">Login</button>
+    </form>
+
+    <div id="msg"></div>
+
+  </div>
+
+  <script>
+  document.getElementById("loginForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const msg = document.getElementById("msg");
+    msg.innerHTML = "Processing...";
+
+    try {
+      const res = await fetch("https://uhsocial.in/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",  
+        body: JSON.stringify({
+          email: document.getElementById("email").value,
+          password: document.getElementById("password").value,
+          fcmToken: "web-client-login"
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        msg.style.color = "green";
+        msg.innerHTML = "Login successful. Redirecting...";
+
+      
+        if (data.accessToken) {
+          localStorage.setItem("accessToken", data.accessToken);
+        }
+        if (data.refreshToken) {
+          localStorage.setItem("refreshToken", data.refreshToken);
+        }
+
+    
+        setTimeout(() => {
+          window.location.href = "/delete-account-admin.html";
+        }, 1000);
+
+      } else {
+        msg.style.color = "red";
+        msg.innerHTML = data.error || "Login failed";
+      }
+
+    } catch (err) {
+      msg.style.color = "red";
+      msg.innerHTML = "Server error: " + err.message;
+    }
+  });
+</script>
+
+
+</body>
+</html>

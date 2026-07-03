@@ -1,0 +1,23 @@
+info:
+  name: Update User General Details
+  type: http
+  seq: 16
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/user/update-general-details"
+  body:
+    type: json
+    data: |-
+      {
+        "username": "test bolte",
+        "userHandle": "test4",
+        "about": "about me"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,63 @@
+info:
+  name: Register
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/user/register"
+  body:
+    type: json
+    data: |-
+      {
+        "user_name": "test",
+        "user_handle": "test4",
+        "email":"test4@gmail.com",
+        "isDoctor":false,
+        "password":"{{userPassword}}"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Register Response
+    request:
+      url: "{{baseUrl}}/api/user/register"
+      method: POST
+    response:
+      status: 400
+      statusText: Bad Request
+      headers:
+        - name: x-powered-by
+          value: Express
+        - name: vary
+          value: Origin, Accept-Encoding
+        - name: access-control-allow-credentials
+          value: "true"
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "100"
+        - name: etag
+          value: W/"64-gdHoIFY88AjfK7SfFkJYl2GjTss"
+        - name: date
+          value: Fri, 01 May 2026 09:11:05 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          {
+            "success": false,
+            "error": {
+              "code": "VALIDATION_ERROR",
+              "message": "Please provide all required fields"
+            }
+          }

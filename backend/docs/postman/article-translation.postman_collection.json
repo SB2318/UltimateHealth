@@ -1,0 +1,177 @@
+{
+  "info": {
+    "name": "UltimateHealth Article Translation API",
+    "description": "Postman collection for verifying article translation creation and published translation lookup.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://uhsocial.in/api"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    },
+    {
+      "key": "authorId",
+      "value": ""
+    },
+    {
+      "key": "sourceArticleId",
+      "value": "101"
+    },
+    {
+      "key": "sourceArticleRecordId",
+      "value": "pb_source_record_id"
+    },
+    {
+      "key": "sourceLanguage",
+      "value": "en-IN"
+    },
+    {
+      "key": "targetLanguage",
+      "value": "hi-IN"
+    },
+    {
+      "key": "tagId",
+      "value": ""
+    },
+    {
+      "key": "pbRecordId",
+      "value": "pb_translation_record_id"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create article translation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/articles",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "articles"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"authorId\": \"{{authorId}}\",\n  \"title\": \"Understanding Hydration - Hindi Translation\",\n  \"authorName\": \"UltimateHealth Contributor\",\n  \"description\": \"Hindi translation of the hydration article.\",\n  \"content\": \"https://uhsocial.in/api/getfile/{{pbRecordId}}\",\n  \"tags\": [\n    {\n      \"_id\": \"{{tagId}}\"\n    }\n  ],\n  \"imageUtils\": [\n    \"https://uhsocial.in/api/getfile/sample-image\"\n  ],\n  \"pb_recordId\": \"{{pbRecordId}}\",\n  \"allow_podcast\": true,\n  \"language\": \"{{targetLanguage}}\",\n  \"isTranslation\": true,\n  \"sourceArticleId\": \"{{sourceArticleId}}\",\n  \"sourceArticleRecordId\": \"{{sourceArticleRecordId}}\",\n  \"sourceLanguage\": \"{{sourceLanguage}}\",\n  \"translationOf\": \"{{sourceArticleId}}\"\n}"
+        }
+      },
+      "response": [
+        {
+          "name": "201 - translation under review",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/articles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "articles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"Translation under reviewed\",\n  \"newArticle\": {\n    \"_id\": 124,\n    \"title\": \"Understanding Hydration - Hindi Translation\",\n    \"language\": \"hi-IN\",\n    \"isTranslation\": true,\n    \"sourceArticleId\": 101,\n    \"sourceArticleRecordId\": \"pb_source_record_id\",\n    \"sourceLanguage\": \"en-IN\",\n    \"translationOf\": 101,\n    \"status\": \"unassigned\",\n    \"is_removed\": false\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Get published article translations",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/articles/{{sourceArticleId}}/translations?language={{targetLanguage}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "articles",
+            "{{sourceArticleId}}",
+            "translations"
+          ],
+          "query": [
+            {
+              "key": "language",
+              "value": "{{targetLanguage}}"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "200 - published translations",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/articles/{{sourceArticleId}}/translations?language={{targetLanguage}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "articles",
+                "{{sourceArticleId}}",
+                "translations"
+              ],
+              "query": [
+                {
+                  "key": "language",
+                  "value": "{{targetLanguage}}"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"translations\": [\n    {\n      \"_id\": 124,\n      \"title\": \"Understanding Hydration - Hindi Translation\",\n      \"language\": \"hi-IN\",\n      \"isTranslation\": true,\n      \"sourceArticleId\": 101,\n      \"sourceArticleRecordId\": \"pb_source_record_id\",\n      \"sourceLanguage\": \"en-IN\",\n      \"translationOf\": 101,\n      \"status\": \"published\",\n      \"is_removed\": false\n    }\n  ]\n}"
+        }
+      ]
+    }
+  ]
+}

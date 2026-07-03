@@ -1,0 +1,17 @@
+# Environment variables
+.env
+
+# Node modules
+node_modules/
+
+# Package lock file (optional; you may choose to keep it depending on your needs)
+package-lock.json
+
+ultimatehealth-firebase-adminsdk.json
+assetlink.json
+
+/public/delete-account-admin.html
+/public/delete-account-user.html
+test.js
+#public/assets/
+useSocket.txt

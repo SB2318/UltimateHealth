@@ -1,0 +1,19 @@
+info:
+  name: User Verify
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/user/verifyEmail?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QzQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwidHlwZSI6ImVtYWlsX3ZlcmlmaWNhdGlvbiIsImp0aSI6IjFiM2U2OGZiLTg1NTgtNGIxYi05NDBkLTgzM2E4Y2JiYTYyYiIsImlhdCI6MTc3NzgzNjMxNCwiZXhwIjoxNzc3ODM5OTE0LCJhdWQiOiJ1bHRpbWF0ZS1oZWFsdGgtdXNlcnMiLCJpc3MiOiJ1bHRpbWF0ZS1oZWFsdGgifQ.Vg9MUyXM6Dg0cuXtKCxVh99ilqtFrTLZAWuXNduktB4"
+  params:
+    - name: token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3QzQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwidHlwZSI6ImVtYWlsX3ZlcmlmaWNhdGlvbiIsImp0aSI6IjFiM2U2OGZiLTg1NTgtNGIxYi05NDBkLTgzM2E4Y2JiYTYyYiIsImlhdCI6MTc3NzgzNjMxNCwiZXhwIjoxNzc3ODM5OTE0LCJhdWQiOiJ1bHRpbWF0ZS1oZWFsdGgtdXNlcnMiLCJpc3MiOiJ1bHRpbWF0ZS1oZWFsdGgifQ.Vg9MUyXM6Dg0cuXtKCxVh99ilqtFrTLZAWuXNduktB4
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

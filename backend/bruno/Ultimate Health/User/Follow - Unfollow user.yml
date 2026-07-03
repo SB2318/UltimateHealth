@@ -1,0 +1,22 @@
+info:
+  name: Follow / Unfollow user
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/user/follow"
+  body:
+    type: json
+    data: |-
+      {
+      //   "articleId": 1
+          "followUserId":"69f474fa3b1cd423a9b2f4c0"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,115 @@
+info:
+  name: Get User Profile By Id or Handle
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/user/getuserprofile?id=69f474fa3b1cd423a9b2f4c0"
+  params:
+    - name: id
+      value: 69f474fa3b1cd423a9b2f4c0
+      type: query
+    - name: handle
+      value: test
+      type: query
+      disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+examples:
+  - name: Success
+    request:
+      url: "{{baseUrl}}/api/user/getuserprofile?id=69f474fa3b1cd423a9b2f4c0"
+      method: GET
+      params:
+        - name: id
+          value: 69f474fa3b1cd423a9b2f4c0
+          type: query
+        - name: handle
+          value: test
+          type: query
+          disabled: true
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: content-security-policy
+          value: "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+        - name: cross-origin-opener-policy
+          value: same-origin
+        - name: cross-origin-resource-policy
+          value: same-origin
+        - name: origin-agent-cluster
+          value: ?1
+        - name: referrer-policy
+          value: no-referrer
+        - name: strict-transport-security
+          value: max-age=31536000; includeSubDomains
+        - name: x-content-type-options
+          value: nosniff
+        - name: x-dns-prefetch-control
+          value: off
+        - name: x-download-options
+          value: noopen
+        - name: x-frame-options
+          value: SAMEORIGIN
+        - name: x-permitted-cross-domain-policies
+          value: none
+        - name: x-xss-protection
+          value: "0"
+        - name: ratelimit-policy
+          value: 300;w=900
+        - name: ratelimit-limit
+          value: "300"
+        - name: ratelimit-remaining
+          value: "298"
+        - name: ratelimit-reset
+          value: "893"
+        - name: vary
+          value: Origin, Accept-Encoding
+        - name: access-control-allow-credentials
+          value: "true"
+        - name: content-type
+          value: application/json; charset=utf-8
+        - name: content-length
+          value: "389"
+        - name: etag
+          value: W/"185-L1PKpfRBb8vn7wbRUB14wdTGCe4"
+        - name: date
+          value: Thu, 07 May 2026 06:40:42 GMT
+        - name: connection
+          value: keep-alive
+        - name: keep-alive
+          value: timeout=5
+      body:
+        type: json
+        data: |-
+          {
+            "success": true,
+            "message": "User profile fetched successfully.",
+            "data": {
+              "_id": "69f474fa3b1cd423a9b2f4c0",
+              "user_id": "69f474fa3b1cd423a9b2f4bf",
+              "user_name": "test",
+              "user_handle": "test",
+              "isDoctor": false,
+              "contact_detail": {
+                "phone_no": null,
+                "email_id": null
+              },
+              "Profile_image": "",
+              "articles": [],
+              "repostArticles": [],
+              "improvements": [],
+              "followers": [],
+              "followings": [],
+              "followerCount": 0,
+              "followingCount": 0
+            }
+          }

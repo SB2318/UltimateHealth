@@ -1,0 +1,33 @@
+opencollection: 1.0.0
+
+info:
+  name: "Ultimate Health "
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  auth:
+    type: bearer
+    token: "{{refreshToken}}"
+  variables:
+    - name: baseUrl
+      value: http://localhost:4000
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git
+    presets:
+      request:
+        type: http
+        url: "{{baseUrl}}"

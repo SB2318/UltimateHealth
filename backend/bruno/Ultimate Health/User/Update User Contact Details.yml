@@ -1,0 +1,22 @@
+info:
+  name: Update User Contact Details
+  type: http
+  seq: 17
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/api/user/update-contact-details"
+  body:
+    type: json
+    data: |-
+      {
+        "phone": "7845673412",
+        "email": "test@gmail.com"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

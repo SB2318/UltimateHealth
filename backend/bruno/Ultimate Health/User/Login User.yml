@@ -1,0 +1,56 @@
+info:
+  name: Login User
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{baseUrl}}/api/user/login"
+  body:
+    type: json
+    data: |-
+      {
+        "email": "test3@gmail.com",
+        "password": "{{userPassword}}",
+        "fcmToken": "{{fcmToken}}"
+      }
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+        if(body.success && body.data.refreshToken){
+          bru.setEnvVar("refreshToken", body.data.refreshToken);
+          console.log(bru.getEnvVar("refreshToken"));
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+
+docs: |
+  # Login User API
+
+  ## Overview
+
+  Authenticate a registered user using email and password.
+
+  Returns:
+  - Access Token
+  - Refresh Token
+  - User Information
+
+  ---
+
+  ## Body Parameters
+
+  | Field | Type | Required | Description |
+  |---|---|---|---|
+  | email | string | Yes | Registered user email address |
+  | password | string | Yes | User account password |
+  | fcmToken | string | Yes | Firebase Cloud Messaging token used for push notifications |
+
+  ---
