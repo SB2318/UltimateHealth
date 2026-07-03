@@ -296,7 +296,7 @@ const ArticleDescriptionScreen = ({
           paddingHorizontal: 6,
         }}>
       <View style={styles.form}>
-        <LanguageSelector />
+        {LanguageSelector()}
 
         {/* Header Section */}
         <View style={styles.headerSection}>
