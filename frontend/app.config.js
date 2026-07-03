@@ -6,7 +6,7 @@
 const defaultStaticConfig = {
   name: "UltimateHealth",
   slug: "UltimateHealth",
-  version: "2.2.0",
+  version: "3.0.0",
   orientation: "portrait",
   icon: "./assets/images/ic_ultimatehealth_appicon.png",
   scheme: "ultimatehealth",

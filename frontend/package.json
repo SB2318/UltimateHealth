@@ -15,7 +15,8 @@
     "knip:exports": "knip --exports",
     "knip:fix": "knip --fix",
     "knip:check": "knip --no-progress",
-    "quality": "pnpm run type-check && pnpm run lint && pnpm run knip"
+    "quality": "pnpm run type-check && pnpm run lint && pnpm run knip",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@bam.tech/react-native-image-resizer": "^3.0.11",
@@ -61,6 +62,7 @@
     "expo-localization": "~56.0.6",
     "expo-notifications": "~56.0.19",
     "expo-secure-store": "~56.0.4",
+    "expo-speech": "~56.0.3",
     "expo-splash-screen": "~56.0.12",
     "expo-status-bar": "~56.0.4",
     "expo-symbols": "~56.0.6",
@@ -119,6 +121,8 @@
     "jest": "^29.2.1",
     "jest-expo": "~56.0.5",
     "knip": "^6.14.2",
+    "patch-package": "^8.0.1",
+    "postinstall-postinstall": "^2.1.0",
     "react-native-svg-transformer": "^1.5.1",
     "react-test-renderer": "19.2.3",
     "typescript": "~6.0.3"
