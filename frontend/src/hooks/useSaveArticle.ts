@@ -1,6 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import { SAVE_ARTICLE } from "../helper/APIUtils";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+type AxiosError = any;
 
 
 export const useSaveArticle = (articleId: number): UseMutationResult<

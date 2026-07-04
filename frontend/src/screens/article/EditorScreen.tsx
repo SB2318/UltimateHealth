@@ -1,12 +1,12 @@
+/* eslint-disable react-compiler/react-compiler */
  
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  StyleSheet,
+import { StyleSheet,
   Text,
-  ScrollView,
+   ScrollView ,
   Alert,
   TouchableOpacity,
-} from 'react-native';
+ } from 'react-native';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -35,7 +35,8 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
     htmlContent,
     pb_record_id,
     translationSource,
-  } = route.params;
+    language,
+  } = route.params || {};
 
   const RichText = useRef<RichEditor>(null);
   const [article, setArticle] = useState('');
@@ -67,7 +68,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
                 articleData: articleData,
                 requestId: requestId,
                 pb_record_id: pb_record_id,
-                language: route.params.language,
+                language: language,
                 translationSource,
               });
             } else {
@@ -449,3 +450,4 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
 });
+

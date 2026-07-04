@@ -14,6 +14,7 @@ import NotificationScreen from '../screens/NotificationScreen';
 import EditorScreen from '../screens/article/EditorScreen';
 import PreviewScreen from '../screens/article/PreviewScreen';
 import ArticleScreen from '../screens/article/ArticleScreen';
+import ReadingHistoryScreen from '../screens/ReadingHistoryScreen';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -27,7 +28,7 @@ import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScree
 import ProfileEditScreen from '../screens/ProfileEditScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import {RootStackParamList, TabParamList} from '../type';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import {BUTTON_COLOR, ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import LogoutScreen from '../screens/auth/LogoutScreen';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import OverviewScreen from '../screens/overview/OverviewScreen';
@@ -45,12 +46,19 @@ import PodcastRecorder from '../screens/PodcastRecorder';
 import PodcastForm from '../screens/PodcastForm';
 import PodcastPlayer from '../screens/PodcastPlayer';
 import PodcastProfile from '../screens/PodcastProfile';
+import PlaylistDetailScreen from '../screens/PlaylistDetailScreen';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicy';
 import CommunityGuidelinesScreen from '../screens/CommunityGuidelinesScreen';
 import ContributorPage from '../screens/ContributorPage';
 import OpenSourcePage from '../screens/OpenSourcePage';
 import NotificationPreferencesScreen from '../screens/NotificationPreferencesScreen';
+import InsightScreen from '../screens/profile/InsightScreen';
+import RepostsScreen from '../screens/profile/RepostsScreen';
+import SavedArticlesScreen from '../screens/profile/SavedArticlesScreen';
+import WellnessDashboardScreen from '../screens/WellnessDashboard/WellnessDashboardScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+
+import ChatbotScreen from '../screens/ChatbotScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -119,6 +127,11 @@ const StackNavigation = () => {
       <Stack.Screen
         name="TabNavigation"
         component={TabNavigation}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ChatbotScreen"
+        component={ChatbotScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -560,6 +573,32 @@ const StackNavigation = () => {
           ),
         })}
       />
+      <Stack.Screen
+        name="ReadingHistoryScreen"
+        component={ReadingHistoryScreen}
+        options={({navigation}) => ({
+          headerShown: true,
+          headerTitle: 'Reading History',
+          headerTitleAlign: 'center',
+          headerBackTitleVisible: false,
+          headerTintColor: 'white',
+          headerStyle: {
+            elevation: 4,
+            backgroundColor: '#000A60',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
+          },
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.headerLeftButtonCommentScreen}
+              onPress={() => navigation.goBack()}>
+              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
+            </TouchableOpacity>
+          ),
+        })}
+      />
 
       <Stack.Screen
         name="Privacy"
@@ -811,6 +850,34 @@ const StackNavigation = () => {
         })}
       />
       <Stack.Screen
+        name="InsightScreen"
+        component={InsightScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="RepostsScreen"
+        component={RepostsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="SavedArticlesScreen"
+        component={SavedArticlesScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="WellnessDashboardScreen"
+        component={WellnessDashboardScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="LogoutScreen"
         component={LogoutScreen}
         options={{
@@ -854,6 +921,19 @@ const StackNavigation = () => {
           ),
         })}
       /> */}
+      <Stack.Screen
+        name="PlaylistDetailScreen"
+        component={PlaylistDetailScreen}
+        options={{
+          headerShown: true,
+          title: 'Playlist',
+         // headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: BUTTON_COLOR,
+          },
+          headerTintColor: 'white',
+        }}
+      />
     </Stack.Navigator>
   );
 };

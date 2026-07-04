@@ -1,5 +1,5 @@
 import { createTamagui, createTokens, TamaguiConfig } from 'tamagui';
-import { themes } from '@tamagui/themes';
+import { defaultThemes } from '@tamagui/themes/v5';
 import { createAnimations } from '@tamagui/animations-react-native'
 
 
@@ -151,18 +151,18 @@ const config = createTamagui({
   shorthands,
   tokens,
   themes: {
-    ...themes,
+    ...defaultThemes,
     light: {
-      background: '#FFFFFF',
-      backgroundLight: '#F5F5F5',
-      color: '#424242',
+      ...defaultThemes.light,
+      // Custom brand overrides (these extend, not replace, the full token set)
       primary: '#4F46E5',
+      backgroundLight: '#F5F5F5',
     },
     dark: {
-      background: '#424242',
-      backgroundLight: '#616161',
-      color: '#FFFFFF',
+      ...defaultThemes.dark,
+      // Custom brand overrides
       primary: '#4F46E5',
+      backgroundLight: '#616161',
     },
   },
   fonts: {

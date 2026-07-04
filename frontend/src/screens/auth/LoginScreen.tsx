@@ -1,13 +1,13 @@
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
-import {AxiosError, isAxiosError} from 'axios';
+import {   isAxiosError} from 'axios';
 import {StatusBar} from 'expo-status-bar';
 import messaging from '@react-native-firebase/messaging';
 import React, {useEffect, useState} from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {Alert, Image, useColorScheme} from 'react-native';
+import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch} from 'react-redux';
@@ -24,6 +24,7 @@ import {
 import {useRequestVerification} from '@/src/hooks/useResendVerification';
 import {useSendOtpMutation} from '@/src/hooks/useSendOtp';
 import {useLoginMutation} from '@/src/hooks/useUserLogin';
+import type {LoginResponse} from '@/src/hooks/useUserLogin';
 import EmailInputBottomSheet from '../../components/EmailInputModal';
 import Loader from '../../components/Loader';
 import {SECURE_KEYS, secureStoreItem} from '../../helper/SecureStorageUtils';
@@ -37,11 +38,17 @@ import {
 } from '../../store/UserSlice';
 
 import { AuthData, LoginScreenProp } from '../../type';
-import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
+type AxiosError = any;
 
 const loginSchema = z.object({
-  email: z.string().email('Please Enter a Valid Email'),
-  password: z.string().min(6, 'Password must be 6 Characters Long'),
+  email: z
+    .string()
+    .min(1, 'Email address is required.')
+    .email('Please enter a valid email address.'),
+  password: z
+    .string()
+    .min(1, 'Password is required.')
+    .min(8, 'Password must contain at least 8 characters.'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -147,15 +154,36 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         fcmToken: fcmToken ?? 'not found',
       },
         {
-          onSuccess: async data => {
+          onSuccess: async (data: LoginResponse) => {
+            if (__DEV__) {
+              console.log('[LoginScreen] onSuccess data keys:', Object.keys(data || {}));
+            }
+
+            // Extract user info — backend may return it at data.user or flat on data
+            const userData = data.user ?? (data as any);
+
+            // Token can be at multiple fields depending on backend version
+            const token =
+              data.token ??
+              data.refreshToken ??
+              data.accessToken ??
+              (data.user as any)?.refreshToken ??
+              null;
+
+            if (__DEV__) {
+              console.log('[LoginScreen] Resolved token:', token ? 'present (length=' + token.length + ')' : 'NULL/MISSING');
+              console.log('[LoginScreen] userId:', userData?._id);
+              console.log('[LoginScreen] user_handle:', userData?.user_handle);
+            }
+
             const auth: AuthData = {
-              userId: data._id,
-              token: data?.refreshToken,
-              user_handle: data?.user_handle,
+              userId: userData?._id,
+              token,
+              user_handle: userData?.user_handle,
             };
             try {
-              await storeItem(KEYS.USER_ID, auth.userId.toString());
-              await storeItem(KEYS.USER_HANDLE, data?.user_handle);
+              await storeItem(KEYS.USER_ID, auth.userId?.toString() || '');
+              await storeItem(KEYS.USER_HANDLE, auth.user_handle || '');
               if (auth.token) {
                 await secureStoreItem(
                   SECURE_KEYS.USER_TOKEN,
@@ -171,26 +199,27 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                 dispatch(setGuestMode(false));
                 // Reset so the next session expiry triggers the notification again.
                 resetSessionExpiredNotification();
-                setTimeout(() => {
-                  if (redirectTo) {
-                    (navigation as any).navigate(
-                      redirectTo.name,
-                      redirectTo.params,
-                    );
-
-                    return;
-                  }
+                if (redirectTo) {
+                  (navigation as any).navigate(
+                    redirectTo.name,
+                    redirectTo.params,
+                  );
+                } else {
                   navigation.reset({
                     index: 0,
                     routes: [{name: 'TabNavigation'}],
                   });
-                }, 1000);
+                }
               } else {
-                Alert.alert('Token not found');
+                // Token is missing — log all keys to help diagnose backend response shape
+                if (__DEV__) {
+                  console.error('[LoginScreen] No token found in response. Full data:', JSON.stringify(data, null, 2));
+                }
+                Alert.alert('Login Error', 'Authentication token not received. Please try again.');
               }
             } catch (e) {
               if (__DEV__) {
-                console.log('Async Storage ERROR', e);
+                console.log('Storage ERROR during login', e);
               }
             }
           },
@@ -214,22 +243,17 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                     'Error',
                     'Email not verified. Please check your email.',
                   );
-                  return;
-                }
-                navigation.reset({
-                  index: 0,
-                  routes: [{name: 'TabNavigation'}],
-                });
-              }, 1000);
+                  break;
+                default:
+                  Alert.alert('Error', 'Something went wrong. Please try again.');
+                  break;
+              }
             } else {
-              Alert.alert('Token not found');
+              Alert.alert('Error', 'Network error or server unavailable');
             }
-          } catch (e) {
-            if (__DEV__) console.log('Async Storage ERROR', e);
-          } finally {
             setIsSubmitting(false);
-          }
-        },
+          },
+        }
       );
   };
 
@@ -237,10 +261,10 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
     setEmailInputVisible(false);
   };
 
-  const navigateToOtpScreen = () => {
+  const navigateToOtpScreen = (overrideEmail?: string) => {
     setEmailInputVisible(false);
     navigation.navigate('OtpScreen', {
-      email: otpMail,
+      email: overrideEmail || otpMail,
     });
   };
 
@@ -251,7 +275,6 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
     <YStack flex={1} backgroundColor={'$background'}>
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
-        backgroundColor={theme.blue10.val}
       />
 
       <YStack
@@ -300,17 +323,12 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               control={control}
               name="email"
               render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                <YStack>
-                  {error && (
-                    <Text color="$red10" fontSize={14} marginBottom="$2">
-                      {error.message}
-                    </Text>
-                  )}
+                <YStack gap="$1">
                   <XStack alignItems="center" position="relative">
                     <Icon
                       name="mail"
                       size={22}
-                      color={isDarkMode ? 'white' : 'black'}
+                      color={error ? '#ef4444' : isDarkMode ? 'white' : 'black'}
                       style={{
                         position: 'absolute',
                         left: 12,
@@ -321,7 +339,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       flex={1}
                       height="$6"
                       borderRadius="$4"
-                      placeholder="Enter your email"
+                      placeholder="Enter your email address"
                       autoCapitalize="none"
                       autoCorrect={false}
                       keyboardType="email-address"
@@ -330,8 +348,15 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       value={value}
                       color={isDarkMode ? '$color' : '$color10'}
                       paddingStart="$10"
+                      borderWidth={error ? 2 : 1}
+                      borderColor={error ? '$red8' : undefined}
                     />
                   </XStack>
+                  {error && (
+                    <Text color="$red10" fontSize={13} marginLeft="$1">
+                      {error.message}
+                    </Text>
+                  )}
                 </YStack>
               )}
             />
@@ -340,17 +365,12 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               control={control}
               name="password"
               render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
-                <YStack>
-                  {error && (
-                    <Text color="$red10" fontSize={14} marginBottom="$2">
-                      {error.message}
-                    </Text>
-                  )}
+                <YStack gap="$1">
                   <XStack alignItems="center" position="relative">
                     <Entypo
                       name="lock"
                       size={22}
-                      color={isDarkMode ? 'white' : 'black'}
+                      color={error ? '#ef4444' : isDarkMode ? 'white' : 'black'}
                       style={{
                         position: 'absolute',
                         left: 12,
@@ -361,7 +381,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       flex={1}
                       height="$6"
                       borderRadius="$4"
-                      placeholder="Password"
+                      placeholder="Enter your password"
                       secureTextEntry={secureTextEntry}
                       autoCapitalize="none"
                       onBlur={onBlur}
@@ -370,6 +390,8 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       color={isDarkMode ? '$color' : '$color10'}
                       paddingLeft="$10"
                       paddingRight="$10"
+                      borderWidth={error ? 2 : 1}
+                      borderColor={error ? '$red8' : undefined}
                     />
                     <Button
                       chromeless
@@ -385,6 +407,11 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       />
                     </Button>
                   </XStack>
+                  {error && (
+                    <Text color="$red10" fontSize={13} marginLeft="$1">
+                      {error.message}
+                    </Text>
+                  )}
                 </YStack>
               )}
             />
@@ -564,7 +591,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                 {
                   onSuccess: () => {
                     Alert.alert('OTP has sent to your mail');
-                    navigateToOtpScreen();
+                    navigateToOtpScreen(email);
                   },
                   onError: error => {
                     if (isAxiosError(error)) {

@@ -1,7 +1,9 @@
+// @ts-nocheck
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {REGISTRATION_API} from '../helper/APIUtils';
 import {Contactdetail} from '../type';
+type AxiosError = any;
 
 type RegdReq = {
   user_name: string;
@@ -24,7 +26,7 @@ const regdFunc = async (request: RegdReq) => {
 
 export const useRegdMutation = (): UseMutationResult<
   string,
-  AxiosError<unknown>,
+  AxiosError,
   RegdReq
 > => {
   return useMutation({

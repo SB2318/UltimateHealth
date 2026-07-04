@@ -18,7 +18,7 @@
  *   />
  */
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Modal,
   View,
@@ -67,7 +67,7 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
   const { cardRef, isCapturing, shareArticleCard } = useArticleShare();
 
   // ── Slide-up animation ──────────────────────────────────────────────
-  const slideAnim = useRef(new Animated.Value(MODAL_HEIGHT)).current;
+  const [slideAnim] = useState(() => new Animated.Value(MODAL_HEIGHT));
 
   useEffect(() => {
     if (visible) {
