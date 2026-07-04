@@ -56,7 +56,7 @@ const defaultStaticConfig = {
           {
             scheme: "https",
             host: "uhsocial.in",
-            pathPrefix: "/ap/share/article"
+            pathPrefix: "/api/share/article"
           },
           {
             scheme: "https",
@@ -149,7 +149,7 @@ module.exports = ({ config }) => {
       // API URLs — read from environment variables with production fallbacks.
       // Override these in your local .env file (see .env.example).
       PROD_URL:
-        process.env.PROD_URL ?? "https://uhsocial.in/ap",
+        process.env.PROD_URL ?? "https://uhsocial.in/api",
       SOCKET_PROD:
         process.env.SOCKET_PROD ?? "https://uhsocial.in",
       CONTENT_CHECKER_PROD:
