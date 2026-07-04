@@ -122,7 +122,7 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
       <FAB
         style={styles.fab}
         small
-        icon={({size, color}) => (
+        icon={({size, color}:{size: number, color: string}) => (
           <Ionicons name="arrow-back" size={size} color={'white'} />
         )}
         onPress={() => {

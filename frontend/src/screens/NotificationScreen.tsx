@@ -1,5 +1,6 @@
+/* eslint-disable react-compiler/react-compiler */
 
-import {AppState, FlatList, StyleSheet, View} from 'react-native';
+import { AppState,  FlatList , StyleSheet, View } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
@@ -13,6 +14,7 @@ import {Notification, NotificationType} from '../type';
 import { useDeleteNotification } from '../hooks/useDeleteNotification';
 import { useGetAllNotifications } from '../hooks/useGetAllNotifications';
 import { useMarkNotificationAsRead } from '../hooks/useMarkNoticationAsRead';
+import {mergeNotificationsById} from '../helper/notificationUtils';
 
 type PendingDelete = {
   item: Notification;
@@ -53,8 +55,12 @@ const NotificationScreen = ({navigation}: any) => {
         setNotificationsData(notificationsRes.notifications);
       } else {
         if (notificationsRes.notifications) {
-          const oldNotif = notificationsData ?? [];
-          setNotificationsData([...oldNotif, ...notificationsRes.notifications]);
+          setNotificationsData(previous =>
+            mergeNotificationsById(
+              previous ?? [],
+              notificationsRes.notifications,
+            ),
+          );
         }
       }
     }
@@ -407,4 +413,5 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
 });
+
 
