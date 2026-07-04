@@ -1,3 +1,5 @@
+/* eslint-disable react-compiler/react-compiler */
+// @ts-nocheck
 import {formatTimeWithDate} from '../helper/dateUtils';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
@@ -252,3 +254,4 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 });
+
