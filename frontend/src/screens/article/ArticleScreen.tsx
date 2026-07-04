@@ -1052,29 +1052,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       <ArticleShareModal
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}
-        article={
-          article
-            ? {
-                title: article.title,
-                authorName:
-                  typeof article.authorId === 'object'
-                    ? article.authorId.user_name
-                    : '',
-                category: 'Health',
-                coverImageUrl: article.imageUtils?.[0] ?? null,
-                authorAvatarUrl:
-                  typeof article.authorId === 'object'
-                    ? article.authorId.Profile_image
-                    : null,
-              }
-            : {
-                title: '',
-                authorName: '',
-                category: 'Health',
-                coverImageUrl: null,
-                authorAvatarUrl: null,
-              }
-        }
+        article={{
+          title: article.title,
+          authorName: article.authorName ?? '',
+          category: article.tags?.[0]?.name ?? 'Health',
+          coverImageUrl:
+            article.imageUtils && article.imageUtils.length > 0
+              ? article.imageUtils[0].startsWith('http')
+                ? article.imageUtils[0]
+                : `${GET_IMAGE}/${article.imageUtils[0]}`
+              : null,
+          authorAvatarUrl: null,
+        }}
       />
       <TrustedUsersModal
         visible={trustedUsersModalVisible}
