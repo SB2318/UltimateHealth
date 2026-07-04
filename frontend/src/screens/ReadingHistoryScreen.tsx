@@ -1,13 +1,12 @@
 import React, {useCallback, useState} from 'react';
-import {
-  FlatList,
+import { FlatList ,
   StyleSheet,
   Text,
   View,
   Image,
   TouchableOpacity,
   Alert,
-} from 'react-native';
+ } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';

@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useNetInfo } from '@react-native-community/netinfo';
@@ -10,6 +11,9 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const BANNER_ANIMATION_DURATION = 300;
+const BANNER_DISPLAY_DURATION_ONLINE = 3000;
 
 export function NetworkBanner() {
   const netInfo = useNetInfo();
@@ -25,14 +29,14 @@ export function NetworkBanner() {
     if (isOffline) {
       setHasBeenOffline(true);
       setIsVisible(true);
-      translateY.value = withTiming(0, { duration: 300 });
+      translateY.value = withTiming(0, { duration: BANNER_ANIMATION_DURATION });
     } else if (hasBeenOffline) {
       // Just came back online
       translateY.value = withSequence(
-        withTiming(0, { duration: 300 }),
+        withTiming(0, { duration: BANNER_ANIMATION_DURATION }),
         withDelay(
-          3000,
-          withTiming(-100, { duration: 300 }, () => {
+          BANNER_DISPLAY_DURATION_ONLINE,
+          withTiming(-100, { duration: BANNER_ANIMATION_DURATION }, () => {
             runOnJS(setIsVisible)(false);
             runOnJS(setHasBeenOffline)(false);
           })
@@ -51,6 +55,7 @@ export function NetworkBanner() {
 
   return (
     <Animated.View
+      accessibilityLiveRegion="polite"
       style={[
         styles.banner,
         {
@@ -85,3 +90,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+

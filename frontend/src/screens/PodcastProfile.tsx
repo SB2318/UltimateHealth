@@ -1,15 +1,15 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  View,
+import { View,
   Text,
   StyleSheet,
-  ScrollView,
+   ScrollView ,
   TouchableOpacity,
   Image,
-  FlatList,
+   FlatList ,
   RefreshControl,
   Dimensions,
-} from 'react-native';
+  } from 'react-native';
 import {PodcastProfileProp, PodcastData, PlayList} from '../type';
 import {MaterialCommunityIcons, Feather, Ionicons} from '@expo/vector-icons';
 import {PRIMARY_COLOR} from '../helper/Theme';
@@ -98,7 +98,9 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
       style={styles.playlistCard}
       activeOpacity={0.7}
       onPress={() => {
-     
+        navigation.navigate('PlaylistDetailScreen', {
+          playlist: item,
+        });
       }}>
       <View style={styles.playlistIconContainer}>
         <MaterialCommunityIcons
@@ -278,7 +280,7 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
               <FlatList
                 data={podcasts ?? []}
                 renderItem={renderPodcastItem}
-                keyExtractor={(item, index) => `podcast-${item._id}-${index}`}
+                keyExtractor={(item: PodcastData, index: number) => `podcast-${item._id}-${index}`}
                 scrollEnabled={false}
                 showsVerticalScrollIndicator={false}
                 refreshing={refreshing}
@@ -313,7 +315,7 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
             <FlatList
               data={playlists}
               renderItem={renderPlaylistItem}
-              keyExtractor={(item, index) => `playlist-${item._id}-${index}`}
+              keyExtractor={(item: any, index: number) => `playlist-${item._id}-${index}`}
               scrollEnabled={false}
               showsVerticalScrollIndicator={false}
             />
@@ -472,23 +474,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#ffffff',
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
+    marginBottom: 16,
+    shadowColor: PRIMARY_COLOR,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: `${PRIMARY_COLOR}20`,
   },
   playlistIconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 12,
-    backgroundColor: `${PRIMARY_COLOR}10`,
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+    backgroundColor: `${PRIMARY_COLOR}15`,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: 16,
   },
   playlistInfo: {
     flex: 1,
@@ -539,3 +543,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+

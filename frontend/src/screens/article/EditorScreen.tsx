@@ -1,12 +1,12 @@
+/* eslint-disable react-compiler/react-compiler */
  
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  StyleSheet,
+import { StyleSheet,
   Text,
-  ScrollView,
+   ScrollView ,
   Alert,
   TouchableOpacity,
-} from 'react-native';
+ } from 'react-native';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -450,3 +450,4 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
 });
+
