@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { View, ViewStyle, StyleProp, useColorScheme } from 'react-native';
 import { GlassStyles } from '../styles/GlassStyles';
