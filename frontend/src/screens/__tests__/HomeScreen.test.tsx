@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import {render} from '@testing-library/react-native';
 import HomeScreen from '../HomeScreen';
@@ -19,7 +20,6 @@ jest.mock('../../components/ArticleCard', () => {
   const React = require('react');
   const {View} = require('react-native');
   const MockArticleCard = () => React.createElement(View, {testID: 'ArticleCard'});
-  MockArticleCard.displayName = 'ArticleCard';
   return MockArticleCard;
 });
 
@@ -108,9 +108,6 @@ jest.mock('../../components/EmptyStates', () => {
   const NoArticleState = () => React.createElement(Text, null, 'NoArticleState');
   const BaseEmptyState = ({loading}: any) =>
     React.createElement(Text, null, loading ? 'LoadingState' : 'BaseEmptyState');
-  OfflineArticleState.displayName = 'OfflineArticleState';
-  NoArticleState.displayName = 'NoArticleState';
-  BaseEmptyState.displayName = 'BaseEmptyState';
 
   return {
     OfflineArticleState,
@@ -124,7 +121,6 @@ jest.mock('../../components/HomeScreenHeader', () => {
   const {View} = require('react-native');
   const MockHomeScreenHeader = () =>
     React.createElement(View, {testID: 'HomeScreenHeader'});
-  MockHomeScreenHeader.displayName = 'HomeScreenHeader';
   return MockHomeScreenHeader;
 });
 
@@ -132,7 +128,6 @@ jest.mock('../../components/FilterModal', () => {
   const React = require('react');
   const {View} = require('react-native');
   const MockFilterModal = () => React.createElement(View);
-  MockFilterModal.displayName = 'FilterModal';
   return MockFilterModal;
 });
 

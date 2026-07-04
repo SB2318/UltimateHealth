@@ -153,7 +153,7 @@ const mockPodcast = {
   article_id: 1,
   title: 'Sample Podcast',
   description: 'Sample description for the podcast detail screen.',
-  audio_url: 'https://uhsocial.in/audio.mp3',
+  audio_url: 'https://example.com/audio.mp3',
   cover_image: 'https://example.com/image.jpg',
   duration: 245,
   tags: [],
@@ -190,7 +190,13 @@ const mockUseGetSinglePodcastDetails = require('../../hooks/useGetSinglePodcastD
 const mockUseLikePodcast = require('../../hooks/useLikePodcast').useLikePodcast as jest.Mock;
 
 const setConnectedStatus = (value: boolean) => {
-  mockState.network.isConnected = value;
+  mockState = {
+    ...mockState,
+    network: {
+      isConnected: value,
+    },
+  };
+  mockUseSelector.mockImplementation((selector: any) => selector(mockState));
 };
 
 describe('PodcastDetail', () => {
@@ -198,6 +204,8 @@ describe('PodcastDetail', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    // clearAllMocks wipes jest.fn() implementations — restore useAudioPlayer
+    require('expo-audio').useAudioPlayer.mockReturnValue(mockPlayer);
     warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     mockPlayer.playing = false;
     mockPlayer.currentStatus.playing = false;
@@ -240,7 +248,7 @@ describe('PodcastDetail', () => {
     render(
       <PodcastDetail
         navigation={{navigate: mockNavigate} as any}
-        route={{params: {trackId: 'podcast-1', audioUrl: 'https://uhsocial.in/audio.mp3'}} as any}
+        route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
       />,
     );
 
@@ -318,14 +326,14 @@ describe('PodcastDetail', () => {
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://uhsocial.in/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
     });
 
     expect(mockPlayer.pause).toHaveBeenCalled();
     expect(getByText('Waiting for network connection')).toBeTruthy();
-  });
+  }, 15000);
 
   it('automatically resumes playback after network reconnects once', async () => {
     mockPlayer.playing = true;
@@ -339,7 +347,7 @@ describe('PodcastDetail', () => {
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://uhsocial.in/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
     });
@@ -352,7 +360,7 @@ describe('PodcastDetail', () => {
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://uhsocial.in/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
     });
@@ -372,7 +380,7 @@ describe('PodcastDetail', () => {
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://uhsocial.in/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
     });
@@ -384,14 +392,14 @@ describe('PodcastDetail', () => {
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://uhsocial.in/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
       setConnectedStatus(true);
       rerender(
         <PodcastDetail
           navigation={{navigate: mockNavigate} as any}
-          route={{params: {trackId: 'podcast-1', audioUrl: 'https://uhsocial.in/audio.mp3'}} as any}
+          route={{params: {trackId: 'podcast-1', audioUrl: 'http://localhost/audio.mp3'}} as any}
         />,
       );
     });

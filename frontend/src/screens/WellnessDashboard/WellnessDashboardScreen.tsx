@@ -1,7 +1,6 @@
 import React from 'react';
-import {
-  ScrollView, Text, StyleSheet, SafeAreaView, View
-} from 'react-native';
+import { ScrollView , Text, StyleSheet, SafeAreaView, View
+ } from 'react-native';
 import WearableSyncCard from './WearableSyncCard';
 import ManualLogCard from './ManualLogCard';
 import WeeklyChart from './WeeklyChart';

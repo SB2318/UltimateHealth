@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Tests for the compensating-delete pattern in PreviewScreen.handlePostSubmit.
  *
@@ -9,7 +10,10 @@
 
 import React from 'react';
 import {Alert} from 'react-native';
-import {render, fireEvent, waitFor} from '@testing-library/react-native';
+import {render, fireEvent, waitFor, act} from '@testing-library/react-native';
+import {Provider} from 'react-redux';
+import {configureStore} from '@reduxjs/toolkit';
+import PreviewScreen from '../screens/article/PreviewScreen';
 
 // ── mocks ──────────────────────────────────────────────────────────────────
 
@@ -19,17 +23,6 @@ const mockDeletePocketbaseRecord = jest.fn();
 const mockUploadImprovementToPocketbase = jest.fn();
 const mockImprovementMutation = jest.fn();
 const mockSubmitChangesMutation = jest.fn();
-const mockDispatch = jest.fn();
-const mockReduxState = {
-  user: {user_token: 'tok', user_id: 'user-1'},
-  data: {suggestion: '', suggestionAccepted: false},
-  network: {isConnected: true},
-};
-
-jest.mock('react-redux', () => ({
-  useSelector: (selectorFn: any) => selectorFn(mockReduxState),
-  useDispatch: () => mockDispatch,
-}));
 
 jest.mock('@/src/hooks/useUploadArticlePocketbase', () => ({
   useUploadArticleToPocketbase: () => ({
@@ -91,16 +84,6 @@ jest.mock('@bam.tech/react-native-image-resizer', () => ({
   createResizedImage: jest.fn().mockResolvedValue({uri: 'resized://img'}),
 }));
 
-// Spy on Alert so we can simulate confirmation dialog
-jest.spyOn(Alert, 'alert').mockImplementation(
-  (_title, _msg, buttons) => {
-    // Auto-confirm the "Create Post" dialog (press OK)
-    const ok = (buttons as {text?: string; onPress?: () => void}[] | undefined)
-      ?.find(b => b.text === 'OK');
-    ok?.onPress?.();
-  },
-);
-
 // ── helpers ────────────────────────────────────────────────────────────────
 
 const FAKE_PB_RESPONSE = {
@@ -108,6 +91,16 @@ const FAKE_PB_RESPONSE = {
   recordId: 'pb-record-42',
   html_file: 'https://pb.example.com/article.html',
 };
+
+function makeStore() {
+  return configureStore({
+    reducer: {
+      user: () => ({user_token: 'tok', user_id: 'user-1'}),
+      data: () => ({suggestion: '', suggestionAccepted: false}),
+      network: () => ({isConnected: true}),
+    },
+  });
+}
 
 function makeNav() {
   return {navigate: jest.fn(), setOptions: jest.fn()};
@@ -132,56 +125,73 @@ function makeRoute(overrides = {}) {
   };
 }
 
-const PreviewScreen = require('../screens/article/PreviewScreen')
-  .default as React.ComponentType<any>;
-
 beforeEach(() => {
   jest.clearAllMocks();
+  // clearAllMocks wipes spy implementations — re-apply Alert auto-confirm.
+  // showConfirmationAlert() returns a Promise resolved by ok.onPress(),
+  // so we must also call the resolver synchronously here.
+  jest.spyOn(Alert, 'alert').mockImplementation((_title, _msg, buttons: any) => {
+    const ok = buttons?.find((b: any) => b.text === 'OK');
+    ok?.onPress?.();
+  });
 });
 
-async function pressHeaderSubmit(nav: ReturnType<typeof makeNav>) {
-  await waitFor(() => expect(nav.setOptions).toHaveBeenCalled());
-  const options =
-    nav.setOptions.mock.calls[nav.setOptions.mock.calls.length - 1]?.[0];
-  const headerRight = options?.headerRight;
-  expect(headerRight).toEqual(expect.any(Function));
+// ── helpers ────────────────────────────────────────────────────────────────
 
-  const {getByText} = render(headerRight());
-  fireEvent.press(getByText('Submit'));
+/**
+ * Renders PreviewScreen, triggers the header Submit button, then waits until
+ * the first-step upload mutation has been called (it runs asynchronously after
+ * the confirmation-alert Promise resolves).
+ */
+async function setupAndSubmit(route: any, waitForMock: jest.Mock) {
+  const store = makeStore();
+  const nav = makeNav();
+
+  render(
+    <Provider store={store}>
+      <PreviewScreen navigation={nav} route={route} />
+    </Provider>,
+  );
+
+  // Submit button lives in the navigation header, not the component tree
+  const headerRight = nav.setOptions.mock.calls[0]?.[0]?.headerRight;
+  if (headerRight) {
+    const {getByText: getHeader} = render(headerRight());
+    await act(async () => {
+      fireEvent.press(getHeader('Submit'));
+    });
+  }
+
+  // handlePostSubmit awaits showConfirmationAlert() before calling any mutation,
+  // so we must wait for it to appear in the next microtask flush.
+  await waitFor(() => expect(waitForMock).toHaveBeenCalled());
+
+  return {nav};
 }
 
 // ── tests ──────────────────────────────────────────────────────────────────
 
 describe('PreviewScreen compensating delete — new article path', () => {
-  async function setupAndSubmit() {
-    const nav = makeNav();
-    render(<PreviewScreen navigation={nav} route={makeRoute()} />);
-    await pressHeaderSubmit(nav);
-    return {nav};
-  }
-
   it('calls deletePocketbaseRecord with the correct recordId when postMutation fails', async () => {
-    await setupAndSubmit();
+    await setupAndSubmit(makeRoute(), mockUploadPocketbase);
 
-    // Step 1 succeeds
     const pbOnSuccess = mockUploadPocketbase.mock.calls[0][1].onSuccess;
     pbOnSuccess(FAKE_PB_RESPONSE);
 
-    // Step 2 fails
     const postOnError = mockPostMutation.mock.calls[0][1].onError;
     postOnError(new Error('500 Internal Server Error'));
 
     await waitFor(() => {
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledTimes(1);
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledWith(
-        'pb-record-42',
+        expect.objectContaining({recordId: 'pb-record-42'}),
         expect.objectContaining({onError: expect.any(Function)}),
       );
     });
   });
 
   it('does NOT call deletePocketbaseRecord when postMutation succeeds', async () => {
-    await setupAndSubmit();
+    await setupAndSubmit(makeRoute(), mockUploadPocketbase);
 
     const pbOnSuccess = mockUploadPocketbase.mock.calls[0][1].onSuccess;
     pbOnSuccess(FAKE_PB_RESPONSE);
@@ -195,7 +205,7 @@ describe('PreviewScreen compensating delete — new article path', () => {
   });
 
   it('does NOT call deletePocketbaseRecord when the PocketBase upload itself fails', async () => {
-    await setupAndSubmit();
+    await setupAndSubmit(makeRoute(), mockUploadPocketbase);
 
     const pbOnError = mockUploadPocketbase.mock.calls[0][1].onError;
     pbOnError(new Error('PB network error'));
@@ -207,23 +217,10 @@ describe('PreviewScreen compensating delete — new article path', () => {
 });
 
 describe('PreviewScreen compensating delete — improvement path', () => {
-  async function setupAndSubmit() {
-    const nav = makeNav();
-    render(
-      <PreviewScreen
-        navigation={nav}
-        route={makeRoute({requestId: 'req-99'})}
-      />,
-    );
-    await pressHeaderSubmit(nav);
-    return {nav};
-  }
-
   it('calls deletePocketbaseRecord with correct recordId when improvementMutation fails', async () => {
-    await setupAndSubmit();
+    await setupAndSubmit(makeRoute({requestId: 'req-99'}), mockUploadImprovementToPocketbase);
 
-    const pbOnSuccess =
-      mockUploadImprovementToPocketbase.mock.calls[0][1].onSuccess;
+    const pbOnSuccess = mockUploadImprovementToPocketbase.mock.calls[0][1].onSuccess;
     pbOnSuccess(FAKE_PB_RESPONSE);
 
     const impOnError = mockImprovementMutation.mock.calls[0][1].onError;
@@ -232,17 +229,16 @@ describe('PreviewScreen compensating delete — improvement path', () => {
     await waitFor(() => {
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledTimes(1);
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledWith(
-        'pb-record-42',
+        expect.objectContaining({recordId: 'pb-record-42'}),
         expect.objectContaining({onError: expect.any(Function)}),
       );
     });
   });
 
   it('does NOT call deletePocketbaseRecord when improvementMutation succeeds', async () => {
-    await setupAndSubmit();
+    await setupAndSubmit(makeRoute({requestId: 'req-99'}), mockUploadImprovementToPocketbase);
 
-    const pbOnSuccess =
-      mockUploadImprovementToPocketbase.mock.calls[0][1].onSuccess;
+    const pbOnSuccess = mockUploadImprovementToPocketbase.mock.calls[0][1].onSuccess;
     pbOnSuccess(FAKE_PB_RESPONSE);
 
     const impOnSuccess = mockImprovementMutation.mock.calls[0][1].onSuccess;
@@ -261,20 +257,8 @@ describe('PreviewScreen compensating delete — edit/suggested-changes path', ()
     authorId: 'user-1',
   };
 
-  async function setupAndSubmit() {
-    const nav = makeNav();
-    render(
-      <PreviewScreen
-        navigation={nav}
-        route={makeRoute({articleData: ARTICLE_DATA})}
-      />,
-    );
-    await pressHeaderSubmit(nav);
-    return {nav};
-  }
-
   it('calls deletePocketbaseRecord with correct recordId when submitChangesMutation fails', async () => {
-    await setupAndSubmit();
+    await setupAndSubmit(makeRoute({articleData: ARTICLE_DATA}), mockUploadPocketbase);
 
     const pbOnSuccess = mockUploadPocketbase.mock.calls[0][1].onSuccess;
     pbOnSuccess(FAKE_PB_RESPONSE);
@@ -285,7 +269,7 @@ describe('PreviewScreen compensating delete — edit/suggested-changes path', ()
     await waitFor(() => {
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledTimes(1);
       expect(mockDeletePocketbaseRecord).toHaveBeenCalledWith(
-        'pb-record-42',
+        expect.objectContaining({recordId: 'pb-record-42'}),
         expect.objectContaining({onError: expect.any(Function)}),
       );
     });

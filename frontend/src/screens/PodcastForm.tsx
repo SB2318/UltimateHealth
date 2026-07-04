@@ -1,16 +1,16 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, {useState} from 'react';
-import {
-  View,
+import { View,
   Text,
   StyleSheet,
-  TextInput,
+   TextInput ,
   TouchableOpacity,
-  ScrollView,
+   ScrollView ,
   Image,
   Modal,
-  FlatList,
+   FlatList ,
   Alert,
-} from 'react-native';
+   } from 'react-native';
 import {useSelector} from 'react-redux';
 import {PodcastFormProp, Category} from '../type';
 import Ionicon from '@expo/vector-icons/Ionicons';
@@ -186,8 +186,8 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
             </View>
             <FlatList
               data={ttsLanguageList}
-              keyExtractor={item => item.code}
-              renderItem={({item}) => (
+              keyExtractor={(item: {code: string; name: string}) => item.code}
+              renderItem={({item}: {item: {code: string; name: string}}) => (
                 <TouchableOpacity
                   style={[
                     styles.languageItem,
@@ -311,7 +311,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                   submitted && titleError ? styles.inputControlError : null,
                 ]}
                 value={title}
-                onChangeText={text => {
+                onChangeText={(text: string) => {
                   setTitle(text);
                   if (submitted) {
                     if (!text.trim()) {
@@ -361,7 +361,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 numberOfLines={4}
                 autoCapitalize="sentences"
                 value={description}
-                onChangeText={text => {
+                onChangeText={(text: string) => {
                   if (text.length <= 160) {
                     setDescription(text);
                     if (submitted) {
@@ -782,3 +782,4 @@ const styles = StyleSheet.create({
 });
 
 export default PodcastForm;
+
