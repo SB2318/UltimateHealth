@@ -38,6 +38,7 @@ const initialState: DataState = {
     viewCount: 0,
     description: '',
     viewUsers: [],
+    trustUsers: [],
     repostUsers: [],
     likeCount: 0,
     likedUsers: [],

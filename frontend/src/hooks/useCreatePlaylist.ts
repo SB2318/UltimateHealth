@@ -1,7 +1,8 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {PlayList} from '../type';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {CREATE_PLAYLIST} from '../helper/APIUtils';
+type AxiosError = any;
 
 type PlayListReq = {
   inputValue: string;

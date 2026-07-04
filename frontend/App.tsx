@@ -7,17 +7,17 @@ import { logger } from './src/services/monitoring/logger';
 import AppContent from './src/components/AppContent';
 
 function App() {
-const [queryClient] = useState(
-() =>
-new QueryClient({
-defaultOptions: {
-queries: {
-retry: 2,
-staleTime: 1000 * 60,
-},
-},
-})
-);
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 2,
+            staleTime: 1000 * 60,
+          },
+        },
+      }),
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -37,7 +37,7 @@ staleTime: 1000 * 60,
           extra: { context: 'App startup audio configuration' },
         });
 
-        
+        if (__DEV__) {
           logger.error('[App] Failed to configure audio mode:', error);
         }
       }

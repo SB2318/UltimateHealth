@@ -14,6 +14,32 @@ interface StatisticsCardProps {
   improvements?: number;
 }
 
+const StatItem = ({
+  icon,
+  label,
+  value,
+  color,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string | number;
+  color: string;
+}) => (
+  <YStack
+    alignItems="center"
+    justifyContent="center"
+    flex={1}
+    paddingVertical="$2">
+    <View style={[styles.iconContainer, {backgroundColor: color + '15'}]}>
+      {icon}
+    </View>
+    <Text style={[styles.statValue, {color: PRIMARY_COLOR}]}>{value}</Text>
+    <Text style={[styles.statLabel]} color="$color10">
+      {label}
+    </Text>
+  </YStack>
+);
+
 const StatisticsCard = ({
   totalLikes,
   totalViews,
@@ -23,31 +49,7 @@ const StatisticsCard = ({
 }:StatisticsCardProps) => {
   // removed isDarkMode variable
 
-  const StatItem = ({
-    icon,
-    label,
-    value,
-    color,
-  }: {
-    icon: React.ReactNode;
-    label: string;
-    value: string | number;
-    color: string;
-  }) => (
-    <YStack
-      alignItems="center"
-      justifyContent="center"
-      flex={1}
-      paddingVertical="$2">
-      <View style={[styles.iconContainer, {backgroundColor: color + '15'}]}>
-        {icon}
-      </View>
-      <Text style={[styles.statValue, {color: PRIMARY_COLOR}]}>{value}</Text>
-      <Text style={[styles.statLabel]} color="$color10">
-        {label}
-      </Text>
-    </YStack>
-  );
+
 
   return (
     <Card

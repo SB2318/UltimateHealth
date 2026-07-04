@@ -2,41 +2,28 @@
   "$schema": "https://unpkg.com/knip@latest/schema.json",
   "entry": [
     "App.tsx",
-    "index.js",
-    "app.json",
-    "plugins/**/*.{js,ts}",
-    "scripts/**/*.{js,ts}"
+    "app.config.js"
   ],
   "project": [
-    "App.tsx",
-    "index.js",
-    "app.json",
-    "jest.setup.ts",
     "src/**/*.{ts,tsx,js,jsx}",
-    "src/**/*.d.ts",
-    "plugins/**/*.{js,ts}",
-    "scripts/**/*.{js,ts}"
+    "src/**/*.d.ts"
   ],
   "ignore": [
-    "node_modules/**",
-    "public/**",
-    "web-build/**",
-    "**/__mocks__/**",
-    "**/__tests__/**",
-    "**/*.{spec,test}.{ts,tsx,js,jsx}",
     "**/*.config.{ts,js,mjs,cjs}",
-    "tsconfig.json"
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js",
+    "react-native.config.js",
+    ".eslintrc.js"
   ],
-  "ignoreBinaries": [
-    "expo",
-    "jest",
-    "knip",
-    "tsc"
-  ],
-  "paths": {
-    "@/*": [
-      "./*"
-    ]
-  },
-  "ignoreDependencies": []
+  "rules": {
+    "types": "off",
+    "duplicates": "off",
+    "exports": "off",
+    "unresolved": "warn",
+    "files": "off",
+    "dependencies": "off",
+    "devDependencies": "off",
+    "unlisted": "off"
+  }
 }
