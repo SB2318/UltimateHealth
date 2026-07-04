@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,  ScrollView , ActivityIndicator } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import {INDIAN_LANGUAGES, LanguageCode} from '../constants/languages';
 import {usePreferences} from '../contexts/PreferencesContext';

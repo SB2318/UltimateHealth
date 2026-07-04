@@ -1,6 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { VERIFICATION_MAIL_API } from "../helper/APIUtils";
+type AxiosError = any;
 
 type VerificationReq = {
     email: string;
