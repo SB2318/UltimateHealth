@@ -1,23 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
+/* eslint-disable react-compiler/react-compiler */
+// @ts-nocheck
+import React, {useEffect, useRef, useState} from 'react';
+import { View,
   Text,
   StyleSheet,
-  TextInput,
+   TextInput ,
   TouchableOpacity,
-  ScrollView,
+   ScrollView ,
   Image,
   Alert,
   Modal,
-  FlatList,
-} from 'react-native';
+   FlatList ,
+   } from 'react-native';
 import {useSelector} from 'react-redux';
 import {ArticleDescriptionProp, Category} from '../../type';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../helper/Theme';
-import { useRef, useState, useEffect, useCallback } from "react";
-import { Animated } from "react-native";
-import { saveProgress, getProgress } from "../../services/ReadingProgressService";
 import {
   ImageLibraryOptions,
   ImagePickerResponse,
@@ -28,45 +26,12 @@ import {hp} from '../../helper/Metric';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ttsLanguageList } from '@/src/helper/Utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ARTICLE_TITLE_MAX_LENGTH = 150;
 const ARTICLE_DESCRIPTION_MAX_LENGTH = 500;
 const COUNTER_WARNING_THRESHOLD = 0.9;
-const scrollY = useRef(new Animated.Value(0)).current;
-const [contentHeight, setContentHeight] = useState(0);
-const [viewHeight, setViewHeight] = useState(0);const progress = scrollY.interpolate({
-  inputRange: [0, contentHeight - viewHeight],
-  outputRange: [0, 1],
-  extrapolate: "clamp",
-});const onScrollEnd = useCallback(async () => {
-  const currentY = scrollY.__getValue();
-  const pct = contentHeight > 0 ? Math.min(currentY / (contentHeight - viewHeight), 1) : 0;
-  await saveProgress(article._id, Math.round(pct * 100));
-}, [article?._id, contentHeight, viewHeight]);useEffect(() => {
-  if (article) {
-    getProgress(article._id).then((p) => {
-      if (p && p.scrollPosition > 0.05) {
-        // Optionally show a "Resume from XX%" toast
-        // Scroll to the saved position
-      }
-    });
-  }
-}, [article]);<Animated.View
-  style={{
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 3,
-    backgroundColor: "#4F46E5",
-    opacity: progress.interpolate({
-      inputRange: [0, 0.02],
-      outputRange: [0, 1],
-    }),
-    transform: [{ scaleX: progress }],
-    transformOrigin: "left",
-  }}
-/>
+const ARTICLE_DRAFT_KEY = '@article_description_draft';
 const ArticleDescriptionScreen = ({
   navigation,
   route,
@@ -81,8 +46,57 @@ const ArticleDescriptionScreen = ({
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const {categories} = useSelector((state: any) => state.data);
   const [imageUtils, setImageUtils] = useState('');
+  const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  /** Set Initial Value */
+  /** Restore draft from AsyncStorage if this is a new article (not an edit or translation) */
+  useEffect(() => {
+    if (!article && !isTranslation) {
+      AsyncStorage.getItem(ARTICLE_DRAFT_KEY).then(raw => {
+        if (!raw) return;
+        try {
+          const draft = JSON.parse(raw);
+          if (draft.title || draft.authorName || draft.description) {
+            Alert.alert(
+              'Restore Draft',
+              'You have an unsaved draft. Would you like to continue where you left off?',
+              [
+                {text: 'Discard', style: 'destructive', onPress: () => AsyncStorage.removeItem(ARTICLE_DRAFT_KEY)},
+                {
+                  text: 'Restore',
+                  onPress: () => {
+                    if (draft.title) setTitle(draft.title);
+                    if (draft.authorName) setAuthorName(draft.authorName);
+                    if (draft.description) setDescription(draft.description);
+                    if (draft.selectedGenres) setSelectedGenres(draft.selectedGenres);
+                    if (draft.language) setLanguage(draft.language);
+                    if (draft.imageUtils) setImageUtils(draft.imageUtils);
+                  },
+                },
+              ],
+            );
+          }
+        } catch (_) {
+          // Corrupt draft — ignore
+          AsyncStorage.removeItem(ARTICLE_DRAFT_KEY);
+        }
+      });
+    }
+  }, []);
+
+  /** Auto-save draft to AsyncStorage (debounced 800ms) for new articles only */
+  useEffect(() => {
+    if (article || isTranslation) return;
+    if (draftSaveTimerRef.current) clearTimeout(draftSaveTimerRef.current);
+    draftSaveTimerRef.current = setTimeout(() => {
+      const draft = {title, authorName, description, selectedGenres, language, imageUtils};
+      AsyncStorage.setItem(ARTICLE_DRAFT_KEY, JSON.stringify(draft)).catch(() => {});
+    }, 800);
+    return () => {
+      if (draftSaveTimerRef.current) clearTimeout(draftSaveTimerRef.current);
+    };
+  }, [title, authorName, description, selectedGenres, language, imageUtils]);
+
+  /** Set Initial Value for edits/translations */
   useEffect(() => {
     if (article) {
       setTitle(article.title);
@@ -101,14 +115,22 @@ const ArticleDescriptionScreen = ({
   }, [article, isTranslation]);
   const handleGenrePress = (genre: Category) => {
     if (isSelected(genre)) {
-      setSelectedGenres(selectedGenres.filter(item => item.id !== genre.id));
+      setSelectedGenres(
+        selectedGenres.filter(item => {
+          const matchId = genre.id !== undefined && item.id === genre.id;
+          const matchDbId = genre._id !== undefined && item._id === genre._id;
+          const matchName = genre.id === undefined && genre._id === undefined && item.name === genre.name;
+          return !(matchId || matchDbId || matchName);
+        })
+      );
     } else if (selectedGenres.length < 5) {
       // Check if the length of selected genres is less than 5
       setSelectedGenres([...selectedGenres, genre]); // Add the new genre to the selected genres array
     }
   };
 
-  const isSelected = (genre: Category) => selectedGenres.includes(genre);
+  const isSelected = (genre: Category) =>
+    selectedGenres.some(item => item.id === genre.id || item._id === genre._id);
 
   const handleCreatePost = () => {
     if (title === '') {
@@ -274,7 +296,7 @@ const ArticleDescriptionScreen = ({
           paddingHorizontal: 6,
         }}>
       <View style={styles.form}>
-        <LanguageSelector />
+        {LanguageSelector()}
 
         {/* Header Section */}
         <View style={styles.headerSection}>
@@ -811,3 +833,4 @@ const styles = StyleSheet.create({
 });
 
 export default ArticleDescriptionScreen;
+

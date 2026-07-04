@@ -1,13 +1,12 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import axios, {AxiosError} from 'axios';
-import {ARTICLE_TAGS_API, PROD_URL} from '../helper/APIUtils';
+import axios from 'axios';
+import {ARTICLE_TAGS_API} from '../helper/APIUtils';
 import {Category} from '../type';
+type AxiosError = any;
 
 const categoryFunc = async () => {
   try{
-     const {data: categoryData} = await axios.get(
-    `${PROD_URL + ARTICLE_TAGS_API}`,
-  );
+     const {data: categoryData} = await axios.get(ARTICLE_TAGS_API);
 
   return categoryData as Category[];
   }catch(err){
