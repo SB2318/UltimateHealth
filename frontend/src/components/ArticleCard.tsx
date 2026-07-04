@@ -102,6 +102,12 @@ const ArticleCard = ({
   const {mutate: getArticleContent, isPending: getArticleContentPending} =
     useLazyGetArticleContent();
 
+  // TEMP MOCK DATA — to be replaced by real /content-intel/readability/analyze response
+  // Shape mirrors the VeriWise-Content-Check API: { score, level, approved }
+  const mockReadability = {
+    score: 78,
+    level: 'Beginner Friendly' as 'Beginner Friendly' | 'Intermediate' | 'Advanced',
+    approved: true,
   const heartScale = useSharedValue(0);
 
   const heartStyle = useAnimatedStyle(() => {
@@ -525,6 +531,31 @@ const ArticleCard = ({
           <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">{item?.title}</Text>
 
 
+          {/* Readability & Accessibility indicators (mock data, issue #845) */}
+          <View style={styles.readabilityRow}>
+            <View style={styles.readabilityBadge}>
+              <Text style={styles.readabilityBadgeText}>
+                {mockReadability.level}
+              </Text>
+            </View>
+            <View style={styles.scoreBadge}>
+              <Text style={styles.scoreBadgeText}>
+                Score: {mockReadability.score}
+              </Text>
+            </View>
+            <View
+              style={[
+                styles.statusChip,
+                mockReadability.approved
+                  ? styles.approvedChip
+                  : styles.needsImprovementChip,
+              ]}>
+              <Text style={styles.statusChipText}>
+                {mockReadability.approved ? 'Approved' : 'Needs Improvement'}
+              </Text>
+            </View>
+          </View>
+
           <View style={styles.metaRow}>
   <Text style={styles.footerText1}>{item?.authorName}</Text>
   <Text style={styles.dot}>•</Text>
@@ -943,6 +974,61 @@ const styles = StyleSheet.create({
     color: '#B0B0B0',
   },
 
+  readabilityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: 8,
+  },
+
+  readabilityBadge: {
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+    marginRight: 6,
+  },
+
+  readabilityBadgeText: {
+    fontSize: fp(3.2),
+    fontWeight: '600',
+    color: '#2E7D32',
+  },
+
+  scoreBadge: {
+    backgroundColor: '#E3F2FD',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+    marginRight: 6,
+  },
+
+  scoreBadgeText: {
+    fontSize: fp(3.2),
+    fontWeight: '600',
+    color: '#1565C0',
+  },
+
+  statusChip: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+  },
+
+  approvedChip: {
+    backgroundColor: '#E8F5E9',
+  },
+
+  needsImprovementChip: {
+    backgroundColor: '#FFF3E0',
+  },
+
+  statusChipText: {
+    fontSize: fp(3.2),
+    fontWeight: '600',
+    color: '#424242',
+  },
+
   likeSaveContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -1054,7 +1140,7 @@ const styles = StyleSheet.create({
     right: 1,
     zIndex: 1,
   },
- 
+
 });
 */
 
