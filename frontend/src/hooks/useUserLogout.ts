@@ -1,6 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {USER_LOGOUT} from '../helper/APIUtils';
+type AxiosError = any;
 
 export const useUserLogout = (): UseMutationResult<any, AxiosError> => {
   return useMutation({

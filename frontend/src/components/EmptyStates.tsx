@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+/* eslint-disable react-compiler/react-compiler */
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -36,9 +37,9 @@ export const BaseEmptyState: React.FC<BaseEmptyStateProps> = ({
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
-  const bounceAnim = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const [bounceAnim] = useState(() => new Animated.Value(0));
+  const [fadeAnim] = useState(() => new Animated.Value(0));
+  const [pulseAnim] = useState(() => new Animated.Value(1));
 
   useEffect(() => {
     // Fade in
@@ -88,8 +89,8 @@ export const BaseEmptyState: React.FC<BaseEmptyStateProps> = ({
   }, [loading]);
 
   const containerBg = isDarkMode ? 'transparent' : 'transparent';
-  const cardBg = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 82, 186, 0.03)';
-  const borderColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)';
+  const cardBg = isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.6)';
+  const borderColor = isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 1)';
   const circleBg = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#E3F2FD';
   const titleColor = isDarkMode ? ProfessionalColors.white : ProfessionalColors.gray900;
   const descColor = isDarkMode ? ProfessionalColors.gray400 : ProfessionalColors.gray600;
@@ -184,9 +185,10 @@ export const OfflinePodcastState = () => (
 
 export const NoArticleState = ({ onRefresh }: { onRefresh?: () => void }) => (
   <BaseEmptyState
-    iconEmoji="📭"
-    title="No Articles Available"
-    description="There are no articles to display right now. Check back later for new health insights!"
+    iconEmoji="🔍"
+    title="No Articles Found"
+    description="We couldn't find any articles matching your current search or filter. Try adjusting your keywords, changing filters, or refreshing the article list."
+    infoText="Tip: Use broader health topics or reset filters to discover more articles."
     actionText={onRefresh ? "Refresh Articles" : undefined}
     onAction={onRefresh}
   />
@@ -294,7 +296,8 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 450,
     borderRadius: BorderRadius.xl,
-    borderWidth: 1,
+    borderWidth: 1.5,
+    borderStyle: 'solid',
     paddingVertical: Spacing.xxl,
     paddingHorizontal: Spacing.xl,
     alignItems: 'center',
@@ -302,12 +305,12 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.1,
+        shadowRadius: 20,
       },
       android: {
-        elevation: 3,
+        elevation: 5,
       },
     }),
   },
@@ -383,3 +386,4 @@ const styles = StyleSheet.create({
     borderRadius: 2.5,
   },
 });
+

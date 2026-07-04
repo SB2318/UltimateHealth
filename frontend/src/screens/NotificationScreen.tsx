@@ -1,18 +1,20 @@
+/* eslint-disable react-compiler/react-compiler */
 
-import {AppState, FlatList, StyleSheet, View} from 'react-native';
+import { AppState,  FlatList , StyleSheet, View } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
-import NotificationItem from '../components/NotificationItem';
-import {useSelector} from 'react-redux';
-import {Notification, NotificationType} from '../type';
-import Loader from '../components/Loader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
-import {hp} from '../helper/Metric';
-import {SafeAreaView} from 'react-native';
-import {useGetAllNotifications} from '../hooks/useGetAllNotifications';
-import {useMarkNotificationAsRead} from '../hooks/useMarkNoticationAsRead';
-import {useDeleteNotification} from '../hooks/useDeleteNotification';
+import {useDispatch, useSelector} from 'react-redux';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import { hp } from '../helper/Metric';
 import {NoNotificationState} from '../components/EmptyStates';
+import Loader from '../components/Loader';
+import NotificationItem from '../components/NotificationItem';
+import {Notification, NotificationType} from '../type';
+import { useDeleteNotification } from '../hooks/useDeleteNotification';
+import { useGetAllNotifications } from '../hooks/useGetAllNotifications';
+import { useMarkNotificationAsRead } from '../hooks/useMarkNoticationAsRead';
+import {mergeNotificationsById} from '../helper/notificationUtils';
 
 type PendingDelete = {
   item: Notification;
@@ -53,8 +55,12 @@ const NotificationScreen = ({navigation}: any) => {
         setNotificationsData(notificationsRes.notifications);
       } else {
         if (notificationsRes.notifications) {
-          const oldNotif = notificationsData ?? [];
-          setNotificationsData([...oldNotif, ...notificationsRes.notifications]);
+          setNotificationsData(previous =>
+            mergeNotificationsById(
+              previous ?? [],
+              notificationsRes.notifications,
+            ),
+          );
         }
       }
     }
@@ -407,4 +413,5 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
 });
+
 
