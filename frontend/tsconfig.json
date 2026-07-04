@@ -3,6 +3,7 @@
     "jsx": "react-native",
     "module": "ESNext",
     "strict": true,
+    "module": "esnext",
     "paths": {
       "@/*": [
         "./*"
@@ -18,5 +19,6 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "extends": "expo/tsconfig.base"
 }

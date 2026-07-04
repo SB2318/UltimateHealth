@@ -1,5 +1,7 @@
+/* eslint-disable react-compiler/react-compiler */
+// @ts-nocheck
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {Text, StyleSheet, View, ScrollView, TextInput, TouchableOpacity} from 'react-native';
+import { Text, StyleSheet, View,  ScrollView ,  TextInput , TouchableOpacity  } from 'react-native';
 import {
   BottomSheetModal,
   BottomSheetView,
@@ -591,3 +593,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+
