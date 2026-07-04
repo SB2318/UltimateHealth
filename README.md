@@ -964,6 +964,10 @@ We welcome contributions from everyone — developers, designers, writers, and t
      <td align="center"><a href="https://github.com/kavin553"><img src="https://avatars.githubusercontent.com/u/197105342?v=4" width="120px;" alt=""/><br/><sub><b>Kavin</b></sub></a></td>
      <td align="center"><a href="https://github.com/DakshtaMethwani"><img src="https://avatars.githubusercontent.com/u/193815683?v=4" width="120px;" alt=""/><br/><sub><b>DakshtaMethwani</b></sub></a></td>
  </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/abhinavkhedwal4-maker"><img src="https://avatars.githubusercontent.com/u/234247126?v=4" width="120px;" alt=""/><br/><sub><b>AK-explores</b></sub></a></td>
+   </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
