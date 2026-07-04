@@ -3,10 +3,7 @@ import { Input, XStack, YStack, Button, Text } from "tamagui";
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
-// @ts-ignore
-import { HomeScreenHeaderProps } from '../types'; 
-
-
+import { HomeScreenHeaderProps } from '../type';
 
 const HomeScreenHeader = ({
   handlePresentModalPress,
@@ -26,7 +23,7 @@ const HomeScreenHeader = ({
           <AntDesign name="menu-fold" size={24} color="white" />
         </Button>
 
-        {/* Center Search Bar Wrapper */}
+        {/* Center search bar wrapper */}
         <XStack 
           flex={1} 
           alignItems="center" 
@@ -80,4 +77,4 @@ const HomeScreenHeader = ({
   );
 };
 
-export default HomeScreenHeader; // Restored default export to prevent component breaking!
+export default HomeScreenHeader;

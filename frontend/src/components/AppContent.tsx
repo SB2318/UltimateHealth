@@ -42,6 +42,8 @@ export default function AppContent() {
   const pendingDeepLinkRef = useRef<string | null>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
+  const { visible, storeUrl } = useVersionCheck();
+  const dispatch = useDispatch();
 
   const { user_token, isGuest } = useSelector(
     (state: RootState) => state.user,
@@ -111,6 +113,20 @@ export default function AppContent() {
   }, [dispatch]);
 
 
+
+  useEffect(() => {
+    if (!navigationRef.current || !pendingDeepLinkRef.current) return;
+    if (!isGuest && tokenRes === null && !user_token) return;
+
+    const isAuthenticated = Boolean(tokenRes?.isValid || user_token) && !isGuest;
+    const target = resolveDeepLinkTarget(pendingDeepLinkRef.current);
+
+    if (target) {
+      navigateDeepLink(navigationRef.current, target, isAuthenticated);
+    }
+
+    pendingDeepLinkRef.current = null;
+  }, [tokenRes, user_token, isGuest]);
 
   useEffect(() => {
     const handleNotificationResponse = async (
