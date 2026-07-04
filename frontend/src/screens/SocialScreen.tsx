@@ -19,13 +19,13 @@ import {useGetUserSocials} from '../hooks/useGetUserSocialCircle';
 import {useUpdateFollowStatus} from '../hooks/useUpdateFollowStatus';
 import Snackbar from 'react-native-snackbar';
 import LoadingSpinner from '../components/LoadingSpinner';
+import {emitFollowNotification} from '../helper/followNotification';
 
 export default function Socialcreen({navigation, route}: SocialScreenProps) {
   const insets = useSafeAreaInsets();
   //const socials = route.params.socials;
   const {type, articleId, social_user_id} = route.params;
   const socket = useSocket();
-
   const queryClient = useQueryClient();
 
   const {mutate: followMutate, isPending: followMutationPending} =
@@ -140,16 +140,11 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                           onSuccess: data => {
 
                             if (data) {
-                              if (socket) {
-                                socket.emit('notification', {
-                                  type: 'userFollow',
-                                  userId: follower._id,
-                                  message: {
-                                    title: `${user_handle} has followed you`,
-                                    body: '',
-                                  },
-                                });
-                              }
+                              emitFollowNotification(
+                                socket,
+                                follower._id,
+                                user_handle,
+                              );
                               refetch();
                             }
 
