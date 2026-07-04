@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 import React, {useState} from 'react';
 import {ScrollView, YStack, XStack, Text, Input, Button, Image, useTheme} from 'tamagui';
 import Icon from '@expo/vector-icons/MaterialIcons';
@@ -9,7 +10,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {SignUpScreenFirstProp, UserDetail} from '../../type';
-import {AxiosError} from 'axios';
+import type  from 'axios';
 import Snackbar from 'react-native-snackbar';
 import EmailVerifiedModal from '../../components/VerifiedModal';
 import SecurityWarningModal from '../../components/SecurityWarningModal';
@@ -24,6 +25,7 @@ import {
 import {useCheckUserHandleAvailability} from '@/src/hooks/useCheckUserHandleAvailability';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
 import {useRegdMutation} from '@/src/hooks/useUserRegistration';
+type AxiosError = any;
 
 const signupSchema = z.object({
   name: z
@@ -366,7 +368,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               <AntDesign
                 name="camera"
                 size={26}
-                color={theme.white.val}
+                color={theme.white?.val}
                 style={{transform: [{scaleX: -1}]}}
               />
             ) : (
@@ -413,7 +415,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     onBlur={onBlur}
                   />
                   <YStack position="absolute" right={14} top={10}>
-                    <Icon name="person" size={20} color={theme.black.val} />
+                    <Icon name="person" size={20} color={theme.black?.val} />
                   </YStack>
                 </XStack>
                 {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
@@ -441,7 +443,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     autoCapitalize="none"
                   />
                   <YStack position="absolute" right={14} top={10}>
-                    <Icon name="person" size={20} color={theme.black.val} />
+                    <Icon name="person" size={20} color={theme.black?.val} />
                   </YStack>
                 </XStack>
                 {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
@@ -472,7 +474,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
             name="email"
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
               <YStack gap="$1">
-                <XStack position="relative">
+                <XStack position="relative" top={8}>
                   <Input
                     flex={1}
                     height="$5"
@@ -487,7 +489,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     autoCapitalize="none"
                   />
                   <YStack position="absolute" right={14} top={10}>
-                    <Icon name="email" size={20} color={theme.black.val} />
+                    <Icon name="email" size={20} color={theme.black?.val} />
                   </YStack>
                 </XStack>
                 {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
@@ -524,7 +526,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     <AntDesign
                       name={isSecureEntry ? 'eye-invisible' : 'eye'}
                       size={17}
-                      color={theme.black.val}
+                      color={theme.black?.val}
                     />
                   </Button>
                 </XStack>
@@ -542,7 +544,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                 <Dropdown
                   style={{
                     height: 40,
-                    borderColor: error ? 'red' : theme.blue10.val,
+                    borderColor: error ? 'red' : theme.blue10?.val,
                     borderWidth: 1,
                     borderRadius: 5,
                     paddingHorizontal: 10,
@@ -608,3 +610,4 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 };
 
 export default SignupPageFirst;
+

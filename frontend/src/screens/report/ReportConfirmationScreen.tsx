@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,  ScrollView  } from 'react-native';
 import {ReportConfirmationScreenProp} from '../../type';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp, fp} from '../../helper/Metric';

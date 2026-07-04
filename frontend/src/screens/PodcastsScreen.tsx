@@ -1,11 +1,11 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import {useEffect, useState, useMemo} from 'react';
-import {
-  StyleSheet,
+import { StyleSheet,
   TouchableOpacity,
-  NativeModules,
+ // NativeModules,
   Text,
-  FlatList,
-} from 'react-native';
+   FlatList ,
+ } from 'react-native';
 
 import {YStack, View, XStack} from 'tamagui';
 import PodcastCard from '../components/PodcastCard';
@@ -29,7 +29,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import PodcastSkeletonCard from '../components/PodcastSkeletonCard';
 import {usePreferences} from '../contexts/PreferencesContext';
 
-const {WavAudioRecorder} = NativeModules;
+//const {WavAudioRecorder} = NativeModules;
 //const recorderEvents = new NativeEventEmitter(WavAudioRecorder);
 
 const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
@@ -73,7 +73,7 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
         }
       }
     }
-  }, [podcastData, page]);
+  }, [podcastData, page, dispatch]);
 
   const openPlaylist = (id: string) => {
     dispatch(setaddedPodcastId(id));
@@ -183,7 +183,7 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="light" backgroundColor="#007AFF" />
+      <StatusBar style="light" />
 
       {/* Header Section */}
       <View style={[GlassStyles.glassCard, styles.header]}>
@@ -215,7 +215,7 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
           <FlatList
             data={filteredPodcasts}
             renderItem={renderItem}
-            keyExtractor={item => item._id.toString()}
+            keyExtractor={(item: PodcastData) => item._id.toString()}
             contentContainerStyle={styles.flatListContentContainer}
             refreshing={refreshing}
             onRefresh={onRefresh}
@@ -358,3 +358,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
