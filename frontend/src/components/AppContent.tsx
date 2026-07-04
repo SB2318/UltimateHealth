@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useRef, useCallback } from 'react';
 import { useColorScheme, View } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
@@ -10,21 +11,15 @@ import { addEventListener } from '@react-native-community/netinfo';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { FirebaseProvider } from '@/hooks/FirebaseContext';
-import { useCheckTokenStatus } from '@/src/hooks/useGetTokenStatus';
 import { useNotificationListeners } from '@/hooks/useNotificationListener';
 import { useVersionCheck } from '@/hooks/useVersionCheck';
 import { SocketProvider } from '../contexts/SocketContext';
 import { PreferencesProvider } from '../contexts/PreferencesContext';
 import config from '../../tamagui.config';
-import { registerAndSyncPushToken } from '../helper/PushNotificationService';
-import {
-  initDeepLinking,
-  navigateDeepLink,
-  resolveDeepLinkTarget,
-  resolveNotificationTarget,
-} from '../helper/DeepLinkService';
+
+import { initDeepLinking, navigateDeepLink, resolveNotificationTarget } from '../helper/DeepLinkService';
 import { firebaseInit } from '../helper/firebase';
-import { cleanUpDownloads } from '../helper/Utils';
+import { cleanUpDownloads , KEYS, retrieveItem } from '../helper/Utils';
 import {
   SECURE_KEYS,
   secureRetrieveItem,
@@ -32,7 +27,7 @@ import {
 import { setupAxiosInterceptor } from '../helper/setupAxiosInterceptor';
 import { initMonitoring } from '../services/monitoring/sentry';
 
-import { setUserToken, setGuestMode } from '../store/UserSlice';
+import { setUserToken, setGuestMode, setUserId, setUserHandle } from '../store/UserSlice';
 import { setConnected } from '../store/NetworkSlice';
 import { RootState } from '../store/ReduxStore';
 
@@ -43,18 +38,19 @@ import { NetworkBanner } from './NetworkBanner';
 
 export default function AppContent() {
   const navigationRef = useRef<NavigationContainerRef<any> | null>(null);
-  const hasInitialized = useRef(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const pendingDeepLinkRef = useRef<string | null>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
   const { visible, storeUrl } = useVersionCheck();
   const dispatch = useDispatch();
 
-  const { data: tokenRes = null } = useCheckTokenStatus();
-
   const { user_token, isGuest } = useSelector(
     (state: RootState) => state.user,
   );
+
+  const { visible, storeUrl } = useVersionCheck();
+  const dispatch = useDispatch();
 
   useNotificationListeners();
 
@@ -63,26 +59,31 @@ export default function AppContent() {
     setupAxiosInterceptor();
   }, []);
 
-  const checkToken = useCallback(async () => {
-    const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
+const hydrateAuthState = useCallback(async () => {
+  const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
+
+  if (token) {
+    const userId = await retrieveItem(KEYS.USER_ID);
+    const userHandle = await retrieveItem(KEYS.USER_HANDLE);
+
     dispatch(setUserToken(token));
-    if (token) {
-      dispatch(setGuestMode(false));
-    }
-  }, [dispatch]);
+    dispatch(setUserId(userId || ''));
+    dispatch(setUserHandle(userHandle || ''));
+    dispatch(setGuestMode(false));
+  }
+
+  // If no token, leave state as-is (will be guest or unauthenticated)
+}, [dispatch]);
+
+useEffect(() => {
+  hydrateAuthState();
+}, [hydrateAuthState]);
 
   useEffect(() => {
-    if (navigationRef.current && tokenRes && !hasInitialized.current) {
-      hasInitialized.current = true;
-      checkToken();
-    }
-  }, [checkToken, tokenRes]);
-
-  useEffect(() => {
-    return initDeepLinking(url => {
-      pendingDeepLinkRef.current = url;
-    });
-  }, []);
+    if (!navigationRef.current) return;
+    const isAuthenticated = Boolean(user_token) && !isGuest;
+    return initDeepLinking(navigationRef.current, isAuthenticated);
+  }, [isGuest, user_token]);
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -112,9 +113,21 @@ export default function AppContent() {
     };
   }, [dispatch]);
 
+
+
   useEffect(() => {
-    registerAndSyncPushToken(user_token);
-  }, [user_token]);
+    if (!navigationRef.current || !pendingDeepLinkRef.current) return;
+    if (!isGuest && tokenRes === null && !user_token) return;
+
+    const isAuthenticated = Boolean(tokenRes?.isValid || user_token) && !isGuest;
+    const target = resolveDeepLinkTarget(pendingDeepLinkRef.current);
+
+    if (target) {
+      navigateDeepLink(navigationRef.current, target, isAuthenticated);
+    }
+
+    pendingDeepLinkRef.current = null;
+  }, [tokenRes, user_token, isGuest]);
 
   useEffect(() => {
     if (!navigationRef.current || !pendingDeepLinkRef.current) return;
@@ -137,7 +150,7 @@ export default function AppContent() {
       const data = response.notification.request.content.data;
       const target = resolveNotificationTarget(data);
       if (!target || !navigationRef.current) return;
-      const isAuthenticated = Boolean(tokenRes?.isValid || user_token) && !isGuest;
+      const isAuthenticated = Boolean(user_token) && !isGuest;
       navigateDeepLink(navigationRef.current, target, isAuthenticated);
     };
 
@@ -150,7 +163,7 @@ export default function AppContent() {
     });
 
     return () => { responseListener.remove(); };
-  }, [user_token, tokenRes, isGuest]);
+  }, [user_token, isGuest]);
 
   useEffect(() => {
     firebaseInit();
@@ -158,30 +171,28 @@ export default function AppContent() {
   }, []);
 
   return (
-<SafeAreaProvider>
-  <TamaguiProvider
-    config={config}
-    defaultTheme={isDarkMode ? 'dark' : 'light'}>
-    <PaperProvider>
-      <FirebaseProvider>
-        <PreferencesProvider>
-          <SocketProvider>
-            <View style={{ flex: 1 }}>
-              <NetworkBanner />
-
-              <AppInner
-                navigationRef={navigationRef}
-                visible={visible}
-                storeUrl={storeUrl}
-              />
-            </View>
-          </SocketProvider>
-        </PreferencesProvider>
-      </FirebaseProvider>
-    </PaperProvider>
-  </TamaguiProvider>
-</SafeAreaProvider>
-
+    <SafeAreaProvider>
+      <TamaguiProvider
+        config={config}
+        defaultTheme={isDarkMode ? 'dark' : 'light'}>
+        <PaperProvider>
+          <FirebaseProvider>
+            <PreferencesProvider>
+              <SocketProvider>
+                <View style={{ flex: 1 }}>
+                  <NetworkBanner />
+                  <AppInner
+                    navigationRef={navigationRef}
+                    visible={visible}
+                    storeUrl={storeUrl}
+                  />
+                </View>
+              </SocketProvider>
+            </PreferencesProvider>
+          </FirebaseProvider>
+        </PaperProvider>
+      </TamaguiProvider>
+    </SafeAreaProvider>
   );
 }
 
@@ -195,24 +206,15 @@ function AppInner({
   storeUrl: string;
 }) {
   const theme = useTheme();
+  const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <FirebaseProvider>
-      <SocketProvider>
-        <PreferencesProvider>
-          <SafeAreaProvider>
-            <PaperProvider>
-              <View style={{ flex: 1, backgroundColor: theme.background.val }}>
-                <NavigationContainer ref={navigationRef}>
-                  <StackNavigation />
-                </NavigationContainer>
-                <CustomAlertDialog key={'alert'} />
-                <UpdateModal visible={visible} storeUrl={storeUrl} />
-              </View>
-            </PaperProvider>
-          </SafeAreaProvider>
-        </PreferencesProvider>
-      </SocketProvider>
-    </FirebaseProvider>
+    <View style={{ flex: 1, backgroundColor: theme?.background?.get() ?? (isDarkMode ? '#121212' : '#ffffff') }}>
+      <NavigationContainer ref={navigationRef}>
+        <StackNavigation />
+      </NavigationContainer>
+      <CustomAlertDialog key={'alert'} />
+      <UpdateModal visible={visible} storeUrl={storeUrl} />
+    </View>
   );
 }

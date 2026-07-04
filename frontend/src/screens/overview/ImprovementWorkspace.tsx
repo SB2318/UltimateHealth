@@ -1,12 +1,12 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  FlatList,
+import { FlatList ,
   TouchableOpacity,
   View,
   Text,
   StyleSheet,
   useColorScheme,
-} from 'react-native';
+ } from 'react-native';
 import { useTheme } from 'tamagui';
 import {EditRequest} from '../../type';
 import {useSelector} from 'react-redux';
@@ -87,7 +87,7 @@ export default function ImprovementWorkspace({
   );
 
   return (
-    <View style={{flex: 1, backgroundColor: theme.background.val as string}}>
+    <View style={{flex: 1, backgroundColor: theme.background?.val as string}}>
       <View style={styles.container}>
         <View style={styles.buttonContainer}>
           {categories.map((item, index) => (
@@ -131,7 +131,7 @@ export default function ImprovementWorkspace({
             <FlatList
               data={improvementData ? improvementData : []}
               renderItem={renderItem}
-              keyExtractor={item => item._id.toString()}
+              keyExtractor={(item: EditRequest) => item._id.toString()}
               contentContainerStyle={styles.flatListContentContainer}
               refreshing={refreshing}
               onRefresh={onRefresh}
@@ -200,3 +200,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+

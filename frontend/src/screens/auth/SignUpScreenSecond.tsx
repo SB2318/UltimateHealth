@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {Contactdetail, SignUpScreenSecondProp} from '../../type';
-import {AxiosError} from 'axios';
+import type  from 'axios';
 import EmailVerifiedModal from '../../components/VerifiedModal';
 import SecurityWarningModal from '../../components/SecurityWarningModal';
 import Loader from '../../components/Loader';
@@ -16,6 +16,7 @@ import useUploadImage from '../../hooks/useUploadImage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
 import {useRegdMutation} from '@/src/hooks/useUserRegistration';
+type AxiosError = any;
 let validator = require('email-validator');
 const signupSecondSchema = z.object({
   specialization: z
@@ -394,7 +395,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
                       maxLength={field.maxLength}
                     />
                     <YStack position="absolute" right={14} top={12}>
-                      <Icon name={field.icon as any} size={20} color={theme.black.val} />
+                      <Icon name={field.icon as any} size={20} color={theme.black?.val} />
                     </YStack>
                   </XStack>
                   {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}

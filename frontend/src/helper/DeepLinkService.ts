@@ -258,6 +258,18 @@ export const navigateDeepLink = (
   navigation.navigate(target.name as never, target.params as never);
 };
 
+/**
+ * Initialises deep-link handling for the app.
+ *
+ * Accepts a URL callback that is invoked with the raw URL string whenever a
+ * deep link is received — both on cold start (via getInitialURL) and while the
+ * app is in the foreground (via the 'url' event listener). Navigation and auth
+ * checks are intentionally kept out of this function; the caller is responsible
+ * for resolving the URL and navigating once auth state is known.
+ *
+ * @param onUrl - Callback invoked with the incoming URL string.
+ * @returns A cleanup function that removes the foreground URL listener.
+ */
 export const initDeepLinking = (onUrl: (url: string) => void): (() => void) => {
   if (!initialUrlHandled) {
     initialUrlHandled = true;

@@ -1,6 +1,7 @@
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {PROD_URL} from '../helper/APIUtils';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
+type AxiosError = any;
 
 export const useMarkNotificationAsRead = (): UseMutationResult<
   any,

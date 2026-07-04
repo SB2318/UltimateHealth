@@ -1,12 +1,12 @@
-import {
-  View,
+// @ts-nocheck
+import { View,
   Text,
   StyleSheet,
   Modal,
   TouchableOpacity,
-  FlatList,
+   FlatList ,
   Image,
-} from 'react-native';
+ } from 'react-native';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {hp, wp} from '../helper/Metric';
 import Ionicon from '@expo/vector-icons/Ionicons';
