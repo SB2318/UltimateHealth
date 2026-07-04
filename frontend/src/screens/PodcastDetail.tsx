@@ -31,6 +31,7 @@ import {useSocket} from '../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import Loader from '../components/Loader';
 import LoadingSpinner from '../components/LoadingSpinner';
+import PodcastDetailSkeleton from '../components/PodcastDetailSkeleton';
 import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
 import LottieView from 'lottie-react-native';
 import AudioWaveform from '../components/AudioWaveform';
