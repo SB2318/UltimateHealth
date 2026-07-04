@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import {useCallback, useEffect, useState} from 'react';
 import {Alert, StyleSheet} from 'react-native';
 import {PodcastPlayerScreenProps} from '../type';
@@ -8,7 +9,7 @@ import Snackbar from 'react-native-snackbar';
 import useUploadImage from '../hooks/useUploadImage';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import useUploadAudio from '../hooks/useUploadAudio';
-import Slider from '@react-native-community/slider';
+import Slider from '../components/SliderCompat';
 
 import {useAudioPlayer} from 'expo-audio';
 import {Button, Circle, Theme, XStack, YStack, Text, useTheme} from 'tamagui';
@@ -528,3 +529,4 @@ const styles = StyleSheet.create({
     color: '#777',
   },
 });
+

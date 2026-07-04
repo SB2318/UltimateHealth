@@ -1,13 +1,12 @@
 import {useEffect, useState} from 'react';
-import {
-  View,
+import { View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   Platform,
-  ScrollView,
-} from 'react-native';
+   ScrollView ,
+ } from 'react-native';
 import {SocialScreenProps} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
@@ -20,13 +19,13 @@ import {useGetUserSocials} from '../hooks/useGetUserSocialCircle';
 import {useUpdateFollowStatus} from '../hooks/useUpdateFollowStatus';
 import Snackbar from 'react-native-snackbar';
 import LoadingSpinner from '../components/LoadingSpinner';
+import {emitFollowNotification} from '../helper/followNotification';
 
 export default function Socialcreen({navigation, route}: SocialScreenProps) {
   const insets = useSafeAreaInsets();
   //const socials = route.params.socials;
   const {type, articleId, social_user_id} = route.params;
   const socket = useSocket();
-  const [userid, setUserId] = useState<string>('');
   const queryClient = useQueryClient();
 
   const {mutate: followMutate, isPending: followMutationPending} =
@@ -137,22 +136,15 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                           : null
                       ]}
                       onPress={() => {
-                        setUserId(follower._id);
-
                         followMutate(follower._id, {
                           onSuccess: data => {
 
                             if (data) {
-                              if (socket) {
-                                socket.emit('notification', {
-                                  type: 'userFollow',
-                                  userId: userid,
-                                  message: {
-                                    title: `${user_handle} has followed you`,
-                                    body: '',
-                                  },
-                                });
-                              }
+                              emitFollowNotification(
+                                socket,
+                                follower._id,
+                                user_handle,
+                              );
                               refetch();
                             }
 

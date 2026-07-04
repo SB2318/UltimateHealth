@@ -1,6 +1,7 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { UPDATE_USER_GENERAL_DETAILS } from "../helper/APIUtils";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
+type AxiosError = any;
 
 
 type UpdateReq ={

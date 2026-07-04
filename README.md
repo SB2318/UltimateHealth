@@ -952,6 +952,22 @@ We welcome contributions from everyone — developers, designers, writers, and t
        <td align="center"><a href="https://github.com/semanirudh94-lang"><img src="https://avatars.githubusercontent.com/u/224640398?v=4" width="120px;" alt=""/><br/><sub><b>Piyush Semalti</b></sub></a></td>
      <td align="center"><a href="https://github.com/parthnakum"><img src="https://avatars.githubusercontent.com/u/134558990?v=4" width="120px;" alt=""/><br/><sub><b>Parth Nakum</b></sub></a></td>
      <td align="center"><a href="https://github.com/Arpita2919"><img src="https://avatars.githubusercontent.com/u/153080323?v=4" width="120px;" alt=""/><br/><sub><b>Arpita Raj</b></sub></a></td>
+     <td align="center"><a href="https://github.com/pratik-dev01"><img src="https://avatars.githubusercontent.com/u/180295981?v=4" width="120px;" alt=""/><br/><sub><b>pratik ankush bandgar</b></sub></a></td>
+     <td align="center"><a href="https://github.com/vanshikaMaheshwari"><img src="https://avatars.githubusercontent.com/u/73647007?v=4" width="120px;" alt=""/><br/><sub><b>Vanshika Maheshwari</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/karthikeyakakarlapudi2007"><img src="https://avatars.githubusercontent.com/u/239514583?v=4" width="120px;" alt=""/><br/><sub><b>karthikeyakakarlapudi2007</b></sub></a></td>
+       <td align="center"><a href="https://github.com/Tomeshwari-02"><img src="https://avatars.githubusercontent.com/u/179694969?v=4" width="120px;" alt=""/><br/><sub><b>Tomeshwari Sahu</b></sub></a></td>
+     <td align="center"><a href="https://github.com/harshitavaishnav7878"><img src="https://avatars.githubusercontent.com/u/198601301?v=4" width="120px;" alt=""/><br/><sub><b>Harshita Vaishnav</b></sub></a></td>
+     <td align="center"><a href="https://github.com/santoshsingampalli11-hub"><img src="https://avatars.githubusercontent.com/u/239569042?v=4" width="120px;" alt=""/><br/><sub><b>S V RAMA SANTOSH</b></sub></a></td>
+     <td align="center"><a href="https://github.com/kavin553"><img src="https://avatars.githubusercontent.com/u/197105342?v=4" width="120px;" alt=""/><br/><sub><b>Kavin</b></sub></a></td>
+     <td align="center"><a href="https://github.com/DakshtaMethwani"><img src="https://avatars.githubusercontent.com/u/193815683?v=4" width="120px;" alt=""/><br/><sub><b>DakshtaMethwani</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/abhinavkhedwal4-maker"><img src="https://avatars.githubusercontent.com/u/234247126?v=4" width="120px;" alt=""/><br/><sub><b>AK-explores</b></sub></a></td>
+       <td align="center"><a href="https://github.com/gargshambhavi0802-pixel"><img src="https://avatars.githubusercontent.com/u/258162308?v=4" width="120px;" alt=""/><br/><sub><b>Shambhavi Garg</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->

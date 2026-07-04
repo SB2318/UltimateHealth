@@ -17,7 +17,7 @@ const authAxios = axios.create({
 // or custom config omits the headers object entirely, preventing a runtime
 // TypeError when setting `config.headers.Authorization`.
 authAxios.interceptors.request.use(
-  async (config) => {
+  async (config: any) => {
     config.headers ??= {} as typeof config.headers;
     const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
     if (token) {
@@ -28,7 +28,7 @@ authAxios.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error),
+  (error: any) => Promise.reject(error),
 );
 
 export default authAxios;

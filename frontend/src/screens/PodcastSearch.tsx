@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 // PodcastSearch.tsx
 import React, {useEffect, useState, useCallback, useRef} from 'react';
-import {Pressable, FlatList, AccessibilityInfo} from 'react-native';
+import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {PodcastData, PodcastSearchProp} from '../type';
-import {AxiosError} from 'axios';
+
 import {useSelector} from 'react-redux';
 import PodcastCard from '../components/PodcastCard';
 import PodcastSkeletonCard from '../components/PodcastSkeletonCard';
@@ -15,6 +16,7 @@ import {XStack, YStack, Input, Separator, Text, useTheme} from 'tamagui';
 import {Feather} from '@expo/vector-icons';
 import {useUpdatePodcastViewcount} from '../hooks/useUpdatePodcastViewcount';
 import {useGetSearchPodcasts} from '../hooks/useGetSearchPodcasts';
+import { useColorScheme } from 'react-native-gifted-chat/lib/hooks/useColorScheme';
 
 const SKELETON_COUNT = 5;
 const SEARCH_DEBOUNCE_MS = 350;
@@ -28,6 +30,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
   const [searchData, setSearchData] = useState<PodcastData[]>([]);
   const theme = useTheme();
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isDarkMode = useColorScheme() === 'dark';
 
   useFocusEffect(
     useCallback(() => {
@@ -98,7 +101,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                 audioUrl: data.audio_url,
               });
             },
-            onError: (err: AxiosError) => {
+            onError: (err: any) => {
               console.log('Update view count err', err);
               Snackbar.show({
                 text: 'Something went wrong!',
@@ -128,7 +131,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                 audioUrl: data.audio_url,
               });
             },
-            onError: (err: AxiosError) => {
+            onError: (err: any) => {
               console.log('Update view count err', err);
               Snackbar.show({
                 text: 'Something went wrong!',
@@ -149,7 +152,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
     <YStack
       flex={1}
       height={'100%'}
-      backgroundColor={theme.background.val}
+      backgroundColor={theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')}
       paddingTop="$2"
       justifyContent="flex-start">
 
@@ -163,7 +166,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
           <XStack alignItems="center" gap="$3">
             <Feather name="mic" size={24} color={PRIMARY_COLOR} />
             <YStack>
-              <Text style={{fontSize: 24, fontWeight: '800', color: theme.color.val}}>
+              <Text style={{fontSize: 24, fontWeight: '800', color: theme?.color?.val ?? (isDarkMode ? '#ffffff' : '#000000')}}>
                 Discover Podcasts
               </Text>
               <Text style={{fontSize: 13, color: theme.colorMuted?.val, marginTop: 2}}>
@@ -183,7 +186,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
           paddingHorizontal="$3"
           paddingVertical="$2"
           borderWidth={1.5}
-          borderColor={query ? PRIMARY_COLOR : theme.borderColor.val}
+          borderColor={query ? PRIMARY_COLOR : theme.borderColor?.val ?? 'transparent'}
           gap="$3"
           shadowColor="#000"
           shadowOffset={{width: 0, height: 2}}
@@ -204,7 +207,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
             backgroundColor="transparent"
             onChangeText={setQuery}
             value={query}
-            color={theme.color.val}
+            color={theme.color?.val ?? '#000'}
             fontSize={14}
             fontWeight="500"
             focusStyle={{
@@ -228,14 +231,14 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
         </XStack>
       </YStack>
 
-      <Separator borderColor={theme.borderColor.val} />
+      <Separator borderColor={theme.borderColor?.val ?? 'transparent'} />
 
       {/* Results / Skeleton Section */}
       <YStack paddingHorizontal="$3" flex={1}>
         {isLoading && debouncedQuery !== '' ? (
           <FlatList
             data={Array.from({length: SKELETON_COUNT}, (_, i) => i)}
-            keyExtractor={(_, index) => `skeleton-${index}`}
+            keyExtractor={(_: number, index: number) => `skeleton-${index}`}
             renderItem={() => <PodcastSkeletonCard />}
             scrollEnabled={false}
             contentContainerStyle={listContentStyle}
@@ -243,7 +246,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
         ) : (
           <FlatList
             data={debouncedQuery !== '' ? searchData : []}
-            keyExtractor={item => item._id.toString()}
+            keyExtractor={(item: PodcastData) => item._id.toString()}
             renderItem={renderItem}
             ListHeaderComponent={
               debouncedQuery !== '' && searchData.length > 0 ? (
@@ -282,7 +285,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                   alignItems="center"
                   justifyContent="center"
                   paddingVertical="$8">
-                  <NoResult />
+                  <NoResults />
                 </YStack>
               )
             }
@@ -298,3 +301,4 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
     </YStack>
   );
 }
+

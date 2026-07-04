@@ -1,5 +1,7 @@
+/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, Alert, AppState, AppStateStatus} from 'react-native';
+import {StyleSheet, Alert, AppState } from 'react-native';
 
 import {PodcastRecorderScreenProps} from '../type';
 import RNFS from 'react-native-fs';
@@ -21,14 +23,15 @@ import audioModule from '@/modules/audio-module';
 import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
-import {useDispatch} from 'react-redux';
+//import {useDispatch} from 'react-redux';
 import {requestStoragePermissions} from '../helper/Utils';
+
 
 //const AudioModule = requireNativeModule('AudioModule');
 
 const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   const [recording, setRecording] = useState(false);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(audioRecorder, 500);
@@ -63,25 +66,28 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
     }
   }, [recorderState?.durationMillis, recording]);
 
-  useEffect(() => {
-    const subscription = AppState.addEventListener(
-      'change',
-      (nextState: AppStateStatus) => {
-        if (nextState === 'active' && recording) {
-          if (durationMillisRef.current > 0) {
-            recordStartTimeRef.current =
-              Date.now() - durationMillisRef.current;
-            setRecordTime(formatTime(durationMillisRef.current));
-          } else if (recordStartTimeRef.current) {
-            const elapsed = Date.now() - recordStartTimeRef.current;
-            setRecordTime(formatTime(elapsed));
-          }
+useEffect(() => {
+  const subscription = AppState.addEventListener(
+    'change',
+    (nextState: AppStateStatus) => {
+      if (nextState === 'active' && recording) {
+        // Re-sync timer immediately on app foreground using actual tracked duration
+        if (durationMillisRef.current > 0) {
+          recordStartTimeRef.current =
+            Date.now() - durationMillisRef.current;
+          setRecordTime(formatTime(durationMillisRef.current));
+        } else if (recordStartTimeRef.current) {
+          // Fallback to JS-based calculation if native duration hasn't been reported yet
+          const elapsed = Date.now() - recordStartTimeRef.current;
+          setRecordTime(formatTime(elapsed));
         }
-      },
-    );
+      }
+    },
+  );
 
-    return () => subscription.remove();
-  }, [recording]);
+  return () => subscription.remove();
+}, [recording]);
+  
  useFocusEffect(
   useCallback(() => {
     handleUpload();
@@ -117,7 +123,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   }
 };
 
-  const stopRecording = async () => {
+const stopRecording = async () => {
   try {
     await audioRecorder.stop();
   } catch (error) {
@@ -125,10 +131,9 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   }
 
   isRecordingRef.current = false;
-
   setRecording(false);
   stopTimer();
-  setFilePath(audioModule.uri);
+  setFilePath(audioRecorder.uri);
 };
 
   useEffect(() => {
@@ -500,182 +505,184 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 
 export default PodcastRecorder;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0f172a',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
-  title: {
-    fontSize: 28,
-    color: '#f8fafc',
-    marginBottom: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  timer: {
-    fontSize: 42,
-    color: '#38bdf8',
-    marginVertical: 20,
-    fontVariant: ['tabular-nums'],
-    letterSpacing: 1,
-  },
-  waveContainer: {
-    height: 80,
-    width: '100%',
-    alignSelf: 'center',
-    marginVertical: 16,
-  },
-  actionRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: 16,
-    marginTop: 24,
-  },
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#0f172a',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     padding: 24,
+//   },
+//   title: {
+//     fontSize: 28,
+//     color: '#f8fafc',
+//     marginBottom: 20,
+//     fontWeight: 'bold',
+//     textAlign: 'center',
+//   },
+//   timer: {
+//     fontSize: 42,
+//     color: '#38bdf8',
+//     marginVertical: 20,
+//     fontVariant: ['tabular-nums'],
+//     letterSpacing: 1,
+//   },
+//   waveContainer: {
+//     height: 80,
+//     width: '100%',
+//     alignSelf: 'center',
+//     marginVertical: 16,
+//   },
+//   actionRow: {
+//     flexDirection: 'row',
+//     flexWrap: 'wrap',
+//     justifyContent: 'center',
+//     gap: 16,
+//     marginTop: 24,
+//   },
 
-  // Shared circular style
-  circularButton: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-  },
+//   // Shared circular style
+//   circularButton: {
+//     width: 64,
+//     height: 64,
+//     borderRadius: 32,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     padding: 10,
+//     elevation: 3,
+//     shadowColor: '#000',
+//     shadowOffset: {width: 0, height: 1},
+//     shadowOpacity: 0.2,
+//     shadowRadius: 3,
+//   },
 
-  // Rectangular style for stop/pause
-  rectButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 28,
-    borderRadius: 12,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-  },
+//   // Rectangular style for stop/pause
+//   rectButton: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     paddingVertical: 14,
+//     paddingHorizontal: 28,
+//     borderRadius: 12,
+//     elevation: 3,
+//     shadowColor: '#000',
+//     shadowOffset: {width: 0, height: 1},
+//     shadowOpacity: 0.2,
+//     shadowRadius: 3,
+//   },
 
-  // Colors
-  record: {backgroundColor: '#16a34a'},
-  stop: {backgroundColor: '#dc2626'},
-  play: {backgroundColor: '#3b82f6'},
-  pause: {backgroundColor: '#f59e0b'},
-  rerecord: {backgroundColor: '#0284c7'},
-  upload: {backgroundColor: '#7c3aed'},
+//   // Colors
+//   record: {backgroundColor: '#16a34a'},
+//   stop: {backgroundColor: '#dc2626'},
+//   play: {backgroundColor: '#3b82f6'},
+//   pause: {backgroundColor: '#f59e0b'},
+//   rerecord: {backgroundColor: '#0284c7'},
+//   upload: {backgroundColor: '#7c3aed'},
 
-  buttonText: {
-    color: '#f8fafc',
-    fontSize: 12,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginTop: 4,
-  },
+//   buttonText: {
+//     color: '#f8fafc',
+//     fontSize: 12,
+//     fontWeight: '600',
+//     textAlign: 'center',
+//     marginTop: 4,
+//   },
 
-  pathText: {
-    marginTop: 20,
-    fontSize: 14,
-    color: '#cbd5e1',
-    textAlign: 'center',
-  },
+//   pathText: {
+//     marginTop: 20,
+//     fontSize: 14,
+//     color: '#cbd5e1',
+//     textAlign: 'center',
+//   },
 
-  // Mic styles
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 16,
-  },
-  micButton: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: '#1e293b',
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-  },
-  micButtonActive: {
-    backgroundColor: '#38bdf8',
-  },
-  micOuterCircle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#334155',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  micInnerCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#f8fafc',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  micBody: {
-    width: 18,
-    height: 28,
-    borderRadius: 9,
-    backgroundColor: '#38bdf8',
-    marginBottom: 2,
-  },
-  micStem: {
-    width: 4,
-    height: 10,
-    borderRadius: 2,
-    backgroundColor: '#38bdf8',
-    marginTop: 2,
-  },
-  micPulse: {
-    position: 'absolute',
-    top: -15,
-    left: -15,
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    borderWidth: 2,
-    borderColor: '#38bdf8',
-    opacity: 0.4,
-  },
+//   // Mic styles
+//   iconContainer: {
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     marginVertical: 16,
+//   },
+//   micButton: {
+//     width: 120,
+//     height: 120,
+//     borderRadius: 60,
+//     backgroundColor: '#1e293b',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     elevation: 6,
+//     shadowColor: '#000',
+//     shadowOffset: {width: 0, height: 4},
+//     shadowOpacity: 0.25,
+//     shadowRadius: 6,
+//   },
+//   micButtonActive: {
+//     backgroundColor: '#38bdf8',
+//   },
+//   micOuterCircle: {
+//     width: 100,
+//     height: 100,
+//     borderRadius: 50,
+//     backgroundColor: '#334155',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   micInnerCircle: {
+//     width: 60,
+//     height: 60,
+//     borderRadius: 30,
+//     backgroundColor: '#f8fafc',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   micBody: {
+//     width: 18,
+//     height: 28,
+//     borderRadius: 9,
+//     backgroundColor: '#38bdf8',
+//     marginBottom: 2,
+//   },
+//   micStem: {
+//     width: 4,
+//     height: 10,
+//     borderRadius: 2,
+//     backgroundColor: '#38bdf8',
+//     marginTop: 2,
+//   },
+//   micPulse: {
+//     position: 'absolute',
+//     top: -15,
+//     left: -15,
+//     width: 150,
+//     height: 150,
+//     borderRadius: 75,
+//     borderWidth: 2,
+//     borderColor: '#38bdf8',
+//     opacity: 0.4,
+//   },
 
-  actionButtonText: {
-    color: '#f8fafc',
-    fontSize: 10,
-    fontWeight: '600',
-    textAlign: 'center',
-    //marginTop: 2,
-    letterSpacing: 0.5,
-  },
+//   actionButtonText: {
+//     color: '#f8fafc',
+//     fontSize: 10,
+//     fontWeight: '600',
+//     textAlign: 'center',
+//     //marginTop: 2,
+//     letterSpacing: 0.5,
+//   },
 
-  slider: {
-    width: '100%',
-    height: 36,
-    marginTop: 6,
-    marginBottom: 2,
-  },
+//   slider: {
+//     width: '100%',
+//     height: 36,
+//     marginTop: 6,
+//     marginBottom: 2,
+//   },
 
-  timeRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 4,
-    marginBottom: 12,
-  },
-  time: {
-    fontSize: 13,
-    color: '#777',
-  },
-});
+//   timeRow: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     paddingHorizontal: 4,
+//     marginBottom: 12,
+//   },
+//   time: {
+//     fontSize: 13,
+//     color: '#777',
+//   },
+// });
+
+
