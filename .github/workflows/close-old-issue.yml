@@ -1,3 +1,38 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 🗂️ Close Old / Stale Issues
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Automatically closes open issues that have had no activity for more than
+#   30 days. This keeps the issue tracker clean and free of abandoned or
+#   forgotten issues that are no longer relevant.
+#
+# HOW IT WORKS:
+#   1. Runs every day at midnight UTC via a cron schedule.
+#   2. Fetches all currently open issues via the GitHub REST API.
+#   3. For each open issue:
+#        a. Gets the last updated timestamp of the issue.
+#        b. Calculates how many days have passed since the last update.
+#        c. If more than 30 days have passed:
+#             - Closes the issue (PATCH state: "closed").
+#             - Posts an explanatory comment:
+#               "This issue has been automatically closed because it has been
+#                inactive for more than 30 days. If still relevant, feel free
+#                to reopen it or create a new one."
+#
+# TRIGGERS:
+#   - Automatic : Runs daily at 00:00 UTC via cron schedule.
+#
+# STALENESS THRESHOLD:
+#   - 30 days of inactivity (no updates, comments, or label changes)
+#
+# PERMISSIONS REQUIRED:
+#   - Default GITHUB_TOKEN permissions (issues: write via curl with token)
+#
+# SECRETS REQUIRED:
+#   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: Close Old Issues
 on:
   schedule:
