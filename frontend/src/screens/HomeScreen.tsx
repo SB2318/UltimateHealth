@@ -5,6 +5,10 @@ import { StyleSheet,
   Alert,
   Text,
   TouchableOpacity,
+  FlatList,
+  ScrollView,
+} from 'react-native';
+import { FlashList } from '@shopify/flash-list';
    FlatList ,
    ScrollView ,
   } from 'react-native';
@@ -823,8 +827,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         </ScrollView>
       </View>
       <View style={styles.articleContainer}>
-        <FlatList
+        <FlashList
           data={listData}
+          estimatedItemSize={100}
           renderItem={renderItem}
           keyExtractor={(item:any) => item._id.toString()}
           contentContainerStyle={styles.flatListContentContainer}
