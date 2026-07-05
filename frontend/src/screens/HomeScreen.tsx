@@ -5,7 +5,7 @@ import { StyleSheet,
   Alert,
   Text,
   TouchableOpacity,
-  FlatList
+  FlatList,
   ScrollView,
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
