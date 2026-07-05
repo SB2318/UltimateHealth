@@ -48,7 +48,7 @@
     "axios": "^1.12.2",
     "date-fns": "^4.1.0",
     "email-validator": "^2.0.4",
-    "expo": "~56.0.14",
+    "expo": "~57.0.2",
     "expo-asset": "~56.0.18",
     "expo-audio": "~56.0.12",
     "expo-build-properties": "~56.0.21",
