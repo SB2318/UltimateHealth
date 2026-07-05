@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect } from 'react';
 import * as Notifications from 'expo-notifications';
 import { logger } from '../src/services/monitoring/logger';

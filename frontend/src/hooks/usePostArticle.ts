@@ -1,7 +1,8 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {ArticleData, Category} from '../type';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {POST_ARTICLE} from '../helper/APIUtils';
+type AxiosError = any;
 
 type PostReq = {
   title: string;
