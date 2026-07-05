@@ -3,8 +3,9 @@
     "target": "ES2022",
     "lib": ["ES2022"],
     "jsx": "react-native",
-    "module": "preserve",
-    "strict": false,
+    "module": "ESNext",
+    "strict": true,
+    "module": "esnext",
     "paths": {
       "@/*": [
         "./*"
@@ -22,5 +23,6 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "extends": "expo/tsconfig.base"
 }

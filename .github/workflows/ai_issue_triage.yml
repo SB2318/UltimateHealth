@@ -1,3 +1,34 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 🤖 AI Issue Triage Bot
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Uses Google Gemini AI to automatically triage newly opened GitHub issues.
+#   It reads the issue content and intelligently assigns labels, suggests
+#   assignees, and posts a structured triage comment to guide contributors.
+#
+# HOW IT WORKS:
+#   1. Triggers when a new issue is opened or when a comment is created.
+#   2. Runs a Python script (.github/scripts/ai_issue_triage.py) that:
+#        a. Reads the issue title and body.
+#        b. Sends the content to the Gemini AI API.
+#        c. Applies relevant labels (e.g. bug, enhancement, documentation).
+#        d. Posts a triage comment summarizing the AI's assessment.
+#   3. Can also be triggered manually by providing an issue number.
+#
+# TRIGGERS:
+#   - Automatic : When a new issue is opened.
+#   - Automatic : When a comment is created on any issue.
+#   - Manual    : Via workflow_dispatch with a specific issue_number input.
+#
+# PERMISSIONS REQUIRED:
+#   - issues: write    → to apply labels and post comments
+#
+# SECRETS REQUIRED:
+#   - GEMINI_KEY_1 ... GEMINI_KEY_5  → Gemini API keys (rotated for rate limits)
+#   - GITHUB_TOKEN                   → provided automatically by GitHub
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: AI Issue Triage
 
 on:

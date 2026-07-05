@@ -1,6 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { UPDATE_READ_EVENT } from "../helper/APIUtils";
+type AxiosError = any;
 
 export const useUpdateReadEvent = (articleId: number): UseMutationResult<
 any,

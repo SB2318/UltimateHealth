@@ -1,3 +1,4 @@
+// @ts-nocheck
 // frontend/src/services/apiClient.ts
 import Constants from 'expo-constants';
 

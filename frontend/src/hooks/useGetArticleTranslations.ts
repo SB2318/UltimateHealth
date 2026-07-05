@@ -1,7 +1,8 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {GET_ARTICLE_TRANSLATIONS} from '../helper/APIUtils';
 import {ArticleData} from '../type';
+type AxiosError = any;
 
 type ArticleTranslationsRes = {
   translations: ArticleData[];

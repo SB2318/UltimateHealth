@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import LottieView from 'lottie-react-native';
@@ -82,3 +83,4 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
 });
+

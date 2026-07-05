@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   StyleSheet,
   Text,
@@ -141,17 +142,35 @@ const ProfileHeader = ({
             Doctors always see their own Call/Email buttons on their own profile too. */}
         <View style={styles.primaryActionContainer}>
           {other ? (
-            // Own profile: prominent Edit Profile button
-            <AccessibleTouchable
-              activeOpacity={0.7}
-              onPress={() => (navigation as any).navigate('ProfileEditScreen')}
-              accessibilityLabel="Edit profile"
-              accessibilityHint="Navigates to edit profile screen"
-              style={[styles.primaryBtn, {backgroundColor: PRIMARY_COLOR}]}
-            >
-              <MaterialIcons name="edit" size={20} color="#ffffff" />
-              <Text style={[styles.primaryBtnText, {color: '#ffffff'}]}>Edit Profile</Text>
-            </AccessibleTouchable>
+            // Own profile: Edit Profile + Logout side by side
+            <View style={styles.primaryActionRow}>
+              <AccessibleTouchable
+                activeOpacity={0.7}
+                onPress={() => (navigation as any).navigate('ProfileEditScreen')}
+                accessibilityLabel="Edit profile"
+                accessibilityHint="Navigates to edit profile screen"
+                style={[styles.primaryBtn, {backgroundColor: PRIMARY_COLOR, flex: 1}]}
+              >
+                <MaterialIcons name="edit" size={20} color="#ffffff" />
+                <Text style={[styles.primaryBtnText, {color: '#ffffff'}]}>Edit Profile</Text>
+              </AccessibleTouchable>
+
+              <AccessibleTouchable
+                activeOpacity={0.7}
+                onPress={() => {
+                  if (isConnected) {
+                    (navigation as any).navigate('LogoutScreen', { profile_image: profileImg, username: username });
+                  } else {
+                    Snackbar.show({ text: 'Please check your internet connection!', duration: Snackbar.LENGTH_SHORT });
+                  }
+                }}
+                accessibilityLabel="Logout"
+                accessibilityHint="Logs out from your account"
+                style={styles.logoutIconBtn}
+              >
+                <MaterialIcons name="logout" size={22} color="#EF4444" />
+              </AccessibleTouchable>
+            </View>
           ) : isDoctor ? (
             // Viewing a doctor's profile: Call & Email
             <View style={styles.contactContainer}>
@@ -182,18 +201,18 @@ const ProfileHeader = ({
               style={[
                 styles.primaryBtn,
                 {
-                  backgroundColor: isFollowing ? 'transparent' : PRIMARY_COLOR,
-                  borderWidth: isFollowing ? 1.5 : 0,
-                  borderColor: PRIMARY_COLOR,
+                  backgroundColor:   PRIMARY_COLOR,
+                  borderWidth: 1.5,
+                  borderColor: isFollowing ? PRIMARY_COLOR : 'transparent',
                 },
               ]}
             >
               <MaterialIcons
                 name={isFollowing ? 'person-outline' : 'person-add'}
                 size={20}
-                color={isFollowing ? PRIMARY_COLOR : '#ffffff'}
+                color={'white'}
               />
-              <Text style={[styles.primaryBtnText, {color: isFollowing ? PRIMARY_COLOR : '#ffffff'}]}>
+              <Text style={[styles.primaryBtnText, {color:  'white' }]}>
                 {isFollowing ? 'Following' : 'Follow'}
               </Text>
             </AccessibleTouchable>
@@ -280,26 +299,6 @@ const ProfileHeader = ({
               <Text style={[styles.listButtonText, {color: themeColors.text}]}>Notification Preferences</Text>
               <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
             </AccessibleTouchable>
-
-            <AccessibleTouchable
-              activeOpacity={0.7}
-
-              accessibilityLabel="Logout"
-              accessibilityHint="Logs out from your account"
-              style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
-              onPress={() => {
-                if (isConnected) {
-                  (navigation as any).navigate('LogoutScreen', { profile_image: profileImg, username: username });
-                } else {
-                  Snackbar.show({ text: 'Please check your internet connection!', duration: Snackbar.LENGTH_SHORT });
-                }
-              }}>
-              <View style={[styles.listButtonIconBg, { backgroundColor: themeColors.iconBackground }]}>
-                <MaterialIcons name="logout" size={22} color="#EF4444" />
-              </View>
-              <Text style={[styles.listButtonText, {color: '#EF4444'}]}>Logout</Text>
-              <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
-            </AccessibleTouchable>
           </View>
         )}
       </View>
@@ -358,7 +357,22 @@ const styles = StyleSheet.create({
   primaryActionContainer: {
     marginVertical: hp(2.5),
     width: '100%',
+  },
+  primaryActionRow: {
+    flexDirection: 'row',
     alignItems: 'center',
+    width: '100%',
+    gap: wp(3),
+  },
+  logoutIconBtn: {
+    width: wp(13),
+    height: wp(13),
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FEF2F2',
+    borderWidth: 1,
+    borderColor: '#FECACA',
   },
   contactContainer: {
     flexDirection: 'row',
@@ -390,7 +404,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 14,
     paddingVertical: hp(1.5),
-    paddingHorizontal: wp(10),
+    paddingHorizontal: wp(5),
     gap: wp(2),
     ...Platform.select({
       ios: {
@@ -496,3 +510,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
+

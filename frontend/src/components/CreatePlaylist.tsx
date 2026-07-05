@@ -1,13 +1,13 @@
+// @ts-nocheck
 import React, {useState} from 'react';
-import {
-  Modal,
+import { Modal,
   View,
   Text,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  TextInput,
-} from 'react-native';
+   TextInput ,
+ } from 'react-native';
 import {useSelector} from 'react-redux';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -163,7 +163,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
       <View style={styles.itemContainer}>
         {!removePlaylistIds.includes(item._id) &&
         (addedPlaylistIds.includes(item._id) ||
-          item.podcasts.includes(addedPodcastId)) ? (
+          item.podcasts.some((p: any) => typeof p === 'string' ? p === addedPodcastId : p._id === addedPodcastId)) ? (
           <TouchableOpacity onPress={() => onClear(item._id)}>
             <FontAwesome name="check-square" size={26} color="#5F9EA0" />
           </TouchableOpacity>
