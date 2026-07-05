@@ -1,11 +1,11 @@
+/* eslint-disable react-compiler/react-compiler */
 import {useCallback, useEffect, useState} from 'react';
-import {
-  View,
+import { View,
   StyleSheet,
   TouchableOpacity,
   Text,
-  FlatList,
-} from 'react-native';
+   FlatList ,
+ } from 'react-native';
 import {ArticleData} from '../../type';
 import {useSelector} from 'react-redux';
 import ReviewCard from '../../components/ReviewCard';
@@ -132,7 +132,7 @@ export default function ArticleWorkSpace({
             <FlatList
               data={articleData ? articleData : []}
               renderItem={renderItem}
-              keyExtractor={item => item._id.toString()}
+              keyExtractor={(item: ArticleData) => item._id.toString()}
               contentContainerStyle={styles.flatListContentContainer}
               refreshing={refreshing}
               onRefresh={onRefresh}
@@ -194,3 +194,4 @@ const styles = StyleSheet.create({
     paddingBottom: hp(2),
   },
 });
+

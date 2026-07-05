@@ -96,6 +96,10 @@ export const retrieveItem = async (key: string) => {
 
 export const storeItem = async (key: string, value: string) => {
   try {
+    if (value === undefined || value === null) {
+      console.warn(`[AsyncStorage] Attempted to store null/undefined value for key: ${key}`);
+      return;
+    }
     await AsyncStorage.setItem(key, value);
   } catch (e) {
     console.log('Async Storage Data error', e);

@@ -1,11 +1,11 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import {useEffect, useState, useMemo} from 'react';
-import {
-  StyleSheet,
+import { StyleSheet,
   TouchableOpacity,
-  NativeModules,
+ // NativeModules,
   Text,
-  FlatList,
-} from 'react-native';
+   FlatList ,
+ } from 'react-native';
 
 import {YStack, View, XStack} from 'tamagui';
 import PodcastCard from '../components/PodcastCard';
@@ -26,9 +26,10 @@ import {useGetAllPodcasts} from '../hooks/useGetAllPodcasts';
 import {useUpdatePodcastViewcount} from '../hooks/useUpdatePodcastViewcount';
 import { PodcastLoadingState, NoPodcastState, ErrorState } from '../components/EmptyStates';
 import LoadingSpinner from '../components/LoadingSpinner';
+import PodcastSkeletonCard from '../components/PodcastSkeletonCard';
 import {usePreferences} from '../contexts/PreferencesContext';
 
-const {WavAudioRecorder} = NativeModules;
+//const {WavAudioRecorder} = NativeModules;
 //const recorderEvents = new NativeEventEmitter(WavAudioRecorder);
 
 const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
@@ -73,7 +74,7 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
         }
       }
     }
-  }, [podcastData, page]);
+  }, [podcastData, page, dispatch]);
 
   const openPlaylist = (id: string) => {
     dispatch(setaddedPodcastId(id));
@@ -177,19 +178,13 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
     />
   );
 
-  const renderLoadingState = () => (
-    <View style={styles.loadingContainer}>
-     <PodcastLoadingState/>
-    </View>
-  );
-
   const renderEmptyState = () => (
     <NoPodcastState onRefresh={onRefresh} />
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="light" backgroundColor="#007AFF" />
+      <StatusBar style="light" />
 
       {/* Header Section */}
       <View style={[GlassStyles.glassCard, styles.header]}>
@@ -212,16 +207,16 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
 
       <YStack flex={1} paddingHorizontal="$3">
         {isLoading && !podcasts?.length ? (
-          renderLoadingState()
-        ) : isError ? (
-          <View style={styles.loadingContainer}>
-            <ErrorState onRetry={refetch} />
-          </View>
+          <>
+            {[1, 2, 3, 4, 5].map((_, i) => (
+              <PodcastSkeletonCard key={i} />
+            ))}
+          </>
         ) : (
           <FlatList
             data={filteredPodcasts}
             renderItem={renderItem}
-            keyExtractor={item => item._id.toString()}
+            keyExtractor={(item: PodcastData) => item._id.toString()}
             contentContainerStyle={styles.flatListContentContainer}
             refreshing={refreshing}
             onRefresh={onRefresh}
@@ -304,40 +299,6 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
 
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 60,
-    paddingHorizontal: 20,
-  },
-
-  loadingIconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: ProfessionalColors.glassWhiteMedium,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-
-  loadingText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: ProfessionalColors.gray900,
-    textAlign: 'center',
-    marginTop: 8,
-  },
-
-  loadingSubText: {
-    marginTop: 8,
-    fontSize: 14,
-    fontWeight: '500',
-    color: ProfessionalColors.gray600,
-    textAlign: 'center',
-  },
-
   emptyContainer: {
     flex: 1,
     alignItems: 'center',
@@ -398,3 +359,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+

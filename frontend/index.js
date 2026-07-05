@@ -17,7 +17,6 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
   // or FCM tokens in production log aggregators.
   
     logger.log('Background notification received:', remoteMessage);
-  }
 });
 
 const AppWrapper = () => {
