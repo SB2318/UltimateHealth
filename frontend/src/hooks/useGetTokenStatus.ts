@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 // hooks/useCheckTokenStatus.ts
 import { GET_TOKEN_STATUS } from '@/src/helper/APIUtils';

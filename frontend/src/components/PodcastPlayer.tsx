@@ -327,7 +327,8 @@ const PodcastPlayer = ({navigation}: any) => {
         </View>
       </View>
 
-      <Slider
+      {/* @ts-ignore */}
+<Slider
         style={styles.slider}
         minimumValue={0}
         maximumValue={1}

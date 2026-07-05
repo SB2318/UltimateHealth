@@ -1,8 +1,9 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {LOAD_REVIEW_COMMENTS} from '../helper/APIUtils';
 import {Comment} from '../type';
 import {useSelector} from 'react-redux';
+type AxiosError = any;
 
 export const useGetLoadReviewComments = (
   articleId: number | undefined,

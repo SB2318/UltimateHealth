@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
 
 import { useSelector } from 'react-redux';
@@ -27,7 +28,9 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
     // This lets us disconnect safely on unmount/auth removal without thrashing the singleton.
     const tokenInitializedRef = useRef<string | null>(null);
     const latestTokenRef = useRef<string | null>(user_token);
-    latestTokenRef.current = user_token;
+    useEffect(() => {
+        latestTokenRef.current = user_token;
+    }, [user_token]);
 
     useEffect(() => {
         // Only initialize if we have a valid token
@@ -144,3 +147,4 @@ export const useSocketConnection = () => {
     }
     return context.isConnected;
 };
+

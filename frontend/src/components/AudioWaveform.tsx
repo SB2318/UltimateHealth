@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, { useEffect, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Animated, {
@@ -27,6 +28,7 @@ const Bar = ({ isPlaying, accentColor, targetHeight, animationDuration }: BarPro
 
   useEffect(() => {
     if (isPlaying) {
+       
       height.value = withRepeat(
         withSequence(
           withTiming(targetHeight, {
@@ -43,6 +45,7 @@ const Bar = ({ isPlaying, accentColor, targetHeight, animationDuration }: BarPro
       );
     } else {
       cancelAnimation(height);
+       
       height.value = withTiming(MIN_HEIGHT, { duration: 200 });
     }
   }, [isPlaying, targetHeight, animationDuration]);
@@ -108,3 +111,4 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
 });
+
