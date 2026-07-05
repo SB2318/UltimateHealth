@@ -51,7 +51,8 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
-      setDebouncedQuery(query);
+      const sanitizedQuery = sanitizeSearchInput(query);
+      setDebouncedQuery(isValidSearchInput(sanitizedQuery) ? sanitizedQuery : '');
       setPage(1);
       setTotalPages(0);
       setSearchData([]);

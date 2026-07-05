@@ -496,17 +496,18 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     dispatch(setSearchMode({ searchMode: false }));
   } else {
     dispatch(setSearchMode({ searchMode: true }));
+    const lowerCaseSanitizedInput = sanitizedInput.toLowerCase();
     const matchesSearch = allArticlesRef.current.filter((article: any) => {  // ✅ use full accumulated list
       const matchesTitle =
         article.title && typeof article.title === 'string'
-          ? article.title.toLowerCase().includes(lowerCaseInput)
+          ? article.title.toLowerCase().includes(lowerCaseSanitizedInput)
           : false;
       const matchesTags =
         article.tags && Array.isArray(article.tags)
           ? article.tags.some(
               (tag: any) =>
                 tag && tag.name && typeof tag.name === 'string' &&
-                tag.name.toLowerCase().includes(lowerCaseInput),
+                tag.name.toLowerCase().includes(lowerCaseSanitizedInput),
             )
           : false;
       return matchesTitle || matchesTags;

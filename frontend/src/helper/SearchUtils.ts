@@ -48,7 +48,8 @@ export const isValidSearchInput = (input: string): boolean => {
     return false;
   }
 
-  // Check for maximum length
+  // Check for maximum length (kept independent of sanitizeSearchInput's
+  // truncation so this function is safe to call on raw, unsanitized input too)
   if (input.length > 500) {
     return false;
   }
@@ -64,9 +65,13 @@ export const isValidSearchInput = (input: string): boolean => {
 export const createSafeRegexPattern = (searchTerm: string): RegExp | null => {
   try {
     const escaped = escapeRegexSpecialChars(searchTerm);
-    return new RegExp(escaped, 'gi');
-  } catch {
-    // If regex creation fails, return null
+    // Use 'i' only (no 'g') - a global flag makes the returned RegExp stateful
+    // across repeated .test() calls via lastIndex, which breaks case-insensitive
+    // matching on subsequent calls with the same instance.
+    return new RegExp(escaped, 'i');
+  } catch (error) {
+    // Log the error for debugging purposes
+    console.error('Failed to create regex pattern for term:', searchTerm, error);
     return null;
   }
 };
