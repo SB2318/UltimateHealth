@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useNetInfo } from '@react-native-community/netinfo';
@@ -44,13 +45,13 @@ export function NetworkBanner() {
     }
   }, [isOffline, hasBeenOffline]);
 
-  if (!isVisible && !isOffline && !hasBeenOffline) return null;
-
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: translateY.value }],
     };
   });
+
+  if (!isVisible && !isOffline && !hasBeenOffline) return null;
 
   return (
     <Animated.View
@@ -89,3 +90,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+

@@ -1,10 +1,9 @@
-import {
-  StyleSheet,
+import { StyleSheet,
   Text,
-  TextInput,
+   TextInput ,
   TouchableOpacity,
   View,
-} from 'react-native';
+ } from 'react-native';
 import React, {useState} from 'react';
 import Feather from '@expo/vector-icons/Feather';
 import { useForm, Controller } from 'react-hook-form';

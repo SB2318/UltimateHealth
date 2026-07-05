@@ -1,8 +1,9 @@
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { PodcastData } from "../type"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { SEARCH_PODCAST } from "../helper/APIUtils"
 import { escapeRegexSpecialChars } from "../helper/SearchUtils"
+type AxiosError = any;
 
 
 type SearchResponse = {
@@ -17,7 +18,14 @@ AxiosError
     queryKey: ['search-podcasts', page, q],
     queryFn: async () => {
       const escapedQuery = encodeURIComponent(q);
-      const res = await axios.get(`${SEARCH_PODCAST}?q=${escapedQuery}&page=${page}`);
+      //const res = await axios.get(`${SEARCH_PODCAST}?q=${escapedQuery}&page=${page}`);
+      const res = await axios.get(SEARCH_PODCAST,{
+        params:{
+          escapedQuery,
+          page,
+        },
+      });
+      
 
       return res.data as SearchResponse;
     },

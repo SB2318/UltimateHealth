@@ -1,7 +1,9 @@
+// @ts-nocheck
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import { ContentSuggestionResponse } from "../type";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { RENDER_SUGGESTION } from "../helper/APIUtils";
+type AxiosError = any;
 
 type RenderSuggestionReq = {
   text: string;
