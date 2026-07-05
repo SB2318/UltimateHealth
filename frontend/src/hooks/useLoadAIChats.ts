@@ -1,7 +1,8 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { Message } from "../type";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { CHAT_URL } from "../helper/APIUtils";
+type AxiosError = any;
 
 
 export const useLoadAIConversations = (isConnected: boolean, characterId?: string): UseQueryResult<
