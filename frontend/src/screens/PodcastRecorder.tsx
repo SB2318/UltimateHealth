@@ -227,33 +227,6 @@ const stopRecording = async () => {
     })();
   }, []);
 
-  const formatTime = (ms: number) => {
-    const totalSec = Math.floor(ms / 1000);
-    const hours = String(Math.floor(totalSec / 3600)).padStart(2, '0');
-    const minutes = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
-    const seconds = String(totalSec % 60).padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
-  };
-
-  const startTimer = () => {
-    recordStartTimeRef.current = Date.now();
-
-    timerRef.current = setInterval(() => {
-      if (!recordStartTimeRef.current) return;
-
-      const elapsed = Date.now() - recordStartTimeRef.current;
-      setRecordTime(formatTime(elapsed));
-    }, 1000) as any;
-  };
-
-  const stopTimer = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-    recordStartTimeRef.current = null;
-  };
-
   // const startRecording = async () => {
   //   if (Platform.OS === 'android') {
   //     ]);
