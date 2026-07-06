@@ -1,5 +1,4 @@
 
-declare const __DEV__: boolean;
 // API URL configuration
 // Values are injected at build time from environment variables via app.config.js.
 // To override for local development, set the following in your .env file
@@ -14,6 +13,7 @@ declare const __DEV__: boolean;
 // corresponding env var is not set.
 
 import Constants from "expo-constants";
+declare const __DEV__: boolean;
 const extra = Constants.expoConfig?.extra ?? {};
 
 const PROD_URL: string = extra.PROD_URL;
@@ -85,7 +85,7 @@ const UPLOAD_IMPROVEMENT_TO_POCKETBASE = `${PROD_URL}/upload-pocketbase/improvem
 const DELETE_POCKETBASE_RECORD = `${PROD_URL}/upload-pocketbase/record`;
 
 /** Content Checker */
-const RENDER_SUGGESTION = `${CONTENT_CHECKER_PROD}/readability/check`;
+const RENDER_SUGGESTION = `${CONTENT_CHECKER_PROD}/grammar/analyze-readability`;
 
 /** PODCAST RELATED */
 const GET_ALL_PODCASTS = `${PROD_URL}/podcast/published-podcasts`;

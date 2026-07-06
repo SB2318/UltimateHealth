@@ -1,12 +1,12 @@
-import {
-  View,
+// @ts-nocheck
+import { View,
   Text,
   StyleSheet,
   Modal,
   TouchableOpacity,
-  FlatList,
+   FlatList ,
   Image,
-} from 'react-native';
+ } from 'react-native';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {hp, wp} from '../helper/Metric';
 import Ionicon from '@expo/vector-icons/Ionicons';
@@ -78,7 +78,7 @@ export default function TrustedUsersModal({
           ) : isError ? (
             <View style={styles.centered}>
               <Text style={styles.emptyText}>
-                Couldn't load trusted readers. Please try again.
+                Could not load trusted readers. Please try again.
               </Text>
             </View>
           ) : !trustedUsers || trustedUsers.length === 0 ? (

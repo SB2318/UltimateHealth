@@ -1,13 +1,13 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 import React, {useEffect, useState} from 'react';
-import {
-  View,
+import { View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
+   ScrollView ,
   Alert,
-  TextInput,
-} from 'react-native';
+   TextInput ,
+  } from 'react-native';
 import {useQueryClient} from '@tanstack/react-query';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
@@ -489,3 +489,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+

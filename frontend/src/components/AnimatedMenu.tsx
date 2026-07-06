@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';

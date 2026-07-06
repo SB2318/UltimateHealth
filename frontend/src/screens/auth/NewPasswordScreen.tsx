@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 import React, { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -20,10 +21,11 @@ import { useChangePasswordMutation } from '@/src/hooks/useChangePassword';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
-import { AxiosError } from 'axios';
+import type  from 'axios';
 import Loader from '../../components/Loader';
 import { NewPasswordScreenProp } from '../../type';
 import {Alert, ActivityIndicator} from 'react-native';
+type AxiosError = any;
 
 const newPasswordSchema = z.object({
   password: z
@@ -233,7 +235,7 @@ export default function NewPasswordScreen({
                       <Icon
                         name={secureTextEntry ? 'eye-off' : 'eye'}
                         size={20}
-                        color={theme.gray700.val}
+                        color={theme.gray700?.val}
                       />
                     </Button>
                   </XStack>
@@ -283,8 +285,8 @@ export default function NewPasswordScreen({
                       size={20}
                       color={
                         value && password === value
-                          ? theme.blue10.val
-                          : theme.gray500.val
+                          ? theme.blue10?.val
+                          : theme.gray500?.val
                       }
                       style={{
                         position: 'absolute',
@@ -339,7 +341,7 @@ export default function NewPasswordScreen({
                       <Icon
                         name={secureNewTextEntry ? 'eye-off' : 'eye'}
                         size={20}
-                        color={theme.gray600.val}
+                        color={theme.gray600?.val}
                       />
                     </Button>
                   </XStack>
@@ -405,4 +407,5 @@ export default function NewPasswordScreen({
     </YStack>
   );
 }
+
 

@@ -1,3 +1,40 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 🤖 Automated AI PR Reviewer (Auto-Triggered)
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Automatically runs a Gemini AI-powered code review on every PR opened or
+#   updated against the main or web branches. Unlike the manual reviewer, this
+#   requires no command — it fires automatically on every qualifying PR event.
+#
+# HOW IT WORKS:
+#   1. Triggers when a PR is opened or synchronized (new commits pushed) on
+#      the main or web branches.
+#   2. Checks out the repository and sets up Python 3.10.
+#   3. Runs automated_reviewer.py which:
+#        a. Fetches the PR diff via the GitHub API.
+#        b. Sends the diff to Gemini AI for analysis.
+#        c. Posts a structured code review comment on the PR covering:
+#             - Code quality and readability
+#             - Potential bugs or logic errors
+#             - Security concerns
+#             - Suggestions for improvement
+#   4. Can also be triggered manually by providing a PR number.
+#
+# TRIGGERS:
+#   - Automatic : PR opened or new commits pushed to main or web branches.
+#   - Manual    : Via workflow_dispatch with a specific pr_number input.
+#
+# PERMISSIONS REQUIRED:
+#   - contents: read        → to read the code and diff
+#   - pull-requests: write  → to post the AI review comment
+#   - issues: write         → for comment posting fallback
+#
+# SECRETS REQUIRED:
+#   - GEMINI_KEY_1 ... GEMINI_KEY_5  → Gemini API keys (rotated for rate limits)
+#   - GITHUB_TOKEN                   → provided automatically by GitHub
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: Automated AI PR Reviewer
 
 on:
