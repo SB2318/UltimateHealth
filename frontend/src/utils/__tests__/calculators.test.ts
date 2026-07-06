@@ -10,7 +10,6 @@ import {
   calculateTDEE,
   calculateCaloricNeeds,
   getBMIAssessment,
-  type BMIInput,
   type BMRInput,
   type TDEEInput,
   type CaloricNeedsInput,
