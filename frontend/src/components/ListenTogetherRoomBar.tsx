@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {XStack, YStack, Text} from 'tamagui';
 import {Ionicons, Feather, MaterialIcons} from '@expo/vector-icons';
-import * as Clipboard from 'expo-linking'; // We use Alert-based copy fallback
+import * as Clipboard from 'expo-clipboard';
 import Share from 'react-native-share';
 import Snackbar from 'react-native-snackbar';
 import {ListenTogetherParticipant} from '../types/ListenTogetherTypes';
@@ -38,8 +38,7 @@ const ListenTogetherRoomBar: React.FC<ListenTogetherRoomBarProps> = ({
   onEnd,
 }) => {
   const handleCopyCode = useCallback(() => {
-    // React Native doesn't have a direct Clipboard in Expo without the module,
-    // so we show a Snackbar with the code for now.
+    Clipboard.setStringAsync(roomCode);
     Snackbar.show({
       text: `Room code copied: ${roomCode}`,
       duration: Snackbar.LENGTH_SHORT,

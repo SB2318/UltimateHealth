@@ -16,6 +16,7 @@ import {
 import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
 import {Ionicons} from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
+// useAudioPlayer is imported from expo-audio, ensuring standard audio playback compatibility
 import {useAudioPlayer} from 'expo-audio';
 import {useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
@@ -37,27 +38,32 @@ import {SyncAction} from '../types/ListenTogetherTypes';
 
 const isAllowedUrl = (urlStr?: string | null): boolean => {
   if (!urlStr) return false;
-  if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
-    if (urlStr.includes('://')) return false;
-    return true;
+  // If it starts with http/https, it must be whitelisted explicitly.
+  if (urlStr.startsWith('http://') || urlStr.startsWith('https://')) {
+    try {
+      const match = urlStr.match(/^https?:\/\/([^/?#:]+)/i);
+      if (!match) return false;
+      const hostname = match[1].toLowerCase();
+      return (
+        hostname === 'uhsocial.in' ||
+        hostname === 'localhost' ||
+        hostname === '10.0.2.2'
+      );
+    } catch {
+      return false;
+    }
   }
-  try {
-    const match = urlStr.match(/^https?:\/\/([^/?#:]+)/i);
-    if (!match) return false;
-    const hostname = match[1].toLowerCase();
-    return (
-      hostname === 'uhsocial.in' ||
-      hostname === 'localhost' ||
-      hostname === '10.0.2.2'
-    );
-  } catch {
-    return false;
-  }
+  // For non-http/https, assume it's a path for GET_IMAGE.
+  // Ensure it doesn't contain protocol separators or directory traversal attempts.
+  return !urlStr.includes('://') && !urlStr.includes('..') && !urlStr.startsWith('/');
 };
 
 const getFormattedSource = (url?: string | null): string | null => {
   if (!url) return null;
-  if (!isAllowedUrl(url)) return null;
+  if (!isAllowedUrl(url)) {
+    console.warn('Attempted to load disallowed URL:', url);
+    return null;
+  }
   return url.startsWith('http') ? url : `${GET_IMAGE}/${url}`;
 };
 

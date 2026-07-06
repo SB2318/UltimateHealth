@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import {Text, XStack, YStack} from 'tamagui';
 import {Ionicons} from '@expo/vector-icons';
+import {useHeaderHeight} from '@react-navigation/elements';
 import {ListenTogetherMessage} from '../types/ListenTogetherTypes';
 
 interface ListenTogetherChatProps {
@@ -31,6 +32,7 @@ const ListenTogetherChat: React.FC<ListenTogetherChatProps> = ({
   currentUserId,
   onSendMessage,
 }) => {
+  const headerHeight = useHeaderHeight();
   const [inputText, setInputText] = useState('');
   const flatListRef = useRef<FlatList>(null);
 
@@ -43,11 +45,16 @@ const ListenTogetherChat: React.FC<ListenTogetherChatProps> = ({
   const formatTime = (isoString: string) => {
     try {
       const date = new Date(isoString);
+      if (isNaN(date.getTime())) {
+        console.warn('Invalid date string for chat message:', isoString);
+        return '--:--';
+      }
       const hours = date.getHours().toString().padStart(2, '0');
       const minutes = date.getMinutes().toString().padStart(2, '0');
       return `${hours}:${minutes}`;
-    } catch {
-      return '';
+    } catch (e) {
+      console.error('Error formatting chat message time:', e, isoString);
+      return '--:--';
     }
   };
 
@@ -106,7 +113,7 @@ const ListenTogetherChat: React.FC<ListenTogetherChatProps> = ({
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
+      keyboardVerticalOffset={Platform.OS === 'ios' ? headerHeight : 0}>
       {/* Header */}
       <XStack
         alignItems="center"

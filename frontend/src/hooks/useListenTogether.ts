@@ -56,8 +56,8 @@ export interface UseListenTogetherReturn {
 
 export const useListenTogether = (): UseListenTogetherReturn => {
   const socket = useSocket();
-  const {user_id, user_handle} = useSelector((state: any) => state.user);
-  const profileImage = useSelector((state: any) => state.user.profile_image ?? null);
+  const {user_id, user_handle, profile_image} = useSelector((state: any) => state.user);
+  const profileImage = profile_image ?? null;
 
   // --- State ---------------------------------------------------------------
   const [room, setRoom] = useState<ListenTogetherRoom | null>(null);
@@ -270,6 +270,16 @@ export const useListenTogether = (): UseListenTogetherReturn => {
     socket.on(LISTEN_TOGETHER_EVENTS.SYNC_UPDATE, onSyncUpdate);
     socket.on(LISTEN_TOGETHER_EVENTS.CHAT_MESSAGE, onChatMessage);
     socket.on(LISTEN_TOGETHER_EVENTS.ERROR, onError);
+    
+    const onSocketDisconnect = () => {
+      setError('Disconnected from the server. Attempting to reconnect...');
+    };
+    const onSocketReconnect = () => {
+      setError(null);
+    };
+
+    socket.on('disconnect', onSocketDisconnect);
+    socket.on('reconnect', onSocketReconnect);
 
     return () => {
       socket.off(LISTEN_TOGETHER_EVENTS.ROOM_CREATED, onRoomCreated);
@@ -280,6 +290,8 @@ export const useListenTogether = (): UseListenTogetherReturn => {
       socket.off(LISTEN_TOGETHER_EVENTS.SYNC_UPDATE, onSyncUpdate);
       socket.off(LISTEN_TOGETHER_EVENTS.CHAT_MESSAGE, onChatMessage);
       socket.off(LISTEN_TOGETHER_EVENTS.ERROR, onError);
+      socket.off('disconnect', onSocketDisconnect);
+      socket.off('reconnect', onSocketReconnect);
     };
   }, [socket]);
 
@@ -287,14 +299,14 @@ export const useListenTogether = (): UseListenTogetherReturn => {
 
   useEffect(() => {
     return () => {
-      if (roomCodeRef.current && socket) {
+      if (roomCodeRef.current && socket && isInRoom) {
         socket.emit(LISTEN_TOGETHER_EVENTS.LEAVE_ROOM, {
           roomCode: roomCodeRef.current,
           userId: user_id,
         });
       }
     };
-  }, [socket, user_id]);
+  }, [socket, user_id, isInRoom]);
 
   return {
     room,
