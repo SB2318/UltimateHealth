@@ -909,3 +909,4 @@ Star this repo if you find it helpful — it motivates us to keep building!
 [![Star History Chart](https://api.star-history.com/svg?repos=SB2318/UltimateHealth&type=Date)](https://star-history.com/#SB2318/UltimateHealth&Date)
 
 </div>
+# TODO: [ui/ux] redesign the medical glossary page for a cleaner and more engaging browsing experience
