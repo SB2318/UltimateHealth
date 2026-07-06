@@ -53,6 +53,7 @@ import {useGetProfile} from '../hooks/useGetProfile';
 import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../hooks/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../hooks/useGetPaginatedArticles';
+import { sanitizeSearchInput, isValidSearchInput } from '../helper/SearchUtils';
 import {
   OfflineArticleState,
   NoArticleState,
@@ -487,22 +488,26 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   }, [isFetching, refreshing]);
 
   const handleSearch = (textInput: string) => {
-  if (textInput === '' || allArticlesRef.current.length === 0) {
+  // Sanitize and validate the search input
+  const sanitizedInput = sanitizeSearchInput(textInput);
+
+  if (!isValidSearchInput(sanitizedInput) || allArticlesRef.current.length === 0) {
     dispatch(setSearchedArticles({ searchedArticles: [] }));
     dispatch(setSearchMode({ searchMode: false }));
   } else {
     dispatch(setSearchMode({ searchMode: true }));
+    const lowerCaseSanitizedInput = sanitizedInput.toLowerCase();
     const matchesSearch = allArticlesRef.current.filter((article: any) => {  // ✅ use full accumulated list
       const matchesTitle =
         article.title && typeof article.title === 'string'
-          ? article.title.toLowerCase().includes((textInput || '').toLowerCase())
+          ? article.title.toLowerCase().includes(lowerCaseSanitizedInput)
           : false;
       const matchesTags =
         article.tags && Array.isArray(article.tags)
           ? article.tags.some(
               (tag: any) =>
                 tag && tag.name && typeof tag.name === 'string' &&
-                tag.name.toLowerCase().includes((textInput || '').toLowerCase()),
+                tag.name.toLowerCase().includes(lowerCaseSanitizedInput),
             )
           : false;
       return matchesTitle || matchesTags;
