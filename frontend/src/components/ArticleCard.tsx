@@ -108,6 +108,8 @@ const ArticleCard = ({
     score: 78,
     level: 'Beginner Friendly' as 'Beginner Friendly' | 'Intermediate' | 'Advanced',
     approved: true,
+  };
+
   const heartScale = useSharedValue(0);
 
   const heartStyle = useAnimatedStyle(() => {

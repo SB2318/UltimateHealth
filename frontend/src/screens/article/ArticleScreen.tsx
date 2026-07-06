@@ -1100,11 +1100,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}
         article={{
-          title: article.title,
-          authorName: article.authorName ?? '',
-          category: article.tags?.[0]?.name ?? 'Health',
+          title: article?.title ?? '',
+          authorName: article?.authorName ?? '',
+          category: article?.tags?.[0]?.name ?? 'Health',
           coverImageUrl:
-            article.imageUtils && article.imageUtils.length > 0
+            article?.imageUtils && article.imageUtils.length > 0
               ? article.imageUtils[0].startsWith('http')
                 ? article.imageUtils[0]
                 : `${GET_IMAGE}/${article.imageUtils[0]}`
