@@ -54,6 +54,11 @@ import {useRepostArticle} from '../hooks/useArticleRepost';
 import { ReadingDifficulty, getArticleDifficulty } from './ReadingDifficulty';
 import {useDoubleTap} from '../hooks/useDoubleTap';
 import { ImageFallback } from './ImageFallback';
+import {
+  saveOfflineArticle,
+  removeOfflineArticle,
+  isArticleOffline,
+} from '../services/ArticleCacheService';
 
 const ArticleCard = ({
   item,
@@ -199,15 +204,26 @@ const ArticleCard = ({
         recordId: item.pb_recordId,
       });
     } else {
-      Snackbar.show({
-        text: 'Please connect to the internet to view this article.',
-        duration: Snackbar.LENGTH_LONG,
-      });
-      Alert.alert(
-        'No Internet 🚫',
-        'Internet connection required. Offline mode will be available in the next update.',
-        [{text: 'OK'}],
-      );
+      if (isArticleOffline(item._id)) {
+        width.value = withTiming(0, {duration: 250});
+        yValue.value = withTiming(100, {duration: 250});
+        setSelectedCardId('');
+        (navigation as any).navigate('ArticleScreen', {
+          articleId: Number(item._id),
+          authorId: item.authorId,
+          recordId: item.pb_recordId,
+        });
+      } else {
+        Snackbar.show({
+          text: 'Internet connection required to view this article.',
+          duration: Snackbar.LENGTH_LONG,
+        });
+        Alert.alert(
+          'No Internet 🚫',
+          'Only bookmarked articles are available offline. Please check your connection.',
+          [{text: 'OK'}],
+        );
+      }
     }
   };
 
@@ -773,7 +789,21 @@ const ArticleCard = ({
                           text: data.message,
                           duration: Snackbar.LENGTH_SHORT,
                         });
-                        setSaved(!saved);
+                        const newSavedState = !saved;
+                        setSaved(newSavedState);
+                        if (newSavedState) {
+                          getArticleContent(item.pb_recordId, {
+                            onSuccess: (htmlContent: string) => {
+                              saveOfflineArticle(item, htmlContent);
+                            },
+                            onError: (err) => {
+                              console.error('Error fetching content for offline cache:', err);
+                              saveOfflineArticle(item, '');
+                            }
+                          });
+                        } else {
+                          removeOfflineArticle(item._id);
+                        }
                       },
 
                       onError: () => {
