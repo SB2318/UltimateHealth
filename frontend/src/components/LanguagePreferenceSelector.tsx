@@ -33,22 +33,22 @@ export const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProp
 
   const toggleLanguage = useCallback(
     (languageCode: LanguageCode) => {
-      const isSelected = preferredLanguages.includes(languageCode);
-      let updated: LanguageCode[];
+      setPreferredLanguages(prev => {
+        const isSelected = prev.includes(languageCode);
 
-      if (isSelected) {
-        updated = preferredLanguages.filter(lang => lang !== languageCode);
-      } else {
-        // Check max limit if specified
-        if (maxLanguagesToSelect && preferredLanguages.length >= maxLanguagesToSelect) {
-          return; // Don't allow selecting more than max
+        if (isSelected) {
+          return prev.filter(lang => lang !== languageCode);
         }
-        updated = [...preferredLanguages, languageCode];
-      }
 
-      setPreferredLanguages(updated);
+        // Check max limit if specified
+        if (maxLanguagesToSelect && prev.length >= maxLanguagesToSelect) {
+          return prev; // Don't allow selecting more than max
+        }
+
+        return [...prev, languageCode];
+      });
     },
-    [preferredLanguages, setPreferredLanguages, maxLanguagesToSelect]
+    [setPreferredLanguages, maxLanguagesToSelect]
   );
 
   const selectAll = useCallback(() => {
