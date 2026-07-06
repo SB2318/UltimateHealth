@@ -41,12 +41,45 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 
   const [amplitudes, setAmplitudes] = useState<number[]>([]);
 
+  // UI State: 'idle' | 'recording' | 'review' | 'playing' | 'paused' | 'uploading'
+  const [uiState, setUiState] = useState<
+    'idle' | 'recording' | 'review' | 'playing' | 'paused' | 'uploading'
+  >('idle');
+  const [uploading, setUploading] = useState(false);
+
   const timerRef = useRef<number | null>(null);
   const recordStartTimeRef = useRef<number | null>(null);
   const isRecordingRef = useRef(false);
 
   // Stores the latest native duration for use in AppState listener and other effects, preventing stale closures.
   const durationMillisRef = useRef<number>(0);
+
+  const formatTime = (ms: number) => {
+    const totalSec = Math.floor(ms / 1000);
+    const hours = String(Math.floor(totalSec / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0');
+    const seconds = String(totalSec % 60).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
+  };
+
+  const startTimer = () => {
+    recordStartTimeRef.current = Date.now();
+
+    timerRef.current = setInterval(() => {
+      if (!recordStartTimeRef.current) return;
+
+      const elapsed = Date.now() - recordStartTimeRef.current;
+      setRecordTime(formatTime(elapsed));
+    }, 1000) as any;
+  };
+
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    recordStartTimeRef.current = null;
+  };
 
   useEffect(() => {
     if (recorderState?.durationMillis !== undefined) {
@@ -87,17 +120,38 @@ useEffect(() => {
 
   return () => subscription.remove();
 }, [recording]);
-  
- // Reset UI state each time this screen gains focus (e.g. after navigating back).
-  useEffect(() => {
-    handleUpload();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+
+  const unlinkFile = useCallback(async () => {
+    if (filePath) {
+      try {
+        const exists = await RNFS.exists(filePath);
+        if (exists) {
+          await RNFS.unlink(filePath);
+          console.log('File deleted:', filePath);
+        }
+      } catch (err) {
+        console.warn('Error deleting file:', err);
+      }
+    }
+  }, [filePath]);
+
+  const handleUpload = useCallback(async () => {
+    setUploading(false);
+    setUiState('idle');
+    setFilePath(null);
+    setAmplitudes([]);
+    setRecordTime('00:00:00');
+    await unlinkFile();
+  }, [unlinkFile]);
 
   // Stop any active recording and release resources when the screen loses focus
-  // (back navigation, screen replacement, etc.).
+  // (back navigation, screen replacement, etc.). Also reset UI on every focus
+  // so the screen is clean when revisited.
   useFocusEffect(
     useCallback(() => {
+      // Reset UI on every focus so the screen is clean when revisited.
+      handleUpload();
+
       return () => {
         // Always stop the JS timer first.
         stopTimer();
@@ -123,10 +177,10 @@ useEffect(() => {
           setRecordTime('00:00:00');
         }
       };
-    }, [audioRecorder]),
+    }, [audioRecorder, handleUpload]),
   );
 
- const record = async () => {
+  const record = async () => {
   try {
     await audioRecorder.prepareToRecordAsync();
     audioRecorder.record();
@@ -221,13 +275,6 @@ const stopRecording = async () => {
   //   }
   // };
 
-  // UI State: 'idle' | 'recording' | 'review' | 'playing' | 'paused' | 'uploading'
-
-  const [uiState, setUiState] = useState<
-    'idle' | 'recording' | 'review' | 'playing' | 'paused' | 'uploading'
-  >('idle');
-  const [uploading, setUploading] = useState(false);
-
   // Handle transitions
   const handleStartRecording = async () => {
     await record();
@@ -258,29 +305,6 @@ const stopRecording = async () => {
     setRecordTime('00:00:00');
     setUiState('idle');
   };
-
-  const unlinkFile = useCallback(async () => {
-    if (filePath) {
-      try {
-        const exists = await RNFS.exists(filePath);
-        if (exists) {
-          await RNFS.unlink(filePath);
-          console.log('File deleted:', filePath);
-        }
-      } catch (err) {
-        console.warn('Error deleting file:', err);
-      }
-    }
-  }, [filePath]);
-
-  const handleUpload = useCallback(async () => {
-    setUploading(false);
-    setUiState('idle');
-    setFilePath(null);
-    setAmplitudes([]);
-    setRecordTime('00:00:00');
-    await unlinkFile();
-  }, [unlinkFile]);
 
   // useEffect(() => {
   //   // const stopSub = AudioModule.addListener('recStop', (data:any) => {
