@@ -1,21 +1,6 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
-import ts from "typescript";
-
-const source = readFileSync(new URL("./api.ts", import.meta.url), "utf8");
-const compiled = ts.transpileModule(source, {
-  compilerOptions: { module: ts.ModuleKind.CommonJS },
-}).outputText;
-const apiModule = { exports: {} };
-
-new Function("module", "exports", "process", compiled)(
-  apiModule,
-  apiModule.exports,
-  process
-);
-
-const { normalizeApiUrl } = apiModule.exports;
+import { normalizeApiUrl } from "./api-url.mjs";
 
 const baseUrls = [
   "https://example.com",
