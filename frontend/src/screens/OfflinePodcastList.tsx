@@ -44,16 +44,14 @@ export default function OfflinePodcastList({
     try {
       setLoadError(null);
       const data = await readDownloadedPodcasts();
-
-      if (!Array.isArray(data)) return;
       setPodcasts(data);
     } catch (err) {
       if (__DEV__) {
-        console.log('Offline podcast load error:', err);
+        console.error('Offline podcast load error:', err);
       }
       setPodcasts([]);
       setLoadError(
-        err instanceof Error ? err.message : 'Failed to load offline podcasts',
+        'Failed to load offline podcasts. Please try again or check your device storage.',
       );
     }
   };
