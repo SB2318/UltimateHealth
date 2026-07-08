@@ -71,6 +71,7 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { ScrollView } from 'react-native';
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 
 const CHUNK_SIZE = 120;
 
@@ -829,652 +830,654 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Reading Progress Bar */}
-      <Animated.View style={[styles.progressBar, progressStyle]} />
+    <ErrorBoundary>
+      <SafeAreaView style={styles.container}>
+        {/* Reading Progress Bar */}
+        <Animated.View style={[styles.progressBar, progressStyle]} />
 
-      <Animated.ScrollView
-        style={styles.scrollView}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
-        contentContainerStyle={styles.scrollViewContent}>
+        <Animated.ScrollView
+          style={styles.scrollView}
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
+          contentContainerStyle={styles.scrollViewContent}>
 
-        {/* Banner Image — scrolls with article */}
-        <View style={styles.imageContainer}>
-          {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
-            <Image
-              source={{
-                uri: article?.imageUtils[0].startsWith('http')
-                  ? article?.imageUtils[0]
-                  : `${GET_IMAGE}/${article?.imageUtils[0]}`,
-              }}
-              style={styles.image}
-            />
-          ) : (
-            <Image
-              source={require('../../assets/images/no_results.jpg')}
-              style={styles.image}
-            />
-          )}
-          {likeMutationPending ? (
-            <LoadingSpinner size={40} />
-          ) : (
-            <TouchableOpacity
-              onPress={handleLike}
-              style={[styles.likeButton, { backgroundColor: 'rgba(255,255,255,0.88)' }]}>
-              <FontAwesome
-                name="heart"
-                size={26}
-                color={
-                  article &&
-                  article?.likedUsers &&
-                  article?.likedUsers?.some(user => user._id === user_id)
-                    ? PRIMARY_COLOR
-                    : '#1f2937'
-                }
+          {/* Banner Image — scrolls with article */}
+          <View style={styles.imageContainer}>
+            {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
+              <Image
+                source={{
+                  uri: article?.imageUtils[0].startsWith('http')
+                    ? article?.imageUtils[0]
+                    : `${GET_IMAGE}/${article?.imageUtils[0]}`,
+                }}
+                style={styles.image}
               />
-            </TouchableOpacity>
-          )}
-
-          <TouchableOpacity
-            onPress={() => {
-              if (playerVisible) {
-                handleTtsStop();
-              } else {
-                handleTtsPlay();
-              }
-            }}
-            style={[styles.playButton, { backgroundColor: 'rgba(255,255,255,0.88)' }]}>
-            <FontAwesome5
-              name={'headphones'}
-              size={24}
-              color={playerVisible ? PRIMARY_COLOR : '#1f2937'}
-            />
-          </TouchableOpacity>
-
-          {isPlaying && (
-            <View style={styles.botContainer}>
-              <LottieView
-                source={require('../../assets/LottieAnimation/TalkBotAnimation.json')}
-                autoPlay
-                loop={isPlaying}
-                style={{width: 200, height: 200}}
+            ) : (
+              <Image
+                source={require('../../assets/images/no_results.jpg')}
+                style={styles.image}
               />
-            </View>
-          )}
-        </View>
-        <View style={styles.contentContainer}>
-          {article && (
-            <Text
-              style={[
-                styles.viewText,
-                {
-                  marginBottom: 10,
-                  fontSize: 14 * fontScale,
-                },
-              ]}>
-              {`${article?.viewCount ?? 0} ${
-                article?.viewCount === 1 ? 'view' : 'views'
-              }`}
-            </Text>
-          )}
-          {article && trustCount > 0 && (
-            <TouchableOpacity
-              onPress={() => setTrustedUsersModalVisible(true)}
-              accessibilityRole="button"
-              accessibilityLabel="View trusted readers">
-              <Text
-                style={[
-                  styles.viewText,
-                  {
-                    marginBottom: 10,
-                    fontSize: 13 * fontScale,
-                  },
-                ]}>
-                {`🛡️ Trusted by ${formatCount(trustCount)} ${
-                  trustCount === 1 ? 'reader' : 'readers'
-                }`}
-              </Text>
-            </TouchableOpacity>
-          )}
-
-          <View style={GlobalStyles.badgeRow}>
-            {article && article?.tags && (
-              <Text style={styles.categoryText}>
-                {article.tags.map(tag => tag.name).join(' | ')}
-              </Text>
             )}
-            {article && (
-              <ReadingDifficulty difficulty={getArticleDifficulty(article)} />
-            )}
-          </View>
-
-          {article && (
-            <>
-              <Text style={styles.titleText}>{article?.title}</Text>
-
-              {/* Readability & Accessibility indicators (mock data, issue #845) */}
-              <View style={styles.readabilityRow}>
-                <View style={styles.readabilityBadge}>
-                  <Text style={styles.readabilityText}>
-                    {mockReadability.level}
-                  </Text>
-                </View>
-
-                <View style={styles.scoreBadge}>
-                  <Text style={styles.scoreText}>
-                    Score: {mockReadability.score}
-                  </Text>
-                </View>
-
-                <View
-                  style={[
-                    styles.statusChip,
-                    {
-                      backgroundColor: mockReadability.approved
-                        ? '#E8F5E9'
-                        : '#FFF3E0',
-                    },
-                  ]}>
-                  <Text
-                    style={{
-                      color: mockReadability.approved
-                        ? '#2E7D32'
-                        : '#EF6C00',
-                      fontWeight: '600',
-                      fontSize: 12,
-                    }}>
-                    {mockReadability.approved
-                      ? 'Approved'
-                      : 'Needs Improvement'}
-                  </Text>
-                </View>
-              </View>
-
-              <Text style={[styles.titleText, {fontSize: 25 * fontScale}]}>
-                {article?.title}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 13 * fontScale,
-                  color: '#6C6C6D',
-                  marginTop: 6,
-                  marginBottom: 4,
-                  fontWeight: '500',
-                }}>
-                🕐 {getReadTime(articleContent ?? '')}
-              </Text>
-              <View style={styles.fontSizeControls}>
-                <View style={styles.fontSizeButtons}>
-                  <TouchableOpacity
-                    onPress={handleDecreaseFont}
-                    accessibilityRole="button"
-                    accessibilityLabel="Decrease article font size"
-                    hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
-                    style={styles.fontSizeButton}>
-                    <Text style={styles.fontSizeButtonText}>A-</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleIncreaseFont}
-                    accessibilityRole="button"
-                    accessibilityLabel="Increase article font size"
-                    hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
-                    style={styles.fontSizeButton}>
-                    <Text style={styles.fontSizeButtonText}>A+</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-              {totalLikes > 0 && (
-                <View style={styles.avatarsContainer}>
-                  {likedUsers
-                    .slice(0, 3)
-                    .map((likedUser, index) => {
-                      const profileImage = likedUser.Profile_image;
-                      const uri = getProfileImageUri(profileImage);
-
-                      return (
-                        <View
-                          key={likedUser._id || index}
-                          style={[styles.avatar, { marginLeft: index === 0 ? 0 : -12, zIndex: 10 - index }]}>
-                          <Image
-                            source={{uri}}
-                            style={[
-                              styles.profileImage,
-                              !profileImage && {
-                                borderWidth: 0.5,
-                                borderColor: '#ccc',
-                              },
-                            ]}
-                          />
-                        </View>
-                      );
-                    })}
-
-                  {totalLikes > 3 && (
-                    <View style={[styles.avatar, styles.avatarTripleOverlap, { marginLeft: -12, zIndex: 0 }]}>
-                      <Text style={styles.moreText}>+{totalLikes - 3}</Text>
-                    </View>
-                  )}
-                  
-                  <Text style={[styles.likedByText, { color: isDarkMode ? '#9ca3af' : '#64748b' }]}>
-                     {totalLikes} {totalLikes === 1 ? 'like' : 'likes'}
-                  </Text>
-                </View>
-              )}
-              <View style={styles.descriptionContainer}>
-                <AutoHeightWebView
-                  style={styles.webView}
-                  customStyle={articleCustomStyle}
-                  files={[
-                    {
-                      href: 'cssfileaddress',
-                      type: 'text/css',
-                      rel: 'stylesheet',
-                    },
-                  ]}
-                  originWhitelist={['*']}
-                  source={{html: articleContent ?? noDataHtml}}
-                  scalesPageToFit={true}
-                  viewportContent={'width=device-width, user-scalable=no'}
-                  onShouldStartLoadWithRequest={handleExternalClick}
-                />
-              </View>
-
-              {/* ── Research Summary Card ── */}
-              <ResearchSummaryCard summary={summary} loading={summaryLoading} />
-
-              {article?.relatedPodcasts &&
-                article.relatedPodcasts.length > 0 && (
-                  <StructuredPodcastCard
-                    relatedEpisodes={article.relatedPodcasts}
-                  />
-                )}
-
-
-            </>
-          )}
-        </View>
-      </Animated.ScrollView>
-
-      <ArticleShareModal
-        visible={shareModalVisible}
-        onClose={() => setShareModalVisible(false)}
-        article={{
-          title: article.title,
-          authorName: article.authorName ?? '',
-          category: article.tags?.[0]?.name ?? 'Health',
-          coverImageUrl:
-            article.imageUtils && article.imageUtils.length > 0
-              ? article.imageUtils[0].startsWith('http')
-                ? article.imageUtils[0]
-                : `${GET_IMAGE}/${article.imageUtils[0]}`
-              : null,
-          authorAvatarUrl: null,
-        }}
-      />
-      <TrustedUsersModal
-        visible={trustedUsersModalVisible}
-        articleId={Number(articleId)}
-        onClose={() => setTrustedUsersModalVisible(false)}
-      />
-
-      <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
-        {/* Author Row */}
-        <View style={[styles.authorRow, { borderBottomColor: footerColors.border }]}>
-          <View style={styles.authorContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                if (isGuest) {
-                  navigation.navigate('GuestPlaceholderScreen', {
-                    title: 'Sign In Required',
-                    description: 'Please sign in or sign up to view user profiles.',
-                    iconName: 'user',
-                  });
-                  return;
-                }
-                navigation.navigate('UserProfileScreen', {
-                  authorId: authorId,
-                  author_handle: undefined,
-                });
-              }}>
-              {(article?.authorId as any)?.Profile_image ? (
-                <Image
-                  source={{
-                    uri: (article?.authorId as any).Profile_image.startsWith('http')
-                      ? `${(article?.authorId as any).Profile_image}`
-                      : `${GET_STORAGE_DATA}/${(article?.authorId as any).Profile_image}`,
-                  }}
-                  style={styles.authorImage}
-                />
-              ) : (
-                <Image
-                  source={{
-                    uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-                  }}
-                  style={styles.authorImage}
-                />
-              )}
-            </TouchableOpacity>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.authorName, {fontSize: 14 * fontScale, color: footerColors.text}]} numberOfLines={1}>
-                {article ? article?.authorName : ''}
-              </Text>
-              <Text style={[styles.authorFollowers, {fontSize: 11 * fontScale, color: footerColors.text}]}>
-                {(article?.authorId as any)?.followers
-                  ? (article?.authorId as any).followers.length > 1
-                    ? `${(article?.authorId as any).followers.length} followers`
-                    : `${(article?.authorId as any).followers.length} follower`
-                  : '0 follower'}
-              </Text>
-              {article && article.contributors && article.contributors.length > 0 && (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (isGuest) {
-                      navigation.navigate('GuestPlaceholderScreen', {
-                        title: 'Sign In Required',
-                        description: 'Please sign in or sign up to view all contributors.',
-                        iconName: 'users',
-                      });
-                      return;
-                    }
-                    navigation.navigate('SocialScreen', {
-                      type: 3,
-                      articleId: Number(article?._id),
-                      social_user_id: undefined,
-                    });
-                  }}>
-                  <Text style={[styles.contributorTextStyle, {fontSize: 14 * fontScale, marginTop: 4}]}>
-                    See all contributors
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </View>
-          {article && user_id !== (article.authorId as any)?._id && (
-            followMutationPending ? (
+            {likeMutationPending ? (
               <LoadingSpinner size={40} />
             ) : (
-              <TouchableOpacity style={styles.followButton} onPress={handleFollow}>
-                <Text style={styles.followButtonText}>
-                  {localIsFollowing
-                    ? 'Following'
-                    : 'Follow'}
-                </Text>
-              </TouchableOpacity>
-            )
-          )}
-        </View>
-
-        {/* Action Bar Row */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={[
-            styles.actionBarFooter,
-            {borderBottomColor: footerColors.border},
-          ]}>
-          <TouchableOpacity
-            style={[
-              styles.actionButtonFooter,
-              {
-                backgroundColor:
-                  article &&
-                  article?.likedUsers &&
-                  article?.likedUsers?.some(user => user._id === user_id)
-                    ? footerColors.activePillBackground
-                    : footerColors.pillBackground,
-              },
-            ]}
-            onPress={handleLike}
-            disabled={likeMutationPending}>
-            {likeMutationPending ? (
-              <LoadingSpinner size={18} />
-            ) : (
-              <>
+              <TouchableOpacity
+                onPress={handleLike}
+                style={[styles.likeButton, { backgroundColor: 'rgba(255,255,255,0.88)' }]}>
                 <FontAwesome
                   name="heart"
-                  size={18}
+                  size={26}
                   color={
                     article &&
                     article?.likedUsers &&
                     article?.likedUsers?.some(user => user._id === user_id)
                       ? PRIMARY_COLOR
-                      : footerColors.text
+                      : '#1f2937'
                   }
                 />
-                <Text
-                  style={[
-                    styles.actionTextFooter,
-                    {
-                      color:
-                        article &&
-                        article?.likedUsers &&
-                        article?.likedUsers?.some(user => user._id === user_id)
-                          ? PRIMARY_COLOR
-                          : footerColors.text,
-                    },
-                  ]}>
-                  {article?.likeCount ? formatCount(article.likeCount) : 0}
-                </Text>
-              </>
+              </TouchableOpacity>
             )}
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
-              styles.actionButtonFooter,
-              {backgroundColor: footerColors.pillBackground},
-            ]}
-            onPress={() => {
-              if (isGuest) {
-                navigation.navigate('GuestPlaceholderScreen', {
-                  title: 'Sign In Required',
-                  description:
-                    'Please sign in or sign up to view and post comments.',
-                  iconName: 'comment',
-                });
-                return;
-              }
-              if (article) {
-                navigation.navigate('CommentScreen', {
-                  articleId: Number(article._id),
-                  mentionedUsers: article.mentionedUsers,
-                  article: article,
-                });
-              }
-            }}>
-            <MaterialCommunityIcons
-              name="comment-outline"
-              size={18}
-              color={footerColors.text}
-            />
-            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
-              Comment
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.actionButtonFooter,
-              {backgroundColor: footerColors.pillBackground},
-            ]}
-            onPress={() => setShareModalVisible(true)}>
-            <FontAwesome name="share" size={18} color={footerColors.text} />
-            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
-              Share
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.actionButtonFooter,
-              {backgroundColor: footerColors.pillBackground},
-            ]}
-            onPress={handleCopyLink}>
-            <FontAwesome name="link" size={18} color={footerColors.text} />
-            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
-              Copy Link
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.actionButtonFooter,
-              {backgroundColor: footerColors.pillBackground},
-            ]}
-            onPress={handleTranslateArticle}>
-            <MaterialCommunityIcons
-              name="translate"
-              size={18}
-              color={footerColors.text}
-            />
-            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
-              Translate
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.actionButtonFooter,
-              {backgroundColor: footerColors.pillBackground},
-            ]}
-            onPress={handleImproveArticle}>
-            <MaterialCommunityIcons
-              name="auto-fix"
-              size={18}
-              color={footerColors.text}
-            />
-            <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
-              Improve
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.actionButtonFooter,
-              {
-                backgroundColor: article?.savedUsers?.includes(user_id)
-                  ? footerColors.activePillBackground
-                  : footerColors.pillBackground,
-              },
-            ]}
-            onPress={handleSave}
-            disabled={saveMutationPending}>
-            {saveMutationPending ? (
-              <LoadingSpinner size={18} />
-            ) : (
-              <>
-                <FontAwesome
-                  name={
-                    article?.savedUsers?.includes(user_id)
-                      ? 'bookmark'
-                      : 'bookmark-o'
-                  }
-                  size={18}
-                  color={
-                    article?.savedUsers?.includes(user_id)
-                      ? PRIMARY_COLOR
-                      : footerColors.text
-                  }
-                />
-                <Text
-                  style={[
-                    styles.actionTextFooter,
-                    {
-                      color: article?.savedUsers?.includes(user_id)
-                        ? PRIMARY_COLOR
-                        : footerColors.text,
-                    },
-                  ]}>
-                  Save
-                </Text>
-              </>
-            )}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.actionButtonFooter,
-              {
-                backgroundColor: isTrusted
-                  ? footerColors.activePillBackground
-                  : footerColors.pillBackground,
-              },
-            ]}
-            onPress={handleTrust}
-            disabled={trustMutationPending}
-            accessibilityRole="button"
-            accessibilityLabel="Trust this article"
-            accessibilityHint="Marks or unmarks this article as trusted">
-            {trustMutationPending ? (
-              <LoadingSpinner size={18} />
-            ) : (
-              <>
-                <MaterialCommunityIcons
-                  name={isTrusted ? 'shield-check' : 'shield-outline'}
-                  size={18}
-                  color={isTrusted ? PRIMARY_COLOR : footerColors.text}
-                />
-                <Text
-                  style={[
-                    styles.actionTextFooter,
-                    {color: isTrusted ? PRIMARY_COLOR : footerColors.text},
-                  ]}>
-                  {isTrusted ? 'Trusted' : 'Trust'}
-                </Text>
-              </>
-            )}
-          </TouchableOpacity>
-        </ScrollView>
-      </View>
-      {/* Floating TTS Media Player */}
-      {playerVisible && (
-        <View style={styles.ttsPlayerContainer}>
-          <View style={styles.ttsPlayerInner}>
-            {/* Speed button */}
             <TouchableOpacity
-              style={styles.ttsSpeedButton}
-              onPress={() => setIsSpeedSelectorVisible(true)}>
-              <Text style={styles.ttsSpeedText}>{`${speechRate}x`}</Text>
-            </TouchableOpacity>
-
-            {/* Play / Pause button — disabled if neither playing nor paused */}
-            <TouchableOpacity
-              style={[
-                styles.ttsControlButton,
-                !isPlaying && !isPaused && {opacity: 0.4},
-              ]}
-              onPress={handleTtsPause}
-              disabled={!isPlaying && !isPaused}>
+              onPress={() => {
+                if (playerVisible) {
+                  handleTtsStop();
+                } else {
+                  handleTtsPlay();
+                }
+              }}
+              style={[styles.playButton, { backgroundColor: 'rgba(255,255,255,0.88)' }]}>
               <FontAwesome5
-                name={isPaused ? 'play' : 'pause'}
-                size={18}
-                color={PRIMARY_COLOR}
+                name={'headphones'}
+                size={24}
+                color={playerVisible ? PRIMARY_COLOR : '#1f2937'}
               />
             </TouchableOpacity>
 
-            {/* Stop button */}
+            {isPlaying && (
+              <View style={styles.botContainer}>
+                <LottieView
+                  source={require('../../assets/LottieAnimation/TalkBotAnimation.json')}
+                  autoPlay
+                  loop={isPlaying}
+                  style={{width: 200, height: 200}}
+                />
+              </View>
+            )}
+          </View>
+          <View style={styles.contentContainer}>
+            {article && (
+              <Text
+                style={[
+                  styles.viewText,
+                  {
+                    marginBottom: 10,
+                    fontSize: 14 * fontScale,
+                  },
+                ]}>
+                {`${article?.viewCount ?? 0} ${
+                  article?.viewCount === 1 ? 'view' : 'views'
+                }`}
+              </Text>
+            )}
+            {article && trustCount > 0 && (
+              <TouchableOpacity
+                onPress={() => setTrustedUsersModalVisible(true)}
+                accessibilityRole="button"
+                accessibilityLabel="View trusted readers">
+                <Text
+                  style={[
+                    styles.viewText,
+                    {
+                      marginBottom: 10,
+                      fontSize: 13 * fontScale,
+                    },
+                  ]}>
+                  {`🛡️ Trusted by ${formatCount(trustCount)} ${
+                    trustCount === 1 ? 'reader' : 'readers'
+                  }`}
+                </Text>
+              </TouchableOpacity>
+            )}
+
+            <View style={GlobalStyles.badgeRow}>
+              {article && article?.tags && (
+                <Text style={styles.categoryText}>
+                  {article.tags.map(tag => tag.name).join(' | ')}
+                </Text>
+              )}
+              {article && (
+                <ReadingDifficulty difficulty={getArticleDifficulty(article)} />
+              )}
+            </View>
+
+            {article && (
+              <>
+                <Text style={styles.titleText}>{article?.title}</Text>
+
+                {/* Readability & Accessibility indicators (mock data, issue #845) */}
+                <View style={styles.readabilityRow}>
+                  <View style={styles.readabilityBadge}>
+                    <Text style={styles.readabilityText}>
+                      {mockReadability.level}
+                    </Text>
+                  </View>
+
+                  <View style={styles.scoreBadge}>
+                    <Text style={styles.scoreText}>
+                      Score: {mockReadability.score}
+                    </Text>
+                  </View>
+
+                  <View
+                    style={[
+                      styles.statusChip,
+                      {
+                        backgroundColor: mockReadability.approved
+                          ? '#E8F5E9'
+                          : '#FFF3E0',
+                      },
+                    ]}>
+                    <Text
+                      style={{
+                        color: mockReadability.approved
+                          ? '#2E7D32'
+                          : '#EF6C00',
+                        fontWeight: '600',
+                        fontSize: 12,
+                      }}>
+                      {mockReadability.approved
+                        ? 'Approved'
+                        : 'Needs Improvement'}
+                    </Text>
+                  </View>
+                </View>
+
+                <Text style={[styles.titleText, {fontSize: 25 * fontScale}]}>
+                  {article?.title}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 13 * fontScale,
+                    color: '#6C6C6D',
+                    marginTop: 6,
+                    marginBottom: 4,
+                    fontWeight: '500',
+                  }}>
+                  🕐 {getReadTime(articleContent ?? '')}
+                </Text>
+                <View style={styles.fontSizeControls}>
+                  <View style={styles.fontSizeButtons}>
+                    <TouchableOpacity
+                      onPress={handleDecreaseFont}
+                      accessibilityRole="button"
+                      accessibilityLabel="Decrease article font size"
+                      hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+                      style={styles.fontSizeButton}>
+                      <Text style={styles.fontSizeButtonText}>A-</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleIncreaseFont}
+                      accessibilityRole="button"
+                      accessibilityLabel="Increase article font size"
+                      hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+                      style={styles.fontSizeButton}>
+                      <Text style={styles.fontSizeButtonText}>A+</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                {totalLikes > 0 && (
+                  <View style={styles.avatarsContainer}>
+                    {likedUsers
+                      .slice(0, 3)
+                      .map((likedUser, index) => {
+                        const profileImage = likedUser.Profile_image;
+                        const uri = getProfileImageUri(profileImage);
+
+                        return (
+                          <View
+                            key={likedUser._id || index}
+                            style={[styles.avatar, { marginLeft: index === 0 ? 0 : -12, zIndex: 10 - index }]}>
+                            <Image
+                              source={{uri}}
+                              style={[
+                                styles.profileImage,
+                                !profileImage && {
+                                  borderWidth: 0.5,
+                                  borderColor: '#ccc',
+                                },
+                              ]}
+                            />
+                          </View>
+                        );
+                      })}
+
+                    {totalLikes > 3 && (
+                      <View style={[styles.avatar, styles.avatarTripleOverlap, { marginLeft: -12, zIndex: 0 }]}>
+                        <Text style={styles.moreText}>+{totalLikes - 3}</Text>
+                      </View>
+                    )}
+                    
+                    <Text style={[styles.likedByText, { color: isDarkMode ? '#9ca3af' : '#64748b' }]}>
+                       {totalLikes} {totalLikes === 1 ? 'like' : 'likes'}
+                    </Text>
+                  </View>
+                )}
+                <View style={styles.descriptionContainer}>
+                  <AutoHeightWebView
+                    style={styles.webView}
+                    customStyle={articleCustomStyle}
+                    files={[
+                      {
+                        href: 'cssfileaddress',
+                        type: 'text/css',
+                        rel: 'stylesheet',
+                      },
+                    ]}
+                    originWhitelist={['*']}
+                    source={{html: articleContent ?? noDataHtml}}
+                    scalesPageToFit={true}
+                    viewportContent={'width=device-width, user-scalable=no'}
+                    onShouldStartLoadWithRequest={handleExternalClick}
+                  />
+                </View>
+
+                {/* ── Research Summary Card ── */}
+                <ResearchSummaryCard summary={summary} loading={summaryLoading} />
+
+                {article?.relatedPodcasts &&
+                  article.relatedPodcasts.length > 0 && (
+                    <StructuredPodcastCard
+                      relatedEpisodes={article.relatedPodcasts}
+                    />
+                  )}
+
+
+              </>
+            )}
+          </View>
+        </Animated.ScrollView>
+
+        <ArticleShareModal
+          visible={shareModalVisible}
+          onClose={() => setShareModalVisible(false)}
+          article={{
+            title: article.title,
+            authorName: article.authorName ?? '',
+            category: article.tags?.[0]?.name ?? 'Health',
+            coverImageUrl:
+              article.imageUtils && article.imageUtils.length > 0
+                ? article.imageUtils[0].startsWith('http')
+                  ? article.imageUtils[0]
+                  : `${GET_IMAGE}/${article.imageUtils[0]}`
+                : null,
+            authorAvatarUrl: null,
+          }}
+        />
+        <TrustedUsersModal
+          visible={trustedUsersModalVisible}
+          articleId={Number(articleId)}
+          onClose={() => setTrustedUsersModalVisible(false)}
+        />
+
+        <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
+          {/* Author Row */}
+          <View style={[styles.authorRow, { borderBottomColor: footerColors.border }]}>
+            <View style={styles.authorContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  if (isGuest) {
+                    navigation.navigate('GuestPlaceholderScreen', {
+                      title: 'Sign In Required',
+                      description: 'Please sign in or sign up to view user profiles.',
+                      iconName: 'user',
+                    });
+                    return;
+                  }
+                  navigation.navigate('UserProfileScreen', {
+                    authorId: authorId,
+                    author_handle: undefined,
+                  });
+                }}>
+                {(article?.authorId as any)?.Profile_image ? (
+                  <Image
+                    source={{
+                      uri: (article?.authorId as any).Profile_image.startsWith('http')
+                        ? `${(article?.authorId as any).Profile_image}`
+                        : `${GET_STORAGE_DATA}/${(article?.authorId as any).Profile_image}`,
+                    }}
+                    style={styles.authorImage}
+                  />
+                ) : (
+                  <Image
+                    source={{
+                      uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                    }}
+                    style={styles.authorImage}
+                  />
+                )}
+              </TouchableOpacity>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.authorName, {fontSize: 14 * fontScale, color: footerColors.text}]} numberOfLines={1}>
+                  {article ? article?.authorName : ''}
+                </Text>
+                <Text style={[styles.authorFollowers, {fontSize: 11 * fontScale, color: footerColors.text}]}>
+                  {(article?.authorId as any)?.followers
+                    ? (article?.authorId as any).followers.length > 1
+                      ? `${(article?.authorId as any).followers.length} followers`
+                      : `${(article?.authorId as any).followers.length} follower`
+                    : '0 follower'}
+                </Text>
+                {article && article.contributors && article.contributors.length > 0 && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (isGuest) {
+                        navigation.navigate('GuestPlaceholderScreen', {
+                          title: 'Sign In Required',
+                          description: 'Please sign in or sign up to view all contributors.',
+                          iconName: 'users',
+                        });
+                        return;
+                      }
+                      navigation.navigate('SocialScreen', {
+                        type: 3,
+                        articleId: Number(article?._id),
+                        social_user_id: undefined,
+                      });
+                    }}>
+                    <Text style={[styles.contributorTextStyle, {fontSize: 14 * fontScale, marginTop: 4}]}>
+                      See all contributors
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+            {article && user_id !== (article.authorId as any)?._id && (
+              followMutationPending ? (
+                <LoadingSpinner size={40} />
+              ) : (
+                <TouchableOpacity style={styles.followButton} onPress={handleFollow}>
+                  <Text style={styles.followButtonText}>
+                    {localIsFollowing
+                      ? 'Following'
+                      : 'Follow'}
+                  </Text>
+                </TouchableOpacity>
+              )
+            )}
+          </View>
+
+          {/* Action Bar Row */}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={[
+              styles.actionBarFooter,
+              {borderBottomColor: footerColors.border},
+            ]}>
             <TouchableOpacity
-              style={styles.ttsControlButton}
-              onPress={handleTtsStop}>
-              <FontAwesome5 name="stop" size={18} color={'#e53935'} />
+              style={[
+                styles.actionButtonFooter,
+                {
+                  backgroundColor:
+                    article &&
+                    article?.likedUsers &&
+                    article?.likedUsers?.some(user => user._id === user_id)
+                      ? footerColors.activePillBackground
+                      : footerColors.pillBackground,
+                },
+              ]}
+              onPress={handleLike}
+              disabled={likeMutationPending}>
+              {likeMutationPending ? (
+                <LoadingSpinner size={18} />
+              ) : (
+                <>
+                  <FontAwesome
+                    name="heart"
+                    size={18}
+                    color={
+                      article &&
+                      article?.likedUsers &&
+                      article?.likedUsers?.some(user => user._id === user_id)
+                        ? PRIMARY_COLOR
+                        : footerColors.text
+                    }
+                  />
+                  <Text
+                    style={[
+                      styles.actionTextFooter,
+                      {
+                        color:
+                          article &&
+                          article?.likedUsers &&
+                          article?.likedUsers?.some(user => user._id === user_id)
+                            ? PRIMARY_COLOR
+                            : footerColors.text,
+                      },
+                    ]}>
+                    {article?.likeCount ? formatCount(article.likeCount) : 0}
+                  </Text>
+                </>
+              )}
             </TouchableOpacity>
 
-            {/* Status label */}
-            <Text style={styles.ttsStatusText}>
-              {isPaused ? 'Paused' : isPlaying ? 'Playing...' : 'Stopped'}
-            </Text>
-          </View>
-        </View>
-      )}
+            <TouchableOpacity
+              style={[
+                styles.actionButtonFooter,
+                {backgroundColor: footerColors.pillBackground},
+              ]}
+              onPress={() => {
+                if (isGuest) {
+                  navigation.navigate('GuestPlaceholderScreen', {
+                    title: 'Sign In Required',
+                    description:
+                      'Please sign in or sign up to view and post comments.',
+                    iconName: 'comment',
+                  });
+                  return;
+                }
+                if (article) {
+                  navigation.navigate('CommentScreen', {
+                    articleId: Number(article._id),
+                    mentionedUsers: article.mentionedUsers,
+                    article: article,
+                  });
+                }
+              }}>
+              <MaterialCommunityIcons
+                name="comment-outline"
+                size={18}
+                color={footerColors.text}
+              />
+              <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+                Comment
+              </Text>
+            </TouchableOpacity>
 
-      <SpeedSelector
-        currentSpeed={speechRate}
-        onSpeedSelect={handleSpeedSelect}
-        visible={isSpeedSelectorVisible}
-        onClose={() => setIsSpeedSelectorVisible(false)}
-      />
-    </SafeAreaView>
+            <TouchableOpacity
+              style={[
+                styles.actionButtonFooter,
+                {backgroundColor: footerColors.pillBackground},
+              ]}
+              onPress={() => setShareModalVisible(true)}>
+              <FontAwesome name="share" size={18} color={footerColors.text} />
+              <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+                Share
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.actionButtonFooter,
+                {backgroundColor: footerColors.pillBackground},
+              ]}
+              onPress={handleCopyLink}>
+              <FontAwesome name="link" size={18} color={footerColors.text} />
+              <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+                Copy Link
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.actionButtonFooter,
+                {backgroundColor: footerColors.pillBackground},
+              ]}
+              onPress={handleTranslateArticle}>
+              <MaterialCommunityIcons
+                name="translate"
+                size={18}
+                color={footerColors.text}
+              />
+              <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+                Translate
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.actionButtonFooter,
+                {backgroundColor: footerColors.pillBackground},
+              ]}
+              onPress={handleImproveArticle}>
+              <MaterialCommunityIcons
+                name="auto-fix"
+                size={18}
+                color={footerColors.text}
+              />
+              <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
+                Improve
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.actionButtonFooter,
+                {
+                  backgroundColor: article?.savedUsers?.includes(user_id)
+                    ? footerColors.activePillBackground
+                    : footerColors.pillBackground,
+                },
+              ]}
+              onPress={handleSave}
+              disabled={saveMutationPending}>
+              {saveMutationPending ? (
+                <LoadingSpinner size={18} />
+              ) : (
+                <>
+                  <FontAwesome
+                    name={
+                      article?.savedUsers?.includes(user_id)
+                        ? 'bookmark'
+                        : 'bookmark-o'
+                    }
+                    size={18}
+                    color={
+                      article?.savedUsers?.includes(user_id)
+                        ? PRIMARY_COLOR
+                        : footerColors.text
+                    }
+                  />
+                  <Text
+                    style={[
+                      styles.actionTextFooter,
+                      {
+                        color: article?.savedUsers?.includes(user_id)
+                          ? PRIMARY_COLOR
+                          : footerColors.text,
+                      },
+                    ]}>
+                    Save
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.actionButtonFooter,
+                {
+                  backgroundColor: isTrusted
+                    ? footerColors.activePillBackground
+                    : footerColors.pillBackground,
+                },
+              ]}
+              onPress={handleTrust}
+              disabled={trustMutationPending}
+              accessibilityRole="button"
+              accessibilityLabel="Trust this article"
+              accessibilityHint="Marks or unmarks this article as trusted">
+              {trustMutationPending ? (
+                <LoadingSpinner size={18} />
+              ) : (
+                <>
+                  <MaterialCommunityIcons
+                    name={isTrusted ? 'shield-check' : 'shield-outline'}
+                    size={18}
+                    color={isTrusted ? PRIMARY_COLOR : footerColors.text}
+                  />
+                  <Text
+                    style={[
+                      styles.actionTextFooter,
+                      {color: isTrusted ? PRIMARY_COLOR : footerColors.text},
+                    ]}>
+                    {isTrusted ? 'Trusted' : 'Trust'}
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+        {/* Floating TTS Media Player */}
+        {playerVisible && (
+          <View style={styles.ttsPlayerContainer}>
+            <View style={styles.ttsPlayerInner}>
+              {/* Speed button */}
+              <TouchableOpacity
+                style={styles.ttsSpeedButton}
+                onPress={() => setIsSpeedSelectorVisible(true)}>
+                <Text style={styles.ttsSpeedText}>{`${speechRate}x`}</Text>
+              </TouchableOpacity>
+
+              {/* Play / Pause button — disabled if neither playing nor paused */}
+              <TouchableOpacity
+                style={[
+                  styles.ttsControlButton,
+                  !isPlaying && !isPaused && {opacity: 0.4},
+                ]}
+                onPress={handleTtsPause}
+                disabled={!isPlaying && !isPaused}>
+                <FontAwesome5
+                  name={isPaused ? 'play' : 'pause'}
+                  size={18}
+                  color={PRIMARY_COLOR}
+                />
+              </TouchableOpacity>
+
+              {/* Stop button */}
+              <TouchableOpacity
+                style={styles.ttsControlButton}
+                onPress={handleTtsStop}>
+                <FontAwesome5 name="stop" size={18} color={'#e53935'} />
+              </TouchableOpacity>
+
+              {/* Status label */}
+              <Text style={styles.ttsStatusText}>
+                {isPaused ? 'Paused' : isPlaying ? 'Playing...' : 'Stopped'}
+              </Text>
+            </View>
+          </View>
+        )}
+
+        <SpeedSelector
+          currentSpeed={speechRate}
+          onSpeedSelect={handleSpeedSelect}
+          visible={isSpeedSelectorVisible}
+          onClose={() => setIsSpeedSelectorVisible(false)}
+        />
+      </SafeAreaView>
+    </ErrorBoundary>
   );
 };
 
@@ -1855,4 +1858,3 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
-
