@@ -17,7 +17,7 @@ export default function WellnessDashboardScreen() {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.heading}> Wellness Dashboard</Text>
+          <Text style={styles.heading}>🌿 Wellness Dashboard</Text>
           <Text style={styles.date}>{today}</Text>
           {!isConnected && (
             <View style={styles.offlineBanner}>
