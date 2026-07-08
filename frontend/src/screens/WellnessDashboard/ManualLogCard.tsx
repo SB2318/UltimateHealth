@@ -127,7 +127,7 @@ export default function ManualLogCard() {
       <TouchableOpacity
         style={[styles.saveButton, mutation.isPending && styles.saveButtonDisabled]}
         onPress={handleSave}
-        disabled={mutation.isPending || isWeeklyLoading}
+        disabled={mutation.isPending || !isConnected || isWeeklyLoading}
         activeOpacity={0.7}
       >
         {mutation.isPending ? (
