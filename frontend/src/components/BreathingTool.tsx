@@ -34,9 +34,11 @@ const MODES: Record<Mode, PhaseConfig[]> = {
   ],
 };
 
-const DEFAULT_CYCLES = 5;
+interface BreathingToolProps {
+  defaultCycles?: number;
+}
 
-export default function BreathingTool() {
+export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps) {
   const [selectedMode, setSelectedMode] = useState<Mode>('4-7-8');
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -65,7 +67,7 @@ export default function BreathingTool() {
 
   const currentPhaseConfig = MODES[selectedMode][currentPhaseIndex];
 
-  // Timer effect
+  // Timer effect handles the countdown, phase transitions, and cycle tracking
   useEffect(() => {
     if (isRunning && !isPaused) {
       timerRef.current = setInterval(() => {
@@ -73,14 +75,15 @@ export default function BreathingTool() {
         
         setPhaseRemaining(prev => {
           if (prev <= 1) {
-            // Move to next phase
+            // Phase is complete, calculate the next phase index
             const nextPhaseIndex = (currentPhaseIndex + 1) % MODES[selectedMode].length;
             
-            // Cycle complete
+            // If the next phase is 0, a full breathing cycle has been completed
             if (nextPhaseIndex === 0) {
               setCompletedCycles(c => {
                 const newCycles = c + 1;
-                if (newCycles >= DEFAULT_CYCLES) {
+                // If target cycles are reached, automatically complete the session
+                if (newCycles >= defaultCycles) {
                   handleCompleteSession();
                 }
                 return newCycles;
@@ -89,7 +92,7 @@ export default function BreathingTool() {
             
             setCurrentPhaseIndex(nextPhaseIndex);
             
-            // Start animation for next phase
+            // Trigger the breathing circle animation for the newly entered phase
             const nextConfig = MODES[selectedMode][nextPhaseIndex];
             Animated.timing(animatedScale, {
               toValue: nextConfig.scale,
@@ -98,8 +101,10 @@ export default function BreathingTool() {
               useNativeDriver: true,
             }).start();
             
+            // Reset the phase countdown timer
             return nextConfig.duration;
           }
+          // Decrement remaining seconds
           return prev - 1;
         });
       }, 1000);
@@ -143,7 +148,8 @@ export default function BreathingTool() {
   };
 
   const submitSessionData = async (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
+    // Round up to ensure any session > 0s logs at least 1 minute
+    const minutes = Math.ceil(seconds / 60);
     if (minutes > 0) {
       try {
         await authAxios.post(LOG_WELLNESS_METRICS, {
@@ -151,6 +157,7 @@ export default function BreathingTool() {
         });
       } catch (error) {
         console.error('Failed to log wellness metrics:', error);
+        Alert.alert('Session Log Failed', 'We could not save your breathing session metrics. Please check your network connection.');
       }
     }
   };
@@ -181,7 +188,7 @@ export default function BreathingTool() {
       <View style={styles.card}>
         <Text style={styles.title}>🎉 Session Complete!</Text>
         <Text style={styles.summaryText}>
-          You completed {DEFAULT_CYCLES} cycles of {selectedMode} breathing.
+          You completed {defaultCycles} cycles of {selectedMode} breathing.
         </Text>
         <Text style={styles.summaryText}>Total Time: {formatTime(sessionElapsed)}</Text>
         <TouchableOpacity
@@ -241,7 +248,7 @@ export default function BreathingTool() {
       </View>
 
       <View style={styles.statsContainer}>
-        <Text style={styles.statText}>Cycle {Math.min(completedCycles + 1, DEFAULT_CYCLES)} / {DEFAULT_CYCLES}</Text>
+        <Text style={styles.statText}>Cycle {Math.min(completedCycles + 1, defaultCycles)} / {defaultCycles}</Text>
         <Text style={styles.statText}>Elapsed: {formatTime(sessionElapsed)}</Text>
       </View>
 
