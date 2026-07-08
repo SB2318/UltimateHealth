@@ -25,10 +25,10 @@ export default function WeeklyChart() {
   const chartData = useMemo(() => {
     if (!data?.logs || data.logs.length === 0) return [];
 
-    // Sort logs by date ascending
-    const sorted = [...data.logs].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
+    // Sort logs by date ascending (filter out logs with missing dates)
+    const sorted = [...data.logs]
+      .filter(log => log.date)
+      .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime());
 
     return sorted.map((log, _idx) => {
       const value = metric === 'steps' ? (log.steps ?? 0) : (log.water ?? 0);
