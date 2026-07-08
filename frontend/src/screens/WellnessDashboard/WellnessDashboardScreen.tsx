@@ -21,7 +21,7 @@ export default function WellnessDashboardScreen() {
           <Text style={styles.date}>{today}</Text>
           {!isConnected && (
             <View style={styles.offlineBanner}>
-              <Text style={styles.offlineText}>You are offline - showing cached data</Text>
+              <Text style={styles.offlineText}>You're offline. Wellness data may not be available until you reconnect.</Text>
             </View>
           )}
         </View>
