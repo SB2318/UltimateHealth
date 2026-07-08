@@ -529,11 +529,13 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         <EmailInputBottomSheet
           visible={emailInputVisible}
           callback={(email: string) => {
-            setOtpMail(email);
+            const trimmedEmail = email.trim();
+            setEmailInputVisible(false);
+            setOtpMail(trimmedEmail);
             if (requestVerificationMode) {
               resendVerification(
                 {
-                  email,
+                  email: trimmedEmail,
                 },
                 {
                   onSuccess: () => {
@@ -586,12 +588,12 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             } else {
               sendOtp(
                 {
-                  email,
+                  email: trimmedEmail,
                 },
                 {
                   onSuccess: () => {
                     Alert.alert('OTP has sent to your mail');
-                    navigateToOtpScreen(email);
+                    navigateToOtpScreen(trimmedEmail);
                   },
                   onError: error => {
                     if (isAxiosError(error)) {
