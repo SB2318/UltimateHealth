@@ -16,7 +16,12 @@
     "knip:exports": "knip --exports",
     "knip:fix": "knip --fix",
     "knip:check": "knip --no-progress",
-    "quality": "pnpm run type-check && pnpm run lint && pnpm run knip",
+    "quality": "yarn run type-check && yarn run lint && yarn run knip",
+    "preview": "expo export --platform web",
+    "preview:android": "expo export --platform android",
+    "preview:ios": "expo export --platform ios",
+    "export:web": "expo export --platform web",
+    "serve:preview": "node scripts/serve-preview.js",
     "postinstall": "patch-package"
   },
   "dependencies": {

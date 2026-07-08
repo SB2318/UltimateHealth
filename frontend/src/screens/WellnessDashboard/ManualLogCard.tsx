@@ -46,7 +46,7 @@ export default function ManualLogCard() {
     });
 
     if (!validation.success) {
-      const firstError = validation.error.errors[0]?.message ?? 'Invalid input';
+      const firstError = validation.error.issues[0]?.message ?? 'Invalid input';
       Alert.alert('Validation Error', firstError);
       return;
     }

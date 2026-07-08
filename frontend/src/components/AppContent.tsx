@@ -17,7 +17,7 @@ import { SocketProvider } from '../contexts/SocketContext';
 import { PreferencesProvider } from '../contexts/PreferencesContext';
 import config from '../../tamagui.config';
 
-import { initDeepLinking, navigateDeepLink, resolveNotificationTarget } from '../helper/DeepLinkService';
+import { initDeepLinking, navigateDeepLink, resolveNotificationTarget, resolveDeepLinkTarget } from '../helper/DeepLinkService';
 import { firebaseInit } from '../helper/firebase';
 import { cleanUpDownloads , KEYS, retrieveItem } from '../helper/Utils';
 import {
@@ -48,9 +48,6 @@ export default function AppContent() {
   const { user_token, isGuest } = useSelector(
     (state: RootState) => state.user,
   );
-
-  const { visible, storeUrl } = useVersionCheck();
-  const dispatch = useDispatch();
 
   useNotificationListeners();
 
@@ -116,9 +113,9 @@ export default function AppContent() {
 
   useEffect(() => {
     if (!navigationRef.current || !pendingDeepLinkRef.current) return;
-    if (!isGuest && tokenRes === null && !user_token) return;
+    if (!isGuest && !user_token) return;
 
-    const isAuthenticated = Boolean(tokenRes?.isValid || user_token) && !isGuest;
+    const isAuthenticated = Boolean(user_token) && !isGuest;
     const target = resolveDeepLinkTarget(pendingDeepLinkRef.current);
 
     if (target) {
@@ -126,7 +123,7 @@ export default function AppContent() {
     }
 
     pendingDeepLinkRef.current = null;
-  }, [tokenRes, user_token, isGuest]);
+  }, [user_token, isGuest]);
 
   useEffect(() => {
     const handleNotificationResponse = async (

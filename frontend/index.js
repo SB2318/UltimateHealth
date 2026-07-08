@@ -12,12 +12,15 @@ import { logger } from './src/services/monitoring/logger';// Firebase background
 // to AppContent.tsx's first useEffect so that expo-application metadata
 // (nativeApplicationVersion, nativeBuildVersion) is fully available before
 // Sentry initialises.
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  // Only log notification payloads in development to avoid leaking user data
-  // or FCM tokens in production log aggregators.
-  
+// Guard: @react-native-firebase/messaging is undefined on web.
+const firebaseMessaging = messaging();
+if (firebaseMessaging) {
+  firebaseMessaging.setBackgroundMessageHandler(async remoteMessage => {
+    // Only log notification payloads in development to avoid leaking user data
+    // or FCM tokens in production log aggregators.
     logger.log('Background notification received:', remoteMessage);
-});
+  });
+}
 
 const AppWrapper = () => {
   return (
