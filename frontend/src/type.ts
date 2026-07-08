@@ -868,3 +868,25 @@ export type NotificationPreferencesResponse = {
   message: string;
   error?: string;
 };
+
+export type WellnessLog = {
+  _id?: string;
+  water: number;
+  calories: number;
+  mood: string;
+  date: string;
+  steps?: number;
+  heartRate?: number;
+  sleep?: number;
+  userId?: string;
+  createdAt?: string;
+};
+
+export type WeeklyWellnessResponse = {
+  logs: WellnessLog[];
+  goal?: {
+    water: number;
+    calories: number;
+    steps: number;
+  };
+};
