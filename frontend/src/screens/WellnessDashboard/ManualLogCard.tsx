@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert
 } from 'react-native';
@@ -21,9 +21,10 @@ export default function ManualLogCard() {
   const waterGoal = 2500;
   const calGoal = 2000;
 
-  // Pre-fill form from today's existing data if available
+  // Pre-fill form from today's existing data if available (only on initial mount)
+  const hasPrefilled = useRef(false);
   useEffect(() => {
-    if (!weeklyData?.logs) return;
+    if (!weeklyData?.logs || hasPrefilled.current) return;
     const todayStr = new Date().toISOString().split('T')[0];
     const todayLog = weeklyData.logs.find(
       (log) => log.date && log.date.startsWith(todayStr),
@@ -32,6 +33,7 @@ export default function ManualLogCard() {
       setWater(todayLog.water ?? 0);
       setCalories(todayLog.calories ?? 0);
       setMood(todayLog.mood ?? '');
+      hasPrefilled.current = true;
     }
   }, [weeklyData]);
 
