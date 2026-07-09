@@ -6,7 +6,7 @@ import {PODCAST_CARD} from '@/constants/podcastCard';
 
 interface ShimmerBoxProps {
   style?: object | object[];
-  shimmerX: Animated.AnimatedInterpolation<number>;
+  shimmerX: any;
   highlightColor: string;
   baseColor: string;
 }

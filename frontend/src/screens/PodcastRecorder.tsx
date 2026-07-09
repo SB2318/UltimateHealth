@@ -1,7 +1,7 @@
 /* eslint-disable react-compiler/react-compiler */
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, Alert, AppState } from 'react-native';
+import {StyleSheet, Alert, AppState, AppStateStatus } from 'react-native';
 
 import {PodcastRecorderScreenProps} from '../type';
 import RNFS from 'react-native-fs';
@@ -69,7 +69,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 useEffect(() => {
   const subscription = AppState.addEventListener(
     'change',
-    (nextState: AppStateStatus) => {
+    (nextState: any) => {
       if (nextState === 'active' && recording) {
         // Re-sync timer immediately on app foreground using actual tracked duration
         if (durationMillisRef.current > 0) {
@@ -88,25 +88,7 @@ useEffect(() => {
   return () => subscription.remove();
 }, [recording]);
   
- useFocusEffect(
-  useCallback(() => {
-    handleUpload();
 
-    return () => {
-      stopTimer();
-
-      if (isRecordingRef.current) {
-        audioRecorder
-          .stop()
-          .catch(err =>
-            console.warn('Error stopping recorder on screen exit:', err),
-          );
-
-        isRecordingRef.current = false;
-      }
-    };
-  }, [audioRecorder, handleUpload]),
-);
 
  const record = async () => {
   try {
@@ -263,6 +245,26 @@ const stopRecording = async () => {
     setRecordTime('00:00:00');
     await unlinkFile();
   }, [unlinkFile]);
+
+  useFocusEffect(
+    useCallback(() => {
+      handleUpload();
+
+      return () => {
+        stopTimer();
+
+        if (isRecordingRef.current) {
+          audioRecorder
+            .stop()
+            .catch(err =>
+              console.warn('Error stopping recorder on screen exit:', err),
+            );
+
+          isRecordingRef.current = false;
+        }
+      };
+    }, [audioRecorder, handleUpload]),
+  );
 
   // useEffect(() => {
   //   // const stopSub = AudioModule.addListener('recStop', (data:any) => {

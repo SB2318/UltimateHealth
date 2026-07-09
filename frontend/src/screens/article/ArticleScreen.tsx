@@ -1125,22 +1125,24 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         </View>
       </Animated.ScrollView>
 
-      <ArticleShareModal
-        visible={shareModalVisible}
-        onClose={() => setShareModalVisible(false)}
-        article={{
-          title: article.title,
-          authorName: article.authorName ?? '',
-          category: article.tags?.[0]?.name ?? 'Health',
-          coverImageUrl:
-            article.imageUtils && article.imageUtils.length > 0
-              ? article.imageUtils[0].startsWith('http')
-                ? article.imageUtils[0]
-                : `${GET_IMAGE}/${article.imageUtils[0]}`
-              : null,
-          authorAvatarUrl: null,
-        }}
-      />
+      {article && (
+        <ArticleShareModal
+          visible={shareModalVisible}
+          onClose={() => setShareModalVisible(false)}
+          article={{
+            title: article.title,
+            authorName: article.authorName ?? '',
+            category: article.tags?.[0]?.name ?? 'Health',
+            coverImageUrl:
+              article.imageUtils && article.imageUtils.length > 0
+                ? article.imageUtils[0].startsWith('http')
+                  ? article.imageUtils[0]
+                  : `${GET_IMAGE}/${article.imageUtils[0]}`
+                : null,
+            authorAvatarUrl: null,
+          }}
+        />
+      )}
       <TrustedUsersModal
         visible={trustedUsersModalVisible}
         articleId={Number(articleId)}
