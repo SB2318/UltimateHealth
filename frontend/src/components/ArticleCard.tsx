@@ -38,14 +38,10 @@ import ArticleFloatingMenu from './ArticleFloatingMenu';
 
 import { generateArticleShareUrl, copyArticleShareLink } from '../helper/shareUtils';
 import Entypo from '@expo/vector-icons/Entypo';
-import Share from 'react-native-share';
-import RNFS from 'react-native-fs';
-import {generatePDF} from 'react-native-html-to-pdf';
 import {useSocket} from '../contexts/SocketContext';
 import EditRequestModal from './EditRequestModal';
 import {FontAwesome, FontAwesome6} from '@expo/vector-icons';
 import LoadingSpinner from './LoadingSpinner';
-import Snackbar from 'react-native-snackbar';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useLikeArticle} from '../hooks/useLikeArticle';
 import {useSaveArticle} from '../hooks/useSaveArticle';
@@ -54,6 +50,12 @@ import {useRepostArticle} from '../hooks/useArticleRepost';
 import { ReadingDifficulty, getArticleDifficulty } from './ReadingDifficulty';
 import {useDoubleTap} from '../hooks/useDoubleTap';
 import { ImageFallback } from './ImageFallback';
+
+// Lazy getters for native-only modules (crash on web if imported eagerly).
+const getShare = () =>  { try { return require('react-native-share'); } catch { return null; } };
+const getRNFS = () =>   { try { return require('react-native-fs'); } catch { return null; } };
+const getPDF = () =>    { try { return require('react-native-html-to-pdf'); } catch { return null; } };
+const getSnackbar = () => { try { return require('react-native-snackbar'); } catch { return null; } };
 
 const ArticleCard = ({
   item,
@@ -108,6 +110,7 @@ const ArticleCard = ({
     score: 78,
     level: 'Beginner Friendly' as 'Beginner Friendly' | 'Intermediate' | 'Advanced',
     approved: true,
+  };
   const heartScale = useSharedValue(0);
 
   const heartStyle = useAnimatedStyle(() => {
@@ -174,16 +177,16 @@ const ArticleCard = ({
           console.log('Like error', err);
           setIsLiked(previousIsLiked);
           setLikeCount(previousLikeCount);
-          Snackbar.show({
+          getSnackbar()?.show({
             text: 'something went wrong, try again!',
-            duration: Snackbar.LENGTH_SHORT,
+            duration: getSnackbar()?.LENGTH_SHORT,
           });
         },
       });
     } else {
-      Snackbar.show({
+      getSnackbar()?.show({
         text: 'Please check your network connection',
-        duration: Snackbar.LENGTH_SHORT,
+        duration: getSnackbar()?.LENGTH_SHORT,
       });
     }
   };
@@ -199,9 +202,9 @@ const ArticleCard = ({
         recordId: item.pb_recordId,
       });
     } else {
-      Snackbar.show({
+      getSnackbar()?.show({
         text: 'Please connect to the internet to view this article.',
-        duration: Snackbar.LENGTH_LONG,
+        duration: getSnackbar()?.LENGTH_LONG,
       });
       Alert.alert(
         'No Internet 🚫',
@@ -219,6 +222,8 @@ const ArticleCard = ({
   };
 
   const handleShare = async () => {
+    const Share = getShare();
+    if (!Share) return;
     try {
       const resolvedAuthorId = (item.authorId as any)?._id || item.authorId;
       const url = generateArticleShareUrl(item._id, resolvedAuthorId, item.pb_recordId);
@@ -241,15 +246,15 @@ const ArticleCard = ({
     try {
       const resolvedAuthorId = (item.authorId as any)?._id || item.authorId;
       copyArticleShareLink(item._id, resolvedAuthorId, item.pb_recordId);
-      Snackbar.show({
+      getSnackbar()?.show({
         text: 'Link copied',
-        duration: Snackbar.LENGTH_SHORT,
+        duration: getSnackbar()?.LENGTH_SHORT,
       });
     } catch (error) {
       console.log('Error copying link:', error);
-      Snackbar.show({
+      getSnackbar()?.show({
         text: 'Failed to copy link',
-        duration: Snackbar.LENGTH_SHORT,
+        duration: getSnackbar()?.LENGTH_SHORT,
       });
     }
   };
@@ -296,9 +301,9 @@ const ArticleCard = ({
         return;
       }
       if (!isConnected) {
-        Snackbar.show({
+        getSnackbar()?.show({
           text: 'Please check your internet connection!',
-          duration: Snackbar.LENGTH_SHORT,
+          duration: getSnackbar()?.LENGTH_SHORT,
         });
         return;
       }
@@ -322,21 +327,24 @@ const ArticleCard = ({
   };
 
   const generatePDFData = async (title: string, htmlContent: string) => {
+    const rnfs = getRNFS();
+    const { generatePDF } = getPDF() || {};
+    if (!rnfs || !generatePDF) return;
     try {
       const safeTitle = title.substring(0, 15).replace(/[^a-zA-Z0-9]/g, '_');
       const fileName = `${safeTitle}.pdf`;
 
       const customDirectory =
         Platform.OS === 'android'
-          ? RNFS.ExternalDirectoryPath
-          : RNFS.DocumentDirectoryPath;
+          ? rnfs.ExternalDirectoryPath
+          : rnfs.DocumentDirectoryPath;
 
       const filePath = `${customDirectory}/${fileName}`;
 
-      const directoryExists = await RNFS.exists(customDirectory);
+      const directoryExists = await rnfs.exists(customDirectory);
 
       if (!directoryExists) {
-        await RNFS.mkdir(customDirectory);
+        await rnfs.mkdir(customDirectory);
       }
 
       const options = {
@@ -348,7 +356,7 @@ const ArticleCard = ({
 
       const file = await generatePDF(options);
 
-      await RNFS.moveFile(file.filePath, filePath);
+      await rnfs.moveFile(file.filePath, filePath);
 
       Alert.alert('PDF created successfully!', `Saved at: ${filePath}`);
     } catch (error) {
@@ -394,22 +402,22 @@ const ArticleCard = ({
             }
           }
 
-          Snackbar.show({
+          getSnackbar()?.show({
             text: data.message,
-            duration: Snackbar.LENGTH_SHORT,
+            duration: getSnackbar()?.LENGTH_SHORT,
           });
         },
         onError: err => {
-          Snackbar.show({
+          getSnackbar()?.show({
             text: 'Something went wrong, try again!',
-            duration: Snackbar.LENGTH_SHORT,
+            duration: getSnackbar()?.LENGTH_SHORT,
           });
         },
       });
     } else {
-      Snackbar.show({
+      getSnackbar()?.show({
         text: 'Please check your internet connection',
-        duration: Snackbar.LENGTH_SHORT,
+        duration: getSnackbar()?.LENGTH_SHORT,
       });
     }
   };
@@ -479,9 +487,9 @@ const ArticleCard = ({
                   name: 'Request to improve this post',
                   action: () => {
                     if (!isConnected) {
-                      Snackbar.show({
+                      getSnackbar()?.show({
                         text: 'Please check your internet connection',
-                        duration: Snackbar.LENGTH_SHORT,
+                        duration: getSnackbar()?.LENGTH_SHORT,
                       });
                       return;
                     }
@@ -647,16 +655,16 @@ const ArticleCard = ({
                         // Rollback optimistic update
                         setIsLiked(previousIsLiked);
                         setLikeCount(previousLikeCount);
-                        Snackbar.show({
+                        getSnackbar()?.show({
                           text: 'something went wrong, try again!',
-                          duration: Snackbar.LENGTH_SHORT,
+                          duration: getSnackbar()?.LENGTH_SHORT,
                         });
                       },
                     });
                   } else {
-                    Snackbar.show({
+                    getSnackbar()?.show({
                       text: 'Please check your network connection',
-                      duration: Snackbar.LENGTH_SHORT,
+                      duration: getSnackbar()?.LENGTH_SHORT,
                     });
                   }
                 }}
@@ -769,24 +777,24 @@ const ArticleCard = ({
                     yValue.value = withTiming(100, {duration: 250});
                     saveMutation(undefined, {
                       onSuccess: async data => {
-                        Snackbar.show({
+                        getSnackbar()?.show({
                           text: data.message,
-                          duration: Snackbar.LENGTH_SHORT,
+                          duration: getSnackbar()?.LENGTH_SHORT,
                         });
                         setSaved(!saved);
                       },
 
                       onError: () => {
-                        Snackbar.show({
+                        getSnackbar()?.show({
                           text: 'Something went wrong, try again!',
-                          duration: Snackbar.LENGTH_SHORT,
+                          duration: getSnackbar()?.LENGTH_SHORT,
                         });
                       },
                     });
                   } else {
-                    Snackbar.show({
+                    getSnackbar()?.show({
                       text: 'Please check your network connection',
-                      duration: Snackbar.LENGTH_SHORT,
+                      duration: getSnackbar()?.LENGTH_SHORT,
                     });
                   }
                 }}

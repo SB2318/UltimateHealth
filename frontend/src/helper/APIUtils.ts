@@ -117,6 +117,10 @@ const GET_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`
 const UPDATE_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`;
 const REGISTER_PUSH_TOKEN = `${PROD_URL}/user/register-device-token`;
 
+/** Wellness Dashboard */
+const WELLNESS_LOG = `${PROD_URL}/wellness/log`;
+const WELLNESS_WEEKLY = `${PROD_URL}/wellness/weekly`;
+
 export {
   LOGIN_API,
   REGISTRATION_API,
@@ -203,6 +207,8 @@ export {
   GET_CHARACTERS_API,
   GET_NOTIFICATION_PREFERENCES,
   UPDATE_NOTIFICATION_PREFERENCES,
-  GET_READ_HISTORY,
-  SHARE_BASE_URL,
-};
+   GET_READ_HISTORY,
+   SHARE_BASE_URL,
+   WELLNESS_LOG,
+   WELLNESS_WEEKLY,
+ };

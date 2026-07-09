@@ -126,9 +126,9 @@ export default function AppContent() {
 
   useEffect(() => {
     if (!navigationRef.current || !pendingDeepLinkRef.current) return;
-    if (!isGuest && tokenRes === null && !user_token) return;
+    if (!isGuest && !user_token) return;
 
-    const isAuthenticated = Boolean(tokenRes?.isValid || user_token) && !isGuest;
+    const isAuthenticated = Boolean(user_token) && !isGuest;
     const target = resolveDeepLinkTarget(pendingDeepLinkRef.current);
 
     if (target) {
@@ -142,7 +142,7 @@ export default function AppContent() {
     }
 
     pendingDeepLinkRef.current = null;
-  }, [tokenRes, user_token, isGuest]);
+  }, [user_token, isGuest]);
 
   useEffect(() => {
     const handleNotificationResponse = async (

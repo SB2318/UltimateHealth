@@ -3,7 +3,15 @@ import {Category, CategoryType, PodcastData} from '../type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GET_STORAGE_DATA} from './APIUtils';
 import {Alert, Linking, Platform, PermissionsAndroid} from 'react-native';
-import RNFS from 'react-native-fs';
+// Lazy getter — react-native-fs is native-only and crashes on web if imported eagerly.
+const getRNFS = () => {
+  try {
+    if (Platform.OS === 'web') return null;
+    return require('react-native-fs');
+  } catch {
+    return null;
+  }
+};
 import {secureClearAllItems} from './SecureStorageUtils';
 import {
   deleteItem as deletePodcastCache,
@@ -240,16 +248,19 @@ const downloadFile = async (key: string, title: string) => {
   const fileName = `${safeTitle}_${Date.now()}.mp3`;
   const downloadUrl = `${GET_STORAGE_DATA}/${key}`;
 
+  const rnfs = getRNFS();
+  if (!rnfs) return null;
+
   const customDirectory =
     Platform.OS === 'android'
-      ? RNFS.ExternalDirectoryPath
-      : RNFS.DocumentDirectoryPath;
+      ? rnfs.ExternalDirectoryPath
+      : rnfs.DocumentDirectoryPath;
 
   const filePath = `${customDirectory}/${fileName}`;
-  const directoryExists = await RNFS.exists(customDirectory);
-  if (!directoryExists) await RNFS.mkdir(customDirectory);
+  const directoryExists = await rnfs.exists(customDirectory);
+  if (!directoryExists) await rnfs.mkdir(customDirectory);
 
-  const result = await RNFS.downloadFile({fromUrl: downloadUrl, toFile: filePath}).promise;
+  const result = await rnfs.downloadFile({fromUrl: downloadUrl, toFile: filePath}).promise;
 
   if (result.statusCode === 200) {
     console.log('Audio downloaded to:', filePath);
@@ -261,6 +272,9 @@ const downloadFile = async (key: string, title: string) => {
 };
 
 export const cleanUpDownloads = async () => {
+  const rnfs = getRNFS();
+  if (!rnfs) return;
+
   const existingPodcasts = await readDownloadedPodcasts();
   if (!Array.isArray(existingPodcasts)) return;
 
@@ -271,8 +285,8 @@ export const cleanUpDownloads = async () => {
   for (const item of existingPodcasts) {
     const age = now - item.downloadAt.getTime();
     if (Number.isFinite(age) && age > THIRTY_DAYS_MS) {
-      if (item.filePath && (await RNFS.exists(item.filePath))) {
-        await RNFS.unlink(item.filePath);
+      if (item.filePath && (await rnfs.exists(item.filePath))) {
+        await rnfs.unlink(item.filePath);
         console.log('Deleted old file:', item.filePath);
       }
     } else {
@@ -284,15 +298,18 @@ export const cleanUpDownloads = async () => {
 };
 
 export const deleteFromDownloads = async (_podcast: PodcastData) => {
+  const rnfs = getRNFS();
+  if (!rnfs) return false;
+
   const existingPodcasts = await readDownloadedPodcasts();
-  if (!Array.isArray(existingPodcasts)) return;
+  if (!Array.isArray(existingPodcasts)) return false;
 
   try {
     const freshPodcasts: PodcastDownloadRecord[] = [];
     for (const item of existingPodcasts) {
       if (item._id === _podcast._id) {
-        if (item.filePath && (await RNFS.exists(item.filePath))) {
-          await RNFS.unlink(item.filePath);
+        if (item.filePath && (await rnfs.exists(item.filePath))) {
+          await rnfs.unlink(item.filePath);
           console.log('Deleted old file:', item.filePath);
         }
       } else {

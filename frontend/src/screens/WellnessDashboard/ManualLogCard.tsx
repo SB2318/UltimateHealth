@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet
+  View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert
 } from 'react-native';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/ReduxStore';
+import { useLogWellnessMetric } from '../../hooks/useLogWellnessMetric';
+import { useGetWeeklyWellness } from '../../hooks/useGetWeeklyWellness';
+import { wellnessLogSchema } from '../../schemas/wellnessSchemas';
 
 export default function ManualLogCard() {
+  const isConnected = useSelector((state: RootState) => state.network.isConnected);
+  const { data: weeklyData, isLoading: isWeeklyLoading } = useGetWeeklyWellness(isConnected);
+  const mutation = useLogWellnessMetric();
+
   const [water, setWater] = useState(0);
   const [calories, setCalories] = useState(0);
   const [mood, setMood] = useState('');
@@ -11,6 +20,52 @@ export default function ManualLogCard() {
   const moods = ['😔', '😐', '🙂', '😄', '🤩'];
   const waterGoal = 2500;
   const calGoal = 2000;
+
+  // Pre-fill form from today's existing data if available (only on initial mount)
+  const hasPrefilled = useRef(false);
+  useEffect(() => {
+    if (!weeklyData?.logs || hasPrefilled.current) return;
+    const todayStr = new Date().toISOString().split('T')[0];
+    const todayLog = weeklyData.logs.find(
+      (log) => log.date && log.date.startsWith(todayStr),
+    );
+    if (todayLog) {
+      setWater(todayLog.water ?? 0);
+      setCalories(todayLog.calories ?? 0);
+      setMood(todayLog.mood ?? '');
+      hasPrefilled.current = true;
+    }
+  }, [weeklyData]);
+
+  const handleSave = useCallback(async () => {
+    const validation = wellnessLogSchema.safeParse({
+      water,
+      calories,
+      mood,
+      date: new Date().toISOString().split('T')[0],
+    });
+
+    if (!validation.success) {
+      const firstError = validation.error.issues[0]?.message ?? 'Invalid input';
+      Alert.alert('Validation Error', firstError);
+      return;
+    }
+
+    try {
+      await mutation.mutateAsync({
+        water: validation.data.water,
+        calories: validation.data.calories,
+        mood: validation.data.mood,
+        date: validation.data.date,
+      });
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message ??
+        err?.message ??
+        'Failed to save wellness data';
+      Alert.alert('Error', message);
+    }
+  }, [water, calories, mood, mutation]);
 
   return (
     <View style={styles.container}>
@@ -28,6 +83,7 @@ export default function ManualLogCard() {
         </View>
         <TouchableOpacity
           style={styles.button}
+          disabled={mutation.isPending}
           onPress={() => setWater(w => Math.min(w + 250, waterGoal))}>
           <Text style={styles.buttonText}>+ Add 250 ml</Text>
         </TouchableOpacity>
@@ -45,6 +101,7 @@ export default function ManualLogCard() {
         </View>
         <TouchableOpacity
           style={styles.button}
+          disabled={mutation.isPending}
           onPress={() => setCalories(c => Math.min(c + 300, calGoal))}>
           <Text style={styles.buttonText}>+ Log Meal (300 kcal)</Text>
         </TouchableOpacity>
@@ -55,7 +112,7 @@ export default function ManualLogCard() {
         <Text style={styles.label}>😊 Mood</Text>
         <View style={styles.moodRow}>
           {moods.map((m) => (
-            <TouchableOpacity key={m} onPress={() => setMood(m)}>
+            <TouchableOpacity key={m} onPress={() => setMood(m)} disabled={mutation.isPending}>
               <Text style={[
                 styles.moodEmoji,
                 mood === m && styles.moodSelected
@@ -65,6 +122,20 @@ export default function ManualLogCard() {
         </View>
         {mood ? <Text style={styles.moodText}>Selected: {mood}</Text> : null}
       </View>
+
+      {/* Save Button */}
+      <TouchableOpacity
+        style={[styles.saveButton, mutation.isPending && styles.saveButtonDisabled]}
+        onPress={handleSave}
+        disabled={mutation.isPending || !isConnected || isWeeklyLoading}
+        activeOpacity={0.7}
+      >
+        {mutation.isPending ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={styles.saveButtonText}>Save Today's Log</Text>
+        )}
+      </TouchableOpacity>
     </View>
   );
 }
@@ -96,4 +167,20 @@ const styles = StyleSheet.create({
   moodEmoji: { fontSize: 28, opacity: 0.4 },
   moodSelected: { opacity: 1, transform: [{ scale: 1.2 }] },
   moodText: { fontSize: 13, color: '#666', marginTop: 4 },
+  saveButton: {
+    backgroundColor: '#378ADD',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+  },
+  saveButtonDisabled: {
+    backgroundColor: '#a0c4f0',
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });
