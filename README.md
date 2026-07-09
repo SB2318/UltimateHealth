@@ -976,7 +976,8 @@ We welcome contributions from everyone — developers, designers, writers, and t
 
    <tr>
     <td align="center"><a href="https://github.com/anshul23102"><img src="https://avatars.githubusercontent.com/u/167362756?v=4" width="120px;" alt=""/><br/><sub><b>Anshul Jain</b></sub></a></td>
-   </tr>
+       <td align="center"><a href="https://github.com/Tech4Aditya"><img src="https://avatars.githubusercontent.com/u/220623325?v=4" width="120px;" alt=""/><br/><sub><b>AdityaPandey.Tech</b></sub></a></td>
+ </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
