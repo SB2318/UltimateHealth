@@ -9,6 +9,7 @@ import {
   Alert,
   useWindowDimensions,
   useColorScheme,
+  ScrollView,
 } from 'react-native';
 import ArticleShareModal from '../../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState, useMemo} from 'react';
@@ -75,7 +76,7 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { ScrollView } from 'react-native';
+
 
 const CHUNK_SIZE = 120;
 
