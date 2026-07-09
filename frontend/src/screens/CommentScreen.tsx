@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert,
    FlatList ,
@@ -474,6 +475,7 @@ const CommentScreen = ({
   }
 
   return (
+    <ErrorBoundary>
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={{flex: 1}}
@@ -680,6 +682,7 @@ const CommentScreen = ({
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </ErrorBoundary>
   );
 };
 
