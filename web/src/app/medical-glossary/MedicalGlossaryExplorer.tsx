@@ -31,19 +31,17 @@ export default function MedicalGlossaryExplorer() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-4xl font-bold tracking-tight">
-          Medical Glossary
-        </h1>
-
-        <p className="mt-3 text-muted-foreground">
-          Search and explore medical terms, conditions, diagnostic tests,
-          preventive care concepts, and health-related terminology.
-        </p>
-      </div>
+      <div className="text-center">
+  <h1 className="text-4xl font-bold tracking-tight">
+    Medical Glossary
+  </h1>
+  <p className="mt-3 text-muted-foreground">
+    Search and explore medical terms...
+  </p>
+</div>
 
       {/* Search & Filters */}
-      <div className="flex flex-col gap-4 md:flex-row w-full min-w-0">
+      <div className="flex flex-col gap-4 md:flex-row w-full min-w-0 mx-auto max-w-3xl">
         <input
           type="text"
           placeholder="Search medical terms..."
@@ -66,7 +64,7 @@ export default function MedicalGlossaryExplorer() {
       </div>
 
       {/* Stats */}
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm text-muted-foreground text-center">
         Showing{" "}
         <span className="font-semibold text-foreground">
           {filteredEntries.length}
