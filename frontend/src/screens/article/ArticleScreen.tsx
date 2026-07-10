@@ -398,12 +398,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
     followMutation(articleId.toString(), {
       onSuccess: data => {
-<<<<<<< HEAD
         //debugLog('follow success');
-=======
         if (data !== undefined) setLocalIsFollowing(data);
         //console.log('follow success');
->>>>>>> e4ef970d2297809b58b78858ac08f741c93d5b5e
         if (data && socket) {
           socket.emit('notification', {
             type: 'userFollow',
@@ -450,6 +447,37 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         },
         onError: (err: any) => {
           debugLog('error', err);
+          Snackbar.show({
+            text: 'Something went wrong, try again!',
+            duration: Snackbar.LENGTH_LONG,
+          });
+        },
+      });
+    } else {
+      Alert.alert('Article not found');
+    }
+  };
+
+  const handleTrust = () => {
+    if (isGuest) {
+      navigation.navigate('GuestPlaceholderScreen', {
+        title: 'Sign In Required',
+        description: 'Please sign in or sign up to trust this article.',
+        iconName: 'shield',
+      });
+      return;
+    }
+    if (article) {
+      trustMutation(undefined, {
+        onSuccess: (data: {isTrusted: boolean}) => {
+          refetch();
+          Snackbar.show({
+            text: data?.isTrusted ? 'Marked as trusted!' : 'Trust removed',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+        onError: (err: any) => {
+          console.log('error', err);
           Snackbar.show({
             text: 'Something went wrong, try again!',
             duration: Snackbar.LENGTH_LONG,
@@ -669,7 +697,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       wordsRef.current = words;
       chunkIndexRef.current = 0;
 
-<<<<<<< HEAD
       Tts.addEventListener('tts-finish', speakNextChunk);
       Tts.addEventListener('tts-error', e => {
         debugLog('TTS Error:', e);
@@ -677,10 +704,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         setIsPaused(false);
         setPlayerVisible(false);
       });
-=======
       attachArticleTtsSubscriptions();
->>>>>>> e4ef970d2297809b58b78858ac08f741c93d5b5e
-
+      attachArticleTtsSubscriptions();
       setIsPlaying(true);
       setIsPaused(false);
       setPlayerVisible(true);
@@ -709,7 +734,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         // Step back one chunk to resume from the interrupted chunk
         chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
 
-<<<<<<< HEAD
         // Re-attach listeners
         Tts.addEventListener('tts-finish', speakNextChunk);
         Tts.addEventListener('tts-error', e => {
@@ -718,10 +742,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           setIsPaused(false);
           setPlayerVisible(false);
         });
-=======
         attachArticleTtsSubscriptions();
->>>>>>> e4ef970d2297809b58b78858ac08f741c93d5b5e
-
+        attachArticleTtsSubscriptions();
         speakNextChunk();
       } else {
         // Pause
@@ -759,7 +781,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       // Note: Rewind is approximate and might read earlier parts of a smaller previous chunk.
       chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
       Tts.stop().then(() => {
-<<<<<<< HEAD
         Tts.addEventListener('tts-finish', speakNextChunk);
         Tts.addEventListener('tts-error', e => {
           debugLog('TTS Error:', e);
@@ -767,9 +788,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           setIsPaused(false);
           setPlayerVisible(false);
         });
-=======
         attachArticleTtsSubscriptions();
->>>>>>> e4ef970d2297809b58b78858ac08f741c93d5b5e
+        attachArticleTtsSubscriptions();
         speakNextChunk();
       });
     }
