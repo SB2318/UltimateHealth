@@ -53,6 +53,7 @@ export type RootStackParamList = {
     recordId?: string;
   };
   PodcastProfile: undefined;
+  PlaylistDetailScreen: { playlist: PlayList };
   ReviewScreen: {
     articleId: number;
     authorId: string;
@@ -100,6 +101,10 @@ export type RootStackParamList = {
   };
   ProfileEditScreen: undefined;
   NotificationPreferencesScreen: undefined;
+  InsightScreen: undefined;
+  RepostsScreen: undefined;
+  SavedArticlesScreen: undefined;
+  WellnessDashboardScreen: undefined;
   LogoutScreen: {profile_image: string; username: string};
   RenderSuggestion: {
     htmlContent: string;
@@ -133,6 +138,8 @@ export type RootStackParamList = {
   CommunityGuidelines: undefined;
   ContributorPage: undefined;
   OpenSourcePage: undefined;
+  ReadingHistoryScreen: undefined;
+  ChatbotScreen: { characterId: string; characterName?: string; characterAvatar?: string };
 };
 
 export type RedirectTo = {
@@ -151,6 +158,13 @@ export type Message = {
   userHandle: string | null;
   profileImage: string | null;
 };
+
+export interface Character {
+  id: string;
+  name: string;
+  tagline: string;
+  avatarUrl: string;
+}
 
 export type UserDetail = {
   user_name: string;
@@ -182,6 +196,26 @@ export type UserProfileScreenProp = StackScreenProps<
   'UserProfileScreen'
 >;
 
+export type InsightScreenProp = StackScreenProps<
+  RootStackParamList,
+  'InsightScreen'
+>;
+
+export type RepostsScreenProp = StackScreenProps<
+  RootStackParamList,
+  'RepostsScreen'
+>;
+
+export type SavedArticlesScreenProp = StackScreenProps<
+  RootStackParamList,
+  'SavedArticlesScreen'
+>;
+
+export type WellnessDashboardScreenProp = StackScreenProps<
+  RootStackParamList,
+  'WellnessDashboardScreen'
+>;
+
 export type OtpScreenProp = StackScreenProps<RootStackParamList, 'OtpScreen'>;
 
 export type SignUpScreenFirstProp = StackScreenProps<
@@ -197,6 +231,11 @@ export type SignUpScreenSecondProp = StackScreenProps<
 export type PodcastProfileProp = StackScreenProps<
   RootStackParamList,
   'PodcastProfile'
+>;
+
+export type PlaylistDetailScreenProp = StackScreenProps<
+  RootStackParamList,
+  'PlaylistDetailScreen'
 >;
 
 export type ArticleDescriptionProp = StackScreenProps<
@@ -311,7 +350,11 @@ export type HomeScreenProps = CompositeScreenProps<
   | StackScreenProps<RootStackParamList, 'NotificationScreen'>
 >;
 
-export type ChatBotScreenProps = BottomTabScreenProps<TabParamList, 'Chatbot'>;
+export type ChatBotScreenProps = StackScreenProps<RootStackParamList, 'ChatbotScreen'>;
+export type PersonaLobbyScreenProps = CompositeScreenProps<
+  BottomTabScreenProps<TabParamList, 'Chatbot'>,
+  StackScreenProps<RootStackParamList, 'ChatbotScreen'>
+>;
 export type OverviewScreenProps = StackScreenProps<
   RootStackParamList,
   'OverviewScreen'
@@ -558,6 +601,7 @@ export type Article = {
   author_name: string;
   lastUpdatedAt: string;
   imageUtils: string;
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
 };
 
 export type ArticleSummary = {
@@ -591,6 +635,7 @@ export type ArticleData = {
   repostUsers: string[];
   likeCount: number;
   likedUsers: User[];
+  trustUsers: string[];
   savedUsers: string[];
   mentionedUsers: User[];
   language: string;
@@ -608,6 +653,8 @@ export type ArticleData = {
   translatedArticles?: ArticleData[];
   summaryData?: ArticleSummary;
   relatedPodcasts?: RelatedPodcast[];
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
+  body?: string;
 };
 
 export type ArticleTranslationSource = {
@@ -684,6 +731,7 @@ export type CategoryType = {
 export type TokenStatus = {
   isValid: boolean;
   message: string;
+  isNetworkError?: boolean;
 };
 
 export type User = {
@@ -720,6 +768,14 @@ export type User = {
   improvements: string[];
   isBlockUser: boolean;
   isBannedUser: boolean;
+};
+
+export type TrustedUser = {
+  _id: string;
+  user_handle: string;
+  user_name: string;
+  Profile_image?: string;
+  bio?: string;
 };
 
 export type Contactdetail = {

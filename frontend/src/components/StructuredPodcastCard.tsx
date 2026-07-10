@@ -85,9 +85,9 @@ const StructuredPodcastCard: React.FC<StructuredPodcastCardProps> = ({
               {episode.description}
             </Text>
             <Text style={[styles.episodeMeta, { color: accentColor }]}>🕐 {episode.durationMinutes} min · {episode.topic}</Text>
-            {progresses[episode.id] && progresses[episode.id].duration > 0 && (
+            {progresses[episode.id] && (
               <View style={styles.progressBarContainer}>
-                <View style={[styles.progressBar, { width: `${(progresses[episode.id].position / progresses[episode.id].duration) * 100}%`, backgroundColor: accentColor }]} />
+                <View style={[styles.progressBar, { width: `${progresses[episode.id].duration > 0 ? Math.min(progresses[episode.id].position / progresses[episode.id].duration, 1) * 100 : 0}%`, backgroundColor: accentColor }]} />
               </View>
             )}
           </View>

@@ -17,7 +17,7 @@ function App() {
             staleTime: 1000 * 60,
           },
         },
-      })
+      }),
   );
 
   useEffect(() => {
@@ -38,7 +38,7 @@ function App() {
           extra: { context: 'App startup audio configuration' },
         });
 
-        
+        if (__DEV__) {
           logger.error('[App] Failed to configure audio mode:', error);
         }
       }

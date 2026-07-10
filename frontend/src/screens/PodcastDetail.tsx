@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+/* eslint-disable react-compiler/react-compiler */
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -14,7 +14,7 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {PodcastDetailScreenProp} from '../type';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import Slider from '@react-native-community/slider';
+import Slider from '../components/SliderCompat';
 import {GlassStyles} from '../styles/GlassStyles';
 
 import {useAudioPlayer} from 'expo-audio';
@@ -31,6 +31,7 @@ import {useSocket} from '../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import Loader from '../components/Loader';
 import LoadingSpinner from '../components/LoadingSpinner';
+import PodcastDetailSkeleton from '../components/PodcastDetailSkeleton';
 import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
 import LottieView from 'lottie-react-native';
 import AudioWaveform from '../components/AudioWaveform';
@@ -841,7 +842,10 @@ useEffect(() => {
   );
 
   return (
-    <ScrollView backgroundColor="#0B1425" contentContainerStyle={{flexGrow: 1}}>
+    <ScrollView
+      backgroundColor="#0B1425"
+      contentContainerStyle={{ flexGrow: 1 } as any}
+    >
       <Theme name="dark">
         <YStack
           flexGrow={1}

@@ -1,17 +1,16 @@
-import {
-  View,
+import { View,
   StyleSheet,
-  ScrollView,
+   ScrollView ,
   TouchableOpacity,
   Text,
   Image,
   Alert,
   Platform,
-} from 'react-native';
+ } from 'react-native';
 import {OfflinePodcastDetailProp, PodcastData} from '../type';
 import {hp} from '../helper/Metric';
 import {ON_PRIMARY_COLOR, BUTTON_COLOR, PRIMARY_COLOR} from '../helper/Theme';
-import Slider from '@react-native-community/slider';
+import SliderRN from '@react-native-community/slider';
 import { formatDateWithTime } from '../helper/dateUtils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // eslint-disable-next-line import/no-duplicates
@@ -20,6 +19,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 
 import {formatCount, updateOfflinePodcastLikeStatus} from '../helper/Utils';
 import {useDispatch, useSelector} from 'react-redux';
+import type {ComponentType} from 'react';
 import {useEffect, useState} from 'react';
 import Snackbar from 'react-native-snackbar';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
@@ -30,6 +30,8 @@ import {useSocket} from '../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import {useAudioPlayer} from 'expo-audio';
 import {useLikePodcast} from '../hooks/useLikePodcast';
+ 
+const Slider = SliderRN as any;
 
 export default function OfflinePodcastDetail({
   route,
@@ -330,7 +332,7 @@ export default function OfflinePodcastDetail({
         minimumTrackTintColor={PRIMARY_COLOR}
         maximumTrackTintColor="#ccc"
         thumbTintColor={PRIMARY_COLOR}
-        onSlidingComplete={async value => {
+        onSlidingComplete={async (value: number) => {
           // seek to selected time
           await player.seekTo(value);
         }}

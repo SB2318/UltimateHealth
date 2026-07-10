@@ -1,3 +1,41 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# ✅ PR Title Checker
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Validates that every pull request title starts with an approved Conventional
+#   Commits prefix. This ensures a consistent, parseable commit history and
+#   enables automated changelog generation.
+#
+# HOW IT WORKS:
+#   1. Triggers on PR opened, edited, synchronized, labeled, or unlabeled.
+#   2. Skips Dependabot PRs (github.actor != 'dependabot[bot]').
+#   3. Uses the thehanimo/pr-title-checker action with the configuration
+#      defined in .github/pr-title-checker.json.
+#   4. Allowed title prefixes (from config):
+#        docs:      → Documentation changes
+#        feat:      → New features
+#        fix:       → Bug fixes
+#        build:     → Build system changes
+#        refactor:  → Code refactoring
+#        revert:    → Reverts a previous commit
+#        style:     → Formatting / style changes
+#        chore:     → Maintenance tasks
+#        test:      → Test additions or fixes
+#   5. Fails the check if the title does not match any allowed prefix,
+#      blocking the PR from being merged.
+#
+# TRIGGERS:
+#   - Automatic : PR opened, edited, synchronized, labeled, or unlabeled.
+#   - Skipped   : PRs opened by Dependabot.
+#
+# CONFIGURATION FILE:
+#   - .github/pr-title-checker.json
+#
+# SECRETS REQUIRED:
+#   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: "PR Title Checker"
 on:
   pull_request:
