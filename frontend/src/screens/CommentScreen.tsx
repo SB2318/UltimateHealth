@@ -153,12 +153,17 @@ const CommentScreen = ({
       patternsConfig,
     });
 
+  const fetchComments = () => {
+    if (!socket) return;
+      socket.emit('fetch-comments', {
+      articleId: route.params.articleId,
+      });
+    };
+
   useEffect(() => {
     if (!socket) return;
 
-    socket.emit('fetch-comments', {
-      articleId: route.params.articleId,
-    });
+     fetchComments();
 
     socket.on(
       'like-comment-processing',
@@ -475,7 +480,7 @@ const CommentScreen = ({
   }
 
   return (
-    <ErrorBoundary>
+    <ErrorBoundary onRetry={fetchComments}>
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={{flex: 1}}
