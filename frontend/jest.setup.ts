@@ -1,5 +1,27 @@
 import 'react-native-gesture-handler/jestSetup';
 
+jest.mock('react-native-worklets', () => {
+  return {
+    makeShareableCloneRecursive: jest.fn(),
+    makeShareableCloneDeep: jest.fn(),
+    makeShareable: jest.fn(),
+    createSerializable: jest.fn(),
+    createRunInContextFn: jest.fn(),
+    runOnJS: jest.fn(),
+    runOnUI: jest.fn(),
+    isConfigured: jest.fn(() => true),
+    serializableMappingCache: new Map(),
+    RuntimeKind: { ReactNative: 1, Worklet: 2 },
+    isWorkletFunction: jest.fn(() => true),
+    scheduleOnUI: jest.fn(),
+    default: {
+      isConfigured: jest.fn(() => true),
+      createSerializable: jest.fn(),
+      serializableMappingCache: new Map(),
+    }
+  };
+});
+
 jest.mock('react-native-reanimated', () => {
   const Reanimated = require('react-native-reanimated/mock');
   Reanimated.default.call = () => {};
@@ -103,3 +125,13 @@ jest.mock('tamagui', () => {
   };
 });
 
+jest.mock('react-native-tts', () => ({
+  getInitStatus: jest.fn(() => Promise.resolve()),
+  setDefaultLanguage: jest.fn(() => Promise.resolve()),
+  setDefaultRate: jest.fn(),
+  setDefaultPitch: jest.fn(),
+  speak: jest.fn(() => Promise.resolve()),
+  stop: jest.fn(() => Promise.resolve()),
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+}));

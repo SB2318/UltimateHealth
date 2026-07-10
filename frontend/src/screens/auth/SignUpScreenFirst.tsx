@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/incompatible-library */
 import React, {useState} from 'react';
 import {ScrollView, YStack, XStack, Text, Input, Button, Image, useTheme} from 'tamagui';
 import Icon from '@expo/vector-icons/MaterialIcons';
@@ -9,7 +10,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {SignUpScreenFirstProp, UserDetail} from '../../type';
-import {AxiosError} from 'axios';
+import type  from 'axios';
 import Snackbar from 'react-native-snackbar';
 import EmailVerifiedModal from '../../components/VerifiedModal';
 import SecurityWarningModal from '../../components/SecurityWarningModal';
@@ -24,13 +25,27 @@ import {
 import {useCheckUserHandleAvailability} from '@/src/hooks/useCheckUserHandleAvailability';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
 import {useRegdMutation} from '@/src/hooks/useUserRegistration';
+type AxiosError = any;
 
 const signupSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  username: z.string().min(1, 'User Handle is required'),
-  email: z.string().email('Please enter a valid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  role: z.string().min(1, 'Please select a role'),
+  name: z
+    .string()
+    .min(1, 'Please enter your full name.')
+    .min(2, 'Name must be at least 2 characters.'),
+  username: z
+    .string()
+    .min(1, 'User handle is required.')
+    .min(3, 'User handle must be at least 3 characters.')
+    .regex(/^[a-zA-Z0-9_]+$/, 'User handle can only contain letters, numbers, and underscores.'),
+  email: z
+    .string()
+    .min(1, 'Email address is required.')
+    .email('Please enter a valid email address.'),
+  password: z
+    .string()
+    .min(1, 'Password is required.')
+    .min(8, 'Password must contain at least 8 characters.'),
+  role: z.string().min(1, 'Please select a role to continue.'),
 });
 type SignupFormData = z.infer<typeof signupSchema>;
 
@@ -65,6 +80,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 
   const username = watch('username');
   const userHandle = username?.trim();
+  const email = watch('email');
 
   const {data: handleAvailability, isLoading: isCheckingHandle} =
     useCheckUserHandleAvailability(userHandle);
@@ -352,7 +368,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
               <AntDesign
                 name="camera"
                 size={26}
-                color={theme.white.val}
+                color={theme.white?.val}
                 style={{transform: [{scaleX: -1}]}}
               />
             ) : (
@@ -391,15 +407,15 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     flex={1}
                     height="$5"
                     borderColor={error ? "$red10" : "$blue10"}
-                    borderWidth={1}
+                    borderWidth={error ? 2 : 1}
                     borderRadius="$3"
-                    placeholder="Name"
+                    placeholder="Enter your full name"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
                   <YStack position="absolute" right={14} top={10}>
-                    <Icon name="person" size={20} color={theme.black.val} />
+                    <Icon name="person" size={20} color={theme.black?.val} />
                   </YStack>
                 </XStack>
                 {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
@@ -418,15 +434,16 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     flex={1}
                     height="$5"
                     borderColor={error ? "$red10" : "$blue10"}
-                    borderWidth={1}
+                    borderWidth={error ? 2 : 1}
                     borderRadius="$3"
-                    placeholder="User Handle"
+                    placeholder="Choose a unique handle (e.g. john_doe)"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
+                    autoCapitalize="none"
                   />
                   <YStack position="absolute" right={14} top={10}>
-                    <Icon name="person" size={20} color={theme.black.val} />
+                    <Icon name="person" size={20} color={theme.black?.val} />
                   </YStack>
                 </XStack>
                 {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
@@ -457,14 +474,14 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
             name="email"
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
               <YStack gap="$1">
-                <XStack position="relative">
+                <XStack position="relative" top={8}>
                   <Input
                     flex={1}
                     height="$5"
                     borderColor={error ? "$red10" : "$blue10"}
-                    borderWidth={1}
+                    borderWidth={error ? 2 : 1}
                     borderRadius="$3"
-                    placeholder="Email"
+                    placeholder="Enter your email address"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -472,7 +489,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     autoCapitalize="none"
                   />
                   <YStack position="absolute" right={14} top={10}>
-                    <Icon name="email" size={20} color={theme.black.val} />
+                    <Icon name="email" size={20} color={theme.black?.val} />
                   </YStack>
                 </XStack>
                 {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}
@@ -491,9 +508,9 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     flex={1}
                     height="$5"
                     borderColor={error ? "$red10" : "$blue10"}
-                    borderWidth={1}
+                    borderWidth={error ? 2 : 1}
                     borderRadius="$3"
-                    placeholder="Password"
+                    placeholder="At least 8 characters"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -509,7 +526,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                     <AntDesign
                       name={isSecureEntry ? 'eye-invisible' : 'eye'}
                       size={17}
-                      color={theme.black.val}
+                      color={theme.black?.val}
                     />
                   </Button>
                 </XStack>
@@ -527,7 +544,7 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                 <Dropdown
                   style={{
                     height: 40,
-                    borderColor: error ? 'red' : theme.blue10.val,
+                    borderColor: error ? 'red' : theme.blue10?.val,
                     borderWidth: 1,
                     borderRadius: 5,
                     paddingHorizontal: 10,
@@ -593,3 +610,4 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
 };
 
 export default SignupPageFirst;
+

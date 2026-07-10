@@ -1,3 +1,36 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 🤖 Gemini AI PR Reviewer (Manual / On-Demand)
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Allows authorized maintainers to trigger a Gemini AI-powered code review
+#   on any pull request by typing "/review" in a PR comment. The AI reads the
+#   diff and posts a detailed review directly on the PR.
+#
+# HOW IT WORKS:
+#   1. Listens for any new comment created on any issue or PR.
+#   2. Runs only if ALL three conditions are true:
+#        a. The comment is on a Pull Request (not a plain issue).
+#        b. The comment body contains the "/review" command.
+#        c. The commenter is an authorized user (SB2318 or rushiii3).
+#   3. Checks out the repo and runs ai_reviewer.py with Gemini API keys.
+#   4. The script fetches the PR diff and posts an AI review as a PR comment.
+#
+# TRIGGERS:
+#   - Manual : An authorized user comments "/review" on any open PR.
+#
+# AUTHORIZED USERS:
+#   - SB2318, rushiii3  (defined in the workflow's if: condition)
+#
+# PERMISSIONS REQUIRED:
+#   - contents: read        → to read the code diff
+#   - pull-requests: write  → to post the review comment on the PR
+#
+# SECRETS REQUIRED:
+#   - GEMINI_KEY_1 ... GEMINI_KEY_5  → Gemini API keys (rotated for rate limits)
+#   - GITHUB_TOKEN                   → provided automatically by GitHub
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: Gemini AI PR Reviewer
 
 on:

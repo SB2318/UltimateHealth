@@ -1,32 +1,15 @@
-import {
-  StyleSheet,
+import { StyleSheet,
   Text,
-  TextInput,
+   TextInput ,
   TouchableOpacity,
   View,
-} from 'react-native';
+ } from 'react-native';
 import React, {useState} from 'react';
 import Feather from '@expo/vector-icons/Feather';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {PRIMARY_COLOR} from '../helper/Theme';
-
-const passwordSchema = z.object({
-  old_password: z.string().min(1, 'Old password is required'),
-  new_password: z.string()
-    .min(6, 'At least 6 characters')
-    .regex(/(?=.*[a-z]).{6,}/, 'At least 6 characters with lowercase letter'),
-  confirm_password: z.string().min(1, 'Please confirm your new password'),
-}).refine((data) => data.new_password === data.confirm_password, {
-  message: "Passwords don't match",
-  path: ['confirm_password'],
-}).refine((data) => data.new_password !== data.old_password, {
-  message: "New password must be different from old password",
-  path: ['new_password'],
-});
-
-export type PasswordFormData = z.infer<typeof passwordSchema>;
+import { passwordSchema, PasswordFormData } from '../schemas/profileSchemas';
 
 interface PasswordTabProps {
   handleSubmitPassword: (data: PasswordFormData) => void;
@@ -74,9 +57,9 @@ const PasswordTab = ({
                 <View style={styles.passwordContainer}>
                   <TextInput
                     secureTextEntry={!isVisibleOldPassword}
-                    placeholder="Enter your old password"
+                    placeholder="Enter your current password"
                     placeholderTextColor="#6b7280"
-                    style={[styles.inputControl, error && { borderColor: 'red' }]}
+                    style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -108,9 +91,9 @@ const PasswordTab = ({
                 <View style={styles.passwordContainer}>
                   <TextInput
                     secureTextEntry={!isVisibleNewPassword}
-                    placeholder="Enter your new password"
+                    placeholder="At least 8 characters"
                     placeholderTextColor="#6b7280"
-                    style={[styles.inputControl, error && { borderColor: 'red' }]}
+                    style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
@@ -142,9 +125,9 @@ const PasswordTab = ({
                 <View style={styles.passwordContainer}>
                   <TextInput
                     secureTextEntry={!isVisibleConfirmPassword}
-                    placeholder="Enter your confirm password"
+                    placeholder="Re-enter your new password"
                     placeholderTextColor="#6b7280"
-                    style={[styles.inputControl, error && { borderColor: 'red' }]}
+                    style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}

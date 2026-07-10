@@ -1,18 +1,20 @@
+/* eslint-disable react-compiler/react-compiler */
 
-import {AppState, FlatList, StyleSheet, View} from 'react-native';
+import { AppState,  FlatList , StyleSheet, View } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
-import NotificationItem from '../components/NotificationItem';
-import {useSelector} from 'react-redux';
-import {Notification, NotificationType} from '../type';
-import Loader from '../components/Loader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
-import {hp} from '../helper/Metric';
-import {SafeAreaView} from 'react-native';
-import {useGetAllNotifications} from '../hooks/useGetAllNotifications';
-import {useMarkNotificationAsRead} from '../hooks/useMarkNoticationAsRead';
-import {useDeleteNotification} from '../hooks/useDeleteNotification';
+import {useDispatch, useSelector} from 'react-redux';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import { hp } from '../helper/Metric';
 import {NoNotificationState} from '../components/EmptyStates';
+import Loader from '../components/Loader';
+import NotificationItem from '../components/NotificationItem';
+import {Notification, NotificationType} from '../type';
+import { useDeleteNotification } from '../hooks/useDeleteNotification';
+import { useGetAllNotifications } from '../hooks/useGetAllNotifications';
+import { useMarkNotificationAsRead } from '../hooks/useMarkNoticationAsRead';
+import {mergeNotificationsById} from '../helper/notificationUtils';
 
 type PendingDelete = {
   item: Notification;
@@ -53,8 +55,12 @@ const NotificationScreen = ({navigation}: any) => {
         setNotificationsData(notificationsRes.notifications);
       } else {
         if (notificationsRes.notifications) {
-          const oldNotif = notificationsData ?? [];
-          setNotificationsData([...oldNotif, ...notificationsRes.notifications]);
+          setNotificationsData(previous =>
+            mergeNotificationsById(
+              previous ?? [],
+              notificationsRes.notifications,
+            ),
+          );
         }
       }
     }
@@ -98,11 +104,16 @@ const NotificationScreen = ({navigation}: any) => {
     return () => {};
   }, [notificationsData, isConnected]);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    refetch();
-    setRefreshing(false);
-  };
+  const onRefresh = async () => {
+  setRefreshing(true);
+
+  try {
+    setPage(1); // Reset pagination
+    await refetch(); // Wait until the request completes
+  } finally {
+    setRefreshing(false); // Hide spinner after refetch finishes
+  }
+};
 
   const restoreDeletedNotification = useCallback((snapshot: PendingDelete) => {
     setNotificationsData(previous => {
@@ -155,15 +166,15 @@ const NotificationScreen = ({navigation}: any) => {
   );
   
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', (state: string) => {
-      if (state === 'active') {
-        setPage(1); // reset pagination
-        refetch(); // fetch fresh data
-      }
-    });
+  const subscription = AppState.addEventListener('change', async (state: string) => {
+    if (state === 'active') {
+      setPage(1);
+      await refetch();
+    }
+  });
 
-    return () => subscription.remove();
-  }, [refetch]);
+  return () => subscription.remove();
+}, [refetch]);
 
   const handleDeleteAction = useCallback(
     (item: Notification) => {
@@ -298,6 +309,7 @@ const NotificationScreen = ({navigation}: any) => {
         navigation.navigate('CommentScreen', {
           articleId: item.articleId._id,
           mentionedUsers: item.articleId.mentionedUsers,
+          article: item.articleId,
         });
       }
     } else if (item.type === NotificationType.ArticleReview) {
@@ -406,4 +418,5 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
 });
+
 
