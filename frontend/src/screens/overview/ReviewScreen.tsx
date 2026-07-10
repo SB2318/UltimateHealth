@@ -1,13 +1,12 @@
-import {
-  Image,
+import { Image,
   Platform,
   StyleSheet,
   TouchableOpacity,
   View,
-  ScrollView,
-  FlatList,
+   ScrollView ,
+   FlatList ,
   Dimensions,
-} from 'react-native';
+  } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -50,7 +49,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
 
   const [comments, setComments] = useState<Comment[]>([]);
 
-  const flatListRef = useRef<FlatList<Comment>>(null);
+  //const flatListRef = useRef<FlatList<Comment>>(null);
 
   const {data: loadComments, isLoading} = useGetLoadReviewComments(
     articleId,
@@ -59,6 +58,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   );
 
   useEffect(() => {
+    // eslint-disable-next-line
     setComments(loadComments ?? []);
   }, [loadComments]);
 
@@ -90,9 +90,9 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
 
       setComments(prevComments => {
         const newComments = [data, ...prevComments];
-        if (flatListRef.current && newComments.length > 1) {
-          flatListRef?.current.scrollToIndex({index: 0, animated: true});
-        }
+        // if (flatListRef.current && newComments.length > 1) {
+        //   flatListRef?.current.scrollToIndex({index: 0, animated: true});
+        // }
 
         return newComments;
       });

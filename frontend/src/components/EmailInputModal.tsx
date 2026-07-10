@@ -1,7 +1,8 @@
+ 
 import React, { useEffect, useState } from 'react';
 import { YStack, Button, Input, Spacer, Text, XStack, Card, Circle, Paragraph, ScrollView as TamaguiScrollView } from 'tamagui';
 import { Sheet } from '@tamagui/sheet';
-import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { KeyboardAvoidingView, Platform,  ScrollView   } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -236,7 +237,7 @@ export default function EmailInputBottomSheet({
                   shadowOpacity={0.3}
                   accessibilityRole="button"
                   accessibilityLabel={isRequestVerification ? 'Send Verification Link' : 'Send Reset Code'}
-                  accessibilityState={{ disabled: !email.trim() }}
+                 accessibilityState={{ disabled: !isValid || !emailValue }}
                 >
                   <Text fontSize={17} fontWeight="600" color="white">
                     {isRequestVerification ? 'Send Verification Link' : 'Send Reset Code'}
@@ -276,3 +277,4 @@ export default function EmailInputBottomSheet({
     </Sheet>
   );
 }
+

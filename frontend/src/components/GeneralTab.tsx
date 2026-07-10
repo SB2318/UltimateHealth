@@ -1,25 +1,16 @@
-import {
-  StyleSheet,
+import { StyleSheet,
   Text,
-  TextInput,
+   TextInput ,
   TouchableOpacity,
   View,
   Image,
-} from 'react-native';
+ } from 'react-native';
 import React, {memo, useEffect} from 'react';
 import Feather from '@expo/vector-icons/Feather';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {PRIMARY_COLOR} from '../helper/Theme';
-
-const generalSchema = z.object({
-  username: z.string().min(1, 'Username is required'),
-  userHandle: z.string().min(1, 'User handle is required'),
-  email: z.string().email('Please enter a valid email'),
-  about: z.string().min(1, 'About is required'),
-});
-export type GeneralFormData = z.infer<typeof generalSchema>;
+import { generalSchema, GeneralFormData } from '../schemas/profileSchemas';
 
 interface ProfileEditGeneralTab {
   user: any;
@@ -87,9 +78,9 @@ const GeneralTab = ({
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
               <>
                 <TextInput
-                  placeholder="Enter your username"
+                  placeholder="Enter your full name"
                   placeholderTextColor="#6b7280"
-                  style={[styles.inputControl, error && { borderColor: 'red' }]}
+                  style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
@@ -145,10 +136,10 @@ const GeneralTab = ({
             render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
               <>
                 <TextInput
-                  placeholder="Enter something about yourself..."
+                  placeholder="Tell us something about yourself..."
                   placeholderTextColor="#6b7280"
                   textAlignVertical="top"
-                  style={[styles.aboutInput, error && { borderColor: 'red' }]}
+                  style={[styles.aboutInput, error && { borderColor: '#ef4444', borderWidth: 2 }]}
                   multiline={true}
                   numberOfLines={4}
                   value={value}

@@ -2,7 +2,7 @@ import NetInfo from '@react-native-community/netinfo';
 import {Category, CategoryType, PodcastData} from '../type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GET_STORAGE_DATA} from './APIUtils';
-import {Linking, PermissionsAndroid, Platform} from 'react-native';
+import {Alert, Linking, Platform, PermissionsAndroid} from 'react-native';
 import RNFS from 'react-native-fs';
 import {secureClearAllItems} from './SecureStorageUtils';
 import {
@@ -96,6 +96,10 @@ export const retrieveItem = async (key: string) => {
 
 export const storeItem = async (key: string, value: string) => {
   try {
+    if (value === undefined || value === null) {
+      console.warn(`[AsyncStorage] Attempted to store null/undefined value for key: ${key}`);
+      return;
+    }
     await AsyncStorage.setItem(key, value);
   } catch (e) {
     console.log('Async Storage Data error', e);

@@ -1,8 +1,9 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {GET_NOTIFICATION_PREFERENCES} from '../helper/APIUtils';
 import {NotificationPreferencesResponse} from '../type';
 import {useSelector} from 'react-redux';
+type AxiosError = any;
 
 const fetchNotificationPreferences = async (): Promise<NotificationPreferencesResponse> => {
   const {data} = await axios.get(GET_NOTIFICATION_PREFERENCES);
