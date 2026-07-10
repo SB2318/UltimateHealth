@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, Image, Linking } from 'react-native';
+import { safeOpenUrl } from '../utils/safeOpenUrl';
 import { 
   YStack, 
   XStack, 
@@ -56,7 +57,7 @@ const PROGRAMS = [
 ];
 
 const ProgramsPage = () => {
-  const handlePress = (url: string) => Linking.openURL(url);
+  const handlePress = (url: string) => safeOpenUrl(url);
 
   return (
     <Theme name="light">
