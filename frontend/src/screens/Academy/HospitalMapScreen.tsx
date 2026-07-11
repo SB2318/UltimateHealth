@@ -1,17 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ACADEMY_BACKGROUND, ACADEMY_PRIMARY, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_SURFACE, ACADEMY_BORDER } from '../../helper/Theme';
 
 const DEPARTMENTS = [
-  { id: 'reception', name: 'Reception', icon: 'desk', color: '#3B82F6', row: 0, col: 0 },
+  { id: 'reception', name: 'Reception', icon: 'monitor-dashboard', color: '#3B82F6', row: 0, col: 0 },
   { id: 'emergency', name: 'Emergency', icon: 'ambulance', color: '#EF4444', row: 0, col: 1 },
   { id: 'opd', name: 'OPD', icon: 'stethoscope', color: '#10B981', row: 1, col: 0 },
   { id: 'pharmacy', name: 'Pharmacy', icon: 'pill', color: '#F59E0B', row: 1, col: 1 },
   { id: 'radiology', name: 'Radiology', icon: 'radioactive', color: '#8B5CF6', row: 2, col: 0 },
   { id: 'lab', name: 'Laboratory', icon: 'flask', color: '#06B6D4', row: 2, col: 1 },
   { id: 'icu', name: 'ICU', icon: 'bed-outline', color: '#EF4444', row: 3, col: 0 },
-  { id: 'ot', name: 'Operation Theater', icon: 'scalpel', color: '#10B981', row: 3, col: 1 },
+  { id: 'ot', name: 'Operation Theater', icon: 'needle', color: '#10B981', row: 3, col: 1 },
 ];
 
 const HospitalMapScreen = ({ navigation }: any) => {

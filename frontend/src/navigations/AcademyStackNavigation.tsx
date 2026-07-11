@@ -1,5 +1,5 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import AcademyHomeScreen from '../screens/Academy/AcademyHomeScreen';
 import CourseListingScreen from '../screens/Academy/CourseListingScreen';
 import CourseDetailScreen from '../screens/Academy/CourseDetailScreen';
@@ -10,7 +10,7 @@ import WorkflowScreen from '../screens/Academy/WorkflowScreen';
 import QuizScreen from '../screens/Academy/QuizScreen';
 import AcademyProfileScreen from '../screens/Academy/AcademyProfileScreen';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 const AcademyStackNavigation = () => {
   return (

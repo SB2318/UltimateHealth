@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ACADEMY_BACKGROUND, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_PRIMARY } from '../../helper/Theme';
 import { ACADEMY_COURSES, ACADEMY_USER_STATS } from '../../helper/AcademyMockData';
 import ProgressCard from '../../components/Academy/ProgressCard';
@@ -54,7 +55,7 @@ const AcademyHomeScreen = ({ navigation }: any) => {
             style={styles.secondaryButton}
             onPress={() => navigation.navigate('HospitalMap')}
           >
-            <MaterialCommunityIcons name="map-marker-path" size={20} color={ACADEMY_PRIMARY} />
+            <MaterialCommunityIcons name="map-marker-radius" size={20} color={ACADEMY_PRIMARY} />
             <Text style={styles.secondaryButtonText}>Hospital Map</Text>
           </TouchableOpacity>
         </View>

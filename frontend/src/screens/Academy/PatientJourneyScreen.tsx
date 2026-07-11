@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ACADEMY_BACKGROUND, ACADEMY_PRIMARY, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_SURFACE, ACADEMY_BORDER } from '../../helper/Theme';
 
 const JOURNEY_STEPS = [
   { id: 1, title: 'Patient Arrival', icon: 'hospital-building', desc: 'Patient arrives at the hospital.' },
-  { id: 2, title: 'Reception', icon: 'desk', desc: 'Initial inquiry and direction.' },
+  { id: 2, title: 'Reception', icon: 'monitor-dashboard', desc: 'Initial inquiry and direction.' },
   { id: 3, title: 'Registration', icon: 'clipboard-account', desc: 'Patient details entered into EHR.' },
   { id: 4, title: 'Waiting', icon: 'clock-outline', desc: 'Patient waits for their token.' },
   { id: 5, title: 'Doctor Consultation', icon: 'stethoscope', desc: 'Doctor examines the patient.' },
   { id: 6, title: 'Lab/Radiology', icon: 'flask', desc: 'Tests conducted if required.' },
-  { id: 7, title: 'Diagnosis', icon: 'file-document-edit', desc: 'Final diagnosis based on reports.' },
+  { id: 7, title: 'Diagnosis', icon: 'file-edit-outline', desc: 'Final diagnosis based on reports.' },
   { id: 8, title: 'Pharmacy', icon: 'pill', desc: 'Medicines dispensed.' },
-  { id: 9, title: 'Discharge', icon: 'exit-run', desc: 'Patient leaves the hospital.' },
+  { id: 9, title: 'Discharge', icon: 'walk', desc: 'Patient leaves the hospital.' },
 ];
 
 const PatientJourneyScreen = ({ navigation }: any) => {

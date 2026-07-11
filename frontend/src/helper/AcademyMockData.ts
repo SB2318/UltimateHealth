@@ -89,7 +89,7 @@ export const ACADEMY_COURSES: Course[] = [
     duration: '5 hours',
     progress: 100,
     lessonsCount: 25,
-    imageIcon: 'laptop',
+    imageIcon: 'tablet',
     skillsGained: ['EHR Navigation', 'Data Privacy', 'Documentation'],
     learningObjectives: ['Navigate EHR systems', 'Ensure HIPAA compliance'],
     modules: []
