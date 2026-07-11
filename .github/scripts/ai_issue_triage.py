@@ -410,17 +410,82 @@ def handle_issue_opened(repo, issue_number, token, gemini_api_keys):
             return "frontend", "Frontend (escalated)"
         else:
             author = issue.get("user", {}).get("login")
+
+            # --- Check 1: No active assignments ---
             has_active = check_active_assignments(repo, author, token)
-            
-            if not has_active:
-                assign_user(repo, issue_number, author, token)
-                msg = f"This issue has been triaged as a **frontend** task ({difficulty or 'Unclassified Difficulty'}).\n\n> **Expected Effect & Scope:** {decision.get('reasoning')}\n\nHi @{author}! Since you opened this issue and have no other active assignments, I have automatically assigned it to you. Happy coding!"
+            if has_active:
+                msg = (
+                    f"This issue has been triaged as a **frontend** task "
+                    f"({difficulty or 'Unclassified Difficulty'}).\n\n"
+                    f"> **Expected Effect & Scope:** {decision.get('reasoning')}\n\n"
+                    f"It is now open for community contribution!\n\n"
+                    f"Hi @{author}, I couldn't assign this to you automatically because you "
+                    f"currently have another active assignment. Please complete your current "
+                    f"task first!\n\n---\n### 🤖 Assignment Guidelines\n"
+                    f"To get assigned to this issue, simply leave a comment requesting assignment.\n"
+                    f"The AI bot will automatically assign you if you meet the following eligibility criteria:\n"
+                    f"1. You do not currently have any other active assigned issues in this repository.\n"
+                    f"2. If you were previously assigned an issue, you must have submitted a "
+                    f"**Pull Request that references that assigned issue** before requesting a new one."
+                )
                 post_comment(repo, issue_number, msg, token)
-                return "frontend", f"Frontend (auto-assigned to @{author})"
-            else:
-                msg = f"This issue has been triaged as a **frontend** task ({difficulty or 'Unclassified Difficulty'}).\n\n> **Expected Effect & Scope:** {decision.get('reasoning')}\n\nIt is now open for community contribution!\n\nHi @{author}, I couldn't assign this to you automatically because you currently have another active assignment. Please complete your current task first!\n\n---\n### 🤖 Assignment Guidelines\nTo get assigned to this issue, simply leave a comment requesting assignment.\nThe AI bot will automatically assign you if you meet the following eligibility criteria:\n1. You do not currently have any other active assigned issues in this repository.\n2. If you were previously assigned an issue, you must have submitted a **Pull Request that references that assigned issue** before requesting a new one."
-                post_comment(repo, issue_number, msg, token)
-                return "frontend", "Frontend (open)"
+                return "frontend", "Frontend (open, author has active assignment)"
+
+            # --- Check 2: If author had previously closed assigned issues, ---
+            # they must have submitted a PR that explicitly references one of those issues.
+            query = urllib.parse.quote(f"repo:{repo} is:issue assignee:{author} is:closed")
+            past_issues_url = f"https://api.github.com/search/issues?q={query}"
+            past_issues = make_request(past_issues_url, token=token)
+
+            if past_issues and past_issues.get("total_count", 0) > 0:
+                assigned_issue_numbers = [
+                    str(i["number"]) for i in past_issues.get("items", [])
+                ]
+                print(
+                    f"[INFO] @{author} has {len(assigned_issue_numbers)} previously closed "
+                    f"assigned issue(s): {assigned_issue_numbers[:5]}",
+                    flush=True,
+                )
+                has_pr_for_issue = check_pr_references_assigned_issue(
+                    repo, author, assigned_issue_numbers, token
+                )
+                if not has_pr_for_issue:
+                    issue_list = ", ".join(f"#{n}" for n in assigned_issue_numbers[:5])
+                    msg = (
+                        f"This issue has been triaged as a **frontend** task "
+                        f"({difficulty or 'Unclassified Difficulty'}).\n\n"
+                        f"> **Expected Effect & Scope:** {decision.get('reasoning')}\n\n"
+                        f"It is now open for community contribution!\n\n"
+                        f"Hi @{author}, I couldn't assign this to you automatically because "
+                        f"you have previously been assigned issue(s) ({issue_list}) that are "
+                        f"now closed, but no Pull Request referencing those issues was found.\n\n"
+                        f"To be eligible for a new assignment, please submit a Pull Request that "
+                        f"explicitly mentions your assigned issue (e.g. `Fixes #{assigned_issue_numbers[0]}`, "
+                        f"`Closes #{assigned_issue_numbers[0]}`, or `#{assigned_issue_numbers[0]}` "
+                        f"in the PR body/title).\n\n"
+                        f"This rule ensures contributors complete and deliver their work before "
+                        f"taking on new tasks. If you believe this is a mistake, please reach out "
+                        f"to a maintainer @SB2318.\n\n---\n### 🤖 Assignment Guidelines\n"
+                        f"To get assigned to this issue, simply leave a comment requesting assignment.\n"
+                        f"The AI bot will automatically assign you if you meet the following eligibility criteria:\n"
+                        f"1. You do not currently have any other active assigned issues in this repository.\n"
+                        f"2. If you were previously assigned an issue, you must have submitted a "
+                        f"**Pull Request that references that assigned issue** before requesting a new one."
+                    )
+                    post_comment(repo, issue_number, msg, token)
+                    return "frontend", "Frontend (open, author has no PR for previous assignment)"
+
+            # All checks passed — auto-assign the author
+            assign_user(repo, issue_number, author, token)
+            msg = (
+                f"This issue has been triaged as a **frontend** task "
+                f"({difficulty or 'Unclassified Difficulty'}).\n\n"
+                f"> **Expected Effect & Scope:** {decision.get('reasoning')}\n\n"
+                f"Hi @{author}! Since you opened this issue and have no other active "
+                f"assignments, I have automatically assigned it to you. Happy coding!"
+            )
+            post_comment(repo, issue_number, msg, token)
+            return "frontend", f"Frontend (auto-assigned to @{author})"
         
     else:
         # Broad or uncategorized
