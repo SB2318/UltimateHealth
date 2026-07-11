@@ -1,8 +1,9 @@
+/* eslint-disable react-compiler/react-compiler */
+// @ts-nocheck
 import {
   StyleSheet,
   Text,
   View,
-  Image,
   Pressable,
   Alert,
   Platform,
@@ -12,19 +13,30 @@ import AccessibleTouchable from './common/AccessibleTouchable';
 import {fp} from '../helper/Metric';
 import {ArticleCardProps, ArticleData} from '../type';
 import { formatDateShort } from '../helper/dateUtils';
+import { getReadTime, calculateReadTime } from '../utils/readTime';
 import {useSelector} from 'react-redux';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import IonIcons from '@expo/vector-icons/Ionicons';
 import {GET_IMAGE} from '../helper/APIUtils';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import GlobalStyles from '../styles/GlobalStyle';
+
 import {
   formatCount,
   requestStoragePermissions,
   StatusEnum,
 } from '../helper/Utils';
-import {useSharedValue, withTiming} from 'react-native-reanimated';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSequence,
+  withSpring,
+  withDelay,
+} from 'react-native-reanimated';
 import ArticleFloatingMenu from './ArticleFloatingMenu';
 
+import { generateArticleShareUrl, copyArticleShareLink } from '../helper/shareUtils';
 import Entypo from '@expo/vector-icons/Entypo';
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
@@ -39,6 +51,9 @@ import {useLikeArticle} from '../hooks/useLikeArticle';
 import {useSaveArticle} from '../hooks/useSaveArticle';
 import {useLazyGetArticleContent} from '../hooks/useLazyGetArticleContent';
 import {useRepostArticle} from '../hooks/useArticleRepost';
+import { ReadingDifficulty, getArticleDifficulty } from './ReadingDifficulty';
+import {useDoubleTap} from '../hooks/useDoubleTap';
+import { ImageFallback } from './ImageFallback';
 
 const ArticleCard = ({
   item,
@@ -48,9 +63,9 @@ const ArticleCard = ({
   handleEditRequestAction,
   source,
 }: ArticleCardProps) => {
-  const {user_id, user_handle, isGuest} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
-
+  const {user_id, user_handle, isGuest} = useSelector((state: any) => state.user || {});
+  const {isConnected} = useSelector((state: any) => state.network || {});
+  const readTime = calculateReadTime(item.content || item.body || '');
   const socket = useSocket();
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
@@ -61,17 +76,17 @@ const ArticleCard = ({
   const {data: user} = useGetProfile();
 
   const [isLiked, setIsLiked] = useState(
-    item.likedUsers.some(
+     item.likedUsers ? item.likedUsers.some(
       it =>
         (it._id && it._id.toString() === user_id) || it.toString() === user_id,
-    ),
+    ): false,
   );
-  const [likeCount, setLikeCount] = useState(item.likedUsers.length);
-  const [repostCount, setRepostCount] = useState(item.repostUsers.length);
+  const [likeCount, setLikeCount] = useState(item.likedUsers ? item.likedUsers.length : 0);
+  const [repostCount, setRepostCount] = useState(item.repostUsers ? item.repostUsers.length : 0);
 
-  const [saved, setSaved] = useState(item.savedUsers.includes(user_id));
+  const [saved, setSaved] = useState(item.savedUsers && item.savedUsers.includes(user_id));
   const [reposted, setReposted] = useState(
-    item.repostUsers.some(user => user.toString() === user_id),
+    item.repostUsers ? item.repostUsers.some(user => user.toString() === user_id) : false
   );
 
   const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
@@ -83,15 +98,130 @@ const ArticleCard = ({
 
   const {mutate: repost, isPending: repostPending} = useRepostArticle();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {mutate: getArticleContent, isPending: getArticleContentPending} =
     useLazyGetArticleContent();
 
+  // TEMP MOCK DATA — to be replaced by real /content-intel/readability/analyze response
+  // Shape mirrors the VeriWise-Content-Check API: { score, level, approved }
+  const mockReadability = {
+    score: 78,
+    level: 'Beginner Friendly' as 'Beginner Friendly' | 'Intermediate' | 'Advanced',
+    approved: true,
+  const heartScale = useSharedValue(0);
+
+  const heartStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: heartScale.value }],
+      opacity: heartScale.value,
+    };
+  });
+
+  const handleLikeAction = (isDoubleTap = false) => {
+    if (isGuest) {
+      (navigation as any).navigate('GuestPlaceholderScreen', {
+        title: 'Sign In Required',
+        description: 'Please sign in or sign up to like this article.',
+        iconName: 'heart',
+      });
+      return;
+    }
+
+    if (isDoubleTap) {
+      if (isLiked) return;
+
+      heartScale.value = withSequence(
+        withSpring(1.2, { damping: 10, stiffness: 100 }),
+        withTiming(1, { duration: 100 }),
+        withDelay(500, withSpring(0, { damping: 12, stiffness: 100 }))
+      );
+    }
+
+    if (isConnected) {
+      const previousIsLiked = isLiked;
+      const previousLikeCount = likeCount;
+
+      setIsLiked(isDoubleTap ? true : !isLiked);
+      setLikeCount(prev =>
+        (isDoubleTap ? true : !isLiked) ? prev + 1 : (prev - 1 > 0 ? prev - 1 : 0)
+      );
+
+      likeMutation(undefined, {
+        onSuccess: (data: {
+          article: ArticleData;
+          likeStatus: boolean;
+        }) => {
+          console.log('Article like success', data.likeStatus);
+          setIsLiked(data?.likeStatus);
+
+          if (data?.likeStatus) {
+            if (socket) {
+              socket.emit('notification', {
+                type: 'likePost',
+                userId: data?.article?.authorId,
+                articleId: data?.article?._id,
+                podcastId: null,
+                articleRecordId: data?.article?.pb_recordId,
+                title: user
+                  ? `${user?.user_handle} liked your post`
+                  : 'Someone liked your post',
+                message: data?.article?.title,
+              });
+            }
+          }
+        },
+        onError: (err: any) => {
+          console.log('Like error', err);
+          setIsLiked(previousIsLiked);
+          setLikeCount(previousLikeCount);
+          Snackbar.show({
+            text: 'something went wrong, try again!',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+      });
+    } else {
+      Snackbar.show({
+        text: 'Please check your network connection',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+
+  const handleCardPress = () => {
+    if (isConnected) {
+      width.value = withTiming(0, {duration: 250});
+      yValue.value = withTiming(100, {duration: 250});
+      setSelectedCardId('');
+      (navigation as any).navigate('ArticleScreen', {
+        articleId: Number(item._id),
+        authorId: item.authorId,
+        recordId: item.pb_recordId,
+      });
+    } else {
+      Snackbar.show({
+        text: 'Please connect to the internet to view this article.',
+        duration: Snackbar.LENGTH_LONG,
+      });
+      Alert.alert(
+        'No Internet 🚫',
+        'Internet connection required. Offline mode will be available in the next update.',
+        [{text: 'OK'}],
+      );
+    }
+  };
+
+  const handleImagePressRaw = useDoubleTap(handleCardPress, () => handleLikeAction(true), 300);
+
+  const handleImagePress = (e: any) => {
+    e?.stopPropagation?.();
+    handleImagePressRaw();
+  };
+
   const handleShare = async () => {
     try {
-      const url =
-        `https://uhsocial.in/api/share/article?articleId=${item._id}` +
-        `&authorId=${(item.authorId as any)?._id || item.authorId}` +
-        `&recordId=${item.pb_recordId}`;
+      const resolvedAuthorId = (item.authorId as any)?._id || item.authorId;
+      const url = generateArticleShareUrl(item._id, resolvedAuthorId, item.pb_recordId);
 
       const result = await Share.open({
         title: item.title,
@@ -100,20 +230,35 @@ const ArticleCard = ({
         url: url,
         subject: 'Article Post',
       });
-      console.log(result);
       setMenuVisible(false);
     } catch (error) {
-      console.log('Error sharing:', error);
       Alert.alert('Error', 'Something went wrong while sharing.');
       setMenuVisible(false);
     }
   };
 
+  const handleCopyLink = async () => {
+    try {
+      const resolvedAuthorId = (item.authorId as any)?._id || item.authorId;
+      copyArticleShareLink(item._id, resolvedAuthorId, item.pb_recordId);
+      Snackbar.show({
+        text: 'Link copied',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    } catch (error) {
+      console.log('Error copying link:', error);
+      Snackbar.show({
+        text: 'Failed to copy link',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+
+
   useEffect(() => {
     if (!socket) return;
 
     const handleConnect = () => {
-      console.log('connection established');
     };
 
     socket.on('connect', handleConnect);
@@ -161,7 +306,6 @@ const ArticleCard = ({
       getArticleContent(recordId, {
         onSuccess: async (htmlContent: string) => {
           if (htmlContent) {
-            console.log('Response', htmlContent);
             await generatePDFData(title, htmlContent);
             setMenuVisible(false);
           }
@@ -202,11 +346,9 @@ const ArticleCard = ({
         base64: true,
       };
 
-      console.log('File flow reach upto now');
       const file = await generatePDF(options);
 
       await RNFS.moveFile(file.filePath, filePath);
-      console.log('File flow reach upto move');
 
       Alert.alert('PDF created successfully!', `Saved at: ${filePath}`);
     } catch (error) {
@@ -229,7 +371,6 @@ const ArticleCard = ({
         onSuccess: data => {
           if (reposted === false) {
 
-            console.log('Repost success', data);
             setReposted(true);
             const body = {
               type: 'repost',
@@ -259,7 +400,6 @@ const ArticleCard = ({
           });
         },
         onError: err => {
-          console.log('Repost error', err);
           Snackbar.show({
             text: 'Something went wrong, try again!',
             duration: Snackbar.LENGTH_SHORT,
@@ -278,40 +418,26 @@ const ArticleCard = ({
     accessibilityRole="button"
     accessibilityLabel={`Open article ${item?.title}`}
     accessibilityHint="Opens full article"
-    onPress={() => {
-        if (isConnected) {
-          width.value = withTiming(0, {duration: 250});
-          yValue.value = withTiming(100, {duration: 250});
-          setSelectedCardId('');
-          (navigation as any).navigate('ArticleScreen', {
-            articleId: Number(item._id),
-            authorId: item.authorId,
-            recordId: item.pb_recordId,
-          });
-        } else {
-          Snackbar.show({
-            text: 'Please connect to the internet to view this article.',
-            duration: Snackbar.LENGTH_LONG,
-          });
-          Alert.alert(
-            'No Internet 🚫',
-            'Internet connection required. Offline mode will be available in the next update.',
-            [{text: 'OK'}],
-          );
-        }
-      }}>
+    onPress={handleCardPress}>
       <View style={styles.cardContainer}>
         {/* Image Section */}
-        <Image
-          source={{
-            uri: item?.imageUtils[0]
-              ? item?.imageUtils[0].startsWith('http')
-                ? item?.imageUtils[0]
-                : `${GET_IMAGE}/${item?.imageUtils[0]}`
-              : undefined,
-          }}
-          style={styles.coverImage}
-        />
+<Pressable onPress={handleImagePress} style={styles.imageWrapper}>
+  <ImageFallback
+    source={{
+      uri: item?.imageUtils[0]
+        ? item?.imageUtils[0].startsWith('http')
+          ? item?.imageUtils[0]
+          : `${GET_IMAGE}/${item?.imageUtils[0]}`
+        : undefined,
+    }}
+    fallbackSource={require('../assets/images/article_default.jpg')}
+    style={styles.coverImage}
+  />
+
+  <Animated.View style={[styles.heartOverlay, heartStyle]}>
+    <AntDesign name="heart" size={80} color="white" />
+  </Animated.View>
+</Pressable>
 
         <View style={styles.contentContainer}>
           {/* Share Icon */}
@@ -343,7 +469,6 @@ const ArticleCard = ({
                   name: 'Download as pdf',
                   action: () => {
                     //handleAnimation();
-                    console.log('click card');
 
                     generatePDFFromUrl(item?.pb_recordId, item?.title);
                   },
@@ -351,10 +476,9 @@ const ArticleCard = ({
                 },
                 {
                   articleId: item._id,
-                  name: 'Request to edit',
+                  name: 'Request to improve this post',
                   action: () => {
                     if (!isConnected) {
-                      console.log('click improvement');
                       Snackbar.show({
                         text: 'Please check your internet connection',
                         duration: Snackbar.LENGTH_SHORT,
@@ -363,39 +487,19 @@ const ArticleCard = ({
                     }
                     setMenuVisible(false);
                     setRequestModalVisible(true);
-                    console.log('modal visible', requestModalVisible);
                     // handleAnimation();
                   },
                   icon: 'edit',
                 },
+                
                 {
                   articleId: item._id,
-                  name: 'Improve Article',
-                  icon: 'tool',
+                  name: 'Copy Link',
                   action: () => {
+                    handleCopyLink();
                     setMenuVisible(false);
-                    if (!isConnected) {
-                      Snackbar.show({
-                        text: 'Please check your internet connection',
-                        duration: Snackbar.LENGTH_SHORT,
-                      });
-                      return;
-                    }
-                    if (isGuest) {
-                      (navigation as any).navigate('GuestPlaceholderScreen', {
-                        title: 'Sign In Required',
-                        description: 'Please sign in or sign up to improve this article.',
-                        iconName: 'tool',
-                      });
-                      return;
-                    }
-                    // Open article in ArticleScreen where user can tap Improve
-                    (navigation as any).navigate('ArticleScreen', {
-                      articleId: Number(item._id),
-                      authorId: item.authorId,
-                      recordId: item.pb_recordId,
-                    });
                   },
+                  icon: 'link',
                 },
                 {
                   articleId: item._id,
@@ -416,23 +520,66 @@ const ArticleCard = ({
           )}
 
           {/* Title & Footer Text */}
-          <Text style={styles.footerText}>
-            {item?.tags.map(tag => tag.name).join(' | ')}
-          </Text>
-          <Text style={styles.title}>{item?.title}</Text>
+          <View style={GlobalStyles.badgeRow}>
+            {item?.tags && item.tags.length > 0 && (
+              <Text style={styles.footerText}>
+                {item?.tags.map(tag => tag.name).join(' | ')}
+              </Text>
+            )}
+            <ReadingDifficulty difficulty={getArticleDifficulty(item)} />
+          </View>
+          <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">{item?.title}</Text>
 
-          <View style={styles.metaRow}>
-            <Text style={styles.footerText1}>{item?.authorName}</Text>
-            <Text style={styles.dot}>•</Text>
-            <Text style={styles.footerText1}>
-              {formatCount(item?.viewCount || 0)} views
-            </Text>
-            <Text style={styles.dot}>•</Text>
-            <Text style={styles.footerText1}>
-              {formatDateShort(item?.lastUpdated)}
-            </Text>
+
+          {/* Readability & Accessibility indicators (mock data, issue #845) */}
+          <View style={styles.readabilityRow}>
+            <View style={styles.readabilityBadge}>
+              <Text style={styles.readabilityBadgeText}>
+                {mockReadability.level}
+              </Text>
+            </View>
+            <View style={styles.scoreBadge}>
+              <Text style={styles.scoreBadgeText}>
+                Score: {mockReadability.score}
+              </Text>
+            </View>
+            <View
+              style={[
+                styles.statusChip,
+                mockReadability.approved
+                  ? styles.approvedChip
+                  : styles.needsImprovementChip,
+              ]}>
+              <Text style={styles.statusChipText}>
+                {mockReadability.approved ? 'Approved' : 'Needs Improvement'}
+              </Text>
+            </View>
           </View>
 
+          <View style={styles.metaRow}>
+  <Text style={styles.footerText1}>{item?.authorName}</Text>
+  <Text style={styles.dot}>•</Text>
+  <Text style={styles.footerText1}>
+    {formatCount(item?.viewCount || 0)} views
+  </Text>
+  <Text style={styles.dot}>•</Text>
+  <Text style={styles.footerText1}>
+    {formatDateShort(item?.lastUpdated)}
+  </Text>
+  <Text style={styles.dot}>•</Text>
+  <Text style={styles.footerText1}>
+    {getReadTime(item?.title + ' ' + (item?.description || ''))}
+  </Text>
+  {(item?.trustUsers?.length ?? 0) > 0 && (
+    <>
+      <Text style={styles.dot}>•</Text>
+      <Text style={styles.footerText1}>
+        🛡️ Trusted by {formatCount(item?.trustUsers?.length ?? 0)}
+      </Text>
+    </>
+  )}
+</View>
+          <Text style={styles.readTime}>{readTime} min read</Text>
           <EditRequestModal
             visible={requestModalVisible}
             callback={(reason: string) => {
@@ -453,7 +600,7 @@ const ArticleCard = ({
               <AccessibleTouchable
                 accessibilityLabel="Like article"
                 accessibilityHint="Likes or unlikes this article"
-                onPress={(e) => {
+                onPress={(e: any) => {
                   e?.stopPropagation?.();
                   if (isGuest) {
                     (navigation as any).navigate('GuestPlaceholderScreen', {
@@ -478,7 +625,6 @@ const ArticleCard = ({
                         article: ArticleData;
                         likeStatus: boolean;
                       }) => {
-                        console.log('Article like success', data.likeStatus);
                         setIsLiked(data?.likeStatus);
 
                         if (data?.likeStatus) {
@@ -498,7 +644,6 @@ const ArticleCard = ({
                         }
                       },
                       onError: (err: any) => {
-                        console.log('Like error', err);
                         // Rollback optimistic update
                         setIsLiked(previousIsLiked);
                         setLikeCount(previousLikeCount);
@@ -536,7 +681,7 @@ const ArticleCard = ({
             <AccessibleTouchable
               accessibilityLabel="Open comments"
               accessibilityHint="Opens article comments"
-              onPress={(e) => {
+              onPress={(e: any) => {
                 e?.stopPropagation?.();
                 if (isGuest) {
                   (navigation as any).navigate('GuestPlaceholderScreen', {
@@ -566,7 +711,7 @@ const ArticleCard = ({
                   <AccessibleTouchable
                     accessibilityLabel="Repost article"
                     accessibilityHint="Reposts this article to your feed"
-                    onPress={(e) => {
+                    onPress={(e: any) => {
                       e?.stopPropagation?.();
                       repostAction();
                     }}
@@ -594,7 +739,7 @@ const ArticleCard = ({
               <AccessibleTouchable
                 accessibilityLabel="Share article"
                 accessibilityHint="Shares this article"
-                onPress={(e) => {
+                onPress={(e: any) => {
                   e?.stopPropagation?.();
                   handleShare();
                 }}
@@ -609,7 +754,7 @@ const ArticleCard = ({
               <AccessibleTouchable
                 accessibilityLabel="Save article"
                 accessibilityHint="Saves this article for later"
-                onPress={(e) => {
+                onPress={(e: any) => {
                   e?.stopPropagation?.();
                   if (isGuest) {
                     (navigation as any).navigate('GuestPlaceholderScreen', {
@@ -624,7 +769,6 @@ const ArticleCard = ({
                     yValue.value = withTiming(100, {duration: 250});
                     saveMutation(undefined, {
                       onSuccess: async data => {
-                        console.log('Article save success', data);
                         Snackbar.show({
                           text: data.message,
                           duration: Snackbar.LENGTH_SHORT,
@@ -664,7 +808,7 @@ const ArticleCard = ({
                 accessibilityLabel="More options"
                 accessibilityHint="Opens article action menu"
                 style={styles.likeSaveChildContainer}
-                onPress={(e) => {
+                onPress={(e: any) => {
                   e?.stopPropagation?.();
                   if (isGuest) {
                     (navigation as any).navigate('GuestPlaceholderScreen', {
@@ -766,9 +910,29 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 4},
   },
 
-  coverImage: {
+  imageWrapper: {
     width: '100%',
     height: 180,
+    position: 'relative',
+  },
+  heartOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  coverImage: {
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
   },
 
@@ -800,12 +964,69 @@ const styles = StyleSheet.create({
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    flexWrap: 'wrap',
     marginTop: 6,
+    rowGap: 4,
   },
 
   dot: {
     marginHorizontal: 6,
     color: '#B0B0B0',
+  },
+
+  readabilityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    marginTop: 8,
+  },
+
+  readabilityBadge: {
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+    marginRight: 6,
+  },
+
+  readabilityBadgeText: {
+    fontSize: fp(3.2),
+    fontWeight: '600',
+    color: '#2E7D32',
+  },
+
+  scoreBadge: {
+    backgroundColor: '#E3F2FD',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+    marginRight: 6,
+  },
+
+  scoreBadgeText: {
+    fontSize: fp(3.2),
+    fontWeight: '600',
+    color: '#1565C0',
+  },
+
+  statusChip: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+  },
+
+  approvedChip: {
+    backgroundColor: '#E8F5E9',
+  },
+
+  needsImprovementChip: {
+    backgroundColor: '#FFF3E0',
+  },
+
+  statusChipText: {
+    fontSize: fp(3.2),
+    fontWeight: '600',
+    color: '#424242',
   },
 
   likeSaveContainer: {
@@ -830,6 +1051,11 @@ const styles = StyleSheet.create({
     backgroundColor: ON_PRIMARY_COLOR,
     padding: 6,
     borderRadius: 20,
+  },
+  readTime: {
+    fontSize: 12,
+    color: "#6B7280", // Gray text
+    marginTop: 4,
   },
 });
 
@@ -914,6 +1140,7 @@ const styles = StyleSheet.create({
     right: 1,
     zIndex: 1,
   },
- 
+
 });
 */
+

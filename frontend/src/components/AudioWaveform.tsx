@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, { useEffect, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Animated, {
@@ -27,6 +28,7 @@ const Bar = ({ isPlaying, accentColor, targetHeight, animationDuration }: BarPro
 
   useEffect(() => {
     if (isPlaying) {
+       
       height.value = withRepeat(
         withSequence(
           withTiming(targetHeight, {
@@ -43,6 +45,7 @@ const Bar = ({ isPlaying, accentColor, targetHeight, animationDuration }: BarPro
       );
     } else {
       cancelAnimation(height);
+       
       height.value = withTiming(MIN_HEIGHT, { duration: 200 });
     }
   }, [isPlaying, targetHeight, animationDuration]);
@@ -67,7 +70,10 @@ interface Props {
   accentColor?: string;
 }
 
-export default function AudioWaveform({ isPlaying, accentColor = '#3B82F6' }: Props) {
+// Uses primary accent color from tamagui config (tokens.color.primary = #4F46E5)
+const TAMAGUI_PRIMARY = '#4F46E5';
+
+export default function AudioWaveform({ isPlaying, accentColor = TAMAGUI_PRIMARY }: Props) {
   const barAnimationData = useMemo(() =>
     Array.from({ length: BAR_COUNT }, (_, i) => ({
       id: `bar-${i}`,
@@ -105,3 +111,4 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
 });
+

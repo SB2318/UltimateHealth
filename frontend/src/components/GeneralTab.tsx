@@ -1,31 +1,50 @@
-import {
-  StyleSheet,
+import { StyleSheet,
   Text,
-  TextInput,
+   TextInput ,
   TouchableOpacity,
   View,
   Image,
-} from 'react-native';
-import React, {memo} from 'react';
+ } from 'react-native';
+import React, {memo, useEffect} from 'react';
 import Feather from '@expo/vector-icons/Feather';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {ProfileEditGeneralTab} from '../type';
+import { generalSchema, GeneralFormData } from '../schemas/profileSchemas';
+
+interface ProfileEditGeneralTab {
+  user: any;
+  imgUrl: string;
+  handleSubmitGeneralDetails: (data: GeneralFormData) => void;
+  selectImage: () => void;
+}
 //import fallback_profile from '../assets/avatar.jpg';
 
 const GeneralTab = ({
-  username,
-  userhandle,
-  email,
-  about,
+  user,
   imgUrl,
-  setUsername,
-  setUserHandle,
-  setEmail,
-  setAbout,
   handleSubmitGeneralDetails,
   selectImage,
 }: ProfileEditGeneralTab) => {
-  //const user_fallback_profile = Image.resolveAssetSource(fallback_profile).uri;
+  const { control, handleSubmit, reset } = useForm<GeneralFormData>({
+    resolver: zodResolver(generalSchema),
+    mode: 'onChange',
+    defaultValues: {
+      username: user?.user_name || '',
+      userHandle: user?.user_handle || '',
+      email: user?.email || '',
+      about: user?.about || '',
+    }
+  });
+
+  useEffect(() => {
+    reset({
+      username: user?.user_name || '',
+      userHandle: user?.user_handle || '',
+      email: user?.email || '',
+      about: user?.about || '',
+    });
+  }, [user, reset]);
 
   return (
     <View style={styles.container}>
@@ -53,62 +72,89 @@ const GeneralTab = ({
         {/* Username Input */}
         <View style={styles.input}>
           <Text style={styles.inputLabel}>Username</Text>
-          <TextInput
-            placeholder="Enter your username"
-            placeholderTextColor="#6b7280"
-            style={styles.inputControl}
-            value={username}
-            onChangeText={text => setUsername(text)}
+          <Controller
+            control={control}
+            name="username"
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              <>
+                <TextInput
+                  placeholder="Enter your full name"
+                  placeholderTextColor="#6b7280"
+                  style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
+                {error && <Text style={styles.errorText}>{error.message}</Text>}
+              </>
+            )}
           />
         </View>
 
         {/* User Handle Input */}
-        {
-          <View style={styles.input}>
+        <View style={styles.input}>
           <Text style={styles.inputLabel}>User handle</Text>
-          <TextInput
-            editable={false}
-            placeholder="Enter your userhandle"
-            placeholderTextColor="#6b7280"
-            style={styles.inputControl}
-            value={userhandle}
-            onChangeText={text => setUserHandle(text)}
+          <Controller
+            control={control}
+            name="userHandle"
+            render={({ field: { value } }) => (
+              <TextInput
+                editable={false}
+                placeholder="Enter your userhandle"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={value}
+              />
+            )}
           />
         </View>
-           
-        }
 
         {/* Email Input */}
         <View style={styles.input}>
           <Text style={styles.inputLabel}>Email</Text>
-          <TextInput
-            placeholder="Enter your email"
-            placeholderTextColor="#6b7280"
-            style={styles.inputControl}
-            value={email}
-            editable={false}
-            onChangeText={text => setEmail(text)}
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { value } }) => (
+              <TextInput
+                placeholder="Enter your email"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={value}
+                editable={false}
+              />
+            )}
           />
         </View>
 
         {/* About Input */}
         <View style={styles.input}>
           <Text style={styles.inputLabel}>About</Text>
-          <TextInput
-            placeholder="Enter something about yourself..."
-            placeholderTextColor="#6b7280"
-            textAlignVertical="top"
-            style={styles.aboutInput}
-            multiline={true}
-            numberOfLines={4}
-            value={about}
-            onChangeText={text => setAbout(text)}
+          <Controller
+            control={control}
+            name="about"
+            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+              <>
+                <TextInput
+                  placeholder="Tell us something about yourself..."
+                  placeholderTextColor="#6b7280"
+                  textAlignVertical="top"
+                  style={[styles.aboutInput, error && { borderColor: '#ef4444', borderWidth: 2 }]}
+                  multiline={true}
+                  numberOfLines={4}
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
+                {error && <Text style={styles.errorText}>{error.message}</Text>}
+              </>
+            )}
           />
         </View>
       </View>
 
       {/* Save Button */}
-      <TouchableOpacity onPress={handleSubmitGeneralDetails} style={styles.btn}>
+      <TouchableOpacity onPress={handleSubmit(handleSubmitGeneralDetails)} style={styles.btn}>
         <Text style={styles.btnText}>Save</Text>
       </TouchableOpacity>
     </View>
@@ -201,5 +247,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 4,
   },
 });

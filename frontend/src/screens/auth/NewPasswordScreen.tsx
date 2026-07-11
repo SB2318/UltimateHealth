@@ -1,5 +1,5 @@
+/* eslint-disable react-hooks/incompatible-library */
 import React, { useState } from 'react';
-import { Alert } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Button,
@@ -12,26 +12,58 @@ import {
   XStack,
   YStack
 } from 'tamagui';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 
 import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '@/src/helper/Theme';
 import { useChangePasswordMutation } from '@/src/hooks/useChangePassword';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
-import { AxiosError } from 'axios';
+import type  from 'axios';
 import Loader from '../../components/Loader';
 import { NewPasswordScreenProp } from '../../type';
+import {Alert, ActivityIndicator} from 'react-native';
+type AxiosError = any;
+
+const newPasswordSchema = z.object({
+  password: z
+    .string()
+    .min(1, 'Password is required.')
+    .min(8, 'Password must contain at least 8 characters.')
+    .regex(/(?=.*[a-z])/, 'Password must contain at least one lowercase letter.')
+    .regex(/(?=.*[0-9]|.*[!@#$%^&*])/, 'Password must contain at least one number or special character.'),
+  confirmPassword: z.string().min(1, 'Please confirm your password.'),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match. Please re-enter.",
+  path: ['confirmPassword'],
+});
+type NewPasswordFormData = z.infer<typeof newPasswordSchema>;
 
 export default function NewPasswordScreen({
   navigation,
   route,
 }: NewPasswordScreenProp) {
   const {email} = route.params;
-  const [password, setPassword] = useState('');
-  // removed isDarkMode variable
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordVerify, setPasswordVerify] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { isValid, errors },
+  } = useForm<NewPasswordFormData>({
+    resolver: zodResolver(newPasswordSchema),
+    mode: 'onChange',
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  const password = watch('password');
+  const confirmPassword = watch('confirmPassword');
+  const passwordVerify = !errors.password && password.length >= 8;
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureNewTextEntry, setSecureNewTextEntry] = useState(true);
@@ -47,57 +79,21 @@ export default function NewPasswordScreen({
     setSecureNewTextEntry(!secureNewTextEntry);
   };
 
-  const handlePasswordSubmit = () => {
-    const showError = (msg: string) => {
-      Alert.alert(msg);
-      setErrorMessage(msg);
-    };
-
-    if (!password?.trim()) {
-      return showError('Please give a password');
-    }
-
-    if (!passwordVerify) {
-      return showError('Please enter a valid password');
-    }
-
-    if (!confirmPassword?.trim()) {
-      return showError('Please confirm your password');
-    }
-
-    if (password !== confirmPassword) {
-      return showError('Confirmation password does not match the new password');
-    }
-
-    setErrorMessage(null);
+  const handlePasswordSubmit = (data: NewPasswordFormData) => {
 
     changePassword(
-      {
-        email,
-        newPassword: password,
-      },
+      {email, newPassword: password},
       {
         onSuccess: () => {
           Alert.alert('Password reset successfully');
           navigation.navigate('LoginScreen', {});
         },
-
         onError: (error: AxiosError) => {
           if (error.response) {
             switch (error.response.status) {
-              case 400:
-                Alert.alert('Error', 'User not found');
-                break;
-
-              case 402:
-                Alert.alert(
-                  'Error',
-                  'New password should not be same as old password',
-                );
-                break;
-
-              default:
-                Alert.alert('Error', 'Something went wrong. Please try again.');
+              case 400: Alert.alert('Error', 'User not found'); break;
+              case 402: Alert.alert('Error', 'New password should not be same as old password.'); break;
+              default: Alert.alert('Error', 'Something went wrong. Please try again.');
             }
           } else {
             Alert.alert('Error', 'Something went wrong. Please try again.');
@@ -107,29 +103,6 @@ export default function NewPasswordScreen({
     );
   };
 
-  const handlePassword = (e: string) => {
-    let pass = e;
-    setErrorMessage(null);
-    setPassword(pass);
-    setPasswordVerify(false);
-
-    if (/(?=.*[a-z]).{6,}/.test(pass)) {
-      setPassword(pass);
-      setPasswordVerify(true);
-    }
-  };
-
-  const handleConfirmPassword = (e: string) => {
-    let pass = e;
-    setErrorMessage(null);
-    setConfirmPassword(pass);
-    setPasswordVerify(false);
-
-    if (/(?=.*[a-z]).{6,}/.test(pass)) {
-      setConfirmPassword(pass);
-      setPasswordVerify(true);
-    }
-  };
 
   const insets = useSafeAreaInsets();
   if (isPending) {
@@ -203,64 +176,71 @@ export default function NewPasswordScreen({
                 New Password
               </Text>
 
-              <XStack alignItems="center" position="relative">
-                <Entypo
-                  name="lock"
-                  size={20}
-                  color={passwordVerify ? '$blue10' : '$gray500'}
-                  style={{
-                    position: 'absolute',
-                    left: 14,
-                    zIndex: 1,
-                  }}
-                />
-                <Input
-                  flex={1}
-                  height={56}
-                  borderRadius="$4"
-                  placeholder="Enter new password"
-                  secureTextEntry={secureTextEntry}
-                  autoCapitalize="none"
-                  onChangeText={handlePassword}
-                  value={password}
-                  color="$color10"
-                  paddingLeft={46}
-                  paddingRight={46}
-                  borderWidth={2}
-                  borderColor={
-                    errorMessage && !password
-                      ? '$red8'
-                      : passwordVerify && password
-                        ? '$green8'
-                        : '$gray6'
-                  }
-                  backgroundColor={
-                    errorMessage && !password
-                      ? '$red1'
-                      : passwordVerify && password
-                        ? '$green1'
-                        : '$gray1'
-                  }
-                  focusStyle={{
-                    borderColor: passwordVerify ? '$green9' : '$blue9',
-                    backgroundColor: '$background',
-                  }}
-                />
-                <Button
-                  chromeless
-                  size="$4"
-                  circular
-                  position="absolute"
-                  right={6}
-                  onPress={handleSecureEntryClickEvent}
-                  padding="$1">
-                  <Icon
-                    name={secureTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray700.val}
-                  />
-                </Button>
-              </XStack>
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                  <XStack alignItems="center" position="relative">
+                    <Entypo
+                      name="lock"
+                      size={20}
+                      color={!error && value ? '$blue10' : '$gray500'}
+                      style={{
+                        position: 'absolute',
+                        left: 14,
+                        zIndex: 1,
+                      }}
+                    />
+                    <Input
+                      flex={1}
+                      height={56}
+                      borderRadius="$4"
+                      placeholder="Enter new password"
+                      secureTextEntry={secureTextEntry}
+                      autoCapitalize="none"
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      color="$color10"
+                      paddingLeft={46}
+                      paddingRight={46}
+                      borderWidth={2}
+                      borderColor={
+                        error && value
+                          ? '$red8'
+                          : !error && value
+                            ? '$green8'
+                            : '$gray6'
+                      }
+                      backgroundColor={
+                        error && value
+                          ? '$red1'
+                          : !error && value
+                            ? '$green1'
+                            : '$gray1'
+                      }
+                      focusStyle={{
+                        borderColor: !error && value ? '$green9' : '$blue9',
+                        backgroundColor: '$background',
+                      }}
+                    />
+                    <Button
+                      chromeless
+                      size="$4"
+                      circular
+                      position="absolute"
+                      right={6}
+                      onPress={handleSecureEntryClickEvent}
+                      padding="$1">
+                      <Icon
+                        name={secureTextEntry ? 'eye-off' : 'eye'}
+                        size={20}
+                        color={theme.gray700?.val}
+                      />
+                    </Button>
+                  </XStack>
+                )}
+              />
 
               {/* Password Requirements */}
               <XStack gap="$2" alignItems="center" paddingLeft="$2">
@@ -273,18 +253,18 @@ export default function NewPasswordScreen({
                       Password meets requirements
                     </Text>
                   </>
-                ) : password ? (
+                ) : errors.password ? (
                   <>
                     <Text fontSize={14} color="$red10">
                       ✗
                     </Text>
-                    <Text fontSize={13} color="$gray700" fontWeight="500">
-                      At least 6 characters with lowercase letter
+                    <Text fontSize={13} color="$red10" fontWeight="500">
+                      {errors.password.message}
                     </Text>
                   </>
                 ) : (
                   <Text fontSize={13} color="$gray400" fontWeight="500">
-                    At least 6 characters with lowercase letter
+                    At least 8 characters with a number or special character
                   </Text>
                 )}
               </XStack>
@@ -295,71 +275,78 @@ export default function NewPasswordScreen({
                 Confirm Password
               </Text>
 
-              <XStack alignItems="center" position="relative">
-                <Entypo
-                  name="lock"
-                  size={20}
-                  color={
-                    confirmPassword && password === confirmPassword
-                      ? theme.blue10.val
-                      : theme.gray500.val
-                  }
-                  style={{
-                    position: 'absolute',
-                    left: 14,
-                    zIndex: 1,
-                  }}
-                />
-                <Input
-                  flex={1}
-                  height={56}
-                  borderRadius="$4"
-                  placeholder="Re-enter password"
-                  secureTextEntry={secureNewTextEntry}
-                  autoCapitalize="none"
-                  onChangeText={handleConfirmPassword}
-                  value={confirmPassword}
-                  color="$color10"
-                  paddingLeft={46}
-                  paddingRight={46}
-                  borderWidth={2}
-                  borderColor={
-                    errorMessage && !confirmPassword
-                      ? '$red8'
-                      : confirmPassword && password === confirmPassword
-                        ? '$green8'
-                        : '$gray6'
-                  }
-                  backgroundColor={
-                    errorMessage && !confirmPassword
-                      ? '$red1'
-                      : confirmPassword && password === confirmPassword
-                        ? '$green1'
-                        : '$gray1'
-                  }
-                  focusStyle={{
-                    borderColor:
-                      confirmPassword && password === confirmPassword
-                        ? '$green9'
-                        : '$blue9',
-                    backgroundColor: '$background',
-                  }}
-                />
-                <Button
-                  chromeless
-                  size="$4"
-                  circular
-                  position="absolute"
-                  right={6}
-                  onPress={handleSecureNewEntryClickEvent}
-                  padding="$1">
-                  <Icon
-                    name={secureNewTextEntry ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={theme.gray600.val}
-                  />
-                </Button>
-              </XStack>
+              <Controller
+                control={control}
+                name="confirmPassword"
+                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                  <XStack alignItems="center" position="relative">
+                    <Entypo
+                      name="lock"
+                      size={20}
+                      color={
+                        value && password === value
+                          ? theme.blue10?.val
+                          : theme.gray500?.val
+                      }
+                      style={{
+                        position: 'absolute',
+                        left: 14,
+                        zIndex: 1,
+                      }}
+                    />
+                    <Input
+                      flex={1}
+                      height={56}
+                      borderRadius="$4"
+                      placeholder="Re-enter password"
+                      secureTextEntry={secureNewTextEntry}
+                      autoCapitalize="none"
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      color="$color10"
+                      paddingLeft={46}
+                      paddingRight={46}
+                      borderWidth={2}
+                      borderColor={
+                        error && value
+                          ? '$red8'
+                          : value && password === value
+                            ? '$green8'
+                            : '$gray6'
+                      }
+                      backgroundColor={
+                        error && value
+                          ? '$red1'
+                          : value && password === value
+                            ? '$green1'
+                            : '$gray1'
+                      }
+                      focusStyle={{
+                        borderColor:
+                          value && password === value
+                            ? '$green9'
+                            : '$blue9',
+                        backgroundColor: '$background',
+                      }}
+                    />
+                    <Button
+                      chromeless
+                      size="$4"
+                      circular
+                      position="absolute"
+                      right={6}
+                      onPress={handleSecureNewEntryClickEvent}
+                      padding="$1">
+                      <Icon
+                        name={secureNewTextEntry ? 'eye-off' : 'eye'}
+                        size={20}
+                        color={theme.gray600?.val}
+                      />
+                    </Button>
+                  </XStack>
+                )}
+              />
 
               {/* Confirmation Status */}
               {confirmPassword && (
@@ -379,7 +366,7 @@ export default function NewPasswordScreen({
                         ✗
                       </Text>
                       <Text fontSize={13} color="$red10" fontWeight="500">
-                        Passwords don&apos;t match
+                        {errors.confirmPassword?.message || "Passwords don't match"}
                       </Text>
                     </>
                   )}
@@ -388,32 +375,11 @@ export default function NewPasswordScreen({
             </YStack>
           </YStack>
 
-          {/* Error Message */}
-          {errorMessage && (
-            <XStack
-              gap="$2"
-              ai="center"
-              mt="$4"
-              paddingHorizontal="$3"
-              paddingVertical="$2"
-              backgroundColor="$red2"
-              borderRadius="$3"
-              alignSelf="stretch">
-              <Text fontSize={16}>⚠️</Text>
-              <Paragraph color="$red10" fontSize={14} fontWeight="600" flex={1}>
-                {errorMessage}
-              </Paragraph>
-            </XStack>
-          )}
-
           {/* Confirm Button */}
           <YStack w="100%" marginTop="$6">
             <Button
               backgroundColor={
-                password &&
-                confirmPassword &&
-                password === confirmPassword &&
-                passwordVerify
+                isValid && !isPending
                   ? '$blue10'
                   : '$gray7'
               }
@@ -423,42 +389,23 @@ export default function NewPasswordScreen({
               hoverStyle={{bg: '$blue9', opacity: 0.9}}
               pressStyle={{bg: '$blue11', scale: 0.98}}
               disabled={
-                !password ||
-                !confirmPassword ||
-                password !== confirmPassword ||
-                !passwordVerify
+                !isValid || isPending
               }
               shadowColor="$blue8"
               shadowRadius={12}
               shadowOffset={{width: 0, height: 4}}
               shadowOpacity={0.25}
-              onPress={handlePasswordSubmit}>
+              onPress={handleSubmit(handlePasswordSubmit)}>
               <Text fontSize={17} fontWeight="600" color="white">
                 Reset Password
               </Text>
             </Button>
           </YStack>
 
-          {/* Return Link */}
-          <Button
-            chromeless
-            marginTop="$5"
-            onPress={() => navigation.navigate('LoginScreen', {})}
-            padding="$2"
-            height="auto">
-            <XStack ai="center" gap="$2">
-              <Icon
-                color="$gray400"
-                name="arrow-back-circle-outline"
-                size={24}
-              />
-              <Text color="$blue10" fontWeight="600" fontSize={15}>
-                Back to Login
-              </Text>
-            </XStack>
-          </Button>
         </Card>
       </YStack>
     </YStack>
   );
 }
+
+

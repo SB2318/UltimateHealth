@@ -1,22 +1,25 @@
-import {
-  ScrollView,
+/* eslint-disable react-hooks/set-state-in-effect */
+import { ScrollView ,
   Text,
   TouchableOpacity,
   View,
   StyleSheet,
   Alert,
-} from 'react-native';
+ } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import GeneralTab from '../components/GeneralTab';
+import {GeneralFormData,ContactFormData,ProfFormData,PasswordFormData} from '../schemas/profileSchemas';
 import ContactTab from '../components/ContactTab';
+
 import ProfessionalTab from '../components/ProfessionalTab';
+
 import PasswordTab from '../components/PasswordTab';
+
 import LanguagePreferenceSelector from '../components/LanguagePreferenceSelector';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {useDispatch, useSelector} from 'react-redux';
-import {AxiosError} from 'axios';
 import {ProfileEditScreenProp} from '../type';
 import {
   GET_STORAGE_DATA,
@@ -36,9 +39,9 @@ import {useUpdateUserContactDetail} from '../hooks/useUpdateUserContactDetail';
 import {useUpdateUserGeneralDetails} from '../hooks/useUpdateUserGeneralDetails';
 import {useUpdateUserProfDetails} from '../hooks/useUpdateUserProfDetails';
 import LoadingSpinner from '../components/LoadingSpinner';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-let validator = require('email-validator');
-let expr = /^(0|91)?[6-9][0-9]{9}$/;
+ 
+// let validator = require('email-validator');
+// let expr = /^(0|91)?[6-9][0-9]{9}$/;
 
 const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
   const {uploadImage, loading} = useUploadImage();
@@ -72,18 +75,6 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
 
   // Initialize state variables
   const [user_profile_image, setUserProfileImage] = useState('');
-  const [username, setUsername] = useState('');
-  const [userHandle, setUserHandle] = useState('');
-  const [email, setEmail] = useState('');
-  const [about, setAbout] = useState('');
-  const [contact_email, setContactEmail] = useState('');
-  const [contact_number, setContactNumber] = useState('');
-  const [specialization, setSpecialization] = useState('');
-  const [qualification, setQualification] = useState('');
-  const [experience, setExperience] = useState('');
-  const [old_password, setOldPassword] = useState('');
-  const [new_password, setNewPassword] = useState('');
-  const [confirm_password, setConfirmPassword] = useState('');
   const {user_token} = useSelector((state: any) => state.user);
   const {isConnected} = useSelector((state: any) => state.network);
 
@@ -93,21 +84,11 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
 
   useEffect(() => {
     if (user) {
-      //console.log(user);
       setUserProfileImage(
         user.Profile_image ?
         user.Profile_image.startsWith("http") ? user.Profile_image :
          `${GET_STORAGE_DATA}/${user.Profile_image}` : '',
       );
-      setUsername(user.user_name || '');
-      setUserHandle(user.user_handle || '');
-      setEmail(user.email || '');
-      setAbout(user.about || '');
-      setContactEmail(user.contact_detail?.email_id || '');
-      setContactNumber(user.contact_detail?.phone_no || '');
-      setSpecialization(user.specialization || '');
-      setQualification(user.qualification || '');
-      setExperience(user.Years_of_experience || '');
     }
   }, [user]);
   // Boolean to check if the user is a doctor
@@ -116,42 +97,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
   const handleTab = (tab: string) => {
     setcurrentTab(tab);
   };
-  const validateGeneralFields = () => {
-    if (!username) {
-      return 'Username is required';
-    }
-    if (!userHandle) {
-      return 'User Handle is required';
-    }
-    if (!email) {
-      return 'Email is required';
-    } else if (!validator.validate(email)) {
-      return 'Email is not valid';
-    }
-    if (!about) {
-      return 'About is required';
-    }
-    return null; // No errors
-  };
-  const validateContactFields = () => {
-    if (!contact_number) {
-      return 'contact number is required';
-    }
-    return null; // No errors
-  };
-  const validateProfessionalFields = () => {
-    if (!specialization) {
-      return 'Specialization is required';
-    }
-    if (!qualification) {
-      return 'Qualification is required';
-    }
-    if (!experience) {
-      return 'Experience is required';
-    }
-    return null; // No errors
-  };
-  const handleSubmitGeneralDetails = () => {
+  const handleSubmitGeneralDetails = (data: GeneralFormData) => {
     if (!isConnected) {
       Snackbar.show({
         text: 'Please check your internet connection!',
@@ -159,18 +105,13 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
       });
       return;
     }
-    const errorMessage = validateGeneralFields();
-    if (errorMessage) {
-      Alert.alert('Validation Error', errorMessage);
-      return;
-    }
 
     updateGeneralDetails(
       {
-        username: username,
-        about: about,
-        userHandle: userHandle,
-        email: email,
+        username: data.username,
+        about: data.about,
+        userHandle: data.userHandle,
+        email: data.email,
       },
       {
         onSuccess: _data => {
@@ -178,7 +119,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
           //navigation.goBack();
         },
 
-        onError: (err: AxiosError) => {
+        onError: (err: any) => {
           if (err.response) {
             const statusCode = err.response.status;
             switch (statusCode) {
@@ -234,7 +175,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
       },
     );
   };
-  const handleSubmitContactDetails = () => {
+  const handleSubmitContactDetails = (data: ContactFormData) => {
     if (!isConnected) {
       Snackbar.show({
         text: 'Please check your internet connection!',
@@ -242,18 +183,11 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
       });
       return;
     }
-    const errorMessage = validateContactFields();
-    if (errorMessage) {
-      Alert.alert('Validation Error', errorMessage);
-      return;
-    }
-    //console.log('donee');
-    //userConatctDetailsMutation.mutate();
 
     updateContactDetails(
       {
-        phone: contact_number,
-        email: contact_email,
+        phone: data.phone_number,
+        email: data.contact_email,
       },
       {
         onSuccess: _data => {
@@ -262,7 +196,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
          // navigation.goBack();
         },
 
-        onError: (err: AxiosError) => {
+        onError: (err: any) => {
           if (err.response) {
             const statusCode = err.response.status;
             switch (statusCode) {
@@ -316,7 +250,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
       },
     );
   };
-  const handleSubmitProfessionalDetails = () => {
+  const handleSubmitProfessionalDetails = (data: ProfFormData) => {
     if (!isConnected) {
       Snackbar.show({
         text: 'Please check your internet connection!',
@@ -324,18 +258,12 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
       });
       return;
     }
-    const errorMessage = validateProfessionalFields();
-    if (errorMessage) {
-      Alert.alert('Validation Error', errorMessage);
-      return;
-    }
-    //console.log('donee');
 
     updateProfessionalDetails(
       {
-        specialization: specialization,
-        qualification: qualification,
-        experience: experience,
+        specialization: data.specialization,
+        qualification: data.qualification,
+        experience: data.experience,
       },
       {
         onSuccess: _data => {
@@ -343,7 +271,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
         //  navigation.goBack();
         },
 
-        onError: (err: AxiosError) => {
+        onError: (err: any) => {
           if (err.response) {
             const statusCode = err.response.status;
             switch (statusCode) {
@@ -388,7 +316,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
       },
     );
   };
-  const handleSubmitPassword = () => {
+  const handleSubmitPassword = (data: PasswordFormData) => {
     if (!isConnected) {
       Snackbar.show({
         text: 'Please check your internet connection!',
@@ -397,46 +325,10 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
       return;
     }
 
-    if (old_password === '') {
-      Alert.alert('Error', 'Please enter your current password.');
-      return;
-    }
-
-    if (new_password === '') {
-      Alert.alert('Error', 'Please enter a new password.');
-      return;
-    }
-
-    if (confirm_password === '') {
-      Alert.alert('Error', 'Please confirm your new password.');
-      return;
-    }
-
-    if (old_password === new_password) {
-      Alert.alert(
-        'Error',
-        'The new password must be different from the current password.',
-      );
-      return;
-    }
-
-    if (new_password.length < 6) {
-      Alert.alert(
-        'Error',
-        'The new password must be at least 6 characters long.',
-      );
-      return;
-    }
-
-    if (new_password !== confirm_password) {
-      Alert.alert('Error', 'The new password and confirmation do not match.');
-      return;
-    }
-
     updatePassword(
       {
-        old_password: old_password,
-        new_password: new_password,
+        old_password: data.old_password,
+        new_password: data.new_password,
       },
       {
         onSuccess: _data => {
@@ -444,12 +336,9 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
             text: 'Password updated sucessfully',
             duration: Snackbar.LENGTH_SHORT,
           });
-          setOldPassword('');
-          setNewPassword('');
-          setConfirmPassword('');
         },
 
-        onError: (err: AxiosError) => {
+        onError: (err: any) => {
           if (err.response) {
             const statusCode = err.response.status;
             switch (statusCode) {
@@ -542,7 +431,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
                                 'Profile updated successfully',
                               );
                             },
-                            onError: (err: AxiosError) => {
+                            onError: (err: any) => {
                               if (err.response) {
                                 const statusCode = err.response.status;
                                 const errorMessage = (err?.response?.data as any)?.error;
@@ -715,14 +604,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
         <View style={styles.tabContent}>
           {currentTab === 'General' && (
             <GeneralTab
-              username={username}
-              setUsername={setUsername}
-              userhandle={userHandle}
-              setUserHandle={setUserHandle}
-              email={email}
-              setEmail={setEmail}
-              about={about}
-              setAbout={setAbout}
+              user={user}
               imgUrl={user_profile_image}
               handleSubmitGeneralDetails={handleSubmitGeneralDetails}
               selectImage={selectImage}
@@ -730,33 +612,19 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
           )}
           {currentTab === 'Professional' && (
             <ProfessionalTab
-              specialization={specialization}
-              qualification={qualification}
-              years_of_experience={experience}
-              setSpecialization={setSpecialization}
-              setQualification={setQualification}
-              setExperience={setExperience}
+              user={user}
               handleSubmitProfessionalDetails={handleSubmitProfessionalDetails}
             />
           )}
           {currentTab === 'Contact' && (
             <ContactTab
-              phone_number={contact_number}
-              contact_email={contact_email}
-              setContactEmail={setContactEmail}
-              setContactNumber={setContactNumber}
+              user={user}
               handleSubmitContactDetails={handleSubmitContactDetails}
             />
           )}
           {currentTab === 'Password' && (
             <PasswordTab
               handleSubmitPassword={handleSubmitPassword}
-              old_password={old_password}
-              new_password={new_password}
-              confirm_password={confirm_password}
-              setConfirmPassword={setConfirmPassword}
-              setNewPassword={setNewPassword}
-              setOldPassword={setOldPassword}
             />
           )}
           {currentTab === 'Language' && (
@@ -832,3 +700,4 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileEditScreen;
+

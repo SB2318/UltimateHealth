@@ -138,7 +138,12 @@ const resolveDeepLinkTarget = (url: string): DeepLinkTarget | null => {
 
   if (firstSegment === 'create-post') {
     return {
-      name: 'EditorScreen',
+      name: 'ArticleDescriptionScreen',
+      params: {
+        article: undefined,
+        htmlContent: undefined,
+        translationSource: undefined,
+      },
       requiresAuth: true,
     };
   }
@@ -167,52 +172,116 @@ const resolveDeepLinkTarget = (url: string): DeepLinkTarget | null => {
   return null;
 };
 
-export const initDeepLinking = (navigation: any, isAuthenticated: boolean) => {
-  const handleUrl = (url: string) => {
-    const target = resolveDeepLinkTarget(url);
+export const resolveNotificationTarget = (
+  data: Record<string, any> | null | undefined,
+): DeepLinkTarget | null => {
+  if (!data) {
+    return null;
+  }
 
-    if (!target) {
-      return;
-    }
+  if (typeof data.url === 'string' && data.url.length > 0) {
+    return resolveDeepLinkTarget(data.url);
+  }
 
-    if (target.requiresAuth && !isAuthenticated) {
-      // This path is for routes that explicitly require authentication and should
-      // redirect to the LoginScreen, preserving the intended destination.
-      navigation.navigate('LoginScreen', {
-        redirectTo: {
-          name: target.name,
-          params: target.params,
-        },
-      });
-      return;
-    }
+  if (typeof data.articleId !== 'undefined') {
+    return {
+      name: 'ArticleScreen',
+      params: {
+        articleId: Number(data.articleId),
+        authorId: data.authorId,
+        recordId: data.recordId,
+      },
+    };
+  }
 
-    if (restrictedRoutes.has(target.name) && !isAuthenticated) {
-      // This path is for routes that are generally restricted for guests but
-      // may not have a specific 'redirectTo' login flow, instead showing a placeholder.
-      // Note: Routes with 'requiresAuth: true' will be handled by the above block first.
-      navigation.navigate('GuestPlaceholderScreen', {
-        title: 'Sign In Required',
-        description: 'Please sign in to continue to this part of the app.',
-        iconName: 'user-lock',
-      });
-      return;
-    }
+  if (typeof data.trackId === 'string' && data.trackId.length > 0) {
+    return {
+      name: 'PodcastDetail',
+      params: {
+        trackId: data.trackId,
+      },
+    };
+  }
 
-    navigation.navigate(target.name as never, target.params as never);
-  };
+  if (typeof data.userId === 'string' && data.userId.length > 0) {
+    return {
+      name: 'UserProfileScreen',
+      params: {
+        authorId: data.userId,
+        userId: data.userId,
+        author_handle: data.author_handle,
+        userHandle: data.userHandle,
+      },
+    };
+  }
 
+  if (data.route === 'NotificationPreferencesScreen') {
+    return {
+      name: 'NotificationPreferencesScreen',
+      requiresAuth: true,
+    };
+  }
+
+  if (data.route === 'NotificationScreen') {
+    return {
+      name: 'NotificationScreen',
+    };
+  }
+
+  return null;
+};
+
+export const navigateDeepLink = (
+  navigation: any,
+  target: DeepLinkTarget,
+  isAuthenticated: boolean,
+) => {
+  if (target.requiresAuth && !isAuthenticated) {
+    navigation.navigate('LoginScreen', {
+      redirectTo: {
+        name: target.name,
+        params: target.params,
+      },
+    });
+    return;
+  }
+
+  if (restrictedRoutes.has(target.name) && !isAuthenticated) {
+    navigation.navigate('GuestPlaceholderScreen', {
+      title: 'Sign In Required',
+      description: 'Please sign in to continue to this part of the app.',
+      iconName: 'user-lock',
+    });
+    return;
+  }
+
+  navigation.navigate(target.name as never, target.params as never);
+};
+
+/**
+ * Initialises deep-link handling for the app.
+ *
+ * Accepts a URL callback that is invoked with the raw URL string whenever a
+ * deep link is received — both on cold start (via getInitialURL) and while the
+ * app is in the foreground (via the 'url' event listener). Navigation and auth
+ * checks are intentionally kept out of this function; the caller is responsible
+ * for resolving the URL and navigating once auth state is known.
+ *
+ * @param onUrl - Callback invoked with the incoming URL string.
+ * @returns A cleanup function that removes the foreground URL listener.
+ */
+export const initDeepLinking = (onUrl: (url: string) => void): (() => void) => {
   if (!initialUrlHandled) {
     initialUrlHandled = true;
     ExpoLinking.getInitialURL().then(url => {
       if (url) {
-        handleUrl(url);
+        onUrl(url);
       }
     });
   }
 
   const subscription = ExpoLinking.addEventListener('url', e => {
-    handleUrl(e.url);
+    onUrl(e.url);
   });
 
   return () => subscription.remove();

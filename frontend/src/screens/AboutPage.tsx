@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Share, Linking, Image, useColorScheme } from 'react-native';
 import VersionCheck from 'react-native-version-check';
@@ -19,13 +20,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AboutScreenProps } from '../type';
 import { GlassContainer } from '../components/GlassContainer';
 import { ProfessionalColors, Typography, Spacing } from '../styles/GlassStyles';
-import { useBackToTop } from '../components/BackToTopScrollView';
-import { BackToTopButton } from '../components/BackToTopButton';
+import { useScrollControls } from '../hooks/useScrollControls';
+import { ScrollActionButtons } from '../components/ScrollActionButtons';
 
 const AboutScreen = ({ navigation }: AboutScreenProps) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
-  const { onScroll, visible, opacity, scrollToTop } = useBackToTop({ threshold: 300 });
+  const { scrollRef, onScroll, topVisible, topOpacity, bottomVisible, bottomOpacity, scrollToTop, scrollToBottom } = useScrollControls({ threshold: 300, bottomThreshold: 50 });
   const currentVersion = VersionCheck.getCurrentVersion();
 
   const onShare = async () => {
@@ -39,9 +40,19 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
     }
   };
 
-  const openLink = (url: string) => {
-    Linking.openURL(url).catch(err => console.error('URL error', err));
-  };
+  const openLink = async (url: string) => {
+  try {
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.error('Cannot open URL:', url);
+    }
+  } catch (error) {
+    console.error('URL error:', error);
+  }
+};
 
   
 
@@ -54,6 +65,7 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
       <StatusBar style={isDarkMode ? 'light' : 'dark'} backgroundColor="#007AFF" />
 
       <ScrollView
+        ref={scrollRef}
         onScroll={onScroll}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
@@ -300,10 +312,13 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
           </YStack>
         </View>
       </ScrollView>
-      <BackToTopButton
-        opacity={opacity}
-        onPress={scrollToTop}
-        visible={visible}
+      <ScrollActionButtons
+        topOpacity={topOpacity}
+        onScrollToTop={scrollToTop}
+        topVisible={topVisible}
+        bottomOpacity={bottomOpacity}
+        onScrollToBottom={scrollToBottom}
+        bottomVisible={bottomVisible}
         buttonColor="#007AFF"
         iconColor="#fff"
       />

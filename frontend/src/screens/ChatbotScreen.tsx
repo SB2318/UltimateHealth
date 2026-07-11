@@ -7,26 +7,27 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 import {
-  Alert,
   View,
+  Image,
   KeyboardAvoidingView,
   Platform,
   Text,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import Tts from 'react-native-tts';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
-import {AxiosError} from 'axios';
 import {ChatBotScreenProps, Message} from '../type';
 import {hp} from '../helper/Metric';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useSendMessageToGemini} from '../hooks/useSendMessageToGemini';
 import {useLoadAIConversations} from '../hooks/useLoadAIChats';
 import Snackbar from 'react-native-snackbar';
+import {verifyChatbotResponse} from '../chatbot-response-verification';
 
 // interface ChatbotResponse {
 //   id: string;
@@ -42,29 +43,94 @@ import Snackbar from 'react-native-snackbar';
 //   total_tokens: number;
 // }
 
-// interface Choice {
-//   index: number;
-//   message: Message;
-//   finish_reason: string;
-// }
+const ASSISTANT_USER_ID = 2;
 
-const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
-  const {user_id, user_token} = useSelector((state: any) => state.user);
+const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   const {isConnected} = useSelector((state: any) => state.network);
+  
+  const { characterId, characterName, characterAvatar } = route.params || {};
 
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isQuotaExceeded, setIsQuotaExceeded] = useState<boolean>(false);
+  const [showQuotaModal, setShowQuotaModal] = useState<boolean>(false);
   const isMountedRef = useRef(true);
-  const dispatch = useDispatch();
   const {data: user} = useGetProfile();
   // const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA'; //token
+
+  const [activeSpeakingId, setActiveSpeakingId] = useState<string | number | null>(null);
+
+  const initTts = async () => {
+    try {
+      await Tts.getInitStatus();
+      const voices = await Tts.voices();
+      const availableVoices = voices.filter(
+        (v: any) =>
+          !v.networkConnectionRequired &&
+          !v.notInstalled &&
+          (v.language === 'en-IN' || v.language === 'en-US' || v.language.startsWith('en')),
+      );
+      if (availableVoices && availableVoices.length > 0) {
+        const defaultVoice = availableVoices[0];
+        if (defaultVoice) {
+          try {
+            await Tts.setDefaultLanguage(defaultVoice.language);
+          } catch (err) {
+            console.warn(`Failed to set TTS language to ${defaultVoice.language}`, err);
+          }
+          await Tts.setDefaultVoice(defaultVoice.id);
+        }
+      }
+      Tts.setDefaultRate(0.5);
+      Tts.setDefaultPitch(1.0);
+    } catch (error) {
+      console.warn('Failed to initialize TTS voices in ChatbotScreen', error);
+    }
+  };
+
+  useEffect(() => {
+    initTts();
+
+    const onStart = () => {};
+    const onFinish = () => { setActiveSpeakingId(null); };
+    const onCancel = () => { setActiveSpeakingId(null); };
+    const onError  = () => { setActiveSpeakingId(null); };
+
+    const startSub = Tts.addEventListener('tts-start',  onStart) as any;
+    const finishSub = Tts.addEventListener('tts-finish', onFinish) as any;
+    const cancelSub = Tts.addEventListener('tts-cancel', onCancel) as any;
+    const errorSub = Tts.addEventListener('tts-error',  onError) as any;
+
+    return () => {
+      Tts.stop();
+      try { startSub?.remove?.(); } catch (e) {}
+      try { finishSub?.remove?.(); } catch (e) {}
+      try { cancelSub?.remove?.(); } catch (e) {}
+      try { errorSub?.remove?.(); } catch (e) {}
+    };
+  }, []);
+
+  const toggleSpeech = useCallback((message: IMessage) => {
+    if (activeSpeakingId === message._id) {
+      Tts.stop();
+      setActiveSpeakingId(null);
+    } else {
+      Tts.stop();
+      if (message.text) {
+        setActiveSpeakingId(message._id);
+        Tts.speak(message.text);
+      }
+    }
+  }, [activeSpeakingId]);
 
   //console.log("User Token", user_token);
 
   const {mutate: sendMessageToAI, isPending: messageProcessPending} =
     useSendMessageToGemini();
-  const {data: conversations, isLoading: conversationLoading} =
-    useLoadAIConversations(isConnected);
+  const isPending = messageProcessPending || isLoading;
+  const {data: conversations, isLoading: _conversationLoading} =
+    useLoadAIConversations(isConnected, characterId);
 
   useEffect(() => {
     return () => {
@@ -87,6 +153,22 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
     }
   }, []);
 
+  const convertToGiftedFormat = useCallback((items: Message[]): IMessage[] => {
+    return items.map(m => ({
+      _id: m._id,
+      text: m.text,
+      createdAt: new Date(m.timestamp),
+      user: {
+        _id: m.role === 'user' ? 1 : ASSISTANT_USER_ID,
+        avatar: m.profileImage
+          ? `${GET_STORAGE_DATA}/${m.profileImage}`
+          : m.role === 'assistant'
+            ? (characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg')
+            : undefined,
+      },
+    }));
+  }, [characterAvatar]);
+
   useEffect(() => {
     if (conversations) {
       const refined = convertToGiftedFormat(conversations);
@@ -96,9 +178,8 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
           text: "Hello! 👋 I'm here to assist you. How can I help you today?",
           createdAt: new Date(),
           user: {
-            _id: 2,
-            avatar:
-              'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+            _id: ASSISTANT_USER_ID,
+            avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
           },
         },
         ...refined.reverse(),
@@ -106,35 +187,39 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
 
       safeSetIsTyping(false);
     }
-  }, [conversations, safeSetIsTyping, safeSetMessages]);
-
-  const convertToGiftedFormat = (items: Message[]): IMessage[] => {
-    return items.map(m => ({
-      _id: m._id,
-      text: m.text,
-      createdAt: new Date(m.timestamp),
-      user: {
-        _id: m.role === 'user' ? 1 : 2,
-        avatar: m.profileImage
-          ? `${GET_STORAGE_DATA}/${m.profileImage}`
-          : m.role === 'assistant'
-            ? 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg'
-            : undefined,
-      },
-    }));
-  };
+  }, [conversations, safeSetIsTyping, safeSetMessages, convertToGiftedFormat]);
 
 
-  const onSend = useCallback((messages: IMessage[] = []) => {
+  const performSendMessage = useCallback((prompt: string) => {
     if (!isConnected) {
+      const errorId = `error-${Date.now()}`;
+      safeSetMessages(previousMessages =>
+        GiftedChat.append(previousMessages, [
+          {
+            _id: errorId,
+            text: 'Unable to connect. Please check your internet connection and try again.',
+            createdAt: new Date(),
+            user: {
+              _id: ASSISTANT_USER_ID,
+              avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+            },
+            customError: true,
+            originalPrompt: prompt,
+          } as any,
+        ]),
+      );
       Snackbar.show({
         text: 'Please check your internet connection and try again!',
         duration: Snackbar.LENGTH_SHORT,
       });
       return;
     }
-    sendMessageToAI(messages[0]?.text ?? 'AI in health within 100 words', {
+    setIsLoading(true);
+
+    sendMessageToAI({ text: prompt, character: characterId }, {
       onSuccess: (responseData: Message) => {
+        setIsLoading(false);
+        const verification = verifyChatbotResponse(responseData.text);
         safeSetMessages(previousMessages =>
           GiftedChat.append(previousMessages, [
             {
@@ -142,124 +227,175 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
               text: responseData.text,
               createdAt: new Date(),
               user: {
-                _id: 2,
-                avatar:
-                  'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+                _id: ASSISTANT_USER_ID,
+                avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
               },
-            },
+              metadata: {
+                status: verification.status,
+                confidence: verification.confidence,
+              },
+            } as any,
           ]),
         );
       },
-      onError: (error: AxiosError) => {
+      onError: (error: any) => {
+        setIsLoading(false);
         if (!isMountedRef.current) {
           return;
         }
         console.log('Error', error);
+        let errorMsg = 'Something went wrong. Please try again.';
         if (error.response) {
           const statusCode = error.response.status;
           switch (statusCode) {
             case 401:
-              Alert.alert('Authentication Error', 'Unauthorized Access');
-
+              errorMsg = 'Unauthorized access. Please log in again.';
               break;
             case 422:
-              Alert.alert(
-                'Bad Request',
-                'Invalid request. Please check your input.',
-              );
-
+              errorMsg = 'Invalid request. Please check your input.';
               break;
             case 429:
-              safeSetMessages(previousMessages =>
-                GiftedChat.append(previousMessages, [
-                  {
-                    _id: previousMessages.length + 1,
-                    text: 'You’ve reached your daily limit. You can ask up to 5 questions per day',
-                    createdAt: new Date(),
-                    user: {
-                      _id: 2,
-                      avatar:
-                        'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
-                    },
-                  },
-                ]),
-              );
+              errorMsg = 'Daily quota exceeded for this character. Come back tomorrow for more advice!';
+              setIsQuotaExceeded(true);
+              setShowQuotaModal(true);
               break;
-
             case 500:
-              Alert.alert(
-                'Server Error',
-                'An internal server error occurred. Please try again later.',
-              );
-
+              errorMsg = 'An internal server error occurred. Please try again later.';
               break;
+              case 503:
+  safeSetMessages(previousMessages =>
+    GiftedChat.append(previousMessages, [
+      {
+        _id: Date.now(),
+        text: "⚠️ AI service is temporarily unavailable. Please try again later.",
+        createdAt: new Date(),
+        user: {
+          _id: ASSISTANT_USER_ID,
+          avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+        },
+      },
+    ]),
+  );
+  break;
+              
+
             default:
-              Alert.alert(
-                'Unknown Error',
-                'An unexpected error occurred. Please try again later.',
-              );
+              errorMsg = 'An unexpected error occurred. Please try again later.';
           }
         } else {
           if (error.message === 'Network Error') {
-            Alert.alert(
-              'Network Error',
-              'Unable to connect. Please check your internet connection and try again.',
-            );
-          } else {
-            Alert.alert('Error', 'Something went wrong. Please try again.');
+            errorMsg = 'Unable to connect. Please check your internet connection and try again.';
           }
         }
+
+        safeSetMessages(previousMessages =>
+          GiftedChat.append(previousMessages, [
+            {
+              _id: `error-${Date.now()}`,
+              text: errorMsg,
+              createdAt: new Date(),
+              user: {
+                _id: ASSISTANT_USER_ID,
+                avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+              },
+              customError: true,
+              originalPrompt: prompt,
+            } as any,
+          ]),
+        );
       },
     });
+  }, [isConnected, safeSetMessages, sendMessageToAI, setIsLoading, characterId]);
+
+  const onSend = useCallback((newMessages: IMessage[] = []) => {
+    if (isPending) {
+      return;
+    }
+    const prompt = newMessages[0]?.text ?? 'AI in health within 100 words';
+    
     safeSetMessages(previousMessages =>
-      GiftedChat.append(previousMessages, messages),
+      GiftedChat.append(previousMessages, newMessages),
     );
-  }, [isConnected, safeSetMessages, sendMessageToAI]);
+
+    performSendMessage(prompt);
+  }, [isPending, safeSetMessages, performSendMessage]);
+
+  const handleRetry = useCallback((failedMessage: any) => {
+    if (isPending) {
+      return;
+    }
+    safeSetMessages(previousMessages =>
+      previousMessages.filter(m => m._id !== failedMessage._id)
+    );
+
+    performSendMessage(failedMessage.originalPrompt);
+  }, [isPending, safeSetMessages, performSendMessage]);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}} edges={['top']}>
       <View
         style={{
-          paddingHorizontal: 16,
+          paddingHorizontal: 20,
           paddingVertical: 16,
-          borderBottomWidth: 1,
-          borderColor: '#e5e7eb',
-          backgroundColor: 'white',
+          backgroundColor: PRIMARY_COLOR,
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 12,
+          gap: 16,
+          borderBottomLeftRadius: 24,
+          borderBottomRightRadius: 24,
+          ...Platform.select({
+            ios: {
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+            },
+            android: {
+              elevation: 4,
+            },
+          }),
         }}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#374151" />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 20,
+            backgroundColor: 'rgba(255,255,255,0.2)',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Ionicons name="arrow-back" size={24} color="#ffffff" />
         </TouchableOpacity>
 
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 12}}>
           <View
             style={{
-              width: 44,
-              height: 44,
-              borderRadius: 22,
+              width: 48,
+              height: 48,
+              borderRadius: 24,
               overflow: 'hidden',
-              backgroundColor: '#dbeafe',
+              backgroundColor: '#ffffff',
               alignItems: 'center',
               justifyContent: 'center',
+              borderWidth: 2,
+              borderColor: 'rgba(255,255,255,0.5)',
             }}>
-            <MaterialCommunityIcons
-              name="robot-outline"
-              size={20}
-              color="#3b82f6"
+            <Image
+              source={{ uri: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg' }}
+              style={{ width: 44, height: 44, borderRadius: 22 }}
             />
           </View>
         </View>
 
         <View style={{flex: 1}}>
-          <Text style={{fontSize: 18, fontWeight: '600', color: '#111827'}}>
-            Care Companion AI
+          <Text style={{fontSize: 20, fontWeight: '700', color: '#ffffff'}}>
+            {characterName || 'Care Companion AI'}
           </Text>
 
-          {isTyping && (
-            <Text style={{fontSize: 13, color: '#3b82f6'}}>typing...</Text>
-          )}
+          <Text style={{fontSize: 13, color: 'rgba(255,255,255,0.8)', marginTop: 2}}>
+            {isPending ? 'Generating response...' : isTyping ? 'Typing...' : 'Online'}
+          </Text>
         </View>
       </View>
 
@@ -278,7 +414,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
                   ? `${GET_STORAGE_DATA}/${user?.Profile_image}`
                   : 'https://png.pngtree.com/png-clipart/20231019/original/pngtree-user-profile-avatar-png-image_13369988.png',
             }}
-            isTyping={isTyping}
+            isTyping={isTyping || isPending}
             //alwaysShowSend={true}
             //keyboardShouldPersistTaps="handled"
             minInputToolbarHeight={52}
@@ -289,41 +425,146 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
               paddingTop: 10,
               paddingBottom: 20,
             }}
-            renderBubble={props => (
-              <Bubble
-                {...props}
-                wrapperStyle={{
-                  right: {backgroundColor: PRIMARY_COLOR},
-                  left: {backgroundColor: '#f3f4f6'},
-                }}
-                textStyle={{
-                  right: {color: 'white', fontSize: 17, lineHeight: 24},
-                  left: {color: '#111827', fontSize: 17, lineHeight: 24},
-                }}
-              />
-            )}
+            textInputProps={{
+              editable: !isPending && !isQuotaExceeded,
+              placeholder: isQuotaExceeded ? 'Come back tomorrow for more advice!' : `Ask ${characterName || 'the AI'} a question...`,
+            }}
+            renderBubble={props => {
+              const currentMessage = props.currentMessage as any;
+              if (currentMessage?.customError) {
+                return (
+                  <View style={{
+                    backgroundColor: '#fee2e2',
+                    borderColor: '#fca5a5',
+                    borderWidth: 1,
+                    borderRadius: 12,
+                    padding: 12,
+                    marginVertical: 4,
+                    maxWidth: '85%',
+                    alignSelf: 'flex-start',
+                  }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                      <Ionicons name="alert-circle" size={20} color="#dc2626" />
+                      <Text style={{ color: '#dc2626', fontWeight: '600', fontSize: 15 }}>
+                        Failed to send message
+                      </Text>
+                    </View>
+                    <Text style={{ color: '#7f1d1d', fontSize: 15, marginTop: 4, lineHeight: 22 }}>
+                      {currentMessage.text}
+                    </Text>
+                    {currentMessage.originalPrompt && (
+                      <TouchableOpacity
+                        onPress={() => handleRetry(currentMessage)}
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          backgroundColor: '#dc2626',
+                          paddingVertical: 8,
+                          paddingHorizontal: 16,
+                          borderRadius: 8,
+                          marginTop: 10,
+                          alignSelf: 'flex-start',
+                          gap: 6,
+                        }}
+                      >
+                        <Ionicons name="refresh" size={16} color="white" />
+                        <Text style={{ color: 'white', fontWeight: '600', fontSize: 14 }}>
+                          Retry
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                );
+              }
+              const isAssistant = currentMessage.user?._id === ASSISTANT_USER_ID;
+              const isSpeaking = activeSpeakingId === currentMessage._id;
+              return (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Bubble
+                    {...props}
+                    wrapperStyle={{
+                      left: {
+                        backgroundColor: '#ffffff',
+                        borderBottomLeftRadius: 4,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        borderBottomRightRadius: 20,
+                        padding: 4,
+                        ...Platform.select({
+                          ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 4 },
+                          android: { elevation: 2 },
+                        }),
+                      },
+                      right: {
+                        backgroundColor: PRIMARY_COLOR,
+                        borderBottomRightRadius: 4,
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                        borderBottomLeftRadius: 20,
+                        padding: 4,
+                        ...Platform.select({
+                          ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 },
+                          android: { elevation: 2 },
+                        }),
+                      },
+                    }}
+                    textStyle={{
+                      left: { color: '#1e293b', fontSize: 16, lineHeight: 24 },
+                      right: { color: '#ffffff', fontSize: 16, lineHeight: 24 },
+                    }}
+                  />
+                  {isAssistant && (
+                    <TouchableOpacity
+                      onPress={() => toggleSpeech(currentMessage)}
+                      style={{
+                        padding: 8,
+                        marginLeft: 4,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      activeOpacity={0.7}
+                      accessibilityLabel={isSpeaking ? 'Stop speaking message' : 'Listen to message'}
+                    >
+                      <Ionicons
+                        name={isSpeaking ? 'stop-circle' : 'volume-medium'}
+                        size={24}
+                        color={isSpeaking ? PRIMARY_COLOR : '#6b7280'}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              );
+            }}
             renderInputToolbar={props => (
               <InputToolbar
                 {...props}
                 containerStyle={{
-                  borderWidth: 0.5,
-                  borderColor: '#ccc',
-                  backgroundColor: 'white',
-                  borderRadius: 12,
-                  paddingVertical: 10,
-                  marginHorizontal: 10,
-                  marginBottom: hp(2),
+                  backgroundColor: '#ffffff',
+                  borderTopWidth: 0,
+                  paddingHorizontal: 8,
+                  paddingVertical: 8,
+                  justifyContent: 'center',
+                  ...Platform.select({
+                    ios: { shadowColor: '#000', shadowOffset: { width: 0, height: -2 }, shadowOpacity: 0.05, shadowRadius: 8 },
+                    android: { elevation: 4 },
+                  }),
                 }}
+                primaryStyle={{ alignItems: 'center' }}
               />
             )}
             renderSend={props => (
-              <Send {...props} containerStyle={{justifyContent: 'center'}}>
+              <Send
+                {...props}
+                containerStyle={{justifyContent: 'center'}}
+              >
                 <View style={{marginRight: 12, marginBottom: 8}}>
                   <Ionicons
                     name="send"
                     size={26}
                     color={
-                      props.text?.trim().length ? PRIMARY_COLOR : '#9ca3af'
+                      props.text?.trim().length && !isPending
+                        ? PRIMARY_COLOR
+                        : '#9ca3af'
                     }
                   />
                 </View>
@@ -332,6 +573,27 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
           />
         </View>
       </KeyboardAvoidingView>
+
+      <Modal visible={showQuotaModal} transparent animationType="slide">
+        <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+          <View style={{ backgroundColor: 'white', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, alignItems: 'center' }}>
+            <View style={{ width: 48, height: 4, backgroundColor: '#e5e7eb', borderRadius: 2, marginBottom: 24 }} />
+            <Ionicons name="time-outline" size={48} color="#f59e0b" style={{ marginBottom: 16 }} />
+            <Text style={{ fontSize: 20, fontWeight: '700', color: '#111827', marginBottom: 8, textAlign: 'center' }}>
+              Daily Limit Reached
+            </Text>
+            <Text style={{ fontSize: 16, color: '#4b5563', textAlign: 'center', marginBottom: 24, lineHeight: 24 }}>
+              {"You've"} used all your messages for {characterName || 'this character'} today. Please come back tomorrow for more advice!
+            </Text>
+            <TouchableOpacity
+              onPress={() => setShowQuotaModal(false)}
+              style={{ backgroundColor: PRIMARY_COLOR, paddingVertical: 14, width: '100%', borderRadius: 12, alignItems: 'center' }}
+            >
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>Got it</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
