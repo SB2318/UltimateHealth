@@ -752,6 +752,36 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         selectedLanguages={sessionSelectedLanguages}
         setSelectedLanguages={setSessionSelectedLanguages}
       />
+      
+      {/* Academy Featured Card */}
+      <View style={{ paddingHorizontal: 16, marginTop: 12 }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#10B981',
+            borderRadius: 16,
+            padding: 16,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+          onPress={() => navigation.navigate('Academy')}
+        >
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>Hospital Learning Academy</Text>
+            <Text style={{ color: 'rgba(255,255,255,0.8)', fontSize: 14, marginTop: 4 }}>Learn how hospitals work</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
+              <View style={{ height: 6, backgroundColor: 'rgba(255,255,255,0.3)', borderRadius: 3, flex: 1, marginRight: 8 }}>
+                <View style={{ height: '100%', width: '45%', backgroundColor: '#fff', borderRadius: 3 }} />
+              </View>
+              <Text style={{ color: '#fff', fontSize: 12, fontWeight: '600' }}>45%</Text>
+            </View>
+          </View>
+          <View style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: 12, borderRadius: 12, marginLeft: 16 }}>
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Continue</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.buttonContainer}>
         <ScrollView
           horizontal={true}

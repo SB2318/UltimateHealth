@@ -179,6 +179,7 @@ export type TabParamList = {
   Podcasts: undefined;
   Profile: undefined;
   Chatbot: undefined;
+  Academy: undefined;
   About: undefined;
 };
 

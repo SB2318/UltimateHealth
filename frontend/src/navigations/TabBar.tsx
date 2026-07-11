@@ -20,6 +20,7 @@ const TAB_CONFIG: Record<
   Home: {active: 'home', inactive: 'home-outline', label: 'Home'},
   Podcasts: {active: 'headphones', inactive: 'headphones', label: 'Podcasts'},
   Chatbot: {active: 'robot', inactive: 'robot-outline', label: 'AI'},
+  Academy: {active: 'school', inactive: 'school-outline', label: 'Academy'},
   Profile: {active: 'account-circle', inactive: 'account-circle-outline', label: 'Profile'},
   About: {active: 'information', inactive: 'information-outline', label: 'About'},
 };
