@@ -1,5 +1,5 @@
-import { StyleSheet, View, Text, Alert, useColorScheme, ScrollView, TouchableOpacity } from 'react-native';
-import React, {useCallback, useState} from 'react';
+import { StyleSheet, View, Text, Alert, useColorScheme, FlatList, TouchableOpacity, RefreshControl, Dimensions } from 'react-native';
+import React, {useCallback, useState, useMemo} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ArticleCard from '../components/ArticleCard';
@@ -30,6 +30,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const [authorId, setAuthorId] = useState<string>('');
   const [recordId, setRecordId] = useState<string>('');
   const [selectedCardId, setSelectedCardId] = useState<string>('');
+  const [selectedTab, setSelectedTab] = useState<'articles' | 'reposts' | 'saved'>('articles');
   const dispatch = useDispatch();
   const {mutate: updateViewCount} =
     useUpdateViewCount(articleId ?? 0);
@@ -245,6 +246,60 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     }
   };
 
+  const listData = useMemo(() => {
+    if (!user) return [];
+    if (selectedTab === 'articles') return user.articles || [];
+    if (selectedTab === 'reposts') return user.repostArticles || [];
+    if (selectedTab === 'saved') return user.savedArticles || [];
+    return [];
+  }, [user, selectedTab]);
+
+  const renderTabs = () => (
+    <View style={[styles.tabsContainer, { backgroundColor: themeColors.background, borderBottomColor: themeColors.border }]}>
+      {(['articles', 'reposts', 'saved'] as const).map((tab) => {
+        const isSelected = selectedTab === tab;
+        const labels = {
+          articles: 'Posts',
+          reposts: 'Reposts',
+          saved: 'Saved'
+        };
+        const counts = {
+          articles: user?.articles?.length || 0,
+          reposts: user?.repostArticles?.length || 0,
+          saved: user?.savedArticles?.length || 0
+        };
+        return (
+          <TouchableOpacity
+            key={tab}
+            style={[styles.tab, isSelected ? { borderBottomColor: PRIMARY_COLOR } : {}]}
+            onPress={() => setSelectedTab(tab)}
+          >
+            <Text style={[styles.tabText, { color: isSelected ? PRIMARY_COLOR : themeColors.textSecondary }, isSelected ? styles.tabTextActive : {}]}>
+              {labels[tab]}
+            </Text>
+            <Text style={[styles.tabCount, { color: isSelected ? PRIMARY_COLOR : themeColors.textSecondary }]}>
+              {counts[tab]}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+
+  const renderEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <MaterialCommunityIcon 
+        name={selectedTab === 'articles' ? 'file-document-outline' : selectedTab === 'reposts' ? 'repeat-variant' : 'bookmark-outline'} 
+        size={64} 
+        color={themeColors.textSecondary} 
+        style={{ opacity: 0.5, marginBottom: hp(2) }}
+      />
+      <Text style={[styles.emptyText, { color: themeColors.textSecondary }]}>
+        No {selectedTab} yet.
+      </Text>
+    </View>
+  );
+
   return (
     <SafeAreaView
       style={[
@@ -265,29 +320,23 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         <MaterialCommunityIcon name="cog-outline" size={26} color="white" />
       </TouchableOpacity>
 
-      <ScrollView
-        style={styles.innerContainer}
-        contentContainerStyle={{flexGrow: 1, backgroundColor: themeColors.background}}
+      <FlatList
+        data={listData}
+        keyExtractor={(item: any, index: number) => item?._id?.toString() || index.toString()}
+        renderItem={renderItem}
         showsVerticalScrollIndicator={false}
-      >
-        {renderHeader()}
-
-        <View style={styles.workspaceSection}>
-          {/* Settings entry point — secondary, for discoverability */}
-          <AccessibleTouchable
-            activeOpacity={0.7}
-            accessibilityLabel="Settings"
-            accessibilityHint="Opens app settings"
-            style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
-            onPress={() => navigation.navigate('SettingsScreen')}>
-            <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
-              <MaterialCommunityIcon name="cog-outline" size={22} color={PRIMARY_COLOR} />
-            </View>
-            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Settings</Text>
-            <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
-          </AccessibleTouchable>
-        </View>
-      </ScrollView>
+        contentContainerStyle={{ flexGrow: 1, backgroundColor: themeColors.background, paddingBottom: hp(4) }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={PRIMARY_COLOR} />
+        }
+        ListHeaderComponent={
+          <View>
+            {renderHeader()}
+            {renderTabs()}
+          </View>
+        }
+        ListEmptyComponent={renderEmptyComponent}
+      />
     </SafeAreaView>
   );
 };
@@ -314,37 +363,46 @@ const styles = StyleSheet.create({
     zIndex: 100,
     padding: 6,
   },
-  workspaceSection: {
-    width: '100%',
-    paddingHorizontal: wp(4),
-    paddingTop: hp(2.5),
-    paddingBottom: hp(4),
-    gap: hp(1.8),
-  },
-  listButton: {
+  tabsContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 14,
-    paddingVertical: hp(1.8),
-    paddingHorizontal: wp(4),
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
-    elevation: 1,
+    width: '100%',
+    borderBottomWidth: 1,
+    paddingHorizontal: wp(2),
   },
-  listButtonIconBg: {
-    width: wp(10),
-    height: wp(10),
-    borderRadius: wp(5),
+  tab: {
+    flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: wp(3.5),
+    paddingVertical: hp(2),
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent',
+    gap: wp(1.5),
   },
-  listButtonText: {
+  tabText: {
+    fontSize: fp(3.8),
+    fontWeight: '500',
+  },
+  tabTextActive: {
+    fontWeight: '700',
+  },
+  tabCount: {
+    fontSize: fp(3.2),
+    fontWeight: '500',
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    paddingHorizontal: wp(1.5),
+    paddingVertical: hp(0.2),
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  emptyContainer: {
     flex: 1,
-    fontSize: fp(4.2),
-    fontWeight: '600',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: hp(8),
   },
+  emptyText: {
+    fontSize: fp(4.2),
+    fontWeight: '500',
+  }
 });

@@ -418,10 +418,10 @@ const ArticleCard = ({
 <Pressable onPress={handleImagePress} style={styles.imageWrapper}>
   <ImageFallback
     source={{
-      uri: item?.imageUtils[0]
-        ? item?.imageUtils[0].startsWith('http')
-          ? item?.imageUtils[0]
-          : `${GET_IMAGE}/${item?.imageUtils[0]}`
+      uri: item?.imageUtils && item.imageUtils.length > 0
+        ? item.imageUtils[0].startsWith('http')
+          ? item.imageUtils[0]
+          : `${GET_IMAGE}/${item.imageUtils[0]}`
         : undefined,
     }}
     fallbackSource={require('../assets/images/article_default.jpg')}
