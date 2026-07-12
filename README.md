@@ -986,6 +986,7 @@ We welcome contributions from everyone — developers, designers, writers, and t
    <tr>
     <td align="center"><a href="https://github.com/eranmol2007-coder"><img src="https://avatars.githubusercontent.com/u/227629043?v=4" width="120px;" alt=""/><br/><sub><b>Anmol Kumar Singh </b></sub></a></td>
        <td align="center"><a href="https://github.com/dokkuprashanth7"><img src="https://avatars.githubusercontent.com/u/239514979?v=4" width="120px;" alt=""/><br/><sub><b>PRASHANTH</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Kadaliswarna"><img src="https://avatars.githubusercontent.com/u/180524407?v=4" width="120px;" alt=""/><br/><sub><b>swarna</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
