@@ -10,6 +10,7 @@
       ]
     },
     "moduleResolution": "bundler",
+    "module": "esnext",
     "skipLibCheck": true
   },
   "include": [

@@ -62,6 +62,8 @@ import {useSocket} from '../../contexts/SocketContext';
 import { copyArticleShareLink } from '../../helper/shareUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
+import { useDyslexiaMode } from '../../hooks/useDyslexiaMode';
+import { generateArticleStyles } from '../../utils/dyslexiaStyles';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -94,6 +96,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontScale, setFontScale] = useState(1);
+  const { isDyslexiaMode, toggleDyslexiaMode } = useDyslexiaMode();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
@@ -878,11 +881,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
-  const articleCustomStyle = `
-    body { font-family: 'Times New Roman'; font-size: ${articleFontSize}px; line-height: 1.6; }
-    p, li { font-size: ${articleFontSize}px; }
-    img, video, iframe { max-width: 100%; height: auto; }
-  `;
+  const articleCustomStyle = generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize);
 
   const footerColors = {
     background: isDarkMode ? '#111827' : '#ffffff',
@@ -1089,6 +1088,31 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     <Text style={styles.fontSizeButtonText}>A+</Text>
                   </TouchableOpacity>
                 </View>
+
+                {/* Dyslexia Mode Toggle */}
+                <TouchableOpacity
+                  onPress={toggleDyslexiaMode}
+                  accessibilityRole="switch"
+                  accessibilityState={{ checked: isDyslexiaMode }}
+                  accessibilityLabel="Toggle Dyslexia-Friendly Reading Mode"
+                  accessibilityHint="Toggles the reading mode to use a dyslexia-friendly font and spacing"
+                  style={[
+                    styles.dyslexiaButton,
+                    isDyslexiaMode && styles.dyslexiaButtonActive,
+                  ]}>
+                  <MaterialCommunityIcons
+                    name="glasses"
+                    size={20}
+                    color={isDyslexiaMode ? '#FFFFFF' : '#333333'}
+                  />
+                  <Text
+                    style={[
+                      styles.dyslexiaButtonText,
+                      isDyslexiaMode && styles.dyslexiaButtonTextActive,
+                    ]}>
+                    Dyslexia Mode
+                  </Text>
+                </TouchableOpacity>
               </View>
               {totalLikes > 0 && (
                 <View style={styles.avatarsContainer}>
@@ -1708,6 +1732,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333333',
     fontWeight: '600',
+  },
+  dyslexiaButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#FFFFFF',
+    gap: 6,
+  },
+  dyslexiaButtonActive: {
+    backgroundColor: PRIMARY_COLOR,
+    borderColor: PRIMARY_COLOR,
+  },
+  dyslexiaButtonText: {
+    fontSize: 14,
+    color: '#333333',
+    fontWeight: '600',
+  },
+  dyslexiaButtonTextActive: {
+    color: '#FFFFFF',
   },
   avatarsContainer: {
     flexDirection: 'row',
