@@ -53,6 +53,7 @@ export type RootStackParamList = {
     recordId?: string;
   };
   PodcastProfile: undefined;
+  PlaylistDetailScreen: { playlist: PlayList };
   ReviewScreen: {
     articleId: number;
     authorId: string;
@@ -100,6 +101,10 @@ export type RootStackParamList = {
   };
   ProfileEditScreen: undefined;
   NotificationPreferencesScreen: undefined;
+  InsightScreen: undefined;
+  RepostsScreen: undefined;
+  SavedArticlesScreen: undefined;
+  WellnessDashboardScreen: undefined;
   LogoutScreen: {profile_image: string; username: string};
   RenderSuggestion: {
     htmlContent: string;
@@ -134,6 +139,7 @@ export type RootStackParamList = {
   ContributorPage: undefined;
   OpenSourcePage: undefined;
   ReadingHistoryScreen: undefined;
+  ChatbotScreen: { characterId: string; characterName?: string; characterAvatar?: string };
 };
 
 export type RedirectTo = {
@@ -152,6 +158,13 @@ export type Message = {
   userHandle: string | null;
   profileImage: string | null;
 };
+
+export interface Character {
+  id: string;
+  name: string;
+  tagline: string;
+  avatarUrl: string;
+}
 
 export type UserDetail = {
   user_name: string;
@@ -183,6 +196,26 @@ export type UserProfileScreenProp = StackScreenProps<
   'UserProfileScreen'
 >;
 
+export type InsightScreenProp = StackScreenProps<
+  RootStackParamList,
+  'InsightScreen'
+>;
+
+export type RepostsScreenProp = StackScreenProps<
+  RootStackParamList,
+  'RepostsScreen'
+>;
+
+export type SavedArticlesScreenProp = StackScreenProps<
+  RootStackParamList,
+  'SavedArticlesScreen'
+>;
+
+export type WellnessDashboardScreenProp = StackScreenProps<
+  RootStackParamList,
+  'WellnessDashboardScreen'
+>;
+
 export type OtpScreenProp = StackScreenProps<RootStackParamList, 'OtpScreen'>;
 
 export type SignUpScreenFirstProp = StackScreenProps<
@@ -198,6 +231,11 @@ export type SignUpScreenSecondProp = StackScreenProps<
 export type PodcastProfileProp = StackScreenProps<
   RootStackParamList,
   'PodcastProfile'
+>;
+
+export type PlaylistDetailScreenProp = StackScreenProps<
+  RootStackParamList,
+  'PlaylistDetailScreen'
 >;
 
 export type ArticleDescriptionProp = StackScreenProps<
@@ -312,7 +350,11 @@ export type HomeScreenProps = CompositeScreenProps<
   | StackScreenProps<RootStackParamList, 'NotificationScreen'>
 >;
 
-export type ChatBotScreenProps = BottomTabScreenProps<TabParamList, 'Chatbot'>;
+export type ChatBotScreenProps = StackScreenProps<RootStackParamList, 'ChatbotScreen'>;
+export type PersonaLobbyScreenProps = CompositeScreenProps<
+  BottomTabScreenProps<TabParamList, 'Chatbot'>,
+  StackScreenProps<RootStackParamList, 'ChatbotScreen'>
+>;
 export type OverviewScreenProps = StackScreenProps<
   RootStackParamList,
   'OverviewScreen'

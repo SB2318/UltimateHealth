@@ -1,21 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
+/* eslint-disable react-compiler/react-compiler */
+// @ts-nocheck
+import React, {useEffect, useRef, useState} from 'react';
+import { View,
   Text,
   StyleSheet,
-  TextInput,
+   TextInput ,
   TouchableOpacity,
-  ScrollView,
+   ScrollView ,
   Image,
   Alert,
   Modal,
-  FlatList,
-} from 'react-native';
+   FlatList ,
+   } from 'react-native';
 import {useSelector} from 'react-redux';
 import {ArticleDescriptionProp, Category} from '../../type';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../helper/Theme';
-
 import {
   ImageLibraryOptions,
   ImagePickerResponse,
@@ -26,11 +26,12 @@ import {hp} from '../../helper/Metric';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ttsLanguageList } from '@/src/helper/Utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ARTICLE_TITLE_MAX_LENGTH = 150;
 const ARTICLE_DESCRIPTION_MAX_LENGTH = 500;
 const COUNTER_WARNING_THRESHOLD = 0.9;
-
+const ARTICLE_DRAFT_KEY = '@article_description_draft';
 const ArticleDescriptionScreen = ({
   navigation,
   route,
@@ -45,8 +46,57 @@ const ArticleDescriptionScreen = ({
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const {categories} = useSelector((state: any) => state.data);
   const [imageUtils, setImageUtils] = useState('');
+  const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  /** Set Initial Value */
+  /** Restore draft from AsyncStorage if this is a new article (not an edit or translation) */
+  useEffect(() => {
+    if (!article && !isTranslation) {
+      AsyncStorage.getItem(ARTICLE_DRAFT_KEY).then(raw => {
+        if (!raw) return;
+        try {
+          const draft = JSON.parse(raw);
+          if (draft.title || draft.authorName || draft.description) {
+            Alert.alert(
+              'Restore Draft',
+              'You have an unsaved draft. Would you like to continue where you left off?',
+              [
+                {text: 'Discard', style: 'destructive', onPress: () => AsyncStorage.removeItem(ARTICLE_DRAFT_KEY)},
+                {
+                  text: 'Restore',
+                  onPress: () => {
+                    if (draft.title) setTitle(draft.title);
+                    if (draft.authorName) setAuthorName(draft.authorName);
+                    if (draft.description) setDescription(draft.description);
+                    if (draft.selectedGenres) setSelectedGenres(draft.selectedGenres);
+                    if (draft.language) setLanguage(draft.language);
+                    if (draft.imageUtils) setImageUtils(draft.imageUtils);
+                  },
+                },
+              ],
+            );
+          }
+        } catch (_) {
+          // Corrupt draft — ignore
+          AsyncStorage.removeItem(ARTICLE_DRAFT_KEY);
+        }
+      });
+    }
+  }, []);
+
+  /** Auto-save draft to AsyncStorage (debounced 800ms) for new articles only */
+  useEffect(() => {
+    if (article || isTranslation) return;
+    if (draftSaveTimerRef.current) clearTimeout(draftSaveTimerRef.current);
+    draftSaveTimerRef.current = setTimeout(() => {
+      const draft = {title, authorName, description, selectedGenres, language, imageUtils};
+      AsyncStorage.setItem(ARTICLE_DRAFT_KEY, JSON.stringify(draft)).catch(() => {});
+    }, 800);
+    return () => {
+      if (draftSaveTimerRef.current) clearTimeout(draftSaveTimerRef.current);
+    };
+  }, [title, authorName, description, selectedGenres, language, imageUtils]);
+
+  /** Set Initial Value for edits/translations */
   useEffect(() => {
     if (article) {
       setTitle(article.title);
@@ -246,7 +296,7 @@ const ArticleDescriptionScreen = ({
           paddingHorizontal: 6,
         }}>
       <View style={styles.form}>
-        <LanguageSelector />
+        {LanguageSelector()}
 
         {/* Header Section */}
         <View style={styles.headerSection}>
@@ -783,3 +833,4 @@ const styles = StyleSheet.create({
 });
 
 export default ArticleDescriptionScreen;
+

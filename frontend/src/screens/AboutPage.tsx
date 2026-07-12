@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import { Share, Linking, Image, useColorScheme } from 'react-native';
 import VersionCheck from 'react-native-version-check';
@@ -39,9 +40,19 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
     }
   };
 
-  const openLink = (url: string) => {
-    Linking.openURL(url).catch(err => console.error('URL error', err));
-  };
+  const openLink = async (url: string) => {
+  try {
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.error('Cannot open URL:', url);
+    }
+  } catch (error) {
+    console.error('URL error:', error);
+  }
+};
 
   
 

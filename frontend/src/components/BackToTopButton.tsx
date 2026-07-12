@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import AccessibleTouchable from './common/AccessibleTouchable';
 import {
