@@ -254,6 +254,17 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
       />
+
+      {/* Settings shortcut — top-right gear icon */}
+      <TouchableOpacity
+        style={styles.settingsBtn}
+        onPress={() => navigation.navigate('SettingsScreen')}
+        accessibilityLabel="Open Settings"
+        accessibilityHint="Navigate to app settings"
+      >
+        <MaterialCommunityIcon name="cog-outline" size={26} color="white" />
+      </TouchableOpacity>
+
       <ScrollView
         style={styles.innerContainer}
         contentContainerStyle={{flexGrow: 1, backgroundColor: themeColors.background}}
@@ -262,72 +273,19 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         {renderHeader()}
 
         <View style={styles.workspaceSection}>
-
+          {/* Settings entry point — secondary, for discoverability */}
           <AccessibleTouchable
             activeOpacity={0.7}
-            accessibilityLabel="Insight"
-            accessibilityHint="Opens your activity insight"
+            accessibilityLabel="Settings"
+            accessibilityHint="Opens app settings"
             style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
-            onPress={() => navigate('InsightScreen')}>
+            onPress={() => navigation.navigate('SettingsScreen')}>
             <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
-              <MaterialCommunityIcon name="chart-line" size={22} color={PRIMARY_COLOR} />
+              <MaterialCommunityIcon name="cog-outline" size={22} color={PRIMARY_COLOR} />
             </View>
-            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Activity Insight</Text>
+            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Settings</Text>
             <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
           </AccessibleTouchable>
-
-          <AccessibleTouchable
-            activeOpacity={0.7}
-            accessibilityLabel="Reposts"
-            accessibilityHint="Opens your reposted articles"
-            style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
-            onPress={() => navigate('RepostsScreen')}>
-            <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
-              <MaterialCommunityIcon name="repeat-variant" size={22} color={PRIMARY_COLOR} />
-            </View>
-            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Reposted Articles ({user?.repostArticles?.length || 0})</Text>
-            <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
-          </AccessibleTouchable>
-
-          <AccessibleTouchable
-            activeOpacity={0.7}
-            accessibilityLabel="Saved Articles"
-            accessibilityHint="Opens your saved articles"
-            style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
-            onPress={() => navigate('SavedArticlesScreen')}>
-            <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
-              <MaterialCommunityIcon name="bookmark-outline" size={22} color={PRIMARY_COLOR} />
-            </View>
-            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Saved Articles ({user?.savedArticles?.length || 0})</Text>
-            <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
-          </AccessibleTouchable>
-
-          <AccessibleTouchable
-            activeOpacity={0.7}
-            accessibilityLabel="Reading History"
-            accessibilityHint="Opens your reading history"
-            style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
-            onPress={() => navigate('ReadingHistoryScreen')}>
-            <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
-              <MaterialCommunityIcon name="history" size={22} color={PRIMARY_COLOR} />
-            </View>
-            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Reading History</Text>
-            <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
-          </AccessibleTouchable>
-
-          <AccessibleTouchable
-            activeOpacity={0.7}
-            accessibilityLabel="Wellness Dashboard"
-            accessibilityHint="Opens your wellness dashboard"
-            style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
-            onPress={() => navigate('WellnessDashboardScreen')}>
-            <View style={[styles.listButtonIconBg, {backgroundColor: themeColors.iconBackground}]}>
-              <MaterialCommunityIcon name="heart-pulse" size={22} color={PRIMARY_COLOR} />
-            </View>
-            <Text style={[styles.listButtonText, {color: themeColors.text}]}>Wellness Dashboard</Text>
-            <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
-          </AccessibleTouchable>
-
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -348,6 +306,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  settingsBtn: {
+    position: 'absolute',
+    top: hp(6),
+    right: wp(4),
+    zIndex: 100,
+    padding: 6,
   },
   workspaceSection: {
     width: '100%',

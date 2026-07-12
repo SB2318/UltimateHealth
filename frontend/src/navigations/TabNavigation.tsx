@@ -13,7 +13,6 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import {BUTTON_COLOR} from '../helper/Theme';
 import HeaderRightMenu from '../components/HeaderRightMenu';
 import PersonaLobbyScreen from '../screens/PersonaLobbyScreen';
-import AboutScreen from '../screens/AboutPage';
 import AcademyStackNavigation from './AcademyStackNavigation';
 import {useSelector} from 'react-redux';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
@@ -132,23 +131,6 @@ const TabNavigation = () => {
             marginBottom: 12,
             color: 'white',
           },
-        }}
-      />
-
-       <Tab.Screen
-        name="About"
-        component={AboutScreen}
-        options={{
-          headerShown: false,
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerTitleStyle: {
-            fontSize: 23,
-            marginBottom: 12,
-            color: 'white',
-          }
         }}
       />
     </Tab.Navigator>

@@ -22,7 +22,6 @@ const TAB_CONFIG: Record<
   Chatbot: {active: 'robot', inactive: 'robot-outline', label: 'AI'},
   Academy: {active: 'school', inactive: 'school-outline', label: 'Academy'},
   Profile: {active: 'account-circle', inactive: 'account-circle-outline', label: 'Profile'},
-  About: {active: 'information', inactive: 'information-outline', label: 'About'},
 };
 
 interface AnimatedTabItemProps {

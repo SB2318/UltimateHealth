@@ -140,6 +140,8 @@ export type RootStackParamList = {
   OpenSourcePage: undefined;
   ReadingHistoryScreen: undefined;
   ChatbotScreen: { characterId: string; characterName?: string; characterAvatar?: string };
+  AboutScreen: undefined;
+  SettingsScreen: undefined;
 };
 
 export type RedirectTo = {
@@ -180,7 +182,6 @@ export type TabParamList = {
   Profile: undefined;
   Chatbot: undefined;
   Academy: undefined;
-  About: undefined;
 };
 
 export type SplashScreenProp =
@@ -377,11 +378,7 @@ export type ProfileScreenProps = CompositeScreenProps<
   | StackScreenProps<RootStackParamList, 'ArticleScreen'>
 >;
 
-export type AboutScreenProps = CompositeScreenProps<
-  BottomTabScreenProps<TabParamList, 'About'>,
-  | StackScreenProps<RootStackParamList, 'Privacy'>
-  | StackScreenProps<RootStackParamList, 'CommunityGuidelines'>
->;
+export type AboutScreenProps = StackScreenProps<RootStackParamList, 'AboutScreen'>;
 
 export type PodcastRecorderScreenProps = StackScreenProps<
   RootStackParamList,

@@ -56,6 +56,8 @@ import InsightScreen from '../screens/profile/InsightScreen';
 import RepostsScreen from '../screens/profile/RepostsScreen';
 import SavedArticlesScreen from '../screens/profile/SavedArticlesScreen';
 import WellnessDashboardScreen from '../screens/WellnessDashboard/WellnessDashboardScreen';
+import AboutScreen from '../screens/AboutPage';
+import SettingsScreen from '../screens/SettingsScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 
 import ChatbotScreen from '../screens/ChatbotScreen';
@@ -873,6 +875,20 @@ const StackNavigation = () => {
       <Stack.Screen
         name="WellnessDashboardScreen"
         component={WellnessDashboardScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="AboutScreen"
+        component={AboutScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="SettingsScreen"
+        component={SettingsScreen}
         options={{
           headerShown: false,
         }}
