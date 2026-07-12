@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 /* eslint-disable react-compiler/react-compiler */
 import {
   Image,
@@ -893,6 +894,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   return (
+    <ErrorBoundary onRetry={() => refetch()}>
     <SafeAreaView style={styles.container}>
       {/* Reading Progress Bar */}
       <Animated.View style={[styles.progressBar, progressStyle]} />
@@ -1193,16 +1195,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}
         article={{
-          title: article.title,
-          authorName: article.authorName ?? '',
-          category: article.tags?.[0]?.name ?? 'Health',
-          coverImageUrl:
-            article.imageUtils && article.imageUtils.length > 0
-              ? article.imageUtils[0].startsWith('http')
-                ? article.imageUtils[0]
-                : `${GET_IMAGE}/${article.imageUtils[0]}`
-              : null,
-          authorAvatarUrl: null,
+        title: article?.title ?? '',
+        authorName: article?.authorName ?? '',
+        category: article?.tags?.[0]?.name ?? 'Health',
+        coverImageUrl:
+        article?.imageUtils && article.imageUtils.length > 0
+        ? article.imageUtils[0].startsWith('http')
+          ? article.imageUtils[0]
+          : `${GET_IMAGE}/${article.imageUtils[0]}`
+        : null,
+        authorAvatarUrl: null,
         }}
       />
       <TrustedUsersModal
@@ -1568,6 +1570,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         onClose={() => setIsSpeedSelectorVisible(false)}
       />
     </SafeAreaView>
+    </ErrorBoundary>
   );
 };
 
