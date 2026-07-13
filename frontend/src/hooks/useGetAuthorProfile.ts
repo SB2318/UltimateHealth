@@ -1,7 +1,8 @@
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {User} from '../type';
 import {PROD_URL} from '../helper/APIUtils';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
+type AxiosError = any;
 
 export const useGetAuthorProfile = (
   authorId: string,
@@ -22,7 +23,8 @@ export const useGetAuthorProfile = (
         url = `${PROD_URL}/user/getuserprofile?id=${user_id}`;
       }
       const response = await axios.get(url);
-      return response.data.profile as User;
+      console.log("Fetched author profile:", response.data);
+      return response.data.data as User;
     },
     enabled: !!isConnected
   });

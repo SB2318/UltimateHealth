@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect} from 'react';
-import {Image, StyleSheet} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {Image, StyleSheet, ActivityIndicator} from 'react-native';
 import {YStack, Text, Button} from 'tamagui';
 import Animated, {
   useSharedValue,
@@ -8,79 +8,46 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import {SplashScreenProp} from '../type';
-import {useDispatch} from 'react-redux';
-import {KEYS, clearStorage, retrieveItem} from '../helper/Utils';
-import {setUserId, setUserToken, setUserHandle} from '../store/UserSlice';
-import { useCheckTokenStatus } from '@/src/hooks/useGetTokenStatus';
-import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../helper/SecureStorageUtils';
+import {useSelector} from 'react-redux';
+import {RootState} from '../store/ReduxStore';
 
 export default function SplashScreen({navigation}: SplashScreenProp) {
   const opacity = useSharedValue(0);
   const scale = useSharedValue(0.8);
   const translateY = useSharedValue(20);
 
-  const dispatch = useDispatch();
+  // `user_token` is hydrated from secure storage by AppContent on mount.
+  // We wait briefly to allow hydration to complete before deciding where to navigate.
+  const user_token = useSelector((state: RootState) => state.user.user_token);
 
-  const {data: tokenRes, isLoading} = useCheckTokenStatus();
+  // Brief hydration delay so AppContent can populate Redux before we navigate
+  const [hydrated, setHydrated] = useState(false);
 
- 
-  // function isDateMoreThanSevenDaysOld(dateString: string) {
-  //   const inputDate = new Date(dateString).getTime();
-  //   const currentDate = new Date().getTime();
-  //   const timeDifference = currentDate - inputDate;
-  //   const daysDifference = timeDifference / (1000 * 3600 * 24);
-  //   return daysDifference >= 6;
-  // }
+  useEffect(() => {
+    const timer = setTimeout(() => setHydrated(true), 800);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const checkLoginStatus = useCallback(async () => {
-
-    if(!tokenRes){
-      return;
-    }
-    try {
-      const userId = await retrieveItem(KEYS.USER_ID);
-      const user = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN as SecureKey);
-      const user_handle = await retrieveItem(KEYS.USER_HANDLE);
-      if (
-       // user_handle &&
-       // user &&
-       // expiryDate &&
-       // !isDateMoreThanSevenDaysOld(expiryDate)
-       tokenRes?.isValid
-      ) {
-
-        dispatch(setUserId(userId));
-        dispatch(setUserToken(user));
-        dispatch(setUserHandle(user_handle));
-
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'TabNavigation'}],
-        });
-      } else {
-        await clearStorage();
-        navigation.reset({
-          index: 0,
-          routes: [{name: 'LoginScreen'}],
-        });
-      }
-    } catch (error) {
-      console.error('Error retrieving user data from storage', error);
-      await clearStorage();
-      // navigation.navigate('LoginScreen');
+  const navigateBasedOnAuth = useCallback(() => {
+    if (user_token) {
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'TabNavigation'}],
+      });
+    } else {
       navigation.reset({
         index: 0,
         routes: [{name: 'LoginScreen'}],
       });
     }
-  },[dispatch, navigation, tokenRes]);
+  }, [navigation, user_token]);
 
-   useEffect(() => {
-    console.log('Token status:', tokenRes);
-    if (tokenRes) {
-      checkLoginStatus();
+  useEffect(() => {
+    if (hydrated) {
+      navigateBasedOnAuth();
     }
-  }, [checkLoginStatus, tokenRes]);
+  }, [hydrated, navigateBasedOnAuth]);
+
   useEffect(() => {
     opacity.value = withTiming(1, {
       duration: 1200,
@@ -106,7 +73,6 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
       flex={1}
       alignItems="center"
       justifyContent="center"
-      //bg="$background"
       padding="$6"
       gap="$4">
       <Animated.View style={animatedStyle}>
@@ -128,23 +94,25 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
         </Text>
       </Animated.View>
 
-      <Button
-        marginTop="$6"
-        size="$7"
-        backgroundColor={isLoading ? '$color3' : '$color9'}
-        color="black"
-        paddingHorizontal="$9"
-        paddingVertical="$2"
-        borderRadius="$10"
-        elevation={4}
-        disabled={isLoading}
-
-        pressStyle={{scale: 0.96, opacity: 0.9}}
-        onPress={checkLoginStatus}>
-        <Text fontSize={16} color="black">
-          Continue
-        </Text>
-      </Button>
+      {!hydrated ? (
+        <ActivityIndicator size="small" color="#000A60" style={{marginTop: 30}} />
+      ) : (
+        <Button
+          marginTop="$6"
+          size="$7"
+          backgroundColor="$color9"
+          color="black"
+          paddingHorizontal="$9"
+          paddingVertical="$2"
+          borderRadius="$10"
+          elevation={4}
+          pressStyle={{scale: 0.96, opacity: 0.9}}
+          onPress={navigateBasedOnAuth}>
+          <Text fontSize={16} color="black">
+            Continue
+          </Text>
+        </Button>
+      )}
     </YStack>
   );
 }

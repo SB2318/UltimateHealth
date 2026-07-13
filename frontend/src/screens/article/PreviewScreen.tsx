@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Alert,
   StyleSheet,
@@ -29,6 +30,7 @@ import {useSubmitSuggestedChanges} from '@/src/hooks/useSubmitSuggestedChanges';
 import {useUploadArticleToPocketbase} from '@/src/hooks/useUploadArticlePocketbase';
 import {useUploadImprovementToPocketbase} from '@/src/hooks/useUploadImprovementToPocketbase';
 import {useRenderSuggestion} from '@/src/hooks/useRenderSuggestion';
+import {useDeletePocketbaseRecord} from '@/src/hooks/useDeletePocketbaseRecord';
 
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {
@@ -74,6 +76,11 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {mutate: renderAISuggestion, isPending: renderSuggestionPending} =
     useRenderSuggestion();
 
+  // Compensating-delete hook: removes an orphaned PocketBase record when
+  // the downstream main-DB write (step 2) fails after PocketBase write
+  // (step 1) succeeded.
+  const {mutate: deletePocketbaseRecord} = useDeletePocketbaseRecord();
+
   const {uploadImage, loading} = useUploadImage();
 
   const {data: user} = useGetProfile();
@@ -112,6 +119,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       const confirmation = await showConfirmationAlert();
       if (!confirmation) {
         Alert.alert('Post discarded');
+        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
         navigation.navigate('TabNavigation');
         return;
       }
@@ -174,16 +182,33 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                     imageUtils: finalImageUtils,
                   },
                   {
-                    onSuccess: data => {
+                    onSuccess: _result => {
                       Snackbar.show({
                         text: 'Changes submitted for review',
                         duration: Snackbar.LENGTH_SHORT,
                       });
 
+                      AsyncStorage.removeItem('@article_description_draft').catch(() => {});
                       navigation.navigate('TabNavigation');
                     },
                     onError: error => {
                       console.log('Article post Error', error);
+
+                      // Step 2 failed — issue a compensating DELETE to remove
+                      // the PocketBase record created in step 1 so it does not
+                      // become a permanent orphan.
+                      deletePocketbaseRecord({
+                       recordId: data.recordId,
+                       collectionName: 'edit_requests',
+                      }, {
+                        onError: cleanupErr => {
+                          console.warn(
+                            'PocketBase orphan cleanup failed for recordId:',
+                            data.recordId,
+                            cleanupErr,
+                          );
+                        },
+                      });
 
                       Alert.alert('Error', 'Failed to upload your post');
                     },
@@ -197,6 +222,8 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
               console.log('Article post Error', error);
               // console.log(error);
 
+              // Step 1 itself failed — no PocketBase record was created,
+              // so no compensating delete is needed here.
               Alert.alert('Failed to upload your post');
             },
           },
@@ -215,6 +242,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
           {
             onSuccess: (data: PocketBaseResponse) => {
               if (data.html_file) {
+                // Case 1: User is submitting suggested changes to an existing non published article
                 if (articleData) {
                   submitChangesMutation(
                     {
@@ -232,7 +260,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                       description: description,
                     },
                     {
-                      onSuccess: data => {
+                      onSuccess: _result => {
                         // User will not get notified, until the article published
 
                         Snackbar.show({
@@ -240,17 +268,34 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                           duration: Snackbar.LENGTH_SHORT,
                         });
 
+                        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
                         navigation.navigate('TabNavigation');
                       },
                       onError: error => {
                         console.log('Article post Error', error);
                         // console.log(error);
 
+                        // Step 2 failed — compensating DELETE for the PocketBase
+                        // record created in step 1.
+                        deletePocketbaseRecord({
+                          recordId: data.recordId,
+                          collectionName: 'content',
+                        }, {
+                          onError: cleanupErr => {
+                            console.warn(
+                              'PocketBase orphan cleanup failed for recordId:',
+                              data.recordId,
+                              cleanupErr,
+                            );
+                          },
+                        });
+
                         Alert.alert('Failed to upload your post');
                       },
                     },
                   );
                 } else {
+                  // Case 2: User is submitting a new article
                   postMutation(
                     {
                       title: title,
@@ -280,11 +325,28 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                           duration: Snackbar.LENGTH_SHORT,
                         });
 
+                        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
                         navigation.navigate('TabNavigation');
                       },
 
                       onError: error => {
                         console.log('Article post Error', error);
+
+                        // Step 2 failed — compensating DELETE for the PocketBase
+                        // article record created in step 1.
+                        deletePocketbaseRecord({
+                          recordId: data.recordId,
+                          collectionName: 'content',
+                        }, {
+                          onError: cleanupErr => {
+                            console.warn(
+                              'PocketBase orphan cleanup failed for recordId:',
+                              data.recordId,
+                              cleanupErr,
+                            );
+                          },
+                        });
+
                         Snackbar.show({
                           text: 'Failed to upload your post',
                           duration: Snackbar.LENGTH_SHORT,
@@ -302,6 +364,9 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
             },
             onError: error => {
               console.log('Article post Error pb', error.message);
+
+              // Step 1 itself failed — no PocketBase record was created,
+              // so no compensating delete is needed here.
               Alert.alert('Failed to upload your post');
             },
           },

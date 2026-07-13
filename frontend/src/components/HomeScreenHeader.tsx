@@ -1,8 +1,9 @@
 import React from 'react';
-import { Input, XStack, YStack, Button, Text, View } from 'tamagui';
-import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
+import { Input, XStack, YStack, Button, Text } from "tamagui";
+import Feather from '@expo/vector-icons/Feather';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { HomeScreenHeaderProps } from '../type';
-import { StatusBar } from 'expo-status-bar';
 
 const HomeScreenHeader = ({
   handlePresentModalPress,
@@ -11,71 +12,69 @@ const HomeScreenHeader = ({
   unreadCount,
   hasActiveFilters = false,
   onFilterReset,
+  searchText,
 }: HomeScreenHeaderProps) => {
   return (
-    <YStack backgroundColor="#000A60" width="100%" paddingHorizontal="$3" paddingVertical="$3" elevation={1}>
-      <XStack alignItems="center" justifyContent="space-between" gap="$3">
+    <YStack backgroundColor="#000A60" width="100%" paddingHorizontal="$2" paddingVertical="$2" elevation={1}>
+      <XStack alignItems="center" justifyContent="space-between" gap="$1.5" height={50}>
+        
+        {/* Left Side Menu Button - Restored! */}
+        <Button chromeless onPress={handlePresentModalPress} padding="$0" width={40} height={40} justifyContent="center" alignItems="center">
+          <AntDesign name="menu-fold" size={24} color="white" />
+        </Button>
 
-        {/* Search Bar */}
-        <XStack
-          flex={1}
-          alignItems="center"
-          backgroundColor="white"
-          borderWidth={1.5}
-          borderColor={'#4D6360'}
-          borderRadius={10}
-          paddingHorizontal="$1"
-          paddingVertical="$0.5"
-          justifyContent="space-between"
-          shadowColor="rgba(0,0,0,0.05)"
+        {/* Center search bar wrapper */}
+        <XStack 
+          flex={1} 
+          alignItems="center" 
+          backgroundColor="white" 
+          borderWidth={1.5} 
+          borderColor="#4D6360" 
+          borderRadius={10} 
+          paddingHorizontal="$2" 
+          minHeight={40}
         >
-          <Feather name="search" size={18} color="#778599" />
-          <Input
+          <Feather name="search" size={18} color="#778599" style={{ marginLeft: 4 }} />
+          
+          <Input 
             unstyled
             flex={1}
-            // marginLeft="$1"
+            paddingLeft={8}
+            paddingVertical={4}
             placeholder="Search articles..."
             placeholderTextColor="#778599"
+            fontSize={16}
+            value={searchText}
             onChangeText={onTextInputChange}
-            fontSize="$4"
+            accessibilityLabel="Search articles"
           />
-          {hasActiveFilters && onFilterReset ? (
-            <Button unstyled onPress={onFilterReset} paddingRight="$1" paddingLeft="$1">
-              <Ionicons name="refresh" size={20} color={'#FF5252'} />
-            </Button>
-          ) : null}
-          <Button unstyled onPress={handlePresentModalPress}>
-            <AntDesign name="menu-fold" size={20} color={'#191C1B'} />
-          </Button>
         </XStack>
 
-        {/* Notification */}
-        <Button unstyled onPress={onNotificationClick} position="relative" p={0}>
-          <Ionicons name="notifications" size={38} color={'white'} />
+        {/* Right Side Notification Bell with Unread Badge - Restored! */}
+        <Button chromeless onPress={onNotificationClick} padding="$0" width={40} height={40} justifyContent="center" alignItems="center" position="relative">
+          <Ionicons name="notifications-outline" size={24} color="white" />
           {unreadCount > 0 && (
-            <View
-              position="absolute"
-              top={1}
-              right={1}
-              w={20}
-              h={20}
-              br={10}
-              bg="red"
-              ai="center"
-              jc="center"
+            <XStack 
+              position="absolute" 
+              top={4} 
+              right={4} 
+              backgroundColor="red" 
+              borderRadius={10} 
+              width={16} 
+              height={16} 
+              alignItems="center" 
+              justifyContent="center"
             >
-              <Text color="white" fontSize={12} fontWeight="700">
-                {unreadCount > 9 ? '9+' : unreadCount}
+              <Text color="white" fontSize={10} fontWeight="bold">
+                {unreadCount}
               </Text>
-            </View>
+            </XStack>
           )}
         </Button>
+
       </XStack>
     </YStack>
   );
 };
-
-
-
 
 export default HomeScreenHeader;

@@ -21,7 +21,7 @@ permissions:
   contents: read
 
 env:
-  NODE_VERSION: "20"
+  NODE_VERSION: "24"
 
 jobs:
   setup:
@@ -36,12 +36,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup Node & Cache Yarn Store
+      - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "yarn"
-          cache-dependency-path: frontend/yarn.lock
 
       - name: Cache node_modules
         id: node-cache
@@ -49,10 +47,14 @@ jobs:
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
 
       - name: Install Dependencies
         if: steps.node-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: |
+          rm -rf node_modules
+          yarn install --frozen-lockfile --network-timeout 600000
 
   lint:
     name: Lint
@@ -79,6 +81,16 @@ jobs:
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Validate cache
+        run: |
+          if ! yarn list > /dev/null 2>&1; then
+            echo "Cache corrupted, reinstalling..."
+            rm -rf node_modules
+            yarn install --frozen-lockfile --network-timeout 600000
+          fi
 
       - name: Run ESLint
         run: yarn lint
@@ -108,6 +120,16 @@ jobs:
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Validate cache
+        run: |
+          if ! yarn list > /dev/null 2>&1; then
+            echo "Cache corrupted, reinstalling..."
+            rm -rf node_modules
+            yarn install --frozen-lockfile --network-timeout 600000
+          fi
 
       - name: Run TypeScript Check
         run: yarn type-check
@@ -137,6 +159,16 @@ jobs:
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Validate cache
+        run: |
+          if ! yarn list > /dev/null 2>&1; then
+            echo "Cache corrupted, reinstalling..."
+            rm -rf node_modules
+            yarn install --frozen-lockfile --network-timeout 600000
+          fi
 
       - name: Run Unit Tests
         run: yarn test
@@ -166,6 +198,16 @@ jobs:
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Validate cache
+        run: |
+          if ! yarn list > /dev/null 2>&1; then
+            echo "Cache corrupted, reinstalling..."
+            rm -rf node_modules
+            yarn install --frozen-lockfile --network-timeout 600000
+          fi
 
       - name: Run Expo Doctor
         shell: bash

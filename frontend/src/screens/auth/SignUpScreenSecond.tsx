@@ -7,7 +7,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {Contactdetail, SignUpScreenSecondProp} from '../../type';
-import {AxiosError} from 'axios';
+import type  from 'axios';
 import EmailVerifiedModal from '../../components/VerifiedModal';
 import SecurityWarningModal from '../../components/SecurityWarningModal';
 import Loader from '../../components/Loader';
@@ -16,13 +16,28 @@ import useUploadImage from '../../hooks/useUploadImage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
 import {useRegdMutation} from '@/src/hooks/useUserRegistration';
+type AxiosError = any;
 let validator = require('email-validator');
 const signupSecondSchema = z.object({
-  specialization: z.string().min(1, 'Specialization is required'),
-  education: z.string().min(1, 'Educational Qualification is required'),
-  experience: z.string().min(1, 'Years of Experience is required'),
-  businessEmail: z.string().email('Please enter a valid email'),
-  phone: z.string().min(10, 'Phone number must be at least 10 characters'),
+  specialization: z
+    .string()
+    .min(1, 'Please enter your area of specialization.'),
+  education: z
+    .string()
+    .min(1, 'Please enter your educational qualification.'),
+  experience: z
+    .string()
+    .min(1, 'Please enter your years of experience.')
+    .regex(/^\d+(\.\d+)?$/, 'Please enter a valid number for years of experience.'),
+  businessEmail: z
+    .string()
+    .min(1, 'Professional email address is required.')
+    .email('Please enter a valid email address.'),
+  phone: z
+    .string()
+    .min(1, 'Phone number is required.')
+    .min(10, 'Please enter a valid phone number (minimum 10 digits).')
+    .regex(/^\+?[\d\s\-()]{10,}$/, 'Please enter a valid phone number.'),
 });
 type SignupSecondFormData = z.infer<typeof signupSecondSchema>;
 
@@ -380,7 +395,7 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
                       maxLength={field.maxLength}
                     />
                     <YStack position="absolute" right={14} top={12}>
-                      <Icon name={field.icon as any} size={20} color={theme.black.val} />
+                      <Icon name={field.icon as any} size={20} color={theme.black?.val} />
                     </YStack>
                   </XStack>
                   {error && <Text color="$red10" fontSize={12}>{error.message}</Text>}

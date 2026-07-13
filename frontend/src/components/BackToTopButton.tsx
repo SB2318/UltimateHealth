@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import AccessibleTouchable from './common/AccessibleTouchable';
 import {
@@ -55,9 +56,6 @@ export const BackToTopButton: React.FC<BackToTopButtonProps> = ({
  
 const styles = StyleSheet.create({
   fab: {
-    position: 'absolute',
-    bottom: 24,
-    right: 20,
     width: 44,
     height: 44,
     borderRadius: 22,

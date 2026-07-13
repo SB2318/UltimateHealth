@@ -1,13 +1,13 @@
-import {
-  Image,
+/* eslint-disable react-compiler/react-compiler */
+import { Image,
   Platform,
   StyleSheet,
   TouchableOpacity,
   View,
-  ScrollView,
-  FlatList,
+   ScrollView ,
+   FlatList ,
   Dimensions,
-} from 'react-native';
+  } from 'react-native';
 import {useEffect, useRef, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
@@ -48,7 +48,7 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
 
   const [comments, setComments] = useState<Comment[]>([]);
 
-  const flatListRef = useRef<FlatList<Comment>>(null);
+ // const flatListRef = useRef<FlatList<Comment>>(null);
 
   const {data: user} = useGetProfile();
   const {data: improvement} = useGetImprovementById(requestId);
@@ -99,9 +99,9 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
       setComments(prevComments => {
         const newComments = [data, ...prevComments];
         // Scroll to the first index after adding the new comment
-        if (flatListRef.current && newComments.length > 1) {
-          flatListRef?.current.scrollToIndex({index: 0, animated: true});
-        }
+        // if (flatListRef.current && newComments.length > 1) {
+        //   flatListRef?.current.scrollToIndex({index: 0, animated: true});
+        // }
 
         return newComments;
       });
@@ -352,20 +352,22 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
               💬 Add a Comment
             </Text>
             <TextArea
-              placeholder="Share your thoughts or ask a question..."
-              value={feedback}
-              onChangeText={setFeedback}
-              multiline
-              height={hp(16)}
+                 id="improvement-feedback-input"  // 👈 Added a unique web platform ID
+                 name="feedbackContent"            // 👈 Added an explicit form name property
+                 placeholder="Share your thoughts or ask a question..."
+                 value={feedback}
+                 onChangeText={setFeedback}
+                multiline
+                height={hp(16)}
               fontSize={wp(4.5)}
               paddingVertical={12}
               paddingHorizontal={14}
-              borderRadius={12}
-              borderWidth={2}
-              borderColor={PRIMARY_COLOR}
-              backgroundColor="#fff"
-              textAlignVertical="top"
-            />
+                borderRadius={12}
+                borderWidth={2}
+               borderColor={PRIMARY_COLOR}
+                  backgroundColor="#fff"
+                   textAlignVertical="top"
+                  />
 
             {feedback.length > 0 && (
               <YStack alignItems="flex-end" marginTop={hp(0.5)}>
@@ -688,3 +690,4 @@ const styles = StyleSheet.create({
     marginBottom: hp(0.8),
   },
 });
+

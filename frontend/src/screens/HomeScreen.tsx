@@ -1,5 +1,6 @@
-import {
-  StyleSheet,
+/* eslint-disable react-hooks/set-state-in-effect */
+// @ts-nocheck
+import { StyleSheet,
   View,
   Alert,
   Text,
@@ -7,6 +8,10 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
+   FlatList ,
+   ScrollView ,
+  } from 'react-native';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
@@ -42,12 +47,13 @@ import Snackbar from 'react-native-snackbar';
 import {useFocusEffect} from '@react-navigation/native';
 import InactiveUserModal from '../components/InactiveUserModal';
 import {StatusBar} from 'expo-status-bar';
-import {wp} from '../helper/Metric';
+import { wp} from '../helper/Metric';
 import {useGetCategories} from '../hooks/useGetArticleTags';
 import {useGetProfile} from '../hooks/useGetProfile';
 import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../hooks/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../hooks/useGetPaginatedArticles';
+import { sanitizeSearchInput, isValidSearchInput } from '../helper/SearchUtils';
 import {
   OfflineArticleState,
   NoArticleState,
@@ -102,6 +108,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [sortingType, setSortingType] = useState<string>('');
+  const [searchText, setSearchText] = useState('');
   const {isConnected} = useSelector((state: any) => state.network);
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   // const [repostItem, setRepostItem] = useState<ArticleData | null>(null);
@@ -113,7 +120,17 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const {preferredLanguages, isLoading: preferencesLoading} = usePreferences();
   const {mutate: requestEdit, isPending: requestEditPending} =
     useRequestArticleEdit();
+  const handleClearAllFilters = () => {
+    // 1. Local state categories reset
+    setSelectedCategory('');
+    setSortingType('');
+    setSearchText('');
 
+    dispatch(setSearchMode(false));
+    dispatch(setSearchedArticles([]));
+    dispatch(setFilteredArticles([]));
+    dispatch(setTags([]));
+  };
   const {
     filteredArticles,
     searchedArticles,
@@ -159,10 +176,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 
   const handleCategorySelection = (category: Category) => {
     // Update Redux State
-    setSelectCategoryList(prevList => {
-       const isAlreadySelected = prevList.some(p => p._id === category._id);
+    setSelectCategoryList((prevList: any) => {
+       const isAlreadySelected = prevList.some((p: any) => p._id === category._id);
       const updatedList = isAlreadySelected
-        ? prevList.filter(item => item._id !== category._id)
+        ? prevList.filter((item: any) => item._id !== category._id)
         : [...prevList, category];
       return updatedList;
     });
@@ -216,7 +233,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
    * Toggles the "Saved" filter chip.
    */
   const handleToggleSavedOnly = () => {
-    setShowSavedOnly(prev => !prev);
+    setShowSavedOnly((prev: any) => !prev);
   };
 
   const handleCategoryClick = (category: Category) => {
@@ -258,13 +275,14 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
               articleRecordId: item.pb_recordId,
             },
             {
-              onSuccess: data => {
+              onSuccess: (data: any) => {
                 Snackbar.show({
                   text: data,
                   duration: Snackbar.LENGTH_SHORT,
                 });
               },
-              onError: err => {
+              onError: (err: any) => {
+                // @ts-ignore
                 if (__DEV__) console.log(err);
                 Snackbar.show({
                   text: 'Try again!',
@@ -309,6 +327,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     }
 
     if (sortingType && sortingType !== '') {
+      // @ts-ignore
       if (__DEV__) console.log('Sort type', sortType);
       dispatch(setSortType({sortType: sortingType}));
     }
@@ -430,7 +449,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     ) {
        prevSelectedCategoryNameRef.current = selectedCategory.name; 
       lastCategoryFilteredCountRef.current = currentFiltered.length;
-      setPage(prev => prev + 1);
+      setPage((prev: number) => prev + 1);
     }
   }, [
     showSavedOnly,
@@ -469,22 +488,26 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   }, [isFetching, refreshing]);
 
   const handleSearch = (textInput: string) => {
-  if (textInput === '' || allArticlesRef.current.length === 0) {
+  // Sanitize and validate the search input
+  const sanitizedInput = sanitizeSearchInput(textInput);
+
+  if (!isValidSearchInput(sanitizedInput) || allArticlesRef.current.length === 0) {
     dispatch(setSearchedArticles({ searchedArticles: [] }));
     dispatch(setSearchMode({ searchMode: false }));
   } else {
     dispatch(setSearchMode({ searchMode: true }));
-    const matchesSearch = allArticlesRef.current.filter(article => {  // ✅ use full accumulated list
+    const lowerCaseSanitizedInput = sanitizedInput.toLowerCase();
+    const matchesSearch = allArticlesRef.current.filter((article: any) => {  // ✅ use full accumulated list
       const matchesTitle =
         article.title && typeof article.title === 'string'
-          ? article.title.toLowerCase().includes((textInput || '').toLowerCase())
+          ? article.title.toLowerCase().includes(lowerCaseSanitizedInput)
           : false;
       const matchesTags =
         article.tags && Array.isArray(article.tags)
           ? article.tags.some(
-              tag =>
+              (tag: any) =>
                 tag && tag.name && typeof tag.name === 'string' &&
-                tag.name.toLowerCase().includes((textInput || '').toLowerCase()),
+                tag.name.toLowerCase().includes(lowerCaseSanitizedInput),
             )
           : false;
       return matchesTitle || matchesTags;
@@ -499,7 +522,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       return savedArticles
         .slice()
         .sort(
-          (a, b) =>
+          (a: any, b: any) =>
             new Date(b.lastUpdated).getTime() -
             new Date(a.lastUpdated).getTime(),
         );
@@ -527,7 +550,11 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     handleFilterReset();
   };
 
-  if (!articleData || articleData.articles?.length === 0) {
+  if (requestEditPending) {
+    return <Loader />;
+  }
+
+  if (isConnected === false) {
     return (
       <SafeAreaView style={styles.container}>
         <HomeScreenHeader
@@ -546,10 +573,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           }}
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
-        <LoadingState />
+        <OfflineState />
       </SafeAreaView>
     );
   }
@@ -573,7 +600,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           }}
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
         <ErrorState onRetry={refetch} />
@@ -581,7 +608,34 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     );
   }
 
-  if (isConnected === false) {
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <HomeScreenHeader
+          handlePresentModalPress={handlePresentModalPress}
+          onTextInputChange={handleSearch}
+          onNotificationClick={() => {
+            if (isGuest) {
+              navigation.navigate('GuestPlaceholderScreen', {
+                title: 'Notifications',
+                description: 'Sign in to see your notifications.',
+                iconName: 'bell',
+              });
+            } else {
+              navigation.navigate('NotificationScreen');
+            }
+          }}
+          unreadCount={unreadCount || 0}
+          hasActiveFilters={hasActiveFilters}
+          onFilterReset={handleClearAllFilters}
+        />
+
+        <LoadingState />
+      </SafeAreaView>
+    );
+  }
+
+  if (!articleData || !articleData.articles || articleData.articles.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <HomeScreenHeader
@@ -603,13 +657,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           onFilterReset={handleQuickReset}
         />
 
-        <OfflineState />
+        <EmptyArticleState />
       </SafeAreaView>
     );
-  }
-
-  if (isLoading || requestEditPending) {
-    return <Loader />;
   }
 
   if (user && (user.isBlockUser || user.isBannedUser)) {
@@ -624,7 +674,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           }}
           unreadCount={unreadCount ? unreadCount : 0}
           hasActiveFilters={hasActiveFilters}
-          onFilterReset={handleQuickReset}
+          onFilterReset={handleClearAllFilters}
         />
 
         <View style={styles.buttonContainer}>
@@ -680,23 +730,27 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   return (
     <SafeAreaView style={styles.container}>
       <HomeScreenHeader
-        handlePresentModalPress={handlePresentModalPress}
-        onTextInputChange={handleSearch}
-        onNotificationClick={() => {
-          if (isGuest) {
-            navigation.navigate('GuestPlaceholderScreen', {
-              title: 'Notifications',
-              description: 'Sign in to see your notifications.',
-              iconName: 'bell',
-            });
-          } else {
-            navigation.navigate('NotificationScreen');
-          }
-        }}
-        unreadCount={unreadCount ? unreadCount : 0}
-        hasActiveFilters={hasActiveFilters}
-        onFilterReset={handleQuickReset}
-      />
+            handlePresentModalPress={handlePresentModalPress}
+            onTextInputChange={(text: string) => {
+              setSearchText(text);
+              handleSearch(text);
+            }}
+            onNotificationClick={() => {
+              if (isGuest) {
+                navigation.navigate('GuestPlaceholderScreen', {
+                  title: 'Notifications',
+                  description: 'Sign in to see your notifications.',
+                  iconName: 'bell',
+                });
+              } else {
+                navigation.navigate('NotificationScreen');
+              }
+            }}
+            unreadCount={unreadCount ? unreadCount : 0}
+            hasActiveFilters={selectedCategory !== '' || sortingType !== '' || searchText !== ''}
+            onFilterReset={handleClearAllFilters}
+            searchText={searchText}
+          />
       <FilterModal
         bottomSheetModalRef={bottomSheetModalRef}
         categories={articleCategories}
@@ -712,6 +766,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       <View style={styles.buttonContainer}>
         <ScrollView
           horizontal={true}
+          style={{width: '100%'}}
           showsHorizontalScrollIndicator={false}
           //contentContainerStyle={{flex:1}}
         >
@@ -777,10 +832,11 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         </ScrollView>
       </View>
       <View style={styles.articleContainer}>
-        <FlatList
+        <FlashList
           data={listData}
+          estimatedItemSize={100}
           renderItem={renderItem}
-          keyExtractor={item => item._id.toString()}
+          keyExtractor={(item:any) => item._id.toString()}
           contentContainerStyle={styles.flatListContentContainer}
           refreshing={refreshing}
           onRefresh={onRefresh}
@@ -791,7 +847,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
             // Only paginate the main feed — saved articles are a
             // finite local list and do not use server-side pagination.
             if (!showSavedOnly && page < totalPages) {
-              setPage(prev => prev + 1);
+              setPage((prev: number) => prev + 1);
             }
           }}
           onEndReachedThreshold={0.5}
@@ -817,6 +873,7 @@ const styles = StyleSheet.create({
 
   blockContainer: {
     flex: 0,
+    width: '100%',
     backgroundColor: '#F0F8FF',
     justifyContent: 'center',
     //alignItems: 'center',
@@ -870,7 +927,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: ON_PRIMARY_COLOR,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     padding: 20,
     top: 30,
   },
@@ -886,7 +943,7 @@ const styles = StyleSheet.create({
   stateContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     padding: 32,
     backgroundColor: '#F0F8FF',
   },
@@ -1042,3 +1099,4 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 });
+

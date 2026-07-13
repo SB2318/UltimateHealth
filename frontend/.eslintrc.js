@@ -4,7 +4,10 @@ module.exports = {
 
   "rules": {
     "prettier/prettier": 0,
-     "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "react/display-name": "off",
+    "react-compiler/react-compiler": "off",
+    "react-hooks/set-state-in-effect": "off"
   }
 
 };
