@@ -989,6 +989,7 @@ We welcome contributions from everyone — developers, designers, writers, and t
      <td align="center"><a href="https://github.com/Kadaliswarna"><img src="https://avatars.githubusercontent.com/u/180524407?v=4" width="120px;" alt=""/><br/><sub><b>swarna</b></sub></a></td>
      <td align="center"><a href="https://github.com/AnkitaKumariii"><img src="https://avatars.githubusercontent.com/u/213439154?v=4" width="120px;" alt=""/><br/><sub><b>Ankita</b></sub></a></td>
      <td align="center"><a href="https://github.com/PARNITA-SINGH"><img src="https://avatars.githubusercontent.com/u/85277783?v=4" width="120px;" alt=""/><br/><sub><b>Parnita Singh</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Suyash2527"><img src="https://avatars.githubusercontent.com/u/174765943?v=4" width="120px;" alt=""/><br/><sub><b>Suyash Chaudhari</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
