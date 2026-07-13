@@ -9649,10 +9649,10 @@ react-native-nitro-modules@^0.35.9:
   resolved "https://registry.npmjs.org/react-native-nitro-modules/-/react-native-nitro-modules-0.35.10.tgz"
   integrity sha512-KsySOAIkbSTjNiX2GvXiNT9P5DMeZd99yvtE/+Lw7RXV7Ztxh9Z+YyAbYkBqadhN5J/KXXuPjhRYgyLOIZgsbQ==
 
-react-native-pager-view@8.0.1:
-  version "8.0.1"
-  resolved "https://registry.npmjs.org/react-native-pager-view/-/react-native-pager-view-8.0.1.tgz"
-  integrity sha512-pGOne2o0y0HOQLrlTLcGgOE48uJlqSZHRRwdW8nL6JJozMkPGJYi/G9e0EsJoWFpXYONjiDgr8IwxC4F6/r7Lg==
+react-native-pager-view@8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-8.0.4.tgz#b5cc01b11cd92273b39b656fc138e0e935d464be"
+  integrity sha512-9ASQA/gdQv63pESFbzyODgsY07kZoBjLqBRvZ/HNYn+h29XyOX2BICuvVmhemxw/pz3hKGqGEU31DDhDArwaRg==
 
 react-native-paper@^5.14.5:
   version "5.15.3"
