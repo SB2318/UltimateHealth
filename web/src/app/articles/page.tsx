@@ -16,28 +16,34 @@ export const metadata: Metadata = {
 
 export default function ArticlesPage() {
   return (
-    <main className="min-h-screen bg-[#f8fafc] text-slate-900">
+    /* overflow-x-hidden on <main> prevents any child from causing horizontal scroll */
+    <main className="min-h-screen bg-[#f8fafc] text-slate-900 overflow-x-hidden">
       <Navbar />
 
-      {/* ── Hero ── */}
-      <section className="bg-[#f8fafc] pt-32 pb-14 px-4 text-center flex flex-col items-center justify-center">
-        <PageWrapper className="flex flex-col items-center justify-center text-center">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#667eea] mb-3 text-center">
+      {/* ── Hero ──
+          pt-32 (128 px) clears the fixed navbar (~80 px) with comfortable breathing room.
+          The section is a flex column so the three text nodes (eyebrow, h1, description)
+          are guaranteed to stack vertically instead of collapsing into a single line. */}
+      <section className="w-full bg-[#f8fafc] pt-32 pb-14 px-4">
+        <div className="flex flex-col items-center justify-center text-center gap-y-3 max-w-2xl mx-auto">
+          <p className="text-xs font-bold uppercase tracking-widest text-[#667eea]">
             Health Knowledge Hub
           </p>
-          <h1 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight mb-4 text-center">
+          <h1 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight">
             Health Articles
           </h1>
-          <p className="text-base sm:text-lg text-slate-600 font-medium leading-relaxed max-w-2xl mx-auto text-center">
+          <p className="text-base sm:text-lg text-slate-600 font-medium leading-relaxed">
             Evidence-based articles written by medical professionals —
             covering cardiovascular health, nutrition, mental wellness, and more.
           </p>
-        </PageWrapper>
+        </div>
       </section>
 
-      {/* ── Articles grid ── */}
+      {/* ── Articles grid ──
+          max-w-screen-xl caps the grid so it never exceeds the viewport on wide monitors.
+          overflow-hidden on the inner wrapper prevents individual cards from escaping. */}
       <Section className="bg-white border-t border-slate-100">
-        <div className="w-full px-4 md:px-8 lg:px-12">
+        <div className="w-full max-w-screen-xl mx-auto px-4 md:px-8 lg:px-12 overflow-hidden">
           <div className="mb-10 flex items-center justify-between border-b border-slate-100 pb-5">
             <h2 className="text-2xl font-black text-slate-900 m-0 leading-none">
               All Articles
