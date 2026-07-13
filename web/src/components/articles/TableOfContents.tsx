@@ -76,37 +76,39 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
       <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 text-left border-none p-0 m-0 bg-none -webkit-text-fill-color-inherit">
         Table of Contents
       </h2>
-      <ul className="space-y-2.5 text-sm">
+      <ul className="space-y-1 text-sm border-l-2 border-gray-100">
         {headings.map((heading) => {
           const isActive = activeId === heading.id;
           return (
             <li
               key={heading.id}
-              className="relative"
+              className="relative -ml-px"
               style={{
-                paddingLeft: heading.level === 3 ? "1.25rem" : "0.75rem",
+                paddingLeft: heading.level === 3 ? "2rem" : "1rem",
               }}
             >
-              {/* Active state indicator dot/line */}
+              {/* Active state rail segment */}
               {isActive && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#667eea]" />
+                <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-[#667eea]" />
               )}
-              <a
-                href={`#${heading.id}`}
-                onClick={(e) => handleLinkClick(e, heading.id)}
-                className={`block py-0.5 transition-all duration-200 hover:text-[#667eea] ${
-                  isActive
-                    ? "font-semibold text-[#667eea]"
-                    : "text-slate-500 hover:translate-x-0.5"
+
+            <a 
+              href={`#${heading.id}`}
+              onClick={(e) => handleLinkClick(e, heading.id)}
+              className={`block py-1.5 leading-snug transition-all duration-200 hover:text-[#667eea] ${isActive
+                  ? "font-semibold text-[#667eea]"
+                  : heading.level === 3
+                    ? "text-slate-400 text-[13px]"
+                    : "text-slate-500"
                 }`}
-                {...(isActive && { "aria-current": "true" })}
-              >
-                {heading.text}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+              {...(isActive && { "aria-current": "true" })}
+            >
+              {heading.text}
+            </a>
+      </li>
+      );
+  })}
+    </ul>
     </nav>
   );
 }
