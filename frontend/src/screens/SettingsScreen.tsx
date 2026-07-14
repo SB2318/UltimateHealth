@@ -138,9 +138,9 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="account-edit-outline"
             iconColor={PRIMARY_COLOR}
-            label="Edit Profile"
+            label="View / Edit Profile"
             sublabel="Update your name, avatar, bio"
-            onPress={() => go('ProfileEditScreen')}
+            onPress={() => go('ProfileScreen')}
             isDark={isDark}
           />
           <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
@@ -167,10 +167,19 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           />
           <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
           <SettingsRow
+            icon="file-document-outline"
+            iconColor="#3B82F6"
+            label="My Posts"
+            sublabel="Articles you have written"
+            onPress={() => go('ContentListScreen', { type: 'articles' })}
+            isDark={isDark}
+          />
+          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <SettingsRow
             icon="repeat-variant"
             iconColor="#F59E0B"
             label="Reposted Articles"
-            onPress={() => go('RepostsScreen')}
+            onPress={() => go('ContentListScreen', { type: 'reposts' })}
             isDark={isDark}
           />
           <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
@@ -179,7 +188,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             iconColor="#3B82F6"
             label="Saved Articles"
             sublabel="Your personal reading list"
-            onPress={() => go('SavedArticlesScreen')}
+            onPress={() => go('ContentListScreen', { type: 'saved' })}
             isDark={isDark}
           />
           <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />

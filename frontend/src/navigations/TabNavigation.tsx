@@ -3,7 +3,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
 import PodcastsScreen from '../screens/PodcastsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 // import {KeyboardAvoidingView, StyleSheet} from 'react-native';
 // import {Colors} from 'react-native/Libraries/NewAppScreen';
 import TabBar from './TabBar';
@@ -101,20 +101,18 @@ const TabNavigation = () => {
         })}
       />
       <Tab.Screen
-        name="Profile"
-        component={isGuest ? ProfileGuestScreen : ProfileScreen}
-        options={{
+        name="Settings"
+        component={SettingsScreen}
+        options={() => ({
+          title: 'Settings',
           headerShown: false,
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerTitleStyle: {
-            fontSize: 23,
-            marginBottom: 12,
-            color: 'white',
-          },
-        }}
+          headerStyle: { backgroundColor: '#000A60' },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcon name="cog-outline" size={24} color={color} />
+          ),
+        })}
       />
 
       <Tab.Screen

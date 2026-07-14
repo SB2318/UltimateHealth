@@ -142,6 +142,7 @@ export type RootStackParamList = {
   ChatbotScreen: { characterId: string; characterName?: string; characterAvatar?: string };
   AboutScreen: undefined;
   SettingsScreen: undefined;
+  ContentListScreen: { type: 'articles' | 'reposts' | 'saved' };
 };
 
 export type RedirectTo = {
@@ -419,12 +420,18 @@ export type HomeScreenHeaderProps = {
   onFilterReset?: () => void;
 };
 
+export type ContentListScreenProp = StackScreenProps<
+  RootStackParamList,
+  'ContentListScreen'
+>;
+
 export type ArticleCardProps = {
   item: ArticleData;
   navigation:
     | HomeScreenProps['navigation']
     | ProfileScreenProps['navigation']
-    | UserProfileScreenProp['navigation'];
+    | UserProfileScreenProp['navigation']
+    | ContentListScreenProp['navigation'];
   success: () => void;
   isSelected: boolean;
   setSelectedCardId: (id: string) => void;

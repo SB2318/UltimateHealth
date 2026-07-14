@@ -58,6 +58,7 @@ import SavedArticlesScreen from '../screens/profile/SavedArticlesScreen';
 import WellnessDashboardScreen from '../screens/WellnessDashboard/WellnessDashboardScreen';
 import AboutScreen from '../screens/AboutPage';
 import SettingsScreen from '../screens/SettingsScreen';
+import ContentListScreen from '../screens/ContentListScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 
 import ChatbotScreen from '../screens/ChatbotScreen';
@@ -889,8 +890,17 @@ const StackNavigation = () => {
       <Stack.Screen
         name="SettingsScreen"
         component={SettingsScreen}
+        options={{headerShown: false, headerTitleAlign: 'center'}}
+      />
+      <Stack.Screen
+        name="ContentListScreen"
+        component={ContentListScreen}
         options={{
-          headerShown: false,
+          headerShown: true,
+          headerTitle: 'My Content',
+          headerTitleAlign: 'center',
+          headerStyle: { backgroundColor: '#000A60' },
+          headerTintColor: '#fff',
         }}
       />
       <Stack.Screen
