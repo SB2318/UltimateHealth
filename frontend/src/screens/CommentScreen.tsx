@@ -485,7 +485,7 @@ const CommentScreen = ({
 
   return (
     <ErrorBoundary onRetry={fetchComments}>
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={
@@ -577,6 +577,7 @@ const CommentScreen = ({
                 })}
 
                 {/* Comment input */}
+                <SafeAreaView edges={['bottom']}>
                 <TextInput
                   {...textInputProps}
                   style={styles.textInput}
@@ -621,6 +622,7 @@ const CommentScreen = ({
                     </Text>
                   </TouchableOpacity>
                 </XStack>
+                </SafeAreaView>
 
                 <View
                   style={
