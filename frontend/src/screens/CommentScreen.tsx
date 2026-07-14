@@ -58,9 +58,7 @@ const CommentScreen = ({
   const flatListRef =
     useRef<any>(null);
 
-  const [comments, setComments] = useState
-    Comment[]
-  >([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const MAX_COMMENT_LENGTH = 500;
   const [newComment, setNewComment] =
     useState('');
@@ -110,15 +108,11 @@ const CommentScreen = ({
     setCommentLikeLoading,
   ] = useState<boolean>(false);
 
-  const [mentions, setMentions] = useState
-    User[]
-  >([]);
+  const [mentions, setMentions] = useState<User[]>([]);
 
   const dispatch = useDispatch();
 
-  const triggersConfig: TriggersConfig
-    'mention' | 'hashtag'
-  > = {
+  const triggersConfig: TriggersConfig<'mention' | 'hashtag'> = {
     mention: {
       trigger: '@',
       textStyle: {
