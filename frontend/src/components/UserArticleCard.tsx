@@ -60,7 +60,13 @@ const UserArticleCard = ({
       {/* Top Section: Author & Meta */}
       <View style={styles.header}>
         <View style={styles.authorInfo}>
-          <Image source={{ uri: authorImage }} style={styles.avatar} />
+          <Image
+            source={{ uri: authorImage }}
+            style={[
+              styles.avatar,
+              { backgroundColor: isDarkMode ? '#374151' : '#E5E7EB' },
+            ]}
+          />
           <View>
             <Text style={[styles.authorName, { color: isDarkMode ? '#F9FAFB' : '#111827' }]}>
               {authorName}
@@ -72,7 +78,15 @@ const UserArticleCard = ({
         </View>
         
         {/* Simple interactions */}
-        <View style={styles.actions}>
+        <View
+          style={[
+            styles.actions,
+            {
+              backgroundColor: isDarkMode
+                ? 'rgba(255,255,255,0.08)'
+                : 'rgba(0,0,0,0.03)',
+            },
+          ]}>
           <FontAwesome6 name="bookmark" size={16} color={isDarkMode ? '#9CA3AF' : '#6B7280'} />
         </View>
       </View>
@@ -139,7 +153,6 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     marginRight: 12,
-    backgroundColor: '#E5E7EB',
   },
   authorName: {
     fontSize: 14,
@@ -154,7 +167,6 @@ const styles = StyleSheet.create({
   actions: {
     padding: 8,
     borderRadius: 20,
-    backgroundColor: 'rgba(0,0,0,0.03)',
   },
   body: {
     marginBottom: 16,
