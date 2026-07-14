@@ -1,0 +1,247 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 🤖 Issue Resolution Bot
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   This bot automatically scans all open GitHub issues and checks whether any
+#   commit on the `main` branch has already resolved them. If a match is found,
+#   the bot posts a comment on the issue with the resolving commit's SHA and
+#   author, then closes the issue automatically.
+#
+# HOW IT WORKS:
+#   1. Checks out the latest `main` branch (full history).
+#   2. Fetches all currently OPEN issues from the repository.
+#   3. Fetches ALL commits on `main` and scans each commit message for
+#      issue-closing keywords (e.g. "Fixes #42", "Closes #10", "Resolves #7").
+#   4. For every open issue that is referenced in a commit message:
+#        a. Checks if the bot has already commented (to avoid duplicates).
+#        b. Posts a formatted comment on the issue with:
+#             - The resolving commit SHA (linked to GitHub)
+#             - The commit message (first line)
+#             - The commit author's GitHub username
+#             - The timestamp of detection
+#        c. Closes the issue with state_reason: "completed".
+#   5. Writes a markdown summary table to the GitHub Actions run summary page.
+#
+# SUPPORTED KEYWORDS (case-insensitive, in commit messages):
+#   close #N  |  closes #N  |  closed #N
+#   fix #N    |  fixes #N   |  fixed #N
+#   resolve #N | resolves #N | resolved #N
+#
+# TRIGGERS:
+#   - Scheduled : Runs automatically every 24 hours at 00:00 UTC.
+#   - Manual    : Can be triggered manually via Actions → "Run workflow".
+#                 Supports a "dry_run" option to preview matches without
+#                 making any changes (no comments posted, no issues closed).
+#
+# PERMISSIONS REQUIRED:
+#   - issues: write    → to post comments and close issues
+#   - contents: read   → to read commit history on main
+#
+# SECRETS:
+#   - GITHUB_TOKEN     → provided automatically by GitHub, no setup needed.
+#
+# USAGE TIPS:
+#   - Use keywords in your commit messages to link them to issues, e.g.:
+#       git commit -m "fix: resolve login crash  Fixes #42"
+#   - Run with dry_run=true first to see which issues would be affected.
+#   - The bot is idempotent — it will never double-comment on the same issue.
+# ──────────────────────────────────────────────────────────────────────────────
+
+name: 🤖 Issue Resolution Bot
+
+on:
+  schedule:
+    # Runs every 24 hours at midnight UTC
+    - cron: "0 0 * * *"
+
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run — only log, don't comment or close issues"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  scan-and-resolve:
+    name: Scan Open Issues & Match Commits
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── Step 1: Checkout main and pull latest changes ──────────────────────
+      - name: 📥 Checkout main branch
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0  # Full history so we can read all commit messages
+
+      # ── Step 2: Core bot logic ─────────────────────────────────────────────
+      - name: 🔍 Scan commits & resolve issues
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const DRY_RUN    = '${{ github.event.inputs.dry_run }}' === 'true';
+            const BOT_MARKER = '<!-- issue-resolution-bot -->';
+
+            const log   = (msg) => core.info(msg);
+            const owner = context.repo.owner;
+            const repo  = context.repo.repo;
+
+            // ── 1. Fetch ALL open issues (paginated) ───────────────────────
+            log('📋 Fetching all open issues...');
+            const allIssues = await github.paginate(
+              github.rest.issues.listForRepo,
+              { owner, repo, state: 'open', per_page: 100 }
+            );
+
+            // GitHub API includes PRs in issue list — filter them out
+            const openIssues = allIssues.filter(i => !i.pull_request);
+            log(`Found ${openIssues.length} open issue(s).`);
+
+            if (openIssues.length === 0) {
+              log('✅ No open issues. Nothing to do.');
+              return;
+            }
+
+            // Build lookup: issueNumber → issue object
+            const issueMap = {};
+            for (const issue of openIssues) {
+              issueMap[issue.number] = issue;
+            }
+
+            // ── 2. Regex: matches closes/fixes/resolves #N ─────────────────
+            // Covers: close, closes, closed, fix, fixes, fixed, resolve, resolves, resolved
+            const KEYWORD_RE = /(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/gi;
+
+            const extractIssueNumbers = (text) => {
+              if (!text) return [];
+              const nums = [];
+              let match;
+              while ((match = KEYWORD_RE.exec(text)) !== null) {
+                nums.push(parseInt(match[1], 10));
+              }
+              KEYWORD_RE.lastIndex = 0; // reset regex state for reuse
+              return nums;
+            };
+
+            // ── 3. Scan ALL commits on main for issue keywords ─────────────
+            log('📦 Scanning all commits on main branch...');
+            const allCommits = await github.paginate(
+              github.rest.repos.listCommits,
+              { owner, repo, sha: 'main', per_page: 100 }
+            );
+            log(`Scanned ${allCommits.length} commit(s).`);
+
+            // Map: issueNumber → { commitSha, shortSha, author, message }
+            const resolvedBy = {};
+
+            for (const c of allCommits) {
+              const message = c.commit.message;
+              const refs    = extractIssueNumbers(message);
+
+              for (const num of refs) {
+                // Only care about issues that are currently open
+                if (issueMap[num] && !resolvedBy[num]) {
+                  resolvedBy[num] = {
+                    commitSha : c.sha,
+                    shortSha  : c.sha.slice(0, 7),
+                    author    : c.author ? c.author.login : c.commit.author.name,
+                    message   : message.split('\n')[0], // first line only
+                  };
+                }
+              }
+            }
+
+            // ── 4. Process each matched issue ──────────────────────────────
+            const resolved = Object.keys(resolvedBy);
+            log(`\n🎯 ${resolved.length} open issue(s) resolved by commits on main.`);
+
+            if (resolved.length === 0) {
+              log('No open issues are referenced in any commit message.');
+              return;
+            }
+
+            let summary  = `## 🤖 Issue Resolution Bot — Run Summary\n\n`;
+            summary     += `> **Run time:** ${new Date().toUTCString()}\n`;
+            summary     += `> **Mode:** ${DRY_RUN ? '🧪 Dry Run' : '🚀 Live'}\n\n`;
+            summary     += `| Issue | Title | Commit | Author | Action |\n`;
+            summary     += `|-------|-------|--------|--------|--------|\n`;
+
+            for (const numStr of resolved) {
+              const num   = parseInt(numStr, 10);
+              const issue = issueMap[num];
+              const { commitSha, shortSha, author, message } = resolvedBy[num];
+
+              const commitUrl = `https://github.com/${owner}/${repo}/commit/${commitSha}`;
+
+              log(`\n🔧 Issue #${num}: "${issue.title}"`);
+              log(`   └─ Resolved by commit ${shortSha} by @${author}`);
+              log(`   └─ Commit msg: "${message}"`);
+
+              // ── Idempotency: skip if bot already commented ───────────────
+              let alreadyCommented = false;
+              try {
+                const { data: comments } = await github.rest.issues.listComments({
+                  owner, repo, issue_number: num, per_page: 100
+                });
+                alreadyCommented = comments.some(c => c.body.includes(BOT_MARKER));
+              } catch (_) {}
+
+              if (alreadyCommented) {
+                log(`   ℹ️  Already processed #${num}. Skipping.`);
+                summary += `| #${num} | ${issue.title} | [\`${shortSha}\`](${commitUrl}) | @${author} | ⏭️ Already done |\n`;
+                continue;
+              }
+
+              // ── Build comment ────────────────────────────────────────────
+              const commentBody = [
+                BOT_MARKER,
+                '## ✅ Issue Resolved',
+                '',
+                'This issue has been resolved by a commit on `main`.',
+                '',
+                '| | |',
+                '|---|---|',
+                `| 🔖 **Commit** | [\`${shortSha}\`](${commitUrl}) |`,
+                `| 💬 **Commit Message** | ${message} |`,
+                `| 👤 **Author** | @${author} |`,
+                `| 🕐 **Detected at** | ${new Date().toUTCString()} |`,
+                '',
+                '---',
+                `*Posted automatically by the [Issue Resolution Bot](https://github.com/${owner}/${repo}/actions/workflows/issue-resolution-bot.yml). If this was closed by mistake, please reopen.*`,
+              ].join('\n');
+
+              if (DRY_RUN) {
+                log(`   [DRY RUN] Would comment and close #${num}`);
+                summary += `| #${num} | ${issue.title} | [\`${shortSha}\`](${commitUrl}) | @${author} | 🧪 Dry run |\n`;
+              } else {
+                // Post the comment
+                await github.rest.issues.createComment({
+                  owner, repo, issue_number: num, body: commentBody
+                });
+
+                // Close the issue
+                await github.rest.issues.update({
+                  owner, repo,
+                  issue_number : num,
+                  state        : 'closed',
+                  state_reason : 'completed',
+                });
+
+                log(`   ✅ Commented and closed #${num}`);
+                summary += `| #${num} | ${issue.title} | [\`${shortSha}\`](${commitUrl}) | @${author} | ✅ Closed |\n`;
+              }
+            }
+
+            // ── 5. Write run summary to Actions UI ────────────────────────
+            await core.summary.addRaw(summary).write();
+            log('\n🏁 Bot run complete.');
