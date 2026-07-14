@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert,
    FlatList ,
@@ -155,12 +156,17 @@ const CommentScreen = ({
       patternsConfig,
     });
 
+  const fetchComments = () => {
+    if (!socket) return;
+      socket.emit('fetch-comments', {
+      articleId: route.params.articleId,
+      });
+    };
+
   useEffect(() => {
     if (!socket) return;
 
-    socket.emit('fetch-comments', {
-      articleId: route.params.articleId,
-    });
+     fetchComments();
 
     socket.on(
       'like-comment-processing',
@@ -478,6 +484,7 @@ const CommentScreen = ({
   }
 
   return (
+    <ErrorBoundary onRetry={fetchComments}>
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={{flex: 1}}
@@ -679,6 +686,7 @@ const CommentScreen = ({
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </ErrorBoundary>
   );
 };
 
