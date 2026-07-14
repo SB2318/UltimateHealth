@@ -4,7 +4,6 @@ import {
   Alert,
   TouchableOpacity,
   useColorScheme,
-  LinearGradient,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';

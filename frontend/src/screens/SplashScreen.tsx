@@ -65,7 +65,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
-    transform: [{scale: scale.value}, {translateY: translateY.value}],
+    transform: [{scale: scale.value}, {translateY: translateY.value}] as any,
   }));
 
   return (

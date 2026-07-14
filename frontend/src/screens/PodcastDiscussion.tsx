@@ -30,28 +30,17 @@ import {wp} from '../helper/Metric';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {useGetSinglePodcastDetails} from '../hooks/useGetSinglePodcastDetails';
 
-type FlatListHandle = {
-  scrollToOffset: (params: {offset: number; animated?: boolean}) => void;
-  scrollToIndex: (params: {index: number; animated?: boolean; viewPosition?: number}) => void;
-};
-
-type TextInputHandle = {
-  focus: () => void;
-  blur: () => void;
-  clear: () => void;
-};
-
 const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const socket = useSocket();
   const dispatch = useDispatch();
   const {podcastId, mentionedUsers} = route.params;
 
   // Auto-join podcast room
-  const inputRef = useRef<TextInputHandle>(null);
+  const inputRef = useRef<TextInput>(null);
   useArticleRoom(null, podcastId);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
-  const flatListRef = useRef<FlatListHandle>(null);
+  const flatListRef = useRef<FlatList<Comment>>(null);
   const {user_id, user_token} = useSelector((state: any) => state.user);
   const [selectedCommentId, setSelectedCommentId] = useState<string>('');
   const [editMode, setEditMode] = useState<boolean>(false);
