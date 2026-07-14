@@ -1,15 +1,14 @@
 import React from 'react';
 import { ScrollView, Image, Linking } from 'react-native';
 import { safeOpenUrl } from '../utils/safeOpenUrl';
-import { 
-  YStack, 
-  XStack, 
-  Text, 
-  Card, 
+import {
+  YStack,
+  XStack,
+  Text,
+  Card,
   H3,
   Separator,
-  Theme, 
- 
+  Theme,
   Paragraph,
   Button
 } from 'tamagui';
