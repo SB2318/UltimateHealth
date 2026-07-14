@@ -141,7 +141,9 @@ export type RootStackParamList = {
   ReadingHistoryScreen: undefined;
   ChatbotScreen: { characterId: string; characterName?: string; characterAvatar?: string };
   AboutScreen: undefined;
+  ProfileScreen: undefined;
   SettingsScreen: undefined;
+  RespectGiverScreen: undefined;
   ContentListScreen: { type: 'articles' | 'reposts' | 'saved' };
 };
 
@@ -180,7 +182,7 @@ export type UserDetail = {
 export type TabParamList = {
   Home: undefined;
   Podcasts: undefined;
-  Profile: undefined;
+  Settings: undefined;
   Chatbot: undefined;
   Academy: undefined;
 };
@@ -373,11 +375,7 @@ export type PodcastScreenProps = CompositeScreenProps<
   StackScreenProps<RootStackParamList, 'PodcastDetail'>
 >;
 
-export type ProfileScreenProps = CompositeScreenProps<
-  BottomTabScreenProps<TabParamList, 'Profile'>,
-  | StackScreenProps<RootStackParamList, 'ProfileEditScreen'>
-  | StackScreenProps<RootStackParamList, 'ArticleScreen'>
->;
+export type ProfileScreenProps = StackScreenProps<RootStackParamList, 'ProfileScreen'>;
 
 export type AboutScreenProps = StackScreenProps<RootStackParamList, 'AboutScreen'>;
 

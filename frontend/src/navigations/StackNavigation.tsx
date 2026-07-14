@@ -58,7 +58,9 @@ import SavedArticlesScreen from '../screens/profile/SavedArticlesScreen';
 import WellnessDashboardScreen from '../screens/WellnessDashboard/WellnessDashboardScreen';
 import AboutScreen from '../screens/AboutPage';
 import SettingsScreen from '../screens/SettingsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import ContentListScreen from '../screens/ContentListScreen';
+import RespectGiverScreen from '../screens/RespectGiverScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 
 import ChatbotScreen from '../screens/ChatbotScreen';
@@ -888,9 +890,19 @@ const StackNavigation = () => {
         }}
       />
       <Stack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{headerShown: false, headerTitleAlign: 'center'}}
+      />
+      <Stack.Screen
         name="SettingsScreen"
         component={SettingsScreen}
         options={{headerShown: false, headerTitleAlign: 'center'}}
+      />
+      <Stack.Screen
+        name="RespectGiverScreen"
+        component={RespectGiverScreen}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="ContentListScreen"

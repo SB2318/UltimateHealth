@@ -260,47 +260,7 @@ const ProfileHeader = ({
           </Pressable>
         </View>
 
-        {/* Secondary Actions List */}
-        {other && (
-          <View style={styles.secondaryActionContainer}>
-            {/* Edit Profile is already shown in the primary action button above */}
-
-            <AccessibleTouchable
-              activeOpacity={0.7}
-              onPress={onOverviewClick}
-
-              accessibilityLabel="Your workspace"
-              accessibilityHint="Opens your workspace dashboard"
-              style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
-            >
-              <View style={[styles.listButtonIconBg, { backgroundColor: themeColors.iconBackground }]}>
-                 <MaterialCommunityIcon name="view-dashboard" size={22} color={PRIMARY_COLOR} />
-              </View>
-              <Text style={[styles.listButtonText, {color: themeColors.text}]}>Your Workspace</Text>
-              <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
-            </AccessibleTouchable>
-
-            <AccessibleTouchable
-              activeOpacity={0.7}
-
-              accessibilityLabel="Notification preferences"
-              accessibilityHint="Opens notification settings"
-              style={[styles.listButton, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}
-              onPress={() => {
-                if (isConnected) {
-                  (navigation as NavigationProp<RootStackParamList>).navigate('NotificationPreferencesScreen');
-                } else {
-                  Snackbar.show({ text: 'Please check your internet connection!', duration: Snackbar.LENGTH_SHORT });
-                }
-              }}>
-              <View style={[styles.listButtonIconBg, { backgroundColor: themeColors.iconBackground }]}>
-                 <MaterialCommunityIcon name="bell-cog-outline" size={22} color={PRIMARY_COLOR} />
-              </View>
-              <Text style={[styles.listButtonText, {color: themeColors.text}]}>Notification Preferences</Text>
-              <MaterialIcons name="chevron-right" size={24} color={themeColors.textSecondary} />
-            </AccessibleTouchable>
-          </View>
-        )}
+        {/* Secondary Actions List removed as they are now in Settings */}
       </View>
     </View>
   );

@@ -21,7 +21,7 @@ import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const ChatbotGuestScreen = () => <GuestPlaceholderScreen title="AI Chatbot" description="Sign in or sign up to get instant health advice and personalized answers from our AI assistant." />;
-const ProfileGuestScreen = () => <GuestPlaceholderScreen title="Your Profile" description="Create an account to manage your details and preferences." />;
+const SettingsGuestScreen = () => <GuestPlaceholderScreen title="Settings" description="Create an account to access settings and manage your preferences." />;
 
 const TabNavigation = () => {
   const isGuest = useSelector((state: any) => state.user.isGuest);
@@ -102,17 +102,10 @@ const TabNavigation = () => {
       />
       <Tab.Screen
         name="Settings"
-        component={SettingsScreen}
-        options={() => ({
-          title: 'Settings',
+        component={isGuest ? SettingsGuestScreen : SettingsScreen}
+        options={{
           headerShown: false,
-          headerStyle: { backgroundColor: '#000A60' },
-          headerTintColor: 'white',
-          headerTitleAlign: 'center',
-          tabBarIcon: ({color}) => (
-            <MaterialCommunityIcon name="cog-outline" size={24} color={color} />
-          ),
-        })}
+        }}
       />
 
       <Tab.Screen

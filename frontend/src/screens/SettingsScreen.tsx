@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import {
   View,
@@ -16,10 +17,7 @@ import { PRIMARY_COLOR } from '../helper/Theme';
 import { wp, hp, fp } from '../helper/Metric';
 import { useSelector } from 'react-redux';
 import Snackbar from 'react-native-snackbar';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../type';
-
-type SettingsScreenProps = StackScreenProps<RootStackParamList, 'SettingsScreen'>;
+type SettingsScreenProps = { navigation: any };
 
 // ─── Section Header ───────────────────────────────────────────────────────────
 const SectionLabel = ({ label, isDark }: { label: string; isDark: boolean }) => (
@@ -100,7 +98,10 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
       });
       return;
     }
-    navigation.navigate(screen, params);
+    // SettingsScreen lives inside the Tab navigator, so we must bubble up
+    // to the parent Stack navigator to reach stack-only screens.
+    const stackNav = navigation.getParent() ?? navigation;
+    (stackNav as any).navigate(screen, params);
   };
 
   const handleLogout = () => {
@@ -109,7 +110,10 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
       {
         text: 'Sign Out',
         style: 'destructive',
-        onPress: () => navigation.navigate('LogoutScreen', { profile_image: '', username: '' }),
+        onPress: () => {
+          const stackNav = navigation.getParent() ?? navigation;
+          (stackNav as any).navigate('LogoutScreen', { profile_image: '', username: '' });
+        },
       },
     ]);
   };
@@ -120,12 +124,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
 
       {/* ── Header ── */}
       <View style={[styles.header, { backgroundColor: headerBg, borderBottomColor: headerBorder }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <MaterialCommunityIcon name="arrow-left" size={24} color={headerText} />
-        </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: headerText }]}>Settings</Text>
-        {/* spacer to center title */}
-        <View style={styles.backBtn} />
       </View>
 
       <ScrollView
@@ -150,6 +149,15 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             label="Notification Preferences"
             sublabel="Push, email, and digest settings"
             onPress={() => go('NotificationPreferencesScreen')}
+            isDark={isDark}
+          />
+          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <SettingsRow
+            icon="view-dashboard"
+            iconColor={PRIMARY_COLOR}
+            label="Your Workspace"
+            sublabel="Contributor & Admin Interaction"
+            onPress={() => go('OverviewScreen')}
             isDark={isDark}
           />
         </View>
@@ -257,6 +265,19 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             label="About UltimateHealth"
             sublabel="Version, team, & mission"
             onPress={() => go('AboutScreen')}
+            isDark={isDark}
+          />
+        </View>
+
+        {/* ── RESPECT GIVER ── */}
+        <SectionLabel label="RESPECT GIVER" isDark={isDark} />
+        <View style={styles.group}>
+          <SettingsRow
+            icon="shield-star-outline"
+            iconColor="#C084FC"
+            label="Moumita Debnath"
+            sublabel="Justice · Dignity · Hope — Story coming soon"
+            onPress={() => go('RespectGiverScreen')}
             isDark={isDark}
           />
         </View>
