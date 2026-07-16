@@ -693,7 +693,7 @@ function HeroSection() {
               <motion.a
                 whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                href="/our-contributors"
+                href="/frontend/v2/our-contributors"
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
