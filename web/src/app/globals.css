@@ -83,7 +83,6 @@ html { scroll-behavior: smooth; }
 /* =============================================================
    LANDING PAGE SCOPED STYLES
    ============================================================= */
-.landing-page {
 
 * {
   margin: 0;
@@ -107,6 +106,19 @@ html { scroll-behavior: smooth; }
   --primary-dark: #5568d3;
   --secondary: #764ba2;
   --accent: #f093fb;
+  /* Light-mode page background */
+  --page-bg: #f8f7ff;
+  --page-bg-mesh:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(102,126,234,0.13) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 55% at 80% 110%, rgba(118,75,162,0.11) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 55% 50%, rgba(240,147,251,0.07) 0%, transparent 70%),
+    linear-gradient(160deg, #f8f7ff 0%, #f3f0ff 40%, #fdf4ff 70%, #f8f7ff 100%);
+}
+
+/* ── Light-mode page background ── */
+html:not(.dark) body {
+  background: var(--page-bg-mesh);
+  background-attachment: fixed;
 }
 
 .container {
@@ -307,13 +319,34 @@ body.touch-device .dna-cursor-canvas {
   flex-shrink: 0;
 }
 .logo:hover { transform: translateY(-2px); }
+.logo-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  /* clean light border + depth shadow */
+  box-shadow: 0 0 0 2px rgba(102,126,234,0.18), 0 4px 14px rgba(102,126,234,0.15);
+  transition: var(--transition);
+}
 .logo-icon img {
   width: 48px; height: 48px;
   border-radius: 12px;
-  box-shadow: var(--shadow-sm);
+  display: block;
   transition: var(--transition);
 }
+.logo:hover .logo-icon {
+  box-shadow: 0 0 0 2.5px rgba(102,126,234,0.45), 0 6px 20px rgba(102,126,234,0.25);
+}
 .logo:hover .logo-icon img { transform: rotate(-5deg) scale(1.05); }
+
+/* Dark mode — glass ring */
+html.dark .logo-icon {
+  box-shadow: 0 0 0 1.5px rgba(167,139,250,0.35), 0 4px 18px rgba(102,126,234,0.2);
+}
+html.dark .logo:hover .logo-icon {
+  box-shadow: 0 0 0 2px rgba(167,139,250,0.6), 0 6px 24px rgba(102,126,234,0.35);
+}
 
 .nav-links {
   display: flex;
@@ -343,9 +376,12 @@ body.touch-device .dna-cursor-canvas {
 
 .nav-item-icon {
   font-size: 1.05rem;
-  color: #D4AF37; /* golden */
+  color: #667eea; /* primary indigo — consistent with brand */
   line-height: 1;
   transition: all 0.2s ease;
+}
+html.dark .nav-item-icon {
+  color: #818cf8; /* indigo-400 — readable on dark bg */
 }
 
 .nav-item-text {
@@ -2806,6 +2842,13 @@ i, svg {
 
 .uh-phone-mini.android-theme .uh-mini-card { background: rgba(16,185,129,0.2); }
 .uh-phone-mini.ios-theme .uh-mini-card     { background: rgba(37,99,235,0.2); }
+
+/* Icon variant — flex-center for platform icons */
+.uh-mini-card--icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 /* Badge group */
 .uh-card-badge-group {

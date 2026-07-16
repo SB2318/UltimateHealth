@@ -298,6 +298,7 @@ function SectionHeader({ title, action }: { title: string; action: string }) {
 }
 
 function MiniPhone({ theme }: { theme: string }) {
+  const isAndroid = theme === 'android';
   return (
     <div className={`uh-phone-mini ${theme}-theme`} aria-hidden="true">
       <div className="uh-phone-mini-notch" />
@@ -314,8 +315,14 @@ function MiniPhone({ theme }: { theme: string }) {
             <div className="uh-mini-line short" />
           </div>
           <div className="uh-mini-cards">
-            <div className="uh-mini-card" />
-            <div className="uh-mini-card" />
+            <div className="uh-mini-card uh-mini-card--icon">
+              <i className={isAndroid ? 'fab fa-android' : 'fab fa-apple'}
+                style={{ fontSize: '10px', color: isAndroid ? '#10b981' : '#60a5fa', lineHeight: 1 }} />
+            </div>
+            <div className="uh-mini-card uh-mini-card--icon">
+              <i className="fas fa-heart-pulse"
+                style={{ fontSize: '8px', color: isAndroid ? '#10b981' : '#60a5fa', lineHeight: 1 }} />
+            </div>
           </div>
         </div>
       </div>
@@ -353,18 +360,19 @@ function AndroidStoreButtons({ onShowComingSoon }: Pick<HeroAndDownloadProps, "o
             <strong>UHealth Admin</strong>
           </div>
         </a>
-        <button
-          type="button"
-          onClick={onShowComingSoon}
+        <a
+          href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin&hl=en-US"
+          target="_blank"
+          rel="noopener noreferrer"
           className="uh-store-btn uh-store-admin"
-          aria-label="View UHealth Admin closed testing launch status"
+          aria-label="Download UHealth Admin on Google Play"
         >
-          <i className="fas fa-hourglass-half" aria-hidden="true" />
+          <i className="fab fa-google-play" aria-hidden="true" />
           <div>
-            <small>Launch Status</small>
-            <strong>Closed Testing</strong>
+            <small>Now on</small>
+            <strong>Google Play</strong>
           </div>
-        </button>
+        </a>
       </div>
     </div>
   );

@@ -1207,6 +1207,6 @@ export default function Home() {
         </div>
       )}
       <ScrollToTop />
-    </div>
+    </>
   );
 }
