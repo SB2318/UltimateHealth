@@ -177,7 +177,7 @@ function ArticleCard({ article }: { article: ApiArticle }) {
   // Try to use a cover image if available, else fallback to a nice gradient
   const rawImg = article.imageUtils && article.imageUtils.length > 0 ? article.imageUtils[0] : null;
   const imageUrl = rawImg 
-    ? (rawImg.startsWith("http") ? rawImg : `/api/proxy-image?url=${encodeURIComponent(`https://uhsocial.in/api/getFile/${rawImg}`)}`)
+    ? (rawImg.startsWith("http") ? rawImg : withBasePath(`/api/proxy-image?url=${encodeURIComponent(`https://uhsocial.in/api/getFile/${rawImg}`)}`))
     : null;
 
   return (
