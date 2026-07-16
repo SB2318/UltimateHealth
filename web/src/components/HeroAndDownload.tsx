@@ -24,8 +24,8 @@ const weeklyStats = [
 ];
 
 const heroStats = [
-  { icon: "fa-users", value: "50K+", label: "Active Users" },
-  { icon: "fa-newspaper", value: "100+", label: "Articles" },
+  { icon: "fa-users", value: "500", label: "Active Users" },
+  { icon: "fa-newspaper", value: "100", label: "Articles" },
   { icon: "fa-globe", value: "Global", label: "Community" },
 ];
 

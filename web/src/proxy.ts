@@ -40,7 +40,7 @@ export default function proxy(request: NextRequest) {
       // would require migration to a nonce- or hash-based approach.  
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self'",
-    "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com https://avatars.githubusercontent.com",
+    "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com https://avatars.githubusercontent.com https://uhsocial.in",
     // IMPORTANT:
 // If new external services are integrated (APIs, analytics,
 // monitoring, authentication providers, etc.), their origins

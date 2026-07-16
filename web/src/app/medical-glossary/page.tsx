@@ -31,11 +31,11 @@ export default function MedicalGlossaryPage() {
         </PageWrapper>
       </section>
 
-      <div className="pb-20 bg-transparent">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <MedicalGlossaryExplorer />
-  </div>
-</div>
+      <div className="pb-20 bg-transparent w-full flex justify-center">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <MedicalGlossaryExplorer />
+        </div>
+      </div>
     </main>
   );
 }

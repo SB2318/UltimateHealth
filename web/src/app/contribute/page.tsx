@@ -601,7 +601,7 @@ function HeroSection() {
               }}
             >
               <Star size={12} />
-              Open Source · GSSoC 2026
+              Independent Open Source
             </motion.div>
 
             <h1
@@ -688,6 +688,29 @@ function HeroSection() {
               >
                 <ExternalLink size={18} />
                 View Repository
+              </motion.a>
+
+              <motion.a
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                href="/our-contributors"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'rgba(255,255,255,0.08)',
+                  color: 'rgba(255,255,255,0.9)',
+                  padding: '14px 28px',
+                  borderRadius: '50px',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  textDecoration: 'none',
+                  border: '2px solid rgba(255,255,255,0.2)',
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                <Users size={18} />
+                Meet Our Contributors
               </motion.a>
             </div>
           </motion.div>
@@ -789,7 +812,7 @@ function HeroSection() {
                     color: '#1a202c',
                   }}
                 >
-                  GSSoC 2026
+                  Community Driven
                 </span>
               </motion.div>
 
@@ -1432,7 +1455,543 @@ function CommunitySection() {
 }
 
 // =============================================================================
-// Section 6: FAQ
+// Section 6: Our Purpose
+// =============================================================================
+function PurposeSection() {
+  const pillars = [
+    {
+      emoji: '🕊️',
+      title: 'To Honour Them',
+      desc: 'We exist to honour everyone who has been wounded — physically, mentally, or emotionally — by the world around them. You are seen. You are not forgotten.',
+      accent: '#667eea',
+      bg: 'rgba(102,126,234,0.06)',
+    },
+    {
+      emoji: '🩹',
+      title: 'Whoever Got Injured by Society',
+      desc: 'Society wounds in ways that are invisible — through neglect, stigma, inequality, and silence. UltimateHealth stands for those who carry those wounds without recognition.',
+      accent: '#f5576c',
+      bg: 'rgba(245,87,108,0.06)',
+    },
+    {
+      emoji: '💡',
+      title: 'Knowledge as Healing',
+      desc: 'Access to clear, honest health knowledge is a right — not a privilege. We build tools that put that knowledge in the hands of every person who needs it.',
+      accent: '#f59e0b',
+      bg: 'rgba(245,158,11,0.06)',
+    },
+    {
+      emoji: '🤝',
+      title: 'Open to Everyone',
+      desc: 'UltimateHealth is independently open source — built by volunteers who believe that healthcare tools should belong to the community, free from gatekeeping.',
+      accent: '#22c55e',
+      bg: 'rgba(34,197,94,0.06)',
+    },
+  ]
+
+  return (
+    <section style={{ background: 'var(--bg-white)', padding: '100px 0' }}>
+      <div className="contribute-container">
+        <AnimateWhenVisible>
+          <motion.div
+            variants={fadeUp}
+            style={{ textAlign: 'center', marginBottom: '70px' }}
+          >
+            {/* Eyebrow */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'rgba(102,126,234,0.08)',
+                border: '1px solid rgba(102,126,234,0.18)',
+                borderRadius: '50px',
+                padding: '6px 18px',
+                marginBottom: '24px',
+                color: '#667eea',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}
+            >
+              <Heart size={12} />
+              Our Purpose
+            </div>
+
+            {/* Headline */}
+            <div
+              style={{
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
+                fontWeight: 900,
+                color: '#1a202c',
+                lineHeight: 1.2,
+                marginBottom: '20px',
+                background: 'linear-gradient(135deg, #667eea 0%, #f5576c 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              To Honour Them,<br />Whoever Got Injured by Society
+            </div>
+
+            <p
+              style={{
+                fontSize: '1.1rem',
+                color: '#718096',
+                maxWidth: '600px',
+                margin: '0 auto',
+                lineHeight: 1.8,
+              }}
+            >
+              UltimateHealth was born from a belief — that every person who has been hurt,
+              overlooked, or left without support deserves access to knowledge, care, and community.
+            </p>
+          </motion.div>
+
+          {/* Pillars grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '28px',
+            }}
+          >
+            {pillars.map((p) => (
+              <motion.div
+                key={p.title}
+                variants={fadeUp}
+                whileHover={{ y: -6, transition: { duration: 0.25 } }}
+                style={{
+                  background: 'white',
+                  borderRadius: '20px',
+                  padding: '36px 28px',
+                  border: `1.5px solid ${p.bg}`,
+                  boxShadow: 'var(--shadow-sm)',
+                  transition: 'all 0.3s ease',
+                  cursor: 'default',
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLDivElement
+                  el.style.boxShadow = `0 16px 48px ${p.bg}`
+                  el.style.borderColor = p.accent
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLDivElement
+                  el.style.boxShadow = 'var(--shadow-sm)'
+                  el.style.borderColor = p.bg
+                }}
+              >
+                <div
+                  style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: '16px',
+                    background: p.bg,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '1.8rem',
+                    marginBottom: '20px',
+                  }}
+                >
+                  {p.emoji}
+                </div>
+                <h3
+                  style={{
+                    fontSize: '1.1rem',
+                    fontWeight: 800,
+                    color: '#1a202c',
+                    marginBottom: '12px',
+                    lineHeight: 1.3,
+                  }}
+                >
+                  {p.title}
+                </h3>
+                <p
+                  style={{
+                    color: '#718096',
+                    lineHeight: 1.75,
+                    fontSize: '0.92rem',
+                    margin: 0,
+                  }}
+                >
+                  {p.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Quote */}
+          <motion.blockquote
+            variants={fadeUp}
+            style={{
+              marginTop: '60px',
+              background: 'linear-gradient(135deg, rgba(102,126,234,0.06) 0%, rgba(245,87,108,0.06) 100%)',
+              border: '1.5px solid rgba(102,126,234,0.15)',
+              borderLeft: '4px solid #667eea',
+              borderRadius: '16px',
+              padding: '32px 36px',
+              textAlign: 'center',
+            }}
+          >
+            <p
+              style={{
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                color: '#2d3748',
+                fontStyle: 'italic',
+                lineHeight: 1.7,
+                margin: 0,
+              }}
+            >
+              &ldquo;We don&apos;t build this platform for accolades or programmes.
+              We build it for the person sitting alone, hurting, and wondering
+              if anyone understands. We do. This is for you.&rdquo;
+            </p>
+            <footer
+              style={{
+                marginTop: '16px',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                color: '#667eea',
+                letterSpacing: '0.04em',
+              }}
+            >
+              — The UltimateHealth Team
+            </footer>
+          </motion.blockquote>
+        </AnimateWhenVisible>
+      </div>
+    </section>
+  )
+}
+
+// =============================================================================
+// Section 7: GSSoC 2026
+// =============================================================================
+function GSSoC2026Section() {
+  const highlights = [
+    {
+      icon: Star,
+      label: 'Featured Program',
+      value: 'GSSoC 2026',
+      sub: 'GirlScript Summer of Code',
+      accent: '#f59e0b',
+      bg: 'rgba(245,158,11,0.08)',
+    },
+    {
+      icon: GitPullRequest,
+      label: 'Contribution Window',
+      value: 'May – Aug 2026',
+      sub: 'Open for all participants',
+      accent: '#667eea',
+      bg: 'rgba(102,126,234,0.08)',
+    },
+    {
+      icon: Users,
+      label: 'Open To',
+      value: 'All Developers',
+      sub: 'Beginners welcome',
+      accent: '#22c55e',
+      bg: 'rgba(34,197,94,0.08)',
+    },
+    {
+      icon: Zap,
+      label: 'Difficulty',
+      value: 'All Levels',
+      sub: 'Easy · Medium · Hard',
+      accent: '#f5576c',
+      bg: 'rgba(245,87,108,0.08)',
+    },
+  ]
+
+  const perks = [
+    'Certificate of participation from GSSoC',
+    'Open source contributions on your GitHub profile',
+    'Mentorship from experienced maintainers',
+    'Beginner-friendly issues labelled for you',
+    'Swag & recognition for top contributors',
+    'Build real-world healthcare tech skills',
+  ]
+
+  return (
+    <section
+      style={{
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)',
+        padding: '100px 0',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Subtle animated background glow */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: '-20%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '800px',
+          height: '500px',
+          background: 'radial-gradient(ellipse, rgba(102,126,234,0.18) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          bottom: '-10%',
+          right: '10%',
+          width: '400px',
+          height: '300px',
+          background: 'radial-gradient(ellipse, rgba(245,158,11,0.12) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <div className="contribute-container" style={{ position: 'relative', zIndex: 1 }}>
+        <AnimateWhenVisible>
+          {/* Header */}
+          <motion.div variants={fadeUp} style={{ textAlign: 'center', marginBottom: '64px' }}>
+            {/* Badge */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                background: 'rgba(245,158,11,0.12)',
+                border: '1px solid rgba(245,158,11,0.35)',
+                borderRadius: '50px',
+                padding: '8px 20px',
+                marginBottom: '28px',
+                color: '#fbbf24',
+                fontSize: '0.78rem',
+                fontWeight: 800,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}
+            >
+              <Star size={13} fill="#fbbf24" />
+              Ongoing · GSSoC 2026
+            </div>
+
+            <div
+              style={{
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
+                fontWeight: 900,
+                lineHeight: 1.15,
+                marginBottom: '20px',
+                background: 'linear-gradient(135deg, #fbbf24 0%, #f472b6 50%, #818cf8 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              Featured in GirlScript<br />Summer of Code 2026
+            </div>
+
+            <p
+              style={{
+                fontSize: '1.1rem',
+                color: 'rgba(255,255,255,0.6)',
+                maxWidth: '580px',
+                margin: '0 auto',
+                lineHeight: 1.8,
+              }}
+            >
+              UltimateHealth is an officially selected project in GSSoC 2026.
+              Contributors can earn recognition, certificates, and make real impact
+              on a health platform used by the community.
+            </p>
+          </motion.div>
+
+          {/* Stats grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '20px',
+              marginBottom: '60px',
+            }}
+          >
+            {highlights.map((h) => {
+              const Icon = h.icon
+              return (
+                <motion.div
+                  key={h.label}
+                  variants={fadeUp}
+                  whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: '20px',
+                    padding: '28px 24px',
+                    backdropFilter: 'blur(12px)',
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLDivElement
+                    el.style.background = h.bg
+                    el.style.borderColor = h.accent + '55'
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLDivElement
+                    el.style.background = 'rgba(255,255,255,0.04)'
+                    el.style.borderColor = 'rgba(255,255,255,0.08)'
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 44,
+                      height: 44,
+                      borderRadius: '12px',
+                      background: h.bg,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: '16px',
+                      border: `1px solid ${h.accent}33`,
+                    }}
+                  >
+                    <Icon size={20} color={h.accent} />
+                  </div>
+                  <div style={{ fontSize: '0.7rem', fontWeight: 700, color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                    {h.label}
+                  </div>
+                  <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'white', marginBottom: '4px', lineHeight: 1.2 }}>
+                    {h.value}
+                  </div>
+                  <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.45)', fontWeight: 500 }}>
+                    {h.sub}
+                  </div>
+                </motion.div>
+              )
+            })}
+          </div>
+
+          {/* Perks + CTA */}
+          <motion.div
+            variants={fadeUp}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: '48px',
+              alignItems: 'center',
+            }}
+            className="contribute-pr-grid"
+          >
+            {/* Perks list */}
+            <div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '20px' }}>
+                What you get as a GSSoC contributor
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {perks.map((perk) => (
+                  <div key={perk} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <div
+                      style={{
+                        width: 22,
+                        height: 22,
+                        borderRadius: '50%',
+                        background: 'rgba(34,197,94,0.15)',
+                        border: '1px solid rgba(34,197,94,0.4)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        marginTop: '1px',
+                      }}
+                    >
+                      <CheckCircle2 size={13} color="#22c55e" />
+                    </div>
+                    <span style={{ fontSize: '0.95rem', color: 'rgba(255,255,255,0.75)', lineHeight: 1.6, fontWeight: 500 }}>
+                      {perk}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA card */}
+            <div
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '24px',
+                padding: '40px 36px',
+                textAlign: 'center',
+                backdropFilter: 'blur(16px)',
+              }}
+            >
+              <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🚀</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'white', marginBottom: '12px', lineHeight: 1.3 }}>
+                Ready to contribute<br />during GSSoC 2026?
+              </div>
+              <p style={{ fontSize: '0.92rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.7, marginBottom: '28px' }}>
+                Browse open issues, pick one that excites you,
+                and start your open source journey today.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <motion.a
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  href={`${REPO_URL}/issues?q=is%3Aissue+is%3Aopen+label%3Agssoc`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #f472b6 100%)',
+                    color: 'white',
+                    padding: '14px 28px',
+                    borderRadius: '50px',
+                    fontWeight: 700,
+                    fontSize: '0.95rem',
+                    textDecoration: 'none',
+                    boxShadow: '0 8px 24px rgba(245,158,11,0.3)',
+                  }}
+                >
+                  <Star size={16} />
+                  Browse GSSoC Issues
+                </motion.a>
+                <motion.a
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  href="https://gssoc.girlscript.tech"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    background: 'rgba(255,255,255,0.08)',
+                    color: 'rgba(255,255,255,0.8)',
+                    padding: '13px 28px',
+                    borderRadius: '50px',
+                    fontWeight: 600,
+                    fontSize: '0.9rem',
+                    textDecoration: 'none',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                  }}
+                >
+                  <ExternalLink size={15} />
+                  Learn about GSSoC
+                </motion.a>
+              </div>
+            </div>
+          </motion.div>
+        </AnimateWhenVisible>
+      </div>
+    </section>
+  )
+}
+
+// =============================================================================
+// Section 8: FAQ
 // =============================================================================
 function FAQSection() {
   return (
@@ -1613,7 +2172,7 @@ function FinalCTASection() {
             >
               {[
                 { icon: Code2, label: 'Open Source' },
-                { icon: Star, label: 'GSSoC 2026' },
+                { icon: Users, label: 'Community Driven' },
                 { icon: Heart, label: 'Beginner Friendly' },
               ].map(({ icon: Icon, label }) => (
                 <div
@@ -1874,6 +2433,8 @@ export default function ContributePage() {
 
       <main>
           <HeroSection />
+          <PurposeSection />
+          <GSSoC2026Section />
           <WhyContributeSection />
           <WaysToContributeSection />
           <WorkflowSection />
