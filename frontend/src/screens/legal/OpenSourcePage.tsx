@@ -10,7 +10,6 @@ import {
   H3,
   Separator,
   Theme, 
- 
   Paragraph,
   Button
 } from 'tamagui';
