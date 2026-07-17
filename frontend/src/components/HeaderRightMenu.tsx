@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {setPodcasts} from '../store/dataSlice';
-import {RootStackParamList, Category, CategoryType} from '../type';
+import {RootStackParamList, Category} from '../type';
 import FilterModal from './FilterModal';
 import {
   XStack,
@@ -38,12 +38,11 @@ const HeaderRightMenu = ({onClick}: Props) => {
   );
 
   const {categories} = useSelector((state: any) => state.data);
-  const {user_token, isGuest} = useSelector((state: any) => state.user);
+  const {isGuest} = useSelector((state: any) => state.user);
   const {isConnected} = useSelector((state: any) => state.network);
   const dispatch = useDispatch();
 
-  const {mutate: filterPodcast, isPending: filterPodcastPending} =
-    useFilterPodcasts();
+  const {mutate: filterPodcast} = useFilterPodcasts();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
