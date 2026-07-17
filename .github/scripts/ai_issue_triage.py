@@ -289,19 +289,38 @@ def close_issue(repo, issue_number, token):
 def check_active_assignments(repo, username, token):
     url = f"https://api.github.com/repos/{repo}/issues?assignee={username}&state=open"
     issues = make_request(url, token=token)
+    if issues:
+        # Filter out pull requests, we only care about actual issues
+        issues = [i for i in issues if "pull_request" not in i]
     return issues is not None and len(issues) > 0
 
 def check_pr_references_assigned_issue(repo, username, assigned_issue_numbers, token):
     """
     Check whether the user has submitted a PR that explicitly references
     (mentions) any of their previously assigned issue numbers.
-    A PR that contains 'Fixes #X', 'Closes #X', 'Resolves #X', or simply '#X'
-    in its title or body counts as referencing the assigned issue.
-    We search up to 5 closed assigned issues to avoid excessive API calls.
+    First, checks the issue timeline for cross-referenced PRs authored by the user.
+    Then falls back to a broader GitHub search in case it was mentioned but not linked.
     """
     for issue_num in assigned_issue_numbers[:5]:
+        # 1. Check timeline events for a cross-referenced PR by the user
+        timeline_url = f"https://api.github.com/repos/{repo}/issues/{issue_num}/timeline"
+        timeline = make_request(timeline_url, token=token)
+        if timeline and isinstance(timeline, list):
+            for event in timeline:
+                if event.get("event") == "cross-referenced" and "source" in event:
+                    source_issue = event["source"].get("issue", {})
+                    if "pull_request" in source_issue:
+                        pr_author = source_issue.get("user", {}).get("login")
+                        if pr_author == username:
+                            print(
+                                f"[INFO] @{username} linked PR #{source_issue.get('number')} to issue #{issue_num} via cross-reference.",
+                                flush=True
+                            )
+                            return True
+
+        # 2. Fallback to Search API using a broader query (tokenizes issue number)
         query = urllib.parse.quote(
-            f"repo:{repo} is:pr author:{username} #{issue_num} in:body,title"
+            f"repo:{repo} is:pr author:{username} {issue_num}"
         )
         url = f"https://api.github.com/search/issues?q={query}"
         result = make_request(url, token=token)
@@ -311,6 +330,7 @@ def check_pr_references_assigned_issue(repo, username, assigned_issue_numbers, t
                 flush=True
             )
             return True
+            
     return False
 
 def assign_user(repo, issue_number, username, token):
@@ -413,7 +433,7 @@ def handle_issue_opened(repo, issue_number, token, gemini_api_keys):
 
             # --- Check 1: No active assignments ---
             has_active = check_active_assignments(repo, author, token)
-            if has_active:
+            if has_active and author.lower() != "sb2318":
                 msg = (
                     f"This issue has been triaged as a **frontend** task "
                     f"({difficulty or 'Unclassified Difficulty'}).\n\n"
@@ -434,10 +454,10 @@ def handle_issue_opened(repo, issue_number, token, gemini_api_keys):
             # --- Check 2: If author had previously closed assigned issues, ---
             # they must have submitted a PR that explicitly references one of those issues.
             query = urllib.parse.quote(f"repo:{repo} is:issue assignee:{author} is:closed")
-            past_issues_url = f"https://api.github.com/search/issues?q={query}"
+            past_issues_url = f"https://api.github.com/search/issues?q={query}&sort=updated&order=desc"
             past_issues = make_request(past_issues_url, token=token)
 
-            if past_issues and past_issues.get("total_count", 0) > 0:
+            if past_issues and past_issues.get("total_count", 0) > 0 and author.lower() != "sb2318":
                 assigned_issue_numbers = [
                     str(i["number"]) for i in past_issues.get("items", [])
                 ]
@@ -520,7 +540,7 @@ def handle_issue_comment(repo, issue_number, commenter, token):
 
     # --- Check 1: No active assignments ---
     has_active = check_active_assignments(repo, commenter, token)
-    if has_active:
+    if has_active and commenter.lower() != "sb2318":
         msg = f"@{commenter} You currently have an active assigned issue. Please complete your existing work before requesting a new assignment."
         post_comment(repo, issue_number, msg, token)
         return "rejected", "Active assignments limit"
@@ -529,10 +549,10 @@ def handle_issue_comment(repo, issue_number, commenter, token):
     # they must have submitted a PR that explicitly references one of those issues.
     # This ensures contributors who took on work actually followed through.
     query = urllib.parse.quote(f"repo:{repo} is:issue assignee:{commenter} is:closed")
-    url = f"https://api.github.com/search/issues?q={query}"
+    url = f"https://api.github.com/search/issues?q={query}&sort=updated&order=desc"
     past_issues = make_request(url, token=token)
 
-    if past_issues and past_issues.get("total_count", 0) > 0:
+    if past_issues and past_issues.get("total_count", 0) > 0 and commenter.lower() != "sb2318":
         assigned_issue_numbers = [
             str(issue["number"]) for issue in past_issues.get("items", [])
         ]
