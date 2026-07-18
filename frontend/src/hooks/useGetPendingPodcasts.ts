@@ -10,23 +10,17 @@ type PendingRes = {
 };
 
 export const useGetPendingPodcasts = (pendingPage: number, isConnected: boolean): UseQueryResult<
-PendingRes | null,
+PendingRes,
 AxiosError
 >=>{
   
     return  useQuery({
       queryKey: ['get-pending-podcasts-for-user', pendingPage],
       queryFn: async () => {
-        try {
-          const response = await axios.get(
-            `${PENDING_PODCASTS}?page=${pendingPage}`
-          );
-
-          return response.data as PendingRes;
-        } catch (err) {
-          console.error('Error fetching podcasts:', err);
-          return null;
-        }
+        const response = await axios.get(
+          `${PENDING_PODCASTS}?page=${pendingPage}`
+        );
+        return response.data as PendingRes;
       },
       enabled: !!pendingPage && !!isConnected
     });
