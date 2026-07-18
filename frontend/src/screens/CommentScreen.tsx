@@ -509,7 +509,7 @@ const CommentScreen = ({
                     fontSize={20}
                     color="#1F2937"
                     fontWeight={'700'}>
-                    {article.title}
+                    {article?.title}
                   </H3>
                 </View>
 
@@ -537,14 +537,14 @@ const CommentScreen = ({
                       'ArticleScreen',
                       {
                         articleId: Number(
-                          article._id,
+                          article?._id,
                         ),
                         authorId:
                           article?.authorId
                             ? article.authorId.toString()
                             : '', // FIX: guard against missing authorId
                         recordId:
-                          article.pb_recordId,
+                          article?.pb_recordId,
                       },
                     )
                   }
@@ -567,7 +567,7 @@ const CommentScreen = ({
                     color="#4B5563"
                     fontSize={15}
                     lineHeight={22}>
-                    {article.description}
+                    {article?.description}
                   </Paragraph>
                 </View>
 
