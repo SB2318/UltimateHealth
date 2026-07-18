@@ -10,7 +10,7 @@ import { withBasePath } from '@/lib/basePath'
 import { ModeToggle } from '@/components/mode-toggle'
 import { useEffect, useState } from 'react'
 
-export const Navbar = (props: { tracking_id: any }) => {
+export const Navbar = (props: { tracking_id: string[] }) => {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState<string>('')
@@ -61,7 +61,7 @@ export const Navbar = (props: { tracking_id: any }) => {
     })
 
     return () => observer.disconnect()
-  }, [])
+  }, [TRACKED_SECTION_IDS])
 
   return (
     <>

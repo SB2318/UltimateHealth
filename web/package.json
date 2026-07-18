@@ -3,10 +3,10 @@
   "version": "2.2.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node --no-warnings node_modules/next/dist/bin/next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --no-warnings --test src/app/admin-agreement/signatureValidation.test.mjs src/app/api/csp-report/sanitizeCspReport.test.mjs src/components/articles/article-layout.test.mjs",
+    "test": "node --no-warnings --test src/app/admin-agreement/signatureValidation.test.mjs src/app/api/csp-report/sanitizeCspReport.test.mjs src/components/articles/article-layout.test.mjs src/lib/api.test.mjs",
     "lint": "eslint",
     "knip": "knip",
     "knip:deps": "knip --dependencies",
