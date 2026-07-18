@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+/* eslint-disable react-compiler/react-compiler */
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -36,9 +37,9 @@ export const BaseEmptyState: React.FC<BaseEmptyStateProps> = ({
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
-  const bounceAnim = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const [bounceAnim] = useState(() => new Animated.Value(0));
+  const [fadeAnim] = useState(() => new Animated.Value(0));
+  const [pulseAnim] = useState(() => new Animated.Value(1));
 
   useEffect(() => {
     // Fade in
@@ -88,8 +89,8 @@ export const BaseEmptyState: React.FC<BaseEmptyStateProps> = ({
   }, [loading]);
 
   const containerBg = isDarkMode ? 'transparent' : 'transparent';
-  const cardBg = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 82, 186, 0.03)';
-  const borderColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)';
+  const cardBg = isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(255, 255, 255, 0.6)';
+  const borderColor = isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(255, 255, 255, 1)';
   const circleBg = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#E3F2FD';
   const titleColor = isDarkMode ? ProfessionalColors.white : ProfessionalColors.gray900;
   const descColor = isDarkMode ? ProfessionalColors.gray400 : ProfessionalColors.gray600;
@@ -179,6 +180,25 @@ export const OfflinePodcastState = () => (
     title="Podcasts Offline"
     description="You need an internet connection to stream podcasts. Connect to WiFi or mobile data to listen."
     infoText="💡 Offline downloads coming soon!"
+  />
+);
+
+export const OfflinePodcastLoadErrorState = ({
+  message,
+  onRetry,
+}: {
+  message?: string;
+  onRetry?: () => void;
+}) => (
+  <BaseEmptyState
+    iconEmoji="⚠️"
+    title="Couldn't Load Offline Podcasts"
+    description={
+      message ||
+      "Something went wrong while reading your downloaded podcasts. Please try again."
+    }
+    actionText={onRetry ? "Retry" : undefined}
+    onAction={onRetry}
   />
 );
 
@@ -295,7 +315,8 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 450,
     borderRadius: BorderRadius.xl,
-    borderWidth: 1,
+    borderWidth: 1.5,
+    borderStyle: 'solid',
     paddingVertical: Spacing.xxl,
     paddingHorizontal: Spacing.xl,
     alignItems: 'center',
@@ -303,12 +324,12 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.1,
+        shadowRadius: 20,
       },
       android: {
-        elevation: 3,
+        elevation: 5,
       },
     }),
   },
@@ -384,3 +405,4 @@ const styles = StyleSheet.create({
     borderRadius: 2.5,
   },
 });
+

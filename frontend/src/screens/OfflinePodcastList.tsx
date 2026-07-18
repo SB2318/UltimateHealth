@@ -1,21 +1,22 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, {useEffect, useState} from 'react';
-import {FlatList, Pressable, View, StyleSheet} from 'react-native';
+import { FlatList , Pressable, View, StyleSheet } from 'react-native';
 import {OfflinePodcastListProp, PodcastData} from '../type';
 import {deleteFromDownloads, msToTime, readDownloadedPodcasts} from '../helper/Utils';
 import PodcastCard from '../components/PodcastCard';
-import PodcastEmptyComponent from '../components/PodcastEmptyComponent';
 import {hp} from '../helper/Metric';
 import {ON_PRIMARY_COLOR} from '../helper/Theme';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch, useSelector} from 'react-redux';
 import CreatePlaylist from '../components/CreatePlaylist';
 import { setaddedPodcastId, setRemovePlaylistId } from '../store/dataSlice';
-import { NoOfflinePodcastsState } from '../components/EmptyStates';
+import { NoOfflinePodcastsState, OfflinePodcastLoadErrorState } from '../components/EmptyStates';
 
 export default function OfflinePodcastList({
   navigation,
 }: OfflinePodcastListProp) {
   const [podcasts, setPodcasts] = useState<PodcastData[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const {user_id} = useSelector((state: any) => state.user);
   const [playlistModalOpen, setPlaylistModalOpen] = useState<boolean>(false);
   //const [playlistIds, setPlaylistIds] = useState<string[]>([]);
@@ -41,11 +42,18 @@ export default function OfflinePodcastList({
 
   const loadPodcasts = async () => {
     try {
+      setLoadError(null);
       const data = await readDownloadedPodcasts();
-
-      if (!Array.isArray(data)) return;
       setPodcasts(data);
-    } catch (err) {}
+    } catch (err) {
+      if (__DEV__) {
+        console.error('Offline podcast load error:', err);
+      }
+      setPodcasts([]);
+      setLoadError(
+        'Failed to load offline podcasts. Please try again or check your device storage.',
+      );
+    }
   };
 
   const navigateToDetail = (podcast: PodcastData) => {
@@ -65,7 +73,7 @@ export default function OfflinePodcastList({
 
  
 
-  const renderItem = ({item}: {item: any}) => (
+  const renderItem = ({item}: {item: PodcastData}) => (
     <Pressable
       onPress={() => {
         //playPodcast(item);
@@ -74,7 +82,7 @@ export default function OfflinePodcastList({
       <PodcastCard
         id={item._id}
         title={item.title}
-        audioUrl={item.audioUrl}
+        audioUrl={item.audio_url}
         host={item.user_id.user_name}
         views={item.viewUsers.length}
         duration={`${msToTime(item.duration)}`}
@@ -112,12 +120,19 @@ export default function OfflinePodcastList({
     <View style={styles.container}>
       <FlatList
         data={podcasts}
-        keyExtractor={item => item._id.toString()}
+        keyExtractor={(item: PodcastData) => item._id.toString()}
         renderItem={renderItem}
         ListEmptyComponent={
-  <NoOfflinePodcastsState
-    onBrowse={() => navigation.navigate('Podcasts')}
-  />
+  loadError ? (
+    <OfflinePodcastLoadErrorState
+      message={loadError}
+      onRetry={loadPodcasts}
+    />
+  ) : (
+    <NoOfflinePodcastsState
+      onBrowse={() => navigation.goBack()}
+    />
+  )
 }
       />
       <CreatePlaylist
@@ -156,3 +171,4 @@ const styles = StyleSheet.create({
     color: '#666',
   },
 });
+

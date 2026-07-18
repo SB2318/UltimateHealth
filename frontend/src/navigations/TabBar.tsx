@@ -1,31 +1,137 @@
-import React from 'react';
-import {View, Pressable, StyleSheet, Image} from 'react-native';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import React, {useRef, useEffect, useState} from 'react';
+import {
+  View,
+  Pressable,
+  StyleSheet,
+  Text,
+  Animated,
+  useColorScheme,
+  Platform,
+} from 'react-native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {VULTR_CHAT_PROFILE_AVTARS} from '../helper/Utils';
-import { hp } from '../helper/Metric';
-import { useTheme } from 'tamagui';
+import {hp, wp, fp} from '../helper/Metric';
+
+// Icon map per tab label
+const TAB_CONFIG: Record<
+  string,
+  {active: string; inactive: string; label: string}
+> = {
+  Home: {active: 'home', inactive: 'home-outline', label: 'Home'},
+  Podcasts: {active: 'headphones', inactive: 'headphones', label: 'Podcasts'},
+  Chatbot: {active: 'robot', inactive: 'robot-outline', label: 'AI'},
+  Profile: {active: 'account-circle', inactive: 'account-circle-outline', label: 'Profile'},
+  About: {active: 'information', inactive: 'information-outline', label: 'About'},
+};
+
+interface AnimatedTabItemProps {
+  label: string;
+  isFocused: boolean;
+  onPress: () => void;
+  isDark: boolean;
+}
+
+const AnimatedTabItem = ({label, isFocused, onPress, isDark}: AnimatedTabItemProps) => {
+  const [scaleAnim] = useState(() => new Animated.Value(1));
+  const [pillWidthAnim] = useState(() => new Animated.Value(isFocused ? 1 : 0));
+
+  useEffect(() => {
+    Animated.spring(pillWidthAnim, {
+      toValue: isFocused ? 1 : 0,
+      useNativeDriver: false,
+      tension: 80,
+      friction: 10,
+    }).start();
+  }, [isFocused]);
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.88,
+      useNativeDriver: true,
+      tension: 200,
+      friction: 10,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      tension: 200,
+      friction: 10,
+    }).start();
+  };
+
+  const config = TAB_CONFIG[label] ?? {
+    active: 'circle',
+    inactive: 'circle-outline',
+    label: label,
+  };
+
+  const iconName = isFocused ? config.active : config.inactive;
+  const activeColor = PRIMARY_COLOR;
+  const inactiveColor = isDark ? '#6b7280' : '#9ca3af';
+
+  const pillBg = pillWidthAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['rgba(0,191,255,0)', 'rgba(0,191,255,0.12)'],
+  });
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      accessibilityRole="button"
+      accessibilityLabel={`${config.label} tab`}
+      accessibilityState={{selected: isFocused}}
+      style={styles.tabItem}>
+      <Animated.View style={{transform: [{scale: scaleAnim}]}}>
+        <Animated.View
+          style={[
+            styles.iconPill,
+            {backgroundColor: pillBg as any},
+          ]}>
+          <MaterialCommunityIcons
+            name={iconName as any}
+            size={24}
+            color={isFocused ? activeColor : inactiveColor}
+          />
+          {isFocused && <View style={styles.activeDot} />}
+        </Animated.View>
+        <Text
+          style={[
+            styles.tabLabel,
+            {color: isFocused ? activeColor : inactiveColor},
+            isFocused && styles.tabLabelActive,
+          ]}
+          numberOfLines={1}>
+          {config.label}
+        </Text>
+      </Animated.View>
+    </Pressable>
+  );
+};
 
 const TabBar = ({state, descriptors, navigation}: any) => {
-  const theme = useTheme();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
-  // List of routes where the tab bar should be hidden
   const hideTabBarScreens = ['Chatbot'];
-
-  // Get the current route name
   const currentRouteName = state.routes[state.index]?.name;
+  if (hideTabBarScreens.includes(currentRouteName)) return null;
 
-  // Check if the current route is in the list to hide the tab bar
-  if (hideTabBarScreens.includes(currentRouteName)) {
-    return null; // Don't render the tab bar
-  }
+  const bgColor = isDark ? '#1a1a2e' : '#ffffff';
+  const borderColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
 
   return (
     <View
       style={[
-        styles.mainContainer,
-        {backgroundColor: theme.background.val},
+        styles.container,
+        {
+          backgroundColor: bgColor,
+          borderTopColor: borderColor,
+        },
       ]}>
       {state.routes.map((route: any, index: number) => {
         const {options} = descriptors[route.key];
@@ -43,92 +149,19 @@ const TabBar = ({state, descriptors, navigation}: any) => {
             type: 'tabPress',
             target: route.key,
           });
-
           if (!isFocused && !event.defaultPrevented) {
             navigation.navigate(route.name);
           }
         };
 
         return (
-          <View
+          <AnimatedTabItem
             key={index}
-            style={[
-              styles.mainItemContainer,
-              {borderRightWidth: label === 'notes' ? 3 : 0},
-            ]}>
-            <Pressable
-              onPress={onPress}
-              accessibilityRole="button"
-              accessibilityLabel={`${label} tab`}
-              accessibilityHint={`Navigates to the ${label} screen`}
-              style={{
-                backgroundColor: isFocused
-                  ? PRIMARY_COLOR
-                  : theme.background.val,
-                borderRadius: 50,
-                width: 40,
-                height: 40,
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: 5,
-              }}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flex: 1,
-                }}>
-                {label === 'Home' && (
-                  <Ionicons
-                    name="home"
-                    size={24}
-                    color={isFocused ? 'white' : theme.color.val}
-                  />
-                )}
-                {label === 'Podcasts' && (
-                  <FontAwesome
-                    name="podcast"
-                    size={24}
-                    color={isFocused ? 'white' : theme.color.val}
-                  />
-                )}
-                {label === 'Chatbot' && (
-                  <Image
-                    source={{uri: VULTR_CHAT_PROFILE_AVTARS.assistant}} 
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 25,
-                      //tintColor: isFocused ? 'white' : theme.color.val,
-                    }}
-                  />
-                )}
-                {label === 'Profile' && (
-                  <FontAwesome
-                    name="user-circle"
-                    size={24}
-                    color={isFocused ? 'white' : theme.color.val}
-                  />
-                )}
-
-                {label === 'About' && (
-                  <FontAwesome
-                    name="info-circle"
-                    size={24}
-                    color={isFocused ? 'white' : theme.color.val}
-                  />
-                )}
-
-                {label === 'Wellness' && (
-                  <FontAwesome
-                    name="heartbeat"
-                    size={24}
-                    color={isFocused ? 'white' : theme.color.val}
-                  />
-                )}
-              </View>
-            </Pressable>
-          </View>
+            label={label}
+            isFocused={isFocused}
+            onPress={onPress}
+            isDark={isDark}
+          />
         );
       })}
     </View>
@@ -136,25 +169,57 @@ const TabBar = ({state, descriptors, navigation}: any) => {
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {
+  container: {
     flexDirection: 'row',
     position: 'absolute',
     bottom: 0,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    paddingBottom: hp(6),
-    backgroundColor: 'red',
-    //borderWidth: 0.19,
-    zIndex: 0,
+    left: 0,
+    right: 0,
+    paddingBottom: hp(4),
+    paddingTop: hp(1),
+    paddingHorizontal: wp(2),
+    borderTopWidth: 1,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: -4},
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 16,
+      },
+    }),
   },
-  mainItemContainer: {
+  tabItem: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 7,
-    borderRadius: 1,
-    //borderColor: '#333B42',
-    zIndex: 1,
+    justifyContent: 'center',
+  },
+  iconPill: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 14,
+    width: wp(12),
+    height: wp(12),
+    position: 'relative',
+  },
+  activeDot: {
+    position: 'absolute',
+    bottom: 4,
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: PRIMARY_COLOR,
+  },
+  tabLabel: {
+    fontSize: fp(2.8),
+    fontWeight: '500',
+    marginTop: 2,
+    textAlign: 'center',
+  },
+  tabLabelActive: {
+    fontWeight: '700',
   },
 });
 

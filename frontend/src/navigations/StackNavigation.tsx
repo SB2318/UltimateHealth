@@ -28,7 +28,7 @@ import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScree
 import ProfileEditScreen from '../screens/ProfileEditScreen';
 import UserProfileScreen from '../screens/UserProfileScreen';
 import {RootStackParamList, TabParamList} from '../type';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import {BUTTON_COLOR, ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import LogoutScreen from '../screens/auth/LogoutScreen';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import OverviewScreen from '../screens/overview/OverviewScreen';
@@ -46,11 +46,16 @@ import PodcastRecorder from '../screens/PodcastRecorder';
 import PodcastForm from '../screens/PodcastForm';
 import PodcastPlayer from '../screens/PodcastPlayer';
 import PodcastProfile from '../screens/PodcastProfile';
+import PlaylistDetailScreen from '../screens/PlaylistDetailScreen';
 import PrivacyPolicyScreen from '../screens/PrivacyPolicy';
 import CommunityGuidelinesScreen from '../screens/CommunityGuidelinesScreen';
 import ContributorPage from '../screens/ContributorPage';
 import OpenSourcePage from '../screens/OpenSourcePage';
 import NotificationPreferencesScreen from '../screens/NotificationPreferencesScreen';
+import InsightScreen from '../screens/profile/InsightScreen';
+import RepostsScreen from '../screens/profile/RepostsScreen';
+import SavedArticlesScreen from '../screens/profile/SavedArticlesScreen';
+import WellnessDashboardScreen from '../screens/WellnessDashboard/WellnessDashboardScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 
 import ChatbotScreen from '../screens/ChatbotScreen';
@@ -113,7 +118,7 @@ const StackNavigation = () => {
     return () => backHandler.remove();
   }, [navigation, nav]);
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined as never}>
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
@@ -845,6 +850,34 @@ const StackNavigation = () => {
         })}
       />
       <Stack.Screen
+        name="InsightScreen"
+        component={InsightScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="RepostsScreen"
+        component={RepostsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="SavedArticlesScreen"
+        component={SavedArticlesScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="WellnessDashboardScreen"
+        component={WellnessDashboardScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="LogoutScreen"
         component={LogoutScreen}
         options={{
@@ -888,6 +921,19 @@ const StackNavigation = () => {
           ),
         })}
       /> */}
+      <Stack.Screen
+        name="PlaylistDetailScreen"
+        component={PlaylistDetailScreen}
+        options={{
+          headerShown: true,
+          title: 'Playlist',
+         // headerBackTitleVisible: false,
+          headerStyle: {
+            backgroundColor: BUTTON_COLOR,
+          },
+          headerTintColor: 'white',
+        }}
+      />
     </Stack.Navigator>
   );
 };

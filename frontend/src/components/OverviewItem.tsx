@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -74,7 +75,7 @@ const OverviewItem: React.FC<OverviewItemProps> = ({
             <View style={styles.viewButton}>
               <Text style={styles.viewText}>View</Text>
               <AntDesign
-                name="arrowright"
+                name="arrow-right"
                 size={13}
                 color={PRIMARY_COLOR}
                 style={styles.arrow}

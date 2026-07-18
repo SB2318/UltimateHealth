@@ -1,3 +1,5 @@
+import { ErrorBoundary } from '../../components/ErrorBoundary';
+/* eslint-disable react-compiler/react-compiler */
 import {
   Image,
   Platform,
@@ -6,8 +8,7 @@ import {
   TouchableOpacity,
   View,
   Alert,
-  Dimensions,
-  Share,
+  useWindowDimensions,
   useColorScheme,
 } from 'react-native';
 import ArticleShareModal from '../../components/ArticleShareModal';
@@ -40,7 +41,7 @@ import {
 //import CommentScreen from '../CommentScreen';
 import Tts from 'react-native-tts';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import FloatingSpeedSelector from '../../components/FloatingSpeedSelector';
+import SpeedSelector from '../../components/FloatingSpeedSelector';
 
 import {setUserHandle} from '../../store/UserSlice';
 import {FontAwesome5} from '@expo/vector-icons';
@@ -62,6 +63,8 @@ import {useSocket} from '../../contexts/SocketContext';
 import { copyArticleShareLink } from '../../helper/shareUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
+import { useDyslexiaMode } from '../../hooks/useDyslexiaMode';
+import { generateArticleStyles } from '../../utils/dyslexiaStyles';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -70,6 +73,7 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated';
+import { ScrollView } from 'react-native';
 
 const CHUNK_SIZE = 120;
 
@@ -79,6 +83,7 @@ type TtsSubscription = {
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
+  const {width: windowWidth} = useWindowDimensions();
   const getProfileImageUri = (profileImage?: string) => {
     if (!profileImage?.trim()) {
       return 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
@@ -92,6 +97,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontScale, setFontScale] = useState(1);
+  const { isDyslexiaMode, toggleDyslexiaMode } = useDyslexiaMode();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
@@ -111,22 +117,30 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const errorHandlerRef = useRef<((event: unknown) => void) | null>(null);
 
   const clearArticleTtsSubscriptions = useCallback(() => {
-    if (finishSubscriptionRef.current?.remove) {
+    if (finishSubscriptionRef.current && typeof finishSubscriptionRef.current.remove === 'function') {
       finishSubscriptionRef.current.remove();
     } else if (
       finishHandlerRef.current &&
       typeof Tts.removeEventListener === 'function'
     ) {
-      Tts.removeEventListener('tts-finish', finishHandlerRef.current as any);
+      try {
+        Tts.removeEventListener('tts-finish', finishHandlerRef.current as any);
+      } catch (e) {
+        console.warn('Failed to call Tts.removeEventListener:', e);
+      }
     }
 
-    if (errorSubscriptionRef.current?.remove) {
+    if (errorSubscriptionRef.current && typeof errorSubscriptionRef.current.remove === 'function') {
       errorSubscriptionRef.current.remove();
     } else if (
       errorHandlerRef.current &&
       typeof Tts.removeEventListener === 'function'
     ) {
-      Tts.removeEventListener('tts-error', errorHandlerRef.current as any);
+      try {
+        Tts.removeEventListener('tts-error', errorHandlerRef.current as any);
+      } catch (e) {
+        console.warn('Failed to call Tts.removeEventListener:', e);
+      }
     }
 
     finishSubscriptionRef.current = null;
@@ -134,6 +148,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     finishHandlerRef.current = null;
     errorHandlerRef.current = null;
   }, []);
+
+  // Scroll position persistence (Issue #1834)
+  // useRef<Animated.ScrollView> — typed to match the JSX ref prop on
+  // Animated.ScrollView. The underlying ScrollView.scrollTo() is called
+  // via a safe cast through the ref for imperative scroll restoration.
+  const scrollViewRef = useRef<Animated.ScrollView>(null);
+  // Tracks whether we have already restored the saved position for the
+  // current article. Prevents the initial layout scroll events from
+  // immediately overwriting the stored value before restoration runs.
+  const scrollRestoredRef = useRef(false);
+  // Key pattern: article_scroll_position_<articleId>
+  const scrollStorageKey = `article_scroll_position_${articleId}`;
 
   // Progress Bar Shared Values
   const scrollY = useSharedValue(0);
@@ -160,6 +186,15 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const resolvedRecordId = article?.pb_recordId || recordId;
   const {data: articleContent} = useGetArticleContent(resolvedRecordId);
 
+  const [localIsFollowing, setLocalIsFollowing] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (article && (article.authorId as any)?.followers) {
+      const isFollow = (article.authorId as any).followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id);
+      setLocalIsFollowing(isFollow);
+    }
+  }, [article, user_id]);
+
   const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
     Number(articleId),
   );
@@ -168,6 +203,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     Number(articleId),
   );
 
+  // TEMP MOCK DATA — to be replaced by real /content-intel/readability/analyze response
+  // Shape mirrors the VeriWise-Content-Check API: { score, level, approved }
+  const mockReadability = {
+    score: 78,
+    level: 'Beginner Friendly' as 'Beginner Friendly' | 'Intermediate' | 'Advanced',
+    approved: true,
+  };
   const {mutate: trustMutation, isPending: trustMutationPending} =
     useTrustArticle(Number(articleId));
 
@@ -204,7 +246,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   const debouncedPersistFontScale = useCallback(
-    debounce(persistFontScale, 300),
+    (nextValue: number) => debounce(persistFontScale, 300)(nextValue),
     [],
   );
 
@@ -256,8 +298,22 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   useEffect(() => {
     readEventFiredRef.current = false;
     setReadEventSave(false);
+    // Reset scroll restoration flag when article changes so a new article
+    // always starts from the top until its own saved position is loaded.
+    scrollRestoredRef.current = false;
     refetch();
   }, [articleId, refetch]);
+
+  // Cleanup: cancel any pending debounce timer when the component unmounts.
+  // Prevents a stale AsyncStorage write after navigation or unmount.
+  useEffect(() => {
+    return () => {
+      if (saveScrollPositionRef.current) {
+        clearTimeout(saveScrollPositionRef.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const noDataHtml = '<p>No Data found</p>';
 
@@ -371,6 +427,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
     followMutation(articleId.toString(), {
       onSuccess: data => {
+        if (data !== undefined) setLocalIsFollowing(data);
         //console.log('follow success');
         if (data && socket) {
           socket.emit('notification', {
@@ -457,9 +514,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
     } else {
       Alert.alert('Article not found');
+    }
+  };
+
   const handleCopyLink = async () => {
     try {
-      copyArticleShareLink(articleId, authorId, resolvedRecordId);
+      copyArticleShareLink(articleId, authorId ??"", resolvedRecordId as string);
       Snackbar.show({
         text: 'Link copied',
         duration: Snackbar.LENGTH_SHORT,
@@ -601,14 +661,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     clearArticleTtsSubscriptions();
     finishHandlerRef.current = speakNextChunk;
     errorHandlerRef.current = handleTtsError;
-    finishSubscriptionRef.current = Tts.addEventListener(
+    Tts.addEventListener(
       'tts-finish',
       speakNextChunk,
-    ) as TtsSubscription;
-    errorSubscriptionRef.current = Tts.addEventListener(
+    );
+    Tts.addEventListener(
       'tts-error',
       handleTtsError,
-    ) as TtsSubscription;
+    );
   }, [
     clearArticleTtsSubscriptions,
     handleTtsError,
@@ -709,6 +769,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
+  // Debounced save: writes scroll offset to AsyncStorage at most once per 500 ms.
+  // Only runs after the position has been restored to avoid clobbering saved state
+  // with the initial mount scroll events.
+  const saveScrollPositionRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleSaveScrollPosition = (offset: number) => {
+    if (!scrollRestoredRef.current) return;
+    if (saveScrollPositionRef.current) clearTimeout(saveScrollPositionRef.current);
+    saveScrollPositionRef.current = setTimeout(() => {
+      storeItem(scrollStorageKey, String(Math.round(offset)));
+    }, 500);
+  };
+
   // Function to handle the Read Status logic (preserved from original onScroll)
   const handleReadStatusUpdate = (
     offset: number,
@@ -742,6 +814,30 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
   };
 
+  // Restore saved scroll position once the WebView content has fully sized.
+  // Triggered from onSizeUpdated so we know the scrollable height is available.
+  const restoreScrollPosition = useCallback(async () => {
+    if (scrollRestoredRef.current) return; // already restored for this article
+    try {
+      const stored = await retrieveItem(scrollStorageKey);
+      const offset = stored ? Number(stored) : 0;
+      if (offset > 0 && scrollViewRef.current) {
+        // Imperative scroll after a 100ms settle delay so the layout is stable.
+        // Cast through `any` to access the underlying ScrollView.scrollTo()
+        // method — Reanimated's AnimatedScrollView wraps but re-exposes it
+        // at runtime. The cast is safe: verified at the `scrollViewRef.current`
+        // guard above.
+        setTimeout(() => {
+          (scrollViewRef.current as any)?.scrollTo({y: offset, animated: false});
+        }, 100);
+      }
+    } catch {
+      // Corrupted or missing data — start from the top.
+    } finally {
+      scrollRestoredRef.current = true;
+    }
+  }, [scrollStorageKey]);
+
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
       scrollY.value = event.contentOffset.y;
@@ -754,6 +850,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         event.contentSize.height,
         event.layoutMeasurement.height,
       );
+
+      // Persist scroll offset (debounced, only after restoration completes)
+      runOnJS(handleSaveScrollPosition)(event.contentOffset.y);
     },
   });
 
@@ -762,14 +861,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
     if (scrollableDistance <= 0 && contentHeight.value > 0) {
       return {
-        width: Dimensions.get('window').width,
+        width: windowWidth,
       };
     }
 
     const width = interpolate(
       scrollY.value,
       [0, Math.max(1, scrollableDistance)],
-      [0, Dimensions.get('window').width],
+      [0, windowWidth],
       Extrapolate.CLAMP,
     );
 
@@ -783,11 +882,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
-  const articleCustomStyle = `
-    body { font-family: 'Times New Roman'; font-size: ${articleFontSize}px; line-height: 1.6; }
-    p, li { font-size: ${articleFontSize}px; }
-    img, video, iframe { max-width: 100%; height: auto; }
-  `;
+  const articleCustomStyle = generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize);
 
   const footerColors = {
     background: isDarkMode ? '#111827' : '#ffffff',
@@ -799,89 +894,82 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   return (
+    <ErrorBoundary onRetry={() => refetch()}>
     <SafeAreaView style={styles.container}>
       {/* Reading Progress Bar */}
       <Animated.View style={[styles.progressBar, progressStyle]} />
 
-      <View style={styles.imageContainer}>
-        {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
-          <Image
-            source={{
-              uri: article?.imageUtils[0].startsWith('http')
-                ? article?.imageUtils[0]
-                : `${GET_IMAGE}/${article?.imageUtils[0]}`,
-            }}
-            style={styles.image}
-          />
-        ) : (
-          <Image
-            source={require('../../assets/images/no_results.jpg')}
-            style={styles.image}
-          />
-        )}
-        {likeMutationPending ? (
-          <LoadingSpinner size={40} />
-        ) : (
-          <TouchableOpacity
-            onPress={handleLike}
-            style={[
-              styles.likeButton,
-              {
-                backgroundColor: 'white',
-              },
-            ]}>
-            <FontAwesome
-              name="heart"
-              size={34}
-              color={
-                article &&
-                article?.likedUsers &&
-                article?.likedUsers?.some(user => user._id === user_id)
-                  ? PRIMARY_COLOR
-                  : 'black'
-              }
-            />
-          </TouchableOpacity>
-        )}
-
-        <TouchableOpacity
-          onPress={() => {
-            if (playerVisible) {
-              handleTtsStop();
-            } else {
-              handleTtsPlay();
-            }
-          }}
-          style={[
-            styles.playButton,
-            {
-              backgroundColor: 'white',
-            },
-          ]}>
-          <FontAwesome5
-            name={'headphones'}
-            size={30}
-            color={playerVisible ? PRIMARY_COLOR : 'black'}
-          />
-        </TouchableOpacity>
-
-        {isPlaying && (
-          <View style={styles.botContainer}>
-            <LottieView
-              source={require('../../assets/LottieAnimation/TalkBotAnimation.json')}
-              autoPlay
-              loop={isPlaying}
-              style={{width: 200, height: 200}}
-            />
-          </View>
-        )}
-      </View>
-
       <Animated.ScrollView
+        ref={scrollViewRef}
         style={styles.scrollView}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         contentContainerStyle={styles.scrollViewContent}>
+
+        {/* Banner Image — scrolls with article */}
+        <View style={styles.imageContainer}>
+          {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
+            <Image
+              source={{
+                uri: article?.imageUtils[0].startsWith('http')
+                  ? article?.imageUtils[0]
+                  : `${GET_IMAGE}/${article?.imageUtils[0]}`,
+              }}
+              style={styles.image}
+            />
+          ) : (
+            <Image
+              source={require('../../assets/images/no_results.jpg')}
+              style={styles.image}
+            />
+          )}
+          {likeMutationPending ? (
+            <LoadingSpinner size={40} />
+          ) : (
+            <TouchableOpacity
+              onPress={handleLike}
+              style={[styles.likeButton, { backgroundColor: 'rgba(255,255,255,0.88)' }]}>
+              <FontAwesome
+                name="heart"
+                size={26}
+                color={
+                  article &&
+                  article?.likedUsers &&
+                  article?.likedUsers?.some(user => user._id === user_id)
+                    ? PRIMARY_COLOR
+                    : '#1f2937'
+                }
+              />
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity
+            onPress={() => {
+              if (playerVisible) {
+                handleTtsStop();
+              } else {
+                handleTtsPlay();
+              }
+            }}
+            style={[styles.playButton, { backgroundColor: 'rgba(255,255,255,0.88)' }]}>
+            <FontAwesome5
+              name={'headphones'}
+              size={24}
+              color={playerVisible ? PRIMARY_COLOR : '#1f2937'}
+            />
+          </TouchableOpacity>
+
+          {isPlaying && (
+            <View style={styles.botContainer}>
+              <LottieView
+                source={require('../../assets/LottieAnimation/TalkBotAnimation.json')}
+                autoPlay
+                loop={isPlaying}
+                style={{width: 200, height: 200}}
+              />
+            </View>
+          )}
+        </View>
         <View style={styles.contentContainer}>
           {article && (
             <Text
@@ -930,6 +1018,46 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
           {article && (
             <>
+              <Text style={styles.titleText}>{article?.title}</Text>
+
+              {/* Readability & Accessibility indicators (mock data, issue #845) */}
+              <View style={styles.readabilityRow}>
+                <View style={styles.readabilityBadge}>
+                  <Text style={styles.readabilityText}>
+                    {mockReadability.level}
+                  </Text>
+                </View>
+
+                <View style={styles.scoreBadge}>
+                  <Text style={styles.scoreText}>
+                    Score: {mockReadability.score}
+                  </Text>
+                </View>
+
+                <View
+                  style={[
+                    styles.statusChip,
+                    {
+                      backgroundColor: mockReadability.approved
+                        ? '#E8F5E9'
+                        : '#FFF3E0',
+                    },
+                  ]}>
+                  <Text
+                    style={{
+                      color: mockReadability.approved
+                        ? '#2E7D32'
+                        : '#EF6C00',
+                      fontWeight: '600',
+                      fontSize: 12,
+                    }}>
+                    {mockReadability.approved
+                      ? 'Approved'
+                      : 'Needs Improvement'}
+                  </Text>
+                </View>
+              </View>
+
               <Text style={[styles.titleText, {fontSize: 25 * fontScale}]}>
                 {article?.title}
               </Text>
@@ -962,11 +1090,36 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     <Text style={styles.fontSizeButtonText}>A+</Text>
                   </TouchableOpacity>
                 </View>
+
+                {/* Dyslexia Mode Toggle */}
+                <TouchableOpacity
+                  onPress={toggleDyslexiaMode}
+                  accessibilityRole="switch"
+                  accessibilityState={{ checked: isDyslexiaMode }}
+                  accessibilityLabel="Toggle Dyslexia-Friendly Reading Mode"
+                  accessibilityHint="Toggles the reading mode to use a dyslexia-friendly font and spacing"
+                  style={[
+                    styles.dyslexiaButton,
+                    isDyslexiaMode && styles.dyslexiaButtonActive,
+                  ]}>
+                  <MaterialCommunityIcons
+                    name="glasses"
+                    size={20}
+                    color={isDyslexiaMode ? '#FFFFFF' : '#333333'}
+                  />
+                  <Text
+                    style={[
+                      styles.dyslexiaButtonText,
+                      isDyslexiaMode && styles.dyslexiaButtonTextActive,
+                    ]}>
+                    Dyslexia Mode
+                  </Text>
+                </TouchableOpacity>
               </View>
               {totalLikes > 0 && (
                 <View style={styles.avatarsContainer}>
                   {likedUsers
-                    .slice(Math.max(0, totalLikes - 3))
+                    .slice(0, 3)
                     .map((likedUser, index) => {
                       const profileImage = likedUser.Profile_image;
                       const uri = getProfileImageUri(profileImage);
@@ -974,14 +1127,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                       return (
                         <View
                           key={likedUser._id || index}
-                          style={[styles.avatar, {left: index * 15}]}>
+                          style={[styles.avatar, { marginLeft: index === 0 ? 0 : -12, zIndex: 10 - index }]}>
                           <Image
                             source={{uri}}
                             style={[
                               styles.profileImage,
                               !profileImage && {
                                 borderWidth: 0.5,
-                                borderColor: 'black',
+                                borderColor: '#ccc',
                               },
                             ]}
                           />
@@ -990,10 +1143,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     })}
 
                   {totalLikes > 3 && (
-                    <View style={[styles.avatar, styles.avatarTripleOverlap]}>
+                    <View style={[styles.avatar, styles.avatarTripleOverlap, { marginLeft: -12, zIndex: 0 }]}>
                       <Text style={styles.moreText}>+{totalLikes - 3}</Text>
                     </View>
                   )}
+                  
+                  <Text style={[styles.likedByText, { color: isDarkMode ? '#9ca3af' : '#64748b' }]}>
+                     {totalLikes} {totalLikes === 1 ? 'like' : 'likes'}
+                  </Text>
                 </View>
               )}
               <View style={styles.descriptionContainer}>
@@ -1012,6 +1169,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   scalesPageToFit={true}
                   viewportContent={'width=device-width, user-scalable=no'}
                   onShouldStartLoadWithRequest={handleExternalClick}
+                  // Once the WebView reports its final rendered height, we know
+                  // the ScrollView has enough content to scroll to the saved position.
+                  onSizeUpdated={restoreScrollPosition}
                 />
               </View>
 
@@ -1024,19 +1184,27 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     relatedEpisodes={article.relatedPodcasts}
                   />
                 )}
+
+
             </>
           )}
         </View>
       </Animated.ScrollView>
+
       <ArticleShareModal
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}
         article={{
-          title: article.title, // string
-          authorName: article.author?.name, // string  — adjust to your model shape
-          category: article.category ?? 'Health', // string
-          coverImageUrl: article.cover_image ?? null,
-          authorAvatarUrl: article.author?.profile_picture ?? null,
+        title: article?.title ?? '',
+        authorName: article?.authorName ?? '',
+        category: article?.tags?.[0]?.name ?? 'Health',
+        coverImageUrl:
+        article?.imageUtils && article.imageUtils.length > 0
+        ? article.imageUtils[0].startsWith('http')
+          ? article.imageUtils[0]
+          : `${GET_IMAGE}/${article.imageUtils[0]}`
+        : null,
+        authorAvatarUrl: null,
         }}
       />
       <TrustedUsersModal
@@ -1046,9 +1214,97 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       />
 
       <View style={[styles.footer, {backgroundColor: footerColors.background}]}>
+        {/* Author Row */}
+        <View style={[styles.authorRow, { borderBottomColor: footerColors.border }]}>
+          <View style={styles.authorContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                if (isGuest) {
+                  navigation.navigate('GuestPlaceholderScreen', {
+                    title: 'Sign In Required',
+                    description: 'Please sign in or sign up to view user profiles.',
+                    iconName: 'user',
+                  });
+                  return;
+                }
+                navigation.navigate('UserProfileScreen', {
+                  authorId: authorId,
+                  author_handle: undefined,
+                });
+              }}>
+              {(article?.authorId as any)?.Profile_image ? (
+                <Image
+                  source={{
+                    uri: (article?.authorId as any).Profile_image.startsWith('http')
+                      ? `${(article?.authorId as any).Profile_image}`
+                      : `${GET_STORAGE_DATA}/${(article?.authorId as any).Profile_image}`,
+                  }}
+                  style={styles.authorImage}
+                />
+              ) : (
+                <Image
+                  source={{
+                    uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                  }}
+                  style={styles.authorImage}
+                />
+              )}
+            </TouchableOpacity>
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.authorName, {fontSize: 14 * fontScale, color: footerColors.text}]} numberOfLines={1}>
+                {article ? article?.authorName : ''}
+              </Text>
+              <Text style={[styles.authorFollowers, {fontSize: 11 * fontScale, color: footerColors.text}]}>
+                {(article?.authorId as any)?.followers
+                  ? (article?.authorId as any).followers.length > 1
+                    ? `${(article?.authorId as any).followers.length} followers`
+                    : `${(article?.authorId as any).followers.length} follower`
+                  : '0 follower'}
+              </Text>
+              {article && article.contributors && article.contributors.length > 0 && (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (isGuest) {
+                      navigation.navigate('GuestPlaceholderScreen', {
+                        title: 'Sign In Required',
+                        description: 'Please sign in or sign up to view all contributors.',
+                        iconName: 'users',
+                      });
+                      return;
+                    }
+                    navigation.navigate('SocialScreen', {
+                      type: 3,
+                      articleId: Number(article?._id),
+                      social_user_id: undefined,
+                    });
+                  }}>
+                  <Text style={[styles.contributorTextStyle, {fontSize: 14 * fontScale, marginTop: 4}]}>
+                    See all contributors
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+          {article && user_id !== (article.authorId as any)?._id && (
+            followMutationPending ? (
+              <LoadingSpinner size={40} />
+            ) : (
+              <TouchableOpacity style={styles.followButton} onPress={handleFollow}>
+                <Text style={styles.followButtonText}>
+                  {localIsFollowing
+                    ? 'Following'
+                    : 'Follow'}
+                </Text>
+              </TouchableOpacity>
+            )
+          )}
+        </View>
+
         {/* Action Bar Row */}
-        <View
-          style={[
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={[
             styles.actionBarFooter,
             {borderBottomColor: footerColors.border},
           ]}>
@@ -1264,111 +1520,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               </>
             )}
           </TouchableOpacity>
-        </View>
-
-        {/*Improvement row */}
-
-        {/* Author Row */}
-        <View style={styles.authorRow}>
-          <View style={styles.authorContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                if (isGuest) {
-                  navigation.navigate('GuestPlaceholderScreen', {
-                    title: 'Sign In Required',
-                    description:
-                      'Please sign in or sign up to view user profiles.',
-                    iconName: 'user',
-                  });
-                  return;
-                }
-                navigation.navigate('UserProfileScreen', {
-                  authorId: (article?.authorId as any)?._id || authorId,
-                  author_handle: undefined,
-                });
-              }}>
-              {(article?.authorId as any)?.Profile_image ? (
-                <Image
-                  source={{
-                    uri: (article?.authorId as any).Profile_image.startsWith(
-                      'http',
-                    )
-                      ? `${(article?.authorId as any).Profile_image}`
-                      : `${GET_STORAGE_DATA}/${(article?.authorId as any).Profile_image}`,
-                  }}
-                  style={styles.authorImage}
-                />
-              ) : (
-                <Image
-                  source={{
-                    uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-                  }}
-                  style={styles.authorImage}
-                />
-              )}
-            </TouchableOpacity>
-            <View>
-              <Text style={[styles.authorName, {fontSize: 14 * fontScale}]}>
-                {article ? article?.authorName : ''}
-              </Text>
-              <Text
-                style={[styles.authorFollowers, {fontSize: 11 * fontScale}]}>
-                {(article?.authorId as any)?.followers
-                  ? (article?.authorId as any).followers.length > 1
-                    ? `${(article?.authorId as any).followers.length} followers`
-                    : `${(article?.authorId as any).followers.length} follower`
-                  : '0 follower'}
-              </Text>
-              {article &&
-                article.contributors &&
-                article.contributors.length > 0 && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (isGuest) {
-                        navigation.navigate('GuestPlaceholderScreen', {
-                          title: 'Sign In Required',
-                          description:
-                            'Please sign in or sign up to view all contributors.',
-                          iconName: 'users',
-                        });
-                        return;
-                      }
-                      navigation.navigate('SocialScreen', {
-                        type: 3,
-                        articleId: Number(article?._id),
-                        social_user_id: undefined,
-                      });
-                    }}>
-                    <Text
-                      style={[
-                        styles.contributorTextStyle,
-                        {fontSize: 14 * fontScale},
-                      ]}>
-                      See all contributors
-                    </Text>
-                  </TouchableOpacity>
-                )}
-            </View>
-          </View>
-          {article &&
-            user_id !== (article.authorId as any)?._id &&
-            (followMutationPending ? (
-              <LoadingSpinner size={40} />
-            ) : (
-              <TouchableOpacity
-                style={styles.followButton}
-                onPress={handleFollow}>
-                <Text style={styles.followButtonText}>
-                  {(article.authorId as any)?.followers &&
-                  (article.authorId as any).followers.some(
-                    (user: any) => user._id === user_id,
-                  )
-                    ? 'Following'
-                    : 'Follow'}
-                </Text>
-              </TouchableOpacity>
-            ))}
-        </View>
+        </ScrollView>
       </View>
       {/* Floating TTS Media Player */}
       {playerVisible && (
@@ -1411,13 +1563,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         </View>
       )}
 
-      <FloatingSpeedSelector
+      <SpeedSelector
         currentSpeed={speechRate}
         onSpeedSelect={handleSpeedSelect}
         visible={isSpeedSelectorVisible}
         onClose={() => setIsSpeedSelectorVisible(false)}
       />
     </SafeAreaView>
+    </ErrorBoundary>
   );
 };
 
@@ -1440,45 +1593,59 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 2,
   },
   scrollView: {
-    flex: 0,
-    // marginTop: hp(4),
+    flex: 1,
     borderBottomEndRadius: hp(2),
     backgroundColor: '#ffffff',
     position: 'relative',
   },
   scrollViewContent: {
     marginBottom: 10,
-    flexGrow: 0,
+    flexGrow: 1,
+    paddingBottom: 40,
   },
   imageContainer: {
     width: '100%',
-    height: 200,
+    height: 280,
     position: 'relative',
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
     overflow: 'hidden',
     zIndex: 4,
-    elevation: 4,
+    elevation: 6,
+    backgroundColor: '#000',
   },
   image: {
-    height: 200,
+    height: 280,
     width: '100%',
     objectFit: 'cover',
+    opacity: 0.9,
   },
   likeButton: {
-    padding: 10,
+    padding: 12,
     position: 'absolute',
-    bottom: 4,
-    right: 70,
+    bottom: 20,
+    right: 75,
     borderRadius: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 5,
   },
 
   playButton: {
-    padding: 10,
+    padding: 12,
     position: 'absolute',
-    bottom: 4,
-    right: 15,
+    bottom: 20,
+    right: 20,
     borderRadius: 50,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 5,
   },
   contentContainer: {
     marginTop: 25,
@@ -1496,9 +1663,49 @@ const styles = StyleSheet.create({
     color: '#6C6C6D',
   },
   titleText: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginTop: 5,
+    fontSize: 28,
+    fontWeight: '800',
+    marginTop: 10,
+    lineHeight: 36,
+  },
+  readabilityRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 4,
+  },
+  readabilityBadge: {
+    backgroundColor: '#E3F2FD',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginRight: 6,
+    marginBottom: 6,
+  },
+  readabilityText: {
+    color: '#1565C0',
+    fontWeight: '600',
+    fontSize: 12,
+  },
+  scoreBadge: {
+    backgroundColor: '#F3E5F5',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginRight: 6,
+    marginBottom: 6,
+  },
+  scoreText: {
+    color: '#6A1B9A',
+    fontWeight: '600',
+    fontSize: 12,
+  },
+  statusChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginBottom: 6,
   },
   fontSizeControls: {
     marginTop: 12,
@@ -1529,39 +1736,68 @@ const styles = StyleSheet.create({
     color: '#333333',
     fontWeight: '600',
   },
-  avatarsContainer: {
-    position: 'relative',
-    flex: 1,
-    height: 70,
-    marginTop: 10,
+  dyslexiaButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#FFFFFF',
+    gap: 6,
   },
-
+  dyslexiaButtonActive: {
+    backgroundColor: PRIMARY_COLOR,
+    borderColor: PRIMARY_COLOR,
+  },
+  dyslexiaButtonText: {
+    fontSize: 14,
+    color: '#333333',
+    fontWeight: '600',
+  },
+  dyslexiaButtonTextActive: {
+    color: '#FFFFFF',
+  },
+  avatarsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+    marginBottom: 5,
+  },
   profileImage: {
-    height: 70,
-    width: 70,
-    borderRadius: 100,
+    height: '100%',
+    width: '100%',
+    borderRadius: 16,
     objectFit: 'cover',
-    resizeMode: 'contain',
   },
   avatar: {
-    height: 70,
-    width: 70,
-    borderRadius: 100,
-    position: 'absolute',
-    borderWidth: 1,
-    borderColor: 'white',
-    backgroundColor: '#D9D9D9',
+    height: 32,
+    width: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#ffffff',
+    backgroundColor: '#f1f5f9',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   avatarTripleOverlap: {
-    left: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: PRIMARY_COLOR,
   },
   moreText: {
-    fontSize: hp(4),
+    fontSize: 11,
     fontWeight: '700',
-    color: 'white',
+    color: '#ffffff',
+  },
+  likedByText: {
+    marginLeft: 10,
+    fontSize: 13,
+    fontWeight: '500',
   },
   descriptionContainer: {
     flex: 1,
@@ -1581,33 +1817,27 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   footer: {
-    position: 'relative',
-    bottom: 0,
-    zIndex: 10,
-    borderTopEndRadius: 20,
-    borderTopStartRadius: 20,
-    paddingTop: 14,
-    paddingBottom: 14,
-    paddingHorizontal: 16,
+    width: '100%',
+    paddingTop: 10,
+    paddingBottom: 20,
+    paddingHorizontal: 0,
+    marginTop: 20,
   },
   actionBarFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    marginBottom: 12,
     gap: 8,
   },
   actionButtonFooter: {
-    flex: 1,
+    width: 65,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
+    paddingVertical: 6,
     borderRadius: 12,
     gap: 3,
-    minHeight: 52,
+    minHeight: 46,
   },
   actionTextFooter: {
     fontSize: 10,
@@ -1615,18 +1845,25 @@ const styles = StyleSheet.create({
   },
   authorRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
+    paddingBottom: 15,
+    borderBottomWidth: 1,
+    marginBottom: 10,
   },
   authorContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+    alignItems: 'flex-start',
+    gap: 12,
+    flex: 1,
+    paddingRight: 10,
   },
   authorImage: {
-    height: 40,
-    width: 40,
-    borderRadius: 40,
+    height: 48,
+    width: 48,
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: '#e2e8f0',
   },
   authorName: {
     fontWeight: '700',
@@ -1737,3 +1974,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 });
+

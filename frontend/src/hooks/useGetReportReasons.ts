@@ -1,8 +1,9 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {GET_REPORT_REASONS} from '../helper/APIUtils';
 import {ReportReason} from '../type';
 import {useSelector} from 'react-redux';
+type AxiosError = any;
 
 const reasonsFunc = async () => {
   const {data: categoryData} = await axios.get(

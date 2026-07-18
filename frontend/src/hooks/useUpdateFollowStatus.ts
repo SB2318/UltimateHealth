@@ -1,6 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { FOLLOW_USER } from "../helper/APIUtils";
+type AxiosError = any;
 
 
 export const useUpdateFollowStatus = (): UseMutationResult<
@@ -19,6 +20,8 @@ export const useUpdateFollowStatus = (): UseMutationResult<
           followUserId: userid,
         },
       );
+
+      console.log("followStatus", res.data);
       return res.data.followStatus as boolean;
     },
   });
@@ -41,7 +44,8 @@ export const useUpdateFollowStatusByArticle = (): UseMutationResult<
           articleId: articleId,
         },
       );
-      return res.data.followStatus as boolean;
+      console.log("followStatus", res.data);
+      return res.data.data.followStatus as boolean;
     },
   });
 

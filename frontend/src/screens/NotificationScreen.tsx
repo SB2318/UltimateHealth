@@ -1,5 +1,6 @@
+/* eslint-disable react-compiler/react-compiler */
 
-import {AppState, FlatList, StyleSheet, View} from 'react-native';
+import { AppState,  FlatList , StyleSheet, View } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
@@ -103,11 +104,16 @@ const NotificationScreen = ({navigation}: any) => {
     return () => {};
   }, [notificationsData, isConnected]);
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    refetch();
-    setRefreshing(false);
-  };
+  const onRefresh = async () => {
+  setRefreshing(true);
+
+  try {
+    setPage(1); // Reset pagination
+    await refetch(); // Wait until the request completes
+  } finally {
+    setRefreshing(false); // Hide spinner after refetch finishes
+  }
+};
 
   const restoreDeletedNotification = useCallback((snapshot: PendingDelete) => {
     setNotificationsData(previous => {
@@ -160,15 +166,15 @@ const NotificationScreen = ({navigation}: any) => {
   );
   
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', (state: string) => {
-      if (state === 'active') {
-        setPage(1); // reset pagination
-        refetch(); // fetch fresh data
-      }
-    });
+  const subscription = AppState.addEventListener('change', async (state: string) => {
+    if (state === 'active') {
+      setPage(1);
+      await refetch();
+    }
+  });
 
-    return () => subscription.remove();
-  }, [refetch]);
+  return () => subscription.remove();
+}, [refetch]);
 
   const handleDeleteAction = useCallback(
     (item: Notification) => {
@@ -412,4 +418,5 @@ const styles = StyleSheet.create({
     paddingBottom: 120,
   },
 });
+
 

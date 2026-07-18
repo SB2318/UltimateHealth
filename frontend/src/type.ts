@@ -53,6 +53,7 @@ export type RootStackParamList = {
     recordId?: string;
   };
   PodcastProfile: undefined;
+  PlaylistDetailScreen: { playlist: PlayList };
   ReviewScreen: {
     articleId: number;
     authorId: string;
@@ -100,6 +101,10 @@ export type RootStackParamList = {
   };
   ProfileEditScreen: undefined;
   NotificationPreferencesScreen: undefined;
+  InsightScreen: undefined;
+  RepostsScreen: undefined;
+  SavedArticlesScreen: undefined;
+  WellnessDashboardScreen: undefined;
   LogoutScreen: {profile_image: string; username: string};
   RenderSuggestion: {
     htmlContent: string;
@@ -175,6 +180,7 @@ export type TabParamList = {
   Profile: undefined;
   Chatbot: undefined;
   About: undefined;
+  Wellness: undefined;
 };
 
 export type SplashScreenProp =
@@ -189,6 +195,26 @@ export type NewPasswordScreenProp = StackScreenProps<
 export type UserProfileScreenProp = StackScreenProps<
   RootStackParamList,
   'UserProfileScreen'
+>;
+
+export type InsightScreenProp = StackScreenProps<
+  RootStackParamList,
+  'InsightScreen'
+>;
+
+export type RepostsScreenProp = StackScreenProps<
+  RootStackParamList,
+  'RepostsScreen'
+>;
+
+export type SavedArticlesScreenProp = StackScreenProps<
+  RootStackParamList,
+  'SavedArticlesScreen'
+>;
+
+export type WellnessDashboardScreenProp = StackScreenProps<
+  RootStackParamList,
+  'WellnessDashboardScreen'
 >;
 
 export type OtpScreenProp = StackScreenProps<RootStackParamList, 'OtpScreen'>;
@@ -206,6 +232,11 @@ export type SignUpScreenSecondProp = StackScreenProps<
 export type PodcastProfileProp = StackScreenProps<
   RootStackParamList,
   'PodcastProfile'
+>;
+
+export type PlaylistDetailScreenProp = StackScreenProps<
+  RootStackParamList,
+  'PlaylistDetailScreen'
 >;
 
 export type ArticleDescriptionProp = StackScreenProps<
@@ -389,6 +420,7 @@ export type HomeScreenHeaderProps = {
   unreadCount: number;
   hasActiveFilters?: boolean;
   onFilterReset?: () => void;
+  searchText?: string;
 };
 
 export type ArticleCardProps = {
@@ -605,7 +637,7 @@ export type ArticleData = {
   repostUsers: string[];
   likeCount: number;
   likedUsers: User[];
-  trustUsers: string[];
+  trustUsers?: string[];
   savedUsers: string[];
   mentionedUsers: User[];
   language: string;
@@ -625,6 +657,9 @@ export type ArticleData = {
   relatedPodcasts?: RelatedPodcast[];
   difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
   body?: string;
+  author?: any;
+  category?: string;
+  cover_image?: string;
 };
 
 export type ArticleTranslationSource = {

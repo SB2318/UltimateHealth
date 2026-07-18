@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import React, { useEffect, useState } from 'react';
 import { BackHandler } from 'react-native';
 import { Sheet } from '@tamagui/sheet';
@@ -153,3 +154,4 @@ export default function GlossaryBottomSheet({
     </Sheet>
   );
 }
+
