@@ -10,23 +10,17 @@ type PublishRes = {
     publishedPodcasts: PodcastData[];
 }
 export const useGetUserPublishedPodcasts = (publishedPage: number, isConnected: number): UseQueryResult<
-PublishRes | null,
+PublishRes,
 AxiosError
 >=>{
 
     return useQuery({
     queryKey: ['get-published-podcasts-for-user', publishedPage],
     queryFn: async () => {
-      try {
-        const response = await axios.get(
-          `${USER_PUBLISHED_PODCASTS}?page=${publishedPage}`
-        );
-
-        return response.data as PublishRes;
-      } catch (err) {
-        console.error('Error fetching podcasts:', err);
-        return null;
-      }
+      const response = await axios.get(
+        `${USER_PUBLISHED_PODCASTS}?page=${publishedPage}`
+      );
+      return response.data as PublishRes;
     },
     enabled:  !!publishedPage && !!isConnected,
   });

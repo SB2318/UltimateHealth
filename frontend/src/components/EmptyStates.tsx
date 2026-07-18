@@ -189,6 +189,25 @@ export const OfflinePodcastState = () => (
   />
 );
 
+export const OfflinePodcastLoadErrorState = ({
+  message,
+  onRetry,
+}: {
+  message?: string;
+  onRetry?: () => void;
+}) => (
+  <BaseEmptyState
+    iconEmoji="⚠️"
+    title="Couldn't Load Offline Podcasts"
+    description={
+      message ||
+      "Something went wrong while reading your downloaded podcasts. Please try again."
+    }
+    actionText={onRetry ? "Retry" : undefined}
+    onAction={onRetry}
+  />
+);
+
 export const NoArticleState = ({ onRefresh }: { onRefresh?: () => void }) => (
   <BaseEmptyState
     iconEmoji="🔍"

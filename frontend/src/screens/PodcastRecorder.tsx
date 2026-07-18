@@ -1,7 +1,8 @@
 /* eslint-disable react-compiler/react-compiler */
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, Alert, AppState, AppStateStatus } from 'react-native';
+import {StyleSheet, Alert, AppState, AppStateStatus} from 'react-native';
+ type AppStateStatusType = 'active' | 'background' | 'inactive' | 'unknown' | 'extension';
 
 import {PodcastRecorderScreenProps} from '../type';
 import RNFS from 'react-native-fs';
@@ -69,7 +70,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 useEffect(() => {
   const subscription = AppState.addEventListener(
     'change',
-    (nextState: any) => {
+    (nextState: AppStateStatusType) => {
       if (nextState === 'active' && recording) {
         // Re-sync timer immediately on app foreground using actual tracked duration
         if (durationMillisRef.current > 0) {
@@ -87,8 +88,6 @@ useEffect(() => {
 
   return () => subscription.remove();
 }, [recording]);
-  
-
 
  const record = async () => {
   try {
