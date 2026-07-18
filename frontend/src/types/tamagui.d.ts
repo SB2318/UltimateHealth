@@ -1,5 +1,5 @@
 import { AppConfig } from '../../tamagui.config'
 
 declare module 'tamagui' {
-  type TamaguiCustomConfig = AppConfig
+  interface TamaguiCustomConfig extends AppConfig {}
 }

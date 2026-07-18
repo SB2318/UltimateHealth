@@ -1,25 +1,33 @@
-import {useMutation, UseMutationResult} from '@tanstack/react-query';
-import axios from 'axios';
-import {CHECK_OTP} from '../helper/APIUtils';
+import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import axios from "axios";
+import { CHECK_OTP } from "../helper/APIUtils";
+
 type AxiosError = any;
 
+export interface VerifyOtpResponse {
+    message: string;
+    resetToken: string;
+}
+
 type VerifyReq = {
-  email: string;
-  otp: string;
+    email: string;
+    otp: string;
 };
+
 export const useVerifyOtpMutation = (): UseMutationResult<
-  string,
-  AxiosError,
-  VerifyReq
+    VerifyOtpResponse,
+    AxiosError,
+    VerifyReq
 > => {
-  return useMutation({
-    mutationKey: ['verify-otp'],
-    mutationFn: async (req: VerifyReq) => {
-      const res = await axios.post(CHECK_OTP, {
-        email: req.email,
-        otp: req.otp,
-      });
-      return res.data.message as string;
-    },
-  });
+    return useMutation({
+        mutationKey: ["verify-otp"],
+        mutationFn: async (req: VerifyReq) => {
+            const res = await axios.post(CHECK_OTP, {
+                email: req.email,
+                otp: req.otp,
+            });
+
+            return res.data as VerifyOtpResponse;
+        },
+    });
 };

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import {useEffect, useRef} from 'react';
 
 export const useDoubleTap = (
   onSingleTap: () => void,
@@ -21,6 +21,14 @@ export const useDoubleTap = (
       }, delay);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (timer.current) {
+        clearTimeout(timer.current);
+      }
+    };
+  }, []);
 
   return handleTap;
 };

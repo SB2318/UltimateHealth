@@ -117,6 +117,9 @@ const GET_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`
 const UPDATE_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`;
 const REGISTER_PUSH_TOKEN = `${PROD_URL}/user/register-device-token`;
 
+/** Wellness */
+const LOG_WELLNESS_METRICS = `${PROD_URL}/wellness`;
+
 export {
   LOGIN_API,
   REGISTRATION_API,
@@ -205,4 +208,5 @@ export {
   UPDATE_NOTIFICATION_PREFERENCES,
   GET_READ_HISTORY,
   SHARE_BASE_URL,
+  LOG_WELLNESS_METRICS,
 };

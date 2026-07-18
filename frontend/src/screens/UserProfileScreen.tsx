@@ -4,7 +4,6 @@ import {
   Alert,
   TouchableOpacity,
   useColorScheme,
-  LinearGradient,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
@@ -127,11 +126,14 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     }
   };
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    refetch();
-    console.log("Refetch called");
-    setRefreshing(false);
+
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
   }, [refetch]);
 
   useFocusEffect(

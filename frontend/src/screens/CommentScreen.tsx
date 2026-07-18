@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert,
    FlatList ,
@@ -57,7 +58,7 @@ const CommentScreen = ({
   const flatListRef =
     useRef<any>(null);
 
-  const [comments, setComments] = useState
+  const [comments, setComments] = useState<
     Comment[]
   >([]);
   const MAX_COMMENT_LENGTH = 500;
@@ -109,13 +110,13 @@ const CommentScreen = ({
     setCommentLikeLoading,
   ] = useState<boolean>(false);
 
-  const [mentions, setMentions] = useState
+  const [mentions, setMentions] = useState<
     User[]
   >([]);
 
   const dispatch = useDispatch();
 
-  const triggersConfig: TriggersConfig
+  const triggersConfig: TriggersConfig<
     'mention' | 'hashtag'
   > = {
     mention: {
@@ -155,12 +156,17 @@ const CommentScreen = ({
       patternsConfig,
     });
 
+  const fetchComments = () => {
+    if (!socket) return;
+      socket.emit('fetch-comments', {
+      articleId: route.params.articleId,
+      });
+    };
+
   useEffect(() => {
     if (!socket) return;
 
-    socket.emit('fetch-comments', {
-      articleId: route.params.articleId,
-    });
+     fetchComments();
 
     socket.on(
       'like-comment-processing',
@@ -478,14 +484,15 @@ const CommentScreen = ({
   }
 
   return (
+    <ErrorBoundary onRetry={fetchComments}>
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={{flex: 1}}
-        behavior={
-          Platform.OS === 'ios'
-            ? 'padding'
-            : undefined
-        }>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.select({
+          ios: 0,
+          android: 20,
+        })}>
         <FlatList
           ref={flatListRef}
           data={comments}
@@ -502,7 +509,7 @@ const CommentScreen = ({
                     fontSize={20}
                     color="#1F2937"
                     fontWeight={'700'}>
-                    {article.title}
+                    {article?.title}
                   </H3>
                 </View>
 
@@ -530,14 +537,14 @@ const CommentScreen = ({
                       'ArticleScreen',
                       {
                         articleId: Number(
-                          article._id,
+                          article?._id,
                         ),
                         authorId:
                           article?.authorId
                             ? article.authorId.toString()
                             : '', // FIX: guard against missing authorId
                         recordId:
-                          article.pb_recordId,
+                          article?.pb_recordId,
                       },
                     )
                   }
@@ -560,7 +567,7 @@ const CommentScreen = ({
                     color="#4B5563"
                     fontSize={15}
                     lineHeight={22}>
-                    {article.description}
+                    {article?.description}
                   </Paragraph>
                 </View>
 
@@ -570,50 +577,52 @@ const CommentScreen = ({
                 })}
 
                 {/* Comment input */}
-                <TextInput
-                  {...textInputProps}
-                  style={styles.textInput}
-                  placeholder="Add a comment..."
-                  placeholderTextColor="#9CA3AF"
-                  multiline
-                  maxLength={MAX_COMMENT_LENGTH}
-                />
+                <SafeAreaView edges={['bottom']}>
+                  <TextInput
+                    {...textInputProps}
+                    style={styles.textInput}
+                    placeholder="Add a comment..."
+                    placeholderTextColor="#9CA3AF"
+                    multiline
+                    maxLength={MAX_COMMENT_LENGTH}
+                  />
 
-                <XStack justifyContent="space-between" alignItems="center" mt="$2" px="$2" width="100%">
+                  <XStack justifyContent="space-between" alignItems="center" mt="$2" px="$2" width="100%">
 
-                  <Text
-                    fontSize="$2"
-                    color={newComment.length >= 480 ? '$red10' : '$colorMuted'}
-                    fontWeight={newComment.length >= 480 ? '600' : '400'}
-                  >
-                    {newComment.length} / {MAX_COMMENT_LENGTH}
-                  </Text>
-
-                  <TouchableOpacity
-                    style={[
-                      styles.submitButton,
-                      {
-                        opacity:
-                          newComment.trim().length === 0 || isSubmitting
-                            ? 0.5
-                            : 1,
-                      },
-                    ]}
-                    disabled={
-                      newComment.trim().length === 0 ||
-                      isSubmitting
-                    }
-                    onPress={handleCommentSubmit}
-                  >
-                    <Text style={styles.submitButtonText}>
-                      {isSubmitting
-                        ? 'Posting...'
-                        : editMode
-                        ? 'Update Comment'
-                        : 'Submit Comment'}
+                    <Text
+                      fontSize="$2"
+                      color={newComment.length >= 480 ? '$red10' : '$colorMuted'}
+                      fontWeight={newComment.length >= 480 ? '600' : '400'}
+                    >
+                      {newComment.length} / {MAX_COMMENT_LENGTH}
                     </Text>
-                  </TouchableOpacity>
-                </XStack>
+
+                    <TouchableOpacity
+                      style={[
+                        styles.submitButton,
+                        {
+                          opacity:
+                            newComment.trim().length === 0 || isSubmitting
+                              ? 0.5
+                              : 1,
+                        },
+                      ]}
+                      disabled={
+                        newComment.trim().length === 0 ||
+                        isSubmitting
+                      }
+                      onPress={handleCommentSubmit}
+                    >
+                      <Text style={styles.submitButtonText}>
+                        {isSubmitting
+                          ? 'Posting...'
+                          : editMode
+                          ? 'Update Comment'
+                          : 'Submit Comment'}
+                      </Text>
+                    </TouchableOpacity>
+                  </XStack>
+                </SafeAreaView>
 
                 <View
                   style={
@@ -679,6 +688,7 @@ const CommentScreen = ({
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </ErrorBoundary>
   );
 };
 
