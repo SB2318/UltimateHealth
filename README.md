@@ -1000,6 +1000,10 @@ We welcome contributions from everyone — developers, designers, writers, and t
      <td align="center"><a href="https://github.com/karrisanthoshigayatri"><img src="https://avatars.githubusercontent.com/u/268634585?v=4" width="120px;" alt=""/><br/><sub><b>karrisanthoshigayatri</b></sub></a></td>
      <td align="center"><a href="https://github.com/amirthavarshh"><img src="https://avatars.githubusercontent.com/u/196654490?v=4" width="120px;" alt=""/><br/><sub><b>Amirtha</b></sub></a></td>
  </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/harshitha0539"><img src="https://avatars.githubusercontent.com/u/258273512?v=4" width="120px;" alt=""/><br/><sub><b>harshitha0539</b></sub></a></td>
+   </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
