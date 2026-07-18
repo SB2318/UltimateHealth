@@ -998,6 +998,7 @@ We welcome contributions from everyone — developers, designers, writers, and t
      <td align="center"><a href="https://github.com/Muskan25-jssateb"><img src="https://avatars.githubusercontent.com/u/244166260?v=4" width="120px;" alt=""/><br/><sub><b>Muskan25-jssateb</b></sub></a></td>
      <td align="center"><a href="https://github.com/tylrx404"><img src="https://avatars.githubusercontent.com/u/183127155?v=4" width="120px;" alt=""/><br/><sub><b>Mrunal Kolhe</b></sub></a></td>
      <td align="center"><a href="https://github.com/karrisanthoshigayatri"><img src="https://avatars.githubusercontent.com/u/268634585?v=4" width="120px;" alt=""/><br/><sub><b>karrisanthoshigayatri</b></sub></a></td>
+     <td align="center"><a href="https://github.com/amirthavarshh"><img src="https://avatars.githubusercontent.com/u/196654490?v=4" width="120px;" alt=""/><br/><sub><b>Amirtha</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
