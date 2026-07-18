@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView , Text, StyleSheet, SafeAreaView, View
  } from 'react-native';
 import WearableSyncCard from './WearableSyncCard';
+import BreathingTool from '../../components/BreathingTool';
 import ManualLogCard from './ManualLogCard';
 import WeeklyChart from './WeeklyChart';
 
@@ -21,6 +22,9 @@ export default function WellnessDashboardScreen() {
 
         {/* Wearable Sync */}
         <WearableSyncCard />
+
+        {/* Guided Breathing Tool */}
+        <BreathingTool />
 
         {/* Manual Log */}
         <ManualLogCard />

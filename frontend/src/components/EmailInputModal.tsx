@@ -11,7 +11,7 @@ import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import Feather from '@expo/vector-icons/Feather';
 
 const emailInputSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Please enter a valid email address"),
+  email: z.string().trim().min(1, "Email is required").email("Please enter a valid email address"),
 });
 type EmailInputFormData = z.infer<typeof emailInputSchema>;
 
