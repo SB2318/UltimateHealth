@@ -1003,7 +1003,8 @@ We welcome contributions from everyone — developers, designers, writers, and t
 
    <tr>
     <td align="center"><a href="https://github.com/harshitha0539"><img src="https://avatars.githubusercontent.com/u/258273512?v=4" width="120px;" alt=""/><br/><sub><b>harshitha0539</b></sub></a></td>
-   </tr>
+       <td align="center"><a href="https://github.com/SujalMahapatra"><img src="https://avatars.githubusercontent.com/u/159683157?v=4" width="120px;" alt=""/><br/><sub><b>Sujal Mahapatra</b></sub></a></td>
+ </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
