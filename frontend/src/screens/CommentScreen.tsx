@@ -58,7 +58,7 @@ const CommentScreen = ({
   const flatListRef =
     useRef<any>(null);
 
-  const [comments, setComments] = useState
+  const [comments, setComments] = useState<
     Comment[]
   >([]);
   const MAX_COMMENT_LENGTH = 500;
@@ -110,13 +110,13 @@ const CommentScreen = ({
     setCommentLikeLoading,
   ] = useState<boolean>(false);
 
-  const [mentions, setMentions] = useState
+  const [mentions, setMentions] = useState<
     User[]
   >([]);
 
   const dispatch = useDispatch();
 
-  const triggersConfig: TriggersConfig
+  const triggersConfig: TriggersConfig<
     'mention' | 'hashtag'
   > = {
     mention: {
@@ -488,11 +488,11 @@ const CommentScreen = ({
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={{flex: 1}}
-        behavior={
-          Platform.OS === 'ios'
-            ? 'padding'
-            : undefined
-        }>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.select({
+          ios: 0,
+          android: 20,
+        })}>
         <FlatList
           ref={flatListRef}
           data={comments}
@@ -577,50 +577,52 @@ const CommentScreen = ({
                 })}
 
                 {/* Comment input */}
-                <TextInput
-                  {...textInputProps}
-                  style={styles.textInput}
-                  placeholder="Add a comment..."
-                  placeholderTextColor="#9CA3AF"
-                  multiline
-                  maxLength={MAX_COMMENT_LENGTH}
-                />
+                <SafeAreaView edges={['bottom']}>
+                  <TextInput
+                    {...textInputProps}
+                    style={styles.textInput}
+                    placeholder="Add a comment..."
+                    placeholderTextColor="#9CA3AF"
+                    multiline
+                    maxLength={MAX_COMMENT_LENGTH}
+                  />
 
-                <XStack justifyContent="space-between" alignItems="center" mt="$2" px="$2" width="100%">
+                  <XStack justifyContent="space-between" alignItems="center" mt="$2" px="$2" width="100%">
 
-                  <Text
-                    fontSize="$2"
-                    color={newComment.length >= 480 ? '$red10' : '$colorMuted'}
-                    fontWeight={newComment.length >= 480 ? '600' : '400'}
-                  >
-                    {newComment.length} / {MAX_COMMENT_LENGTH}
-                  </Text>
-
-                  <TouchableOpacity
-                    style={[
-                      styles.submitButton,
-                      {
-                        opacity:
-                          newComment.trim().length === 0 || isSubmitting
-                            ? 0.5
-                            : 1,
-                      },
-                    ]}
-                    disabled={
-                      newComment.trim().length === 0 ||
-                      isSubmitting
-                    }
-                    onPress={handleCommentSubmit}
-                  >
-                    <Text style={styles.submitButtonText}>
-                      {isSubmitting
-                        ? 'Posting...'
-                        : editMode
-                        ? 'Update Comment'
-                        : 'Submit Comment'}
+                    <Text
+                      fontSize="$2"
+                      color={newComment.length >= 480 ? '$red10' : '$colorMuted'}
+                      fontWeight={newComment.length >= 480 ? '600' : '400'}
+                    >
+                      {newComment.length} / {MAX_COMMENT_LENGTH}
                     </Text>
-                  </TouchableOpacity>
-                </XStack>
+
+                    <TouchableOpacity
+                      style={[
+                        styles.submitButton,
+                        {
+                          opacity:
+                            newComment.trim().length === 0 || isSubmitting
+                              ? 0.5
+                              : 1,
+                        },
+                      ]}
+                      disabled={
+                        newComment.trim().length === 0 ||
+                        isSubmitting
+                      }
+                      onPress={handleCommentSubmit}
+                    >
+                      <Text style={styles.submitButtonText}>
+                        {isSubmitting
+                          ? 'Posting...'
+                          : editMode
+                          ? 'Update Comment'
+                          : 'Submit Comment'}
+                      </Text>
+                    </TouchableOpacity>
+                  </XStack>
+                </SafeAreaView>
 
                 <View
                   style={
