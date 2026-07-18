@@ -9,9 +9,6 @@ import { StyleSheet,
   ScrollView,
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-   FlatList ,
-   ScrollView ,
-  } from 'react-native';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
