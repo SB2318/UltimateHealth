@@ -135,3 +135,35 @@ jest.mock('react-native-tts', () => ({
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
 }));
+
+jest.mock('react-native-mmkv', () => {
+  class MockMMKV {
+    storage = new Map();
+    constructor(config?: any) {}
+    set(key: string, value: any) {
+      this.storage.set(key, value);
+    }
+    getString(key: string) {
+      return this.storage.get(key);
+    }
+    getNumber(key: string) {
+      return this.storage.get(key);
+    }
+    getBoolean(key: string) {
+      return this.storage.get(key);
+    }
+    delete(key: string) {
+      this.storage.delete(key);
+    }
+    clearAll() {
+      this.storage.clear();
+    }
+    remove(key: string) {
+      this.storage.delete(key);
+    }
+  }
+  return {
+    MMKV: MockMMKV,
+    createMMKV: (config?: any) => new MockMMKV(config),
+  };
+});

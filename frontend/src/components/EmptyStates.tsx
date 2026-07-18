@@ -152,12 +152,18 @@ export const BaseEmptyState: React.FC<BaseEmptyStateProps> = ({
 };
 
 // Specialized Empty State Exports
-export const OfflineArticleState = () => (
+export const OfflineArticleState = ({
+  onBrowsePodcasts,
+}: {
+  onBrowsePodcasts?: () => void;
+}) => (
   <BaseEmptyState
     iconEmoji="📄"
     title="Articles Offline"
     description="You need an internet connection to view articles. Connect to WiFi or mobile data to continue."
-    infoText="💡 Offline reading coming soon!"
+    infoText="💡 Offline reading is available for saved articles. Tap the bookmark icon on any article when online."
+    actionText={onBrowsePodcasts ? "Browse Podcasts Offline" : undefined}
+    onAction={onBrowsePodcasts}
   />
 );
 export const NoOfflinePodcastsState = ({

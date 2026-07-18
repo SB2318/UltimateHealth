@@ -10,9 +10,10 @@ import {
   Alert,
   useWindowDimensions,
   useColorScheme,
+  ScrollView,
 } from 'react-native';
 import ArticleShareModal from '../../components/ArticleShareModal';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState, useMemo} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
@@ -24,6 +25,11 @@ import {GET_IMAGE, GET_STORAGE_DATA} from '../../helper/APIUtils';
 import Loader from '../../components/Loader';
 import Snackbar from 'react-native-snackbar';
 import ResearchSummaryCard from '../../components/ResearchSummaryCard';
+import {
+  saveOfflineArticle,
+  removeOfflineArticle,
+  getCachedArticleById,
+} from '../../services/ArticleCacheService';
 import StructuredPodcastCard from '../../components/StructuredPodcastCard';
 import {
   generateArticleSummary,
@@ -73,7 +79,7 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { ScrollView } from 'react-native';
+
 
 const CHUNK_SIZE = 120;
 
@@ -94,6 +100,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       : `${GET_STORAGE_DATA}/${profileImage}`;
   };
   const {user_id, isGuest} = useSelector((state: any) => state.user);
+  const {isConnected} = useSelector((state: any) => state.network);
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontScale, setFontScale] = useState(1);
@@ -178,13 +185,23 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   const {data: user} = useGetProfile();
   const {
-    data: article,
+    data: onlineArticle,
     isLoading: articleLoading,
     refetch,
   } = useGetArticleDetails(articleId);
 
-  const resolvedRecordId = article?.pb_recordId || recordId;
-  const {data: articleContent} = useGetArticleContent(resolvedRecordId);
+  const resolvedRecordId = onlineArticle?.pb_recordId || recordId;
+  const {data: onlineArticleContent} = useGetArticleContent(resolvedRecordId);
+
+  const cachedData = useMemo(() => {
+    if (articleId) {
+      return getCachedArticleById(articleId);
+    }
+    return undefined;
+  }, [articleId]);
+
+  const article = onlineArticle || cachedData?.article;
+  const articleContent = onlineArticleContent || cachedData?.htmlContent;
 
   const [localIsFollowing, setLocalIsFollowing] = useState<boolean | null>(null);
 
@@ -462,12 +479,25 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
       return;
     }
+    if (!isConnected) {
+      Snackbar.show({
+        text: 'Internet connection required to toggle bookmark',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+      return;
+    }
     if (article) {
+      const isCurrentlySaved = article.savedUsers?.includes(user_id);
       saveMutation(undefined, {
         onSuccess: () => {
           refetch();
+          if (isCurrentlySaved) {
+            removeOfflineArticle(article._id);
+          } else {
+            saveOfflineArticle(article, articleContent || '');
+          }
           Snackbar.show({
-            text: article.savedUsers?.includes(user_id)
+            text: isCurrentlySaved
               ? 'Article removed from saved'
               : 'Article saved successfully!',
             duration: Snackbar.LENGTH_SHORT,
@@ -1191,22 +1221,24 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         </View>
       </Animated.ScrollView>
 
-      <ArticleShareModal
-        visible={shareModalVisible}
-        onClose={() => setShareModalVisible(false)}
-        article={{
-          title: article?.title ?? '',
-          authorName: article?.authorName ?? '',
-          category: article?.tags?.[0]?.name ?? 'Health',
-          coverImageUrl:
-            article?.imageUtils && article.imageUtils.length > 0
-              ? article.imageUtils[0].startsWith('http')
-                ? article.imageUtils[0]
-                : `${GET_IMAGE}/${article.imageUtils[0]}`
-              : null,
-          authorAvatarUrl: null,
-        }}
-      />
+      {article && (
+        <ArticleShareModal
+          visible={shareModalVisible}
+          onClose={() => setShareModalVisible(false)}
+          article={{
+            title: article.title,
+            authorName: article.authorName ?? '',
+            category: article.tags?.[0]?.name ?? 'Health',
+            coverImageUrl:
+              article.imageUtils && article.imageUtils.length > 0
+                ? article.imageUtils[0].startsWith('http')
+                  ? article.imageUtils[0]
+                  : `${GET_IMAGE}/${article.imageUtils[0]}`
+                : null,
+            authorAvatarUrl: null,
+          }}
+        />
+      )}
       <TrustedUsersModal
         visible={trustedUsersModalVisible}
         articleId={Number(articleId)}

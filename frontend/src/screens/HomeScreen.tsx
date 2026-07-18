@@ -50,6 +50,11 @@ import {useGetProfile} from '../hooks/useGetProfile';
 import {useRequestArticleEdit} from '../hooks/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../hooks/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../hooks/useGetPaginatedArticles';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import {
+  getCachedArticles,
+  syncCachedArticles,
+} from '../services/ArticleCacheService';
 import { sanitizeSearchInput, isValidSearchInput } from '../helper/SearchUtils';
 import {
   OfflineArticleState,
@@ -77,9 +82,9 @@ const ErrorState = ({onRetry}: {onRetry: () => void}) => {
 };
 
 // Offline State Component
-const OfflineState = () => {
+const OfflineState = ({onBrowsePodcasts}: {onBrowsePodcasts?: () => void}) => {
   return (
-    <OfflineArticleState />
+    <OfflineArticleState onBrowsePodcasts={onBrowsePodcasts} />
   );
 };
 
@@ -413,6 +418,13 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     updateArticles(allArticlesRef.current);
   }, [selectedTags, sortType, sessionSelectedLanguages, preferredLanguages]);
 
+  // Sync local cached articles with the backend list of saved articles when online
+  useEffect(() => {
+    if (isConnected && user?.savedArticles) {
+      syncCachedArticles(user.savedArticles);
+    }
+  }, [isConnected, user?.savedArticles]);
+
   // Proactively auto-paginate in the background if the client-filtered list is too short
   // to ensure that at least a few articles of the selected category are shown
   // or we have exhaustively searched all pages from the backend.
@@ -471,8 +483,12 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         refetchUnreadCount();
       }
     } else {
+      setRefreshing(true);
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 500);
       Snackbar.show({
-        text: 'Please check your network connection',
+        text: 'You are offline. Showing cached saved articles.',
         duration: Snackbar.LENGTH_SHORT,
       });
     }
@@ -513,7 +529,17 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   }
 };
 
+  const offlineArticles = useMemo(() => {
+    if (!isConnected) {
+      return getCachedArticles().map(item => item.article);
+    }
+    return [];
+  }, [isConnected]);
+
   const listData = useMemo(() => {
+    if (!isConnected) {
+      return offlineArticles;
+    }
     if (showSavedOnly) {
       const savedArticles = user?.savedArticles || [];
       return savedArticles
@@ -533,7 +559,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     );
 
     return filtered;
-  }, [showSavedOnly, searchMode, searchedArticles, filteredArticles, selectedCategory, user]);
+  }, [showSavedOnly, searchMode, searchedArticles, filteredArticles, selectedCategory, user, isConnected, offlineArticles]);
 
   // Check if any filters are active
   const hasActiveFilters = useMemo(() => {
@@ -551,7 +577,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     return <Loader />;
   }
 
-  if (isConnected === false) {
+  if (isConnected === false && offlineArticles.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
         <HomeScreenHeader
@@ -573,7 +599,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           onFilterReset={handleClearAllFilters}
         />
 
-        <OfflineState />
+        <OfflineState onBrowsePodcasts={() => navigation.navigate('OfflinePodcastList')} />
       </SafeAreaView>
     );
   }
@@ -748,6 +774,14 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
             onFilterReset={handleClearAllFilters}
             searchText={searchText}
           />
+      {!isConnected && (
+        <View style={styles.offlineBanner}>
+          <Ionicons name="cloud-offline-outline" size={18} color="#92400e" style={{marginRight: 6}} />
+          <Text style={styles.offlineBannerText}>
+            You are offline. Showing cached saved articles.
+          </Text>
+        </View>
+      )}
       <FilterModal
         bottomSheetModalRef={bottomSheetModalRef}
         categories={articleCategories}
@@ -760,74 +794,76 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         selectedLanguages={sessionSelectedLanguages}
         setSelectedLanguages={setSessionSelectedLanguages}
       />
-      <View style={styles.buttonContainer}>
-        <ScrollView
-          horizontal={true}
-          style={{width: '100%'}}
-          showsHorizontalScrollIndicator={false}
-          //contentContainerStyle={{flex:1}}
-        >
-          {!isGuest && (
-            <TouchableOpacity
-              style={{
-                ...styles.button,
-                backgroundColor: showSavedOnly
-                  ? SAVED_CHIP_ACTIVE_BG
-                  : SAVED_CHIP_INACTIVE_BG,
-                borderColor: showSavedOnly
-                  ? SAVED_CHIP_ACTIVE_BG
-                  : SAVED_CHIP_INACTIVE_BORDER,
-              }}
-              onPress={handleToggleSavedOnly}
-              accessibilityRole="button"
-              accessibilityLabel={
-                showSavedOnly
-                  ? 'Saved articles filter active. Tap to show all articles.'
-                  : 'Tap to filter by saved articles'
-              }>
-              <Text
+      {isConnected && (
+        <View style={styles.buttonContainer}>
+          <ScrollView
+            horizontal={true}
+            style={{width: '100%'}}
+            showsHorizontalScrollIndicator={false}
+            //contentContainerStyle={{flex:1}}
+          >
+            {!isGuest && (
+              <TouchableOpacity
                 style={{
-                  ...styles.labelStyle,
-                  color: showSavedOnly ? 'white' : '#4B5563',
-                }}>
-                Saved
-              </Text>
-            </TouchableOpacity>
-          )}
-          {selectedTags &&
-            selectedTags.length > 0 &&
-            !searchMode &&
-            selectedTags.map((item: Category, index: number) => {
-              // Category chips visually appear inactive when Saved filter is on —
-              // they are still clickable to switch away from Saved mode.
-              const isActive = !showSavedOnly &&
-                selectedCategory &&
-                (selectedCategory._id === item._id || selectedCategory.id === item.id || selectedCategory.name === item.name);
-              return (
-                <TouchableOpacity
-                  key={index}
+                  ...styles.button,
+                  backgroundColor: showSavedOnly
+                    ? SAVED_CHIP_ACTIVE_BG
+                    : SAVED_CHIP_INACTIVE_BG,
+                  borderColor: showSavedOnly
+                    ? SAVED_CHIP_ACTIVE_BG
+                    : SAVED_CHIP_INACTIVE_BORDER,
+                }}
+                onPress={handleToggleSavedOnly}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  showSavedOnly
+                    ? 'Saved articles filter active. Tap to show all articles.'
+                    : 'Tap to filter by saved articles'
+                }>
+                <Text
                   style={{
-                    ...styles.button,
-                    backgroundColor: isActive ? '#000A60' : 'white',
-                    borderColor: isActive ? '#000A60' : '#D1D5DB',
-                  }}
-                  onPress={() => handleCategoryClick(item)}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Filter by ${item.name}${
-                    isActive ? ', currently active' : ''
-                  }`}>
-                  <Text
+                    ...styles.labelStyle,
+                    color: showSavedOnly ? 'white' : '#4B5563',
+                  }}>
+                  Saved
+                </Text>
+              </TouchableOpacity>
+            )}
+            {selectedTags &&
+              selectedTags.length > 0 &&
+              !searchMode &&
+              selectedTags.map((item: Category, index: number) => {
+                // Category chips visually appear inactive when Saved filter is on —
+                // they are still clickable to switch away from Saved mode.
+                const isActive = !showSavedOnly &&
+                  selectedCategory &&
+                  (selectedCategory._id === item._id || selectedCategory.id === item.id || selectedCategory.name === item.name);
+                return (
+                  <TouchableOpacity
+                    key={index}
                     style={{
-                      ...styles.labelStyle,
-                      color: isActive ? 'white' : '#4B5563',
-                    }}>
-                    {item.name}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-        </ScrollView>
-      </View>
+                      ...styles.button,
+                      backgroundColor: isActive ? '#000A60' : 'white',
+                      borderColor: isActive ? '#000A60' : '#D1D5DB',
+                    }}
+                    onPress={() => handleCategoryClick(item)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Filter by ${item.name}${
+                      isActive ? ', currently active' : ''
+                    }`}>
+                    <Text
+                      style={{
+                        ...styles.labelStyle,
+                        color: isActive ? 'white' : '#4B5563',
+                      }}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+          </ScrollView>
+        </View>
+      )}
       <View style={styles.articleContainer}>
         <FlashList
           data={listData}
@@ -851,9 +887,11 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         />
       </View>
 
-      <View style={styles.homePlusIconview}>
-        <AddIcon callback={handleNoteIconClick} />
-      </View>
+      {isConnected && (
+        <View style={styles.homePlusIconview}>
+          <AddIcon callback={handleNoteIconClick} />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -1094,6 +1132,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
     marginTop: 8,
+  },
+  offlineBanner: {
+    backgroundColor: '#fef3c7',
+    borderBottomWidth: 1,
+    borderBottomColor: '#fde68a',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  offlineBannerText: {
+    color: '#92400e',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });
 
