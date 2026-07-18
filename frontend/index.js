@@ -5,7 +5,20 @@ import store from './src/store/ReduxStore';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import App from './App';
 import messaging from '@react-native-firebase/messaging';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
+
+if (Platform.OS === 'web') {
+  const style = document.createElement('style');
+  style.textContent = `
+    html, body, #root {
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 import { logger } from './src/services/monitoring/logger';// Firebase background handler must be registered at the app root (run once,
 // before any component mounts). FCM requires this to be at module scope.
 // NOTE: initMonitoring() is intentionally NOT called here — it has been moved

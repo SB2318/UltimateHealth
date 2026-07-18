@@ -17,9 +17,9 @@ import { SocketProvider } from '../contexts/SocketContext';
 import { PreferencesProvider } from '../contexts/PreferencesContext';
 import config from '../../tamagui.config';
 
-import { initDeepLinking, navigateDeepLink, resolveNotificationTarget } from '../helper/DeepLinkService';
+import { initDeepLinking, navigateDeepLink, resolveNotificationTarget, resolveDeepLinkTarget } from '../helper/DeepLinkService';
 import { firebaseInit } from '../helper/firebase';
-import { cleanUpDownloads , KEYS, retrieveItem } from '../helper/Utils';
+import { cleanUpDownloads, KEYS, retrieveItem } from '../helper/Utils';
 import {
   SECURE_KEYS,
   secureRetrieveItem,
@@ -49,9 +49,6 @@ export default function AppContent() {
     (state: RootState) => state.user,
   );
 
-  const { visible, storeUrl } = useVersionCheck();
-  const dispatch = useDispatch();
-
   useNotificationListeners();
 
   useEffect(() => {
@@ -79,10 +76,23 @@ export default function AppContent() {
   }, [hydrateAuthState]);
 
   useEffect(() => {
-    if (!navigationRef.current) return;
-    const isAuthenticated = Boolean(user_token) && !isGuest;
-    return initDeepLinking(navigationRef.current, isAuthenticated);
-  }, [isGuest, user_token]);
+    const unsubscribeDeepLink = initDeepLinking((url) => {
+      if (url) {
+        pendingDeepLinkRef.current = url;
+
+        if (__DEV__) {
+          console.log(
+            '[Auth Guard] Cached incoming deep link:',
+            url,
+          );
+        }
+      }
+    });
+
+    return () => {
+      unsubscribeDeepLink();
+    };
+  }, []);
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -122,7 +132,13 @@ export default function AppContent() {
     const target = resolveDeepLinkTarget(pendingDeepLinkRef.current);
 
     if (target) {
-      navigateDeepLink(navigationRef.current, target, isAuthenticated);
+      navigateDeepLink(
+        navigationRef.current,
+        target,
+        isAuthenticated,
+      );
+    } else if (!isAuthenticated) {
+      navigationRef.current.navigate('LoginScreen');
     }
 
     pendingDeepLinkRef.current = null;

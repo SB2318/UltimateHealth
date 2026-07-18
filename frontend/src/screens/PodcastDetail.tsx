@@ -1,4 +1,5 @@
 /* eslint-disable react-compiler/react-compiler */
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -817,6 +818,7 @@ useEffect(() => {
   );
 
   return (
+  <ErrorBoundary onRetry={() => refetch()}>
     <ScrollView
       backgroundColor="#0B1425"
       contentContainerStyle={{ flexGrow: 1 } as any}
@@ -847,6 +849,7 @@ useEffect(() => {
         </YStack>
       </Theme>
     </ScrollView>
+  </ErrorBoundary>
   );
 };
 

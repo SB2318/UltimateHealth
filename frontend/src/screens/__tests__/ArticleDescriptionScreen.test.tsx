@@ -6,17 +6,23 @@ const mockNavigate = jest.fn();
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({top: 0, bottom: 0, left: 0, right: 0}),
-  SafeAreaView: ({children}: any) => children,
+  SafeAreaView: function MockSafeAreaView({children}: any) {
+    return children;
+  },
 }));
 
 jest.mock('react-native-keyboard-controller', () => ({
-  KeyboardAwareScrollView: ({children}: any) => children,
+  KeyboardAwareScrollView: function MockKeyboardAwareScrollView({children}: any) {
+    return children;
+  },
 }));
 
 jest.mock('@expo/vector-icons/Ionicons', () => {
   const React = require('react');
   const {Text} = require('react-native');
-  return () => React.createElement(Text, null, 'Icon');
+  const MockIcon = () => React.createElement(Text, null, 'Icon');
+  MockIcon.displayName = 'Ionicons';
+  return MockIcon;
 });
 
 jest.mock('react-native-image-picker', () => ({

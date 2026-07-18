@@ -1,4 +1,5 @@
 import { Modal, View, Text, Pressable, Linking } from 'react-native';
+import { safeOpenUrl } from '../utils/safeOpenUrl';
 
 export default function UpdateModal({ visible, storeUrl }: any) {
   return (
@@ -29,7 +30,12 @@ export default function UpdateModal({ visible, storeUrl }: any) {
           </Text>
 
           <Pressable
-            onPress={() => Linking.openURL(storeUrl)}
+            onPress={() =>
+              safeOpenUrl(storeUrl, {
+              errorTitle: 'Store Unavailable',
+              errorMessage: 'Unable to open the app store on this device.',
+            })
+            }
             accessibilityRole="button"
             accessibilityLabel="Update Now"
             style={{
