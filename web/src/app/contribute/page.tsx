@@ -76,6 +76,8 @@ interface FAQItem {
   answer: string
 }
 
+const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact'];
+
 // =============================================================================
 // Constants
 // =============================================================================
