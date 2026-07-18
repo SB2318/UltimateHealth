@@ -1,9 +1,8 @@
 /* eslint-disable react-compiler/react-compiler */
 /* eslint-disable react-hooks/set-state-in-effect */
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, Alert, AppState} from 'react-native';
-
-type AppStateStatusType = 'active' | 'background' | 'inactive' | 'unknown' | 'extension';
+import {StyleSheet, Alert, AppState, AppStateStatus} from 'react-native';
+ type AppStateStatusType = 'active' | 'background' | 'inactive' | 'unknown' | 'extension';
 
 import {PodcastRecorderScreenProps} from '../type';
 import RNFS from 'react-native-fs';
