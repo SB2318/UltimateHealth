@@ -108,6 +108,8 @@ const ArticleCard = ({
     score: 78,
     level: 'Beginner Friendly' as 'Beginner Friendly' | 'Intermediate' | 'Advanced',
     approved: true,
+  };
+
   const heartScale = useSharedValue(0);
 
   const heartStyle = useAnimatedStyle(() => {
@@ -151,7 +153,10 @@ const ArticleCard = ({
           article: ArticleData;
           likeStatus: boolean;
         }) => {
-          console.log('Article like success', data.likeStatus);
+   if (__DEV__) {
+  console.log("Article like success", data.likeStatus);
+}
+
           setIsLiked(data?.likeStatus);
 
           if (data?.likeStatus) {

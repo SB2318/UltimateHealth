@@ -180,6 +180,7 @@ export type TabParamList = {
   Profile: undefined;
   Chatbot: undefined;
   About: undefined;
+  Wellness: undefined;
 };
 
 export type SplashScreenProp =
@@ -419,6 +420,7 @@ export type HomeScreenHeaderProps = {
   unreadCount: number;
   hasActiveFilters?: boolean;
   onFilterReset?: () => void;
+  searchText?: string;
 };
 
 export type ArticleCardProps = {
@@ -635,7 +637,7 @@ export type ArticleData = {
   repostUsers: string[];
   likeCount: number;
   likedUsers: User[];
-  trustUsers: string[];
+  trustUsers?: string[];
   savedUsers: string[];
   mentionedUsers: User[];
   language: string;
@@ -655,6 +657,9 @@ export type ArticleData = {
   relatedPodcasts?: RelatedPodcast[];
   difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
   body?: string;
+  author?: any;
+  category?: string;
+  cover_image?: string;
 };
 
 export type ArticleTranslationSource = {

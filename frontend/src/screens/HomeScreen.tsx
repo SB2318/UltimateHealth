@@ -9,9 +9,6 @@ import { StyleSheet,
   ScrollView,
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-   FlatList ,
-   ScrollView ,
-  } from 'react-native';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
@@ -106,7 +103,7 @@ const SavedArticleEmptyState = () => (
 const HomeScreen = ({navigation}: HomeScreenProps) => {
   const dispatch = useDispatch();
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<Category>();
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [sortingType, setSortingType] = useState<string>('');
   const [searchText, setSearchText] = useState('');
   const {isConnected} = useSelector((state: any) => state.network);
@@ -122,7 +119,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     useRequestArticleEdit();
   const handleClearAllFilters = () => {
     // 1. Local state categories reset
-    setSelectedCategory('');
+    setSelectedCategory(null);
     setSortingType('');
     setSearchText('');
 
@@ -747,7 +744,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
               }
             }}
             unreadCount={unreadCount ? unreadCount : 0}
-            hasActiveFilters={selectedCategory !== '' || sortingType !== '' || searchText !== ''}
+            hasActiveFilters={!!selectedCategory || sortingType !== '' || searchText !== ''}
             onFilterReset={handleClearAllFilters}
             searchText={searchText}
           />

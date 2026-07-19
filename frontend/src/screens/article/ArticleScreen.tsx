@@ -1,3 +1,4 @@
+import { ErrorBoundary } from '../../components/ErrorBoundary';
 /* eslint-disable react-compiler/react-compiler */
 import {
   Image,
@@ -24,6 +25,7 @@ import Loader from '../../components/Loader';
 import Snackbar from 'react-native-snackbar';
 import ResearchSummaryCard from '../../components/ResearchSummaryCard';
 import StructuredPodcastCard from '../../components/StructuredPodcastCard';
+import { debugLog, debugWarn, debugError } from '../utils/debugLog';
 import {
   generateArticleSummary,
   ArticleSummary,
@@ -62,6 +64,8 @@ import {useSocket} from '../../contexts/SocketContext';
 import { copyArticleShareLink } from '../../helper/shareUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
+import { useDyslexiaMode } from '../../hooks/useDyslexiaMode';
+import { generateArticleStyles } from '../../utils/dyslexiaStyles';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -94,6 +98,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontScale, setFontScale] = useState(1);
+  const { isDyslexiaMode, toggleDyslexiaMode } = useDyslexiaMode();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
@@ -144,6 +149,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     finishHandlerRef.current = null;
     errorHandlerRef.current = null;
   }, []);
+
+  // Scroll position persistence (Issue #1834)
+  // useRef<Animated.ScrollView> — typed to match the JSX ref prop on
+  // Animated.ScrollView. The underlying ScrollView.scrollTo() is called
+  // via a safe cast through the ref for imperative scroll restoration.
+  const scrollViewRef = useRef<Animated.ScrollView>(null);
+  // Tracks whether we have already restored the saved position for the
+  // current article. Prevents the initial layout scroll events from
+  // immediately overwriting the stored value before restoration runs.
+  const scrollRestoredRef = useRef(false);
+  // Key pattern: article_scroll_position_<articleId>
+  const scrollStorageKey = `article_scroll_position_${articleId}`;
 
   // Progress Bar Shared Values
   const scrollY = useSharedValue(0);
@@ -261,7 +278,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     if (!isGuest) {
       updateViewCount(articleId, {
         onError: error => {
-          console.log('Update View Count Error', error);
+          debugLog('Update View Count Error', error);
         },
       });
     }
@@ -282,8 +299,22 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   useEffect(() => {
     readEventFiredRef.current = false;
     setReadEventSave(false);
+    // Reset scroll restoration flag when article changes so a new article
+    // always starts from the top until its own saved position is loaded.
+    scrollRestoredRef.current = false;
     refetch();
   }, [articleId, refetch]);
+
+  // Cleanup: cancel any pending debounce timer when the component unmounts.
+  // Prevents a stale AsyncStorage write after navigation or unmount.
+  useEffect(() => {
+    return () => {
+      if (saveScrollPositionRef.current) {
+        clearTimeout(saveScrollPositionRef.current);
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const noDataHtml = '<p>No Data found</p>';
 
@@ -372,7 +403,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           refetch();
         },
         onError: (err: any) => {
-          console.log('error', err);
+          debugLog('error', err);
           Snackbar.show({
             text: 'Something went wrong, try again!',
             duration: Snackbar.LENGTH_LONG,
@@ -397,6 +428,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
     followMutation(articleId.toString(), {
       onSuccess: data => {
+        //debugLog('follow success');
         if (data !== undefined) setLocalIsFollowing(data);
         //console.log('follow success');
         if (data && socket) {
@@ -414,7 +446,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       },
 
       onError: err => {
-        console.log('Update Follow mutation error', err);
+        debugLog('Update Follow mutation error', err);
         Snackbar.show({
           text: 'Something went wrong, Try again!',
           duration: Snackbar.LENGTH_SHORT,
@@ -440,6 +472,37 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             text: article.savedUsers?.includes(user_id)
               ? 'Article removed from saved'
               : 'Article saved successfully!',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+        onError: (err: any) => {
+          debugLog('error', err);
+          Snackbar.show({
+            text: 'Something went wrong, try again!',
+            duration: Snackbar.LENGTH_LONG,
+          });
+        },
+      });
+    } else {
+      Alert.alert('Article not found');
+    }
+  };
+
+  const handleTrust = () => {
+    if (isGuest) {
+      navigation.navigate('GuestPlaceholderScreen', {
+        title: 'Sign In Required',
+        description: 'Please sign in or sign up to trust this article.',
+        iconName: 'shield',
+      });
+      return;
+    }
+    if (article) {
+      trustMutation(undefined, {
+        onSuccess: (data: {isTrusted: boolean}) => {
+          refetch();
+          Snackbar.show({
+            text: data?.isTrusted ? 'Marked as trusted!' : 'Trust removed',
             duration: Snackbar.LENGTH_SHORT,
           });
         },
@@ -664,14 +727,21 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       wordsRef.current = words;
       chunkIndexRef.current = 0;
 
+      Tts.addEventListener('tts-finish', speakNextChunk);
+      Tts.addEventListener('tts-error', e => {
+        debugLog('TTS Error:', e);
+        setIsPlaying(false);
+        setIsPaused(false);
+        setPlayerVisible(false);
+      });
       attachArticleTtsSubscriptions();
-
+      attachArticleTtsSubscriptions();
       setIsPlaying(true);
       setIsPaused(false);
       setPlayerVisible(true);
       speakNextChunk();
     } catch (error) {
-      console.log('TTS Error:', error);
+      debugLog('TTS Error:', error);
       setIsPlaying(false);
       setIsPaused(false);
       setPlayerVisible(false);
@@ -694,8 +764,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         // Step back one chunk to resume from the interrupted chunk
         chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
 
+        // Re-attach listeners
+        Tts.addEventListener('tts-finish', speakNextChunk);
+        Tts.addEventListener('tts-error', e => {
+          debugLog('TTS Error:', e);
+          setIsPlaying(false);
+          setIsPaused(false);
+          setPlayerVisible(false);
+        });
         attachArticleTtsSubscriptions();
-
+        attachArticleTtsSubscriptions();
         speakNextChunk();
       } else {
         // Pause
@@ -705,7 +783,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         setIsPaused(true);
       }
     } catch (e) {
-      console.log('TTS Pause/Resume Error:', e);
+      debugLog('TTS Pause/Resume Error:', e);
     }
   };
 
@@ -719,7 +797,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       setIsPaused(false);
       setPlayerVisible(false);
     } catch (e) {
-      console.log('TTS Stop Error:', e);
+      debugLog('TTS Stop Error:', e);
     }
   };
 
@@ -733,10 +811,30 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       // Note: Rewind is approximate and might read earlier parts of a smaller previous chunk.
       chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
       Tts.stop().then(() => {
+        Tts.addEventListener('tts-finish', speakNextChunk);
+        Tts.addEventListener('tts-error', e => {
+          debugLog('TTS Error:', e);
+          setIsPlaying(false);
+          setIsPaused(false);
+          setPlayerVisible(false);
+        });
+        attachArticleTtsSubscriptions();
         attachArticleTtsSubscriptions();
         speakNextChunk();
       });
     }
+  };
+
+  // Debounced save: writes scroll offset to AsyncStorage at most once per 500 ms.
+  // Only runs after the position has been restored to avoid clobbering saved state
+  // with the initial mount scroll events.
+  const saveScrollPositionRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleSaveScrollPosition = (offset: number) => {
+    if (!scrollRestoredRef.current) return;
+    if (saveScrollPositionRef.current) clearTimeout(saveScrollPositionRef.current);
+    saveScrollPositionRef.current = setTimeout(() => {
+      storeItem(scrollStorageKey, String(Math.round(offset)));
+    }, 500);
   };
 
   // Function to handle the Read Status logic (preserved from original onScroll)
@@ -761,7 +859,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             });
           },
           onError: err => {
-            console.log('Update Read Status mutation error', err);
+            debugLog('Update Read Status mutation error', err);
             Snackbar.show({
               text: 'Failed to update your read status.',
               duration: Snackbar.LENGTH_SHORT,
@@ -771,6 +869,30 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       }
     }
   };
+
+  // Restore saved scroll position once the WebView content has fully sized.
+  // Triggered from onSizeUpdated so we know the scrollable height is available.
+  const restoreScrollPosition = useCallback(async () => {
+    if (scrollRestoredRef.current) return; // already restored for this article
+    try {
+      const stored = await retrieveItem(scrollStorageKey);
+      const offset = stored ? Number(stored) : 0;
+      if (offset > 0 && scrollViewRef.current) {
+        // Imperative scroll after a 100ms settle delay so the layout is stable.
+        // Cast through `any` to access the underlying ScrollView.scrollTo()
+        // method — Reanimated's AnimatedScrollView wraps but re-exposes it
+        // at runtime. The cast is safe: verified at the `scrollViewRef.current`
+        // guard above.
+        setTimeout(() => {
+          (scrollViewRef.current as any)?.scrollTo({y: offset, animated: false});
+        }, 100);
+      }
+    } catch {
+      // Corrupted or missing data — start from the top.
+    } finally {
+      scrollRestoredRef.current = true;
+    }
+  }, [scrollStorageKey]);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
@@ -784,6 +906,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         event.contentSize.height,
         event.layoutMeasurement.height,
       );
+
+      // Persist scroll offset (debounced, only after restoration completes)
+      runOnJS(handleSaveScrollPosition)(event.contentOffset.y);
     },
   });
 
@@ -813,11 +938,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
-  const articleCustomStyle = `
-    body { font-family: 'Times New Roman'; font-size: ${articleFontSize}px; line-height: 1.6; }
-    p, li { font-size: ${articleFontSize}px; }
-    img, video, iframe { max-width: 100%; height: auto; }
-  `;
+  const articleCustomStyle = generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize);
 
   const footerColors = {
     background: isDarkMode ? '#111827' : '#ffffff',
@@ -829,11 +950,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   return (
+    <ErrorBoundary onRetry={() => refetch()}>
     <SafeAreaView style={styles.container}>
       {/* Reading Progress Bar */}
       <Animated.View style={[styles.progressBar, progressStyle]} />
 
       <Animated.ScrollView
+        ref={scrollViewRef}
         style={styles.scrollView}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
@@ -1023,6 +1146,31 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     <Text style={styles.fontSizeButtonText}>A+</Text>
                   </TouchableOpacity>
                 </View>
+
+                {/* Dyslexia Mode Toggle */}
+                <TouchableOpacity
+                  onPress={toggleDyslexiaMode}
+                  accessibilityRole="switch"
+                  accessibilityState={{ checked: isDyslexiaMode }}
+                  accessibilityLabel="Toggle Dyslexia-Friendly Reading Mode"
+                  accessibilityHint="Toggles the reading mode to use a dyslexia-friendly font and spacing"
+                  style={[
+                    styles.dyslexiaButton,
+                    isDyslexiaMode && styles.dyslexiaButtonActive,
+                  ]}>
+                  <MaterialCommunityIcons
+                    name="glasses"
+                    size={20}
+                    color={isDyslexiaMode ? '#FFFFFF' : '#333333'}
+                  />
+                  <Text
+                    style={[
+                      styles.dyslexiaButtonText,
+                      isDyslexiaMode && styles.dyslexiaButtonTextActive,
+                    ]}>
+                    Dyslexia Mode
+                  </Text>
+                </TouchableOpacity>
               </View>
               {totalLikes > 0 && (
                 <View style={styles.avatarsContainer}>
@@ -1077,6 +1225,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   scalesPageToFit={true}
                   viewportContent={'width=device-width, user-scalable=no'}
                   onShouldStartLoadWithRequest={handleExternalClick}
+                  // Once the WebView reports its final rendered height, we know
+                  // the ScrollView has enough content to scroll to the saved position.
+                  onSizeUpdated={restoreScrollPosition}
                 />
               </View>
 
@@ -1100,11 +1251,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}
         article={{
-          title: article.title,
-          authorName: article.authorName ?? '',
-          category: article.tags?.[0]?.name ?? 'Health',
+          title: article?.title ?? '',
+          authorName: article?.authorName ?? '',
+          category: article?.tags?.[0]?.name ?? 'Health',
           coverImageUrl:
-            article.imageUtils && article.imageUtils.length > 0
+            article?.imageUtils && article.imageUtils.length > 0
               ? article.imageUtils[0].startsWith('http')
                 ? article.imageUtils[0]
                 : `${GET_IMAGE}/${article.imageUtils[0]}`
@@ -1475,6 +1626,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         onClose={() => setIsSpeedSelectorVisible(false)}
       />
     </SafeAreaView>
+    </ErrorBoundary>
   );
 };
 
@@ -1639,6 +1791,29 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333333',
     fontWeight: '600',
+  },
+  dyslexiaButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#FFFFFF',
+    gap: 6,
+  },
+  dyslexiaButtonActive: {
+    backgroundColor: PRIMARY_COLOR,
+    borderColor: PRIMARY_COLOR,
+  },
+  dyslexiaButtonText: {
+    fontSize: 14,
+    color: '#333333',
+    fontWeight: '600',
+  },
+  dyslexiaButtonTextActive: {
+    color: '#FFFFFF',
   },
   avatarsContainer: {
     flexDirection: 'row',

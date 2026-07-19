@@ -186,8 +186,8 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
             </View>
             <FlatList
               data={ttsLanguageList}
-              keyExtractor={(item: {code: string; label: string}) => item.code}
-              renderItem={({item}:{item: {code: string; label: string}}) => (
+              keyExtractor={(item: {code: string; name: string}) => item.code}
+              renderItem={({item}: {item: {code: string; name: string}}) => (
                 <TouchableOpacity
                   style={[
                     styles.languageItem,
@@ -202,7 +202,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                       styles.languageItemText,
                       language === item.code && styles.selectedLanguageItemText,
                     ]}>
-                    {item.label}
+                    {item.name}
                   </Text>
                   {language === item.code && (
                     <Ionicon name="checkmark" size={20} color={PRIMARY_COLOR} />

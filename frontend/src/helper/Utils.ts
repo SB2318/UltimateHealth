@@ -5,6 +5,7 @@ import {GET_STORAGE_DATA} from './APIUtils';
 import {Alert, Linking, Platform, PermissionsAndroid} from 'react-native';
 import RNFS from 'react-native-fs';
 import {secureClearAllItems} from './SecureStorageUtils';
+import { debugLog, debugWarn, debugError } from '../utils/debugLog'; 
 import {
   deleteItem as deletePodcastCache,
   retrieveItem as retrievePodcastCache,
@@ -90,7 +91,7 @@ export const retrieveItem = async (key: string) => {
     const value = await AsyncStorage.getItem(key);
     return value;
   } catch (e) {
-    console.log('Error reading value', e);
+    debugLog('Error reading value', e);
   }
 };
 
@@ -102,7 +103,7 @@ export const storeItem = async (key: string, value: string) => {
     }
     await AsyncStorage.setItem(key, value);
   } catch (e) {
-    console.log('Async Storage Data error', e);
+    debugLog('Async Storage Data error', e);
   }
 };
 
@@ -134,7 +135,7 @@ export const clearStorage = async () => {
       AsyncStorage.removeItem(KEYS.USER_HANDLE),
     ]);
     await secureClearAllItems();
-    console.log('All user-related storage cleared successfully.');
+    debugLog('All user-related storage cleared successfully.');
   } catch (error) {
     console.error('Error clearing user-related storage:', error);
   }
@@ -241,7 +242,7 @@ export const downloadAudio = async (_podcast: PodcastData) => {
       return {message: 'Something went wrong, try again after sometime', success: false};
     }
   } catch (err) {
-    console.log(err);
+    debugLog(err);
     return {message: 'Something went wrong, try again after sometime', success: false};
   }
 };
@@ -263,7 +264,7 @@ const downloadFile = async (key: string, title: string) => {
   const result = await RNFS.downloadFile({fromUrl: downloadUrl, toFile: filePath}).promise;
 
   if (result.statusCode === 200) {
-    console.log('Audio downloaded to:', filePath);
+    debugLog('Audio downloaded to:', filePath);
     return filePath;
   } else {
     console.error('Download failed:', result.statusCode);
@@ -284,14 +285,14 @@ export const cleanUpDownloads = async () => {
     if (Number.isFinite(age) && age > THIRTY_DAYS_MS) {
       if (item.filePath && (await RNFS.exists(item.filePath))) {
         await RNFS.unlink(item.filePath);
-        console.log('Deleted old file:', item.filePath);
+        debugLog('Deleted old file:', item.filePath);
       }
     } else {
       freshPodcasts.push(item);
     }
   }
   await writeDownloadedPodcasts(freshPodcasts);
-  console.log('Cleanup completed. Remaining items:', freshPodcasts.length);
+  debugLog('Cleanup completed. Remaining items:', freshPodcasts.length);
 };
 
 export const deleteFromDownloads = async (_podcast: PodcastData) => {
@@ -304,17 +305,17 @@ export const deleteFromDownloads = async (_podcast: PodcastData) => {
       if (item._id === _podcast._id) {
         if (item.filePath && (await RNFS.exists(item.filePath))) {
           await RNFS.unlink(item.filePath);
-          console.log('Deleted old file:', item.filePath);
+          debugLog('Deleted old file:', item.filePath);
         }
       } else {
         freshPodcasts.push(item);
       }
     }
     await writeDownloadedPodcasts(freshPodcasts);
-    console.log('Cleanup completed. Remaining items:', freshPodcasts.length);
+    debugLog('Cleanup completed. Remaining items:', freshPodcasts.length);
     return true;
   } catch (err) {
-    console.log('cleaned up error', err);
+    debugLog('cleaned up error', err);
     return false;
   }
 };
@@ -331,9 +332,9 @@ export const updateOfflinePodcastLikeStatus = async (_podcast: PodcastData) => {
       }
     }
     await writeDownloadedPodcasts(freshPodcasts);
-    console.log('Update completed');
+    debugLog('Update completed');
   } catch (err) {
-    console.log(err);
+    debugLog(err);
   }
 };
 

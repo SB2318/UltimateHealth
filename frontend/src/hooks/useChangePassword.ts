@@ -1,25 +1,30 @@
-import {useMutation, UseMutationResult} from '@tanstack/react-query';
-import axios from 'axios';
-import {CHANGE_PASSWORD_API} from '../helper/APIUtils';
+import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import axios from "axios";
+import { CHANGE_PASSWORD_API } from "../helper/APIUtils";
+
 type AxiosError = any;
 
-type ChangePassWordReq = {
-  email: string;
-  newPassword: string;
+type ChangePasswordReq = {
+    email: string;
+    newPassword: string;
+    resetToken: string;
 };
+
 export const useChangePasswordMutation = (): UseMutationResult<
-  any,
-  AxiosError,
-  ChangePassWordReq
+    any,
+    AxiosError,
+    ChangePasswordReq
 > => {
-  return useMutation({
-    mutationKey: ['generate-new-password'],
-    mutationFn: async (req: ChangePassWordReq) => {
-      const res = await axios.post(CHANGE_PASSWORD_API, {
-        email: req.email,
-        newPassword: req.newPassword,
-      });
-      return res.data as any;
-    },
-  });
+    return useMutation({
+        mutationKey: ["generate-new-password"],
+        mutationFn: async (req: ChangePasswordReq) => {
+            const res = await axios.post(CHANGE_PASSWORD_API, {
+                email: req.email,
+                newPassword: req.newPassword,
+                resetToken: req.resetToken,
+            });
+
+            return res.data;
+        },
+    });
 };
