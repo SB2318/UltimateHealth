@@ -11,7 +11,7 @@ import {
   Separator,
   Theme, 
   Paragraph,
-  Button
+  Button,
 } from 'tamagui';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // Corrected Icon Imports
