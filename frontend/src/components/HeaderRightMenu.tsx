@@ -1,11 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
+import {useColorScheme} from 'react-native';
 import {useCallback, useRef, useState} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useDispatch, useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {setPodcasts} from '../store/dataSlice';
-import {RootStackParamList, Category, CategoryType} from '../type';
+import {RootStackParamList, Category} from '../type';
 import FilterModal from './FilterModal';
 import {
   XStack,
@@ -16,7 +17,6 @@ import {
   Text,
 } from 'tamagui';
 import {Feather, FontAwesome, MaterialCommunityIcons} from '@expo/vector-icons';
-import {ON_PRIMARY_COLOR} from '../helper/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFilterPodcasts} from '../hooks/useFilterPodcasts';
 
@@ -25,6 +25,11 @@ interface Props {
 }
 
 const HeaderRightMenu = ({onClick}: Props) => {
+  const isDarkMode = useColorScheme() === 'dark';
+  const surface = isDarkMode ? '#1F2937' : '#FFFFFF';
+  const text = isDarkMode ? '#F9FAFB' : '#333333';
+  const mutedText = isDarkMode ? '#D1D5DB' : '#555555';
+  const hoverSurface = isDarkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)';
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [menuOpen, setMenuOpen] = useState(false);
   const [sortingType, setSortingType] = useState<string>('');
@@ -33,12 +38,11 @@ const HeaderRightMenu = ({onClick}: Props) => {
   );
 
   const {categories} = useSelector((state: any) => state.data);
-  const {user_token, isGuest} = useSelector((state: any) => state.user);
+  const {isGuest} = useSelector((state: any) => state.user);
   const {isConnected} = useSelector((state: any) => state.network);
   const dispatch = useDispatch();
 
-  const {mutate: filterPodcast, isPending: filterPodcastPending} =
-    useFilterPodcasts();
+  const {mutate: filterPodcast} = useFilterPodcasts();
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -76,8 +80,8 @@ const HeaderRightMenu = ({onClick}: Props) => {
         <Button
           size="$5"
           circular
-          backgroundColor={ON_PRIMARY_COLOR}
-          icon={<Feather name="search" size={20} color="#333" />}
+          backgroundColor={surface}
+          icon={<Feather name="search" size={20} color={text} />}
           onPress={onClick}
           pressStyle={{opacity: 0.7}}
         />
@@ -88,12 +92,12 @@ const HeaderRightMenu = ({onClick}: Props) => {
             <Button
               size="$5"
               circular
-              backgroundColor={ON_PRIMARY_COLOR}
+              backgroundColor={surface}
               icon={
                 <MaterialCommunityIcons
                   name="dots-vertical"
                   size={20}
-                  color="#333"
+                  color={text}
                 />
               }
               pressStyle={{opacity: 0.7}}
@@ -101,7 +105,7 @@ const HeaderRightMenu = ({onClick}: Props) => {
           </Popover.Trigger>
 
           <Popover.Content
-            backgroundColor={ON_PRIMARY_COLOR}
+            backgroundColor={surface}
             borderRadius="$4"
             elevation="$3"
             padding="$1"
@@ -115,7 +119,7 @@ const HeaderRightMenu = ({onClick}: Props) => {
                 paddingVertical="$2"
                 paddingHorizontal="$2"
                 borderRadius="$4"
-                hoverStyle={{backgroundColor: 'rgba(0,0,0,0.05)'}}
+                hoverStyle={{backgroundColor: hoverSurface}}
                 pressStyle={{opacity: 0.8}}
                 onPress={() => {
                   setMenuOpen(false);
@@ -130,10 +134,10 @@ const HeaderRightMenu = ({onClick}: Props) => {
                   }
                   navigation.navigate('PodcastProfile');
                 }}>
-                <Text fontSize={15} color="#333">
+                <Text fontSize={15} color={text}>
                   Profile
                 </Text>
-                <FontAwesome name="user" size={17} color="#555" />
+                <FontAwesome name="user" size={17} color={mutedText} />
               </XStack>
 
               {/* Menu Row: Downloads */}
@@ -143,7 +147,7 @@ const HeaderRightMenu = ({onClick}: Props) => {
                 paddingVertical="$2"
                 paddingHorizontal="$1"
                 borderRadius="$4"
-                hoverStyle={{backgroundColor: 'rgba(0,0,0,0.05)'}}
+                hoverStyle={{backgroundColor: hoverSurface}}
                 pressStyle={{opacity: 0.8}}
                 onPress={() => {
                   setMenuOpen(false);
@@ -157,10 +161,10 @@ const HeaderRightMenu = ({onClick}: Props) => {
                   }
                   navigation.navigate('OfflinePodcastList');
                 }}>
-                <Text fontSize={15} color="#333">
+                <Text fontSize={15} color={text}>
                   Downloads
                 </Text>
-                <Feather name="download" size={17} color="#555" />
+                <Feather name="download" size={17} color={mutedText} />
               </XStack>
 
               <Separator marginVertical="$1" />
@@ -172,13 +176,13 @@ const HeaderRightMenu = ({onClick}: Props) => {
                 paddingVertical="$3"
                 paddingHorizontal="$3"
                 borderRadius="$4"
-                hoverStyle={{backgroundColor: 'rgba(0,0,0,0.05)'}}
+                hoverStyle={{backgroundColor: hoverSurface}}
                 pressStyle={{opacity: 0.8}}
                 onPress={handlePresentModalPress}>
-                <Text fontSize={15} color="#333">
+                <Text fontSize={15} color={text}>
                   Filter
                 </Text>
-                <Feather name="filter" size={17} color="#555" />
+                <Feather name="filter" size={17} color={mutedText} />
               </XStack>
             </YStack>
           </Popover.Content>
