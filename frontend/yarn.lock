@@ -5,7 +5,6 @@
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.20.0", "@babel/code-frame@^7.29.0", "@babel/code-frame@^7.29.7":
   version "7.29.7"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.29.7.tgz#f2fbbfea87c44a21590ec515b778b2c26d8866e7"
-  resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.29.7.tgz#f2fbbfea87c44a21590ec515b778b2c26d8866e7"
   integrity sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==
   dependencies:
     "@babel/helper-validator-identifier" "^7.29.7"
@@ -909,7 +908,6 @@
 
 "@expo/code-signing-certificates@^0.0.6":
   version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@expo/code-signing-certificates/-/code-signing-certificates-0.0.6.tgz#6b7b22830cb69c77a45e357c2f3aa7ab436ac772"
   resolved "https://registry.yarnpkg.com/@expo/code-signing-certificates/-/code-signing-certificates-0.0.6.tgz#6b7b22830cb69c77a45e357c2f3aa7ab436ac772"
   integrity sha512-iNe0puxwBNEcuua9gmTGzq+SuMDa0iATai1FlFTMHJ/vUmKvN/V//drXoLJkVb5i5H3iE/n/qIJxyoBnXouD0w==
   dependencies:
@@ -3015,6 +3013,11 @@
   dependencies:
     "@tamagui/animate-presence" "1.144.4"
 
+"@tamagui/animation-helpers@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/animation-helpers/-/animation-helpers-2.4.6.tgz#6eee9efb2058c9e3e45c0cadfc04d5f342353f86"
+  integrity sha512-cX0Q55cTwZgn+V5swpXtbSNDjClmggLjXy3fJKKmAFeBsIu2sxezuIsqrV5YJta3VkY4R5/W20Ycg4Gz7cLn1A==
+
 "@tamagui/animations-css@1.144.4":
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/animations-css/-/animations-css-1.144.4.tgz#181478f71be0890340bb4a02540c2af0e92db4b6"
@@ -3025,7 +3028,7 @@
     "@tamagui/use-presence" "1.144.4"
     "@tamagui/web" "1.144.4"
 
-"@tamagui/animations-react-native@1.144.4", "@tamagui/animations-react-native@^1.135.6":
+"@tamagui/animations-react-native@1.144.4":
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/animations-react-native/-/animations-react-native-1.144.4.tgz#5c5645a0ef4e5d1e6756b44ea87ced71f23c13cd"
   integrity sha512-l83+Y9IpXZoI7Pyylop5tDrVGBRxxf9ZQLoxhhZyhGJMQBQVZith1SxpawmvMdEA4lxbl/W+R3wM3cjce14kyg==
@@ -3033,6 +3036,16 @@
     "@tamagui/constants" "1.144.4"
     "@tamagui/use-presence" "1.144.4"
     "@tamagui/web" "1.144.4"
+
+"@tamagui/animations-react-native@^2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/animations-react-native/-/animations-react-native-2.4.6.tgz#21eaa19216514bfba1566d59995409e308138055"
+  integrity sha512-somFlZc2EkPnMIwIvtqNgIiAdAHFEnREd/e/BOkm6WoaQkzIEbitTOeYte7j9seEVvXqy39A4yjt/re95o4n2Q==
+  dependencies:
+    "@tamagui/animation-helpers" "2.4.6"
+    "@tamagui/constants" "2.4.6"
+    "@tamagui/use-presence" "2.4.6"
+    "@tamagui/web" "2.4.6"
 
 "@tamagui/avatar@1.144.4":
   version "1.144.4"
@@ -3145,6 +3158,11 @@
   resolved "https://registry.yarnpkg.com/@tamagui/compose-refs/-/compose-refs-1.144.4.tgz#e6aff6521b011d7666de376ca48a4493dcb9b64b"
   integrity sha512-AXBm7YOCNk0J4MD3rIQySMyQ0jEPP9LooEalOrS3/gdGF2AGjRh7PhdFcG0Gx5S0kO9zOf0fq0keFd3Qi3FJKQ==
 
+"@tamagui/compose-refs@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/compose-refs/-/compose-refs-2.4.6.tgz#52c28843f180209000f8e5ffad1b2924658fe598"
+  integrity sha512-I40h8sWTwKhvhyC43uD7G2LGocU3o/Q79fVP1NTeaWFDdTqXktNdospBWEFbJUhcfxbP6fW0GmISqF4aOsGaZw==
+
 "@tamagui/config-default@1.144.4":
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/config-default/-/config-default-1.144.4.tgz#128f4c37c83c070586233159af0e9cef17117b9c"
@@ -3160,6 +3178,11 @@
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/constants/-/constants-1.144.4.tgz#776300f4e3c0b1dca4e723399f4d9d52834b5326"
   integrity sha512-8Ql9PwJYuuBZ/Ss27759dDZMMFLQckUnyo7gm5/P5DclGVoaIklEj/sxM0o7inoaZArr3dPm8fxdtgb11z2Qmg==
+
+"@tamagui/constants@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/constants/-/constants-2.4.6.tgz#99b1b2f428efdece0069ef443c05889cc893f679"
+  integrity sha512-9mFirw5u/3/KQ1MmzwRQAIi3SaHcuZqUNlsBfoQzEDhV0ZsggSpV+ZYNfhUyuh74o9Oeu3to6QaoZOGyXbYGkA==
 
 "@tamagui/core@1.144.4":
   version "1.144.4"
@@ -3336,6 +3359,14 @@
     "@tamagui/constants" "1.144.4"
     "@tamagui/simple-hash" "1.144.4"
 
+"@tamagui/helpers@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/helpers/-/helpers-2.4.6.tgz#898ded5f7fd1ced6b34511aee4f32b6f30b39d22"
+  integrity sha512-ev04nREHnATBcV/K2vKMdGqz1FK7UK7jcRjqFsLugy7+VYAAPEP/qtUN2NglhiCNwDBNnHWbSpE/nqlqtDhyhQ==
+  dependencies:
+    "@tamagui/constants" "2.4.6"
+    "@tamagui/simple-hash" "2.4.6"
+
 "@tamagui/image@1.144.4":
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/image/-/image-1.144.4.tgz#6c8988cc8a97e87f5677703777b258198e881439"
@@ -3348,6 +3379,11 @@
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/is-equal-shallow/-/is-equal-shallow-1.144.4.tgz#d234a8a1394c58bee123cdcf7d4dd9c5f8c0fdaa"
   integrity sha512-DfujzgfJnG4Shgd+SHmdgqnT51e2zqE+dFjd0cN3481PMekDtKfFQkcMp7nhew757SJMViNS8o4hB/ans6JrJg==
+
+"@tamagui/is-equal-shallow@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/is-equal-shallow/-/is-equal-shallow-2.4.6.tgz#34ce3c94fa1f59f65957c3901dc839deb30dee97"
+  integrity sha512-lHPYM05Lsm45wX+w9hxtEcACSPBYDprvRZk3NaSy0GhRmyylYl4Tq3PXkgPakNoD9/R26n1XHTboC6BWJzBANA==
 
 "@tamagui/label@1.144.4":
   version "1.144.4"
@@ -3385,10 +3421,22 @@
     "@tamagui/text" "1.144.4"
     "@tamagui/web" "1.144.4"
 
+"@tamagui/native@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/native/-/native-2.4.6.tgz#ce3e8749996a5f5fdacf89d7646765057b40b491"
+  integrity sha512-HrdBYXyFNGE5D1Q/wM3fQERH5xwxlEpISbtn+L3EnqusRMjRCcqTT67ibxXgjgrz4UN/50pvMDFna3+xsjJ5+A==
+
 "@tamagui/normalize-css-color@1.144.4":
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/normalize-css-color/-/normalize-css-color-1.144.4.tgz#fb98f9eea74891e00222d78e9bed446e2473ee73"
   integrity sha512-QkdqzgZM5q0sZzP7KITD0xDg1p6Yac4YCqFpqPY6iZcS2snbbsU+iejWRK00itqIsisim9CHyzyPrO7OV5Dalw==
+  dependencies:
+    "@react-native/normalize-color" "^2.1.0"
+
+"@tamagui/normalize-css-color@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/normalize-css-color/-/normalize-css-color-2.4.6.tgz#20d12478299d7bcc3b1e3e34bba88d1b57b504a5"
+  integrity sha512-pEwyOEpszg8aq5PMP10ZqTSH7faFhAzsEMvDrtslRIaP2PjadX4krhclu7RmnE+crvNjXSAdV385kqCbnEpKuA==
   dependencies:
     "@react-native/normalize-color" "^2.1.0"
 
@@ -3623,6 +3671,11 @@
   resolved "https://registry.yarnpkg.com/@tamagui/simple-hash/-/simple-hash-1.144.4.tgz#47e36d02e15d460b9c2389b89183797777d57f1d"
   integrity sha512-qNFLORvxKt1pIjqQb8eaNOK2Exdronww57BnJy2OmsSNVK/j4A5e/MqvmstttwmtLrOqw8hhoT8gXP+fQLhO+A==
 
+"@tamagui/simple-hash@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/simple-hash/-/simple-hash-2.4.6.tgz#5ab4b00a7e71cc4335cf61d67a1af046ac918db1"
+  integrity sha512-5VBMwRkpjIPQoBxfMc5l6ZZZFct2tVpxZ5MzPMWDFcYsMzX0EKqb1zMgI9X+PSz8CbPEbslj6pnsIvfAYd74vA==
+
 "@tamagui/slider@1.144.4":
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/slider/-/slider-1.144.4.tgz#e4dc7a2ce3b2adce6be1accfa3d2277dd860465e"
@@ -3741,6 +3794,11 @@
   resolved "https://registry.yarnpkg.com/@tamagui/timer/-/timer-1.144.4.tgz#69b5060448c8a75ee334fa50aae323a94746c727"
   integrity sha512-023miTGlare9nZ8e5sKoFTCA9R+Ek1Wf1yiS1/uDxZWVY2Qz1Ix3yPU5d/CpUsjqs5ghiJ3fcvzsvwaEdjIXDg==
 
+"@tamagui/timer@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/timer/-/timer-2.4.6.tgz#60772e0143b5c98579b2497810aad7e186d66391"
+  integrity sha512-bpvs4RVLf0EsIXkvCh6lfK46GGoolo0Jey5ssFGxhH7Z6JzWCW0uDYayztlLuzzeKmIknSAFDjb+zv82sFqRMQ==
+
 "@tamagui/toggle-group@1.144.4":
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/toggle-group/-/toggle-group-1.144.4.tgz#e0e82561c589593ce09774864b0c6b61e5ba6456"
@@ -3784,6 +3842,11 @@
   resolved "https://registry.yarnpkg.com/@tamagui/types/-/types-1.144.4.tgz#6840798a287614e017402039d96d9bf1236c2e31"
   integrity sha512-/vmKoj2ytDDYh4Y7Mq/Wjiq4rU1ZAIh0PHpt5KLby5Pxks78GAQ8fQQzLff2H4Mdvzm0ei7zQ6pSo6iM6zJpMQ==
 
+"@tamagui/types@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/types/-/types-2.4.6.tgz#04449dda20c191a0f004641b80c86a234101d6e6"
+  integrity sha512-eMmfZ/ByXPbQspcwy0HYf+XPEgBdOXhenMUHjvrn5rouYE/gReLUPcyDy7r4EenXaFIvmANTEERRS51MvZZ6zw==
+
 "@tamagui/use-async@1.144.4":
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/use-async/-/use-async-1.144.4.tgz#23ab81ede51c82b4ef3e1a4ffa6e4fece61190f8"
@@ -3817,6 +3880,11 @@
   resolved "https://registry.yarnpkg.com/@tamagui/use-did-finish-ssr/-/use-did-finish-ssr-1.144.4.tgz#bb2a23229e8fffa5b6ca33273747c70f266b3b0f"
   integrity sha512-Lyhtf9UoWYb4o6x4AlRNbDoIyRELzFfBYEWNGDmsmnJ59LMueKEUdNqXZPDRMKEftBtCCuVrFmIGKNe25v7XwQ==
 
+"@tamagui/use-did-finish-ssr@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/use-did-finish-ssr/-/use-did-finish-ssr-2.4.6.tgz#55dff7e72de3b30856d216300e27f48279475099"
+  integrity sha512-6vdAZlHVxhKNeG1YO+Xmv0guZo3pyGO+/yfkJNtXmmwN2R0cUDZNd6xhu8vseivVc411o5BRS4aDIQWXaEiA4A==
+
 "@tamagui/use-direction@1.144.4":
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/use-direction/-/use-direction-1.144.4.tgz#da382dc0863a30e99c799ccc85aa856fe87c90f7"
@@ -3844,10 +3912,20 @@
   dependencies:
     "@tamagui/constants" "1.144.4"
 
+"@tamagui/use-event@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/use-event/-/use-event-2.4.6.tgz#bf2fe5741dcba2eebfc903edf98e3f516db81be9"
+  integrity sha512-X52LV4wVXXBP8p+9HxKozw6xGtcAXg0rXNBmtUBlUEjw0aG7+2mkfI07tdKe8/z4C+i0gc8sYAeoek9wLL7XRA==
+
 "@tamagui/use-force-update@1.144.4":
   version "1.144.4"
   resolved "https://registry.yarnpkg.com/@tamagui/use-force-update/-/use-force-update-1.144.4.tgz#4893d34ad1afba3eb0fc6659ba8908261e556505"
   integrity sha512-CIsdCY31blRqm6FYQ7VzuqHVOvnmqjL6L4b7eBBLwFwPZ9BE5jv8aTV8gm+D6cMgZvuSNz0SrIJpWPo0TclwDQ==
+
+"@tamagui/use-force-update@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/use-force-update/-/use-force-update-2.4.6.tgz#088a6b9fa758da735ba5aab27f0efb1f4b29761f"
+  integrity sha512-CTitOhgGexOlGaFIn3UWfaNlsLpEppKYlSRftKoTUNVh3dKswESU4YrS9lMqN+qrV7LnhLBLzaTzIg4GCmJ/rg==
 
 "@tamagui/use-keyboard-visible@1.144.4":
   version "1.144.4"
@@ -3860,6 +3938,13 @@
   integrity sha512-2sJxOcoSCIqzClv05XPnkFlqTOsDOMh8kuNvtFI/IDApq/kKj5rybr5lBt77PW1FMmz0/+wZCOOmLjNCirxZqA==
   dependencies:
     "@tamagui/web" "1.144.4"
+
+"@tamagui/use-presence@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/use-presence/-/use-presence-2.4.6.tgz#fe8e2d8ffa5882c534a34d2c6200012844a6dc71"
+  integrity sha512-hYvHSM4s4acCM+0lE+bDf/OJAwearXZomININbNv8awl/z/gP2WHUO4IBCtD2g3hndU1w8d1oUD9zpBS/qGYrQ==
+  dependencies:
+    "@tamagui/web" "2.4.6"
 
 "@tamagui/use-previous@1.144.4":
   version "1.144.4"
@@ -3895,6 +3980,23 @@
     "@tamagui/use-did-finish-ssr" "1.144.4"
     "@tamagui/use-event" "1.144.4"
     "@tamagui/use-force-update" "1.144.4"
+
+"@tamagui/web@2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@tamagui/web/-/web-2.4.6.tgz#1345baaa1464e323a4247a6ece88754829a869be"
+  integrity sha512-ZaDy8aqnZKSLU1T8ViaaV2/T+JARu1/DsFYBpirODnaArkdTfCmtMM8NkrMh23PawSBLVm9/1hQaDBBuVWazUA==
+  dependencies:
+    "@tamagui/compose-refs" "2.4.6"
+    "@tamagui/constants" "2.4.6"
+    "@tamagui/helpers" "2.4.6"
+    "@tamagui/is-equal-shallow" "2.4.6"
+    "@tamagui/native" "2.4.6"
+    "@tamagui/normalize-css-color" "2.4.6"
+    "@tamagui/timer" "2.4.6"
+    "@tamagui/types" "2.4.6"
+    "@tamagui/use-did-finish-ssr" "2.4.6"
+    "@tamagui/use-event" "2.4.6"
+    "@tamagui/use-force-update" "2.4.6"
 
 "@tamagui/z-index-stack@1.144.4":
   version "1.144.4"
@@ -4360,7 +4462,6 @@
 
 "@unrs/resolver-binding-win32-arm64-msvc@1.12.2":
   version "1.12.2"
-  resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-arm64-msvc/-/resolver-binding-win32-arm64-msvc-1.12.2.tgz#521427dd59a8f4740ddd1dc7c3bc6af1aa1d260d"
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-arm64-msvc/-/resolver-binding-win32-arm64-msvc-1.12.2.tgz#521427dd59a8f4740ddd1dc7c3bc6af1aa1d260d"
   integrity sha512-qzNyg3xL0VPQmCaUh+N5jSitce6k+uCBfMDesWRnlULOZaqUkaJ0ybdT+UqlAWJoQjuqfIU/0Ptx9bteN4D82g==
 
