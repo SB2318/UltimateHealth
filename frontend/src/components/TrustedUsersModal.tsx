@@ -91,7 +91,7 @@ export default function TrustedUsersModal({
           ) : (
             <FlatList
               data={trustedUsers}
-              keyExtractor={(item, index) => item._id || String(index)}
+              keyExtractor={(item) => item._id || item.user_handle}
               renderItem={renderItem}
               contentContainerStyle={styles.listContent}
             />

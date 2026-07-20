@@ -46,7 +46,14 @@ export default function NewPasswordScreen({
   navigation,
   route,
 }: NewPasswordScreenProp) {
-  const {email} = route.params;
+  const { email, resetToken } = route.params;
+
+  React.useEffect(() => {
+      if (!resetToken) {
+          Alert.alert("Invalid password reset session", "Please verify your OTP again.");
+          navigation.goBack();
+      }
+  }, [resetToken]);
 
   const {
     control,
@@ -83,7 +90,7 @@ export default function NewPasswordScreen({
   const handlePasswordSubmit = (data: NewPasswordFormData) => {
 
     changePassword(
-      {email, newPassword: password},
+      {email, newPassword: password, resetToken},
       {
         onSuccess: () => {
           Alert.alert('Password reset successfully');

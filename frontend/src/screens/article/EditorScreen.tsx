@@ -7,6 +7,7 @@ import { StyleSheet,
    ScrollView ,
   Alert,
   TouchableOpacity,
+  View,
  } from 'react-native';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import Feather from '@expo/vector-icons/Feather';
@@ -20,6 +21,8 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
 import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
+import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
+import {createHTMLStructure} from '../../helper/Utils';
 
 // Feature:
 // If you want to discard your post, in that case no post will upload into storage,
@@ -44,6 +47,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const [localImages, setLocalImages] = useState<string[]>([]);
   const [htmlImages, setHtmlImages] = useState<string[]>([]);
   const [editorReady, setEditorReady] = useState(false);
+  const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -52,26 +56,8 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         <TouchableOpacity
           style={styles.preview_button}
           onPress={() => {
-            console.log('Preview button pressed');
             if (article.length > 20) {
-              //console.log('Preview Screen');
-              dispatch(setSuggestion({suggestion: ''}));
-              dispatch(setSuggestionAccepted({selection: false}));
-              navigation.navigate('PreviewScreen', {
-                article: article,
-                title: title,
-                authorName: authorName,
-                description: description,
-                image: imageUtils,
-                selectedGenres: selectedGenres,
-                localImages: localImages,
-                htmlImages: htmlImages,
-                articleData: articleData,
-                requestId: requestId,
-                pb_record_id: pb_record_id,
-                language: language,
-                translationSource,
-              });
+              setActiveTab('preview');
             } else {
               Alert.alert('Error', 'Please enter at least 20 characters');
             }
@@ -83,18 +69,6 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   }, [
     navigation,
     article,
-    title,
-    description,
-    imageUtils,
-    selectedGenres,
-    authorName,
-    localImages,
-    htmlImages,
-    articleData,
-    requestId,
-    dispatch,
-    pb_record_id,
-    translationSource,
   ]);
 
   useEffect(() => {
@@ -249,7 +223,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
     });
   };
 */
-  return (
+  const EditorScene = () => (
     <ScrollView
       style={[styles.container, {paddingBottom: insets.bottom}]}
       showsVerticalScrollIndicator={false}
@@ -359,6 +333,63 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       </Text>
     </ScrollView>
   );
+
+  const PreviewScene = () => (
+    <ScrollView
+      style={styles.previewContainer}
+      showsVerticalScrollIndicator={true}>
+      <View style={styles.previewContent}>
+        <Text style={styles.previewTitle}>{title || 'Article Preview'}</Text>
+        {article ? (
+          <AutoHeightWebView
+            style={styles.webView}
+            source={{html: createHTMLStructure(article)}}
+            scrollEnabled={true}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <Text style={styles.emptyPreview}>Start typing to see preview...</Text>
+        )}
+      </View>
+    </ScrollView>
+  );
+
+  return (
+    <View style={styles.tabContainer}>
+      <View style={styles.tabBar}>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === 'editor' && styles.tabButtonActive,
+          ]}
+          onPress={() => setActiveTab('editor')}>
+          <Text
+            style={[
+              styles.tabLabel,
+              activeTab === 'editor' && styles.tabLabelActive,
+            ]}>
+            Editor
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === 'preview' && styles.tabButtonActive,
+          ]}
+          onPress={() => setActiveTab('preview')}>
+          <Text
+            style={[
+              styles.tabLabel,
+              activeTab === 'preview' && styles.tabLabelActive,
+            ]}>
+            Preview
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {activeTab === 'editor' ? <EditorScene /> : <PreviewScene />}
+    </View>
+  );
 };
 
 export default EditorScreen;
@@ -449,6 +480,63 @@ const styles = StyleSheet.create({
     marginRight: 15,
     paddingHorizontal: 8,
     paddingVertical: 6,
+  },
+  tabContainer: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+  },
+  tabBar: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 2,
+    borderBottomColor: '#E5E7EB',
+    elevation: 1,
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 3,
+    borderBottomColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tabButtonActive: {
+    borderBottomColor: PRIMARY_COLOR,
+  },
+  tabLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#6B7280',
+  },
+  tabLabelActive: {
+    color: PRIMARY_COLOR,
+  },
+  previewContainer: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+  },
+  previewContent: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
+  previewTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1F2937',
+    marginBottom: 16,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  webView: {
+    marginTop: 12,
+  },
+  emptyPreview: {
+    fontSize: 16,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    paddingVertical: 32,
   },
 });
 

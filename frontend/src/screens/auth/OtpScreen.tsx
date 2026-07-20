@@ -49,9 +49,10 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
           otp: fullCode,
         },
         {
-          onSuccess: () => {
+          onSuccess: (data) => {
             navigation.navigate('NewPasswordScreen', {
-              email: email,
+              email,
+              resetToken: data.resetToken,
             });
           },
           onError: (error: AxiosError) => {

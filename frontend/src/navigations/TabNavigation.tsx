@@ -17,6 +17,7 @@ import PersonaLobbyScreen from '../screens/PersonaLobbyScreen';
 import AboutScreen from '../screens/AboutPage';
 import {useSelector} from 'react-redux';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import WellnessDashboardScreen from '../screens/WellnessDashboardScreen';
 
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -101,6 +102,22 @@ const TabNavigation = () => {
             </TouchableOpacity>
           ),
         })}
+      />
+      <Tab.Screen
+        name="Wellness"
+        component={WellnessDashboardScreen}
+        options={{
+          headerShown: false,
+          headerTransparent: true,
+          headerStyle: {
+            backgroundColor: '#000A60',
+          },
+          headerTitleStyle: {
+            fontSize: 23,
+            marginBottom: 12,
+            color: 'white',
+          },
+        }}
       />
       <Tab.Screen
         name="Profile"

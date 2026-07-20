@@ -6,9 +6,11 @@ import {StyleSheet, View, Animated, useWindowDimensions} from 'react-native';
 import {useTheme, YStack, XStack} from 'tamagui';
 import {PODCAST_CARD} from '@/constants/podcastCard';
 
+type AnimatedInterpolation = ReturnType<InstanceType<typeof Animated.Value>['interpolate']>;
+
 interface ShimmerBoxProps {
   style?: object | object[];
-  shimmerX: Animated.AnimatedInterpolation<number>;
+  shimmerX: AnimatedInterpolation;
   highlightColor: string;
   baseColor: string;
 }

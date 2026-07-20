@@ -8,6 +8,7 @@ import {
   Pressable,
   Alert,
   Platform,
+  useColorScheme,
 } from 'react-native';
 import {useEffect, useRef, useState} from 'react';
 import AccessibleTouchable from './common/AccessibleTouchable';
@@ -66,6 +67,15 @@ const ArticleCard = ({
 }: ArticleCardProps) => {
   const {user_id, user_handle, isGuest} = useSelector((state: any) => state.user || {});
   const {isConnected} = useSelector((state: any) => state.network || {});
+  const isDarkMode = useColorScheme() === 'dark';
+  const themeColors = {
+    surface: isDarkMode ? '#1F2937' : '#FFFFFF',
+    text: isDarkMode ? '#F3F4F6' : '#121212',
+    secondaryText: isDarkMode ? '#D1D5DB' : '#7A869A',
+    mutedText: isDarkMode ? '#9CA3AF' : '#414A4C',
+    border: isDarkMode ? '#374151' : '#F0F0F0',
+    icon: isDarkMode ? '#D1D5DB' : '#414A4C',
+  };
   const readTime = calculateReadTime(item.content || item.body || '');
   const socket = useSocket();
   const width = useSharedValue(0);
@@ -424,7 +434,7 @@ const ArticleCard = ({
     accessibilityLabel={`Open article ${item?.title}`}
     accessibilityHint="Opens full article"
     onPress={handleCardPress}>
-      <View style={styles.cardContainer}>
+      <View style={[styles.cardContainer, {backgroundColor: themeColors.surface}]}>
         {/* Image Section */}
 <Pressable onPress={handleImagePress} style={styles.imageWrapper}>
   <ImageFallback
@@ -533,58 +543,58 @@ const ArticleCard = ({
             )}
             <ReadingDifficulty difficulty={getArticleDifficulty(item)} />
           </View>
-          <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">{item?.title}</Text>
+          <Text style={[styles.title, {color: themeColors.text}]} numberOfLines={2} ellipsizeMode="tail">{item?.title}</Text>
 
 
           {/* Readability & Accessibility indicators (mock data, issue #845) */}
           <View style={styles.readabilityRow}>
-            <View style={styles.readabilityBadge}>
-              <Text style={styles.readabilityBadgeText}>
+            <View style={[styles.readabilityBadge, {backgroundColor: isDarkMode ? '#14532D' : '#E8F5E9'}]}>
+              <Text style={[styles.readabilityBadgeText, {color: isDarkMode ? '#BBF7D0' : '#2E7D32'}]}>
                 {mockReadability.level}
               </Text>
             </View>
-            <View style={styles.scoreBadge}>
-              <Text style={styles.scoreBadgeText}>
+            <View style={[styles.scoreBadge, {backgroundColor: isDarkMode ? '#1E3A5F' : '#E3F2FD'}]}>
+              <Text style={[styles.scoreBadgeText, {color: isDarkMode ? '#BFDBFE' : '#1565C0'}]}>
                 Score: {mockReadability.score}
               </Text>
             </View>
             <View
               style={[
                 styles.statusChip,
-                mockReadability.approved
-                  ? styles.approvedChip
-                  : styles.needsImprovementChip,
+                {backgroundColor: isDarkMode
+                  ? (mockReadability.approved ? '#14532D' : '#78350F')
+                  : (mockReadability.approved ? '#E8F5E9' : '#FFF3E0')},
               ]}>
-              <Text style={styles.statusChipText}>
+              <Text style={[styles.statusChipText, {color: isDarkMode ? '#E5E7EB' : '#424242'}]}>
                 {mockReadability.approved ? 'Approved' : 'Needs Improvement'}
               </Text>
             </View>
           </View>
 
           <View style={styles.metaRow}>
-  <Text style={styles.footerText1}>{item?.authorName}</Text>
-  <Text style={styles.dot}>•</Text>
-  <Text style={styles.footerText1}>
+  <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>{item?.authorName}</Text>
+  <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
+  <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
     {formatCount(item?.viewCount || 0)} views
   </Text>
-  <Text style={styles.dot}>•</Text>
-  <Text style={styles.footerText1}>
+  <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
+  <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
     {formatDateShort(item?.lastUpdated)}
   </Text>
-  <Text style={styles.dot}>•</Text>
-  <Text style={styles.footerText1}>
+  <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
+  <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
     {getReadTime(item?.title + ' ' + (item?.description || ''))}
   </Text>
   {(item?.trustUsers?.length ?? 0) > 0 && (
     <>
-      <Text style={styles.dot}>•</Text>
-      <Text style={styles.footerText1}>
+      <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
+      <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
         🛡️ Trusted by {formatCount(item?.trustUsers?.length ?? 0)}
       </Text>
     </>
   )}
 </View>
-          <Text style={styles.readTime}>{readTime} min read</Text>
+          <Text style={[styles.readTime, {color: themeColors.secondaryText}]}>{readTime} min read</Text>
           <EditRequestModal
             visible={requestModalVisible}
             callback={(reason: string) => {
@@ -598,7 +608,7 @@ const ArticleCard = ({
           />
 
           {/* Like, Save, and Comment Actions */}
-          <View style={styles.likeSaveContainer}>
+          <View style={[styles.likeSaveContainer, {borderTopColor: themeColors.border}]}>
             {likeMutationPending ? (
               <LoadingSpinner size="small" />
             ) : (
@@ -669,14 +679,14 @@ const ArticleCard = ({
                 {isLiked ? (
                   <AntDesign name="heart" size={24} color={PRIMARY_COLOR} />
                 ) : (
-                  <FontAwesome name="heart-o" size={24} color={'black'} />
+                  <FontAwesome name="heart-o" size={24} color={themeColors.icon} />
                 )}
                 <Text
                   style={{
                     ...styles.title,
                     marginStart: 3,
                     fontWeight: '500',
-                    color: 'black',
+                    color: themeColors.text,
                   }}>
                   {formatCount(likeCount)}
                 </Text>
@@ -705,7 +715,7 @@ const ArticleCard = ({
                 });
               }}
               style={styles.likeSaveChildContainer}>
-              <FontAwesome name="commenting" size={27} color={'#414A4C'} />
+              <FontAwesome name="commenting" size={27} color={themeColors.icon} />
             </AccessibleTouchable>
 
             {source === 'home' && (
@@ -724,14 +734,14 @@ const ArticleCard = ({
                     <FontAwesome6
                       name="arrows-rotate"
                       size={24}
-                      color={!reposted ? '#414A4C' : PRIMARY_COLOR}
+                      color={!reposted ? themeColors.icon : PRIMARY_COLOR}
                     />
                     <Text
                       style={{
                         ...styles.title,
                         fontWeight: '500',
                         marginStart: 3,
-                        color: 'black',
+                        color: themeColors.text,
                       }}>
                       {formatCount(repostCount)}
                     </Text>
@@ -749,7 +759,7 @@ const ArticleCard = ({
                   handleShare();
                 }}
                 style={styles.likeSaveChildContainer}>
-                <FontAwesome name="share-alt" size={24} color={'#414A4C'} />
+                <FontAwesome name="share-alt" size={24} color={themeColors.icon} />
               </AccessibleTouchable>
             )}
 
@@ -802,7 +812,7 @@ const ArticleCard = ({
                   <IonIcons
                     name="bookmark-outline"
                     size={24}
-                    color={'#414A4C'}
+                    color={themeColors.icon}
                   />
                 )}
               </AccessibleTouchable>
@@ -828,7 +838,7 @@ const ArticleCard = ({
                 <Entypo
                   name="dots-three-vertical"
                   size={20}
-                  color={'#414A4C'}
+                  color={themeColors.icon}
                 />
               </AccessibleTouchable>
             )}
@@ -1148,4 +1158,3 @@ const styles = StyleSheet.create({
 
 });
 */
-

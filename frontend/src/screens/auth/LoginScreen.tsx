@@ -530,6 +530,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         <EmailInputBottomSheet
           visible={emailInputVisible}
           callback={(email: string) => {
+            setEmailInputVisible(false);
             setOtpMail(email);
             if (requestVerificationMode) {
               resendVerification(
