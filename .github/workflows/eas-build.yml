@@ -36,7 +36,8 @@ jobs:
             pnpm install --frozen-lockfile
           elif [ -f "yarn.lock" ]; then
             echo "Using Yarn"
-            npm install -g yarn
+            corepack enable
+            corepack prepare yarn@4.17.1 --activate
             yarn install --frozen-lockfile
           else
             echo "Using npm"

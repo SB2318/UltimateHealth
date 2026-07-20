@@ -93,6 +93,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
@@ -131,6 +136,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
 
       - name: Restore node_modules
         uses: actions/cache@v4
@@ -171,6 +181,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
@@ -209,6 +224,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
 
       - name: Restore node_modules
         uses: actions/cache@v4

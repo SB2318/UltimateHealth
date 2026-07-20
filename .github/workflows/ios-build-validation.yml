@@ -47,6 +47,11 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: frontend/yarn.lock
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+
       - name: Setup Ruby (for CocoaPods)
         uses: ruby/setup-ruby@v1
         with:
