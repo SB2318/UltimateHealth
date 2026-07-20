@@ -140,6 +140,11 @@ export type RootStackParamList = {
   OpenSourcePage: undefined;
   ReadingHistoryScreen: undefined;
   ChatbotScreen: { characterId: string; characterName?: string; characterAvatar?: string };
+  AboutScreen: undefined;
+  ProfileScreen: undefined;
+  SettingsScreen: undefined;
+  RespectGiverScreen: undefined;
+  ContentListScreen: { type: 'articles' | 'reposts' | 'saved' };
 };
 
 export type RedirectTo = {
@@ -177,10 +182,9 @@ export type UserDetail = {
 export type TabParamList = {
   Home: undefined;
   Podcasts: undefined;
-  Profile: undefined;
+  Settings: undefined;
   Chatbot: undefined;
-  About: undefined;
-  Wellness: undefined;
+  Academy: undefined;
 };
 
 export type SplashScreenProp =
@@ -371,17 +375,9 @@ export type PodcastScreenProps = CompositeScreenProps<
   StackScreenProps<RootStackParamList, 'PodcastDetail'>
 >;
 
-export type ProfileScreenProps = CompositeScreenProps<
-  BottomTabScreenProps<TabParamList, 'Profile'>,
-  | StackScreenProps<RootStackParamList, 'ProfileEditScreen'>
-  | StackScreenProps<RootStackParamList, 'ArticleScreen'>
->;
+export type ProfileScreenProps = StackScreenProps<RootStackParamList, 'ProfileScreen'>;
 
-export type AboutScreenProps = CompositeScreenProps<
-  BottomTabScreenProps<TabParamList, 'About'>,
-  | StackScreenProps<RootStackParamList, 'Privacy'>
-  | StackScreenProps<RootStackParamList, 'CommunityGuidelines'>
->;
+export type AboutScreenProps = StackScreenProps<RootStackParamList, 'AboutScreen'>;
 
 export type PodcastRecorderScreenProps = StackScreenProps<
   RootStackParamList,
@@ -423,12 +419,18 @@ export type HomeScreenHeaderProps = {
   searchText?: string;
 };
 
+export type ContentListScreenProp = StackScreenProps<
+  RootStackParamList,
+  'ContentListScreen'
+>;
+
 export type ArticleCardProps = {
   item: ArticleData;
   navigation:
     | HomeScreenProps['navigation']
     | ProfileScreenProps['navigation']
-    | UserProfileScreenProp['navigation'];
+    | UserProfileScreenProp['navigation']
+    | ContentListScreenProp['navigation'];
   success: () => void;
   isSelected: boolean;
   setSelectedCardId: (id: string) => void;
