@@ -5,7 +5,6 @@
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.20.0", "@babel/code-frame@^7.29.0", "@babel/code-frame@^7.29.7":
   version "7.29.7"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.29.7.tgz#f2fbbfea87c44a21590ec515b778b2c26d8866e7"
-  resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.29.7.tgz#f2fbbfea87c44a21590ec515b778b2c26d8866e7"
   integrity sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==
   dependencies:
     "@babel/helper-validator-identifier" "^7.29.7"
@@ -909,7 +908,6 @@
 
 "@expo/code-signing-certificates@^0.0.6":
   version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@expo/code-signing-certificates/-/code-signing-certificates-0.0.6.tgz#6b7b22830cb69c77a45e357c2f3aa7ab436ac772"
   resolved "https://registry.yarnpkg.com/@expo/code-signing-certificates/-/code-signing-certificates-0.0.6.tgz#6b7b22830cb69c77a45e357c2f3aa7ab436ac772"
   integrity sha512-iNe0puxwBNEcuua9gmTGzq+SuMDa0iATai1FlFTMHJ/vUmKvN/V//drXoLJkVb5i5H3iE/n/qIJxyoBnXouD0w==
   dependencies:
@@ -4360,7 +4358,6 @@
 
 "@unrs/resolver-binding-win32-arm64-msvc@1.12.2":
   version "1.12.2"
-  resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-arm64-msvc/-/resolver-binding-win32-arm64-msvc-1.12.2.tgz#521427dd59a8f4740ddd1dc7c3bc6af1aa1d260d"
   resolved "https://registry.yarnpkg.com/@unrs/resolver-binding-win32-arm64-msvc/-/resolver-binding-win32-arm64-msvc-1.12.2.tgz#521427dd59a8f4740ddd1dc7c3bc6af1aa1d260d"
   integrity sha512-qzNyg3xL0VPQmCaUh+N5jSitce6k+uCBfMDesWRnlULOZaqUkaJ0ybdT+UqlAWJoQjuqfIU/0Ptx9bteN4D82g==
 
@@ -9722,10 +9719,10 @@ react-native-reanimated@4.3.2:
     react-native-is-edge-to-edge "^1.3.1"
     semver "^7.7.3"
 
-react-native-safe-area-context@~5.7.0:
-  version "5.7.0"
-  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.7.0.tgz#035699d5ec17fefb98cc1fa44a9ec852c7d530d0"
-  integrity sha512-/9/MtQz8ODphjsLdZ+GZAIcC/RtoqW9EeShf7Uvnfgm/pzYrJ75y3PV/J1wuAV1T5Dye5ygq4EAW20RoBq0ABQ==
+react-native-safe-area-context@~5.8.0:
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-5.8.0.tgz#d2fb9fc8e0f0583311e261dc484b95ceb80f8902"
+  integrity sha512-t+ZsAVzY/wWzzx34vqGbo3/as9EEESJdbyZNL7Yg5EYX+toYMtMqFoDDCvqZUi35eeGVsXc6pAaEk4edMwbuCQ==
 
 react-native-screens@~4.25.2:
   version "4.25.2"
