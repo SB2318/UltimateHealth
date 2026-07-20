@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
 import React, {useCallback, useEffect, useState} from 'react';
 import {Image, StyleSheet, ActivityIndicator} from 'react-native';
 import {YStack, Text, Button} from 'tamagui';

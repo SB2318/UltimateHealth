@@ -31,7 +31,7 @@ jest.mock('@expo/vector-icons/MaterialIcons', () => {
 let capturedContext: ReturnType<typeof usePreferences> | null = null;
 
 const ContextSpy: React.FC = () => {
-  // eslint-disable-next-line react-hooks/globals
+   
   capturedContext = usePreferences();
   return null;
 };

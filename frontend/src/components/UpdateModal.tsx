@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Modal, View, Text, Pressable, Linking } from 'react-native';
 import { safeOpenUrl } from '../utils/safeOpenUrl';
 

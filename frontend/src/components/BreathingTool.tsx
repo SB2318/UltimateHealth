@@ -53,11 +53,13 @@ export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps)
 
   const animatedScale = useRef(new Animated.Value(1)).current;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const currentPhaseIndexRef = useRef(0);
 
   // Initialize phase when mode changes or tool resets
   useEffect(() => {
     if (!isRunning && !isPaused) {
       setCurrentPhaseIndex(0);
+      currentPhaseIndexRef.current = 0;
       setPhaseRemaining(MODES[selectedMode][0].duration);
       setSessionElapsed(0);
       setCompletedCycles(0);
@@ -75,22 +77,16 @@ export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps)
         
         setPhaseRemaining(prev => {
           if (prev <= 1) {
-            // Phase is complete, calculate the next phase index
-            const nextPhaseIndex = (currentPhaseIndex + 1) % MODES[selectedMode].length;
+            // Phase is complete, calculate the next phase index using the ref to avoid stale closures
+            const nextPhaseIndex = (currentPhaseIndexRef.current + 1) % MODES[selectedMode].length;
             
             // If the next phase is 0, a full breathing cycle has been completed
             if (nextPhaseIndex === 0) {
-              setCompletedCycles(c => {
-                const newCycles = c + 1;
-                // If target cycles are reached, automatically complete the session
-                if (newCycles >= defaultCycles) {
-                  handleCompleteSession();
-                }
-                return newCycles;
-              });
+              setCompletedCycles(c => c + 1);
             }
             
             setCurrentPhaseIndex(nextPhaseIndex);
+            currentPhaseIndexRef.current = nextPhaseIndex;
             
             // Trigger the breathing circle animation for the newly entered phase
             const nextConfig = MODES[selectedMode][nextPhaseIndex];
@@ -116,6 +112,12 @@ export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps)
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [isRunning, isPaused, currentPhaseIndex, selectedMode, animatedScale]);
+
+  useEffect(() => {
+    if (completedCycles > 0 && completedCycles >= defaultCycles && isRunning && !isCompleted) {
+      handleCompleteSession();
+    }
+  }, [completedCycles, defaultCycles, isRunning, isCompleted]);
 
   const handleStart = () => {
     setIsCompleted(false);
@@ -148,10 +150,13 @@ export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps)
   };
 
   const submitSessionData = async (seconds: number) => {
+    console.log('submitSessionData called with seconds:', seconds);
     // Round up to ensure any session > 0s logs at least 1 minute
     const minutes = Math.ceil(seconds / 60);
+    console.log('minutes calculated:', minutes);
     if (minutes > 0) {
       try {
+        console.log('calling authAxios.post...');
         await authAxios.post(LOG_WELLNESS_METRICS, {
           breathingSessionMinutes: minutes,
         });
@@ -170,6 +175,7 @@ export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps)
   };
 
   const handleCompleteSession = () => {
+    console.log('handleCompleteSession called. sessionElapsed:', sessionElapsed);
     setIsRunning(false);
     setIsPaused(false);
     setIsCompleted(true);

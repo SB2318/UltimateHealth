@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
 import React, {useRef} from 'react';
 import {TouchableOpacity, Alert, StyleSheet, View} from 'react-native';
 import {YStack, XStack, Image, Text} from 'tamagui';
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   imageOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',

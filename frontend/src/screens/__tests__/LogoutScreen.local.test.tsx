@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
 import React from 'react';
 import {Alert} from 'react-native';
 import {fireEvent, render, waitFor} from '@testing-library/react-native';

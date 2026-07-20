@@ -13,7 +13,7 @@ export type RootStackParamList = {
   SignUpScreenFirst: undefined;
   SignUpScreenSecond: {user: UserDetail};
   OtpScreen: {email: string};
-  NewPasswordScreen: {email: string};
+  NewPasswordScreen: {email: string; resetToken?: string};
   EditorScreen: {
     title: string;
     authorName: string;

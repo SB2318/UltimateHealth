@@ -20,7 +20,7 @@ describe('useUpdatePlaylist', () => {
 
   it('adds podcast to playlist successfully', async () => {
     mockedAxios.post.mockResolvedValueOnce({
-      data: {data: {id: 1, name: 'List'}},
+      data: {data: {_id: 1, title: 'List'}},
     });
 
     const {result} = renderHook(() => useUpdatePlaylist(), {
@@ -30,7 +30,7 @@ describe('useUpdatePlaylist', () => {
     result.current.mutate({addedPodcastId: 'p1', selectedPlaylistId: 'l1'});
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.id).toBe(1);
+    expect(result.current.data?._id).toBe(1);
   });
 
   it('sets error state on network failure', async () => {

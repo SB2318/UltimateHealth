@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 import React, {useCallback, useState} from 'react';
 import { FlatList ,
   StyleSheet,
@@ -125,7 +125,7 @@ const ReadingHistoryScreen = ({navigation}: Props) => {
     ({item}: {item: ReadingHistoryItem}) => (
       <HistoryRow item={item} onPress={handleRowPress} />
     ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
     [],
   );
 

@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
 import React, { useEffect, useRef, useCallback } from 'react';
 import { useColorScheme, View } from 'react-native';

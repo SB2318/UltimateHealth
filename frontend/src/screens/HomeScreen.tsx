@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
+ 
 // @ts-nocheck
 import { StyleSheet,
   View,

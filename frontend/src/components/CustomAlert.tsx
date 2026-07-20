@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
 import { AlertDialog, Button, XStack, YStack } from "tamagui";
 import { useDispatch, useSelector } from "react-redux";
 import { hideAlert } from "../store/alertSlice";

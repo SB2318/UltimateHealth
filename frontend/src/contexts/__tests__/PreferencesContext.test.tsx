@@ -3,6 +3,8 @@ import {render, waitFor, act} from '@testing-library/react-native';
 import {Text} from 'react-native';
 import {PreferencesProvider, usePreferences} from '../PreferencesContext';
 
+import * as SecureStore from 'expo-secure-store';
+
 const mockStore: Record<string, string> = {};
 
 jest.mock('expo-secure-store', () => ({
@@ -19,13 +21,11 @@ jest.mock('expo-secure-store', () => ({
   }),
 }));
 
-import * as SecureStore from 'expo-secure-store';
-
 let capturedContext: ReturnType<typeof usePreferences> | null = null;
 
 const TestHarness: React.FC = () => {
   const ctx = usePreferences();
-  // eslint-disable-next-line react-hooks/globals
+   
   capturedContext = ctx;
   return <Text>{ctx.preferredLanguages.join(',')}</Text>;
 };

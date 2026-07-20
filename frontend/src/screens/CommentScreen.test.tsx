@@ -2,6 +2,9 @@
 import React from 'react';
 import {render} from '@testing-library/react-native';
 
+// ── Import screen AFTER all mocks ─────────────────────────────────────────────
+import CommentScreen from './CommentScreen';
+
 // ── Tamagui mock ──────────────────────────────────────────────────────────────
 jest.mock('tamagui', () => {
   const ReactLib = require('react');
@@ -97,9 +100,6 @@ jest.mock('axios', () => ({
   post: jest.fn(() => Promise.resolve({data: {}})),
 }));
 
-// ── Import screen AFTER all mocks ─────────────────────────────────────────────
-import CommentScreen from './CommentScreen';
-
 // ─────────────────────────────────────────────────────────────────────────────
 
 const baseRoute = (articleOverrides = {}) => ({
@@ -124,21 +124,21 @@ describe('CommentScreen - edge case guards', () => {
   it('renders without crashing when imageUtils is missing', () => {
     const route = baseRoute({imageUtils: undefined});
     expect(() =>
-      render(<CommentScreen navigation={navigation} route={route} />),
+      render(<CommentScreen navigation={navigation as any} route={route as any} />),
     ).not.toThrow();
   });
 
   it('renders without crashing when imageUtils is an empty array', () => {
     const route = baseRoute({imageUtils: []});
     expect(() =>
-      render(<CommentScreen navigation={navigation} route={route} />),
+      render(<CommentScreen navigation={navigation as any} route={route as any} />),
     ).not.toThrow();
   });
 
   it('renders without crashing when authorId is missing', () => {
     const route = baseRoute({authorId: undefined, imageUtils: ['img.jpg']});
     expect(() =>
-      render(<CommentScreen navigation={navigation} route={route} />),
+      render(<CommentScreen navigation={navigation as any} route={route as any} />),
     ).not.toThrow();
   });
 
@@ -148,7 +148,7 @@ describe('CommentScreen - edge case guards', () => {
       authorId: 'author123',
     });
     expect(() =>
-      render(<CommentScreen navigation={navigation} route={route} />),
+      render(<CommentScreen navigation={navigation as any} route={route as any} />),
     ).not.toThrow();
   });
 });

@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
 import React, { JSX } from 'react';
 import { Text, Image} from 'react-native';
 import GlobalStyles from '../styles/GlobalStyle';

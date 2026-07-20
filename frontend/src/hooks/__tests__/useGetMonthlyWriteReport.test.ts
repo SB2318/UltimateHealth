@@ -8,12 +8,12 @@ import { useSelector } from 'react-redux';
 // ─── Mocks ───────────────────────────────────────────────────────────────────
 
 jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+const mockedAxios = axios as unknown as jest.Mocked<typeof axios>;
 
 jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }));
-const mockedUseSelector = useSelector as jest.Mock;
+const mockedUseSelector = useSelector as unknown as jest.Mock;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

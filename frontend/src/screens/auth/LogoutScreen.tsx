@@ -43,7 +43,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
 
   const handleLogout = () => {
     logout(
-      {},
+      undefined,
       {
         onSuccess: async () => {
           await completeLocalLogout();

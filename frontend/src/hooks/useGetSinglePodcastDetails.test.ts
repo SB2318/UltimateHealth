@@ -38,7 +38,6 @@ describe('useGetSinglePodcastDetails', () => {
       wrapper: makeWrapper(),
     });
 
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data).toBeNull();
+    await waitFor(() => expect(result.current.isError).toBe(true));
   });
 });

@@ -31,15 +31,14 @@ describe('useGetAllPodcasts', () => {
     expect(result.current.data?.totalPages).toBe(2);
   });
 
-  it('returns null on catch', async () => {
+  it('sets error state on network failure', async () => {
     mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
 
     const {result} = renderHook(() => useGetAllPodcasts(true, 1), {
       wrapper: makeWrapper(),
     });
 
-    await waitFor(() => expect(result.current.isSuccess).toBe(true)); // Try/catch inside queryFn
-    expect(result.current.data).toBeNull();
+    await waitFor(() => expect(result.current.isError).toBe(true));
   });
 
   it('does not fetch if not connected', async () => {

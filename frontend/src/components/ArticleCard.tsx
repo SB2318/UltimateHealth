@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
  
 // @ts-nocheck
 import {
@@ -109,7 +109,7 @@ const ArticleCard = ({
 
   const {mutate: repost, isPending: repostPending} = useRepostArticle();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const {mutate: getArticleContent, isPending: getArticleContentPending} =
     useLazyGetArticleContent();
 
