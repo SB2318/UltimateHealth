@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   Modal,
@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {PRIMARY_COLOR} from '../helper/Theme';
+import { PRIMARY_COLOR } from '../helper/Theme';
 
 interface AddSpecializationModalProps {
   isModalVisible: boolean;
@@ -88,10 +88,17 @@ const AddSpecializationModal = ({
             onPress={handleClose}
             style={styles.cancelBtn}
             accessibilityRole="button"
-            accessibilityLabel="Cancel and close dialog">
+            accessibilityLabel="Cancel and close dialog"
+          >
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={validateAndAdd} style={styles.addBtn}>
+
+          <TouchableOpacity
+            onPress={validateAndAdd}
+            style={styles.addBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Add specialization"
+          >
             <Text style={styles.addText}>Add</Text>
           </TouchableOpacity>
         </View>
