@@ -1,4 +1,4 @@
-import { CHECK_OTP } from "@/src/helper/APIUtils";
+import { CHECK_OTP } from "@/src/lib/api/APIUtils";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
 

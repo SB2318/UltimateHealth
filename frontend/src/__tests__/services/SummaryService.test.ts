@@ -1,4 +1,4 @@
-import { generateArticleSummary } from "@/src/services/SummaryService";
+import { generateArticleSummary } from "@/src/lib/services/SummaryService";
 
 
 global.fetch = jest.fn();

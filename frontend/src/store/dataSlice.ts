@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {ArticleData, Category, Podcast} from '../type';
+import {ArticleData, Category, Podcast} from '../schemas/type';
 
 export type DataState = {
   filteredArticles: ArticleData[];

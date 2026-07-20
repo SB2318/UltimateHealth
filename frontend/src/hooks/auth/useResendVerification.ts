@@ -1,4 +1,4 @@
-import { RESEND_VERIFICATION } from '@/src/helper/APIUtils';
+import { RESEND_VERIFICATION } from '@/src/lib/api/APIUtils';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import axios from 'axios';
 type AxiosError = any;

@@ -1,18 +1,18 @@
 import { StyleSheet, View, Text, Alert, useColorScheme, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {useDispatch, useSelector} from 'react-redux';
 import { useTheme } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import ProfileHeader from '../../components/ProfileHeader';
-import {ProfileScreenProps} from '../../type';
-import Loader from '../../components/Loader';
+import ProfileHeader from '../../components/profile/ProfileHeader';
+import {ProfileScreenProps} from '../../schemas/type';
+import Loader from '../../components/common/Loader';
 import {useFocusEffect} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
 import {setUserHandle} from '../../store/UserSlice';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
-import {wp, hp, fp} from '../../helper/Metric';
+import {wp, hp, fp} from '../../lib/ui/Metric';
 
 const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const theme = useTheme();

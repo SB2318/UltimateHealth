@@ -1,5 +1,5 @@
-import { SEND_MESSAGE_TO_GEMINI } from '@/src/helper/APIUtils';
-import { Message } from '@/src/type';
+import { SEND_MESSAGE_TO_GEMINI } from '@/src/lib/api/APIUtils';
+import { Message } from '@/src/schemas/type';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 
 import axios from 'axios';

@@ -1,5 +1,5 @@
-import { GET_MONTHLY_WRITES_REPORT } from '@/src/helper/APIUtils';
-import { MonthStatus } from '@/src/type';
+import { GET_MONTHLY_WRITES_REPORT } from '@/src/lib/api/APIUtils';
+import { MonthStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 

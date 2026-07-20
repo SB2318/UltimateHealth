@@ -1,7 +1,7 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import {User} from '../../type';
+import {User} from '../../schemas/type';
 import axios from 'axios';
-import {GET_PROFILE_API} from '../../helper/APIUtils';
+import {GET_PROFILE_API} from '../../lib/api/APIUtils';
 import {useSelector} from 'react-redux';
 type AxiosError = any;
 

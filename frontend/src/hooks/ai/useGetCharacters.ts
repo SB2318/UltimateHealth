@@ -1,5 +1,5 @@
-import { GET_CHARACTERS_API } from "@/src/helper/APIUtils";
-import { Character } from "@/src/type";
+import { GET_CHARACTERS_API } from "@/src/lib/api/APIUtils";
+import { Character } from "@/src/schemas/type";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
 import axios from "axios";

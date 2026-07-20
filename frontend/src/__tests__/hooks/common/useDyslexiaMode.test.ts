@@ -1,5 +1,5 @@
-import { retrieveItem } from '@/src/helper/MMKVUtils';
-import { storeItem } from '@/src/helper/Utils';
+import { retrieveItem } from '@/src/lib/storage/MMKVUtils';
+import { storeItem } from '@/src/lib/utils/Utils';
 import { useDyslexiaMode, DYSLEXIA_MODE_KEY } from '@/src/hooks/common/useDyslexiaMode';
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 

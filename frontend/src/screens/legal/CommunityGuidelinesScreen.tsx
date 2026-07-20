@@ -6,10 +6,10 @@ import { StatusBar } from 'expo-status-bar';
 import { ScrollView, YStack, XStack, Text, Button, View, Separator } from 'tamagui';
 import { Ionicons } from '@expo/vector-icons';
 import { ProfessionalColors, Typography, Spacing } from '../../styles/GlassStyles';
-import { GlassContainer } from '../../components/GlassContainer';
+import { GlassContainer } from '../../components/common/GlassContainer';
 import { useScrollControls } from '../../hooks/common/useScrollControls';
-import { ScrollActionButtons } from '../../components/ScrollActionButtons';
-import type { CommunityGuidelinesScreenProps } from '../../type';
+import { ScrollActionButtons } from '../../components/common/ScrollActionButtons';
+import type { CommunityGuidelinesScreenProps } from '../../schemas/type';
 
 interface Section {
   id: number;

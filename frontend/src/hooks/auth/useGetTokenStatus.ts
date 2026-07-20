@@ -1,9 +1,9 @@
 // @ts-nocheck
 
 // hooks/useCheckTokenStatus.ts
-import { GET_TOKEN_STATUS } from '@/src/helper/APIUtils';
-import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../../helper/SecureStorageUtils';
-import { TokenStatus } from '@/src/type';
+import { GET_TOKEN_STATUS } from '@/src/lib/api/APIUtils';
+import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../../lib/storage/SecureStorageUtils';
+import { TokenStatus } from '@/src/schemas/type';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 import { useSelector } from 'react-redux';

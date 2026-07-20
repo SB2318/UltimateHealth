@@ -1,4 +1,4 @@
-import { CHECK_USER_HANDLE } from '@/src/helper/APIUtils';
+import { CHECK_USER_HANDLE } from '@/src/lib/api/APIUtils';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 

@@ -1,5 +1,5 @@
-import { GET_TOTAL_LIKES_VIEWS } from '@/src/helper/APIUtils';
-import { UserStatus } from '@/src/type';
+import { GET_TOTAL_LIKES_VIEWS } from '@/src/lib/api/APIUtils';
+import { UserStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 import {useSelector} from 'react-redux';

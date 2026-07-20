@@ -1,5 +1,5 @@
-import { GET_TOTAL_READS } from '@/src/helper/APIUtils';
-import { ReadStatus } from '@/src/type';
+import { GET_TOTAL_READS } from '@/src/lib/api/APIUtils';
+import { ReadStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 

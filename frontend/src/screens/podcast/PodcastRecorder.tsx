@@ -4,7 +4,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Alert, AppState, AppStateStatus} from 'react-native';
 
-import {PodcastRecorderScreenProps} from '../../type';
+import {PodcastRecorderScreenProps} from '../../schemas/type';
 import RNFS from 'react-native-fs';
 
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
@@ -25,7 +25,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
 //import {useDispatch} from 'react-redux';
-import {requestStoragePermissions} from '../../helper/Utils';
+import {requestStoragePermissions} from '../../lib/utils/Utils';
  type AppStateStatusType = 'active' | 'background' | 'inactive' | 'unknown' | 'extension';
 
 

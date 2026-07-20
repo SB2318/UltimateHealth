@@ -1,5 +1,5 @@
-import { LOAD_REVIEW_COMMENTS } from '@/src/helper/APIUtils';
-import { Comment } from '@/src/type';
+import { LOAD_REVIEW_COMMENTS } from '@/src/lib/api/APIUtils';
+import { Comment } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 

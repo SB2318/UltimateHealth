@@ -1,4 +1,4 @@
-import { GET_IMPROVEMENT_CONTENT } from '@/src/helper/APIUtils';
+import { GET_IMPROVEMENT_CONTENT } from '@/src/lib/api/APIUtils';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useSelector } from 'react-redux';

@@ -13,19 +13,19 @@ import { View,
   Alert,
    } from 'react-native';
 import {useSelector} from 'react-redux';
-import {PodcastFormProp, Category} from '../../type';
+import {PodcastFormProp, Category} from '../../schemas/type';
 import Ionicon from '@expo/vector-icons/Ionicons';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {
   ImageLibraryOptions,
   ImagePickerResponse,
   launchImageLibrary,
 } from 'react-native-image-picker';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
-import {hp} from '../../helper/Metric';
+import {hp} from '../../lib/ui/Metric';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
-import { ttsLanguageList } from '../../helper/Utils';
+import { ttsLanguageList } from '../../lib/utils/Utils';
 
 
 const PodcastForm = ({navigation, route}: PodcastFormProp) => {

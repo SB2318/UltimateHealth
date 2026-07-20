@@ -1,8 +1,8 @@
 import axios from "axios"
-import { PodcastData } from "../../type"
+import { PodcastData } from "../../schemas/type"
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
-import { SEARCH_PODCAST } from "../../helper/APIUtils"
-import { escapeRegexSpecialChars } from "../../helper/SearchUtils"
+import { SEARCH_PODCAST } from "../../lib/api/APIUtils"
+import { escapeRegexSpecialChars } from "../../lib/utils/SearchUtils"
 type AxiosError = any;
 
 

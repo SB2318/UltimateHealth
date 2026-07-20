@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { PodcastData } from "../../type";
+import { PodcastData } from "../../schemas/type";
 import axios from "axios";
-import { GET_PODCAST_DETAILS } from "../../helper/APIUtils";
+import { GET_PODCAST_DETAILS } from "../../lib/api/APIUtils";
 type AxiosError = any;
 
 export const useGetSinglePodcastDetails = (trackId: string): UseQueryResult<

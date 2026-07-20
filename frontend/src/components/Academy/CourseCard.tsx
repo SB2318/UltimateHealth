@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Course } from '../../helper/AcademyMockData';
-import { ACADEMY_PRIMARY, ACADEMY_SURFACE, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_BORDER } from '../../helper/Theme';
+import { Course } from '../../lib/utils/AcademyMockData';
+import { ACADEMY_PRIMARY, ACADEMY_SURFACE, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_BORDER } from '../../lib/ui/Theme';
 
 type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 

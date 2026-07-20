@@ -1,4 +1,4 @@
-import { UPDATE_USER_PASSWORD } from "@/src/helper/APIUtils";
+import { UPDATE_USER_PASSWORD } from "@/src/lib/api/APIUtils";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
 type AxiosError = any;

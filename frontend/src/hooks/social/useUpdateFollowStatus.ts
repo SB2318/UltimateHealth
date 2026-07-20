@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
-import { FOLLOW_USER } from "../../helper/APIUtils";
+import { FOLLOW_USER } from "../../lib/api/APIUtils";
 type AxiosError = any;
 
 

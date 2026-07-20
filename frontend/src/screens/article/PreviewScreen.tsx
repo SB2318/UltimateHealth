@@ -9,16 +9,16 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {BUTTON_COLOR} from '../../helper/Theme';
+import {BUTTON_COLOR} from '../../lib/ui/Theme';
 import {
   PocketBaseResponse,
   PreviewScreenProp,
-} from '../../type';
-import {createHTMLStructure, handleExternalClick} from '../../helper/Utils';
+} from '../../schemas/type';
+import {createHTMLStructure, handleExternalClick} from '../../lib/utils/Utils';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 
-import Loader from '../../components/Loader';
-import {GET_IMAGE} from '../../helper/APIUtils';
+import Loader from '../../components/common/Loader';
+import {GET_IMAGE} from '../../lib/api/APIUtils';
 import {useDispatch, useSelector} from 'react-redux';
 import useUploadImage from '../../hooks/media/useUploadImage';
 import {setSuggestion} from '../../store/dataSlice';

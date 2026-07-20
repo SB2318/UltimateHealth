@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { ErrorBoundary } from '../../components/common/ErrorBoundary';
  
 import {
   Image,
@@ -12,26 +12,26 @@ import {
   useWindowDimensions,
   useColorScheme,
  ScrollView } from 'react-native';
-import ArticleShareModal from '../../components/ArticleShareModal';
+import ArticleShareModal from '../../components/article/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {ArticleData, ArticleScreenProp} from '../../type';
+import {ArticleData, ArticleScreenProp} from '../../schemas/type';
 import {useDispatch, useSelector} from 'react-redux';
-import {hp} from '../../helper/Metric';
-import {GET_IMAGE, GET_STORAGE_DATA} from '../../helper/APIUtils';
-import Loader from '../../components/Loader';
+import {hp} from '../../lib/ui/Metric';
+import {GET_IMAGE, GET_STORAGE_DATA} from '../../lib/api/APIUtils';
+import Loader from '../../components/common/Loader';
 import Snackbar from 'react-native-snackbar';
-import ResearchSummaryCard from '../../components/ResearchSummaryCard';
-import StructuredPodcastCard from '../../components/StructuredPodcastCard';
-import { debugLog, debugWarn, debugError } from '../../utils/debugLog';
+import ResearchSummaryCard from '../../components/article/ResearchSummaryCard';
+import StructuredPodcastCard from '../../components/podcast/StructuredPodcastCard';
+import { debugLog, debugWarn, debugError } from '../../lib/utils/debugLog';
 import {
   generateArticleSummary,
   ArticleSummary,
-} from '../../services/SummaryService';
-import {recordArticleView} from '../../services/ReadingHistoryService';
+} from '../../lib/services/SummaryService';
+import {recordArticleView} from '../../lib/services/ReadingHistoryService';
 
 import {
   formatCount,
@@ -39,11 +39,11 @@ import {
   retrieveItem,
   StatusEnum,
   storeItem,
-} from '../../helper/Utils';
+} from '../../lib/utils/Utils';
 //import CommentScreen from '../CommentScreen';
 import Tts from 'react-native-tts';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import SpeedSelector from '../../components/FloatingSpeedSelector';
+import SpeedSelector from '../../components/podcast/FloatingSpeedSelector';
 
 import {setUserHandle} from '../../store/UserSlice';
 import {FontAwesome5} from '@expo/vector-icons';
@@ -56,17 +56,17 @@ import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
 import {useLikeArticle} from '@/src/hooks/article/useLikeArticle';
 import {useUpdateFollowStatusByArticle} from '@/src/hooks/social/useUpdateFollowStatus';
 import {useUpdateReadEvent} from '@/src/hooks/article/useUpdateReadEvent';
-import {getReadTime} from '../../utils/readTime';
+import {getReadTime} from '../../lib/utils/readTime';
 import {useUpdateViewCount} from '@/src/hooks/article/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/article/useSaveArticle';
 import {useTrustArticle} from '@/src/hooks/article/useTrustArticle';
-import TrustedUsersModal from '../../components/TrustedUsersModal';
+import TrustedUsersModal from '../../components/profile/TrustedUsersModal';
 import {useSocket} from '../../contexts/SocketContext';
-import { copyArticleShareLink } from '../../helper/shareUtils';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
+import { copyArticleShareLink } from '../../lib/utils/shareUtils';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { ReadingDifficulty, getArticleDifficulty } from '../../components/article/ReadingDifficulty';
 import { useDyslexiaMode } from '../../hooks/common/useDyslexiaMode';
-import { generateArticleStyles } from '../../utils/dyslexiaStyles';
+import { generateArticleStyles } from '../../lib/ui/dyslexiaStyles';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,

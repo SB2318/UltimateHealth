@@ -1,5 +1,5 @@
-import { GET_ALL_ARTICLES_FOR_USER } from '@/src/helper/APIUtils';
-import { ArticleData } from '@/src/type';
+import { GET_ALL_ARTICLES_FOR_USER } from '@/src/lib/api/APIUtils';
+import { ArticleData } from '@/src/schemas/type';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useSelector } from 'react-redux';

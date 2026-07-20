@@ -1,7 +1,7 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
-import {GET_NOTIFICATION_PREFERENCES} from '../../helper/APIUtils';
-import {NotificationPreferencesResponse} from '../../type';
+import {GET_NOTIFICATION_PREFERENCES} from '../../lib/api/APIUtils';
+import {NotificationPreferencesResponse} from '../../schemas/type';
 import {useSelector} from 'react-redux';
 type AxiosError = any;
 

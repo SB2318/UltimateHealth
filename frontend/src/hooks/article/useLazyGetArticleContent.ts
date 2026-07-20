@@ -1,7 +1,7 @@
 // @ts-nocheck
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import axios from 'axios';
-import {GET_ARTICLE_CONTENT} from '../../helper/APIUtils';
+import {GET_ARTICLE_CONTENT} from '../../lib/api/APIUtils';
 type AxiosError = any;
 
 interface ArticleContentResponse {

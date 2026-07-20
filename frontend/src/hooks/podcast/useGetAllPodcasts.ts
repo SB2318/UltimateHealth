@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
-import { GET_ALL_PODCASTS } from "../../helper/APIUtils";
-import { PodcastData } from "../../type";
+import { GET_ALL_PODCASTS } from "../../lib/api/APIUtils";
+import { PodcastData } from "../../schemas/type";
 type AxiosError = any;
 
 type PodcastResponse = {

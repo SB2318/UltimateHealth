@@ -1,8 +1,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { GET_SOCIALS } from '../../helper/APIUtils';
-import { User } from '../../type';
+import { GET_SOCIALS } from '../../lib/api/APIUtils';
+import { User } from '../../schemas/type';
 import { useSelector } from 'react-redux';
 
 interface Props {

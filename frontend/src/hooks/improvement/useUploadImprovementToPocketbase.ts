@@ -1,7 +1,7 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
-import {PocketBaseResponse} from '../../type';
+import {PocketBaseResponse} from '../../schemas/type';
 import axios from 'axios';
-import {UPLOAD_IMPROVEMENT_TO_POCKETBASE} from '../../helper/APIUtils';
+import {UPLOAD_IMPROVEMENT_TO_POCKETBASE} from '../../lib/api/APIUtils';
 type AxiosError = any;
 
 interface ImprovementReq {

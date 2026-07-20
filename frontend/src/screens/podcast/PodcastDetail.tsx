@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
  
-import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -12,34 +12,34 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import {PodcastDetailScreenProp} from '../../type';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import Slider from '../../components/SliderCompat';
+import {PodcastDetailScreenProp} from '../../schemas/type';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import Slider from '../../components/podcast/SliderCompat';
 import {GlassStyles} from '../../styles/GlassStyles';
 
 import {useAudioPlayer} from 'expo-audio';
 
 // GET_IMAGE is defined as `${PROD_URL}/getfile` (resolves to absolute URL: https://uhsocial.in/api/getfile).
 // This absolute, securely-configured endpoint ensures that relative resource paths cannot access local device files via traversal.
-import {GET_IMAGE} from '../../helper/APIUtils';
+import {GET_IMAGE} from '../../lib/api/APIUtils';
 import {useSelector} from 'react-redux';
 
-import {downloadAudio, formatCount, StatusEnum} from '../../helper/Utils';
+import {downloadAudio, formatCount, StatusEnum} from '../../lib/utils/Utils';
 import Snackbar from 'react-native-snackbar';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Share from 'react-native-share';
-import {fp} from '../../helper/Metric';
+import {fp} from '../../lib/ui/Metric';
 import {useSocket} from '../../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
-import Loader from '../../components/Loader';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import PodcastDetailSkeleton from '../../components/PodcastDetailSkeleton';
+import Loader from '../../components/common/Loader';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import PodcastDetailSkeleton from '../../components/podcast/PodcastDetailSkeleton';
 import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
 import LottieView from 'lottie-react-native';
-import AudioWaveform from '../../components/AudioWaveform';
+import AudioWaveform from '../../components/podcast/AudioWaveform';
 import {useGetSinglePodcastDetails} from '../../hooks/podcast/useGetSinglePodcastDetails';
 import {useLikePodcast} from '../../hooks/podcast/useLikePodcast';
-import {getPlaybackPosition, savePlaybackPosition} from '../../helper/PlaybackManager';
+import {getPlaybackPosition, savePlaybackPosition} from '../../lib/platform/PlaybackManager';
 
 const isAllowedUrl = (urlStr?: string | null): boolean => {
   if (!urlStr) return false;

@@ -2,7 +2,7 @@
  
 import {useCallback, useEffect, useState} from 'react';
 import {Alert, StyleSheet} from 'react-native';
-import {PodcastPlayerScreenProps} from '../../type';
+import {PodcastPlayerScreenProps} from '../../schemas/type';
 import RNFS from 'react-native-fs';
 import {useSelector} from 'react-redux';
 import Snackbar from 'react-native-snackbar';
@@ -10,16 +10,16 @@ import Snackbar from 'react-native-snackbar';
 import useUploadImage from '../../hooks/media/useUploadImage';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import useUploadAudio from '../../hooks/media/useUploadAudio';
-import Slider from '../../components/SliderCompat';
+import Slider from '../../components/podcast/SliderCompat';
 
 import {useAudioPlayer} from 'expo-audio';
 import {Button, Circle, Theme, XStack, YStack, Text, useTheme} from 'tamagui';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
-import AudioWaveform from '../../components/AudioWaveform';
+import AudioWaveform from '../../components/podcast/AudioWaveform';
 import {useUploadPodcast} from '../../hooks/podcast/useUploadPodcast';
-import Loader from '../../components/Loader';
+import Loader from '../../components/common/Loader';
 
-import FloatingSpeedSelector from '../../components/FloatingSpeedSelector';
+import FloatingSpeedSelector from '../../components/podcast/FloatingSpeedSelector';
 
 const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const {uploadImage, loading, error: imageError} = useUploadImage();

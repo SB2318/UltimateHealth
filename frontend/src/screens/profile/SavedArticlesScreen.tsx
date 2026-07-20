@@ -5,10 +5,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import {useTheme} from 'tamagui';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import {SavedArticlesScreenProp, ArticleData} from '../../type';
+import {SavedArticlesScreenProp, ArticleData} from '../../schemas/type';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
-import {NoArticleState} from '../../components/EmptyStates';
-import UserArticleCard from '../../components/UserArticleCard';
+import {NoArticleState} from '../../components/common/EmptyStates';
+import UserArticleCard from '../../components/article/UserArticleCard';
 import {useFocusEffect} from '@react-navigation/native';
 
 const SavedArticlesScreen = ({navigation}: SavedArticlesScreenProp) => {

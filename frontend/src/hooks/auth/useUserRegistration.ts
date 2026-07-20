@@ -1,8 +1,8 @@
 // @ts-nocheck
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import axios from 'axios';
-import {REGISTRATION_API} from '../../helper/APIUtils';
-import {Contactdetail} from '../../type';
+import {REGISTRATION_API} from '../../lib/api/APIUtils';
+import {Contactdetail} from '../../schemas/type';
 type AxiosError = any;
 
 type RegdReq = {

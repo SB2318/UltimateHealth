@@ -2,7 +2,7 @@
 // @ts-nocheck
 import React, {useState, useMemo} from 'react';
 import {Linking, FlatList} from 'react-native';
-import { safeOpenUrl } from '../../utils/safeOpenUrl';
+import { safeOpenUrl } from '../../lib/utils/safeOpenUrl';
 import {
   YStack,
   XStack,

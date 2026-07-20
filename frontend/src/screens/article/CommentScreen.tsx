@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 // @ts-nocheck
-import { ErrorBoundary } from '../../components/ErrorBoundary';
+import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert,
    FlatList ,
@@ -17,14 +17,14 @@ import { Alert,
 import { useDispatch, useSelector } from 'react-redux';
 import { H3, Image, Paragraph, Text, YStack, TextArea, XStack, Button } from 'tamagui';
 
-import CommentItem from '../../components/CommentItem';
-import Loader from '../../components/Loader';
+import CommentItem from '../../components/article/CommentItem';
+import Loader from '../../components/common/Loader';
 
 import { useSocket } from '../../contexts/SocketContext';
-import { PRIMARY_COLOR } from '../../helper/Theme';
+import { PRIMARY_COLOR } from '../../lib/ui/Theme';
 import { useArticleRoom } from '../../hooks/article/useArticleRoom';
 
-import { Comment, CommentScreenProp, User } from '../../type';
+import { Comment, CommentScreenProp, User } from '../../schemas/type';
 
 import {
   parseValue,
@@ -40,7 +40,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   GET_IMAGE,
   GET_STORAGE_DATA,
-} from '../../helper/APIUtils';
+} from '../../lib/api/APIUtils';
 
 const DEFAULT_AVATAR_URL =
   'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg';

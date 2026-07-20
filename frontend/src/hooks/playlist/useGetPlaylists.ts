@@ -1,6 +1,6 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import {PlayList} from '../../type';
-import {GET_PLAYLIST} from '../../helper/APIUtils';
+import {PlayList} from '../../schemas/type';
+import {GET_PLAYLIST} from '../../lib/api/APIUtils';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 type AxiosError = any;

@@ -1,4 +1,4 @@
-import { SEND_OTP } from "@/src/helper/APIUtils";
+import { SEND_OTP } from "@/src/lib/api/APIUtils";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
 type AxiosError = any;

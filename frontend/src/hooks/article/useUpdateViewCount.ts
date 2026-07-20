@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
-import { UPDATE_VIEW_COUNT } from '@/src/helper/APIUtils';
-import { ArticleData } from '@/src/type';
+import { UPDATE_VIEW_COUNT } from '@/src/lib/api/APIUtils';
+import { ArticleData } from '@/src/schemas/type';
 type AxiosError = any;
 
 export const useUpdateViewCount = (articleId: number): UseMutationResult<

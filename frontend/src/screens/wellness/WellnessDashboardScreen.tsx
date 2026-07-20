@@ -4,8 +4,8 @@ import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LineChart } from 'react-native-chart-kit';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { PRIMARY_COLOR, BUTTON_COLOR } from '../../helper/Theme';
-import { wp, hp, fp } from '../../helper/Metric';
+import { PRIMARY_COLOR, BUTTON_COLOR } from '../../lib/ui/Theme';
+import { wp, hp, fp } from '../../lib/ui/Metric';
 
 const WellnessDashboardScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';

@@ -28,8 +28,8 @@ import Ionicon from '@expo/vector-icons/Ionicons';
 import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScreen';
 import ProfileEditScreen from '../screens/profile/ProfileEditScreen';
 import UserProfileScreen from '../screens/profile/UserProfileScreen';
-import {RootStackParamList, TabParamList} from '../type';
-import {BUTTON_COLOR, ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
+import {RootStackParamList, TabParamList} from '../schemas/type';
+import {BUTTON_COLOR, ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../lib/ui/Theme';
 import LogoutScreen from '../screens/auth/LogoutScreen';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 import OverviewScreen from '../screens/overview/OverviewScreen';
@@ -62,7 +62,7 @@ import SettingsScreen from '../screens/settings/SettingsScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import ContentListScreen from '../screens/article/ContentListScreen';
 import RespectGiverScreen from '../screens/social/RespectGiverScreen';
-import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
 
 import ChatbotScreen from '../screens/ai/ChatbotScreen';
 

@@ -18,11 +18,11 @@ import {
 } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AboutScreenProps } from '../../type';
-import { GlassContainer } from '../../components/GlassContainer';
+import { AboutScreenProps } from '../../schemas/type';
+import { GlassContainer } from '../../components/common/GlassContainer';
 import { ProfessionalColors, Typography, Spacing } from '../styles/GlassStyles';
 import { useScrollControls } from '../../hooks/common/useScrollControls';
-import { ScrollActionButtons } from '../../components/ScrollActionButtons';
+import { ScrollActionButtons } from '../../components/common/ScrollActionButtons';
 
 const AboutScreen = ({ navigation }: AboutScreenProps) => {
   const colorScheme = useColorScheme();

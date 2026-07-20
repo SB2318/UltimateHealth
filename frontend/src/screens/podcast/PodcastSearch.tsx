@@ -4,20 +4,20 @@
 import React, {useEffect, useState, useCallback, useRef} from 'react';
 import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import {PodcastData, PodcastSearchProp} from '../../type';
+import {PodcastData, PodcastSearchProp} from '../../schemas/type';
 
 import {useSelector} from 'react-redux';
-import PodcastCard from '../../components/PodcastCard';
-import PodcastSkeletonCard from '../../components/PodcastSkeletonCard';
-import {msToTime} from '../../helper/Utils';
+import PodcastCard from '../../components/podcast/PodcastCard';
+import PodcastSkeletonCard from '../../components/podcast/PodcastSkeletonCard';
+import {msToTime} from '../../lib/utils/Utils';
 import Snackbar from 'react-native-snackbar';
-import NoResults from '../../components/NoResult';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import NoResults from '../../components/common/NoResult';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {XStack, YStack, Input, Separator, Text, useTheme} from 'tamagui';
 import {Feather} from '@expo/vector-icons';
 import {useUpdatePodcastViewcount} from '../../hooks/podcast/useUpdatePodcastViewcount';
 import {useGetSearchPodcasts} from '../../hooks/podcast/useGetSearchPodcasts';
-import { sanitizeSearchInput, isValidSearchInput } from '../../helper/SearchUtils';
+import { sanitizeSearchInput, isValidSearchInput } from '../../lib/utils/SearchUtils';
 import { useColorScheme } from 'react-native-gifted-chat/lib/hooks/useColorScheme';
 
 const SKELETON_COUNT = 5;

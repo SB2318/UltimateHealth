@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {PROD_URL} from '../../helper/APIUtils';
+import {PROD_URL} from '../../lib/api/APIUtils';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 type AxiosError = any;
 

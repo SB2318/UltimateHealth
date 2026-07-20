@@ -6,8 +6,8 @@ import axios, { isAxiosError } from 'axios';
 import React, { useRef, useState } from 'react';
 import { Alert,  TextInput   } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {OtpScreenProp} from '../../type';
-import Loader from '../../components/Loader';
+import {OtpScreenProp} from '../../schemas/type';
+import Loader from '../../components/common/Loader';
 import {
   Button,
   Card,

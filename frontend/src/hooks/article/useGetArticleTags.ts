@@ -1,5 +1,5 @@
-import { ARTICLE_TAGS_API } from '@/src/helper/APIUtils';
-import { Category } from '@/src/type';
+import { ARTICLE_TAGS_API } from '@/src/lib/api/APIUtils';
+import { Category } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 

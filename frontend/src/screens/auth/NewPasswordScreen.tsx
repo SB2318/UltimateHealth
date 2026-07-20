@@ -17,14 +17,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
-import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '@/src/helper/Theme';
+import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '@/src/lib/ui/Theme';
 import { useChangePasswordMutation } from '@/src/hooks/auth/useChangePassword';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
 import type  from 'axios';
-import Loader from '../../components/Loader';
-import { NewPasswordScreenProp } from '../../type';
+import Loader from '../../components/common/Loader';
+import { NewPasswordScreenProp } from '../../schemas/type';
 import {Alert, ActivityIndicator} from 'react-native';
 type AxiosError = any;
 

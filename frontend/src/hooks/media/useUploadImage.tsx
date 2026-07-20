@@ -3,8 +3,8 @@ import {useState} from 'react';
 import { showAlert } from '@/src/store/alertSlice';
 import { useDispatch } from 'react-redux';
 import { Alert } from 'react-native';
-import { UPLOAD_STORAGE } from '../../helper/APIUtils';
-import { fetchWithTimeout } from '../../helper/ApiTimeout';
+import { UPLOAD_STORAGE } from '../../lib/api/APIUtils';
+import { fetchWithTimeout } from '../../lib/api/ApiTimeout';
 
 const useUploadImage = () => {
   const [loading, setLoading] = useState(false);

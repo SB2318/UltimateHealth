@@ -21,16 +21,16 @@ import {
   EMPTY_STATE_BACKGROUND,
   EMPTY_STATE_TEXT_PRIMARY,
   EMPTY_STATE_TEXT_SECONDARY,
-} from '../../helper/Theme';
-import AddIcon from '../../components/AddIcon';
-import ArticleCard from '../../components/ArticleCard';
+} from '../../lib/ui/Theme';
+import AddIcon from '../../components/common/AddIcon';
+import ArticleCard from '../../components/article/ArticleCard';
 
-import HomeScreenHeader from '../../components/HomeScreenHeader';
-import {ArticleData, Category, HomeScreenProps} from '../../type';
-import FilterModal from '../../components/FilterModal';
+import HomeScreenHeader from '../../components/home/HomeScreenHeader';
+import {ArticleData, Category, HomeScreenProps} from '../../schemas/type';
+import FilterModal from '../../components/article/FilterModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useSelector, useDispatch} from 'react-redux';
-import Loader from '../../components/Loader';
+import Loader from '../../components/common/Loader';
 import {usePreferences} from '../../contexts/PreferencesContext';
 
 import {
@@ -43,20 +43,20 @@ import {
 } from '../../store/dataSlice';
 import Snackbar from 'react-native-snackbar';
 import {useFocusEffect} from '@react-navigation/native';
-import InactiveUserModal from '../../components/InactiveUserModal';
+import InactiveUserModal from '../../components/auth/InactiveUserModal';
 import {StatusBar} from 'expo-status-bar';
-import { wp} from '../../helper/Metric';
+import { wp} from '../../lib/ui/Metric';
 import {useGetCategories} from '../../hooks/article/useGetArticleTags';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import {useRequestArticleEdit} from '../../hooks/article/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../../hooks/notification/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../../hooks/article/useGetPaginatedArticles';
-import { sanitizeSearchInput, isValidSearchInput } from '../../helper/SearchUtils';
+import { sanitizeSearchInput, isValidSearchInput } from '../../lib/utils/SearchUtils';
 import {
   OfflineArticleState,
   NoArticleState,
   BaseEmptyState,
-} from '../../components/EmptyStates';
+} from '../../components/common/EmptyStates';
 
 // Loading State Component with Animation
 const LoadingState = () => {

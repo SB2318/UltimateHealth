@@ -8,18 +8,18 @@ import {
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import ActivityOverview from '../../components/ActivityOverview';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import ActivityOverview from '../../components/profile/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
-import ArticleCard from '../../components/ArticleCard';
-import UserArticleCard from '../../components/UserArticleCard';
+import ArticleCard from '../../components/article/ArticleCard';
+import UserArticleCard from '../../components/article/UserArticleCard';
 import { useTheme } from 'tamagui';
 import {useSelector} from 'react-redux';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import ProfileHeader from '../../components/ProfileHeader';
-import {ArticleData, UserProfileScreenProp} from '../../type';
+import ProfileHeader from '../../components/profile/ProfileHeader';
+import {ArticleData, UserProfileScreenProp} from '../../schemas/type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import Loader from '../../components/Loader';
+import Loader from '../../components/common/Loader';
 import {useFocusEffect} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
 import {useSocket} from '../../contexts/SocketContext';
@@ -28,7 +28,7 @@ import {useUpdateFollowStatus} from '../../hooks/social/useUpdateFollowStatus';
 import {useUpdateViewCount} from '../../hooks/article/useUpdateViewCount';
 import { useGetAuthorProfile } from '../../hooks/profile/useGetAuthorProfile';
 import {useGetTotalLikeViewStatus} from '../../hooks/analytics/useGetTotalLikeViewStatus';
-import { NoArticleState } from '../../components/EmptyStates';
+import { NoArticleState } from '../../components/common/EmptyStates';
 
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const theme = useTheme();

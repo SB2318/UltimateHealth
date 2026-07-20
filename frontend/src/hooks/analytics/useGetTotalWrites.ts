@@ -1,6 +1,6 @@
 
-import { GET_TOTAL_WRITES } from "@/src/helper/APIUtils";
-import { WriteStatus } from "@/src/type";
+import { GET_TOTAL_WRITES } from "@/src/lib/api/APIUtils";
+import { WriteStatus } from "@/src/schemas/type";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
 

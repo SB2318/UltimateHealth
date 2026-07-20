@@ -1,4 +1,4 @@
-import { GET_ARTICLE_CONTENT } from '@/src/helper/APIUtils';
+import { GET_ARTICLE_CONTENT } from '@/src/lib/api/APIUtils';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 type AxiosError = any;

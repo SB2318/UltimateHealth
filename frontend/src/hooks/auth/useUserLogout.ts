@@ -1,4 +1,4 @@
-import { USER_LOGOUT } from '@/src/helper/APIUtils';
+import { USER_LOGOUT } from '@/src/lib/api/APIUtils';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import axios from 'axios';
 type AxiosError = any;

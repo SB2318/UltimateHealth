@@ -10,8 +10,8 @@ import {
   Platform,
 } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import {PRIMARY_COLOR} from '../helper/Theme';
-import {hp, wp, fp} from '../helper/Metric';
+import {PRIMARY_COLOR} from '../lib/ui/Theme';
+import {hp, wp, fp} from '../lib/ui/Metric';
 
 // Icon map per tab label
 const TAB_CONFIG: Record<

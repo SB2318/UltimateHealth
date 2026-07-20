@@ -9,25 +9,25 @@ import { StyleSheet,
  } from 'react-native';
 
 import {YStack, View, XStack} from 'tamagui';
-import PodcastCard from '../../components/PodcastCard';
-import {hp} from '../../helper/Metric';
-import {PodcastData, PodcastScreenProps} from '../../type';
+import PodcastCard from '../../components/podcast/PodcastCard';
+import {hp} from '../../lib/ui/Metric';
+import {PodcastData, PodcastScreenProps} from '../../schemas/type';
 import {useDispatch, useSelector} from 'react-redux';
-import {downloadAudio, msToTime} from '../../helper/Utils';
+import {downloadAudio, msToTime} from '../../lib/utils/Utils';
 import Snackbar from 'react-native-snackbar';
 import {setaddedPodcastId, setPodcasts, appendPodcasts} from '../../store/dataSlice';
-import CreatePlaylist from '../../components/CreatePlaylist';
+import CreatePlaylist from '../../components/playlist/CreatePlaylist';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import {Ionicons} from '@expo/vector-icons';
 import {GlassStyles, ProfessionalColors} from '../../styles/GlassStyles';
-import CreateIcon from '../../components/CreateIcon';
+import CreateIcon from '../../components/common/CreateIcon';
 import {useGetAllPodcasts} from '../../hooks/podcast/useGetAllPodcasts';
 import {useUpdatePodcastViewcount} from '../../hooks/podcast/useUpdatePodcastViewcount';
-import { NoPodcastState } from '../../components/EmptyStates';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import PodcastSkeletonCard from '../../components/PodcastSkeletonCard';
+import { NoPodcastState } from '../../components/common/EmptyStates';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import PodcastSkeletonCard from '../../components/podcast/PodcastSkeletonCard';
 import {usePreferences} from '../../contexts/PreferencesContext';
 
 //const {WavAudioRecorder} = NativeModules;

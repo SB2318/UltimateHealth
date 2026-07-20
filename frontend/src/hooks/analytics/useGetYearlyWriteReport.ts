@@ -1,5 +1,5 @@
-import { GET_YEARLY_WRITES_REPORT } from '@/src/helper/APIUtils';
-import { YearStatus } from '@/src/type';
+import { GET_YEARLY_WRITES_REPORT } from '@/src/lib/api/APIUtils';
+import { YearStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 

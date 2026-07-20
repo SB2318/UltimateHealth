@@ -8,22 +8,22 @@ import { View,
   Alert,
   Platform,
  } from 'react-native';
-import {OfflinePodcastDetailProp, PodcastData} from '../../type';
-import {hp} from '../../helper/Metric';
-import {ON_PRIMARY_COLOR, BUTTON_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
+import {OfflinePodcastDetailProp, PodcastData} from '../../schemas/type';
+import {hp} from '../../lib/ui/Metric';
+import {ON_PRIMARY_COLOR, BUTTON_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import SliderRN from '@react-native-community/slider';
-import { formatDateWithTime } from '../../helper/dateUtils';
+import { formatDateWithTime } from '../../lib/utils/dateUtils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 // eslint-disable-next-line import/no-duplicates
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-import {formatCount, updateOfflinePodcastLikeStatus} from '../../helper/Utils';
+import {formatCount, updateOfflinePodcastLikeStatus} from '../../lib/utils/Utils';
 import {useDispatch, useSelector} from 'react-redux';
 import type {ComponentType} from 'react';
 import {useEffect, useState} from 'react';
 import Snackbar from 'react-native-snackbar';
-import {GET_STORAGE_DATA} from '../../helper/APIUtils';
+import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import Share from 'react-native-share';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Icon from '@expo/vector-icons/MaterialIcons';

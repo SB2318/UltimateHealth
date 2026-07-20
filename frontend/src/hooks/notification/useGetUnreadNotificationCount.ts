@@ -1,5 +1,5 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
-import {PROD_URL} from '../../helper/APIUtils';
+import {PROD_URL} from '../../lib/api/APIUtils';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
 type AxiosError = any;

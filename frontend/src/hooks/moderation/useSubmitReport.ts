@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
-import { SUBMIT_REPORT } from "../../helper/APIUtils";
+import { SUBMIT_REPORT } from "../../lib/api/APIUtils";
 type AxiosError = any;
 
 type SubmitReportParams = {

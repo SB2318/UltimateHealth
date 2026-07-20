@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
-import { UPDATE_PROFILE_IMAGE } from "../../helper/APIUtils";
+import { UPDATE_PROFILE_IMAGE } from "../../lib/api/APIUtils";
 type AxiosError = any;
 
 

@@ -1,5 +1,5 @@
-import { SUBMIT_SUGGESTED_CHANGES } from "@/src/helper/APIUtils";
-import { Category } from "@/src/type";
+import { SUBMIT_SUGGESTED_CHANGES } from "@/src/lib/api/APIUtils";
+import { Category } from "@/src/schemas/type";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
 type AxiosError = any;

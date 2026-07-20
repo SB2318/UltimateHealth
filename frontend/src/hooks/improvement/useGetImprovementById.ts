@@ -1,5 +1,5 @@
-import { GET_IMPROVEMENT_BY_ID } from '@/src/helper/APIUtils';
-import { EditRequest } from '@/src/type';
+import { GET_IMPROVEMENT_BY_ID } from '@/src/lib/api/APIUtils';
+import { EditRequest } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 import {useSelector} from 'react-redux';

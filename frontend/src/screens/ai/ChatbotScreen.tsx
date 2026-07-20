@@ -7,7 +7,7 @@ import {
   InputToolbar,
   Send,
 } from 'react-native-gifted-chat';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {useSelector} from 'react-redux';
 import {
   View,
@@ -20,15 +20,15 @@ import {
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Tts from 'react-native-tts';
-import {GET_STORAGE_DATA} from '../../helper/APIUtils';
-import {ChatBotScreenProps, Message} from '../../type';
-import {hp} from '../../helper/Metric';
+import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
+import {ChatBotScreenProps, Message} from '../../schemas/type';
+import {hp} from '../../lib/ui/Metric';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import {useSendMessageToGemini} from '../../hooks/ai/useSendMessageToGemini';
 import {useLoadAIConversations} from '../../hooks/ai/useLoadAIChats';
 import Snackbar from 'react-native-snackbar';
-import {verifyChatbotResponse} from '../../chatbot-response-verification';
+import {verifyChatbotResponse} from '../../../plugins/api/chatbot-response-verification';
 
 // interface ChatbotResponse {
 //   id: string;

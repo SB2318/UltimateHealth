@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-import {SplashScreenProp} from '../../type';
+import {SplashScreenProp} from '../../schemas/type';
 import {useSelector} from 'react-redux';
 import {RootState} from '../../store/ReduxStore';
 

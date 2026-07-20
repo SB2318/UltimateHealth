@@ -1,14 +1,14 @@
  
 import React, {useState} from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
-import { PlaylistDetailScreenProp, PodcastData } from '../../type';
-import PodcastCard from '../../components/PodcastCard';
-import { msToTime } from '../../helper/Utils';
+import { PlaylistDetailScreenProp, PodcastData } from '../../schemas/type';
+import PodcastCard from '../../components/podcast/PodcastCard';
+import { msToTime } from '../../lib/utils/Utils';
 import Snackbar from 'react-native-snackbar';
 import { useSelector, useDispatch } from 'react-redux';
 import { useUpdatePodcastViewcount } from '../../hooks/podcast/useUpdatePodcastViewcount';
-import { NoPodcastState } from '../../components/EmptyStates';
-import CreatePlaylist from '../../components/CreatePlaylist';
+import { NoPodcastState } from '../../components/common/EmptyStates';
+import CreatePlaylist from '../../components/playlist/CreatePlaylist';
 import { setaddedPodcastId } from '../../store/dataSlice';
 
 export default function PlaylistDetailScreen({ navigation, route }: PlaylistDetailScreenProp) {

@@ -1,4 +1,4 @@
-import { VERIFICATION_MAIL_API } from "@/src/helper/APIUtils";
+import { VERIFICATION_MAIL_API } from "@/src/lib/api/APIUtils";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
 type AxiosError = any;

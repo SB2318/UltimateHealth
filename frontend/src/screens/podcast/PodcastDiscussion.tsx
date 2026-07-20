@@ -8,12 +8,12 @@ import { TouchableOpacity,
   Pressable,
    TextInput ,
   } from 'react-native';
-import {PodcastDiscussionProp, User, Comment} from '../../type';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {PodcastDiscussionProp, User, Comment} from '../../schemas/type';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 //import io from 'socket.io-client';
 import {useDispatch, useSelector} from 'react-redux';
-import Loader from '../../components/Loader';
-import CommentItem from '../../components/CommentItem';
+import Loader from '../../components/common/Loader';
+import CommentItem from '../../components/article/CommentItem';
 import {useSocket} from '../../contexts/SocketContext';
 import {useArticleRoom} from '../../hooks/article/useArticleRoom';
 import {
@@ -24,10 +24,10 @@ import {
   SuggestionsProvidedProps,
   parseValue,
 } from 'react-native-controlled-mentions';
-import {GET_IMAGE, GET_STORAGE_DATA} from '../../helper/APIUtils';
+import {GET_IMAGE, GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import {H3, Paragraph, YStack, Text, View, Image} from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {wp} from '../../helper/Metric';
+import {wp} from '../../lib/ui/Metric';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {useGetSinglePodcastDetails} from '../../hooks/podcast/useGetSinglePodcastDetails';
 

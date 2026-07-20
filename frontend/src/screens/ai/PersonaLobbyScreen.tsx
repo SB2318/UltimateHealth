@@ -14,8 +14,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { useGetCharacters } from '../../hooks/ai/useGetCharacters';
-import { PRIMARY_COLOR } from '../../helper/Theme';
-import { PersonaLobbyScreenProps, Character } from '../../type';
+import { PRIMARY_COLOR } from '../../lib/ui/Theme';
+import { PersonaLobbyScreenProps, Character } from '../../schemas/type';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 

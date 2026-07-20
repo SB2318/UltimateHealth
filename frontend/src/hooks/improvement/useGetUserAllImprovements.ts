@@ -1,5 +1,5 @@
-import { GET_ALL_IMPROVEMENTS_FOR_USER } from '@/src/helper/APIUtils';
-import { EditRequest } from '@/src/type';
+import { GET_ALL_IMPROVEMENTS_FOR_USER } from '@/src/lib/api/APIUtils';
+import { EditRequest } from '@/src/schemas/type';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

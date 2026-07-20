@@ -1,5 +1,5 @@
-import { GET_ARTICLE_BY_ID } from '@/src/helper/APIUtils';
-import { ArticleData } from '@/src/type';
+import { GET_ARTICLE_BY_ID } from '@/src/lib/api/APIUtils';
+import { ArticleData } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 
 import axios from 'axios';

@@ -11,20 +11,20 @@ import { View,
   RefreshControl,
   Dimensions,
   } from 'react-native';
-import {PodcastProfileProp, PodcastData, PlayList} from '../../type';
+import {PodcastProfileProp, PodcastData, PlayList} from '../../schemas/type';
 import {MaterialCommunityIcons, Feather, Ionicons} from '@expo/vector-icons';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import {useGetPlaylists} from '../../hooks/playlist/useGetPlaylists';
 import {useGetUserPublishedPodcasts} from '../../hooks/podcast/useGetUserPublishedPodcasts';
-import Loader from '../../components/Loader';
-import PodcastCard from '../../components/PodcastCard';
-import {GET_STORAGE_DATA} from '../../helper/APIUtils';
+import Loader from '../../components/common/Loader';
+import PodcastCard from '../../components/podcast/PodcastCard';
+import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {NoPodcastState} from '../../components/EmptyStates';
+import {NoPodcastState} from '../../components/common/EmptyStates';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
-import {downloadAudio, msToTime} from '../../helper/Utils';
+import {downloadAudio, msToTime} from '../../lib/utils/Utils';
 import Snackbar from 'react-native-snackbar';
 
 const {width} = Dimensions.get('window');

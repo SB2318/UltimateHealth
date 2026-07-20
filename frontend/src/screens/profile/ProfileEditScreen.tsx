@@ -8,23 +8,23 @@ import { ScrollView ,
   Alert,
  } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
-import GeneralTab from '../../components/GeneralTab';
-import {GeneralFormData,ContactFormData,ProfFormData,PasswordFormData} from '../../schemas/profileSchemas';
-import ContactTab from '../../components/ContactTab';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
+import GeneralTab from '../../components/profile/GeneralTab';
+import {GeneralFormData,ContactFormData,ProfFormData,PasswordFormData} from '../../schemas/zod/profileSchemas';
+import ContactTab from '../../components/profile/ContactTab';
 
-import ProfessionalTab from '../../components/ProfessionalTab';
+import ProfessionalTab from '../../components/profile/ProfessionalTab';
 
-import PasswordTab from '../../components/PasswordTab';
+import PasswordTab from '../../components/profile/PasswordTab';
 
-import LanguagePreferenceSelector from '../../components/LanguagePreferenceSelector';
+import LanguagePreferenceSelector from '../../components/profile/LanguagePreferenceSelector';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {useDispatch, useSelector} from 'react-redux';
-import {ProfileEditScreenProp} from '../../type';
+import {ProfileEditScreenProp} from '../../schemas/type';
 import {
   GET_STORAGE_DATA,
-} from '../../helper/APIUtils';
+} from '../../lib/api/APIUtils';
 import {
   ImageLibraryOptions,
   launchImageLibrary,
@@ -39,7 +39,7 @@ import {useUpdateProfileImage} from '../../hooks/profile/useUpdateProfileImage';
 import {useUpdateUserContactDetail} from '../../hooks/profile/useUpdateUserContactDetail';
 import {useUpdateUserGeneralDetails} from '../../hooks/profile/useUpdateUserGeneralDetails';
 import {useUpdateUserProfDetails} from '../../hooks/profile/useUpdateUserProfDetails';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
  
 // let validator = require('email-validator');
 // let expr = /^(0|91)?[6-9][0-9]{9}$/;

@@ -8,19 +8,19 @@ import { View,
   Platform,
    ScrollView ,
  } from 'react-native';
-import {SocialScreenProps} from '../../type';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import {GET_STORAGE_DATA} from '../../helper/APIUtils';
+import {SocialScreenProps} from '../../schemas/type';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import {useQueryClient} from '@tanstack/react-query';
 import {useSocket} from '../../contexts/SocketContext';
-import Loader from '../../components/Loader';
+import Loader from '../../components/common/Loader';
 import {useGetUserSocials} from '../../hooks/social/useGetUserSocialCircle';
 import {useUpdateFollowStatus} from '../../hooks/social/useUpdateFollowStatus';
 import Snackbar from 'react-native-snackbar';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import {emitFollowNotification} from '../../helper/followNotification';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import {emitFollowNotification} from '../../lib/platform/followNotification';
 
 export default function Socialcreen({navigation, route}: SocialScreenProps) {
   const insets = useSafeAreaInsets();

@@ -1,4 +1,4 @@
-import { UPDATE_READ_EVENT } from "@/src/helper/APIUtils";
+import { UPDATE_READ_EVENT } from "@/src/lib/api/APIUtils";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
 type AxiosError = any;

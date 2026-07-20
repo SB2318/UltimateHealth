@@ -2,16 +2,16 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import { FlatList , Pressable, View, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import {OfflinePodcastListProp, PodcastData} from '../../type';
-import {deleteFromDownloads, msToTime, readDownloadedPodcasts} from '../../helper/Utils';
-import PodcastCard from '../../components/PodcastCard';
-import {hp} from '../../helper/Metric';
-import {ON_PRIMARY_COLOR} from '../../helper/Theme';
+import {OfflinePodcastListProp, PodcastData} from '../../schemas/type';
+import {deleteFromDownloads, msToTime, readDownloadedPodcasts} from '../../lib/utils/Utils';
+import PodcastCard from '../../components/podcast/PodcastCard';
+import {hp} from '../../lib/ui/Metric';
+import {ON_PRIMARY_COLOR} from '../../lib/ui/Theme';
 import Snackbar from 'react-native-snackbar';
 import {useDispatch, useSelector} from 'react-redux';
-import CreatePlaylist from '../../components/CreatePlaylist';
+import CreatePlaylist from '../../components/playlist/CreatePlaylist';
 import { setaddedPodcastId, setRemovePlaylistId } from '../../store/dataSlice';
-import { NoOfflinePodcastsState, OfflinePodcastLoadErrorState } from '../../components/EmptyStates';
+import { NoOfflinePodcastsState, OfflinePodcastLoadErrorState } from '../../components/common/EmptyStates';
 
 export default function OfflinePodcastList({
   navigation,

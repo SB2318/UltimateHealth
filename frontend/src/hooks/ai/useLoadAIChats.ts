@@ -1,5 +1,5 @@
-import { CHAT_URL } from "@/src/helper/APIUtils";
-import { Message } from "@/src/type";
+import { CHAT_URL } from "@/src/lib/api/APIUtils";
+import { Message } from "@/src/schemas/type";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
 import axios from "axios";

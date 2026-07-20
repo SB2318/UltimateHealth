@@ -14,13 +14,13 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
 import {useSelector} from 'react-redux';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
-import {fp, hp, wp} from '../../helper/Metric';
-import {Category, NotificationPreferencesScreenProp} from '../../type';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {fp, hp, wp} from '../../lib/ui/Metric';
+import {Category, NotificationPreferencesScreenProp} from '../../schemas/type';
 import {useGetCategories} from '../../hooks/article/useGetArticleTags';
 import {useGetNotificationPreferences} from '../../hooks/notification/useGetNotificationPreferences';
 import {useUpdateNotificationPreferences} from '../../hooks/notification/useUpdateNotificationPreferences';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
 
 const NotificationPreferencesScreen = ({
   navigation,

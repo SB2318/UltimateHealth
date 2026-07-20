@@ -1,9 +1,9 @@
  
 import { useState } from 'react';
 import { Alert } from 'react-native';
-import { getMimeTypes } from '../../helper/Utils';
-import { UPLOAD_STORAGE } from '../../helper/APIUtils';
-import { fetchWithTimeout } from '../../helper/ApiTimeout';
+import { getMimeTypes } from '../../lib/utils/Utils';
+import { UPLOAD_STORAGE } from '../../lib/api/APIUtils';
+import { fetchWithTimeout } from '../../lib/api/ApiTimeout';
 
 
 const useUploadAudio = () => {

@@ -3,7 +3,7 @@ import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
 import {useSelector} from 'react-redux';
-import {GET_MONTHLY_WRITES_REPORT, GET_TOTAL_WRITES, GET_YEARLY_WRITES_REPORT} from '../../helper/APIUtils';
+import {GET_MONTHLY_WRITES_REPORT, GET_TOTAL_WRITES, GET_YEARLY_WRITES_REPORT} from '../../lib/api/APIUtils';
 import { useGetAuthorMonthlyWriteReport } from '@/src/hooks/analytics/useGetMonthlyWriteReport';
 import { useGetTotalWrites } from '@/src/hooks/analytics/useGetTotalWrites';
 import { useGetAuthorYearlyWriteReport } from '@/src/hooks/analytics/useGetYearlyWriteReport';

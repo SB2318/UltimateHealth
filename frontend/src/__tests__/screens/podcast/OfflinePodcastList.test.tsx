@@ -2,7 +2,7 @@
 import React from 'react';
 import {render, fireEvent, waitFor} from '@testing-library/react-native';
 import OfflinePodcastList from '../../../screens/podcast/OfflinePodcastList';
-import {readDownloadedPodcasts, deleteFromDownloads} from '../../../helper/Utils';
+import {readDownloadedPodcasts, deleteFromDownloads} from '../../../lib/utils/Utils';
 import {useFocusEffect} from '@react-navigation/native';
 
 jest.mock('@react-navigation/native', () => ({

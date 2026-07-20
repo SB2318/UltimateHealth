@@ -1,5 +1,5 @@
-import { GET_MOSTLY_VIEWED } from '@/src/helper/APIUtils';
-import { ArticleData } from '@/src/type';
+import { GET_MOSTLY_VIEWED } from '@/src/lib/api/APIUtils';
+import { ArticleData } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 

@@ -7,16 +7,16 @@ import { View,
   Text,
    FlatList ,
  } from 'react-native';
-import {PodcastData} from '../../type';
+import {PodcastData} from '../../schemas/type';
 import {useSelector} from 'react-redux';
-import PodcastReviewCard from '../../components/PodcastReviewCard';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
-import {hp, wp} from '../../helper/Metric';
-import Loader from '../../components/Loader';
+import PodcastReviewCard from '../../components/podcast/PodcastReviewCard';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {hp, wp} from '../../lib/ui/Metric';
+import Loader from '../../components/common/Loader';
 import {useGetPendingPodcasts} from '@/src/hooks/podcast/useGetPendingPodcasts';
 import {useGetDiscardedPodcasts} from '@/src/hooks/podcast/useGetDiscardedPodcast';
 import {useGetUserPublishedPodcasts} from '@/src/hooks/podcast/useGetUserPublishedPodcasts';
-import {NoPodcastState} from '../../components/EmptyStates';
+import {NoPodcastState} from '../../components/common/EmptyStates';
 
 export default function PodcastWorkSpace({
   handleClickAction,

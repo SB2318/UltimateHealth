@@ -12,13 +12,13 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 import Ionicon from '@expo/vector-icons/Ionicons';
-import {RootStackParamList} from '../../type';
-import {PRIMARY_COLOR, ON_PRIMARY_COLOR} from '../../helper/Theme';
+import {RootStackParamList} from '../../schemas/type';
+import {PRIMARY_COLOR, ON_PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {
   ReadingHistoryItem,
   getReadingHistory,
   clearReadingHistory,
-} from '../../services/ReadingHistoryService';
+} from '../../lib/services/ReadingHistoryService';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

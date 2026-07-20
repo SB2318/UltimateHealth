@@ -1,5 +1,5 @@
-import { UPLOAD_ARTICLE_TO_POCKETBASE } from '@/src/helper/APIUtils';
-import { ArticleData, PocketBaseResponse } from '@/src/type';
+import { UPLOAD_ARTICLE_TO_POCKETBASE } from '@/src/lib/api/APIUtils';
+import { ArticleData, PocketBaseResponse } from '@/src/schemas/type';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 

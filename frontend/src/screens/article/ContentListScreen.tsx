@@ -1,20 +1,20 @@
 import { StyleSheet, View, Text, Alert, useColorScheme, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
 import React, {useCallback, useState, useMemo} from 'react';
 import {StatusBar} from 'expo-status-bar';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import ArticleCard from '../../components/ArticleCard';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import ArticleCard from '../../components/article/ArticleCard';
 import {useSelector} from 'react-redux';
 import { useTheme } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {ArticleData} from '../../type';
-import Loader from '../../components/Loader';
+import {ArticleData} from '../../schemas/type';
+import Loader from '../../components/common/Loader';
 import {useFocusEffect} from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
-import {wp, hp, fp} from '../../helper/Metric';
+import {wp, hp, fp} from '../../lib/ui/Metric';
 import {StackScreenProps} from '@react-navigation/stack';
-import {RootStackParamList} from '../../type';
+import {RootStackParamList} from '../../schemas/type';
 
 type Props = StackScreenProps<RootStackParamList, 'ContentListScreen'>;
 

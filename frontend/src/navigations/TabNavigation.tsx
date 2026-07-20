@@ -8,14 +8,14 @@ import SettingsScreen from '../screens/settings/SettingsScreen';
 // import {Colors} from 'react-native/Libraries/NewAppScreen';
 import TabBar from './TabBar';
 import {TouchableOpacity} from 'react-native';
-import {TabParamList} from '../type';
+import {TabParamList} from '../schemas/type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import {BUTTON_COLOR} from '../helper/Theme';
-import HeaderRightMenu from '../components/HeaderRightMenu';
+import {BUTTON_COLOR} from '../lib/ui/Theme';
+import HeaderRightMenu from '../components/common/HeaderRightMenu';
 import PersonaLobbyScreen from '../screens/ai/PersonaLobbyScreen';
 import AcademyStackNavigation from './AcademyStackNavigation';
 import {useSelector} from 'react-redux';
-import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
 import WellnessDashboardScreen from '../screens/wellness/WellnessDashboardScreen';
 
 

@@ -1,9 +1,9 @@
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import axios from 'axios';
-import {UPDATE_NOTIFICATION_PREFERENCES} from '../../helper/APIUtils';
+import {UPDATE_NOTIFICATION_PREFERENCES} from '../../lib/api/APIUtils';
 //import {NotificationPreferencesResponse} from '../../type';
 
-import {Category, NotificationPreferencesResponse} from '../../type';
+import {Category, NotificationPreferencesResponse} from '../../schemas/type';
 type AxiosError = any;
 
 type UpdatePreferencesReq = {
