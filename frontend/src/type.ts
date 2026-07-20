@@ -13,7 +13,7 @@ export type RootStackParamList = {
   SignUpScreenFirst: undefined;
   SignUpScreenSecond: {user: UserDetail};
   OtpScreen: {email: string};
-  NewPasswordScreen: {email: string};
+  NewPasswordScreen: {email: string; resetToken?: string};
   EditorScreen: {
     title: string;
     authorName: string;
@@ -416,6 +416,7 @@ export type HomeScreenHeaderProps = {
   unreadCount: number;
   hasActiveFilters?: boolean;
   onFilterReset?: () => void;
+  searchText?: string;
 };
 
 export type ContentListScreenProp = StackScreenProps<
@@ -638,7 +639,7 @@ export type ArticleData = {
   repostUsers: string[];
   likeCount: number;
   likedUsers: User[];
-  trustUsers: string[];
+  trustUsers?: string[];
   savedUsers: string[];
   mentionedUsers: User[];
   language: string;
@@ -658,6 +659,9 @@ export type ArticleData = {
   relatedPodcasts?: RelatedPodcast[];
   difficulty?: 'Beginner' | 'Intermediate' | 'Advanced';
   body?: string;
+  author?: any;
+  category?: string;
+  cover_image?: string;
 };
 
 export type ArticleTranslationSource = {

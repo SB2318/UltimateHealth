@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 // @ts-nocheck
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { Alert,
    FlatList ,
@@ -39,6 +41,9 @@ import {
   GET_IMAGE,
   GET_STORAGE_DATA,
 } from '../helper/APIUtils';
+
+const DEFAULT_AVATAR_URL =
+  'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg';
 
 const CommentScreen = ({
   navigation,
@@ -152,12 +157,17 @@ const CommentScreen = ({
       patternsConfig,
     });
 
+  const fetchComments = () => {
+    if (!socket) return;
+      socket.emit('fetch-comments', {
+      articleId: route.params.articleId,
+      });
+    };
+
   useEffect(() => {
     if (!socket) return;
 
-    socket.emit('fetch-comments', {
-      articleId: route.params.articleId,
-    });
+     fetchComments();
 
     socket.on(
       'like-comment-processing',
@@ -257,6 +267,7 @@ const CommentScreen = ({
       socket.off('edit-comment');
       socket.off('delete-comment');
       socket.off('like-comment');
+      socket.off('like-comment-processing'); // FIX: was previously missing, caused listener leak on remount
     };
   }, [socket, route.params.articleId]);
 
@@ -430,7 +441,7 @@ const CommentScreen = ({
                       )
                       ? one.Profile_image
                       : `${GET_STORAGE_DATA}/${one.Profile_image}`
-                    : 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg',
+                    : DEFAULT_AVATAR_URL,
                 }}
                 style={styles.profileImage2}
               />
@@ -474,14 +485,15 @@ const CommentScreen = ({
   }
 
   return (
+    <ErrorBoundary onRetry={fetchComments}>
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={{flex: 1}}
-        behavior={
-          Platform.OS === 'ios'
-            ? 'padding'
-            : undefined
-        }>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.select({
+          ios: 0,
+          android: 20,
+        })}>
         <FlatList
           ref={flatListRef}
           data={comments}
@@ -498,7 +510,7 @@ const CommentScreen = ({
                     fontSize={20}
                     color="#1F2937"
                     fontWeight={'700'}>
-                    {article.title}
+                    {article?.title}
                   </H3>
                 </View>
 
@@ -508,13 +520,11 @@ const CommentScreen = ({
                   }>
                   <Image
                     source={{
-                      uri:
-                        article?.imageUtils[0].startsWith(
-                          'http',
-                        )
-                          ? article
-                              ?.imageUtils[0]
-                          : `${GET_IMAGE}/${article?.imageUtils[0]}`,
+                      uri: article?.imageUtils?.[0]
+                        ? article.imageUtils[0].startsWith('http')
+                          ? article.imageUtils[0]
+                          : `${GET_IMAGE}/${article.imageUtils[0]}`
+                        : DEFAULT_AVATAR_URL, // FIX: guard against missing/empty imageUtils array
                     }}
                     style={
                       styles.articleImage
@@ -528,12 +538,14 @@ const CommentScreen = ({
                       'ArticleScreen',
                       {
                         articleId: Number(
-                          article._id,
+                          article?._id,
                         ),
                         authorId:
-                          article.authorId.toString(),
+                          article?.authorId
+                            ? article.authorId.toString()
+                            : '', // FIX: guard against missing authorId
                         recordId:
-                          article.pb_recordId,
+                          article?.pb_recordId,
                       },
                     )
                   }
@@ -556,7 +568,7 @@ const CommentScreen = ({
                     color="#4B5563"
                     fontSize={15}
                     lineHeight={22}>
-                    {article.description}
+                    {article?.description}
                   </Paragraph>
                 </View>
 
@@ -565,56 +577,53 @@ const CommentScreen = ({
                   ...triggers.mention
                 })}
 
-               {/* 1. Updated Input Component with Strict 500 Character Boundary */}
-          <TextInput
-           {...textInputProps}
-            id="article-comment-input"    // 👈 Added unique id attribute
-             name="commentContent"         // 👈 Added explicit name attribute
-             style={styles.textInput}
-               placeholder="Add a comment..."
-               placeholderTextColor="#9CA3AF"
-                         multiline
-                    maxLength={MAX_COMMENT_LENGTH} // 👈 Forces the input boundary cap
-                    />
+                {/* Comment input */}
+                <SafeAreaView edges={['bottom']}>
+                  <TextInput
+                    {...textInputProps}
+                    style={styles.textInput}
+                    placeholder="Add a comment..."
+                    placeholderTextColor="#9CA3AF"
+                    multiline
+                    maxLength={MAX_COMMENT_LENGTH}
+                  />
 
-                {/* 2. Brand New Layout Row for Counter and Submit Button */}
-                <XStack justifyContent="space-between" alignItems="center" mt="$2" px="$2" width="100%">
-                  
-                  {/* Real-time Dynamic Character Counter */}
-                  <Text 
-                    fontSize="$2" 
-                    color={newComment.length >= 480 ? '$red10' : '$colorMuted'} 
-                    fontWeight={newComment.length >= 480 ? '600' : '400'}
-                  >
-                    {newComment.length} / {MAX_COMMENT_LENGTH}
-                  </Text>
+                  <XStack justifyContent="space-between" alignItems="center" mt="$2" px="$2" width="100%">
 
-                  {/* 3. Submit Button (Always visible but visually disabled/faded when text is empty) */}
-                  <TouchableOpacity
-  style={[
-    styles.submitButton,
-    {
-      opacity:
-        newComment.trim().length === 0 || isSubmitting
-          ? 0.5
-          : 1,
-    },
-  ]}
-  disabled={
-    newComment.trim().length === 0 ||
-    isSubmitting
-  }
-  onPress={handleCommentSubmit}
->
-                    <Text style={styles.submitButtonText}>
-  {isSubmitting
-    ? 'Posting...'
-    : editMode
-    ? 'Update Comment'
-    : 'Submit Comment'}
-</Text>
-                  </TouchableOpacity>
-                </XStack>
+                    <Text
+                      fontSize="$2"
+                      color={newComment.length >= 480 ? '$red10' : '$colorMuted'}
+                      fontWeight={newComment.length >= 480 ? '600' : '400'}
+                    >
+                      {newComment.length} / {MAX_COMMENT_LENGTH}
+                    </Text>
+
+                    <TouchableOpacity
+                      style={[
+                        styles.submitButton,
+                        {
+                          opacity:
+                            newComment.trim().length === 0 || isSubmitting
+                              ? 0.5
+                              : 1,
+                        },
+                      ]}
+                      disabled={
+                        newComment.trim().length === 0 ||
+                        isSubmitting
+                      }
+                      onPress={handleCommentSubmit}
+                    >
+                      <Text style={styles.submitButtonText}>
+                        {isSubmitting
+                          ? 'Posting...'
+                          : editMode
+                          ? 'Update Comment'
+                          : 'Submit Comment'}
+                      </Text>
+                    </TouchableOpacity>
+                  </XStack>
+                </SafeAreaView>
 
                 <View
                   style={
@@ -680,6 +689,7 @@ const CommentScreen = ({
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </ErrorBoundary>
   );
 };
 

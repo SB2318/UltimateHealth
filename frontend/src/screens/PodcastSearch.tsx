@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+ 
+ 
 // PodcastSearch.tsx
 import React, {useEffect, useState, useCallback, useRef} from 'react';
 import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';
@@ -16,6 +17,7 @@ import {XStack, YStack, Input, Separator, Text, useTheme} from 'tamagui';
 import {Feather} from '@expo/vector-icons';
 import {useUpdatePodcastViewcount} from '../hooks/useUpdatePodcastViewcount';
 import {useGetSearchPodcasts} from '../hooks/useGetSearchPodcasts';
+import { sanitizeSearchInput, isValidSearchInput } from '../helper/SearchUtils';
 import { useColorScheme } from 'react-native-gifted-chat/lib/hooks/useColorScheme';
 
 const SKELETON_COUNT = 5;
@@ -50,7 +52,8 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
   useEffect(() => {
     if (debounceTimer.current) clearTimeout(debounceTimer.current);
     debounceTimer.current = setTimeout(() => {
-      setDebouncedQuery(query);
+      const sanitizedQuery = sanitizeSearchInput(query);
+      setDebouncedQuery(isValidSearchInput(sanitizedQuery) ? sanitizedQuery : '');
       setPage(1);
       setTotalPages(0);
       setSearchData([]);

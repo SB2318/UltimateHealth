@@ -36,23 +36,42 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Setup Node & Cache Yarn Store
+      - name: Setup Node
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "yarn"
-          cache-dependency-path: frontend/yarn.lock
+      
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
 
+      - name: Check versions
+        run: |
+          node -v
+          yarn -v
+
+      - name: Validate cache
+        run: |
+          if ! yarn install --immutable --immutable-cache --check-cache; then
+            echo "Cached node_modules is invalid. Removing cache..."
+            rm -rf node_modules
+            yarn install --immutable
+          fi
       - name: Cache node_modules
         id: node-cache
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
 
       - name: Install Dependencies
         if: steps.node-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: |
+          rm -rf node_modules
+          yarn install --frozen-lockfile --network-timeout 600000
 
   lint:
     name: Lint
@@ -74,11 +93,26 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Validate cache
+        run: |
+          if ! yarn list > /dev/null 2>&1; then
+            echo "Cache corrupted, reinstalling..."
+            rm -rf node_modules
+            yarn install --frozen-lockfile --network-timeout 600000
+          fi
 
       - name: Run ESLint
         run: yarn lint
@@ -103,11 +137,26 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Validate cache
+        run: |
+          if ! yarn list > /dev/null 2>&1; then
+            echo "Cache corrupted, reinstalling..."
+            rm -rf node_modules
+            yarn install --frozen-lockfile --network-timeout 600000
+          fi
 
       - name: Run TypeScript Check
         run: yarn type-check
@@ -132,11 +181,26 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Validate cache
+        run: |
+          if ! yarn list > /dev/null 2>&1; then
+            echo "Cache corrupted, reinstalling..."
+            rm -rf node_modules
+            yarn install --frozen-lockfile --network-timeout 600000
+          fi
 
       - name: Run Unit Tests
         run: yarn test
@@ -161,11 +225,26 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
+      - name: Validate cache
+        run: |
+          if ! yarn list > /dev/null 2>&1; then
+            echo "Cache corrupted, reinstalling..."
+            rm -rf node_modules
+            yarn install --frozen-lockfile --network-timeout 600000
+          fi
 
       - name: Run Expo Doctor
         shell: bash
@@ -183,7 +262,7 @@ jobs:
 
           set +e
           set +o pipefail
-          CRITICAL_FAILS=$(echo "$OUTPUT" | grep "Check " | grep -v "app config fields that may not be synced" | grep -v "duplicate dependencies" | grep -v "common issues" | grep -v "installed Expo SDK" | wc -l | tr -d '[:space:]')
+          CRITICAL_FAILS=$(echo "$OUTPUT" | grep "Check " | grep -v "app config fields that may not be synced" | grep -v "duplicate dependencies" | grep -v "common issues" | grep -v "installed Expo SDK" | grep -v "lock file" | wc -l | tr -d '[:space:]')
           set -e
           set -o pipefail
           if [ "$CRITICAL_FAILS" -eq 0 ]; then

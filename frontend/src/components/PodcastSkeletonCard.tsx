@@ -1,13 +1,16 @@
-// @ts-nocheck
+ 
+ 
 // PodcastSkeletonCard.tsx
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StyleSheet, View, Animated, useWindowDimensions} from 'react-native';
 import {useTheme, YStack, XStack} from 'tamagui';
-import { PODCAST_CARD } from '@/constants/podcastCard';
+import {PODCAST_CARD} from '@/constants/podcastCard';
+
+type AnimatedInterpolation = ReturnType<InstanceType<typeof Animated.Value>['interpolate']>;
 
 interface ShimmerBoxProps {
   style?: object | object[];
-  shimmerX: Animated.AnimatedInterpolation<number>;
+  shimmerX: AnimatedInterpolation;
   highlightColor: string;
   baseColor: string;
 }
@@ -41,7 +44,7 @@ const PodcastSkeletonCard: React.FC = () => {
   const highlightColor = (theme.gray100?.val ?? '#F9FAFB') as string;
   const cardBackground = (theme.background?.val ?? '#FFFFFF') as string;
 
-  const [shimmerProgress] = useState(() => new Animated.Value(0));
+  const shimmerProgress = useRef(new Animated.Value(0)).current;
 
   const shimmerX = shimmerProgress.interpolate({
     inputRange: [0, 1],
@@ -56,18 +59,30 @@ const PodcastSkeletonCard: React.FC = () => {
         useNativeDriver: true,
       }),
     );
+
     animation.start();
+
     return () => animation.stop();
   }, [shimmerProgress]);
 
-  const shimmerProps = {shimmerX, baseColor, highlightColor};
+  const shimmerProps = {
+    shimmerX,
+    baseColor,
+    highlightColor,
+  };
 
   return (
     <YStack
       style={styles.cardWrapper}
-      accessibilityElementsHidden={true}
+      accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants">
-      <YStack style={[styles.cardContainer, {backgroundColor: cardBackground}]}>
+      <YStack
+        style={[
+          styles.cardContainer,
+          {
+            backgroundColor: cardBackground,
+          },
+        ]}>
         <ShimmerBox style={styles.imageSkeleton} {...shimmerProps} />
 
         <YStack padding="$3" gap="$2" flex={1}>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
 import {   isAxiosError} from 'axios';
@@ -529,6 +530,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         <EmailInputBottomSheet
           visible={emailInputVisible}
           callback={(email: string) => {
+            setEmailInputVisible(false);
             setOtpMail(email);
             if (requestVerificationMode) {
               resendVerification(

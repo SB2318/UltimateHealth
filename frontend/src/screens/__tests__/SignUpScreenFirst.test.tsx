@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import {render, fireEvent, waitFor} from '@testing-library/react-native';
 import {Alert} from 'react-native';
@@ -7,7 +8,9 @@ const mockNavigate = jest.fn();
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({top: 0, bottom: 0, left: 0, right: 0}),
-  SafeAreaView: ({children}: any) => children,
+  SafeAreaView: function MockSafeAreaView({children}: any) {
+    return children;
+  },
 }));
 
 jest.mock('tamagui', () => {
@@ -81,13 +84,17 @@ jest.mock('react-native-snackbar', () => ({
 jest.mock('@expo/vector-icons/MaterialIcons', () => {
   const React = require('react');
   const {Text} = require('react-native');
-  return () => React.createElement(Text, null, 'Icon');
+  const MockIcon = () => React.createElement(Text, null, 'Icon');
+  MockIcon.displayName = 'MaterialIcons';
+  return MockIcon;
 });
 
 jest.mock('@expo/vector-icons/AntDesign', () => {
   const React = require('react');
   const {Text} = require('react-native');
-  return () => React.createElement(Text, null, 'AntDesign');
+  const MockIcon = () => React.createElement(Text, null, 'AntDesign');
+  MockIcon.displayName = 'AntDesign';
+  return MockIcon;
 });
 
 const mockRegisterMutate = jest.fn();
@@ -117,8 +124,8 @@ jest.mock('../../hooks/useUploadImage', () => () => ({
 // Mock modal components to trigger their callback when mocked buttons are pressed
 jest.mock('../../components/VerifiedModal', () => {
   const React = require('react');
-  const {Button, Text} = require('react-native');
-  return ({visible, onClick, message}: any) => {
+  const {Button} = require('react-native');
+  const MockVerifiedModal = ({visible, onClick, message}: any) => {
     if (!visible) return null;
     return React.createElement(
       Button,
@@ -129,12 +136,14 @@ jest.mock('../../components/VerifiedModal', () => {
       }
     );
   };
+  MockVerifiedModal.displayName = 'VerifiedModal';
+  return MockVerifiedModal;
 });
 
 jest.mock('../../components/SecurityWarningModal', () => {
   const React = require('react');
   const {Button} = require('react-native');
-  return ({visible, onContinue}: any) => {
+  const MockSecurityWarningModal = ({visible, onContinue}: any) => {
     if (!visible) return null;
     return React.createElement(
       Button,
@@ -145,12 +154,16 @@ jest.mock('../../components/SecurityWarningModal', () => {
       }
     );
   };
+  MockSecurityWarningModal.displayName = 'SecurityWarningModal';
+  return MockSecurityWarningModal;
 });
 
 jest.mock('../../components/Loader', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View);
+  const MockLoader = () => React.createElement(View);
+  MockLoader.displayName = 'Loader';
+  return MockLoader;
 });
 
 describe('SignUpScreenFirst - Crash Prevention and Field Verification Tests', () => {

@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 import React, {useState, useMemo} from 'react';
-import { Linking,  FlatList  } from 'react-native';
+import {Linking, FlatList} from 'react-native';
+import { safeOpenUrl } from '../utils/safeOpenUrl';
 import {
   YStack,
   XStack,
@@ -334,7 +336,7 @@ const ContributorPage = () => {
   const [search, setSearch] = useState('');
 
   const openLink = (url: string) => {
-    Linking.openURL(url);
+    safeOpenUrl(url);
   };
 
   // 🔍 Filter contributors

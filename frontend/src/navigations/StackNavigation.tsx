@@ -1,3 +1,4 @@
+ 
 import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import TabNavigation from './TabNavigation';
@@ -123,7 +124,7 @@ const StackNavigation = () => {
     return () => backHandler.remove();
   }, [navigation, nav]);
   return (
-    <Stack.Navigator>
+    <Stack.Navigator id={undefined as never}>
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}

@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   StyleSheet,
   View,
   Alert,
   TouchableOpacity,
   useColorScheme,
-  LinearGradient,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
@@ -72,7 +72,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   useEffect(() => {
     if (user && user.followers) {
       const isFollow = user.followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id);
-      // eslint-disable-next-line
+       
       setLocalIsFollowing(isFollow);
        
       setLocalFollowerCount(user.followers.length);
@@ -127,11 +127,14 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     }
   };
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    refetch();
-    console.log("Refetch called");
-    setRefreshing(false);
+
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
   }, [refetch]);
 
   useFocusEffect(

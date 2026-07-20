@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+ 
+ 
 import React, {useEffect, useState} from 'react';
 import { FlatList , Pressable, View, StyleSheet } from 'react-native';
 import {OfflinePodcastListProp, PodcastData} from '../type';
@@ -10,12 +11,13 @@ import Snackbar from 'react-native-snackbar';
 import {useDispatch, useSelector} from 'react-redux';
 import CreatePlaylist from '../components/CreatePlaylist';
 import { setaddedPodcastId, setRemovePlaylistId } from '../store/dataSlice';
-import { NoOfflinePodcastsState } from '../components/EmptyStates';
+import { NoOfflinePodcastsState, OfflinePodcastLoadErrorState } from '../components/EmptyStates';
 
 export default function OfflinePodcastList({
   navigation,
 }: OfflinePodcastListProp) {
   const [podcasts, setPodcasts] = useState<PodcastData[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const {user_id} = useSelector((state: any) => state.user);
   const [playlistModalOpen, setPlaylistModalOpen] = useState<boolean>(false);
   //const [playlistIds, setPlaylistIds] = useState<string[]>([]);
@@ -41,11 +43,18 @@ export default function OfflinePodcastList({
 
   const loadPodcasts = async () => {
     try {
+      setLoadError(null);
       const data = await readDownloadedPodcasts();
-
-      if (!Array.isArray(data)) return;
       setPodcasts(data);
-    } catch (err) {}
+    } catch (err) {
+      if (__DEV__) {
+        console.error('Offline podcast load error:', err);
+      }
+      setPodcasts([]);
+      setLoadError(
+        'Failed to load offline podcasts. Please try again or check your device storage.',
+      );
+    }
   };
 
   const navigateToDetail = (podcast: PodcastData) => {
@@ -115,9 +124,16 @@ export default function OfflinePodcastList({
         keyExtractor={(item: PodcastData) => item._id.toString()}
         renderItem={renderItem}
         ListEmptyComponent={
-  <NoOfflinePodcastsState
-    onBrowse={() => navigation.goBack()}
-  />
+  loadError ? (
+    <OfflinePodcastLoadErrorState
+      message={loadError}
+      onRetry={loadPodcasts}
+    />
+  ) : (
+    <NoOfflinePodcastsState
+      onBrowse={() => navigation.goBack()}
+    />
+  )
 }
       />
       <CreatePlaylist

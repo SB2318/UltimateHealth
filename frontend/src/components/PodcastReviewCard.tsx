@@ -1,3 +1,4 @@
+ 
 import {
   StyleSheet,
   Text,
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   playOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     justifyContent: 'center',
     alignItems: 'center',

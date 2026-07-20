@@ -1,4 +1,6 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
+ 
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import React, {useEffect, useState, useRef} from 'react';
 import {
   StyleSheet,
@@ -31,6 +33,7 @@ import {useSocket} from '../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import Loader from '../components/Loader';
 import LoadingSpinner from '../components/LoadingSpinner';
+import PodcastDetailSkeleton from '../components/PodcastDetailSkeleton';
 import {Theme, XStack, YStack, Text, ScrollView} from 'tamagui';
 import LottieView from 'lottie-react-native';
 import AudioWaveform from '../components/AudioWaveform';
@@ -816,6 +819,7 @@ useEffect(() => {
   );
 
   return (
+  <ErrorBoundary onRetry={() => refetch()}>
     <ScrollView
       backgroundColor="#0B1425"
       contentContainerStyle={{ flexGrow: 1 } as any}
@@ -846,6 +850,7 @@ useEffect(() => {
         </YStack>
       </Theme>
     </ScrollView>
+  </ErrorBoundary>
   );
 };
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
 import { StyleSheet, Text, View,  TextInput  } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';

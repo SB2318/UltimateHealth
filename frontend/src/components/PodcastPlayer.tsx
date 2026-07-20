@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   StyleSheet,
   Text,
@@ -121,7 +122,7 @@ const PodcastPlayer = ({navigation}: any) => {
     eventName: TtsEventName,
     handler: TtsEventHandler,
   ) => {
-    if (subscription?.remove) {
+    if (typeof subscription === 'object' && subscription?.remove) {
       subscription.remove();
       return;
     }

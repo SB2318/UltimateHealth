@@ -43,6 +43,40 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     }, [refetch]),
   );
 
+
+   
+  const handleReportAction = (item: ArticleData) => {
+    navigation.navigate('ReportScreen', {
+      articleId: item._id,
+      authorId: item.authorId as string,
+      commentId: null,
+      podcastId: null,
+    });
+  };
+  const renderItem = useCallback(
+    ({item}: {item: ArticleData}) => {
+      return (
+        <ArticleCard
+          item={item}
+          isSelected={selectedCardId === item._id}
+          setSelectedCardId={setSelectedCardId}
+          navigation={navigation}
+          success={onRefresh}
+          handleRepostAction={()=>{}}
+          handleReportAction={handleReportAction}
+          handleEditRequestAction={() => {}}
+          source="profile"
+        />
+      );
+    },
+    [
+      selectedCardId,
+      navigation,
+      onRefresh,
+      handleReportAction,
+    ],
+  );
+
   const onFollowerClick = () => {
     if (isConnected) {
       if (user && (user.followers?.length ?? 0) > 0) {

@@ -11,15 +11,9 @@ const defaultStaticConfig = {
   icon: "./assets/images/ic_ultimatehealth_appicon.png",
   scheme: "ultimatehealth",
   userInterfaceStyle: "automatic",
-  newArchEnabled: true,
   androidStatusBar: {
     backgroundColor: "#00BFFF",
     barStyle: "light-content"
-  },
-  splash: {
-    image: "./assets/images/adaptive-icon.png",
-    resizeMode: "contain",
-    backgroundColor: "#E6F4FE"
   },
   ios: {
     supportsTablet: true,
@@ -72,7 +66,6 @@ const defaultStaticConfig = {
       foregroundImage: "./assets/images/ic_ultimatehealth_appicon_foreground.png",
       backgroundImage: "./assets/images/ic_launcher_background.png"
     },
-    edgeToEdgeEnabled: true,
     predictiveBackGestureEnabled: false,
     package: "com.anonymous.UltimateHealth",
     versionCode: 21

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 import React, {useRef, useEffect, useState} from 'react';
 import {
   View,

@@ -1,3 +1,4 @@
+ 
 import React from 'react';
 import {render, fireEvent, waitFor} from '@testing-library/react-native';
 import {Alert} from 'react-native';
@@ -110,12 +111,16 @@ jest.mock('../../helper/Utils', () => ({
 jest.mock('../../components/EmailInputModal', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View);
+  const MockEmailInputModal = () => React.createElement(View);
+  MockEmailInputModal.displayName = 'EmailInputModal';
+  return MockEmailInputModal;
 });
 jest.mock('../../components/Loader', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View);
+  const MockLoader = () => React.createElement(View);
+  MockLoader.displayName = 'Loader';
+  return MockLoader;
 });
 
 describe('LoginScreen - Security Bypass and Validation Tests', () => {

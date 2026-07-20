@@ -1,3 +1,4 @@
+ 
 import React, {useRef} from 'react';
 import {TouchableOpacity, Alert, StyleSheet, View} from 'react-native';
 import {YStack, XStack, Image, Text} from 'tamagui';
@@ -115,9 +116,9 @@ const PodcastCard = ({
               <Ionicons name="play" size={24} color={ProfessionalColors.white} />
             </View>
           </View>
-          {progress && progress.duration > 0 && (
+          {progress && (
             <View style={styles.progressBarContainer}>
-              <View style={[styles.progressBar, { width: `${(progress.position / progress.duration) * 100}%` }]} />
+              <View style={[styles.progressBar, { width: `${progress.duration > 0 ? Math.min(progress.position / progress.duration, 1) * 100 : 0}%` }]} />
             </View>
           )}
         </View>
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   imageOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+ 
+ 
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {YStack, XStack, Text, Avatar, Paragraph} from 'tamagui';

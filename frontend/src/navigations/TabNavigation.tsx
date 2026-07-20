@@ -1,3 +1,4 @@
+ 
 // @ts-nocheck
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -16,6 +17,7 @@ import PersonaLobbyScreen from '../screens/PersonaLobbyScreen';
 import AcademyStackNavigation from './AcademyStackNavigation';
 import {useSelector} from 'react-redux';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import WellnessDashboardScreen from '../screens/WellnessDashboardScreen';
 
 
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -27,6 +29,7 @@ const TabNavigation = () => {
   const isGuest = useSelector((state: any) => state.user.isGuest);
   return (
     <Tab.Navigator
+      id={undefined as never}
       initialRouteName="Home"
       tabBar={props => <TabBar {...props} />}>
       <Tab.Screen

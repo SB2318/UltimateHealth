@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import {useEffect, useState, useMemo} from 'react';
 import { StyleSheet,
   TouchableOpacity,
@@ -24,8 +25,9 @@ import {GlassStyles, ProfessionalColors} from '../styles/GlassStyles';
 import CreateIcon from '../components/CreateIcon';
 import {useGetAllPodcasts} from '../hooks/useGetAllPodcasts';
 import {useUpdatePodcastViewcount} from '../hooks/useUpdatePodcastViewcount';
-import { PodcastLoadingState, NoPodcastState } from '../components/EmptyStates';
+import { NoPodcastState } from '../components/EmptyStates';
 import LoadingSpinner from '../components/LoadingSpinner';
+import PodcastSkeletonCard from '../components/PodcastSkeletonCard';
 import {usePreferences} from '../contexts/PreferencesContext';
 
 //const {WavAudioRecorder} = NativeModules;
@@ -176,12 +178,6 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
     />
   );
 
-  const renderLoadingState = () => (
-    <View style={styles.loadingContainer}>
-     <PodcastLoadingState/>
-    </View>
-  );
-
   const renderEmptyState = () => (
     <NoPodcastState onRefresh={onRefresh} />
   );
@@ -211,7 +207,11 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
 
       <YStack flex={1} paddingHorizontal="$3">
         {isLoading && !podcasts?.length ? (
-          renderLoadingState()
+          <>
+            {[1, 2, 3, 4, 5].map((_, i) => (
+              <PodcastSkeletonCard key={i} />
+            ))}
+          </>
         ) : (
           <FlatList
             data={filteredPodcasts}
@@ -297,40 +297,6 @@ const styles = StyleSheet.create({
   flatListContentContainer: {
     paddingTop: 8,
     paddingBottom: 120,
-  },
-
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 60,
-    paddingHorizontal: 20,
-  },
-
-  loadingIconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: ProfessionalColors.glassWhiteMedium,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-
-  loadingText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: ProfessionalColors.gray900,
-    textAlign: 'center',
-    marginTop: 8,
-  },
-
-  loadingSubText: {
-    marginTop: 8,
-    fontSize: 14,
-    fontWeight: '500',
-    color: ProfessionalColors.gray600,
-    textAlign: 'center',
   },
 
   emptyContainer: {

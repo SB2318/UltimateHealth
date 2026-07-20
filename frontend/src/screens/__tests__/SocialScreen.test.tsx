@@ -1,3 +1,4 @@
+ 
 import React from 'react';
 import {render, fireEvent, waitFor} from '@testing-library/react-native';
 import SocialScreen from '../SocialScreen';
@@ -36,13 +37,16 @@ jest.mock('../../contexts/SocketContext', () => ({
 jest.mock('../../components/Loader', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View, {testID: 'loader'});
+  const MockLoader = () => React.createElement(View, {testID: 'loader'});
+  return MockLoader;
 });
 
 jest.mock('../../components/LoadingSpinner', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View, {testID: 'loading-spinner'});
+  const MockLoadingSpinner = () =>
+    React.createElement(View, {testID: 'loading-spinner'});
+  return MockLoadingSpinner;
 });
 
 const mockSocialsList = [

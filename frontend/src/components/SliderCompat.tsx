@@ -1,3 +1,4 @@
+ 
 // Type patch for @react-native-community/slider v5 with React 19
 // The library typings use class-based component types that are incompatible with React 19's JSX types.
 // This patch re-exports the component as a functional component wrapper.

@@ -1,3 +1,4 @@
+ 
 import React, { JSX } from 'react';
 import { Text, Image} from 'react-native';
 import GlobalStyles from '../styles/GlobalStyle';
@@ -6,6 +7,7 @@ import {BUTTON_COLOR} from '../helper/Theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function NoInternetLayout(): JSX.Element {
+
   // Use useSelector with the proper type
 
   return (
@@ -30,7 +32,9 @@ export default function NoInternetLayout(): JSX.Element {
         style={{marginBottom: 20}}
       />
       <Text style={GlobalStyles.text}>No internet connection</Text>
+
     </SafeAreaView>
+
   );
 }
 

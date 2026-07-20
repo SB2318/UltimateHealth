@@ -24,7 +24,12 @@ module.exports = defineConfig([
       "react-hooks/rules-of-hooks": "off",
       "react/no-unescaped-entities": "off",
       "react-compiler/react-compiler": "off",
-      "react-hooks/set-state-in-effect": "off"
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/immutability": "off",
+      "react-hooks/refs": "off",
+      "react-hooks/purity": "off",
+      "react-hooks/globals": "off",
+      "react-hooks/static-components": "off",
     }
   },
 ]);

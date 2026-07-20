@@ -1,7 +1,8 @@
-/* eslint-disable react-compiler/react-compiler */
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
+ 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, Alert, AppState } from 'react-native';
+import {StyleSheet, Alert, AppState, AppStateStatus} from 'react-native';
 
 import {PodcastRecorderScreenProps} from '../type';
 import RNFS from 'react-native-fs';
@@ -25,6 +26,7 @@ import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
 //import {useDispatch} from 'react-redux';
 import {requestStoragePermissions} from '../helper/Utils';
+ type AppStateStatusType = 'active' | 'background' | 'inactive' | 'unknown' | 'extension';
 
 
 //const AudioModule = requireNativeModule('AudioModule');
@@ -43,7 +45,8 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
 
   const timerRef = useRef<number | null>(null);
   const recordStartTimeRef = useRef<number | null>(null);
-  
+  const isRecordingRef = useRef(false);
+
   // Stores the latest native duration for use in AppState listener and other effects, preventing stale closures.
   const durationMillisRef = useRef<number>(0);
 
@@ -54,49 +57,66 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   }, [recorderState?.durationMillis]);
 
   useEffect(() => {
-    if (recording && recorderState?.durationMillis && recorderState.durationMillis > 0) {
-      // Keep recordStartTimeRef in sync with the actual duration
-      recordStartTimeRef.current = Date.now() - recorderState.durationMillis;
+    if (
+      recording &&
+      recorderState?.durationMillis &&
+      recorderState.durationMillis > 0
+    ) {
+      recordStartTimeRef.current =
+        Date.now() - recorderState.durationMillis;
       setRecordTime(formatTime(recorderState.durationMillis));
     }
   }, [recorderState?.durationMillis, recording]);
 
-  useEffect(() => {
-    const subscription = AppState.addEventListener('change', (nextState: any) => {
+useEffect(() => {
+  const subscription = AppState.addEventListener(
+    'change',
+    (nextState: AppStateStatusType) => {
       if (nextState === 'active' && recording) {
         // Re-sync timer immediately on app foreground using actual tracked duration
         if (durationMillisRef.current > 0) {
-          recordStartTimeRef.current = Date.now() - durationMillisRef.current;
+          recordStartTimeRef.current =
+            Date.now() - durationMillisRef.current;
           setRecordTime(formatTime(durationMillisRef.current));
         } else if (recordStartTimeRef.current) {
-          // Fallback to JS-based calculation if native duration hasn't been reported yet (e.g., very early in the recording session)
+          // Fallback to JS-based calculation if native duration hasn't been reported yet
           const elapsed = Date.now() - recordStartTimeRef.current;
           setRecordTime(formatTime(elapsed));
         }
       }
-    });
-    return () => subscription.remove();
-  }, [recording]);
-
-  useFocusEffect(
-    useCallback(() => {
-      handleUpload();
-    }, []),
+    },
   );
 
-  const record = async () => {
+  return () => subscription.remove();
+}, [recording]);
+
+ const record = async () => {
+  try {
     await audioRecorder.prepareToRecordAsync();
     audioRecorder.record();
-    startTimer();
-  };
 
-  const stopRecording = async () => {
-    // The recording will be available on `audioRecorder.uri`.
-    await audioRecorder.stop();
-    setRecording(false);
+    isRecordingRef.current = true;
+    startTimer();
+  } catch (error) {
+    console.warn('Failed to start recording:', error);
+
+    isRecordingRef.current = false;
     stopTimer();
-    setFilePath(audioRecorder.uri);
-  };
+  }
+};
+
+const stopRecording = async () => {
+  try {
+    await audioRecorder.stop();
+  } catch (error) {
+    console.warn('Failed to stop recording:', error);
+  }
+
+  isRecordingRef.current = false;
+  setRecording(false);
+  stopTimer();
+  setFilePath(audioRecorder.uri);
+};
 
   useEffect(() => {
     (async () => {
@@ -226,6 +246,26 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
     await unlinkFile();
   }, [unlinkFile]);
 
+  useFocusEffect(
+    useCallback(() => {
+      handleUpload();
+
+      return () => {
+        stopTimer();
+
+        if (isRecordingRef.current) {
+          audioRecorder
+            .stop()
+            .catch(err =>
+              console.warn('Error stopping recorder on screen exit:', err),
+            );
+
+          isRecordingRef.current = false;
+        }
+      };
+    }, [audioRecorder, handleUpload]),
+  );
+
   // useEffect(() => {
   //   // const stopSub = AudioModule.addListener('recStop', (data:any) => {
   //   //   console.log('File saved at:', data.filePath);
@@ -267,11 +307,6 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   //   };
   // }, []);
 
-  useEffect(() => {
-    return () => {
-      stopTimer();
-    };
-  }, []);
 
   return (
     <Theme name="dark">

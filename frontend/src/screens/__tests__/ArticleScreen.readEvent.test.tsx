@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useRef} from 'react';
 
 describe('ArticleScreen — read-event scroll guard', () => {

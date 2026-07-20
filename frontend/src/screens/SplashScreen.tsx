@@ -1,3 +1,4 @@
+ 
 import React, {useCallback, useEffect, useState} from 'react';
 import {Image, StyleSheet, ActivityIndicator} from 'react-native';
 import {YStack, Text, Button} from 'tamagui';
@@ -65,7 +66,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
-    transform: [{scale: scale.value}, {translateY: translateY.value}],
+    transform: [{scale: scale.value}, {translateY: translateY.value}] as any,
   }));
 
   return (

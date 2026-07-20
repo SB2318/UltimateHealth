@@ -12,8 +12,7 @@ export const useLikeArticle = (
     article: ArticleData;
     likeStatus: boolean;
   },
-  AxiosError
-> => {
+  AxiosError, void> => {
   const isGuest = useSelector((state: any) => state.user.isGuest);
 
   return useMutation({

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/incompatible-library */
 import React, { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -45,7 +46,14 @@ export default function NewPasswordScreen({
   navigation,
   route,
 }: NewPasswordScreenProp) {
-  const {email} = route.params;
+  const { email, resetToken } = route.params;
+
+  React.useEffect(() => {
+      if (!resetToken) {
+          Alert.alert("Invalid password reset session", "Please verify your OTP again.");
+          navigation.goBack();
+      }
+  }, [resetToken]);
 
   const {
     control,
@@ -82,7 +90,7 @@ export default function NewPasswordScreen({
   const handlePasswordSubmit = (data: NewPasswordFormData) => {
 
     changePassword(
-      {email, newPassword: password},
+      {email, newPassword: password, resetToken},
       {
         onSuccess: () => {
           Alert.alert('Password reset successfully');

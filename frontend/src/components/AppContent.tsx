@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
 import React, { useEffect, useRef, useCallback } from 'react';
 import { useColorScheme, View } from 'react-native';
@@ -17,9 +18,9 @@ import { SocketProvider } from '../contexts/SocketContext';
 import { PreferencesProvider } from '../contexts/PreferencesContext';
 import config from '../../tamagui.config';
 
-import { initDeepLinking, navigateDeepLink, resolveNotificationTarget } from '../helper/DeepLinkService';
+import { initDeepLinking, navigateDeepLink, resolveNotificationTarget, resolveDeepLinkTarget } from '../helper/DeepLinkService';
 import { firebaseInit } from '../helper/firebase';
-import { cleanUpDownloads , KEYS, retrieveItem } from '../helper/Utils';
+import { cleanUpDownloads, KEYS, retrieveItem } from '../helper/Utils';
 import {
   SECURE_KEYS,
   secureRetrieveItem,
@@ -38,17 +39,16 @@ import { NetworkBanner } from './NetworkBanner';
 
 export default function AppContent() {
   const navigationRef = useRef<NavigationContainerRef<any> | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const pendingDeepLinkRef = useRef<string | null>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
+  const { visible, storeUrl } = useVersionCheck();
+  const dispatch = useDispatch();
 
   const { user_token, isGuest } = useSelector(
     (state: RootState) => state.user,
   );
-
-  const { visible, storeUrl } = useVersionCheck();
-  const dispatch = useDispatch();
 
   useNotificationListeners();
 
@@ -77,10 +77,23 @@ export default function AppContent() {
   }, [hydrateAuthState]);
 
   useEffect(() => {
-    if (!navigationRef.current) return;
-    const isAuthenticated = Boolean(user_token) && !isGuest;
-    return initDeepLinking(navigationRef.current, isAuthenticated);
-  }, [isGuest, user_token]);
+    const unsubscribeDeepLink = initDeepLinking((url) => {
+      if (url) {
+        pendingDeepLinkRef.current = url;
+
+        if (__DEV__) {
+          console.log(
+            '[Auth Guard] Cached incoming deep link:',
+            url,
+          );
+        }
+      }
+    });
+
+    return () => {
+      unsubscribeDeepLink();
+    };
+  }, []);
 
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
@@ -111,6 +124,26 @@ export default function AppContent() {
   }, [dispatch]);
 
 
+
+  useEffect(() => {
+    if (!navigationRef.current || !pendingDeepLinkRef.current) return;
+    if (!isGuest && tokenRes === null && !user_token) return;
+
+    const isAuthenticated = Boolean(tokenRes?.isValid || user_token) && !isGuest;
+    const target = resolveDeepLinkTarget(pendingDeepLinkRef.current);
+
+    if (target) {
+      navigateDeepLink(
+        navigationRef.current,
+        target,
+        isAuthenticated,
+      );
+    } else if (!isAuthenticated) {
+      navigationRef.current.navigate('LoginScreen');
+    }
+
+    pendingDeepLinkRef.current = null;
+  }, [tokenRes, user_token, isGuest]);
 
   useEffect(() => {
     const handleNotificationResponse = async (

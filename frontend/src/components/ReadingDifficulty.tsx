@@ -1,3 +1,4 @@
+ 
 import React from 'react';
 import { StyleSheet, Text, View, useColorScheme } from 'react-native';
 import { fp } from '../helper/Metric';

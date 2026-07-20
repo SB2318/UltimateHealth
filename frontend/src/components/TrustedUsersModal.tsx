@@ -1,3 +1,4 @@
+ 
 // @ts-nocheck
 import { View,
   Text,
@@ -78,7 +79,7 @@ export default function TrustedUsersModal({
           ) : isError ? (
             <View style={styles.centered}>
               <Text style={styles.emptyText}>
-                Couldn't load trusted readers. Please try again.
+                Could not load trusted readers. Please try again.
               </Text>
             </View>
           ) : !trustedUsers || trustedUsers.length === 0 ? (
@@ -90,7 +91,7 @@ export default function TrustedUsersModal({
           ) : (
             <FlatList
               data={trustedUsers}
-              keyExtractor={(item, index) => item._id || String(index)}
+              keyExtractor={(item) => item._id || item.user_handle}
               renderItem={renderItem}
               contentContainerStyle={styles.listContent}
             />

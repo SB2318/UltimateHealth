@@ -64,7 +64,6 @@ const GET_YEARLY_READ_REPORT = `${PROD_URL}/analytics/yearly-reads/`;
 const GET_MONTHLY_WRITES_REPORT = `${PROD_URL}/analytics/monthly-writes/`;
 const GET_YEARLY_WRITES_REPORT = `${PROD_URL}/analytics/yearly-writes/`;
 
-const VULTR_CHAT_URL = 'https://api.vultrinference.com/v1/chat/completions';
 const GET_ARTICLE_CONTENT = `${PROD_URL}/articles/get-article-content`;
 const GET_IMPROVEMENT_CONTENT = `${PROD_URL}/article/get-improve-content`;
 
@@ -118,6 +117,9 @@ const GET_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`
 const UPDATE_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`;
 const REGISTER_PUSH_TOKEN = `${PROD_URL}/user/register-device-token`;
 
+/** Wellness */
+const LOG_WELLNESS_METRICS = `${PROD_URL}/wellness`;
+
 export {
   LOGIN_API,
   REGISTRATION_API,
@@ -159,7 +161,6 @@ export {
   GET_MONTHLY_WRITES_REPORT,
   GET_YEARLY_READ_REPORT,
   GET_YEARLY_WRITES_REPORT,
-  VULTR_CHAT_URL,
   CHAT_URL,
   REPOST_ARTICLE,
   CHECK_USER_HANDLE,
@@ -207,4 +208,5 @@ export {
   UPDATE_NOTIFICATION_PREFERENCES,
   GET_READ_HISTORY,
   SHARE_BASE_URL,
+  LOG_WELLNESS_METRICS,
 };

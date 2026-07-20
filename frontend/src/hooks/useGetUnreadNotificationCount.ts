@@ -12,16 +12,10 @@ export const useGetUnreadNotificationCount = (
   return useQuery({
     queryKey: ['get-unread-notifications-count'],
     queryFn: async () => {
-      try {
-        const response = await axios.get(
-          `${PROD_URL}/notification/unread-count?role=2`,
-        );
-
-        return response.data.unreadCount as number;
-      } catch (err) {
-        console.error('Error fetching articles:', err);
-        return 0;
-      }
+      const response = await axios.get(
+        `${PROD_URL}/notification/unread-count?role=2`,
+      );
+      return response.data.unreadCount as number;
     },
     enabled: !!isConnected && !isGuest,
   });

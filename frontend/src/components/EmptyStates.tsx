@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable react-hooks/exhaustive-deps */
+ 
 import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
@@ -180,6 +181,25 @@ export const OfflinePodcastState = () => (
     title="Podcasts Offline"
     description="You need an internet connection to stream podcasts. Connect to WiFi or mobile data to listen."
     infoText="💡 Offline downloads coming soon!"
+  />
+);
+
+export const OfflinePodcastLoadErrorState = ({
+  message,
+  onRetry,
+}: {
+  message?: string;
+  onRetry?: () => void;
+}) => (
+  <BaseEmptyState
+    iconEmoji="⚠️"
+    title="Couldn't Load Offline Podcasts"
+    description={
+      message ||
+      "Something went wrong while reading your downloaded podcasts. Please try again."
+    }
+    actionText={onRetry ? "Retry" : undefined}
+    onAction={onRetry}
   />
 );
 

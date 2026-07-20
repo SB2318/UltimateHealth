@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 import { useSendOtpMutation } from '@/src/hooks/useSendOtp';
 import { useVerifyOtpMutation } from '@/src/hooks/useVerifyOtp';
@@ -48,9 +49,10 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
           otp: fullCode,
         },
         {
-          onSuccess: () => {
+          onSuccess: (data) => {
             navigation.navigate('NewPasswordScreen', {
-              email: email,
+              email,
+              resetToken: data.resetToken,
             });
           },
           onError: (error: AxiosError) => {

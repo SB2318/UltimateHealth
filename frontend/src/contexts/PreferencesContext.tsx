@@ -1,3 +1,4 @@
+ 
 import React, {
   createContext,
   useContext,
@@ -14,9 +15,11 @@ import {
 } from '../helper/SecureStorageUtils';
 import { LanguageCode, isValidLanguageCode } from '../constants/languages';
 
+type LanguagesUpdater = LanguageCode[] | ((prev: LanguageCode[]) => LanguageCode[]);
+
 interface PreferencesContextType {
   preferredLanguages: LanguageCode[];
-  setPreferredLanguages: (languages: LanguageCode[]) => Promise<void>;
+  setPreferredLanguages: (languages: LanguagesUpdater) => Promise<void>;
   addLanguagePreference: (language: LanguageCode) => Promise<void>;
   removeLanguagePreference: (language: LanguageCode) => Promise<void>;
   isLoading: boolean;
@@ -100,18 +103,42 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
     []
   );
 
+  // Serializes writes to SecureStore. Without this, two back-to-back
+  // setPreferredLanguages calls (no await between them) each resolve their
+  // own `resolved` value correctly against React's queued state updates,
+  // but their `savePreferencesToStorage` calls race independently — the
+  // call whose I/O happens to finish last wins, even if it started first
+  // and resolved an older value. Chaining onto `pendingWrite` forces writes
+  // to land in call order, so the persisted value never regresses behind
+  // an earlier, now-superseded one.
+  const pendingWriteRef = React.useRef<Promise<void>>(Promise.resolve());
+
+  // Resolves `languages` (value or updater) against the latest committed
+  // state via React's functional setState, then persists exactly that
+  // resolved value. This closes the lost-update race: two near-simultaneous
+  // calls each get queued against the state React actually commits, rather
+  // than both branching off the same stale closure snapshot.
   const setPreferredLanguages = useCallback(
-    async (languages: LanguageCode[]): Promise<void> => {
-      const validLanguages = languages.filter(lang =>
-        isValidLanguageCode(lang)
+    async (languages: LanguagesUpdater): Promise<void> => {
+      let resolved: LanguageCode[] = [];
+      setInternalPreferredLanguages(prev => {
+        const next =
+          typeof languages === 'function' ? languages(prev) : languages;
+        resolved = next.filter(lang => isValidLanguageCode(lang));
+        return resolved;
+      });
+      const write = pendingWriteRef.current.then(() =>
+        savePreferencesToStorage(resolved)
       );
-      setInternalPreferredLanguages(validLanguages);
-      await savePreferencesToStorage(validLanguages);
+      pendingWriteRef.current = write;
+      await write;
     },
     [savePreferencesToStorage]
   );
 
-  // ✅ FIXED: Refactored to avoid race conditions
+  // ✅ FIXED: Derives the next array from the latest committed state via
+  // a functional updater, not from `preferredLanguages` captured in this
+  // callback's closure, so concurrent toggles no longer clobber each other.
   const addLanguagePreference = useCallback(
     async (language: LanguageCode): Promise<void> => {
       if (!isValidLanguageCode(language)) {
@@ -120,25 +147,25 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
         );
         return;
       }
-      // Use setPreferredLanguages to avoid race conditions
-      if (!preferredLanguages.includes(language)) {
-        await setPreferredLanguages([...preferredLanguages, language]);
-      }
+      await setPreferredLanguages(prev =>
+        prev.includes(language) ? prev : [...prev, language]
+      );
     },
-    [preferredLanguages, setPreferredLanguages]
+    [setPreferredLanguages]
   );
 
-  // ✅ FIXED: Refactored to avoid race conditions
+  // ✅ FIXED: Derives the next array from the latest committed state via
+  // a functional updater, not from `preferredLanguages` captured in this
+  // callback's closure, so concurrent toggles no longer clobber each other.
   const removeLanguagePreference = useCallback(
     async (language: LanguageCode): Promise<void> => {
-      // Use setPreferredLanguages to avoid race conditions
-      if (preferredLanguages.includes(language)) {
-        await setPreferredLanguages(
-          preferredLanguages.filter(lang => lang !== language)
-        );
-      }
+      await setPreferredLanguages(prev =>
+        prev.includes(language)
+          ? prev.filter(lang => lang !== language)
+          : prev
+      );
     },
-    [preferredLanguages, setPreferredLanguages]
+    [setPreferredLanguages]
   );
 
   const value: PreferencesContextType = {

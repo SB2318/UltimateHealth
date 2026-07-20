@@ -1,8 +1,9 @@
 // @ts-nocheck
 // frontend/src/services/apiClient.ts
-const PROD_URL = "http://10.0.2.2:3000/api";
+import Constants from 'expo-constants';
+
 const extra = Constants.expoConfig?.extra ?? {};
-const PROD_URL: string = extra.PROD_URL;
+const PROD_URL: string = extra.PROD_URL ?? 'http://10.0.2.2:3000/api';
 
 // 🔥 Main fix: Sirf successful responses return
 export async function apiRequest(endpoint: string, options?: RequestInit) {

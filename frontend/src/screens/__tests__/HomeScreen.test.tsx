@@ -1,3 +1,4 @@
+ 
 // @ts-nocheck
 import React from 'react';
 import {render} from '@testing-library/react-native';
@@ -19,7 +20,8 @@ jest.mock('react-native-snackbar', () => ({
 jest.mock('../../components/ArticleCard', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View, {testID: 'ArticleCard'});
+  const MockArticleCard = () => React.createElement(View, {testID: 'ArticleCard'});
+  return MockArticleCard;
 });
 
 const mockSelector = jest.fn();
@@ -103,23 +105,31 @@ jest.mock('../../contexts/PreferencesContext', () => ({
 jest.mock('../../components/EmptyStates', () => {
   const React = require('react');
   const {Text} = require('react-native');
+  const OfflineArticleState = () => React.createElement(Text, null, 'OfflineArticleState');
+  const NoArticleState = () => React.createElement(Text, null, 'NoArticleState');
+  const BaseEmptyState = ({loading}: any) =>
+    React.createElement(Text, null, loading ? 'LoadingState' : 'BaseEmptyState');
+
   return {
-    OfflineArticleState: () => React.createElement(Text, null, 'OfflineArticleState'),
-    NoArticleState: () => React.createElement(Text, null, 'NoArticleState'),
-    BaseEmptyState: ({loading}: any) => React.createElement(Text, null, loading ? 'LoadingState' : 'BaseEmptyState'),
+    OfflineArticleState,
+    NoArticleState,
+    BaseEmptyState,
   };
 });
 
 jest.mock('../../components/HomeScreenHeader', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View, {testID: 'HomeScreenHeader'});
+  const MockHomeScreenHeader = () =>
+    React.createElement(View, {testID: 'HomeScreenHeader'});
+  return MockHomeScreenHeader;
 });
 
 jest.mock('../../components/FilterModal', () => {
   const React = require('react');
   const {View} = require('react-native');
-  return () => React.createElement(View);
+  const MockFilterModal = () => React.createElement(View);
+  return MockFilterModal;
 });
 
 describe('HomeScreen - Early Return and State Rendering Tests', () => {
