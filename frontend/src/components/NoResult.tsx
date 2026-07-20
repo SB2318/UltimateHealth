@@ -1,3 +1,4 @@
+ 
 // NoResult.tsx
 import {MaterialIcons} from '@expo/vector-icons';
 import React from 'react';

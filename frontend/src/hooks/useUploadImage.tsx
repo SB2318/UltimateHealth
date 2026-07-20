@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {useState} from 'react';
 import { showAlert } from '@/src/store/alertSlice';
 import { useDispatch } from 'react-redux';

@@ -27,7 +27,7 @@ describe('useGetPlaylists', () => {
     (ReactRedux.useSelector as unknown as jest.Mock).mockReturnValue(false);
 
     mockedAxios.get.mockResolvedValueOnce({
-      data: [{id: 1, name: 'My List'}],
+      data: [{id: 1, title: 'My List'}],
     });
 
     const {result} = renderHook(() => useGetPlaylists(), {
@@ -35,7 +35,7 @@ describe('useGetPlaylists', () => {
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.[0].name).toBe('My List');
+    expect(result.current.data?.[0].title).toBe('My List');
   });
 
   it('does not fetch if user is a guest', async () => {

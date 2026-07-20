@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import { ScrollView, Image, Linking } from 'react-native';
 import { safeOpenUrl } from '../utils/safeOpenUrl';

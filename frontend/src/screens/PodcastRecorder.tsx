@@ -1,8 +1,8 @@
-/* eslint-disable react-compiler/react-compiler */
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
+ 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Alert, AppState, AppStateStatus} from 'react-native';
- type AppStateStatusType = 'active' | 'background' | 'inactive' | 'unknown' | 'extension';
 
 import {PodcastRecorderScreenProps} from '../type';
 import RNFS from 'react-native-fs';
@@ -26,6 +26,7 @@ import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
 //import {useDispatch} from 'react-redux';
 import {requestStoragePermissions} from '../helper/Utils';
+ type AppStateStatusType = 'active' | 'background' | 'inactive' | 'unknown' | 'extension';
 
 
 //const AudioModule = requireNativeModule('AudioModule');

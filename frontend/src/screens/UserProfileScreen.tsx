@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   StyleSheet,
   View,
@@ -71,7 +72,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   useEffect(() => {
     if (user && user.followers) {
       const isFollow = user.followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id);
-      // eslint-disable-next-line
+       
       setLocalIsFollowing(isFollow);
        
       setLocalFollowerCount(user.followers.length);

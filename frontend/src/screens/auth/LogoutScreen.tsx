@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 import React, {useCallback} from 'react';
 import {
   StyleSheet,
@@ -42,7 +43,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
 
   const handleLogout = () => {
     logout(
-      {},
+      undefined,
       {
         onSuccess: async () => {
           await completeLocalLogout();

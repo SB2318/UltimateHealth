@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 // @ts-nocheck
 import {
   StyleSheet,
@@ -108,7 +109,7 @@ const ArticleCard = ({
 
   const {mutate: repost, isPending: repostPending} = useRepostArticle();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const {mutate: getArticleContent, isPending: getArticleContentPending} =
     useLazyGetArticleContent();
 
@@ -119,7 +120,6 @@ const ArticleCard = ({
     level: 'Beginner Friendly' as 'Beginner Friendly' | 'Intermediate' | 'Advanced',
     approved: true,
   };
-
   const heartScale = useSharedValue(0);
 
   const heartStyle = useAnimatedStyle(() => {
@@ -439,10 +439,10 @@ const ArticleCard = ({
 <Pressable onPress={handleImagePress} style={styles.imageWrapper}>
   <ImageFallback
     source={{
-      uri: item?.imageUtils[0]
-        ? item?.imageUtils[0].startsWith('http')
-          ? item?.imageUtils[0]
-          : `${GET_IMAGE}/${item?.imageUtils[0]}`
+      uri: item?.imageUtils && item.imageUtils.length > 0
+        ? item.imageUtils[0].startsWith('http')
+          ? item.imageUtils[0]
+          : `${GET_IMAGE}/${item.imageUtils[0]}`
         : undefined,
     }}
     fallbackSource={require('../assets/images/article_default.jpg')}

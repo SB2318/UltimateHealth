@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorBoundary } from '../../components/ErrorBoundary';
-/* eslint-disable react-compiler/react-compiler */
+ 
 import {
   Image,
   Platform,
@@ -10,7 +11,7 @@ import {
   Alert,
   useWindowDimensions,
   useColorScheme,
-} from 'react-native';
+ ScrollView } from 'react-native';
 import ArticleShareModal from '../../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -25,7 +26,7 @@ import Loader from '../../components/Loader';
 import Snackbar from 'react-native-snackbar';
 import ResearchSummaryCard from '../../components/ResearchSummaryCard';
 import StructuredPodcastCard from '../../components/StructuredPodcastCard';
-import { debugLog, debugWarn, debugError } from '../utils/debugLog';
+import { debugLog, debugWarn, debugError } from '../../utils/debugLog';
 import {
   generateArticleSummary,
   ArticleSummary,
@@ -74,7 +75,7 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { ScrollView } from 'react-native';
+
 
 const CHUNK_SIZE = 120;
 
@@ -313,7 +314,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         clearTimeout(saveScrollPositionRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   const noDataHtml = '<p>No Data found</p>';
@@ -472,37 +473,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             text: article.savedUsers?.includes(user_id)
               ? 'Article removed from saved'
               : 'Article saved successfully!',
-            duration: Snackbar.LENGTH_SHORT,
-          });
-        },
-        onError: (err: any) => {
-          debugLog('error', err);
-          Snackbar.show({
-            text: 'Something went wrong, try again!',
-            duration: Snackbar.LENGTH_LONG,
-          });
-        },
-      });
-    } else {
-      Alert.alert('Article not found');
-    }
-  };
-
-  const handleTrust = () => {
-    if (isGuest) {
-      navigation.navigate('GuestPlaceholderScreen', {
-        title: 'Sign In Required',
-        description: 'Please sign in or sign up to trust this article.',
-        iconName: 'shield',
-      });
-      return;
-    }
-    if (article) {
-      trustMutation(undefined, {
-        onSuccess: (data: {isTrusted: boolean}) => {
-          refetch();
-          Snackbar.show({
-            text: data?.isTrusted ? 'Marked as trusted!' : 'Trust removed',
             duration: Snackbar.LENGTH_SHORT,
           });
         },

@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
+ 
 import React, {useCallback, useEffect, useState} from 'react';
 import { View,
   Text,

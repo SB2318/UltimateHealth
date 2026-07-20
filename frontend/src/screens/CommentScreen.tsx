@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';

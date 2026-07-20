@@ -27,7 +27,7 @@ describe('useChangePasswordMutation', () => {
       wrapper: makeWrapper(),
     });
 
-    result.current.mutate({email: 'test@example.com', newPassword: 'newPassword123'});
+    result.current.mutate({email: 'test@example.com', newPassword: 'newPassword123', resetToken: 'token'});
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data?.message).toBe('Password changed successfully');
@@ -40,7 +40,7 @@ describe('useChangePasswordMutation', () => {
       wrapper: makeWrapper(),
     });
 
-    result.current.mutate({email: 'test@example.com', newPassword: 'newPassword123'});
+    result.current.mutate({email: 'test@example.com', newPassword: 'newPassword123', resetToken: 'token'});
 
     await waitFor(() => expect(result.current.isError).toBe(true));
   });
@@ -52,13 +52,13 @@ describe('useChangePasswordMutation', () => {
       wrapper: makeWrapper(),
     });
 
-    result.current.mutate({email: 'test@example.com', newPassword: 'newPassword123'});
+    result.current.mutate({email: 'test@example.com', newPassword: 'newPassword123', resetToken: 'token'});
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(mockedAxios.post).toHaveBeenCalledWith(
       expect.stringContaining('verifypassword'),
-      {email: 'test@example.com', newPassword: 'newPassword123'},
+      {email: 'test@example.com', newPassword: 'newPassword123', resetToken: 'token'},
     );
   });
 });

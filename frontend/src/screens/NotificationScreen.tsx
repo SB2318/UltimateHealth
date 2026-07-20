@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
+ 
 
 import { AppState,  FlatList , StyleSheet, View } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';

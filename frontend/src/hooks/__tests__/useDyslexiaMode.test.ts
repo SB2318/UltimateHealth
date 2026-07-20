@@ -14,7 +14,7 @@ describe('useDyslexiaMode hook', () => {
   });
 
   it('should initialize with false if nothing is in storage', async () => {
-    (retrieveItem as jest.Mock).mockResolvedValueOnce(null);
+    (retrieveItem as unknown as jest.Mock).mockResolvedValueOnce(null);
 
     const { result } = renderHook(() => useDyslexiaMode());
 
@@ -23,7 +23,7 @@ describe('useDyslexiaMode hook', () => {
   });
 
   it('should initialize with true if "true" is in storage', async () => {
-    (retrieveItem as jest.Mock).mockResolvedValueOnce('true');
+    (retrieveItem as unknown as jest.Mock).mockResolvedValueOnce('true');
 
     const { result } = renderHook(() => useDyslexiaMode());
 
@@ -36,7 +36,7 @@ describe('useDyslexiaMode hook', () => {
   });
 
   it('should toggle state and call storeItem', async () => {
-    (retrieveItem as jest.Mock).mockResolvedValueOnce(null);
+    (retrieveItem as unknown as jest.Mock).mockResolvedValueOnce(null);
 
     const { result } = renderHook(() => useDyslexiaMode());
 
@@ -64,11 +64,11 @@ describe('useDyslexiaMode hook', () => {
   });
 
   it('should revert state if storeItem fails (optimistic update fallback)', async () => {
-    (retrieveItem as jest.Mock).mockResolvedValueOnce(null);
+    (retrieveItem as unknown as jest.Mock).mockResolvedValueOnce(null);
     const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     // Mock storeItem to reject
-    (storeItem as jest.Mock).mockRejectedValueOnce(new Error('Storage error'));
+    (storeItem as unknown as jest.Mock).mockRejectedValueOnce(new Error('Storage error'));
 
     const { result } = renderHook(() => useDyslexiaMode());
 

@@ -8,8 +8,6 @@ import {useGetAuthorProfile} from './useGetAuthorProfile';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-
-
 function makeWrapper() {
   const queryClient = new QueryClient({
     defaultOptions: {queries: {retry: false}, mutations: {retry: false}},
@@ -21,24 +19,34 @@ function makeWrapper() {
 describe('useGetAuthorProfile', () => {
   afterEach(() => jest.clearAllMocks());
 
-  it('executes mutation successfully and calls API', async () => {
-    
-    
-    
-    mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });
+  it('executes query successfully and calls API', async () => {
+    // Hook uses axios.get (it's a useQuery, not a mutation)
+    mockedAxios.get.mockResolvedValueOnce({data: {data: {id: 'test-id', name: 'Author Name'}}});
 
-    const {result} = renderHook(() => useGetAuthorProfile('test-id', null as any, 'test-id', true), {
-      wrapper: makeWrapper(),
-    });
+    const {result} = renderHook(
+      () => useGetAuthorProfile('test-id', undefined, 'test-id', true),
+      {wrapper: makeWrapper()},
+    );
 
-    // Check if it's a query or mutation and wait for it to settle if it executes immediately
-    if (result.current && typeof result.current.mutate === 'function') {
-        result.current.mutate(null as any);
-        await waitFor(() => expect(result.current.isSuccess || result.current.isError).toBe(true));
-    } else if (result.current && result.current.isSuccess !== undefined) {
-        await waitFor(() => expect(result.current.isSuccess || result.current.isError).toBe(true));
-    } else {
-        expect(result.current).toBeDefined();
-    }
+    // useQuery fires automatically when enabled=true; wait for it to settle
+    await waitFor(() =>
+      expect(result.current.isSuccess || result.current.isError).toBe(true),
+    );
+
+    expect(result.current.isSuccess).toBe(true);
+    expect(mockedAxios.get).toHaveBeenCalledWith(
+      expect.stringContaining('getuserprofile'),
+    );
+  });
+
+  it('returns undefined when isConnected is false (query disabled)', () => {
+    const {result} = renderHook(
+      () => useGetAuthorProfile('test-id', undefined, 'test-id', false),
+      {wrapper: makeWrapper()},
+    );
+
+    // enabled=false so query never runs
+    expect(result.current.isFetching).toBe(false);
+    expect(result.current.data).toBeUndefined();
   });
 });

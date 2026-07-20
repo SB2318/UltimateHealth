@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
+ 
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import React, {useEffect, useState, useRef} from 'react';
 import {

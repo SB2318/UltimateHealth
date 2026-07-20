@@ -30,7 +30,7 @@ describe('useVerifyOtpMutation', () => {
     result.current.mutate({email: 'test@example.com', otp: '123456'});
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data).toBe('OTP verified');
+    expect(result.current.data?.message).toBe('OTP verified');
   });
 
   it('sets error state on network failure', async () => {

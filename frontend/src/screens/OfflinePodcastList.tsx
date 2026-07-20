@@ -1,4 +1,4 @@
-/* eslint-disable react-compiler/react-compiler */
+
 import React, {useCallback, useEffect, useState} from 'react';
 import { FlatList , Pressable, View, StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';

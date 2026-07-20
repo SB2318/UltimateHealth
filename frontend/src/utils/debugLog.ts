@@ -8,7 +8,7 @@ type LogLevel = 'log' | 'warn' | 'error';
 
 function log(level: LogLevel, ...args: unknown[]): void {
     if (__DEV__) {
-    // eslint-disable-next-line no-console
+     
     console[level](...args);
     }
 }

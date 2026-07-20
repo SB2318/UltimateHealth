@@ -6,8 +6,7 @@ type AxiosError = any;
 
 export const useSaveArticle = (articleId: number): UseMutationResult<
  any,
- AxiosError
->=>{
+ AxiosError, void>=>{
 
     return useMutation({
     mutationKey: [`update-save-article`, articleId],

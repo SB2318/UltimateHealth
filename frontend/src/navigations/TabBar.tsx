@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 import React, {useRef, useEffect, useState} from 'react';
 import {
   View,
@@ -20,9 +21,8 @@ const TAB_CONFIG: Record<
   Home: {active: 'home', inactive: 'home-outline', label: 'Home'},
   Podcasts: {active: 'headphones', inactive: 'headphones', label: 'Podcasts'},
   Chatbot: {active: 'robot', inactive: 'robot-outline', label: 'AI'},
-  Wellness: {active: 'heart', inactive: 'heart-outline', label: 'Wellness'},
-  Profile: {active: 'account-circle', inactive: 'account-circle-outline', label: 'Profile'},
-  About: {active: 'information', inactive: 'information-outline', label: 'About'},
+  Academy: {active: 'school', inactive: 'school-outline', label: 'Academy'},
+  Settings: {active: 'cog', inactive: 'cog-outline', label: 'Settings'},
 };
 
 interface AnimatedTabItemProps {

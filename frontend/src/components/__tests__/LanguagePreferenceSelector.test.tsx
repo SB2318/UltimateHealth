@@ -31,6 +31,7 @@ jest.mock('@expo/vector-icons/MaterialIcons', () => {
 let capturedContext: ReturnType<typeof usePreferences> | null = null;
 
 const ContextSpy: React.FC = () => {
+   
   capturedContext = usePreferences();
   return null;
 };

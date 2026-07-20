@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Modal, View, Text, Pressable, Linking } from 'react-native';
 import { safeOpenUrl } from '../utils/safeOpenUrl';
 

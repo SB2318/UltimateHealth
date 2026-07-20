@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * ArticleShareModal.tsx
  *
@@ -159,7 +160,7 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
 
 const styles = StyleSheet.create({
   backdrop: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: COLORS.backdrop,
   },
   sheet: {
