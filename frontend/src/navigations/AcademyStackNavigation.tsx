@@ -15,6 +15,7 @@ const Stack = createStackNavigator();
 const AcademyStackNavigation = () => {
   return (
     <Stack.Navigator
+      id={undefined as never}
       initialRouteName="AcademyHome"
       screenOptions={{
         headerShown: false,

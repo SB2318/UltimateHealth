@@ -4,6 +4,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Course } from '../../helper/AcademyMockData';
 import { ACADEMY_PRIMARY, ACADEMY_SURFACE, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_BORDER } from '../../helper/Theme';
 
+type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+
 interface CourseCardProps {
   course: Course;
   onPress: () => void;
@@ -13,7 +15,7 @@ const CourseCard = ({ course, onPress }: CourseCardProps) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.iconContainer}>
-        <MaterialCommunityIcons name={course.imageIcon as any} size={40} color={ACADEMY_PRIMARY} />
+        <MaterialCommunityIcons name={course.imageIcon as IconName} size={40} color={ACADEMY_PRIMARY} />
       </View>
       <View style={styles.content}>
         <Text style={styles.title}>{course.title}</Text>

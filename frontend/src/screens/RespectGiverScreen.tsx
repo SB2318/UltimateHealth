@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useRef } from 'react';
 import {
   View,
@@ -23,7 +22,7 @@ const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
 const pdmImage = require('../../assets/images/p_d_m.jpg');
 
 // ─── Particle dot component ───────────────────────────────────────────────────
-const FloatingDot = ({ delay, size, x, color }: any) => {
+const FloatingDot = ({ delay, size, x, color }: { delay: number; size: number; x: number; color: string }) => {
   const anim = useRef(new Animated.Value(0)).current;
   useEffect(() => {
     Animated.loop(
@@ -102,7 +101,7 @@ const QuoteCard = ({ text, delay }: { text: string; delay: number }) => {
 };
 
 // ─── Insight Pill ─────────────────────────────────────────────────────────────
-const InsightPill = ({ icon, label, delay }: any) => {
+const InsightPill = ({ icon, label, delay }: { icon: keyof typeof MaterialCommunityIcon.glyphMap; label: string; delay: number }) => {
   const scale = useRef(new Animated.Value(0.6)).current;
   const fade = useRef(new Animated.Value(0)).current;
 

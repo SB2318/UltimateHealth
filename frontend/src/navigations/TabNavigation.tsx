@@ -1,5 +1,4 @@
  
-// @ts-nocheck
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
@@ -116,15 +115,6 @@ const TabNavigation = () => {
         component={AcademyStackNavigation}
         options={{
           headerShown: false,
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerTitleStyle: {
-            fontSize: 23,
-            marginBottom: 12,
-            color: 'white',
-          },
         }}
       />
     </Tab.Navigator>
