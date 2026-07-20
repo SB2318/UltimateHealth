@@ -98,11 +98,7 @@ jest.mock('../../hooks/useLoadAIChats', () => ({
   useLoadAIConversations: jest.fn(),
 }));
 
-<<<<<<< HEAD
-const mockuseAppSelector = require('react-redux').useAppSelector as jest.Mock;
-=======
 const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
->>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 const mockUseSendMessageToGemini = require('../../hooks/useSendMessageToGemini').useSendMessageToGemini as jest.Mock;
 const mockUseLoadAIConversations = require('../../hooks/useLoadAIChats').useLoadAIConversations as jest.Mock;
 

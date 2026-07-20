@@ -10,13 +10,8 @@ jest.mock('react-native-snackbar', () => ({
   LENGTH_SHORT: 0,
 }));
 
-<<<<<<< HEAD
-jest.mock('react-redux', () => ({
-  useAppSelector: jest.fn(),
-=======
 jest.mock('../store/hooks', () => ({
   useAppSelector: jest.fn(),
->>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 }));
 
 jest.mock('@tanstack/react-query', () => ({
@@ -77,11 +72,7 @@ const mockPreferences = {
   message: 'Success',
 };
 
-<<<<<<< HEAD
-const mockuseAppSelector = require('react-redux').useAppSelector as jest.Mock;
-=======
 const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
->>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 const mockUseGetCategories = require('../../hooks/useGetArticleTags').useGetCategories as jest.Mock;
 const mockUseGetNotificationPreferences = require('../../hooks/useGetNotificationPreferences').useGetNotificationPreferences as jest.Mock;
 const mockUseUpdateNotificationPreferences = require('../../hooks/useUpdateNotificationPreferences').useUpdateNotificationPreferences as jest.Mock;

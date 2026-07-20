@@ -13,11 +13,7 @@ import { Alert,
   View
   } from 'react-native';
 
-<<<<<<< HEAD
-import { useAppDispatch, useAppSelector } from 'react-redux';
-=======
 import { useAppDispatch, useAppSelector } from '../store/hooks';
->>>>>>> b5d39036 (refactor: complete typed Redux hooks migration)
 import { H3, Image, Paragraph, Text, YStack, TextArea, XStack, Button } from 'tamagui';
 
 import CommentItem from '../components/CommentItem';
