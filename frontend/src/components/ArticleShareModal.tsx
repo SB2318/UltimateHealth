@@ -19,7 +19,7 @@
  *   />
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Modal,
   View,
@@ -31,8 +31,8 @@ import {
   Dimensions,
   SafeAreaView,
 } from 'react-native';
-import ArticleShareCard, { ArticleShareCardProps } from './ArticleShareCard';
-import { useArticleShare } from '../hooks/useArticleShare';
+import ArticleShareCard, {ArticleShareCardProps} from './ArticleShareCard';
+import {useArticleShare} from '../hooks/useArticleShare';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -44,7 +44,7 @@ interface ArticleShareModalProps {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MODAL_HEIGHT = SCREEN_HEIGHT * 0.72;
 
 const COLORS = {
@@ -65,7 +65,7 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
   onClose,
   article,
 }) => {
-  const { cardRef, isCapturing, shareArticleCard } = useArticleShare();
+  const {cardRef, isCapturing, shareArticleCard} = useArticleShare();
 
   // ── Slide-up animation ──────────────────────────────────────────────
   const [slideAnim] = useState(() => new Animated.Value(MODAL_HEIGHT));
@@ -97,22 +97,19 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
       transparent
       animationType="fade"
       onRequestClose={onClose}
-      statusBarTranslucent
-    >
+      statusBarTranslucent>
       {/* ── Backdrop ─────────────────────────────────────────────────── */}
       <TouchableOpacity
         style={styles.backdrop}
         activeOpacity={1}
         onPress={onClose}
+        accessibilityRole="button"
+        accessibilityLabel="Close dialog"
       />
 
       {/* ── Sheet ────────────────────────────────────────────────────── */}
       <Animated.View
-        style={[
-          styles.sheet,
-          { transform: [{ translateY: slideAnim }] },
-        ]}
-      >
+        style={[styles.sheet, {transform: [{translateY: slideAnim}]}]}>
         <SafeAreaView style={styles.safeArea}>
           {/* Handle */}
           <View style={styles.handle} />
@@ -120,7 +117,11 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Share Article</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+            <TouchableOpacity
+              onPress={onClose}
+              style={styles.closeBtn}
+              accessibilityRole="button"
+              accessibilityLabel="Close share article dialog">
               <Text style={styles.closeBtnText}>✕</Text>
             </TouchableOpacity>
           </View>
@@ -140,7 +141,8 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
             onPress={handleShare}
             disabled={isCapturing}
             activeOpacity={0.85}
-          >
+            accessibilityRole="button"
+            accessibilityLabel="Share article card">
             {isCapturing ? (
               <ActivityIndicator color={COLORS.white} size="small" />
             ) : (
@@ -225,7 +227,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{ scale: 0.88 }],
+    transform: [{scale: 0.88}],
   },
 
   // Share button
@@ -239,7 +241,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 8,
     shadowColor: COLORS.teal,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.35,
     shadowRadius: 8,
     elevation: 6,
