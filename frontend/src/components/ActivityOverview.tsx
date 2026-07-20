@@ -26,14 +26,14 @@ import Loader from './Loader';
 
 import {useFocusEffect} from '@react-navigation/native';
 import {Dropdown} from 'react-native-element-dropdown';
-import {useGetAuthorMonthlyReadReport} from '../hooks/useGetMonthlyReadReport';
-import {useGetAuthorMonthlyWriteReport} from '../hooks/useGetMonthlyWriteReport';
-import {useGetAuthorMostViewedArticles} from '../hooks/useGetMostViewedArticle';
-import {useGetTotalLikeViewStatus} from '../hooks/useGetTotalLikeViewStatus';
-import {useGetTotalReads} from '../hooks/useGetTotalReads';
-import {useGetTotalWrites} from '../hooks/useGetTotalWrites';
-import {useGetAuthorYearlyReadReport} from '../hooks/useGetYearlyReadReport';
-import {useGetAuthorYearlyWriteReport} from '../hooks/useGetYearlyWriteReport';
+import {useGetAuthorMonthlyReadReport} from '../hooks/analytics/useGetMonthlyReadReport';
+import {useGetAuthorMonthlyWriteReport} from '../hooks/analytics/useGetMonthlyWriteReport';
+import {useGetAuthorMostViewedArticles} from '../hooks/article/useGetMostViewedArticle';
+import {useGetTotalLikeViewStatus} from '../hooks/analytics/useGetTotalLikeViewStatus';
+import {useGetTotalReads} from '../hooks/analytics/useGetTotalReads';
+import {useGetTotalWrites} from '../hooks/analytics/useGetTotalWrites';
+import {useGetAuthorYearlyReadReport} from '../hooks/analytics/useGetYearlyReadReport';
+import {useGetAuthorYearlyWriteReport} from '../hooks/analytics/useGetYearlyWriteReport';
 import StatisticsCard from './StatisticsCard';
 
 const getArticleImageSource = (image?: string): ImageSourcePropType => {

@@ -1,0 +1,28 @@
+import { LOAD_REVIEW_COMMENTS } from '@/src/helper/APIUtils';
+import { Comment } from '@/src/type';
+import {useQuery, UseQueryResult} from '@tanstack/react-query';
+import axios from 'axios';
+
+import {useSelector} from 'react-redux';
+type AxiosError = any;
+
+export const useGetLoadReviewComments = (
+  articleId: number | undefined,
+  requestId: string | undefined,
+  isConnected: boolean
+): UseQueryResult<Comment[], AxiosError> => {
+  const isGuest = useSelector((state: any) => state.user.isGuest);
+
+  return useQuery({
+    queryKey: ['get-review-comments', articleId, requestId],
+
+    queryFn: async () => {
+      const response = await axios.get(
+        `${LOAD_REVIEW_COMMENTS}?articleId=${articleId}&requestId=${requestId}`,
+      );
+
+      return response.data as Comment[];
+    },
+    enabled: !!isConnected && !isGuest
+  });
+};

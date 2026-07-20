@@ -50,22 +50,22 @@ import {FontAwesome5} from '@expo/vector-icons';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 import LottieView from 'lottie-react-native';
 
-import {useGetArticleDetails} from '@/src/hooks/useGetArticleDetail';
-import {useGetArticleContent} from '@/src/hooks/useGetArticleContent';
-import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {useLikeArticle} from '@/src/hooks/useLikeArticle';
-import {useUpdateFollowStatusByArticle} from '@/src/hooks/useUpdateFollowStatus';
-import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
+import {useGetArticleDetails} from '@/src/hooks/article/useGetArticleDetail';
+import {useGetArticleContent} from '@/src/hooks/article/useGetArticleContent';
+import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
+import {useLikeArticle} from '@/src/hooks/article/useLikeArticle';
+import {useUpdateFollowStatusByArticle} from '@/src/hooks/social/useUpdateFollowStatus';
+import {useUpdateReadEvent} from '@/src/hooks/article/useUpdateReadEvent';
 import {getReadTime} from '../../utils/readTime';
-import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
-import {useSaveArticle} from '@/src/hooks/useSaveArticle';
-import {useTrustArticle} from '@/src/hooks/useTrustArticle';
+import {useUpdateViewCount} from '@/src/hooks/article/useUpdateViewCount';
+import {useSaveArticle} from '@/src/hooks/article/useSaveArticle';
+import {useTrustArticle} from '@/src/hooks/article/useTrustArticle';
 import TrustedUsersModal from '../../components/TrustedUsersModal';
 import {useSocket} from '../../contexts/SocketContext';
 import { copyArticleShareLink } from '../../helper/shareUtils';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
-import { useDyslexiaMode } from '../../hooks/useDyslexiaMode';
+import { useDyslexiaMode } from '../../hooks/common/useDyslexiaMode';
 import { generateArticleStyles } from '../../utils/dyslexiaStyles';
 import Animated, {
   useSharedValue,

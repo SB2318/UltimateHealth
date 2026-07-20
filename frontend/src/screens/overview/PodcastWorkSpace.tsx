@@ -13,9 +13,9 @@ import PodcastReviewCard from '../../components/PodcastReviewCard';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
 import Loader from '../../components/Loader';
-import {useGetPendingPodcasts} from '@/src/hooks/useGetPendingPodcasts';
-import {useGetDiscardedPodcasts} from '@/src/hooks/useGetDiscardedPodcast';
-import {useGetUserPublishedPodcasts} from '@/src/hooks/useGetUserPublishedPodcasts';
+import {useGetPendingPodcasts} from '@/src/hooks/podcast/useGetPendingPodcasts';
+import {useGetDiscardedPodcasts} from '@/src/hooks/podcast/useGetDiscardedPodcast';
+import {useGetUserPublishedPodcasts} from '@/src/hooks/podcast/useGetUserPublishedPodcasts';
 import {NoPodcastState} from '../../components/EmptyStates';
 
 export default function PodcastWorkSpace({

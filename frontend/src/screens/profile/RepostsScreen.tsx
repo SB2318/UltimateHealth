@@ -6,7 +6,7 @@ import {StatusBar} from 'expo-status-bar';
 import {useTheme} from 'tamagui';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import {RepostsScreenProp, ArticleData} from '../../type';
-import {useGetProfile} from '../../hooks/useGetProfile';
+import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import {NoArticleState} from '../../components/EmptyStates';
 import UserArticleCard from '../../components/UserArticleCard';
 import {useFocusEffect} from '@react-navigation/native';

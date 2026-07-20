@@ -13,10 +13,10 @@ import EmailVerifiedModal from '../../components/VerifiedModal';
 import SecurityWarningModal from '../../components/SecurityWarningModal';
 import Loader from '../../components/Loader';
 import Snackbar from 'react-native-snackbar';
-import useUploadImage from '../../hooks/useUploadImage';
+import useUploadImage from '../../hooks/media/useUploadImage';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
-import {useRegdMutation} from '@/src/hooks/useUserRegistration';
+import {useVerificationMailMutation} from '@/src/hooks/auth/useMailVerification';
+import {useRegdMutation} from '@/src/hooks/auth/useUserRegistration';
 type AxiosError = any;
 let validator = require('email-validator');
 const signupSecondSchema = z.object({

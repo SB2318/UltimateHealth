@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
-import { useSendOtpMutation } from '@/src/hooks/useSendOtp';
-import { useVerifyOtpMutation } from '@/src/hooks/useVerifyOtp';
+import { useSendOtpMutation } from '@/src/hooks/auth/useSendOtp';
+import { useVerifyOtpMutation } from '@/src/hooks/auth/useVerifyOtp';
 import axios, { isAxiosError } from 'axios';
 import React, { useRef, useState } from 'react';
 import { Alert,  TextInput   } from 'react-native';

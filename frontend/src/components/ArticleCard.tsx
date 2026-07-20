@@ -48,13 +48,13 @@ import EditRequestModal from './EditRequestModal';
 import {FontAwesome, FontAwesome6} from '@expo/vector-icons';
 import LoadingSpinner from './LoadingSpinner';
 import Snackbar from 'react-native-snackbar';
-import {useGetProfile} from '../hooks/useGetProfile';
-import {useLikeArticle} from '../hooks/useLikeArticle';
-import {useSaveArticle} from '../hooks/useSaveArticle';
-import {useLazyGetArticleContent} from '../hooks/useLazyGetArticleContent';
-import {useRepostArticle} from '../hooks/useArticleRepost';
+import {useGetProfile} from '../hooks/profile/useGetProfile';
+import {useLikeArticle} from '../hooks/article/useLikeArticle';
+import {useSaveArticle} from '../hooks/article/useSaveArticle';
+import {useLazyGetArticleContent} from '../hooks/article/useLazyGetArticleContent';
+import {useRepostArticle} from '../hooks/article/useArticleRepost';
 import { ReadingDifficulty, getArticleDifficulty } from './ReadingDifficulty';
-import {useDoubleTap} from '../hooks/useDoubleTap';
+import {useDoubleTap} from '../hooks/common/useDoubleTap';
 import { ImageFallback } from './ImageFallback';
 
 const ArticleCard = ({

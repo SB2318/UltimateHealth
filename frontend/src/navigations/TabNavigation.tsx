@@ -1,9 +1,9 @@
  
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen';
-import PodcastsScreen from '../screens/PodcastsScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import HomeScreen from '../screens/home/HomeScreen';
+import PodcastsScreen from '../screens/podcast/PodcastsScreen';
+import SettingsScreen from '../screens/settings/SettingsScreen';
 // import {KeyboardAvoidingView, StyleSheet} from 'react-native';
 // import {Colors} from 'react-native/Libraries/NewAppScreen';
 import TabBar from './TabBar';
@@ -12,11 +12,11 @@ import {TabParamList} from '../type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import {BUTTON_COLOR} from '../helper/Theme';
 import HeaderRightMenu from '../components/HeaderRightMenu';
-import PersonaLobbyScreen from '../screens/PersonaLobbyScreen';
+import PersonaLobbyScreen from '../screens/ai/PersonaLobbyScreen';
 import AcademyStackNavigation from './AcademyStackNavigation';
 import {useSelector} from 'react-redux';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
-import WellnessDashboardScreen from '../screens/WellnessDashboardScreen';
+import WellnessDashboardScreen from '../screens/wellness/WellnessDashboardScreen';
 
 
 const Tab = createBottomTabNavigator<TabParamList>();

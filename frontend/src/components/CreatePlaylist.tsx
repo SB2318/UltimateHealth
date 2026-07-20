@@ -17,8 +17,8 @@ import Feather from '@expo/vector-icons/Feather';
 import {PlayList} from '../type';
 import Snackbar from 'react-native-snackbar';
 import NoInternet from './NoInternet';
-import {useGetPlaylists} from '../hooks/useGetPlaylists';
-import {useUpdatePodcastPlaylist} from '../hooks/useUpdatePodcastPlaylist';
+import {useGetPlaylists} from '../hooks/playlist/useGetPlaylists';
+import {useUpdatePodcastPlaylist} from '../hooks/podcast/useUpdatePodcastPlaylist';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import LoadingSpinner from './LoadingSpinner';
 

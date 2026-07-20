@@ -15,7 +15,7 @@ import Loader from '../../components/Loader';
 import ImprovementCard from '../../components/ImprovementCard';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
-import {useGetAllImprovementsForReview} from '@/src/hooks/useGetUserAllImprovements';
+import {useGetAllImprovementsForReview} from '@/src/hooks/improvement/useGetUserAllImprovements';
 import {ProfessionalColors} from '../../styles/GlassStyles';
 import {NoArticleState} from '../../components/EmptyStates';
 

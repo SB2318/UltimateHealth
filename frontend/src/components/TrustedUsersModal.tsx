@@ -11,7 +11,7 @@ import { View,
 import {PRIMARY_COLOR} from '../helper/Theme';
 import {hp, wp} from '../helper/Metric';
 import Ionicon from '@expo/vector-icons/Ionicons';
-import {useGetTrustedUsers} from '../hooks/useGetTrustedUsers';
+import {useGetTrustedUsers} from '../hooks/social/useGetTrustedUsers';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
 import {TrustedUser} from '../type';
 import LoadingSpinner from './LoadingSpinner';

@@ -15,8 +15,8 @@ import Snackbar from 'react-native-snackbar';
 import {hp, wp, fp} from '../../helper/Metric';
 import {PRIMARY_COLOR} from '../../helper/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useGetReasons} from '@/src/hooks/useGetReportReasons';
-import {useSubmitReport} from '@/src/hooks/useSubmitReport';
+import {useGetReasons} from '@/src/hooks/moderation/useGetReportReasons';
+import {useSubmitReport} from '@/src/hooks/moderation/useSubmitReport';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 

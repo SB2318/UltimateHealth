@@ -16,7 +16,7 @@ import {useDispatch} from 'react-redux';
 import {clearStorage} from '../../helper/Utils';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';
-import {useUserLogout} from '@/src/hooks/useUserLogout';
+import {useUserLogout} from '@/src/hooks/auth/useUserLogout';
 import {useTheme} from 'tamagui';
 import { useColorScheme } from 'react-native-gifted-chat/lib/hooks/useColorScheme';
 type AxiosError = any;

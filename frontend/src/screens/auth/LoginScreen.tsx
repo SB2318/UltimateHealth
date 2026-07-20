@@ -22,10 +22,10 @@ import {
   YStack,
 } from 'tamagui';
 
-import {useRequestVerification} from '@/src/hooks/useResendVerification';
-import {useSendOtpMutation} from '@/src/hooks/useSendOtp';
-import {useLoginMutation} from '@/src/hooks/useUserLogin';
-import type {LoginResponse} from '@/src/hooks/useUserLogin';
+import {useRequestVerification} from '@/src/hooks/auth/useResendVerification';
+import {useSendOtpMutation} from '@/src/hooks/auth/useSendOtp';
+import {useLoginMutation} from '@/src/hooks/auth/useUserLogin';
+import type {LoginResponse} from '@/src/hooks/auth/useUserLogin';
 import EmailInputBottomSheet from '../../components/EmailInputModal';
 import Loader from '../../components/Loader';
 import {SECURE_KEYS, secureStoreItem} from '../../helper/SecureStorageUtils';

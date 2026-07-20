@@ -32,7 +32,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import ArticleShareCard, {ArticleShareCardProps} from './ArticleShareCard';
-import {useArticleShare} from '../hooks/useArticleShare';
+import { useArticleShare } from '../hooks/article/useArticleShare';
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

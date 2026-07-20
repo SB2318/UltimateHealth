@@ -19,7 +19,8 @@ import {
 } from 'tamagui';
 import {Feather, FontAwesome, MaterialCommunityIcons} from '@expo/vector-icons';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useFilterPodcasts} from '../hooks/useFilterPodcasts';
+import { useFilterPodcasts } from '../hooks/podcast/useFilterPodcasts';
+
 
 interface Props {
   onClick: () => void;

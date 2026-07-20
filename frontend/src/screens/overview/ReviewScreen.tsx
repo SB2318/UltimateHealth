@@ -26,10 +26,10 @@ import {handleExternalClick, StatusEnum} from '../../helper/Utils';
 import ReviewItem from '../../components/ReviewItem';
 import {Button, Spinner, Text, YStack, TextArea} from 'tamagui';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-import {useGetArticleDetails} from '@/src/hooks/useGetArticleDetail';
-import {useGetArticleContent} from '@/src/hooks/useGetArticleContent';
-import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';
+import {useGetArticleDetails} from '@/src/hooks/article/useGetArticleDetail';
+import {useGetArticleContent} from '@/src/hooks/article/useGetArticleContent';
+import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
+import {useGetLoadReviewComments} from '@/src/hooks/article/useGetLoadReviewComments';
 import {useSocket} from '../../contexts/SocketContext';
 
 const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {

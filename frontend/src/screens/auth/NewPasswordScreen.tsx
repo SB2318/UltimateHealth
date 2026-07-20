@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
 import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '@/src/helper/Theme';
-import { useChangePasswordMutation } from '@/src/hooks/useChangePassword';
+import { useChangePasswordMutation } from '@/src/hooks/auth/useChangePassword';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';

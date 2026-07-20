@@ -28,10 +28,10 @@ import {handleExternalClick, StatusEnum} from '../../helper/Utils';
 import ReviewItem from '../../components/ReviewItem';
 import {Button, Spinner, TextArea, YStack, Text} from 'tamagui';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-import {useGetImprovementById} from '@/src/hooks/useGetImprovementById';
-import {useGetImprovementContent} from '@/src/hooks/useGetImprovementContent';
-import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';
+import {useGetImprovementById} from '@/src/hooks/improvement/useGetImprovementById';
+import {useGetImprovementContent} from '@/src/hooks/improvement/useGetImprovementContent';
+import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
+import {useGetLoadReviewComments} from '@/src/hooks/article/useGetLoadReviewComments';
 
 const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
   const insets = useSafeAreaInsets();

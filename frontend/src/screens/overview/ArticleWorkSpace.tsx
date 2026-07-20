@@ -13,7 +13,7 @@ import ReviewCard from '../../components/ReviewCard';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';
 import Loader from '../../components/Loader';
-import {useGetAllArticlesForUser} from '@/src/hooks/useGetUserAllArticles';
+import {useGetAllArticlesForUser} from '@/src/hooks/article/useGetUserAllArticles';
 import {NoArticleState} from '../../components/EmptyStates';
 
 export default function ArticleWorkSpace({

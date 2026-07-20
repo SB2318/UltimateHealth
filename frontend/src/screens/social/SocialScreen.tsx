@@ -1,0 +1,272 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {useEffect, useState} from 'react';
+import { View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Platform,
+   ScrollView ,
+ } from 'react-native';
+import {SocialScreenProps} from '../../type';
+import {PRIMARY_COLOR} from '../../helper/Theme';
+import {GET_STORAGE_DATA} from '../../helper/APIUtils';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSelector} from 'react-redux';
+import {useQueryClient} from '@tanstack/react-query';
+import {useSocket} from '../../contexts/SocketContext';
+import Loader from '../../components/Loader';
+import {useGetUserSocials} from '../../hooks/social/useGetUserSocialCircle';
+import {useUpdateFollowStatus} from '../../hooks/social/useUpdateFollowStatus';
+import Snackbar from 'react-native-snackbar';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import {emitFollowNotification} from '../../helper/followNotification';
+
+export default function Socialcreen({navigation, route}: SocialScreenProps) {
+  const insets = useSafeAreaInsets();
+  //const socials = route.params.socials;
+  const {type, articleId, social_user_id} = route.params;
+  const socket = useSocket();
+  const queryClient = useQueryClient();
+
+  const {mutate: followMutate, isPending: followMutationPending} =
+    useUpdateFollowStatus();
+
+  const {user_id, user_handle} = useSelector(
+    (state: any) => state.user,
+  );
+
+  const {
+    data: socials,
+    refetch,
+    isLoading,
+  } = useGetUserSocials({
+    type: type,
+    articleId: articleId,
+    social_user_id: social_user_id,
+  });
+
+  useEffect(() => {
+    queryClient.invalidateQueries({queryKey: ['get-user-socials']});
+    navigation.setOptions({
+      headerTitle:
+        type === 1 ? 'Follower' : type === 2 ? 'Followings' : 'Contributors',
+      headerTitleAlign: 'center',
+    });
+  }, [navigation, queryClient, type]);
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}>
+        {socials && socials.length === 0 && (
+          <View style={styles.emptyContainer}>
+            <View style={styles.emptyCard}>
+              <Text style={styles.message}>No users found</Text>
+            </View>
+          </View>
+        )}
+        {socials &&
+          socials.map((follower, index) => (
+            <View
+              key={index}
+              style={[
+                styles.userCard,
+                {
+                  marginBottom: index === socials.length - 1
+                    ? (Platform.OS === 'ios' ? insets.bottom + 20 : insets.bottom + 40)
+                    : 12,
+                },
+              ]}>
+              <View style={styles.authorContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('UserProfileScreen', {
+                      authorId: follower._id,
+                      author_handle: undefined,
+                    });
+                  }}
+                  activeOpacity={0.7}>
+                  {follower.Profile_image && follower.Profile_image !== '' ? (
+                    <Image
+                      source={{
+                        uri: follower.Profile_image.startsWith('http')
+                          ? follower.Profile_image
+                          : `${GET_STORAGE_DATA}/${follower.Profile_image}`,
+                      }}
+                      style={styles.authorImage}
+                    />
+                  ) : (
+                    <Image
+                      source={{
+                        uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                      }}
+                      style={styles.authorImage}
+                    />
+                  )}
+                </TouchableOpacity>
+                <View style={styles.userInfo}>
+                  <Text style={styles.authorName} numberOfLines={1}>
+                    {follower ? follower?.user_name : ''}
+                  </Text>
+                  <Text style={styles.authorFollowers}>
+                    {follower.followers
+                      ? follower.followers.length > 1
+                        ? `${follower.followers.length} followers`
+                        : `${follower.followers.length} follower`
+                      : '0 follower'}
+                  </Text>
+                </View>
+              </View>
+
+              {follower && user_id !== follower._id && (
+                <>
+                  {followMutationPending ? (
+                    <LoadingSpinner size="small" />
+                  ) : (
+                    <TouchableOpacity
+                      style={[
+                        styles.followButton,
+                        follower.followers && follower.followers.includes(user_id)
+                          ? styles.followingButton
+                          : null
+                      ]}
+                      onPress={() => {
+                        followMutate(follower._id, {
+                          onSuccess: data => {
+
+                            if (data) {
+                              emitFollowNotification(
+                                socket,
+                                follower._id,
+                                user_handle,
+                              );
+                              refetch();
+                            }
+
+                          },
+
+                          onError: err => {
+                            console.log('Update Follow mutation error', err);
+                            Snackbar.show({
+                              text: 'Try again!',
+                              duration: Snackbar.LENGTH_SHORT,
+                            });
+                          },
+                        });
+                      }}
+                      activeOpacity={0.7}>
+                      <Text style={styles.followButtonText}>
+                        {follower.followers &&
+                        follower.followers.includes(user_id)
+                          ? 'Following'
+                          : 'Follow'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </>
+              )}
+            </View>
+          ))}
+      </ScrollView>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  scrollContent: {
+    padding: 16,
+  },
+  userCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  emptyCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    padding: 32,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  authorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 12,
+  },
+  userInfo: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  authorImage: {
+    height: 56,
+    width: 56,
+    borderRadius: 28,
+    borderWidth: 3,
+    borderColor: '#ffffff',
+  },
+  authorName: {
+    fontWeight: '700',
+    fontSize: 16,
+    color: '#1a1a1a',
+    marginBottom: 4,
+  },
+  authorFollowers: {
+    fontWeight: '500',
+    fontSize: 13,
+    color: '#6b7280',
+  },
+  followButton: {
+    backgroundColor: PRIMARY_COLOR,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    paddingVertical: 10,
+    shadowColor: PRIMARY_COLOR,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  followingButton: {
+    backgroundColor: '#d1d5db',
+  },
+  followButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  message: {
+    fontSize: 16,
+    color: '#6b7280',
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+});
