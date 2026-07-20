@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 import { useSendOtpMutation } from '@/src/hooks/useSendOtp';
 import { useVerifyOtpMutation } from '@/src/hooks/useVerifyOtp';

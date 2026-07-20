@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+ 
+ 
 // PodcastSearch.tsx
 import React, {useEffect, useState, useCallback, useRef} from 'react';
 import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';

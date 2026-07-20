@@ -31,14 +31,13 @@ describe('useGetUserPublishedPodcasts', () => {
     expect(result.current.data?.totalPages).toBe(2);
   });
 
-  it('returns null on catch', async () => {
+  it('sets error state on network failure', async () => {
     mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
 
     const {result} = renderHook(() => useGetUserPublishedPodcasts(1, 1), {
       wrapper: makeWrapper(),
     });
 
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data).toBeNull();
+    await waitFor(() => expect(result.current.isError).toBe(true));
   });
 });

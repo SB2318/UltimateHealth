@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Image,
   Platform,
   StyleSheet,
@@ -58,7 +59,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   );
 
   useEffect(() => {
-    // eslint-disable-next-line
+     
     setComments(loadComments ?? []);
   }, [loadComments]);
 

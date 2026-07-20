@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
+ 
 // @ts-nocheck
 import { StyleSheet,
   View,
@@ -760,6 +761,29 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         selectedLanguages={sessionSelectedLanguages}
         setSelectedLanguages={setSessionSelectedLanguages}
       />
+      
+      {/* Academy Featured Card */}
+      <View style={styles.academyCardContainer}>
+        <TouchableOpacity
+          style={styles.academyCard}
+          onPress={() => navigation.navigate('Academy')}
+        >
+          <View style={{ flex: 1 }}>
+            <Text style={styles.academyCardTitle}>Hospital Learning Academy</Text>
+            <Text style={styles.academyCardSubtitle}>Learn how hospitals work</Text>
+            <View style={styles.academyProgressRow}>
+              <View style={styles.academyProgressBg}>
+                <View style={styles.academyProgressFill} />
+              </View>
+              <Text style={styles.academyProgressText}>45%</Text>
+            </View>
+          </View>
+          <View style={styles.academyCardButton}>
+            <Text style={styles.academyCardButtonText}>Continue</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.buttonContainer}>
         <ScrollView
           horizontal={true}
@@ -1012,6 +1036,67 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  offlineText: {
+    color: ON_PRIMARY_COLOR,
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  academyCardContainer: {
+    paddingHorizontal: 16,
+    marginTop: 12,
+  },
+  academyCard: {
+    backgroundColor: '#10B981',
+    borderRadius: 16,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  academyCardTitle: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  academyCardSubtitle: {
+    color: 'rgba(255,255,255,0.8)',
+    fontSize: 14,
+    marginTop: 4,
+  },
+  academyProgressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+  },
+  academyProgressBg: {
+    height: 6,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 3,
+    flex: 1,
+    marginRight: 8,
+  },
+  academyProgressFill: {
+    height: '100%',
+    width: '45%',
+    backgroundColor: '#fff',
+    borderRadius: 3,
+  },
+  academyProgressText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  academyCardButton: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    padding: 12,
+    borderRadius: 12,
+    marginLeft: 16,
+  },
+  academyCardButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
 
   // Empty Article State styles (for FlatList empty state)

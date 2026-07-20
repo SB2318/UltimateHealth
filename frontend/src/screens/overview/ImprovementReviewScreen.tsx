@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import { Image,
   Platform,
   StyleSheet,

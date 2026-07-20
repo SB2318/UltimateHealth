@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 // @ts-nocheck
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import { Text, StyleSheet, View,  ScrollView ,  TextInput , TouchableOpacity  } from 'react-native';

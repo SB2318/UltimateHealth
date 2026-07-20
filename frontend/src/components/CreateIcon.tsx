@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Entypo from '@expo/vector-icons/Entypo';

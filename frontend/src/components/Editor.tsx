@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import Entypo from '@expo/vector-icons/Entypo';

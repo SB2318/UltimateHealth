@@ -20,7 +20,7 @@ describe('useCreatePlaylist', () => {
 
   it('creates playlist successfully', async () => {
     mockedAxios.post.mockResolvedValueOnce({
-      data: {data: {id: 1, name: 'New List'}},
+      data: {data: {id: 1, title: 'New List'}},
     });
 
     const {result} = renderHook(() => useCreatePlaylist(), {
@@ -30,7 +30,7 @@ describe('useCreatePlaylist', () => {
     result.current.mutate({inputValue: 'New List', addedPodcastId: 'p1'});
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.name).toBe('New List');
+    expect(result.current.data?.title).toBe('New List');
   });
 
   it('sets error state on network failure', async () => {

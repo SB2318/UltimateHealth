@@ -9,7 +9,7 @@ import axios from 'axios';
 jest.mock('axios', () => ({
   get: jest.fn(),
 }));
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+const mockedAxios = axios as unknown as jest.Mocked<typeof axios>;
 
 beforeEach(() => {
   mockedAxios.get.mockClear();

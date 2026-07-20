@@ -19,8 +19,10 @@ describe('useLoginMutation', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('returns user profile data on success', async () => {
+    // The hook unwraps: responseData = res.data?.data ?? res.data
+    // So mock with a top-level user object (no extra data envelope)
     mockedAxios.post.mockResolvedValueOnce({
-      data: {user: {id: 1, name: 'Test User', email: 'test@example.com'}},
+      data: {user: {id: 1, user_name: 'Test User', email: 'test@example.com'}},
     });
 
     const {result} = renderHook(() => useLoginMutation(), {
@@ -30,7 +32,8 @@ describe('useLoginMutation', () => {
     result.current.mutate({email: 'test@example.com', password: 'password', fcmToken: 'token'});
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data?.name).toBe('Test User');
+    // The hook returns LoginResponse which has a `user` field, not name at top level
+    expect(result.current.data?.user?.user_name).toBe('Test User');
   });
 
   it('sets error state on network failure', async () => {
@@ -56,9 +59,11 @@ describe('useLoginMutation', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
+    // The hook passes a headers object as a third argument to axios.post
     expect(mockedAxios.post).toHaveBeenCalledWith(
       expect.stringContaining('login'),
       {email: 'check@example.com', password: 'pass', fcmToken: 'token'},
+      {headers: {'x-client-type': 'mobile'}},
     );
   });
 });

@@ -1,3 +1,4 @@
+ 
 import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import TabNavigation from './TabNavigation';
@@ -56,6 +57,11 @@ import InsightScreen from '../screens/profile/InsightScreen';
 import RepostsScreen from '../screens/profile/RepostsScreen';
 import SavedArticlesScreen from '../screens/profile/SavedArticlesScreen';
 import WellnessDashboardScreen from '../screens/WellnessDashboard/WellnessDashboardScreen';
+import AboutScreen from '../screens/AboutPage';
+import SettingsScreen from '../screens/SettingsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import ContentListScreen from '../screens/ContentListScreen';
+import RespectGiverScreen from '../screens/RespectGiverScreen';
 import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
 
 import ChatbotScreen from '../screens/ChatbotScreen';
@@ -89,7 +95,8 @@ const StackNavigation = () => {
       const isRootTab =
         currTab === 'Home' ||
         currTab === 'Podcasts' ||
-        currTab === 'Profile';
+        currTab === 'Settings' ||
+        currTab === 'Academy';
 
       if (isRootScreen || isRootTab) {
         Alert.alert('Warning', 'Do you want to exit?', [
@@ -875,6 +882,39 @@ const StackNavigation = () => {
         component={WellnessDashboardScreen}
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="AboutScreen"
+        component={AboutScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{headerShown: false, headerTitleAlign: 'center'}}
+      />
+      <Stack.Screen
+        name="SettingsScreen"
+        component={SettingsScreen}
+        options={{headerShown: false, headerTitleAlign: 'center'}}
+      />
+      <Stack.Screen
+        name="RespectGiverScreen"
+        component={RespectGiverScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ContentListScreen"
+        component={ContentListScreen}
+        options={{
+          headerShown: true,
+          headerTitle: 'My Content',
+          headerTitleAlign: 'center',
+          headerStyle: { backgroundColor: '#000A60' },
+          headerTintColor: '#fff',
         }}
       />
       <Stack.Screen

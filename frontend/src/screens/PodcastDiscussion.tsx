@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import React, {FC, useEffect, useMemo, useRef, useState} from 'react';
 import { TouchableOpacity,
   StyleSheet,

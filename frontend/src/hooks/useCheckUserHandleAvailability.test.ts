@@ -27,13 +27,13 @@ describe('useCheckUserHandleAvailability', () => {
     
     mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });
 
-    const {result} = renderHook(() => useCheckUserHandleAvailability('handle', true), {
+    const {result} = renderHook(() => useCheckUserHandleAvailability('handle'), {
       wrapper: makeWrapper(),
     });
 
     // Check if it's a query or mutation and wait for it to settle if it executes immediately
-    if (result.current && typeof result.current.mutate === 'function') {
-        result.current.mutate(null as any);
+    if (result.current && typeof (result.current as any).mutate === 'function') {
+        (result.current as any).mutate(null as any);
         await waitFor(() => expect(result.current.isSuccess || result.current.isError).toBe(true));
     } else if (result.current && result.current.isSuccess !== undefined) {
         await waitFor(() => expect(result.current.isSuccess || result.current.isError).toBe(true));

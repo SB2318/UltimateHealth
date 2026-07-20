@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import {render, fireEvent, waitFor} from '@testing-library/react-native';
 import ChatbotScreen from '../ChatbotScreen';

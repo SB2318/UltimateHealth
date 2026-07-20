@@ -13,8 +13,8 @@ jest.mock('react-redux', () => ({
   useAppSelector: jest.fn(),
 }));
 
-const mockedAxios = axios as jest.Mocked<typeof axios>;
-const mockeduseAppSelector = useAppSelector as jest.Mock;
+const mockedAxios = axios as as unknown jest.Mocked<typeof axios>;
+const mockeduseAppSelector = useAppSelector as unknown as jest.Mock;
 
 function makeWrapper() {
   const queryClient = new QueryClient({

@@ -3,17 +3,18 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import axios from 'axios';
 import { useGetAuthorYearlyWriteReport } from '../useGetYearlyWriteReport';
+import { useSelector } from 'react-redux';
 
 // ─── Mocks ───────────────────────────────────────────────────────────────────
 
 jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+const mockedAxios = axios as unknown as jest.Mocked<typeof axios>;
 
 jest.mock('react-redux', () => ({
   useAppSelector: jest.fn(),
 }));
-import { useAppSelector } from 'react-redux';
-const mockeduseAppSelector = useAppSelector as jest.Mock;
+import { useAppSelector } from '../store/hooks';
+const mockeduseAppSelector = useAppSelector as unknown as jest.Mock;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

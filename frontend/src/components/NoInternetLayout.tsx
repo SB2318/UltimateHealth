@@ -1,3 +1,4 @@
+ 
 import React, { JSX } from 'react';
 import { Text, Image} from 'react-native';
 import GlobalStyles from '../styles/GlobalStyle';

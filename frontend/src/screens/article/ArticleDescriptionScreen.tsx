@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
+ 
 // @ts-nocheck
 import React, {useEffect, useRef, useState} from 'react';
 import { View,

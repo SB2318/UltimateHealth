@@ -1,3 +1,4 @@
+ 
 // @ts-nocheck
 import React from 'react';
 import { Share, Linking, Image, useColorScheme } from 'react-native';

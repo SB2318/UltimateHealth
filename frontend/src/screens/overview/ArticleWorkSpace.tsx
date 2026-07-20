@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+ 
+ 
 import {useCallback, useEffect, useState} from 'react';
 import { View,
   StyleSheet,

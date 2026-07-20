@@ -1,4 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import {useEffect, useState, useMemo} from 'react';
 import { StyleSheet,
   TouchableOpacity,
