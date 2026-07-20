@@ -9,15 +9,15 @@ import { FlatList ,
   useColorScheme,
  } from 'react-native';
 import { useTheme } from 'tamagui';
-import {EditRequest} from '../../type';
+import {EditRequest} from '../../schemas/type';
 import {useSelector} from 'react-redux';
-import Loader from '../../components/Loader';
-import ImprovementCard from '../../components/ImprovementCard';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import {hp, wp} from '../../helper/Metric';
-import {useGetAllImprovementsForReview} from '@/src/hooks/useGetUserAllImprovements';
+import Loader from '../../components/common/Loader';
+import ImprovementCard from '../../components/article/ImprovementCard';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {hp, wp} from '../../lib/ui/Metric';
+import {useGetAllImprovementsForReview} from '@/src/hooks/improvement/useGetUserAllImprovements';
 import {ProfessionalColors} from '../../styles/GlassStyles';
-import {NoArticleState} from '../../components/EmptyStates';
+import {NoArticleState} from '../../components/common/EmptyStates';
 
 export default function ImprovementWorkspace({
   handleImprovementClick,

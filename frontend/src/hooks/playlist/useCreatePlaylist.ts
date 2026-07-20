@@ -1,0 +1,27 @@
+import {useMutation, UseMutationResult} from '@tanstack/react-query';
+import {PlayList} from '../../schemas/type';
+import axios from 'axios';
+import {CREATE_PLAYLIST} from '../../lib/api/APIUtils';
+type AxiosError = any;
+
+type PlayListReq = {
+  inputValue: string;
+  addedPodcastId: string;
+};
+export const useCreatePlaylist = (): UseMutationResult<
+  PlayList,
+  AxiosError,
+  PlayListReq
+> => {
+  return useMutation({
+    mutationKey: ['create-playlist'],
+    mutationFn: async ({inputValue, addedPodcastId}) => {
+      const res = await axios.post(CREATE_PLAYLIST, {
+        name: inputValue,
+        podcast_ids: [addedPodcastId],
+      });
+
+      return res.data.data as PlayList;
+    },
+  });
+};

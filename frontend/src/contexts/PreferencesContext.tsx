@@ -12,7 +12,7 @@ import {
   secureStoreItem,
   secureRetrieveItem,
   SECURE_KEYS,
-} from '../helper/SecureStorageUtils';
+} from '../lib/storage/SecureStorageUtils';
 import { LanguageCode, isValidLanguageCode } from '../constants/languages';
 
 type LanguagesUpdater = LanguageCode[] | ((prev: LanguageCode[]) => LanguageCode[]);

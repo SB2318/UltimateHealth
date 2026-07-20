@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ACADEMY_BACKGROUND, ACADEMY_PRIMARY, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_BORDER, ACADEMY_SURFACE } from '../../helper/Theme';
-import { ACADEMY_COURSES } from '../../helper/AcademyMockData';
-import CourseCard from '../../components/Academy/CourseCard';
+import { ACADEMY_BACKGROUND, ACADEMY_PRIMARY, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_BORDER, ACADEMY_SURFACE } from '../../lib/ui/Theme';
+import { ACADEMY_COURSES } from '../../lib/utils/AcademyMockData';
+import CourseCard from '../../components/academy/CourseCard';
 
 const CATEGORIES = ['All', 'Fundamentals', 'Patient Care', 'Departments', 'Technology'];
 

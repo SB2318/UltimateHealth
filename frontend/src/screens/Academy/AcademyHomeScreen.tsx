@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ACADEMY_BACKGROUND, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_PRIMARY } from '../../helper/Theme';
-import { ACADEMY_COURSES, ACADEMY_USER_STATS } from '../../helper/AcademyMockData';
-import ProgressCard from '../../components/Academy/ProgressCard';
-import CourseCard from '../../components/Academy/CourseCard';
+import { ACADEMY_BACKGROUND, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_PRIMARY } from '../../lib/ui/Theme';
+import { ACADEMY_COURSES, ACADEMY_USER_STATS } from '../../lib/utils/AcademyMockData';
+import ProgressCard from '../../components/academy/ProgressCard';
+import CourseCard from '../../components/academy/CourseCard';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const AcademyHomeScreen = ({ navigation }: any) => {

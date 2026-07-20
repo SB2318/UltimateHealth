@@ -9,27 +9,27 @@ import { Image,
   Dimensions,
   } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ReviewScreenProp, Comment} from '../../type';
+import {ReviewScreenProp, Comment} from '../../schemas/type';
 import {useDispatch, useSelector} from 'react-redux';
-import {hp, wp} from '../../helper/Metric';
+import {hp, wp} from '../../lib/ui/Metric';
 import {
   GET_IMAGE,
   GET_STORAGE_DATA,
   SOCKET_PROD,
-} from '../../helper/APIUtils';
+} from '../../lib/api/APIUtils';
 
 import {setUserHandle} from '../../store/UserSlice';
-import {handleExternalClick, StatusEnum} from '../../helper/Utils';
-import ReviewItem from '../../components/ReviewItem';
+import {handleExternalClick, StatusEnum} from '../../lib/utils/Utils';
+import ReviewItem from '../../components/article/ReviewItem';
 import {Button, Spinner, Text, YStack, TextArea} from 'tamagui';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-import {useGetArticleDetails} from '@/src/hooks/useGetArticleDetail';
-import {useGetArticleContent} from '@/src/hooks/useGetArticleContent';
-import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';
+import {useGetArticleDetails} from '@/src/hooks/article/useGetArticleDetail';
+import {useGetArticleContent} from '@/src/hooks/article/useGetArticleContent';
+import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
+import {useGetLoadReviewComments} from '@/src/hooks/article/useGetLoadReviewComments';
 import {useSocket} from '../../contexts/SocketContext';
 
 const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {

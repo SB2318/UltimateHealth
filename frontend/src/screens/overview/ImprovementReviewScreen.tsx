@@ -10,28 +10,28 @@ import { Image,
   Dimensions,
   } from 'react-native';
 import {useEffect, useRef, useState} from 'react';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ImpvReviewScreenProp, Comment} from '../../type';
+import {ImpvReviewScreenProp, Comment} from '../../schemas/type';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {hp, wp} from '../../helper/Metric';
-import {GET_STORAGE_DATA} from '../../helper/APIUtils';
+import {hp, wp} from '../../lib/ui/Metric';
+import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 
 //import io from 'socket.io-client';
 
 import {useSocket} from '../../contexts/SocketContext';
 //import CommentScreen from '../CommentScreen';
 import {setUserHandle} from '../../store/UserSlice';
-import {handleExternalClick, StatusEnum} from '../../helper/Utils';
-import ReviewItem from '../../components/ReviewItem';
+import {handleExternalClick, StatusEnum} from '../../lib/utils/Utils';
+import ReviewItem from '../../components/article/ReviewItem';
 import {Button, Spinner, TextArea, YStack, Text} from 'tamagui';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-import {useGetImprovementById} from '@/src/hooks/useGetImprovementById';
-import {useGetImprovementContent} from '@/src/hooks/useGetImprovementContent';
-import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';
+import {useGetImprovementById} from '@/src/hooks/improvement/useGetImprovementById';
+import {useGetImprovementContent} from '@/src/hooks/improvement/useGetImprovementContent';
+import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
+import {useGetLoadReviewComments} from '@/src/hooks/article/useGetLoadReviewComments';
 
 const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
   const insets = useSafeAreaInsets();

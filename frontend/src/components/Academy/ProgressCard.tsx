@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { ACADEMY_PRIMARY, ACADEMY_BACKGROUND, ACADEMY_SURFACE, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY } from '../../helper/Theme';
+import { ACADEMY_PRIMARY, ACADEMY_BACKGROUND, ACADEMY_SURFACE, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY } from '../../lib/ui/Theme';
 
 interface ProgressCardProps {
   progress: number;

@@ -1,0 +1,278 @@
+ 
+// @ts-nocheck
+/**
+ * Tests for the compensating-delete pattern in PreviewScreen.handlePostSubmit.
+ *
+ * Strategy: mock the three mutation hooks (uploadPocketbase, postMutation,
+ * deletePocketbaseRecord) so we can assert that deletePocketbaseRecord is
+ * called with the correct recordId whenever the downstream write fails, and
+ * is NOT called when the downstream write succeeds.
+ */
+
+import React from 'react';
+import {Alert} from 'react-native';
+import {render, fireEvent, waitFor, act} from '@testing-library/react-native';
+import {Provider} from 'react-redux';
+import {configureStore} from '@reduxjs/toolkit';
+import PreviewScreen from '../../../screens/article/PreviewScreen';
+
+// ── mocks ──────────────────────────────────────────────────────────────────
+
+const mockUploadPocketbase = jest.fn();
+const mockPostMutation = jest.fn();
+const mockDeletePocketbaseRecord = jest.fn();
+const mockUploadImprovementToPocketbase = jest.fn();
+const mockImprovementMutation = jest.fn();
+const mockSubmitChangesMutation = jest.fn();
+
+jest.mock('@/src/hooks/useUploadArticlePocketbase', () => ({
+  useUploadArticleToPocketbase: () => ({
+    mutate: mockUploadPocketbase,
+    isPending: false,
+  }),
+}));
+
+jest.mock('@/src/hooks/usePostArticle', () => ({
+  usePostArticleData: () => ({
+    mutate: mockPostMutation,
+    isPending: false,
+  }),
+}));
+
+jest.mock('@/src/hooks/useDeletePocketbaseRecord', () => ({
+  useDeletePocketbaseRecord: () => ({
+    mutate: mockDeletePocketbaseRecord,
+  }),
+}));
+
+jest.mock('@/src/hooks/useUploadImprovementToPocketbase', () => ({
+  useUploadImprovementToPocketbase: () => ({
+    mutate: mockUploadImprovementToPocketbase,
+    isPending: false,
+  }),
+}));
+
+jest.mock('@/src/hooks/useSubmitImprovement', () => ({
+  useSubmitImprovement: () => ({
+    mutate: mockImprovementMutation,
+    isPending: false,
+  }),
+}));
+
+jest.mock('@/src/hooks/useSubmitSuggestedChanges', () => ({
+  useSubmitSuggestedChanges: () => ({
+    mutate: mockSubmitChangesMutation,
+    isPending: false,
+  }),
+}));
+
+jest.mock('@/src/hooks/useRenderSuggestion', () => ({
+  useRenderSuggestion: () => ({mutate: jest.fn(), isPending: false}),
+}));
+
+jest.mock('@/src/hooks/useGetProfile', () => ({
+  useGetProfile: () => ({data: {_id: 'user-1', user_name: 'tester'}}),
+}));
+
+jest.mock('@/src/hooks/useUploadImage', () => ({
+  __esModule: true,
+  default: () => ({uploadImage: jest.fn(), loading: false}),
+}));
+
+jest.mock('react-native-snackbar', () => ({show: jest.fn()}));
+jest.mock('@brown-bear/react-native-autoheight-webview', () => 'WebView');
+jest.mock('@bam.tech/react-native-image-resizer', () => ({
+  createResizedImage: jest.fn().mockResolvedValue({uri: 'resized://img'}),
+}));
+
+// ── helpers ────────────────────────────────────────────────────────────────
+
+const FAKE_PB_RESPONSE = {
+  message: 'ok',
+  recordId: 'pb-record-42',
+  html_file: 'https://pb.example.com/article.html',
+};
+
+function makeStore() {
+  return configureStore({
+    reducer: {
+      user: () => ({user_token: 'tok', user_id: 'user-1'}),
+      data: () => ({suggestion: '', suggestionAccepted: false}),
+      network: () => ({isConnected: true}),
+    },
+  });
+}
+
+function makeNav() {
+  return {navigate: jest.fn(), setOptions: jest.fn()};
+}
+
+function makeRoute(overrides = {}) {
+  return {
+    params: {
+      article: '<p>hello</p>',
+      title: 'Test Article',
+      description: 'desc',
+      authorName: 'Tester',
+      selectedGenres: [],
+      localImages: [],
+      articleData: null,
+      requestId: null,
+      language: 'en',
+      pb_record_id: null,
+      translationSource: null,
+      ...overrides,
+    },
+  };
+}
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  // clearAllMocks wipes spy implementations — re-apply Alert auto-confirm.
+  // showConfirmationAlert() returns a Promise resolved by ok.onPress(),
+  // so we must also call the resolver synchronously here.
+  jest.spyOn(Alert, 'alert').mockImplementation((_title, _msg, buttons: any) => {
+    const ok = buttons?.find((b: any) => b.text === 'OK');
+    ok?.onPress?.();
+  });
+});
+
+// ── helpers ────────────────────────────────────────────────────────────────
+
+/**
+ * Renders PreviewScreen, triggers the header Submit button, then waits until
+ * the first-step upload mutation has been called (it runs asynchronously after
+ * the confirmation-alert Promise resolves).
+ */
+async function setupAndSubmit(route: any, waitForMock: jest.Mock) {
+  const store = makeStore();
+  const nav = makeNav();
+
+  render(
+    <Provider store={store}>
+      <PreviewScreen navigation={nav} route={route} />
+    </Provider>,
+  );
+
+  // Submit button lives in the navigation header, not the component tree
+  const headerRight = nav.setOptions.mock.calls[0]?.[0]?.headerRight;
+  if (headerRight) {
+    const {getByText: getHeader} = render(headerRight());
+    await act(async () => {
+      fireEvent.press(getHeader('Submit'));
+    });
+  }
+
+  // handlePostSubmit awaits showConfirmationAlert() before calling any mutation,
+  // so we must wait for it to appear in the next microtask flush.
+  await waitFor(() => expect(waitForMock).toHaveBeenCalled());
+
+  return {nav};
+}
+
+// ── tests ──────────────────────────────────────────────────────────────────
+
+describe('PreviewScreen compensating delete — new article path', () => {
+  it('calls deletePocketbaseRecord with the correct recordId when postMutation fails', async () => {
+    await setupAndSubmit(makeRoute(), mockUploadPocketbase);
+
+    const pbOnSuccess = mockUploadPocketbase.mock.calls[0][1].onSuccess;
+    pbOnSuccess(FAKE_PB_RESPONSE);
+
+    const postOnError = mockPostMutation.mock.calls[0][1].onError;
+    postOnError(new Error('500 Internal Server Error'));
+
+    await waitFor(() => {
+      expect(mockDeletePocketbaseRecord).toHaveBeenCalledTimes(1);
+      expect(mockDeletePocketbaseRecord).toHaveBeenCalledWith(
+        expect.objectContaining({recordId: 'pb-record-42'}),
+        expect.objectContaining({onError: expect.any(Function)}),
+      );
+    });
+  });
+
+  it('does NOT call deletePocketbaseRecord when postMutation succeeds', async () => {
+    await setupAndSubmit(makeRoute(), mockUploadPocketbase);
+
+    const pbOnSuccess = mockUploadPocketbase.mock.calls[0][1].onSuccess;
+    pbOnSuccess(FAKE_PB_RESPONSE);
+
+    const postOnSuccess = mockPostMutation.mock.calls[0][1].onSuccess;
+    postOnSuccess({});
+
+    await waitFor(() => {
+      expect(mockDeletePocketbaseRecord).not.toHaveBeenCalled();
+    });
+  });
+
+  it('does NOT call deletePocketbaseRecord when the PocketBase upload itself fails', async () => {
+    await setupAndSubmit(makeRoute(), mockUploadPocketbase);
+
+    const pbOnError = mockUploadPocketbase.mock.calls[0][1].onError;
+    pbOnError(new Error('PB network error'));
+
+    await waitFor(() => {
+      expect(mockDeletePocketbaseRecord).not.toHaveBeenCalled();
+    });
+  });
+});
+
+describe('PreviewScreen compensating delete — improvement path', () => {
+  it('calls deletePocketbaseRecord with correct recordId when improvementMutation fails', async () => {
+    await setupAndSubmit(makeRoute({requestId: 'req-99'}), mockUploadImprovementToPocketbase);
+
+    const pbOnSuccess = mockUploadImprovementToPocketbase.mock.calls[0][1].onSuccess;
+    pbOnSuccess(FAKE_PB_RESPONSE);
+
+    const impOnError = mockImprovementMutation.mock.calls[0][1].onError;
+    impOnError(new Error('503'));
+
+    await waitFor(() => {
+      expect(mockDeletePocketbaseRecord).toHaveBeenCalledTimes(1);
+      expect(mockDeletePocketbaseRecord).toHaveBeenCalledWith(
+        expect.objectContaining({recordId: 'pb-record-42'}),
+        expect.objectContaining({onError: expect.any(Function)}),
+      );
+    });
+  });
+
+  it('does NOT call deletePocketbaseRecord when improvementMutation succeeds', async () => {
+    await setupAndSubmit(makeRoute({requestId: 'req-99'}), mockUploadImprovementToPocketbase);
+
+    const pbOnSuccess = mockUploadImprovementToPocketbase.mock.calls[0][1].onSuccess;
+    pbOnSuccess(FAKE_PB_RESPONSE);
+
+    const impOnSuccess = mockImprovementMutation.mock.calls[0][1].onSuccess;
+    impOnSuccess({});
+
+    await waitFor(() => {
+      expect(mockDeletePocketbaseRecord).not.toHaveBeenCalled();
+    });
+  });
+});
+
+describe('PreviewScreen compensating delete — edit/suggested-changes path', () => {
+  const ARTICLE_DATA = {
+    _id: 'art-1',
+    pb_recordId: 'old-pb-id',
+    authorId: 'user-1',
+  };
+
+  it('calls deletePocketbaseRecord with correct recordId when submitChangesMutation fails', async () => {
+    await setupAndSubmit(makeRoute({articleData: ARTICLE_DATA}), mockUploadPocketbase);
+
+    const pbOnSuccess = mockUploadPocketbase.mock.calls[0][1].onSuccess;
+    pbOnSuccess(FAKE_PB_RESPONSE);
+
+    const changesOnError = mockSubmitChangesMutation.mock.calls[0][1].onError;
+    changesOnError(new Error('422'));
+
+    await waitFor(() => {
+      expect(mockDeletePocketbaseRecord).toHaveBeenCalledTimes(1);
+      expect(mockDeletePocketbaseRecord).toHaveBeenCalledWith(
+        expect.objectContaining({recordId: 'pb-record-42'}),
+        expect.objectContaining({onError: expect.any(Function)}),
+      );
+    });
+  });
+});

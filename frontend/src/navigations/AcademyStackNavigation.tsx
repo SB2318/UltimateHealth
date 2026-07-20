@@ -1,14 +1,14 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import AcademyHomeScreen from '../screens/Academy/AcademyHomeScreen';
-import CourseListingScreen from '../screens/Academy/CourseListingScreen';
-import CourseDetailScreen from '../screens/Academy/CourseDetailScreen';
-import LessonReaderScreen from '../screens/Academy/LessonReaderScreen';
-import PatientJourneyScreen from '../screens/Academy/PatientJourneyScreen';
-import HospitalMapScreen from '../screens/Academy/HospitalMapScreen';
-import WorkflowScreen from '../screens/Academy/WorkflowScreen';
-import QuizScreen from '../screens/Academy/QuizScreen';
-import AcademyProfileScreen from '../screens/Academy/AcademyProfileScreen';
+import AcademyHomeScreen from '../screens/academy/AcademyHomeScreen';
+import CourseListingScreen from '../screens/academy/CourseListingScreen';
+import CourseDetailScreen from '../screens/academy/CourseDetailScreen';
+import LessonReaderScreen from '../screens/academy/LessonReaderScreen';
+import PatientJourneyScreen from '../screens/academy/PatientJourneyScreen';
+import HospitalMapScreen from '../screens/academy/HospitalMapScreen';
+import WorkflowScreen from '../screens/academy/WorkflowScreen';
+import QuizScreen from '../screens/academy/QuizScreen';
+import AcademyProfileScreen from '../screens/academy/AcademyProfileScreen';
 
 const Stack = createStackNavigator();
 
