@@ -19,7 +19,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
 
-const pdmImage = require('../../assets/images/p_d_m.jpg');
+const pdmImage = require('../../../assets/images/p_d_m.jpg');
 
 // ─── Particle dot component ───────────────────────────────────────────────────
 const FloatingDot = ({ delay, size, x, color }: { delay: number; size: number; x: number; color: string }) => {

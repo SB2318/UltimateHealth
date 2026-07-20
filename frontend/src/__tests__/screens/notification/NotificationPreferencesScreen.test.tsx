@@ -21,21 +21,21 @@ jest.mock('@tanstack/react-query', () => ({
   })),
 }));
 
-jest.mock('../../helper/Metric', () => ({
+jest.mock('../../../lib/ui/Metric', () => ({
   fp: (value: number) => value,
   hp: (value: number) => value,
   wp: (value: number) => value,
 }));
 
-jest.mock('../../hooks/useGetArticleTags', () => ({
+jest.mock('../../../hooks/article/useGetArticleTags', () => ({
   useGetCategories: jest.fn(),
 }));
 
-jest.mock('../../hooks/useGetNotificationPreferences', () => ({
+jest.mock('../../../hooks/notification/useGetNotificationPreferences', () => ({
   useGetNotificationPreferences: jest.fn(),
 }));
 
-jest.mock('../../hooks/useUpdateNotificationPreferences', () => ({
+jest.mock('../../../hooks/notification/useUpdateNotificationPreferences', () => ({
   useUpdateNotificationPreferences: jest.fn(),
 }));
 
@@ -50,7 +50,7 @@ jest.mock('@expo/vector-icons/MaterialCommunityIcons', () => {
 });
 
 // Mock components
-jest.mock('../../components/LoadingSpinner', () => {
+jest.mock('../../../components/common/LoadingSpinner', () => {
   const React = require('react');
   const {Text} = require('react-native');
   const MockSpinner = () => React.createElement(Text, null, 'Loading...');
@@ -74,9 +74,9 @@ const mockPreferences = {
 };
 
 const mockUseSelector = require('react-redux').useSelector as jest.Mock;
-const mockUseGetCategories = require('../../hooks/useGetArticleTags').useGetCategories as jest.Mock;
-const mockUseGetNotificationPreferences = require('../../hooks/useGetNotificationPreferences').useGetNotificationPreferences as jest.Mock;
-const mockUseUpdateNotificationPreferences = require('../../hooks/useUpdateNotificationPreferences').useUpdateNotificationPreferences as jest.Mock;
+const mockUseGetCategories = require('../../../hooks/article/useGetArticleTags').useGetCategories as jest.Mock;
+const mockUseGetNotificationPreferences = require('../../../hooks/notification/useGetNotificationPreferences').useGetNotificationPreferences as jest.Mock;
+const mockUseUpdateNotificationPreferences = require('../../../hooks/notification/useUpdateNotificationPreferences').useUpdateNotificationPreferences as jest.Mock;
 
 describe('NotificationPreferencesScreen', () => {
   beforeEach(() => {

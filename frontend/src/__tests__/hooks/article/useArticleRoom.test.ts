@@ -12,7 +12,7 @@ jest.mock('react-redux', () => ({
   useSelector: jest.fn(),
 }));
 
-jest.mock('../contexts/SocketContext', () => ({
+jest.mock('../../../contexts/SocketContext', () => ({
   useSocket: () => ({ emit: jest.fn(), on: jest.fn(), off: jest.fn() })
 }));
 

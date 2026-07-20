@@ -55,11 +55,11 @@ jest.mock('react-native-safe-area-context', () => {
 });
 
 // ── Socket / room hooks ───────────────────────────────────────────────────────
-jest.mock('../contexts/SocketContext', () => ({
+jest.mock('../../../contexts/SocketContext', () => ({
   useSocket: () => ({emit: jest.fn(), on: jest.fn(), off: jest.fn()}),
 }));
 
-jest.mock('../hooks/useArticleRoom', () => ({
+jest.mock('../../../hooks/article/useArticleRoom', () => ({
   useArticleRoom: jest.fn(),
 }));
 
@@ -70,7 +70,7 @@ jest.mock('react-redux', () => ({
 }));
 
 // ── CommentItem ───────────────────────────────────────────────────────────────
-jest.mock('../components/CommentItem', () => {
+jest.mock('../../../components/article/CommentItem', () => {
   const ReactLib = require('react');
   const RN = require('react-native');
   return function MockCommentItem() {
@@ -79,7 +79,7 @@ jest.mock('../components/CommentItem', () => {
 });
 
 // ── Loader ────────────────────────────────────────────────────────────────────
-jest.mock('../components/Loader', () => {
+jest.mock('../../../components/common/Loader', () => {
   const ReactLib = require('react');
   const RN = require('react-native');
   return function MockLoader() {

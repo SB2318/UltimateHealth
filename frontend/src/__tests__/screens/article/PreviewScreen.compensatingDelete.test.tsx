@@ -25,56 +25,56 @@ const mockUploadImprovementToPocketbase = jest.fn();
 const mockImprovementMutation = jest.fn();
 const mockSubmitChangesMutation = jest.fn();
 
-jest.mock('@/src/hooks/useUploadArticlePocketbase', () => ({
+jest.mock('@/src/hooks/article/useUploadArticlePocketbase', () => ({
   useUploadArticleToPocketbase: () => ({
     mutate: mockUploadPocketbase,
     isPending: false,
   }),
 }));
 
-jest.mock('@/src/hooks/usePostArticle', () => ({
+jest.mock('@/src/hooks/article/usePostArticle', () => ({
   usePostArticleData: () => ({
     mutate: mockPostMutation,
     isPending: false,
   }),
 }));
 
-jest.mock('@/src/hooks/useDeletePocketbaseRecord', () => ({
+jest.mock('@/src/hooks/common/useDeletePocketbaseRecord', () => ({
   useDeletePocketbaseRecord: () => ({
     mutate: mockDeletePocketbaseRecord,
   }),
 }));
 
-jest.mock('@/src/hooks/useUploadImprovementToPocketbase', () => ({
+jest.mock('@/src/hooks/improvement/useUploadImprovementToPocketbase', () => ({
   useUploadImprovementToPocketbase: () => ({
     mutate: mockUploadImprovementToPocketbase,
     isPending: false,
   }),
 }));
 
-jest.mock('@/src/hooks/useSubmitImprovement', () => ({
+jest.mock('@/src/hooks/improvement/useSubmitImprovement', () => ({
   useSubmitImprovement: () => ({
     mutate: mockImprovementMutation,
     isPending: false,
   }),
 }));
 
-jest.mock('@/src/hooks/useSubmitSuggestedChanges', () => ({
+jest.mock('@/src/hooks/article/useSubmitSuggestedChanges', () => ({
   useSubmitSuggestedChanges: () => ({
     mutate: mockSubmitChangesMutation,
     isPending: false,
   }),
 }));
 
-jest.mock('@/src/hooks/useRenderSuggestion', () => ({
+jest.mock('@/src/hooks/ai/useRenderSuggestion', () => ({
   useRenderSuggestion: () => ({mutate: jest.fn(), isPending: false}),
 }));
 
-jest.mock('@/src/hooks/useGetProfile', () => ({
+jest.mock('@/src/hooks/profile/useGetProfile', () => ({
   useGetProfile: () => ({data: {_id: 'user-1', user_name: 'tester'}}),
 }));
 
-jest.mock('@/src/hooks/useUploadImage', () => ({
+jest.mock('@/src/hooks/media/useUploadImage', () => ({
   __esModule: true,
   default: () => ({uploadImage: jest.fn(), loading: false}),
 }));

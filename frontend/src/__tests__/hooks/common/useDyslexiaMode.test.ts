@@ -1,11 +1,8 @@
-import { retrieveItem } from '@/src/lib/storage/MMKVUtils';
-import { storeItem } from '@/src/lib/utils/Utils';
+import { retrieveItem, storeItem } from '@/src/lib/utils/Utils';
 import { useDyslexiaMode, DYSLEXIA_MODE_KEY } from '@/src/hooks/common/useDyslexiaMode';
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 
-
-// Mock the Utils
-jest.mock('../../helper/Utils', () => ({
+jest.mock('@/src/lib/utils/Utils', () => ({
   retrieveItem: jest.fn(),
   storeItem: jest.fn(() => Promise.resolve()),
 }));

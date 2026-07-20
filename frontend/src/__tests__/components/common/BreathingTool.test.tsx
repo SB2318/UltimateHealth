@@ -4,7 +4,7 @@ import authAxios from '../../../lib/api/authAxios';
 import BreathingTool from '@/src/components/common/BreathingTool';
 
 // Mock the API helper
-jest.mock('../../helper/authAxios');
+jest.mock('../../../lib/api/authAxios');
 
 describe('BreathingTool Component', () => {
   beforeEach(() => {

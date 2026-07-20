@@ -28,20 +28,20 @@ jest.mock('@tanstack/react-query', () => ({
   }),
 }));
 
-jest.mock('../../contexts/SocketContext', () => ({
+jest.mock('../../../contexts/SocketContext', () => ({
   useSocket: () => ({
     emit: mockSocketEmit,
   }),
 }));
 
-jest.mock('../../components/Loader', () => {
+jest.mock('../../../components/common/Loader', () => {
   const React = require('react');
   const {View} = require('react-native');
   const MockLoader = () => React.createElement(View, {testID: 'loader'});
   return MockLoader;
 });
 
-jest.mock('../../components/LoadingSpinner', () => {
+jest.mock('../../../components/common/LoadingSpinner', () => {
   const React = require('react');
   const {View} = require('react-native');
   const MockLoadingSpinner = () =>
@@ -64,7 +64,7 @@ const mockSocialsList = [
   },
 ];
 
-jest.mock('../../hooks/useGetUserSocialCircle', () => ({
+jest.mock('../../../hooks/social/useGetUserSocialCircle', () => ({
   useGetUserSocials: () => ({
     data: mockSocialsList,
     refetch: mockRefetch,
@@ -72,7 +72,7 @@ jest.mock('../../hooks/useGetUserSocialCircle', () => ({
   }),
 }));
 
-jest.mock('../../hooks/useUpdateFollowStatus', () => ({
+jest.mock('../../../hooks/social/useUpdateFollowStatus', () => ({
   useUpdateFollowStatus: () => ({
     mutate: mockFollowMutate,
     isPending: false,

@@ -12,7 +12,7 @@ jest.mock('@react-navigation/native', () => ({
   }),
 }));
 
-jest.mock('../../helper/Utils', () => ({
+jest.mock('../../../lib/utils/Utils', () => ({
   readDownloadedPodcasts: jest.fn(),
   deleteFromDownloads: jest.fn(),
   msToTime: jest.fn(() => '05:00'),
@@ -28,7 +28,7 @@ jest.mock('react-redux', () => ({
   useDispatch: jest.fn(() => jest.fn()),
 }));
 
-jest.mock('../../components/PodcastCard', () => {
+jest.mock('../../../components/podcast/PodcastCard', () => {
   const React = require('react');
   const {View, Text, TouchableOpacity} = require('react-native');
   return function MockPodcastCard(props: any) {
@@ -43,7 +43,7 @@ jest.mock('../../components/PodcastCard', () => {
   };
 });
 
-jest.mock('../../components/EmptyStates', () => {
+jest.mock('../../../components/common/EmptyStates', () => {
   const React = require('react');
   const {View, Text} = require('react-native');
   return {
@@ -56,7 +56,7 @@ jest.mock('../../components/EmptyStates', () => {
   };
 });
 
-jest.mock('../../components/CreatePlaylist', () => {
+jest.mock('../../../components/playlist/CreatePlaylist', () => {
   const React = require('react');
   const {View} = require('react-native');
   return () => <View testID="create-playlist" />;

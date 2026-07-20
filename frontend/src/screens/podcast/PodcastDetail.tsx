@@ -94,7 +94,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const {data: podcast, refetch, isLoading: isPodcastLoading, isError: isPodcastError, error: podcastError} = useGetSinglePodcastDetails(trackId);
   const {mutate: likePodcast, isPending: likePodcastPending} = useLikePodcast();
 
-  const defaultFallback = require('../../assets/sounds/funny-cartoon-sound-397415.mp3');
+  const defaultFallback = require('../../../assets/sounds/funny-cartoon-sound-397415.mp3');
 
   const getFormattedSource = (url?: string | null) => {
     if (!url) return null;

@@ -102,28 +102,28 @@ const mockRegisterMutate = jest.fn();
 const mockVerifyMailMutate = jest.fn();
 const mockCheckAvailability = jest.fn(() => ({ data: { isAvailable: true, message: 'Available' }, isLoading: false }));
 
-jest.mock('@/src/hooks/useCheckUserHandleAvailability', () => ({
+jest.mock('@/src/hooks/auth/useCheckUserHandleAvailability', () => ({
   useCheckUserHandleAvailability: () => mockCheckAvailability(),
 }));
-jest.mock('@/src/hooks/useMailVerification', () => ({
+jest.mock('@/src/hooks/auth/useMailVerification', () => ({
   useVerificationMailMutation: () => ({
     mutate: mockVerifyMailMutate,
     isPending: false,
   }),
 }));
-jest.mock('@/src/hooks/useUserRegistration', () => ({
+jest.mock('@/src/hooks/auth/useUserRegistration', () => ({
   useRegdMutation: () => ({
     mutate: mockRegisterMutate,
     isPending: false,
   }),
 }));
-jest.mock('../../hooks/useUploadImage', () => () => ({
+jest.mock('../../../hooks/media/useUploadImage', () => () => ({
   uploadImage: jest.fn(() => Promise.resolve('uploaded-img-url')),
   loading: false,
 }));
 
 // Mock modal components to trigger their callback when mocked buttons are pressed
-jest.mock('../../components/VerifiedModal', () => {
+jest.mock('../../../components/auth/VerifiedModal', () => {
   const React = require('react');
   const {Button} = require('react-native');
   const MockVerifiedModal = ({visible, onClick, message}: any) => {
@@ -141,7 +141,7 @@ jest.mock('../../components/VerifiedModal', () => {
   return MockVerifiedModal;
 });
 
-jest.mock('../../components/SecurityWarningModal', () => {
+jest.mock('../../../components/auth/SecurityWarningModal', () => {
   const React = require('react');
   const {Button} = require('react-native');
   const MockSecurityWarningModal = ({visible, onContinue}: any) => {
@@ -159,7 +159,7 @@ jest.mock('../../components/SecurityWarningModal', () => {
   return MockSecurityWarningModal;
 });
 
-jest.mock('../../components/Loader', () => {
+jest.mock('../../../components/common/Loader', () => {
   const React = require('react');
   const {View} = require('react-native');
   const MockLoader = () => React.createElement(View);

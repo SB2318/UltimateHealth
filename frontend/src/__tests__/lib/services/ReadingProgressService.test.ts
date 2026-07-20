@@ -9,7 +9,7 @@ import {
   saveProgress,
 } from '../../../lib/services/ReadingProgressService';
 
-jest.mock('../helper/MMKVUtils', () => ({
+jest.mock('../../../lib/storage/MMKVUtils', () => ({
   deleteReadingProgressItem: jest.fn(),
   getReadingProgressItem: jest.fn(),
   setReadingProgressItem: jest.fn(),

@@ -95,7 +95,7 @@ describe('dateUtils', () => {
         getLocales: jest.fn(() => [{ languageTag: 'en-US' }])
       }));
 
-      const { formatDateWithTime } = require('../dateUtils');
+      const { formatDateWithTime } = require('../../../lib/utils/dateUtils');
       // 2026-05-26 is in Daylight Saving Time (EDT) which is UTC-4
       // 14:30 UTC is 10:30 AM EDT
       const formatted = formatDateWithTime('2026-05-26T14:30:00Z');

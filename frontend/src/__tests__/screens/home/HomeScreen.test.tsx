@@ -17,7 +17,7 @@ jest.mock('react-native-snackbar', () => ({
   LENGTH_LONG: 1,
 }));
 
-jest.mock('../../components/ArticleCard', () => {
+jest.mock('../../../components/article/ArticleCard', () => {
   const React = require('react');
   const {View} = require('react-native');
   const MockArticleCard = () => React.createElement(View, {testID: 'ArticleCard'});
@@ -54,7 +54,7 @@ const mockRefetchUser = jest.fn();
 const mockRefetchUnreadCount = jest.fn();
 const mockRefetchArticles = jest.fn();
 
-jest.mock('../../hooks/useGetProfile', () => ({
+jest.mock('../../../hooks/profile/useGetProfile', () => ({
   useGetProfile: () => ({
     data: { isBlockUser: false, isBannedUser: false },
     refetch: mockRefetchUser,
@@ -62,21 +62,21 @@ jest.mock('../../hooks/useGetProfile', () => ({
 }));
 
 const mockCategoriesData = [{ _id: '1', id: 1, name: 'General' }];
-jest.mock('../../hooks/useGetArticleTags', () => ({
+jest.mock('../../../hooks/article/useGetArticleTags', () => ({
   useGetCategories: () => ({
     data: mockCategoriesData,
     isSuccess: true,
   }),
 }));
 
-jest.mock('../../hooks/useRequestArticleEdit', () => ({
+jest.mock('../../../hooks/article/useRequestArticleEdit', () => ({
   useRequestArticleEdit: () => ({
     mutate: jest.fn(),
     isPending: false,
   }),
 }));
 
-jest.mock('../../hooks/useGetUnreadNotificationCount', () => ({
+jest.mock('../../../hooks/notification/useGetUnreadNotificationCount', () => ({
   useGetUnreadNotificationCount: () => ({
     data: 0,
     refetch: mockRefetchUnreadCount,
@@ -91,18 +91,18 @@ const mockArticlesQuery = {
   refetch: mockRefetchArticles,
 };
 
-jest.mock('../../hooks/useGetPaginatedArticles', () => ({
+jest.mock('../../../hooks/article/useGetPaginatedArticles', () => ({
   useGetPaginatedArticle: () => mockArticlesQuery,
 }));
 
-jest.mock('../../contexts/PreferencesContext', () => ({
+jest.mock('../../../contexts/PreferencesContext', () => ({
   usePreferences: () => ({
     preferredLanguages: ['en-IN'],
     isLoading: false,
   }),
 }));
 
-jest.mock('../../components/EmptyStates', () => {
+jest.mock('../../../components/common/EmptyStates', () => {
   const React = require('react');
   const {Text} = require('react-native');
   const OfflineArticleState = () => React.createElement(Text, null, 'OfflineArticleState');
@@ -117,7 +117,7 @@ jest.mock('../../components/EmptyStates', () => {
   };
 });
 
-jest.mock('../../components/HomeScreenHeader', () => {
+jest.mock('../../../components/home/HomeScreenHeader', () => {
   const React = require('react');
   const {View} = require('react-native');
   const MockHomeScreenHeader = () =>
@@ -125,7 +125,7 @@ jest.mock('../../components/HomeScreenHeader', () => {
   return MockHomeScreenHeader;
 });
 
-jest.mock('../../components/FilterModal', () => {
+jest.mock('../../../components/article/FilterModal', () => {
   const React = require('react');
   const {View} = require('react-native');
   const MockFilterModal = () => React.createElement(View);

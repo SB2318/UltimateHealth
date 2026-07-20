@@ -67,13 +67,13 @@ jest.mock('react-redux', () => ({
   useDispatch: jest.fn(() => jest.fn()),
 }));
 
-jest.mock('../../contexts/SocketContext', () => ({
+jest.mock('../../../contexts/SocketContext', () => ({
   useSocket: jest.fn(() => ({
     emit: jest.fn(),
   })),
 }));
 
-jest.mock('../../helper/Utils', () => ({
+jest.mock('../../../lib/utils/Utils', () => ({
   downloadAudio: jest.fn(),
   formatCount: (value: number) => String(value),
   StatusEnum: {
@@ -81,29 +81,29 @@ jest.mock('../../helper/Utils', () => ({
   },
 }));
 
-jest.mock('../../helper/Theme', () => ({
+jest.mock('../../../lib/ui/Theme', () => ({
   PRIMARY_COLOR: '#4ACDFF',
 }));
 
-jest.mock('../../helper/APIUtils', () => ({
+jest.mock('../../../lib/api/APIUtils', () => ({
   GET_IMAGE: 'https://example.com',
 }));
 
-jest.mock('../../helper/Metric', () => ({
+jest.mock('../../../lib/ui/Metric', () => ({
   fp: (value: number) => value,
 }));
 
-jest.mock('../../styles/GlassStyles', () => ({
+jest.mock('../../../styles/GlassStyles', () => ({
   GlassStyles: {
     glassContainerDark: {},
   },
 }));
 
-jest.mock('../../hooks/useGetSinglePodcastDetails', () => ({
+jest.mock('../../../hooks/podcast/useGetSinglePodcastDetails', () => ({
   useGetSinglePodcastDetails: jest.fn(),
 }));
 
-jest.mock('../../hooks/useLikePodcast', () => ({
+jest.mock('../../../hooks/podcast/useLikePodcast', () => ({
   useLikePodcast: jest.fn(),
 }));
 
@@ -111,7 +111,7 @@ jest.mock('expo-audio', () => ({
   useAudioPlayer: jest.fn(() => mockPlayer),
 }));
 
-jest.mock('../../../assets/sounds/funny-cartoon-sound-397415.mp3', () => 1, {
+jest.mock('../../../../assets/sounds/funny-cartoon-sound-397415.mp3', () => 1, {
   virtual: true,
 });
 
@@ -127,7 +127,7 @@ jest.mock('tamagui', () => {
   };
 });
 
-jest.mock('../../components/Loader', () => {
+jest.mock('../../../components/common/Loader', () => {
   const React = require('react');
   const {Text} = require('react-native');
   const MockLoader = () => React.createElement(Text, {testID: 'loader'}, 'Loading');
@@ -135,7 +135,7 @@ jest.mock('../../components/Loader', () => {
   return MockLoader;
 });
 
-jest.mock('../../components/LoadingSpinner', () => {
+jest.mock('../../../components/common/LoadingSpinner', () => {
   const React = require('react');
   const {Text} = require('react-native');
   const MockSpinner = () => React.createElement(Text, {testID: 'loading-spinner'}, 'LoadingSpinner');
@@ -187,8 +187,8 @@ let mockState: any = {
 };
 
 const mockUseSelector = require('react-redux').useSelector as jest.Mock;
-const mockUseGetSinglePodcastDetails = require('../../hooks/useGetSinglePodcastDetails').useGetSinglePodcastDetails as jest.Mock;
-const mockUseLikePodcast = require('../../hooks/useLikePodcast').useLikePodcast as jest.Mock;
+const mockUseGetSinglePodcastDetails = require('../../../hooks/podcast/useGetSinglePodcastDetails').useGetSinglePodcastDetails as jest.Mock;
+const mockUseLikePodcast = require('../../../hooks/podcast/useLikePodcast').useLikePodcast as jest.Mock;
 
 const setConnectedStatus = (value: boolean) => {
   mockState = {

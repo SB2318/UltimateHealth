@@ -20,25 +20,25 @@ jest.mock('@tanstack/react-query', () => ({
   }),
 }));
 
-jest.mock('../../hooks/useUserLogout', () => ({
+jest.mock('../../../hooks/auth/useUserLogout', () => ({
   useUserLogout: () => ({
     mutate: mockLogout,
   }),
 }));
 
-jest.mock('../../helper/Utils', () => ({
+jest.mock('../../../lib/utils/Utils', () => ({
   clearStorage: () => mockClearStorage(),
 }));
 
-jest.mock('../../store/UserSlice', () => ({
+jest.mock('../../../store/UserSlice', () => ({
   resetUserState: () => ({type: 'user/resetUserState'}),
 }));
 
-jest.mock('../../helper/APIUtils', () => ({
+jest.mock('../../../lib/api/APIUtils', () => ({
   GET_STORAGE_DATA: 'https://storage.example.com',
 }));
 
-jest.mock('../../helper/Theme', () => ({
+jest.mock('../../../lib/ui/Theme', () => ({
   PRIMARY_COLOR: '#000A60',
 }));
 

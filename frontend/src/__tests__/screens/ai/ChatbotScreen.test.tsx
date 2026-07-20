@@ -86,23 +86,23 @@ jest.mock('react-redux', () => ({
   useDispatch: jest.fn(() => jest.fn()),
 }));
 
-jest.mock('../../hooks/useGetProfile', () => ({
+jest.mock('../../../hooks/profile/useGetProfile', () => ({
   useGetProfile: jest.fn(() => ({
     data: {Profile_image: 'user_avatar.png'},
   })),
 }));
 
-jest.mock('../../hooks/useSendMessageToGemini', () => ({
+jest.mock('../../../hooks/ai/useSendMessageToGemini', () => ({
   useSendMessageToGemini: jest.fn(),
 }));
 
-jest.mock('../../hooks/useLoadAIChats', () => ({
+jest.mock('../../../hooks/ai/useLoadAIChats', () => ({
   useLoadAIConversations: jest.fn(),
 }));
 
 const mockUseSelector = require('react-redux').useSelector as jest.Mock;
-const mockUseSendMessageToGemini = require('../../hooks/useSendMessageToGemini').useSendMessageToGemini as jest.Mock;
-const mockUseLoadAIConversations = require('../../hooks/useLoadAIChats').useLoadAIConversations as jest.Mock;
+const mockUseSendMessageToGemini = require('../../../hooks/ai/useSendMessageToGemini').useSendMessageToGemini as jest.Mock;
+const mockUseLoadAIConversations = require('../../../hooks/ai/useLoadAIChats').useLoadAIConversations as jest.Mock;
 
 describe('ChatbotScreen', () => {
   let initialConversations: any[];

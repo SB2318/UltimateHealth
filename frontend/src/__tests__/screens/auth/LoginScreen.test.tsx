@@ -69,28 +69,28 @@ jest.mock('@react-native-firebase/messaging', () => {
 });
 
 const mockLoginMutate = jest.fn();
-jest.mock('@/src/hooks/useUserLogin', () => ({
+jest.mock('@/src/hooks/auth/useUserLogin', () => ({
   useLoginMutation: () => ({
     mutate: mockLoginMutate,
     isPending: false,
   }),
 }));
 
-jest.mock('@/src/hooks/useResendVerification', () => ({
+jest.mock('@/src/hooks/auth/useResendVerification', () => ({
   useRequestVerification: () => ({
     mutate: jest.fn(),
     isPending: false,
   }),
 }));
 
-jest.mock('@/src/hooks/useSendOtp', () => ({
+jest.mock('@/src/hooks/auth/useSendOtp', () => ({
   useSendOtpMutation: () => ({
     mutate: jest.fn(),
     isPending: false,
   }),
 }));
 
-jest.mock('../../helper/SecureStorageUtils', () => ({
+jest.mock('../../../lib/storage/SecureStorageUtils', () => ({
   secureStoreItem: jest.fn(() => Promise.resolve()),
   secureRetrieveItem: jest.fn(() => Promise.resolve(null)),
   SECURE_KEYS: {
@@ -98,7 +98,7 @@ jest.mock('../../helper/SecureStorageUtils', () => ({
   },
 }));
 
-jest.mock('../../helper/Utils', () => ({
+jest.mock('../../../lib/utils/Utils', () => ({
   storeItem: jest.fn(() => Promise.resolve()),
   retrieveItem: jest.fn(() => Promise.resolve(null)),
   clearStorage: jest.fn(() => Promise.resolve()),
@@ -109,14 +109,14 @@ jest.mock('../../helper/Utils', () => ({
   },
 }));
 
-jest.mock('../../components/EmailInputModal', () => {
+jest.mock('../../../components/auth/EmailInputModal', () => {
   const React = require('react');
   const {View} = require('react-native');
   const MockEmailInputModal = () => React.createElement(View);
   MockEmailInputModal.displayName = 'EmailInputModal';
   return MockEmailInputModal;
 });
-jest.mock('../../components/Loader', () => {
+jest.mock('../../../components/common/Loader', () => {
   const React = require('react');
   const {View} = require('react-native');
   const MockLoader = () => React.createElement(View);

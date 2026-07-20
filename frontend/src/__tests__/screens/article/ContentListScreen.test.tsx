@@ -12,7 +12,7 @@ jest.mock('tamagui', () => ({
   useTheme: () => ({ background: { val: '#ffffff' } }),
 }));
 
-jest.mock('../../hooks/useGetProfile', () => ({
+jest.mock('../../../hooks/profile/useGetProfile', () => ({
   useGetProfile: () => ({
     data: { articles: [], repostArticles: [], savedArticles: [] },
     refetch: jest.fn(),

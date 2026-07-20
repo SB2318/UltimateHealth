@@ -51,7 +51,7 @@ const bootstrap = (
   jest.doMock('react-native-mmkv', () => ({
     createMMKV: jest.fn(() => mmkvInstance),
   }));
-  const mod = require('../MMKVUtils') as ModuleUnderTest;
+  const mod = require('../../../lib/storage/MMKVUtils') as ModuleUnderTest;
   const asyncStorage =
     require('@react-native-async-storage/async-storage') as AsyncStorageMock;
   asyncStorage.setItem.mockClear();
