@@ -50,8 +50,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: "yarn"
-          cache-dependency-path: frontend/yarn.lock
       - name: Enable Corepack
         run: |
           corepack enable
@@ -66,6 +64,14 @@ jobs:
       - name: Install dependencies
         if: steps.node-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
+
+      - name: Validate cache
+        run: |
+          if ! yarn list > /dev/null 2>&1; then
+            echo "Cache corrupted, reinstalling..."
+            rm -rf node_modules
+            yarn install --frozen-lockfile --network-timeout 600000
+          fi
 
       - name: Run Knip analyses
         id: knip

@@ -43,13 +43,17 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 20
-          cache: 'yarn'
-          cache-dependency-path: frontend/yarn.lock
 
       - name: Enable Corepack
         run: |
           corepack enable
           corepack prepare yarn@4.17.1 --activate
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
 
       - name: Cache Gradle Wrapper
         uses: actions/cache@v4
