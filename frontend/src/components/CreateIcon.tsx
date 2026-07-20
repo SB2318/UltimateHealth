@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 import { StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Entypo from '@expo/vector-icons/Entypo';

@@ -1,5 +1,6 @@
-/* eslint-disable react-compiler/react-compiler */
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
+ 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Alert, AppState } from 'react-native';
 

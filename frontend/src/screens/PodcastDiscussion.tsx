@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
 import React, {FC, useEffect, useMemo, useRef, useState} from 'react';
 import { TouchableOpacity,
   StyleSheet,

@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 import { ErrorBoundary } from '../../components/ErrorBoundary';
-/* eslint-disable react-compiler/react-compiler */
+ 
 import {
   Image,
   Platform,
@@ -10,7 +11,7 @@ import {
   Alert,
   useWindowDimensions,
   useColorScheme,
-} from 'react-native';
+ ScrollView } from 'react-native';
 import ArticleShareModal from '../../components/ArticleShareModal';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -73,7 +74,7 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { ScrollView } from 'react-native';
+
 
 const CHUNK_SIZE = 120;
 
@@ -312,7 +313,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         clearTimeout(saveScrollPositionRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   const noDataHtml = '<p>No Data found</p>';

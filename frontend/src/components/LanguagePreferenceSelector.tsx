@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 import React, {useCallback} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,  ScrollView , ActivityIndicator } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';

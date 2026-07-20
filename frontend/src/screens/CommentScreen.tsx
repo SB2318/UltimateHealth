@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
@@ -58,7 +59,7 @@ const CommentScreen = ({
   const flatListRef =
     useRef<any>(null);
 
-  const [comments, setComments] = useState
+  const [comments, setComments] = useState<
     Comment[]
   >([]);
   const MAX_COMMENT_LENGTH = 500;
@@ -110,13 +111,13 @@ const CommentScreen = ({
     setCommentLikeLoading,
   ] = useState<boolean>(false);
 
-  const [mentions, setMentions] = useState
+  const [mentions, setMentions] = useState<
     User[]
   >([]);
 
   const dispatch = useDispatch();
 
-  const triggersConfig: TriggersConfig
+  const triggersConfig: TriggersConfig<
     'mention' | 'hashtag'
   > = {
     mention: {

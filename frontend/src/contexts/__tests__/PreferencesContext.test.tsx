@@ -25,6 +25,7 @@ let capturedContext: ReturnType<typeof usePreferences> | null = null;
 
 const TestHarness: React.FC = () => {
   const ctx = usePreferences();
+  // eslint-disable-next-line react-hooks/globals
   capturedContext = ctx;
   return <Text>{ctx.preferredLanguages.join(',')}</Text>;
 };

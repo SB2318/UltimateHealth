@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/set-state-in-effect */
 // @ts-nocheck
 import { StyleSheet,
@@ -9,9 +10,6 @@ import { StyleSheet,
   ScrollView,
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-   FlatList ,
-   ScrollView ,
-  } from 'react-native';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {

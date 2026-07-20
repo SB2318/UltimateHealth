@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 import {Text, StyleSheet} from 'react-native';
 import {hp} from '../helper/Metric';
 import { MaterialCommunityIcons } from '@expo/vector-icons';

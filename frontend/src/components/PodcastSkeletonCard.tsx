@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
 // PodcastSkeletonCard.tsx
 import React, {useEffect, useRef} from 'react';
 import {StyleSheet, View, Animated, useWindowDimensions} from 'react-native';

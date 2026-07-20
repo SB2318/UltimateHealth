@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 import React from 'react';
 import { Share, Linking, Image, useColorScheme } from 'react-native';

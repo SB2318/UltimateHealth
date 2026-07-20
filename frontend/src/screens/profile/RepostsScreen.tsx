@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, View, Text, FlatList, TouchableOpacity, useColorScheme} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';

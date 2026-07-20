@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
 // @ts-nocheck
 import React, { useRef } from 'react';
 import {

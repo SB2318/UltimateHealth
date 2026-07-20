@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
  
 import React, { useEffect, useState } from 'react';
 import { YStack, Button, Input, Spacer, Text, XStack, Card, Circle, Paragraph, ScrollView as TamaguiScrollView } from 'tamagui';

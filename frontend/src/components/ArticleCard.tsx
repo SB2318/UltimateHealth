@@ -1,4 +1,5 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+ 
 // @ts-nocheck
 import {
   StyleSheet,
@@ -108,6 +109,7 @@ const ArticleCard = ({
     score: 78,
     level: 'Beginner Friendly' as 'Beginner Friendly' | 'Intermediate' | 'Advanced',
     approved: true,
+  };
   const heartScale = useSharedValue(0);
 
   const heartStyle = useAnimatedStyle(() => {

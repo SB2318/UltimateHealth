@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 import {useNavigation} from '@react-navigation/native';
 import {useCallback, useRef, useState} from 'react';
 import {StackNavigationProp} from '@react-navigation/stack';

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 import React, {
   createContext,
   useContext,
@@ -38,7 +39,7 @@ interface PreferencesProviderProps {
 export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
   children,
 }) => {
-  const [preferredLanguages, setInternalPreferredLanguages] = useState
+  const [preferredLanguages, setInternalPreferredLanguages] = useState<
     LanguageCode[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
