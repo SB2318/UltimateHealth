@@ -40,7 +40,24 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
 
+      - name: Check versions
+        run: |
+          node -v
+          yarn -v
+
+      - name: Validate cache
+        run: |
+          if ! yarn install --immutable --immutable-cache --check-cache; then
+            echo "Cached node_modules is invalid. Removing cache..."
+            rm -rf node_modules
+            yarn install --immutable
+          fi
       - name: Cache node_modules
         id: node-cache
         uses: actions/cache@v4
