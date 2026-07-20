@@ -1,7 +1,7 @@
- 
- 
-import React, {useEffect, useState} from 'react';
+
+import React, {useCallback, useEffect, useState} from 'react';
 import { FlatList , Pressable, View, StyleSheet } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import {OfflinePodcastListProp, PodcastData} from '../type';
 import {deleteFromDownloads, msToTime, readDownloadedPodcasts} from '../helper/Utils';
 import PodcastCard from '../components/PodcastCard';
@@ -34,14 +34,7 @@ export default function OfflinePodcastList({
     dispatch(setRemovePlaylistId(''));
   };
 
-
-
-  useEffect(() => {
-    loadPodcasts();
-    return () => {};
-  }, []);
-
-  const loadPodcasts = async () => {
+  const loadPodcasts = useCallback(async () => {
     try {
       setLoadError(null);
       const data = await readDownloadedPodcasts();
@@ -55,7 +48,17 @@ export default function OfflinePodcastList({
         'Failed to load offline podcasts. Please try again or check your device storage.',
       );
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    loadPodcasts();
+  }, [loadPodcasts]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadPodcasts();
+    }, [loadPodcasts]),
+  );
 
   const navigateToDetail = (podcast: PodcastData) => {
     navigation.navigate('OfflinePodcastDetail', {
@@ -95,6 +98,7 @@ export default function OfflinePodcastList({
           const res = await deleteFromDownloads(item);
 
           if (res) {
+            await loadPodcasts();
             Snackbar.show({
               text: 'Podcast has been removed from offline',
               duration: Snackbar.LENGTH_SHORT,
