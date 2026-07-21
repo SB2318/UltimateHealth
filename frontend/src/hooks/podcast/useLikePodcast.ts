@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import axios from "axios";
 import { LIKE_PODCAST } from "../../lib/api/APIUtils";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../store/hooks";
 type AxiosError = any;
 
 export const useLikePodcast = (): UseMutationResult<
@@ -9,7 +9,7 @@ any,
 AxiosError,
 string
 >=>{
-    const isGuest = useSelector((state: any) => state.user.isGuest);
+    const isGuest = useAppSelector(state => state.user.isGuest);
 
     return useMutation({
     mutationKey: ['update-podcast-like-count'],

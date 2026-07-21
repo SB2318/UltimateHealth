@@ -8,17 +8,33 @@ const mockNavigate = jest.fn();
 const mockReset = jest.fn();
 
 // ── react-redux mock ──────────────────────────────────────────────────────────
-// SplashScreen reads user_token via useSelector. We control it here.
+// SplashScreen reads user_token via useAppSelector. We control it here.
 let mockUserToken: string | null = 'valid-token';
 
-jest.mock('react-redux', () => ({
-  useSelector: (selector: any) =>
-    selector({
-      user: {user_token: mockUserToken},
-      network: {isConnected: true},
-    }),
-  useDispatch: () => jest.fn(),
+const mockDispatch = jest.fn();
+
+jest.mock('../../store/hooks', () => ({
+  useAppDispatch: () => mockDispatch,
+  useAppSelector: jest.fn(),
 }));
+
+const mockCheckTokenStatus = jest.fn();
+jest.mock('@/src/hooks/useGetTokenStatus', () => ({
+  useCheckTokenStatus: () => mockCheckTokenStatus(),
+}));
+
+jest.mock('../../helper/Utils', () => {
+  const original = jest.requireActual('../../helper/Utils');
+  return {
+    ...original,
+    clearStorage: jest.fn(() => Promise.resolve()),
+    retrieveItem: jest.fn((key) => {
+      if (key === 'USER_ID') return Promise.resolve('user-id-123');
+      if (key === 'USER_HANDLE') return Promise.resolve('john_doe');
+      return Promise.resolve(null);
+    }),
+  };
+});
 
 // ── timer mocks ───────────────────────────────────────────────────────────────
 // SplashScreen waits 800ms before navigating. Use fake timers to control this.

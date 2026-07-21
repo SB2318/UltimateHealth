@@ -9,7 +9,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import {SplashScreenProp} from '../../schemas/type';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {RootState} from '../../store/ReduxStore';
 
 export default function SplashScreen({navigation}: SplashScreenProp) {
@@ -19,7 +19,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
 
   // `user_token` is hydrated from secure storage by AppContent on mount.
   // We wait briefly to allow hydration to complete before deciding where to navigate.
-  const user_token = useSelector((state: RootState) => state.user.user_token);
+  const user_token = useAppSelector((state: RootState) => state.user.user_token);
 
   // Brief hydration delay so AppContent can populate Redux before we navigate
   const [hydrated, setHydrated] = useState(false);

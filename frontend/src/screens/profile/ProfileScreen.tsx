@@ -2,7 +2,7 @@ import { StyleSheet, View, Text, Alert, useColorScheme, TouchableOpacity, Scroll
 import React, {useCallback, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import { useTheme } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileHeader from '../../components/profile/ProfileHeader';
@@ -18,8 +18,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const {isConnected} = useSelector((state: any) => state.network);
-  const dispatch = useDispatch();
+  const {isConnected} = useAppSelector((state: any) => state.network);
+  const dispatch = useAppDispatch();
 
   const {data: user, refetch, isLoading} = useGetProfile();
 

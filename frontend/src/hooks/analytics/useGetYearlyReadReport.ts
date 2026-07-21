@@ -3,7 +3,7 @@ import { YearStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 
 export const useGetAuthorYearlyReadReport = ({
   user_id,
@@ -18,7 +18,7 @@ export const useGetAuthorYearlyReadReport = ({
   others?: boolean;
   isConnected?: boolean;
 }): UseQueryResult<YearStatus[]> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
 
   return useQuery<YearStatus[]>({
     queryKey: ['get-user-yearly-read-report', user_id, userId, others],

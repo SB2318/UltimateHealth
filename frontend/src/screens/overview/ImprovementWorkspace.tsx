@@ -10,7 +10,7 @@ import { FlatList ,
  } from 'react-native';
 import { useTheme } from 'tamagui';
 import {EditRequest} from '../../schemas/type';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import Loader from '../../components/common/Loader';
 import ImprovementCard from '../../components/article/ImprovementCard';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
@@ -26,7 +26,7 @@ export default function ImprovementWorkspace({
 }) {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
-  const {user_token} = useSelector((state: any) => state.user);
+  const {user_token} = useAppSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const [page, setPage] = useState(1);

@@ -3,7 +3,7 @@ import { ReadStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 
 export const useGetTotalReads = ({
   user_id,
@@ -16,7 +16,7 @@ export const useGetTotalReads = ({
   others?: boolean;
   isConnected?: boolean;
 }): UseQueryResult<ReadStatus> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
 
   return useQuery<ReadStatus>({
     queryKey: ['get-total-reads', user_id, userId, others],

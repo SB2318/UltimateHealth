@@ -2,15 +2,15 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-import * as ReactRedux from 'react-redux';
+import * as ReactRedux from '../../store/hooks';
 import { useGetPlaylists } from '@/src/hooks/playlist/useGetPlaylists';
 
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
+jest.mock('../../store/hooks', () => ({
+  useAppSelector: jest.fn(),
 }));
 
 function makeWrapper() {
@@ -25,7 +25,7 @@ describe('useGetPlaylists', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('fetches playlists successfully when not guest', async () => {
-    (ReactRedux.useSelector as unknown as jest.Mock).mockReturnValue(false);
+    (ReactRedux.useAppSelector as unknown as jest.Mock).mockReturnValue(false);
 
     mockedAxios.get.mockResolvedValueOnce({
       data: [{id: 1, title: 'My List'}],
@@ -40,7 +40,7 @@ describe('useGetPlaylists', () => {
   });
 
   it('does not fetch if user is a guest', async () => {
-    (ReactRedux.useSelector as unknown as jest.Mock).mockReturnValue(true);
+    (ReactRedux.useAppSelector as unknown as jest.Mock).mockReturnValue(true);
 
     const {result} = renderHook(() => useGetPlaylists(), {
       wrapper: makeWrapper(),

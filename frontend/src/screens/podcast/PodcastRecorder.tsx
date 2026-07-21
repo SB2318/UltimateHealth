@@ -24,7 +24,7 @@ import audioModule from '@/modules/audio-module';
 import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
-//import {useDispatch} from 'react-redux';
+//import {useAppDispatch} from '../../store/hooks';
 import {requestStoragePermissions} from '../../lib/utils/Utils';
  type AppStateStatusType = 'active' | 'background' | 'inactive' | 'unknown' | 'extension';
 
@@ -33,7 +33,7 @@ import {requestStoragePermissions} from '../../lib/utils/Utils';
 
 const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   const [recording, setRecording] = useState(false);
-  // const dispatch = useDispatch();
+  // const dispatch = useAppDispatch();
 
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(audioRecorder, 500);

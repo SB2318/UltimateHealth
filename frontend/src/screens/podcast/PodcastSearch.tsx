@@ -6,7 +6,7 @@ import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {PodcastData, PodcastSearchProp} from '../../schemas/type';
 
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import PodcastCard from '../../components/podcast/PodcastCard';
 import PodcastSkeletonCard from '../../components/podcast/PodcastSkeletonCard';
 import {msToTime} from '../../lib/utils/Utils';
@@ -26,7 +26,7 @@ const SEARCH_DEBOUNCE_MS = 350;
 export default function PodcastSearch({navigation}: PodcastSearchProp) {
   const [query, setQuery] = useState<string>('');
   const [debouncedQuery, setDebouncedQuery] = useState<string>('');
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [searchData, setSearchData] = useState<PodcastData[]>([]);

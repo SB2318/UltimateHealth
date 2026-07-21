@@ -8,7 +8,7 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {
   View,
   Image,
@@ -47,7 +47,7 @@ import {verifyChatbotResponse} from '../../../plugins/api/chatbot-response-verif
 const ASSISTANT_USER_ID = 2;
 
 const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   
   const { characterId, characterName, characterAvatar } = route.params || {};
 

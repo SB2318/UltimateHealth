@@ -2,7 +2,7 @@
 import {Alert, View} from 'react-native';
 import React, {useState} from 'react';
 import Dropdown from './Dropdown';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../store/hooks';
 import { showAlert } from '../../store/alertSlice';
 
 const DropDownComponent = ({data}: {data: any[]}) => {
@@ -10,7 +10,7 @@ const DropDownComponent = ({data}: {data: any[]}) => {
   const [specialization, setspecialization] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [visible, setVisible] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleAddSpecialization = (specialization: string) => {
     if (!specialization) {

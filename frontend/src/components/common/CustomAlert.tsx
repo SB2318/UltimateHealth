@@ -1,12 +1,12 @@
  
 import { AlertDialog, Button, XStack, YStack } from "tamagui";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { hideAlert } from "../../store/alertSlice";
 
 export function CustomAlertDialog() {
-  const dispatch = useDispatch();
-  const { visible, title, message, onConfirm, onCancel } = useSelector(
-    (state: any) => state.alert
+  const dispatch = useAppDispatch();
+  const { visible, title, message, onConfirm, onCancel } = useAppSelector(
+    state => state.alert
   );
 
   const close = () => dispatch(hideAlert());

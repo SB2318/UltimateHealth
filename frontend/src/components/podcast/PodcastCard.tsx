@@ -10,7 +10,7 @@ import PodcastActions from './PodcastActions';
 import Share from 'react-native-share';
 import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import {GlassStyles, ProfessionalColors, BorderRadius} from '../../styles/GlassStyles';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import { PODCAST_CARD } from '@/src/constants/podcastCard';
 import {getPlaybackPosition, PlaybackPosition} from '../../lib/platform/PlaybackManager';
@@ -49,7 +49,7 @@ const PodcastCard = ({
   playlistAct,
 }: PodcastProps) => {
   const sheetRef = useRef<BottomSheetModal>(null);
-  const {isGuest} = useSelector((state: any) => state.user);
+  const {isGuest} = useAppSelector((state: any) => state.user);
   const navigation = useNavigation<any>();
   const [progress, setProgress] = React.useState<PlaybackPosition | null>(null);
 

@@ -16,7 +16,7 @@ import {fp} from '../../lib/ui/Metric';
 import {ArticleCardProps, ArticleData} from '../../schemas/type';
 import { formatDateShort } from '../../lib/utils/dateUtils';
 import { getReadTime, calculateReadTime } from '../../lib/utils/readTime';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import IonIcons from '@expo/vector-icons/Ionicons';
 import {GET_IMAGE} from '../../lib/api/APIUtils';
@@ -65,8 +65,8 @@ const ArticleCard = ({
   handleEditRequestAction,
   source,
 }: ArticleCardProps) => {
-  const {user_id, user_handle, isGuest} = useSelector((state: any) => state.user || {});
-  const {isConnected} = useSelector((state: any) => state.network || {});
+  const {user_id, user_handle, isGuest} = useAppSelector((state: any) => state.user || {});
+  const {isConnected} = useAppSelector((state: any) => state.network || {});
   const isDarkMode = useColorScheme() === 'dark';
   const themeColors = {
     surface: isDarkMode ? '#1F2937' : '#FFFFFF',

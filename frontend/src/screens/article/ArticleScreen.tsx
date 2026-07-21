@@ -19,7 +19,7 @@ import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData, ArticleScreenProp} from '../../schemas/type';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {hp} from '../../lib/ui/Metric';
 import {GET_IMAGE, GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import Loader from '../../components/common/Loader';
@@ -95,7 +95,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       ? profileImage
       : `${GET_STORAGE_DATA}/${profileImage}`;
   };
-  const {user_id, isGuest} = useSelector((state: any) => state.user);
+  const {user_id, isGuest} = useAppSelector((state: any) => state.user);
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontScale, setFontScale] = useState(1);
@@ -176,7 +176,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
 
   const socket = useSocket();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {data: user} = useGetProfile();
   const {

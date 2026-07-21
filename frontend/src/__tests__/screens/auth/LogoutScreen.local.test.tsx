@@ -10,8 +10,8 @@ const mockClearQueryCache = jest.fn();
 const mockClearStorage = jest.fn(() => Promise.resolve());
 const mockLogout = jest.fn();
 
-jest.mock('react-redux', () => ({
-  useDispatch: () => mockDispatch,
+jest.mock('@/src/store/hooks', () => ({
+  useAppDispatch: () => mockDispatch,
 }));
 
 jest.mock('@tanstack/react-query', () => ({

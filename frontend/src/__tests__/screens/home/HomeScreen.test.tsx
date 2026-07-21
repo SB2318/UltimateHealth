@@ -30,9 +30,9 @@ const mockDispatch = jest.fn((action) => {
     mockState.data.selectedTags = action.payload.selectedTags;
   }
 });
-jest.mock('react-redux', () => ({
-  useSelector: (selectorFn: any) => mockSelector(selectorFn),
-  useDispatch: () => mockDispatch,
+jest.mock('@/src/store/hooks', () => ({
+  useAppSelector: (selectorFn: any) => mockSelector(selectorFn),
+  useAppDispatch: () => mockDispatch,
 }));
 
 let mockState = {

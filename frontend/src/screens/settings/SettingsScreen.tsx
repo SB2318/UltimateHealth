@@ -14,7 +14,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { StatusBar } from 'expo-status-bar';
 import { PRIMARY_COLOR } from '../../lib/ui/Theme';
 import { wp, hp, fp } from '../../lib/ui/Metric';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
 type SettingsScreenProps = { navigation: any };
 
@@ -82,7 +82,7 @@ const SettingsRow = ({
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   const isDark = useColorScheme() === 'dark';
-  const { isConnected } = useSelector((state: any) => state.network);
+  const { isConnected } = useAppSelector((state: any) => state.network);
 
   const bg = isDark ? '#111827' : '#F9FAFB';
   const headerBg = isDark ? '#1F2937' : '#FFFFFF';

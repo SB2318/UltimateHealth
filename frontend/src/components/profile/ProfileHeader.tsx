@@ -26,7 +26,7 @@ import {fp, hp, wp} from '../../lib/ui/Metric';
 
 import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import {buildMailLink, buildPhoneLink} from '../../lib/utils/contactLinks';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
 
 const ProfileHeader = ({
@@ -49,7 +49,7 @@ const ProfileHeader = ({
   onFollowClick,
   onOverviewClick,
 }: ProfileHeaderProps) => {
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 

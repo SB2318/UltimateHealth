@@ -4,7 +4,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {Alert, StyleSheet} from 'react-native';
 import {PodcastPlayerScreenProps} from '../../schemas/type';
 import RNFS from 'react-native-fs';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
 
 import useUploadImage from '../../hooks/media/useUploadImage';
@@ -35,8 +35,8 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
     route.params;
 
   //const [elapsedMs, setElapsedMs] = useState(0);
-  const {user_token} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_token} = useAppSelector((state: any) => state.user);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [amplitudes, setAmplitudes] = useState<number[]>([]);
   //const [currentAmplitude, setCurrentAmplitude] = useState<number>(0);
   //const timerRef = useRef(null);

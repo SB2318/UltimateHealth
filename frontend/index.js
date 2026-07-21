@@ -1,6 +1,6 @@
 import {registerRootComponent} from 'expo';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {Provider} from 'react-redux';
+import {Provider} from '../store/hooks';
 import store from './src/store/ReduxStore';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import App from './App';

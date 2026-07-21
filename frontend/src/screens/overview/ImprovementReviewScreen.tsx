@@ -15,7 +15,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ImpvReviewScreenProp, Comment} from '../../schemas/type';
 
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {hp, wp} from '../../lib/ui/Metric';
 import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 
@@ -36,8 +36,8 @@ import {useGetLoadReviewComments} from '@/src/hooks/article/useGetLoadReviewComm
 const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
   const insets = useSafeAreaInsets();
   const {requestId, authorId, recordId, articleRecordId} = route.params; // requestId
-  const {user_token, user_handle} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_token, user_handle} = useAppSelector((state: any) => state.user);
+  const {isConnected} = useAppSelector((state: any) => state.network);
 
   const [feedback, setFeedback] = useState('');
   const [webviewHeight, setWebViewHeight] = useState(0);
@@ -45,7 +45,7 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
   const [loading, setLoading] = useState(false);
 
   const socket = useSocket();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [comments, setComments] = useState<Comment[]>([]);
 

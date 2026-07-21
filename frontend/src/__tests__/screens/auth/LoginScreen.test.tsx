@@ -9,8 +9,8 @@ const mockNavigate = jest.fn();
 const mockReset = jest.fn();
 const mockDispatch = jest.fn();
 
-jest.mock('react-redux', () => ({
-  useDispatch: () => mockDispatch,
+jest.mock('../store/hooks', () => ({
+  useAppDispatch: () => mockDispatch,
 }));
 
 jest.mock('react-native-snackbar', () => ({

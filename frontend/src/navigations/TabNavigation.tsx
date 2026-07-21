@@ -14,7 +14,7 @@ import {BUTTON_COLOR} from '../lib/ui/Theme';
 import HeaderRightMenu from '../components/common/HeaderRightMenu';
 import PersonaLobbyScreen from '../screens/ai/PersonaLobbyScreen';
 import AcademyStackNavigation from './AcademyStackNavigation';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
 import WellnessDashboardScreen from '../screens/wellness/WellnessDashboardScreen';
 
@@ -25,7 +25,7 @@ const ChatbotGuestScreen = () => <GuestPlaceholderScreen title="AI Chatbot" desc
 const SettingsGuestScreen = () => <GuestPlaceholderScreen title="Settings" description="Create an account to access settings and manage your preferences." />;
 
 const TabNavigation = () => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
   return (
     <Tab.Navigator
       id={undefined as never}

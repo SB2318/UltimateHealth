@@ -5,7 +5,7 @@ import { PlaylistDetailScreenProp, PodcastData } from '../../schemas/type';
 import PodcastCard from '../../components/podcast/PodcastCard';
 import { msToTime } from '../../lib/utils/Utils';
 import Snackbar from 'react-native-snackbar';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { useUpdatePodcastViewcount } from '../../hooks/podcast/useUpdatePodcastViewcount';
 import { NoPodcastState } from '../../components/common/EmptyStates';
 import CreatePlaylist from '../../components/playlist/CreatePlaylist';
@@ -13,8 +13,8 @@ import { setaddedPodcastId } from '../../store/dataSlice';
 
 export default function PlaylistDetailScreen({ navigation, route }: PlaylistDetailScreenProp) {
   const { playlist } = route.params;
-  const dispatch = useDispatch();
-  const { user_id, isGuest } = useSelector((state: any) => state.user);
+  const dispatch = useAppDispatch();
+  const { user_id, isGuest } = useAppSelector((state: any) => state.user);
   const [playlistModalOpen, setPlaylistModalOpen] = useState<boolean>(false);
 
   const { mutate: updateViewCount } = useUpdatePodcastViewcount();

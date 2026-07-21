@@ -64,9 +64,9 @@ jest.mock('../../../hooks/article/useArticleRoom', () => ({
 }));
 
 // ── Redux ─────────────────────────────────────────────────────────────────────
-jest.mock('react-redux', () => ({
-  useSelector: () => ({user_id: 'test-user-id'}),
-  useDispatch: () => jest.fn(),
+jest.mock('../../store/hooks', () => ({
+  useAppSelector: () => ({ user_id: 'test-user-id' }),
+  useAppDispatch: () => jest.fn(),
 }));
 
 // ── CommentItem ───────────────────────────────────────────────────────────────

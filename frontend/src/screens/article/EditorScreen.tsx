@@ -19,7 +19,7 @@ import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {EditorScreenProp} from '../../schemas/type';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useDispatch} from 'react-redux';
+import {useAppDispatch} from '../store/hooks';
 import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 import {createHTMLStructure} from '../../lib/utils/Utils';
@@ -48,7 +48,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const [htmlImages, setHtmlImages] = useState<string[]>([]);
   const [editorReady, setEditorReady] = useState(false);
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     navigation.setOptions({

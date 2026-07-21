@@ -2,7 +2,7 @@ import { GET_TOTAL_LIKES_VIEWS } from '@/src/lib/api/APIUtils';
 import { UserStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 
 export const useGetTotalLikeViewStatus = ({
   user_id,
@@ -15,7 +15,7 @@ export const useGetTotalLikeViewStatus = ({
   others?: boolean;
   isConnected?: boolean;
 }): UseQueryResult<UserStatus> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
 
   return useQuery<UserStatus>({
     queryKey: ['get-like-view-status', user_id, userId, others],

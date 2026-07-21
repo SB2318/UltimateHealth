@@ -11,8 +11,8 @@ jest.mock('react-native-snackbar', () => ({
   LENGTH_SHORT: 0,
 }));
 
-jest.mock('react-redux', () => ({
-  useSelector: jest.fn(),
+jest.mock('../store/hooks', () => ({
+  useAppSelector: jest.fn(),
 }));
 
 jest.mock('@tanstack/react-query', () => ({
@@ -73,7 +73,7 @@ const mockPreferences = {
   message: 'Success',
 };
 
-const mockUseSelector = require('react-redux').useSelector as jest.Mock;
+const mockuseAppSelector = require('../../store/hooks').useAppSelector as jest.Mock;
 const mockUseGetCategories = require('../../../hooks/article/useGetArticleTags').useGetCategories as jest.Mock;
 const mockUseGetNotificationPreferences = require('../../../hooks/notification/useGetNotificationPreferences').useGetNotificationPreferences as jest.Mock;
 const mockUseUpdateNotificationPreferences = require('../../../hooks/notification/useUpdateNotificationPreferences').useUpdateNotificationPreferences as jest.Mock;
@@ -81,7 +81,7 @@ const mockUseUpdateNotificationPreferences = require('../../../hooks/notificatio
 describe('NotificationPreferencesScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockUseSelector.mockImplementation((selector: any) =>
+    mockuseAppSelector.mockImplementation((selector: any) =>
       selector({
         user: {isGuest: false},
         network: {isConnected: true},

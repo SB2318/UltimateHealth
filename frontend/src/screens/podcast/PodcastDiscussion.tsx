@@ -11,7 +11,7 @@ import { TouchableOpacity,
 import {PodcastDiscussionProp, User, Comment} from '../../schemas/type';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 //import io from 'socket.io-client';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import Loader from '../../components/common/Loader';
 import CommentItem from '../../components/article/CommentItem';
 import {useSocket} from '../../contexts/SocketContext';
@@ -33,7 +33,7 @@ import {useGetSinglePodcastDetails} from '../../hooks/podcast/useGetSinglePodcas
 
 const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const socket = useSocket();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const {podcastId, mentionedUsers} = route.params;
 
   // Auto-join podcast room
@@ -42,7 +42,7 @@ const PodcastDiscussion = ({navigation, route}: PodcastDiscussionProp) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
   const flatListRef = useRef<FlatList<Comment>>(null);
-  const {user_id, user_token} = useSelector((state: any) => state.user);
+  const {user_id, user_token} = useAppSelector((state: any) => state.user);
   const [selectedCommentId, setSelectedCommentId] = useState<string>('');
   const [editMode, setEditMode] = useState<boolean>(false);
   const [editCommentId, setEditCommentId] = useState<string | null>(null);

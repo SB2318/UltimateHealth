@@ -6,7 +6,7 @@ import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../../lib/storage/Se
 import { TokenStatus } from '@/src/schemas/type';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../store/hooks';
 
  const checkTokenStatusApi = async (
   token: string,
@@ -39,7 +39,7 @@ import { useSelector } from 'react-redux';
   }
 };
 export const useCheckTokenStatus = () => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
 
   return useQuery<TokenStatus>({
     queryKey: ['token-status'],

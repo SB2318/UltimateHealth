@@ -13,8 +13,8 @@ jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({top: 0, bottom: 0, left: 0, right: 0}),
 }));
 
-jest.mock('react-redux', () => ({
-  useSelector: (selectorFn: any) => selectorFn({
+jest.mock('@/src/store/hooks', () => ({
+  useAppSelector: (selectorFn: any) => selectorFn({
     user: {
       user_id: 'my-user-id',
       user_handle: 'my_handle',

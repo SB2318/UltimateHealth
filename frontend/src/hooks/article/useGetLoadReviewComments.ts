@@ -3,7 +3,7 @@ import { Comment } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 type AxiosError = any;
 
 export const useGetLoadReviewComments = (
@@ -11,7 +11,7 @@ export const useGetLoadReviewComments = (
   requestId: string | undefined,
   isConnected: boolean
 ): UseQueryResult<Comment[], AxiosError> => {
-  const isGuest = useSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: any) => state.user.isGuest);
 
   return useQuery({
     queryKey: ['get-review-comments', articleId, requestId],
