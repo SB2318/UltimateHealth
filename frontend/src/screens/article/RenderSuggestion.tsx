@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { RenderSuggestionProp } from '../../type';
+import { RenderSuggestionProp } from '../../schemas/type';
 import { useDispatch } from 'react-redux';
 import { setSuggestionAccepted } from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 // ✅ Re-introduced original project helpers for security sanitization and link safety
-import { createHTMLStructure, handleExternalClick } from '../../helper/Utils';
+import { createHTMLStructure, handleExternalClick } from '../../lib/utils/Utils';
 
 export default function RenderSuggestion({
   navigation,

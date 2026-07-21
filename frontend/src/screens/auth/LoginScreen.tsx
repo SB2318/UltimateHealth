@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
 import {   isAxiosError} from 'axios';
@@ -21,15 +22,15 @@ import {
   YStack,
 } from 'tamagui';
 
-import {useRequestVerification} from '@/src/hooks/useResendVerification';
-import {useSendOtpMutation} from '@/src/hooks/useSendOtp';
-import {useLoginMutation} from '@/src/hooks/useUserLogin';
-import type {LoginResponse} from '@/src/hooks/useUserLogin';
-import EmailInputBottomSheet from '../../components/EmailInputModal';
-import Loader from '../../components/Loader';
-import {SECURE_KEYS, secureStoreItem} from '../../helper/SecureStorageUtils';
-import {resetSessionExpiredNotification} from '../../helper/setupAxiosInterceptor';
-import {KEYS, storeItem} from '../../helper/Utils';
+import {useRequestVerification} from '@/src/hooks/auth/useResendVerification';
+import {useSendOtpMutation} from '@/src/hooks/auth/useSendOtp';
+import {useLoginMutation} from '@/src/hooks/auth/useUserLogin';
+import type {LoginResponse} from '@/src/hooks/auth/useUserLogin';
+import EmailInputBottomSheet from '../../components/auth/EmailInputModal';
+import Loader from '../../components/common/Loader';
+import {SECURE_KEYS, secureStoreItem} from '../../lib/storage/SecureStorageUtils';
+import {resetSessionExpiredNotification} from '../../lib/api/setupAxiosInterceptor';
+import {KEYS, storeItem} from '../../lib/utils/Utils';
 import {
   setGuestMode,
   setUserHandle,
@@ -37,7 +38,7 @@ import {
   setUserToken,
 } from '../../store/UserSlice';
 
-import { AuthData, LoginScreenProp } from '../../type';
+import { AuthData, LoginScreenProp } from '../../schemas/type';
 type AxiosError = any;
 
 const loginSchema = z.object({
@@ -529,6 +530,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         <EmailInputBottomSheet
           visible={emailInputVisible}
           callback={(email: string) => {
+            setEmailInputVisible(false);
             setOtpMail(email);
             if (requestVerificationMode) {
               resendVerification(

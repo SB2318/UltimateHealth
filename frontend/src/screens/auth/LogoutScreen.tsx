@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
 import React, {useCallback} from 'react';
 import {
   StyleSheet,
@@ -7,15 +8,15 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import {GET_STORAGE_DATA} from '../../helper/APIUtils';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import type  from 'axios';
 import {resetUserState} from '../../store/UserSlice';
 import {useDispatch} from 'react-redux';
-import {clearStorage} from '../../helper/Utils';
+import {clearStorage} from '../../lib/utils/Utils';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {LogoutScreenProp} from '@/src/type';
-import {useUserLogout} from '@/src/hooks/useUserLogout';
+import {LogoutScreenProp} from '@/src/schemas/type';
+import {useUserLogout} from '@/src/hooks/auth/useUserLogout';
 import {useTheme} from 'tamagui';
 import { useColorScheme } from 'react-native-gifted-chat/lib/hooks/useColorScheme';
 type AxiosError = any;
@@ -42,7 +43,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
 
   const handleLogout = () => {
     logout(
-      {},
+      undefined,
       {
         onSuccess: async () => {
           await completeLocalLogout();

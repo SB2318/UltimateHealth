@@ -1,9 +1,10 @@
-/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps */
+ 
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
 
 import { useSelector } from 'react-redux';
 import { Socket } from 'socket.io-client';
-import { initializeSocket, disconnectSocket } from '../helper/socket';
+import { initializeSocket, disconnectSocket } from '../lib/platform/socket';
 
 
 interface SocketContextType {

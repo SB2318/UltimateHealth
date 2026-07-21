@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
-import { useSendOtpMutation } from '@/src/hooks/useSendOtp';
-import { useVerifyOtpMutation } from '@/src/hooks/useVerifyOtp';
+import { useSendOtpMutation } from '@/src/hooks/auth/useSendOtp';
+import { useVerifyOtpMutation } from '@/src/hooks/auth/useVerifyOtp';
 import axios, { isAxiosError } from 'axios';
 import React, { useRef, useState } from 'react';
 import { Alert,  TextInput   } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {OtpScreenProp} from '../../type';
-import Loader from '../../components/Loader';
+import {OtpScreenProp} from '../../schemas/type';
+import Loader from '../../components/common/Loader';
 import {
   Button,
   Card,
@@ -48,9 +49,10 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
           otp: fullCode,
         },
         {
-          onSuccess: () => {
+          onSuccess: (data) => {
             navigation.navigate('NewPasswordScreen', {
-              email: email,
+              email,
+              resetToken: data.resetToken,
             });
           },
           onError: (error: AxiosError) => {

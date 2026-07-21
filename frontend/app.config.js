@@ -11,15 +11,9 @@ const defaultStaticConfig = {
   icon: "./assets/images/ic_ultimatehealth_appicon.png",
   scheme: "ultimatehealth",
   userInterfaceStyle: "automatic",
-  newArchEnabled: true,
   androidStatusBar: {
     backgroundColor: "#00BFFF",
     barStyle: "light-content"
-  },
-  splash: {
-    image: "./assets/images/adaptive-icon.png",
-    resizeMode: "contain",
-    backgroundColor: "#E6F4FE"
   },
   ios: {
     supportsTablet: true,
@@ -61,7 +55,7 @@ const defaultStaticConfig = {
           {
             scheme: "https",
             host: "uhsocial.in",
-            pathPrefix: "/api/share/podcast"
+            pathPrefix: "/ap/share/podcast"
           }
         ]
       }
@@ -72,7 +66,6 @@ const defaultStaticConfig = {
       foregroundImage: "./assets/images/ic_ultimatehealth_appicon_foreground.png",
       backgroundImage: "./assets/images/ic_launcher_background.png"
     },
-    edgeToEdgeEnabled: true,
     predictiveBackGestureEnabled: false,
     package: "com.anonymous.UltimateHealth",
     versionCode: 21
@@ -149,7 +142,7 @@ module.exports = ({ config }) => {
       // API URLs — read from environment variables with production fallbacks.
       // Override these in your local .env file (see .env.example).
       PROD_URL:
-        process.env.PROD_URL ?? "https://uhsocial.in/ap",
+        process.env.PROD_URL ?? "https://uhsocial.in/api",
       SOCKET_PROD:
         process.env.SOCKET_PROD ?? "https://uhsocial.in",
       CONTENT_CHECKER_PROD:

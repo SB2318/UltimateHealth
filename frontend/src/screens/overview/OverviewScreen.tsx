@@ -1,3 +1,4 @@
+ 
 import React from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {MaterialTabBar, Tabs} from 'react-native-collapsible-tab-view';
@@ -5,13 +6,13 @@ import {
   PRIMARY_COLOR,
   ON_PRIMARY_COLOR,
   BUTTON_COLOR,
-} from '../../helper/Theme';
+} from '../../lib/ui/Theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ArticleData, EditRequest, OverviewScreenProps, PodcastData} from '../../type';
+import {ArticleData, EditRequest, OverviewScreenProps, PodcastData} from '../../schemas/type';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import {StatusEnum} from '../../helper/Utils';
+import {StatusEnum} from '../../lib/utils/Utils';
 import {FAB} from 'react-native-paper';
-import {hp} from '../../helper/Metric';
+import {hp} from '../../lib/ui/Metric';
 import ArticleWorkSpace from './ArticleWorkSpace';
 import ImprovementWorkspace from './ImprovementWorkspace';
 import PodcastWorkSpace from './PodcastWorkSpace';

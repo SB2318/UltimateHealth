@@ -1,3 +1,4 @@
+ 
 import React, {useState} from 'react';
 import { View,
    ScrollView ,
@@ -6,16 +7,16 @@ import { View,
   Alert,
   TouchableOpacity,
  } from 'react-native';
-import {ReportScreenProp} from '../../type';
+import {ReportScreenProp} from '../../schemas/type';
 import {useSelector} from 'react-redux';
-import Loader from '../../components/Loader';
+import Loader from '../../components/common/Loader';
 import {RadioButton} from 'react-native-paper';
 import Snackbar from 'react-native-snackbar';
-import {hp, wp, fp} from '../../helper/Metric';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {hp, wp, fp} from '../../lib/ui/Metric';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useGetReasons} from '@/src/hooks/useGetReportReasons';
-import {useSubmitReport} from '@/src/hooks/useSubmitReport';
+import {useGetReasons} from '@/src/hooks/moderation/useGetReportReasons';
+import {useSubmitReport} from '@/src/hooks/moderation/useSubmitReport';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 

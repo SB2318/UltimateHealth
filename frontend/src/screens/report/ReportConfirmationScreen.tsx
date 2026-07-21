@@ -1,8 +1,9 @@
+ 
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,  ScrollView  } from 'react-native';
-import {ReportConfirmationScreenProp} from '../../type';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import {hp, wp, fp} from '../../helper/Metric';
+import {ReportConfirmationScreenProp} from '../../schemas/type';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {hp, wp, fp} from '../../lib/ui/Metric';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';

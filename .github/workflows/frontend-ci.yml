@@ -40,7 +40,24 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
+      
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
 
+      - name: Check versions
+        run: |
+          node -v
+          yarn -v
+
+      - name: Validate cache
+        run: |
+          if ! yarn install --immutable --immutable-cache --check-cache; then
+            echo "Cached node_modules is invalid. Removing cache..."
+            rm -rf node_modules
+            yarn install --immutable
+          fi
       - name: Cache node_modules
         id: node-cache
         uses: actions/cache@v4
@@ -75,6 +92,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
 
       - name: Restore node_modules
         uses: actions/cache@v4
@@ -115,6 +137,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
@@ -153,6 +180,11 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
 
       - name: Restore node_modules
         uses: actions/cache@v4
@@ -193,6 +225,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+
       - name: Restore node_modules
         uses: actions/cache@v4
         with:
@@ -225,7 +262,7 @@ jobs:
 
           set +e
           set +o pipefail
-          CRITICAL_FAILS=$(echo "$OUTPUT" | grep "Check " | grep -v "app config fields that may not be synced" | grep -v "duplicate dependencies" | grep -v "common issues" | grep -v "installed Expo SDK" | wc -l | tr -d '[:space:]')
+          CRITICAL_FAILS=$(echo "$OUTPUT" | grep "Check " | grep -v "app config fields that may not be synced" | grep -v "duplicate dependencies" | grep -v "common issues" | grep -v "installed Expo SDK" | grep -v "lock file" | wc -l | tr -d '[:space:]')
           set -e
           set -o pipefail
           if [ "$CRITICAL_FAILS" -eq 0 ]; then

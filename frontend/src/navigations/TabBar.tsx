@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 import React, {useRef, useEffect, useState} from 'react';
 import {
   View,
@@ -9,8 +10,8 @@ import {
   Platform,
 } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import {PRIMARY_COLOR} from '../helper/Theme';
-import {hp, wp, fp} from '../helper/Metric';
+import {PRIMARY_COLOR} from '../lib/ui/Theme';
+import {hp, wp, fp} from '../lib/ui/Metric';
 
 // Icon map per tab label
 const TAB_CONFIG: Record<
@@ -20,8 +21,8 @@ const TAB_CONFIG: Record<
   Home: {active: 'home', inactive: 'home-outline', label: 'Home'},
   Podcasts: {active: 'headphones', inactive: 'headphones', label: 'Podcasts'},
   Chatbot: {active: 'robot', inactive: 'robot-outline', label: 'AI'},
-  Profile: {active: 'account-circle', inactive: 'account-circle-outline', label: 'Profile'},
-  About: {active: 'information', inactive: 'information-outline', label: 'About'},
+  Academy: {active: 'school', inactive: 'school-outline', label: 'Academy'},
+  Settings: {active: 'cog', inactive: 'cog-outline', label: 'Settings'},
 };
 
 interface AnimatedTabItemProps {

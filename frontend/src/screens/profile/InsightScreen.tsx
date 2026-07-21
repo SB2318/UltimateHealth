@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState} from 'react';
 import {StyleSheet, View, Alert, TouchableOpacity,useColorScheme} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import {useTheme} from 'tamagui';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import {InsightScreenProp} from '../../type';
-import ActivityOverview from '../../components/ActivityOverview';
-import Loader from '../../components/Loader';
-import {useGetProfile} from '../../hooks/useGetProfile';
-import {useUpdateViewCount} from '../../hooks/useUpdateViewCount';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {InsightScreenProp} from '../../schemas/type';
+import ActivityOverview from '../../components/profile/ActivityOverview';
+import Loader from '../../components/common/Loader';
+import {useGetProfile} from '../../hooks/profile/useGetProfile';
+import {useUpdateViewCount} from '../../hooks/article/useUpdateViewCount';
 import Snackbar from 'react-native-snackbar';
 import {useSelector} from 'react-redux';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';

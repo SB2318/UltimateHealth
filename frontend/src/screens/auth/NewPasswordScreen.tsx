@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/incompatible-library */
 import React, { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,14 +17,14 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
-import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '@/src/helper/Theme';
-import { useChangePasswordMutation } from '@/src/hooks/useChangePassword';
+import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '@/src/lib/ui/Theme';
+import { useChangePasswordMutation } from '@/src/hooks/auth/useChangePassword';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
 import type  from 'axios';
-import Loader from '../../components/Loader';
-import { NewPasswordScreenProp } from '../../type';
+import Loader from '../../components/common/Loader';
+import { NewPasswordScreenProp } from '../../schemas/type';
 import {Alert, ActivityIndicator} from 'react-native';
 type AxiosError = any;
 
@@ -45,7 +46,14 @@ export default function NewPasswordScreen({
   navigation,
   route,
 }: NewPasswordScreenProp) {
-  const {email} = route.params;
+  const { email, resetToken } = route.params;
+
+  React.useEffect(() => {
+      if (!resetToken) {
+          Alert.alert("Invalid password reset session", "Please verify your OTP again.");
+          navigation.goBack();
+      }
+  }, [resetToken]);
 
   const {
     control,
@@ -82,7 +90,7 @@ export default function NewPasswordScreen({
   const handlePasswordSubmit = (data: NewPasswordFormData) => {
 
     changePassword(
-      {email, newPassword: password},
+      {email, newPassword: password, resetToken},
       {
         onSuccess: () => {
           Alert.alert('Password reset successfully');

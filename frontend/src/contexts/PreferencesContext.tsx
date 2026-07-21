@@ -1,3 +1,4 @@
+ 
 import React, {
   createContext,
   useContext,
@@ -11,7 +12,7 @@ import {
   secureStoreItem,
   secureRetrieveItem,
   SECURE_KEYS,
-} from '../helper/SecureStorageUtils';
+} from '../lib/storage/SecureStorageUtils';
 import { LanguageCode, isValidLanguageCode } from '../constants/languages';
 
 type LanguagesUpdater = LanguageCode[] | ((prev: LanguageCode[]) => LanguageCode[]);
@@ -38,7 +39,7 @@ interface PreferencesProviderProps {
 export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
   children,
 }) => {
-  const [preferredLanguages, setInternalPreferredLanguages] = useState
+  const [preferredLanguages, setInternalPreferredLanguages] = useState<
     LanguageCode[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);

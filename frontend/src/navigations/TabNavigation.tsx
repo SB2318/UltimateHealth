@@ -1,32 +1,34 @@
-// @ts-nocheck
+ 
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/HomeScreen';
-import PodcastsScreen from '../screens/PodcastsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import HomeScreen from '../screens/home/HomeScreen';
+import PodcastsScreen from '../screens/podcast/PodcastsScreen';
+import SettingsScreen from '../screens/settings/SettingsScreen';
 // import {KeyboardAvoidingView, StyleSheet} from 'react-native';
 // import {Colors} from 'react-native/Libraries/NewAppScreen';
 import TabBar from './TabBar';
 import {TouchableOpacity} from 'react-native';
-import {TabParamList} from '../type';
+import {TabParamList} from '../schemas/type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import {BUTTON_COLOR} from '../helper/Theme';
-import HeaderRightMenu from '../components/HeaderRightMenu';
-import PersonaLobbyScreen from '../screens/PersonaLobbyScreen';
-import AboutScreen from '../screens/AboutPage';
+import {BUTTON_COLOR} from '../lib/ui/Theme';
+import HeaderRightMenu from '../components/common/HeaderRightMenu';
+import PersonaLobbyScreen from '../screens/ai/PersonaLobbyScreen';
+import AcademyStackNavigation from './AcademyStackNavigation';
 import {useSelector} from 'react-redux';
-import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
+import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
+import WellnessDashboardScreen from '../screens/wellness/WellnessDashboardScreen';
 
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const ChatbotGuestScreen = () => <GuestPlaceholderScreen title="AI Chatbot" description="Sign in or sign up to get instant health advice and personalized answers from our AI assistant." />;
-const ProfileGuestScreen = () => <GuestPlaceholderScreen title="Your Profile" description="Create an account to manage your details and preferences." />;
+const SettingsGuestScreen = () => <GuestPlaceholderScreen title="Settings" description="Create an account to access settings and manage your preferences." />;
 
 const TabNavigation = () => {
   const isGuest = useSelector((state: any) => state.user.isGuest);
   return (
     <Tab.Navigator
+      id={undefined as never}
       initialRouteName="Home"
       tabBar={props => <TabBar {...props} />}>
       <Tab.Screen
@@ -101,36 +103,18 @@ const TabNavigation = () => {
         })}
       />
       <Tab.Screen
-        name="Profile"
-        component={isGuest ? ProfileGuestScreen : ProfileScreen}
+        name="Settings"
+        component={isGuest ? SettingsGuestScreen : SettingsScreen}
         options={{
           headerShown: false,
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerTitleStyle: {
-            fontSize: 23,
-            marginBottom: 12,
-            color: 'white',
-          },
         }}
       />
 
-       <Tab.Screen
-        name="About"
-        component={AboutScreen}
+      <Tab.Screen
+        name="Academy"
+        component={AcademyStackNavigation}
         options={{
           headerShown: false,
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerTitleStyle: {
-            fontSize: 23,
-            marginBottom: 12,
-            color: 'white',
-          }
         }}
       />
     </Tab.Navigator>
