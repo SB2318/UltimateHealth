@@ -2,13 +2,8 @@
 import {Alert, View} from 'react-native';
 import React, {useState} from 'react';
 import Dropdown from './Dropdown';
-<<<<<<< HEAD:frontend/src/components/DropDownComponent.tsx
-import { useAppDispatch } from '../store/hooks';
-import { showAlert } from '../store/alertSlice';
-=======
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../store/hooks';
 import { showAlert } from '../../store/alertSlice';
->>>>>>> upstream/main:frontend/src/components/common/DropDownComponent.tsx
 
 const DropDownComponent = ({data}: {data: any[]}) => {
   const [specializationData, setspecializationData] = useState(data);

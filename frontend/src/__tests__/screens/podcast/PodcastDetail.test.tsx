@@ -186,15 +186,9 @@ let mockState: any = {
   },
 };
 
-<<<<<<< HEAD:frontend/src/screens/__tests__/PodcastDetail.test.tsx
-const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
-const mockUseGetSinglePodcastDetails = require('../../hooks/useGetSinglePodcastDetails').useGetSinglePodcastDetails as jest.Mock;
-const mockUseLikePodcast = require('../../hooks/useLikePodcast').useLikePodcast as jest.Mock;
-=======
-const mockUseSelector = require('react-redux').useSelector as jest.Mock;
+const mockuseAppSelector = require('../../store/hooks').useAppSelector as jest.Mock;
 const mockUseGetSinglePodcastDetails = require('../../../hooks/podcast/useGetSinglePodcastDetails').useGetSinglePodcastDetails as jest.Mock;
 const mockUseLikePodcast = require('../../../hooks/podcast/useLikePodcast').useLikePodcast as jest.Mock;
->>>>>>> upstream/main:frontend/src/__tests__/screens/podcast/PodcastDetail.test.tsx
 
 const setConnectedStatus = (value: boolean) => {
   mockState = {

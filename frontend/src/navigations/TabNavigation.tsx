@@ -10,23 +10,13 @@ import TabBar from './TabBar';
 import {TouchableOpacity} from 'react-native';
 import {TabParamList} from '../schemas/type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-<<<<<<< HEAD
-import {BUTTON_COLOR} from '../helper/Theme';
-import HeaderRightMenu from '../components/HeaderRightMenu';
-import PersonaLobbyScreen from '../screens/PersonaLobbyScreen';
-import AboutScreen from '../screens/AboutPage';
-import {useAppSelector} from '../store/hooks';
-import GuestPlaceholderScreen from '../components/GuestPlaceholderScreen';
-import WellnessDashboardScreen from '../screens/WellnessDashboardScreen';
-=======
 import {BUTTON_COLOR} from '../lib/ui/Theme';
 import HeaderRightMenu from '../components/common/HeaderRightMenu';
 import PersonaLobbyScreen from '../screens/ai/PersonaLobbyScreen';
 import AcademyStackNavigation from './AcademyStackNavigation';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
 import WellnessDashboardScreen from '../screens/wellness/WellnessDashboardScreen';
->>>>>>> upstream/main
 
 
 const Tab = createBottomTabNavigator<TabParamList>();

@@ -2,13 +2,7 @@ import { GET_TOTAL_LIKES_VIEWS } from '@/src/lib/api/APIUtils';
 import { UserStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetTotalLikeViewStatus.ts
-import {UserStatus} from '../type';
-import {GET_TOTAL_LIKES_VIEWS} from '../helper/APIUtils';
 import {useAppSelector} from '../../store/hooks';
-=======
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/analytics/useGetTotalLikeViewStatus.ts
 
 export const useGetTotalLikeViewStatus = ({
   user_id,

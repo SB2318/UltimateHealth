@@ -24,13 +24,8 @@ import audioModule from '@/modules/audio-module';
 import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';
-<<<<<<< HEAD:frontend/src/screens/PodcastRecorder.tsx
-import {useAppDispatch} from '../store/hooks';
-import {requestStoragePermissions} from '../helper/Utils';
-=======
-//import {useDispatch} from 'react-redux';
+//import {useAppDispatch} from '../../store/hooks';
 import {requestStoragePermissions} from '../../lib/utils/Utils';
->>>>>>> upstream/main:frontend/src/screens/podcast/PodcastRecorder.tsx
  type AppStateStatusType = 'active' | 'background' | 'inactive' | 'unknown' | 'extension';
 
 

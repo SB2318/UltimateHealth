@@ -1,15 +1,9 @@
 
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetUserSocialCircle.ts
-import { GET_SOCIALS } from '../helper/APIUtils';
-import { User } from '../type';
-import { useAppSelector } from '../store/hooks';
-=======
 import { GET_SOCIALS } from '../../lib/api/APIUtils';
 import { User } from '../../schemas/type';
-import { useSelector } from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/social/useGetUserSocialCircle.ts
+import { useAppSelector } from '../../store/hooks';
 
 interface Props {
   type: number;

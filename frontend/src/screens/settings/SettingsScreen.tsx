@@ -12,15 +12,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { StatusBar } from 'expo-status-bar';
-<<<<<<< HEAD:frontend/src/screens/SettingsScreen.tsx
-import { PRIMARY_COLOR } from '../helper/Theme';
-import { wp, hp, fp } from '../helper/Metric';
-import { useAppSelector } from '../../store/hooks';
-=======
 import { PRIMARY_COLOR } from '../../lib/ui/Theme';
 import { wp, hp, fp } from '../../lib/ui/Metric';
-import { useSelector } from 'react-redux';
->>>>>>> upstream/main:frontend/src/screens/settings/SettingsScreen.tsx
+import { useAppSelector } from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
 type SettingsScreenProps = { navigation: any };
 

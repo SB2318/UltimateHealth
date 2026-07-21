@@ -7,15 +7,9 @@ import { View,
   Alert,
   TouchableOpacity,
  } from 'react-native';
-<<<<<<< HEAD
-import {ReportScreenProp} from '../../type';
-import {useAppSelector} from '../../store/hooks';
-import Loader from '../../components/Loader';
-=======
 import {ReportScreenProp} from '../../schemas/type';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import Loader from '../../components/common/Loader';
->>>>>>> upstream/main
 import {RadioButton} from 'react-native-paper';
 import Snackbar from 'react-native-snackbar';
 import {hp, wp, fp} from '../../lib/ui/Metric';

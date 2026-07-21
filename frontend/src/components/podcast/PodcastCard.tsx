@@ -8,15 +8,9 @@ import {Category} from '../../schemas/type';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import PodcastActions from './PodcastActions';
 import Share from 'react-native-share';
-<<<<<<< HEAD:frontend/src/components/PodcastCard.tsx
-import {GET_STORAGE_DATA} from '../helper/APIUtils';
-import {GlassStyles, ProfessionalColors, BorderRadius} from '../styles/GlassStyles';
-import {useAppSelector} from '../../store/hooks';
-=======
 import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import {GlassStyles, ProfessionalColors, BorderRadius} from '../../styles/GlassStyles';
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/components/podcast/PodcastCard.tsx
+import {useAppSelector} from '../../store/hooks';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import { PODCAST_CARD } from '@/src/constants/podcastCard';
 import {getPlaybackPosition, PlaybackPosition} from '../../lib/platform/PlaybackManager';

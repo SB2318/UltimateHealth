@@ -1,14 +1,8 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetReportReasons.ts
-import {GET_REPORT_REASONS} from '../helper/APIUtils';
-import {ReportReason} from '../type';
-import {useAppSelector} from '../../store/hooks';
-=======
 import {GET_REPORT_REASONS} from '../../lib/api/APIUtils';
 import {ReportReason} from '../../schemas/type';
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/moderation/useGetReportReasons.ts
+import {useAppSelector} from '../../store/hooks';
 type AxiosError = any;
 
 const reasonsFunc = async () => {

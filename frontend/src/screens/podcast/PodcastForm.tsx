@@ -12,13 +12,8 @@ import { View,
    FlatList ,
   Alert,
    } from 'react-native';
-<<<<<<< HEAD:frontend/src/screens/PodcastForm.tsx
 import {useAppSelector} from '../../store/hooks';
-import {PodcastFormProp, Category} from '../type';
-=======
-import {useSelector} from 'react-redux';
 import {PodcastFormProp, Category} from '../../schemas/type';
->>>>>>> upstream/main:frontend/src/screens/podcast/PodcastForm.tsx
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {

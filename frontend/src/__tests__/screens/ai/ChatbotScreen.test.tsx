@@ -100,15 +100,9 @@ jest.mock('../../../hooks/ai/useLoadAIChats', () => ({
   useLoadAIConversations: jest.fn(),
 }));
 
-<<<<<<< HEAD:frontend/src/screens/__tests__/ChatbotScreen.test.tsx
-const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
-const mockUseSendMessageToGemini = require('../../hooks/useSendMessageToGemini').useSendMessageToGemini as jest.Mock;
-const mockUseLoadAIConversations = require('../../hooks/useLoadAIChats').useLoadAIConversations as jest.Mock;
-=======
-const mockUseSelector = require('react-redux').useSelector as jest.Mock;
+const mockuseAppSelector = require('../../store/hooks').useAppSelector as jest.Mock;
 const mockUseSendMessageToGemini = require('../../../hooks/ai/useSendMessageToGemini').useSendMessageToGemini as jest.Mock;
 const mockUseLoadAIConversations = require('../../../hooks/ai/useLoadAIChats').useLoadAIConversations as jest.Mock;
->>>>>>> upstream/main:frontend/src/__tests__/screens/ai/ChatbotScreen.test.tsx
 
 describe('ChatbotScreen', () => {
   let initialConversations: any[];

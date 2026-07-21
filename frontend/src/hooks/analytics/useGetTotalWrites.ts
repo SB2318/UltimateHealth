@@ -3,14 +3,8 @@ import { GET_TOTAL_WRITES } from "@/src/lib/api/APIUtils";
 import { WriteStatus } from "@/src/schemas/type";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
-<<<<<<< HEAD:frontend/src/hooks/useGetTotalWrites.ts
-import { WriteStatus } from "../type";
-import { GET_TOTAL_WRITES } from "../helper/APIUtils";
-import { useAppSelector, useAppDispatch } from "@/src/store/hooks";
-=======
 
-import { useSelector } from "react-redux";
->>>>>>> upstream/main:frontend/src/hooks/analytics/useGetTotalWrites.ts
+import { useAppSelector } from "../../store/hooks";
 
 export const useGetTotalWrites = (
  {

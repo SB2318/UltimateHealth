@@ -12,15 +12,9 @@ import React, {useEffect, useRef, useState} from 'react';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-<<<<<<< HEAD
-import {ReviewScreenProp, Comment} from '../../type';
-import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import {hp, wp} from '../../helper/Metric';
-=======
 import {ReviewScreenProp, Comment} from '../../schemas/type';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {hp, wp} from '../../lib/ui/Metric';
->>>>>>> upstream/main
 import {
   GET_IMAGE,
   GET_STORAGE_DATA,

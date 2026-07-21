@@ -2,14 +2,8 @@ import { GET_ALL_IMPROVEMENTS_FOR_USER } from '@/src/lib/api/APIUtils';
 import { EditRequest } from '@/src/schemas/type';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetUserAllImprovements.ts
-import { EditRequest } from '../type';
-import { GET_ALL_IMPROVEMENTS_FOR_USER } from '../helper/APIUtils';
-import { useAppSelector } from '../store/hooks';
-=======
 
-import { useSelector } from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/improvement/useGetUserAllImprovements.ts
+import { useAppSelector } from '../../store/hooks';
 
 interface Props {
   page: number;

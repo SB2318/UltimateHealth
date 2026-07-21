@@ -7,13 +7,8 @@ import {
   InputToolbar,
   Send,
 } from 'react-native-gifted-chat';
-<<<<<<< HEAD:frontend/src/screens/ChatbotScreen.tsx
-import {PRIMARY_COLOR} from '../helper/Theme';
-import {useAppSelector} from '../../store/hooks';
-=======
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/screens/ai/ChatbotScreen.tsx
+import {useAppSelector} from '../../store/hooks';
 import {
   View,
   Image,

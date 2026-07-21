@@ -8,17 +8,10 @@ import PodcastCard from '../../components/podcast/PodcastCard';
 import {hp} from '../../lib/ui/Metric';
 import {ON_PRIMARY_COLOR} from '../../lib/ui/Theme';
 import Snackbar from 'react-native-snackbar';
-<<<<<<< HEAD:frontend/src/screens/OfflinePodcastList.tsx
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import CreatePlaylist from '../components/CreatePlaylist';
-import { setaddedPodcastId, setRemovePlaylistId } from '../store/dataSlice';
-import { NoOfflinePodcastsState, OfflinePodcastLoadErrorState } from '../components/EmptyStates';
-=======
-import {useDispatch, useSelector} from 'react-redux';
 import CreatePlaylist from '../../components/playlist/CreatePlaylist';
 import { setaddedPodcastId, setRemovePlaylistId } from '../../store/dataSlice';
 import { NoOfflinePodcastsState, OfflinePodcastLoadErrorState } from '../../components/common/EmptyStates';
->>>>>>> upstream/main:frontend/src/screens/podcast/OfflinePodcastList.tsx
 
 export default function OfflinePodcastList({
   navigation,

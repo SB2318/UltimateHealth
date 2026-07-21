@@ -2,14 +2,8 @@ import { GET_READ_HISTORY } from '@/src/lib/api/APIUtils';
 import { ArticleData } from '@/src/schemas/type';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetReadHistory.ts
-import { useAppSelector } from '../store/hooks';
-import { GET_READ_HISTORY } from '../helper/APIUtils';
-import { ArticleData } from '../type';
-=======
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../store/hooks';
 
->>>>>>> upstream/main:frontend/src/hooks/analytics/useGetReadHistory.ts
 
 export type ReadHistoryArticle = ArticleData & {
   dateRead: string;

@@ -17,17 +17,10 @@ import {
 import {createHTMLStructure, handleExternalClick} from '../../lib/utils/Utils';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 
-<<<<<<< HEAD
-import Loader from '../../components/Loader';
-import {GET_IMAGE} from '../../helper/APIUtils';
-import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import useUploadImage from '../../hooks/useUploadImage';
-=======
 import Loader from '../../components/common/Loader';
 import {GET_IMAGE} from '../../lib/api/APIUtils';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import useUploadImage from '../../hooks/media/useUploadImage';
->>>>>>> upstream/main
 import {setSuggestion} from '../../store/dataSlice';
 import Snackbar from 'react-native-snackbar';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';

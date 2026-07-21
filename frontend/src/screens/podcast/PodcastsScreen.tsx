@@ -9,19 +9,11 @@ import { StyleSheet,
  } from 'react-native';
 
 import {YStack, View, XStack} from 'tamagui';
-<<<<<<< HEAD:frontend/src/screens/PodcastsScreen.tsx
-import PodcastCard from '../components/PodcastCard';
-import {hp} from '../helper/Metric';
-import {PodcastData, PodcastScreenProps} from '../type';
-import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import {downloadAudio, msToTime} from '../helper/Utils';
-=======
 import PodcastCard from '../../components/podcast/PodcastCard';
 import {hp} from '../../lib/ui/Metric';
 import {PodcastData, PodcastScreenProps} from '../../schemas/type';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {downloadAudio, msToTime} from '../../lib/utils/Utils';
->>>>>>> upstream/main:frontend/src/screens/podcast/PodcastsScreen.tsx
 import Snackbar from 'react-native-snackbar';
 import {setaddedPodcastId, setPodcasts, appendPodcasts} from '../../store/dataSlice';
 import CreatePlaylist from '../../components/playlist/CreatePlaylist';

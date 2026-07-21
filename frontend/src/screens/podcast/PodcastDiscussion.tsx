@@ -11,19 +11,11 @@ import { TouchableOpacity,
 import {PodcastDiscussionProp, User, Comment} from '../../schemas/type';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 //import io from 'socket.io-client';
-<<<<<<< HEAD:frontend/src/screens/PodcastDiscussion.tsx
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import Loader from '../components/Loader';
-import CommentItem from '../components/CommentItem';
-import {useSocket} from '../contexts/SocketContext';
-import {useArticleRoom} from '../hooks/useArticleRoom';
-=======
-import {useDispatch, useSelector} from 'react-redux';
 import Loader from '../../components/common/Loader';
 import CommentItem from '../../components/article/CommentItem';
 import {useSocket} from '../../contexts/SocketContext';
 import {useArticleRoom} from '../../hooks/article/useArticleRoom';
->>>>>>> upstream/main:frontend/src/screens/podcast/PodcastDiscussion.tsx
 import {
   useMentions,
   replaceTriggerValues,

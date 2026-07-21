@@ -2,14 +2,9 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-<<<<<<< HEAD:frontend/src/hooks/useGetTotalWrites.test.ts
 import * as ReactRedux from '../../store/hooks';
-import {useGetTotalWrites} from './useGetTotalWrites';
-=======
-import * as ReactRedux from 'react-redux';
 import { useGetTotalWrites } from '@/src/hooks/analytics/useGetTotalWrites';
 
->>>>>>> upstream/main:frontend/src/__tests__/hooks/analytics/useGetTotalWrites.test.ts
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

@@ -1,12 +1,7 @@
 import { GET_IMPROVEMENT_CONTENT } from '@/src/lib/api/APIUtils';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetImprovementContent.ts
-import { GET_IMPROVEMENT_CONTENT } from '../helper/APIUtils';
-import { useAppSelector } from '../store/hooks';
-=======
-import { useSelector } from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/improvement/useGetImprovementContent.ts
+import { useAppSelector } from '../../store/hooks';
 
 interface Props {
   recordId?: string;

@@ -73,17 +73,10 @@ const mockPreferences = {
   message: 'Success',
 };
 
-<<<<<<< HEAD:frontend/src/screens/__tests__/NotificationPreferencesScreen.test.tsx
-const mockuseAppSelector = require('../store/hooks').useAppSelector as jest.Mock;
-const mockUseGetCategories = require('../../hooks/useGetArticleTags').useGetCategories as jest.Mock;
-const mockUseGetNotificationPreferences = require('../../hooks/useGetNotificationPreferences').useGetNotificationPreferences as jest.Mock;
-const mockUseUpdateNotificationPreferences = require('../../hooks/useUpdateNotificationPreferences').useUpdateNotificationPreferences as jest.Mock;
-=======
-const mockUseSelector = require('react-redux').useSelector as jest.Mock;
+const mockuseAppSelector = require('../../store/hooks').useAppSelector as jest.Mock;
 const mockUseGetCategories = require('../../../hooks/article/useGetArticleTags').useGetCategories as jest.Mock;
 const mockUseGetNotificationPreferences = require('../../../hooks/notification/useGetNotificationPreferences').useGetNotificationPreferences as jest.Mock;
 const mockUseUpdateNotificationPreferences = require('../../../hooks/notification/useUpdateNotificationPreferences').useUpdateNotificationPreferences as jest.Mock;
->>>>>>> upstream/main:frontend/src/__tests__/screens/notification/NotificationPreferencesScreen.test.tsx
 
 describe('NotificationPreferencesScreen', () => {
   beforeEach(() => {

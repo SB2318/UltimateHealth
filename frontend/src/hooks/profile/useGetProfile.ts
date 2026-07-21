@@ -1,13 +1,8 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {User} from '../../schemas/type';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetProfile.ts
-import {GET_PROFILE_API} from '../helper/APIUtils';
-import {useAppSelector} from '../../store/hooks';
-=======
 import {GET_PROFILE_API} from '../../lib/api/APIUtils';
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/profile/useGetProfile.ts
+import {useAppSelector} from '../../store/hooks';
 type AxiosError = any;
 
 export const useGetProfile = (): UseQueryResult<User, AxiosError> => {

@@ -2,14 +2,9 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-<<<<<<< HEAD:frontend/src/hooks/useGetUserSocialCircle.test.ts
 import * as ReactRedux from '../../store/hooks';
-import {useGetUserSocials} from './useGetUserSocialCircle';
-=======
-import * as ReactRedux from 'react-redux';
 import { useGetUserSocials } from '@/src/hooks/social/useGetUserSocialCircle';
 
->>>>>>> upstream/main:frontend/src/__tests__/hooks/social/useGetUserSocialCircle.test.ts
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

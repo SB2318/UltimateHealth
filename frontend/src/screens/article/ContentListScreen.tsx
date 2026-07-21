@@ -1,15 +1,9 @@
 import { StyleSheet, View, Text, Alert, useColorScheme, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
 import React, {useCallback, useState, useMemo} from 'react';
 import {StatusBar} from 'expo-status-bar';
-<<<<<<< HEAD:frontend/src/screens/ContentListScreen.tsx
-import {PRIMARY_COLOR} from '../helper/Theme';
-import ArticleCard from '../components/ArticleCard';
-import {useAppSelector} from '../../store/hooks';
-=======
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import ArticleCard from '../../components/article/ArticleCard';
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/screens/article/ContentListScreen.tsx
+import {useAppSelector} from '../../store/hooks';
 import { useTheme } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData} from '../../schemas/type';

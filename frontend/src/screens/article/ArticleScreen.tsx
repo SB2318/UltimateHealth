@@ -18,19 +18,11 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
 import {SafeAreaView} from 'react-native-safe-area-context';
-<<<<<<< HEAD
-import {ArticleData, ArticleScreenProp} from '../../type';
-import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import {hp} from '../../helper/Metric';
-import {GET_IMAGE, GET_STORAGE_DATA} from '../../helper/APIUtils';
-import Loader from '../../components/Loader';
-=======
 import {ArticleData, ArticleScreenProp} from '../../schemas/type';
-import {useDispatch, useSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {hp} from '../../lib/ui/Metric';
 import {GET_IMAGE, GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import Loader from '../../components/common/Loader';
->>>>>>> upstream/main
 import Snackbar from 'react-native-snackbar';
 import ResearchSummaryCard from '../../components/article/ResearchSummaryCard';
 import StructuredPodcastCard from '../../components/podcast/StructuredPodcastCard';

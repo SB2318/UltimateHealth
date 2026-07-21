@@ -13,13 +13,8 @@ import { View,
   } from 'react-native';
 import {PodcastProfileProp, PodcastData, PlayList} from '../../schemas/type';
 import {MaterialCommunityIcons, Feather, Ionicons} from '@expo/vector-icons';
-<<<<<<< HEAD:frontend/src/screens/PodcastProfile.tsx
-import {PRIMARY_COLOR} from '../helper/Theme';
-import {useAppSelector} from '../../store/hooks';
-=======
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/screens/podcast/PodcastProfile.tsx
+import {useAppSelector} from '../../store/hooks';
 import {useFocusEffect} from '@react-navigation/native';
 import {useGetPlaylists} from '../../hooks/playlist/useGetPlaylists';
 import {useGetUserPublishedPodcasts} from '../../hooks/podcast/useGetUserPublishedPodcasts';

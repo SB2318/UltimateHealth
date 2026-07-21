@@ -1,13 +1,8 @@
 import { StyleSheet, View, Text, Alert, useColorScheme, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
-<<<<<<< HEAD:frontend/src/screens/ProfileScreen.tsx
-import {PRIMARY_COLOR} from '../helper/Theme';
-import {useAppDispatch, useAppSelector} from '../store/hooks';
-=======
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
-import {useDispatch, useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/screens/profile/ProfileScreen.tsx
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import { useTheme } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileHeader from '../../components/profile/ProfileHeader';

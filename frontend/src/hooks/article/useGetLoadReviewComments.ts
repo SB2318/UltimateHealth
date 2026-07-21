@@ -2,14 +2,8 @@ import { LOAD_REVIEW_COMMENTS } from '@/src/lib/api/APIUtils';
 import { Comment } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetLoadReviewComments.ts
-import {LOAD_REVIEW_COMMENTS} from '../helper/APIUtils';
-import {Comment} from '../type';
-import {useAppSelector} from '../../store/hooks';
-=======
 
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/article/useGetLoadReviewComments.ts
+import {useAppSelector} from '../../store/hooks';
 type AxiosError = any;
 
 export const useGetLoadReviewComments = (

@@ -1,14 +1,8 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
-<<<<<<< HEAD:frontend/src/hooks/useLikePodcast.ts
-import axios, { AxiosError } from "axios";
-import { LIKE_PODCAST } from "../helper/APIUtils";
-import { useAppSelector, useAppDispatch } from "@/src/store/hooks";
-=======
 import axios from "axios";
 import { LIKE_PODCAST } from "../../lib/api/APIUtils";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../store/hooks";
 type AxiosError = any;
->>>>>>> upstream/main:frontend/src/hooks/podcast/useLikePodcast.ts
 
 export const useLikePodcast = (): UseMutationResult<
 any,

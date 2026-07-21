@@ -2,14 +2,8 @@ import { GET_TOTAL_READS } from '@/src/lib/api/APIUtils';
 import { ReadStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetTotalReads.ts
-import {ReadStatus} from '../type';
-import {GET_TOTAL_READS} from '../helper/APIUtils';
-import {useAppSelector} from '../../store/hooks';
-=======
 
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/analytics/useGetTotalReads.ts
+import {useAppSelector} from '../../store/hooks';
 
 export const useGetTotalReads = ({
   user_id,

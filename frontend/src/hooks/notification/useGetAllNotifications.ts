@@ -1,13 +1,8 @@
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {Notification} from '../../schemas/type';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetAllNotifications.ts
-import {PROD_URL} from '../helper/APIUtils';
-import {useAppSelector} from '../../store/hooks';
-=======
 import {PROD_URL} from '../../lib/api/APIUtils';
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/notification/useGetAllNotifications.ts
+import {useAppSelector} from '../../store/hooks';
 type AxiosError = any;
 
 type NotificationRes = {

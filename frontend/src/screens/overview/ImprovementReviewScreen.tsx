@@ -15,15 +15,9 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ImpvReviewScreenProp, Comment} from '../../schemas/type';
 
-<<<<<<< HEAD
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import {hp, wp} from '../../helper/Metric';
-import {GET_STORAGE_DATA} from '../../helper/APIUtils';
-=======
-import {useDispatch, useSelector} from 'react-redux';
 import {hp, wp} from '../../lib/ui/Metric';
 import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
->>>>>>> upstream/main
 
 //import io from 'socket.io-client';
 

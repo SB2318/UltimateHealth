@@ -20,13 +20,8 @@ import PasswordTab from '../../components/profile/PasswordTab';
 import LanguagePreferenceSelector from '../../components/profile/LanguagePreferenceSelector';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
-<<<<<<< HEAD:frontend/src/screens/ProfileEditScreen.tsx
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import {ProfileEditScreenProp} from '../type';
-=======
-import {useDispatch, useSelector} from 'react-redux';
 import {ProfileEditScreenProp} from '../../schemas/type';
->>>>>>> upstream/main:frontend/src/screens/profile/ProfileEditScreen.tsx
 import {
   GET_STORAGE_DATA,
 } from '../../lib/api/APIUtils';

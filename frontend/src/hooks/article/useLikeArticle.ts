@@ -1,13 +1,8 @@
 import axios from 'axios';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
-<<<<<<< HEAD:frontend/src/hooks/useLikeArticle.ts
-import {LIKE_ARTICLE} from '../helper/APIUtils';
 import {useAppSelector} from '../../store/hooks';
-=======
-import {useSelector} from 'react-redux';
 import { LIKE_ARTICLE } from '@/src/lib/api/APIUtils';
 import { ArticleData } from '@/src/schemas/type';
->>>>>>> upstream/main:frontend/src/hooks/article/useLikeArticle.ts
 type AxiosError = any;
 
 export const useLikeArticle = (

@@ -7,25 +7,14 @@ import { View,
   Text,
    FlatList ,
  } from 'react-native';
-<<<<<<< HEAD
-import {ArticleData} from '../../type';
-import {useAppSelector} from '../../store/hooks';
-import ReviewCard from '../../components/ReviewCard';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
-import {hp, wp} from '../../helper/Metric';
-import Loader from '../../components/Loader';
-import {useGetAllArticlesForUser} from '@/src/hooks/useGetUserAllArticles';
-import {NoArticleState} from '../../components/EmptyStates';
-=======
 import {ArticleData} from '../../schemas/type';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import ReviewCard from '../../components/article/ReviewCard';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {hp, wp} from '../../lib/ui/Metric';
 import Loader from '../../components/common/Loader';
 import {useGetAllArticlesForUser} from '@/src/hooks/article/useGetUserAllArticles';
 import {NoArticleState} from '../../components/common/EmptyStates';
->>>>>>> upstream/main
 
 export default function ArticleWorkSpace({
   handleClickAction,

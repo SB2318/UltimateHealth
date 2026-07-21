@@ -1,13 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-<<<<<<< HEAD
-import { RenderSuggestionProp } from '../../type';
-import { useAppDispatch } from '../store/hooks';
-=======
 import { RenderSuggestionProp } from '../../schemas/type';
-import { useDispatch } from 'react-redux';
->>>>>>> upstream/main
+import { useAppDispatch } from '../../store/hooks';
 import { setSuggestionAccepted } from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 // ✅ Re-introduced original project helpers for security sanitization and link safety

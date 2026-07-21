@@ -29,15 +29,9 @@ import HomeScreenHeader from '../../components/home/HomeScreenHeader';
 import {ArticleData, Category, HomeScreenProps} from '../../schemas/type';
 import FilterModal from '../../components/article/FilterModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-<<<<<<< HEAD:frontend/src/screens/HomeScreen.tsx
 import {useAppSelector, useAppDispatch} from '../../store/hooks';
-import Loader from '../components/Loader';
-import {usePreferences} from '../contexts/PreferencesContext';
-=======
-import {useSelector, useDispatch} from 'react-redux';
 import Loader from '../../components/common/Loader';
 import {usePreferences} from '../../contexts/PreferencesContext';
->>>>>>> upstream/main:frontend/src/screens/home/HomeScreen.tsx
 
 import {
   setFilteredArticles,

@@ -2,14 +2,8 @@ import { GET_MONTHLY_READ_REPORT } from '@/src/lib/api/APIUtils';
 import { MonthStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetMonthlyReadReport.ts
-import {MonthStatus} from '../type';
-import {GET_MONTHLY_READ_REPORT} from '../helper/APIUtils';
-import {useAppSelector} from '../../store/hooks';
-=======
 
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/analytics/useGetMonthlyReadReport.ts
+import {useAppSelector} from '../../store/hooks';
 
 export const useGetAuthorMonthlyReadReport = ({
   user_id,

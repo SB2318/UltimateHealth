@@ -5,20 +5,7 @@ import { AppState,  FlatList , StyleSheet, View } from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
-<<<<<<< HEAD:frontend/src/screens/NotificationScreen.tsx
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
-import { hp } from '../helper/Metric';
-import {NoNotificationState} from '../components/EmptyStates';
-import Loader from '../components/Loader';
-import NotificationItem from '../components/NotificationItem';
-import {Notification, NotificationType} from '../type';
-import { useDeleteNotification } from '../hooks/useDeleteNotification';
-import { useGetAllNotifications } from '../hooks/useGetAllNotifications';
-import { useMarkNotificationAsRead } from '../hooks/useMarkNoticationAsRead';
-import {mergeNotificationsById} from '../helper/notificationUtils';
-=======
-import {useDispatch, useSelector} from 'react-redux';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import { hp } from '../../lib/ui/Metric';
 import {NoNotificationState} from '../../components/common/EmptyStates';
@@ -29,7 +16,6 @@ import { useDeleteNotification } from '../../hooks/notification/useDeleteNotific
 import { useGetAllNotifications } from '../../hooks/notification/useGetAllNotifications';
 import { useMarkNotificationAsRead } from '../../hooks/notification/useMarkNoticationAsRead';
 import {mergeNotificationsById} from '../../lib/platform/notificationUtils';
->>>>>>> upstream/main:frontend/src/screens/notification/NotificationScreen.tsx
 
 type PendingDelete = {
   item: Notification;

@@ -6,17 +6,10 @@ import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {PodcastData, PodcastSearchProp} from '../../schemas/type';
 
-<<<<<<< HEAD:frontend/src/screens/PodcastSearch.tsx
 import {useAppSelector} from '../../store/hooks';
-import PodcastCard from '../components/PodcastCard';
-import PodcastSkeletonCard from '../components/PodcastSkeletonCard';
-import {msToTime} from '../helper/Utils';
-=======
-import {useSelector} from 'react-redux';
 import PodcastCard from '../../components/podcast/PodcastCard';
 import PodcastSkeletonCard from '../../components/podcast/PodcastSkeletonCard';
 import {msToTime} from '../../lib/utils/Utils';
->>>>>>> upstream/main:frontend/src/screens/podcast/PodcastSearch.tsx
 import Snackbar from 'react-native-snackbar';
 import NoResults from '../../components/common/NoResult';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';

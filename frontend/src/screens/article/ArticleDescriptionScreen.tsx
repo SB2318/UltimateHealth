@@ -13,13 +13,8 @@ import { View,
   Modal,
    FlatList ,
    } from 'react-native';
-<<<<<<< HEAD
 import {useAppSelector} from '../../store/hooks';
-import {ArticleDescriptionProp, Category} from '../../type';
-=======
-import {useSelector} from 'react-redux';
 import {ArticleDescriptionProp, Category} from '../../schemas/type';
->>>>>>> upstream/main
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {

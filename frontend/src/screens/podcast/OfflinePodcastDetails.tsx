@@ -18,13 +18,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-<<<<<<< HEAD:frontend/src/screens/OfflinePodcastDetails.tsx
-import {formatCount, updateOfflinePodcastLikeStatus} from '../helper/Utils';
-import {useAppDispatch, useAppSelector} from '../../store/hooks';
-=======
 import {formatCount, updateOfflinePodcastLikeStatus} from '../../lib/utils/Utils';
-import {useDispatch, useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/screens/podcast/OfflinePodcastDetails.tsx
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import type {ComponentType} from 'react';
 import {useEffect, useState} from 'react';
 import Snackbar from 'react-native-snackbar';

@@ -2,14 +2,9 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-<<<<<<< HEAD:frontend/src/hooks/useGetMonthlyWriteReport.test.ts
 import * as ReactRedux from '../../store/hooks';
-import {useGetAuthorMonthlyWriteReport} from './useGetMonthlyWriteReport';
-=======
-import * as ReactRedux from 'react-redux';
 import { useGetAuthorMonthlyWriteReport } from '@/src/hooks/analytics/useGetMonthlyWriteReport';
 
->>>>>>> upstream/main:frontend/src/__tests__/hooks/analytics/useGetMonthlyWriteReport.test.ts
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

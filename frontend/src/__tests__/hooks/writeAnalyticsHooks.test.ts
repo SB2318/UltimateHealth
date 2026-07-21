@@ -2,20 +2,12 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-<<<<<<< HEAD:frontend/src/hooks/__tests__/writeAnalyticsHooks.test.ts
 import {useAppSelector} from '../../store/hooks';
-import {GET_MONTHLY_WRITES_REPORT, GET_TOTAL_WRITES, GET_YEARLY_WRITES_REPORT} from '../../helper/APIUtils';
-import {useGetAuthorMonthlyWriteReport} from '../useGetMonthlyWriteReport';
-import {useGetTotalWrites} from '../useGetTotalWrites';
-import {useGetAuthorYearlyWriteReport} from '../useGetYearlyWriteReport';
-=======
-import {useSelector} from 'react-redux';
 import {GET_MONTHLY_WRITES_REPORT, GET_TOTAL_WRITES, GET_YEARLY_WRITES_REPORT} from '../../lib/api/APIUtils';
 import { useGetAuthorMonthlyWriteReport } from '@/src/hooks/analytics/useGetMonthlyWriteReport';
 import { useGetTotalWrites } from '@/src/hooks/analytics/useGetTotalWrites';
 import { useGetAuthorYearlyWriteReport } from '@/src/hooks/analytics/useGetYearlyWriteReport';
 
->>>>>>> upstream/main:frontend/src/__tests__/hooks/writeAnalyticsHooks.test.ts
 
 jest.mock('axios');
 jest.mock('../../store/hooks', () => ({

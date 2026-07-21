@@ -9,13 +9,8 @@ import { Modal,
   TouchableOpacity,
    TextInput ,
  } from 'react-native';
-<<<<<<< HEAD:frontend/src/components/CreatePlaylist.tsx
 import {useAppSelector} from '../../store/hooks';
-import {PRIMARY_COLOR} from '../helper/Theme';
-=======
-import {useSelector} from 'react-redux';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
->>>>>>> upstream/main:frontend/src/components/playlist/CreatePlaylist.tsx
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Feather from '@expo/vector-icons/Feather';

@@ -9,23 +9,13 @@ import { FlatList ,
   useColorScheme,
  } from 'react-native';
 import { useTheme } from 'tamagui';
-<<<<<<< HEAD
-import {EditRequest} from '../../type';
-import {useAppSelector} from '../../store/hooks';
-import Loader from '../../components/Loader';
-import ImprovementCard from '../../components/ImprovementCard';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import {hp, wp} from '../../helper/Metric';
-import {useGetAllImprovementsForReview} from '@/src/hooks/useGetUserAllImprovements';
-=======
 import {EditRequest} from '../../schemas/type';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import Loader from '../../components/common/Loader';
 import ImprovementCard from '../../components/article/ImprovementCard';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {hp, wp} from '../../lib/ui/Metric';
 import {useGetAllImprovementsForReview} from '@/src/hooks/improvement/useGetUserAllImprovements';
->>>>>>> upstream/main
 import {ProfessionalColors} from '../../styles/GlassStyles';
 import {NoArticleState} from '../../components/common/EmptyStates';
 

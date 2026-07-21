@@ -11,21 +11,12 @@ import {
   useColorScheme,
 } from 'react-native';
 import {useEffect, useRef, useState} from 'react';
-<<<<<<< HEAD:frontend/src/components/ArticleCard.tsx
-import AccessibleTouchable from './common/AccessibleTouchable';
-import {fp} from '../helper/Metric';
-import {ArticleCardProps, ArticleData} from '../type';
-import { formatDateShort } from '../helper/dateUtils';
-import { getReadTime, calculateReadTime } from '../utils/readTime';
-import {useAppSelector} from '../../store/hooks';
-=======
 import AccessibleTouchable from '../common/AccessibleTouchable';
 import {fp} from '../../lib/ui/Metric';
 import {ArticleCardProps, ArticleData} from '../../schemas/type';
 import { formatDateShort } from '../../lib/utils/dateUtils';
 import { getReadTime, calculateReadTime } from '../../lib/utils/readTime';
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/components/article/ArticleCard.tsx
+import {useAppSelector} from '../../store/hooks';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import IonIcons from '@expo/vector-icons/Ionicons';
 import {GET_IMAGE} from '../../lib/api/APIUtils';

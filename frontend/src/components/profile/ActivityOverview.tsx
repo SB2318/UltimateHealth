@@ -17,21 +17,12 @@ import {
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 //import {LineChart} from 'react-native-gifted-charts';
 import {BarChart} from 'react-native-chart-kit';
-<<<<<<< HEAD:frontend/src/components/ActivityOverview.tsx
-import { getCurrentYear, formatDateShortYear } from '../helper/dateUtils';
-import {fp, hp} from '../helper/Metric';
-import {useAppSelector} from '../../store/hooks';
-import {GET_IMAGE} from '../helper/APIUtils';
-import {ArticleData, MonthStatus, YearStatus} from '../type';
-import Loader from './Loader';
-=======
 import { getCurrentYear, formatDateShortYear } from '../../lib/utils/dateUtils';
 import {fp, hp} from '../../lib/ui/Metric';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {GET_IMAGE} from '../../lib/api/APIUtils';
 import {ArticleData, MonthStatus, YearStatus} from '../../schemas/type';
 import Loader from '../common/Loader';
->>>>>>> upstream/main:frontend/src/components/profile/ActivityOverview.tsx
 
 import {useFocusEffect} from '@react-navigation/native';
 import {Dropdown} from 'react-native-element-dropdown';

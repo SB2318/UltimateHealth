@@ -5,19 +5,11 @@ import { PlaylistDetailScreenProp, PodcastData } from '../../schemas/type';
 import PodcastCard from '../../components/podcast/PodcastCard';
 import { msToTime } from '../../lib/utils/Utils';
 import Snackbar from 'react-native-snackbar';
-<<<<<<< HEAD:frontend/src/screens/PlaylistDetailScreen.tsx
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { useUpdatePodcastViewcount } from '../hooks/useUpdatePodcastViewcount';
-import { NoPodcastState } from '../components/EmptyStates';
-import CreatePlaylist from '../components/CreatePlaylist';
-import { setaddedPodcastId } from '../store/dataSlice';
-=======
-import { useSelector, useDispatch } from 'react-redux';
 import { useUpdatePodcastViewcount } from '../../hooks/podcast/useUpdatePodcastViewcount';
 import { NoPodcastState } from '../../components/common/EmptyStates';
 import CreatePlaylist from '../../components/playlist/CreatePlaylist';
 import { setaddedPodcastId } from '../../store/dataSlice';
->>>>>>> upstream/main:frontend/src/screens/playlist/PlaylistDetailScreen.tsx
 
 export default function PlaylistDetailScreen({ navigation, route }: PlaylistDetailScreenProp) {
   const { playlist } = route.params;

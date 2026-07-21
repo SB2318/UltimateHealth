@@ -1,12 +1,7 @@
  
 import { AlertDialog, Button, XStack, YStack } from "tamagui";
-<<<<<<< HEAD:frontend/src/components/CustomAlert.tsx
-import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
-import { hideAlert } from "../store/alertSlice";
-=======
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { hideAlert } from "../../store/alertSlice";
->>>>>>> upstream/main:frontend/src/components/common/CustomAlert.tsx
 
 export function CustomAlertDialog() {
   const dispatch = useAppDispatch();

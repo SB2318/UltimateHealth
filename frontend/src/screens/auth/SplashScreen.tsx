@@ -8,18 +8,9 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
-<<<<<<< HEAD:frontend/src/screens/SplashScreen.tsx
-import {SplashScreenProp} from '../type';
-import {useAppDispatch} from '../store/hooks';
-import {KEYS, clearStorage, retrieveItem} from '../helper/Utils';
-import {setUserId, setUserToken, setUserHandle} from '../store/UserSlice';
-import { useCheckTokenStatus } from '@/src/hooks/useGetTokenStatus';
-import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../helper/SecureStorageUtils';
-=======
 import {SplashScreenProp} from '../../schemas/type';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {RootState} from '../../store/ReduxStore';
->>>>>>> upstream/main:frontend/src/screens/auth/SplashScreen.tsx
 
 export default function SplashScreen({navigation}: SplashScreenProp) {
   const opacity = useSharedValue(0);

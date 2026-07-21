@@ -2,14 +2,9 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-<<<<<<< HEAD:frontend/src/hooks/useGetUserDetails.test.ts
 import * as ReactRedux from '../../store/hooks';
-import {useGetUserDetails} from './useGetUserDetails';
-=======
-import * as ReactRedux from 'react-redux';
 import { useGetUserDetails } from '@/src/hooks/profile/useGetUserDetails';
 
->>>>>>> upstream/main:frontend/src/__tests__/hooks/profile/useGetUserDetails.test.ts
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

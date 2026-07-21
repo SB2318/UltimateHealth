@@ -12,17 +12,10 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-<<<<<<< HEAD:frontend/src/screens/PersonaLobbyScreen.tsx
-import { useAppSelector } from "@/src/store/hooks";
-import { useGetCharacters } from '../hooks/useGetCharacters';
-import { PRIMARY_COLOR } from '../helper/Theme';
-import { PersonaLobbyScreenProps, Character } from '../type';
-=======
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../store/hooks';
 import { useGetCharacters } from '../../hooks/ai/useGetCharacters';
 import { PRIMARY_COLOR } from '../../lib/ui/Theme';
 import { PersonaLobbyScreenProps, Character } from '../../schemas/type';
->>>>>>> upstream/main:frontend/src/screens/ai/PersonaLobbyScreen.tsx
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 

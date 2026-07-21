@@ -2,13 +2,7 @@ import { GET_ALL_ARTICLES_FOR_USER } from '@/src/lib/api/APIUtils';
 import { ArticleData } from '@/src/schemas/type';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetUserAllArticles.ts
-import { ArticleData } from '../type';
-import { GET_ALL_ARTICLES_FOR_USER } from '../helper/APIUtils';
-import { useAppSelector } from '../store/hooks';
-=======
-import { useSelector } from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/article/useGetUserAllArticles.ts
+import { useAppSelector } from '../../store/hooks';
 
 interface Props {
   page: number;

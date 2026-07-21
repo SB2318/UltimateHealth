@@ -2,14 +2,8 @@ import { GET_YEARLY_READ_REPORT } from '@/src/lib/api/APIUtils';
 import { YearStatus } from '@/src/schemas/type';
 import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
-<<<<<<< HEAD:frontend/src/hooks/useGetYearlyReadReport.ts
-import {YearStatus} from '../type';
-import {GET_YEARLY_READ_REPORT} from '../helper/APIUtils';
-import {useAppSelector} from '../../store/hooks';
-=======
 
-import {useSelector} from 'react-redux';
->>>>>>> upstream/main:frontend/src/hooks/analytics/useGetYearlyReadReport.ts
+import {useAppSelector} from '../../store/hooks';
 
 export const useGetAuthorYearlyReadReport = ({
   user_id,

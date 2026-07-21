@@ -2,14 +2,9 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-<<<<<<< HEAD:frontend/src/hooks/useGetImprovementById.test.ts
 import * as ReactRedux from '../../store/hooks';
-import {useGetImprovementById} from './useGetImprovementById';
-=======
-import * as ReactRedux from 'react-redux';
 import { useGetImprovementById } from '@/src/hooks/improvement/useGetImprovementById';
 
->>>>>>> upstream/main:frontend/src/__tests__/hooks/improvement/useGetImprovementById.test.ts
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;

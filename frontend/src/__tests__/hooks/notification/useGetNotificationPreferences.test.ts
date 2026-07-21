@@ -2,14 +2,9 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-<<<<<<< HEAD:frontend/src/hooks/useGetNotificationPreferences.test.ts
 import * as ReactRedux from '../../store/hooks';
-import {useGetNotificationPreferences} from './useGetNotificationPreferences';
-=======
-import * as ReactRedux from 'react-redux';
 import { useGetNotificationPreferences } from '@/src/hooks/notification/useGetNotificationPreferences';
 
->>>>>>> upstream/main:frontend/src/__tests__/hooks/notification/useGetNotificationPreferences.test.ts
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
