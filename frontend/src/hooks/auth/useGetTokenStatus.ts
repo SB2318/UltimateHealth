@@ -6,7 +6,7 @@ import { SECURE_KEYS, SecureKey, secureRetrieveItem } from '../../lib/storage/Se
 import { TokenStatus } from '@/src/schemas/type';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
-import { useAppSelector } from '../store/hooks';
+import { useAppSelector } from '../../store/hooks';
 
  const checkTokenStatusApi = async (
   token: string,

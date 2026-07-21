@@ -2,7 +2,7 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-import * as ReactRedux from '../../store/hooks';
+import * as ReactRedux from '../../../store/hooks';
 import { useGetUnreadNotificationCount } from '@/src/hooks/notification/useGetUnreadNotificationCount';
 
 

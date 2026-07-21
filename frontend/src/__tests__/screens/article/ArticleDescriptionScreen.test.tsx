@@ -129,7 +129,7 @@ describe('ArticleDescriptionScreen - Tag Selection and Deselection Tests', () =>
       },
     };
     
-    const redux = require('../../store/hooks');
+    const redux = require('../../../store/hooks');
     jest.spyOn(redux, 'useAppSelector').mockImplementation((fn: any) => fn(stateWithDbIds));
 
     const {getAllByText} = render(
@@ -166,7 +166,7 @@ describe('ArticleDescriptionScreen - Tag Selection and Deselection Tests', () =>
       },
     };
     
-    const redux = require('../../store/hooks');
+    const redux = require('../../../store/hooks');
     jest.spyOn(redux, 'useAppSelector').mockImplementation((fn: any) => fn(stateWithIds));
 
     const {getAllByText} = render(

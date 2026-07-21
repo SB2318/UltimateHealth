@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useEffect } from 'react';
 import * as Notifications from 'expo-notifications';
-import { logger } from '../src/services/monitoring/logger';
+import { logger } from '../../lib/services/monitoring/logger';
 
 export function useNotificationListeners() {
   useEffect(() => {

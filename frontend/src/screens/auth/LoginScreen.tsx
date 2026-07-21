@@ -11,7 +11,7 @@ import * as z from 'zod';
 import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
-import {useAppDispatch} from '../store/hooks';
+
 import {
   Button,
   Input,
@@ -39,6 +39,7 @@ import {
 } from '../../store/UserSlice';
 
 import { AuthData, LoginScreenProp } from '../../schemas/type';
+import { useAppDispatch } from '@/src/store/hooks';
 type AxiosError = any;
 
 const loginSchema = z.object({

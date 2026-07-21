@@ -14,9 +14,9 @@ import {BUTTON_COLOR} from '../lib/ui/Theme';
 import HeaderRightMenu from '../components/common/HeaderRightMenu';
 import PersonaLobbyScreen from '../screens/ai/PersonaLobbyScreen';
 import AcademyStackNavigation from './AcademyStackNavigation';
-import {useAppSelector} from '../../store/hooks';
 import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
-import WellnessDashboardScreen from '../screens/wellness/WellnessDashboardScreen';
+import { useAppSelector } from '../store/hooks';
+
 
 
 const Tab = createBottomTabNavigator<TabParamList>();

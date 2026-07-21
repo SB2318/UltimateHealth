@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
-import {render, fireEvent, waitFor} from '@testing-library/react-native';
+import {render, fireEvent} from '@testing-library/react-native';
 
-import {GiftedChat} from 'react-native-gifted-chat';
 import ChatbotScreen from '@/src/screens/ai/ChatbotScreen';
 
 jest.mock('react-native-gifted-chat', () => {
@@ -81,7 +80,7 @@ jest.mock('react-native-snackbar', () => ({
   LENGTH_SHORT: 0,
 }));
 
-jest.mock('../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppSelector: jest.fn(),
   useAppDispatch: jest.fn(() => jest.fn()),
 }));
@@ -100,7 +99,7 @@ jest.mock('../../../hooks/ai/useLoadAIChats', () => ({
   useLoadAIConversations: jest.fn(),
 }));
 
-const mockuseAppSelector = require('../../store/hooks').useAppSelector as jest.Mock;
+const mockuseAppSelector = require('../../../store/hooks').useAppSelector as jest.Mock;
 const mockUseSendMessageToGemini = require('../../../hooks/ai/useSendMessageToGemini').useSendMessageToGemini as jest.Mock;
 const mockUseLoadAIConversations = require('../../../hooks/ai/useLoadAIChats').useLoadAIConversations as jest.Mock;
 

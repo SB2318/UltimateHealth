@@ -19,10 +19,10 @@ import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {EditorScreenProp} from '../../schemas/type';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useAppDispatch} from '../store/hooks';
 import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 import {createHTMLStructure} from '../../lib/utils/Utils';
+import { useAppDispatch } from '@/src/store/hooks';
 
 // Feature:
 // If you want to discard your post, in that case no post will upload into storage,

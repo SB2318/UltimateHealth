@@ -2,8 +2,10 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import axios from 'axios';
-import { useGetTotalWrites } from '../useGetTotalWrites';
-import { useAppSelector } from '../../store/hooks';
+
+import { useGetTotalWrites } from '../analytics/useGetTotalWrites';
+import { useAppSelector } from '@/src/store/hooks';
+
 
 // ─── Mocks ───────────────────────────────────────────────────────────────────
 
@@ -11,10 +13,9 @@ jest.mock('axios');
 const mockedAxios = axios as unknown as jest.Mocked<typeof axios>;
 
 // Mock react-redux so we can control the isGuest selector per test
-jest.mock('../../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppSelector: jest.fn(),
 }));
-import { useAppSelector } from '../store/hooks';
 const mockeduseAppSelector = useAppSelector as unknown as jest.Mock;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

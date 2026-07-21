@@ -11,12 +11,12 @@ import messaging from '@react-native-firebase/messaging';
 import { addEventListener } from '@react-native-community/netinfo';
 import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 
-import { FirebaseProvider } from '@/hooks/FirebaseContext';
-import { useNotificationListeners } from '@/hooks/useNotificationListener';
+import { FirebaseProvider } from '../../contexts/FirebaseContext';
+import { useNotificationListeners } from '../../hooks/notification/useNotificationListener';
 import { useVersionCheck } from '@/src/hooks/app/useVersionCheck';
 import { SocketProvider } from '../../contexts/SocketContext';
 import { PreferencesProvider } from '../../contexts/PreferencesContext';
-import config from '../../tamagui.config';
+import config from '../../../tamagui.config';
 
 import { initDeepLinking, navigateDeepLink, resolveNotificationTarget, resolveDeepLinkTarget } from '../../lib/platform/DeepLinkService';
 import { firebaseInit } from '../../lib/platform/firebase';

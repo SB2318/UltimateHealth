@@ -2,19 +2,19 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-import {useAppSelector} from '../../store/hooks';
-import {GET_MONTHLY_WRITES_REPORT, GET_TOTAL_WRITES, GET_YEARLY_WRITES_REPORT} from '../../lib/api/APIUtils';
+import {useAppSelector} from '../../../store/hooks';
+import {GET_MONTHLY_WRITES_REPORT, GET_TOTAL_WRITES, GET_YEARLY_WRITES_REPORT} from '../../../lib/api/APIUtils';
 import { useGetAuthorMonthlyWriteReport } from '@/src/hooks/analytics/useGetMonthlyWriteReport';
 import { useGetTotalWrites } from '@/src/hooks/analytics/useGetTotalWrites';
 import { useGetAuthorYearlyWriteReport } from '@/src/hooks/analytics/useGetYearlyWriteReport';
 
 
 jest.mock('axios');
-jest.mock('../../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppSelector: jest.fn(),
 }));
 
-const mockedAxios = axios as unknown jest.Mocked<typeof axios>;
+const mockedAxios = axios as unknown as jest.Mocked<typeof axios>;
 const mockeduseAppSelector = useAppSelector as unknown as jest.Mock;
 
 function makeWrapper() {

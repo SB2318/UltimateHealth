@@ -2,8 +2,8 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import axios from 'axios';
-import { useGetAuthorMonthlyWriteReport } from '../useGetMonthlyWriteReport';
 import { useAppSelector } from '../../store/hooks';
+import { useGetAuthorMonthlyWriteReport } from '../analytics/useGetMonthlyWriteReport';
 
 // ─── Mocks ───────────────────────────────────────────────────────────────────
 
@@ -13,7 +13,7 @@ const mockedAxios = axios as unknown as jest.Mocked<typeof axios>;
 jest.mock('../../store/hooks', () => ({
   useAppSelector: jest.fn(),
 }));
-import { useAppSelector } from '../../store/hooks';
+
 const mockeduseAppSelector = useAppSelector as unknown as jest.Mock;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

@@ -12,7 +12,7 @@
 import React from 'react';
 import {Alert} from 'react-native';
 import {render, fireEvent, waitFor} from '@testing-library/react-native';
-import {Provider} from '../store/hooks';
+import {Provider} from '../../../store/hooks';
 import {configureStore} from '@reduxjs/toolkit';
 import PreviewScreen from '../../../screens/article/PreviewScreen';
 

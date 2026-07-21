@@ -73,7 +73,7 @@ const mockPreferences = {
   message: 'Success',
 };
 
-const mockuseAppSelector = require('../../store/hooks').useAppSelector as jest.Mock;
+const mockuseAppSelector = require('../../../store/hooks').useAppSelector as jest.Mock;
 const mockUseGetCategories = require('../../../hooks/article/useGetArticleTags').useGetCategories as jest.Mock;
 const mockUseGetNotificationPreferences = require('../../../hooks/notification/useGetNotificationPreferences').useGetNotificationPreferences as jest.Mock;
 const mockUseUpdateNotificationPreferences = require('../../../hooks/notification/useUpdateNotificationPreferences').useUpdateNotificationPreferences as jest.Mock;

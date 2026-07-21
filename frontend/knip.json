@@ -1,13 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
-  "entry": [
-    "App.tsx",
-    "app.config.js"
-  ],
-  "project": [
-    "src/**/*.{ts,tsx,js,jsx}",
-    "src/**/*.d.ts"
-  ],
   "ignore": [
     "**/*.config.{ts,js,mjs,cjs}",
     "babel.config.js",

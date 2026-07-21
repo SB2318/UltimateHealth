@@ -1,11 +1,13 @@
 import {registerRootComponent} from 'expo';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {Provider} from '../store/hooks';
+import {Provider} from 'react-redux';
 import store from './src/store/ReduxStore';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import App from './App';
 import messaging from '@react-native-firebase/messaging';
 import {StyleSheet, Platform} from 'react-native';
+
+import { logger } from './src/lib/services/monitoring/logger';
 
 if (Platform.OS === 'web') {
   const style = document.createElement('style');
@@ -17,9 +19,7 @@ if (Platform.OS === 'web') {
     }
   `;
   document.head.appendChild(style);
-}
-
-import { logger } from './src/services/monitoring/logger';// Firebase background handler must be registered at the app root (run once,
+}// Firebase background handler must be registered at the app root (run once,
 // before any component mounts). FCM requires this to be at module scope.
 // NOTE: initMonitoring() is intentionally NOT called here — it has been moved
 // to AppContent.tsx's first useEffect so that expo-application metadata

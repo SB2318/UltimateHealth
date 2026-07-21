@@ -2,9 +2,9 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
-import { useGetAuthorYearlyReadReport } from '../useGetYearlyReadReport';
 
 import axios from 'axios';
+import { useGetAuthorYearlyReadReport } from '../analytics/useGetYearlyReadReport';
 
 const mockedAxios = axios as unknown as jest.Mocked<typeof axios>;
 

@@ -2,9 +2,9 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
-import { useGetTotalLikeViewStatus } from '../useGetTotalLikeViewStatus';
 
 import axios from 'axios';
+import { useGetTotalLikeViewStatus } from '../analytics/useGetTotalLikeViewStatus';
 const mockedAxios = axios as unknown as jest.Mocked<typeof axios>;
 
 beforeEach(() => {
@@ -17,7 +17,7 @@ jest.mock('axios', () => ({
   get: jest.fn(),
 }));
 
-jest.mock('../../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppSelector: jest.fn(() => false),
 }));
 

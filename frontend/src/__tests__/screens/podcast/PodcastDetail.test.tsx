@@ -186,7 +186,7 @@ let mockState: any = {
   },
 };
 
-const mockuseAppSelector = require('../../store/hooks').useAppSelector as jest.Mock;
+const mockuseAppSelector = require('../../../store/hooks').useAppSelector as jest.Mock;
 const mockUseGetSinglePodcastDetails = require('../../../hooks/podcast/useGetSinglePodcastDetails').useGetSinglePodcastDetails as jest.Mock;
 const mockUseLikePodcast = require('../../../hooks/podcast/useLikePodcast').useLikePodcast as jest.Mock;
 

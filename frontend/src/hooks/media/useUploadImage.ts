@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {useState} from 'react';
 import { showAlert } from '@/src/store/alertSlice';
-import { useAppDispatch } from '../store/hooks';
 import { Alert } from 'react-native';
 import { UPLOAD_STORAGE } from '../../lib/api/APIUtils';
 import { fetchWithTimeout } from '../../lib/api/ApiTimeout';
+import { useAppDispatch } from '@/src/store/hooks';
 
 const useUploadImage = () => {
   const [loading, setLoading] = useState(false);

@@ -2,9 +2,9 @@ import { renderHook, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
-import { useGetTotalReads } from '../useGetTotalReads';
 
 import axios from 'axios';
+import { useGetTotalReads } from '../analytics/useGetTotalReads';
 
 jest.mock('axios', () => ({
   get: jest.fn(),
