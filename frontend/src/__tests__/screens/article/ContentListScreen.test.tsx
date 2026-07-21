@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native';
 import ContentListScreen from '@/src/screens/article/ContentListScreen';
 
 
-jest.mock('../../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppSelector: jest.fn(() => ({ isConnected: true })),
   useAppDispatch: () => jest.fn(),
 }));

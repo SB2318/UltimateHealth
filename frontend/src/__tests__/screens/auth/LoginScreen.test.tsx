@@ -9,7 +9,7 @@ const mockNavigate = jest.fn();
 const mockReset = jest.fn();
 const mockDispatch = jest.fn();
 
-jest.mock('../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppDispatch: () => mockDispatch,
 }));
 

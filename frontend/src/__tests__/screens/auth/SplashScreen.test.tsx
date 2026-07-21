@@ -13,18 +13,20 @@ let mockUserToken: string | null = 'valid-token';
 
 const mockDispatch = jest.fn();
 
-jest.mock('../../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppDispatch: () => mockDispatch,
-  useAppSelector: jest.fn(),
+  useAppSelector: jest.fn((selector: any) =>
+    selector({ user: { user_token: mockUserToken } }),
+  ),
 }));
 
 const mockCheckTokenStatus = jest.fn();
-jest.mock('@/src/hooks/useGetTokenStatus', () => ({
+jest.mock('@/src/hooks/auth/useGetTokenStatus', () => ({
   useCheckTokenStatus: () => mockCheckTokenStatus(),
 }));
 
-jest.mock('../../helper/Utils', () => {
-  const original = jest.requireActual('../../helper/Utils');
+jest.mock('../../../lib/utils/Utils', () => {
+  const original = jest.requireActual('../../../lib/utils/Utils');
   return {
     ...original,
     clearStorage: jest.fn(() => Promise.resolve()),

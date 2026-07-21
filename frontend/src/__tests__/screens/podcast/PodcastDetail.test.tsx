@@ -62,7 +62,7 @@ jest.mock('react-native-share', () => ({
   open: jest.fn(),
 }));
 
-jest.mock('../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppSelector: jest.fn(),
   useAppDispatch: jest.fn(() => jest.fn()),
 }));

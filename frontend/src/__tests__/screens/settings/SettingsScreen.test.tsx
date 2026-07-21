@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import SettingsScreen from '../../../screens/settings/SettingsScreen';
 
-jest.mock('../../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppSelector: jest.fn(() => ({ isConnected: true })),
   useAppDispatch: () => jest.fn(),
 }));

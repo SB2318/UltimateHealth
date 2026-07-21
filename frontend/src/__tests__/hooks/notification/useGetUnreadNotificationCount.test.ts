@@ -9,7 +9,7 @@ import { useGetUnreadNotificationCount } from '@/src/hooks/notification/useGetUn
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-jest.mock('../../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppSelector: jest.fn(),
   useAppDispatch: jest.fn(),
 }));

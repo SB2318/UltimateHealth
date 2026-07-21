@@ -23,7 +23,7 @@ jest.mock('react-native-snackbar', () => ({
   LENGTH_SHORT: 0,
 }));
 
-jest.mock('../../store/hooks', () => ({
+jest.mock('../../../store/hooks', () => ({
   useAppSelector: jest.fn(() => ({user_id: 'user123'})),
   useAppDispatch: jest.fn(() => jest.fn()),
 }));
