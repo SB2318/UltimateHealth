@@ -2,9 +2,9 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import SettingsScreen from '../SettingsScreen';
 
-jest.mock('react-redux', () => ({
-  useSelector: jest.fn(() => ({ isConnected: true })),
-  useDispatch: () => jest.fn(),
+jest.mock('../../store/hooks', () => ({
+  useAppSelector: jest.fn(() => ({ isConnected: true })),
+  useAppDispatch: () => jest.fn(),
 }));
 
 jest.mock('@expo/vector-icons/MaterialCommunityIcons', () => 'MaterialCommunityIcon');

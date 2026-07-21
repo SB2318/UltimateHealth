@@ -8,7 +8,7 @@ import PodcastCard from '../components/PodcastCard';
 import {hp} from '../helper/Metric';
 import {ON_PRIMARY_COLOR} from '../helper/Theme';
 import Snackbar from 'react-native-snackbar';
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import CreatePlaylist from '../components/CreatePlaylist';
 import { setaddedPodcastId, setRemovePlaylistId } from '../store/dataSlice';
 import { NoOfflinePodcastsState, OfflinePodcastLoadErrorState } from '../components/EmptyStates';

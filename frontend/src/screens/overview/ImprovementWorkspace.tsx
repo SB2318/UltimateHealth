@@ -10,7 +10,7 @@ import { FlatList ,
  } from 'react-native';
 import { useTheme } from 'tamagui';
 import {EditRequest} from '../../type';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import Loader from '../../components/Loader';
 import ImprovementCard from '../../components/ImprovementCard';
 import {PRIMARY_COLOR} from '../../helper/Theme';

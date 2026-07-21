@@ -19,7 +19,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 import Loader from '../../components/Loader';
 import {GET_IMAGE} from '../../helper/APIUtils';
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import useUploadImage from '../../hooks/useUploadImage';
 import {setSuggestion} from '../../store/dataSlice';
 import Snackbar from 'react-native-snackbar';

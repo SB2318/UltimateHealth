@@ -2,7 +2,7 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 import {UserStatus} from '../type';
 import {GET_TOTAL_LIKES_VIEWS} from '../helper/APIUtils';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 
 export const useGetTotalLikeViewStatus = ({
   user_id,

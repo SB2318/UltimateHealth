@@ -2,7 +2,7 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 import {ReadStatus} from '../type';
 import {GET_TOTAL_READS} from '../helper/APIUtils';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 
 export const useGetTotalReads = ({
   user_id,

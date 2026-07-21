@@ -3,7 +3,7 @@ import React, {useCallback, useState, useMemo} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import ArticleCard from '../components/ArticleCard';
-import {useSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import { useTheme } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData} from '../type';
@@ -22,7 +22,7 @@ const ContentListScreen = ({navigation, route}: Props) => {
   const initialType = route.params?.type || 'articles';
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [selectedTab, setSelectedTab] = useState<'articles' | 'reposts' | 'saved'>(initialType);

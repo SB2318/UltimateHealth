@@ -2,7 +2,7 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 import {GET_REPORT_REASONS} from '../helper/APIUtils';
 import {ReportReason} from '../type';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 type AxiosError = any;
 
 const reasonsFunc = async () => {

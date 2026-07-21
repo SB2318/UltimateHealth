@@ -2,7 +2,7 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {EditRequest} from '../type';
 import axios from 'axios';
 import {GET_IMPROVEMENT_BY_ID} from '../helper/APIUtils';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 type AxiosError = any;
 
 export const useGetImprovementById = (

@@ -2,7 +2,7 @@ import axios from 'axios';
 import {ArticleData} from '../type';
 import {useMutation, UseMutationResult} from '@tanstack/react-query';
 import {LIKE_ARTICLE} from '../helper/APIUtils';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 type AxiosError = any;
 
 export const useLikeArticle = (

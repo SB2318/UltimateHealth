@@ -8,7 +8,7 @@ import {useArticleRoom} from './useArticleRoom';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-jest.mock('react-redux', () => ({
+jest.mock('../../store/hooks', () => ({
   useAppSelector: jest.fn(),
 }));
 

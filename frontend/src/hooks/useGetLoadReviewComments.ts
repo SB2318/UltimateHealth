@@ -2,7 +2,7 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 import {LOAD_REVIEW_COMMENTS} from '../helper/APIUtils';
 import {Comment} from '../type';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 type AxiosError = any;
 
 export const useGetLoadReviewComments = (

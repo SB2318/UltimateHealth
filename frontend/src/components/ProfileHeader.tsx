@@ -26,7 +26,7 @@ import {fp, hp, wp} from '../helper/Metric';
 
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
 import {buildMailLink, buildPhoneLink} from '../helper/contactLinks';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
 
 const ProfileHeader = ({

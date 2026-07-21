@@ -2,7 +2,7 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import {PlayList} from '../type';
 import {GET_PLAYLIST} from '../helper/APIUtils';
 import axios from 'axios';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 type AxiosError = any;
 
 export const useGetPlaylists = (): UseQueryResult<PlayList[], AxiosError> => {

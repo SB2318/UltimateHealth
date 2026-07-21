@@ -17,7 +17,7 @@ jest.mock('axios', () => ({
   get: jest.fn(),
 }));
 
-jest.mock('react-redux', () => ({
+jest.mock('../../store/hooks', () => ({
   useAppSelector: jest.fn(() => false),
 }));
 

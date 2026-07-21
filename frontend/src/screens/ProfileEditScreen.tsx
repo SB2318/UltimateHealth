@@ -20,7 +20,7 @@ import PasswordTab from '../components/PasswordTab';
 import LanguagePreferenceSelector from '../components/LanguagePreferenceSelector';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {ProfileEditScreenProp} from '../type';
 import {
   GET_STORAGE_DATA,

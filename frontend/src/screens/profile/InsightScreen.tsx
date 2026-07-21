@@ -11,7 +11,7 @@ import Loader from '../../components/Loader';
 import {useGetProfile} from '../../hooks/useGetProfile';
 import {useUpdateViewCount} from '../../hooks/useUpdateViewCount';
 import Snackbar from 'react-native-snackbar';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 const InsightScreen = ({navigation}: InsightScreenProp) => {

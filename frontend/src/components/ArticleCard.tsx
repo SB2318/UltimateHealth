@@ -16,7 +16,7 @@ import {fp} from '../helper/Metric';
 import {ArticleCardProps, ArticleData} from '../type';
 import { formatDateShort } from '../helper/dateUtils';
 import { getReadTime, calculateReadTime } from '../utils/readTime';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import IonIcons from '@expo/vector-icons/Ionicons';
 import {GET_IMAGE} from '../helper/APIUtils';

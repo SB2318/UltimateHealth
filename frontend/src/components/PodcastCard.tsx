@@ -10,7 +10,7 @@ import PodcastActions from './PodcastActions';
 import Share from 'react-native-share';
 import {GET_STORAGE_DATA} from '../helper/APIUtils';
 import {GlassStyles, ProfessionalColors, BorderRadius} from '../styles/GlassStyles';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import { PODCAST_CARD } from '@/constants/podcastCard';
 import {getPlaybackPosition, PlaybackPosition} from '../helper/PlaybackManager';

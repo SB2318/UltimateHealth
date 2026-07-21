@@ -8,7 +8,7 @@ import {
   Send,
 } from 'react-native-gifted-chat';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {
   View,
   Image,

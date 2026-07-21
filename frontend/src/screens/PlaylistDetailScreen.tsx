@@ -5,7 +5,7 @@ import { PlaylistDetailScreenProp, PodcastData } from '../type';
 import PodcastCard from '../components/PodcastCard';
 import { msToTime } from '../helper/Utils';
 import Snackbar from 'react-native-snackbar';
-import { useAppSelector, useAppDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { useUpdatePodcastViewcount } from '../hooks/useUpdatePodcastViewcount';
 import { NoPodcastState } from '../components/EmptyStates';
 import CreatePlaylist from '../components/CreatePlaylist';

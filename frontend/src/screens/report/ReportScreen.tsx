@@ -8,7 +8,7 @@ import { View,
   TouchableOpacity,
  } from 'react-native';
 import {ReportScreenProp} from '../../type';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import Loader from '../../components/Loader';
 import {RadioButton} from 'react-native-paper';
 import Snackbar from 'react-native-snackbar';

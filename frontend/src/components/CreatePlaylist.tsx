@@ -9,7 +9,7 @@ import { Modal,
   TouchableOpacity,
    TextInput ,
  } from 'react-native';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {PRIMARY_COLOR} from '../helper/Theme';
 import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';

@@ -12,7 +12,7 @@ import { View,
    FlatList ,
   Alert,
    } from 'react-native';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {PodcastFormProp, Category} from '../type';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../helper/Theme';

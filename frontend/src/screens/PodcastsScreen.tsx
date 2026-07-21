@@ -12,7 +12,7 @@ import {YStack, View, XStack} from 'tamagui';
 import PodcastCard from '../components/PodcastCard';
 import {hp} from '../helper/Metric';
 import {PodcastData, PodcastScreenProps} from '../type';
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {downloadAudio, msToTime} from '../helper/Utils';
 import Snackbar from 'react-native-snackbar';
 import {setaddedPodcastId, setPodcasts, appendPodcasts} from '../store/dataSlice';

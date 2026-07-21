@@ -8,7 +8,7 @@ import { View,
    FlatList ,
  } from 'react-native';
 import {PodcastData} from '../../type';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import PodcastReviewCard from '../../components/PodcastReviewCard';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';

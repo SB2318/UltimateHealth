@@ -2,14 +2,14 @@ import axios from 'axios';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {GET_MONTHLY_WRITES_REPORT, GET_TOTAL_WRITES, GET_YEARLY_WRITES_REPORT} from '../../helper/APIUtils';
 import {useGetAuthorMonthlyWriteReport} from '../useGetMonthlyWriteReport';
 import {useGetTotalWrites} from '../useGetTotalWrites';
 import {useGetAuthorYearlyWriteReport} from '../useGetYearlyWriteReport';
 
 jest.mock('axios');
-jest.mock('react-redux', () => ({
+jest.mock('../../store/hooks', () => ({
   useAppSelector: jest.fn(),
 }));
 

@@ -8,7 +8,7 @@ import { View,
    FlatList ,
  } from 'react-native';
 import {ArticleData} from '../../type';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import ReviewCard from '../../components/ReviewCard';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
 import {hp, wp} from '../../helper/Metric';

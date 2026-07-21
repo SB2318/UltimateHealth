@@ -14,7 +14,7 @@ import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../components/ArticleCard';
 import UserArticleCard from '../components/UserArticleCard';
 import { useTheme } from 'tamagui';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileHeader from '../components/ProfileHeader';
 import {ArticleData, UserProfileScreenProp} from '../type';

@@ -12,7 +12,7 @@ import {PRIMARY_COLOR} from '../../helper/Theme';
 import {GET_STORAGE_DATA} from '../../helper/APIUtils';
 import type  from 'axios';
 import {resetUserState} from '../../store/UserSlice';
-import {useAppDispatch} from 'react-redux';
+import {useAppDispatch} from '../../store/hooks';
 import {clearStorage} from '../../helper/Utils';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/type';

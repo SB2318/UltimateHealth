@@ -14,7 +14,7 @@ import { View,
 import {PodcastProfileProp, PodcastData, PlayList} from '../type';
 import {MaterialCommunityIcons, Feather, Ionicons} from '@expo/vector-icons';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {useFocusEffect} from '@react-navigation/native';
 import {useGetPlaylists} from '../hooks/useGetPlaylists';
 import {useGetUserPublishedPodcasts} from '../hooks/useGetUserPublishedPodcasts';

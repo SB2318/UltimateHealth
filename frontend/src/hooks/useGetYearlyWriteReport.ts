@@ -2,7 +2,7 @@ import {useQuery, UseQueryResult} from '@tanstack/react-query';
 import axios from 'axios';
 import {YearStatus} from '../type';
 import {GET_YEARLY_WRITES_REPORT} from '../helper/APIUtils';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 
 export const useGetAuthorYearlyWriteReport = ({
   user_id,

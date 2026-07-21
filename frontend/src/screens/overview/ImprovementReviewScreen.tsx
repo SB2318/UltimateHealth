@@ -15,7 +15,7 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {ImpvReviewScreenProp, Comment} from '../../type';
 
-import {useAppDispatch, useAppSelector} from 'react-redux';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {hp, wp} from '../../helper/Metric';
 import {GET_STORAGE_DATA} from '../../helper/APIUtils';
 

@@ -4,7 +4,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {Alert, StyleSheet} from 'react-native';
 import {PodcastPlayerScreenProps} from '../type';
 import RNFS from 'react-native-fs';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
 
 import useUploadImage from '../hooks/useUploadImage';

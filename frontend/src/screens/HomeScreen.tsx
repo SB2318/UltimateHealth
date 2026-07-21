@@ -29,7 +29,7 @@ import HomeScreenHeader from '../components/HomeScreenHeader';
 import {ArticleData, Category, HomeScreenProps} from '../type';
 import FilterModal from '../components/FilterModal';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {useAppSelector, useAppDispatch} from 'react-redux';
+import {useAppSelector, useAppDispatch} from '../../store/hooks';
 import Loader from '../components/Loader';
 import {usePreferences} from '../contexts/PreferencesContext';
 

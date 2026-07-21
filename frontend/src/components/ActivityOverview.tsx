@@ -19,7 +19,7 @@ import {PRIMARY_COLOR} from '../helper/Theme';
 import {BarChart} from 'react-native-chart-kit';
 import { getCurrentYear, formatDateShortYear } from '../helper/dateUtils';
 import {fp, hp} from '../helper/Metric';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import {GET_IMAGE} from '../helper/APIUtils';
 import {ArticleData, MonthStatus, YearStatus} from '../type';
 import Loader from './Loader';

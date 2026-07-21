@@ -15,7 +15,7 @@ beforeEach(() => {
   mockedAxios.get.mockClear();
 });
 
-jest.mock('react-redux', () => ({
+jest.mock('../../store/hooks', () => ({
   useAppSelector: jest.fn(() => false),
 }));
 

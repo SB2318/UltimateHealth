@@ -6,7 +6,7 @@ import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {PodcastData, PodcastSearchProp} from '../type';
 
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import PodcastCard from '../components/PodcastCard';
 import PodcastSkeletonCard from '../components/PodcastSkeletonCard';
 import {msToTime} from '../helper/Utils';

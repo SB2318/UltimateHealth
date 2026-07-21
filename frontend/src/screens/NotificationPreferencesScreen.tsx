@@ -12,7 +12,7 @@ import { View,
 import {useQueryClient} from '@tanstack/react-query';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
-import {useAppSelector} from 'react-redux';
+import {useAppSelector} from '../../store/hooks';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../helper/Theme';
 import {fp, hp, wp} from '../helper/Metric';
