@@ -12,8 +12,7 @@ import {
   Theme, 
  
   Paragraph,
-  Button
-} from 'tamagui';
+ } from 'tamagui';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // Corrected Icon Imports
 import { FontAwesome5, Ionicons, Entypo, MaterialIcons } from '@expo/vector-icons';
