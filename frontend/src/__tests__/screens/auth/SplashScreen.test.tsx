@@ -11,8 +11,11 @@ const mockReset = jest.fn();
 // SplashScreen reads user_token via useAppSelector. We control it here.
 let mockUserToken: string | null = 'valid-token';
 
-jest.mock('../store/hooks', () => ({
+const mockDispatch = jest.fn();
+
+jest.mock('../../store/hooks', () => ({
   useAppDispatch: () => mockDispatch,
+  useAppSelector: jest.fn(),
 }));
 
 const mockCheckTokenStatus = jest.fn();
@@ -30,8 +33,8 @@ jest.mock('../../helper/Utils', () => {
       if (key === 'USER_HANDLE') return Promise.resolve('john_doe');
       return Promise.resolve(null);
     }),
-  useAppDispatch: () => jest.fn(),
-}));
+  };
+});
 
 // ── timer mocks ───────────────────────────────────────────────────────────────
 // SplashScreen waits 800ms before navigating. Use fake timers to control this.

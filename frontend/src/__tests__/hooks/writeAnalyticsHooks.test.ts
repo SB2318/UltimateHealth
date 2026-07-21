@@ -14,7 +14,7 @@ jest.mock('../../store/hooks', () => ({
   useAppSelector: jest.fn(),
 }));
 
-const mockedAxios = axios as as unknown jest.Mocked<typeof axios>;
+const mockedAxios = axios as unknown jest.Mocked<typeof axios>;
 const mockeduseAppSelector = useAppSelector as unknown as jest.Mock;
 
 function makeWrapper() {
