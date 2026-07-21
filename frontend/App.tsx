@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { setAudioModeAsync } from 'expo-audio';
 import * as Sentry from '@sentry/react-native';
-import { logger } from './src/services/monitoring/logger';
+import { logger } from './src/lib/services/monitoring/logger';
 
-import AppContent from './src/components/AppContent';
+import AppContent from './src/components/common/AppContent';
 
 function App() {
   const [queryClient] = useState(

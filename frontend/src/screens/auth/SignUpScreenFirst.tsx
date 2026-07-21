@@ -10,22 +10,22 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {SignUpScreenFirstProp, UserDetail} from '../../type';
+import {SignUpScreenFirstProp, UserDetail} from '../../schemas/type';
 import type  from 'axios';
 import Snackbar from 'react-native-snackbar';
-import EmailVerifiedModal from '../../components/VerifiedModal';
-import SecurityWarningModal from '../../components/SecurityWarningModal';
+import EmailVerifiedModal from '../../components/auth/VerifiedModal';
+import SecurityWarningModal from '../../components/auth/SecurityWarningModal';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
-import Loader from '../../components/Loader';
-import useUploadImage from '../../hooks/useUploadImage';
+import Loader from '../../components/common/Loader';
+import useUploadImage from '../../hooks/media/useUploadImage';
 import {
   ImageLibraryOptions,
   launchImageLibrary,
   ImagePickerResponse,
 } from 'react-native-image-picker';
-import {useCheckUserHandleAvailability} from '@/src/hooks/useCheckUserHandleAvailability';
-import {useVerificationMailMutation} from '@/src/hooks/useMailVerification';
-import {useRegdMutation} from '@/src/hooks/useUserRegistration';
+import {useCheckUserHandleAvailability} from '@/src/hooks/auth/useCheckUserHandleAvailability';
+import {useVerificationMailMutation} from '@/src/hooks/auth/useMailVerification';
+import {useRegdMutation} from '@/src/hooks/auth/useUserRegistration';
 type AxiosError = any;
 
 const signupSchema = z.object({

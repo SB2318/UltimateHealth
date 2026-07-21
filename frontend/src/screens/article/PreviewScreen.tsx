@@ -9,29 +9,36 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {BUTTON_COLOR} from '../../helper/Theme';
+import {BUTTON_COLOR} from '../../lib/ui/Theme';
 import {
   PocketBaseResponse,
   PreviewScreenProp,
-} from '../../type';
-import {createHTMLStructure, handleExternalClick} from '../../helper/Utils';
+} from '../../schemas/type';
+import {createHTMLStructure, handleExternalClick} from '../../lib/utils/Utils';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 
+<<<<<<< HEAD
 import Loader from '../../components/Loader';
 import {GET_IMAGE} from '../../helper/APIUtils';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import useUploadImage from '../../hooks/useUploadImage';
+=======
+import Loader from '../../components/common/Loader';
+import {GET_IMAGE} from '../../lib/api/APIUtils';
+import {useDispatch, useSelector} from 'react-redux';
+import useUploadImage from '../../hooks/media/useUploadImage';
+>>>>>>> upstream/main
 import {setSuggestion} from '../../store/dataSlice';
 import Snackbar from 'react-native-snackbar';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {usePostArticleData} from '@/src/hooks/usePostArticle';
-import {useSubmitImprovement} from '@/src/hooks/useSubmitImprovement';
-import {useSubmitSuggestedChanges} from '@/src/hooks/useSubmitSuggestedChanges';
-import {useUploadArticleToPocketbase} from '@/src/hooks/useUploadArticlePocketbase';
-import {useUploadImprovementToPocketbase} from '@/src/hooks/useUploadImprovementToPocketbase';
-import {useRenderSuggestion} from '@/src/hooks/useRenderSuggestion';
-import {useDeletePocketbaseRecord} from '@/src/hooks/useDeletePocketbaseRecord';
+import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
+import {usePostArticleData} from '@/src/hooks/article/usePostArticle';
+import {useSubmitImprovement} from '@/src/hooks/improvement/useSubmitImprovement';
+import {useSubmitSuggestedChanges} from '@/src/hooks/article/useSubmitSuggestedChanges';
+import {useUploadArticleToPocketbase} from '@/src/hooks/article/useUploadArticlePocketbase';
+import {useUploadImprovementToPocketbase} from '@/src/hooks/improvement/useUploadImprovementToPocketbase';
+import {useRenderSuggestion} from '@/src/hooks/ai/useRenderSuggestion';
+import {useDeletePocketbaseRecord} from '@/src/hooks/common/useDeletePocketbaseRecord';
 
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {

@@ -15,14 +15,14 @@ import Entypo from '@expo/vector-icons/Entypo';
 import IonIcon from '@expo/vector-icons/Ionicons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Fontisto from '@expo/vector-icons/Fontisto';
-import {PRIMARY_COLOR} from '../../helper/Theme';
-import {EditorScreenProp} from '../../type';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {EditorScreenProp} from '../../schemas/type';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useAppDispatch} from '../store/hooks';
 import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-import {createHTMLStructure} from '../../helper/Utils';
+import {createHTMLStructure} from '../../lib/utils/Utils';
 
 // Feature:
 // If you want to discard your post, in that case no post will upload into storage,

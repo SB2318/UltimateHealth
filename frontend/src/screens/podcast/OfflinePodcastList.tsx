@@ -1,0 +1,186 @@
+
+import React, {useCallback, useEffect, useState} from 'react';
+import { FlatList , Pressable, View, StyleSheet } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import {OfflinePodcastListProp, PodcastData} from '../../schemas/type';
+import {deleteFromDownloads, msToTime, readDownloadedPodcasts} from '../../lib/utils/Utils';
+import PodcastCard from '../../components/podcast/PodcastCard';
+import {hp} from '../../lib/ui/Metric';
+import {ON_PRIMARY_COLOR} from '../../lib/ui/Theme';
+import Snackbar from 'react-native-snackbar';
+<<<<<<< HEAD:frontend/src/screens/OfflinePodcastList.tsx
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import CreatePlaylist from '../components/CreatePlaylist';
+import { setaddedPodcastId, setRemovePlaylistId } from '../store/dataSlice';
+import { NoOfflinePodcastsState, OfflinePodcastLoadErrorState } from '../components/EmptyStates';
+=======
+import {useDispatch, useSelector} from 'react-redux';
+import CreatePlaylist from '../../components/playlist/CreatePlaylist';
+import { setaddedPodcastId, setRemovePlaylistId } from '../../store/dataSlice';
+import { NoOfflinePodcastsState, OfflinePodcastLoadErrorState } from '../../components/common/EmptyStates';
+>>>>>>> upstream/main:frontend/src/screens/podcast/OfflinePodcastList.tsx
+
+export default function OfflinePodcastList({
+  navigation,
+}: OfflinePodcastListProp) {
+  const [podcasts, setPodcasts] = useState<PodcastData[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const {user_id} = useAppSelector((state: any) => state.user);
+  const [playlistModalOpen, setPlaylistModalOpen] = useState<boolean>(false);
+  //const [playlistIds, setPlaylistIds] = useState<string[]>([]);
+  const dispatch = useAppDispatch();
+
+  const openPlaylist = (id: string) => {
+    //setPlaylistIds([id]);
+    setPlaylistModalOpen(true);
+    dispatch(setaddedPodcastId(id));
+  };
+  const closePlaylist = () => {
+    setPlaylistModalOpen(false);
+   // setPlaylistIds([]);
+    dispatch(setRemovePlaylistId(''));
+  };
+
+  const loadPodcasts = useCallback(async () => {
+    try {
+      setLoadError(null);
+      const data = await readDownloadedPodcasts();
+      setPodcasts(data);
+    } catch (err) {
+      if (__DEV__) {
+        console.error('Offline podcast load error:', err);
+      }
+      setPodcasts([]);
+      setLoadError(
+        'Failed to load offline podcasts. Please try again or check your device storage.',
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    loadPodcasts();
+  }, [loadPodcasts]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadPodcasts();
+    }, [loadPodcasts]),
+  );
+
+  const navigateToDetail = (podcast: PodcastData) => {
+    navigation.navigate('OfflinePodcastDetail', {
+      podcast: podcast,
+    });
+  };
+
+  const navigateToReport = (podcastId: string)=> {
+    navigation.navigate('ReportScreen', {
+      articleId: '',
+      authorId: user_id,
+      commentId: null,
+      podcastId: podcastId,
+    });
+  };
+
+ 
+
+  const renderItem = ({item}: {item: PodcastData}) => (
+    <Pressable
+      onPress={() => {
+        //playPodcast(item);
+        navigateToDetail(item);
+      }}>
+      <PodcastCard
+        id={item._id}
+        title={item.title}
+        audioUrl={item.audio_url}
+        host={item.user_id.user_name}
+        views={item.viewUsers.length}
+        duration={`${msToTime(item.duration)}`}
+        tags={item.tags}
+        downloaded={true}
+        display={true}
+        downLoadAudio={async () => {
+          // delete from downloads
+          const res = await deleteFromDownloads(item);
+
+          if (res) {
+            await loadPodcasts();
+            Snackbar.show({
+              text: 'Podcast has been removed from offline',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          } else {
+            Snackbar.show({
+              text: 'Failed to removed podcast from offline',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          }
+        }}
+        handleClick={() => {
+          navigateToDetail(item);
+        }}
+        imageUri={''}
+        handleReport={() => {
+          navigateToReport(item._id);
+        }}
+       playlistAct={openPlaylist}
+      />
+    </Pressable>
+  );
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={podcasts}
+        keyExtractor={(item: PodcastData) => item._id.toString()}
+        renderItem={renderItem}
+        ListEmptyComponent={
+  loadError ? (
+    <OfflinePodcastLoadErrorState
+      message={loadError}
+      onRetry={loadPodcasts}
+    />
+  ) : (
+    <NoOfflinePodcastsState
+      onBrowse={() => navigation.goBack()}
+    />
+  )
+}
+      />
+      <CreatePlaylist
+        visible={playlistModalOpen}
+        dismiss={closePlaylist}
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: hp(5),
+    paddingTop: hp(10),
+    paddingHorizontal: hp(3),
+    backgroundColor: ON_PRIMARY_COLOR,
+    // backgroundColor:'#ffffff'
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 12,
+  },
+  item: {
+    paddingVertical: 12,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  artist: {
+    fontSize: 14,
+    color: '#666',
+  },
+});
+
