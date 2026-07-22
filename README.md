@@ -345,6 +345,18 @@ npm install -g expo-cli eas-cli
 
 ---
 
+## Common Commands
+
+The following commands are commonly used during local development.
+
+| Command | Description |
+|---------|-------------|
+| `yarn install` | Install all project dependencies. |
+| `npx expo start` | Start the Expo development server. |
+| `npx expo run:android` | Build and run the app on an Android device or emulator. |
+| `npx expo run:ios` | Build and run the app on an iOS simulator (macOS only). |
+| `npx expo prebuild --clean` | Regenerate native Android and iOS projects from the Expo configuration. |
+
 ## Project Structure
 
 ```
