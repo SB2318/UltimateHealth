@@ -292,7 +292,7 @@ The following table outlines planned improvements based on active issues and com
 | [Node.js](https://nodejs.org/) | >= 18.x | JavaScript runtime |
 | [Yarn](https://yarnpkg.com/) | >= 1.22.x | Package manager |
 | [Git](https://git-scm.com/) | Latest | Version control |
-| [Expo CLI](https://docs.expo.dev/get-started/installation/) | Latest | Mobile app tooling |
+| [Expo CLI](http://web.archive.org/web/20240506160635/https://docs.expo.dev/get-started/installation/) | Latest | Mobile app tooling |
 | [Android Studio](https://developer.android.com/studio) | Latest | Android emulator and SDK |
 | [Xcode](https://developer.apple.com/xcode/) | Latest (macOS only) | iOS simulator |
 
