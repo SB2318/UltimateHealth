@@ -368,7 +368,8 @@ The following commands are commonly used during local development.
 - **Swagger** – A tool for documenting and testing REST APIs.
 - **MongoDB** – A NoSQL database used to store application data.
 - **REST API** – An interface that allows applications to communicate over HTTP.
-
+- **API** – Application Programming Interface that enables communication between software systems.
+- **README** – The main documentation file that explains the project setup and usage.
 
 ## Project Structure
 
