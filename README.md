@@ -132,6 +132,7 @@ This repository is currently receiving a very large number of forks, issues, and
 - [⚙️ Getting Started](#%EF%B8%8F-getting-started)
 - [🔧 Environment Setup](#%EF%B8%8F-environment-setup)
 - [🚀 Installation](#-installation)
+- [📖 Glossary](#-glossary)
 - [📁 Project Structure](#-project-structure)
 - [🔁 Development Workflow](#-development-workflow)
 - [🏗️ Build & Deployment](#%EF%B8%8F-build--deployment)
@@ -356,6 +357,18 @@ The following commands are commonly used during local development.
 | `npx expo run:android` | Build and run the app on an Android device or emulator. |
 | `npx expo run:ios` | Build and run the app on an iOS simulator (macOS only). |
 | `npx expo prebuild --clean` | Regenerate native Android and iOS projects from the Expo configuration. |
+
+## Glossary
+
+- **Expo** – A framework and toolset for building React Native applications.
+- **EAS** – Expo Application Services used to build and deploy Expo apps.
+- **CI/CD** – Automated workflows that test and deploy code changes.
+- **JWT** – JSON Web Token used for secure user authentication.
+- **RBAC** – Role-Based Access Control manages user permissions based on roles.
+- **Swagger** – A tool for documenting and testing REST APIs.
+- **MongoDB** – A NoSQL database used to store application data.
+- **REST API** – An interface that allows applications to communicate over HTTP.
+
 
 ## Project Structure
 
