@@ -106,6 +106,7 @@ html { scroll-behavior: smooth; }
   --primary-dark: #5568d3;
   --secondary: #764ba2;
   --accent: #f093fb;
+  --card-border: rgba(0, 0, 0, 0.07);
   /* Light-mode page background */
   --page-bg: #f8f7ff;
   --page-bg-mesh:
@@ -3144,6 +3145,7 @@ html.dark {
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
   --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
   --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
+  --card-border: rgba(255, 255, 255, 0.08);
 }
 
 html.dark .header {

@@ -455,14 +455,14 @@ function FAQAccordionItem({ item, index }: { item: FAQItem; index: number }) {
     <motion.div
       variants={fadeUp}
       style={{
-        background: 'white',
+        background: 'var(--bg-white)',
         borderRadius: '16px',
-        border: `1.5px solid ${open ? '#667eea' : 'rgba(0,0,0,0.07)'}`,
+        border: `1.5px solid ${open ? '#667eea' : 'var(--card-border)'}`,
         overflow: 'hidden',
         transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
         boxShadow: open
           ? '0 8px 24px rgba(102,126,234,0.13)'
-          : '0 2px 8px rgba(0,0,0,0.05)',
+          : 'var(--shadow-sm)',
       }}
     >
       <button
@@ -503,7 +503,7 @@ function FAQAccordionItem({ item, index }: { item: FAQItem; index: number }) {
             style={{
               fontWeight: 700,
               fontSize: '1rem',
-              color: '#1a202c',
+              color: 'var(--text-dark)',
               lineHeight: 1.4,
             }}
           >
@@ -531,7 +531,7 @@ function FAQAccordionItem({ item, index }: { item: FAQItem; index: number }) {
             <p
               style={{
                 padding: '0 24px 20px 66px',
-                color: '#718096',
+                color: 'var(--text-light)',
                 lineHeight: 1.75,
                 fontSize: '0.95rem',
                 margin: 0,
@@ -797,7 +797,7 @@ function HeroSection() {
                   position: 'absolute',
                   top: '-18px',
                   right: '-18px',
-                  background: 'white',
+                  background: 'var(--bg-white)',
                   borderRadius: '14px',
                   padding: '10px 16px',
                   display: 'flex',
@@ -811,7 +811,7 @@ function HeroSection() {
                   style={{
                     fontSize: '0.8rem',
                     fontWeight: 700,
-                    color: '#1a202c',
+                    color: 'var(--text-dark)',
                   }}
                 >
                   Community Driven
@@ -831,7 +831,7 @@ function HeroSection() {
                   position: 'absolute',
                   bottom: '-18px',
                   left: '-18px',
-                  background: 'white',
+                  background: 'var(--bg-white)',
                   borderRadius: '14px',
                   padding: '10px 16px',
                   display: 'flex',
@@ -845,7 +845,7 @@ function HeroSection() {
                   style={{
                     fontSize: '0.8rem',
                     fontWeight: 700,
-                    color: '#1a202c',
+                    color: 'var(--text-dark)',
                   }}
                 >
                   Beginner Friendly
@@ -887,10 +887,10 @@ function WhyContributeSection() {
                   variants={fadeUp}
                   whileHover={{ y: -8, transition: { duration: 0.25 } }}
                   style={{
-                    background: 'white',
+                    background: 'var(--bg-white)',
                     borderRadius: '20px',
                     padding: '36px 32px',
-                    border: '1px solid rgba(0,0,0,0.06)',
+                    border: '1px solid var(--card-border)',
                     boxShadow: 'var(--shadow-sm)',
                     transition: 'box-shadow 0.3s ease',
                     cursor: 'default',
@@ -969,7 +969,7 @@ function WaysToContributeSection() {
                   variants={fadeUp}
                   whileHover={{ y: -6, transition: { duration: 0.25 } }}
                   style={{
-                    background: 'white',
+                    background: 'var(--bg-white)',
                     borderRadius: '20px',
                     padding: '28px',
                     border: `1.5px solid ${way.bg}`,
@@ -1077,7 +1077,7 @@ function WorkflowSection() {
                   variants={fadeUp}
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
                   style={{
-                    background: 'white',
+                    background: 'var(--bg-white)',
                     borderRadius: '16px',
                     padding: '24px',
                     border: '1.5px solid rgba(102,126,234,0.12)',
@@ -1243,13 +1243,13 @@ function PRSection() {
                     key={s.label}
                     variants={fadeUp}
                     style={{
-                      background: 'white',
+                      background: 'var(--bg-white)',
                       borderRadius: '16px',
                       padding: '20px 24px',
                       display: 'flex',
                       alignItems: 'flex-start',
                       gap: '16px',
-                      border: '1px solid rgba(0,0,0,0.06)',
+                      border: '1px solid var(--card-border)',
                       boxShadow: 'var(--shadow-sm)',
                       transition: 'all 0.3s ease',
                     }}
@@ -1365,10 +1365,10 @@ function CommunitySection() {
                   variants={fadeUp}
                   whileHover={{ y: -8, transition: { duration: 0.25 } }}
                   style={{
-                    background: 'white',
+                    background: 'var(--bg-white)',
                     borderRadius: '20px',
                     padding: '36px 32px',
-                    border: '1px solid rgba(0,0,0,0.06)',
+                    border: '1px solid var(--card-border)',
                     boxShadow: 'var(--shadow-sm)',
                     display: 'flex',
                     flexDirection: 'column',
@@ -1526,7 +1526,7 @@ function PurposeSection() {
               style={{
                 fontSize: 'clamp(2rem, 4vw, 3rem)',
                 fontWeight: 900,
-                color: '#1a202c',
+                color: 'var(--text-dark)',
                 lineHeight: 1.2,
                 marginBottom: '20px',
                 background: 'linear-gradient(135deg, #667eea 0%, #f5576c 100%)',
@@ -1540,7 +1540,7 @@ function PurposeSection() {
             <p
               style={{
                 fontSize: '1.1rem',
-                color: '#718096',
+                color: 'var(--text-light)',
                 maxWidth: '600px',
                 margin: '0 auto',
                 lineHeight: 1.8,
@@ -1565,7 +1565,7 @@ function PurposeSection() {
                 variants={fadeUp}
                 whileHover={{ y: -6, transition: { duration: 0.25 } }}
                 style={{
-                  background: 'white',
+                  background: 'var(--bg-white)',
                   borderRadius: '20px',
                   padding: '36px 28px',
                   border: `1.5px solid ${p.bg}`,
@@ -1603,7 +1603,7 @@ function PurposeSection() {
                   style={{
                     fontSize: '1.1rem',
                     fontWeight: 800,
-                    color: '#1a202c',
+                    color: 'var(--text-dark)',
                     marginBottom: '12px',
                     lineHeight: 1.3,
                   }}
@@ -1612,7 +1612,7 @@ function PurposeSection() {
                 </h3>
                 <p
                   style={{
-                    color: '#718096',
+                    color: 'var(--text-light)',
                     lineHeight: 1.75,
                     fontSize: '0.92rem',
                     margin: 0,
@@ -1641,7 +1641,7 @@ function PurposeSection() {
               style={{
                 fontSize: '1.25rem',
                 fontWeight: 700,
-                color: '#2d3748',
+                color: 'var(--text-dark)',
                 fontStyle: 'italic',
                 lineHeight: 1.7,
                 margin: 0,
@@ -2304,10 +2304,10 @@ export default function ContributePage() {
   top: 74px;
   right: 24px;
   z-index: 9998;
-  background: white;
+  background: var(--bg-white);
   border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-  border: 1px solid rgba(0,0,0,0.07);
+  border: 1px solid var(--card-border);
   padding: 8px;
   min-width: 230px;
   overflow: hidden;
@@ -2319,7 +2319,7 @@ export default function ContributePage() {
   gap: 10px;
   padding: 11px 14px;
   border-radius: 10px;
-  color: #1a202c;
+  color: var(--text-dark);
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 600;
@@ -2340,7 +2340,7 @@ export default function ContributePage() {
 
 .contrib-nav-divider {
   height: 1px;
-  background: rgba(0,0,0,0.06);
+  background: var(--card-border);
   margin: 6px 8px;
 }
 
@@ -2350,7 +2350,7 @@ export default function ContributePage() {
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: #a0aec0;
+  color: var(--text-muted);
 }
 
 @media (max-width: 1100px) {
