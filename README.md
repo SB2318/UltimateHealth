@@ -139,7 +139,6 @@ This repository is currently receiving a very large number of forks, issues, and
 - [🔌 Services & API Dependencies](#-services--api-dependencies)
 - [🤖 Automation & Bot System](#-automation--bot-system)
 - [🤝 Contribution Workflow](#-contribution-workflow)
-- [🤝 Contributing](#contributing)
 - [🔗 Submodule Repositories](#submodule-repositories)
 - [🤝 Contribution Guidelines](#-contribution-guidelines)
 - [🚀 Programs Participated In](#-programs-participated-in)
@@ -735,7 +734,6 @@ Frontend dead-code checks use Knip. See [Knip Guide](docs/KNIP_GUIDE.md) and [Kn
 
 ---
 
----
 
 ## 🤝 Contribution Workflow
 
