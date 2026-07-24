@@ -13,7 +13,7 @@ import {
   useColorScheme,
  ScrollView } from 'react-native';
 import ArticleShareModal from '../../components/article/ArticleShareModal';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
@@ -247,8 +247,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     };
   };
 
-  const debouncedPersistFontScale = useCallback(
-    (nextValue: number) => debounce(persistFontScale, 300)(nextValue),
+  const debouncedPersistFontScale = useMemo(
+    () => debounce(persistFontScale, 300),
     [],
   );
 
