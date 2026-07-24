@@ -138,6 +138,8 @@ This repository is currently receiving a very large number of forks, issues, and
 - [🏗️ Build & Deployment](#%EF%B8%8F-build--deployment)
 - [🔌 Services & API Dependencies](#-services--api-dependencies)
 - [🤖 Automation & Bot System](#-automation--bot-system)
+- [🤝 Contribution Workflow](#-contribution-workflow)
+- [🤝 Contributing](#contributing)
 - [🔗 Submodule Repositories](#submodule-repositories)
 - [🤝 Contribution Guidelines](#-contribution-guidelines)
 - [🚀 Programs Participated In](#-programs-participated-in)
@@ -732,6 +734,35 @@ Frontend dead-code checks use Knip. See [Knip Guide](docs/KNIP_GUIDE.md) and [Kn
 </details>
 
 ---
+
+---
+
+## 🤝 Contribution Workflow
+
+New to open source? Follow this simple workflow to contribute to UltimateHealth.
+
+```mermaid
+flowchart LR
+    A[Find an Issue] --> B[Request Assignment]
+    B --> C[Fork Repository]
+    C --> D[Create Feature Branch]
+    D --> E[Make Changes]
+    E --> F[Submit Pull Request]
+    F --> G[CI Checks]
+    G --> H[Maintainer Review]
+    H --> I[Merge]
+```
+This workflow summarizes the standard contribution process for all new contributors. Following these steps helps ensure a smooth review and merge process.
+### Contribution Steps
+
+1. Find an open issue that matches your interests or skills.
+2. Request assignment by commenting on the issue.
+3. Fork the repository to your GitHub account.
+4. Create a new feature or documentation branch.
+5. Make your changes and test them.
+6. Submit a Pull Request.
+7. Wait for CI checks and maintainer review.
+8. Once approved, your contribution will be merged.
 
 ## Contributing
 
