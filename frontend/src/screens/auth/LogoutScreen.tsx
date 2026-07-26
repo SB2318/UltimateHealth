@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
-import type  from 'axios';
 import {resetUserState} from '../../store/UserSlice';
 import {useAppDispatch} from '../../store/hooks';
 import {clearStorage} from '../../lib/utils/Utils';
