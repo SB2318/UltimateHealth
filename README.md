@@ -106,6 +106,25 @@
 
 ---
 
+## 📛 Repository Badges Explained
+
+The badges displayed at the top of this README provide a quick overview of the repository's health, activity, and development status.
+
+| Badge | Explanation |
+|--------|-------------|
+| **🛠️ Frontend CI** | Shows whether the frontend code passes automated build and validation checks. |
+| **📱 Expo CI** | Indicates the status of Expo EAS build workflows for the mobile application. |
+| **🤖 Android Build CI** | Confirms whether the Android build validation workflow completed successfully. |
+| **🍎 iOS Build CI** | Displays the status of automated iOS build validation. |
+| **🌟 Stars** | Shows how many GitHub users have starred the repository. |
+| **🍴 Forks** | Indicates how many people have forked the repository to contribute or experiment. |
+| **🐛 Issues** | Displays the current number of open issues awaiting resolution. |
+| **🔄 Open PRs** | Shows the number of pull requests that are currently under review. |
+| **🧾 License** | Identifies the open-source license under which the project is distributed. |
+| **👀 Views** | Shows the approximate number of repository profile views. |
+| **⏱️ Last Commit** | Indicates when the latest commit was pushed to the repository. |
+| **📦 Repo Size** | Displays the current size of the repository. |
+
 ## Maintainer Notice
 
 | What you can expect | Timeline |
@@ -119,6 +138,7 @@
  
 - [🌟 UltimateHealth (HealthGuide)](#-ultimatehealth-healthguide)
 - [📢 Maintainer Notice](#-maintainer-notice)
+- [📛 Repository Badges Explained](#-repository-badges-explained)
 - [📖 About the Project](#-about-the-project)
 - [✨ Features](#-features)
 - [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
