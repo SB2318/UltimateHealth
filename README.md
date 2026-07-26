@@ -1,4 +1,4 @@
-<div align="center">
+8<div align="center">
 
    <a href="https://git.io/typing-svg">
      <img src="https://readme-typing-svg.herokuapp.com?font=Roboto&size=22&duration=4995&pause=1000&color=006400&width=850&height=58&lines=Open-source+Health+Platform+%7C+React+Native+(Expo)+App+%2B+Node.js+Backend+%2B+MongoDB" alt="Typing SVG" />
@@ -107,10 +107,6 @@
 ---
 
 ## Maintainer Notice
-
-> **GSSoC 2026 Season Active — High Volume Period**
-
-This repository is currently receiving a very large number of forks, issues, and pull requests due to **GirlScript Summer of Code 2026**. Many submissions may be unrelated to the project's roadmap (spam issues, duplicate PRs, off-topic contributions). Please read this section carefully before opening anything.
 
 | What you can expect | Timeline |
 |---|---|
