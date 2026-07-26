@@ -8,23 +8,22 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import Ionicon from '@expo/vector-icons/Ionicons';
-import {testGlossaryTerms, GlossaryTerm} from '../constants/glossary';
-
-const glossaryTerms = testGlossaryTerms;
-const glossaryCategories = [...new Set(glossaryTerms.map(t => t.category).filter(Boolean))] as string[];
+import {glossaryTerms, GlossaryTerm} from '../constants/glossary';
 import GlossaryBottomSheet from '../components/GlossaryBottomSheet';
 import {PRIMARY_COLOR} from '../helper/Theme';
-import {YStack, XStack, Text, Input, useTheme} from 'tamagui';
+import {YStack, XStack, Text, Input, useTheme, useThemeName} from 'tamagui';
+
+const glossaryCategories = [...new Set(glossaryTerms.map(t => t.category).filter(Boolean))] as string[];
 
 const MedicalGlossaryScreen = ({navigation}: any) => {
   const theme = useTheme();
+  const themeName = useThemeName();
+  const isDarkMode = themeName === 'dark';
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedTerm, setSelectedTerm] = useState<GlossaryTerm | null>(null);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-
-  const isDarkMode = theme.background?.val === '#424242';
 
   const filteredTerms = useMemo(() => {
     let terms = glossaryTerms;
@@ -36,7 +35,7 @@ const MedicalGlossaryScreen = ({navigation}: any) => {
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
       terms = terms.filter(
-        t =>
+        (t: GlossaryTerm) =>
           t.term.toLowerCase().includes(query) ||
           t.definition.toLowerCase().includes(query) ||
           (t.category && t.category.toLowerCase().includes(query)),
@@ -48,7 +47,7 @@ const MedicalGlossaryScreen = ({navigation}: any) => {
 
   const groupedTerms = useMemo(() => {
     const groups: Record<string, GlossaryTerm[]> = {};
-    filteredTerms.forEach(term => {
+    filteredTerms.forEach((term: GlossaryTerm) => {
       const cat = term.category || 'Other';
       if (!groups[cat]) {
         groups[cat] = [];
@@ -71,6 +70,8 @@ const MedicalGlossaryScreen = ({navigation}: any) => {
   const handleClearSearch = useCallback(() => {
     setSearchQuery('');
   }, []);
+
+  const categoryTagBg = isDarkMode ? 'rgba(0, 191, 255, 0.15)' : 'rgba(0, 191, 255, 0.08)';
 
   const renderCategoryChip = useCallback(
     (category: string) => {
@@ -143,7 +144,7 @@ const MedicalGlossaryScreen = ({navigation}: any) => {
             paddingVertical={3}
             borderRadius={12}
             marginBottom={8}
-            backgroundColor={isDarkMode ? 'rgba(0, 191, 255, 0.15)' : 'rgba(0, 191, 255, 0.08)'}>
+            backgroundColor={categoryTagBg}>
             <Text
               fontSize={11}
               fontWeight="700"
@@ -161,7 +162,7 @@ const MedicalGlossaryScreen = ({navigation}: any) => {
         </Text>
       </TouchableOpacity>
     ),
-    [theme, handleTermPress, isDarkMode],
+    [theme, handleTermPress, categoryTagBg],
   );
 
   const renderSectionHeader = useCallback(
@@ -212,7 +213,9 @@ const MedicalGlossaryScreen = ({navigation}: any) => {
               setSearchQuery('');
               setSelectedCategory(null);
             }}>
-            <Text style={styles.clearFiltersText}>Clear Filters</Text>
+            <Text color="#FFFFFF" fontSize={14} fontWeight="700">
+              Clear Filters
+            </Text>
           </TouchableOpacity>
         )}
       </YStack>
@@ -269,9 +272,8 @@ const MedicalGlossaryScreen = ({navigation}: any) => {
             color={theme.color?.val}
             fontSize={15}
             focusStyle={{
-              outlineWidth: 0,
-              borderColor: 'transparent',
-              boxShadow: 'none',
+              borderColor: PRIMARY_COLOR,
+              borderWidth: 1,
             }}
           />
           {searchQuery.length > 0 && (
@@ -362,9 +364,6 @@ const styles = StyleSheet.create({
     padding: 14,
     marginBottom: 8,
     borderWidth: 1,
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
     elevation: 2,
   },
   listContent: {
@@ -379,10 +378,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 25,
-  },
-  clearFiltersText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '700',
   },
 });

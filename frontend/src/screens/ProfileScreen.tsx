@@ -216,7 +216,6 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         ]}>
         <StatusBar
           style={isDarkMode ? 'light' : 'dark'}
-          backgroundColor="#007AFF"
         />
         <Loader />
       </SafeAreaView>
@@ -238,7 +237,6 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
       ]}>
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
-        backgroundColor="#007AFF"
       />
       <ScrollView
         style={styles.innerContainer}
