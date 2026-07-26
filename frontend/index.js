@@ -19,18 +19,23 @@ if (Platform.OS === 'web') {
     }
   `;
   document.head.appendChild(style);
-}// Firebase background handler must be registered at the app root (run once,
+}
+
+// Firebase background handler must be registered at the app root (run once,
 // before any component mounts). FCM requires this to be at module scope.
 // NOTE: initMonitoring() is intentionally NOT called here — it has been moved
 // to AppContent.tsx's first useEffect so that expo-application metadata
 // (nativeApplicationVersion, nativeBuildVersion) is fully available before
 // Sentry initialises.
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  // Only log notification payloads in development to avoid leaking user data
-  // or FCM tokens in production log aggregators.
-  
+// Only register on native platforms — @react-native-firebase/messaging
+// does not support web and will throw if invoked in a browser context.
+if (Platform.OS !== 'web') {
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
+    // Only log notification payloads in development to avoid leaking user data
+    // or FCM tokens in production log aggregators.
     logger.log('Background notification received:', remoteMessage);
-});
+  });
+}
 
 const AppWrapper = () => {
   return (

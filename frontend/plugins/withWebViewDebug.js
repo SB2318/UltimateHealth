@@ -13,18 +13,23 @@ const withWebViewDebug = (config) => {
     }
 
     // Add the WebView debug configuration before DefaultNewArchitectureEntryPoint
-    const debugStatement = `
-    // Security: Only enable WebView remote debugging in debug builds.
+    const debugStatement = `    // Security: Only enable WebView remote debugging in debug builds.
     // In production, this prevents Chrome DevTools from inspecting WebView
     // content, extracting session cookies, or reading localStorage.
-    WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
-    `;
+    WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)`;
 
     if (!mainApplication.includes('WebView.setWebContentsDebuggingEnabled')) {
-      mainApplication = mainApplication.replace(
-        'DefaultNewArchitectureEntryPoint.releaseLevel',
-        `${debugStatement}\n    DefaultNewArchitectureEntryPoint.releaseLevel`
-      );
+      const target = 'DefaultNewArchitectureEntryPoint.releaseLevel';
+      if (mainApplication.includes(target)) {
+        mainApplication = mainApplication.replace(
+          target,
+          `${debugStatement}\n    ${target}`
+        );
+      } else {
+        console.warn(
+          '[withWebViewDebug] Could not find injection point "' + target + '" — WebView debugging will not be enabled.',
+        );
+      }
     }
 
     config.modResults.contents = mainApplication;
