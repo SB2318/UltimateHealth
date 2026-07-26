@@ -187,7 +187,7 @@ export const Navbar = (props: { tracking_id: string[] }) => {
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>
             Community Programs
           </a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer">
+          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer" onClick={() => setMobileMenuOpen(false)}>
             Read Articles
           </a>
           <Link
