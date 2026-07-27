@@ -103,7 +103,7 @@
     "react-native-view-shot": "5.1.0",
     "react-native-web": "~0.21.0",
     "react-native-webview": "13.16.1",
-    "react-native-worklets": "0.10.0",
+    "react-native-worklets": "0.11.3",
     "react-redux": "^9.2.0",
     "socket.io-client": "^4.8.1",
     "tamagui": "^1.135.6",
