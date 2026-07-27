@@ -49,13 +49,30 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
-          cache: "yarn"
-          cache-dependency-path: frontend/yarn.lock
- 
+          node-version: 24
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack prepare yarn@4.17.1 --activate
+      - name: Cache node_modules
+        id: node-cache
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+
       - name: Install dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
- 
+
+      - name: Validate cache
+        run: |
+          if ! yarn list > /dev/null 2>&1; then
+            echo "Cache corrupted, reinstalling..."
+            rm -rf node_modules
+            yarn install --frozen-lockfile --network-timeout 600000
+          fi
+
       - name: Run Knip analyses
         id: knip
         shell: bash
@@ -79,12 +96,12 @@ jobs:
               cat "$output"
             fi
           }
- 
+
           run_check full yarn knip
           run_check dependencies yarn knip --dependencies
           run_check files yarn knip --files
           run_check exports yarn knip --exports
- 
+
           exit 0
 
       - name: Comment Knip results on PR
@@ -114,7 +131,7 @@ jobs:
               const text = fs.existsSync(file) ? fs.readFileSync(file, 'utf8').trim() : '';
               const truncated = text.length > 5000;
               const output = text.length > 0 ? text.slice(0, 5000) : 'No output.';
-              const truncationNote = truncated ? '\n\n> ⚠️ Output truncated to 5000 characters. Run `pnpm knip` locally for the full report.' : '';
+              const truncationNote = truncated ? '\n\n> ⚠️ Output truncated to 5000 characters. Run `yarn knip` locally for the full report.' : '';
               return `<details><summary>${label}</summary>\n\n\`\`\`text\n${output}\n\`\`\`${truncationNote}\n\n</details>`;
             });
 

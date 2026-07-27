@@ -1,29 +1,29 @@
+ 
 import React, {useState} from 'react';
-import {
-  View,
-  ScrollView,
+import { View,
+   ScrollView ,
   Text,
   StyleSheet,
   Alert,
   TouchableOpacity,
-} from 'react-native';
-import {ReportScreenProp} from '../../type';
-import {useSelector} from 'react-redux';
-import Loader from '../../components/Loader';
+ } from 'react-native';
+import {ReportScreenProp} from '../../schemas/type';
+import {useAppSelector} from '../../store/hooks';
+import Loader from '../../components/common/Loader';
 import {RadioButton} from 'react-native-paper';
 import Snackbar from 'react-native-snackbar';
-import {hp, wp, fp} from '../../helper/Metric';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {hp, wp, fp} from '../../lib/ui/Metric';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useGetReasons} from '@/src/hooks/useGetReportReasons';
-import {useSubmitReport} from '@/src/hooks/useSubmitReport';
+import {useGetReasons} from '@/src/hooks/moderation/useGetReportReasons';
+import {useSubmitReport} from '@/src/hooks/moderation/useSubmitReport';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function ReportScreen({navigation, route}: ReportScreenProp) {
   const {articleId, commentId, authorId, podcastId} = route.params;
-  const {user_token, user_id} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_id} = useAppSelector((state: any) => state.user);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [selectedReasonId, setSelectedReasonId] = useState<string>('');
 
   const {data: reasons, isLoading} = useGetReasons(isConnected);
@@ -152,7 +152,7 @@ export default function ReportScreen({navigation, route}: ReportScreenProp) {
                               });
                               navigation.navigate('ReportConfirmationScreen');
                             },
-                            onError: error => {
+                            onError: () => {
                               Alert.alert('Error', 'Something went wrong. Please try again.');
                             },
                           },

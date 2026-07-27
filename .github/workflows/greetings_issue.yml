@@ -1,3 +1,32 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 👋 Issue Greeting Bot
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Automatically welcomes contributors when they open a new issue. Posts a
+#   friendly greeting comment that also explains the assignment guidelines so
+#   contributors know how to get assigned to the issue they created.
+#
+# HOW IT WORKS:
+#   1. Triggers immediately when a new issue is opened (types: [opened]).
+#   2. Posts a comment on the new issue that includes:
+#        - A thank-you message for creating the issue.
+#        - Assignment guidelines explaining how to get assigned:
+#            Rule 1: You must not have any other active assigned issues.
+#            Rule 2: If previously assigned, you must have submitted a PR
+#                    before requesting a new assignment.
+#   3. Exits with an error if the comment fails to post (HTTP != 201).
+#
+# TRIGGERS:
+#   - Automatic : Fires instantly when any new issue is opened.
+#
+# PERMISSIONS REQUIRED:
+#   - issues: write  → to post the greeting comment
+#
+# SECRETS REQUIRED:
+#   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: Auto Comment on Issue
 
 on:
@@ -16,7 +45,7 @@ jobs:
         run: |
           COMMENT=$(cat <<EOF
           {
-            "body": "Thank you for creating this issue! We'll look into it as soon as possible. Your contributions are highly appreciated! 😊"
+            "body": "Thank you for creating this issue! We'll look into it as soon as possible. Your contributions are highly appreciated! 😊\n\n---\n### 🤖 Assignment Guidelines\nTo get assigned to this issue, simply leave a comment requesting assignment.\nThe AI bot will automatically assign you if you meet the following eligibility criteria:\n1. You do not currently have any other active assigned issues in this repository.\n2. If you were previously assigned an issue, you must have submitted a Pull Request for it before requesting a new one."
           }
           EOF
           )

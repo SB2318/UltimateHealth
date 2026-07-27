@@ -1,3 +1,40 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 🧹 Close Stale Pull Requests
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Automatically marks pull requests as stale and closes them if they have
+#   had no activity for 30 days. This prevents the PR queue from filling up
+#   with abandoned contributions and keeps the review backlog manageable.
+#
+# HOW IT WORKS:
+#   1. Runs daily at midnight UTC and also whenever a PR is opened, reopened,
+#      or has new commits pushed (synchronize).
+#   2. Uses the official actions/stale action to:
+#        a. Mark PRs as stale after 30 days of inactivity.
+#        b. Close stale PRs immediately (days-before-pr-close: 0).
+#        c. Post a stale message:
+#             "This PR has been automatically closed due to inactivity
+#              from the owner for 30 days."
+#        d. Remove the stale mark if the PR is updated again.
+#   3. Processes up to 30 PRs per run (operations-per-run: 30).
+#
+# TRIGGERS:
+#   - Automatic : Runs daily at 00:00 UTC.
+#   - Automatic : Fires on PR opened, reopened, or synchronized events
+#                 (to immediately re-evaluate recently updated PRs).
+#
+# STALENESS THRESHOLD:
+#   - 30 days of inactivity → marked stale and closed immediately
+#
+# PERMISSIONS REQUIRED:
+#   - pull-requests: write  → to label, comment, and close stale PRs
+#   - issues: write         → required by actions/stale for some operations
+#
+# SECRETS REQUIRED:
+#   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: Close Stale PRs
 
 on:

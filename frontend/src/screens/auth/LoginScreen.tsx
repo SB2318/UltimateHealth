@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
-import {AxiosError, isAxiosError} from 'axios';
+import {   isAxiosError} from 'axios';
 import {StatusBar} from 'expo-status-bar';
 import messaging from '@react-native-firebase/messaging';
 import React, {useEffect, useState} from 'react';
-import {Alert, Image, useColorScheme} from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
-import {useDispatch} from 'react-redux';
+
 import {
   Button,
   Input,
@@ -18,14 +22,15 @@ import {
   YStack,
 } from 'tamagui';
 
-import {useRequestVerification} from '@/src/hooks/useResendVerification';
-import {useSendOtpMutation} from '@/src/hooks/useSendOtp';
-import {useLoginMutation} from '@/src/hooks/useUserLogin';
-import EmailInputBottomSheet from '../../components/EmailInputModal';
-import Loader from '../../components/Loader';
-import {SECURE_KEYS, secureStoreItem} from '../../helper/SecureStorageUtils';
-import {resetSessionExpiredNotification} from '../../helper/setupAxiosInterceptor';
-import {KEYS, storeItem} from '../../helper/Utils';
+import {useRequestVerification} from '@/src/hooks/auth/useResendVerification';
+import {useSendOtpMutation} from '@/src/hooks/auth/useSendOtp';
+import {useLoginMutation} from '@/src/hooks/auth/useUserLogin';
+import type {LoginResponse} from '@/src/hooks/auth/useUserLogin';
+import EmailInputBottomSheet from '../../components/auth/EmailInputModal';
+import Loader from '../../components/common/Loader';
+import {SECURE_KEYS, secureStoreItem} from '../../lib/storage/SecureStorageUtils';
+import {resetSessionExpiredNotification} from '../../lib/api/setupAxiosInterceptor';
+import {KEYS, storeItem} from '../../lib/utils/Utils';
 import {
   setGuestMode,
   setUserHandle,
@@ -33,26 +38,49 @@ import {
   setUserToken,
 } from '../../store/UserSlice';
 
-import { AuthData, LoginScreenProp } from '../../type';
+import { AuthData, LoginScreenProp } from '../../schemas/type';
+import { useAppDispatch } from '@/src/store/hooks';
+type AxiosError = any;
+
+const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email address is required.')
+    .email('Please enter a valid email address.'),
+  password: z
+    .string()
+    .min(1, 'Password is required.')
+    .min(8, 'Password must contain at least 8 characters.'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginScreen = ({navigation, route}: LoginScreenProp) => {
   const inset = useSafeAreaInsets();
   const {redirectTo} = route.params || {};
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isDarkMode = useColorScheme() === 'dark';
   const [emailInputVisible, setEmailInputVisible] = useState(false);
   const [requestVerificationMode, setRequestVerification] = useState(false);
-  const [password, setPassword] = useState('');
-  const [passwordVerify, setPasswordVerify] = useState(false);
-  const [email, setEmail] = useState('');
   const [otpMail, setOtpMail] = useState('');
   const [fcmToken, setFcmToken] = useState<string | null>(null);
-  const [emailVerify, setEmailVerify] = useState(false);
-  const [output, setOutput] = useState(true);
-  const [passwordMessage, setPasswordMessage] = useState(false);
-  const [emailMessage, setEmailMessage] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+    setValue,
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onChange',
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {mutate: resendVerification, isPending: resendVerificationPending} =
     useRequestVerification();
 
@@ -110,36 +138,54 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
     }
   }
 
-  const validateAndSubmit = async () => {
-    if (validate()) {
-      setPasswordMessage(false);
-      setEmailMessage(false);
-      if (__DEV__) {
-        console.log('Login attempt in progress');
-      }
+  const onSubmit = async (data: LoginFormData) => {
+    if (__DEV__) {
+      console.log('Login attempt in progress');
+    }
 
-      const fcmToken = await getFCMToken();
+    const fcmToken = await getFCMToken();
 
-      if (__DEV__) {
-        console.log('Attempting to retrieve FCM Token');
-      }
+    if (__DEV__) {
+      console.log('Attempting to retrieve FCM Token');
+    }
 
-      login(
+    login(
+      {
+        email: data.email,
+        password: data.password,
+        fcmToken: fcmToken ?? 'not found',
+      },
         {
-          email: email,
-          password: password,
-          fcmToken: fcmToken ?? 'not found',
-        },
-        {
-          onSuccess: async data => {
+          onSuccess: async (data: LoginResponse) => {
+            if (__DEV__) {
+              console.log('[LoginScreen] onSuccess data keys:', Object.keys(data || {}));
+            }
+
+            // Extract user info — backend may return it at data.user or flat on data
+            const userData = data.user ?? (data as any);
+
+            // Token can be at multiple fields depending on backend version
+            const token =
+              data.token ??
+              data.refreshToken ??
+              data.accessToken ??
+              (data.user as any)?.refreshToken ??
+              null;
+
+            if (__DEV__) {
+              console.log('[LoginScreen] Resolved token:', token ? 'present (length=' + token.length + ')' : 'NULL/MISSING');
+              console.log('[LoginScreen] userId:', userData?._id);
+              console.log('[LoginScreen] user_handle:', userData?.user_handle);
+            }
+
             const auth: AuthData = {
-              userId: data._id,
-              token: data?.refreshToken,
-              user_handle: data?.user_handle,
+              userId: userData?._id,
+              token,
+              user_handle: userData?.user_handle,
             };
             try {
-              await storeItem(KEYS.USER_ID, auth.userId.toString());
-              await storeItem(KEYS.USER_HANDLE, data?.user_handle);
+              await storeItem(KEYS.USER_ID, auth.userId?.toString() || '');
+              await storeItem(KEYS.USER_HANDLE, auth.user_handle || '');
               if (auth.token) {
                 await secureStoreItem(
                   SECURE_KEYS.USER_TOKEN,
@@ -155,26 +201,27 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                 dispatch(setGuestMode(false));
                 // Reset so the next session expiry triggers the notification again.
                 resetSessionExpiredNotification();
-                setTimeout(() => {
-                  if (redirectTo) {
-                    (navigation as any).navigate(
-                      redirectTo.name,
-                      redirectTo.params,
-                    );
-
-                    return;
-                  }
+                if (redirectTo) {
+                  (navigation as any).navigate(
+                    redirectTo.name,
+                    redirectTo.params,
+                  );
+                } else {
                   navigation.reset({
                     index: 0,
                     routes: [{name: 'TabNavigation'}],
                   });
-                }, 1000);
+                }
               } else {
-                Alert.alert('Token not found');
+                // Token is missing — log all keys to help diagnose backend response shape
+                if (__DEV__) {
+                  console.error('[LoginScreen] No token found in response. Full data:', JSON.stringify(data, null, 2));
+                }
+                Alert.alert('Login Error', 'Authentication token not received. Please try again.');
               }
             } catch (e) {
               if (__DEV__) {
-                console.log('Async Storage ERROR', e);
+                console.log('Storage ERROR during login', e);
               }
             }
           },
@@ -183,8 +230,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             if (__DEV__) {
               console.log('Error', error);
             }
-            setPassword('');
-            setEmail('');
+            setValue('password', '');
             if (error.response) {
               const errorCode = error.response.status;
               switch (errorCode) {
@@ -200,68 +246,27 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                     'Email not verified. Please check your email.',
                   );
                   break;
-                case 404:
-                  Alert.alert('Error', 'User not found');
-                  break;
                 default:
-                  Alert.alert('Error', 'Internal server error');
+                  Alert.alert('Error', 'Something went wrong. Please try again.');
+                  break;
               }
             } else {
-              Alert.alert('Error', 'User not found');
+              Alert.alert('Error', 'Network error or server unavailable');
             }
+            setIsSubmitting(false);
           },
-        },
+        }
       );
-    } else {
-      setOutput(true);
-      setPasswordMessage(false);
-      setEmailMessage(false);
-      if (output && !passwordVerify) {
-        setPasswordMessage(true);
-      }
-      if (output && !emailVerify) {
-        setEmailMessage(true);
-      }
-    }
-  };
-
-  const validate = () => {
-    if (emailVerify && passwordVerify) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-  const handlePassword = (e: any) => {
-    //let pass = e.nativeEvent.text;
-    setPassword(e);
-    setPasswordVerify(false);
-
-    if (/(?=.*[a-z]).{6,}/.test(e)) {
-      setPassword(e);
-      setPasswordVerify(true);
-    }
-  };
-
-  const handleEmail = (e: any) => {
-    //console.log("Event",e );
-    //let email = e.nativeEvent.text;
-    setEmail(e);
-    setEmailVerify(false);
-    if (/^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(e)) {
-      setEmail(e);
-      setEmailVerify(true);
-    }
   };
 
   const handleEmailInputBack = () => {
     setEmailInputVisible(false);
   };
 
-  const navigateToOtpScreen = () => {
+  const navigateToOtpScreen = (overrideEmail?: string) => {
     setEmailInputVisible(false);
     navigation.navigate('OtpScreen', {
-      email: otpMail,
+      email: overrideEmail || otpMail,
     });
   };
 
@@ -272,7 +277,6 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
     <YStack flex={1} backgroundColor={'$background'}>
       <StatusBar
         style={isDarkMode ? 'light' : 'dark'}
-        backgroundColor={theme.blue10.val}
       />
 
       <YStack
@@ -317,81 +321,102 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
           </YStack>
 
           <YStack gap="$3">
-            {emailMessage && (
-              <Text color="$red10" fontSize={14} marginBottom="$-2">
-                Please Enter a Valid Email
-              </Text>
-            )}
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                <YStack gap="$1">
+                  <XStack alignItems="center" position="relative">
+                    <Icon
+                      name="mail"
+                      size={22}
+                      color={error ? '#ef4444' : isDarkMode ? 'white' : 'black'}
+                      style={{
+                        position: 'absolute',
+                        left: 12,
+                        zIndex: 1,
+                      }}
+                    />
+                    <Input
+                      flex={1}
+                      height="$6"
+                      borderRadius="$4"
+                      placeholder="Enter your email address"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      keyboardType="email-address"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      color={isDarkMode ? '$color' : '$color10'}
+                      paddingStart="$10"
+                      borderWidth={error ? 2 : 1}
+                      borderColor={error ? '$red8' : undefined}
+                    />
+                  </XStack>
+                  {error && (
+                    <Text color="$red10" fontSize={13} marginLeft="$1">
+                      {error.message}
+                    </Text>
+                  )}
+                </YStack>
+              )}
+            />
 
-            <XStack alignItems="center" position="relative">
-              <Icon
-                name="mail"
-                size={22}
-                color={isDarkMode ? 'white' : 'black'}
-                style={{
-                  position: 'absolute',
-                  left: 12,
-                  zIndex: 1,
-                }}
-              />
-              <Input
-                flex={1}
-                height="$6"
-                borderRadius="$4"
-                placeholder="Enter your email"
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
-                onChangeText={handleEmail}
-                color={isDarkMode ? '$color' : '$color10'}
-                paddingStart="$10"
-              />
-            </XStack>
-
-            {passwordMessage && (
-              <Text color="$red10" fontSize={14} marginBottom="$-2">
-                Password must be 6 Characters Long
-              </Text>
-            )}
-
-            <XStack alignItems="center" position="relative">
-              <Entypo
-                name="lock"
-                size={22}
-                color={isDarkMode ? 'white' : 'black'}
-                style={{
-                  position: 'absolute',
-                  left: 12,
-                  zIndex: 1,
-                }}
-              />
-              <Input
-                flex={1}
-                height="$6"
-                borderRadius="$4"
-                placeholder="Password"
-                secureTextEntry={secureTextEntry}
-                autoCapitalize="none"
-                onChangeText={handlePassword}
-                value={password}
-                color={isDarkMode ? '$color' : '$color10'}
-                paddingLeft="$10"
-                paddingRight="$10"
-              />
-              <Button
-                chromeless
-                size="$4"
-                circular
-                position="absolute"
-                right={6}
-                onPress={handleSecureEntryClickEvent}>
-                <Icon
-                  name={secureTextEntry ? 'eye-off' : 'eye'}
-                  size={22}
-                  color={isDarkMode ? 'white' : 'black'}
-                />
-              </Button>
-            </XStack>
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                <YStack gap="$1">
+                  <XStack alignItems="center" position="relative">
+                    <Entypo
+                      name="lock"
+                      size={22}
+                      color={error ? '#ef4444' : isDarkMode ? 'white' : 'black'}
+                      style={{
+                        position: 'absolute',
+                        left: 12,
+                        zIndex: 1,
+                      }}
+                    />
+                    <Input
+                      flex={1}
+                      height="$6"
+                      borderRadius="$4"
+                      placeholder="Enter your password"
+                      secureTextEntry={secureTextEntry}
+                      autoCapitalize="none"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      color={isDarkMode ? '$color' : '$color10'}
+                      paddingLeft="$10"
+                      paddingRight="$10"
+                      borderWidth={error ? 2 : 1}
+                      borderColor={error ? '$red8' : undefined}
+                    />
+                    <Button
+                      chromeless
+                      size="$4"
+                      circular
+                      position="absolute"
+                      right={6}
+                      onPress={handleSecureEntryClickEvent}>
+                      <Icon
+                        name={secureTextEntry ? 'eye-off' : 'eye'}
+                        size={22}
+                        color={isDarkMode ? 'white' : 'black'}
+                      />
+                    </Button>
+                  </XStack>
+                  {error && (
+                    <Text color="$red10" fontSize={13} marginLeft="$1">
+                      {error.message}
+                    </Text>
+                  )}
+                </YStack>
+              )}
+            />
 
             <XStack
               justifyContent="space-between"
@@ -425,7 +450,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               </Text>
             </XStack>
 
-            <Button
+          <Button
               backgroundColor="$blue10"
               theme="blue"
               marginTop="$5"
@@ -433,18 +458,17 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               borderRadius="$4"
               fontWeight="700"
               alignSelf="center"
-              onPress={() => {
-                if (__DEV__) {
-                  console.log('Login button pressed!');
-                }
-                validateAndSubmit();
-              }}
-              disabled={loginPending}
-              opacity={loginPending ? 0.5 : 1}
+              onPress={handleSubmit(onSubmit)}
+              disabled={loginPending || !isValid}
+              opacity={loginPending || !isValid ? 0.5 : 1}
               width="100%">
-              <Text fontSize={18} color="$white" fontWeight="600">
-                Login
-              </Text>
+              {isSubmitting || loginPending ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text fontSize={18} color="$white" fontWeight="600">
+                  Login
+                </Text>
+              )}
             </Button>
           </YStack>
 
@@ -507,6 +531,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
         <EmailInputBottomSheet
           visible={emailInputVisible}
           callback={(email: string) => {
+            setEmailInputVisible(false);
             setOtpMail(email);
             if (requestVerificationMode) {
               resendVerification(
@@ -517,8 +542,8 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                   onSuccess: () => {
                     /** Check Status */
                     Alert.alert('Verification Email Sent');
-                    setEmail('');
-                    setPassword('');
+                    setValue('password', '');
+                    setValue('email', '');
                   },
                   onError: (error: AxiosError) => {
                     if (__DEV__) {
@@ -569,7 +594,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                 {
                   onSuccess: () => {
                     Alert.alert('OTP has sent to your mail');
-                    navigateToOtpScreen();
+                    navigateToOtpScreen(email);
                   },
                   onError: error => {
                     if (isAxiosError(error)) {

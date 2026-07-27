@@ -259,7 +259,7 @@ describe('ArticleScreen', () => {
 ### Testing Components with Redux
 
 ```typescript
-import { Provider } from 'react-redux';
+import { Provider } from "@/src/store/hooks";
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from '@/store/slices/userSlice';
 
@@ -1264,7 +1264,7 @@ Contributors must ensure tests pass locally via `yarn test` before opening PRs.
 // __tests__/setup/testUtils.tsx
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { Provider } from 'react-redux';
+import { Provider } from "@/src/store/hooks";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NavigationContainer } from '@react-navigation/native';
 import { configureStore } from '@reduxjs/toolkit';

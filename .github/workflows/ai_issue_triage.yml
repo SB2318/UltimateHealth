@@ -1,0 +1,66 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 🤖 AI Issue Triage Bot
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Uses Google Gemini AI to automatically triage newly opened GitHub issues.
+#   It reads the issue content and intelligently assigns labels, suggests
+#   assignees, and posts a structured triage comment to guide contributors.
+#
+# HOW IT WORKS:
+#   1. Triggers when a new issue is opened or when a comment is created.
+#   2. Runs a Python script (.github/scripts/ai_issue_triage.py) that:
+#        a. Reads the issue title and body.
+#        b. Sends the content to the Gemini AI API.
+#        c. Applies relevant labels (e.g. bug, enhancement, documentation).
+#        d. Posts a triage comment summarizing the AI's assessment.
+#   3. Can also be triggered manually by providing an issue number.
+#
+# TRIGGERS:
+#   - Automatic : When a new issue is opened.
+#   - Automatic : When a comment is created on any issue.
+#   - Manual    : Via workflow_dispatch with a specific issue_number input.
+#
+# PERMISSIONS REQUIRED:
+#   - issues: write    → to apply labels and post comments
+#
+# SECRETS REQUIRED:
+#   - GEMINI_KEY_1 ... GEMINI_KEY_5  → Gemini API keys (rotated for rate limits)
+#   - GITHUB_TOKEN                   → provided automatically by GitHub
+# ──────────────────────────────────────────────────────────────────────────────
+
+name: AI Issue Triage
+
+on:
+  issues:
+    types: [opened]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number to manually triage (required)'
+        required: true
+        type: string
+
+jobs:
+  triage-and-assign:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.10"
+
+      - name: Run AI Triage Script
+        env:
+          GEMINI_API_KEYS: ${{ secrets.GEMINI_KEY_1 }},${{ secrets.GEMINI_KEY_2 }},${{ secrets.GEMINI_KEY_3 }},${{ secrets.GEMINI_KEY_4 }},${{ secrets.GEMINI_KEY_5 }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number || github.event.comment.issue_id || github.event.inputs.issue_number }}
+        run: |
+          python .github/scripts/ai_issue_triage.py

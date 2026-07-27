@@ -1,3 +1,40 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 📝 Update Contributors in README
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Automatically adds a merged PR author to the contributors section of the
+#   README.md file after their PR is merged into main or web. This ensures
+#   every contributor is publicly acknowledged in the project documentation.
+#
+# HOW IT WORKS:
+#   1. Triggers when a PR is closed (merged) on the main or web branches.
+#   2. Skips if the PR was closed without merging, or if the author is a Bot.
+#   3. Checks out the target branch (main or web) with full git history.
+#   4. Runs update_contributors.py with the PR author's GitHub username:
+#        - The script locates the contributors section in README.md.
+#        - Adds the new contributor's avatar and profile link if not present.
+#   5. Stages README.md and checks for changes:
+#        - If the contributor is already listed → skips the commit.
+#        - If new → commits with message: "docs: add @<username> to contributors list"
+#        - Pushes the commit directly to the target branch.
+#   6. Uses concurrency group to prevent simultaneous runs from corrupting README.
+#
+# TRIGGERS:
+#   - Automatic : Fires when a PR is merged into main or web.
+#   - Skipped   : PRs closed without merging, or opened by Bot accounts.
+#
+# CONCURRENCY:
+#   - Group: update-contributors (cancel-in-progress: false)
+#     Runs are queued — never cancelled — to avoid missing contributors.
+#
+# PERMISSIONS REQUIRED:
+#   - contents: write  → to commit and push the updated README.md
+#
+# SECRETS REQUIRED:
+#   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: Update Contributors
 
 concurrency:
@@ -22,9 +59,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
-          # Make sure to fetch the full history to easily commit and push
+          # Checkout the target branch (main or web) so contributors are added to the right README
+          ref: ${{ github.event.pull_request.base.ref }}
           fetch-depth: 0
 
       - name: Set up Python

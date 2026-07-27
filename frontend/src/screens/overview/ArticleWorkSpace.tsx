@@ -1,26 +1,27 @@
+ 
+ 
 import {useCallback, useEffect, useState} from 'react';
-import {
-  View,
+import { View,
   StyleSheet,
   TouchableOpacity,
   Text,
-  FlatList,
-} from 'react-native';
-import {ArticleData} from '../../type';
-import {useSelector} from 'react-redux';
-import ReviewCard from '../../components/ReviewCard';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
-import {hp, wp} from '../../helper/Metric';
-import Loader from '../../components/Loader';
-import {useGetAllArticlesForUser} from '@/src/hooks/useGetUserAllArticles';
-import {NoArticleState} from '../../components/EmptyStates';
+   FlatList ,
+ } from 'react-native';
+import {ArticleData} from '../../schemas/type';
+import {useAppSelector} from '../../store/hooks';
+import ReviewCard from '../../components/article/ReviewCard';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {hp, wp} from '../../lib/ui/Metric';
+import Loader from '../../components/common/Loader';
+import {useGetAllArticlesForUser} from '@/src/hooks/article/useGetUserAllArticles';
+import {NoArticleState} from '../../components/common/EmptyStates';
 
 export default function ArticleWorkSpace({
   handleClickAction,
 }: {
   handleClickAction: (item: ArticleData) => void;
 }) {
-  useSelector((state: any) => state.user);
+  useAppSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -130,7 +131,7 @@ export default function ArticleWorkSpace({
             <FlatList
               data={articleData ? articleData : []}
               renderItem={renderItem}
-              keyExtractor={item => item._id.toString()}
+              keyExtractor={(item: ArticleData) => item._id.toString()}
               contentContainerStyle={styles.flatListContentContainer}
               refreshing={refreshing}
               onRefresh={onRefresh}
@@ -192,3 +193,4 @@ const styles = StyleSheet.create({
     paddingBottom: hp(2),
   },
 });
+

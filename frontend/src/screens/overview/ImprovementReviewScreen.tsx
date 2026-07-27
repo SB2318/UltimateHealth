@@ -1,42 +1,43 @@
-import {
-  Image,
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
+import { Image,
   Platform,
   StyleSheet,
   TouchableOpacity,
   View,
-  ScrollView,
-  FlatList,
+   ScrollView ,
+   FlatList ,
   Dimensions,
-} from 'react-native';
+  } from 'react-native';
 import {useEffect, useRef, useState} from 'react';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ImpvReviewScreenProp, Comment} from '../../type';
+import {ImpvReviewScreenProp, Comment} from '../../schemas/type';
 
-import {useDispatch, useSelector} from 'react-redux';
-import {hp, wp} from '../../helper/Metric';
-import {GET_STORAGE_DATA} from '../../helper/APIUtils';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {hp, wp} from '../../lib/ui/Metric';
+import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 
 //import io from 'socket.io-client';
 
 import {useSocket} from '../../contexts/SocketContext';
 //import CommentScreen from '../CommentScreen';
 import {setUserHandle} from '../../store/UserSlice';
-import {handleExternalClick, StatusEnum} from '../../helper/Utils';
-import ReviewItem from '../../components/ReviewItem';
+import {handleExternalClick, StatusEnum} from '../../lib/utils/Utils';
+import ReviewItem from '../../components/article/ReviewItem';
 import {Button, Spinner, TextArea, YStack, Text} from 'tamagui';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-import {useGetImprovementById} from '@/src/hooks/useGetImprovementById';
-import {useGetImprovementContent} from '@/src/hooks/useGetImprovementContent';
-import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';
+import {useGetImprovementById} from '@/src/hooks/improvement/useGetImprovementById';
+import {useGetImprovementContent} from '@/src/hooks/improvement/useGetImprovementContent';
+import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
+import {useGetLoadReviewComments} from '@/src/hooks/article/useGetLoadReviewComments';
 
 const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
   const insets = useSafeAreaInsets();
   const {requestId, authorId, recordId, articleRecordId} = route.params; // requestId
-  const {user_token, user_handle} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {user_token, user_handle} = useAppSelector((state: any) => state.user);
+  const {isConnected} = useAppSelector((state: any) => state.network);
 
   const [feedback, setFeedback] = useState('');
   const [webviewHeight, setWebViewHeight] = useState(0);
@@ -44,11 +45,11 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
   const [loading, setLoading] = useState(false);
 
   const socket = useSocket();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [comments, setComments] = useState<Comment[]>([]);
 
-  const flatListRef = useRef<FlatList<Comment>>(null);
+ // const flatListRef = useRef<FlatList<Comment>>(null);
 
   const {data: user} = useGetProfile();
   const {data: improvement} = useGetImprovementById(requestId);
@@ -99,9 +100,9 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
       setComments(prevComments => {
         const newComments = [data, ...prevComments];
         // Scroll to the first index after adding the new comment
-        if (flatListRef.current && newComments.length > 1) {
-          flatListRef?.current.scrollToIndex({index: 0, animated: true});
-        }
+        // if (flatListRef.current && newComments.length > 1) {
+        //   flatListRef?.current.scrollToIndex({index: 0, animated: true});
+        // }
 
         return newComments;
       });
@@ -352,20 +353,22 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
               💬 Add a Comment
             </Text>
             <TextArea
-              placeholder="Share your thoughts or ask a question..."
-              value={feedback}
-              onChangeText={setFeedback}
-              multiline
-              height={hp(16)}
+                 id="improvement-feedback-input"  // 👈 Added a unique web platform ID
+                 name="feedbackContent"            // 👈 Added an explicit form name property
+                 placeholder="Share your thoughts or ask a question..."
+                 value={feedback}
+                 onChangeText={setFeedback}
+                multiline
+                height={hp(16)}
               fontSize={wp(4.5)}
               paddingVertical={12}
               paddingHorizontal={14}
-              borderRadius={12}
-              borderWidth={2}
-              borderColor={PRIMARY_COLOR}
-              backgroundColor="#fff"
-              textAlignVertical="top"
-            />
+                borderRadius={12}
+                borderWidth={2}
+               borderColor={PRIMARY_COLOR}
+                  backgroundColor="#fff"
+                   textAlignVertical="top"
+                  />
 
             {feedback.length > 0 && (
               <YStack alignItems="flex-end" marginTop={hp(0.5)}>
@@ -688,3 +691,4 @@ const styles = StyleSheet.create({
     marginBottom: hp(0.8),
   },
 });
+

@@ -76,6 +76,79 @@ docs: update contribution guidelines
    - Target the **web** branch for web application contributions.
 
 
+## Local Development Troubleshooting
+
+If you encounter issues while setting up the project locally, try the following solutions before opening an issue.
+
+### Dependency installation fails
+
+If `yarn install` or `pnpm install` fails:
+
+- Make sure you are using a supported Node.js version.
+- Delete `node_modules` and reinstall dependencies.
+
+```bash
+# macOS / Linux
+rm -rf node_modules
+
+# Windows (PowerShell)
+Remove-Item -Recurse -Force node_modules
+
+yarn install
+# or
+pnpm install
+```
+
+### Node.js version mismatch
+
+Check your installed Node.js version:
+
+```bash
+node -v
+```
+
+If the version does not match the project's requirements, install the recommended version using a version manager such as **nvm**. See the [Node.js Documentation](https://nodejs.org/docs) for installation guidance.
+
+### Expo CLI or Android Emulator issues
+
+If the Expo app does not start or no Android device is detected:
+
+- Ensure Android Studio and the Android SDK are installed correctly.
+- Start an Android emulator before running the Expo commands.
+- Restart the emulator if it is not detected.
+
+### pnpm quality check failures
+
+Before opening a Pull Request, run:
+
+```bash
+cd frontend
+pnpm quality
+```
+
+Resolve any reported issues before submitting your changes.
+
+### Cache-related issues
+
+If you encounter unexpected build or dependency issues, clear the cache and reinstall dependencies:
+
+```bash
+# macOS / Linux
+rm -rf node_modules
+
+# Windows (PowerShell)
+Remove-Item -Recurse -Force node_modules
+
+pnpm store prune
+pnpm install
+```
+
+### Helpful Resources
+
+- [Node.js Documentation](https://nodejs.org/docs)
+- [pnpm Documentation](https://pnpm.io/)
+- [Expo Documentation](https://docs.expo.dev/)
+
 ## Pull Request Guidelines
 
 - **Keep PRs focused** — one feature or bug fix per PR.
@@ -123,6 +196,30 @@ We will review your PR as soon as possible. Feedback will be provided constructi
   - Explain the use case
   - Describe why it benefits the community
 
+
+## Frequently Asked Questions
+
+- Do I need to get assigned to an issue before working on it?
+
+Yes. It is recommended to comment on the issue and wait for maintainer       assignment before starting work. This helps prevent duplicate efforts and conflicting Pull
+
+- Which branch should I target for my Pull Request?
+
+For mobile app and core project contributions, target the main branch.
+For web application contributions, target the web branch.
+Always verify the target branch before creating your PR.
+
+-  How do I know whether an issue belongs to the mobile app or web app?
+
+Check the issue description, labels, and affected files. If the issue mentions React Native, Expo, Android, or iOS, it likely belongs to the mobile app. If it mentions React web pages, routing, or browser UI, it likely belongs to the web branch.
+
+- What if my Pull Request has merge conflicts?
+
+Sync your branch with the latest changes from the target branch, resolve conflicts locally, test again, and push the updated branch.
+
+- Do I need to update documentation when making changes?
+
+Yes. If your contribution affects users, contributors, APIs, workflows, or setup instructions, update the relevant documentation accordingly.
 
 ## Recognition
 

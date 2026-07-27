@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {ArticleData, Category, Podcast} from '../type';
+import {ArticleData, Category, Podcast} from '../schemas/type';
 
 export type DataState = {
   filteredArticles: ArticleData[];
@@ -38,6 +38,7 @@ const initialState: DataState = {
     viewCount: 0,
     description: '',
     viewUsers: [],
+    trustUsers: [],
     repostUsers: [],
     likeCount: 0,
     likedUsers: [],

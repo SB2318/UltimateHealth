@@ -1,42 +1,42 @@
-import {
-  Image,
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Image,
   Platform,
   StyleSheet,
   TouchableOpacity,
   View,
-  ScrollView,
-  FlatList,
+   ScrollView ,
+   FlatList ,
   Dimensions,
-} from 'react-native';
+  } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ReviewScreenProp, Comment} from '../../type';
-import {useDispatch, useSelector} from 'react-redux';
-import {hp, wp} from '../../helper/Metric';
+import {ReviewScreenProp, Comment} from '../../schemas/type';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {hp, wp} from '../../lib/ui/Metric';
 import {
   GET_IMAGE,
   GET_STORAGE_DATA,
   SOCKET_PROD,
-} from '../../helper/APIUtils';
+} from '../../lib/api/APIUtils';
 
 import {setUserHandle} from '../../store/UserSlice';
-import {handleExternalClick, StatusEnum} from '../../helper/Utils';
-import ReviewItem from '../../components/ReviewItem';
+import {handleExternalClick, StatusEnum} from '../../lib/utils/Utils';
+import ReviewItem from '../../components/article/ReviewItem';
 import {Button, Spinner, Text, YStack, TextArea} from 'tamagui';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-import {useGetArticleDetails} from '@/src/hooks/useGetArticleDetail';
-import {useGetArticleContent} from '@/src/hooks/useGetArticleContent';
-import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {useGetLoadReviewComments} from '@/src/hooks/useGetLoadReviewComments';
+import {useGetArticleDetails} from '@/src/hooks/article/useGetArticleDetail';
+import {useGetArticleContent} from '@/src/hooks/article/useGetArticleContent';
+import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
+import {useGetLoadReviewComments} from '@/src/hooks/article/useGetLoadReviewComments';
 import {useSocket} from '../../contexts/SocketContext';
 
 const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   const insets = useSafeAreaInsets();
   const {articleId, authorId, recordId} = route.params;
-  const {user_token} = useSelector((state: any) => state.user);
-  const {isConnected} = useSelector((state: any) => state.isConnected);
+  const {user_token} = useAppSelector((state: any) => state.user);
+  const {isConnected} = useAppSelector((state: any) => state.isConnected);
 
   const [feedback, setFeedback] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -46,11 +46,11 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   const {data: articleContent} = useGetArticleContent(recordId);
 
   const socket = useSocket();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [comments, setComments] = useState<Comment[]>([]);
 
-  const flatListRef = useRef<FlatList<Comment>>(null);
+  //const flatListRef = useRef<FlatList<Comment>>(null);
 
   const {data: loadComments, isLoading} = useGetLoadReviewComments(
     articleId,
@@ -59,6 +59,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
   );
 
   useEffect(() => {
+     
     setComments(loadComments ?? []);
   }, [loadComments]);
 
@@ -90,9 +91,9 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
 
       setComments(prevComments => {
         const newComments = [data, ...prevComments];
-        if (flatListRef.current && newComments.length > 1) {
-          flatListRef?.current.scrollToIndex({index: 0, animated: true});
-        }
+        // if (flatListRef.current && newComments.length > 1) {
+        //   flatListRef?.current.scrollToIndex({index: 0, animated: true});
+        // }
 
         return newComments;
       });
@@ -201,6 +202,8 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
                 💬 Add a Comment
               </Text>
               <TextArea
+                id="general-review-input"     // 👈 Added unique web platform ID
+                name="generalReviewContent"
                 placeholder="Share your thoughts or ask a question..."
                 value={feedback}
                 onChangeText={setFeedback}

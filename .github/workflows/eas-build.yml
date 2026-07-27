@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Setup Expo & EAS
-        uses: expo/expo-github-action@v8
+        uses: expo/expo-github-action@v9
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
@@ -36,7 +36,8 @@ jobs:
             pnpm install --frozen-lockfile
           elif [ -f "yarn.lock" ]; then
             echo "Using Yarn"
-            npm install -g yarn
+            corepack enable
+            corepack prepare yarn@4.17.1 --activate
             yarn install --frozen-lockfile
           else
             echo "Using npm"

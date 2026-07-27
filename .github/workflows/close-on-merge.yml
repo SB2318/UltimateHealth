@@ -1,3 +1,35 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 🔗 Close Linked Issues on PR Merge
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   When a pull request is merged, this bot scans the PR body for issue
+#   references (e.g. "#42", "#10") and automatically closes each linked issue
+#   with a comment attributing the closure to the merged PR.
+#
+# HOW IT WORKS:
+#   1. Triggers on every pull_request closed event.
+#   2. Skips if the PR was closed without merging.
+#   3. If the PR was merged:
+#        a. Parses the PR body using grep to extract all #<number> references.
+#        b. For each referenced issue number:
+#             - Posts a comment: "Closed by PR #<pr_number>"
+#             - Closes the issue via PATCH state: "closed"
+#
+# TRIGGERS:
+#   - Automatic : Fires whenever a pull request is closed (merged only).
+#
+# ISSUE LINKING FORMAT:
+#   - Any "#N" pattern found in the PR body is treated as a linked issue.
+#   - Example PR body: "This fixes the crash. Closes #42, see also #10."
+#
+# PERMISSIONS REQUIRED:
+#   - Default GITHUB_TOKEN permissions (issues read/write via curl with token)
+#
+# SECRETS REQUIRED:
+#   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: Close Issues on PR Merge
 
 on:

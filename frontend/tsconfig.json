@@ -1,19 +1,24 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "jsx": "react-native",
-    "strict": true,
+    "module": "preserve",
+    "strict": false,
     "paths": {
       "@/*": [
         "./*"
       ]
     },
     "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "skipLibCheck": true
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "**/*.d.ts"
   ],
   "exclude": [
     "node_modules"

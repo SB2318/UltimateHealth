@@ -1,3 +1,32 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 🎉 Auto Comment on PR Merge
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Automatically posts a congratulatory comment on a pull request the moment
+#   it is successfully merged. This celebrates the contributor's effort and
+#   encourages further participation in the project.
+#
+# HOW IT WORKS:
+#   1. Triggers on every pull_request_target closed event.
+#   2. Checks if the PR was actually merged (not just closed/rejected).
+#   3. If merged, posts a thank-you comment on the PR using the GitHub API:
+#        "Congratulations! Your PR has been successfully merged 🥳🎉
+#         Thank you for your contribution 🚀 Keep Contributing!! ✨"
+#   4. Exits with an error if the comment fails to post (HTTP != 201).
+#
+# TRIGGERS:
+#   - Automatic : Fires whenever a PR is closed (merged or not).
+#                 The job itself only runs when merged == true.
+#
+# PERMISSIONS REQUIRED:
+#   - issues: write         → to post the comment (issues API covers PR comments)
+#   - pull-requests: write  → to interact with the PR
+#
+# SECRETS REQUIRED:
+#   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: Auto Comment on PR Merge
 
 on:
