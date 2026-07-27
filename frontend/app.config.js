@@ -50,12 +50,12 @@ const defaultStaticConfig = {
           {
             scheme: "https",
             host: "uhsocial.in",
-            pathPrefix: "/ap/share/article"
+            pathPrefix: "/api/share/article"
           },
           {
             scheme: "https",
             host: "uhsocial.in",
-            pathPrefix: "/ap/share/podcast"
+            pathPrefix: "/api/share/podcast"
           }
         ]
       }
