@@ -16,9 +16,9 @@ import Constants from "expo-constants";
 declare const __DEV__: boolean;
 const extra = Constants.expoConfig?.extra ?? {};
 
-const PROD_URL: string = extra.PROD_URL;
-const SOCKET_PROD: string = extra.SOCKET_PROD;
-const CONTENT_CHECKER_PROD: string = extra.CONTENT_CHECKER_PROD;
+const PROD_URL: string = extra.PROD_URL ?? 'http://10.0.2.2:3000/api';
+const SOCKET_PROD: string = extra.SOCKET_PROD ?? 'http://10.0.2.2:3000';
+const CONTENT_CHECKER_PROD: string = extra.CONTENT_CHECKER_PROD ?? 'http://10.0.2.2:3000/content-intel';
 const SHARE_BASE_URL = 'https://uhsocial.in';
 
 const LOGIN_API = `${PROD_URL}/user/login`;
