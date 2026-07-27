@@ -42,7 +42,10 @@ export function postMethodCallwithToken<T = unknown>(
       Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify(params),
-  }).then(response => response.json());
+  }).then(response => {
+    if (!response.ok) throw new Error(`POST ${url} failed: ${response.status}`);
+    return response.json();
+  });
 }
 
 /**
@@ -74,7 +77,10 @@ export function postMethodCall<T = unknown>(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(params),
-  }).then(response => response.json());
+  }).then(response => {
+    if (!response.ok) throw new Error(`POST ${url} failed: ${response.status}`);
+    return response.json();
+  });
 }
 
 /**
@@ -106,7 +112,10 @@ export function getMethodCallwithToken<T = unknown>(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${authToken}`,
     },
-  }).then(response => response.json());
+  }).then(response => {
+    if (!response.ok) throw new Error(`GET ${url} failed: ${response.status}`);
+    return response.json();
+  });
 }
 
 /**
@@ -132,5 +141,8 @@ export function getMethodCall<T = unknown>(url: string): Promise<T> {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-  }).then(response => response.json());
+  }).then(response => {
+    if (!response.ok) throw new Error(`GET ${url} failed: ${response.status}`);
+    return response.json();
+  });
 }

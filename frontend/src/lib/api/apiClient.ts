@@ -1,14 +1,12 @@
-// @ts-nocheck
 // frontend/src/services/apiClient.ts
 import Constants from 'expo-constants';
 
 const extra = Constants.expoConfig?.extra ?? {};
 const PROD_URL: string = extra.PROD_URL ?? 'http://10.0.2.2:3000/api';
 
-// 🔥 Main fix: Sirf successful responses return
 export async function apiRequest(endpoint: string, options?: RequestInit) {
   const url = `${PROD_URL}${endpoint}`;
-  
+
   try {
     const response = await fetch(url, {
       ...options,
@@ -18,28 +16,22 @@ export async function apiRequest(endpoint: string, options?: RequestInit) {
       },
     });
 
-    
-    if (response.ok) {  // status 200-299
+    if (response.ok) {
       const data = await response.json();
-      return { 
-        success: true, 
-        data: data, 
-        status: response.status 
-      };
-    } 
-    
-    
-    else {
-      const errorData = await response.json().catch(() => ({}));
-      throw { 
-        success: false, 
-        status: response.status, 
-        error: errorData 
+      return {
+        success: true,
+        data: data,
+        status: response.status,
       };
     }
-    
+
+    const errorData = await response.json().catch(() => ({}));
+    throw {
+      success: false,
+      status: response.status,
+      error: errorData,
+    };
   } catch (error) {
-    // Network errors bhi cache mat karo
     throw error;
   }
 }
