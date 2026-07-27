@@ -81,6 +81,20 @@ const NotificationPreferencesScreen = ({
     );
   };
 
+  // Whether a search filter is currently narrowing the visible list
+  const isFiltering = searchQuery.trim().length > 0;
+
+  // Clear only what's currently visible when filtering, so hidden
+  // selections outside the filtered view are never silently dropped.
+  const handleClearAll = () => {
+    if (isFiltering) {
+      const visibleIds = new Set(filteredCategories.map(t => t._id));
+      setSelectedIds(prev => prev.filter(id => !visibleIds.has(id)));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
   const handleSave = () => {
     if (isGuest) {
       navigation.navigate('GuestPlaceholderScreen', {
@@ -239,9 +253,10 @@ const NotificationPreferencesScreen = ({
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.bulkBtn, styles.bulkBtnClear]}
-                    onPress={() => setSelectedIds([])}>
+                    onPress={handleClearAll}
+                    testID="clear-all-button">
                     <Text style={[styles.bulkBtnText, {color: '#6b7280'}]}>
-                      Clear All
+                      {isFiltering ? 'Clear Visible' : 'Clear All'}
                     </Text>
                   </TouchableOpacity>
                 </View>

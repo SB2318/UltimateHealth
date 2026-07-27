@@ -255,4 +255,40 @@ describe('NotificationPreferencesScreen', () => {
       expect.any(Object),
     );
   });
+
+  it('relabels to "Clear Visible" while filtering and preserves hidden selections on press', () => {
+    const {getByTestId, getByText, queryByText} = renderScreen();
+
+    // Select everything first (Nutrition, Fitness, Mental Health all selected)
+    fireEvent.press(getByText('Select All'));
+
+    // Filter down to just Fitness
+    const searchInput = getByTestId('search-input');
+    fireEvent.changeText(searchInput, 'Fit');
+
+    // Button should relabel while a filter is active
+    expect(getByText('Clear Visible')).toBeTruthy();
+    expect(queryByText('Clear All')).toBeNull();
+
+    // Press it - should only clear the visible Fitness selection
+    fireEvent.press(getByText('Clear Visible'));
+
+    // Remove the filter to inspect full state again
+    fireEvent.press(getByTestId('clear-search-button'));
+
+    // Label should revert now that nothing is filtered
+    expect(getByText('Clear All')).toBeTruthy();
+
+    // Nutrition and Mental Health should still be selected; Fitness should not
+    fireEvent.press(getByText('Save Preferences'));
+    expect(mockUpdatePreferences).toHaveBeenLastCalledWith(
+      {
+        contentClusters: [
+          {_id: 'cat-1', id: 1, name: 'Nutrition', __v: 0},
+          {_id: 'cat-3', id: 3, name: 'Mental Health', __v: 0},
+        ],
+      },
+      expect.any(Object),
+    );
+  });
 });
