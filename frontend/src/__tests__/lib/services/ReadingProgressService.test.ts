@@ -88,4 +88,118 @@ describe('ReadingProgressService', () => {
       'reading_progress_article-1',
     );
   });
+
+  it('returns null when no progress exists', async () => {
+    mockedGetReadingProgressItem.mockResolvedValue(undefined);
+
+    await expect(getProgress('article-1')).resolves.toBeNull();
+
+    expect(mockedDeleteReadingProgressItem).not.toHaveBeenCalled();
+  });
+
+  it('removes progress with scroll position greater than 100', async () => {
+    mockedGetReadingProgressItem.mockResolvedValue(
+      JSON.stringify({
+        articleId: 'article-1',
+        scrollPosition: 150,
+        updatedAt: 123456,
+      }),
+    );
+
+    await expect(getProgress('article-1')).resolves.toBeNull();
+
+    expect(mockedDeleteReadingProgressItem).toHaveBeenCalledWith(
+      'reading_progress_article-1',
+    );
+  });
+
+  it('removes progress with negative scroll position', async () => {
+    mockedGetReadingProgressItem.mockResolvedValue(
+      JSON.stringify({
+        articleId: 'article-1',
+        scrollPosition: -10,
+        updatedAt: 123456,
+      }),
+    );
+
+    await expect(getProgress('article-1')).resolves.toBeNull();
+
+    expect(mockedDeleteReadingProgressItem).toHaveBeenCalledWith(
+      'reading_progress_article-1',
+    );
+  });
+
+  it('removes progress with invalid timestamp', async () => {
+    mockedGetReadingProgressItem.mockResolvedValue(
+      JSON.stringify({
+        articleId: 'article-1',
+        scrollPosition: 50,
+        updatedAt: 0,
+      }),
+    );
+
+    await expect(getProgress('article-1')).resolves.toBeNull();
+
+    expect(mockedDeleteReadingProgressItem).toHaveBeenCalledWith(
+      'reading_progress_article-1',
+    );
+  });
+
+  it('removes progress with non-numeric scroll position', async () => {
+    mockedGetReadingProgressItem.mockResolvedValue(
+      JSON.stringify({
+        articleId: 'article-1',
+        scrollPosition: null,
+        updatedAt: 123456,
+      }),
+    );
+
+    await expect(getProgress('article-1')).resolves.toBeNull();
+
+    expect(mockedDeleteReadingProgressItem).toHaveBeenCalledWith(
+      'reading_progress_article-1',
+    );
+  });
+
+  it('clamps negative progress to 0', async () => {
+    await saveProgress('article-1', -25);
+
+    const [, serialized] = mockedSetReadingProgressItem.mock.calls[0];
+
+    expect(JSON.parse(serialized)).toMatchObject({
+      articleId: 'article-1',
+      scrollPosition: 0,
+    });
+  });
+
+  it('stores the current timestamp when saving progress', async () => {
+    jest.spyOn(Date, 'now').mockReturnValue(987654321);
+
+    await saveProgress('article-1', 75);
+
+    expect(mockedSetReadingProgressItem).toHaveBeenCalledTimes(1);
+
+    const [, serialized] = mockedSetReadingProgressItem.mock.calls[0];
+
+    expect(JSON.parse(serialized)).toEqual({
+      articleId: 'article-1',
+      scrollPosition: 75,
+      updatedAt: 987654321,
+    });
+  });
+
+  it('returns null even if cleanup of invalid progress fails', async () => {
+    mockedGetReadingProgressItem.mockResolvedValue('{broken');
+
+    mockedDeleteReadingProgressItem.mockRejectedValue(
+      new Error('Storage error'),
+    );
+
+    await expect(getProgress('article-1')).resolves.toBeNull();
+
+    expect(mockedDeleteReadingProgressItem).toHaveBeenCalledWith(
+      'reading_progress_article-1',
+    );
+  });
+
 });
