@@ -8,7 +8,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {Contactdetail, SignUpScreenSecondProp} from '../../schemas/type';
-import type  from 'axios';
 import EmailVerifiedModal from '../../components/auth/VerifiedModal';
 import SecurityWarningModal from '../../components/auth/SecurityWarningModal';
 import Loader from '../../components/common/Loader';

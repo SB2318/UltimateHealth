@@ -11,7 +11,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {SignUpScreenFirstProp, UserDetail} from '../../schemas/type';
-import type  from 'axios';
+import { isAxiosError } from 'axios';
 import Snackbar from 'react-native-snackbar';
 import EmailVerifiedModal from '../../components/auth/VerifiedModal';
 import SecurityWarningModal from '../../components/auth/SecurityWarningModal';
