@@ -274,17 +274,4 @@ export const initDeepLinking = (onUrl: (url: string) => void): (() => void) => {
   if (!initialUrlHandled) {
     initialUrlHandled = true;
     ExpoLinking.getInitialURL().then(url => {
-      if (url) {
-        onUrl(url);
-      }
-    });
-  }
-
-  const subscription = ExpoLinking.addEventListener('url', e => {
-    onUrl(e.url);
-  });
-
-  return () => subscription.remove();
-};
-
-export {resolveDeepLinkTarget};
+    .catch(err => console.error(err))
