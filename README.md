@@ -141,6 +141,7 @@ The badges displayed at the top of this README provide a quick overview of the r
 - [📛 Repository Badges Explained](#-repository-badges-explained)
 - [📖 About the Project](#-about-the-project)
 - [✨ Features](#-features)
+- [🏗️ Architecture Overview](#️-architecture-overview)
 - [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
 - [📊 Code Quality](#code-quality)
 - [🚀 Latest Releases](#-latest-releases)
@@ -171,6 +172,44 @@ Our AI bot suite handles the initial pipeline automatically. See [Automation & B
 **UltimateHealth** (also known as **HealthGuide**) is a fully open-source platform that combines a React Native mobile app, a Next.js web frontend, a Node.js REST API, and a Python content intelligence service — all working together to deliver trusted health content worldwide.
 
 > Live Platform: [uhsocial.in](https://uhsocial.in/frontend/v2) &nbsp;|&nbsp; Android App: [Play Store](https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth)
+
+---
+
+## 🏗️ Architecture Overview
+
+UltimateHealth is organized into multiple components, each responsible for a specific part of the platform. These components communicate through the backend API to provide a consistent experience across mobile and web applications.
+
+```text
+                     UltimateHealth
+                           │
+        ┌──────────────────┼──────────────────┐
+        │                  │                  │
+        ▼                  ▼                  ▼
+React Native App     Next.js Web App    Documentation
+        │                  │
+        └──────────┬───────┘
+                   ▼
+            Node.js REST API
+                   │
+         ┌─────────┴─────────┐
+         ▼                   ▼
+      MongoDB      Python Content
+                   Intelligence Service
+```
+
+| Component | Responsibility |
+|-----------|----------------|
+| **React Native (Expo) Mobile App** | Mobile application for Android and iOS users. |
+| **Next.js Web Frontend** | Browser-based interface for accessing UltimateHealth. |
+| **Node.js REST API** | Handles authentication, business logic, and communication with backend services. |
+| **Python Content Intelligence Service** | Performs plagiarism detection, grammar analysis, and originality scoring. |
+
+### Where to Contribute
+
+- **Mobile features** → `frontend/`
+- **Backend functionality** → Node.js backend repository
+- **Content intelligence** → Python content service repository
+- **Documentation** → `README.md` and `docs/`
 
 ---
 
