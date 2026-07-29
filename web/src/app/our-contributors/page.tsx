@@ -370,6 +370,45 @@ export default function OurContributorsPage() {
           .admin-link { margin-left: 0; }
           .contrib-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
         }
+
+        /* ── Dark Mode ── */
+        html.dark .contrib-wall-page { background: #0f172a; }
+        html.dark .admin-card {
+          background: #1e293b;
+          border-color: rgba(255,255,255,0.08);
+          box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        html.dark .admin-name { color: #f1f5f9; }
+        html.dark .admin-desc { color: #94a3b8; }
+        html.dark .contrib-search {
+          background: #1e293b;
+          border-color: rgba(255,255,255,0.1);
+          color: #f1f5f9;
+        }
+        html.dark .contrib-search::placeholder { color: #64748b; }
+        html.dark .contrib-year-tab {
+          background: #1e293b;
+          border-color: rgba(255,255,255,0.1);
+          color: #94a3b8;
+        }
+        html.dark .contrib-year-tab:hover { border-color: #818cf8; color: #a78bfa; }
+        html.dark .contrib-count-line { background: rgba(255,255,255,0.1); }
+        html.dark .contrib-count-text { color: #64748b; }
+        html.dark .contrib-count-text span { color: #cbd5e1; }
+        html.dark .contrib-card {
+          background: #1e293b;
+          border-color: rgba(255,255,255,0.08);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        html.dark .contrib-card:hover { border-color: #818cf8; box-shadow: 0 14px 36px rgba(102,126,234,0.25); }
+        html.dark .contrib-card-img { border-color: rgba(255,255,255,0.15); }
+        html.dark .contrib-card-name { color: #f1f5f9; }
+        html.dark .contrib-card-gh {
+          background: #0f172a;
+          border-color: rgba(255,255,255,0.1);
+          color: #64748b;
+        }
+        html.dark .contrib-empty-text { color: #94a3b8; }
       `}</style>
 
       <div className="contrib-wall-page">
