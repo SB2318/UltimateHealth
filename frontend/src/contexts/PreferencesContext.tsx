@@ -128,6 +128,7 @@ export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
         return resolved;
       });
       const write = pendingWriteRef.current.then(() =>
+.catch(err => console.error(err))
         savePreferencesToStorage(resolved)
       );
       pendingWriteRef.current = write;
