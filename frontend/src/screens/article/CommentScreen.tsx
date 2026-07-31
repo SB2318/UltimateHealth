@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { H3, Image, Paragraph, Text, YStack, TextArea, XStack, Button } from 'tamagui';
 
 import CommentItem from '../../components/article/CommentItem';
+import { BaseEmptyState } from '../../components/common/EmptyStates';
 import Loader from '../../components/common/Loader';
 
 import { useSocket } from '../../contexts/SocketContext';
@@ -58,6 +59,7 @@ const CommentScreen = ({
 
   const flatListRef =
     useRef<any>(null);
+  const inputRef = useRef<TextInput>(null);
 
   const [comments, setComments] = useState<
     Comment[]
@@ -103,6 +105,8 @@ const CommentScreen = ({
     useState<string | null>(null);
 
   const [commentLoading, setCommentLoading] =
+    useState<boolean>(true);
+  const [commentsError, setCommentsError] =
     useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] =
   useState<boolean>(false);
@@ -158,16 +162,30 @@ const CommentScreen = ({
     });
 
   const fetchComments = () => {
-    if (!socket) return;
-      socket.emit('fetch-comments', {
+    if (!socket) {
+      setCommentLoading(false);
+      setCommentsError(true);
+      return;
+    }
+    setCommentsError(false);
+    setCommentLoading(true);
+    socket.emit('fetch-comments', {
       articleId: route.params.articleId,
-      });
-    };
+    });
+  };
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket) {
+      setCommentLoading(false);
+      setCommentsError(true);
+      return;
+    }
 
-     fetchComments();
+    fetchComments();
+
+    socket.on('comment-processing', (data: boolean) => {
+      setCommentLoading(data);
+    });
 
     socket.on(
       'like-comment-processing',
@@ -180,8 +198,17 @@ const CommentScreen = ({
         data.articleId ===
         route.params.articleId
       ) {
-        setComments(data.comments);
+        setComments(
+          Array.isArray(data.comments) ? data.comments : [],
+        );
+        setCommentLoading(false);
+        setCommentsError(false);
       }
+    });
+
+    socket.on('error', () => {
+      setCommentLoading(false);
+      setCommentsError(true);
     });
 
     socket.on('comment', data => {
@@ -267,7 +294,9 @@ const CommentScreen = ({
       socket.off('edit-comment');
       socket.off('delete-comment');
       socket.off('like-comment');
-      socket.off('like-comment-processing'); // FIX: was previously missing, caused listener leak on remount
+      socket.off('like-comment-processing');
+      socket.off('comment-processing');
+      socket.off('error');
     };
   }, [socket, route.params.articleId]);
 
@@ -484,8 +513,49 @@ const CommentScreen = ({
     return <Loader />;
   }
 
+  const renderCommentsEmpty = () => {
+    if (commentsError) {
+      return (
+        <BaseEmptyState
+          iconEmoji="⚠️"
+          title="Couldn't Load Comments"
+          description="We had trouble loading comments for this article. Check your connection and try again."
+          actionText="Try Again"
+          onAction={fetchComments}
+        />
+      );
+    }
+
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyIcon}>💬</Text>
+        <Text style={styles.emptyTitle}>No comments yet!</Text>
+        <Text style={styles.emptySubtitle}>
+          Be the first to share your thoughts on this article
+        </Text>
+        <TouchableOpacity
+          style={styles.emptyButton}
+          onPress={() => inputRef.current?.focus()}>
+          <Text style={styles.emptyButtonText}>Add a Comment</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   return (
-    <ErrorBoundary onRetry={fetchComments}>
+    <ErrorBoundary
+      onRetry={fetchComments}
+      fallback={
+        <SafeAreaView style={styles.safeArea}>
+          <BaseEmptyState
+            iconEmoji="⚠️"
+            title="Something Went Wrong"
+            description="Comments couldn't be displayed. Please try again."
+            actionText="Try Again"
+            onAction={fetchComments}
+          />
+        </SafeAreaView>
+      }>
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={{flex: 1}}
@@ -580,6 +650,7 @@ const CommentScreen = ({
                 {/* Comment input */}
                 <SafeAreaView edges={['bottom']}>
                   <TextInput
+                    ref={inputRef}
                     {...textInputProps}
                     style={styles.textInput}
                     placeholder="Add a comment..."
@@ -674,6 +745,7 @@ const CommentScreen = ({
               isFromArticle={false}
             />
           )}
+          ListEmptyComponent={renderCommentsEmpty}
           contentContainerStyle={[
             styles.scrollContent,
             {
@@ -807,6 +879,41 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 18,
     color: '#1F2937',
+  },
+
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  emptyIcon: {
+    fontSize: 60,
+    marginBottom: 16,
+  },
+  emptyTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: PRIMARY_COLOR,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    color: '#888',
+    marginBottom: 24,
+    textAlign: 'center',
+  },
+  emptyButton: {
+    backgroundColor: PRIMARY_COLOR,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  emptyButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 14,
   },
 });
 
