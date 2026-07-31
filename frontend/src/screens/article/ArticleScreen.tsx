@@ -22,7 +22,10 @@ import {ArticleData, ArticleScreenProp} from '../../schemas/type';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {hp} from '../../lib/ui/Metric';
 import {GET_IMAGE, GET_STORAGE_DATA} from '../../lib/api/APIUtils';
-import Loader from '../../components/common/Loader';
+import {
+  BaseEmptyState,
+  NoArticleState,
+} from '../../components/common/EmptyStates';
 import Snackbar from 'react-native-snackbar';
 import ResearchSummaryCard from '../../components/article/ResearchSummaryCard';
 import StructuredPodcastCard from '../../components/podcast/StructuredPodcastCard';
@@ -81,6 +84,20 @@ const CHUNK_SIZE = 120;
 
 type TtsSubscription = {
   remove?: () => void;
+};
+
+const isHtmlContentEmpty = (html?: string | null) => {
+  if (!html) {
+    return true;
+  }
+
+  const plainText = html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .trim();
+
+  return plainText.length === 0;
 };
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
@@ -182,11 +199,17 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {
     data: article,
     isLoading: articleLoading,
+    isError: articleError,
     refetch,
   } = useGetArticleDetails(articleId);
 
   const resolvedRecordId = article?.pb_recordId || recordId;
-  const {data: articleContent} = useGetArticleContent(resolvedRecordId);
+  const {
+    data: articleContent,
+    isLoading: contentLoading,
+    isError: contentError,
+    refetch: refetchContent,
+  } = useGetArticleContent(resolvedRecordId);
 
   const [localIsFollowing, setLocalIsFollowing] = useState<boolean | null>(null);
 
@@ -316,8 +339,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     };
      
   }, []);
-
-  const noDataHtml = '<p>No Data found</p>';
 
   useEffect(() => {
     if (user) {
@@ -904,7 +925,24 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   });
 
   if (articleLoading) {
-    return <Loader />;
+    return (
+      <SafeAreaView style={styles.container}>
+        <BaseEmptyState
+          iconEmoji="📄"
+          title="Loading Article"
+          description="Fetching the latest content for you..."
+          loading
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (articleError || !article) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <NoArticleState onRefresh={refetch} />
+      </SafeAreaView>
+    );
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
@@ -920,7 +958,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   return (
-    <ErrorBoundary onRetry={() => refetch()}>
+    <ErrorBoundary
+      onRetry={() => refetch()}
+      fallback={
+        <SafeAreaView style={styles.container}>
+          <NoArticleState onRefresh={() => refetch()} />
+        </SafeAreaView>
+      }>
     <SafeAreaView style={styles.container}>
       {/* Reading Progress Bar */}
       <Animated.View style={[styles.progressBar, progressStyle]} />
@@ -1180,25 +1224,50 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 </View>
               )}
               <View style={styles.descriptionContainer}>
-                <AutoHeightWebView
-                  style={styles.webView}
-                  customStyle={articleCustomStyle}
-                  files={[
-                    {
-                      href: 'cssfileaddress',
-                      type: 'text/css',
-                      rel: 'stylesheet',
-                    },
-                  ]}
-                  originWhitelist={['*']}
-                  source={{html: articleContent ?? noDataHtml}}
-                  scalesPageToFit={true}
-                  viewportContent={'width=device-width, user-scalable=no'}
-                  onShouldStartLoadWithRequest={handleExternalClick}
-                  // Once the WebView reports its final rendered height, we know
-                  // the ScrollView has enough content to scroll to the saved position.
-                  onSizeUpdated={restoreScrollPosition}
-                />
+                {contentLoading ? (
+                  <BaseEmptyState
+                    iconEmoji="📄"
+                    title="Loading Content"
+                    description="Preparing the article body..."
+                    loading
+                  />
+                ) : contentError ? (
+                  <BaseEmptyState
+                    iconEmoji="⚠️"
+                    title="Couldn't Load Content"
+                    description="We had trouble loading this article's content. Check your connection and try again."
+                    actionText="Try Again"
+                    onAction={() => refetchContent()}
+                  />
+                ) : isHtmlContentEmpty(articleContent) ? (
+                  <BaseEmptyState
+                    iconEmoji="📄"
+                    title="No Content Available"
+                    description="This article doesn't have readable content yet. Try refreshing or check back later."
+                    actionText="Refresh Content"
+                    onAction={() => refetchContent()}
+                  />
+                ) : (
+                  <AutoHeightWebView
+                    style={styles.webView}
+                    customStyle={articleCustomStyle}
+                    files={[
+                      {
+                        href: 'cssfileaddress',
+                        type: 'text/css',
+                        rel: 'stylesheet',
+                      },
+                    ]}
+                    originWhitelist={['*']}
+                    source={{html: articleContent}}
+                    scalesPageToFit={true}
+                    viewportContent={'width=device-width, user-scalable=no'}
+                    onShouldStartLoadWithRequest={handleExternalClick}
+                    // Once the WebView reports its final rendered height, we know
+                    // the ScrollView has enough content to scroll to the saved position.
+                    onSizeUpdated={restoreScrollPosition}
+                  />
+                )}
               </View>
 
               {/* ── Research Summary Card ── */}
