@@ -9,9 +9,10 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {glossaryTerms, GlossaryTerm} from '../constants/glossary';
-import GlossaryBottomSheet from '../components/GlossaryBottomSheet';
-import {PRIMARY_COLOR} from '../helper/Theme';
+
 import {YStack, XStack, Text, Input, useTheme, useThemeName} from 'tamagui';
+import GlossaryBottomSheet from '../components/article/GlossaryBottomSheet';
+import { PRIMARY_COLOR } from '../lib/ui/Theme';
 
 const glossaryCategories = [...new Set(glossaryTerms.map(t => t.category).filter(Boolean))] as string[];
 

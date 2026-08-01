@@ -67,7 +67,7 @@ describe('fetchWithTimeout', () => {
 describe('CallAPI helpers', () => {
   it('uses the timeout-enabled fetch wrapper for authenticated POST calls', async () => {
     const json = jest.fn().mockResolvedValue({success: true});
-    const fetchMock = jest.fn().mockResolvedValue({json} as unknown as Response);
+    const fetchMock = jest.fn().mockResolvedValue({json, ok: true, status: 200} as unknown as Response);
     global.fetch = fetchMock as typeof fetch;
 
     await expect(
@@ -92,7 +92,7 @@ describe('CallAPI helpers', () => {
 
   it('uses the timeout-enabled fetch wrapper for simple GET calls', async () => {
     const json = jest.fn().mockResolvedValue({items: []});
-    const fetchMock = jest.fn().mockResolvedValue({json} as unknown as Response);
+    const fetchMock = jest.fn().mockResolvedValue({json, ok: true, status: 200} as unknown as Response);
     global.fetch = fetchMock as typeof fetch;
 
     await expect(getMethodCall('https://example.com/api')).resolves.toEqual({

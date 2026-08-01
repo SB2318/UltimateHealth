@@ -1,11 +1,13 @@
  
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
-import { testGlossaryTerms } from '../../../constants/glossary';
+import { glossaryTerms as testGlossaryTerms} from '../../../constants/glossary';
 import GlossaryBottomSheet from '@/src/components/article/GlossaryBottomSheet';
 
 jest.mock('@tamagui/sheet', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require('react-native');
 
   const Sheet = ({ open, children }: { open: boolean; children: React.ReactNode }) =>
