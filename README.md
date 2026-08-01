@@ -142,6 +142,7 @@ The badges displayed at the top of this README provide a quick overview of the r
 - [📖 About the Project](#-about-the-project)
 - [🏗️ Architecture Overview](#️-architecture-overview)
 - [✨ Features](#-features)
+- [🧩 Feature-to-Technology Mapping](#-feature-to-technology-mapping)
 - [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
 - [📊 Code Quality](#code-quality)
 - [🚀 Latest Releases](#-latest-releases)
@@ -230,6 +231,24 @@ React Native App     Next.js Web App    Documentation
 | Translation Support | Extend any article in your preferred language |
 
 **Admin Features:** Interactive review dashboard, moderation tools and analytics.
+
+---
+
+## 🧩 Feature-to-Technology Mapping
+
+The following table explains which technologies power different features of UltimateHealth. This helps contributors identify the correct project area when contributing to a specific feature.
+
+| Feature | Primary Technology |
+|---------|--------------------|
+| AI Health Chat | Node.js + Python Content Intelligence API |
+| Podcasts | React Native + Expo |
+| Multilingual Articles | React Native + Backend API |
+| Content Integrity | Python Content Intelligence API |
+| Authentication | Node.js REST API + MongoDB |
+| Health Tracking | React Native + Backend |
+| User Profile Management | Node.js + MongoDB |
+| Mobile Application | React Native + Expo |
+| Web Platform | Next.js |
 
 ---
 
