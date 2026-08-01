@@ -148,6 +148,7 @@ The badges displayed at the top of this README provide a quick overview of the r
 - [🗺️ Project Roadmap](#️-project-roadmap)
 - [⚙️ Getting Started](#%EF%B8%8F-getting-started)
 - [🔧 Environment Setup](#%EF%B8%8F-environment-setup)
+- [🧩 Version Compatibility Matrix](#-version-compatibility-matrix)
 - [🚀 Installation](#-installation)
 - [📖 Glossary](#-glossary)
 - [📁 Project Structure](#-project-structure)
@@ -344,14 +345,31 @@ The following table outlines planned improvements based on active issues and com
 
 ### Prerequisites
 
-| Tool | Version | Purpose |
-|---|---|---|
-| [Node.js](https://nodejs.org/) | >= 18.x | JavaScript runtime |
-| [Yarn](https://yarnpkg.com/) | >= 1.22.x | Package manager |
-| [Git](https://git-scm.com/) | Latest | Version control |
-| [Expo CLI](https://docs.expo.dev/get-started/installation/) | Latest | Mobile app tooling |
-| [Android Studio](https://developer.android.com/studio) | Latest | Android emulator and SDK |
-| [Xcode](https://developer.apple.com/xcode/) | Latest (macOS only) | iOS simulator |
+The following tools are required for setting up the development environment:
+
+| Tool | Purpose |
+|------|---------|
+| [Node.js](https://nodejs.org/) | JavaScript runtime |
+| [Yarn](https://yarnpkg.com/) | Package manager |
+| [Git](https://git-scm.com/) | Version control |
+| [Expo SDK](https://docs.expo.dev/) | Mobile app framework |
+| [Expo CLI](https://docs.expo.dev/get-started/installation/) | Mobile app tooling |
+| [Android Studio](https://developer.android.com/studio) | Android emulator and SDK |
+| [Xcode](https://developer.apple.com/xcode/) | iOS simulator (macOS only) |
+
+### Version Compatibility Matrix
+
+The following versions are recommended for a smooth development setup. Using these versions helps avoid compatibility issues during installation and development.
+
+| Tool | Recommended Version | Notes |
+|------|----------------------|-------|
+| Node.js | >=18.x | Required runtime |
+| Yarn | >=1.22.x | Recommended package manager |
+| Expo SDK | Current supported version | Match the SDK used by the project |
+| Expo CLI | Latest | Install globally for Expo commands |
+| Android Studio | Latest | Includes Android SDK and Emulator |
+| Xcode | Latest (macOS only) | Required for iOS builds on macOS |
+
 
 ### Installation
 
