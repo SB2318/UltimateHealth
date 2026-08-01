@@ -345,15 +345,17 @@ The following table outlines planned improvements based on active issues and com
 
 ### Prerequisites
 
-| Tool | Version | Purpose |
-|------|---------|---------|
-| [Node.js](https://nodejs.org/) | >=18.x | JavaScript runtime |
-| [Yarn](https://yarnpkg.com/) | >=1.22.x | Package manager |
-| [Git](https://git-scm.com/) | Latest | Version control |
-| [Expo SDK](https://docs.expo.dev/) | Current supported version | Mobile app framework |
-| [Expo CLI](https://docs.expo.dev/get-started/installation/) | Latest | Mobile app tooling |
-| [Android Studio](https://developer.android.com/studio) | Latest | Android emulator and SDK |
-| [Xcode](https://developer.apple.com/xcode/) | Latest (macOS only) | iOS simulator |
+The following tools are required for setting up the development environment:
+
+| Tool | Purpose |
+|------|---------|
+| [Node.js](https://nodejs.org/) | JavaScript runtime |
+| [Yarn](https://yarnpkg.com/) | Package manager |
+| [Git](https://git-scm.com/) | Version control |
+| [Expo SDK](https://docs.expo.dev/) | Mobile app framework |
+| [Expo CLI](https://docs.expo.dev/get-started/installation/) | Mobile app tooling |
+| [Android Studio](https://developer.android.com/studio) | Android emulator and SDK |
+| [Xcode](https://developer.apple.com/xcode/) | iOS simulator (macOS only) |
 
 ### Version Compatibility Matrix
 
