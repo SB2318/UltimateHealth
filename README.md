@@ -242,10 +242,10 @@ The following table explains which technologies power different features of Ulti
 |---------|--------------------|
 | AI Health Chat | Node.js + Python Content Intelligence API |
 | Podcasts | React Native + Expo |
-| Multilingual Articles | React Native + Backend API |
+| Multilingual Articles | React Native + Node.js REST API + Python Content Intelligence API |
 | Content Integrity | Python Content Intelligence API |
 | Authentication | Node.js REST API + MongoDB |
-| Health Tracking | React Native + Backend |
+| Health Tracking | React Native + Node.js REST API + MongoDB |
 | User Profile Management | Node.js + MongoDB |
 | Mobile Application | React Native + Expo |
 | Web Platform | Next.js |
