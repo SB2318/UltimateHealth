@@ -52,7 +52,6 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
 
   return (
     <main className="min-h-screen bg-[#f8fafc] text-slate-900 overflow-x-hidden">
-      <Navbar />
 
       {/* ── Hero ── */}
       <section className="relative w-full overflow-hidden bg-gradient-to-b from-[#eef2ff] to-[#f8fafc] pt-36 pb-24 px-4 flex justify-center border-b border-slate-100">
