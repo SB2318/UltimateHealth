@@ -1173,6 +1173,7 @@ We welcome contributions from everyone — developers, designers, writers, and t
      <td align="center"><a href="https://github.com/ankitasahu83964"><img src="https://avatars.githubusercontent.com/u/228574323?v=4" width="120px;" alt=""/><br/><sub><b>Ankita sahu</b></sub></a></td>
      <td align="center"><a href="https://github.com/AdityaChaube"><img src="https://avatars.githubusercontent.com/u/233758866?v=4" width="120px;" alt=""/><br/><sub><b>AdityaChaube</b></sub></a></td>
      <td align="center"><a href="https://github.com/Ashwitha-Ramesh"><img src="https://avatars.githubusercontent.com/u/267248446?v=4" width="120px;" alt=""/><br/><sub><b>Ashwitha Ramesh</b></sub></a></td>
+     <td align="center"><a href="https://github.com/tayyibah07"><img src="https://avatars.githubusercontent.com/u/186385301?v=4" width="120px;" alt=""/><br/><sub><b>tayyibah07</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
