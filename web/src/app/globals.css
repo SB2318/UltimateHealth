@@ -1747,7 +1747,7 @@ footer {
   }
   .footer-subscribe-input {
     border-radius: 8px;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
   .footer-subscribe-btn {
     border-radius: 8px;
