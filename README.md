@@ -1,4 +1,4 @@
-8<div align="center">
+<div align="center">
 
    <a href="https://git.io/typing-svg">
      <img src="https://readme-typing-svg.herokuapp.com?font=Roboto&size=22&duration=4995&pause=1000&color=006400&width=850&height=58&lines=Open-source+Health+Platform+%7C+React+Native+(Expo)+App+%2B+Node.js+Backend+%2B+MongoDB" alt="Typing SVG" />
