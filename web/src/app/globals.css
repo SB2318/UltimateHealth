@@ -1741,6 +1741,19 @@ footer {
 }
 .footer-subscribe-btn:hover { opacity: 0.88; }
 .footer-subscribe-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+@media (max-width: 480px) {
+  .footer-subscribe-row {
+    flex-direction: column;
+  }
+  .footer-subscribe-input {
+    border-radius: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .footer-subscribe-btn {
+    border-radius: 8px;
+    width: 100%;
+  }
+}
 .footer-subscribe-note {
   color: #334155;
   display: block;
