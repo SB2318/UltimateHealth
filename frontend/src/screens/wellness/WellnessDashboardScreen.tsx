@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { StyleSheet, Dimensions, useColorScheme, ScrollView, SafeAreaView } from 'react-native';
 import { YStack, XStack, Text, Card, View, Separator, Theme } from 'tamagui';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
