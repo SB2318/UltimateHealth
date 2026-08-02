@@ -47,6 +47,7 @@ import PodcastRecorder from '../screens/podcast/PodcastRecorder';
 import PodcastForm from '../screens/podcast/PodcastForm';
 import PodcastPlayer from '../screens/podcast/PodcastPlayer';
 import PodcastProfile from '../screens/podcast/PodcastProfile';
+import PodcastEpisodesScreen from '../screens/podcast/PodcastEpisodesScreen';
 import PlaylistDetailScreen from '../screens/playlist/PlaylistDetailScreen';
 import PrivacyPolicyScreen from '../screens/legal/PrivacyPolicy';
 import CommunityGuidelinesScreen from '../screens/legal/CommunityGuidelinesScreen';
@@ -972,6 +973,19 @@ const StackNavigation = () => {
             backgroundColor: BUTTON_COLOR,
           },
           headerTintColor: 'white',
+        }}
+      />
+      <Stack.Screen
+        name="PodcastEpisodesScreen"
+        component={PodcastEpisodesScreen}
+        options={{
+          headerShown: true,
+          title: 'Podcast Episodes',
+          headerStyle: {
+            backgroundColor: PRIMARY_COLOR,
+          },
+          headerTintColor: 'white',
+          headerBackTitleVisible: false,
         }}
       />
     </Stack.Navigator>
