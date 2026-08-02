@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
  
 import React, { useEffect, useState } from 'react';
-import { BackHandler } from 'react-native';
+import { BackHandler, TouchableOpacity } from 'react-native';
 import { Sheet } from '@tamagui/sheet';
 import {
   Button,
@@ -17,6 +17,7 @@ import type { GlossaryTerm } from '../../constants/glossary';
 export type GlossaryBottomSheetProps = GlossaryTerm & {
   visible: boolean;
   onClose: () => void;
+  onRelatedTermPress?: (term: string) => void;
 };
 
 export default function GlossaryBottomSheet({
@@ -26,6 +27,7 @@ export default function GlossaryBottomSheet({
   category,
   relatedTerms = [],
   onClose,
+  onRelatedTermPress,
 }: GlossaryBottomSheetProps) {
   const [open, setOpen] = useState(visible);
 
@@ -55,6 +57,10 @@ export default function GlossaryBottomSheet({
       onClose();
     }
   };
+
+  const filteredRelatedTerms = Array.from(new Set(relatedTerms)).filter(
+    (rt) => rt.toLowerCase() !== term.toLowerCase()
+  );
 
   return (
     <Sheet
@@ -126,25 +132,31 @@ export default function GlossaryBottomSheet({
               </Paragraph>
             </Card>
 
-            {relatedTerms.length > 0 && (
+            {filteredRelatedTerms.length > 0 && (
               <YStack gap="$3" marginTop="$4">
                 <Text color="$color12" fontSize={16} fontWeight="700">
-                  Related terms
+                  Related Terms
                 </Text>
                 <XStack gap="$2" flexWrap="wrap">
-                  {relatedTerms.map((relatedTerm) => (
-                    <Text
+                  {filteredRelatedTerms.map((relatedTerm) => (
+                    <TouchableOpacity
                       key={relatedTerm}
-                      backgroundColor="$blue3"
-                      color="$blue11"
-                      borderRadius="$10"
-                      paddingHorizontal="$3"
-                      paddingVertical="$2"
-                      fontSize={13}
-                      fontWeight="600"
+                      onPress={() => onRelatedTermPress?.(relatedTerm)}
+                      accessibilityRole="link"
+                      accessibilityLabel={`View glossary entry for ${relatedTerm}`}
                     >
-                      {relatedTerm}
-                    </Text>
+                      <Text
+                        backgroundColor="$blue3"
+                        color="$blue11"
+                        borderRadius="$10"
+                        paddingHorizontal="$3"
+                        paddingVertical="$2"
+                        fontSize={13}
+                        fontWeight="600"
+                      >
+                        {relatedTerm}
+                      </Text>
+                    </TouchableOpacity>
                   ))}
                 </XStack>
               </YStack>

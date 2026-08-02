@@ -68,6 +68,15 @@ const MedicalGlossaryScreen = ({navigation}: any) => {
     setSelectedTerm(null);
   }, []);
 
+  const handleRelatedTermPress = useCallback((termName: string) => {
+    const foundTerm = glossaryTerms.find(
+      t => t.term.toLowerCase() === termName.toLowerCase()
+    );
+    if (foundTerm) {
+      setSelectedTerm(foundTerm);
+    }
+  }, []);
+
   const handleClearSearch = useCallback(() => {
     setSearchQuery('');
   }, []);
@@ -331,6 +340,7 @@ const MedicalGlossaryScreen = ({navigation}: any) => {
           category={selectedTerm.category}
           relatedTerms={selectedTerm.relatedTerms}
           onClose={handleCloseBottomSheet}
+          onRelatedTermPress={handleRelatedTermPress}
         />
       )}
     </SafeAreaView>
