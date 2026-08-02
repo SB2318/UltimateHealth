@@ -337,6 +337,10 @@ def assign_user(repo, issue_number, username, token):
     url = f"https://api.github.com/repos/{repo}/issues/{issue_number}/assignees"
     make_request(url, method="POST", data={"assignees": [username]}, token=token)
 
+def remove_assignee(repo, issue_number, username, token):
+    url = f"https://api.github.com/repos/{repo}/issues/{issue_number}/assignees"
+    make_request(url, method="DELETE", data={"assignees": [username]}, token=token)
+
 def handle_issue_opened(repo, issue_number, token, gemini_api_keys):
     print(f"Triaging new issue #{issue_number}...")
     issue = fetch_issue(repo, issue_number, token)
@@ -585,6 +589,50 @@ def handle_issue_comment(repo, issue_number, commenter, token):
     print(f"Successfully assigned #{issue_number} to {commenter}.")
     return "assigned", f"Assigned to {commenter}"
 
+def handle_issue_labeled(repo, issue_number, label_name, token):
+    trigger_labels = ["not planned", "duplicate", "invalid", "won't fix", "wontfix"]
+    if label_name.lower() not in trigger_labels:
+        return "ignored", f"Label '{label_name}' does not trigger unassignment"
+
+    issue = fetch_issue(repo, issue_number, token)
+    if not issue or not issue.get("assignees"):
+        return "ignored", "No assignees to remove"
+
+    # Check for preserve-assignment label
+    labels = [l.get("name", "").lower() for l in issue.get("labels", [])]
+    if "preserve-assignment" in labels:
+        return "ignored", "Assignment preserved by maintainer"
+
+    assignees = [user["login"] for user in issue["assignees"]]
+    for assignee in assignees:
+        remove_assignee(repo, issue_number, assignee, token)
+        msg = f"@{assignee} has been unassigned because the issue was labeled as `{label_name}`."
+        post_comment(repo, issue_number, msg, token)
+    return "unassigned", f"Unassigned {', '.join(assignees)} due to label {label_name}"
+
+def handle_issue_closed(repo, issue_number, token):
+    issue = fetch_issue(repo, issue_number, token)
+    if not issue or not issue.get("assignees"):
+        return "ignored", "No assignees to remove"
+
+    # Check for preserve-assignment label
+    labels = [l.get("name", "").lower() for l in issue.get("labels", [])]
+    if "preserve-assignment" in labels:
+        return "ignored", "Assignment preserved by maintainer"
+
+    assignees = [user["login"] for user in issue["assignees"]]
+    for assignee in assignees:
+        # Check if assignee has a linked PR
+        has_pr = check_pr_references_assigned_issue(repo, assignee, [str(issue_number)], token)
+        if not has_pr:
+            remove_assignee(repo, issue_number, assignee, token)
+            msg = f"@{assignee} has been unassigned because the issue was closed before a PR was linked."
+            post_comment(repo, issue_number, msg, token)
+        else:
+            print(f"[INFO] @{assignee} has a PR linked, not unassigning.")
+
+    return "processed", "Handled issue close event for assignees"
+
 def main():
     gemini_keys_str = os.environ.get("GEMINI_API_KEYS", "")
     gemini_api_keys = [k.strip() for k in gemini_keys_str.split(",") if k.strip()]
@@ -650,6 +698,29 @@ def main():
                 f"**Status:** {status}",
                 f"**Detail:** {detail}"
             ])
+            
+    elif event_name == "issues" and action == "labeled":
+        issue_number = event_data["issue"]["number"]
+        label_name = event_data.get("label", {}).get("name", "")
+        status, detail = handle_issue_labeled(repo, issue_number, label_name, github_token)
+        _write_step_summary([
+            "## 🤖 AI Issue Unassignment Report",
+            f"**Issue:** #{issue_number}",
+            f"**Action:** labeled '{label_name}'",
+            f"**Status:** {status}",
+            f"**Detail:** {detail}"
+        ])
+
+    elif event_name == "issues" and action == "closed":
+        issue_number = event_data["issue"]["number"]
+        status, detail = handle_issue_closed(repo, issue_number, github_token)
+        _write_step_summary([
+            "## 🤖 AI Issue Unassignment Report",
+            f"**Issue:** #{issue_number}",
+            f"**Action:** closed",
+            f"**Status:** {status}",
+            f"**Detail:** {detail}"
+        ])
 
 if __name__ == "__main__":
     main()
