@@ -144,6 +144,7 @@ The badges displayed at the top of this README provide a quick overview of the r
 - [✨ Features](#-features)
 - [🧩 Feature-to-Technology Mapping](#-feature-to-technology-mapping)
 - [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
+- [📱 Platform Support](#-platform-support)
 - [📊 Code Quality](#code-quality)
 - [🚀 Latest Releases](#-latest-releases)
 - [🗺️ Project Roadmap](#️-project-roadmap)
@@ -306,6 +307,24 @@ The following table explains which technologies power different features of Ulti
 | Live URL | [uhsocial.in/frontend/v2](https://uhsocial.in/frontend/v2) |
 
 </details>
+
+---
+
+## 📱 Platform Support
+
+UltimateHealth is designed to support both development and end-user deployment across multiple platforms. The following table summarizes the officially supported platforms and any platform-specific requirements.
+
+| Platform | Support | Notes |
+|----------|:-------:|-------|
+| Android | ✅ | React Native (Expo) mobile application |
+| iOS | ✅ | Supported through Expo; macOS required for native builds |
+| Web | ✅ | Next.js web frontend |
+| Windows | ✅ | Supported for local development |
+| Linux | ✅ | Supported for local development |
+| macOS | ✅ | Supported for development and required for iOS builds |
+
+> **Note:** Android, iOS, and Web are officially supported deployment platforms. Windows, Linux, and macOS are supported development environments.
+
 
 ---
 
