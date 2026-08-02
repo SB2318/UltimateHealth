@@ -44,11 +44,9 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const {mutate: uploadPodcast, isPending: uploadPodcastPending} =
     useUploadPodcast();
 
-  const player = useAudioPlayer(
-    filePath
-      ? `file://${filePath}`
-      : require('../../assets/sounds/funny-cartoon-sound-397415.mp3'),
-  );
+ const player = useAudioPlayer(
+  filePath ? `file://${filePath}` : null
+);
 
   const formatPlaybackSpeed = (playbackSpeed: number) => `${playbackSpeed}x`;
   const formatSecTime = (seconds: number) => {

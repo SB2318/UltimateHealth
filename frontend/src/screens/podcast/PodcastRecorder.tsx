@@ -378,7 +378,7 @@ const stopRecording = async () => {
         {recording && (
           <YStack ai="center" my="$3">
             <LottieView
-              source={require('../assets/LottieAnimation/sound-voice-waves.json')}
+              source={require('../../assets/LottieAnimation/sound-voice-waves.json')}
               autoPlay
               loop
               style={{

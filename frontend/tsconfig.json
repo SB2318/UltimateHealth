@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022"],
+    "lib": [
+      "ES2022"
+    ],
     "jsx": "react-native",
     "module": "preserve",
     "strict": false,
@@ -22,5 +24,6 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
+  "extends": "expo/tsconfig.base"
 }
