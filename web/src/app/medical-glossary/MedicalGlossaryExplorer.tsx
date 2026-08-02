@@ -235,6 +235,10 @@ export default function MedicalGlossaryExplorer() {
                         {entry.relatedTerms.map((term) => (
                           <span
                             key={term}
+                            onClick={() => {
+                              setSearchQuery(term);
+                              setSelectedCategory("All");
+                            }}
                             style={{
                               fontSize: "12px",
                               fontWeight: 500,
