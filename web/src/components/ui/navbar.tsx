@@ -8,13 +8,16 @@ import { PageWrapper } from '../layout'
 
 import { withBasePath } from '@/lib/basePath'
 import { ModeToggle } from '@/components/mode-toggle'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 export const Navbar = (props: { tracking_id: string[] }) => {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState<string>('')
-  const TRACKED_SECTION_IDS = props.tracking_id;
+  // useMemo stabilises the array reference so the IntersectionObserver
+  // effect below doesn't re-run on every render (avoids infinite loop).
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const TRACKED_SECTION_IDS = useMemo(() => props.tracking_id, [JSON.stringify(props.tracking_id)])
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
@@ -66,7 +69,7 @@ export const Navbar = (props: { tracking_id: string[] }) => {
   return (
     <>
       <header
-        className={`header${scrolled ? ' scrolled' : ''}bg-white dark:bg-slate-900 transition-colors duration-300 h-[80px]`}
+        className={`header${scrolled ? ' scrolled' : ''} bg-white dark:bg-slate-900 transition-colors duration-300 h-[80px]`}
         id="header"
       >
         <PageWrapper as="div" className="nav">
