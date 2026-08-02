@@ -3,9 +3,15 @@ import {Category, CategoryType, PodcastData} from '../../schemas/type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GET_STORAGE_DATA} from '../api/APIUtils';
 import {Alert, Linking, Platform, PermissionsAndroid} from 'react-native';
-import RNFS from 'react-native-fs';
+
+let RNFS: any = null;
+
+if (Platform.OS !== 'web') {
+  RNFS = require('react-native-fs');
+}
+
 import {secureClearAllItems} from '../storage/SecureStorageUtils';
-import { debugLog, debugWarn, debugError } from '../utils/debugLog'; 
+import { debugLog, debugWarn, debugError } from '../utils/debugLog';
 import {
   deleteItem as deletePodcastCache,
   retrieveItem as retrievePodcastCache,

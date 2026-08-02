@@ -41,7 +41,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
         enterStyle={{ opacity: 0, scale: 0.5 }}
       >
         <LottieView
-          source={require('../assets/LottieAnimation/lock-animation.json')}
+          source={require('../../assets/LottieAnimation/lock-animation.json')}
           autoPlay
           loop
           style={{
