@@ -2230,8 +2230,6 @@ export default function ContributePage() {
 
   const [navOpen, setNavOpen] = useState(false)
 
-  const TRACKED_SECTION_IDS = ['screenshots', 'features', 'programs', 'contact']
-
   const navLinks = [
     { href: '/', label: 'Home', icon: 'fa-home' },
     { href: '/#features', label: 'Platform Highlights', icon: 'fa-star' },
