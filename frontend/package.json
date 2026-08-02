@@ -112,7 +112,7 @@
   "devDependencies": {
     "@react-native/jest-preset": "^0.86.0",
     "@testing-library/jest-native": "^5.4.3",
-    "@testing-library/react-native": "^13.3.3",
+    "@testing-library/react-native": "^14.0.1",
     "@types/jest": "^29.2.1",
     "@types/react": "~19.2.14",
     "@types/react-native-version-check": "^3.4.8",
