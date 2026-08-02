@@ -912,10 +912,18 @@ const [showSavedFilter, setShowSavedFilter] = useState(true);
 <CustomizeHomepageModal
   visible={customizeVisible}
   onClose={() => setCustomizeVisible(false)}
+  onSave={() => setCustomizeVisible(false)}
+  onReset={() => {
+    setShowAcademyCard(true);
+    setShowCategoryFilters(true);
+    setShowSavedFilter(true);
+  }}
   showAcademyCard={showAcademyCard}
   setShowAcademyCard={setShowAcademyCard}
   showCategoryFilters={showCategoryFilters}
   setShowCategoryFilters={setShowCategoryFilters}
+  showSavedFilter={showSavedFilter}
+  setShowSavedFilter={setShowSavedFilter}
 />
 
 </SafeAreaView>
