@@ -195,6 +195,7 @@ We will review your PR as soon as possible. Feedback will be provided constructi
 - For **feature requests**:
   - Explain the use case
   - Describe why it benefits the community
+- **AI Issue Triage Bot**: We use an AI bot to automatically triage and manage assignments. For details on how the bot handles labeling, assignment, and unassignment, please review the [AI Issue Triage Workflow](docs/AI_ISSUE_TRIAGE.md).
 
 
 ## Frequently Asked Questions
