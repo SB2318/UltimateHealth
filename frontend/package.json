@@ -127,7 +127,7 @@
     "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
     "react-native-svg-transformer": "^1.5.1",
-    "react-test-renderer": "19.2.3",
+    "react-test-renderer": "19.2.8",
     "typescript": "~7.0.2"
   },
   "private": true,

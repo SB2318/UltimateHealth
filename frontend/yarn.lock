@@ -13456,7 +13456,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is-19@npm:react-is@^19.2.5, react-is@npm:^19.1.0, react-is@npm:^19.2.3":
+"react-is-19@npm:react-is@^19.2.5, react-is@npm:^19.1.0, react-is@npm:^19.2.3, react-is@npm:^19.2.8":
   version: 19.2.8
   resolution: "react-is@npm:19.2.8"
   checksum: 10c0/ed5322c84efe035c8fc814b1614ff5ca7fb8c2872a7c045197daf99f9b1bd68f32a2c79ffcbcfcff2fc5d93924ff9f9447400898f5b1534e6302bb0736a257f0
@@ -13966,6 +13966,18 @@ __metadata:
   peerDependencies:
     react: ^19.2.3
   checksum: 10c0/842b82239dbddbc536083a6260c3e1b0507c02a3400bd05879fc19160468fd0f8ab79fec5dceffa6113b131835cc7621212f8415b46ea5156ab66bbfd7e24297
+  languageName: node
+  linkType: hard
+
+"react-test-renderer@npm:19.2.8":
+  version: 19.2.8
+  resolution: "react-test-renderer@npm:19.2.8"
+  dependencies:
+    react-is: "npm:^19.2.8"
+    scheduler: "npm:^0.27.0"
+  peerDependencies:
+    react: ^19.2.8
+  checksum: 10c0/3ecb6b68f9658050bbe7f8e04fed58644c5693b1a5a716d78dd4ad9defac184e658f8a153265903e75b438f4aee5a7f2c6a9565ccce8e6321a93bb0237c04e66
   languageName: node
   linkType: hard
 
@@ -15630,7 +15642,7 @@ __metadata:
     react-native-webview: "npm:13.16.1"
     react-native-worklets: "npm:0.11.3"
     react-redux: "npm:^9.2.0"
-    react-test-renderer: "npm:19.2.3"
+    react-test-renderer: "npm:19.2.8"
     socket.io-client: "npm:^4.8.1"
     tamagui: "npm:^1.135.6"
     typescript: "npm:~7.0.2"
