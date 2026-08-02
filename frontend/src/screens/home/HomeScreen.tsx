@@ -12,6 +12,7 @@ import { StyleSheet,
 import { FlashList } from '@shopify/flash-list';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   ON_PRIMARY_COLOR,
   PRIMARY_COLOR,
@@ -53,11 +54,15 @@ import {useRequestArticleEdit} from '../../hooks/article/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../../hooks/notification/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../../hooks/article/useGetPaginatedArticles';
 import { sanitizeSearchInput, isValidSearchInput } from '../../lib/utils/SearchUtils';
+
+
 import {
   OfflineArticleState,
   NoArticleState,
   BaseEmptyState,
 } from '../../components/common/EmptyStates';
+
+const HOMEPAGE_SETTINGS_KEY = 'homepage_customization';
 
 // Loading State Component with Animation
 const LoadingState = () => {
@@ -119,6 +124,26 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 const [showAcademyCard, setShowAcademyCard] = useState(true);
 const [showCategoryFilters, setShowCategoryFilters] = useState(true);
 const [showSavedFilter, setShowSavedFilter] = useState(true);
+useEffect(() => {
+  const loadSettings = async () => {
+    try {
+      const saved = await AsyncStorage.getItem(HOMEPAGE_SETTINGS_KEY);
+
+      if (saved) {
+        const settings = JSON.parse(saved);
+
+        setShowAcademyCard(settings.showAcademyCard ?? true);
+        setShowCategoryFilters(settings.showCategoryFilters ?? true);
+        setShowSavedFilter(settings.showSavedFilter ?? true);
+      }
+    } catch (error) {
+      console.log('Failed to load homepage settings', error);
+    }
+  };
+
+  loadSettings();
+}, []);
+
   // Session-level language filter (can override preferences per session)
   const [sessionSelectedLanguages, setSessionSelectedLanguages] = useState<string[]>([]);
   const {preferredLanguages, isLoading: preferencesLoading} = usePreferences();
@@ -912,11 +937,30 @@ const [showSavedFilter, setShowSavedFilter] = useState(true);
 <CustomizeHomepageModal
   visible={customizeVisible}
   onClose={() => setCustomizeVisible(false)}
-  onSave={() => setCustomizeVisible(false)}
-  onReset={() => {
+  onSave={async () => {
+    await AsyncStorage.setItem(
+      HOMEPAGE_SETTINGS_KEY,
+      JSON.stringify({
+        showAcademyCard,
+        showCategoryFilters,
+        showSavedFilter,
+      }),
+    );
+    setCustomizeVisible(false);
+  }}
+  onReset={async () => {
     setShowAcademyCard(true);
     setShowCategoryFilters(true);
     setShowSavedFilter(true);
+
+    await AsyncStorage.setItem(
+      HOMEPAGE_SETTINGS_KEY,
+      JSON.stringify({
+        showAcademyCard: true,
+        showCategoryFilters: true,
+        showSavedFilter: true,
+      }),
+    );
   }}
   showAcademyCard={showAcademyCard}
   setShowAcademyCard={setShowAcademyCard}
