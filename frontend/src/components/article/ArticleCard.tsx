@@ -445,7 +445,7 @@ const ArticleCard = ({
           : `${GET_IMAGE}/${item.imageUtils[0]}`
         : undefined,
     }}
-    fallbackSource={require('../assets/images/article_default.jpg')}
+    fallbackSource={require('../../assets/images/article_default.jpg')}
     style={styles.coverImage}
   />
 

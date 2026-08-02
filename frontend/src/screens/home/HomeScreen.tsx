@@ -12,6 +12,7 @@ import { StyleSheet,
 import { FlashList } from '@shopify/flash-list';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   ON_PRIMARY_COLOR,
   PRIMARY_COLOR,
@@ -32,6 +33,7 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useAppSelector, useAppDispatch} from '../../store/hooks';
 import Loader from '../../components/common/Loader';
 import {usePreferences} from '../../contexts/PreferencesContext';
+import CustomizeHomepageModal from '../../components/home/CustomizeHomepageModal';
 
 import {
   setFilteredArticles,
@@ -52,11 +54,15 @@ import {useRequestArticleEdit} from '../../hooks/article/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../../hooks/notification/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../../hooks/article/useGetPaginatedArticles';
 import { sanitizeSearchInput, isValidSearchInput } from '../../lib/utils/SearchUtils';
+
+
 import {
   OfflineArticleState,
   NoArticleState,
   BaseEmptyState,
 } from '../../components/common/EmptyStates';
+
+const HOMEPAGE_SETTINGS_KEY = 'homepage_customization';
 
 // Loading State Component with Animation
 const LoadingState = () => {
@@ -113,6 +119,31 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [selectCategoryList, setSelectCategoryList] = useState<Category[]>([]);
   const [showSavedOnly, setShowSavedOnly] = useState(false);
   const [filterLoading, setFilterLoading] = useState<boolean>(false);
+  const [customizeVisible, setCustomizeVisible] = useState(false);
+
+const [showAcademyCard, setShowAcademyCard] = useState(true);
+const [showCategoryFilters, setShowCategoryFilters] = useState(true);
+const [showSavedFilter, setShowSavedFilter] = useState(true);
+useEffect(() => {
+  const loadSettings = async () => {
+    try {
+      const saved = await AsyncStorage.getItem(HOMEPAGE_SETTINGS_KEY);
+
+      if (saved) {
+        const settings = JSON.parse(saved);
+
+        setShowAcademyCard(settings.showAcademyCard ?? true);
+        setShowCategoryFilters(settings.showCategoryFilters ?? true);
+        setShowSavedFilter(settings.showSavedFilter ?? true);
+      }
+    } catch (error) {
+      console.log('Failed to load homepage settings', error);
+    }
+  };
+
+  loadSettings();
+}, []);
+
   // Session-level language filter (can override preferences per session)
   const [sessionSelectedLanguages, setSessionSelectedLanguages] = useState<string[]>([]);
   const {preferredLanguages, isLoading: preferencesLoading} = usePreferences();
@@ -749,6 +780,23 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
             onFilterReset={handleClearAllFilters}
             searchText={searchText}
           />
+           <TouchableOpacity
+      onPress={() => setCustomizeVisible(true)}
+      style={{
+        alignSelf: 'flex-end',
+        marginRight: 16,
+        marginTop: 10,
+        marginBottom: 10,
+      }}>
+      <Text
+        style={{
+          color: '#000A60',
+          fontWeight: 'bold',
+          fontSize: 16,
+        }}>
+        ⚙ Customize Homepage
+      </Text>
+    </TouchableOpacity>
       <FilterModal
         bottomSheetModalRef={bottomSheetModalRef}
         categories={articleCategories}
@@ -763,47 +811,54 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       />
       
       {/* Academy Featured Card */}
-      <View style={styles.academyCardContainer}>
-        <TouchableOpacity
-          style={styles.academyCard}
-          onPress={() => navigation.navigate('Academy')}
-        >
-          <View style={{ flex: 1 }}>
-            <Text style={styles.academyCardTitle}>Hospital Learning Academy</Text>
-            <Text style={styles.academyCardSubtitle}>Learn how hospitals work</Text>
-            <View style={styles.academyProgressRow}>
-              <View style={styles.academyProgressBg}>
-                <View style={styles.academyProgressFill} />
-              </View>
-              <Text style={styles.academyProgressText}>45%</Text>
-            </View>
+     {showAcademyCard && (
+  <View style={styles.academyCardContainer}>
+    <TouchableOpacity
+      style={styles.academyCard}
+      onPress={() => navigation.navigate('Academy')}
+    >
+      <View style={{ flex: 1 }}>
+        <Text style={styles.academyCardTitle}>
+          Hospital Learning Academy
+        </Text>
+        <Text style={styles.academyCardSubtitle}>
+          Learn how hospitals work
+        </Text>
+        <View style={styles.academyProgressRow}>
+          <View style={styles.academyProgressBg}>
+            <View style={styles.academyProgressFill} />
           </View>
-          <View style={styles.academyCardButton}>
-            <Text style={styles.academyCardButtonText}>Continue</Text>
-          </View>
-        </TouchableOpacity>
+          <Text style={styles.academyProgressText}>45%</Text>
+        </View>
       </View>
 
-      <View style={styles.buttonContainer}>
-        <ScrollView
-          horizontal={true}
-          style={{width: '100%'}}
-          showsHorizontalScrollIndicator={false}
-          //contentContainerStyle={{flex:1}}
-        >
-          {!isGuest && (
-            <TouchableOpacity
-              style={{
-                ...styles.button,
-                backgroundColor: showSavedOnly
-                  ? SAVED_CHIP_ACTIVE_BG
-                  : SAVED_CHIP_INACTIVE_BG,
-                borderColor: showSavedOnly
-                  ? SAVED_CHIP_ACTIVE_BG
-                  : SAVED_CHIP_INACTIVE_BORDER,
-              }}
-              onPress={handleToggleSavedOnly}
-              accessibilityRole="button"
+      <View style={styles.academyCardButton}>
+        <Text style={styles.academyCardButtonText}>Continue</Text>
+      </View>
+    </TouchableOpacity>
+  </View>
+)}
+        {showCategoryFilters && (
+        <View style={styles.buttonContainer}>
+          <ScrollView
+            horizontal={true}
+            style={{width: '100%'}}
+            showsHorizontalScrollIndicator={false}
+            //contentContainerStyle={{flex:1}}
+          >
+            {!isGuest && (
+              <TouchableOpacity
+                style={{
+                  ...styles.button,
+                  backgroundColor: showSavedOnly
+                    ? SAVED_CHIP_ACTIVE_BG
+                    : SAVED_CHIP_INACTIVE_BG,
+                  borderColor: showSavedOnly
+                    ? SAVED_CHIP_ACTIVE_BG
+                    : SAVED_CHIP_INACTIVE_BORDER,
+                }}
+                onPress={handleToggleSavedOnly}
+                accessibilityRole="button"
               accessibilityLabel={
                 showSavedOnly
                   ? 'Saved articles filter active. Tap to show all articles.'
@@ -851,7 +906,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
               );
             })}
         </ScrollView>
-      </View>
+      </View>)}
       <View style={styles.articleContainer}>
         <FlashList
           data={listData}
@@ -876,9 +931,46 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       </View>
 
       <View style={styles.homePlusIconview}>
-        <AddIcon callback={handleNoteIconClick} />
-      </View>
-    </SafeAreaView>
+  <AddIcon callback={handleNoteIconClick} />
+</View>
+
+<CustomizeHomepageModal
+  visible={customizeVisible}
+  onClose={() => setCustomizeVisible(false)}
+  onSave={async () => {
+    await AsyncStorage.setItem(
+      HOMEPAGE_SETTINGS_KEY,
+      JSON.stringify({
+        showAcademyCard,
+        showCategoryFilters,
+        showSavedFilter,
+      }),
+    );
+    setCustomizeVisible(false);
+  }}
+  onReset={async () => {
+    setShowAcademyCard(true);
+    setShowCategoryFilters(true);
+    setShowSavedFilter(true);
+
+    await AsyncStorage.setItem(
+      HOMEPAGE_SETTINGS_KEY,
+      JSON.stringify({
+        showAcademyCard: true,
+        showCategoryFilters: true,
+        showSavedFilter: true,
+      }),
+    );
+  }}
+  showAcademyCard={showAcademyCard}
+  setShowAcademyCard={setShowAcademyCard}
+  showCategoryFilters={showCategoryFilters}
+  setShowCategoryFilters={setShowCategoryFilters}
+  showSavedFilter={showSavedFilter}
+  setShowSavedFilter={setShowSavedFilter}
+/>
+
+</SafeAreaView>
   );
 };
 
