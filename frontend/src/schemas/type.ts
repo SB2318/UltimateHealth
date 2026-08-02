@@ -145,6 +145,7 @@ export type RootStackParamList = {
   SettingsScreen: undefined;
   RespectGiverScreen: undefined;
   ContentListScreen: { type: 'articles' | 'reposts' | 'saved' };
+  PodcastEpisodesScreen: undefined;
 };
 
 export type RedirectTo = {
@@ -336,6 +337,11 @@ export type EditorScreenProp = StackScreenProps<
 export type ProfileEditScreenProp = StackScreenProps<
   RootStackParamList,
   'ProfileEditScreen'
+>;
+
+export type PodcastEpisodesScreenProp = StackScreenProps<
+  RootStackParamList,
+  'PodcastEpisodesScreen'
 >;
 
 export type PreviewScreenProp = StackScreenProps<
