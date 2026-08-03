@@ -26,6 +26,54 @@ const BADGE_STYLES: Record<string, { bg: string; color: string }> = {
 
 const DEFAULT_BADGE = { bg: "#f1f5f9", color: "#475569" };
 
+function RelatedTermButton({ term, onClick }: { term: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={`View related term: ${term}`}
+      className="text-xs font-medium text-slate-600 bg-slate-50 border border-slate-200 rounded-md px-2 py-0.5 cursor-pointer transition-colors hover:bg-slate-200 hover:border-slate-300"
+    >
+      {term}
+    </button>
+  );
+}
+
+function RelatedTermsList({
+  currentTerm,
+  relatedTerms,
+  onTermClick,
+}: {
+  currentTerm: string;
+  relatedTerms?: string[];
+  onTermClick: (term: string) => void;
+}) {
+  const filteredRelated = useMemo(() => {
+    return Array.from(new Set(relatedTerms || [])).filter(
+      (t) => t.toLowerCase() !== currentTerm.toLowerCase()
+    );
+  }, [relatedTerms, currentTerm]);
+
+  if (filteredRelated.length === 0) return null;
+
+  return (
+    <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid #f1f5f9" }}>
+      <div style={{ fontSize: "10px", fontWeight: 700, color: "#94a3b8", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
+        Related Terms
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+        {filteredRelated.map((term) => (
+          <RelatedTermButton
+            key={term}
+            term={term}
+            onClick={() => onTermClick(term)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function MedicalGlossaryExplorer() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -78,28 +126,7 @@ export default function MedicalGlossaryExplorer() {
               placeholder="Search medical terms or definitions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: "100%",
-                height: "48px",
-                paddingLeft: "44px",
-                paddingRight: "16px",
-                borderRadius: "12px",
-                border: "1px solid #e2e8f0",
-                background: "#f8fafc",
-                fontSize: "14px",
-                color: "#1e293b",
-                outline: "none",
-                boxSizing: "border-box",
-                transition: "border-color 0.15s, box-shadow 0.15s",
-              }}
-              onFocus={(e) => {
-                e.target.style.borderColor = "#818cf8";
-                e.target.style.boxShadow = "0 0 0 3px rgba(129,140,248,0.15)";
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = "#e2e8f0";
-                e.target.style.boxShadow = "none";
-              }}
+              className="w-full h-12 pl-11 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 outline-none transition-all focus:border-indigo-400 focus:ring-4 focus:ring-indigo-400/15"
             />
           </div>
 
@@ -108,22 +135,7 @@ export default function MedicalGlossaryExplorer() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              style={{
-                width: "100%",
-                height: "48px",
-                paddingLeft: "16px",
-                paddingRight: "40px",
-                borderRadius: "12px",
-                border: "1px solid #e2e8f0",
-                background: "#f8fafc",
-                fontSize: "14px",
-                color: "#1e293b",
-                outline: "none",
-                appearance: "none",
-                cursor: "pointer",
-                boxSizing: "border-box",
-                transition: "border-color 0.15s",
-              }}
+              className="w-full h-12 pl-4 pr-10 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 outline-none appearance-none cursor-pointer transition-colors hover:border-slate-300 focus:border-indigo-400"
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
@@ -170,30 +182,7 @@ export default function MedicalGlossaryExplorer() {
               return (
                 <div
                   key={`${entry.term}-${i}`}
-                  style={{
-                    background: "#ffffff",
-                    border: "1px solid #e2e8f0",
-                    borderRadius: "16px",
-                    padding: "24px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0",
-                    boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-                    transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
-                    cursor: "default",
-                    position: "relative",
-                    overflow: "hidden",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)";
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = "0 8px 28px rgba(79,70,229,0.12)";
-                    (e.currentTarget as HTMLDivElement).style.borderColor = "#c7d2fe";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)";
-                    (e.currentTarget as HTMLDivElement).style.borderColor = "#e2e8f0";
-                  }}
+                  className="group relative flex flex-col bg-white border border-slate-200 rounded-2xl p-6 shadow-sm overflow-hidden transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_8px_28px_rgba(79,70,229,0.12)] hover:border-indigo-200 cursor-default"
                 >
                   {/* Top accent bar */}
                   <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: "linear-gradient(90deg, #818cf8, #a78bfa, #f472b6)", opacity: 0.7, borderRadius: "16px 16px 0 0" }} />
@@ -226,63 +215,14 @@ export default function MedicalGlossaryExplorer() {
                   </div>
 
                   {/* Related Terms */}
-                  {(() => {
-                    const filteredRelated = Array.from(new Set(entry.relatedTerms || [])).filter(
-                      (t) => t.toLowerCase() !== entry.term.toLowerCase()
-                    );
-                    
-                    if (filteredRelated.length === 0) return null;
-
-                    return (
-                      <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid #f1f5f9" }}>
-                        <div style={{ fontSize: "10px", fontWeight: 700, color: "#94a3b8", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
-                          Related Terms
-                        </div>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                          {filteredRelated.map((term) => (
-                            <span
-                              key={term}
-                              role="button"
-                              tabIndex={0}
-                              aria-label={`View related term: ${term}`}
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                  e.preventDefault();
-                                  setSearchQuery(term);
-                                  setSelectedCategory("All");
-                                }
-                              }}
-                              onClick={() => {
-                                setSearchQuery(term);
-                                setSelectedCategory("All");
-                              }}
-                              style={{
-                                fontSize: "12px",
-                                fontWeight: 500,
-                                color: "#475569",
-                                background: "#f8fafc",
-                                border: "1px solid #e2e8f0",
-                                borderRadius: "6px",
-                                padding: "2px 8px",
-                                cursor: "pointer",
-                                transition: "background-color 0.2s, border-color 0.2s",
-                              }}
-                              onMouseEnter={(e) => {
-                                (e.currentTarget as HTMLSpanElement).style.backgroundColor = "#e2e8f0";
-                                (e.currentTarget as HTMLSpanElement).style.borderColor = "#cbd5e1";
-                              }}
-                              onMouseLeave={(e) => {
-                                (e.currentTarget as HTMLSpanElement).style.backgroundColor = "#f8fafc";
-                                (e.currentTarget as HTMLSpanElement).style.borderColor = "#e2e8f0";
-                              }}
-                            >
-                              {term}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })()}
+                  <RelatedTermsList
+                    currentTerm={entry.term}
+                    relatedTerms={entry.relatedTerms}
+                    onTermClick={(term) => {
+                      setSearchQuery(term);
+                      setSelectedCategory("All");
+                    }}
+                  />
                 </div>
               );
             })}
