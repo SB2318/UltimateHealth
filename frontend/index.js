@@ -1,3 +1,4 @@
+import './src/lib/i18n/i18n';
 import {registerRootComponent} from 'expo';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {Provider} from 'react-redux';

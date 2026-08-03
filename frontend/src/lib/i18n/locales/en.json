@@ -1,0 +1,18 @@
+{
+  "auth": {
+    "emailPlaceholder": "Enter your email address",
+    "passwordPlaceholder": "Enter your password",
+    "loginDescription": "Enter your email and password to securely access your account",
+    "forgotPassword": "Forgot Password?"
+  },
+  "errors": {
+    "articleNotFound": "Article not found",
+    "uploadFailed": "Failed to upload your post"
+  },
+  "translation": {
+    "selectTargetLanguage": "Please select a target language for the translation"
+  },
+  "search": {
+    "searchContributors": "Search contributors"
+  }
+}

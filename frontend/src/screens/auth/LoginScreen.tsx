@@ -11,6 +11,7 @@ import * as z from 'zod';
 import {Alert, Image, useColorScheme, ActivityIndicator} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
+import { useTranslation } from 'react-i18next';
 
 import {
   Button,
@@ -55,7 +56,9 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
+
 const LoginScreen = ({navigation, route}: LoginScreenProp) => {
+  const { t } = useTranslation();
   const inset = useSafeAreaInsets();
   const {redirectTo} = route.params || {};
   const dispatch = useAppDispatch();
@@ -316,7 +319,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
               color={isDarkMode ? '$color' : '$color10'}
               maxWidth={300}
               lineHeight={22}>
-              Enter your email and password to securely access your account
+              {t('auth.loginDescription')}
             </Text>
           </YStack>
 
@@ -341,7 +344,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       flex={1}
                       height="$6"
                       borderRadius="$4"
-                      placeholder="Enter your email address"
+                      placeholder={t('auth.emailPlaceholder')}
                       autoCapitalize="none"
                       autoCorrect={false}
                       keyboardType="email-address"
@@ -383,7 +386,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                       flex={1}
                       height="$6"
                       borderRadius="$4"
-                      placeholder="Enter your password"
+                      placeholder={t('auth.passwordPlaceholder')}
                       secureTextEntry={secureTextEntry}
                       autoCapitalize="none"
                       onBlur={onBlur}
@@ -446,7 +449,7 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                   setEmailInputVisible(true);
                   setRequestVerification(false);
                 }}>
-                Forgot Password?
+                {t('auth.forgotPassword')}
               </Text>
             </XStack>
 
