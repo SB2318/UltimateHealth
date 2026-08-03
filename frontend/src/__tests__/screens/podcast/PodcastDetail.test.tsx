@@ -20,6 +20,7 @@ const mockPlayer = {
   pause: jest.fn(),
   seekTo: jest.fn(),
   replace: jest.fn(),
+  setRateAsync: jest.fn(),
 };
 
 jest.mock('@expo/vector-icons/Ionicons', () => {
@@ -468,4 +469,21 @@ describe('PodcastDetail', () => {
     const {getByText} = renderScreen();
     expect(getByText(longTitle)).toBeTruthy();
   });
-});
+
+  it('cycles playback speed correctly on speed button press', async () => {
+    const {getByTestId, getByText} = renderScreen();
+    
+    const speedButton = getByTestId('podcast-speed-button');
+    expect(speedButton).toBeTruthy();
+    
+    // Initial speed is 1.0, which renders as "1x"
+    expect(getByText('1x')).toBeTruthy();
+    
+    await act(async () => {
+      fireEvent.press(speedButton);
+    });
+    
+    expect(getByText('1.25x')).toBeTruthy();
+    expect(mockPlayer.setRateAsync).toHaveBeenCalledWith(1.25, false, 'high');
+  });
+});

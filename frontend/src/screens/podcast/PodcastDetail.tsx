@@ -17,7 +17,7 @@ import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import Slider from '../../components/podcast/SliderCompat';
 import {GlassStyles} from '../../styles/GlassStyles';
 
-import {useAudioPlayer} from 'expo-audio';
+import {useAudioPlayer, type AudioPlayer} from 'expo-audio';
 
 // GET_IMAGE is defined as `${PROD_URL}/getfile` (resolves to absolute URL: https://uhsocial.in/api/getfile).
 // This absolute, securely-configured endpoint ensures that relative resource paths cannot access local device files via traversal.
@@ -62,6 +62,8 @@ const isAllowedUrl = (urlStr?: string | null): boolean => {
   }
 };
 
+const PLAYBACK_SPEEDS = [1.0, 1.25, 1.5, 2.0];
+
 const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   //const [progress, setProgress] = useState(10);
   // const insets = useSafeAreaInsets();
@@ -90,6 +92,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
 
   const [isLike, setLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [speed, setSpeed] = useState(1.0);
 
   const {data: podcast, refetch, isLoading: isPodcastLoading, isError: isPodcastError, error: podcastError} = useGetSinglePodcastDetails(trackId);
   const {mutate: likePodcast, isPending: likePodcastPending} = useLikePodcast();
@@ -112,7 +115,9 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
     typeof loadedSource === 'string' && loadedSource.startsWith('http');
 
   // only initialize once a valid uri exists
-  const player = useAudioPlayer(initialSource);
+  const player = useAudioPlayer(initialSource) as AudioPlayer & {
+    setRateAsync?: (rate: number, shouldPlay: boolean, pitchCorrectionQuality: string) => Promise<void>;
+  };
 
   useEffect(() => {
     if (podcast?.audio_url) {
@@ -307,6 +312,30 @@ useEffect(() => {
       setLikeCount(podcast.likedUsers.length);
     }
   }, [podcast, user_id])
+
+  const handleSpeedChange = async () => {
+    if (!player) return;
+
+    const currentIndex = PLAYBACK_SPEEDS.indexOf(speed);
+    const nextIndex = (currentIndex + 1) % PLAYBACK_SPEEDS.length;
+    const nextSpeed = PLAYBACK_SPEEDS[nextIndex];
+
+    try {
+      if (player.setRateAsync) {
+        await player.setRateAsync(nextSpeed, playing, 'high');
+      } else {
+        // Fallback for expo-audio if setRateAsync is not available
+        (player as any).playbackRate = nextSpeed;
+      }
+      setSpeed(nextSpeed);
+    } catch (err) {
+      console.warn('Failed to set playback rate:', err);
+      Snackbar.show({
+        text: 'Failed to change playback speed. Please try again.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
 
   const SKIP_TIME = 5; // seconds
 
@@ -603,6 +632,24 @@ useEffect(() => {
           onPress={handleForward}
           style={styles.controlButton}>
           <Ionicons name="play-forward" size={32} color="#9BB3C8" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          testID="podcast-speed-button"
+          accessibilityLabel={`Playback speed: ${speed}x. Tap to change.`}
+          onPress={handleSpeedChange}
+          style={{ marginLeft: 10 }}>
+          <XStack
+            backgroundColor="$backgroundFocus"
+            paddingHorizontal="$3"
+            paddingVertical="$2"
+            borderRadius="$4"
+            alignItems="center"
+            justifyContent="center">
+            <Text color="$color" fontSize={14} fontWeight="800">
+              {speed}x
+            </Text>
+          </XStack>
         </TouchableOpacity>
       </XStack>
     </View>
