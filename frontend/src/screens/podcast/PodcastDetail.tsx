@@ -90,6 +90,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
 
   const [isLike, setLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [speed, setSpeed] = useState(1.0);
 
   const {data: podcast, refetch, isLoading: isPodcastLoading, isError: isPodcastError, error: podcastError} = useGetSinglePodcastDetails(trackId);
   const {mutate: likePodcast, isPending: likePodcastPending} = useLikePodcast();
@@ -307,6 +308,26 @@ useEffect(() => {
       setLikeCount(podcast.likedUsers.length);
     }
   }, [podcast, user_id])
+
+  const handleSpeedChange = async () => {
+    if (!player) return;
+    const nextSpeed = speed === 1.0 ? 1.25 : speed === 1.25 ? 1.5 : speed === 1.5 ? 2.0 : 1.0;
+    setSpeed(nextSpeed);
+
+    try {
+      if ('setPlaybackRate' in player) {
+        (player as any).setPlaybackRate(nextSpeed, 'high');
+      } else {
+        player.playbackRate = nextSpeed;
+      }
+      
+      if ('setRateAsync' in player) {
+        await (player as any).setRateAsync(nextSpeed, true, 'high');
+      }
+    } catch (err) {
+      console.warn('Failed to set playback rate:', err);
+    }
+  };
 
   const SKIP_TIME = 5; // seconds
 
@@ -603,6 +624,24 @@ useEffect(() => {
           onPress={handleForward}
           style={styles.controlButton}>
           <Ionicons name="play-forward" size={32} color="#9BB3C8" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          testID="podcast-speed-button"
+          accessibilityLabel="podcast-speed-button"
+          onPress={handleSpeedChange}
+          style={{ marginLeft: 10 }}>
+          <XStack
+            backgroundColor="$backgroundFocus"
+            paddingHorizontal="$3"
+            paddingVertical="$2"
+            borderRadius="$4"
+            alignItems="center"
+            justifyContent="center">
+            <Text color="$color" fontSize={14} fontWeight="800">
+              {speed}x
+            </Text>
+          </XStack>
         </TouchableOpacity>
       </XStack>
     </View>
