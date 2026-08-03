@@ -484,6 +484,6 @@ describe('PodcastDetail', () => {
     });
     
     expect(getByText('1.25x')).toBeTruthy();
-    expect(mockPlayer.setRateAsync).toHaveBeenCalledWith(1.25, true, 'high');
+    expect(mockPlayer.setRateAsync).toHaveBeenCalledWith(1.25, false, 'high');
   });
-});
+});
