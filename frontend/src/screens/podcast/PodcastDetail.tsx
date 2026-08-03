@@ -116,7 +116,7 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
 
   // only initialize once a valid uri exists
   const player = useAudioPlayer(initialSource) as AudioPlayer & {
-    setRateAsync?: (rate: number, shouldPlay: boolean, pitchCorrectionQuality: string) => Promise<void>;
+    setRateAsync: (rate: number, shouldPlay: boolean, pitchCorrectionQuality: string) => Promise<void>;
   };
 
   useEffect(() => {
@@ -313,7 +313,7 @@ useEffect(() => {
     }
   }, [podcast, user_id])
 
-  const handleSpeedChange = async () => {
+  const handleSpeedChange = React.useCallback(async () => {
     if (!player) return;
 
     const currentIndex = PLAYBACK_SPEEDS.indexOf(speed);
@@ -321,12 +321,7 @@ useEffect(() => {
     const nextSpeed = PLAYBACK_SPEEDS[nextIndex];
 
     try {
-      if (player.setRateAsync) {
-        await player.setRateAsync(nextSpeed, playing, 'high');
-      } else {
-        // Fallback for expo-audio if setRateAsync is not available
-        (player as any).playbackRate = nextSpeed;
-      }
+      await player.setRateAsync(nextSpeed, playing, 'high');
       setSpeed(nextSpeed);
     } catch (err) {
       console.warn('Failed to set playback rate:', err);
@@ -335,7 +330,7 @@ useEffect(() => {
         duration: Snackbar.LENGTH_SHORT,
       });
     }
-  };
+  }, [player, playing, speed]);
 
   const SKIP_TIME = 5; // seconds
 

@@ -470,8 +470,8 @@ describe('PodcastDetail', () => {
     expect(getByText(longTitle)).toBeTruthy();
   });
 
-  it('cycles playback speed correctly on speed button press', async () => {
-    const {getByTestId, getByText} = renderScreen();
+  it('cycles playback speed correctly on speed button press in both playing and paused states', async () => {
+    const {getByTestId, getByText, getByLabelText} = renderScreen();
     
     const speedButton = getByTestId('podcast-speed-button');
     expect(speedButton).toBeTruthy();
@@ -479,11 +479,38 @@ describe('PodcastDetail', () => {
     // Initial speed is 1.0, which renders as "1x"
     expect(getByText('1x')).toBeTruthy();
     
+    // 1.0 -> 1.25 (paused)
     await act(async () => {
       fireEvent.press(speedButton);
     });
-    
     expect(getByText('1.25x')).toBeTruthy();
     expect(mockPlayer.setRateAsync).toHaveBeenCalledWith(1.25, false, 'high');
+    
+    // 1.25 -> 1.5 (paused)
+    await act(async () => {
+      fireEvent.press(speedButton);
+    });
+    expect(getByText('1.5x')).toBeTruthy();
+    expect(mockPlayer.setRateAsync).toHaveBeenCalledWith(1.5, false, 'high');
+
+    // Play the audio
+    await act(async () => {
+      fireEvent.press(getByLabelText('podcast-play-pause-button'));
+    });
+
+    // 1.5 -> 2.0 (playing)
+    await act(async () => {
+      fireEvent.press(speedButton);
+    });
+    expect(getByText('2x')).toBeTruthy();
+    expect(mockPlayer.setRateAsync).toHaveBeenCalledWith(2.0, true, 'high');
+
+    // 2.0 -> 1.0 (playing)
+    await act(async () => {
+      fireEvent.press(speedButton);
+    });
+    expect(getByText('1x')).toBeTruthy();
+    expect(mockPlayer.setRateAsync).toHaveBeenCalledWith(1.0, true, 'high');
   });
-});
+});
+
