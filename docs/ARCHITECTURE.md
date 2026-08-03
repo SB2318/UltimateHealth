@@ -134,7 +134,7 @@ Push notifications to mobile users for review updates, new articles, and moderat
 | `src/index.js` | Express app bootstrap |
 | `src/routes/` | All API route definitions |
 | `src/controllers/` | Request handlers per domain |
-| `src/models/` | Mongoose schemas (User, Article, Podcast, Report) |
+| `src/models/` | Mongoose schemas (User, Article, Podcast, PodcastEpisode, Report) |
 | `src/middleware/` | JWT auth, validation, error handling |
 | `src/services/` | Email, storage, and external integrations |
 | `.env.example` | All required environment variables |
