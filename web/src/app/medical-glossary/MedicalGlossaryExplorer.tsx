@@ -226,36 +226,63 @@ export default function MedicalGlossaryExplorer() {
                   </div>
 
                   {/* Related Terms */}
-                  {entry.relatedTerms?.length > 0 && (
-                    <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid #f1f5f9" }}>
-                      <div style={{ fontSize: "10px", fontWeight: 700, color: "#94a3b8", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
-                        Related
+                  {(() => {
+                    const filteredRelated = Array.from(new Set(entry.relatedTerms || [])).filter(
+                      (t) => t.toLowerCase() !== entry.term.toLowerCase()
+                    );
+                    
+                    if (filteredRelated.length === 0) return null;
+
+                    return (
+                      <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid #f1f5f9" }}>
+                        <div style={{ fontSize: "10px", fontWeight: 700, color: "#94a3b8", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
+                          Related Terms
+                        </div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                          {filteredRelated.map((term) => (
+                            <span
+                              key={term}
+                              role="button"
+                              tabIndex={0}
+                              aria-label={`View related term: ${term}`}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                  e.preventDefault();
+                                  setSearchQuery(term);
+                                  setSelectedCategory("All");
+                                }
+                              }}
+                              onClick={() => {
+                                setSearchQuery(term);
+                                setSelectedCategory("All");
+                              }}
+                              style={{
+                                fontSize: "12px",
+                                fontWeight: 500,
+                                color: "#475569",
+                                background: "#f8fafc",
+                                border: "1px solid #e2e8f0",
+                                borderRadius: "6px",
+                                padding: "2px 8px",
+                                cursor: "pointer",
+                                transition: "background-color 0.2s, border-color 0.2s",
+                              }}
+                              onMouseEnter={(e) => {
+                                (e.currentTarget as HTMLSpanElement).style.backgroundColor = "#e2e8f0";
+                                (e.currentTarget as HTMLSpanElement).style.borderColor = "#cbd5e1";
+                              }}
+                              onMouseLeave={(e) => {
+                                (e.currentTarget as HTMLSpanElement).style.backgroundColor = "#f8fafc";
+                                (e.currentTarget as HTMLSpanElement).style.borderColor = "#e2e8f0";
+                              }}
+                            >
+                              {term}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                        {entry.relatedTerms.map((term) => (
-                          <span
-                            key={term}
-                            onClick={() => {
-                              setSearchQuery(term);
-                              setSelectedCategory("All");
-                            }}
-                            style={{
-                              fontSize: "12px",
-                              fontWeight: 500,
-                              color: "#475569",
-                              background: "#f8fafc",
-                              border: "1px solid #e2e8f0",
-                              borderRadius: "6px",
-                              padding: "2px 8px",
-                              cursor: "pointer",
-                            }}
-                          >
-                            {term}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                    );
+                  })()}
                 </div>
               );
             })}
