@@ -154,10 +154,19 @@ def handle_issue_comment(repo, token, event_path):
         # Check if already assigned
         current_assignees = [a["login"] for a in issue.get("assignees", [])]
         if not current_assignees:
-            # Assign to the commenter
-            api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/assignees", token, method="POST", data={"assignees": [commenter]})
-            reply = f"Assigned to @{commenter}. You have 7 days to complete this issue. Please submit a PR referencing this issue."
-            api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": reply})
+            # Check if they have ANY OTHER open issue assigned
+            search_url = f"https://api.github.com/search/issues?q=repo:{repo}+is:open+assignee:{commenter}"
+            search_res = api_request(search_url, token)
+            active_assignments = search_res.get("total_count", 0) if search_res else 0
+            
+            if active_assignments > 0:
+                reply = f"Sorry @{commenter}, you already have an active assignment in this repository. Please complete or unassign it before claiming a new one."
+                api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": reply})
+            else:
+                # Assign to the commenter
+                api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/assignees", token, method="POST", data={"assignees": [commenter]})
+                reply = f"Assigned to @{commenter}. You have 7 days to complete this issue. Please submit a PR referencing this issue."
+                api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": reply})
         elif commenter in current_assignees:
             pass # Already assigned to them
         else:
