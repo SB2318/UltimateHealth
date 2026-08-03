@@ -13,6 +13,9 @@ export const initializeSocket = (token: string | null = null): Socket => {
     const tokenChanged = currentAuthToken !== token;
 
     if (socket && !tokenChanged) {
+        if (!socket.connected) {
+            socket.connect();
+        }
         return socket;
     }
 

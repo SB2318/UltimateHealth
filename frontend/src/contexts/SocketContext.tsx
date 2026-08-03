@@ -76,16 +76,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
         };
     }, [user_token]); // Re-initialize only when token changes
 
-    // Provider unmount cleanup: disconnect only if the current auth matches what this provider initialized.
-    useEffect(() => {
-        return () => {
-            if (tokenInitializedRef.current && latestTokenRef.current === tokenInitializedRef.current) {
-                disconnectSocket();
-            }
-        };
-    }, []);
-
-
 
     useEffect(() => {
         if (!socket || !user_id) return;
