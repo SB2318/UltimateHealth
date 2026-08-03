@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState, ReactNode } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+ 
+import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
 
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../store/hooks';
 import { Socket } from 'socket.io-client';
-import { initializeSocket, disconnectSocket } from '../helper/socket';
+import { initializeSocket, disconnectSocket } from '../lib/platform/socket';
 
 
 interface SocketContextType {
@@ -21,13 +23,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
     const [isConnected, setIsConnected] = useState(false);
 
     // Get token and user info from Redux
-    const { user_token, user_id } = useSelector((state: any) => state.user);
-
-    // Track the token that this provider instance initialized with.
-    // This lets us disconnect safely on unmount/auth removal without thrashing the singleton.
-    const tokenInitializedRef = useRef<string | null>(null);
-    const latestTokenRef = useRef<string | null>(user_token);
-    latestTokenRef.current = user_token;
+    const { user_token, user_id } = useAppSelector((state: any) => state.user);
 
     useEffect(() => {
         // Only initialize if we have a valid token
@@ -37,13 +33,11 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
             disconnectSocket();
             setSocket(null);
             setIsConnected(false);
-            tokenInitializedRef.current = null;
             return;
         }
 
         // Initialize socket with authentication token.
         const socketInstance = initializeSocket(user_token);
-        tokenInitializedRef.current = user_token;
         setSocket(socketInstance);
 
         // Connection listeners
@@ -51,10 +45,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
             setIsConnected(true);
             if (__DEV__) console.log('Socket Context: Connected');
             
-            // Auto-join user room for notifications if logged in
-            if (user_id) {
-                socketInstance.emit('join-user-notifications', { userId: user_id });
-            }
         };
 
         const onDisconnect = () => {
@@ -64,23 +54,19 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
 
         socketInstance.on('connect', onConnect);
         socketInstance.on('disconnect', onDisconnect);
-
+        // ARCHITECTURAL NOTE: Socket survives React remounts. 
+        // We only forcefully disconnect if the user fully closes the browser tab.
+        const handleAppClose = () => {
+            disconnectSocket();
+        };
+        window.addEventListener('beforeunload', handleAppClose);
         return () => {
             socketInstance.off('connect', onConnect);
             socketInstance.off('disconnect', onDisconnect);
+            window.removeEventListener('beforeunload', handleAppClose);
             setIsConnected(false);
         };
     }, [user_token]); // Re-initialize only when token changes
-
-    // Provider unmount cleanup: disconnect only if the current auth matches what this provider initialized.
-    useEffect(() => {
-        return () => {
-            if (tokenInitializedRef.current && latestTokenRef.current === tokenInitializedRef.current) {
-                disconnectSocket();
-            }
-        };
-    }, []);
-
 
 
     useEffect(() => {
@@ -144,3 +130,4 @@ export const useSocketConnection = () => {
     }
     return context.isConnected;
 };
+

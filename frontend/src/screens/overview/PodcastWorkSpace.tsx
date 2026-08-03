@@ -1,28 +1,29 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+ 
 import {useCallback, useEffect, useState} from 'react';
-import {
-  View,
+import { View,
   StyleSheet,
   TouchableOpacity,
   Text,
-  FlatList,
-} from 'react-native';
-import {PodcastData} from '../../type';
-import {useSelector} from 'react-redux';
-import PodcastReviewCard from '../../components/PodcastReviewCard';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../helper/Theme';
-import {hp, wp} from '../../helper/Metric';
-import Loader from '../../components/Loader';
-import {useGetPendingPodcasts} from '@/src/hooks/useGetPendingPodcasts';
-import {useGetDiscardedPodcasts} from '@/src/hooks/useGetDiscardedPodcast';
-import {useGetUserPublishedPodcasts} from '@/src/hooks/useGetUserPublishedPodcasts';
-import {NoPodcastState} from '../../components/EmptyStates';
+   FlatList ,
+ } from 'react-native';
+import {PodcastData} from '../../schemas/type';
+import {useAppSelector} from '../../store/hooks';
+import PodcastReviewCard from '../../components/podcast/PodcastReviewCard';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {hp, wp} from '../../lib/ui/Metric';
+import Loader from '../../components/common/Loader';
+import {useGetPendingPodcasts} from '@/src/hooks/podcast/useGetPendingPodcasts';
+import {useGetDiscardedPodcasts} from '@/src/hooks/podcast/useGetDiscardedPodcast';
+import {useGetUserPublishedPodcasts} from '@/src/hooks/podcast/useGetUserPublishedPodcasts';
+import {NoPodcastState} from '../../components/common/EmptyStates';
 
 export default function PodcastWorkSpace({
   handleClickAction,
 }: {
   handleClickAction: (item: PodcastData) => void;
 }) {
-  const {isConnected} = useSelector((state: any) => state.network);
+  const {isConnected} = useAppSelector((state: any) => state.network);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [publishedPage, setPublishedPage] = useState(1);
   const [totalPublishPages, setTotalPublishPages] = useState(0);
@@ -72,7 +73,7 @@ export default function PodcastWorkSpace({
         }
       }
     }
-  }, [publishedPodcastsData, publishedPage]);
+  }, [publishedPodcastsData, publishedPage, publishedPodcasts]);
 
   useEffect(() => {
     if (pendingPodcastsData) {
@@ -195,7 +196,7 @@ export default function PodcastWorkSpace({
                     : (discardedPodcasts ?? [])
               }
               renderItem={renderItem}
-              keyExtractor={item => item._id.toString()}
+              keyExtractor={(item:PodcastData) => item._id.toString()}
               contentContainerStyle={styles.flatListContentContainer}
               refreshing={refreshing}
               onRefresh={onRefresh}
@@ -268,3 +269,4 @@ const styles = StyleSheet.create({
     paddingBottom: hp(2),
   },
 });
+

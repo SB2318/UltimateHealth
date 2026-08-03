@@ -1,0 +1,41 @@
+import { POST_ARTICLE } from '@/src/lib/api/APIUtils';
+import { Category, ArticleData } from '@/src/schemas/type';
+import {useMutation, UseMutationResult} from '@tanstack/react-query';
+
+import axios from 'axios';
+
+type AxiosError = any;
+
+type PostReq = {
+  title: string;
+  authorName: string;
+  authorId: string;
+  content: string;
+  tags: Category[];
+  imageUtils: string[];
+  description: string;
+  pb_recordId: string;
+  allow_podcast: boolean;
+  language: string;
+  isTranslation?: boolean;
+  sourceArticleId?: string;
+  sourceArticleRecordId?: string;
+  sourceLanguage?: string;
+  targetLanguage?: string;
+  translationOf?: string;
+};
+
+export const usePostArticleData = (): UseMutationResult<
+  ArticleData,
+  AxiosError,
+  PostReq
+> => {
+  return useMutation({
+    mutationKey: ['create-post-key'],
+    mutationFn: async (data: PostReq) => {
+      const response = await axios.post(POST_ARTICLE, data);
+      //  console.log(article);
+      return response.data.newArticle as ArticleData;
+    },
+  });
+};

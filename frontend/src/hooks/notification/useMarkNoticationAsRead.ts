@@ -1,0 +1,23 @@
+import axios from 'axios';
+import {PROD_URL} from '../../lib/api/APIUtils';
+import {useMutation, UseMutationResult} from '@tanstack/react-query';
+type AxiosError = any;
+
+export const useMarkNotificationAsRead = (): UseMutationResult<
+  any,
+  AxiosError
+> => {
+  return useMutation({
+    mutationKey: ['mark-notification-as-read'],
+    mutationFn: async () => {
+      const res = await axios.put(
+        `${PROD_URL}/notifications/mark-as-read?role=2`,
+        {
+          role: 2,
+        },
+      );
+
+      return res.data as any;
+    },
+  });
+};

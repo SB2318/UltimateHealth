@@ -1,3 +1,29 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 💬 Auto Comment on Issue Close
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Automatically posts a thank-you comment on a GitHub issue the moment it
+#   is closed — whether closed by a maintainer, a bot, or a PR merge. This
+#   acknowledges the issue reporter and provides closure feedback.
+#
+# HOW IT WORKS:
+#   1. Triggers whenever any issue is closed (types: [closed]).
+#   2. Reads the issue creator's username and issue number from the event payload.
+#   3. Posts a personalized comment on the issue:
+#        "Hello @<creator>! Your issue #<N> has been closed.
+#         Thank you for your contribution!"
+#
+# TRIGGERS:
+#   - Automatic : Fires instantly when any issue is closed.
+#
+# PERMISSIONS REQUIRED:
+#   - issues: write  → to post the closing comment
+#
+# SECRETS REQUIRED:
+#   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: Comment on Issue Close
 
 on:

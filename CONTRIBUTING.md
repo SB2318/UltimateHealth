@@ -76,6 +76,79 @@ docs: update contribution guidelines
    - Target the **web** branch for web application contributions.
 
 
+## Local Development Troubleshooting
+
+If you encounter issues while setting up the project locally, try the following solutions before opening an issue.
+
+### Dependency installation fails
+
+If `yarn install` or `pnpm install` fails:
+
+- Make sure you are using a supported Node.js version.
+- Delete `node_modules` and reinstall dependencies.
+
+```bash
+# macOS / Linux
+rm -rf node_modules
+
+# Windows (PowerShell)
+Remove-Item -Recurse -Force node_modules
+
+yarn install
+# or
+pnpm install
+```
+
+### Node.js version mismatch
+
+Check your installed Node.js version:
+
+```bash
+node -v
+```
+
+If the version does not match the project's requirements, install the recommended version using a version manager such as **nvm**. See the [Node.js Documentation](https://nodejs.org/docs) for installation guidance.
+
+### Expo CLI or Android Emulator issues
+
+If the Expo app does not start or no Android device is detected:
+
+- Ensure Android Studio and the Android SDK are installed correctly.
+- Start an Android emulator before running the Expo commands.
+- Restart the emulator if it is not detected.
+
+### pnpm quality check failures
+
+Before opening a Pull Request, run:
+
+```bash
+cd frontend
+pnpm quality
+```
+
+Resolve any reported issues before submitting your changes.
+
+### Cache-related issues
+
+If you encounter unexpected build or dependency issues, clear the cache and reinstall dependencies:
+
+```bash
+# macOS / Linux
+rm -rf node_modules
+
+# Windows (PowerShell)
+Remove-Item -Recurse -Force node_modules
+
+pnpm store prune
+pnpm install
+```
+
+### Helpful Resources
+
+- [Node.js Documentation](https://nodejs.org/docs)
+- [pnpm Documentation](https://pnpm.io/)
+- [Expo Documentation](https://docs.expo.dev/)
+
 ## Pull Request Guidelines
 
 - **Keep PRs focused** — one feature or bug fix per PR.
@@ -122,6 +195,7 @@ We will review your PR as soon as possible. Feedback will be provided constructi
 - For **feature requests**:
   - Explain the use case
   - Describe why it benefits the community
+- **AI Issue Triage Bot**: We use an AI bot to automatically triage and manage assignments. For details on how the bot handles labeling, assignment, and unassignment, please review the [AI Issue Triage Workflow](docs/AI_ISSUE_TRIAGE.md).
 
 
 ## Frequently Asked Questions

@@ -88,3 +88,7 @@ expo-env.d.ts
 # Expo local state (machine-specific device history and dev server settings)
 .expo/
 dist/
+
+# Native folders managed by Expo CNG
+#android/
+#ios/

@@ -6,20 +6,14 @@
 const defaultStaticConfig = {
   name: "UltimateHealth",
   slug: "UltimateHealth",
-  version: "2.2.0",
+  version: "3.0.0",
   orientation: "portrait",
   icon: "./assets/images/ic_ultimatehealth_appicon.png",
   scheme: "ultimatehealth",
   userInterfaceStyle: "automatic",
-  newArchEnabled: true,
   androidStatusBar: {
     backgroundColor: "#00BFFF",
     barStyle: "light-content"
-  },
-  splash: {
-    image: "./assets/images/adaptive-icon.png",
-    resizeMode: "contain",
-    backgroundColor: "#E6F4FE"
   },
   ios: {
     supportsTablet: true,
@@ -72,7 +66,6 @@ const defaultStaticConfig = {
       foregroundImage: "./assets/images/ic_ultimatehealth_appicon_foreground.png",
       backgroundImage: "./assets/images/ic_launcher_background.png"
     },
-    edgeToEdgeEnabled: true,
     predictiveBackGestureEnabled: false,
     package: "com.anonymous.UltimateHealth",
     versionCode: 21
@@ -113,13 +106,9 @@ const defaultStaticConfig = {
     ],
     "./plugins/withWebViewDebug.js"
   ],
-  experiments: {
+  
+ experiments: {
     reactCompiler: true
-  },
-  extra: {
-    eas: {
-      projectId: "bdd3feee-d70b-4f27-9be5-33edb8b864f4"
-    }
   }
 };
 
@@ -128,7 +117,6 @@ module.exports = ({ config }) => {
     ...defaultStaticConfig,
     ...config,
   };
-
   // Filter out "@sentry/react-native/expo" if present in base config plugins,
   // to avoid duplication when we append our dynamically configured version.
   const basePlugins = (mergedConfig.plugins || []).filter(

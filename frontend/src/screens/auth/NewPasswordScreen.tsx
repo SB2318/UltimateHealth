@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/incompatible-library */
 import React, { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -15,23 +17,26 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 
-import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '@/src/helper/Theme';
-import { useChangePasswordMutation } from '@/src/hooks/useChangePassword';
+import { ON_PRIMARY_COLOR, PRIMARY_COLOR } from '@/src/lib/ui/Theme';
+import { useChangePasswordMutation } from '@/src/hooks/auth/useChangePassword';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import Icon from '@expo/vector-icons/Ionicons';
-import { AxiosError } from 'axios';
-import Loader from '../../components/Loader';
-import { NewPasswordScreenProp } from '../../type';
+import Loader from '../../components/common/Loader';
+import { NewPasswordScreenProp } from '../../schemas/type';
 import {Alert, ActivityIndicator} from 'react-native';
+type AxiosError = any;
 
 const newPasswordSchema = z.object({
-  password: z.string()
-    .min(6, 'At least 6 characters with lowercase letter')
-    .regex(/(?=.*[a-z]).{6,}/, 'At least 6 characters with lowercase letter'),
-  confirmPassword: z.string().min(1, 'Please confirm your password'),
+  password: z
+    .string()
+    .min(1, 'Password is required.')
+    .min(8, 'Password must contain at least 8 characters.')
+    .regex(/(?=.*[a-z])/, 'Password must contain at least one lowercase letter.')
+    .regex(/(?=.*[0-9]|.*[!@#$%^&*])/, 'Password must contain at least one number or special character.'),
+  confirmPassword: z.string().min(1, 'Please confirm your password.'),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
+  message: "Passwords do not match. Please re-enter.",
   path: ['confirmPassword'],
 });
 type NewPasswordFormData = z.infer<typeof newPasswordSchema>;
@@ -40,7 +45,14 @@ export default function NewPasswordScreen({
   navigation,
   route,
 }: NewPasswordScreenProp) {
-  const {email} = route.params;
+  const { email, resetToken } = route.params;
+
+  React.useEffect(() => {
+      if (!resetToken) {
+          Alert.alert("Invalid password reset session", "Please verify your OTP again.");
+          navigation.goBack();
+      }
+  }, [resetToken]);
 
   const {
     control,
@@ -58,7 +70,7 @@ export default function NewPasswordScreen({
 
   const password = watch('password');
   const confirmPassword = watch('confirmPassword');
-  const passwordVerify = !errors.password && password.length >= 6;
+  const passwordVerify = !errors.password && password.length >= 8;
 
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureNewTextEntry, setSecureNewTextEntry] = useState(true);
@@ -73,28 +85,25 @@ export default function NewPasswordScreen({
   const handleSecureNewEntryClickEvent = () => {
     setSecureNewTextEntry(!secureNewTextEntry);
   };
-  const[isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePasswordSubmit = (data: NewPasswordFormData) => {
 
     changePassword(
-      {email, newPassword: password},
+      {email, newPassword: password, resetToken},
       {
         onSuccess: () => {
-          setIsSubmitting(false);
           Alert.alert('Password reset successfully');
           navigation.navigate('LoginScreen', {});
         },
         onError: (error: AxiosError) => {
-          setIsSubmitting(false);
           if (error.response) {
             switch (error.response.status) {
               case 400: Alert.alert('Error', 'User not found'); break;
-              case 402: Alert.alert('Error', 'New password should not be same as old'); break;
-              default: Alert.alert('Error', 'Something went wrong.');
+              case 402: Alert.alert('Error', 'New password should not be same as old password.'); break;
+              default: Alert.alert('Error', 'Something went wrong. Please try again.');
             }
           } else {
-            Alert.alert('Error', 'Something went wrong.');
+            Alert.alert('Error', 'Something went wrong. Please try again.');
           }
         },
       },
@@ -233,7 +242,7 @@ export default function NewPasswordScreen({
                       <Icon
                         name={secureTextEntry ? 'eye-off' : 'eye'}
                         size={20}
-                        color={theme.gray700.val}
+                        color={theme.gray700?.val}
                       />
                     </Button>
                   </XStack>
@@ -262,7 +271,7 @@ export default function NewPasswordScreen({
                   </>
                 ) : (
                   <Text fontSize={13} color="$gray400" fontWeight="500">
-                    At least 6 characters with lowercase letter
+                    At least 8 characters with a number or special character
                   </Text>
                 )}
               </XStack>
@@ -283,8 +292,8 @@ export default function NewPasswordScreen({
                       size={20}
                       color={
                         value && password === value
-                          ? theme.blue10.val
-                          : theme.gray500.val
+                          ? theme.blue10?.val
+                          : theme.gray500?.val
                       }
                       style={{
                         position: 'absolute',
@@ -339,7 +348,7 @@ export default function NewPasswordScreen({
                       <Icon
                         name={secureNewTextEntry ? 'eye-off' : 'eye'}
                         size={20}
-                        color={theme.gray600.val}
+                        color={theme.gray600?.val}
                       />
                     </Button>
                   </XStack>
@@ -400,34 +409,10 @@ export default function NewPasswordScreen({
             </Button>
           </YStack>
 
-          {/* Return Link */}
-          <Button
-            backgroundColor={
-              password && confirmPassword &&
-              password === confirmPassword && passwordVerify
-                ? '$blue10' : '$gray7'
-            }
-            w="100%"
-            h={56}
-            borderRadius={12}
-            disabled={
-              !password || !confirmPassword ||
-              password !== confirmPassword ||
-              !passwordVerify || isSubmitting || isPending
-            }
-            onPress={handlePasswordSubmit}
-            opacity={isSubmitting || isPending ? 0.6 : 1}>
-            {isSubmitting || isPending ? (
-              <ActivityIndicator color="white" />
-            ) : (
-              <Text fontSize={17} fontWeight="600" color="white">
-                Reset Password
-              </Text>
-            )}
-          </Button>
         </Card>
       </YStack>
     </YStack>
   );
 }
+
 

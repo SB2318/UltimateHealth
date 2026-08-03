@@ -375,7 +375,7 @@ glassCard: {
 
   // Gradient Overlay (for backgrounds)
   gradientOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     opacity: 0.8,
   },
 

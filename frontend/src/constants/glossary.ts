@@ -5,7 +5,7 @@ export type GlossaryTerm = {
   relatedTerms?: string[];
 };
 
-export const testGlossaryTerms: GlossaryTerm[] = [
+export const glossaryTerms: GlossaryTerm[] = [
   {
     term: 'Hypertension',
     definition:

@@ -1,3 +1,44 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 📋 PR Governance — Title & Label Validator
+# ──────────────────────────────────────────────────────────────────────────────
+#
+# DESCRIPTION:
+#   Enforces PR quality standards by validating two things on every non-draft PR:
+#   (1) the title must follow Conventional Commits format, and
+#   (2) the PR must have at least one meaningful label applied.
+#   Fails the check and blocks merge if either requirement is not met.
+#
+# HOW IT WORKS:
+#
+#   STEP 1 — Semantic PR Title Check (uses: amannn/action-semantic-pull-request):
+#     Validates the PR title against Conventional Commits specification.
+#     Allowed prefixes: feat, fix, docs, style, refactor, perf, test,
+#                       build, ci, chore, revert
+#     Example valid titles:
+#       "feat: add dark mode toggle"
+#       "fix(auth): handle token expiry"
+#
+#   STEP 2 — Enforce Minimum Label Usage:
+#     Skips label check for infrastructure/maintenance PR types:
+#       ci, docs, chore, build, test, style, refactor, perf, revert
+#     For all other types (feat, fix, etc.), requires at least one label
+#     that is NOT in the ignored list ("dependencies").
+#     Fails with: "Please apply at least one meaningful label to this PR."
+#
+# TRIGGERS:
+#   - Automatic : PR opened, edited, synchronized, labeled, unlabeled,
+#                 ready_for_review, or converted_to_draft.
+#   - Manual    : Via workflow_dispatch.
+#   - Skips     : Draft PRs (github.event.pull_request.draft == false guard).
+#
+# PERMISSIONS REQUIRED:
+#   - contents: read        → to read the PR content
+#   - pull-requests: read   → to read PR title and labels
+#
+# SECRETS REQUIRED:
+#   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
+# ──────────────────────────────────────────────────────────────────────────────
+
 name: PR Governance
 
 on:

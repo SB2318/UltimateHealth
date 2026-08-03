@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 import React, {useState} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Alert,
   StyleSheet,
@@ -7,29 +9,29 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {BUTTON_COLOR} from '../../helper/Theme';
+import {BUTTON_COLOR} from '../../lib/ui/Theme';
 import {
   PocketBaseResponse,
   PreviewScreenProp,
-} from '../../type';
-import {createHTMLStructure, handleExternalClick} from '../../helper/Utils';
+} from '../../schemas/type';
+import {createHTMLStructure, handleExternalClick} from '../../lib/utils/Utils';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 
-import Loader from '../../components/Loader';
-import {GET_IMAGE} from '../../helper/APIUtils';
-import {useDispatch, useSelector} from 'react-redux';
-import useUploadImage from '../../hooks/useUploadImage';
+import Loader from '../../components/common/Loader';
+import {GET_IMAGE} from '../../lib/api/APIUtils';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import useUploadImage from '../../hooks/media/useUploadImage';
 import {setSuggestion} from '../../store/dataSlice';
 import Snackbar from 'react-native-snackbar';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {usePostArticleData} from '@/src/hooks/usePostArticle';
-import {useSubmitImprovement} from '@/src/hooks/useSubmitImprovement';
-import {useSubmitSuggestedChanges} from '@/src/hooks/useSubmitSuggestedChanges';
-import {useUploadArticleToPocketbase} from '@/src/hooks/useUploadArticlePocketbase';
-import {useUploadImprovementToPocketbase} from '@/src/hooks/useUploadImprovementToPocketbase';
-import {useRenderSuggestion} from '@/src/hooks/useRenderSuggestion';
-import {useDeletePocketbaseRecord} from '@/src/hooks/useDeletePocketbaseRecord';
+import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
+import {usePostArticleData} from '@/src/hooks/article/usePostArticle';
+import {useSubmitImprovement} from '@/src/hooks/improvement/useSubmitImprovement';
+import {useSubmitSuggestedChanges} from '@/src/hooks/article/useSubmitSuggestedChanges';
+import {useUploadArticleToPocketbase} from '@/src/hooks/article/useUploadArticlePocketbase';
+import {useUploadImprovementToPocketbase} from '@/src/hooks/improvement/useUploadImprovementToPocketbase';
+import {useRenderSuggestion} from '@/src/hooks/ai/useRenderSuggestion';
+import {useDeletePocketbaseRecord} from '@/src/hooks/common/useDeletePocketbaseRecord';
 
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {
@@ -49,13 +51,13 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const [imageUtil, setImageUtil] = useState<string>('');
   const [imageUtils, setImageUtils] = useState<string[]>([]);
 
-  const {user_token, user_id} = useSelector((state: any) => state.user);
-  const {suggestion, suggestionAccepted} = useSelector(
+  const {user_token, user_id} = useAppSelector((state: any) => state.user);
+  const {suggestion, suggestionAccepted} = useAppSelector(
     (state: any) => state.data,
   );
 
-  const {isConnected} = useSelector((state: any) => state.network);
-  const dispatch = useDispatch();
+  const {isConnected} = useAppSelector((state: any) => state.network);
+  const dispatch = useAppDispatch();
 
   const {mutate: postMutation, isPending: postMutationPending} =
     usePostArticleData();
@@ -118,6 +120,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       const confirmation = await showConfirmationAlert();
       if (!confirmation) {
         Alert.alert('Post discarded');
+        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
         navigation.navigate('TabNavigation');
         return;
       }
@@ -186,6 +189,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                         duration: Snackbar.LENGTH_SHORT,
                       });
 
+                      AsyncStorage.removeItem('@article_description_draft').catch(() => {});
                       navigation.navigate('TabNavigation');
                     },
                     onError: error => {
@@ -194,7 +198,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                       // Step 2 failed — issue a compensating DELETE to remove
                       // the PocketBase record created in step 1 so it does not
                       // become a permanent orphan.
-                      deletePocketbaseRecord(data.recordId, {
+                      deletePocketbaseRecord({
+                       recordId: data.recordId,
+                       collectionName: 'edit_requests',
+                      }, {
                         onError: cleanupErr => {
                           console.warn(
                             'PocketBase orphan cleanup failed for recordId:',
@@ -236,6 +243,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
           {
             onSuccess: (data: PocketBaseResponse) => {
               if (data.html_file) {
+                // Case 1: User is submitting suggested changes to an existing non published article
                 if (articleData) {
                   submitChangesMutation(
                     {
@@ -261,6 +269,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                           duration: Snackbar.LENGTH_SHORT,
                         });
 
+                        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
                         navigation.navigate('TabNavigation');
                       },
                       onError: error => {
@@ -269,7 +278,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
 
                         // Step 2 failed — compensating DELETE for the PocketBase
                         // record created in step 1.
-                        deletePocketbaseRecord(data.recordId, {
+                        deletePocketbaseRecord({
+                          recordId: data.recordId,
+                          collectionName: 'content',
+                        }, {
                           onError: cleanupErr => {
                             console.warn(
                               'PocketBase orphan cleanup failed for recordId:',
@@ -284,6 +296,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                     },
                   );
                 } else {
+                  // Case 2: User is submitting a new article
                   postMutation(
                     {
                       title: title,
@@ -313,6 +326,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                           duration: Snackbar.LENGTH_SHORT,
                         });
 
+                        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
                         navigation.navigate('TabNavigation');
                       },
 
@@ -321,7 +335,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
 
                         // Step 2 failed — compensating DELETE for the PocketBase
                         // article record created in step 1.
-                        deletePocketbaseRecord(data.recordId, {
+                        deletePocketbaseRecord({
+                          recordId: data.recordId,
+                          collectionName: 'content',
+                        }, {
                           onError: cleanupErr => {
                             console.warn(
                               'PocketBase orphan cleanup failed for recordId:',
