@@ -34,6 +34,7 @@ export const ScrollActionButtons: React.FC<ScrollActionButtonsProps> = ({
         visible={topVisible}
         buttonColor={buttonColor}
         iconColor={iconColor}
+        style={styles.actionButton}
       />
       <ScrollToBottomButton
         opacity={bottomOpacity}
@@ -41,6 +42,7 @@ export const ScrollActionButtons: React.FC<ScrollActionButtonsProps> = ({
         visible={bottomVisible}
         buttonColor={buttonColor}
         iconColor={iconColor}
+        style={styles.actionButton}
       />
     </View>
   );
@@ -49,12 +51,17 @@ export const ScrollActionButtons: React.FC<ScrollActionButtonsProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 24,
+    bottom: 36,
     right: 20,
     flexDirection: 'column',
     gap: 8,
     alignItems: 'center',
     justifyContent: 'flex-end',
     zIndex: 100,
+  },
+  actionButton: {
+    position: 'relative',
+    bottom: undefined,
+    right: undefined,
   },
 });

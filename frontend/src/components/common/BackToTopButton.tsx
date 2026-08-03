@@ -28,6 +28,7 @@ export interface BackToTopButtonProps {
   visible: boolean;
   buttonColor?: string;
   iconColor?: string;
+  style?: any;
 }
  
 export const BackToTopButton: React.FC<BackToTopButtonProps> = ({
@@ -36,18 +37,19 @@ export const BackToTopButton: React.FC<BackToTopButtonProps> = ({
   visible,
   buttonColor = '#4CAF50',
   iconColor = '#fff',
+  style,
 }) => {
   if (!visible) return null;
  
   return (
     <Animated.View
-      style={[styles.fab, { opacity, backgroundColor: buttonColor }]}
+      style={[styles.fab, { opacity, backgroundColor: buttonColor }, style]}
     >
       <AccessibleTouchable
         onPress={onPress}
         accessibilityLabel="Back to top"
-        
         accessibilityHint="Scrolls the page back to the top"
+        style={styles.touchable}
       >
         <Ionicons name="arrow-up" size={22} color={iconColor} />
       </AccessibleTouchable>
@@ -57,11 +59,15 @@ export const BackToTopButton: React.FC<BackToTopButtonProps> = ({
  
 const styles = StyleSheet.create({
   fab: {
+    position: 'absolute',
+    bottom: 36,
+    right: 20,
     width: 44,
     height: 44,
     borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 100,
     // Shadow — iOS
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -69,5 +75,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     // Elevation — Android
     elevation: 6,
+  },
+  touchable: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
