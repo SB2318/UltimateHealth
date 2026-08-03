@@ -1,1 +1,19 @@
-{}
+{
+  "auth": {
+    "emailPlaceholder": "",
+    "passwordPlaceholder": "",
+    "loginDescription": "",
+    "forgotPassword": ""
+  },
+  "errors": {
+    "articleNotFound": "",
+    "uploadFailed": ""
+  },
+  "translation": {
+    "selectTargetLanguage": ""
+  },
+  "search": {
+    "searchContributors": ""
+  }
+}
+
