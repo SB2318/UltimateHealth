@@ -311,19 +311,17 @@ useEffect(() => {
 
   const handleSpeedChange = async () => {
     if (!player) return;
-    const nextSpeed = speed === 1.0 ? 1.25 : speed === 1.25 ? 1.5 : speed === 1.5 ? 2.0 : 1.0;
+
+    const speeds = [1.0, 1.25, 1.5, 2.0];
+    const currentIndex = speeds.indexOf(speed);
+    const nextIndex = (currentIndex + 1) % speeds.length;
+    const nextSpeed = speeds[nextIndex];
+
     setSpeed(nextSpeed);
 
     try {
-      if ('setPlaybackRate' in player) {
-        (player as any).setPlaybackRate(nextSpeed, 'high');
-      } else {
-        player.playbackRate = nextSpeed;
-      }
-      
-      if ('setRateAsync' in player) {
-        await (player as any).setRateAsync(nextSpeed, true, 'high');
-      }
+      type AudioSound = { setRateAsync: (rate: number, shouldPlay: boolean, pitchCorrectionQuality: string) => Promise<void> };
+      await (player as unknown as AudioSound).setRateAsync(nextSpeed, true, 'high');
     } catch (err) {
       console.warn('Failed to set playback rate:', err);
     }
