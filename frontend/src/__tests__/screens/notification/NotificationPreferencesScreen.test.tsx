@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import {render, fireEvent} from '@testing-library/react-native';
-import NotificationPreferencesScreen from '../../../screens/notification/NotificationPreferencesScreen';
+import NotificationPreferencesScreen from '../../../screens/NotificationPreferencesScreen';
 
 const mockNavigate = jest.fn();
 const mockUpdatePreferences = jest.fn();
@@ -9,6 +9,10 @@ const mockUpdatePreferences = jest.fn();
 jest.mock('react-native-snackbar', () => ({
   show: jest.fn(),
   LENGTH_SHORT: 0,
+}));
+
+jest.mock('react-redux', () => ({
+  useSelector: jest.fn(),
 }));
 
 jest.mock('../../../store/hooks', () => ({
@@ -27,15 +31,15 @@ jest.mock('../../../lib/ui/Metric', () => ({
   wp: (value: number) => value,
 }));
 
-jest.mock('../../../hooks/article/useGetArticleTags', () => ({
+jest.mock('../../../hooks/useGetArticleTags', () => ({
   useGetCategories: jest.fn(),
 }));
 
-jest.mock('../../../hooks/notification/useGetNotificationPreferences', () => ({
+jest.mock('../../../hooks/useGetNotificationPreferences', () => ({
   useGetNotificationPreferences: jest.fn(),
 }));
 
-jest.mock('../../../hooks/notification/useUpdateNotificationPreferences', () => ({
+jest.mock('../../../hooks/useUpdateNotificationPreferences', () => ({
   useUpdateNotificationPreferences: jest.fn(),
 }));
 
@@ -50,7 +54,7 @@ jest.mock('@expo/vector-icons/MaterialCommunityIcons', () => {
 });
 
 // Mock components
-jest.mock('../../../components/common/LoadingSpinner', () => {
+jest.mock('../../../components/LoadingSpinner', () => {
   const React = require('react');
   const {Text} = require('react-native');
   const MockSpinner = () => React.createElement(Text, null, 'Loading...');
@@ -73,15 +77,15 @@ const mockPreferences = {
   message: 'Success',
 };
 
-const mockuseAppSelector = require('../../../store/hooks').useAppSelector as jest.Mock;
-const mockUseGetCategories = require('../../../hooks/article/useGetArticleTags').useGetCategories as jest.Mock;
-const mockUseGetNotificationPreferences = require('../../../hooks/notification/useGetNotificationPreferences').useGetNotificationPreferences as jest.Mock;
-const mockUseUpdateNotificationPreferences = require('../../../hooks/notification/useUpdateNotificationPreferences').useUpdateNotificationPreferences as jest.Mock;
+const mockUseSelector = require('react-redux').useSelector as jest.Mock;
+const mockUseGetCategories = require('../../../hooks/useGetArticleTags').useGetCategories as jest.Mock;
+const mockUseGetNotificationPreferences = require('../../../hooks/useGetNotificationPreferences').useGetNotificationPreferences as jest.Mock;
+const mockUseUpdateNotificationPreferences = require('../../../hooks/useUpdateNotificationPreferences').useUpdateNotificationPreferences as jest.Mock;
 
 describe('NotificationPreferencesScreen', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockuseAppSelector.mockImplementation((selector: any) =>
+    mockUseSelector.mockImplementation((selector: any) =>
       selector({
         user: {isGuest: false},
         network: {isConnected: true},
