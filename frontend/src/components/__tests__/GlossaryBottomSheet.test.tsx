@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import GlossaryBottomSheet from '../GlossaryBottomSheet';
-import { testGlossaryTerms } from '../../constants/glossary';
+import { medicalGlossaryAlphabetSections, testGlossaryTerms } from '../../constants/glossary';
 
 jest.mock('@tamagui/sheet', () => {
   const React = require('react');
@@ -52,7 +52,7 @@ jest.mock('tamagui', () => {
 });
 
 describe('GlossaryBottomSheet', () => {
-  const glossaryTerm = testGlossaryTerms[0];
+  const glossaryTerm = testGlossaryTerms.find(({ term }) => term === 'Hypertension') ?? testGlossaryTerms[0];
 
   it('includes medically relevant terms across multiple alphabet categories', () => {
     const firstLetters = new Set(testGlossaryTerms.map(({ term }) => term[0].toUpperCase()));
@@ -69,6 +69,17 @@ describe('GlossaryBottomSheet', () => {
     expect(selectedTerms.every(({ definition, category, relatedTerms }) => !!definition && !!category && (relatedTerms?.length ?? 0) > 0)).toBeTruthy();
   });
 
+  it('exposes alphabet sections for all letters so inactive categories can be populated', () => {
+    const missingLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      .split('')
+      .filter((letter) => !medicalGlossaryAlphabetSections[letter as keyof typeof medicalGlossaryAlphabetSections]);
+
+    expect(missingLetters).toEqual([]);
+    expect(medicalGlossaryAlphabetSections.A.length).toBeGreaterThan(1);
+    expect(medicalGlossaryAlphabetSections.Q.length).toBeGreaterThan(0);
+    expect(medicalGlossaryAlphabetSections.Z.length).toBeGreaterThan(0);
+  });
+
   it('renders glossary term details when visible', () => {
     const { getByText } = render(
       <GlossaryBottomSheet
@@ -77,6 +88,7 @@ describe('GlossaryBottomSheet', () => {
         definition={glossaryTerm.definition}
         category={glossaryTerm.category}
         relatedTerms={glossaryTerm.relatedTerms}
+        tags={glossaryTerm.tags}
         onClose={jest.fn()}
       />
     );
@@ -85,7 +97,7 @@ describe('GlossaryBottomSheet', () => {
     expect(getByText('Cardiology')).toBeTruthy();
     expect(getByText(glossaryTerm.definition)).toBeTruthy();
     expect(getByText('Blood pressure')).toBeTruthy();
-    expect(getByText('#heart')).toBeTruthy();
+    expect(getByText('#blood pressure')).toBeTruthy();
   });
 
   it('does not render content while hidden', () => {
@@ -94,6 +106,7 @@ describe('GlossaryBottomSheet', () => {
         visible={false}
         term={glossaryTerm.term}
         definition={glossaryTerm.definition}
+        category={glossaryTerm.category}
         onClose={jest.fn()}
       />
     );
@@ -108,6 +121,7 @@ describe('GlossaryBottomSheet', () => {
         visible
         term={glossaryTerm.term}
         definition={glossaryTerm.definition}
+        category={glossaryTerm.category}
         onClose={onClose}
       />
     );
