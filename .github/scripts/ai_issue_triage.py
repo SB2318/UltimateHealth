@@ -661,9 +661,8 @@ def main():
     github_token = os.environ.get("GITHUB_TOKEN")
     repo = os.environ.get("GITHUB_REPOSITORY")
     event_name = os.environ.get("GITHUB_EVENT_NAME")
-    
-    if not gemini_api_keys or not github_token or not repo:
-        print("Missing required environment variables.")
+    if not github_token or not repo:
+        print("Missing required environment variables (GITHUB_TOKEN or GITHUB_REPOSITORY).")
         return
         
     event_path = os.environ.get("GITHUB_EVENT_PATH")
@@ -675,6 +674,9 @@ def main():
             print("workflow_dispatch: No issue_number provided.", flush=True)
             return
         print(f"Manual triage triggered for issue #{issue_number}... (Keys loaded: {len(gemini_api_keys)})", flush=True)
+        if not gemini_api_keys:
+            print("workflow_dispatch: Missing GEMINI_API_KEYS required for manual triage.")
+            return
         status, detail = handle_issue_opened(repo, issue_number, github_token, gemini_api_keys)
         _write_step_summary([
             "## 🤖 AI Issue Triage Report (Manual)",
@@ -691,6 +693,9 @@ def main():
     action = event_data.get("action")
     
     if event_name == "issues" and action == "opened":
+        if not gemini_api_keys:
+            print("Missing GEMINI_API_KEYS required for issue triage.")
+            return
         issue_number = event_data["issue"]["number"]
         status, detail = handle_issue_opened(repo, issue_number, github_token, gemini_api_keys)
         _write_step_summary([

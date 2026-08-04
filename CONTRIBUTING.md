@@ -166,7 +166,7 @@ pnpm install
   - Maintain clean and structured Node.js code for backend
 
 - **Testing**
-  - Add or update tests when applicable (see `TEST_GUIDELINES.md`)
+  - Add or update tests when applicable (see `docs/TEST_GUIDELINES.md`)
 
 - **Documentation**
   - Update documentation if your change affects users or developers

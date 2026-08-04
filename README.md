@@ -507,7 +507,6 @@ UltimateHealth/
 ├── BACKEND_SETUP.md         
 ├── CONTRIBUTING.md
 ├── CODE_OF_CONDUCT.md
-├── TEST_GUIDELINES.md
 ├── Learn.md
 └── README.md
 ```
@@ -591,7 +590,7 @@ cd frontend
 yarn test
 ```
 
-For more details on our testing standards, refer to [TEST_GUIDELINES.md](TEST_GUIDELINES.md).
+For more details on our testing standards, refer to [TEST_GUIDELINES.md](docs/TEST_GUIDELINES.md).
 
 ---
 
@@ -903,7 +902,7 @@ We welcome contributions from everyone — developers, designers, writers, and t
 3. Follow the [Development Workflow](#-development-workflow) above
 4. Read [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines
 5. Follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
-6. Follow [TEST_GUIDELINES.md](TEST_GUIDELINES.md) when adding tests
+6. Follow [TEST_GUIDELINES.md](docs/TEST_GUIDELINES.md) when adding tests
 
 ### Types of Contributions
 
