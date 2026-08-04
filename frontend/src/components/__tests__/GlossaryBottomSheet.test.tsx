@@ -54,6 +54,21 @@ jest.mock('tamagui', () => {
 describe('GlossaryBottomSheet', () => {
   const glossaryTerm = testGlossaryTerms[0];
 
+  it('includes medically relevant terms across multiple alphabet categories', () => {
+    const firstLetters = new Set(testGlossaryTerms.map(({ term }) => term[0].toUpperCase()));
+
+    expect(firstLetters.has('A')).toBeTruthy();
+    expect(firstLetters.has('Q')).toBeTruthy();
+    expect(firstLetters.has('Z')).toBeTruthy();
+
+    const selectedTerms = testGlossaryTerms.filter(({ term }) =>
+      ['Anemia', 'Hypertension', 'Q fever', 'Zika virus'].includes(term)
+    );
+
+    expect(selectedTerms).toHaveLength(4);
+    expect(selectedTerms.every(({ definition, category, relatedTerms }) => !!definition && !!category && (relatedTerms?.length ?? 0) > 0)).toBeTruthy();
+  });
+
   it('renders glossary term details when visible', () => {
     const { getByText } = render(
       <GlossaryBottomSheet
@@ -70,6 +85,7 @@ describe('GlossaryBottomSheet', () => {
     expect(getByText('Cardiology')).toBeTruthy();
     expect(getByText(glossaryTerm.definition)).toBeTruthy();
     expect(getByText('Blood pressure')).toBeTruthy();
+    expect(getByText('#heart')).toBeTruthy();
   });
 
   it('does not render content while hidden', () => {
