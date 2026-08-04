@@ -1,18 +1,17 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import "./globals.css";
+import "../globals.css";
 
 import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import HeroAndDownload from "../components/HeroAndDownload";
-import ScrollToTop from "../components/ScrollToTop";
+import HeroAndDownload from "../../components/HeroAndDownload";
+import ScrollToTop from "../../components/ScrollToTop";
 import { ModeToggle } from "@/components/mode-toggle";
-import Navbar from "../components/Navbar";
-import { PageWrapper, Section } from "../components/layout";
+import Navbar from "../../components/Navbar";
+import { PageWrapper, Section } from "../../components/layout";
 
 import { withBasePath } from "@/lib/basePath";
-import { Skeleton } from "../components/ui";
+import { Skeleton } from "../../components/ui";
 
 
 const userScreenshots = [

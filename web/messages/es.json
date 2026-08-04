@@ -1,0 +1,20 @@
+{
+  "Login": {
+    "heading": "Inicio de sesión requerido",
+    "description": "Inicia sesión para continuar con la eliminación de la cuenta.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Contraseña",
+    "processingTitle": "Procesando",
+    "processingDescription": "Iniciando sesión.",
+    "successTitle": "Inicio de sesión exitoso",
+    "successDescription": "Redirigiendo a la eliminación de la cuenta.",
+    "failedTitle": "Error al iniciar sesión",
+    "failedDefaultDescription": "Verifica tus datos e inténtalo de nuevo.",
+    "serverErrorTitle": "Error del servidor",
+    "submitButton": "Iniciar sesión",
+    "submitButtonLoading": "Iniciando sesión..."
+  }
+}
+

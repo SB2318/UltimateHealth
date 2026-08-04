@@ -1,0 +1,20 @@
+{
+  "Login": {
+    "heading": "Potrebna prijava",
+    "description": "Prijavite se za nastavak brisanja računa.",
+    "emailLabel": "E-pošta",
+    "emailPlaceholder": "Unesite svoju e-poštu",
+    "passwordLabel": "Lozinka",
+    "passwordPlaceholder": "Lozinka",
+    "processingTitle": "Obrada u tijeku",
+    "processingDescription": "Prijava u tijeku.",
+    "successTitle": "Prijava uspješna",
+    "successDescription": "Preusmjeravanje na brisanje računa.",
+    "failedTitle": "Prijava neuspješna",
+    "failedDefaultDescription": "Provjerite svoje podatke i pokušajte ponovno.",
+    "serverErrorTitle": "Greška poslužitelja",
+    "submitButton": "Prijava",
+    "submitButtonLoading": "Prijava u tijeku..."
+  }
+}
+
