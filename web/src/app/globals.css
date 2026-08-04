@@ -135,16 +135,32 @@ html:not(.dark) body {
 .fade-in {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
-.fade-in.visible { opacity: 1; transform: translateY(0); }
 
-.scroll-reveal {
-  opacity: 0;
-  transform: translateY(60px);
-  transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+.fade-in:nth-child(1) { transition-delay: 0s; }
+.fade-in:nth-child(2) { transition-delay: 0.15s; }
+.fade-in:nth-child(3) { transition-delay: 0.3s; }
+.fade-in:nth-child(4) { transition-delay: 0.45s; }
+.fade-in:nth-child(5) { transition-delay: 0.6s; }
+.fade-in:nth-child(6) { transition-delay: 0.75s; }
+.fade-in:nth-child(n+7) { transition-delay: 0.9s; }
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
-.scroll-reveal.revealed { opacity: 1; transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .scroll-reveal,
+  .scroll-reveal-left,
+  .scroll-reveal-right {
+    transition-delay: 0s !important;
+  }
+}
 
 .scroll-reveal-left {
   opacity: 0;
@@ -982,17 +998,21 @@ p.center {
   border-radius: 50%;
   pointer-events: none;
 }
-
 .feature-card-premium {
   position: relative;
   background: rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+
   border: 1px solid rgba(255, 255, 255, 0.8);
+  border-left: 3px solid transparent;
   border-radius: 24px;
   padding: 40px 32px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: transform 0.3s ease,
+              box-shadow 0.3s ease,
+              background 0.3s ease,
+              border-left-color 0.3s ease;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1013,16 +1033,30 @@ p.center {
 }
 
 .feature-card-premium:hover {
-  transform: translateY(-12px);
-  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.18);
   background: rgba(255, 255, 255, 0.85);
+  border-left-color: #764ba2;
 }
 
 .feature-card-premium:hover .feature-icon-wrapper {
-  transform: scale(1.1) rotate(5deg);
+  animation: uh-icon-bounce 0.3s ease;
   box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
 }
 
+@keyframes uh-icon-bounce {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
+}
 .feature-icon-wrapper {
   width: 64px;
   height: 64px;
@@ -1034,8 +1068,16 @@ p.center {
   color: white;
   font-size: 28px;
   margin-bottom: 24px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: scale(1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: var(--shadow-md);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feature-card-premium:hover .feature-icon-wrapper {
+    animation: none;
+    transform: scale(1.1);
+  }
 }
 
 .feature-card-premium h3 {
@@ -2097,14 +2139,37 @@ i, svg {
 /* Background layers */
 .uh-hero-bg-glow {
   position: absolute;
-  inset: 0;
+  inset: -10%;
   background:
     radial-gradient(ellipse 90% 64% at 62% 42%, rgba(37,99,235,0.34) 0%, transparent 68%),
     radial-gradient(ellipse 58% 44% at 18% 72%, rgba(124,58,237,0.3) 0%, transparent 62%),
     radial-gradient(ellipse 42% 32% at 48% 8%, rgba(14,165,233,0.16) 0%, transparent 70%);
   pointer-events: none;
+  animation: uh-aurora-shift 16s ease-in-out infinite alternate;
 }
 
+@keyframes uh-aurora-shift {
+  0% {
+    transform: translate(0, 0) scale(1);
+    filter: hue-rotate(0deg);
+  }
+
+  50% {
+    transform: translate(-2%, 1.5%) scale(1.06);
+    filter: hue-rotate(8deg);
+  }
+
+  100% {
+    transform: translate(2%, -1%) scale(1.02);
+    filter: hue-rotate(-6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uh-hero-bg-glow {
+    animation: none;
+  }
+}
 .uh-hero-bg-stars {
   position: absolute;
   inset: 0;
@@ -2226,7 +2291,7 @@ i, svg {
     0 2px 12px rgba(0,0,0,0.56),
     0 18px 60px rgba(0,0,0,0.42);
   margin-bottom: 20px;
-  animation: none;
+ animation: uh-fade-up 0.8s cubic-bezier(.22,1,.36,1) 0.1s both;
 }
 
 .uh-hero-title em {
@@ -2245,7 +2310,7 @@ i, svg {
   color: rgba(255,255,255,0.92);
   max-width: 460px;
   margin-bottom: 32px;
-  animation: none;
+  animation: uh-fade-up 0.8s cubic-bezier(.22,1,.36,1) 0.3s both;
   text-shadow: 0 1px 10px rgba(0,0,0,0.36);
 }
 
@@ -2255,7 +2320,7 @@ i, svg {
   gap: 14px;
   flex-wrap: wrap;
   margin-bottom: 40px;
-  animation: uh-fade-up 0.7s ease 0.3s both;
+ animation: uh-fade-up 0.7s ease 0.45s both;
 }
 
 .uh-btn-primary,
