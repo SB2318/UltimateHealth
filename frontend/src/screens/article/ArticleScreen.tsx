@@ -115,6 +115,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {user_id, isGuest} = useAppSelector((state: any) => state.user);
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
+  const [fontSizeOption, setFontSizeOption] = useState<FontSizeOption>('medium');
   const [fontScale, setFontScale] = useState(1);
   const { isDyslexiaMode, toggleDyslexiaMode } = useDyslexiaMode();
   const [isPlaying, setIsPlaying] = useState(false);
@@ -228,6 +229,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     Number(articleId),
   );
 
+  type FontSizeOption = 'small' | 'medium' | 'large';
+
+  const FONT_SIZE_STORAGE_KEY = 'article_font_size';
   // TEMP MOCK DATA — to be replaced by real /content-intel/readability/analyze response
   // Shape mirrors the VeriWise-Content-Check API: { score, level, approved }
   const mockReadability = {
@@ -239,11 +243,15 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     useTrustArticle(Number(articleId));
 
   const FONT_SCALE_KEY = 'article_font_scale';
-  const FONT_SCALE_MIN = 0.8;
-  const FONT_SCALE_MAX = 1.6;
-  const FONT_SCALE_STEP = 0.1;
   const BASE_FONT_SIZE = 16;
 
+  const FONT_SIZE_SCALES: Record<FontSizeOption, number> = {
+    small: 0.875,
+    medium: 1.0,
+    large: 1.25,
+  };
+
+  const fontScale = FONT_SIZE_SCALES[fontSizeOption];
   const likedUsers = article?.likedUsers ?? [];
   const totalLikes = likedUsers.length;
 
@@ -275,16 +283,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     [],
   );
 
-  const handleDecreaseFont = () => {
-    const nextValue = clampFontScale(fontScale - FONT_SCALE_STEP);
-    setFontScale(nextValue);
-    debouncedPersistFontScale(nextValue);
-  };
+  const likedUsers = article?.likedUsers ?? [];
+  const totalLikes = likedUsers.length;
 
-  const handleIncreaseFont = () => {
-    const nextValue = clampFontScale(fontScale + FONT_SCALE_STEP);
-    setFontScale(nextValue);
-    debouncedPersistFontScale(nextValue);
+  const handleSelectFontSize = (option: FontSizeOption) => {
+    setFontSizeOption(option);
+    storeItem(FONT_SIZE_STORAGE_KEY, option).catch(error => {
+      console.error('Failed to persist font size:', error);
+    });
   };
 
   useEffect(() => {
@@ -349,21 +355,33 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   useEffect(() => {
     let isMounted = true;
 
-    const loadFontScale = async () => {
+    const loadFontSize = async () => {
       try {
-        const storedValue = await retrieveItem(FONT_SCALE_KEY);
+        const storedValue =
+          (await retrieveItem(FONT_SIZE_STORAGE_KEY)) ||
+          (await retrieveItem(FONT_SCALE_KEY));
         if (!isMounted || !storedValue) return;
 
-        const parsed = Number(storedValue);
-        if (!Number.isNaN(parsed)) {
-          setFontScale(clampFontScale(parsed));
+        if (
+          storedValue === 'small' ||
+          storedValue === 'medium' ||
+          storedValue === 'large'
+        ) {
+          setFontSizeOption(storedValue as FontSizeOption);
+        } else {
+          const parsed = Number(storedValue);
+          if (!Number.isNaN(parsed)) {
+            if (parsed <= 0.9) setFontSizeOption('small');
+            else if (parsed >= 1.2) setFontSizeOption('large');
+            else setFontSizeOption('medium');
+          }
         }
       } catch (error) {
-        console.error('Failed to load font scale:', error);
+        console.error('Failed to load font size:', error);
       }
     };
 
-    loadFontScale();
+    loadFontSize();
 
     return () => {
       isMounted = false;
@@ -1142,23 +1160,33 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 🕐 {getReadTime(articleContent ?? '')}
               </Text>
               <View style={styles.fontSizeControls}>
+                <Text style={styles.fontSizeLabel}>Font Size:</Text>
                 <View style={styles.fontSizeButtons}>
-                  <TouchableOpacity
-                    onPress={handleDecreaseFont}
-                    accessibilityRole="button"
-                    accessibilityLabel="Decrease article font size"
-                    hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
-                    style={styles.fontSizeButton}>
-                    <Text style={styles.fontSizeButtonText}>A-</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleIncreaseFont}
-                    accessibilityRole="button"
-                    accessibilityLabel="Increase article font size"
-                    hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
-                    style={styles.fontSizeButton}>
-                    <Text style={styles.fontSizeButtonText}>A+</Text>
-                  </TouchableOpacity>
+                  {(['small', 'medium', 'large'] as const).map(option => {
+                    const isSelected = fontSizeOption === option;
+                    const label = option.charAt(0).toUpperCase() + option.slice(1);
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        onPress={() => handleSelectFontSize(option)}
+                        accessibilityRole="button"
+                        accessibilityLabel={`${label} font size option`}
+                        accessibilityState={{selected: isSelected}}
+                        hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+                        style={[
+                          styles.fontSizeButton,
+                          isSelected && styles.fontSizeButtonActive,
+                        ]}>
+                        <Text
+                          style={[
+                            styles.fontSizeButtonText,
+                            isSelected && styles.fontSizeButtonTextActive,
+                          ]}>
+                          {label}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
 
                 {/* Dyslexia Mode Toggle */}
@@ -1816,21 +1844,29 @@ const styles = StyleSheet.create({
   fontSizeButtons: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 8,
   },
   fontSizeButton: {
     borderWidth: 1,
     borderColor: '#D0D0D0',
     borderRadius: 14,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     backgroundColor: '#FFFFFF',
+    minHeight: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fontSizeButtonActive: {
+    backgroundColor: PRIMARY_COLOR,
+    borderColor: PRIMARY_COLOR,
   },
   fontSizeButtonText: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#333333',
     fontWeight: '600',
   },
+  fontSizeButtonTextActive: {
   dyslexiaButton: {
     flexDirection: 'row',
     alignItems: 'center',
