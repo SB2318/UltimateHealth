@@ -1,4 +1,24 @@
 import 'react-native-gesture-handler/jestSetup';
+import { configure } from '@testing-library/react-native';
+import React from 'react';
+
+// Polyfill React 18 secret internals for RN 0.86 fabric compatibility
+const secretInternals = (React as any).__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED || {};
+(React as any).__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = secretInternals;
+if (!secretInternals.S) {
+  secretInternals.S = {};
+}
+
+(configure as any)({
+  hostComponentNames: {
+    text: 'Text',
+    textInput: 'TextInput',
+    image: 'Image',
+    switch: 'Switch',
+    scrollView: 'ScrollView',
+    modal: 'Modal',
+  },
+});
 
 jest.mock('react-native-worklets', () => {
   return {

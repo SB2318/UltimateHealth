@@ -986,7 +986,7 @@ const StackNavigation = () => {
           },
           headerTintColor: 'white',
           headerBackTitleVisible: false,
-        }}
+        } as any}
       />
     </Stack.Navigator>
   );

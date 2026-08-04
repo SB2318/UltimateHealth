@@ -11,6 +11,7 @@ import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import ActivityOverview from '../../components/profile/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
+const TabsFlatList = Tabs.FlatList as any;
 import ArticleCard from '../../components/article/ArticleCard';
 import UserArticleCard from '../../components/article/UserArticleCard';
 import { useTheme } from 'tamagui';
@@ -390,7 +391,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           </Tabs.Tab>
           {/* Tab 2 */}
           <Tabs.Tab name="Articles">
-            <Tabs.FlatList
+            <TabsFlatList
               data={user?.articles || []}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
@@ -402,7 +403,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           </Tabs.Tab>
 
           <Tabs.Tab name="Reposts">
-            <Tabs.FlatList
+            <TabsFlatList
               data={user?.repostArticles || []}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}

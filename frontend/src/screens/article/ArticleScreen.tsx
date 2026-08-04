@@ -116,7 +116,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontSizeOption, setFontSizeOption] = useState<FontSizeOption>('medium');
-  const [fontScale, setFontScale] = useState(1);
+ // const [fontScale, setFontScale] = useState(1);
   const { isDyslexiaMode, toggleDyslexiaMode } = useDyslexiaMode();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -244,6 +244,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   const FONT_SCALE_KEY = 'article_font_scale';
   const BASE_FONT_SIZE = 16;
+  const FONT_SCALE_MIN = 0.8;
+  const FONT_SCALE_MAX = 1.5;
 
   const FONT_SIZE_SCALES: Record<FontSizeOption, number> = {
     small: 0.875,
@@ -282,9 +284,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     () => debounce(persistFontScale, 300),
     [],
   );
-
-  const likedUsers = article?.likedUsers ?? [];
-  const totalLikes = likedUsers.length;
 
   const handleSelectFontSize = (option: FontSizeOption) => {
     setFontSizeOption(option);
@@ -1867,6 +1866,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   fontSizeButtonTextActive: {
+    color: '#FFFFFF',
+  },
   dyslexiaButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -2103,6 +2104,6 @@ const styles = StyleSheet.create({
     color: PRIMARY_COLOR,
     marginTop: hp(0.5),
     fontSize: 14,
-  },
+  }
 });
 

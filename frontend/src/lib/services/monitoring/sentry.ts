@@ -47,5 +47,5 @@ export const initMonitoring = () => {
  * Wrap the root component of the app.
  */
 export const wrapWithSentry = (App: React.ComponentType<any>) => {
-  return Sentry.wrap(App);
+  return Sentry.wrap(App as any);
 };
