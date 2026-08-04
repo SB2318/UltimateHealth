@@ -212,6 +212,24 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     refetch: refetchContent,
   } = useGetArticleContent(resolvedRecordId);
 
+  // Coalesce refetches from rapid like/follow/save/trust taps. Each mutation's
+  // onSuccess previously fired its own refetch(); a burst produced one network
+  // round-trip per tap. Debounce so at most one refetch runs after taps settle.
+  const refetchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debouncedRefetch = useCallback(() => {
+    if (refetchTimer.current) clearTimeout(refetchTimer.current);
+    refetchTimer.current = setTimeout(() => {
+      refetchTimer.current = null;
+      refetch();
+    }, 500);
+  }, [refetch]);
+  useEffect(
+    () => () => {
+      if (refetchTimer.current) clearTimeout(refetchTimer.current);
+    },
+    [],
+  );
+
   const [localIsFollowing, setLocalIsFollowing] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -424,6 +442,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
       return;
     }
+    // Ignore taps while a like is already in flight (avoids overlapping
+    // mutations and duplicate notification emits on rapid taps).
+    if (likeMutationPending) return;
     if (article) {
       likeMutation(undefined, {
         onSuccess: (data: {article: ArticleData; likeStatus: boolean}) => {
@@ -440,7 +461,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               message: data?.article?.title,
             });
           }
-          refetch();
+          debouncedRefetch();
         },
         onError: (err: any) => {
           debugLog('error', err);
@@ -466,6 +487,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
     //  updateFollowMutation.mutate();
 
+    if (followMutationPending) return;
     followMutation(articleId.toString(), {
       onSuccess: data => {
         //debugLog('follow success');
@@ -481,7 +503,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             },
           });
         }
-        refetch();
+        debouncedRefetch();
         // refetchProfile();
       },
 
@@ -504,10 +526,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
       return;
     }
+    if (saveMutationPending) return;
     if (article) {
       saveMutation(undefined, {
         onSuccess: () => {
-          refetch();
+          debouncedRefetch();
           Snackbar.show({
             text: article.savedUsers?.includes(user_id)
               ? 'Article removed from saved'
@@ -537,10 +560,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
       return;
     }
+    if (trustMutationPending) return;
     if (article) {
       trustMutation(undefined, {
         onSuccess: (data: {isTrusted: boolean}) => {
-          refetch();
+          debouncedRefetch();
           Snackbar.show({
             text: data?.isTrusted ? 'Marked as trusted!' : 'Trust removed',
             duration: Snackbar.LENGTH_SHORT,
