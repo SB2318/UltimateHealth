@@ -1,6 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import GlossaryBottomSheet from '../GlossaryBottomSheet';
+
 import { medicalGlossaryAlphabetSections, testGlossaryTerms } from '../../constants/glossary';
 
 jest.mock('@tamagui/sheet', () => {
