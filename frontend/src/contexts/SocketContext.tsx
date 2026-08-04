@@ -59,11 +59,17 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
         const handleAppClose = () => {
             disconnectSocket();
         };
-        window.addEventListener('beforeunload', handleAppClose);
+        // `window` only exists on web; guard so RN doesn't throw at runtime or typecheck time.
+        const w = typeof window !== 'undefined' ? (window as Window & typeof globalThis) : null;
+        if (w) {
+            w.addEventListener('beforeunload', handleAppClose);
+        }
         return () => {
             socketInstance.off('connect', onConnect);
             socketInstance.off('disconnect', onDisconnect);
-            window.removeEventListener('beforeunload', handleAppClose);
+            if (w) {
+                w.removeEventListener('beforeunload', handleAppClose);
+            }
             setIsConnected(false);
         };
     }, [user_token]); // Re-initialize only when token changes

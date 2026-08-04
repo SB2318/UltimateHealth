@@ -2,8 +2,11 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": [
-      "ES2022"
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
     ],
+    "types": ["node", "jest"],
     "jsx": "react-native",
     "module": "preserve",
     "strict": false,

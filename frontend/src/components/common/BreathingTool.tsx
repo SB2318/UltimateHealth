@@ -52,7 +52,7 @@ export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps)
   const [isCompleted, setIsCompleted] = useState(false);
 
   const animatedScale = useRef(new Animated.Value(1)).current;
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const currentPhaseIndexRef = useRef(0);
 
   // Initialize phase when mode changes or tool resets

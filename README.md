@@ -372,7 +372,7 @@ The following table outlines planned improvements based on active issues and com
 | 🔐 **Guest / Auth Experience** | Read-only unauthenticated mode before login ([#681](https://github.com/SB2318/UltimateHealth/issues/681)) | 🔜 In Progress |
 | 🌐 **Translation & i18n** | Multi-language translation module for frontend and backend ([#644](https://github.com/SB2318/UltimateHealth/issues/644)) | 📋 Planned |
 | 🤖 **AI & Content Intelligence** | Trending/popular article ranking algorithm ([#550](https://github.com/SB2318/UltimateHealth/issues/550)), community tag suggestion with moderation ([#670](https://github.com/SB2318/UltimateHealth/issues/670)) | 📋 Planned |
-| 🧪 **Testing** | Setup Jest + React Native Testing Library ([#672](https://github.com/SB2318/UltimateHealth/issues/672)), unit tests for key Redux slices ([#673](https://github.com/SB2318/UltimateHealth/issues/673)) | 📋 Planned |
+| 🧪 **Testing** | Setup Jest + React Native Testing Library ([#672](https://github.com/SB2318/UltimateHealth/issues/672)), unit tests for key Redux slices ([#673](https://github.com/SB2318/UltimateHealth/issues/673)) | ✅ Done |
 | ⚙️ **CI/CD & DevOps** | Enhanced GitHub Actions workflows and automated contributor updates ([#679](https://github.com/SB2318/UltimateHealth/issues/679), [#680](https://github.com/SB2318/UltimateHealth/issues/680)) | 📋 Planned |
 | 🛡️ **Code Quality** | Shared Zod validation schemas and TypeScript types across frontend/backend ([#658](https://github.com/SB2318/UltimateHealth/issues/658)) | 📋 Planned |
 | ✅ **Completed** | Android App on Play Store, AI chat assistant, podcast support, article management system, automated bot pipeline | ✅ Done |
@@ -573,6 +573,25 @@ eas build --platform ios --profile production
 ```
 
 Builds are also triggered automatically via GitHub Actions on pushes to `main`.
+
+---
+
+## 🧪 Testing
+
+UltimateHealth includes a comprehensive test suite covering components, hooks, utilities, and Redux slices. The tests use Jest and React Native Testing Library (RNTL).
+
+- **Available Tests**: 456 tests across 130 test suites.
+- **Coverage & Purpose**: The test suite validates core UI components (screens, cards, buttons), custom hooks (API data fetching and mutations), Redux state management (User, Network, Data slices), and helper services (date utilities, platform notifications).
+- **Current Status**: [![Frontend CI](https://github.com/SB2318/UltimateHealth/actions/workflows/frontend-ci.yml/badge.svg?style=flat)](https://github.com/SB2318/UltimateHealth/actions/workflows/frontend-ci.yml) (130/130 suites passing)
+
+### Running Tests Locally
+
+```bash
+cd frontend
+yarn test
+```
+
+For more details on our testing standards, refer to [TEST_GUIDELINES.md](TEST_GUIDELINES.md).
 
 ---
 

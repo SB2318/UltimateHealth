@@ -13,7 +13,7 @@ export default function WearableSyncCard() {
   async function handleSync() {
     setSyncing(true);
     // Dummy data for now — real API baad mein connect karenge
-    await new Promise(res => setTimeout(res, 1500));
+    await new Promise<void>(res => setTimeout(() => res(), 1500));
     setData({ steps: 7842, heartRate: 72, sleep: 6.5 });
     setSyncing(false);
   }

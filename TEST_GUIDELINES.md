@@ -24,7 +24,30 @@
 
 UltimateHealth is a React Native + Expo application built with TypeScript, Redux Toolkit, and React Query. This document outlines comprehensive testing guidelines for all aspects of the application.
 
-**Current Status**: The Jest testing infrastructure is fully operational. Expo SDK 54, React Native Testing Library, and Tamagui compatibility have been properly configured. Contributors can immediately begin writing tests using the existing setup.
+**Current Status**: [![Frontend CI](https://github.com/SB2318/UltimateHealth/actions/workflows/frontend-ci.yml/badge.svg?style=flat)](https://github.com/SB2318/UltimateHealth/actions/workflows/frontend-ci.yml) - The Jest testing infrastructure is fully operational with 130/130 test suites passing. Expo SDK 54, React Native Testing Library, and Tamagui compatibility have been properly configured. Contributors can immediately begin writing tests using the existing setup.
+
+> **Full Test Inventory**: For a comprehensive table of all 456 test cases and the exact conditions they test, please see the [TEST_CASES_REPORT.md](TEST_CASES_REPORT.md).
+
+<details>
+<summary><b>View All Available Tests (130 Suites)</b></summary>
+<br/>
+
+**Components & Contexts**
+`CourseCard.test.tsx`, `GlossaryBottomSheet.test.tsx`, `ResearchSummaryCard.test.tsx`, `BreathingTool.test.tsx`, `EmptyStates.test.tsx`, `GlassButton.test.tsx`, `ImageFallback.test.tsx`, `Loader.test.tsx`, `LoadingSpinner.test.tsx`, `NetworkBanner.test.tsx`, `FloatingSpeedSelector.test.tsx`, `LanguagePreferenceSelector.test.tsx`, `PreferencesContext.test.tsx`
+
+**Screens**
+`ChatbotScreen.test.tsx`, `ArticleDescriptionScreen.test.tsx`, `ArticleScreen.readEvent.test.tsx`, `CommentScreen.test.tsx`, `ContentListScreen.test.tsx`, `PreviewScreen.compensatingDelete.test.tsx`, `LoginScreen.test.tsx`, `LogoutScreen.local.test.tsx`, `SignUpScreenFirst.test.tsx`, `SplashScreen.test.tsx`, `HomeScreen.test.tsx`, `NotificationPreferencesScreen.test.tsx`, `NotificationScreen.markAsRead.test.tsx`, `OfflinePodcastList.test.tsx`, `PodcastDetail.test.tsx`, `SettingsScreen.test.tsx`, `RespectGiverScreen.test.tsx`, `SocialScreen.test.tsx`
+
+**Hooks**
+`useLoadAIChats.test.ts`, `useRenderSuggestion.test.ts`, `useSendMessageToGemini.test.ts`, `useGetMonthlyReadReport.test.ts`, `useGetMonthlyWriteReport.test.ts`, `useGetTotalLikeViewStatus.test.ts`, `useGetTotalReads.test.ts`, `useGetTotalWrites.test.ts`, `useGetYearlyReadReport.test.ts`, `useGetYearlyWriteReport.test.ts`, `writeAnalyticsHooks.test.ts`, `useArticleRepost.test.ts`, `useArticleRoom.test.ts`, `useArticleShare.test.ts`, `useGetArticleContent.test.ts`, `useGetArticleDetail.test.ts`, `useGetArticleTags.test.ts`, `useGetArticleTranslations.test.ts`, `useGetLoadReviewComments.test.ts`, `useGetMostViewedArticle.test.ts`, `useGetPaginatedArticles.test.ts`, `useGetUserAllArticles.test.ts`, `useLazyGetArticleContent.test.ts`, `useLikeArticle.test.ts`, `usePostArticle.test.ts`, `useRequestArticleEdit.test.ts`, `useSaveArticle.test.ts`, `useSubmitEditRequestMutation.test.ts`, `useSubmitSuggestedChanges.test.ts`, `useUpdateReadEvent.test.ts`, `useUpdateViewCount.test.ts`, `useUploadArticlePocketbase.test.ts`, `useChangePassword.test.ts`, `useCheckUserHandleAvailability.test.ts`, `useGetTokenStatus.test.ts`, `useMailVerification.test.ts`, `useResendVerification.test.ts`, `useSendOtp.test.ts`, `useUpdatePassword.test.ts`, `useUserLogin.test.ts`, `useUserLogout.test.ts`, `useUserRegistration.test.ts`, `useVerifyOtp.test.ts`, `useDoubleTap.test.ts`, `useDyslexiaMode.test.ts`, `useGetImprovementById.test.ts`, `useGetImprovementContent.test.ts`, `useGetUserAllImprovements.test.ts`, `useSubmitImprovement.test.ts`, `useUploadImprovementToPocketbase.test.ts`, `useGetReportReasons.test.ts`, `useSubmitReport.test.ts`, `useDeleteNotification.test.ts`, `useGetAllNotifications.test.ts`, `useGetNotificationPreferences.test.ts`, `useGetUnreadNotificationCount.test.ts`, `useMarkNoticationAsRead.test.ts`, `useUpdateNotificationPreferences.test.ts`, `useCreatePlaylist.test.ts`, `useGetPlaylists.test.ts`, `useUpdatePlaylist.test.ts`, `useFilterPodcasts.test.ts`, `useGetAllPodcasts.test.ts`, `useGetDiscardedPodcast.test.ts`, `useGetPendingPodcasts.test.ts`, `useGetSearchPodcasts.test.ts`, `useGetSinglePodcastDetails.test.ts`, `useGetUserPublishedPodcasts.test.ts`, `useLikePodcast.test.ts`, `useUpdatePodcastPlaylist.test.ts`, `useUpdatePodcastViewcount.test.ts`, `useUploadPodcast.test.ts`, `useGetAuthorProfile.test.ts`, `useGetProfile.test.ts`, `useGetProfileImageById.test.ts`, `useGetUserDetails.test.ts`, `useUpdateProfileImage.test.ts`, `useUpdateUserContactDetail.test.ts`, `useUpdateUserGeneralDetails.test.ts`, `useUpdateUserProfDetails.test.ts`, `useGetUserSocialCircle.test.ts`, `useUpdateFollowStatus.test.ts`
+
+**Utilities, Services & APIs**
+`ReadingDifficulty.test.ts`, `ApiTimeout.test.ts`, `DeepLinkService.test.ts`, `followNotification.test.ts`, `notificationUtils.test.ts`, `ReadingHistoryService.test.ts`, `ReadingProgressService.test.ts`, `MMKVUtils.test.ts`, `calculators.test.ts`, `contactLinks.test.ts`, `dateUtils.test.ts`, `SearchUtils.test.ts`, `SummaryService.test.ts`
+
+**Redux Slices**
+`alertSlice.test.ts`, `dataSlice.test.ts`, `NetworkSlice.test.ts`, `UserSlice.test.ts`
+
+</details>
 
 ---
 

@@ -1,5 +1,5 @@
+/// <reference types="node" />
 import { generateArticleSummary } from "@/src/lib/services/SummaryService";
-
 
 global.fetch = jest.fn();
 
