@@ -1,4 +1,6 @@
-/* eslint-disable react-compiler/react-compiler */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { ErrorBoundary } from '../../components/common/ErrorBoundary';
+ 
 import {
   Image,
   Platform,
@@ -9,26 +11,30 @@ import {
   Alert,
   useWindowDimensions,
   useColorScheme,
-} from 'react-native';
-import ArticleShareModal from '../../components/ArticleShareModal';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+ ScrollView } from 'react-native';
+import ArticleShareModal from '../../components/article/ArticleShareModal';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {PRIMARY_COLOR} from '../../helper/Theme';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {ArticleData, ArticleScreenProp} from '../../type';
-import {useDispatch, useSelector} from 'react-redux';
-import {hp} from '../../helper/Metric';
-import {GET_IMAGE, GET_STORAGE_DATA} from '../../helper/APIUtils';
-import Loader from '../../components/Loader';
+import {ArticleData, ArticleScreenProp} from '../../schemas/type';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {hp} from '../../lib/ui/Metric';
+import {GET_IMAGE, GET_STORAGE_DATA} from '../../lib/api/APIUtils';
+import {
+  BaseEmptyState,
+  NoArticleState,
+} from '../../components/common/EmptyStates';
 import Snackbar from 'react-native-snackbar';
-import ResearchSummaryCard from '../../components/ResearchSummaryCard';
-import StructuredPodcastCard from '../../components/StructuredPodcastCard';
+import ResearchSummaryCard from '../../components/article/ResearchSummaryCard';
+import StructuredPodcastCard from '../../components/podcast/StructuredPodcastCard';
+import { debugLog, debugWarn, debugError } from '../../lib/utils/debugLog';
 import {
   generateArticleSummary,
   ArticleSummary,
-} from '../../services/SummaryService';
-import {recordArticleView} from '../../services/ReadingHistoryService';
+} from '../../lib/services/SummaryService';
+import {recordArticleView} from '../../lib/services/ReadingHistoryService';
 
 import {
   formatCount,
@@ -36,32 +42,34 @@ import {
   retrieveItem,
   StatusEnum,
   storeItem,
-} from '../../helper/Utils';
+} from '../../lib/utils/Utils';
 //import CommentScreen from '../CommentScreen';
 import Tts from 'react-native-tts';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import SpeedSelector from '../../components/FloatingSpeedSelector';
+import SpeedSelector from '../../components/podcast/FloatingSpeedSelector';
 
 import {setUserHandle} from '../../store/UserSlice';
 import {FontAwesome5} from '@expo/vector-icons';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 import LottieView from 'lottie-react-native';
 
-import {useGetArticleDetails} from '@/src/hooks/useGetArticleDetail';
-import {useGetArticleContent} from '@/src/hooks/useGetArticleContent';
-import {useGetProfile} from '@/src/hooks/useGetProfile';
-import {useLikeArticle} from '@/src/hooks/useLikeArticle';
-import {useUpdateFollowStatusByArticle} from '@/src/hooks/useUpdateFollowStatus';
-import {useUpdateReadEvent} from '@/src/hooks/useUpdateReadEvent';
-import {getReadTime} from '../../utils/readTime';
-import {useUpdateViewCount} from '@/src/hooks/useUpdateViewCount';
-import {useSaveArticle} from '@/src/hooks/useSaveArticle';
-import {useTrustArticle} from '@/src/hooks/useTrustArticle';
-import TrustedUsersModal from '../../components/TrustedUsersModal';
+import {useGetArticleDetails} from '@/src/hooks/article/useGetArticleDetail';
+import {useGetArticleContent} from '@/src/hooks/article/useGetArticleContent';
+import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
+import {useLikeArticle} from '@/src/hooks/article/useLikeArticle';
+import {useUpdateFollowStatusByArticle} from '@/src/hooks/social/useUpdateFollowStatus';
+import {useUpdateReadEvent} from '@/src/hooks/article/useUpdateReadEvent';
+import {getReadTime} from '../../lib/utils/readTime';
+import {useUpdateViewCount} from '@/src/hooks/article/useUpdateViewCount';
+import {useSaveArticle} from '@/src/hooks/article/useSaveArticle';
+import {useTrustArticle} from '@/src/hooks/article/useTrustArticle';
+import TrustedUsersModal from '../../components/profile/TrustedUsersModal';
 import {useSocket} from '../../contexts/SocketContext';
-import { copyArticleShareLink } from '../../helper/shareUtils';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import { ReadingDifficulty, getArticleDifficulty } from '../../components/ReadingDifficulty';
+import { copyArticleShareLink } from '../../lib/utils/shareUtils';
+import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { ReadingDifficulty, getArticleDifficulty } from '../../components/article/ReadingDifficulty';
+import { useDyslexiaMode } from '../../hooks/common/useDyslexiaMode';
+import { generateArticleStyles } from '../../lib/ui/dyslexiaStyles';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -70,12 +78,26 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { ScrollView } from 'react-native';
+
 
 const CHUNK_SIZE = 120;
 
 type TtsSubscription = {
   remove?: () => void;
+};
+
+const isHtmlContentEmpty = (html?: string | null) => {
+  if (!html) {
+    return true;
+  }
+
+  const plainText = html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .trim();
+
+  return plainText.length === 0;
 };
 
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
@@ -90,10 +112,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       ? profileImage
       : `${GET_STORAGE_DATA}/${profileImage}`;
   };
-  const {user_id, isGuest} = useSelector((state: any) => state.user);
+  const {user_id, isGuest} = useAppSelector((state: any) => state.user);
   const isDarkMode = useColorScheme() === 'dark';
   const [readEventSave, setReadEventSave] = useState(false);
-  const [fontScale, setFontScale] = useState(1);
+  const [fontSizeOption, setFontSizeOption] = useState<FontSizeOption>('medium');
+ // const [fontScale, setFontScale] = useState(1);
+  const { isDyslexiaMode, toggleDyslexiaMode } = useDyslexiaMode();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [speechRate, setSpeechRate] = useState(0.5);
@@ -145,6 +169,18 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     errorHandlerRef.current = null;
   }, []);
 
+  // Scroll position persistence (Issue #1834)
+  // useRef<Animated.ScrollView> — typed to match the JSX ref prop on
+  // Animated.ScrollView. The underlying ScrollView.scrollTo() is called
+  // via a safe cast through the ref for imperative scroll restoration.
+  const scrollViewRef = useRef<Animated.ScrollView>(null);
+  // Tracks whether we have already restored the saved position for the
+  // current article. Prevents the initial layout scroll events from
+  // immediately overwriting the stored value before restoration runs.
+  const scrollRestoredRef = useRef(false);
+  // Key pattern: article_scroll_position_<articleId>
+  const scrollStorageKey = `article_scroll_position_${articleId}`;
+
   // Progress Bar Shared Values
   const scrollY = useSharedValue(0);
   const contentHeight = useSharedValue(0);
@@ -158,17 +194,41 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
 
   const socket = useSocket();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const {data: user} = useGetProfile();
   const {
     data: article,
     isLoading: articleLoading,
+    isError: articleError,
     refetch,
   } = useGetArticleDetails(articleId);
 
   const resolvedRecordId = article?.pb_recordId || recordId;
-  const {data: articleContent} = useGetArticleContent(resolvedRecordId);
+  const {
+    data: articleContent,
+    isLoading: contentLoading,
+    isError: contentError,
+    refetch: refetchContent,
+  } = useGetArticleContent(resolvedRecordId);
+
+  // Coalesce refetches from rapid like/follow/save/trust taps. Each mutation's
+  // onSuccess previously fired its own refetch(); a burst produced one network
+  // round-trip per tap. Debounce so at most one refetch runs after taps settle.
+  const refetchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const debouncedRefetch = useCallback(() => {
+    if (refetchTimer.current) clearTimeout(refetchTimer.current);
+    refetchTimer.current = setTimeout(() => {
+      refetchTimer.current = null;
+      refetch();
+    }, 500);
+  }, [refetch]);
+  useEffect(
+    () => () => {
+      if (refetchTimer.current) clearTimeout(refetchTimer.current);
+    },
+    [],
+  );
 
   const [localIsFollowing, setLocalIsFollowing] = useState<boolean | null>(null);
 
@@ -187,6 +247,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     Number(articleId),
   );
 
+  type FontSizeOption = 'small' | 'medium' | 'large';
+
+  const FONT_SIZE_STORAGE_KEY = 'article_font_size';
   // TEMP MOCK DATA — to be replaced by real /content-intel/readability/analyze response
   // Shape mirrors the VeriWise-Content-Check API: { score, level, approved }
   const mockReadability = {
@@ -198,11 +261,17 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     useTrustArticle(Number(articleId));
 
   const FONT_SCALE_KEY = 'article_font_scale';
-  const FONT_SCALE_MIN = 0.8;
-  const FONT_SCALE_MAX = 1.6;
-  const FONT_SCALE_STEP = 0.1;
   const BASE_FONT_SIZE = 16;
+  const FONT_SCALE_MIN = 0.8;
+  const FONT_SCALE_MAX = 1.5;
 
+  const FONT_SIZE_SCALES: Record<FontSizeOption, number> = {
+    small: 0.875,
+    medium: 1.0,
+    large: 1.25,
+  };
+
+  const fontScale = FONT_SIZE_SCALES[fontSizeOption];
   const likedUsers = article?.likedUsers ?? [];
   const totalLikes = likedUsers.length;
 
@@ -229,21 +298,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     };
   };
 
-  const debouncedPersistFontScale = useCallback(
-    (nextValue: number) => debounce(persistFontScale, 300)(nextValue),
+  const debouncedPersistFontScale = useMemo(
+    () => debounce(persistFontScale, 300),
     [],
   );
 
-  const handleDecreaseFont = () => {
-    const nextValue = clampFontScale(fontScale - FONT_SCALE_STEP);
-    setFontScale(nextValue);
-    debouncedPersistFontScale(nextValue);
-  };
-
-  const handleIncreaseFont = () => {
-    const nextValue = clampFontScale(fontScale + FONT_SCALE_STEP);
-    setFontScale(nextValue);
-    debouncedPersistFontScale(nextValue);
+  const handleSelectFontSize = (option: FontSizeOption) => {
+    setFontSizeOption(option);
+    storeItem(FONT_SIZE_STORAGE_KEY, option).catch(error => {
+      console.error('Failed to persist font size:', error);
+    });
   };
 
   useEffect(() => {
@@ -261,7 +325,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     if (!isGuest) {
       updateViewCount(articleId, {
         onError: error => {
-          console.log('Update View Count Error', error);
+          debugLog('Update View Count Error', error);
         },
       });
     }
@@ -282,10 +346,22 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   useEffect(() => {
     readEventFiredRef.current = false;
     setReadEventSave(false);
+    // Reset scroll restoration flag when article changes so a new article
+    // always starts from the top until its own saved position is loaded.
+    scrollRestoredRef.current = false;
     refetch();
   }, [articleId, refetch]);
 
-  const noDataHtml = '<p>No Data found</p>';
+  // Cleanup: cancel any pending debounce timer when the component unmounts.
+  // Prevents a stale AsyncStorage write after navigation or unmount.
+  useEffect(() => {
+    return () => {
+      if (saveScrollPositionRef.current) {
+        clearTimeout(saveScrollPositionRef.current);
+      }
+    };
+     
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -296,21 +372,33 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   useEffect(() => {
     let isMounted = true;
 
-    const loadFontScale = async () => {
+    const loadFontSize = async () => {
       try {
-        const storedValue = await retrieveItem(FONT_SCALE_KEY);
+        const storedValue =
+          (await retrieveItem(FONT_SIZE_STORAGE_KEY)) ||
+          (await retrieveItem(FONT_SCALE_KEY));
         if (!isMounted || !storedValue) return;
 
-        const parsed = Number(storedValue);
-        if (!Number.isNaN(parsed)) {
-          setFontScale(clampFontScale(parsed));
+        if (
+          storedValue === 'small' ||
+          storedValue === 'medium' ||
+          storedValue === 'large'
+        ) {
+          setFontSizeOption(storedValue as FontSizeOption);
+        } else {
+          const parsed = Number(storedValue);
+          if (!Number.isNaN(parsed)) {
+            if (parsed <= 0.9) setFontSizeOption('small');
+            else if (parsed >= 1.2) setFontSizeOption('large');
+            else setFontSizeOption('medium');
+          }
         }
       } catch (error) {
-        console.error('Failed to load font scale:', error);
+        console.error('Failed to load font size:', error);
       }
     };
 
-    loadFontScale();
+    loadFontSize();
 
     return () => {
       isMounted = false;
@@ -353,6 +441,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
       return;
     }
+    // Ignore taps while a like is already in flight (avoids overlapping
+    // mutations and duplicate notification emits on rapid taps).
+    if (likeMutationPending) return;
     if (article) {
       likeMutation(undefined, {
         onSuccess: (data: {article: ArticleData; likeStatus: boolean}) => {
@@ -369,10 +460,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               message: data?.article?.title,
             });
           }
-          refetch();
+          debouncedRefetch();
         },
         onError: (err: any) => {
-          console.log('error', err);
+          debugLog('error', err);
           Snackbar.show({
             text: 'Something went wrong, try again!',
             duration: Snackbar.LENGTH_LONG,
@@ -395,8 +486,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     }
     //  updateFollowMutation.mutate();
 
+    if (followMutationPending) return;
     followMutation(articleId.toString(), {
       onSuccess: data => {
+        //debugLog('follow success');
         if (data !== undefined) setLocalIsFollowing(data);
         //console.log('follow success');
         if (data && socket) {
@@ -409,12 +502,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             },
           });
         }
-        refetch();
+        debouncedRefetch();
         // refetchProfile();
       },
 
       onError: err => {
-        console.log('Update Follow mutation error', err);
+        debugLog('Update Follow mutation error', err);
         Snackbar.show({
           text: 'Something went wrong, Try again!',
           duration: Snackbar.LENGTH_SHORT,
@@ -432,10 +525,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
       return;
     }
+    if (saveMutationPending) return;
     if (article) {
       saveMutation(undefined, {
         onSuccess: () => {
-          refetch();
+          debouncedRefetch();
           Snackbar.show({
             text: article.savedUsers?.includes(user_id)
               ? 'Article removed from saved'
@@ -465,10 +559,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       });
       return;
     }
+    if (trustMutationPending) return;
     if (article) {
       trustMutation(undefined, {
         onSuccess: (data: {isTrusted: boolean}) => {
-          refetch();
+          debouncedRefetch();
           Snackbar.show({
             text: data?.isTrusted ? 'Marked as trusted!' : 'Trust removed',
             duration: Snackbar.LENGTH_SHORT,
@@ -664,14 +759,21 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       wordsRef.current = words;
       chunkIndexRef.current = 0;
 
+      Tts.addEventListener('tts-finish', speakNextChunk);
+      Tts.addEventListener('tts-error', e => {
+        debugLog('TTS Error:', e);
+        setIsPlaying(false);
+        setIsPaused(false);
+        setPlayerVisible(false);
+      });
       attachArticleTtsSubscriptions();
-
+      attachArticleTtsSubscriptions();
       setIsPlaying(true);
       setIsPaused(false);
       setPlayerVisible(true);
       speakNextChunk();
     } catch (error) {
-      console.log('TTS Error:', error);
+      debugLog('TTS Error:', error);
       setIsPlaying(false);
       setIsPaused(false);
       setPlayerVisible(false);
@@ -694,8 +796,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         // Step back one chunk to resume from the interrupted chunk
         chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
 
+        // Re-attach listeners
+        Tts.addEventListener('tts-finish', speakNextChunk);
+        Tts.addEventListener('tts-error', e => {
+          debugLog('TTS Error:', e);
+          setIsPlaying(false);
+          setIsPaused(false);
+          setPlayerVisible(false);
+        });
         attachArticleTtsSubscriptions();
-
+        attachArticleTtsSubscriptions();
         speakNextChunk();
       } else {
         // Pause
@@ -705,7 +815,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         setIsPaused(true);
       }
     } catch (e) {
-      console.log('TTS Pause/Resume Error:', e);
+      debugLog('TTS Pause/Resume Error:', e);
     }
   };
 
@@ -719,7 +829,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       setIsPaused(false);
       setPlayerVisible(false);
     } catch (e) {
-      console.log('TTS Stop Error:', e);
+      debugLog('TTS Stop Error:', e);
     }
   };
 
@@ -733,10 +843,30 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       // Note: Rewind is approximate and might read earlier parts of a smaller previous chunk.
       chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
       Tts.stop().then(() => {
+        Tts.addEventListener('tts-finish', speakNextChunk);
+        Tts.addEventListener('tts-error', e => {
+          debugLog('TTS Error:', e);
+          setIsPlaying(false);
+          setIsPaused(false);
+          setPlayerVisible(false);
+        });
+        attachArticleTtsSubscriptions();
         attachArticleTtsSubscriptions();
         speakNextChunk();
       });
     }
+  };
+
+  // Debounced save: writes scroll offset to AsyncStorage at most once per 500 ms.
+  // Only runs after the position has been restored to avoid clobbering saved state
+  // with the initial mount scroll events.
+  const saveScrollPositionRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleSaveScrollPosition = (offset: number) => {
+    if (!scrollRestoredRef.current) return;
+    if (saveScrollPositionRef.current) clearTimeout(saveScrollPositionRef.current);
+    saveScrollPositionRef.current = setTimeout(() => {
+      storeItem(scrollStorageKey, String(Math.round(offset)));
+    }, 500);
   };
 
   // Function to handle the Read Status logic (preserved from original onScroll)
@@ -761,7 +891,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             });
           },
           onError: err => {
-            console.log('Update Read Status mutation error', err);
+            debugLog('Update Read Status mutation error', err);
             Snackbar.show({
               text: 'Failed to update your read status.',
               duration: Snackbar.LENGTH_SHORT,
@@ -771,6 +901,30 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       }
     }
   };
+
+  // Restore saved scroll position once the WebView content has fully sized.
+  // Triggered from onSizeUpdated so we know the scrollable height is available.
+  const restoreScrollPosition = useCallback(async () => {
+    if (scrollRestoredRef.current) return; // already restored for this article
+    try {
+      const stored = await retrieveItem(scrollStorageKey);
+      const offset = stored ? Number(stored) : 0;
+      if (offset > 0 && scrollViewRef.current) {
+        // Imperative scroll after a 100ms settle delay so the layout is stable.
+        // Cast through `any` to access the underlying ScrollView.scrollTo()
+        // method — Reanimated's AnimatedScrollView wraps but re-exposes it
+        // at runtime. The cast is safe: verified at the `scrollViewRef.current`
+        // guard above.
+        setTimeout(() => {
+          (scrollViewRef.current as any)?.scrollTo({y: offset, animated: false});
+        }, 100);
+      }
+    } catch {
+      // Corrupted or missing data — start from the top.
+    } finally {
+      scrollRestoredRef.current = true;
+    }
+  }, [scrollStorageKey]);
 
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
@@ -784,6 +938,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         event.contentSize.height,
         event.layoutMeasurement.height,
       );
+
+      // Persist scroll offset (debounced, only after restoration completes)
+      runOnJS(handleSaveScrollPosition)(event.contentOffset.y);
     },
   });
 
@@ -809,15 +966,28 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   });
 
   if (articleLoading) {
-    return <Loader />;
+    return (
+      <SafeAreaView style={styles.container}>
+        <BaseEmptyState
+          iconEmoji="📄"
+          title="Loading Article"
+          description="Fetching the latest content for you..."
+          loading
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (articleError || !article) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <NoArticleState onRefresh={refetch} />
+      </SafeAreaView>
+    );
   }
 
   const articleFontSize = BASE_FONT_SIZE * fontScale;
-  const articleCustomStyle = `
-    body { font-family: 'Times New Roman'; font-size: ${articleFontSize}px; line-height: 1.6; }
-    p, li { font-size: ${articleFontSize}px; }
-    img, video, iframe { max-width: 100%; height: auto; }
-  `;
+  const articleCustomStyle = generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize);
 
   const footerColors = {
     background: isDarkMode ? '#111827' : '#ffffff',
@@ -829,11 +999,19 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
 
   return (
+    <ErrorBoundary
+      onRetry={() => refetch()}
+      fallback={
+        <SafeAreaView style={styles.container}>
+          <NoArticleState onRefresh={() => refetch()} />
+        </SafeAreaView>
+      }>
     <SafeAreaView style={styles.container}>
       {/* Reading Progress Bar */}
       <Animated.View style={[styles.progressBar, progressStyle]} />
 
       <Animated.ScrollView
+        ref={scrollViewRef}
         style={styles.scrollView}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
@@ -1005,24 +1183,59 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 🕐 {getReadTime(articleContent ?? '')}
               </Text>
               <View style={styles.fontSizeControls}>
+                <Text style={styles.fontSizeLabel}>Font Size:</Text>
                 <View style={styles.fontSizeButtons}>
-                  <TouchableOpacity
-                    onPress={handleDecreaseFont}
-                    accessibilityRole="button"
-                    accessibilityLabel="Decrease article font size"
-                    hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
-                    style={styles.fontSizeButton}>
-                    <Text style={styles.fontSizeButtonText}>A-</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={handleIncreaseFont}
-                    accessibilityRole="button"
-                    accessibilityLabel="Increase article font size"
-                    hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
-                    style={styles.fontSizeButton}>
-                    <Text style={styles.fontSizeButtonText}>A+</Text>
-                  </TouchableOpacity>
+                  {(['small', 'medium', 'large'] as const).map(option => {
+                    const isSelected = fontSizeOption === option;
+                    const label = option.charAt(0).toUpperCase() + option.slice(1);
+                    return (
+                      <TouchableOpacity
+                        key={option}
+                        onPress={() => handleSelectFontSize(option)}
+                        accessibilityRole="button"
+                        accessibilityLabel={`${label} font size option`}
+                        accessibilityState={{selected: isSelected}}
+                        hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
+                        style={[
+                          styles.fontSizeButton,
+                          isSelected && styles.fontSizeButtonActive,
+                        ]}>
+                        <Text
+                          style={[
+                            styles.fontSizeButtonText,
+                            isSelected && styles.fontSizeButtonTextActive,
+                          ]}>
+                          {label}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
+
+                {/* Dyslexia Mode Toggle */}
+                <TouchableOpacity
+                  onPress={toggleDyslexiaMode}
+                  accessibilityRole="switch"
+                  accessibilityState={{ checked: isDyslexiaMode }}
+                  accessibilityLabel="Toggle Dyslexia-Friendly Reading Mode"
+                  accessibilityHint="Toggles the reading mode to use a dyslexia-friendly font and spacing"
+                  style={[
+                    styles.dyslexiaButton,
+                    isDyslexiaMode && styles.dyslexiaButtonActive,
+                  ]}>
+                  <MaterialCommunityIcons
+                    name="glasses"
+                    size={20}
+                    color={isDyslexiaMode ? '#FFFFFF' : '#333333'}
+                  />
+                  <Text
+                    style={[
+                      styles.dyslexiaButtonText,
+                      isDyslexiaMode && styles.dyslexiaButtonTextActive,
+                    ]}>
+                    Dyslexia Mode
+                  </Text>
+                </TouchableOpacity>
               </View>
               {totalLikes > 0 && (
                 <View style={styles.avatarsContainer}>
@@ -1062,22 +1275,50 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 </View>
               )}
               <View style={styles.descriptionContainer}>
-                <AutoHeightWebView
-                  style={styles.webView}
-                  customStyle={articleCustomStyle}
-                  files={[
-                    {
-                      href: 'cssfileaddress',
-                      type: 'text/css',
-                      rel: 'stylesheet',
-                    },
-                  ]}
-                  originWhitelist={['*']}
-                  source={{html: articleContent ?? noDataHtml}}
-                  scalesPageToFit={true}
-                  viewportContent={'width=device-width, user-scalable=no'}
-                  onShouldStartLoadWithRequest={handleExternalClick}
-                />
+                {contentLoading ? (
+                  <BaseEmptyState
+                    iconEmoji="📄"
+                    title="Loading Content"
+                    description="Preparing the article body..."
+                    loading
+                  />
+                ) : contentError ? (
+                  <BaseEmptyState
+                    iconEmoji="⚠️"
+                    title="Couldn't Load Content"
+                    description="We had trouble loading this article's content. Check your connection and try again."
+                    actionText="Try Again"
+                    onAction={() => refetchContent()}
+                  />
+                ) : isHtmlContentEmpty(articleContent) ? (
+                  <BaseEmptyState
+                    iconEmoji="📄"
+                    title="No Content Available"
+                    description="This article doesn't have readable content yet. Try refreshing or check back later."
+                    actionText="Refresh Content"
+                    onAction={() => refetchContent()}
+                  />
+                ) : (
+                  <AutoHeightWebView
+                    style={styles.webView}
+                    customStyle={articleCustomStyle}
+                    files={[
+                      {
+                        href: 'cssfileaddress',
+                        type: 'text/css',
+                        rel: 'stylesheet',
+                      },
+                    ]}
+                    originWhitelist={['*']}
+                    source={{html: articleContent}}
+                    scalesPageToFit={true}
+                    viewportContent={'width=device-width, user-scalable=no'}
+                    onShouldStartLoadWithRequest={handleExternalClick}
+                    // Once the WebView reports its final rendered height, we know
+                    // the ScrollView has enough content to scroll to the saved position.
+                    onSizeUpdated={restoreScrollPosition}
+                  />
+                )}
               </View>
 
               {/* ── Research Summary Card ── */}
@@ -1100,11 +1341,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}
         article={{
-          title: article.title,
-          authorName: article.authorName ?? '',
-          category: article.tags?.[0]?.name ?? 'Health',
+          title: article?.title ?? '',
+          authorName: article?.authorName ?? '',
+          category: article?.tags?.[0]?.name ?? 'Health',
           coverImageUrl:
-            article.imageUtils && article.imageUtils.length > 0
+            article?.imageUtils && article.imageUtils.length > 0
               ? article.imageUtils[0].startsWith('http')
                 ? article.imageUtils[0]
                 : `${GET_IMAGE}/${article.imageUtils[0]}`
@@ -1475,6 +1716,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         onClose={() => setIsSpeedSelectorVisible(false)}
       />
     </SafeAreaView>
+    </ErrorBoundary>
   );
 };
 
@@ -1625,20 +1867,53 @@ const styles = StyleSheet.create({
   fontSizeButtons: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 8,
   },
   fontSizeButton: {
     borderWidth: 1,
     borderColor: '#D0D0D0',
     borderRadius: 14,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     backgroundColor: '#FFFFFF',
+    minHeight: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fontSizeButtonActive: {
+    backgroundColor: PRIMARY_COLOR,
+    borderColor: PRIMARY_COLOR,
   },
   fontSizeButtonText: {
+    fontSize: 13,
+    color: '#333333',
+    fontWeight: '600',
+  },
+  fontSizeButtonTextActive: {
+    color: '#FFFFFF',
+  },
+  dyslexiaButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    backgroundColor: '#FFFFFF',
+    gap: 6,
+  },
+  dyslexiaButtonActive: {
+    backgroundColor: PRIMARY_COLOR,
+    borderColor: PRIMARY_COLOR,
+  },
+  dyslexiaButtonText: {
     fontSize: 14,
     color: '#333333',
     fontWeight: '600',
+  },
+  dyslexiaButtonTextActive: {
+    color: '#FFFFFF',
   },
   avatarsContainer: {
     flexDirection: 'row',
@@ -1853,6 +2128,6 @@ const styles = StyleSheet.create({
     color: PRIMARY_COLOR,
     marginTop: hp(0.5),
     fontSize: 14,
-  },
+  }
 });
 
