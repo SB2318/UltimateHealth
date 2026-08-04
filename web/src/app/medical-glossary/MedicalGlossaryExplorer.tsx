@@ -123,7 +123,7 @@ export default function MedicalGlossaryExplorer() {
             </svg>
             <input
               type="text"
-              placeholder="Search medical terms or definitions..."
+              placeholder="Search medical terms..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full h-12 pl-11 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 outline-none transition-all focus:border-indigo-400 focus:ring-4 focus:ring-indigo-400/15"
@@ -165,8 +165,9 @@ export default function MedicalGlossaryExplorer() {
         {filteredEntries.length === 0 ? (
           <div style={{ background: "#fff", border: "1.5px dashed #e2e8f0", borderRadius: "16px", padding: "64px 32px", textAlign: "center" }}>
             <div style={{ fontSize: "40px", marginBottom: "12px" }}>🔍</div>
-            <p style={{ fontSize: "16px", fontWeight: 700, color: "#334155", margin: 0 }}>No results found</p>
-            <p style={{ fontSize: "14px", color: "#94a3b8", marginTop: "6px" }}>Try a different term or category.</p>
+            <p style={{ fontSize: "16px", fontWeight: 700, color: "#334155", margin: 0 }}>
+              {searchQuery ? `No glossary terms found matching "${searchQuery}".` : "No glossary terms found."}
+            </p>
           </div>
         ) : (
           <div
