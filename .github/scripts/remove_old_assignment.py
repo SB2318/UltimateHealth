@@ -29,19 +29,54 @@ def api_request(url, token, method="GET", data=None):
         return None
 
 def get_all_open_issues(repo, token):
+    """Paginate through ALL open issues (and PRs), then filter out PRs.
+
+    Key fix: distinguish between:
+      - None  → API error (skip page but keep going, don't abort early)
+      - []    → no more results (stop pagination)
+    """
     issues = []
     page = 1
+    consecutive_errors = 0
+    MAX_ERRORS = 3  # abort only after 3 consecutive failures
+
+    print(f"  📥 Fetching all open issues (paginated)...")
     while True:
         url = f"https://api.github.com/repos/{repo}/issues?state=open&per_page=100&page={page}"
         batch = api_request(url, token)
-        if not batch:
+
+        if batch is None:
+            # API error — count consecutive failures, don't stop immediately
+            consecutive_errors += 1
+            print(f"     ⚠️  Page {page}: API error ({consecutive_errors}/{MAX_ERRORS} consecutive)")
+            if consecutive_errors >= MAX_ERRORS:
+                print(f"     ❌ Too many consecutive errors, stopping pagination at page {page}")
+                break
+            page += 1
+            continue
+
+        # Successful response
+        consecutive_errors = 0
+
+        if len(batch) == 0:
+            # Truly no more results
+            print(f"     ✅ Page {page}: empty — pagination complete")
             break
+
         issues.extend(batch)
+        prs_in_batch   = sum(1 for i in batch if "pull_request" in i)
+        issues_in_batch = len(batch) - prs_in_batch
+        print(f"     📄 Page {page}: {len(batch)} items fetched ({issues_in_batch} issues, {prs_in_batch} PRs)")
+
         if len(batch) < 100:
+            # Last page
             break
         page += 1
+
     # Filter out pull requests
-    return [issue for issue in issues if "pull_request" not in issue]
+    real_issues = [i for i in issues if "pull_request" not in i]
+    print(f"  ✅ Total raw items : {len(issues)} | After filtering PRs : {len(real_issues)} open issues\n")
+    return real_issues
 
 def handle_schedule(repo, token):
     issues = get_all_open_issues(repo, token)
