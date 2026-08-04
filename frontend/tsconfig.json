@@ -1,15 +1,23 @@
 {
-  
   "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "types": ["node", "jest"],
     "jsx": "react-native",
-    "module": "esnext",
-    "strict": true,
+    "module": "preserve",
+    "strict": false,
     "paths": {
       "@/*": [
         "./*"
       ]
     },
     "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "skipLibCheck": true
   },
   "include": [
@@ -20,5 +28,5 @@
   "exclude": [
     "node_modules"
   ],
-  "extends": "expo/tsconfig.base.json"
+  "extends": "expo/tsconfig.base"
 }
