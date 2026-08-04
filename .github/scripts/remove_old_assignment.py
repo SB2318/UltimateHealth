@@ -55,8 +55,18 @@ def handle_schedule(repo, token):
         issue_number = issue["number"]
         
         # Fetch timeline to get assignment times and PR references
-        timeline_url = f"https://api.github.com/repos/{repo}/issues/{issue_number}/timeline"
-        timeline = api_request(timeline_url, token)
+        timeline = []
+        page = 1
+        while page <= 5: # Fetch up to 500 events max
+            timeline_url = f"https://api.github.com/repos/{repo}/issues/{issue_number}/timeline?per_page=100&page={page}"
+            batch = api_request(timeline_url, token)
+            if not batch:
+                break
+            timeline.extend(batch)
+            if len(batch) < 100:
+                break
+            page += 1
+            
         if not timeline:
             continue
             
@@ -133,62 +143,7 @@ def handle_schedule(repo, token):
             api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": body})
 
 
-def handle_issue_comment(repo, token, event_path):
-    with open(event_path, "r") as f:
-        event = json.load(f)
-        
-    action = event.get("action")
-    if action != "created":
-        return
-        
-    comment = event.get("comment", {})
-    body = comment.get("body", "").lower().strip()
-    issue = event.get("issue", {})
-    issue_number = issue.get("number")
-    commenter = comment.get("user", {}).get("login")
-    
-    assign_match = re.search(r'/(assign|claim)', body)
-    unassign_match = re.search(r'/unassign', body)
-    
-    if assign_match:
-        # Fetch live issue data to prevent race conditions with other bots assigning simultaneously
-        live_issue = api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}", token)
-        if live_issue:
-            current_assignees = [a["login"] for a in live_issue.get("assignees", [])]
-        else:
-            current_assignees = [a["login"] for a in issue.get("assignees", [])]
-            
-        if not current_assignees:
-            # Check if they have ANY OTHER open issue assigned
-            search_url = f"https://api.github.com/search/issues?q=repo:{repo}+is:open+assignee:{commenter}"
-            search_res = api_request(search_url, token)
-            
-            other_active_assignments = 0
-            if search_res and "items" in search_res:
-                for item in search_res["items"]:
-                    if item.get("number") != issue_number:
-                        other_active_assignments += 1
-            
-            if other_active_assignments > 0:
-                reply = f"Sorry @{commenter}, you already have an active assignment in this repository. Please complete or unassign it before claiming a new one."
-                api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": reply})
-            else:
-                # Assign to the commenter
-                api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/assignees", token, method="POST", data={"assignees": [commenter]})
-                reply = f"Assigned to @{commenter}. You have 7 days to complete this issue. Please submit a PR referencing this issue."
-                api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": reply})
-        elif commenter in current_assignees:
-            pass # Already assigned to them
-        else:
-            # Optionally notify them it's taken
-            pass 
-            
-    if unassign_match:
-        current_assignees = [a["login"] for a in issue.get("assignees", [])]
-        if commenter in current_assignees:
-            api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/assignees", token, method="DELETE", data={"assignees": [commenter]})
-            reply = f"@{commenter} has been unassigned. Anyone else can reply with `/assign` or `/claim` to claim it."
-            api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": reply})
+
 
 def main():
     token = os.environ.get("GITHUB_TOKEN")
@@ -203,12 +158,6 @@ def main():
     if event_name in ["schedule", "workflow_dispatch"]:
         print("Running scheduled unassign checks...")
         handle_schedule(repo, token)
-    elif event_name == "issue_comment":
-        print("Handling issue comment...")
-        if event_path and os.path.exists(event_path):
-            handle_issue_comment(repo, token, event_path)
-        else:
-            print("Missing or invalid GITHUB_EVENT_PATH.")
     else:
         print(f"Unsupported event: {event_name}")
 

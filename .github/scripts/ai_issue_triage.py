@@ -446,7 +446,7 @@ def handle_issue_opened(repo, issue_number, token, gemini_api_keys):
                     f"Hi @{author}, I couldn't assign this to you automatically because you "
                     f"currently have another active assignment. Please complete your current "
                     f"task first!\n\n---\n### 🤖 Assignment Guidelines\n"
-                    f"To get assigned to this issue, simply leave a comment requesting assignment.\n"
+                    f"To get assigned to this issue, simply leave a comment with `/assign` or `/claim`.\n"
                     f"The AI bot will automatically assign you if you meet the following eligibility criteria:\n"
                     f"1. You do not currently have any other active assigned issues in this repository.\n"
                     f"2. If you were previously assigned an issue, you must have submitted a "
@@ -490,7 +490,7 @@ def handle_issue_opened(repo, issue_number, token, gemini_api_keys):
                         f"This rule ensures contributors complete and deliver their work before "
                         f"taking on new tasks. If you believe this is a mistake, please reach out "
                         f"to a maintainer @SB2318.\n\n---\n### 🤖 Assignment Guidelines\n"
-                        f"To get assigned to this issue, simply leave a comment requesting assignment.\n"
+                        f"To get assigned to this issue, simply leave a comment with `/assign` or `/claim`.\n"
                         f"The AI bot will automatically assign you if you meet the following eligibility criteria:\n"
                         f"1. You do not currently have any other active assigned issues in this repository.\n"
                         f"2. If you were previously assigned an issue, you must have submitted a "
@@ -520,10 +520,26 @@ def handle_issue_opened(repo, issue_number, token, gemini_api_keys):
         post_comment(repo, issue_number, msg, token)
         return "broad", "Broad/Uncategorized (escalated)"
 
-def handle_issue_comment(repo, issue_number, commenter, token):
+def handle_issue_comment(repo, issue_number, commenter, comment_body, token):
     print(f"Evaluating assignment request for @{commenter} on PR/Issue #{issue_number}...")
+    
+    assign_match = re.search(r'/(assign|claim)', comment_body)
+    unassign_match = re.search(r'/unassign', comment_body)
+    
     issue = fetch_issue(repo, issue_number, token)
     if not issue: return "error", "Failed to fetch issue"
+    
+    if unassign_match:
+        current_assignees = [a["login"] for a in issue.get("assignees", [])]
+        if commenter in current_assignees:
+            remove_assignee(repo, issue_number, commenter, token)
+            msg = f"@{commenter} has been unassigned. Anyone else can reply with `/assign` or `/claim` to claim it."
+            post_comment(repo, issue_number, msg, token)
+            return "unassigned", f"Unassigned @{commenter}"
+        return "ignored", "Not currently assigned"
+        
+    if not assign_match:
+        return "ignored", "Comment does not contain /assign or /claim"
     
     if issue.get("state") == "closed":
         print("Issue is closed. Ignoring comment.")
@@ -545,7 +561,7 @@ def handle_issue_comment(repo, issue_number, commenter, token):
     # --- Check 1: No active assignments ---
     has_active = check_active_assignments(repo, commenter, token)
     if has_active and commenter.lower() != "sb2318":
-        msg = f"@{commenter} You currently have an active assigned issue. Please complete your existing work before requesting a new assignment."
+        msg = f"Sorry @{commenter}, you already have an active assignment in this repository. Please complete or unassign it before claiming a new one."
         post_comment(repo, issue_number, msg, token)
         return "rejected", "Active assignments limit"
 
@@ -584,7 +600,7 @@ def handle_issue_comment(repo, issue_number, commenter, token):
 
     # All checks passed — assign
     assign_user(repo, issue_number, commenter, token)
-    msg = f"""> Thank you for volunteering, @{commenter}!\n>\n> The issue has been reviewed and determined to be suitable for community contribution.\n>\n> Assignment has been made based on current contributor availability.\n>\n> Please ensure your pull request references this issue (`Fixes #{issue_number}`) and follows repository contribution guidelines.\n>\n> Maintainer: @SB2318"""
+    msg = f"Assigned to @{commenter}. You have 7 days to complete this issue. Please submit a PR referencing this issue."
     post_comment(repo, issue_number, msg, token)
     print(f"Successfully assigned #{issue_number} to {commenter}.")
     return "assigned", f"Assigned to {commenter}"
@@ -688,9 +704,10 @@ def main():
         if "pull_request" not in event_data["issue"]:
             issue_number = event_data["issue"]["number"]
             commenter = event_data["comment"]["user"]["login"]
+            comment_body = event_data["comment"].get("body", "").lower().strip()
             if commenter == "github-actions[bot]" or "bot" in commenter.lower():
                 return
-            status, detail = handle_issue_comment(repo, issue_number, commenter, github_token)
+            status, detail = handle_issue_comment(repo, issue_number, commenter, comment_body, github_token)
             _write_step_summary([
                 "## 🤖 AI Issue Assignment Report",
                 f"**Issue:** #{issue_number}",

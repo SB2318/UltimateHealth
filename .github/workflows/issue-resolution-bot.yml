@@ -118,16 +118,17 @@ jobs:
               issueMap[issue.number] = issue;
             }
 
-            // ── 2. Regex: matches closes/fixes/resolves #N ─────────────────
-            // Covers: close, closes, closed, fix, fixes, fixed, resolve, resolves, resolved
-            const KEYWORD_RE = /(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)/gi;
+            // ── 2. Regex: matches closes/fixes/resolves #N, #closes #N, closes#N or #N ──
+            // Covers: close, closes, closed, fix, fixes, fixed, resolve, resolves, resolved (with or without #, with or without spaces) or just #N
+            const KEYWORD_RE = /(?:#?(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s*#(\d+))|(?:#(\d+))/gi;
 
             const extractIssueNumbers = (text) => {
               if (!text) return [];
               const nums = [];
               let match;
               while ((match = KEYWORD_RE.exec(text)) !== null) {
-                nums.push(parseInt(match[1], 10));
+                const numStr = match[1] || match[2];
+                if (numStr) nums.push(parseInt(numStr, 10));
               }
               KEYWORD_RE.lastIndex = 0; // reset regex state for reuse
               return nums;
