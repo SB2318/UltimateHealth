@@ -173,7 +173,7 @@ describe('NotificationPreferencesScreen', () => {
     fireEvent.press(clearButton);
 
     // Search input should be empty and clear button should disappear
-    expect(searchInput.props.value).toBe('');
+    expect(getByTestId('search-input').props.value).toBe('');
     expect(queryByTestId('clear-search-button')).toBeNull();
   });
 

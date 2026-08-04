@@ -112,9 +112,9 @@
   "devDependencies": {
     "@react-native/jest-preset": "^0.86.0",
     "@testing-library/jest-native": "^5.4.3",
-    "@testing-library/react-native": "12.9.0",
+    "@testing-library/react-native": "^14.0.1",
     "@types/jest": "29.5.14",
-    "@types/react": "~19.2.4",
+    "@types/react": "~19.2.14",
     "@types/react-native-version-check": "^3.4.8",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-preset-expo": "~57.0.0",
@@ -127,15 +127,14 @@
     "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
     "react-native-svg-transformer": "^1.5.1",
-    "react-test-renderer": "18.2.0",
-    "typescript": "^5.5.4"
+    "react-test-renderer": "19.2.3",
+    "test-renderer": "^1.0.0",
+    "typescript": "~6.0.3"
   },
   "private": true,
   "resolutions": {
     "@tamagui/web": "^1.135.6",
-    "@tamagui/core": "^1.135.6",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "@tamagui/core": "^1.135.6"
   },
   "workspaces": [
     "modules/*"

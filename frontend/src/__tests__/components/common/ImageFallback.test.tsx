@@ -1,7 +1,7 @@
  
 // @ts-nocheck
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { ImageFallback } from '../../../components/common/ImageFallback';
 
 describe('ImageFallback Component', () => {
@@ -25,16 +25,15 @@ describe('ImageFallback Component', () => {
     expect(image.props.source).toEqual(fallbackSource);
   });
 
-  it('swaps to fallback image when onError is triggered', () => {
+  it('swaps to fallback image when onError is triggered', async () => {
     const { getByTestId } = render(
       <ImageFallback source={primarySource} fallbackSource={fallbackSource} testID="test-image" />
     );
     const image = getByTestId('test-image');
     
-    // Simulate a network failure loading the image
     fireEvent(image, 'onError');
-    
-    // It should now have swapped to the fallback
-    expect(image.props.source).toEqual(fallbackSource);
+    await waitFor(() => {
+      expect(getByTestId('test-image').props.source).toEqual(fallbackSource);
+    });
   });
 });

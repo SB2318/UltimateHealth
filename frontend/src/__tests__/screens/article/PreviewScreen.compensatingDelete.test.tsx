@@ -188,8 +188,8 @@ describe('PreviewScreen compensating delete — new article path', () => {
         expect.objectContaining({recordId: 'pb-record-42'}),
         expect.objectContaining({onError: expect.any(Function)}),
       );
-    });
-  });
+    }, { timeout: 15000 });
+  }, 15000);
 
   it('does NOT call deletePocketbaseRecord when postMutation succeeds', async () => {
     await setupAndSubmit(makeRoute(), mockUploadPocketbase);

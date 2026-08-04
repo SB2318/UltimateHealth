@@ -97,8 +97,8 @@ describe('OfflinePodcastList', () => {
       expect(readDownloadedPodcasts).toHaveBeenCalled();
       expect(getByText('First Offline Podcast')).toBeTruthy();
       expect(getByTestId('podcast-card-pod1')).toBeTruthy();
-    });
-  });
+    }, { timeout: 15000 });
+  }, 15000);
 
   it('triggers focus effect callback to reload podcasts when screen comes into focus', async () => {
     readDownloadedPodcasts.mockResolvedValue(mockPodcasts);
