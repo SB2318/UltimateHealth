@@ -1,4 +1,4 @@
-import { logger } from './monitoring/logger';// ─────────────────────────────────────────────────────────────
+import { logger } from '../../services/monitoring/logger';
 // SummaryService.ts
 // Calls Google Gemini API (FREE) to auto-generate article summaries
 // Free tier: 1500 requests/day, no credit card needed
