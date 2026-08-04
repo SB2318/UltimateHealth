@@ -169,9 +169,6 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
       // Show confirmation alert
       const confirmation = await showConfirmationAlert();
       if (!confirmation) {
-        //Alert.alert('Post discarded');
-        await unlinkFile();
-        navigation.navigate('TabNavigation');
         return;
       }
 
