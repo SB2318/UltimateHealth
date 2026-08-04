@@ -24,6 +24,7 @@ export default function GlossaryBottomSheet({
   definition,
   category,
   relatedTerms = [],
+  tags = [],
   onClose,
 }: GlossaryBottomSheetProps) {
   const [open, setOpen] = useState(visible);
@@ -143,6 +144,30 @@ export default function GlossaryBottomSheet({
                       fontWeight="600"
                     >
                       {relatedTerm}
+                    </Text>
+                  ))}
+                </XStack>
+              </YStack>
+            )}
+
+            {tags.length > 0 && (
+              <YStack gap="$3" marginTop="$4">
+                <Text color="$color12" fontSize={16} fontWeight="700">
+                  Tags
+                </Text>
+                <XStack gap="$2" flexWrap="wrap">
+                  {tags.map((tag) => (
+                    <Text
+                      key={tag}
+                      backgroundColor="$gray4"
+                      color="$color11"
+                      borderRadius="$10"
+                      paddingHorizontal="$3"
+                      paddingVertical="$2"
+                      fontSize={13}
+                      fontWeight="600"
+                    >
+                      #{tag}
                     </Text>
                   ))}
                 </XStack>
