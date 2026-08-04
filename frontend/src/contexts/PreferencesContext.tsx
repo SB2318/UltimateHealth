@@ -38,9 +38,7 @@ interface PreferencesProviderProps {
 export const PreferencesProvider: React.FC<PreferencesProviderProps> = ({
   children,
 }) => {
-  const [preferredLanguages, setInternalPreferredLanguages] = useState
-    LanguageCode[]
-  >([]);
+  const [preferredLanguages, setInternalPreferredLanguages] = useState<LanguageCode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Load preferences on mount
