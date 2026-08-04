@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { PageWrapper, Section } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { getApiUrl } from "@/lib/api";
 
 export default function UserLoginPage() {
+  const t = useTranslations("Login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<{
@@ -32,7 +34,10 @@ export default function UserLoginPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setMessage({ title: "Processing", description: "Signing you in." });
+    setMessage({
+      title: t("processingTitle"),
+      description: t("processingDescription"),
+    });
     setLoading(true);
 
     try {
@@ -47,20 +52,20 @@ export default function UserLoginPage() {
 
       if (res.ok) {
         setMessage({
-          title: "Login successful",
-          description: "Redirecting to account deletion.",
+          title: t("successTitle"),
+          description: t("successDescription"),
         });
         setTimeout(() => router.push("/delete-account"), 1000);
       } else {
         setMessage({
-          title: "Login failed",
-          description: data.error || data.message || "Please check your details and try again.",
+          title: t("failedTitle"),
+          description: data.error || data.message || t("failedDefaultDescription"),
           variant: "destructive",
         });
       }
     } catch (err: unknown) {
       setMessage({
-        title: "Server error",
+        title: t("serverErrorTitle"),
         description: err instanceof Error ? err.message : "Unknown error",
         variant: "destructive",
       });
@@ -83,34 +88,32 @@ export default function UserLoginPage() {
               </span>
             </div>
             <CardTitle className="text-xl font-semibold">
-              <h1>Login Required</h1>
+              <h1>{t("heading")}</h1>
             </CardTitle>
-            <CardDescription>
-              Please log in to continue to account deletion.
-            </CardDescription>
+            <CardDescription>{t("description")}</CardDescription>
           </CardHeader>
 
           <form id="loginForm" onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("emailLabel")}</Label>
                 <Input
                   id="email"
                   type="email"
                   required
-                  placeholder="Enter your email"
+                  placeholder={t("emailPlaceholder")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t("passwordLabel")}</Label>
                 <Input
                   id="password"
                   type="password"
                   required
-                  placeholder="Password"
+                  placeholder={t("passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -127,7 +130,7 @@ export default function UserLoginPage() {
             <CardFooter className="justify-end">
               <Button type="submit" id="login-btn" disabled={loading}>
                 {loading && <Spinner size="sm" className="mr-1" />}
-                {loading ? "Logging in..." : "Login"}
+                {loading ? t("submitButtonLoading") : t("submitButton")}
               </Button>
             </CardFooter>
           </form>

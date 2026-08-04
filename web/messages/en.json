@@ -1,0 +1,20 @@
+{
+  "Login": {
+    "heading": "Login Required",
+    "description": "Please log in to continue to account deletion.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Password",
+    "processingTitle": "Processing",
+    "processingDescription": "Signing you in.",
+    "successTitle": "Login successful",
+    "successDescription": "Redirecting to account deletion.",
+    "failedTitle": "Login failed",
+    "failedDefaultDescription": "Please check your details and try again.",
+    "serverErrorTitle": "Server error",
+    "submitButton": "Login",
+    "submitButtonLoading": "Logging in..."
+  }
+}
+

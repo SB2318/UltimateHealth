@@ -1,0 +1,20 @@
+{
+  "Login": {
+    "heading": "Anmeldung erforderlich",
+    "description": "Bitte melden Sie sich an, um mit der Kontolöschung fortzufahren.",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
+    "passwordLabel": "Passwort",
+    "passwordPlaceholder": "Passwort",
+    "processingTitle": "Verarbeitung",
+    "processingDescription": "Sie werden angemeldet.",
+    "successTitle": "Anmeldung erfolgreich",
+    "successDescription": "Weiterleitung zur Kontolöschung.",
+    "failedTitle": "Anmeldung fehlgeschlagen",
+    "failedDefaultDescription": "Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
+    "serverErrorTitle": "Serverfehler",
+    "submitButton": "Anmelden",
+    "submitButtonLoading": "Anmeldung läuft..."
+  }
+}
+
