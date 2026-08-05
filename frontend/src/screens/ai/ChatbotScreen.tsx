@@ -308,6 +308,10 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     });
   }, [isConnected, safeSetMessages, sendMessageToAI, setIsLoading, characterId]);
 
+  // A failed message can only be resent once the device is back online and no
+  // other request is in flight; until then the retry control stays inert.
+  const canRetry = isConnected && !isPending;
+
   const onSend = useCallback((newMessages: IMessage[] = []) => {
     if (isPending) {
       return;
@@ -325,12 +329,21 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     if (isPending) {
       return;
     }
+    // Retrying while still offline would only swap the failure card for an
+    // identical one, so the prompt is held until the connection is back.
+    if (!isConnected) {
+      Snackbar.show({
+        text: 'Still offline. Your message will be ready to send once you reconnect.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+      return;
+    }
     safeSetMessages(previousMessages =>
       previousMessages.filter(m => m._id !== failedMessage._id)
     );
 
     performSendMessage(failedMessage.originalPrompt);
-  }, [isPending, safeSetMessages, performSendMessage]);
+  }, [isPending, isConnected, safeSetMessages, performSendMessage]);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}} edges={['top']}>
@@ -456,10 +469,20 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                     {currentMessage.originalPrompt && (
                       <TouchableOpacity
                         onPress={() => handleRetry(currentMessage)}
+                        disabled={!canRetry}
+                        accessibilityRole="button"
+                        accessibilityState={{disabled: !canRetry}}
+                        accessibilityLabel={
+                          canRetry
+                            ? 'Retry sending message'
+                            : 'Retry unavailable, waiting for a network connection'
+                        }
                         style={{
                           flexDirection: 'row',
                           alignItems: 'center',
-                          backgroundColor: '#dc2626',
+                          backgroundColor: canRetry ? '#dc2626' : '#f3f4f6',
+                          borderWidth: canRetry ? 0 : 1,
+                          borderColor: '#d1d5db',
                           paddingVertical: 8,
                           paddingHorizontal: 16,
                           borderRadius: 8,
@@ -468,9 +491,18 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                           gap: 6,
                         }}
                       >
-                        <Ionicons name="refresh" size={16} color="white" />
-                        <Text style={{ color: 'white', fontWeight: '600', fontSize: 14 }}>
-                          Retry
+                        <Ionicons
+                          name={isConnected ? 'refresh' : 'cloud-offline-outline'}
+                          size={16}
+                          color={canRetry ? 'white' : '#4b5563'}
+                        />
+                        <Text
+                          style={{
+                            color: canRetry ? 'white' : '#4b5563',
+                            fontWeight: '600',
+                            fontSize: 14,
+                          }}>
+                          {isConnected ? 'Retry' : 'Waiting for connection'}
                         </Text>
                       </TouchableOpacity>
                     )}
