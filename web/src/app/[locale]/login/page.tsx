@@ -2,7 +2,8 @@
 
 import type { FormEvent } from "react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { PageWrapper, Section } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -18,10 +19,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
-import { getApiUrl } from "@/lib/api";
+import { useAuth } from "@/hooks/useAuth";
+import { withBasePath } from "@/lib/basePath";
+
+/** Where to land after signing in when no `next` param was supplied. */
+const DEFAULT_REDIRECT = "/delete-account";
 
 export default function UserLoginPage() {
   const t = useTranslations("Login");
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<{
@@ -31,6 +37,7 @@ export default function UserLoginPage() {
   } | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -41,32 +48,29 @@ export default function UserLoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(getApiUrl("/user/login"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ email, password, fcmToken: "web-client-login" }),
+      // The context stores the session, so the rest of the app sees the user
+      // without this page having to know how tokens are persisted.
+      await login({ email, password });
+
+      setMessage({
+        title: t("successTitle"),
+        description: t("successDescription"),
       });
 
-      const data = await res.json();
+      // Only same-origin paths are honoured, so a crafted `next` cannot bounce
+      // the user to another site after signing in.
+      const requested = searchParams?.get("next");
+      const destination =
+        requested && requested.startsWith("/") && !requested.startsWith("//")
+          ? requested
+          : withBasePath(DEFAULT_REDIRECT);
 
-      if (res.ok) {
-        setMessage({
-          title: t("successTitle"),
-          description: t("successDescription"),
-        });
-        setTimeout(() => router.push("/delete-account"), 1000);
-      } else {
-        setMessage({
-          title: t("failedTitle"),
-          description: data.error || data.message || t("failedDefaultDescription"),
-          variant: "destructive",
-        });
-      }
+      setTimeout(() => router.push(destination), 1000);
     } catch (err: unknown) {
       setMessage({
-        title: t("serverErrorTitle"),
-        description: err instanceof Error ? err.message : "Unknown error",
+        title: t("failedTitle"),
+        description:
+          err instanceof Error ? err.message : t("failedDefaultDescription"),
         variant: "destructive",
       });
     } finally {
@@ -127,11 +131,19 @@ export default function UserLoginPage() {
               )}
             </CardContent>
 
-            <CardFooter className="justify-end">
+            <CardFooter className="flex-col items-stretch gap-3">
               <Button type="submit" id="login-btn" disabled={loading}>
                 {loading && <Spinner size="sm" className="mr-1" />}
                 {loading ? t("submitButtonLoading") : t("submitButton")}
               </Button>
+              <div className="flex flex-wrap justify-between gap-2 text-sm text-muted-foreground">
+                <Link href={withBasePath("/forgot-password")} className="underline">
+                  Forgot password?
+                </Link>
+                <Link href={withBasePath("/register")} className="underline">
+                  Create an account
+                </Link>
+              </div>
             </CardFooter>
           </form>
         </Card>
