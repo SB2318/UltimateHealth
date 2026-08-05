@@ -51,7 +51,18 @@ export default function UserLoginPage() {
     try {
       // The context stores the session, so the rest of the app sees the user
       // without this page having to know how tokens are persisted.
-      await login({ email, password });
+      const user = await login({ email, password });
+
+      // A 200 with no session is still a failed sign-in — reporting success and
+      // redirecting would drop the user on a page that bounces them back.
+      if (!user) {
+        setMessage({
+          title: t("failedTitle"),
+          description: t("failedDefaultDescription"),
+          variant: "destructive",
+        });
+        return;
+      }
 
       setMessage({
         title: t("successTitle"),

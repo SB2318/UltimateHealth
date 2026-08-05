@@ -42,7 +42,12 @@ export default function ForgotPasswordPage() {
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
-  const [fieldError, setFieldError] = useState<string | null>(null);
+  // Tracks which input the message belongs to, so aria-invalid lands on the
+  // field the user actually has to correct.
+  const [fieldError, setFieldError] = useState<{
+    field: "email" | "otp" | "newPassword";
+    message: string;
+  } | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -53,7 +58,7 @@ export default function ForgotPasswordPage() {
     setFieldError(null);
 
     if (!isValidEmail(email)) {
-      setFieldError("Enter a valid email address.");
+      setFieldError({ field: "email", message: "Enter a valid email address." });
       return;
     }
 
@@ -77,12 +82,12 @@ export default function ForgotPasswordPage() {
     setFieldError(null);
 
     if (!isValidOtp(otp)) {
-      setFieldError("Enter the six-digit code from your email.");
+      setFieldError({ field: "otp", message: "Enter the six-digit code from your email." });
       return;
     }
     const passwordError = validatePassword(newPassword);
     if (passwordError) {
-      setFieldError(passwordError);
+      setFieldError({ field: "newPassword", message: passwordError });
       return;
     }
 
@@ -125,7 +130,8 @@ export default function ForgotPasswordPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    aria-invalid={Boolean(fieldError)}
+                    aria-invalid={fieldError?.field === "email"}
+                    aria-describedby={fieldError?.field === "email" ? "reset-error" : undefined}
                     autoComplete="email"
                   />
                 </div>
@@ -139,7 +145,8 @@ export default function ForgotPasswordPage() {
                       maxLength={6}
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
-                      aria-invalid={Boolean(fieldError)}
+                      aria-invalid={fieldError?.field === "otp"}
+                      aria-describedby={fieldError?.field === "otp" ? "reset-error" : undefined}
                       autoComplete="one-time-code"
                     />
                   </div>
@@ -151,7 +158,12 @@ export default function ForgotPasswordPage() {
                       type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      aria-describedby="new-password-hint"
+                      aria-invalid={fieldError?.field === "newPassword"}
+                      aria-describedby={
+                        fieldError?.field === "newPassword"
+                          ? "reset-error new-password-hint"
+                          : "new-password-hint"
+                      }
                       autoComplete="new-password"
                     />
                     <p id="new-password-hint" className="text-sm text-muted-foreground">
@@ -162,7 +174,11 @@ export default function ForgotPasswordPage() {
                 </>
               )}
 
-              {fieldError && <p className="text-sm text-destructive">{fieldError}</p>}
+              {fieldError && (
+                <p id="reset-error" role="alert" className="text-sm text-destructive">
+                  {fieldError.message}
+                </p>
+              )}
 
               {formError && (
                 <Alert variant="destructive" role="alert">

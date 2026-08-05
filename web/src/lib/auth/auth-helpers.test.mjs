@@ -51,31 +51,28 @@ const SPECIAL = "#";
 test("enforces every part of the backend password policy", () => {
   assert.equal(validatePassword(UPPER + LOWER + DIGIT + SPECIAL), null);
 
-  assert.notEqual(
-    validatePassword(UPPER + LOWER.slice(0, 3) + DIGIT + SPECIAL),
-    null,
-    "under eight characters"
-  );
-  assert.notEqual(
-    validatePassword(LOWER + LOWER + DIGIT + SPECIAL),
-    null,
-    "no uppercase"
-  );
-  assert.notEqual(
-    validatePassword(UPPER.repeat(7) + DIGIT + SPECIAL),
-    null,
-    "no lowercase"
-  );
-  assert.notEqual(
-    validatePassword(UPPER + LOWER + SPECIAL),
-    null,
-    "no number"
-  );
-  assert.notEqual(
-    validatePassword(UPPER + LOWER + DIGIT),
-    null,
-    "no special character"
-  );
+  // Asserting the exact message, not merely "not null": under node:assert/strict
+  // `notEqual(undefined, null)` passes, so a bare notEqual would still go green
+  // if the validator stopped returning messages altogether.
+  const cases = [
+    [UPPER + LOWER.slice(0, 3) + DIGIT + SPECIAL, /at least 8 characters/i, "under eight characters"],
+    [LOWER + LOWER + DIGIT + SPECIAL, /uppercase/i, "no uppercase"],
+    [UPPER.repeat(7) + DIGIT + SPECIAL, /lowercase/i, "no lowercase"],
+    [UPPER + LOWER + SPECIAL, /number/i, "no number"],
+    [UPPER + LOWER + DIGIT, /special character/i, "no special character"],
+  ];
+
+  for (const [sample, expected, label] of cases) {
+    const message = validatePassword(sample);
+    assert.equal(typeof message, "string", `${label}: expected a message`);
+    assert.match(message, expected, label);
+  }
+});
+
+test("rejects a non-string password rather than accepting it", () => {
+  for (const value of [undefined, null, 12345678, {}, []]) {
+    assert.equal(typeof validatePassword(value), "string", `input ${String(value)}`);
+  }
 });
 
 test("accepts only six-digit OTPs", () => {
@@ -114,6 +111,19 @@ test("reads the session from every known token field name", () => {
 test("prefers token over its aliases when several are present", () => {
   const session = readAuthSession({token: "primary", accessToken: "secondary"});
   assert.equal(session.token, "primary");
+});
+
+test("finds a top-level token even when the body also carries an envelope", () => {
+  const session = readAuthSession({ token: "TOP", data: { user: { _id: "1" } } });
+  assert.equal(session.token, "TOP");
+  assert.deepEqual(session.user, { _id: "1" });
+});
+
+test("does not mistake an empty object or array for a signed-in user", () => {
+  // The context falls back to /user/getprofile when user is null, so an empty
+  // shape must not masquerade as a real user.
+  assert.equal(readAuthSession({ token: "t", user: {} }).user, null);
+  assert.equal(readAuthSession({ token: "t", user: [] }).user, null);
 });
 
 test("reports a missing session rather than throwing", () => {

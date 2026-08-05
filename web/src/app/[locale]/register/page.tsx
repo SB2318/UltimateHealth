@@ -39,6 +39,14 @@ interface FieldErrors {
   Years_of_experience?: string;
 }
 
+/** Cleared when "I am a medical professional" is unticked. */
+const DOCTOR_ONLY_ERRORS = [
+  "qualification",
+  "specialization",
+  "Years_of_experience",
+  "contact_detail",
+] as const satisfies readonly (keyof FieldErrors)[];
+
 export default function RegisterPage() {
   const { register } = useAuth();
   const router = useRouter();
@@ -159,7 +167,7 @@ export default function RegisterPage() {
                   autoComplete="name"
                 />
                 {errors.user_name && (
-                  <p id="user_name-error" className="text-sm text-destructive">
+                  <p id="user_name-error" role="alert" className="text-sm text-destructive">
                     {errors.user_name}
                   </p>
                 )}
@@ -177,7 +185,7 @@ export default function RegisterPage() {
                   autoComplete="username"
                 />
                 {errors.user_handle && (
-                  <p id="user_handle-error" className="text-sm text-destructive">
+                  <p id="user_handle-error" role="alert" className="text-sm text-destructive">
                     {errors.user_handle}
                   </p>
                 )}
@@ -195,7 +203,7 @@ export default function RegisterPage() {
                   autoComplete="email"
                 />
                 {errors.email && (
-                  <p id="email-error" className="text-sm text-destructive">
+                  <p id="email-error" role="alert" className="text-sm text-destructive">
                     {errors.email}
                   </p>
                 )}
@@ -209,7 +217,9 @@ export default function RegisterPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   aria-invalid={Boolean(errors.password)}
-                  aria-describedby="password-hint"
+                  aria-describedby={
+                    errors.password ? "password-error password-hint" : "password-hint"
+                  }
                   autoComplete="new-password"
                 />
                 <p id="password-hint" className="text-sm text-muted-foreground">
@@ -217,7 +227,9 @@ export default function RegisterPage() {
                   a number and a special character.
                 </p>
                 {errors.password && (
-                  <p className="text-sm text-destructive">{errors.password}</p>
+                  <p id="password-error" role="alert" className="text-sm text-destructive">
+                    {errors.password}
+                  </p>
                 )}
               </div>
 
@@ -231,10 +243,13 @@ export default function RegisterPage() {
                   value={contactDetail}
                   onChange={(e) => setContactDetail(e.target.value)}
                   aria-invalid={Boolean(errors.contact_detail)}
+                  aria-describedby={errors.contact_detail ? "contact_detail-error" : undefined}
                   autoComplete="tel"
                 />
                 {errors.contact_detail && (
-                  <p className="text-sm text-destructive">{errors.contact_detail}</p>
+                  <p id="contact_detail-error" role="alert" className="text-sm text-destructive">
+                    {errors.contact_detail}
+                  </p>
                 )}
               </div>
 
@@ -242,7 +257,20 @@ export default function RegisterPage() {
                 <Checkbox
                   id="isDoctor"
                   checked={isDoctor}
-                  onCheckedChange={(checked) => setIsDoctor(checked === true)}
+                  onCheckedChange={(checked) => {
+                    const next = checked === true;
+                    setIsDoctor(next);
+                    // Errors raised by the doctor-only rules no longer apply, and
+                    // a "doctors must provide a contact number" message under a
+                    // field now labelled optional is just confusing.
+                    if (!next) {
+                      setErrors((current) => {
+                        const remaining = { ...current };
+                        for (const key of DOCTOR_ONLY_ERRORS) delete remaining[key];
+                        return remaining;
+                      });
+                    }
+                  }}
                 />
                 <Label htmlFor="isDoctor" className="font-normal">
                   I am a medical professional
@@ -262,9 +290,12 @@ export default function RegisterPage() {
                       value={qualification}
                       onChange={(e) => setQualification(e.target.value)}
                       aria-invalid={Boolean(errors.qualification)}
+                      aria-describedby={errors.qualification ? "qualification-error" : undefined}
                     />
                     {errors.qualification && (
-                      <p className="text-sm text-destructive">{errors.qualification}</p>
+                      <p id="qualification-error" role="alert" className="text-sm text-destructive">
+                        {errors.qualification}
+                      </p>
                     )}
                   </div>
 
@@ -275,9 +306,12 @@ export default function RegisterPage() {
                       value={specialization}
                       onChange={(e) => setSpecialization(e.target.value)}
                       aria-invalid={Boolean(errors.specialization)}
+                      aria-describedby={errors.specialization ? "specialization-error" : undefined}
                     />
                     {errors.specialization && (
-                      <p className="text-sm text-destructive">{errors.specialization}</p>
+                      <p id="specialization-error" role="alert" className="text-sm text-destructive">
+                        {errors.specialization}
+                      </p>
                     )}
                   </div>
 
@@ -291,9 +325,12 @@ export default function RegisterPage() {
                       value={yearsOfExperience}
                       onChange={(e) => setYearsOfExperience(e.target.value)}
                       aria-invalid={Boolean(errors.Years_of_experience)}
+                      aria-describedby={
+                        errors.Years_of_experience ? "Years_of_experience-error" : undefined
+                      }
                     />
                     {errors.Years_of_experience && (
-                      <p className="text-sm text-destructive">
+                      <p id="Years_of_experience-error" role="alert" className="text-sm text-destructive">
                         {errors.Years_of_experience}
                       </p>
                     )}

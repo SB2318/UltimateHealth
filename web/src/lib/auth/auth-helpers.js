@@ -121,18 +121,39 @@ export function unwrapEnvelope(payload) {
  * @returns {{user: Record<string, unknown> | null, token: string | null}}
  */
 export function readAuthSession(payload) {
-  const body = unwrapEnvelope(payload);
+  const outer = /** @type {Record<string, unknown>} */ (
+    payload && typeof payload === "object" ? payload : {}
+  );
+  const inner = unwrapEnvelope(payload);
+
+  // A response can carry the token outside the envelope and the user inside it,
+  // so both levels are consulted rather than committing to whichever one
+  // unwrapEnvelope happened to pick.
   const token =
-    asTrimmedString(body.token) ||
-    asTrimmedString(body.accessToken) ||
-    asTrimmedString(body.refreshToken);
+    asTrimmedString(outer.token) ||
+    asTrimmedString(inner.token) ||
+    asTrimmedString(outer.accessToken) ||
+    asTrimmedString(inner.accessToken) ||
+    asTrimmedString(outer.refreshToken) ||
+    asTrimmedString(inner.refreshToken);
 
-  const user =
-    body.user && typeof body.user === "object"
-      ? /** @type {Record<string, unknown>} */ (body.user)
-      : null;
+  return { user: readUser(inner.user) ?? readUser(outer.user), token: token || null };
+}
 
-  return { user, token: token || null };
+/**
+ * A user is only a user when it is a non-empty plain object. An array or `{}`
+ * would otherwise be treated as a signed-in user and suppress the context's
+ * fallback to `/user/getprofile`.
+ *
+ * @param {unknown} candidate
+ * @returns {Record<string, unknown> | null}
+ */
+function readUser(candidate) {
+  if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) {
+    return null;
+  }
+  const user = /** @type {Record<string, unknown>} */ (candidate);
+  return Object.keys(user).length > 0 ? user : null;
 }
 
 /**
