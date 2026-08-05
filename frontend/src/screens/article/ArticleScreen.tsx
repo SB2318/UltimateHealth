@@ -1172,16 +1172,17 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               <Text style={[styles.titleText, {fontSize: 25 * fontScale}]}>
                 {article?.title}
               </Text>
-              <Text
-                style={{
-                  fontSize: 13 * fontScale,
-                  color: '#6C6C6D',
-                  marginTop: 6,
-                  marginBottom: 4,
-                  fontWeight: '500',
-                }}>
-                🕐 {getReadTime(articleContent ?? '')}
-              </Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 6, marginBottom: 4}}>
+                <MaterialCommunityIcons name="clock-outline" size={14} color="#6C6C6D" style={{marginRight: 4}} />
+                <Text
+                  style={{
+                    fontSize: 13 * fontScale,
+                    color: '#6C6C6D',
+                    fontWeight: '500',
+                  }}>
+                  {getReadTime(articleContent ?? '')}
+                </Text>
+              </View>
               <View style={styles.fontSizeControls}>
                 <Text style={styles.fontSizeLabel}>Font Size:</Text>
                 <View style={styles.fontSizeButtons}>
