@@ -13,6 +13,7 @@ import { getStoredToken } from "./auth-storage";
 import {
   AuthError,
   type AuthSession,
+  type RegistrationResult,
   type AuthUser,
   type LoginCredentials,
   type RegisterPayload,
@@ -101,7 +102,18 @@ export async function login(credentials: LoginCredentials): Promise<AuthSession>
   return readAuthSession(payload) as AuthSession;
 }
 
-export async function register(payload: RegisterPayload): Promise<AuthSession> {
+/**
+ * Creates the account. This does NOT sign the user in.
+ *
+ * `/user/register` replies with a short-lived email-verification token at the
+ * top level and no user. Feeding it to `sendVerificationEmail` is what actually
+ * sends the mail; the user signs in afterwards. The mobile client does the same
+ * — see `frontend/src/screens/auth/SignUpScreenSecond.tsx`, which keeps the
+ * token in local state, posts it to `/user/verifyEmail`, then navigates to the
+ * login screen. Treating this token as a session would store a credential that
+ * is not one and skip email verification entirely.
+ */
+export async function register(payload: RegisterPayload): Promise<RegistrationResult> {
   // Doctor-only fields are rejected outright for non-doctors, so they are
   // dropped rather than sent as empty strings.
   const body: Record<string, unknown> = {
@@ -126,7 +138,25 @@ export async function register(payload: RegisterPayload): Promise<AuthSession> {
     fallbackError: "Registration failed. Please check your details and try again.",
   });
 
-  return readAuthSession(response) as AuthSession;
+  // readAuthSession is reused only to find the top-level token; the value is a
+  // verification token, never a session token.
+  return { verificationToken: readAuthSession(response).token };
+}
+
+/**
+ * Asks the backend to send the verification mail for a freshly created account,
+ * using the token `register` returned.
+ */
+export async function sendVerificationEmail(
+  email: string,
+  verificationToken: string
+): Promise<string> {
+  const payload = await request("/user/verifyEmail", {
+    body: { email: email.trim(), token: verificationToken },
+    fallbackError: "Could not send the verification email.",
+  });
+
+  return readApiErrorMessage(payload, "Verification email sent.");
 }
 
 export async function logout(): Promise<void> {

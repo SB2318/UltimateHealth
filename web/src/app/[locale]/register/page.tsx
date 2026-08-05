@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
 import { PageWrapper, Section } from "@/components/layout";
@@ -49,7 +48,6 @@ const DOCTOR_ONLY_ERRORS = [
 
 export default function RegisterPage() {
   const { register } = useAuth();
-  const router = useRouter();
 
   const [userName, setUserName] = useState("");
   const [userHandle, setUserHandle] = useState("");
@@ -111,7 +109,7 @@ export default function RegisterPage() {
 
     setSubmitting(true);
     try {
-      const user = await register({
+      const outcome = await register({
         user_name: userName,
         user_handle: userHandle,
         email,
@@ -123,15 +121,15 @@ export default function RegisterPage() {
         Years_of_experience: isDoctor ? Number(yearsOfExperience) : undefined,
       });
 
-      if (user) {
-        router.replace(withBasePath("/"));
-        return;
+      // Sign-up never signs the user in: the address has to be verified first,
+      // so the next step is always the inbox and then the login page.
+      if (outcome.verificationEmailSent) {
+        setNotice(
+          `Account created. Check ${email} to verify your address, then sign in.`
+        );
+      } else {
+        setFormError(outcome.message);
       }
-
-      // No session yet: the backend wants the address verified first.
-      setNotice(
-        "Account created. Check your inbox to verify your email, then sign in."
-      );
     } catch (error) {
       setFormError(
         error instanceof Error ? error.message : "Registration failed. Please try again."

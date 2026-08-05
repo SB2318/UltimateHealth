@@ -80,23 +80,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [applySession]
   );
 
-  const register = useCallback(
-    async (payload: RegisterPayload) => {
-      const session = await authService.register(payload);
+  const register = useCallback(async (payload: RegisterPayload) => {
+    // Registration never produces a session. `/user/register` returns an
+    // email-verification token, and posting it back to `/user/verifyEmail` is
+    // what sends the mail; the user signs in afterwards. Storing that token as
+    // a session would put a non-credential in the Authorization header and skip
+    // verification entirely.
+    const { verificationToken } = await authService.register(payload);
 
-      // Registration may require email verification before a session exists.
-      if (!session.token && !session.user) {
-        if (isMountedRef.current) setStatus("unauthenticated");
-        return null;
-      }
+    if (isMountedRef.current) setStatus("unauthenticated");
 
-      if (session.token) setStoredToken(session.token);
-      const nextUser = session.user ?? (await authService.getProfile());
-      applySession(nextUser);
-      return nextUser;
-    },
-    [applySession]
-  );
+    if (!verificationToken) {
+      return {
+        verificationEmailSent: false,
+        message:
+          "Account created, but no verification email could be requested. Try signing in, or use the resend option.",
+      };
+    }
+
+    try {
+      const message = await authService.sendVerificationEmail(
+        payload.email,
+        verificationToken
+      );
+      return { verificationEmailSent: true, message };
+    } catch (error) {
+      // The account exists — reporting a failed registration here would push the
+      // user to submit again and hit a duplicate-account error.
+      return {
+        verificationEmailSent: false,
+        message:
+          error instanceof Error
+            ? `Account created, but the verification email failed to send: ${error.message}`
+            : "Account created, but the verification email failed to send.",
+      };
+    }
+  }, []);
 
   const logout = useCallback(async () => {
     try {

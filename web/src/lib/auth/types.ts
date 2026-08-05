@@ -47,6 +47,22 @@ export interface ResetPasswordPayload {
   newPassword: string;
 }
 
+/**
+ * Registration does NOT sign the user in. `/user/register` returns a short-lived
+ * email-verification token, which `/user/verifyEmail` exchanges for the
+ * verification mail; the user signs in afterwards. This shape exists so the
+ * token can never be mistaken for a session again.
+ */
+export interface RegistrationResult {
+  verificationToken: string | null;
+}
+
+/** What the UI needs to know after a successful sign-up. */
+export interface RegisterOutcome {
+  verificationEmailSent: boolean;
+  message: string;
+}
+
 /** Never `authenticated` until the session has actually been checked. */
 export type AuthStatus = "loading" | "authenticated" | "unauthenticated";
 
@@ -56,7 +72,7 @@ export interface AuthContextValue {
   loading: boolean;
   isAuthenticated: boolean;
   login: (credentials: LoginCredentials) => Promise<AuthUser | null>;
-  register: (payload: RegisterPayload) => Promise<AuthUser | null>;
+  register: (payload: RegisterPayload) => Promise<RegisterOutcome>;
   logout: () => Promise<void>;
   requestPasswordReset: (email: string) => Promise<string>;
   resetPassword: (payload: ResetPasswordPayload) => Promise<string>;
