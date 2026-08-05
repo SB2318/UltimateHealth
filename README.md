@@ -1198,6 +1198,7 @@ We welcome contributions from everyone — developers, designers, writers, and t
     <td align="center"><a href="https://github.com/pisum-sativum"><img src="https://avatars.githubusercontent.com/u/169545299?v=4" width="120px;" alt=""/><br/><sub><b>Ankita Jha</b></sub></a></td>
        <td align="center"><a href="https://github.com/reddypnipun"><img src="https://avatars.githubusercontent.com/u/230384897?v=4" width="120px;" alt=""/><br/><sub><b>NIPUNKUMAR REDDY</b></sub></a></td>
      <td align="center"><a href="https://github.com/gauridhingra03"><img src="https://avatars.githubusercontent.com/u/202611157?v=4" width="120px;" alt=""/><br/><sub><b>gauridhingra03</b></sub></a></td>
+     <td align="center"><a href="https://github.com/udaycodespace"><img src="https://avatars.githubusercontent.com/u/211140575?v=4" width="120px;" alt=""/><br/><sub><b>SOMAPURAM UDAY</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
