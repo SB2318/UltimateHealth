@@ -33,7 +33,7 @@ export const useCheckUserHandleAvailability = (handle: string) => {
     queryKey: ['check-user-handle', trimmedHandle],
     queryFn: async () => {
       const response = await axios.post(CHECK_USER_HANDLE, {
-        userHandle: trimmedHandle,
+        user_handle: trimmedHandle,
       });
 
       return parseAvailabilityResponse(response.data);
