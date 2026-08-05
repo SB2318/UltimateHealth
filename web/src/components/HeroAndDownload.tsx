@@ -1,6 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+
+import { withBasePath } from "@/lib/basePath";
 
 type HeroAndDownloadProps = {
   onJoinTestFlight: () => void;
@@ -95,6 +98,10 @@ export default function HeroAndDownload({ onJoinTestFlight, onShowComingSoon }: 
                   <i className="fas fa-download" aria-hidden="true" />
                   Download App
                 </a>
+                <Link href={withBasePath("/articles")} className="uh-btn-secondary">
+                  <i className="fas fa-file-lines" aria-hidden="true" />
+                  Read Articles
+                </Link>
                 <a href="#features" className="uh-btn-secondary">
                   <i className="fas fa-play" aria-hidden="true" />
                   Explore Features
