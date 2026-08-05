@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/hooks/useAuth";
+import { safeRedirectPath } from "@/lib/auth/auth-helpers.js";
 import { withBasePath } from "@/lib/basePath";
 
 /** Where to land after signing in when no `next` param was supplied. */
@@ -58,12 +59,11 @@ export default function UserLoginPage() {
       });
 
       // Only same-origin paths are honoured, so a crafted `next` cannot bounce
-      // the user to another site after signing in.
-      const requested = searchParams?.get("next");
+      // the user to another site after signing in. A leading-slash test is not
+      // enough here — see safeRedirectPath for the shapes that defeat it.
       const destination =
-        requested && requested.startsWith("/") && !requested.startsWith("//")
-          ? requested
-          : withBasePath(DEFAULT_REDIRECT);
+        safeRedirectPath(searchParams?.get("next"), window.location.origin) ??
+        withBasePath(DEFAULT_REDIRECT);
 
       setTimeout(() => router.push(destination), 1000);
     } catch (err: unknown) {

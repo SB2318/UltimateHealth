@@ -136,6 +136,41 @@ export function readAuthSession(payload) {
 }
 
 /**
+ * Resolves a caller-supplied post-login destination to a safe same-origin path,
+ * or null when it points anywhere else.
+ *
+ * A `startsWith("/") && !startsWith("//")` check is NOT enough. Browsers treat a
+ * backslash as a path separator in http(s) URLs and strip control characters
+ * while parsing, so `/\evil.com`, `/\/evil.com` and `/<TAB>/evil.com` all
+ * navigate off-site despite passing that test. Resolving against the real origin
+ * and comparing origins is the only reliable check — plus a final guard against
+ * `/..//evil.com`, which resolves same-origin but yields a protocol-relative path.
+ *
+ * @param {unknown} candidate the untrusted `next` value
+ * @param {string} origin the current origin, e.g. `window.location.origin`
+ * @returns {string | null} a path safe to navigate to, or null
+ */
+export function safeRedirectPath(candidate, origin) {
+  if (!candidate || typeof candidate !== "string" || !origin) return null;
+
+  // Strip the characters a URL parser would drop, so they cannot smuggle a
+  // authority section past the leading-slash check.
+  const cleaned = candidate.replace(/[\u0000-\u001F\u007F]/g, "");
+  if (!cleaned.startsWith("/")) return null;
+
+  try {
+    const url = new URL(cleaned, origin);
+    if (url.origin !== origin) return null;
+
+    const path = `${url.pathname}${url.search}${url.hash}`;
+    if (path.startsWith("//")) return null;
+    return path;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Pulls the most useful message out of an error body, which may use `error`,
  * `message`, or nest either inside the `data` envelope.
  *

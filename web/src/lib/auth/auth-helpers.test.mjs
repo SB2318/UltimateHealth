@@ -5,11 +5,13 @@ import {
   isValidOtp,
   readApiErrorMessage,
   readAuthSession,
+  safeRedirectPath,
   unwrapEnvelope,
   validatePassword,
   validateUserHandle,
   validateUserName,
 } from "./auth-helpers.js";
+import { HOSTILE_REDIRECTS, SAFE_REDIRECTS } from "./redirect-vectors.mjs";
 
 test("accepts well-formed emails and rejects the rest", () => {
   assert.equal(isValidEmail("person@example.com"), true);
@@ -122,6 +124,34 @@ test("reports a missing session rather than throwing", () => {
     {user: null, token: null},
     "blank tokens do not count as a session"
   );
+});
+
+const ORIGIN = "https://uhsocial.in";
+
+test("keeps a same-origin redirect target intact", () => {
+  for (const { input, expected } of SAFE_REDIRECTS) {
+    assert.equal(safeRedirectPath(input, ORIGIN), expected, `input ${input}`);
+  }
+});
+
+test("rejects every known open-redirect shape", () => {
+  for (const { input, why } of HOSTILE_REDIRECTS) {
+    assert.equal(
+      safeRedirectPath(input, ORIGIN),
+      null,
+      `${JSON.stringify(input)} should be rejected — ${why}`
+    );
+  }
+});
+
+test("rejects a redirect to a different host on the same scheme", () => {
+  assert.equal(safeRedirectPath("//uhsocial.in.evil.example.com", ORIGIN), null);
+  assert.equal(safeRedirectPath("/path", "https://other.example.com"), "/path");
+});
+
+test("returns null rather than throwing without an origin", () => {
+  assert.equal(safeRedirectPath("/articles", ""), null);
+  assert.equal(safeRedirectPath("/articles", undefined), null);
 });
 
 test("surfaces the most useful API error message", () => {
