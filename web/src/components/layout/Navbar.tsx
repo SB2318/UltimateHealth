@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { PageWrapper } from "./index";
+import { useActiveRoute } from "@/hooks/use-active-route";
 import { withBasePath } from "@/lib/basePath";
 
 interface NavbarProps {
@@ -20,6 +21,13 @@ interface NavbarProps {
 export default function Navbar({ activeSection }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const isRouteActive = useActiveRoute();
+
+  // Route-based entries stay highlighted for the whole section, so "Read
+  // Articles" also reads as active on an individual article page.
+  const articlesActive = isRouteActive("/articles");
+  const glossaryActive = isRouteActive("/medical-glossary");
+  const contributeActive = isRouteActive("/contribute");
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -75,19 +83,31 @@ export default function Navbar({ activeSection }: NavbarProps) {
             </a>
           </li>
           <li>
-            <Link href={withBasePath("/articles")} className="nav-link-item">
+            <Link
+              href={withBasePath("/articles")}
+              className={`nav-link-item${articlesActive ? " active" : ""}`}
+              aria-current={articlesActive ? "page" : undefined}
+            >
               <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Read Articles</span>
             </Link>
           </li>
           <li>
-            <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
+            <Link
+              href={withBasePath("/medical-glossary")}
+              className={`nav-link-item${glossaryActive ? " active" : ""}`}
+              aria-current={glossaryActive ? "page" : undefined}
+            >
               <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Medical Glossary</span>
             </Link>
           </li>
           <li>
-            <Link href={withBasePath("/contribute")} className="nav-link-item">
+            <Link
+              href={withBasePath("/contribute")}
+              className={`nav-link-item${contributeActive ? " active" : ""}`}
+              aria-current={contributeActive ? "page" : undefined}
+            >
               <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Join Us to Contribute</span>
             </Link>
@@ -114,9 +134,30 @@ export default function Navbar({ activeSection }: NavbarProps) {
         <a href={withBasePath("/#screenshots")} onClick={() => setMobileMenuOpen(false)}>Screenshots</a>
         <a href={withBasePath("/#features")} onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
         <a href={withBasePath("/#programs")} onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-        <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
-        <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
-        <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
+        <Link
+          href={withBasePath("/articles")}
+          className={articlesActive ? "active" : undefined}
+          aria-current={articlesActive ? "page" : undefined}
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          Read Articles
+        </Link>
+        <Link
+          href={withBasePath("/medical-glossary")}
+          className={glossaryActive ? "active" : undefined}
+          aria-current={glossaryActive ? "page" : undefined}
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          Medical Glossary
+        </Link>
+        <Link
+          href={withBasePath("/contribute")}
+          className={contributeActive ? "active" : undefined}
+          aria-current={contributeActive ? "page" : undefined}
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          Join Us to Contribute
+        </Link>
         <a href={withBasePath("/#downloads")} onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
       </nav>
     </header>

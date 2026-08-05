@@ -8,12 +8,20 @@ import { PageWrapper } from '../layout'
 
 import { withBasePath } from '@/lib/basePath'
 import { ModeToggle } from '@/components/mode-toggle'
+import { useActiveRoute } from '@/hooks/use-active-route'
 import { useEffect, useMemo, useState } from 'react'
 
 export const Navbar = (props: { tracking_id: string[] }) => {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState<string>('')
+  const isRouteActive = useActiveRoute()
+
+  // Route-based entries stay highlighted for the whole section, so "Read
+  // Articles" also reads as active on an individual article page.
+  const articlesActive = isRouteActive('/articles')
+  const glossaryActive = isRouteActive('/medical-glossary')
+  const contributeActive = isRouteActive('/contribute')
   // useMemo stabilises the array reference so the IntersectionObserver
   // effect below doesn't re-run on every render (avoids infinite loop).
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,7 +138,11 @@ export const Navbar = (props: { tracking_id: string[] }) => {
               </a>
             </li>
             <li>
-              <Link href={withBasePath('/articles')} className="nav-link-item">
+              <Link
+                href={withBasePath('/articles')}
+                className={`nav-link-item${articlesActive ? ' active' : ''}`}
+                aria-current={articlesActive ? 'page' : undefined}
+              >
                 <i
                   className="fas fa-file-lines nav-item-icon"
                   aria-hidden="true"
@@ -141,7 +153,8 @@ export const Navbar = (props: { tracking_id: string[] }) => {
             <li>
               <Link
                 href={withBasePath('/medical-glossary')}
-                className="nav-link-item"
+                className={`nav-link-item${glossaryActive ? ' active' : ''}`}
+                aria-current={glossaryActive ? 'page' : undefined}
               >
                 <i
                   className="fas fa-book-medical nav-item-icon"
@@ -151,7 +164,11 @@ export const Navbar = (props: { tracking_id: string[] }) => {
               </Link>
             </li>
             <li>
-              <Link href={withBasePath('/contribute')} className="nav-link-item">
+              <Link
+                href={withBasePath('/contribute')}
+                className={`nav-link-item${contributeActive ? ' active' : ''}`}
+                aria-current={contributeActive ? 'page' : undefined}
+              >
                 <i
                   className="fas fa-users nav-item-icon"
                   aria-hidden="true"
@@ -181,28 +198,52 @@ export const Navbar = (props: { tracking_id: string[] }) => {
         </PageWrapper>
 
         <nav className={`mobile-nav${mobileMenuOpen ? ' open' : ''}`}>
-          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>
+          <a
+            href={withBasePath('/#screenshots')}
+            onClick={() => setMobileMenuOpen(false)}
+          >
             Screenshots
           </a>
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>
+          <a
+            href={withBasePath('/#features')}
+            onClick={() => setMobileMenuOpen(false)}
+          >
             Platform Highlights
           </a>
-          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>
+          <a
+            href={withBasePath('/#programs')}
+            onClick={() => setMobileMenuOpen(false)}
+          >
             Community Programs
           </a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noreferrer" onClick={() => setMobileMenuOpen(false)}>
-            Read Articles
-          </a>
           <Link
-            href="/medical-glossary"
+            href={withBasePath('/articles')}
+            className={articlesActive ? 'active' : undefined}
+            aria-current={articlesActive ? 'page' : undefined}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Read Articles
+          </Link>
+          <Link
+            href={withBasePath('/medical-glossary')}
+            className={glossaryActive ? 'active' : undefined}
+            aria-current={glossaryActive ? 'page' : undefined}
             onClick={() => setMobileMenuOpen(false)}
           >
             Medical Glossary
           </Link>
-          <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>
+          <Link
+            href={withBasePath('/contribute')}
+            className={contributeActive ? 'active' : undefined}
+            aria-current={contributeActive ? 'page' : undefined}
+            onClick={() => setMobileMenuOpen(false)}
+          >
             Join Us to Contribute
           </Link>
-          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>
+          <a
+            href={withBasePath('/#downloads')}
+            onClick={() => setMobileMenuOpen(false)}
+          >
             Login / Register
           </a>
         </nav>

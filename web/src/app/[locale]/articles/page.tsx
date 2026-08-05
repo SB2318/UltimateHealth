@@ -50,13 +50,12 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
   const totalPages = actualTotalPages;
   const currentPage = page;
 
-  return (<>
-    <Navbar /><main className="min-h-screen bg-[#f8fafc] text-slate-900 overflow-x-hidden">
+  return (
+    <>
+      <Navbar />
+      <main className="min-h-screen bg-[#f8fafc] text-slate-900 overflow-x-hidden">
 
       {/* ── Hero ── */}
-      </main>
-      </>
-  );
       <section className="relative w-full overflow-hidden bg-gradient-to-b from-[#eef2ff] to-[#f8fafc] pt-36 pb-24 px-4 flex justify-center border-b border-slate-100">
         {/* Decorative background blobs */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none opacity-60">
@@ -169,6 +168,9 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
           </Link>
         </PageWrapper>
       </footer>
+      </main>
+    </>
+  );
 }
 
 function ArticleCard({ article }: { article: ApiArticle }) {
