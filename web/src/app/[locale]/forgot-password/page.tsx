@@ -4,17 +4,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
-import { PageWrapper, Section } from "@/components/layout";
+import AuthShell, {
+  authErrorClass,
+  authFieldClass,
+  authLabelClass,
+  authLinkClass,
+  authSubmitClass,
+} from "@/components/auth/AuthShell";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
@@ -106,132 +104,183 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <Section as="main" className="flex min-h-screen items-center bg-slate-50 px-4 py-10 dark:bg-slate-950">
-      <PageWrapper className="flex max-w-md justify-center px-0">
-        <Card className="w-full rounded-lg shadow-sm">
-          <CardHeader className="items-center text-center">
-            <CardTitle className="text-xl font-semibold">
-              <h1>Reset your password</h1>
-            </CardTitle>
-            <CardDescription>
-              {step === "request"
-                ? "We'll email you a six-digit code to confirm it's you."
-                : `Enter the code sent to ${email} and choose a new password.`}
-            </CardDescription>
-          </CardHeader>
+    <AuthShell
+      title="Reset your password"
+      description={
+        step === "request"
+          ? "We'll email you a six-digit code to confirm it's you."
+          : `Enter the code sent to ${email} and choose a new password.`
+      }
+      footer={
+        <>
+          Remembered it?{" "}
+          <Link href={withBasePath("/login")} className={authLinkClass}>
+            Sign in
+          </Link>
+        </>
+      }
+    >
+      {/* Two steps, one route: the backend splits reset across
+          /user/forgotpassword and /user/verifypassword. */}
+      <ol
+        className="mb-6! flex items-center gap-3 text-[0.72rem]! font-semibold tracking-wide text-slate-400 uppercase dark:text-slate-500"
+        aria-label="Password reset progress"
+      >
+        {(["request", "verify"] as const).map((s2, i) => {
+          const active = step === s2;
+          const done = step === "verify" && s2 === "request";
+          return (
+            <li key={s2} className="flex flex-1 items-center gap-2">
+              <span
+                aria-current={active ? "step" : undefined}
+                className={
+                  "flex size-6 shrink-0 items-center justify-center rounded-full text-[0.7rem]! font-bold transition-colors " +
+                  (active || done
+                    ? "bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white"
+                    : "bg-slate-200 text-slate-500 dark:bg-white/10 dark:text-slate-400")
+                }
+              >
+                {i + 1}
+              </span>
+              <span className={active ? "text-slate-700 dark:text-slate-200" : undefined}>
+                {s2 === "request" ? "Your email" : "New password"}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
 
-          <form onSubmit={step === "request" ? handleRequest : handleVerify} noValidate>
-            <CardContent className="space-y-4">
-              {step === "request" ? (
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    aria-invalid={fieldError?.field === "email"}
-                    aria-describedby={fieldError?.field === "email" ? "reset-error" : undefined}
-                    autoComplete="email"
-                  />
-                </div>
-              ) : (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="otp">Verification code</Label>
-                    <Input
-                      id="otp"
-                      inputMode="numeric"
-                      maxLength={6}
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      aria-invalid={fieldError?.field === "otp"}
-                      aria-describedby={fieldError?.field === "otp" ? "reset-error" : undefined}
-                      autoComplete="one-time-code"
-                    />
-                  </div>
+      <form
+        onSubmit={step === "request" ? handleRequest : handleVerify}
+        noValidate
+        className="space-y-5!"
+      >
+        {step === "request" ? (
+          <div className="space-y-2!">
+            <Label htmlFor="email" className={authLabelClass}>
+              Email
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              aria-invalid={fieldError?.field === "email"}
+              aria-describedby={fieldError?.field === "email" ? "reset-error" : undefined}
+              autoComplete="email"
+              placeholder="you@example.com"
+              className={authFieldClass}
+            />
+          </div>
+        ) : (
+          <>
+            <div className="space-y-2!">
+              <Label htmlFor="otp" className={authLabelClass}>
+                Verification code
+              </Label>
+              <Input
+                id="otp"
+                inputMode="numeric"
+                maxLength={6}
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                aria-invalid={fieldError?.field === "otp"}
+                aria-describedby={fieldError?.field === "otp" ? "reset-error" : undefined}
+                autoComplete="one-time-code"
+                placeholder="123456"
+                className={`${authFieldClass} text-center! text-lg! font-semibold tracking-[0.5em]`}
+              />
+            </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="newPassword">New password</Label>
-                    <Input
-                      id="newPassword"
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      aria-invalid={fieldError?.field === "newPassword"}
-                      aria-describedby={
-                        fieldError?.field === "newPassword"
-                          ? "reset-error new-password-hint"
-                          : "new-password-hint"
-                      }
-                      autoComplete="new-password"
-                    />
-                    <p id="new-password-hint" className="text-sm text-muted-foreground">
-                      At least 8 characters, with an uppercase letter, a lowercase
-                      letter, a number and a special character.
-                    </p>
-                  </div>
-                </>
-              )}
-
-              {fieldError && (
-                <p id="reset-error" role="alert" className="text-sm text-destructive">
-                  {fieldError.message}
-                </p>
-              )}
-
-              {formError && (
-                <Alert variant="destructive" role="alert">
-                  <AlertTitle>Something went wrong</AlertTitle>
-                  <AlertDescription>{formError}</AlertDescription>
-                </Alert>
-              )}
-
-              {notice && (
-                <Alert role="status">
-                  <AlertTitle>Check your email</AlertTitle>
-                  <AlertDescription>{notice}</AlertDescription>
-                </Alert>
-              )}
-            </CardContent>
-
-            <CardFooter className="flex-col items-stretch gap-3">
-              <Button type="submit" disabled={submitting}>
-                {submitting && <Spinner size="sm" className="mr-1" />}
-                {step === "request"
-                  ? submitting
-                    ? "Sending code..."
-                    : "Send reset code"
-                  : submitting
-                    ? "Resetting..."
-                    : "Reset password"}
-              </Button>
-
-              {step === "verify" && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => {
-                    setStep("request");
-                    setNotice(null);
-                    setFormError(null);
-                    setFieldError(null);
-                  }}
-                >
-                  Use a different email
-                </Button>
-              )}
-
-              <p className="text-center text-sm text-muted-foreground">
-                Remembered it?{" "}
-                <Link href={withBasePath("/login")} className="underline">
-                  Sign in
-                </Link>
+            <div className="space-y-2!">
+              <Label htmlFor="newPassword" className={authLabelClass}>
+                New password
+              </Label>
+              <Input
+                id="newPassword"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                aria-invalid={fieldError?.field === "newPassword"}
+                aria-describedby={
+                  fieldError?.field === "newPassword"
+                    ? "reset-error new-password-hint"
+                    : "new-password-hint"
+                }
+                autoComplete="new-password"
+                className={authFieldClass}
+              />
+              <p
+                id="new-password-hint"
+                className="text-[0.75rem]! leading-relaxed text-slate-500 dark:text-slate-400"
+              >
+                At least 8 characters, with an uppercase letter, a lowercase letter, a
+                number and a special character.
               </p>
-            </CardFooter>
-          </form>
-        </Card>
-      </PageWrapper>
-    </Section>
+            </div>
+          </>
+        )}
+
+        {fieldError && (
+          <p id="reset-error" role="alert" className={authErrorClass}>
+            {fieldError.message}
+          </p>
+        )}
+
+        {formError && (
+          <Alert
+            variant="destructive"
+            role="alert"
+            className="rounded-xl border-rose-200/70 bg-rose-50/80 dark:border-rose-500/30 dark:bg-rose-500/10"
+          >
+            <AlertTitle className="text-[0.85rem]! font-semibold">
+              Something went wrong
+            </AlertTitle>
+            <AlertDescription className="text-[0.8rem]!">{formError}</AlertDescription>
+          </Alert>
+        )}
+
+        {notice && (
+          <Alert
+            role="status"
+            className="rounded-xl border-indigo-200/70 bg-indigo-50/80 dark:border-indigo-400/30 dark:bg-indigo-500/10"
+          >
+            <AlertTitle className="text-[0.85rem]! font-semibold">
+              Check your email
+            </AlertTitle>
+            <AlertDescription className="text-[0.8rem]!">{notice}</AlertDescription>
+          </Alert>
+        )}
+
+        <div className="space-y-2!">
+          <Button type="submit" disabled={submitting} className={authSubmitClass}>
+            {submitting && <Spinner size="sm" className="mr-2" />}
+            {step === "request"
+              ? submitting
+                ? "Sending code..."
+                : "Send reset code"
+              : submitting
+                ? "Resetting..."
+                : "Reset password"}
+          </Button>
+
+          {step === "verify" && (
+            <Button
+              type="button"
+              variant="ghost"
+              className="h-10! w-full rounded-xl text-[0.8rem]! text-slate-600 hover:bg-slate-100/70 dark:text-slate-300 dark:hover:bg-white/5"
+              onClick={() => {
+                setStep("request");
+                setNotice(null);
+                setFormError(null);
+                setFieldError(null);
+              }}
+            >
+              Use a different email
+            </Button>
+          )}
+        </div>
+      </form>
+    </AuthShell>
   );
 }

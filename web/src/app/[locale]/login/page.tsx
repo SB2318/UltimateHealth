@@ -5,17 +5,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { PageWrapper, Section } from "@/components/layout";
+import AuthShell, {
+  authFieldClass,
+  authLabelClass,
+  authLinkClass,
+  authSubmitClass,
+} from "@/components/auth/AuthShell";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
@@ -89,76 +86,92 @@ export default function UserLoginPage() {
     }
   };
 
+  const failed = message?.variant === "destructive";
+
   return (
-    <Section
-      as="main"
-      className="flex min-h-screen items-center bg-slate-50 px-4 py-10"
+    <AuthShell
+      title={t("heading")}
+      description={t("description")}
+      footer={
+        <>
+          New to UltimateHealth?{" "}
+          <Link href={withBasePath("/register")} className={authLinkClass}>
+            Create an account
+          </Link>
+        </>
+      }
     >
-      <PageWrapper className="flex max-w-md justify-center px-0">
-        <Card className="w-full rounded-lg shadow-sm">
-          <CardHeader className="items-center text-center">
-            <div className="mb-2 flex size-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
-              <span className="text-sm font-semibold" aria-hidden="true">
-                UH
-              </span>
-            </div>
-            <CardTitle className="text-xl font-semibold">
-              <h1>{t("heading")}</h1>
-            </CardTitle>
-            <CardDescription>{t("description")}</CardDescription>
-          </CardHeader>
+      <form id="loginForm" onSubmit={handleSubmit} className="space-y-5!">
+        <div className="space-y-2!">
+          <Label htmlFor="email" className={authLabelClass}>
+            {t("emailLabel")}
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            required
+            placeholder={t("emailPlaceholder")}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+            className={authFieldClass}
+          />
+        </div>
 
-          <form id="loginForm" onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">{t("emailLabel")}</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  required
-                  placeholder={t("emailPlaceholder")}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
+        <div className="space-y-2!">
+          <div className="flex items-baseline justify-between gap-3">
+            <Label htmlFor="password" className={authLabelClass}>
+              {t("passwordLabel")}
+            </Label>
+            <Link
+              href={withBasePath("/forgot-password")}
+              className={`${authLinkClass} text-[0.78rem]`}
+            >
+              Forgot password?
+            </Link>
+          </div>
+          <Input
+            id="password"
+            type="password"
+            required
+            placeholder={t("passwordPlaceholder")}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            className={authFieldClass}
+          />
+        </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">{t("passwordLabel")}</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  placeholder={t("passwordPlaceholder")}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+        {message && (
+          <Alert
+            id="msg"
+            variant={message.variant}
+            role="status"
+            className={
+              failed
+                ? "rounded-xl border-rose-200/70 bg-rose-50/80 dark:border-rose-500/30 dark:bg-rose-500/10"
+                : "rounded-xl border-indigo-200/70 bg-indigo-50/80 dark:border-indigo-400/30 dark:bg-indigo-500/10"
+            }
+          >
+            <AlertTitle className="text-[0.85rem] font-semibold">
+              {message.title}
+            </AlertTitle>
+            <AlertDescription className="text-[0.8rem]">
+              {message.description}
+            </AlertDescription>
+          </Alert>
+        )}
 
-              {message && (
-                <Alert id="msg" variant={message.variant} role="status">
-                  <AlertTitle>{message.title}</AlertTitle>
-                  <AlertDescription>{message.description}</AlertDescription>
-                </Alert>
-              )}
-            </CardContent>
-
-            <CardFooter className="flex-col items-stretch gap-3">
-              <Button type="submit" id="login-btn" disabled={loading}>
-                {loading && <Spinner size="sm" className="mr-1" />}
-                {loading ? t("submitButtonLoading") : t("submitButton")}
-              </Button>
-              <div className="flex flex-wrap justify-between gap-2 text-sm text-muted-foreground">
-                <Link href={withBasePath("/forgot-password")} className="underline">
-                  Forgot password?
-                </Link>
-                <Link href={withBasePath("/register")} className="underline">
-                  Create an account
-                </Link>
-              </div>
-            </CardFooter>
-          </form>
-        </Card>
-      </PageWrapper>
-    </Section>
+        <Button
+          type="submit"
+          id="login-btn"
+          disabled={loading}
+          className={authSubmitClass}
+        >
+          {loading && <Spinner size="sm" className="mr-2" />}
+          {loading ? t("submitButtonLoading") : t("submitButton")}
+        </Button>
+      </form>
+    </AuthShell>
   );
 }

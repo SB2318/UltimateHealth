@@ -3,17 +3,15 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 
-import { PageWrapper, Section } from "@/components/layout";
+import AuthShell, {
+  authErrorClass,
+  authFieldClass,
+  authLabelClass,
+  authLinkClass,
+  authSubmitClass,
+} from "@/components/auth/AuthShell";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -140,232 +138,267 @@ export default function RegisterPage() {
   };
 
   return (
-    <Section as="main" className="flex min-h-screen items-center bg-slate-50 px-4 py-10 dark:bg-slate-950">
-      <PageWrapper className="flex max-w-xl justify-center px-0">
-        <Card className="w-full rounded-lg shadow-sm">
-          <CardHeader className="items-center text-center">
-            <CardTitle className="text-xl font-semibold">
-              <h1>Create your account</h1>
-            </CardTitle>
-            <CardDescription>
-              Join UltimateHealth to publish health knowledge and follow the community.
-            </CardDescription>
-          </CardHeader>
-
-          <form onSubmit={handleSubmit} noValidate>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="user_name">Full name</Label>
+    <AuthShell
+      width="lg"
+      title="Create your account"
+      description="Join UltimateHealth to publish health knowledge and follow the community."
+      footer={
+        <>
+          Already have an account?{" "}
+          <Link href={withBasePath("/login")} className={authLinkClass}>
+            Sign in
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} noValidate className="space-y-5!">
+        <div className="grid gap-5 sm:grid-cols-2">
+              <div className="space-y-2!">
+                <Label htmlFor="user_name" className={authLabelClass}>
+                  Full name
+                </Label>
                 <Input
                   id="user_name"
+                  autoComplete="name"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
                   aria-invalid={Boolean(errors.user_name)}
                   aria-describedby={errors.user_name ? "user_name-error" : undefined}
-                  autoComplete="name"
+                  className={authFieldClass}
                 />
                 {errors.user_name && (
-                  <p id="user_name-error" role="alert" className="text-sm text-destructive">
+                  <p id="user_name-error" role="alert" className={authErrorClass}>
                     {errors.user_name}
                   </p>
                 )}
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="user_handle">Handle</Label>
+              <div className="space-y-2!">
+                <Label htmlFor="user_handle" className={authLabelClass}>
+                  Handle
+                </Label>
                 <Input
                   id="user_handle"
+                  placeholder="ada_lovelace"
+                  autoComplete="username"
                   value={userHandle}
                   onChange={(e) => setUserHandle(e.target.value)}
-                  placeholder="ada_lovelace"
                   aria-invalid={Boolean(errors.user_handle)}
                   aria-describedby={errors.user_handle ? "user_handle-error" : undefined}
-                  autoComplete="username"
+                  className={authFieldClass}
                 />
                 {errors.user_handle && (
-                  <p id="user_handle-error" role="alert" className="text-sm text-destructive">
+                  <p id="user_handle-error" role="alert" className={authErrorClass}>
                     {errors.user_handle}
                   </p>
                 )}
               </div>
+        </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+              <div className="space-y-2!">
+                <Label htmlFor="email" className={authLabelClass}>
+                  Email
+                </Label>
                 <Input
                   id="email"
                   type="email"
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   aria-invalid={Boolean(errors.email)}
                   aria-describedby={errors.email ? "email-error" : undefined}
-                  autoComplete="email"
+                  className={authFieldClass}
                 />
                 {errors.email && (
-                  <p id="email-error" role="alert" className="text-sm text-destructive">
+                  <p id="email-error" role="alert" className={authErrorClass}>
                     {errors.email}
                   </p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+        <div className="space-y-2!">
+          <Label htmlFor="password" className={authLabelClass}>
+            Password
+          </Label>
+          <Input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            aria-invalid={Boolean(errors.password)}
+            aria-describedby={
+              errors.password ? "password-error password-hint" : "password-hint"
+            }
+            autoComplete="new-password"
+            className={authFieldClass}
+          />
+          <p
+            id="password-hint"
+            className="text-[0.75rem]! leading-relaxed text-slate-500 dark:text-slate-400"
+          >
+            At least 8 characters, with an uppercase letter, a lowercase letter, a
+            number and a special character.
+          </p>
+          {errors.password && (
+            <p id="password-error" role="alert" className={authErrorClass}>
+              {errors.password}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-2!">
+          <Label htmlFor="contact_detail" className={authLabelClass}>
+            Contact number{isDoctor ? "" : " (optional)"}
+          </Label>
+          <Input
+            id="contact_detail"
+            inputMode="numeric"
+            value={contactDetail}
+            onChange={(e) => setContactDetail(e.target.value)}
+            aria-invalid={Boolean(errors.contact_detail)}
+            aria-describedby={errors.contact_detail ? "contact_detail-error" : undefined}
+            autoComplete="tel"
+            className={authFieldClass}
+          />
+          {errors.contact_detail && (
+            <p id="contact_detail-error" role="alert" className={authErrorClass}>
+              {errors.contact_detail}
+            </p>
+          )}
+        </div>
+
+        {/* Ticking this reveals the fields the backend requires only of doctors. */}
+        <label
+          htmlFor="isDoctor"
+          className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white/60 p-3.5! transition-colors hover:border-[#667eea]/50 hover:bg-indigo-50/50 dark:border-white/10 dark:bg-white/5 dark:hover:border-[#818cf8]/50 dark:hover:bg-white/[0.07]"
+        >
+          <Checkbox
+            id="isDoctor"
+            checked={isDoctor}
+            onCheckedChange={(checked) => {
+              const next = checked === true;
+              setIsDoctor(next);
+              // Errors raised by the doctor-only rules no longer apply, and a
+              // "doctors must provide a contact number" message under a field
+              // now labelled optional is just confusing.
+              if (!next) {
+                setErrors((current) => {
+                  const remaining = { ...current };
+                  for (const key of DOCTOR_ONLY_ERRORS) delete remaining[key];
+                  return remaining;
+                });
+              }
+            }}
+            className="data-[state=checked]:border-[#667eea] data-[state=checked]:bg-gradient-to-br data-[state=checked]:from-[#667eea] data-[state=checked]:to-[#764ba2]"
+          />
+          <span className="text-[0.85rem]! font-medium text-slate-700 dark:text-slate-200">
+            I am a medical professional
+          </span>
+        </label>
+
+        {isDoctor && (
+          <fieldset className="space-y-4! rounded-2xl border border-[#667eea]/25 bg-indigo-50/40 p-4! motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-top-2 motion-safe:duration-300 dark:border-[#818cf8]/20 dark:bg-white/[0.04]">
+            <legend className="px-2! text-[0.72rem]! font-bold tracking-wider text-[#5b6fe0] uppercase dark:text-[#a5b4fc]">
+              Professional details
+            </legend>
+
+              <div className="space-y-2!">
+                <Label htmlFor="qualification" className={authLabelClass}>
+                  Qualification
+                </Label>
                 <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  aria-invalid={Boolean(errors.password)}
-                  aria-describedby={
-                    errors.password ? "password-error password-hint" : "password-hint"
-                  }
-                  autoComplete="new-password"
+                  id="qualification"
+                  value={qualification}
+                  onChange={(e) => setQualification(e.target.value)}
+                  aria-invalid={Boolean(errors.qualification)}
+                  aria-describedby={errors.qualification ? "qualification-error" : undefined}
+                  className={authFieldClass}
                 />
-                <p id="password-hint" className="text-sm text-muted-foreground">
-                  At least 8 characters, with an uppercase letter, a lowercase letter,
-                  a number and a special character.
+                {errors.qualification && (
+                  <p id="qualification-error" role="alert" className={authErrorClass}>
+                    {errors.qualification}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2!">
+                <Label htmlFor="specialization" className={authLabelClass}>
+                  Specialization
+                </Label>
+                <Input
+                  id="specialization"
+                  value={specialization}
+                  onChange={(e) => setSpecialization(e.target.value)}
+                  aria-invalid={Boolean(errors.specialization)}
+                  aria-describedby={errors.specialization ? "specialization-error" : undefined}
+                  className={authFieldClass}
+                />
+                {errors.specialization && (
+                  <p id="specialization-error" role="alert" className={authErrorClass}>
+                    {errors.specialization}
+                  </p>
+                )}
+              </div>
+
+            <div className="space-y-2!">
+              <Label htmlFor="Years_of_experience" className={authLabelClass}>
+                Years of experience
+              </Label>
+              <Input
+                id="Years_of_experience"
+                type="number"
+                min={0}
+                max={60}
+                value={yearsOfExperience}
+                onChange={(e) => setYearsOfExperience(e.target.value)}
+                aria-invalid={Boolean(errors.Years_of_experience)}
+                aria-describedby={
+                  errors.Years_of_experience ? "Years_of_experience-error" : undefined
+                }
+                className={authFieldClass}
+              />
+              {errors.Years_of_experience && (
+                <p
+                  id="Years_of_experience-error"
+                  role="alert"
+                  className={authErrorClass}
+                >
+                  {errors.Years_of_experience}
                 </p>
-                {errors.password && (
-                  <p id="password-error" role="alert" className="text-sm text-destructive">
-                    {errors.password}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="contact_detail">
-                  Contact number{isDoctor ? "" : " (optional)"}
-                </Label>
-                <Input
-                  id="contact_detail"
-                  inputMode="numeric"
-                  value={contactDetail}
-                  onChange={(e) => setContactDetail(e.target.value)}
-                  aria-invalid={Boolean(errors.contact_detail)}
-                  aria-describedby={errors.contact_detail ? "contact_detail-error" : undefined}
-                  autoComplete="tel"
-                />
-                {errors.contact_detail && (
-                  <p id="contact_detail-error" role="alert" className="text-sm text-destructive">
-                    {errors.contact_detail}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Checkbox
-                  id="isDoctor"
-                  checked={isDoctor}
-                  onCheckedChange={(checked) => {
-                    const next = checked === true;
-                    setIsDoctor(next);
-                    // Errors raised by the doctor-only rules no longer apply, and
-                    // a "doctors must provide a contact number" message under a
-                    // field now labelled optional is just confusing.
-                    if (!next) {
-                      setErrors((current) => {
-                        const remaining = { ...current };
-                        for (const key of DOCTOR_ONLY_ERRORS) delete remaining[key];
-                        return remaining;
-                      });
-                    }
-                  }}
-                />
-                <Label htmlFor="isDoctor" className="font-normal">
-                  I am a medical professional
-                </Label>
-              </div>
-
-              {isDoctor && (
-                <fieldset className="space-y-4 rounded-md border p-4">
-                  <legend className="px-1 text-sm font-medium">
-                    Professional details
-                  </legend>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="qualification">Qualification</Label>
-                    <Input
-                      id="qualification"
-                      value={qualification}
-                      onChange={(e) => setQualification(e.target.value)}
-                      aria-invalid={Boolean(errors.qualification)}
-                      aria-describedby={errors.qualification ? "qualification-error" : undefined}
-                    />
-                    {errors.qualification && (
-                      <p id="qualification-error" role="alert" className="text-sm text-destructive">
-                        {errors.qualification}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="specialization">Specialization</Label>
-                    <Input
-                      id="specialization"
-                      value={specialization}
-                      onChange={(e) => setSpecialization(e.target.value)}
-                      aria-invalid={Boolean(errors.specialization)}
-                      aria-describedby={errors.specialization ? "specialization-error" : undefined}
-                    />
-                    {errors.specialization && (
-                      <p id="specialization-error" role="alert" className="text-sm text-destructive">
-                        {errors.specialization}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="Years_of_experience">Years of experience</Label>
-                    <Input
-                      id="Years_of_experience"
-                      type="number"
-                      min={0}
-                      max={60}
-                      value={yearsOfExperience}
-                      onChange={(e) => setYearsOfExperience(e.target.value)}
-                      aria-invalid={Boolean(errors.Years_of_experience)}
-                      aria-describedby={
-                        errors.Years_of_experience ? "Years_of_experience-error" : undefined
-                      }
-                    />
-                    {errors.Years_of_experience && (
-                      <p id="Years_of_experience-error" role="alert" className="text-sm text-destructive">
-                        {errors.Years_of_experience}
-                      </p>
-                    )}
-                  </div>
-                </fieldset>
               )}
+            </div>
+          </fieldset>
+        )}
 
-              {formError && (
-                <Alert variant="destructive" role="alert">
-                  <AlertTitle>Registration failed</AlertTitle>
-                  <AlertDescription>{formError}</AlertDescription>
-                </Alert>
-              )}
+        {formError && (
+          <Alert
+            variant="destructive"
+            role="alert"
+            className="rounded-xl border-rose-200/70 bg-rose-50/80 dark:border-rose-500/30 dark:bg-rose-500/10"
+          >
+            <AlertTitle className="text-[0.85rem]! font-semibold">
+              Registration failed
+            </AlertTitle>
+            <AlertDescription className="text-[0.8rem]!">{formError}</AlertDescription>
+          </Alert>
+        )}
 
-              {notice && (
-                <Alert role="status">
-                  <AlertTitle>Almost there</AlertTitle>
-                  <AlertDescription>{notice}</AlertDescription>
-                </Alert>
-              )}
-            </CardContent>
+        {notice && (
+          <Alert
+            role="status"
+            className="rounded-xl border-emerald-200/70 bg-emerald-50/80 dark:border-emerald-400/30 dark:bg-emerald-500/10"
+          >
+            <AlertTitle className="text-[0.85rem]! font-semibold">
+              Almost there
+            </AlertTitle>
+            <AlertDescription className="text-[0.8rem]!">{notice}</AlertDescription>
+          </Alert>
+        )}
 
-            <CardFooter className="flex-col items-stretch gap-3">
-              <Button type="submit" disabled={submitting}>
-                {submitting && <Spinner size="sm" className="mr-1" />}
-                {submitting ? "Creating account..." : "Create account"}
-              </Button>
-              <p className="text-center text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <Link href={withBasePath("/login")} className="underline">
-                  Sign in
-                </Link>
-              </p>
-            </CardFooter>
-          </form>
-        </Card>
-      </PageWrapper>
-    </Section>
+        <Button type="submit" disabled={submitting} className={authSubmitClass}>
+          {submitting && <Spinner size="sm" className="mr-2" />}
+          {submitting ? "Creating account..." : "Create account"}
+        </Button>
+      </form>
+    </AuthShell>
   );
 }
