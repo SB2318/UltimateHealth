@@ -15,6 +15,22 @@
     "serverErrorTitle": "Server error",
     "submitButton": "Login",
     "submitButtonLoading": "Logging in..."
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "heading": "404",
+    "description": "The page you're looking for seems to have wandered off. Let's help you find your way back to good health information.",
+    "goHome": "Go Home",
+    "browseArticles": "Browse Articles",
+    "medicalGlossary": "Medical Glossary"
+  },
+  "ErrorPage": {
+    "title": "Something Went Wrong",
+    "heading": "Oops!",
+    "description": "We hit an unexpected error while loading this page. Don't worry, our team has been notified. Please try again.",
+    "tryAgain": "Try Again",
+    "goHome": "Go Home"
   }
 }
+
 
