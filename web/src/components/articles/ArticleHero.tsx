@@ -1,4 +1,4 @@
-import Image from "next/image";
+
 import type { Article } from "@/types/article";
 import ArticleMeta from "./ArticleMeta";
 
@@ -25,13 +25,10 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
       {/* ── Hero image ── */}
       <div className="relative overflow-hidden bg-gradient-to-br from-[#667eea] to-[#764ba2] aspect-[16/9] md:aspect-[2.4/1] border-2 border-slate-400 mx-4 sm:mx-6 lg:mx-10 mt-3 rounded-3xl">
         {article.imageUrl ? (
-          <Image
+          <img
             src={article.imageUrl}
             alt={article.imageAlt}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
+            className="w-full h-full object-cover"
           />
         ) : (
           /* Gradient placeholder when no hero image is provided */

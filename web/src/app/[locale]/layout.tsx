@@ -83,6 +83,7 @@ export default async function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
+            nonce={nonce}
           >
             <AuthProvider>
               <TooltipProvider>{children}</TooltipProvider>
