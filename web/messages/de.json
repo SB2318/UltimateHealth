@@ -15,6 +15,21 @@
     "serverErrorTitle": "Serverfehler",
     "submitButton": "Anmelden",
     "submitButtonLoading": "Anmeldung läuft..."
+  },
+  "NotFound": {
+    "title": "Seite nicht gefunden",
+    "heading": "404",
+    "description": "Die gesuchte Seite scheint nicht mehr zu existieren. Wir helfen dir, den Weg zurück zu finden.",
+    "goHome": "Zur Startseite",
+    "browseArticles": "Artikel durchsuchen",
+    "medicalGlossary": "Medizinisches Glossar"
+  },
+  "ErrorPage": {
+    "title": "Etwas ist schiefgelaufen",
+    "heading": "Hoppla!",
+    "description": "Beim Laden dieser Seite ist ein unerwarteter Fehler aufgetreten. Unser Team wurde bereits informiert. Bitte versuche es erneut.",
+    "tryAgain": "Erneut versuchen",
+    "goHome": "Zur Startseite"
   }
 }
 
