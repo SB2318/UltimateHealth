@@ -1,4 +1,10 @@
 {
+  "cookie": {
+    "message": "We use cookies to improve your browsing experience, analyze site traffic, and personalize content.",
+    "accept": "Accept All",
+    "decline": "Decline",
+    "learnMore": "Learn More"
+},
   "Login": {
     "heading": "Login Required",
     "description": "Please log in to continue to account deletion.",
@@ -16,5 +22,6 @@
     "submitButton": "Login",
     "submitButtonLoading": "Logging in..."
   }
+  
 }
 

@@ -1,4 +1,10 @@
 {
+   "cookie": {
+    "message": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern.",
+    "accept": "Alle akzeptieren",
+    "decline": "Ablehnen",
+    "learnMore": "Mehr erfahren"
+},
   "Login": {
     "heading": "Anmeldung erforderlich",
     "description": "Bitte melden Sie sich an, um mit der Kontolöschung fortzufahren.",
@@ -16,5 +22,6 @@
     "submitButton": "Anmelden",
     "submitButtonLoading": "Anmeldung läuft..."
   }
+ 
 }
 
