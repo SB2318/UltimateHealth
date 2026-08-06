@@ -12,6 +12,7 @@ import {GlassStyles, ProfessionalColors, BorderRadius} from '../styles/GlassStyl
 import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import { PODCAST_CARD } from '@/constants/podcastCard';
+import { buildPodcastShareUrl } from '../helper/ShareUtils';
 
 interface PodcastProps {
   id: string;
@@ -64,8 +65,8 @@ const PodcastCard = ({
 
   const handleShare = async () => {
     try {
-      const url = `https://uhsocial.in/api/share/podcast?trackId=${id}&audioUrl=${audioUrl}`;
-      const result = await Share.open({
+const url = buildPodcastShareUrl(id, audioUrl);      
+const result = await Share.open({
         title: title,
         message: `${title} : Check out this awesome podcast on UltimateHealth app!`,
         url: url,
