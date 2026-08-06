@@ -17,11 +17,11 @@ export default function proxy(request: NextRequest) {
   const cspDirectives = [
     "default-src 'self'",
     isDev
-      ? "script-src 'self' 'unsafe-eval' 'unsafe-inline'"
-      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
-    "style-src 'self' 'unsafe-inline'",
-    "font-src 'self'",
-    "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com https://avatars.githubusercontent.com https://uhsocial.in",
+      ? "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.tailwindcss.com"
+      : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://cdn.tailwindcss.com`,
+    "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com",
+    "font-src 'self' data: https://cdnjs.cloudflare.com",
+    "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com https://avatars.githubusercontent.com https://uhsocial.in https://picsum.photos",
     "connect-src 'self' https://uhsocial.in https://api.github.com" + (isDev ? " http: ws:" : ""),
     "object-src 'none'",
     "base-uri 'self'",

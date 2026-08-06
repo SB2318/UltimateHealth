@@ -21,6 +21,21 @@
     "serverErrorTitle": "Erreur serveur",
     "submitButton": "Connexion",
     "submitButtonLoading": "Connexion en cours..."
+  },
+  "NotFound": {
+    "title": "Page introuvable",
+    "heading": "404",
+    "description": "La page que vous recherchez semble s'être égarée. Laissez-nous vous aider à retrouver votre chemin vers de bonnes informations de santé.",
+    "goHome": "Retour à l'accueil",
+    "browseArticles": "Parcourir les articles",
+    "medicalGlossary": "Glossaire médical"
+  },
+  "ErrorPage": {
+    "title": "Une erreur est survenue",
+    "heading": "Oups !",
+    "description": "Une erreur inattendue s'est produite lors du chargement de cette page. Ne vous inquiétez pas, notre équipe a été informée. Veuillez réessayer.",
+    "tryAgain": "Réessayer",
+    "goHome": "Retour à l'accueil"
   }
 }
 

@@ -21,6 +21,21 @@
     "serverErrorTitle": "Greška poslužitelja",
     "submitButton": "Prijava",
     "submitButtonLoading": "Prijava u tijeku..."
+  },
+  "NotFound": {
+    "title": "Stranica nije pronađena",
+    "heading": "404",
+    "description": "Čini se da je stranica koju tražite nestala. Pomoći ćemo vam pronaći put natrag do korisnih zdravstvenih informacija.",
+    "goHome": "Idi na početnu",
+    "browseArticles": "Pregledaj članke",
+    "medicalGlossary": "Medicinski pojmovnik"
+  },
+  "ErrorPage": {
+    "title": "Nešto je pošlo po zlu",
+    "heading": "Ups!",
+    "description": "Došlo je do neočekivane pogreške prilikom učitavanja ove stranice. Ne brinite, naš tim je obaviješten. Pokušajte ponovno.",
+    "tryAgain": "Pokušaj ponovno",
+    "goHome": "Idi na početnu"
   }
 }
 
