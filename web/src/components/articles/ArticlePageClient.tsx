@@ -24,6 +24,8 @@ const FONT_SIZE_MAP: Record<FontSize, number> = {
 interface ArticlePageClientProps {
   article: Article;
   relatedArticles: Article[];
+  /** Raw HTML content fetched from the get-article-content API endpoint */
+  htmlContent?: string;
 }
 
 /**
@@ -34,6 +36,7 @@ interface ArticlePageClientProps {
 export default function ArticlePageClient({
   article,
   relatedArticles,
+  htmlContent,
 }: ArticlePageClientProps) {
   const [fontSize, setFontSize] = useState<FontSize>("md");
 
@@ -86,7 +89,9 @@ export default function ArticlePageClient({
           {/* ── Article body ── */}
           <div
             id="article-body"
-            className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:grid lg:grid-cols-[1fr_250px] lg:gap-12"
+            className={`max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-12 ${
+              htmlContent ? "" : "lg:grid lg:grid-cols-[1fr_250px] lg:gap-12"
+            }`}
           >
             <div className="max-w-[740px] w-full">
               <article
@@ -94,19 +99,31 @@ export default function ArticlePageClient({
                 className="[font-size:var(--article-font-size)]"
                 style={{ "--article-font-size": `${FONT_SIZE_MAP[fontSize]}px` } as CSSProperties}
               >
-                <ArticleContent content={article.content} />
+                {htmlContent ? (
+                  /* Raw HTML from the API — rendered directly */
+                  <div
+                    className="article-html-content prose max-w-none"
+                    // The HTML comes from UH's own backend; content is controlled
+                    // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{ __html: htmlContent }}
+                  />
+                ) : (
+                  <ArticleContent content={article.content} />
+                )}
               </article>
 
               {/* ── Article footer: share + attribution ── */}
               <ArticleFooter article={article} />
             </div>
 
-            {/* ── Table of Contents Sidebar ── */}
-            <aside className="hidden lg:block lg:w-[250px] print:hidden">
-              <div className="sticky top-[var(--article-sticky-header-height)] max-h-[calc(100vh-var(--article-sticky-header-height))] overflow-y-auto pr-2">
-                <TableOfContents content={article.content} />
-              </div>
-            </aside>
+            {/* ── Table of Contents Sidebar (only for structured content) ── */}
+            {!htmlContent && (
+              <aside className="hidden lg:block lg:w-[250px] print:hidden">
+                <div className="sticky top-[var(--article-sticky-header-height)] max-h-[calc(100vh-var(--article-sticky-header-height))] overflow-y-auto pr-2">
+                  <TableOfContents content={article.content} />
+                </div>
+              </aside>
+            )}
           </div>
         </main>
 
