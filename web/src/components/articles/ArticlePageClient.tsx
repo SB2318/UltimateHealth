@@ -14,6 +14,7 @@ import RelatedArticles from "./RelatedArticles";
 import AccessibilityControls, { type FontSize } from "./AccessibilityControls";
 import TableOfContents from "./TableOfContents";
 import { ARTICLE_STICKY_HEADER_HEIGHT_PX } from "./article-layout.js";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const FONT_SIZE_MAP: Record<FontSize, number> = {
   sm: 16,
@@ -151,6 +152,9 @@ export default function ArticlePageClient({
         fontSize={fontSize}
         onFontSizeChange={setFontSize}
       />
+      </div>
+      <div className="print:hidden">
+        <ScrollToTop />
       </div>
     </GlossaryProvider>
   );
