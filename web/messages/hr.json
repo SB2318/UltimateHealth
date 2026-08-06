@@ -1,4 +1,10 @@
 {
+  "cookie": {
+    "message": "Koristimo kolačiće kako bismo poboljšali vaše iskustvo na našoj stranici.",
+    "accept": "Prihvati sve",
+    "decline": "Odbij",
+    "learnMore": "Saznaj više"
+},
   "Login": {
     "heading": "Potrebna prijava",
     "description": "Prijavite se za nastavak brisanja računa.",

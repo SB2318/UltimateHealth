@@ -12,6 +12,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
+import CookieConsent from "@/components/ui/cookie-consent";
 
 const interHeading = Inter({ subsets: ['latin'], variable: '--font-heading' })
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-sans' })
@@ -85,11 +86,10 @@ export default async function RootLayout({
             disableTransitionOnChange
             nonce={nonce}
           >
-            <AuthProvider>
-              <TooltipProvider>{children}</TooltipProvider>
-            </AuthProvider>
+            <TooltipProvider>{children} <CookieConsent /></TooltipProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
+        
       </body>
     </html>
   )

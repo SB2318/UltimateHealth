@@ -1,4 +1,10 @@
 {
+  "cookie": {
+    "message": "Nous utilisons des cookies pour améliorer votre expérience sur notre site.",
+    "accept": "Tout accepter",
+    "decline": "Refuser",
+    "learnMore": "En savoir plus"
+},
   "Login": {
     "heading": "Connexion requise",
     "description": "Veuillez vous connecter pour continuer la suppression du compte.",

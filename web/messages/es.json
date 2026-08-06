@@ -1,4 +1,10 @@
 {
+  "cookie": {
+    "message": "Utilizamos cookies para mejorar su experiencia en nuestro sitio.",
+    "accept": "Aceptar todo",
+    "decline": "Rechazar",
+    "learnMore": "Más información"
+},
   "Login": {
     "heading": "Inicio de sesión requerido",
     "description": "Inicia sesión para continuar con la eliminación de la cuenta.",
@@ -31,5 +37,6 @@
     "tryAgain": "Intentar de nuevo",
     "goHome": "Ir al inicio"
   }
+  
 }
 
