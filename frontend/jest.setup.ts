@@ -107,6 +107,7 @@ jest.mock('tamagui', () => {
   return {
     Theme: createMockComponent('Theme', React.Fragment),
     XStack: createMockComponent('XStack', RNView),
+    View: createMockComponent('View', RNView),
     YStack: createMockComponent('YStack', RNView),
     Text: createMockComponent('Text', RNText),
     ScrollView: createMockComponent('ScrollView', RNScrollView),
