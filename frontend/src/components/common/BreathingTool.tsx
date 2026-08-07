@@ -8,7 +8,7 @@ import {
   Easing,
   Alert
 } from 'react-native';
-import { format } from 'date-fns';
+import { getTodayDateString } from '../../lib/utils/wellnessUtils';
 import authAxios from '../../lib/api/authAxios';
 import { LOG_WELLNESS_API } from '../../lib/api/APIUtils';
 
@@ -151,19 +151,17 @@ export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps)
   };
 
   const submitSessionData = async (seconds: number) => {
-    console.log('submitSessionData called with seconds:', seconds);
     // Round up to ensure any session > 0s logs at least 1 minute
     const minutes = Math.ceil(seconds / 60);
-    console.log('minutes calculated:', minutes);
     if (minutes > 0) {
       try {
-        console.log('calling authAxios.post...');
         await authAxios.post(LOG_WELLNESS_API, {
-          date: format(new Date(), 'yyyy-MM-dd'),
+          date: getTodayDateString(),
           metrics: {breathingSessionMinutes: minutes},
         });
       } catch (error) {
-        console.error('Failed to log wellness metrics:', error);
+        // MAJOR-05: never log the full AxiosError (its headers carry the Bearer token)
+        console.error('Failed to log wellness metrics:', (error as {message?: string})?.message ?? error);
         Alert.alert('Session Log Failed', 'We could not save your breathing session metrics. Please check your network connection.');
       }
     }
@@ -177,7 +175,6 @@ export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps)
   };
 
   const handleCompleteSession = () => {
-    console.log('handleCompleteSession called. sessionElapsed:', sessionElapsed);
     setIsRunning(false);
     setIsPaused(false);
     setIsCompleted(true);

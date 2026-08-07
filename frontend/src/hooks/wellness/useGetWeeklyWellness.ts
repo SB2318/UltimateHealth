@@ -13,7 +13,9 @@ export const useGetWeeklyWellness = (
     queryFn: async () => {
       const response = await authAxios.get(GET_WELLNESS_WEEKLY_API);
       const body = response.data as WeeklyWellnessResponse;
-      return body.data ?? [];
+      // MAJOR-04: the GET response is a runtime contract, not a compile-time one.
+      if (body?.success === false) throw new Error('Failed to load wellness data');
+      return Array.isArray(body?.data) ? body.data : [];
     },
     enabled: isConnected,
   });

@@ -108,4 +108,26 @@ describe('WellnessDashboardScreen - Manual Log Form', () => {
     expect(getByTestId('log-failed')).toBeTruthy();
     expect(getByTestId('log-failed').props.children).toContain('Failed to save log. Please try again.');
   });
+
+  it('rejects an all-empty submit instead of fabricating success (MAJOR-02)', () => {
+    const { getByTestId, getByText } = render(<WellnessDashboardScreen />);
+
+    fireEvent.press(getByTestId('log-submit'));
+
+    expect(getByText('Enter at least one metric to log today.')).toBeTruthy();
+    expect(mockMutate).not.toHaveBeenCalled();
+  });
+
+  it('renders today\'s metric cards without crashing when a weekly log lacks a `metrics` key (MAJOR-01)', () => {
+    useGetWeeklyWellness.mockReturnValue({
+      data: [{ userId: 'u1', date: '2026-08-07' }], // no metrics
+      isLoading: false,
+      isError: false,
+      refetch: jest.fn(),
+    });
+
+    const { getByText } = render(<WellnessDashboardScreen />);
+
+    expect(getByText("Today's Metrics")).toBeTruthy();
+  });
 });

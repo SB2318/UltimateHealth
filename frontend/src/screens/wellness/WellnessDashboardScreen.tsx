@@ -11,7 +11,7 @@ import { useAppSelector } from '../../store/hooks';
 import { useGetWeeklyWellness } from '../../hooks/wellness/useGetWeeklyWellness';
 import { useLogWellness } from '../../hooks/wellness/useLogWellness';
 import { wellnessLogPayloadSchema } from '../../schemas/zod/wellnessSchemas';
-import { buildChartData, calculateDashboardScore, formatMetricValue, metricGoal, getTodayLog } from '../../lib/utils/wellnessUtils';
+import { buildChartData, calculateDashboardScore, formatMetricValue, metricGoal, getTodayDateString, getTodayLog } from '../../lib/utils/wellnessUtils';
 
 const WellnessDashboardScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -42,7 +42,7 @@ const WellnessDashboardScreen = () => {
 
   const handleLogSubmit = () => {
     const parsed = wellnessLogPayloadSchema.safeParse({
-      date: new Date().toISOString().split('T')[0],
+      date: getTodayDateString(),
       metrics: {
         steps: stepsInput === '' ? undefined : Number(stepsInput),
         waterMl: waterInput === '' ? undefined : Number(waterInput),
@@ -55,53 +55,60 @@ const WellnessDashboardScreen = () => {
       setLogError(`${String(firstIssue.path[1] ?? 'metrics')}: ${firstIssue.message}`);
       return;
     }
+    // MAJOR-02: reject an all-empty submission — otherwise a `{date, metrics:{}}`
+    // payload renders as a fabricated "Log saved" and a 0-valued row.
+    if (Object.values(parsed.data.metrics ?? {}).every(v => v === undefined)) {
+      setLogError('Enter at least one metric to log today.');
+      return;
+    }
     setLogError('');
     logMutation.mutate(parsed.data);
   };
 
   const todayLog = getTodayLog(weeklyLogs);
+  const todayMetrics = todayLog?.metrics ?? {}; // server rows may omit `metrics` (MAJOR-01)
   const wellnessScore = calculateDashboardScore(weeklyLogs);
 
   const metrics = [
     {
       id: 'steps',
       title: 'Steps',
-      value: formatMetricValue('steps', todayLog?.metrics.steps ?? 0),
+      value: formatMetricValue('steps', todayMetrics.steps ?? 0),
       target: '/ 10,000 steps',
-      progress: metricGoal('steps', todayLog?.metrics.steps ?? 0),
+      progress: metricGoal('steps', todayMetrics.steps ?? 0),
       icon: 'walk',
       color: '#4CAF50',
-      description: `${Math.round((metricGoal('steps', todayLog?.metrics.steps ?? 0)) * 100)}% of daily goal`
+      description: `${Math.round((metricGoal('steps', todayMetrics.steps ?? 0)) * 100)}% of daily goal`
     },
     {
       id: 'sleep',
       title: 'Sleep',
-      value: formatMetricValue('sleepHours', todayLog?.metrics.sleepHours ?? 0),
+      value: formatMetricValue('sleepHours', todayMetrics.sleepHours ?? 0),
       target: '/ 8.0 hrs',
-      progress: metricGoal('sleepHours', todayLog?.metrics.sleepHours ?? 0),
+      progress: metricGoal('sleepHours', todayMetrics.sleepHours ?? 0),
       icon: 'moon',
       color: '#9C27B0',
-      description: `${Math.round(metricGoal('sleepHours', todayLog?.metrics.sleepHours ?? 0) * 100)}% of daily goal`
+      description: `${Math.round(metricGoal('sleepHours', todayMetrics.sleepHours ?? 0) * 100)}% of daily goal`
     },
     {
       id: 'hydration',
       title: 'Hydration',
-      value: formatMetricValue('waterMl', todayLog?.metrics.waterMl ?? 0),
+      value: formatMetricValue('waterMl', todayMetrics.waterMl ?? 0),
       target: '/ 2.5L total',
-      progress: metricGoal('waterMl', todayLog?.metrics.waterMl ?? 0),
+      progress: metricGoal('waterMl', todayMetrics.waterMl ?? 0),
       icon: 'water',
       color: '#2196F3',
-      description: `${Math.round(metricGoal('waterMl', todayLog?.metrics.waterMl ?? 0) * 100)}% of daily goal`
+      description: `${Math.round(metricGoal('waterMl', todayMetrics.waterMl ?? 0) * 100)}% of daily goal`
     },
     {
       id: 'active',
       title: 'Active Minutes',
-      value: formatMetricValue('activeMinutes', todayLog?.metrics.activeMinutes ?? 0),
+      value: formatMetricValue('activeMinutes', todayMetrics.activeMinutes ?? 0),
       target: '/ 30 min',
-      progress: metricGoal('activeMinutes', todayLog?.metrics.activeMinutes ?? 0),
+      progress: metricGoal('activeMinutes', todayMetrics.activeMinutes ?? 0),
       icon: 'fitness',
       color: '#F44336',
-      description: `${Math.round(metricGoal('activeMinutes', todayLog?.metrics.activeMinutes ?? 0) * 100)}% of daily goal`
+      description: `${Math.round(metricGoal('activeMinutes', todayMetrics.activeMinutes ?? 0) * 100)}% of daily goal`
     }
   ];
 

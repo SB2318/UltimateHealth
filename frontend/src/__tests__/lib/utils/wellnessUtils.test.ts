@@ -102,7 +102,7 @@ describe('getTodayLog', () => {
       {userId: 'u1', date: '2026-08-08', metrics: {steps: 200}},
     ];
 
-    const today = getTodayLog(logs, new Date('2026-08-07T12:00:00Z'));
+    const today = getTodayLog(logs, new Date('2026-08-07T12:00:00'));
     expect(today?.date).toBe('2026-08-07');
     expect(today?.metrics.steps).toBe(10000);
   });
@@ -112,6 +112,6 @@ describe('getTodayLog', () => {
       {userId: 'u1', date: '2026-08-06', metrics: {steps: 100}},
     ];
 
-    expect(getTodayLog(logs, new Date('2026-08-07T12:00:00Z'))).toBeNull();
+    expect(getTodayLog(logs, new Date('2026-08-07T12:00:00'))).toBeNull();
   });
 });

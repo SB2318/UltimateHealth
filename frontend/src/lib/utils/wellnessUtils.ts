@@ -1,6 +1,14 @@
 import {WellnessLog} from '../../schemas/type';
+import {format} from 'date-fns';
 
 const DAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+/**
+ * Today's date as YYYY-MM-DD in LOCAL time (single source of truth for the
+ * dashboard form, getTodayLog, and BreathingTool). Using the same convention
+ * everywhere keeps sessions attributed to the user's own calendar day.
+ */
+export const getTodayDateString = (today: Date = new Date()): string => format(today, 'yyyy-MM-dd');
 
 /** Format metric value for compact display: steps '8,450', waterMl -> '1.8L', hours '7.5h'. */
 export const formatMetricValue = (key: string, value: number): string => {
@@ -45,6 +53,6 @@ export const calculateDashboardScore = (logs: WellnessLog[]): number => {
 
 /** Today's log (date === today) or null. */
 export const getTodayLog = (logs: WellnessLog[], today = new Date()): WellnessLog | null => {
-  const todayStr = today.toISOString().slice(0, 10);
+  const todayStr = getTodayDateString(today);
   return logs.find(l => l.date === todayStr) ?? null;
 };
