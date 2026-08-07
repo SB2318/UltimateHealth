@@ -910,7 +910,8 @@ useEffect(() => {
       <View style={styles.articleContainer}>
         <FlashList
           data={listData}
-          estimatedItemSize={100}
+          estimatedItemSize={380}
+          drawDistance={300}
           renderItem={renderItem}
           keyExtractor={(item:any) => item._id.toString()}
           contentContainerStyle={styles.flatListContentContainer}
