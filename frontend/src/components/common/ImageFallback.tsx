@@ -1,13 +1,16 @@
  
 // @ts-nocheck
 import React, { useState } from 'react';
-import { Image, ImageProps, ImageSourcePropType } from 'react-native';
+import { Image, ImageProps } from 'expo-image';
+import { ImageSourcePropType } from 'react-native';
 
-interface ImageFallbackProps extends ImageProps {
-  fallbackSource: ImageSourcePropType;
+interface ImageFallbackProps extends Omit<ImageProps, 'source'> {
+  source: any;
+  fallbackSource?: ImageSourcePropType;
+  resizeMode?: any;
 }
 
-export const ImageFallback = ({ source, fallbackSource, style, ...props }: ImageFallbackProps) => {
+export const ImageFallback = ({ source, fallbackSource, style, resizeMode, ...props }: ImageFallbackProps) => {
   const [hasError, setHasError] = useState(false);
 
   // Check if the primary source is a valid URI object, or a valid local file (number)
@@ -18,9 +21,15 @@ export const ImageFallback = ({ source, fallbackSource, style, ...props }: Image
   // If the primary URI is invalid from the start, or an error occurred, use the fallback
   const finalSource = (!isPrimaryUriValid || hasError) ? fallbackSource : source;
 
+  const contentFit = props.contentFit || (resizeMode as any) || 'cover';
+
   return (
     <Image
       source={finalSource}
+      placeholder={fallbackSource}
+      cachePolicy="disk"
+      transition={150}
+      contentFit={contentFit}
       onError={(e: any) => {
         // Only trigger our error state if the original URI was theoretically valid
         if (isPrimaryUriValid) {

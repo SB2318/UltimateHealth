@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Alert, useColorScheme, FlatList, RefreshControl, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Alert, useColorScheme, FlatList, RefreshControl, TouchableOpacity, Platform } from 'react-native';
 import React, {useCallback, useState, useMemo} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
@@ -167,6 +167,10 @@ const ContentListScreen = ({navigation, route}: Props) => {
         }
         ListHeaderComponent={renderTabs()}
         ListEmptyComponent={renderEmptyComponent}
+        initialNumToRender={5}
+        maxToRenderPerBatch={5}
+        windowSize={5}
+        removeClippedSubviews={Platform.OS === 'android'}
       />
     </SafeAreaView>
   );

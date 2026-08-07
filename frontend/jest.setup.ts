@@ -85,6 +85,24 @@ jest.mock('expo-secure-store', () => ({
   deleteItemAsync: jest.fn(),
 }));
 
+jest.mock('expo-image', () => {
+  const React = require('react');
+  const { Image: RNImage } = require('react-native');
+
+  const Image = React.forwardRef(({ source, placeholder, cachePolicy, transition, contentFit, ...props }: any, ref: any) => {
+    return React.createElement(RNImage, {
+      ...props,
+      ref,
+      source,
+      onError: props.onError,
+    });
+  });
+
+  return {
+    Image,
+  };
+});
+
 
 jest.mock('@sentry/react-native', () => ({
   init: jest.fn(),
