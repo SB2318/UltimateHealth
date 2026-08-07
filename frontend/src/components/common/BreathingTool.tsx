@@ -8,8 +8,9 @@ import {
   Easing,
   Alert
 } from 'react-native';
+import { format } from 'date-fns';
 import authAxios from '../../lib/api/authAxios';
-import { LOG_WELLNESS_METRICS } from '../../lib/api/APIUtils';
+import { LOG_WELLNESS_API } from '../../lib/api/APIUtils';
 
 type Mode = '4-7-8' | 'Box';
 type Phase = 'Inhale' | 'Hold' | 'Exhale' | 'Hold (Empty)';
@@ -157,8 +158,9 @@ export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps)
     if (minutes > 0) {
       try {
         console.log('calling authAxios.post...');
-        await authAxios.post(LOG_WELLNESS_METRICS, {
-          breathingSessionMinutes: minutes,
+        await authAxios.post(LOG_WELLNESS_API, {
+          date: format(new Date(), 'yyyy-MM-dd'),
+          metrics: {breathingSessionMinutes: minutes},
         });
       } catch (error) {
         console.error('Failed to log wellness metrics:', error);
