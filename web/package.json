@@ -6,7 +6,7 @@
     "dev": "node --no-warnings node_modules/next/dist/bin/next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --no-warnings --test src/app/[locale]/admin-agreement/signatureValidation.test.mjs src/app/api/csp-report/sanitizeCspReport.test.mjs src/components/articles/article-layout.test.mjs src/lib/api.test.mjs src/lib/nav-active.test.mjs src/lib/auth/auth-helpers.test.mjs",
+    "test": "node --no-warnings --test src/proxy.test.mjs src/app/[locale]/admin-agreement/signatureValidation.test.mjs src/app/api/csp-report/sanitizeCspReport.test.mjs src/components/articles/article-layout.test.mjs src/lib/api.test.mjs src/lib/nav-active.test.mjs src/lib/auth/auth-helpers.test.mjs",
     "lint": "eslint",
     "knip": "knip",
     "knip:deps": "knip --dependencies",
