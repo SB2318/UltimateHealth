@@ -1202,6 +1202,10 @@ We welcome contributions from everyone — developers, designers, writers, and t
      <td align="center"><a href="https://github.com/Anijesh"><img src="https://avatars.githubusercontent.com/u/190940845?v=4" width="120px;" alt=""/><br/><sub><b>Anijesh Kumar</b></sub></a></td>
      <td align="center"><a href="https://github.com/sureshsuriya"><img src="https://avatars.githubusercontent.com/u/115452537?v=4" width="120px;" alt=""/><br/><sub><b>Suresh</b></sub></a></td>
  </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/Yuvraj-Sarathe"><img src="https://avatars.githubusercontent.com/u/216678101?v=4" width="120px;" alt=""/><br/><sub><b>Yuvraj Sarathe</b></sub></a></td>
+   </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
