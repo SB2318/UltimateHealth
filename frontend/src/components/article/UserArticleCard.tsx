@@ -11,7 +11,9 @@ import {
 } from 'react-native';
 import { ArticleCardProps, ArticleData } from '../../schemas/type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { PRIMARY_COLOR } from '../../lib/ui/Theme';
+import { getReadTime } from '../../lib/utils/readTime';
 
 const { width } = Dimensions.get('window');
 
@@ -66,9 +68,18 @@ const UserArticleCard = ({
             <Text style={[styles.authorName, { color: isDarkMode ? '#F9FAFB' : '#111827' }]}>
               {authorName}
             </Text>
-            <Text style={[styles.metaText, { color: isDarkMode ? '#9CA3AF' : '#6B7280' }]}>
-              {item.status === 'published' ? 'Published' : 'Draft'} • {item.lastUpdated ? new Date(item.lastUpdated).toLocaleDateString() : 'Recent'}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
+              <Text style={[styles.metaText, { color: isDarkMode ? '#9CA3AF' : '#6B7280' }]}>
+                {item.status === 'published' ? 'Published' : 'Draft'} • {item.lastUpdated ? new Date(item.lastUpdated).toLocaleDateString() : 'Recent'}
+              </Text>
+              <Text style={[styles.metaText, { color: isDarkMode ? '#9CA3AF' : '#6B7280' }]}> • </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
+                <Ionicons name="time-outline" size={12} color={isDarkMode ? '#9CA3AF' : '#6B7280'} style={{ marginRight: 4 }} />
+                <Text style={[styles.metaText, { color: isDarkMode ? '#9CA3AF' : '#6B7280', marginTop: 0 }]}>
+                  {getReadTime(item.content || item.body || item.description || item.title || '')}
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
         

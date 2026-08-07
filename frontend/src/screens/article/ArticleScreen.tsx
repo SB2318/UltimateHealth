@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
- 
+
 import {
   Image,
   Platform,
@@ -14,7 +14,6 @@ import {
  ScrollView } from 'react-native';
 import ArticleShareModal from '../../components/article/ArticleShareModal';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -45,11 +44,9 @@ import {
 } from '../../lib/utils/Utils';
 //import CommentScreen from '../CommentScreen';
 import Tts from 'react-native-tts';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import SpeedSelector from '../../components/podcast/FloatingSpeedSelector';
 
 import {setUserHandle} from '../../store/UserSlice';
-import {FontAwesome5} from '@expo/vector-icons';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 import LottieView from 'lottie-react-native';
 
@@ -78,6 +75,8 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated';
+import { useTheme } from 'tamagui';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 const CHUNK_SIZE = 120;
@@ -114,6 +113,53 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
   const {user_id, isGuest} = useAppSelector((state: any) => state.user);
   const isDarkMode = useColorScheme() === 'dark';
+  const theme = useTheme();
+
+  const themeColors = {
+    background: isDarkMode ? '#121212' : '#ffffff',
+    card: isDarkMode ? '#1f2937' : '#ffffff',
+    border: isDarkMode ? '#374151' : '#e5e7eb',
+    text: isDarkMode ? '#ffffff' : '#111827',
+    textSecondary: isDarkMode ? '#9ca3af' : '#6b7280',
+    iconBackground: isDarkMode ? '#374151' : '#f3f4f6',
+    imageBackground: isDarkMode ? '#000000' : '#000000',
+    floatingButtonBg: isDarkMode ? 'rgba(31, 41, 55, 0.88)' : 'rgba(255, 255, 255, 0.88)',
+    shadowColor: isDarkMode ? '#000000' : '#000000',
+    
+    // Readability indicators
+    readabilityBadgeBg: isDarkMode ? '#1e3a8a' : '#E3F2FD',
+    readabilityBadgeText: isDarkMode ? '#93c5fd' : '#1565C0',
+    scoreBadgeBg: isDarkMode ? '#581c87' : '#F3E5F5',
+    scoreBadgeText: isDarkMode ? '#d8b4fe' : '#6A1B9A',
+    approvedBg: isDarkMode ? '#14532d' : '#E8F5E9',
+    approvedText: isDarkMode ? '#4ade80' : '#2E7D32',
+    needsImprovementBg: isDarkMode ? '#7c2d12' : '#FFF3E0',
+    needsImprovementText: isDarkMode ? '#fb923c' : '#EF6C00',
+    
+    // Font size controls
+    buttonBorder: isDarkMode ? '#374151' : '#D0D0D0',
+    buttonBg: isDarkMode ? '#1f2937' : '#FFFFFF',
+    buttonText: isDarkMode ? '#ffffff' : '#333333',
+    buttonTextActive: '#FFFFFF',
+    
+    // Avatars
+    avatarBorder: isDarkMode ? '#121212' : '#ffffff',
+    avatarBg: isDarkMode ? '#374151' : '#f1f5f9',
+    
+    // Author row & actions in footer
+    footerBackground: isDarkMode ? '#111827' : '#ffffff',
+    footerBorder: isDarkMode ? '#1f2937' : '#E5E5E5',
+    footerPillBackground: isDarkMode ? '#1f2937' : '#F3F4F6',
+    footerActivePillBackground: isDarkMode ? '#3b82f6' : '#EFF6FF',
+    footerText: isDarkMode ? '#d1d5db' : '#4b5563',
+    
+    // TTS Player
+    ttsBg: isDarkMode ? '#0f172a' : '#ffffff',
+    ttsBorder: isDarkMode ? '#1e293b' : '#e2e8f0',
+    ttsText: isDarkMode ? '#f8fafc' : '#0f172a',
+    ttsControlButtonBg: isDarkMode ? '#ffffff15' : '#00000010',
+    ttsStopColor: '#e53935',
+  };
   const [readEventSave, setReadEventSave] = useState(false);
   const [fontSizeOption, setFontSizeOption] = useState<FontSizeOption>('medium');
  // const [fontScale, setFontScale] = useState(1);
@@ -274,6 +320,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const fontScale = FONT_SIZE_SCALES[fontSizeOption];
   const likedUsers = article?.likedUsers ?? [];
   const totalLikes = likedUsers.length;
+  const isLiked = !!user_id && likedUsers.some(user => user._id === user_id);
 
   const trustUsers = article?.trustUsers ?? [];
   const trustCount = trustUsers.length;
@@ -967,7 +1014,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   if (articleLoading) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, {backgroundColor: themeColors.background}]}>
         <BaseEmptyState
           iconEmoji="📄"
           title="Loading Article"
@@ -980,7 +1027,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   if (articleError || !article) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[styles.container, {backgroundColor: themeColors.background}]}>
         <NoArticleState onRefresh={refetch} />
       </SafeAreaView>
     );
@@ -990,11 +1037,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const articleCustomStyle = generateArticleStyles(isDyslexiaMode, isDarkMode, articleFontSize);
 
   const footerColors = {
-    background: isDarkMode ? '#111827' : '#ffffff',
-    border: isDarkMode ? '#1f2937' : '#E5E5E5',
-    pillBackground: isDarkMode ? '#1f2937' : '#F3F4F6',
-    activePillBackground: isDarkMode ? '#3b82f6' : '#EFF6FF',
-    text: isDarkMode ? '#d1d5db' : '#4b5563',
+    background: themeColors.footerBackground,
+    border: themeColors.footerBorder,
+    pillBackground: themeColors.footerPillBackground,
+    activePillBackground: themeColors.footerActivePillBackground,
+    text: themeColors.footerText,
     activeText: PRIMARY_COLOR,
   };
 
@@ -1002,23 +1049,23 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     <ErrorBoundary
       onRetry={() => refetch()}
       fallback={
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, {backgroundColor: themeColors.background}]}>
           <NoArticleState onRefresh={() => refetch()} />
         </SafeAreaView>
       }>
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {backgroundColor: themeColors.background}]}>
       {/* Reading Progress Bar */}
       <Animated.View style={[styles.progressBar, progressStyle]} />
 
       <Animated.ScrollView
         ref={scrollViewRef}
-        style={styles.scrollView}
+        style={[styles.scrollView, {backgroundColor: themeColors.background}]}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         contentContainerStyle={styles.scrollViewContent}>
 
         {/* Banner Image — scrolls with article */}
-        <View style={styles.imageContainer}>
+        <View style={[styles.imageContainer, {backgroundColor: themeColors.imageBackground}]}>
           {article && article?.imageUtils && article?.imageUtils.length > 0 ? (
             <Image
               source={{
@@ -1039,17 +1086,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           ) : (
             <TouchableOpacity
               onPress={handleLike}
-              style={[styles.likeButton, { backgroundColor: 'rgba(255,255,255,0.88)' }]}>
-              <FontAwesome
-                name="heart"
+              style={[styles.likeButton, { backgroundColor: themeColors.floatingButtonBg }]}>
+              <Ionicons
+                name={isLiked ? 'heart' : 'heart-outline'}
                 size={26}
-                color={
-                  article &&
-                  article?.likedUsers &&
-                  article?.likedUsers?.some(user => user._id === user_id)
-                    ? PRIMARY_COLOR
-                    : '#1f2937'
-                }
+                color={isLiked ? PRIMARY_COLOR : themeColors.text}
               />
             </TouchableOpacity>
           )}
@@ -1062,11 +1103,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 handleTtsPlay();
               }
             }}
-            style={[styles.playButton, { backgroundColor: 'rgba(255,255,255,0.88)' }]}>
-            <FontAwesome5
-              name={'headphones'}
+            style={[styles.playButton, { backgroundColor: themeColors.floatingButtonBg }]}>
+            <Ionicons
+              name="headset"
               size={24}
-              color={playerVisible ? PRIMARY_COLOR : '#1f2937'}
+              color={playerVisible ? PRIMARY_COLOR : themeColors.text}
             />
           </TouchableOpacity>
 
@@ -1089,6 +1130,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 {
                   marginBottom: 10,
                   fontSize: 14 * fontScale,
+                  color: themeColors.textSecondary,
                 },
               ]}>
               {`${article?.viewCount ?? 0} ${
@@ -1107,6 +1149,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   {
                     marginBottom: 10,
                     fontSize: 13 * fontScale,
+                    color: themeColors.textSecondary,
                   },
                 ]}>
                 {`🛡️ Trusted by ${formatCount(trustCount)} ${
@@ -1118,7 +1161,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
           <View style={GlobalStyles.badgeRow}>
             {article && article?.tags && (
-              <Text style={styles.categoryText}>
+              <Text style={[styles.categoryText, {color: themeColors.textSecondary}]}>
                 {article.tags.map(tag => tag.name).join(' | ')}
               </Text>
             )}
@@ -1133,14 +1176,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
               {/* Readability & Accessibility indicators (mock data, issue #845) */}
               <View style={styles.readabilityRow}>
-                <View style={styles.readabilityBadge}>
-                  <Text style={styles.readabilityText}>
+                <View style={[styles.readabilityBadge, {backgroundColor: themeColors.readabilityBadgeBg}]}>
+                  <Text style={[styles.readabilityText, {color: themeColors.readabilityBadgeText}]}>
                     {mockReadability.level}
                   </Text>
                 </View>
 
-                <View style={styles.scoreBadge}>
-                  <Text style={styles.scoreText}>
+                <View style={[styles.scoreBadge, {backgroundColor: themeColors.scoreBadgeBg}]}>
+                  <Text style={[styles.scoreText, {color: themeColors.scoreBadgeText}]}>
                     Score: {mockReadability.score}
                   </Text>
                 </View>
@@ -1150,15 +1193,15 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     styles.statusChip,
                     {
                       backgroundColor: mockReadability.approved
-                        ? '#E8F5E9'
-                        : '#FFF3E0',
+                        ? themeColors.approvedBg
+                        : themeColors.needsImprovementBg,
                     },
                   ]}>
                   <Text
                     style={{
                       color: mockReadability.approved
-                        ? '#2E7D32'
-                        : '#EF6C00',
+                        ? themeColors.approvedText
+                        : themeColors.needsImprovementText,
                       fontWeight: '600',
                       fontSize: 12,
                     }}>
@@ -1169,21 +1212,22 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 </View>
               </View>
 
-              <Text style={[styles.titleText, {fontSize: 25 * fontScale}]}>
+              <Text style={[styles.titleText, {fontSize: 25 * fontScale, color: themeColors.text}]}>
                 {article?.title}
               </Text>
-              <Text
-                style={{
-                  fontSize: 13 * fontScale,
-                  color: '#6C6C6D',
-                  marginTop: 6,
-                  marginBottom: 4,
-                  fontWeight: '500',
-                }}>
-                🕐 {getReadTime(articleContent ?? '')}
-              </Text>
+              <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 6, marginBottom: 4}}>
+                <Ionicons name="time-outline" size={14} color={themeColors.textSecondary} style={{marginRight: 4}} />
+                <Text
+                  style={{
+                    fontSize: 13 * fontScale,
+                    color: themeColors.textSecondary,
+                    fontWeight: '500',
+                  }}>
+                  {getReadTime(articleContent ?? '')}
+                </Text>
+              </View>
               <View style={styles.fontSizeControls}>
-                <Text style={styles.fontSizeLabel}>Font Size:</Text>
+                <Text style={[styles.fontSizeLabel, {color: themeColors.textSecondary}]}>Font Size:</Text>
                 <View style={styles.fontSizeButtons}>
                   {(['small', 'medium', 'large'] as const).map(option => {
                     const isSelected = fontSizeOption === option;
@@ -1198,12 +1242,20 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                         hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
                         style={[
                           styles.fontSizeButton,
+                          {
+                            borderColor: themeColors.buttonBorder,
+                            backgroundColor: themeColors.buttonBg,
+                          },
                           isSelected && styles.fontSizeButtonActive,
                         ]}>
                         <Text
                           style={[
                             styles.fontSizeButtonText,
-                            isSelected && styles.fontSizeButtonTextActive,
+                            {
+                              color: isSelected
+                                ? themeColors.buttonTextActive
+                                : themeColors.buttonText,
+                            },
                           ]}>
                           {label}
                         </Text>
@@ -1221,17 +1273,25 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   accessibilityHint="Toggles the reading mode to use a dyslexia-friendly font and spacing"
                   style={[
                     styles.dyslexiaButton,
+                    {
+                      borderColor: themeColors.buttonBorder,
+                      backgroundColor: themeColors.buttonBg,
+                    },
                     isDyslexiaMode && styles.dyslexiaButtonActive,
                   ]}>
-                  <MaterialCommunityIcons
+                  <Ionicons
                     name="glasses"
                     size={20}
-                    color={isDyslexiaMode ? '#FFFFFF' : '#333333'}
+                    color={isDyslexiaMode ? themeColors.buttonTextActive : themeColors.buttonText}
                   />
                   <Text
                     style={[
                       styles.dyslexiaButtonText,
-                      isDyslexiaMode && styles.dyslexiaButtonTextActive,
+                      {
+                        color: isDyslexiaMode
+                          ? themeColors.buttonTextActive
+                          : themeColors.buttonText,
+                      },
                     ]}>
                     Dyslexia Mode
                   </Text>
@@ -1248,14 +1308,22 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                       return (
                         <View
                           key={likedUser._id || index}
-                          style={[styles.avatar, { marginLeft: index === 0 ? 0 : -12, zIndex: 10 - index }]}>
+                          style={[
+                            styles.avatar,
+                            {
+                              marginLeft: index === 0 ? 0 : -12,
+                              zIndex: 10 - index,
+                              borderColor: themeColors.avatarBorder,
+                              backgroundColor: themeColors.avatarBg,
+                            },
+                          ]}>
                           <Image
                             source={{uri}}
                             style={[
                               styles.profileImage,
                               !profileImage && {
                                 borderWidth: 0.5,
-                                borderColor: '#ccc',
+                                borderColor: themeColors.border,
                               },
                             ]}
                           />
@@ -1264,12 +1332,24 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                     })}
 
                   {totalLikes > 3 && (
-                    <View style={[styles.avatar, styles.avatarTripleOverlap, { marginLeft: -12, zIndex: 0 }]}>
-                      <Text style={styles.moreText}>+{totalLikes - 3}</Text>
+                    <View
+                      style={[
+                        styles.avatar,
+                        styles.avatarTripleOverlap,
+                        {
+                          marginLeft: -12,
+                          zIndex: 0,
+                          borderColor: themeColors.avatarBorder,
+                          backgroundColor: themeColors.avatarBg,
+                        },
+                      ]}>
+                      <Text style={[styles.moreText, {color: themeColors.buttonTextActive}]}>
+                        +{totalLikes - 3}
+                      </Text>
                     </View>
                   )}
                   
-                  <Text style={[styles.likedByText, { color: isDarkMode ? '#9ca3af' : '#64748b' }]}>
+                  <Text style={[styles.likedByText, { color: themeColors.textSecondary }]}>
                      {totalLikes} {totalLikes === 1 ? 'like' : 'likes'}
                   </Text>
                 </View>
@@ -1385,14 +1465,14 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                       ? `${(article?.authorId as any).Profile_image}`
                       : `${GET_STORAGE_DATA}/${(article?.authorId as any).Profile_image}`,
                   }}
-                  style={styles.authorImage}
+                  style={[styles.authorImage, {borderColor: themeColors.border}]}
                 />
               ) : (
                 <Image
                   source={{
                     uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
                   }}
-                  style={styles.authorImage}
+                  style={[styles.authorImage, {borderColor: themeColors.border}]}
                 />
               )}
             </TouchableOpacity>
@@ -1472,27 +1552,16 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               <LoadingSpinner size={18} />
             ) : (
               <>
-                <FontAwesome
-                  name="heart"
+                <Ionicons
+                  name={isLiked ? 'heart' : 'heart-outline'}
                   size={18}
-                  color={
-                    article &&
-                    article?.likedUsers &&
-                    article?.likedUsers?.some(user => user._id === user_id)
-                      ? PRIMARY_COLOR
-                      : footerColors.text
-                  }
+                  color={isLiked ? PRIMARY_COLOR : footerColors.text}
                 />
                 <Text
                   style={[
                     styles.actionTextFooter,
                     {
-                      color:
-                        article &&
-                        article?.likedUsers &&
-                        article?.likedUsers?.some(user => user._id === user_id)
-                          ? PRIMARY_COLOR
-                          : footerColors.text,
+                      color: isLiked ? PRIMARY_COLOR : footerColors.text,
                     },
                   ]}>
                   {article?.likeCount ? formatCount(article.likeCount) : 0}
@@ -1524,8 +1593,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 });
               }
             }}>
-            <MaterialCommunityIcons
-              name="comment-outline"
+            <Ionicons
+              name="chatbubble-outline"
               size={18}
               color={footerColors.text}
             />
@@ -1540,7 +1609,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               {backgroundColor: footerColors.pillBackground},
             ]}
             onPress={() => setShareModalVisible(true)}>
-            <FontAwesome name="share" size={18} color={footerColors.text} />
+            <Ionicons name="share-outline" size={18} color={footerColors.text} />
             <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
               Share
             </Text>
@@ -1552,7 +1621,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               {backgroundColor: footerColors.pillBackground},
             ]}
             onPress={handleCopyLink}>
-            <FontAwesome name="link" size={18} color={footerColors.text} />
+            <Ionicons name="link-outline" size={18} color={footerColors.text} />
             <Text style={[styles.actionTextFooter, {color: footerColors.text}]}>
               Copy Link
             </Text>
@@ -1564,8 +1633,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               {backgroundColor: footerColors.pillBackground},
             ]}
             onPress={handleTranslateArticle}>
-            <MaterialCommunityIcons
-              name="translate"
+            <Ionicons
+              name="language-outline"
               size={18}
               color={footerColors.text}
             />
@@ -1580,8 +1649,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               {backgroundColor: footerColors.pillBackground},
             ]}
             onPress={handleImproveArticle}>
-            <MaterialCommunityIcons
-              name="auto-fix"
+            <Ionicons
+              name="create-outline"
               size={18}
               color={footerColors.text}
             />
@@ -1605,11 +1674,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               <LoadingSpinner size={18} />
             ) : (
               <>
-                <FontAwesome
+                <Ionicons
                   name={
                     article?.savedUsers?.includes(user_id)
                       ? 'bookmark'
-                      : 'bookmark-o'
+                      : 'bookmark-outline'
                   }
                   size={18}
                   color={
@@ -1651,8 +1720,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               <LoadingSpinner size={18} />
             ) : (
               <>
-                <MaterialCommunityIcons
-                  name={isTrusted ? 'shield-check' : 'shield-outline'}
+                <Ionicons
+                  name={isTrusted ? 'shield-checkmark' : 'shield-outline'}
                   size={18}
                   color={isTrusted ? PRIMARY_COLOR : footerColors.text}
                 />
@@ -1671,23 +1740,24 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       {/* Floating TTS Media Player */}
       {playerVisible && (
         <View style={styles.ttsPlayerContainer}>
-          <View style={styles.ttsPlayerInner}>
+          <View style={[styles.ttsPlayerInner, {backgroundColor: themeColors.ttsBg, borderWidth: 1, borderColor: themeColors.ttsBorder}]}>
             {/* Speed button */}
             <TouchableOpacity
               style={styles.ttsSpeedButton}
               onPress={() => setIsSpeedSelectorVisible(true)}>
-              <Text style={styles.ttsSpeedText}>{`${speechRate}x`}</Text>
+              <Text style={[styles.ttsSpeedText, {color: themeColors.buttonTextActive}]}>{`${speechRate}x`}</Text>
             </TouchableOpacity>
 
             {/* Play / Pause button — disabled if neither playing nor paused */}
             <TouchableOpacity
               style={[
                 styles.ttsControlButton,
+                {backgroundColor: themeColors.ttsControlButtonBg},
                 !isPlaying && !isPaused && {opacity: 0.4},
               ]}
               onPress={handleTtsPause}
               disabled={!isPlaying && !isPaused}>
-              <FontAwesome5
+              <Ionicons
                 name={isPaused ? 'play' : 'pause'}
                 size={18}
                 color={PRIMARY_COLOR}
@@ -1696,13 +1766,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
             {/* Stop button */}
             <TouchableOpacity
-              style={styles.ttsControlButton}
+              style={[styles.ttsControlButton, {backgroundColor: themeColors.ttsControlButtonBg}]}
               onPress={handleTtsStop}>
-              <FontAwesome5 name="stop" size={18} color={'#e53935'} />
+              <Ionicons name="stop" size={18} color={themeColors.ttsStopColor} />
             </TouchableOpacity>
 
             {/* Status label */}
-            <Text style={styles.ttsStatusText}>
+            <Text style={[styles.ttsStatusText, {color: themeColors.ttsText}]}>
               {isPaused ? 'Paused' : isPlaying ? 'Playing...' : 'Stopped'}
             </Text>
           </View>
