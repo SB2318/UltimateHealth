@@ -1,5 +1,9 @@
 /* Unified global stylesheet compiled on Next.js setup */
 @import "tailwindcss";
+/* Design tokens + shadcn base layer. Imported here (instead of separately from
+   the layout) so Tailwind is compiled once — importing "tailwindcss" from two
+   entry stylesheets emitted the whole framework twice into the page. */
+@import "./globals2.css";
 @config "../../tailwind.config.ts";
 
 @theme {
@@ -2749,6 +2753,13 @@ i, svg {
 .uh-float-sparkle { bottom: 20%; right: -22%; animation: uh-float-bob 6s ease-in-out infinite alternate; animation-delay: -0.5s; }
 
 
+
+/* Roadmap ("What's Coming Next") cards. --uh-upcoming-glow is set per card from
+   the component so the hover state needs no JavaScript. */
+.uh-upcoming-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px var(--uh-upcoming-glow);
+}
 
 /* ── Scroll reveal animations ── */
 .scroll-reveal-left  { animation: uh-slide-left  0.8s cubic-bezier(.22,1,.36,1) both; }
