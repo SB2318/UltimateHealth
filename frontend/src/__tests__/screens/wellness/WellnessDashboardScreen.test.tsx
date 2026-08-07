@@ -21,6 +21,11 @@ jest.mock('../../../hooks/wellness/useGetWeeklyWellness', () => ({
 }));
 const { useGetWeeklyWellness } = require('../../../hooks/wellness/useGetWeeklyWellness');
 
+jest.mock('../../../hooks/wellness/useLogWellness', () => ({
+  useLogWellness: jest.fn(),
+}));
+const { useLogWellness } = require('../../../hooks/wellness/useLogWellness');
+
 // mock the chart lib to avoid SVG/canvas issues in jest
 jest.mock('react-native-chart-kit', () => ({ LineChart: () => null }));
 
@@ -38,6 +43,13 @@ describe('WellnessDashboardScreen - State Rendering Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     useGetWeeklyWellness.mockReset();
+    useLogWellness.mockReset();
+    useLogWellness.mockReturnValue({
+      mutate: jest.fn(),
+      isSuccess: false,
+      isError: false,
+      error: null,
+    });
     mockSelector.mockReturnValue({ isConnected: true });
   });
 
@@ -70,9 +82,10 @@ describe('WellnessDashboardScreen - State Rendering Tests', () => {
   it('renders data-driven dashboard when weekly logs exist', () => {
     useGetWeeklyWellness.mockReturnValue({ data: [mockLog], isLoading: false, isError: false, refetch: jest.fn() });
 
-    const { getByText } = render(<WellnessDashboardScreen />);
+    const { getByText, getAllByText } = render(<WellnessDashboardScreen />);
 
-    expect(getByText('Steps')).toBeTruthy();
+    // 'Steps' appears twice: the metric card label and the log form label
+    expect(getAllByText('Steps').length).toBeGreaterThanOrEqual(1);
     expect(getByText('8,450')).toBeTruthy();
     expect(getByText('Active Minutes')).toBeTruthy();
     expect(getByText('Weekly Trend')).toBeTruthy();

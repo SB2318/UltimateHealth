@@ -1,13 +1,16 @@
-import { StyleSheet, Dimensions, useColorScheme, ScrollView, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Dimensions, useColorScheme, ScrollView, SafeAreaView, ActivityIndicator, TextInput } from 'react-native';
 import { YStack, XStack, Text, Card, View, Button, Separator, Theme } from 'tamagui';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LineChart } from 'react-native-chart-kit';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { useEffect, useState } from 'react';
 import { PRIMARY_COLOR, BUTTON_COLOR } from '../../lib/ui/Theme';
 import { wp, hp, fp } from '../../lib/ui/Metric';
 import { useAppSelector } from '../../store/hooks';
 import { useGetWeeklyWellness } from '../../hooks/wellness/useGetWeeklyWellness';
+import { useLogWellness } from '../../hooks/wellness/useLogWellness';
+import { wellnessLogPayloadSchema } from '../../schemas/zod/wellnessSchemas';
 import { buildChartData, calculateDashboardScore, formatMetricValue, metricGoal, getTodayLog } from '../../lib/utils/wellnessUtils';
 
 const WellnessDashboardScreen = () => {
@@ -17,6 +20,44 @@ const WellnessDashboardScreen = () => {
 
   const { isConnected } = useAppSelector((state: any) => state.network);
   const { data: weeklyLogs = [], isLoading, isError, refetch } = useGetWeeklyWellness(isConnected);
+
+  // Manual log form state (D-05: validated before any network call)
+  const [stepsInput, setStepsInput] = useState('');
+  const [waterInput, setWaterInput] = useState('');
+  const [sleepInput, setSleepInput] = useState('');
+  const [breathingInput, setBreathingInput] = useState('');
+  const [logError, setLogError] = useState('');
+  const logMutation = useLogWellness();
+
+  // On successful log: clear the form (D-06 — the hook already invalidated the weekly query)
+  useEffect(() => {
+    if (logMutation.isSuccess) {
+      setStepsInput('');
+      setWaterInput('');
+      setSleepInput('');
+      setBreathingInput('');
+      setLogError('');
+    }
+  }, [logMutation.isSuccess]);
+
+  const handleLogSubmit = () => {
+    const parsed = wellnessLogPayloadSchema.safeParse({
+      date: new Date().toISOString().split('T')[0],
+      metrics: {
+        steps: stepsInput === '' ? undefined : Number(stepsInput),
+        waterMl: waterInput === '' ? undefined : Number(waterInput),
+        sleepHours: sleepInput === '' ? undefined : Number(sleepInput),
+        breathingSessionMinutes: breathingInput === '' ? undefined : Number(breathingInput),
+      },
+    });
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0];
+      setLogError(`${String(firstIssue.path[1] ?? 'metrics')}: ${firstIssue.message}`);
+      return;
+    }
+    setLogError('');
+    logMutation.mutate(parsed.data);
+  };
 
   const todayLog = getTodayLog(weeklyLogs);
   const wellnessScore = calculateDashboardScore(weeklyLogs);
@@ -271,6 +312,108 @@ const WellnessDashboardScreen = () => {
             </>
           )}
 
+          {/* Today's Log Form */}
+          <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
+            Log Today
+          </Text>
+          <Card
+            padding={14}
+            borderRadius={16}
+            backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
+            elevate
+            bordered
+            borderWidth={0.6}
+            borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
+            marginBottom={16}
+          >
+            <Text fontSize={fp(3.4)} color={isDarkMode ? '#B0C4DE' : '#777777'} marginBottom="$3">
+              Log or update today's wellness metrics.
+            </Text>
+            <YStack gap="$3">
+              <XStack justifyContent="space-between" alignItems="center" gap="$3">
+                <Text fontSize={fp(3.2)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#555555'} width={wp(28)}>
+                  Steps
+                </Text>
+                <TextInput
+                  style={[styles.logInput, { backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB', color: isDarkMode ? '#FFFFFF' : '#333333' }]}
+                  testID="log-steps"
+                  value={stepsInput}
+                  onChangeText={setStepsInput}
+                  placeholder="e.g. 8000 steps"
+                  placeholderTextColor={isDarkMode ? '#6B7BB8' : '#9CA3AF'}
+                  keyboardType="numeric"
+                />
+              </XStack>
+              <XStack justifyContent="space-between" alignItems="center" gap="$3">
+                <Text fontSize={fp(3.2)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#555555'} width={wp(28)}>
+                  Water (ml)
+                </Text>
+                <TextInput
+                  style={[styles.logInput, { backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB', color: isDarkMode ? '#FFFFFF' : '#333333' }]}
+                  testID="log-water"
+                  value={waterInput}
+                  onChangeText={setWaterInput}
+                  placeholder="e.g. 2000 ml"
+                  placeholderTextColor={isDarkMode ? '#6B7BB8' : '#9CA3AF'}
+                  keyboardType="numeric"
+                />
+              </XStack>
+              <XStack justifyContent="space-between" alignItems="center" gap="$3">
+                <Text fontSize={fp(3.2)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#555555'} width={wp(28)}>
+                  Sleep (hrs)
+                </Text>
+                <TextInput
+                  style={[styles.logInput, { backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB', color: isDarkMode ? '#FFFFFF' : '#333333' }]}
+                  testID="log-sleep"
+                  value={sleepInput}
+                  onChangeText={setSleepInput}
+                  placeholder="e.g. 7.5 h"
+                  placeholderTextColor={isDarkMode ? '#6B7BB8' : '#9CA3AF'}
+                  keyboardType="numeric"
+                />
+              </XStack>
+              <XStack justifyContent="space-between" alignItems="center" gap="$3">
+                <Text fontSize={fp(3.2)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#555555'} width={wp(28)}>
+                  Breathing (min)
+                </Text>
+                <TextInput
+                  style={[styles.logInput, { backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB', color: isDarkMode ? '#FFFFFF' : '#333333' }]}
+                  testID="log-breathing"
+                  value={breathingInput}
+                  onChangeText={setBreathingInput}
+                  placeholder="e.g. 10 min"
+                  placeholderTextColor={isDarkMode ? '#6B7BB8' : '#9CA3AF'}
+                  keyboardType="numeric"
+                />
+              </XStack>
+            </YStack>
+
+            <Button
+              testID="log-submit"
+              onPress={handleLogSubmit}
+              marginTop="$3"
+              backgroundColor={BUTTON_COLOR}
+            >
+              <Text color="#FFFFFF">Save today's log</Text>
+            </Button>
+
+            {logError !== '' && (
+              <Text testID="log-error" color="#D32F2F" fontSize={fp(3)} marginTop="$2">
+                {logError}
+              </Text>
+            )}
+            {logMutation.isSuccess && (
+              <Text testID="log-success" color="#2E7D32" fontSize={fp(3)} marginTop="$2">
+                Log saved. Dashboard updated.
+              </Text>
+            )}
+            {logMutation.isError && (
+              <Text testID="log-failed" color="#D32F2F" fontSize={fp(3)} marginTop="$2">
+                Failed to save log. Please try again.
+              </Text>
+            )}
+          </Card>
+
           {/* Actionable Recommendations */}
           <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
             Insights & Recommendations
@@ -334,6 +477,15 @@ const styles = StyleSheet.create({
   progressBarFill: {
     height: '100%',
     borderRadius: 3
+  },
+  logInput: {
+    flex: 1,
+    height: 42,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    fontSize: 14,
+    borderWidth: 1,
+    borderColor: '#E5E7EB'
   }
 });
 

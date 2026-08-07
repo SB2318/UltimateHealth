@@ -86,8 +86,10 @@ describe('WellnessDashboardScreen - Manual Log Form', () => {
     fireEvent.changeText(getByTestId('log-steps'), '-5');
     fireEvent.press(getByTestId('log-submit'));
 
-    // zod .min(0) default message, prefixed by the field name
-    expect(getByText(/Number must be greater than or equal to 0/)).toBeTruthy();
+    // zod v4 default .min(0) message, prefixed by the field name
+    // (zod 4.4.3 emits "Too small: expected number to be >=0" — the plan's
+    // "Number must be greater than or equal to 0" is the zod v3 wording)
+    expect(getByText(/expected number to be >=0/)).toBeTruthy();
     expect(mockMutate).not.toHaveBeenCalled();
   });
 
