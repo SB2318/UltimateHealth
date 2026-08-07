@@ -452,7 +452,7 @@ export default function OurContributorsPage() {
         <div className="admin-section">
           <div className="admin-card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={PROJECT_ADMIN.img} alt={PROJECT_ADMIN.name} className="admin-avatar" />
+            <img src={PROJECT_ADMIN.img} alt={`Avatar of ${PROJECT_ADMIN.name}`} loading="lazy" className="admin-avatar" />
             <div>
               <div className="admin-badge">👑 Project Admin</div>
               <div className="admin-name">{PROJECT_ADMIN.name}</div>
@@ -517,7 +517,7 @@ export default function OurContributorsPage() {
               <div key={c.handle} className="contrib-card">
                 <div className="contrib-card-accent" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={c.img} alt={c.name} className="contrib-card-img" />
+                <img src={c.img} alt={`Avatar of ${c.name}`} loading="lazy" className="contrib-card-img" />
                 <div className="contrib-card-name">{c.name}</div>
                 <div className="contrib-card-handle">{c.handle}</div>
                 <div className="contrib-card-years">
