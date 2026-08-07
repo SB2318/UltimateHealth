@@ -532,7 +532,7 @@ function AdminAgreementContent() {
                 <>
                   {/* NOTE: Keep as standard <img> element. next/image does not support dynamic base64/data URLs. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={signatureDataUrl} alt="Your signature" style={css.signatureImg} />
+                  <img src={signatureDataUrl} alt="Your drawn digital signature" loading="lazy" style={css.signatureImg} />
                 </>
               ) : (
                 <canvas

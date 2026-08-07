@@ -191,7 +191,8 @@ function ArticleCard({ article }: { article: ApiArticle }) {
           /* eslint-disable-next-line @next/next/no-img-element */
           <img 
             src={imageUrl} 
-            alt={article.title} 
+            alt={`Cover image for article: ${article.title}`} 
+            loading="lazy"
             className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
@@ -236,7 +237,8 @@ function ArticleCard({ article }: { article: ApiArticle }) {
               /* eslint-disable-next-line @next/next/no-img-element */
               <img 
                 src={article.authorId.Profile_image} 
-                alt={article.authorId.user_name || "Author"} 
+                alt={`Profile picture of ${article.authorId.user_name || "Author"}`} 
+                loading="lazy"
                 className="w-10 h-10 rounded-full object-cover shadow-sm"
               />
             ) : (
