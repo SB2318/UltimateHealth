@@ -509,6 +509,22 @@ html.dark .nav-item-icon {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
+/* Mirrors the desktop highlight so the current page is obvious in the drawer. */
+.mobile-nav a.active {
+  color: var(--primary);
+  box-shadow: inset 3px 0 0 0 var(--primary);
+  padding-left: 12px;
+}
+
+/* Keyboard users get the same affordance as the mouse hover state. */
+.nav-links a:focus-visible,
+.mobile-nav a:focus-visible,
+.mobile-menu-toggle:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
 /* ==================== HERO ==================== */
 .hero {
   background: var(--gradient-primary);
@@ -3277,6 +3293,23 @@ html.dark .nav-links a {
 
 html.dark .nav-links a:hover {
   color: #a78bfa;
+}
+
+/* Needs to outrank `html.dark .nav-links a` above, which would otherwise
+   repaint the active entry with the default light-on-dark colour. */
+html.dark .nav-links a.active,
+html.dark .mobile-nav a.active {
+  color: #a78bfa;
+}
+
+html.dark .mobile-nav a.active {
+  box-shadow: inset 3px 0 0 0 #a78bfa;
+}
+
+html.dark .nav-links a:focus-visible,
+html.dark .mobile-nav a:focus-visible,
+html.dark .mobile-menu-toggle:focus-visible {
+  outline-color: #a78bfa;
 }
 
 html.dark .logo {
