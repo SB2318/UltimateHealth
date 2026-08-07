@@ -1,14 +1,8 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 
+import TestFlightCta from "@/components/home/TestFlightCta";
 import { withBasePath } from "@/lib/basePath";
-
-type HeroAndDownloadProps = {
-  onJoinTestFlight: () => void;
-  onShowComingSoon: () => void;
-};
 
 const activityItems = [
   { icon: "fa-user", name: "New Article", time: "2 min ago", badge: "new", label: "New" },
@@ -60,7 +54,12 @@ const platforms = [
   },
 ];
 
-export default function HeroAndDownload({ onJoinTestFlight, onShowComingSoon }: HeroAndDownloadProps) {
+/**
+ * Above-the-fold hero and the download cards below it. Server rendered — the
+ * only interactive element is the TestFlight CTA, which is its own client island
+ * so the LCP content is not waiting on the page's JavaScript to hydrate.
+ */
+export default function HeroAndDownload() {
   return (
     <>
       <section className="uh-hero">
@@ -251,11 +250,7 @@ export default function HeroAndDownload({ onJoinTestFlight, onShowComingSoon }: 
                     ))}
                   </ul>
 
-                  {platform.theme === "android" ? (
-                    <AndroidStoreButtons onShowComingSoon={onShowComingSoon} />
-                  ) : (
-                    <IosStoreButtons onJoinTestFlight={onJoinTestFlight} />
-                  )}
+                  {platform.theme === "android" ? <AndroidStoreButtons /> : <IosStoreButtons />}
 
                   <div className="uh-card-footer">
                     <span className={`uh-card-footer-dot ${platform.theme === "android" ? "green" : "blue"}`} />
@@ -337,7 +332,7 @@ function MiniPhone({ theme }: { theme: string }) {
   );
 }
 
-function AndroidStoreButtons({ onShowComingSoon }: Pick<HeroAndDownloadProps, "onShowComingSoon">) {
+function AndroidStoreButtons() {
   return (
     <div className="uh-store-buttons-group">
       <div className="uh-store-buttons">
@@ -385,22 +380,11 @@ function AndroidStoreButtons({ onShowComingSoon }: Pick<HeroAndDownloadProps, "o
   );
 }
 
-function IosStoreButtons({ onJoinTestFlight }: Pick<HeroAndDownloadProps, "onJoinTestFlight">) {
+function IosStoreButtons() {
   return (
     <div className="uh-store-buttons-group">
       <div className="uh-store-buttons">
-        <button
-          type="button"
-          onClick={onJoinTestFlight}
-          className="uh-store-btn uh-store-testflight"
-          aria-label="Join UltimateHealth TestFlight"
-        >
-          <i className="fab fa-apple" aria-hidden="true" />
-          <div>
-            <small>Join the</small>
-            <strong>TestFlight (Beta)</strong>
-          </div>
-        </button>
+        <TestFlightCta />
         <span className="uh-store-btn uh-store-admin disabled" aria-hidden="true">
           <i className="fas fa-user-shield" />
           <div>
