@@ -1,94 +1,123 @@
-import { StyleSheet, Dimensions, useColorScheme, ScrollView, SafeAreaView } from 'react-native';
-import { YStack, XStack, Text, Card, View, Separator, Theme } from 'tamagui';
+import { StyleSheet, Dimensions, useColorScheme, ScrollView, SafeAreaView, ActivityIndicator, TextInput } from 'react-native';
+import { YStack, XStack, Text, Card, View, Button, Separator, Theme } from 'tamagui';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LineChart } from 'react-native-chart-kit';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { useEffect, useState } from 'react';
 import { PRIMARY_COLOR, BUTTON_COLOR } from '../../lib/ui/Theme';
 import { wp, hp, fp } from '../../lib/ui/Metric';
+import { useAppSelector } from '../../store/hooks';
+import { useGetWeeklyWellness } from '../../hooks/wellness/useGetWeeklyWellness';
+import { useLogWellness } from '../../hooks/wellness/useLogWellness';
+import { wellnessLogPayloadSchema } from '../../schemas/zod/wellnessSchemas';
+import { buildChartData, calculateDashboardScore, formatMetricValue, metricGoal, getTodayDateString, getTodayLog } from '../../lib/utils/wellnessUtils';
 
 const WellnessDashboardScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const bottomBarHeight = useBottomTabBarHeight();
   const screenWidth = Dimensions.get('window').width;
 
-  // Static placeholder data as requested
-  const wellnessScore = 85;
-  const riskLevel = 'Low'; // Low, Medium, High
-  
+  const { isConnected } = useAppSelector((state: any) => state.network);
+  const { data: weeklyLogs = [], isLoading, isError, refetch } = useGetWeeklyWellness(isConnected);
+
+  // Manual log form state (D-05: validated before any network call)
+  const [stepsInput, setStepsInput] = useState('');
+  const [waterInput, setWaterInput] = useState('');
+  const [sleepInput, setSleepInput] = useState('');
+  const [breathingInput, setBreathingInput] = useState('');
+  const [logError, setLogError] = useState('');
+  const logMutation = useLogWellness();
+
+  // On successful log: clear the form (D-06 — the hook already invalidated the weekly query)
+  useEffect(() => {
+    if (logMutation.isSuccess) {
+      setStepsInput('');
+      setWaterInput('');
+      setSleepInput('');
+      setBreathingInput('');
+      setLogError('');
+    }
+  }, [logMutation.isSuccess]);
+
+  const handleLogSubmit = () => {
+    const parsed = wellnessLogPayloadSchema.safeParse({
+      date: getTodayDateString(),
+      metrics: {
+        steps: stepsInput === '' ? undefined : Number(stepsInput),
+        waterMl: waterInput === '' ? undefined : Number(waterInput),
+        sleepHours: sleepInput === '' ? undefined : Number(sleepInput),
+        breathingSessionMinutes: breathingInput === '' ? undefined : Number(breathingInput),
+      },
+    });
+    if (!parsed.success) {
+      const firstIssue = parsed.error.issues[0];
+      setLogError(`${String(firstIssue.path[1] ?? 'metrics')}: ${firstIssue.message}`);
+      return;
+    }
+    // MAJOR-02: reject an all-empty submission — otherwise a `{date, metrics:{}}`
+    // payload renders as a fabricated "Log saved" and a 0-valued row.
+    if (Object.values(parsed.data.metrics ?? {}).every(v => v === undefined)) {
+      setLogError('Enter at least one metric to log today.');
+      return;
+    }
+    setLogError('');
+    logMutation.mutate(parsed.data);
+  };
+
+  const todayLog = getTodayLog(weeklyLogs);
+  const todayMetrics = todayLog?.metrics ?? {}; // server rows may omit `metrics` (MAJOR-01)
+  const wellnessScore = calculateDashboardScore(weeklyLogs);
+
   const metrics = [
     {
       id: 'steps',
       title: 'Steps',
-      value: '8,450',
+      value: formatMetricValue('steps', todayMetrics.steps ?? 0),
       target: '/ 10,000 steps',
-      progress: 0.845,
+      progress: metricGoal('steps', todayMetrics.steps ?? 0),
       icon: 'walk',
       color: '#4CAF50',
-      description: '84% of daily goal'
+      description: `${Math.round((metricGoal('steps', todayMetrics.steps ?? 0)) * 100)}% of daily goal`
     },
     {
       id: 'sleep',
       title: 'Sleep',
-      value: '7.5 hrs',
+      value: formatMetricValue('sleepHours', todayMetrics.sleepHours ?? 0),
       target: '/ 8.0 hrs',
-      progress: 0.937,
+      progress: metricGoal('sleepHours', todayMetrics.sleepHours ?? 0),
       icon: 'moon',
       color: '#9C27B0',
-      description: 'Good quality sleep'
-    },
-    {
-      id: 'heartRate',
-      title: 'Heart Rate',
-      value: '72 bpm',
-      target: 'Resting avg',
-      progress: 0.72,
-      icon: 'heart',
-      color: '#F44336',
-      description: 'Normal resting zone'
+      description: `${Math.round(metricGoal('sleepHours', todayMetrics.sleepHours ?? 0) * 100)}% of daily goal`
     },
     {
       id: 'hydration',
       title: 'Hydration',
-      value: '1.8L',
+      value: formatMetricValue('waterMl', todayMetrics.waterMl ?? 0),
       target: '/ 2.5L total',
-      progress: 0.72,
+      progress: metricGoal('waterMl', todayMetrics.waterMl ?? 0),
       icon: 'water',
       color: '#2196F3',
-      description: '0.7L remaining'
+      description: `${Math.round(metricGoal('waterMl', todayMetrics.waterMl ?? 0) * 100)}% of daily goal`
+    },
+    {
+      id: 'active',
+      title: 'Active Minutes',
+      value: formatMetricValue('activeMinutes', todayMetrics.activeMinutes ?? 0),
+      target: '/ 30 min',
+      progress: metricGoal('activeMinutes', todayMetrics.activeMinutes ?? 0),
+      icon: 'fitness',
+      color: '#F44336',
+      description: `${Math.round(metricGoal('activeMinutes', todayMetrics.activeMinutes ?? 0) * 100)}% of daily goal`
     }
   ];
 
-  const recommendations = [
-    {
-      id: '1',
-      type: 'warning',
-      text: 'Increase water intake: You are still 0.7L away from your daily hydration target.',
-      icon: 'water-outline',
-      iconColor: '#2196F3'
-    },
-    {
-      id: '2',
-      type: 'success',
-      text: 'Great sleep quality last night! You achieved deep rest cycles for 7.5 hours.',
-      icon: 'checkmark-circle-outline',
-      iconColor: '#4CAF50'
-    },
-    {
-      id: '3',
-      type: 'info',
-      text: 'Keep up the step activity. You are close to hitting your 10,000 daily steps goal.',
-      icon: 'trending-up-outline',
-      iconColor: '#FF9800'
-    }
-  ];
-
-  // Chart data for wellness trend (Mon - Sun)
+  const weeklyChart = buildChartData(weeklyLogs);
   const chartData = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    labels: weeklyChart.labels,
     datasets: [
       {
-        data: [78, 80, 82, 81, 85, 84, 85],
+        data: weeklyChart.datasets[0].data,
         color: (opacity = 1) => `rgba(0, 191, 255, ${opacity})`,
         strokeWidth: 3
       }
@@ -96,212 +125,330 @@ const WellnessDashboardScreen = () => {
     legend: ['Wellness Trend']
   };
 
-  const getRiskBadgeColor = (risk: string) => {
-    switch (risk.toLowerCase()) {
-      case 'low': return '#E8F5E9';
-      case 'medium': return '#FFF8E1';
-      case 'high': return '#FFEBEE';
-      default: return '#ECEFF1';
-    }
-  };
-
-  const getRiskTextColor = (risk: string) => {
-    switch (risk.toLowerCase()) {
-      case 'low': return '#2E7D32';
-      case 'medium': return '#F57F17';
-      case 'high': return '#C62828';
-      default: return '#37474F';
-    }
-  };
+  const recommendations = (() => {
+    const m = todayLog?.metrics;
+    const list: Array<{id: string; type: 'warning' | 'success' | 'info'; text: string; icon: string; iconColor: string}> = [];
+    if (!m) return list;
+    if ((m.steps ?? 0) < 10000) list.push({id: '1', type: 'info', text: `You are ${Math.max(0, 10000 - (m.steps ?? 0)).toLocaleString('en-US')} steps away from your daily goal.`, icon: 'trending-up-outline', iconColor: '#FF9800'});
+    if ((m.waterMl ?? 0) < 2500) list.push({id: '2', type: 'warning', text: `Increase water intake: ${((2500 - (m.waterMl ?? 0)) / 1000).toFixed(1)}L remaining to your daily hydration target.`, icon: 'water-outline', iconColor: '#2196F3'});
+    if ((m.sleepHours ?? 0) < 8) list.push({id: '3', type: 'info', text: `Aim for 8 hours of sleep — you logged ${(m.sleepHours ?? 0).toFixed(1)} hours.`, icon: 'moon-outline', iconColor: '#9C27B0'});
+    if (list.length === 0) list.push({id: '4', type: 'success', text: 'All daily wellness goals met. Great job!', icon: 'checkmark-circle-outline', iconColor: '#4CAF50'});
+    return list;
+  })();
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#000A60' : '#F5F7FB' }]}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: bottomBarHeight + hp(4),
-          paddingHorizontal: wp(4)
-        }}
-      >
-        {/* Header Greeting */}
-        <YStack marginVertical="$3">
-          <Text fontSize={fp(7)} fontWeight="800" color={isDarkMode ? '#FFFFFF' : '#0F52BA'}>
-            Wellness Dashboard
-          </Text>
-          <Text fontSize={fp(3.8)} color={isDarkMode ? '#B0C4DE' : '#666666'} marginTop="$1">
-            Track your vital metrics and customized health score.
-          </Text>
-        </YStack>
-
-        {/* Score & Risk Badge Section */}
-        <Card
-          padding={16}
-          borderRadius={16}
-          backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
-          elevate
-          bordered
-          borderWidth={0.6}
-          borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
-          marginBottom={16}
+      {isLoading ? (
+        <View style={styles.centerContainer}>
+          <ActivityIndicator size="large" color={PRIMARY_COLOR} testID="loading-indicator" />
+        </View>
+      ) : isError ? (
+        <View style={styles.centerContainer}>
+          <Card padding={16} borderRadius={12} backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'} bordered borderWidth={0.6} borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}>
+            <Text fontSize={fp(4)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#333333'}>Unable to load wellness data</Text>
+            <Text fontSize={fp(3.2)} color={isDarkMode ? '#B0C4DE' : '#777777'} marginTop="$1">Check your connection and try again.</Text>
+            <Button onPress={() => refetch()} marginTop="$3" backgroundColor={BUTTON_COLOR}><Text color="#FFFFFF">Retry</Text></Button>
+          </Card>
+        </View>
+      ) : weeklyLogs.length === 0 ? (
+        <View style={styles.centerContainer}>
+          <Text fontSize={fp(4)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#333333'}>No wellness data yet</Text>
+          <Text fontSize={fp(3.2)} color={isDarkMode ? '#B0C4DE' : '#777777'} marginTop="$1">Log today&apos;s metrics to see your dashboard.</Text>
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: bottomBarHeight + hp(4),
+            paddingHorizontal: wp(4)
+          }}
         >
-          <XStack justifyContent="space-between" alignItems="center">
-            <YStack flex={1}>
-              <Text fontSize={fp(4.2)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'}>
-                Overall Health Score
-              </Text>
-              <Text fontSize={fp(3.2)} color={isDarkMode ? '#B0C4DE' : '#777777'} marginTop="$1">
-                Your score is calculated based on sleep, steps, and hydration trends.
-              </Text>
-              
-              <XStack alignItems="center" marginTop="$3">
-                <View
-                  paddingHorizontal={12}
-                  paddingVertical={6}
-                  borderRadius={20}
-                  backgroundColor={getRiskBadgeColor(riskLevel)}
-                >
-                  <Text fontSize={fp(3.2)} fontWeight="bold" color={getRiskTextColor(riskLevel)}>
-                    {riskLevel} Risk
+          {/* Header Greeting */}
+          <YStack marginVertical="$3">
+            <Text fontSize={fp(7)} fontWeight="800" color={isDarkMode ? '#FFFFFF' : '#0F52BA'}>
+              Wellness Dashboard
+            </Text>
+            <Text fontSize={fp(3.8)} color={isDarkMode ? '#B0C4DE' : '#666666'} marginTop="$1">
+              Track your vital metrics and customized health score.
+            </Text>
+          </YStack>
+
+          {/* Score Section */}
+          <Card
+            padding={16}
+            borderRadius={16}
+            backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
+            elevate
+            bordered
+            borderWidth={0.6}
+            borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
+            marginBottom={16}
+          >
+            <XStack justifyContent="space-between" alignItems="center">
+              <YStack flex={1}>
+                <Text fontSize={fp(4.2)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'}>
+                  Overall Health Score
+                </Text>
+                <Text fontSize={fp(3.2)} color={isDarkMode ? '#B0C4DE' : '#777777'} marginTop="$1">
+                  Your score is calculated based on sleep, steps, and hydration trends.
+                </Text>
+
+                <XStack alignItems="center" marginTop="$3">
+                  <View
+                    paddingHorizontal={12}
+                    paddingVertical={6}
+                    borderRadius={20}
+                    backgroundColor="#E8F5E9"
+                  >
+                    <Text fontSize={fp(3.2)} fontWeight="bold" color="#2E7D32">
+                      {wellnessScore}% of weekly goals
+                    </Text>
+                  </View>
+                </XStack>
+              </YStack>
+
+              {/* Circular Ring Presentation */}
+              <View style={styles.scoreCircle}>
+                <Text fontSize={fp(6.5)} fontWeight="bold" color={PRIMARY_COLOR}>
+                  {wellnessScore}
+                </Text>
+                <Text fontSize={fp(3)} color={isDarkMode ? '#FFFFFF' : '#555555'}>
+                  /100
+                </Text>
+              </View>
+            </XStack>
+          </Card>
+
+          {/* Metrics Grid */}
+          <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
+            Today's Metrics
+          </Text>
+          <XStack flexWrap="wrap" justifyContent="space-between" marginBottom={16}>
+            {metrics.map((item) => (
+              <Card
+                key={item.id}
+                width={wp(44)}
+                padding={12}
+                borderRadius={12}
+                backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
+                bordered
+                borderWidth={0.6}
+                borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
+                marginBottom={12}
+                elevate
+              >
+                <XStack justifyContent="space-between" alignItems="center" marginBottom={8}>
+                  <Text fontSize={fp(3.6)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#555555'}>
+                    {item.title}
                   </Text>
+                  <Ionicons name={item.icon as any} size={20} color={item.color} />
+                </XStack>
+
+                <XStack alignItems="baseline">
+                  <Text fontSize={fp(5)} fontWeight="bold" color={isDarkMode ? '#FFFFFF' : '#111111'}>
+                    {item.value}
+                  </Text>
+                  <Text fontSize={fp(2.8)} color={isDarkMode ? '#B0C4DE' : '#888888'} marginLeft={4}>
+                    {item.target}
+                  </Text>
+                </XStack>
+
+                {/* Progress Line */}
+                <View style={styles.progressBarBackground}>
+                  <View
+                    style={[
+                      styles.progressBarFill,
+                      { width: `${item.progress * 100}%`, backgroundColor: item.color }
+                    ]}
+                  />
                 </View>
+
+                <Text fontSize={fp(2.8)} color={isDarkMode ? '#B0C4DE' : '#777777'} marginTop={4}>
+                  {item.description}
+                </Text>
+              </Card>
+            ))}
+          </XStack>
+
+          {/* Line Chart Section */}
+          {weeklyLogs.length > 0 && (
+            <>
+              <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
+                Weekly Trend
+              </Text>
+              <Card
+                padding={14}
+                borderRadius={16}
+                backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
+                elevate
+                bordered
+                borderWidth={0.6}
+                borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
+                marginBottom={16}
+                overflow="hidden"
+                alignItems="center"
+              >
+                <LineChart
+                  data={chartData}
+                  width={screenWidth - wp(12)}
+                  height={200}
+                  chartConfig={{
+                    backgroundColor: isDarkMode ? '#001280' : '#FFFFFF',
+                    backgroundGradientFrom: isDarkMode ? '#001280' : '#FFFFFF',
+                    backgroundGradientTo: isDarkMode ? '#001280' : '#FFFFFF',
+                    decimalPlaces: 0,
+                    color: (opacity = 1) => isDarkMode ? `rgba(255, 255, 255, ${opacity})` : `rgba(15, 82, 186, ${opacity})`,
+                    labelColor: (opacity = 1) => isDarkMode ? `rgba(176, 196, 222, ${opacity})` : `rgba(102, 102, 102, ${opacity})`,
+                    propsForDots: {
+                      r: '4',
+                      strokeWidth: '2',
+                      stroke: PRIMARY_COLOR
+                    },
+                    propsForBackgroundLines: {
+                      stroke: isDarkMode ? '#334EBC' : '#E5E7EB',
+                      strokeDasharray: ''
+                    }
+                  }}
+                  bezier
+                  style={{
+                    marginVertical: 4,
+                    borderRadius: 16
+                  }}
+                />
+              </Card>
+            </>
+          )}
+
+          {/* Today's Log Form */}
+          <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
+            Log Today
+          </Text>
+          <Card
+            padding={14}
+            borderRadius={16}
+            backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
+            elevate
+            bordered
+            borderWidth={0.6}
+            borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
+            marginBottom={16}
+          >
+            <Text fontSize={fp(3.4)} color={isDarkMode ? '#B0C4DE' : '#777777'} marginBottom="$3">
+              Log or update today's wellness metrics.
+            </Text>
+            <YStack gap="$3">
+              <XStack justifyContent="space-between" alignItems="center" gap="$3">
+                <Text fontSize={fp(3.2)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#555555'} width={wp(28)}>
+                  Steps
+                </Text>
+                <TextInput
+                  style={[styles.logInput, { backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB', color: isDarkMode ? '#FFFFFF' : '#333333' }]}
+                  testID="log-steps"
+                  value={stepsInput}
+                  onChangeText={setStepsInput}
+                  placeholder="e.g. 8000 steps"
+                  placeholderTextColor={isDarkMode ? '#6B7BB8' : '#9CA3AF'}
+                  keyboardType="numeric"
+                />
+              </XStack>
+              <XStack justifyContent="space-between" alignItems="center" gap="$3">
+                <Text fontSize={fp(3.2)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#555555'} width={wp(28)}>
+                  Water (ml)
+                </Text>
+                <TextInput
+                  style={[styles.logInput, { backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB', color: isDarkMode ? '#FFFFFF' : '#333333' }]}
+                  testID="log-water"
+                  value={waterInput}
+                  onChangeText={setWaterInput}
+                  placeholder="e.g. 2000 ml"
+                  placeholderTextColor={isDarkMode ? '#6B7BB8' : '#9CA3AF'}
+                  keyboardType="numeric"
+                />
+              </XStack>
+              <XStack justifyContent="space-between" alignItems="center" gap="$3">
+                <Text fontSize={fp(3.2)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#555555'} width={wp(28)}>
+                  Sleep (hrs)
+                </Text>
+                <TextInput
+                  style={[styles.logInput, { backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB', color: isDarkMode ? '#FFFFFF' : '#333333' }]}
+                  testID="log-sleep"
+                  value={sleepInput}
+                  onChangeText={setSleepInput}
+                  placeholder="e.g. 7.5 h"
+                  placeholderTextColor={isDarkMode ? '#6B7BB8' : '#9CA3AF'}
+                  keyboardType="numeric"
+                />
+              </XStack>
+              <XStack justifyContent="space-between" alignItems="center" gap="$3">
+                <Text fontSize={fp(3.2)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#555555'} width={wp(28)}>
+                  Breathing (min)
+                </Text>
+                <TextInput
+                  style={[styles.logInput, { backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB', color: isDarkMode ? '#FFFFFF' : '#333333' }]}
+                  testID="log-breathing"
+                  value={breathingInput}
+                  onChangeText={setBreathingInput}
+                  placeholder="e.g. 10 min"
+                  placeholderTextColor={isDarkMode ? '#6B7BB8' : '#9CA3AF'}
+                  keyboardType="numeric"
+                />
               </XStack>
             </YStack>
 
-            {/* Circular Ring Presentation */}
-            <View style={styles.scoreCircle}>
-              <Text fontSize={fp(6.5)} fontWeight="bold" color={PRIMARY_COLOR}>
-                {wellnessScore}
-              </Text>
-              <Text fontSize={fp(3)} color={isDarkMode ? '#FFFFFF' : '#555555'}>
-                /100
-              </Text>
-            </View>
-          </XStack>
-        </Card>
-
-        {/* Metrics Grid */}
-        <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
-          Today's Metrics
-        </Text>
-        <XStack flexWrap="wrap" justifyContent="space-between" marginBottom={16}>
-          {metrics.map((item) => (
-            <Card
-              key={item.id}
-              width={wp(44)}
-              padding={12}
-              borderRadius={12}
-              backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
-              bordered
-              borderWidth={0.6}
-              borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
-              marginBottom={12}
-              elevate
+            <Button
+              testID="log-submit"
+              onPress={handleLogSubmit}
+              marginTop="$3"
+              backgroundColor={BUTTON_COLOR}
             >
-              <XStack justifyContent="space-between" alignItems="center" marginBottom={8}>
-                <Text fontSize={fp(3.6)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#555555'}>
-                  {item.title}
-                </Text>
-                <Ionicons name={item.icon as any} size={20} color={item.color} />
-              </XStack>
-              
-              <XStack alignItems="baseline">
-                <Text fontSize={fp(5)} fontWeight="bold" color={isDarkMode ? '#FFFFFF' : '#111111'}>
-                  {item.value}
-                </Text>
-                <Text fontSize={fp(2.8)} color={isDarkMode ? '#B0C4DE' : '#888888'} marginLeft={4}>
-                  {item.target}
-                </Text>
-              </XStack>
-              
-              {/* Progress Line */}
-              <View style={styles.progressBarBackground}>
-                <View 
-                  style={[
-                    styles.progressBarFill, 
-                    { width: `${item.progress * 100}%`, backgroundColor: item.color }
-                  ]} 
-                />
-              </View>
+              <Text color="#FFFFFF">Save today's log</Text>
+            </Button>
 
-              <Text fontSize={fp(2.8)} color={isDarkMode ? '#B0C4DE' : '#777777'} marginTop={4}>
-                {item.description}
+            {logError !== '' && (
+              <Text testID="log-error" color="#D32F2F" fontSize={fp(3)} marginTop="$2">
+                {logError}
               </Text>
-            </Card>
-          ))}
-        </XStack>
+            )}
+            {logMutation.isSuccess && (
+              <Text testID="log-success" color="#2E7D32" fontSize={fp(3)} marginTop="$2">
+                Log saved. Dashboard updated.
+              </Text>
+            )}
+            {logMutation.isError && (
+              <Text testID="log-failed" color="#D32F2F" fontSize={fp(3)} marginTop="$2">
+                Failed to save log. Please try again.
+              </Text>
+            )}
+          </Card>
 
-        {/* Line Chart Section */}
-        <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
-          Weekly Trend
-        </Text>
-        <Card
-          padding={14}
-          borderRadius={16}
-          backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
-          elevate
-          bordered
-          borderWidth={0.6}
-          borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
-          marginBottom={16}
-          overflow="hidden"
-          alignItems="center"
-        >
-          <LineChart
-            data={chartData}
-            width={screenWidth - wp(12)}
-            height={200}
-            chartConfig={{
-              backgroundColor: isDarkMode ? '#001280' : '#FFFFFF',
-              backgroundGradientFrom: isDarkMode ? '#001280' : '#FFFFFF',
-              backgroundGradientTo: isDarkMode ? '#001280' : '#FFFFFF',
-              decimalPlaces: 0,
-              color: (opacity = 1) => isDarkMode ? `rgba(255, 255, 255, ${opacity})` : `rgba(15, 82, 186, ${opacity})`,
-              labelColor: (opacity = 1) => isDarkMode ? `rgba(176, 196, 222, ${opacity})` : `rgba(102, 102, 102, ${opacity})`,
-              propsForDots: {
-                r: '4',
-                strokeWidth: '2',
-                stroke: PRIMARY_COLOR
-              },
-              propsForBackgroundLines: {
-                stroke: isDarkMode ? '#334EBC' : '#E5E7EB',
-                strokeDasharray: ''
-              }
-            }}
-            bezier
-            style={{
-              marginVertical: 4,
-              borderRadius: 16
-            }}
-          />
-        </Card>
+          {/* Actionable Recommendations */}
+          <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
+            Insights & Recommendations
+          </Text>
+          <YStack gap="$3">
+            {recommendations.map((rec) => (
+              <Card
+                key={rec.id}
+                padding={12}
+                borderRadius={12}
+                backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
+                bordered
+                borderWidth={0.6}
+                borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
+                elevate
+              >
+                <XStack gap="$3" alignItems="center">
+                  <Ionicons name={rec.icon as any} size={24} color={rec.iconColor} />
+                  <Text flex={1} fontSize={fp(3.2)} color={isDarkMode ? '#FFFFFF' : '#444444'} lineHeight={18}>
+                    {rec.text}
+                  </Text>
+                </XStack>
+              </Card>
+            ))}
+          </YStack>
 
-        {/* Actionable Recommendations */}
-        <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
-          Insights & Recommendations
-        </Text>
-        <YStack gap="$3">
-          {recommendations.map((rec) => (
-            <Card
-              key={rec.id}
-              padding={12}
-              borderRadius={12}
-              backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
-              bordered
-              borderWidth={0.6}
-              borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
-              elevate
-            >
-              <XStack gap="$3" alignItems="center">
-                <Ionicons name={rec.icon as any} size={24} color={rec.iconColor} />
-                <Text flex={1} fontSize={fp(3.2)} color={isDarkMode ? '#FFFFFF' : '#444444'} lineHeight={18}>
-                  {rec.text}
-                </Text>
-              </XStack>
-            </Card>
-          ))}
-        </YStack>
-
-      </ScrollView>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -309,6 +456,12 @@ const WellnessDashboardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: wp(8)
   },
   scoreCircle: {
     width: 80,
@@ -331,6 +484,15 @@ const styles = StyleSheet.create({
   progressBarFill: {
     height: '100%',
     borderRadius: 3
+  },
+  logInput: {
+    flex: 1,
+    height: 42,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    fontSize: 14,
+    borderWidth: 1,
+    borderColor: '#E5E7EB'
   }
 });
 
