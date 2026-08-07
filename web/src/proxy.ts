@@ -8,11 +8,7 @@ const intlMiddleware = createMiddleware(routing);
 export default function proxy(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
 
-  const nonce = btoa(
-    Array.from(crypto.getRandomValues(new Uint8Array(16)))
-      .map((b) => String.fromCharCode(b))
-      .join("")
-  );
+  const nonce = crypto.randomUUID().replace(/-/g, "");
 
   const cspDirectives = [
     "default-src 'self'",
