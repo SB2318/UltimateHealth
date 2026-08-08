@@ -28,6 +28,20 @@ import {logApiError} from '../services/monitoring/networkLogger';
 let sessionExpiredNotified = false;
 
 /**
+ * Holds the in-flight session teardown promise triggered by a 401 response.
+ *
+ * Two things depend on this handle:
+ * 1. Concurrent 401s (several in-flight requests expiring at once) share a
+ *    single teardown instead of each firing their own storage writes.
+ * 2. The request interceptor awaits it before reading credentials, so a
+ *    request issued mid-teardown can never observe a half-cleared session.
+ *
+ * It is reset to `null` once the teardown settles, so a future session that
+ * expires later gets a fresh teardown.
+ */
+let sessionTeardownPromise: Promise<void> | null = null;
+
+/**
  * Module-scoped interceptor IDs.
  *
  * Storing the numeric IDs returned by `.use()` lets us call `.eject()` before
@@ -53,24 +67,74 @@ export const resetSessionExpiredNotification = (): void => {
 };
 
 /**
+ * Erases every persisted trace of the expired session and *then* flips the
+ * app into guest mode.
+ *
+ * Ordering matters. Persisted credentials are removed before the Redux
+ * dispatches so that components re-rendering in response to the state change
+ * cannot read a half-cleared session (token gone from Redux but still on
+ * disk, or vice versa). This mirrors `completeLocalLogout` in LogoutScreen,
+ * which already awaits `clearStorage()` before dispatching and navigating.
+ *
+ * This function is deliberately non-throwing: the underlying helpers swallow
+ * their own errors, and the extra guard here ensures a storage failure can
+ * never surface as an unhandled rejection or mask the original API error.
+ */
+const clearExpiredSession = async (): Promise<void> => {
+  try {
+    await Promise.all([
+      secureRemoveItem(SECURE_KEYS.USER_TOKEN),
+      removeItem(KEYS.USER_TOKEN_EXPIRY_DATE),
+      removeItem(KEYS.USER_ID),
+      removeItem(KEYS.USER_HANDLE),
+    ]);
+  } catch (storageError) {
+    console.error('Failed to clear auth storage safely:', storageError);
+  }
+
+  store.dispatch(setUserToken(''));
+  store.dispatch(setUserId(''));
+  store.dispatch(setUserHandle(''));
+  store.dispatch(setGuestMode(true));
+};
+
+/**
+ * Starts a session teardown, or joins the one already running.
+ *
+ * When a token expires it is common for several in-flight requests to fail
+ * with 401 at nearly the same moment. Without this guard each of them would
+ * launch its own set of concurrent storage deletions for the same keys.
+ */
+const teardownExpiredSession = (): Promise<void> => {
+  if (!sessionTeardownPromise) {
+    sessionTeardownPromise = clearExpiredSession().finally(() => {
+      sessionTeardownPromise = null;
+    });
+  }
+  return sessionTeardownPromise;
+};
+
+/**
  * Shared error handler used by both axios instances.
  * Logs API errors safely and handles 401 Unauthorized specifically.
+ *
+ * The handler is async and awaits the session teardown before rejecting, so
+ * by the time a caller's `catch` block runs — and navigates to the login /
+ * guest screen — secure storage and Redux are already consistent. Previously
+ * the storage clears were fired without `await`, letting navigation and
+ * re-renders race the deletions.
  */
-const handleError = (error: any) => {
+const handleError = async (error: any) => {
   // Log the API error securely without exposing secrets
   logApiError(error, undefined, {handler: 'axiosInterceptor'});
 
   if (error?.response?.status === 401) {
-    store.dispatch(setUserToken(''));
-    store.dispatch(setUserId(''));
-    store.dispatch(setUserHandle(''));
-    store.dispatch(setGuestMode(true));
-
-    // Clear token from secure storage to prevent re-attachment by request interceptor.
-    secureRemoveItem(SECURE_KEYS.USER_TOKEN);
-    removeItem(KEYS.USER_TOKEN_EXPIRY_DATE);
-    removeItem(KEYS.USER_ID);
-    removeItem(KEYS.USER_HANDLE);
+    try {
+      await teardownExpiredSession();
+    } catch (teardownError) {
+      // Never let a teardown failure replace the original API error.
+      console.error('Failed to clear the expired session safely:', teardownError);
+    }
 
     // Notify once to avoid alert/toast spam if multiple calls fail simultaneously.
     if (!sessionExpiredNotified) {
@@ -146,7 +210,17 @@ export const setupAxiosInterceptor = () => {
   _axiosReqId = axios.interceptors.request.use(
     async config => {
       config.headers ??= {} as typeof config.headers;
-      
+
+      // If a 401 teardown is in flight, let it finish before reading any
+      // credentials. Redux is cleared only at the end of the teardown, so
+      // without this gate a request could fall through to secure storage,
+      // read the token currently being deleted, and re-attach it — earning
+      // another 401 and kicking off another teardown in a loop.
+      const pendingTeardown = sessionTeardownPromise;
+      if (pendingTeardown) {
+        await pendingTeardown;
+      }
+
       let token = store.getState().user.user_token;
       if (!token) {
         token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
