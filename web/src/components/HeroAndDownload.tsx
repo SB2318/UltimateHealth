@@ -63,12 +63,7 @@ export default function HeroAndDownload() {
   return (
     <>
       <section className="uh-hero">
-        <div className="uh-hero-bg-glow" aria-hidden="true" />
         <div className="uh-hero-bg-stars" aria-hidden="true" />
-        <div className="uh-hero-bg-lightstreak" aria-hidden="true" />
-        <div className="uh-hero-orb uh-orb-1" aria-hidden="true" />
-        <div className="uh-hero-orb uh-orb-2" aria-hidden="true" />
-        <div className="uh-hero-orb uh-orb-3" aria-hidden="true" />
 
         <div className="container">
           <div className="uh-hero-inner">
@@ -123,9 +118,8 @@ export default function HeroAndDownload() {
             </div>
 
             <div className="uh-hero-right scroll-reveal-right">
-              <div className="uh-phone-wrapper">
-                <div className="uh-phone-glow" aria-hidden="true" />
-                <div className="uh-phone-mockup">
+          <div className="uh-phone-wrapper">
+            <div className="uh-phone-mockup">
                   <div className="uh-phone-notch" aria-hidden="true" />
                   <div className="uh-phone-screen">
                     <div className="uh-phone-app-header">
@@ -207,7 +201,6 @@ export default function HeroAndDownload() {
       </section>
 
       <section id="downloads" className="uh-download-section">
-        <div className="uh-download-bg-glow" aria-hidden="true" />
         <div className="container">
           <div className="uh-download-header scroll-reveal">
             <div className="uh-download-header-badge">
