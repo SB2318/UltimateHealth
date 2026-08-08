@@ -4,17 +4,14 @@ import authAxios from './authAxios';
 import {Alert, Platform, ToastAndroid} from 'react-native';
 import store from '../../store/ReduxStore';
 import {
-  setGuestMode,
-  setUserHandle,
-  setUserId,
-  setUserToken,
-} from '../../store/UserSlice';
-import {
   API_REQUEST_TIMEOUT_MS,
   API_TIMEOUT_ERROR_MESSAGE,
 } from './ApiTimeout';
-import {KEYS, removeItem} from '../utils/Utils';
-import {SECURE_KEYS, secureRemoveItem, secureRetrieveItem} from '../storage/SecureStorageUtils';
+import {SECURE_KEYS, secureRetrieveItem} from '../storage/SecureStorageUtils';
+import {
+  awaitPendingSessionTeardown,
+  teardownExpiredSession,
+} from './sessionTeardown';
 import {logApiError} from '../services/monitoring/networkLogger';
 
 /**
@@ -55,22 +52,24 @@ export const resetSessionExpiredNotification = (): void => {
 /**
  * Shared error handler used by both axios instances.
  * Logs API errors safely and handles 401 Unauthorized specifically.
+ *
+ * The handler is async and awaits the session teardown before rejecting, so
+ * by the time a caller's `catch` block runs — and navigates to the login /
+ * guest screen — secure storage and Redux are already consistent. Previously
+ * the storage clears were fired without `await`, letting navigation and
+ * re-renders race the deletions.
  */
-const handleError = (error: any) => {
+const handleError = async (error: any) => {
   // Log the API error securely without exposing secrets
   logApiError(error, undefined, {handler: 'axiosInterceptor'});
 
   if (error?.response?.status === 401) {
-    store.dispatch(setUserToken(''));
-    store.dispatch(setUserId(''));
-    store.dispatch(setUserHandle(''));
-    store.dispatch(setGuestMode(true));
-
-    // Clear token from secure storage to prevent re-attachment by request interceptor.
-    secureRemoveItem(SECURE_KEYS.USER_TOKEN);
-    removeItem(KEYS.USER_TOKEN_EXPIRY_DATE);
-    removeItem(KEYS.USER_ID);
-    removeItem(KEYS.USER_HANDLE);
+    try {
+      await teardownExpiredSession();
+    } catch (teardownError) {
+      // Never let a teardown failure replace the original API error.
+      console.error('Failed to clear the expired session safely:', teardownError);
+    }
 
     // Notify once to avoid alert/toast spam if multiple calls fail simultaneously.
     if (!sessionExpiredNotified) {
@@ -146,7 +145,14 @@ export const setupAxiosInterceptor = () => {
   _axiosReqId = axios.interceptors.request.use(
     async config => {
       config.headers ??= {} as typeof config.headers;
-      
+
+      // If a 401 teardown is in flight, let it finish before reading any
+      // credentials. Redux is cleared only at the end of the teardown, so
+      // without this gate a request could fall through to secure storage,
+      // read the token currently being deleted, and re-attach it — earning
+      // another 401 and kicking off another teardown in a loop.
+      await awaitPendingSessionTeardown();
+
       let token = store.getState().user.user_token;
       if (!token) {
         token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);

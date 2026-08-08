@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {SECURE_KEYS, secureRetrieveItem} from '../storage/SecureStorageUtils';
+import {awaitPendingSessionTeardown} from './sessionTeardown';
 import {PROD_URL} from './APIUtils';
 
 // Centralized Axios instance with authentication handling.
@@ -19,6 +20,13 @@ const authAxios = axios.create({
 authAxios.interceptors.request.use(
   async (config: any) => {
     config.headers ??= {} as typeof config.headers;
+
+    // If a 401 teardown is in flight, let it finish before reading the token.
+    // This instance reads straight from secure storage, so without the gate a
+    // request issued mid-teardown would re-attach the token that is currently
+    // being deleted, earning another 401 in a loop.
+    await awaitPendingSessionTeardown();
+
     const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN);
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
