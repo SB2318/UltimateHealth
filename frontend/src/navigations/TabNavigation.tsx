@@ -21,9 +21,19 @@ import { useAppSelector } from '../store/hooks';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
-const ChatbotGuestScreen = () => <GuestPlaceholderScreen title="AI Chatbot" description="Sign in or sign up to get instant health advice and personalized answers from our AI assistant." />;
-const SettingsGuestScreen = () => <GuestPlaceholderScreen title="Settings" description="Create an account to access settings and manage your preferences." />;
+const ChatbotGuestScreen = () => (
+  <GuestPlaceholderScreen
+    title="AI Chatbot"
+    description="Sign in or create an account to ask health-related questions and access your conversations."
+  />
+);
 
+const SettingsGuestScreen = () => (
+  <GuestPlaceholderScreen
+    title="Settings"
+    description="Create an account to access settings and manage your preferences."
+  />
+);
 const TabNavigation = () => {
   const isGuest = useAppSelector((state: any) => state.user.isGuest);
   return (

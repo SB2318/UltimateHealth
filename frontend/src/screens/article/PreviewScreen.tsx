@@ -439,7 +439,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
         </View>
         <Text style={styles.reviewTitle}>Article Ready for Review</Text>
         <Text style={styles.reviewSubtext}>
-          Enhance your content with AI-powered suggestions and improvements
+        Get actionable suggestions to improve your article before publishing.
         </Text>
         <TouchableOpacity
           style={styles.continueButton}
@@ -486,7 +486,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
             }
           }}
           activeOpacity={0.8}>
-          <Text style={styles.continueButtonText}>Get AI Suggestions</Text>
+          <Text style={styles.continueButtonText}>Get Review Suggestions</Text>
         </TouchableOpacity>
       </View>
 
