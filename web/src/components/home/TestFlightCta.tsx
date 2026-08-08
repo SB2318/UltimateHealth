@@ -80,13 +80,15 @@ export default function TestFlightCta() {
       {appleModal && (
         <div className="modal-overlay active" onClick={closeAppleModal} role="dialog" aria-modal="true" aria-labelledby="testflight-modal-title">
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>✈️</div>
+            <div style={{ width: 72, height: 72, margin: "0 auto 16px", borderRadius: "50%", background: "rgba(0,122,255,0.12)", border: "1px solid rgba(0,122,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", color: "#007aff", fontSize: "1.8rem" }}>
+              <i className="fas fa-plane" aria-hidden="true" />
+            </div>
             <h2 id="testflight-modal-title">Join the iOS TestFlight</h2>
             <p style={{ color: "var(--text-muted)", marginBottom: 24 }}>Help us build the ultimate experience</p>
             <div style={{ textAlign: "left", fontSize: "0.95rem", color: "var(--text-dark)", background: "#f8fafc", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }}>
               <p style={{ marginBottom: 12 }}>We have decided to release via <strong>TestFlight</strong> first before moving to a full App Store launch.</p>
-              <p style={{ marginBottom: 12 }}><strong>🔹 Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
-              <p style={{ marginBottom: 12 }}><strong>🔹 What this means:</strong> The app will be available to invited testers only via TestFlight.</p>
+              <p style={{ marginBottom: 12 }}><strong><i className="fas fa-circle" style={{ fontSize: "0.45rem", color: "#007aff", marginRight: 6 }} aria-hidden="true" />Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
+              <p style={{ marginBottom: 12 }}><strong><i className="fas fa-circle" style={{ fontSize: "0.45rem", color: "#007aff", marginRight: 6 }} aria-hidden="true" />What this means:</strong> The app will be available to invited testers only via TestFlight.</p>
               <p><strong>Are you ready to test?</strong> Enter your email below to request an invitation.</p>
             </div>
             {!testerSuccess ? (
@@ -103,7 +105,7 @@ export default function TestFlightCta() {
               </div>
             ) : (
               <div style={{ padding: 24, color: "#059669", background: "#d1fae5", borderRadius: 12 }}>
-                <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We&apos;ll notify you as soon as the test link is ready.</p>
+                <p style={{ margin: 0, fontWeight: 600 }}><i className="fas fa-check-circle" style={{ marginRight: 6 }} aria-hidden="true" /><strong>Request Sent!</strong> We&apos;ll notify you as soon as the test link is ready.</p>
               </div>
             )}
             <button type="button" className="close-modal-btn" onClick={closeAppleModal}>

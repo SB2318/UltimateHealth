@@ -17,7 +17,10 @@ export default function ContactSection() {
 
         <div className="contact-dark-card">
           <div className="contact-dark-left">
-            <div className="contact-left-badge">✦ UltimateHealth</div>
+            <div className="contact-left-badge">
+              <i className="fas fa-heart-pulse" aria-hidden="true" />
+              UltimateHealth
+            </div>
             <h3 className="contact-dark-title">Let&apos;s Talk<br />Health Together</h3>
             <p className="contact-dark-subtitle">
               Questions about our platform? We&apos;re here to help. Reach out and we&apos;ll respond promptly.
