@@ -28,6 +28,7 @@ import {
 import { setupAxiosInterceptor } from '../../lib/api/setupAxiosInterceptor';
 import { initMonitoring } from '../../lib/services/monitoring/sentry';
 
+import { useCheckTokenStatus } from '../../hooks/auth/useGetTokenStatus';
 import { setUserToken, setGuestMode, setUserId, setUserHandle } from '../../store/UserSlice';
 import { setConnected } from '../../store/NetworkSlice';
 import { RootState } from '../../store/ReduxStore';
@@ -49,6 +50,8 @@ export default function AppContent() {
   const { user_token, isGuest } = useAppSelector(
     (state: RootState) => state.user,
   );
+
+  const { data: tokenRes } = useCheckTokenStatus();
 
   useNotificationListeners();
 
@@ -127,7 +130,7 @@ export default function AppContent() {
 
   useEffect(() => {
     if (!navigationRef.current || !pendingDeepLinkRef.current) return;
-    if (!isGuest && tokenRes === null && !user_token) return;
+    if (!isGuest && !tokenRes && !user_token) return;
 
     const isAuthenticated = Boolean(tokenRes?.isValid || user_token) && !isGuest;
     const target = resolveDeepLinkTarget(pendingDeepLinkRef.current);
