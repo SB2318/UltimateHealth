@@ -23,7 +23,7 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
   return (
     <header>
       {/* ── Hero image ── */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#667eea] to-[#764ba2] aspect-[16/9] md:aspect-[2.4/1] border-2 border-slate-400 mx-4 sm:mx-6 lg:mx-10 mt-3 rounded-3xl">
+      <div className="relative overflow-hidden bg-slate-100 aspect-[16/9] md:aspect-[2.4/1] border-2 border-slate-400 mx-4 sm:mx-6 lg:mx-10 mt-3 rounded-3xl dark:bg-slate-800">
         {article.imageUrl ? (
           <img
             src={article.imageUrl}
@@ -41,7 +41,7 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
         )}
         {/* Bottom gradient overlay for smooth transition */}
         <div
-          className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/20"
+          className="absolute inset-0 bg-black/10"
           aria-hidden="true"
         />
       </div>
@@ -86,7 +86,7 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
 
         {/* Visual separator */}
         <div
-          className="mt-10 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"
+          className="mt-10 h-px bg-slate-200"
           aria-hidden="true"
         />
       </div>
