@@ -9,6 +9,16 @@ export const SECURE_KEYS = {
 
 export type SecureKey = (typeof SECURE_KEYS)[keyof typeof SECURE_KEYS];
 
+// Only non-sensitive values are allowed to fall back to plaintext AsyncStorage.
+// Sensitive credentials (auth tokens, push tokens) must NEVER be persisted
+// unencrypted — if SecureStore is unavailable they fail the write instead.
+const PLAINTEXT_FALLBACK_KEYS: ReadonlySet<SecureKey> = new Set<SecureKey>([
+  SECURE_KEYS.LANGUAGE_PREFERENCES,
+]);
+
+const isPlaintextFallbackAllowed = (key: SecureKey): boolean =>
+  PLAINTEXT_FALLBACK_KEYS.has(key);
+
 export const secureStoreItem = async (
   key: SecureKey,
   value: string,
@@ -21,7 +31,15 @@ export const secureStoreItem = async (
 
     try {
       await SecureStore.setItemAsync(key, value);
+      await AsyncStorage.removeItem(`FALLBACK_${key}`);
     } catch (e) {
+      if (!isPlaintextFallbackAllowed(key)) {
+        console.error(
+          `[SecureStorage] Refusing to store sensitive key ${key} in plaintext fallback`,
+          e,
+        );
+        return false;
+      }
       console.warn(`[SecureStorage] Failed to store ${key}, falling back to AsyncStorage`, e);
       await AsyncStorage.setItem(`FALLBACK_${key}`, value);
     }
@@ -37,7 +55,7 @@ export const secureRetrieveItem = async (
 ): Promise<string | null> => {
   try {
     let value = await SecureStore.getItemAsync(key);
-    if (!value) {
+    if (!value && isPlaintextFallbackAllowed(key)) {
       value = await AsyncStorage.getItem(`FALLBACK_${key}`);
     }
     if (!value || value.trim().length === 0) {
@@ -47,6 +65,9 @@ export const secureRetrieveItem = async (
   } catch (error) {
     console.error(`[SecureStorage] Error retrieving key "${key}":`, error);
     try {
+      if (!isPlaintextFallbackAllowed(key)) {
+        return null;
+      }
       const fallback = await AsyncStorage.getItem(`FALLBACK_${key}`);
       return fallback || null;
     } catch (e) {
