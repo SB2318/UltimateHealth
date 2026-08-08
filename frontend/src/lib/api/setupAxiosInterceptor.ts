@@ -4,17 +4,14 @@ import authAxios from './authAxios';
 import {Alert, Platform, ToastAndroid} from 'react-native';
 import store from '../../store/ReduxStore';
 import {
-  setGuestMode,
-  setUserHandle,
-  setUserId,
-  setUserToken,
-} from '../../store/UserSlice';
-import {
   API_REQUEST_TIMEOUT_MS,
   API_TIMEOUT_ERROR_MESSAGE,
 } from './ApiTimeout';
-import {KEYS, removeItem} from '../utils/Utils';
-import {SECURE_KEYS, secureRemoveItem, secureRetrieveItem} from '../storage/SecureStorageUtils';
+import {SECURE_KEYS, secureRetrieveItem} from '../storage/SecureStorageUtils';
+import {
+  awaitPendingSessionTeardown,
+  teardownExpiredSession,
+} from './sessionTeardown';
 import {logApiError} from '../services/monitoring/networkLogger';
 
 /**
@@ -26,20 +23,6 @@ import {logApiError} from '../services/monitoring/networkLogger';
  * session starts (i.e., after a successful login).
  */
 let sessionExpiredNotified = false;
-
-/**
- * Holds the in-flight session teardown promise triggered by a 401 response.
- *
- * Two things depend on this handle:
- * 1. Concurrent 401s (several in-flight requests expiring at once) share a
- *    single teardown instead of each firing their own storage writes.
- * 2. The request interceptor awaits it before reading credentials, so a
- *    request issued mid-teardown can never observe a half-cleared session.
- *
- * It is reset to `null` once the teardown settles, so a future session that
- * expires later gets a fresh teardown.
- */
-let sessionTeardownPromise: Promise<void> | null = null;
 
 /**
  * Module-scoped interceptor IDs.
@@ -64,54 +47,6 @@ let _authAxiosResId: number | null = null;
  */
 export const resetSessionExpiredNotification = (): void => {
   sessionExpiredNotified = false;
-};
-
-/**
- * Erases every persisted trace of the expired session and *then* flips the
- * app into guest mode.
- *
- * Ordering matters. Persisted credentials are removed before the Redux
- * dispatches so that components re-rendering in response to the state change
- * cannot read a half-cleared session (token gone from Redux but still on
- * disk, or vice versa). This mirrors `completeLocalLogout` in LogoutScreen,
- * which already awaits `clearStorage()` before dispatching and navigating.
- *
- * This function is deliberately non-throwing: the underlying helpers swallow
- * their own errors, and the extra guard here ensures a storage failure can
- * never surface as an unhandled rejection or mask the original API error.
- */
-const clearExpiredSession = async (): Promise<void> => {
-  try {
-    await Promise.all([
-      secureRemoveItem(SECURE_KEYS.USER_TOKEN),
-      removeItem(KEYS.USER_TOKEN_EXPIRY_DATE),
-      removeItem(KEYS.USER_ID),
-      removeItem(KEYS.USER_HANDLE),
-    ]);
-  } catch (storageError) {
-    console.error('Failed to clear auth storage safely:', storageError);
-  }
-
-  store.dispatch(setUserToken(''));
-  store.dispatch(setUserId(''));
-  store.dispatch(setUserHandle(''));
-  store.dispatch(setGuestMode(true));
-};
-
-/**
- * Starts a session teardown, or joins the one already running.
- *
- * When a token expires it is common for several in-flight requests to fail
- * with 401 at nearly the same moment. Without this guard each of them would
- * launch its own set of concurrent storage deletions for the same keys.
- */
-const teardownExpiredSession = (): Promise<void> => {
-  if (!sessionTeardownPromise) {
-    sessionTeardownPromise = clearExpiredSession().finally(() => {
-      sessionTeardownPromise = null;
-    });
-  }
-  return sessionTeardownPromise;
 };
 
 /**
@@ -216,10 +151,7 @@ export const setupAxiosInterceptor = () => {
       // without this gate a request could fall through to secure storage,
       // read the token currently being deleted, and re-attach it — earning
       // another 401 and kicking off another teardown in a loop.
-      const pendingTeardown = sessionTeardownPromise;
-      if (pendingTeardown) {
-        await pendingTeardown;
-      }
+      await awaitPendingSessionTeardown();
 
       let token = store.getState().user.user_token;
       if (!token) {

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {Alert} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
+import authAxios from '../../../lib/api/authAxios';
 import store from '../../../store/ReduxStore';
 import {setUserHandle, setUserId, setUserToken} from '../../../store/UserSlice';
 import {SECURE_KEYS} from '../../../lib/storage/SecureStorageUtils';
@@ -136,6 +137,32 @@ describe('401 session teardown', () => {
     // interceptor read the not-yet-cleared credentials and re-attached the dead
     // token, producing another 401 and another teardown in a loop.
     const configPromise = onRequest({headers: {} as any});
+
+    releaseDeletion();
+    await rejection;
+
+    const config = await configPromise;
+    expect(config.headers.Authorization).toBeUndefined();
+  });
+
+  it('gates the authAxios request interceptor on an in-flight teardown', async () => {
+    let releaseDeletion: () => void = () => {};
+    deleteGate = new Promise<void>(resolve => {
+      releaseDeletion = resolve;
+    });
+
+    setupAxiosInterceptor();
+    const onError = getResponseErrorHandler();
+
+    // authAxios registers its own request interceptor at module load and reads
+    // the token straight from secure storage, so it needs the same gate as the
+    // global instance.
+    const authHandlers = (authAxios.interceptors.request as any).handlers;
+    const authRequest = authHandlers.find((h: any) => h && h.fulfilled);
+    expect(authRequest).toBeDefined();
+
+    const rejection = onError(unauthorizedError()).catch(() => {});
+    const configPromise = authRequest.fulfilled({headers: {} as any});
 
     releaseDeletion();
     await rejection;
