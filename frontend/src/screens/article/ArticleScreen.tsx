@@ -39,6 +39,7 @@ import {
   formatCount,
   handleExternalClick,
   retrieveItem,
+  sanitizeHtml,
   StatusEnum,
   storeItem,
 } from '../../lib/utils/Utils';
@@ -1389,8 +1390,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                         rel: 'stylesheet',
                       },
                     ]}
-                    originWhitelist={['*']}
-                    source={{html: articleContent}}
+                    originWhitelist={['http://*', 'https://*']}
+                    source={{html: sanitizeHtml(articleContent)}}
                     scalesPageToFit={true}
                     viewportContent={'width=device-width, user-scalable=no'}
                     onShouldStartLoadWithRequest={handleExternalClick}
