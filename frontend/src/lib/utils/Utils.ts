@@ -71,13 +71,38 @@ export function formatCount(count: number) {
   else return Math.floor(count / 1000000) + 'M';
 }
 
+// Only safe, externally-openable schemes are allowed to leave the WebView.
+// Anything else (javascript:, data:, vbscript:, file:, custom schemes, ...)
+// is blocked so injected content cannot trigger script execution.
+const SAFE_EXTERNAL_URL = /^(https?|mailto|tel|sms):/i;
+
 export const handleExternalClick = (request: any) => {
   const {url} = request;
-  if (url.startsWith('http')) {
+  if (SAFE_EXTERNAL_URL.test(url ?? '')) {
     Linking.openURL(url);
-    return false;
   }
-  return true;
+  return false;
+};
+
+// Minimal HTML sanitizer for content rendered inside WebViews.
+// Strips executable/embedding tags, event-handler attributes and
+// javascript: URLs while preserving article formatting.
+export const sanitizeHtml = (html: string | null | undefined): string => {
+  if (!html) return '';
+  return html
+    .replace(/<\s*script\b[\s\S]*?<\s*\/\s*script\s*>/gi, '')
+    .replace(/<\s*script\b[^>]*\/?>/gi, '')
+    .replace(/<\s*iframe\b[\s\S]*?<\s*\/\s*iframe\s*>/gi, '')
+    .replace(/<\s*iframe\b[^>]*\/?>/gi, '')
+    .replace(/<\s*object\b[\s\S]*?<\s*\/\s*object\s*>/gi, '')
+    .replace(/<\s*object\b[^>]*\/?>/gi, '')
+    .replace(/<\s*embed\b[^>]*\/?>/gi, '')
+    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+    .replace(
+      /\s(href|src)\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi,
+      (match, attr, value) =>
+        /javascript:/i.test(value) ? ` ${attr}="#"` : match,
+    );
 };
 
 export function msToTime(ms: number): string {
@@ -154,10 +179,17 @@ export const createHTMLStructure = (
   social_link: string,
   author: string,
 ) => {
+  const safeTitle = sanitizeHtml(title);
+  const safeBody = sanitizeHtml(body);
+  const safeAuthor = sanitizeHtml(author);
+  const safeTags = (tags || []).map(tag => ({
+    ...tag,
+    name: sanitizeHtml(tag?.name ?? ''),
+  }));
   return `<!DOCTYPE html>
 <html>
 <head>
-<title>${title}</title>
+<title>${safeTitle}</title>
 <style>
 body { font-family: Arial, sans-serif; font-size: 18px; line-height: 1.6; color: #333; }
 h1 { color: #00698f; } h2 { color: #008000; } h3 { color: #660066; }
@@ -173,13 +205,13 @@ th { background-color: #f0f0f0; }
 </style>
 </head>
 <body>
-${body}
+${safeBody}
 <hr>
 <ul class="tag-list">
-  ${tags.map(tag => `<li><a class="tag" href="#">#${tag.name}</a></li>`).join('')}
+  ${safeTags.map(tag => `<li><a class="tag" href="#">#${tag.name}</a></li>`).join('')}
 </ul>
 <h3>Author</h3>
-<h4>${author}</h4>
+<h4>${safeAuthor}</h4>
 </body>
 </html>`;
 };

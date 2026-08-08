@@ -22,7 +22,7 @@ import {
 } from '../../lib/api/APIUtils';
 
 import {setUserHandle} from '../../store/UserSlice';
-import {handleExternalClick, StatusEnum} from '../../lib/utils/Utils';
+import {handleExternalClick, sanitizeHtml, StatusEnum} from '../../lib/utils/Utils';
 import ReviewItem from '../../components/article/ReviewItem';
 import {Button, Spinner, Text, YStack, TextArea} from 'tamagui';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
@@ -179,8 +179,8 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
                   rel: 'stylesheet',
                 },
               ]}
-              originWhitelist={['*']}
-              source={{html: articleContent ?? noDataHtml}}
+              originWhitelist={['http://*', 'https://*']}
+              source={{html: sanitizeHtml(articleContent ?? noDataHtml)}}
               scalesPageToFit={true}
               viewportContent={'width=device-width, user-scalable=no'}
               onShouldStartLoadWithRequest={handleExternalClick}
