@@ -1,0 +1,20 @@
+{
+  "Login": {
+    "heading": "Connexion requise",
+    "description": "Veuillez vous connecter pour continuer la suppression du compte.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "Entrez votre e-mail",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Mot de passe",
+    "processingTitle": "Traitement en cours",
+    "processingDescription": "Connexion en cours.",
+    "successTitle": "Connexion réussie",
+    "successDescription": "Redirection vers la suppression du compte.",
+    "failedTitle": "Échec de la connexion",
+    "failedDefaultDescription": "Veuillez vérifier vos informations et réessayer.",
+    "serverErrorTitle": "Erreur serveur",
+    "submitButton": "Connexion",
+    "submitButtonLoading": "Connexion en cours..."
+  }
+}
+
