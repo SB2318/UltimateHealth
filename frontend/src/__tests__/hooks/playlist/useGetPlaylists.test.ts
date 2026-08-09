@@ -25,7 +25,10 @@ describe('useGetPlaylists', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('fetches playlists successfully when not guest', async () => {
-    (ReactRedux.useAppSelector as unknown as jest.Mock).mockReturnValue(false);
+    (ReactRedux.useAppSelector as unknown as jest.Mock).mockImplementation((selector: any) => {
+      const mockState = { user: { isGuest: false, user_id: 'test-user-id' } };
+      return selector(mockState);
+    });
 
     mockedAxios.get.mockResolvedValueOnce({
       data: [{id: 1, title: 'My List'}],
@@ -40,7 +43,10 @@ describe('useGetPlaylists', () => {
   });
 
   it('does not fetch if user is a guest', async () => {
-    (ReactRedux.useAppSelector as unknown as jest.Mock).mockReturnValue(true);
+    (ReactRedux.useAppSelector as unknown as jest.Mock).mockImplementation((selector: any) => {
+      const mockState = { user: { isGuest: true, user_id: 'test-guest-id' } };
+      return selector(mockState);
+    });
 
     const {result} = renderHook(() => useGetPlaylists(), {
       wrapper: makeWrapper(),

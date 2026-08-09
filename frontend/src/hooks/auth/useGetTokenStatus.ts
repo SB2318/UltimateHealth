@@ -7,6 +7,7 @@ import { TokenStatus } from '@/src/schemas/type';
 import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppSelector } from '../../store/hooks';
+import { RootState } from '../../store/ReduxStore';
 
  const checkTokenStatusApi = async (
   token: string,
@@ -39,10 +40,11 @@ import { useAppSelector } from '../../store/hooks';
   }
 };
 export const useCheckTokenStatus = () => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: RootState) => state.user.isGuest);
+  const userId = useAppSelector((state: RootState) => state.user.user_id);
 
   return useQuery<TokenStatus>({
-    queryKey: ['token-status'],
+    queryKey: ['token-status', userId],
     queryFn: async () => {
       const token = await secureRetrieveItem(SECURE_KEYS.USER_TOKEN as SecureKey);
       console.log('Checking token status. Token present:', !!token);

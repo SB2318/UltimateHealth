@@ -3,6 +3,7 @@ import {Notification} from '../../schemas/type';
 import axios from 'axios';
 import {PROD_URL} from '../../lib/api/APIUtils';
 import {useAppSelector} from '../../store/hooks';
+import {RootState} from '../../store/ReduxStore';
 type AxiosError = any;
 
 type NotificationRes = {
@@ -13,10 +14,11 @@ export const useGetAllNotifications = (
   page: number,
   isConnected: boolean,
 ): UseQueryResult<NotificationRes, AxiosError> => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: RootState) => state.user.isGuest);
+  const userId = useAppSelector((state: RootState) => state.user.user_id);
 
   return useQuery({
-    queryKey: ['get-all-notifications', page],
+    queryKey: ['get-all-notifications', userId, page],
     queryFn: async () => {
       const response = await axios.get(
         `${PROD_URL}/notifications?role=2&page=${page}`,

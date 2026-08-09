@@ -26,7 +26,10 @@ describe('useGetNotificationPreferences', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('executes mutation successfully and calls API', async () => {
-    (ReactRedux.useAppSelector as unknown as jest.Mock).mockReturnValue(false);
+    (ReactRedux.useAppSelector as unknown as jest.Mock).mockImplementation((selector: any) => {
+      const mockState = { user: { isGuest: false, user_id: 'test-user-id' } };
+      return selector(mockState);
+    });
     
     
     mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });
