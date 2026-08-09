@@ -25,6 +25,7 @@ import {GET_IMAGE} from '../../lib/api/APIUtils';
 import {useAppSelector} from '../../store/hooks';
 
 import {downloadAudio, formatCount, StatusEnum} from '../../lib/utils/Utils';
+import {generatePodcastShareUrl} from '../../lib/utils/shareUtils';
 import Snackbar from 'react-native-snackbar';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Share from 'react-native-share';
@@ -377,7 +378,10 @@ useEffect(() => {
 
   const handleShare = async () => {
     try {
-      const url = `https://uhsocial.in/api/share/podcast?trackId=${podcast?._id}&audioUrl=${podcast?.audio_url}`;
+      const url = generatePodcastShareUrl(
+         podcast?._id ?? '',
+         podcast?.audio_url ?? '',
+      );
       await Share.open({
         title: podcast?.title,
         message: `${podcast?.title} : Check out this awesome podcast on UltimateHealth app!`,
