@@ -14,7 +14,7 @@ const features = [
 
 const upcoming = [
   {
-    emoji: '🤖',
+    icon: 'fa-robot',
     title: 'AI Personal Chat',
     sub: 'Characters Chat',
     desc: 'Chat with AI-powered health personas — a compassionate doctor, a mindful therapist, or a wellness coach — available anytime, completely free.',
@@ -22,7 +22,7 @@ const upcoming = [
     glow: 'rgba(102,126,234,0.15)',
   },
   {
-    emoji: '🏥',
+    icon: 'fa-hospital',
     title: 'Hospital Learning System',
     sub: 'Structured Health Education',
     desc: 'A modular learning platform bringing hospital-grade health education directly to patients, students, and caregivers — no fees, no barriers.',
@@ -30,7 +30,7 @@ const upcoming = [
     glow: 'rgba(34,197,94,0.12)',
   },
   {
-    emoji: '👨‍⚕️',
+    icon: 'fa-user-doctor',
     title: 'Connect with a Doctor',
     sub: 'Voluntary Suggestions Only',
     desc: 'Doctors who choose to volunteer their time can offer health suggestions to the community. No one is forced — only those who genuinely want to help.',
@@ -38,7 +38,7 @@ const upcoming = [
     glow: 'rgba(245,158,11,0.12)',
   },
   {
-    emoji: '🧬',
+    icon: 'fa-dna',
     title: 'AI Health Analytics',
     sub: 'Personalized Wellness Insights',
     desc: 'Track your health patterns with AI-driven insights — personalized reports, trend analysis, and proactive wellness recommendations, built open-source.',
@@ -128,9 +128,9 @@ export default function FeaturesSection() {
                     background: `linear-gradient(135deg, ${f.accent}33, ${f.accent}18)`,
                     border: `1px solid ${f.accent}44`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '1.5rem',
+                    color: f.accent, fontSize: '1.3rem',
                   }}>
-                    {f.emoji}
+                    <i className={`fas ${f.icon}`} aria-hidden="true" />
                   </div>
                   <span style={{
                     fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.1em',
