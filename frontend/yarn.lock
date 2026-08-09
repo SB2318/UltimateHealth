@@ -4027,16 +4027,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@shopify/flash-list@npm:2.0.2":
-  version: 2.0.2
-  resolution: "@shopify/flash-list@npm:2.0.2"
-  dependencies:
-    tslib: "npm:2.8.1"
+"@shopify/flash-list@npm:2.3.2":
+  version: 2.3.2
+  resolution: "@shopify/flash-list@npm:2.3.2"
   peerDependencies:
     "@babel/runtime": "*"
     react: "*"
     react-native: "*"
-  checksum: 10c0/c4e88348ce66e8f51c6213a42574a097d54cebf2125dc3fd8c077f3f7b83e25209c67bcb9a9102a3178c146cf5c23a978febd9a5ed5328ba1d7c663b5a8149d2
+  checksum: 10c0/3e58913506b1dc7f02dd0696c478fd963ede413d9d7121705a08ff505d5c21e611813ce9370068238b8983ff582ed7b8ee94f68e94f99a1ac8f600c01fff118e
   languageName: node
   linkType: hard
 
@@ -15195,7 +15193,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.8.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
+"tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
@@ -15347,7 +15345,7 @@ __metadata:
     "@react-navigation/stack": "npm:^7.10.17"
     "@reduxjs/toolkit": "npm:^2.9.2"
     "@sentry/react-native": "npm:^8.20.0"
-    "@shopify/flash-list": "npm:2.0.2"
+    "@shopify/flash-list": "npm:2.3.2"
     "@tamagui/animations-react-native": "npm:^2.6.0"
     "@tamagui/sheet": "npm:^1.135.6"
     "@tamagui/themes": "npm:^2.6.0"
