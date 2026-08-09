@@ -13560,13 +13560,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-pager-view@npm:8.0.2":
-  version: 8.0.2
-  resolution: "react-native-pager-view@npm:8.0.2"
+"react-native-pager-view@npm:8.0.4":
+  version: 8.0.4
+  resolution: "react-native-pager-view@npm:8.0.4"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/a2ba54ba413d07468d0f5d509071d9addb1281424c04293b9213a8f47fc097455b76109bef5e66272cdb04c1654d8eded6bc7ae3486341fa10dfc58c021defd6
+  checksum: 10c0/658f80cbc42fe3bfcfd1f9f9f11865fef6206bf8eb465635589665a54574817656113041918f465a927b56416811c6d7b720af12ed7a37122cf67fe811f4f45d
   languageName: node
   linkType: hard
 
@@ -15412,7 +15412,7 @@ __metadata:
     react-native-keyboard-controller: "npm:1.21.9"
     react-native-mmkv: "npm:^4.3.1"
     react-native-nitro-modules: "npm:^0.36.4"
-    react-native-pager-view: "npm:8.0.2"
+    react-native-pager-view: "npm:8.0.4"
     react-native-paper: "npm:^5.14.5"
     react-native-pell-rich-editor: "npm:^1.10.0"
     react-native-reanimated: "npm:4.5.1"
