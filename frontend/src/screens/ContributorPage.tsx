@@ -418,16 +418,15 @@ const ContributorPage = () => {
             borderRadius={20}
             borderWidth={1}
             borderColor="rgba(255, 255, 255, 0.2)">
-            <XStack alignItems="center" justifyContent="center" gap="$2">
-              <Text
-                color="white"
-                textAlign="center"
-                fontWeight="600"
-                fontSize={14}>
-                We appreciate your help in making UltimateHealth better!
-              </Text>
-              <FontAwesome5 name="grin-stars" size={18} color="#FFD700" />
-            </XStack>
+            <XStack alignItems="center" justifyContent="center">
+  <Text
+    color="white"
+    textAlign="center"
+    fontWeight="600"
+    fontSize={14}>
+    We appreciate your help in making UltimateHealth better!
+  </Text>
+</XStack>
           </Card>
 
           <XStack

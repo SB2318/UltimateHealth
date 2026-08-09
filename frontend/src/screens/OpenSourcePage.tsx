@@ -14,8 +14,7 @@ import {
 } from 'tamagui';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // Corrected Icon Imports
-import { FontAwesome5, Ionicons, Entypo, MaterialIcons } from '@expo/vector-icons';
-
+import {Ionicons, Entypo, MaterialIcons} from '@expo/vector-icons';
 const PROGRAMS = [
   {
     id: 4,
@@ -68,10 +67,15 @@ const ProgramsPage = () => {
           
           {/* Header Section */}
           <YStack padding="$6" paddingTop="$10" alignItems="center" gap="$2">
-            <XStack alignItems="center" gap="$3">
-              <FontAwesome5 name="trophy" size={30} color="#1A91FF" />
-              <Text fontSize={24} fontWeight="900" color="#1A202C" letterSpacing={-0.5}>Programs</Text>
-            </XStack>
+            <XStack alignItems="center">
+  <Text
+    fontSize={24}
+    fontWeight="900"
+    color="#1A202C"
+    letterSpacing={-0.5}>
+    Programs
+  </Text>
+</XStack>
             <Paragraph color="$gray10" textAlign="center" fontSize={15}>
               Participated Open Source Programs & Hackathons
             </Paragraph>
