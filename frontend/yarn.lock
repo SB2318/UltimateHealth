@@ -4522,10 +4522,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/colors@npm:2.6.3":
-  version: 2.6.3
-  resolution: "@tamagui/colors@npm:2.6.3"
-  checksum: 10c0/b0b54bf28c172a40dca96bef51d3dde96873b313524fb1118a007be03c133514370e7850560295f76694d3d4311115cd43585ec538623f5622cd308c5a40ef84
+"@tamagui/colors@npm:2.7.2":
+  version: 2.7.2
+  resolution: "@tamagui/colors@npm:2.7.2"
+  checksum: 10c0/bb7decd6092e47a2f37b0e84ebaf969d3b8bb834c12e6a6c85ccaee116c6e62c53a942f69c8af0f3e006b0776fe556b18370bd3c1af1cac31dc66ff4cbf28bc5
   languageName: node
   linkType: hard
 
@@ -4597,12 +4597,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/create-theme@npm:2.6.3":
-  version: 2.6.3
-  resolution: "@tamagui/create-theme@npm:2.6.3"
+"@tamagui/create-theme@npm:2.7.2":
+  version: 2.7.2
+  resolution: "@tamagui/create-theme@npm:2.7.2"
   dependencies:
-    "@tamagui/web": "npm:2.6.3"
-  checksum: 10c0/032b8f82081b1f168e9b3838402184cf44fdec0d344f2e7b70203c1d1c2338eaf0da3b1d8575fea5f698062e404029b53ffe296905b6888750ed7fc7c1ccc39b
+    "@tamagui/web": "npm:2.7.2"
+  checksum: 10c0/90941169979e148332ca31e7b73c72cc40dee788fa0f70c651210f482fa59b9f37af431ff11df844198536c8ec8fcae0330a1efe88c1b9517b21a0679c3c545a
   languageName: node
   linkType: hard
 
@@ -5329,14 +5329,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/theme-builder@npm:2.6.3":
-  version: 2.6.3
-  resolution: "@tamagui/theme-builder@npm:2.6.3"
+"@tamagui/theme-builder@npm:2.7.2":
+  version: 2.7.2
+  resolution: "@tamagui/theme-builder@npm:2.7.2"
   dependencies:
-    "@tamagui/create-theme": "npm:2.6.3"
-    "@tamagui/web": "npm:2.6.3"
+    "@tamagui/create-theme": "npm:2.7.2"
+    "@tamagui/web": "npm:2.7.2"
     color2k: "npm:^2.0.2"
-  checksum: 10c0/a38c47b01177524f9fc59336804cd7f53f51b7051f0726aab0084ba3bef43b6741491b04e53847f6baa77a33dce804eb2b1198d3c16759bb60018be74fcc2d13
+  checksum: 10c0/ee2cbd22d1db182f900f093e7af623ce3d5a5d846ef1f4e2add273cd1b60d9aeecd459c26b3bbaa8be2572bd76a91e47a156ed8ce8be185959b88da4757dcdae
   languageName: node
   linkType: hard
 
@@ -5353,16 +5353,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tamagui/themes@npm:^2.6.0":
-  version: 2.6.3
-  resolution: "@tamagui/themes@npm:2.6.3"
+"@tamagui/themes@npm:^2.7.2":
+  version: 2.7.2
+  resolution: "@tamagui/themes@npm:2.7.2"
   dependencies:
-    "@tamagui/colors": "npm:2.6.3"
-    "@tamagui/create-theme": "npm:2.6.3"
-    "@tamagui/theme-builder": "npm:2.6.3"
-    "@tamagui/web": "npm:2.6.3"
+    "@tamagui/colors": "npm:2.7.2"
+    "@tamagui/create-theme": "npm:2.7.2"
+    "@tamagui/theme-builder": "npm:2.7.2"
+    "@tamagui/web": "npm:2.7.2"
     color2k: "npm:^2.0.2"
-  checksum: 10c0/109daffd2ac785462a0e078a640da11707c245d1985cf302b6c433f9359d5442b133d54612d5d96f7920313891292f6df9ea935d09f1b7ce4b97cd3dbccc5645
+  checksum: 10c0/f222d019f72d3129c3907096f0a1746c3b28a90afb196ff9bc6bb36950b4efc02d0089dcc8e91a21358837cf91cdd16aac4b6430e540ca5cd2a53e490064ec9c
   languageName: node
   linkType: hard
 
@@ -15350,7 +15350,7 @@ __metadata:
     "@shopify/flash-list": "npm:2.0.2"
     "@tamagui/animations-react-native": "npm:^2.6.0"
     "@tamagui/sheet": "npm:^1.135.6"
-    "@tamagui/themes": "npm:^2.6.0"
+    "@tamagui/themes": "npm:^2.7.2"
     "@tanstack/react-query": "npm:^5.90.5"
     "@testing-library/jest-native": "npm:^5.4.3"
     "@testing-library/react-native": "npm:^13.2.0"
