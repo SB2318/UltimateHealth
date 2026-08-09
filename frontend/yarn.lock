@@ -8658,7 +8658,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-asset@npm:~57.0.7, expo-asset@npm:~57.0.8":
+"expo-asset@npm:~57.0.8":
   version: 57.0.8
   resolution: "expo-asset@npm:57.0.8"
   dependencies:
@@ -8669,6 +8669,20 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/77106fac4e167614c8ebc76ffbd0ba8521a6d15c6b8a2002b2d03136c4733d7b444c0cc637efd8b43af9eeb4803c8bb7c5ef1c690819017bfc4aeda6a5e4f961
+  languageName: node
+  linkType: hard
+
+"expo-asset@npm:~57.0.9":
+  version: 57.0.9
+  resolution: "expo-asset@npm:57.0.9"
+  dependencies:
+    "@expo/image-utils": "npm:^0.11.4"
+    expo-constants: "npm:~57.0.9"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/42f51be18663e365b85ec4615597445912efd712b611d6d777711f809358e32bdca91cfe39529f93640f8b537c75acd734e821f57974f0ae4e6f8333659aa015
   languageName: node
   linkType: hard
 
@@ -8684,16 +8698,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-build-properties@npm:~57.0.7":
-  version: 57.0.8
-  resolution: "expo-build-properties@npm:57.0.8"
+"expo-build-properties@npm:~57.0.9":
+  version: 57.0.9
+  resolution: "expo-build-properties@npm:57.0.9"
   dependencies:
     "@expo/schema-utils": "npm:^57.0.2"
     resolve-from: "npm:^5.0.0"
     semver: "npm:^7.6.0"
   peerDependencies:
     expo: "*"
-  checksum: 10c0/e67b206eef31ee1b5de983c6f9400abeb252eef6338087e5a598e4dc7cbfbcd03fc999626787bc9d9bc5e98d7dc96868a77711ad3d395bb94b519238403bed37
+  checksum: 10c0/bd8c01f686d357510ac99dc1aa8a5fa09b5045f8b686ebdba3d5478327d93afd83f908f8093eca3e9dbf41dd1901d9c870c3a481e436ac538409057b94ce0ebf
   languageName: node
   linkType: hard
 
@@ -8924,20 +8938,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-notifications@npm:~57.0.7":
-  version: 57.0.8
-  resolution: "expo-notifications@npm:57.0.8"
+"expo-notifications@npm:~57.0.9":
+  version: 57.0.9
+  resolution: "expo-notifications@npm:57.0.9"
   dependencies:
     "@expo/image-utils": "npm:^0.11.4"
     abort-controller: "npm:^3.0.0"
     badgin: "npm:^1.1.5"
     expo-application: "npm:~57.0.2"
-    expo-constants: "npm:~57.0.8"
+    expo-constants: "npm:~57.0.9"
   peerDependencies:
     expo: "*"
     react: "*"
     react-native: "*"
-  checksum: 10c0/55dbc8c0abdab5236b2f0c8fac3d681ed2b1aa792e3c5c6b47a90e1901b08c9628f336bd094a1ca66508081ff8f471391e9fc10c48e3b9fe4a48ba3572ba290c
+  checksum: 10c0/c5b544590e6e192a1e2960adbd86d668b2c5793cc8ab8e47c9354061c143bc7cc3a72c5621e63f095d5d2aa2764f1f6a9575a8fdac2aa47fa37260d0b1b27c88
   languageName: node
   linkType: hard
 
@@ -8990,9 +9004,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-symbols@npm:~57.0.0":
-  version: 57.0.1
-  resolution: "expo-symbols@npm:57.0.1"
+"expo-symbols@npm:~57.0.2":
+  version: 57.0.2
+  resolution: "expo-symbols@npm:57.0.2"
   dependencies:
     "@expo-google-fonts/material-symbols": "npm:^0.4.1"
     sf-symbols-typescript: "npm:^2.0.0"
@@ -9001,7 +9015,7 @@ __metadata:
     expo-font: "*"
     react: "*"
     react-native: "*"
-  checksum: 10c0/ee338e91a3d18b64a8430c6d506a10e906158b5ddbe5c0712a0e12e602b4b5ffea17cfdb826d94a2681b1b02d5a30b92e19be86835e3989a058de30767b98096
+  checksum: 10c0/01f9ecf61a772bdfbf1ddec8282e7f27ad3967b79e82bb6eca61f5f19f36113ec951fe7df44ce47c8431baefb6e34a3dea5524c58e72d5a2d34614457c2592c4
   languageName: node
   linkType: hard
 
@@ -15367,9 +15381,9 @@ __metadata:
     eslint-config-expo: "npm:~57.0.0"
     eslint-plugin-react-compiler: "npm:^19.1.0-rc.2"
     expo: "npm:~57.0.4"
-    expo-asset: "npm:~57.0.7"
+    expo-asset: "npm:~57.0.9"
     expo-audio: "npm:~57.0.3"
-    expo-build-properties: "npm:~57.0.7"
+    expo-build-properties: "npm:~57.0.9"
     expo-constants: "npm:~57.0.7"
     expo-dev-client: "npm:~57.0.9"
     expo-device: "npm:~57.0.0"
@@ -15379,12 +15393,12 @@ __metadata:
     expo-linear-gradient: "npm:~57.0.0"
     expo-linking: "npm:~57.0.4"
     expo-localization: "npm:~57.0.0"
-    expo-notifications: "npm:~57.0.7"
+    expo-notifications: "npm:~57.0.9"
     expo-secure-store: "npm:~57.0.0"
     expo-speech: "npm:~57.0.0"
     expo-splash-screen: "npm:~57.0.5"
     expo-status-bar: "npm:~57.0.0"
-    expo-symbols: "npm:~57.0.0"
+    expo-symbols: "npm:~57.0.2"
     expo-system-ui: "npm:~57.0.0"
     expo-web-browser: "npm:~57.0.2"
     jest: "npm:^29.7.0"
