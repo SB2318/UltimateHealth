@@ -46,7 +46,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/generator@npm:^7.20.5, @babel/generator@npm:^7.29.1, @babel/generator@npm:^7.29.7, @babel/generator@npm:^7.29.8, @babel/generator@npm:^7.7.2":
+"@babel/generator@npm:^7.20.5, @babel/generator@npm:^7.27.1, @babel/generator@npm:^7.29.1, @babel/generator@npm:^7.29.7, @babel/generator@npm:^7.29.8, @babel/generator@npm:^7.7.2":
   version: 7.29.8
   resolution: "@babel/generator@npm:7.29.8"
   dependencies:
@@ -940,7 +940,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/traverse@npm:^7.29.0, @babel/traverse@npm:^7.29.7":
+"@babel/traverse@npm:^7.27.1, @babel/traverse@npm:^7.29.0, @babel/traverse@npm:^7.29.7":
   version: 7.29.8
   resolution: "@babel/traverse@npm:7.29.8"
   dependencies:
@@ -13741,10 +13741,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-worklets@npm:0.10.1":
-  version: 0.10.1
-  resolution: "react-native-worklets@npm:0.10.1"
+"react-native-worklets@npm:0.11.3":
+  version: 0.11.3
+  resolution: "react-native-worklets@npm:0.11.3"
   dependencies:
+    "@babel/generator": "npm:^7.27.1"
     "@babel/plugin-transform-arrow-functions": "npm:^7.27.1"
     "@babel/plugin-transform-class-properties": "npm:^7.28.6"
     "@babel/plugin-transform-classes": "npm:^7.28.6"
@@ -13754,6 +13755,7 @@ __metadata:
     "@babel/plugin-transform-template-literals": "npm:^7.27.1"
     "@babel/plugin-transform-unicode-regex": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.28.5"
+    "@babel/traverse": "npm:^7.27.1"
     "@babel/types": "npm:^7.27.1"
     convert-source-map: "npm:^2.0.0"
     semver: "npm:^7.7.4"
@@ -13762,7 +13764,7 @@ __metadata:
     "@react-native/metro-config": "*"
     react: "*"
     react-native: 0.83 - 0.86
-  checksum: 10c0/31712cf1b311e3dc96544a665da269cdd6be8cab286234cea968c22509398924020f168b1e9e13a532acc23086048c16f5167aa3737e756711239b6f7521fe5a
+  checksum: 10c0/74627598616e671f19475053037fdd2c40941b0b1e65cd538b41ec53229f7d2a35a182f88baf2e669b785c11ace11e2a9ec0c3cf50e1f9c283645af71a673c1a
   languageName: node
   linkType: hard
 
@@ -15427,7 +15429,7 @@ __metadata:
     react-native-view-shot: "npm:5.1.0"
     react-native-web: "npm:~0.21.0"
     react-native-webview: "npm:13.16.1"
-    react-native-worklets: "npm:0.10.1"
+    react-native-worklets: "npm:0.11.3"
     react-redux: "npm:^9.2.0"
     react-test-renderer: "npm:19.2.3"
     socket.io-client: "npm:^4.8.1"
