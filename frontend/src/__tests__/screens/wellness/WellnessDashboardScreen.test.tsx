@@ -2,6 +2,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import WellnessDashboardScreen from '../../../screens/wellness/WellnessDashboardScreen';
+import { getTodayDateString } from '../../../lib/utils/wellnessUtils';
 
 jest.mock('react-native-snackbar', () => ({
   show: jest.fn(),
@@ -36,7 +37,7 @@ describe('WellnessDashboardScreen - State Rendering Tests', () => {
 
   const mockLog = {
     userId: 'u1',
-    date: '2026-08-07',
+    date: getTodayDateString(),
     metrics: { steps: 8450, sleepHours: 7.5, waterMl: 1800, activeMinutes: 45 },
   };
 
