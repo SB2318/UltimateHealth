@@ -57,6 +57,21 @@ import { ReadingDifficulty, getArticleDifficulty } from './ReadingDifficulty';
 import {useDoubleTap} from '../../hooks/common/useDoubleTap';
 import { ImageFallback } from '../common/ImageFallback';
 
+const deriveEngagement = (article: any, uid: any) => ({
+  isLiked: article.likedUsers
+    ? article.likedUsers.some(
+        (it: any) =>
+          (it._id && it._id.toString() === uid) || it.toString() === uid,
+      )
+    : false,
+  likeCount: article.likedUsers ? article.likedUsers.length : 0,
+  saved: !!article.savedUsers && article.savedUsers.includes(uid),
+  reposted: article.repostUsers
+    ? article.repostUsers.some((user: any) => user.toString() === uid)
+    : false,
+  repostCount: article.repostUsers ? article.repostUsers.length : 0,
+});
+
 const ArticleCard = ({
   item,
   navigation,
@@ -83,21 +98,17 @@ const ArticleCard = ({
     useState<boolean>(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const menuTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const prevItemRef = useRef(item);
+  const prevArticleIdRef = useRef(item?._id);
   const {data: user} = useGetProfile();
 
-  const [isLiked, setIsLiked] = useState(
-     item.likedUsers ? item.likedUsers.some(
-      it =>
-        (it._id && it._id.toString() === user_id) || it.toString() === user_id,
-    ): false,
-  );
-  const [likeCount, setLikeCount] = useState(item.likedUsers ? item.likedUsers.length : 0);
-  const [repostCount, setRepostCount] = useState(item.repostUsers ? item.repostUsers.length : 0);
+  const initialEngagement = deriveEngagement(item, user_id);
+  const [isLiked, setIsLiked] = useState(initialEngagement.isLiked);
+  const [likeCount, setLikeCount] = useState(initialEngagement.likeCount);
+  const [repostCount, setRepostCount] = useState(initialEngagement.repostCount);
 
-  const [saved, setSaved] = useState(item.savedUsers && item.savedUsers.includes(user_id));
-  const [reposted, setReposted] = useState(
-    item.repostUsers ? item.repostUsers.some(user => user.toString() === user_id) : false
-  );
+  const [saved, setSaved] = useState(initialEngagement.saved);
+  const [reposted, setReposted] = useState(initialEngagement.reposted);
 
   const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
     Number(item._id),
@@ -111,6 +122,31 @@ const ArticleCard = ({
    
   const {mutate: getArticleContent, isPending: getArticleContentPending} =
     useLazyGetArticleContent();
+
+  // Keep like/save/repost UI in sync when the parent refetches or replaces `item`.
+  useEffect(() => {
+    const itemRefChanged = prevItemRef.current !== item;
+    const sameArticle = prevArticleIdRef.current === item?._id;
+    prevItemRef.current = item;
+    prevArticleIdRef.current = item?._id;
+
+    if (!itemRefChanged) return;
+
+    const next = deriveEngagement(item, user_id);
+
+    // saved/reposted are only confirmed via server callbacks, so they are
+    // safe to reconcile whenever the item is replaced.
+    setSaved(next.saved);
+    setReposted(next.reposted);
+    setRepostCount(next.repostCount);
+
+    // Preserve an in-flight optimistic like for the same article so the
+    // like state is not reverted by a stale refetch.
+    if (sameArticle && likeMutationPending) return;
+
+    setIsLiked(next.isLiked);
+    setLikeCount(next.likeCount);
+  }, [item, user_id, likeMutationPending]);
 
   // TEMP MOCK DATA — to be replaced by real /content-intel/readability/analyze response
   // Shape mirrors the VeriWise-Content-Check API: { score, level, approved }
