@@ -11532,20 +11532,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lottie-react-native@npm:^7.3.4":
-  version: 7.3.8
-  resolution: "lottie-react-native@npm:7.3.8"
+"lottie-react-native@npm:^7.4.0":
+  version: 7.4.0
+  resolution: "lottie-react-native@npm:7.4.0"
   peerDependencies:
     "@lottiefiles/dotlottie-react": ^0.13.5
-    react: "*"
-    react-native: ">=0.46"
+    react: ">=19.2"
+    react-native: ">=0.84"
     react-native-windows: ">=0.63.x"
   peerDependenciesMeta:
     "@lottiefiles/dotlottie-react":
       optional: true
     react-native-windows:
       optional: true
-  checksum: 10c0/19cb5561a4d75d3bc2e2d2e09e328802c96e7724bd4804383331162cc7e3d584c5f45a90dbd5909e3fe93a294dd50f4a0ff517e1ab8450213b789a64f814440d
+  checksum: 10c0/e2b9129ed99363ff907defbf0a4524162afe348aa213655fbc3cf04175942e16a79a4e74e14d3cc92d3dfcc6cd84a5badd1fd3512835870ccd1e3b7063ec76da
   languageName: node
   linkType: hard
 
@@ -15390,7 +15390,7 @@ __metadata:
     jest: "npm:^29.7.0"
     jest-expo: "npm:~57.0.1"
     knip: "npm:^6.29.0"
-    lottie-react-native: "npm:^7.3.4"
+    lottie-react-native: "npm:^7.4.0"
     metro-config: "npm:^0.87.0"
     patch-package: "npm:^8.0.1"
     postinstall-postinstall: "npm:^2.1.0"
