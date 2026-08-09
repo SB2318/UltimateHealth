@@ -13526,16 +13526,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-keyboard-controller@npm:1.21.9":
-  version: 1.21.9
-  resolution: "react-native-keyboard-controller@npm:1.21.9"
+"react-native-keyboard-controller@npm:1.22.3":
+  version: 1.22.3
+  resolution: "react-native-keyboard-controller@npm:1.22.3"
   dependencies:
     react-native-is-edge-to-edge: "npm:^1.2.1"
   peerDependencies:
     react: "*"
     react-native: "*"
     react-native-reanimated: ">=3.0.0"
-  checksum: 10c0/2a679df003f23fbfabe067b14ab4fe2e565421a3285d658a8c3242a0362d4a19ebda6139b0e35fdc926377dab291bad06b15167bc63ca715ab795b946812ac76
+  checksum: 10c0/d3bf5a9378156feba2495ac1ba6d019c70cce9ddcb40e0043a15d5f7f2ceb05c044c88b7408d34b970f392fff261709719c57283768f5884f03a520c96adcd2f
   languageName: node
   linkType: hard
 
@@ -15409,7 +15409,7 @@ __metadata:
     react-native-gifted-chat: "npm:^3.3.3"
     react-native-html-to-pdf: "npm:^1.3.0"
     react-native-image-picker: "npm:^8.2.1"
-    react-native-keyboard-controller: "npm:1.21.9"
+    react-native-keyboard-controller: "npm:1.22.3"
     react-native-mmkv: "npm:^4.3.1"
     react-native-nitro-modules: "npm:^0.36.4"
     react-native-pager-view: "npm:8.0.2"
