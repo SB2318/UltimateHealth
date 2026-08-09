@@ -75,6 +75,7 @@ export default function RenderSuggestion({
           .complex-sentence { background-color: #fef08a; padding: 2px; border-radius: 4px; border-bottom: 2px solid #ca8a04; }
         `}
         source={{ html: formattedHtml }}
+        originWhitelist={['http://*', 'https://*']}
         scalesPageToFit={false}
         viewportContent={'width=device-width, user-scalable=no'}
         // ✅ Re-added link interceptor so external links safely launch default system browser

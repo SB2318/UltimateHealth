@@ -12,7 +12,7 @@ import {fp, hp} from '../../lib/ui/Metric';
 import {ImprovementCardProps} from '../../schemas/type';
 import { formatDateShortYear } from '../../lib/utils/dateUtils';
 import {BUTTON_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
-import {handleExternalClick, StatusEnum} from '../../lib/utils/Utils';
+import {handleExternalClick, sanitizeHtml, StatusEnum} from '../../lib/utils/Utils';
 //import io from 'socket.io-client';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
@@ -81,8 +81,8 @@ const ImprovementCard = ({item, onNavigate}: ImprovementCardProps) => {
                   rel: 'stylesheet',
                 },
               ]}
-              originWhitelist={['*']}
-              source={{html: extractBody(item?.edit_reason) || '<p>No reason provided.</p>'}}
+              originWhitelist={['http://*', 'https://*']}
+              source={{html: sanitizeHtml(extractBody(item?.edit_reason) || '<p>No reason provided.</p>')}}
               scalesPageToFit={true}
               viewportContent={'width=device-width, user-scalable=no'}
               onShouldStartLoadWithRequest={handleExternalClick}
