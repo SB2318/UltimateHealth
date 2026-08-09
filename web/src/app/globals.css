@@ -49,11 +49,6 @@ html { scroll-behavior: smooth; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes uh-orb-float {
-  from { transform: translateY(0) scale(1); }
-  to   { transform: translateY(-40px) scale(1.08); }
-}
-
 @keyframes uh-pulse {
   0%,100% { opacity: 1; transform: scale(1); }
   50%      { opacity: 0.6; transform: scale(1.3); }
@@ -2096,8 +2091,8 @@ i, svg {
   --uh-radius-phone:  40px;
   --uh-font-head:     'Plus Jakarta Sans', sans-serif;
   --uh-font-body:     'DM Sans', sans-serif;
-  --uh-shadow-glow:   0 0 90px rgba(59,130,246,0.48);
-  --uh-shadow-card:   0 8px 32px rgba(0,0,0,0.35);
+  --uh-shadow-glow:   0 0 40px rgba(59,130,246,0.28);
+  --uh-shadow-card:   0 4px 16px rgba(0,0,0,0.22);
 }
 
 /* ── Reset helpers ── */
@@ -2122,11 +2117,7 @@ i, svg {
 .uh-hero {
   position: relative;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 18% 18%, rgba(59,130,246,0.28) 0%, transparent 32%),
-    radial-gradient(circle at 82% 16%, rgba(124,58,237,0.26) 0%, transparent 34%),
-    radial-gradient(circle at 72% 82%, rgba(14,165,233,0.14) 0%, transparent 38%),
-    linear-gradient(135deg, #0b1026 0%, #111c44 34%, #1a237e 68%, #312e81 100%);
+  background: linear-gradient(160deg, #0b1026 0%, #111c44 55%, #1e1b4b 100%);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -2134,126 +2125,19 @@ i, svg {
   padding: 100px 0 80px;
 }
 
-.uh-hero::before,
-.uh-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.uh-hero::before {
-  background:
-    linear-gradient(115deg, transparent 4%, rgba(255,255,255,0.07) 18%, transparent 34%),
-    linear-gradient(28deg, transparent 38%, rgba(96,165,250,0.08) 51%, transparent 64%);
-  mix-blend-mode: screen;
-  opacity: 0.72;
-}
-
-.uh-hero::after {
-  background:
-    radial-gradient(ellipse at 50% 10%, rgba(255,255,255,0.08) 0%, transparent 42%),
-    linear-gradient(180deg, rgba(11,16,38,0.18) 0%, rgba(11,16,38,0) 42%, rgba(6,10,26,0.42) 100%);
-}
-
 /* Background layers */
-.uh-hero-bg-glow {
-  position: absolute;
-  inset: -10%;
-  background:
-    radial-gradient(ellipse 90% 64% at 62% 42%, rgba(37,99,235,0.34) 0%, transparent 68%),
-    radial-gradient(ellipse 58% 44% at 18% 72%, rgba(124,58,237,0.3) 0%, transparent 62%),
-    radial-gradient(ellipse 42% 32% at 48% 8%, rgba(14,165,233,0.16) 0%, transparent 70%);
-  pointer-events: none;
-  animation: uh-aurora-shift 16s ease-in-out infinite alternate;
-}
-
-@keyframes uh-aurora-shift {
-  0% {
-    transform: translate(0, 0) scale(1);
-    filter: hue-rotate(0deg);
-  }
-
-  50% {
-    transform: translate(-2%, 1.5%) scale(1.06);
-    filter: hue-rotate(8deg);
-  }
-
-  100% {
-    transform: translate(2%, -1%) scale(1.02);
-    filter: hue-rotate(-6deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .uh-hero-bg-glow {
-    animation: none;
-  }
-}
 .uh-hero-bg-stars {
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.42) 0%, transparent 100%),
-    radial-gradient(1px 1px at 35% 60%, rgba(255,255,255,0.28) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 55% 15%, rgba(255,255,255,0.34) 0%, transparent 100%),
-    radial-gradient(1px 1px at 70% 75%, rgba(255,255,255,0.24) 0%, transparent 100%),
-    radial-gradient(1px 1px at 85% 35%, rgba(255,255,255,0.34) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 10% 80%, rgba(255,255,255,0.24) 0%, transparent 100%),
-    radial-gradient(1px 1px at 90% 90%, rgba(255,255,255,0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 45% 40%, rgba(255,255,255,0.22) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 25% 90%, rgba(255,255,255,0.26) 0%, transparent 100%),
-    radial-gradient(1px 1px at 75% 10%, rgba(255,255,255,0.38) 0%, transparent 100%);
-  opacity: 0.86;
+    radial-gradient(1px 1px at 15% 20%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,0.32) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 70% 75%, rgba(255,255,255,0.28) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 35%, rgba(255,255,255,0.32) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 10% 80%, rgba(255,255,255,0.28) 0%, transparent 100%);
+  opacity: 0.5;
   pointer-events: none;
 }
-
-.uh-hero-bg-lightstreak {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 18%,
-    rgba(96,165,250,0.03) 36%,
-    rgba(167,139,250,0.14) 49%,
-    rgba(14,165,233,0.05) 58%,
-    transparent 76%
-  );
-  opacity: 0.8;
-  pointer-events: none;
-}
-
-/* Floating orbs */
-.uh-hero-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  pointer-events: none;
-  animation: uh-orb-float 8s ease-in-out infinite alternate;
-}
-
-.uh-orb-1 {
-  width: 400px; height: 400px;
-  background: rgba(59,130,246,0.34);
-  top: -100px; right: 5%;
-  animation-duration: 9s;
-}
-.uh-orb-2 {
-  width: 300px; height: 300px;
-  background: rgba(124,58,237,0.32);
-  bottom: -50px; left: 5%;
-  animation-duration: 11s;
-  animation-delay: -3s;
-}
-.uh-orb-3 {
-  width: 200px; height: 200px;
-  background: rgba(14,165,233,0.24);
-  top: 40%; right: 30%;
-  animation-duration: 7s;
-  animation-delay: -5s;
-}
-
-
 
 /* Inner layout */
 .uh-hero-inner {
@@ -2293,7 +2177,6 @@ i, svg {
   width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--uh-cyan);
-  box-shadow: 0 0 8px var(--uh-cyan);
   animation: uh-pulse 2s ease infinite;
 }
 
@@ -2307,9 +2190,7 @@ i, svg {
   letter-spacing: -0.02em;
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff;
-  text-shadow:
-    0 2px 12px rgba(0,0,0,0.56),
-    0 18px 60px rgba(0,0,0,0.42);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
   margin-bottom: 20px;
  animation: uh-fade-up 0.8s cubic-bezier(.22,1,.36,1) 0.1s both;
 }
@@ -2331,7 +2212,7 @@ i, svg {
   max-width: 460px;
   margin-bottom: 32px;
   animation: uh-fade-up 0.8s cubic-bezier(.22,1,.36,1) 0.3s both;
-  text-shadow: 0 1px 10px rgba(0,0,0,0.36);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
 /* Buttons */
@@ -2362,11 +2243,11 @@ i, svg {
 .uh-btn-primary {
   background: linear-gradient(135deg, #38bdf8 0%, #2563eb 48%, #4f46e5 100%);
   color: #fff;
-  box-shadow: 0 10px 30px rgba(37,99,235,0.48), 0 0 0 1px rgba(255,255,255,0.12) inset;
+  box-shadow: 0 6px 16px rgba(37,99,235,0.35);
 }
 .uh-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(37,99,235,0.62), 0 0 0 1px rgba(255,255,255,0.16) inset;
+  box-shadow: 0 8px 20px rgba(37,99,235,0.4);
 }
 
 .uh-btn-secondary {
@@ -2461,25 +2342,13 @@ i, svg {
   width: 280px;
 }
 
-.uh-phone-glow {
-  position: absolute;
-  inset: -30px;
-  background: radial-gradient(ellipse at center, rgba(37,99,235,0.4) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  animation: uh-orb-float 6s ease-in-out infinite alternate;
-}
-
 .uh-phone-mockup {
   position: relative;
   width: 100%;
   border-radius: var(--uh-radius-phone);
   background: linear-gradient(160deg, #1a1f3c, #0d1224);
   border: 2px solid rgba(255,255,255,0.15);
-  box-shadow:
-    0 0 0 6px rgba(255,255,255,0.04),
-    0 30px 80px rgba(0,0,0,0.6),
-    var(--uh-shadow-glow);
+  box-shadow: 0 18px 48px rgba(0,0,0,0.45);
   overflow: hidden;
   animation: uh-phone-float 5s ease-in-out infinite alternate;
 }
@@ -2729,15 +2598,15 @@ i, svg {
   border-radius: 14px;
   background: rgba(37,99,235,0.9);
   border: 1.5px solid rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(6px);
   display: flex; align-items: center; justify-content: center;
   color: #fff;
   font-size: 16px;
-  box-shadow: 0 8px 24px rgba(37,99,235,0.4);
+  box-shadow: 0 4px 12px rgba(37,99,235,0.25);
 }
-.uh-badge-heart { background: rgba(239,68,68,0.9); box-shadow: 0 8px 24px rgba(239,68,68,0.4); }
-.uh-badge-group { background: rgba(16,185,129,0.9); box-shadow: 0 8px 24px rgba(16,185,129,0.4); }
-.uh-badge-health { background: rgba(124,58,237,0.9); box-shadow: 0 8px 24px rgba(124,58,237,0.4); }
+.uh-badge-heart { background: rgba(239,68,68,0.9); box-shadow: 0 4px 12px rgba(239,68,68,0.2); }
+.uh-badge-group { background: rgba(16,185,129,0.9); box-shadow: 0 4px 12px rgba(16,185,129,0.2); }
+.uh-badge-health { background: rgba(124,58,237,0.9); box-shadow: 0 4px 12px rgba(124,58,237,0.2); }
 
 .uh-float-label {
   font-family: var(--uh-font-head);
@@ -2758,7 +2627,7 @@ i, svg {
    the component so the hover state needs no JavaScript. */
 .uh-upcoming-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 50px var(--uh-upcoming-glow);
+  box-shadow: 0 12px 28px var(--uh-upcoming-glow);
 }
 
 /* ── Scroll reveal animations ── */
@@ -2782,14 +2651,6 @@ i, svg {
   padding: 90px 0 100px;
   font-family: var(--uh-font-body);
   overflow: hidden;
-}
-
-.uh-download-bg-glow {
-  position: absolute;
-  top: -60px; left: 50%; transform: translateX(-50%);
-  width: 700px; height: 300px;
-  background: radial-gradient(ellipse, rgba(37,99,235,0.1) 0%, transparent 70%);
-  pointer-events: none;
 }
 
 /* Download Header */
@@ -2852,7 +2713,7 @@ i, svg {
 }
 .uh-download-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
 }
 
 /* Glassmorphism overlay */
@@ -2887,11 +2748,11 @@ i, svg {
   border-radius: 14px;
   background: #0f172a;
   border: 1.5px solid rgba(255,255,255,0.1);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   overflow: hidden;
 }
-.uh-phone-mini.android-theme { box-shadow: 0 8px 24px rgba(16,185,129,0.3); }
-.uh-phone-mini.ios-theme     { box-shadow: 0 8px 24px rgba(37,99,235,0.3); }
+.uh-phone-mini.android-theme { box-shadow: 0 4px 12px rgba(16,185,129,0.2); }
+.uh-phone-mini.ios-theme     { box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
 
 .uh-phone-mini-notch {
   width: 30px; height: 8px;
@@ -3112,8 +2973,8 @@ i, svg {
   border-radius: 50%;
   flex-shrink: 0;
 }
-.uh-card-footer-dot.green { background: #10b981; box-shadow: 0 0 6px rgba(16,185,129,0.5); }
-.uh-card-footer-dot.blue  { background: var(--uh-primary); box-shadow: 0 0 6px rgba(37,99,235,0.5); }
+.uh-card-footer-dot.green { background: #10b981; }
+.uh-card-footer-dot.blue  { background: var(--uh-primary); }
 
 /* =============================================================
    RESPONSIVE
@@ -3229,7 +3090,6 @@ i, svg {
   outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) {
-  .uh-hero-orb,
   .uh-phone-mockup,
   .uh-float-icon,
   .uh-download-card,
