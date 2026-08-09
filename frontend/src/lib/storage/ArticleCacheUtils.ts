@@ -1,0 +1,189 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ArticleData} from '../../schemas/type';
+import {debugError} from '../utils/debugLog';
+
+/**
+ * Offline reading cache for recently viewed articles.
+ *
+ * Article detail and body are fetched over the network on every open, so a
+ * user with no connection cannot re-read something they opened minutes ago.
+ * Each viewed article is stored here instead, and the read hooks fall back to
+ * this cache when the request fails for connectivity reasons.
+ *
+ * The cache is bounded two ways: by recency (`MAX_CACHED_ARTICLES`) and by age
+ * (`CACHE_TTL_MS`), so it cannot grow without limit or serve stale health
+ * content indefinitely.
+ */
+
+/** AsyncStorage key holding the serialised cache. */
+export const ARTICLE_CACHE_KEY = 'OFFLINE_ARTICLE_CACHE';
+
+/** How many recently viewed articles are retained. */
+export const MAX_CACHED_ARTICLES = 20;
+
+/** Entries older than this are dropped on the next read or write. */
+export const CACHE_TTL_DAYS = 7;
+export const CACHE_TTL_MS = CACHE_TTL_DAYS * 24 * 60 * 60 * 1000;
+
+export type CachedArticle = {
+  articleId: number;
+  article: ArticleData;
+  /** PocketBase record id, used to match the separately fetched body. */
+  recordId?: string;
+  htmlContent?: string;
+  /** Epoch ms of the most recent view; drives both LRU order and expiry. */
+  cachedAt: number;
+};
+
+const isExpired = (entry: CachedArticle, now: number): boolean =>
+  now - entry.cachedAt > CACHE_TTL_MS;
+
+/** Reads the cache, tolerating absent or corrupt storage. */
+const readCache = async (): Promise<CachedArticle[]> => {
+  try {
+    const raw = await AsyncStorage.getItem(ARTICLE_CACHE_KEY);
+    if (!raw) {
+      return [];
+    }
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (error) {
+    // A corrupt payload must not break reading forever, so reset it.
+    debugError('[ArticleCache] Unable to read cache, resetting:', error);
+    try {
+      await AsyncStorage.removeItem(ARTICLE_CACHE_KEY);
+    } catch {}
+    return [];
+  }
+};
+
+const writeCache = async (entries: CachedArticle[]): Promise<void> => {
+  try {
+    await AsyncStorage.setItem(ARTICLE_CACHE_KEY, JSON.stringify(entries));
+  } catch (error) {
+    debugError('[ArticleCache] Unable to persist cache:', error);
+  }
+};
+
+/**
+ * Drops expired entries and trims to the most recent `MAX_CACHED_ARTICLES`.
+ * Entries are held newest-first, so the tail is the least recently viewed.
+ */
+const prune = (entries: CachedArticle[], now: number): CachedArticle[] =>
+  entries.filter(entry => !isExpired(entry, now)).slice(0, MAX_CACHED_ARTICLES);
+
+/**
+ * Records a viewed article, moving it to the front of the cache.
+ *
+ * Re-viewing an article refreshes its timestamp, so actively read articles
+ * survive eviction while forgotten ones age out.
+ */
+export const cacheArticleDetail = async (
+  articleId: number,
+  article: ArticleData,
+): Promise<void> => {
+  if (!articleId || !article) {
+    return;
+  }
+
+  const now = Date.now();
+  const entries = await readCache();
+  const existing = entries.find(entry => entry.articleId === articleId);
+
+  const updated: CachedArticle = {
+    articleId,
+    article,
+    // Preserve any body already cached for this article.
+    recordId: article.pb_recordId || existing?.recordId,
+    htmlContent: existing?.htmlContent,
+    cachedAt: now,
+  };
+
+  const remaining = entries.filter(entry => entry.articleId !== articleId);
+  await writeCache(prune([updated, ...remaining], now));
+};
+
+/**
+ * Attaches a fetched article body to its cached entry.
+ *
+ * The body is fetched by PocketBase record id in a separate request, so it is
+ * matched back to the article that carries the same `pb_recordId`. A body with
+ * no cached article is not stored — it would be unreadable offline anyway.
+ */
+export const cacheArticleContent = async (
+  recordId: string,
+  htmlContent: string,
+): Promise<void> => {
+  if (!recordId || typeof htmlContent !== 'string') {
+    return;
+  }
+
+  const now = Date.now();
+  const entries = await readCache();
+  const index = entries.findIndex(entry => entry.recordId === recordId);
+  if (index === -1) {
+    return;
+  }
+
+  const updated = {...entries[index], htmlContent, cachedAt: now};
+  const remaining = entries.filter((_, i) => i !== index);
+  await writeCache(prune([updated, ...remaining], now));
+};
+
+/** Returns a cached article, or null when absent or expired. */
+export const getCachedArticle = async (
+  articleId: number,
+): Promise<CachedArticle | null> => {
+  const now = Date.now();
+  const entries = await readCache();
+  const entry = entries.find(item => item.articleId === articleId);
+
+  if (!entry || isExpired(entry, now)) {
+    return null;
+  }
+  return entry;
+};
+
+/** Returns a cached article body, or null when absent or expired. */
+export const getCachedArticleContent = async (
+  recordId: string,
+): Promise<string | null> => {
+  const now = Date.now();
+  const entries = await readCache();
+  const entry = entries.find(item => item.recordId === recordId);
+
+  if (!entry || isExpired(entry, now) || typeof entry.htmlContent !== 'string') {
+    return null;
+  }
+  return entry.htmlContent;
+};
+
+/**
+ * Returns every unexpired cached article, newest first, and persists the
+ * pruned list so expired entries are cleaned up as a side effect of browsing.
+ */
+export const getCachedArticles = async (): Promise<CachedArticle[]> => {
+  const now = Date.now();
+  const entries = await readCache();
+  const pruned = prune(entries, now);
+
+  if (pruned.length !== entries.length) {
+    await writeCache(pruned);
+  }
+  return pruned;
+};
+
+/** Whether an article is readable offline. */
+export const isArticleCached = async (articleId: number): Promise<boolean> => {
+  const entry = await getCachedArticle(articleId);
+  return entry !== null;
+};
+
+/** Removes every cached article. */
+export const clearArticleCache = async (): Promise<void> => {
+  try {
+    await AsyncStorage.removeItem(ARTICLE_CACHE_KEY);
+  } catch (error) {
+    debugError('[ArticleCache] Unable to clear cache:', error);
+  }
+};

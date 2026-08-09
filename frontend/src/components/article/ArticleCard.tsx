@@ -55,6 +55,7 @@ import {useLazyGetArticleContent} from '../../hooks/article/useLazyGetArticleCon
 import {useRepostArticle} from '../../hooks/article/useArticleRepost';
 import { ReadingDifficulty, getArticleDifficulty } from './ReadingDifficulty';
 import {useDoubleTap} from '../../hooks/common/useDoubleTap';
+import {useIsArticleCached} from '../../hooks/article/useIsArticleCached';
 import { ImageFallback } from '../common/ImageFallback';
 
 const ArticleCard = ({
@@ -77,6 +78,8 @@ const ArticleCard = ({
     icon: isDarkMode ? '#D1D5DB' : '#414A4C',
   };
   const socket = useSocket();
+  // Whether this article has been cached for offline reading.
+  const isAvailableOffline = useIsArticleCached(Number(item?._id));
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
   const [requestModalVisible, setRequestModalVisible] =
@@ -593,6 +596,28 @@ const ArticleCard = ({
       <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
         🛡️ Trusted by {formatCount(item?.trustUsers?.length ?? 0)}
       </Text>
+    </>
+  )}
+  {isAvailableOffline && (
+    <>
+      <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
+      <View
+        accessibilityLabel="Available Offline"
+        style={{flexDirection: 'row', alignItems: 'center'}}>
+        <IonIcons
+          name="cloud-done-outline"
+          size={13}
+          color={themeColors.secondaryText}
+          style={{marginRight: 4}}
+        />
+        <Text
+          style={[
+            styles.footerText1,
+            {color: themeColors.secondaryText, marginBottom: 0},
+          ]}>
+          Available Offline
+        </Text>
+      </View>
     </>
   )}
 </View>
