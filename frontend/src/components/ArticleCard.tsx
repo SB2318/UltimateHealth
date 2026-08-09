@@ -781,19 +781,19 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    fontSize: fp(3.4),
-    fontWeight: '600',
-    color: PRIMARY_COLOR,
-    marginBottom: 6,
-  },
+  fontSize: fp(3.4),
+  fontWeight: '700',
+  color: '#000000',
+  marginBottom: 6,
+},
 
-  title: {
-    fontSize: fp(5.8),
-    fontWeight: '700',
-    color: '#121212',
-    lineHeight: 26,
-    marginBottom: 6,
-  },
+title: {
+  fontSize: fp(5.8),
+  fontWeight: '700',
+  color: '#000000',
+  lineHeight: 26,
+  marginBottom: 6,
+},
 
   footerText1: {
     fontSize: fp(3.5),
@@ -812,14 +812,14 @@ const styles = StyleSheet.create({
     color: '#B0B0B0',
   },
 
-  likeSaveContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 14,
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#F0F0F0',
-  },
+likeSaveContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  marginTop: 14,
+  paddingTop: 12,
+  borderTopWidth: 2,
+  borderTopColor: '#000000',
+},
 
   likeSaveChildContainer: {
     flexDirection: 'row',
@@ -848,6 +848,8 @@ const styles = StyleSheet.create({
     marginVertical: 14,
     overflow: 'hidden',
     elevation: 4,
+    borderWidth: 2,
+  borderColor: '#000000',
 
     borderRadius: 12,
   },
