@@ -642,15 +642,14 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                     key={index}
                     style={{
                       ...styles.button,
-                      backgroundColor: isActive ? '#000A60' : 'white',
-                      borderColor: isActive ? '#000A60' : '#D1D5DB',
+                     backgroundColor: isActive ? '#000000' : '#FFFFFF',
+borderColor: '#000000',
                     }}
                     onPress={() => handleCategoryClick(item)}>
                     <Text
                       style={{
                         ...styles.labelStyle,
-                        color: isActive ? 'white' : '#4B5563',
-                      }}>
+color: isActive ? '#FFFFFF' : '#000000',                      }}>
                       {item.name}
                     </Text>
                   </TouchableOpacity>
@@ -755,8 +754,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                   key={index}
                   style={{
                     ...styles.button,
-                    backgroundColor: isActive ? '#000A60' : 'white',
-                    borderColor: isActive ? '#000A60' : '#D1D5DB',
+                    backgroundColor: isActive ? '#000000' : '#FFFFFF',
+borderColor: '#000000',
                   }}
                   onPress={() => handleCategoryClick(item)}
                   accessibilityRole="button"
@@ -766,8 +765,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                   <Text
                     style={{
                       ...styles.labelStyle,
-                      color: isActive ? 'white' : '#4B5563',
-                    }}>
+color: isActive ? '#FFFFFF' : '#000000',                    }}>
                     {item.name}
                   </Text>
                 </TouchableOpacity>
@@ -816,7 +814,7 @@ const styles = StyleSheet.create({
 
   blockContainer: {
     flex: 0,
-    backgroundColor: '#F0F8FF',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     //alignItems: 'center',
   },
@@ -825,16 +823,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 6,
   },
-  button: {
-    flex: 0,
-    borderRadius: wp(4),
-    marginHorizontal: 6,
-    marginVertical: 4,
-    padding: wp(3.1),
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+ button: {
+  flex: 0,
+  borderRadius: wp(4),
+  marginHorizontal: 6,
+  marginVertical: 4,
+  padding: wp(3.1),
+  borderWidth: 2,
+  justifyContent: 'center',
+  alignItems: 'center',
+},
+
+
   labelStyle: {
     fontWeight: 'bold',
     fontSize: 15,
@@ -887,7 +887,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 32,
-    backgroundColor: '#F0F8FF',
+    backgroundColor: '#FFFFFF',
   },
   iconCircle: {
     width: 120,
