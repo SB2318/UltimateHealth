@@ -1218,8 +1218,10 @@ We welcome contributions from everyone — developers, designers, writers, and t
 
 Made with love by the [UltimateHealth Community](https://github.com/SB2318/UltimateHealth/graphs/contributors)
 
-Star this repo if you find it helpful — it motivates us to keep building!
+## FAQ
 
-[![Star History Chart](https://api.star-history.com/svg?repos=SB2318/UltimateHealth&type=Date)](https://star-history.com/#SB2318/UltimateHealth&Date)
+### Who owned this software?
+
+=> All Engineering Students.
 
 </div>
