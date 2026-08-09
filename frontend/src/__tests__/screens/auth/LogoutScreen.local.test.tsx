@@ -77,6 +77,7 @@ describe('LogoutScreen local logout behavior', () => {
   const expectLocalLogout = async () => {
     await waitFor(() => {
       expect(mockClearStorage).toHaveBeenCalledTimes(1);
+      expect(mockClearQueryCache).toHaveBeenCalledTimes(1);
       expect(mockDispatch).toHaveBeenCalledWith({
         type: 'user/resetUserState',
       });

@@ -3,7 +3,12 @@ import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import React from 'react';
 import { useLoadAIConversations } from '@/src/hooks/ai/useLoadAIChats';
+import * as ReactRedux from '@/src/store/hooks';
 
+jest.mock('@/src/store/hooks', () => ({
+  useAppSelector: jest.fn(),
+  useAppDispatch: jest.fn(),
+}));
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -22,9 +27,10 @@ describe('useLoadAIConversations', () => {
   afterEach(() => jest.clearAllMocks());
 
   it('executes mutation successfully and calls API', async () => {
-    
-    
-    
+    (ReactRedux.useAppSelector as unknown as jest.Mock).mockImplementation((selector: any) => {
+      const mockState = { user: { isGuest: false, user_id: 'test-user-id' } };
+      return selector(mockState);
+    });
     mockedAxios.post.mockResolvedValueOnce({ data: { success: true, data: [] } });
 
     const {result} = renderHook(() => useLoadAIConversations(true), {

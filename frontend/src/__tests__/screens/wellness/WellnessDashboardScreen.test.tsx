@@ -36,7 +36,7 @@ describe('WellnessDashboardScreen - State Rendering Tests', () => {
 
   const mockLog = {
     userId: 'u1',
-    date: '2026-08-07',
+    date: require('../../../lib/utils/wellnessUtils').getTodayDateString(),
     metrics: { steps: 8450, sleepHours: 7.5, waterMl: 1800, activeMinutes: 45 },
   };
 
