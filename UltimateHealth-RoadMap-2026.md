@@ -6,7 +6,7 @@ UltimateHealth was initially published as a real-world project where contributor
 
 ---
 
-## Contributor Reengagement — May–August 2026 (Developer & Community Feedback on this Projects)
+## Contributor Reengagement — May–August 2026 (Developer & Community Feedback on this Project)
 
 ### Goal
 
