@@ -13,7 +13,13 @@ export const generateArticleShareUrl = (
   authorId: string | number,
   recordId: string
 ): string => {
-  return `${SHARE_BASE_URL}/api/share/article?articleId=${articleId}&authorId=${authorId}&recordId=${recordId}`;
+  const params = new URLSearchParams({
+    articleId: String(articleId),
+    authorId: String(authorId),
+    recordId,
+  });
+
+  return `${SHARE_BASE_URL}/api/share/article?${params.toString()}`;
 };
 /**
  * Generates the unified share URL for a podcast.
