@@ -1,5 +1,6 @@
  
 import React from 'react';
+import {Alert} from 'react-native';
 import {render, fireEvent, act} from '@testing-library/react-native';
 import PodcastDetail from '../../../screens/podcast/PodcastDetail';
 
@@ -143,6 +144,11 @@ jest.mock('../../../components/common/LoadingSpinner', () => {
   MockSpinner.displayName = 'LoadingSpinner';
   return MockSpinner;
 });
+
+jest.mock('../../../lib/platform/PlaybackManager', () => ({
+  getPlaybackPosition: jest.fn(),
+  savePlaybackPosition: jest.fn(),
+}));
 
 const mockPodcast = {
   _id: 'podcast-1',
@@ -511,6 +517,65 @@ describe('PodcastDetail', () => {
     });
     expect(getByText('1x')).toBeTruthy();
     expect(mockPlayer.setRateAsync).toHaveBeenCalledWith(1.0, true, 'high');
+  });
+
+  describe('resume prompt', () => {
+    const mockGetPlaybackPosition =
+      require('../../../lib/platform/PlaybackManager').getPlaybackPosition as jest.Mock;
+
+    beforeEach(() => {
+      jest.useFakeTimers();
+      jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      jest.useRealTimers();
+      (Alert.alert as jest.Mock).mockRestore();
+    });
+
+    it('shows the resume prompt on normal screen entry when saved progress exists', async () => {
+      mockGetPlaybackPosition.mockResolvedValue({position: 120, duration: 245});
+
+      renderScreen();
+
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Resume Podcast',
+        expect.stringContaining('Do you want to resume from'),
+        expect.anything(),
+      );
+    });
+
+    it('does not show the resume prompt when the user starts playback before the delayed check', async () => {
+      mockGetPlaybackPosition.mockResolvedValue({position: 120, duration: 245});
+
+      const {getByLabelText} = renderScreen();
+
+      fireEvent.press(getByLabelText('podcast-play-pause-button'));
+
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+
+      expect(Alert.alert).not.toHaveBeenCalled();
+    });
+
+    it('does not show the resume prompt when the user seeks before the delayed check', async () => {
+      mockGetPlaybackPosition.mockResolvedValue({position: 120, duration: 245});
+
+      const {getByLabelText} = renderScreen();
+
+      fireEvent.press(getByLabelText('podcast-back-button'));
+
+      await act(async () => {
+        jest.advanceTimersByTime(500);
+      });
+
+      expect(Alert.alert).not.toHaveBeenCalled();
+    });
   });
 });
 

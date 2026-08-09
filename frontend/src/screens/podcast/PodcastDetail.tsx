@@ -90,6 +90,8 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const [isWaitingForNetwork, setIsWaitingForNetwork] = useState(false);
   const [resumePosition, setResumePosition] = useState<number | null>(null);
   const resumeAttemptedRef = useRef(false);
+  const resumePromptSkippedRef = useRef(false);
+  const resumePromptTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [isLike, setLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -269,7 +271,12 @@ useEffect(() => {
   const checkResume = async () => {
     const saved = await getPlaybackPosition(trackId);
 
-    if (!isCancelled && saved && saved.position > 5) {
+    if (
+      !isCancelled &&
+      !resumePromptSkippedRef.current &&
+      saved &&
+      saved.position > 5
+    ) {
       Alert.alert(
         'Resume Podcast',
         `Do you want to resume from ${formatSecTime(saved.position)}?`,
@@ -296,13 +303,16 @@ useEffect(() => {
     }
   };
 
-  const timeout = setTimeout(() => {
+  resumePromptTimerRef.current = setTimeout(() => {
     void checkResume();
   }, 500);
 
   return () => {
     isCancelled = true;
-    clearTimeout(timeout);
+    if (resumePromptTimerRef.current) {
+      clearTimeout(resumePromptTimerRef.current);
+      resumePromptTimerRef.current = null;
+    }
   };
 }, [player, trackId]);
 
@@ -314,7 +324,17 @@ useEffect(() => {
     }
   }, [podcast, user_id])
 
+  const cancelResumePrompt = () => {
+    // Once the user interacts with playback, never interrupt with the resume prompt.
+    resumePromptSkippedRef.current = true;
+    if (resumePromptTimerRef.current) {
+      clearTimeout(resumePromptTimerRef.current);
+      resumePromptTimerRef.current = null;
+    }
+  };
+
   const handleSpeedChange = React.useCallback(async () => {
+    cancelResumePrompt();
     if (!player) return;
 
     const currentIndex = PLAYBACK_SPEEDS.indexOf(speed);
@@ -336,6 +356,7 @@ useEffect(() => {
   const SKIP_TIME = 5; // seconds
 
   const handleForward = async () => {
+    cancelResumePrompt();
     if (!player) return;
 
     let next = position + SKIP_TIME;
@@ -349,6 +370,7 @@ useEffect(() => {
   };
 
   const handleBackward = async () => {
+    cancelResumePrompt();
     if (!player) return;
 
     let next = position - SKIP_TIME;
@@ -402,6 +424,7 @@ useEffect(() => {
   };
 
   const handlePlay = async () => {
+    cancelResumePrompt();
     if (!player || !isConnected) {
       return;
     }
@@ -427,6 +450,7 @@ useEffect(() => {
   };
 
  const handlePause = async () => {
+  cancelResumePrompt();
   if (!player) return;
 
   try {
@@ -575,6 +599,7 @@ useEffect(() => {
         maximumTrackTintColor="#ccc"
         thumbTintColor={PRIMARY_COLOR}
         onSlidingComplete={async v => {
+          cancelResumePrompt();
           if (player) {
             await player.seekTo(v);
             setPosition(v);
