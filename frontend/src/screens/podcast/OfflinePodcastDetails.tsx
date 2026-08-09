@@ -19,6 +19,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 import {formatCount, updateOfflinePodcastLikeStatus} from '../../lib/utils/Utils';
+import {generatePodcastShareUrl} from '../../lib/utils/shareUtils';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import type {ComponentType} from 'react';
 import {useEffect, useState} from 'react';
@@ -91,7 +92,7 @@ export default function OfflinePodcastDetail({
 
   const handleShare = async () => {
     try {
-      const url = `https://uhsocial.in/api/share/podcast?trackId=${podcast._id}&audioUrl=${podcast.audio_url}`;
+      const url = generatePodcastShareUrl(podcast._id, podcast.audio_url);
       await Share.open({
         title: podcast?.title,
         message: `${podcast?.title} : Check out this awesome podcast on UltimateHealth app!`,

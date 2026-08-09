@@ -4,6 +4,7 @@ import {TouchableOpacity, Alert, StyleSheet, View} from 'react-native';
 import {YStack, XStack, Image, Text} from 'tamagui';
 import {Entypo, Ionicons} from '@expo/vector-icons';
 import {formatCount} from '../../lib/utils/Utils';
+import {generatePodcastShareUrl} from '../../lib/utils/shareUtils';
 import {Category} from '../../schemas/type';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import PodcastActions from './PodcastActions';
@@ -81,7 +82,7 @@ const PodcastCard = ({
 
   const handleShare = async () => {
     try {
-      const url = `https://uhsocial.in/api/share/podcast?trackId=${id}&audioUrl=${audioUrl}`;
+      const url = generatePodcastShareUrl(id, audioUrl);
       const result = await Share.open({
         title: title,
         message: `${title} : Check out this awesome podcast on UltimateHealth app!`,
