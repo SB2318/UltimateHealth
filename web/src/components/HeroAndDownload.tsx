@@ -49,7 +49,7 @@ const platforms = [
     status: "Coming Soon",
     description:
       "Join our TestFlight beta program to get early access to UltimateHealth on iOS. Be among the first to experience the platform on Apple devices.",
-    features: ["Early Access", "TestFlight Beta", "Premium Testing"],
+    features: ["Early Access", "TestFlight Beta", "Beta Testing"],
     footer: "TestFlight Beta - Coming Soon",
   },
 ];
@@ -74,7 +74,7 @@ export default function HeroAndDownload() {
               </div>
 
               <h1 className="uh-hero-title">
-                Empowering Wellness Through <em>Global Community</em>
+                Collaborative Health Knowledge Through <em>Open Source</em>
               </h1>
 
               <p className="uh-hero-subtitle">

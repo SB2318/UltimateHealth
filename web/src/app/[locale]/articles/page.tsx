@@ -82,7 +82,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
           
           <p className="text-lg sm:text-xl text-slate-600 font-medium leading-relaxed max-w-2xl mt-2">
             Explore evidence-based articles crafted by leading medical professionals. 
-            From cardiovascular wellness to mental resilience, discover insights that empower your life.
+            From cardiovascular wellness to mental resilience, discover resources to support your health and well-being.
           </p>
         </div>
       </section>

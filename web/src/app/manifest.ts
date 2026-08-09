@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "UltimateHealth",
     short_name: "UltimateHealth",
-    description: "Empowering Wellness Through Global Community",
+    description: "An open-source platform for collaborative health knowledge and community podcasts.",
     start_url: `${BASE_PATH}/`,
     display: "standalone",
     theme_color: "#ffffff",
