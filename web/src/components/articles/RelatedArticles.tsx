@@ -74,7 +74,7 @@ function RelatedArticleCard({ article }: RelatedArticleCardProps) {
   const articleUrl = withBasePath(`/articles/${article.id}`);
 
   return (
-    <article className="relative group flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#667eea]">
+    <article className="relative group flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-sm hover:-translate-y-1 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#667eea]">
       {/* Thumbnail */}
       <div className="relative aspect-video overflow-hidden shrink-0">
         {article.imageUrl ? (
@@ -102,7 +102,7 @@ function RelatedArticleCard({ article }: RelatedArticleCardProps) {
 
         {/* Category badge overlay */}
         <div className="absolute top-3 left-3">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-white bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-white bg-black/60 px-2.5 py-1 rounded-full">
             {article.category}
           </span>
         </div>

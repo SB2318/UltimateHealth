@@ -35,9 +35,6 @@ export default function AuthShell({
       {/* Brand backdrop. Decorative only, so it is hidden from assistive tech
           and skipped entirely when the visitor prefers reduced motion. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-32 -top-40 size-[30rem] rounded-full bg-gradient-to-br from-[#667eea]/40 to-[#764ba2]/30 blur-[110px] motion-safe:animate-pulse [animation-duration:8s] dark:from-[#667eea]/25 dark:to-[#764ba2]/20" />
-        <div className="absolute -bottom-48 -right-28 size-[34rem] rounded-full bg-gradient-to-br from-[#f5576c]/25 to-[#764ba2]/25 blur-[130px] motion-safe:animate-pulse [animation-duration:11s] dark:from-[#f5576c]/15 dark:to-[#764ba2]/20" />
-        <div className="absolute left-1/2 top-1/4 size-[26rem] -translate-x-1/2 rounded-full bg-gradient-to-br from-sky-300/25 to-[#667eea]/20 blur-[120px] dark:from-sky-500/10 dark:to-[#667eea]/10" />
         {/* Faint grid, to stop the gradient reading as an empty wash. */}
         <div className="absolute inset-0 opacity-[0.035] dark:opacity-[0.05] [background-image:linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] [background-size:56px_56px] dark:[background-image:linear-gradient(to_right,#94a3b8_1px,transparent_1px),linear-gradient(to_bottom,#94a3b8_1px,transparent_1px)]" />
       </div>
@@ -48,17 +45,17 @@ export default function AuthShell({
           width === "lg" ? "max-w-xl" : "max-w-md"
         )}
       >
-        <div className="rounded-3xl border border-white/70 bg-white/85 shadow-[0_28px_80px_-24px_rgba(102,126,234,0.5)] backdrop-blur-xl transition-colors duration-300 dark:border-white/10 dark:bg-slate-900/70 dark:shadow-[0_28px_80px_-24px_rgba(0,0,0,0.8)]">
+        <div className="rounded-3xl border border-white/70 bg-white shadow-xl transition-colors duration-300 dark:border-white/10 dark:bg-slate-900 dark:shadow-xl">
           <div className="flex flex-col items-center gap-3 px-6! pt-8! text-center sm:px-9!">
             <Link
               href={withBasePath("/")}
               aria-label="UltimateHealth home"
               className="group inline-flex items-center gap-2.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-[#667eea] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
-              <span className="flex size-11 items-center justify-center rounded-2xl bg-gradient-to-br from-[#667eea] to-[#764ba2] text-sm font-black tracking-tight text-white shadow-lg shadow-indigo-500/30 transition-transform duration-300 group-hover:scale-105">
+              <span className="flex size-11 items-center justify-center rounded-2xl bg-[#667eea] text-sm font-black tracking-tight text-white shadow-sm transition-transform duration-300 group-hover:scale-105">
                 UH
               </span>
-              <span className="bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-lg font-extrabold text-transparent">
+              <span className="text-[#667eea] text-lg font-extrabold">
                 Ultimate-Health
               </span>
             </Link>
@@ -72,7 +69,7 @@ export default function AuthShell({
 
             <span
               aria-hidden="true"
-              className="mt-1! h-px w-16 rounded-full bg-gradient-to-r from-transparent via-[#667eea]/60 to-transparent"
+              className="mt-1! h-px w-16 rounded-full bg-slate-200"
             />
           </div>
 
@@ -95,7 +92,7 @@ export const authFieldClass =
 
 /** The primary action on every auth form. */
 export const authSubmitClass =
-  "h-11! w-full rounded-xl bg-gradient-to-r from-[#667eea] to-[#764ba2] font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-indigo-500/35 focus-visible:ring-4 focus-visible:ring-[#667eea]/30 disabled:pointer-events-none disabled:opacity-60 disabled:shadow-none";
+  "h-11! w-full rounded-xl bg-[#667eea] font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md focus-visible:ring-4 focus-visible:ring-[#667eea]/30 disabled:pointer-events-none disabled:opacity-60 disabled:shadow-none";
 
 /** Label styling, kept here so all three forms match. */
 export const authLabelClass =

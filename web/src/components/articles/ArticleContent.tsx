@@ -210,7 +210,7 @@ function renderBlock(
     case "image": {
       return (
         <figure key={index} className="my-10 -mx-4 sm:mx-0">
-          <div className="relative aspect-video overflow-hidden sm:rounded-2xl bg-gray-100 shadow-md">
+          <div className="relative aspect-video overflow-hidden sm:rounded-2xl bg-gray-100 shadow-sm">
             <Image
               src={block.src}
               alt={block.alt}
@@ -233,7 +233,7 @@ function renderBlock(
       return (
         <blockquote
           key={index}
-          className="relative my-10 pl-6 pr-4 py-5 border-l-4 border-[#667eea] rounded-r-2xl bg-gradient-to-r from-[#667eea]/8 to-[#764ba2]/4"
+          className="relative my-10 pl-6 pr-4 py-5 border-l-4 border-[#667eea] rounded-r-2xl bg-[#667eea]/5"
         >
           <p className="text-lg italic text-[#4a5568] leading-relaxed mb-0">
             &ldquo;{block.text}&rdquo;
@@ -319,7 +319,7 @@ function renderBlock(
       return (
         <hr
           key={index}
-          className="my-14 border-none h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"
+          className="my-14 border-none h-px bg-slate-200"
           aria-hidden="true"
         />
       );
