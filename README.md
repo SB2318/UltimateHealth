@@ -1206,6 +1206,7 @@ We welcome contributions from everyone — developers, designers, writers, and t
    <tr>
     <td align="center"><a href="https://github.com/Yuvraj-Sarathe"><img src="https://avatars.githubusercontent.com/u/216678101?v=4" width="120px;" alt=""/><br/><sub><b>Yuvraj Sarathe</b></sub></a></td>
        <td align="center"><a href="https://github.com/sasikiranambati"><img src="https://avatars.githubusercontent.com/u/239514881?v=4" width="120px;" alt=""/><br/><sub><b>sasikiranambati</b></sub></a></td>
+     <td align="center"><a href="https://github.com/namann5"><img src="https://avatars.githubusercontent.com/u/211621538?v=4" width="120px;" alt=""/><br/><sub><b>Naman Singh</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
