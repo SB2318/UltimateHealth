@@ -1,9 +1,9 @@
 import { PageWrapper, Section } from "@/components/layout";
 
 const features = [
-  { icon: "fa-robot",         title: "AI Health Chat Assistant",    desc: "Instant, AI-powered health guidance available 24/7.", span: "md:col-span-2 lg:col-span-2" },
+  { icon: "fa-robot",         title: "AI Health Chat Assistant",    desc: "Ask health-related questions and get responses from the AI assistant.", span: "md:col-span-2 lg:col-span-2" },
   { icon: "fa-book-medical",  title: "Centralized Library",         desc: "A vast repository of trusted, community-reviewed health articles.", span: "col-span-1" },
-  { icon: "fa-podcast",       title: "Health Podcasts",             desc: "Stream and share verified health audio content worldwide.", span: "col-span-1" },
+  { icon: "fa-podcast",       title: "Health Podcasts",             desc: "Listen to and share health podcasts from the community.", span: "col-span-1" },
   { icon: "fa-language",      title: "Multilingual Resources",      desc: "Read and write health content in multiple languages globally.", span: "md:col-span-2 lg:col-span-2" },
   { icon: "fa-users",         title: "Community Contributions",     desc: "Collaborate and drive open-source health content creation.", span: "col-span-1" },
   { icon: "fa-search",        title: "Advanced Search",             desc: "Quickly find the exact health information you need.", span: "col-span-1" },
@@ -17,7 +17,7 @@ const upcoming = [
     icon: 'fa-robot',
     title: 'AI Personal Chat',
     sub: 'Characters Chat',
-    desc: 'Chat with AI-powered health personas — a compassionate doctor, a mindful therapist, or a wellness coach — available anytime, completely free.',
+    desc: 'Chat with health-focused AI personas for general guidance and wellness conversations.',
     accent: '#667eea',
     glow: 'rgba(102,126,234,0.15)',
   },
@@ -25,7 +25,7 @@ const upcoming = [
     icon: 'fa-hospital',
     title: 'Hospital Learning System',
     sub: 'Structured Health Education',
-    desc: 'A modular learning platform bringing hospital-grade health education directly to patients, students, and caregivers — no fees, no barriers.',
+    desc: 'Health education resources for patients, students, and caregivers.',
     accent: '#22c55e',
     glow: 'rgba(34,197,94,0.12)',
   },
@@ -41,7 +41,7 @@ const upcoming = [
     icon: 'fa-dna',
     title: 'AI Health Analytics',
     sub: 'Personalized Wellness Insights',
-    desc: 'Track your health patterns with AI-driven insights — personalized reports, trend analysis, and proactive wellness recommendations, built open-source.',
+    desc: 'View health reports, trends, and wellness recommendations based on your health data.',
     accent: '#f5576c',
     glow: 'rgba(245,87,108,0.12)',
   },

@@ -84,7 +84,7 @@ export default function TestFlightCta() {
               <i className="fas fa-plane" aria-hidden="true" />
             </div>
             <h2 id="testflight-modal-title">Join the iOS TestFlight</h2>
-            <p style={{ color: "var(--text-muted)", marginBottom: 24 }}>Help us build the ultimate experience</p>
+            <p style={{ color: "var(--text-muted)", marginBottom: 24 }}>Help us build and test the iOS application</p>
             <div style={{ textAlign: "left", fontSize: "0.95rem", color: "var(--text-dark)", background: "#f8fafc", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }}>
               <p style={{ marginBottom: 12 }}>We have decided to release via <strong>TestFlight</strong> first before moving to a full App Store launch.</p>
               <p style={{ marginBottom: 12 }}><strong><i className="fas fa-circle" style={{ fontSize: "0.45rem", color: "#007aff", marginRight: 6 }} aria-hidden="true" />Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
