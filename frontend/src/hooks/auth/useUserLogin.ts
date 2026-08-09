@@ -33,11 +33,12 @@ const loginFunc = async ({email, password, fcmToken}: LoginReq): Promise<LoginRe
   });
 
   if (__DEV__) {
-    // Log the raw response shape so we can confirm the token field name
+    // Log only safe response metadata (keys / presence), never credential values,
+    // so auth tokens cannot leak into Metro logs, device logs, or Sentry.
     console.log('[Login] Raw API response keys:', Object.keys(res.data || {}));
-    console.log('[Login] res.data.token:', res.data?.token);
-    console.log('[Login] res.data.refreshToken:', res.data?.refreshToken);
-    console.log('[Login] res.data.user?.refreshToken:', res.data?.user?.refreshToken);
+    console.log('[Login] res.data.token:', res.data?.token ? 'present' : 'absent');
+    console.log('[Login] res.data.refreshToken:', res.data?.refreshToken ? 'present' : 'absent');
+    console.log('[Login] res.data.user?.refreshToken:', res.data?.user?.refreshToken ? 'present' : 'absent');
     console.log('[Login] res.data.data keys:', res.data?.data ? Object.keys(res.data.data) : null);
   }
 
