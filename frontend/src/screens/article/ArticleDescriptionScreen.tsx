@@ -51,7 +51,8 @@ const ArticleDescriptionScreen = ({
   const [imageUtils, setImageUtils] = useState('');
   const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollYRef = useRef(new Animated.Value(0));
+  const scrollY = scrollYRef.current;
   const [contentHeight, setContentHeight] = useState(0);
   const [viewHeight, setViewHeight] = useState(0);
 
@@ -68,7 +69,7 @@ const ArticleDescriptionScreen = ({
     if (article._id || article.id) {
       await saveProgress((article._id || article.id) as string, Math.round(pct * 100));
     }
-  }, [article, contentHeight, viewHeight, scrollY]);
+  }, [article, contentHeight, viewHeight]);
 
   useEffect(() => {
     if (article && (article._id || article.id)) {

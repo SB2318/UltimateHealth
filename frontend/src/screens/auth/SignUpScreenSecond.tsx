@@ -16,8 +16,8 @@ import useUploadImage from '../../hooks/media/useUploadImage';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useVerificationMailMutation} from '@/src/hooks/auth/useMailVerification';
 import {useRegdMutation} from '@/src/hooks/auth/useUserRegistration';
-type AxiosError = any;
 import validator from 'email-validator';
+type AxiosError = any;
 const signupSecondSchema = z.object({
   specialization: z
     .string()

@@ -3,7 +3,7 @@ import React, {useCallback, useState, useMemo} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import ArticleCard from '../../components/article/ArticleCard';
-import {useAppSelector} from '../../store/hooks';
+
 import { useTheme } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData, RootStackParamList} from '../../schemas/type';
@@ -26,11 +26,11 @@ const ContentListScreen = ({navigation, route}: Props) => {
 
   const {data: user, refetch, isLoading} = useGetProfile();
 
-  const onRefresh = () => {
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     refetch();
     setRefreshing(false);
-  };
+  }, [refetch]);
 
   useFocusEffect(
     useCallback(() => {

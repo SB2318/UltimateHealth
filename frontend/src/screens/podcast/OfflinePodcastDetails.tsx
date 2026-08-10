@@ -14,7 +14,6 @@ import {ON_PRIMARY_COLOR, BUTTON_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme'
 import SliderRN from '@react-native-community/slider';
 import { formatDateWithTime } from '../../lib/utils/dateUtils';
 import Ionicons from '@expo/vector-icons/Ionicons';
-// eslint-disable-next-line import/no-duplicates
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
