@@ -1,36 +1,1342 @@
-import HeroAndDownload from "@/components/HeroAndDownload";
-import ScrollToTop from "@/components/ScrollToTop";
-import ContactSection from "@/components/home/ContactSection";
-import DnaCursor from "@/components/home/DnaCursor";
-import FeaturesSection from "@/components/home/FeaturesSection";
-import ModeratorFeatures from "@/components/home/ModeratorFeatures";
-import ProgramsSection from "@/components/home/ProgramsSection";
-import ScreenshotGallery from "@/components/home/ScreenshotGallery";
-import ScrollReveal from "@/components/home/ScrollReveal";
-import SiteFooter from "@/components/home/SiteFooter";
-import SiteHeader from "@/components/home/SiteHeader";
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import "../globals.css";
 
-/**
- * Landing page. This is a server component: the hero, feature grids, programs
- * and footer are rendered to HTML on the server and ship no JavaScript. Only the
- * genuinely interactive parts — header, screenshot gallery, the two forms and the
- * TestFlight dialog — are client islands, so hydration no longer has to walk the
- * whole page before the content becomes interactive.
- */
+import { type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import HeroAndDownload from "../../components/HeroAndDownload";
+import ScrollToTop from "../../components/ScrollToTop";
+import { ModeToggle } from "@/components/mode-toggle";
+import Navbar from "../../components/Navbar";
+import { PageWrapper, Section } from "../../components/layout";
+
+import { withBasePath } from "@/lib/basePath";
+import { Skeleton } from "../../components/ui";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
+
+const userScreenshots = [
+  { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
+  { src: "/assets/article-detail-screen.jpeg", caption: "Reading View" },
+  { src: "/assets/article-discussion-screen-for-user.jpeg", caption: "Article Discussion" },
+  { src: "/assets/article-writing-screen.jpeg", caption: "Writing Form" },
+  { src: "/assets/article-writing-screen-2.jpeg", caption: "Select Language" },
+  { src: "/assets/podcast-form.jpeg", caption: "Podcast Form" },
+  { src: "/assets/podcast-list-screen.jpeg", caption: "Podcast Listing" },
+  { src: "/assets/podcast-play-screen.jpeg", caption: "Podcast Player" },
+  { src: "/assets/podcast-play-screen-2.jpeg", caption: "Podcast Player" },
+  { src: "/assets/podcast-recording.jpeg", caption: "Podcast Recorder" },
+  { src: "/assets/podcast-upload.jpeg", caption: "Podcast Upload" },
+  { src: "/assets/notification-screen.jpeg", caption: "Notification" },
+  { src: "/assets/ultimate-health-about.jpeg", caption: "App Info" },
+  { src: "/assets/terms_cond_page.jpeg", caption: "Terms And Condition" },
+];
+
+const adminScreenshots = [
+  { src: "/assets/admin_dashboard.jpeg", caption: "Admin Dashboard" },
+  { src: "/assets/admin_dashboard2.jpeg", caption: "Admin Dashboard Second" },
+  { src: "/assets/article_view_unassign.jpeg", caption: "Article View Unassign" },
+  { src: "/assets/article_view_unassign1.jpeg", caption: "Article View Unassign" },
+  { src: "/assets/article_view_assign.jpeg", caption: "Article View Assign" },
+  { src: "/assets/article_action.jpeg", caption: "Article Action" },
+  { src: "/assets/podcast_action.jpeg", caption: "Podcast Action" },
+  { src: "/assets/podcast_live.jpeg", caption: "Podcast Live State" },
+  { src: "/assets/admin_insights.jpeg", caption: "Admin Insights" },
+];
+
+const allScreenshots = [...userScreenshots, ...adminScreenshots];
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://uhsocial.in";
+const CURSOR_GLOW_STORAGE_KEY = "cursorGlowEnabled";
+const CURSOR_GLOW_EVENT = "cursor-glow-preference-change";
+const HELP_CENTER_URL = process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https://uhsocial.in/docs";
+const FEEDBACK_URL = process.env.NEXT_PUBLIC_FEEDBACK_URL || "https://github.com/SB2318/UltimateHealth/issues";
+const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "";
+const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "";
+const PRIVACY_POLICY_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || "#";
+const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || "#";
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const SLIDER_SCROLL_AMOUNT = 324;
+const DNA_TRAIL_MAX_POINTS = 38;
+const CLONE_COUNT = 8; // needs to be >= viewport_width / itemWidth for clone zone to be reachable
+const isValidEmail = (email: string) => EMAIL_PATTERN.test(email.trim());
+
+// Infinite carousel: clone first/last CLONE_COUNT items on each side for seamless looping
+const extendedUserScreenshots = [
+  ...userScreenshots.slice(-CLONE_COUNT),
+  ...userScreenshots,
+  ...userScreenshots.slice(0, CLONE_COUNT),
+];
+const extendedAdminScreenshots = [
+  ...adminScreenshots.slice(-CLONE_COUNT),
+  ...adminScreenshots,
+  ...adminScreenshots.slice(0, CLONE_COUNT),
+];
+
+const getCursorGlowSnapshot = () => {
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem(CURSOR_GLOW_STORAGE_KEY) === "true";
+};
+
+const subscribeToCursorGlow = (callback: () => void) => {
+  if (typeof window === "undefined") return () => { };
+
+  const onStorage = (event: StorageEvent) => {
+    if (event.storageArea === window.localStorage && event.key === CURSOR_GLOW_STORAGE_KEY) {
+      callback();
+    }
+  };
+  const onCustomEvent: EventListener = () => callback();
+
+  window.addEventListener("storage", onStorage);
+  window.addEventListener(CURSOR_GLOW_EVENT, onCustomEvent);
+
+  return () => {
+    window.removeEventListener("storage", onStorage);
+    window.removeEventListener(CURSOR_GLOW_EVENT, onCustomEvent);
+  };
+};
+
 export default function Home() {
+  const [comingSoonModal, setComingSoonModal] = useState(false);
+  const [appleModal, setAppleModal] = useState(false);
+  const [testerEmail, setTesterEmail] = useState("");
+  const [testerSuccess, setTesterSuccess] = useState(false);
+  const [screenshotModal, setScreenshotModal] = useState(false);
+  const [currentScreenshot, setCurrentScreenshot] = useState(0);
+  const [userSliderOpen, setUserSliderOpen] = useState(true);
+  const [adminSliderOpen, setAdminSliderOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
+  const [featuresLoading, setFeaturesLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // ── DNA helix cursor ──
+  const cursorGlowEnabled = useSyncExternalStore(
+    subscribeToCursorGlow,
+    getCursorGlowSnapshot,
+    () => false
+  );
+  const dnaCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const dnaAnimRef = useRef<number | null>(null);
+  const dnaEnabledRef = useRef(false);
+
+  // ── Contact form state ──
+  const [contactName, setContactName] = useState("");
+  const [contactNameError, setContactNameError] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactSubject, setContactSubject] = useState("");
+  const [contactMessage, setContactMessage] = useState("");
+  const [contactStatus, setContactStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+
+  // ── Newsletter state ──
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterStatus, setNewsletterStatus] = useState<"idle" | "sending" | "success" | "error" | "invalid" | "empty" | "duplicate">("idle");
+
+  const userSliderRef = useRef<HTMLDivElement>(null);
+  const adminSliderRef = useRef<HTMLDivElement>(null);
+  const autoSlideTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const openComingSoonModal = useCallback(() => {
+    setComingSoonModal(true);
+  }, []);
+
+  const closeComingSoonModal = useCallback(() => {
+    setComingSoonModal(false);
+  }, []);
+
+  const openAppleModal = useCallback(() => {
+    setAppleModal(true);
+  }, []);
+
+  const closeAppleModal = useCallback(() => {
+    setAppleModal(false);
+    setTesterSuccess(false);
+    setTesterEmail("");
+  }, []);
+
+  // ── Scroll listener ──
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // ── Active section observer ──
+  useEffect(() => {
+    const sections = ["features", "screenshots", "programs", "contact"];
+    const observers = sections.map((id) => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const observer = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { threshold: 0.4 }
+      );
+      observer.observe(el);
+      return observer;
+    });
+    return () => observers.forEach((o) => o?.disconnect());
+  }, []);
+
+  useEffect(() => {
+    dnaEnabledRef.current = cursorGlowEnabled;
+    if (dnaCanvasRef.current) {
+      dnaCanvasRef.current.style.opacity = cursorGlowEnabled ? "1" : "0";
+    }
+  }, [cursorGlowEnabled]);
+
+  // ── DNA Helix Cursor Effect ──
+  useEffect(() => {
+    const isTouchDevice = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    if (isTouchDevice) { document.body.classList.add("touch-device"); return; }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const canvas = document.createElement("canvas");
+    canvas.className = "dna-cursor-canvas";
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    document.body.appendChild(canvas);
+    dnaCanvasRef.current = canvas;
+
+    const saved = getCursorGlowSnapshot();
+    dnaEnabledRef.current = saved;
+    canvas.style.opacity = saved ? "1" : "0";
+
+    const ctx = canvas.getContext("2d")!;
+    const trail: { x: number; y: number; t: number }[] = [];
+    let dnaT = 0;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+
+    const onMove = (e: MouseEvent) => { mouseX = e.clientX; mouseY = e.clientY; };
+    const onResize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("resize", onResize);
+
+    const draw = () => {
+      dnaT += 0.06;
+      trail.unshift({ x: mouseX, y: mouseY, t: dnaT });
+      if (trail.length > DNA_TRAIL_MAX_POINTS) trail.pop();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (dnaEnabledRef.current) {
+        trail.forEach((pt, i) => {
+          const age = i / trail.length;
+          const alpha = (1 - age) * 0.92;
+          const dotR = (1 - age) * 5.5 + 1;
+          const offset = Math.sin(pt.t * 2.2) * 14 * (1 - age * 0.4);
+
+          ctx.beginPath();
+          ctx.arc(pt.x + offset, pt.y, dotR, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(14,165,233,${alpha})`;
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(pt.x - offset, pt.y, dotR * 0.72, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(56,189,248,${alpha * 0.78})`;
+          ctx.fill();
+
+          if (i % 4 === 0 && i + 4 < trail.length) {
+            ctx.beginPath();
+            ctx.moveTo(pt.x + offset, pt.y);
+            ctx.lineTo(pt.x - offset, pt.y);
+            ctx.strokeStyle = `rgba(125,211,252,${alpha * 0.38})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        });
+      }
+      dnaAnimRef.current = requestAnimationFrame(draw);
+    };
+
+    dnaAnimRef.current = requestAnimationFrame(draw);
+
+    return () => {
+      if (dnaAnimRef.current) cancelAnimationFrame(dnaAnimRef.current);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("resize", onResize);
+      canvas.remove();
+      dnaCanvasRef.current = null;
+    };
+  }, []);
+
+  // ── Scroll reveal ──
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.querySelectorAll(".fade-in,.scroll-reveal,.scroll-reveal-left,.scroll-reveal-right,.scroll-reveal-scale")
+        .forEach((el) => el.classList.add("visible", "revealed"));
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("visible", "revealed"); }),
+      { threshold: 0.15, rootMargin: "0px 0px -50px 0px" }
+    );
+    document.querySelectorAll(".fade-in,.scroll-reveal,.scroll-reveal-left,.scroll-reveal-right,.scroll-reveal-scale")
+      .forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
+  // ── Features loading state ──
+  useEffect(() => {
+    const timer = setTimeout(() => setFeaturesLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Screenshot keyboard nav
+  const navigateScreenshot = useCallback((dir: number) => {
+    setCurrentScreenshot((prev) => {
+      const next = prev + dir;
+      if (next < 0) return allScreenshots.length - 1;
+      if (next >= allScreenshots.length) return 0;
+      return next;
+    });
+  }, []);
+
+  const closeScreenshotModal = useCallback(() => {
+    setScreenshotModal(false);
+  }, []);
+
+  const isAnyModalOpen = comingSoonModal || appleModal || screenshotModal;
+
+  useEffect(() => {
+    if (!isAnyModalOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isAnyModalOpen]);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (screenshotModal) closeScreenshotModal();
+        else if (appleModal) closeAppleModal();
+        else if (comingSoonModal) closeComingSoonModal();
+      }
+
+      if (screenshotModal && e.key === "ArrowLeft") navigateScreenshot(-1);
+      if (screenshotModal && e.key === "ArrowRight") navigateScreenshot(1);
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [
+    appleModal,
+    closeAppleModal,
+    closeComingSoonModal,
+    closeScreenshotModal,
+    comingSoonModal,
+    navigateScreenshot,
+    screenshotModal,
+  ]);
+
+  const openScreenshotModal = (src: string) => {
+    const idx = allScreenshots.findIndex((s) => s.src === src);
+    setCurrentScreenshot(idx >= 0 ? idx : 0);
+    setScreenshotModal(true);
+  };
+
+  const handleScreenshotCardKeyDown = (e: React.KeyboardEvent<HTMLDivElement>, src: string) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openScreenshotModal(src);
+    }
+  };
+
+  // Infinite carousel using the clone trick:
+  // The rendered list is [...lastN clones, ...real items, ...firstN clones]
+  // moveSlider only triggers the smooth scroll; the scroll-event listeners below
+  // handle the silent reset once the animation actually finishes.
+  const moveSlider = (
+    ref: RefObject<HTMLDivElement | null>,
+    dir: number,
+    _realCount: number,
+  ) => {
+    const slider = ref.current;
+    if (!slider) return;
+    const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+    const currentScroll = slider.scrollLeft;
+    const targetScroll = Math.max(
+      0,
+      Math.min(currentScroll + dir * SLIDER_SCROLL_AMOUNT, maxScrollLeft),
+    );
+    slider.scrollTo({ left: targetScroll, behavior: "smooth" });
+  };
+
+  const startAutoSlide = useCallback(() => {
+    if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
+    autoSlideTimerRef.current = setInterval(() => {
+      moveSlider(userSliderRef, 1, userScreenshots.length);
+      if (adminSliderOpen) moveSlider(adminSliderRef, 1, adminScreenshots.length);
+    }, 3000);
+  }, [adminSliderOpen]);
+
+  const handleManualSlide = useCallback(
+    (ref: RefObject<HTMLDivElement | null>, direction: number, realCount: number) => {
+      if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
+      moveSlider(ref, direction, realCount);
+      setTimeout(startAutoSlide, 5000);
+    },
+    [startAutoSlide],
+  );
+
+  useEffect(() => {
+    startAutoSlide();
+    return () => {
+      if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
+    };
+  }, [startAutoSlide]);
+
+  // Initialise slider scroll positions to show the first REAL item (skip start clones)
+  useEffect(() => {
+    if (!userSliderOpen) return;
+    const timer = setTimeout(() => {
+      const slider = userSliderRef.current;
+      if (!slider) return;
+      const itemWidth = slider.scrollWidth / (userScreenshots.length + CLONE_COUNT * 2);
+      slider.scrollLeft = CLONE_COUNT * itemWidth;
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [userSliderOpen]);
+
+  useEffect(() => {
+    if (!adminSliderOpen) return;
+    const timer = setTimeout(() => {
+      const slider = adminSliderRef.current;
+      if (!slider) return;
+      const itemWidth = slider.scrollWidth / (adminScreenshots.length + CLONE_COUNT * 2);
+      slider.scrollLeft = CLONE_COUNT * itemWidth;
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [adminSliderOpen]);
+
+  // Scroll-event debounce: fires 150ms after scrolling stops (works for any scroll duration)
+  // Silently resets position when the slider lands in the clone zone.
+  useEffect(() => {
+    const slider = userSliderRef.current;
+    if (!slider || !userSliderOpen) return;
+    let debounce: ReturnType<typeof setTimeout> | null = null;
+    const onScroll = () => {
+      if (debounce) clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        const totalItems = userScreenshots.length + CLONE_COUNT * 2;
+        const itemWidth = slider.scrollWidth / totalItems;
+        const startOffset = CLONE_COUNT * itemWidth;
+        const realScrollWidth = userScreenshots.length * itemWidth;
+        const scroll = slider.scrollLeft;
+        if (scroll >= startOffset + realScrollWidth) {
+          slider.scrollTo({ left: startOffset + (scroll - startOffset - realScrollWidth), behavior: "instant" as ScrollBehavior });
+        } else if (scroll < startOffset) {
+          slider.scrollTo({ left: startOffset + realScrollWidth + (scroll - startOffset), behavior: "instant" as ScrollBehavior });
+        }
+      }, 150);
+    };
+    slider.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      slider.removeEventListener("scroll", onScroll);
+      if (debounce) clearTimeout(debounce);
+    };
+  }, [userSliderOpen]);
+
+  useEffect(() => {
+    const slider = adminSliderRef.current;
+    if (!slider || !adminSliderOpen) return;
+    let debounce: ReturnType<typeof setTimeout> | null = null;
+    const onScroll = () => {
+      if (debounce) clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        const totalItems = adminScreenshots.length + CLONE_COUNT * 2;
+        const itemWidth = slider.scrollWidth / totalItems;
+        const startOffset = CLONE_COUNT * itemWidth;
+        const realScrollWidth = adminScreenshots.length * itemWidth;
+        const scroll = slider.scrollLeft;
+        if (scroll >= startOffset + realScrollWidth) {
+          slider.scrollTo({ left: startOffset + (scroll - startOffset - realScrollWidth), behavior: "instant" as ScrollBehavior });
+        } else if (scroll < startOffset) {
+          slider.scrollTo({ left: startOffset + realScrollWidth + (scroll - startOffset), behavior: "instant" as ScrollBehavior });
+        }
+      }, 150);
+    };
+    slider.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      slider.removeEventListener("scroll", onScroll);
+      if (debounce) clearTimeout(debounce);
+    };
+  }, [adminSliderOpen]);
+
+  // ── TestFlight invite ──
+  const sendTesterEmail = async () => {
+    const trimmedTesterEmail = testerEmail.trim();
+    if (!isValidEmail(trimmedTesterEmail)) {
+      alert("Please enter a valid Apple ID email.");
+      return;
+    }
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/publishing-related/invite-testflight`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: "ultimate.health25@gmail.com",
+          from: trimmedTesterEmail,
+          subject: "New TestFlight Invitation Request",
+          body: `User with email ${trimmedTesterEmail} wants to join the iOS TestFlight group.`,
+        }),
+      });
+      if (!response.ok) throw new Error("API Failure");
+    } catch {
+      window.location.href = `mailto:ultimate.health25@gmail.com?subject=TestFlight Request&body=I would like to be a tester. My email is: ${trimmedTesterEmail}`;
+    }
+    setTesterSuccess(true);
+  };
+
+  // ── Contact name validation ──
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setContactName(value);
+    const invalidChars = /[^a-zA-Z\s\-']/;
+    if (value.trim() === "") {
+      setContactNameError("Name is required.");
+    } else if (invalidChars.test(value)) {
+      setContactNameError("Name can only contain letters, spaces, hyphens, and apostrophes.");
+    } else {
+      setContactNameError("");
+    }
+  };
+
+  // ── Contact form submit → uhsocial.in API ──
+  // Backend route needed: POST /api/contact/send on NEXT_PUBLIC_API_BASE_URL
+  // See /contact_newsletter_guide.md for the Express route implementation
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedName = contactName.trim();
+    const trimmedEmail = contactEmail.trim();
+    const trimmedSubject = contactSubject.trim();
+    const trimmedMessage = contactMessage.trim();
+    if (!trimmedName || !isValidEmail(trimmedEmail) || !trimmedSubject || !trimmedMessage) {
+      alert("Please complete the form with a valid email address.");
+      return;
+    }
+    setContactStatus("sending");
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: trimmedName,
+          email: trimmedEmail,
+          subject: trimmedSubject,
+          message: trimmedMessage,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setContactStatus("success");
+      setContactName(""); setContactEmail(""); setContactSubject(""); setContactMessage("");
+    } catch {
+      window.location.href = `mailto:ultimate.health25@gmail.com?subject=${encodeURIComponent(trimmedSubject)}&body=${encodeURIComponent(`From: ${trimmedName} (${trimmedEmail})\n\n${trimmedMessage}`)}`;
+      setContactStatus("error");
+    }
+  };
+
+  // ── Newsletter subscribe ──
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmedNewsletterEmail = newsletterEmail.trim();
+
+    if (!trimmedNewsletterEmail) {
+      setNewsletterStatus("empty");
+      return;
+    }
+    if (!isValidEmail(trimmedNewsletterEmail)) {
+      setNewsletterStatus("invalid");
+      return;
+    }
+    setNewsletterStatus("sending");
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: trimmedNewsletterEmail }),
+      });
+
+      if (res.status === 409) {
+        setNewsletterStatus("duplicate");
+        return;
+      }
+      if (!res.ok) throw new Error("Failed");
+
+      setNewsletterStatus("success");
+      setNewsletterEmail("");
+    } catch {
+      setNewsletterStatus("error");
+    }
+  };
+
+  const selectedScreenshot = allScreenshots[currentScreenshot] ?? allScreenshots[0];
+
   return (
     <>
-      <SiteHeader />
-      <HeroAndDownload />
-      <ScreenshotGallery />
-      <FeaturesSection />
-      <ModeratorFeatures />
-      <ProgramsSection />
-      <ContactSection />
-      <SiteFooter />
+      {/* ── Header ── */}
+      <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
+        <PageWrapper as="div" className="nav">
+          <Link href={withBasePath("/")} className="logo">
+            <div className="logo-icon">
+              <Image
+                src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
+                alt="UltimateHealth Logo" width={48} height={48}
+                priority
+              />
+            </div>
+            Ultimate-Health
+          </Link>
+
+          <ul className="nav-links">
+            <li>
+              <a
+                href="#features"
+                className={`nav-link-item${activeSection === "features" ? " active" : ""}`}
+                aria-current={activeSection === "features" ? "location" : undefined}
+              >
+                <i className="fas fa-star nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Platform Highlights</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#screenshots"
+                className={`nav-link-item${activeSection === "screenshots" ? " active" : ""}`}
+                aria-current={activeSection === "screenshots" ? "location" : undefined}
+              >
+                <i className="fas fa-image nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">App Experience</span>
+              </a>
+            </li>
+            <li>
+              <a
+                href="#programs"
+                className={`nav-link-item${activeSection === "programs" ? " active" : ""}`}
+                aria-current={activeSection === "programs" ? "location" : undefined}
+              >
+                <i className="fas fa-code-branch nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Community Programs</span>
+              </a>
+            </li>
+            <li>
+              <Link href={withBasePath("/articles")} className="nav-link-item">
+                <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Read Articles</span>
+              </Link>
+            </li>
+            <li>
+              <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
+                <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Medical Glossary</span>
+              </Link>
+            </li>
+            <li>
+              <Link href={withBasePath("/contribute")} className="nav-link-item">
+                <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
+                <span className="nav-item-text">Join Us to Contribute</span>
+              </Link>
+            </li>
+            <li style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <LanguageSwitcher />
+              <ModeToggle />
+            </li>
+            <li style={{ display: "flex", alignItems: "center" }}>
+              <a href="#downloads" className="nav-btn-sm">
+                <i className="fas fa-user" aria-hidden="true"></i>
+                <span>Login / Register</span>
+              </a>
+            </li>
+          </ul>
+
+          <button className="mobile-menu-toggle" onClick={() => setMobileMenuOpen((o) => !o)} aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={mobileMenuOpen}>
+            <i className={`fas fa-${mobileMenuOpen ? "times" : "bars"}`}></i>
+          </button>
+        </PageWrapper>
+
+        <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
+          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>App Experience</a>
+          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
+          <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
+          <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
+          <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
+          <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
+          <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "16px", padding: "8px 0" }}>
+            <LanguageSwitcher />
+            <ModeToggle />
+          </div>
+        </nav>
+      </header>
+
+      {/* ── Hero ── */}
+      <HeroAndDownload
+        onJoinTestFlight={openAppleModal}
+        onShowComingSoon={openComingSoonModal}
+      />
+
+      {/* ── Screenshots ── */}
+      <Section id="screenshots">
+        <PageWrapper>
+          <h2>App Experience</h2>
+          <p className="center">A closer look at what UltimateHealth offers, screen by screen</p>
+
+          <div className="screenshot-details">
+            <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setUserSliderOpen((o) => !o); }}>
+              <span style={{ color: "var(--primary)" }}>{userSliderOpen ? "▼" : "▶"}</span> UltimateHealth App
+            </div>
+            {userSliderOpen && (
+              <div className="screenshot-slider-container">
+                <div className="screenshots-wrapper" ref={userSliderRef}>
+                  {extendedUserScreenshots.map((s, i) => (
+                    <div
+                      key={`user-${i}`}
+                      className="screenshot-box"
+                      onClick={() => openScreenshotModal(s.src)}
+                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${s.caption} screenshot`}
+                    >
+                      <div className="screenshot-image-frame">
+                        <Image
+                          src={s.src}
+                          alt={s.caption}
+                          fill
+                          sizes="(max-width: 768px) 260px, 300px"
+                          className="screenshot-image"
+                        />
+                      </div>
+                      <div className="screenshot-card-caption">{s.caption}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="slider-nav">
+                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, -1, userScreenshots.length)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, 1, userScreenshots.length)}><i className="fas fa-chevron-right"></i></button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="screenshot-details">
+            <div className="screenshot-summary" onClick={() => setAdminSliderOpen((o) => !o)} role="button" tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setAdminSliderOpen((o) => !o); }}>
+              <span style={{ color: "var(--primary)" }}>{adminSliderOpen ? "▼" : "▶"}</span> UHealth Admin App
+            </div>
+            {adminSliderOpen && (
+              <div className="screenshot-slider-container">
+                <div className="screenshots-wrapper" ref={adminSliderRef}>
+                  {extendedAdminScreenshots.map((s, i) => (
+                    <div
+                      key={`admin-${i}`}
+                      className="screenshot-box"
+                      onClick={() => openScreenshotModal(s.src)}
+                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${s.caption} screenshot`}
+                    >
+                      <Image
+                        src={s.src}
+                        alt={s.caption}
+                        fill
+                        sizes="(max-width: 768px) 260px, 300px"
+                        className="screenshot-image"
+                      />
+                      <div className="screenshot-card-caption">{s.caption}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="slider-nav">
+                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, -1, adminScreenshots.length)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, 1, adminScreenshots.length)}><i className="fas fa-chevron-right"></i></button>
+                </div>
+              </div>
+            )}
+          </div>
+        </PageWrapper>
+      </Section>
+
+      {/* ── Features ── */}
+      <Section id="features" className="feature-section-premium scroll-reveal">
+        <PageWrapper>
+          <h2>UltimateHealth Features</h2>
+          <p className="center">
+            An open-source health platform with AI assistance, trusted articles, multilingual content, and community-driven knowledge — free for everyone.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full relative z-10">
+            {featuresLoading ? (
+              <Skeleton count={6} variant="compact" />
+            ) : (
+              [
+                { icon: "fa-robot", title: "AI Health Chat Assistant", desc: "Instant, AI-powered health guidance available 24/7.", span: "md:col-span-2 lg:col-span-2" },
+                { icon: "fa-book-medical", title: "Centralized Library", desc: "A vast repository of trusted, community-reviewed health articles.", span: "col-span-1" },
+                { icon: "fa-podcast", title: "Health Podcasts", desc: "Stream and share verified health audio content worldwide.", span: "col-span-1" },
+                { icon: "fa-language", title: "Multilingual Resources", desc: "Read and write health content in multiple languages globally.", span: "md:col-span-2 lg:col-span-2" },
+                { icon: "fa-users", title: "Community Contributions", desc: "Collaborate and drive open-source health content creation.", span: "col-span-1" },
+                { icon: "fa-search", title: "Advanced Search", desc: "Quickly find the exact health information you need.", span: "col-span-1" },
+                { icon: "fa-mobile-alt", title: "Cross-Platform", desc: "Available on Android and Web — seamlessly synced.", span: "col-span-1" },
+                { icon: "fa-user-shield", title: "Secure Authentication", desc: "Role-based access with robust user and moderator management.", span: "col-span-1" },
+                { icon: "fa-shield-alt", title: "Trusted Knowledge Base", desc: "Heavily moderated, safe, and accurate wellness repository.", span: "md:col-span-2 lg:col-span-2" },
+              ].map((f, i) => (
+                <div className={`feature-card-premium w-full fade-in ${f.span}`} key={i}>
+                  <div className="feature-icon-wrapper">
+                    <i className={`fas ${f.icon}`}></i>
+                  </div>
+                  <h3>{f.title}</h3>
+                  <p>{f.desc}</p>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* ── Upcoming Features ── */}
+          <div style={{ marginTop: '80px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                background: 'linear-gradient(135deg, rgba(102,126,234,0.12), rgba(245,87,108,0.12))',
+                border: '1px solid rgba(102,126,234,0.25)',
+                borderRadius: '50px', padding: '6px 18px', marginBottom: '16px',
+                fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.1em',
+                textTransform: 'uppercase', color: '#667eea',
+              }}>
+                <i className="fas fa-rocket" style={{ fontSize: '0.7rem' }}></i>
+                Arriving October 2026
+              </div>
+              <h3 style={{
+                fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 900, color: '#1e293b',
+                marginBottom: '10px', lineHeight: 1.3,
+              }}>
+                What&apos;s Coming Next
+              </h3>
+              <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: '520px', margin: '0 auto', lineHeight: 1.7 }}>
+                As an open-source project, these upcoming features are community-built and <strong>free for all</strong>.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+              {[
+                {
+                  icon: 'fa-comments',
+                  emoji: '🤖',
+                  title: 'AI Personal Chat',
+                  sub: 'Characters Chat',
+                  desc: 'Chat with AI-powered health personas — a compassionate doctor, a mindful therapist, or a wellness coach — available anytime, completely free.',
+                  accent: '#667eea',
+                  glow: 'rgba(102,126,234,0.15)',
+                },
+                {
+                  icon: 'fa-hospital',
+                  emoji: '🏥',
+                  title: 'Hospital Learning System',
+                  sub: 'Structured Health Education',
+                  desc: 'A modular learning platform bringing hospital-grade health education directly to patients, students, and caregivers — no fees, no barriers.',
+                  accent: '#22c55e',
+                  glow: 'rgba(34,197,94,0.12)',
+                },
+                {
+                  icon: 'fa-user-md',
+                  emoji: '👨‍⚕️',
+                  title: 'Connect with a Doctor',
+                  sub: 'Voluntary Suggestions Only',
+                  desc: 'Doctors who choose to volunteer their time can offer health suggestions to the community. No one is forced — only those who genuinely want to help.',
+                  accent: '#f59e0b',
+                  glow: 'rgba(245,158,11,0.12)',
+                },
+                {
+                  icon: 'fa-dna',
+                  emoji: '🧬',
+                  title: 'AI Health Analytics',
+                  sub: 'Personalized Wellness Insights',
+                  desc: 'Track your health patterns with AI-driven insights — personalized reports, trend analysis, and proactive wellness recommendations, built open-source.',
+                  accent: '#f5576c',
+                  glow: 'rgba(245,87,108,0.12)',
+                },
+              ].map((f, i) => (
+                <div
+                  key={i}
+                  className="fade-in"
+                  style={{
+                    background: `linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)`,
+                    borderRadius: '20px',
+                    padding: '32px 28px',
+                    border: `1.5px solid ${f.accent}33`,
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'transform 0.3s, box-shadow 0.3s',
+                  }}
+                  onMouseEnter={e => {
+                    (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-5px)'
+                      ; (e.currentTarget as HTMLDivElement).style.boxShadow = `0 20px 50px ${f.glow}`
+                  }}
+                  onMouseLeave={e => {
+                    (e.currentTarget as HTMLDivElement).style.transform = 'translateY(0)'
+                      ; (e.currentTarget as HTMLDivElement).style.boxShadow = 'none'
+                  }}
+                >
+                  {/* glow blob */}
+                  <div style={{
+                    position: 'absolute', top: '-30px', right: '-30px', width: '120px', height: '120px',
+                    borderRadius: '50%', background: f.glow, filter: 'blur(30px)', pointerEvents: 'none',
+                  }} />
+
+                  {/* top row */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
+                    <div style={{
+                      width: 52, height: 52, borderRadius: '14px',
+                      background: `linear-gradient(135deg, ${f.accent}33, ${f.accent}18)`,
+                      border: `1px solid ${f.accent}44`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '1.5rem',
+                    }}>
+                      {f.emoji}
+                    </div>
+                    <span style={{
+                      fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.1em',
+                      textTransform: 'uppercase', color: '#fbbf24',
+                      background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.25)',
+                      borderRadius: '50px', padding: '3px 10px',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      Oct – Nov 2026
+                    </span>
+                  </div>
+
+                  <div style={{ fontSize: '1.15rem', fontWeight: 800, color: 'white', marginBottom: '4px', lineHeight: 1.3 }}>
+                    {f.title}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: f.accent, marginBottom: '12px', letterSpacing: '0.04em' }}>
+                    {f.sub}
+                  </div>
+                  <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', lineHeight: 1.7, margin: 0 }}>
+                    {f.desc}
+                  </p>
+
+                  {/* bottom divider + free badge */}
+                  <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fas fa-lock-open" style={{ color: f.accent, fontSize: '0.75rem' }}></i>
+                    <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>
+                      Open Source · Free for All
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </PageWrapper>
+      </Section>
+
+      {/* ── Moderator Features ── */}
+      <Section className="member-section scroll-reveal">
+        <PageWrapper>
+          <h2>Be a Member: Guardian of Content Integrity</h2>
+          <p className="center">Help maintain quality and safety across the platform</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
+            {[
+              { icon: "fa-sync-alt", title: "Interactive Review", desc: "Manage the full lifecycle of content with a streamlined approval, rejection, and feedback loop for contributors." },
+              { icon: "fa-microchip", title: "Content Integrity", desc: "Leverage automated plagiarism and grammar engines to maintain professional clarity and originality scores." },
+              { icon: "fa-shield-alt", title: "Visual Asset Audit", desc: "Validation for image quality and automated compliance checks for brand logos and visual safety. (Coming Soon)" },
+            ].map((f, i) => (
+              <div className="feature-card mod-card w-full fade-in" key={i}>
+                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 mx-auto" style={{ maxWidth: "66.666%", marginLeft: "auto", marginRight: "auto", marginTop: "20px" }}>
+            {[
+              { icon: "fa-gavel", title: "Community Safety", desc: "Investigate flagged content and manage user reports through a robust system designed to keep the platform safe." },
+              { icon: "fa-fingerprint", title: "Advanced Security", desc: "Role-based access control (RBAC) ensuring only verified Reviewers and Admins can access protected operations." },
+            ].map((f, i) => (
+              <div className="feature-card mod-card w-full fade-in" key={i}>
+                <div className="mod-icon"><i className={`fas ${f.icon}`}></i></div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </PageWrapper>
+      </Section>
+
+      {/* ── Programs ── */}
+      <Section id="programs" className="scroll-reveal">
+        <PageWrapper>
+          <h2>Programs Participated In</h2>
+          <p className="center">We are proud to have collaborated with and contributed to these prestigious tech and open-source initiatives</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-16 w-full">
+            {[
+              { logo: "https://github.com/user-attachments/assets/e0a40d06-f5b8-42a7-a5a0-033280f842be", alt: "IEEE IGDTUW Logo", badge: "Open Source Week", title: "IEEE IGDTUW", desc: "A week-long intensive event aimed at fostering global collaboration and high-level skill-building in the open-source ecosystem." },
+              { logo: "https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00", alt: "Vultr Logo", badge: "Cloud Hackathon", title: "Vultr Cloud Innovate", desc: "Harnessing high-performance cloud infrastructure to develop scalable solutions for real-world problems using Vultr's computing and networking power." },
+              { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2024", title: "GirlScript Summer of Code", desc: "A massive three-month initiative focused on bringing beginners into the world of open-source software development through expert mentorship." },
+              { logo: "https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png", alt: "GSSoC Logo", badge: "Summer 2026", title: "GirlScript Summer of Code 2026", desc: "A large-scale open-source program that provides mentorship, real-world project experience, and collaboration opportunities for contributors worldwide." },
+            ].map((p, i) => (
+              <div className="program-card w-full fade-in" key={i}>
+                <div className="program-logo-wrapper">
+                  <Image
+                    src={p.logo}
+                    alt={p.alt}
+                    width={180}
+                    height={80}
+                    sizes="180px"
+                    className="program-logo"
+                  />
+                </div>
+                <span className="program-badge">{p.badge}</span>
+                <h3>{p.title}</h3>
+                <p>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </PageWrapper>
+      </Section>
+
+      {/* ── Contact ── */}
+      <Section className="contact-section scroll-reveal" id="contact">
+        <PageWrapper>
+          <h2>Connect With Us</h2>
+          <p className="center" style={{ marginBottom: 56 }}>
+            Have questions or want to collaborate? We&apos;d love to hear from you.
+          </p>
+
+          <div className="contact-dark-card">
+            <div className="contact-dark-left">
+              <div className="contact-left-badge">✦ UltimateHealth</div>
+              <h3 className="contact-dark-title">Let&apos;s Talk<br />Health Together</h3>
+              <p className="contact-dark-subtitle">
+                Questions about our platform? We&apos;re here to help. Reach out and we&apos;ll respond promptly.
+              </p>
+
+              <div className="contact-info-cards">
+                <div className="contact-info-card">
+                  <div className="contact-info-icon"><i className="fas fa-envelope"></i></div>
+                  <div>
+                    <strong>Email Us</strong>
+                    <p>ultimate.health25@gmail.com</p>
+                  </div>
+                </div>
+                <div className="contact-info-card">
+                  <div className="contact-info-icon"><i className="fas fa-comment-dots"></i></div>
+                  <div>
+                    <strong>Quick Response</strong>
+                    <p>We aim to reply within 24 hours.</p>
+                  </div>
+                </div>
+                <div className="contact-info-card">
+                  <div className="contact-info-icon"><i className="fas fa-layer-group"></i></div>
+                  <div>
+                    <strong>Multiple Channels</strong>
+                    <p>Reach us via email, GitHub, or this form.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="contact-dark-socials">
+                <a href="https://github.com/SB2318" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub">
+                  <i className="fab fa-github"></i>
+                </a>
+                <a
+                  href="mailto:ultimate.health25@gmail.com?subject=Hello%20UltimateHealth&body=Hi%20UltimateHealth%20Team%2C"
+                  className="dark-social-icon"
+                  title="Email"
+                  aria-label="Send email to UltimateHealth via mail client"
+                  style={{ cursor: "pointer" }}
+                >
+                  <i className="fas fa-envelope"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="dark-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn">
+                  <i className="fab fa-linkedin-in"></i>
+                </a>
+              </div>
+            </div>
+
+            <div className="contact-dark-right">
+              <h3 className="contact-form-title">Send us a Message</h3>
+              <p className="contact-form-subtitle">We typically respond within 24 hours</p>
+
+              {contactStatus === "success" ? (
+                <div className="contact-success-box">
+                  <div className="contact-success-icon"><i className="fas fa-check-circle"></i></div>
+                  <h4>Message Sent!</h4>
+                  <p>Thank you for reaching out. We&apos;ll get back to you within 24 hours.</p>
+                  <button type="button" onClick={() => setContactStatus("idle")} className="contact-reset-btn">
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form className="contact-dark-form" autoComplete="off" onSubmit={handleContactSubmit}>
+                  <div className="dark-field-group">
+                    <span className="dark-field-icon"><i className="fas fa-user"></i></span>
+                    <input
+                      type="text"
+                      className={`dark-input${contactNameError ? " input-error" : ""}`}
+                      placeholder="Your Name *"
+                      required
+                      maxLength={80}
+                      value={contactName}
+                      onChange={handleNameChange}
+                      aria-describedby="contact-name-error"
+                    />
+                  </div>
+                  {contactNameError && (
+                    <p id="contact-name-error" className="contact-error-msg" style={{ marginTop: "-8px", marginBottom: "4px" }}>
+                      <i className="fas fa-exclamation-circle"></i> {contactNameError}
+                    </p>
+                  )}
+                  <div className="dark-field-group">
+                    <span className="dark-field-icon"><i className="fas fa-envelope"></i></span>
+                    <input
+                      type="email" className="dark-input" placeholder="Email Address *" required
+                      maxLength={120}
+                      value={contactEmail} onChange={(e) => setContactEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="dark-field-group">
+                    <span className="dark-field-icon"><i className="fas fa-tag"></i></span>
+                    <input
+                      type="text" className="dark-input" placeholder="Subject *" required
+                      maxLength={120}
+                      value={contactSubject} onChange={(e) => setContactSubject(e.target.value)}
+                    />
+                  </div>
+                  <div className="dark-field-group dark-field-textarea">
+                    <span className="dark-field-icon dark-field-icon-top"><i className="fas fa-comment"></i></span>
+                    <textarea
+                      className="dark-input dark-textarea" placeholder="Your Message *" required
+                      maxLength={1500}
+                      value={contactMessage} onChange={(e) => setContactMessage(e.target.value)}
+                    ></textarea>
+                  </div>
+
+                  {contactStatus === "error" && (
+                    <p className="contact-error-msg">
+                      <i className="fas fa-exclamation-circle"></i> Something went wrong. Opening your email client as fallback.
+                    </p>
+                  )}
+
+                  <button type="submit" className="dark-submit-btn" disabled={contactStatus === "sending"}>
+                    {contactStatus === "sending" ? (
+                      <><i className="fas fa-spinner fa-spin"></i> Sending...</>
+                    ) : (
+                      <>Send Message <i className="fas fa-arrow-right" style={{ fontSize: "0.85rem" }}></i></>
+                    )}
+                  </button>
+
+                  <div className="contact-trust">
+                    <div className="contact-trust-dot"></div>
+                    <span className="contact-trust-text">Your message is private and secure</span>
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </PageWrapper>
+      </Section>
+
+      {/* ── Footer ── */}
+      <footer>
+        <PageWrapper className="footer-grid">
+          <div className="footer-brand">
+            <h2>UltimateHealth</h2>
+            <p className="footer-note">Open-source health and wellness for everyone.</p>
+
+            <form className="footer-subscribe-form" onSubmit={handleNewsletterSubmit} noValidate>
+              {newsletterStatus === "success" ? (
+                <div className="newsletter-success">
+                  <i className="fas fa-check-circle"></i> You have successfully subscribed!
+                </div>
+              ) : (
+                <>
+                  <div className="footer-subscribe-row">
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      className="footer-subscribe-input"
+                      maxLength={120}
+                      value={newsletterEmail}
+                      required
+                      aria-label="Newsletter email address"
+                      aria-describedby="newsletter-feedback"
+                      onChange={(e) => {
+                        setNewsletterEmail(e.target.value);
+                        if (newsletterStatus !== "idle" && newsletterStatus !== "sending") {
+                          setNewsletterStatus("idle");
+                        }
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      className="footer-subscribe-btn"
+                      aria-label="Subscribe to UltimateHealth newsletter"
+                      disabled={newsletterStatus === "sending"}
+                    >
+                      {newsletterStatus === "sending" ? "Subscribing..." : "Subscribe"}
+                    </button>
+                  </div>
+
+                  <div id="newsletter-feedback" aria-live="polite">
+                    {newsletterStatus === "empty" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-exclamation-circle"></i> Please enter a valid email address.
+                      </p>
+                    )}
+                    {newsletterStatus === "invalid" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-exclamation-circle"></i> Invalid email format.
+                      </p>
+                    )}
+                    {newsletterStatus === "duplicate" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-info-circle"></i> This email is already subscribed.
+                      </p>
+                    )}
+                    {newsletterStatus === "error" && (
+                      <p className="newsletter-error">
+                        <i className="fas fa-exclamation-circle"></i> Could not subscribe. Please try again.
+                      </p>
+                    )}
+                  </div>
+
+                  <small className="footer-subscribe-note">
+                    We respect your privacy. Unsubscribe at any time.
+                  </small>
+                </>
+              )}
+            </form>
+            <div style={{ marginTop: 20 }}>
+              <span className="footer-follow-label">Follow Us</span>
+              <div className="footer-social-links">
+                <a href="https://github.com/SB2318" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="Open UltimateHealth GitHub profile">
+                  <i className="fab fa-github"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/ultimate-health-9290873a8/" className="footer-social-icon" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="Open UltimateHealth LinkedIn profile">
+                  <i className="fab fa-linkedin-in"></i>
+                </a>
+                {TELEGRAM_URL && (
+                  <a href={TELEGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Telegram" aria-label="Open UltimateHealth Telegram link">
+                    <i className="fab fa-telegram-plane"></i>
+                  </a>
+                )}
+                {INSTAGRAM_URL && (
+                  <a href={INSTAGRAM_URL} className="footer-social-icon" target="_blank" rel="noreferrer" title="Instagram" aria-label="Open UltimateHealth Instagram link">
+                    <i className="fab fa-instagram"></i>
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="footer-links-col">
+            <h3>Quick Links</h3>
+            <Link href={withBasePath("/")}>Home</Link>
+            <a href="#features">Features</a>
+            <a href="#programs">Programs</a>
+            <a href="#screenshots">Screenshots</a>
+            <a href="#contact">Contact</a>
+            <Link href={withBasePath("/articles")}>Health Articles</Link>
+            <Link href={withBasePath("/contribute")}>Join Us &amp; Contribute</Link>
+          </div>
+
+          <div className="footer-links-col">
+            <h3>Support</h3>
+            <a href={HELP_CENTER_URL} target="_blank" rel="noopener noreferrer">Help Center</a>
+            <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
+            <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">Feedback</a>
+            <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer">API Docs</a>
+          </div>
+        </PageWrapper>
+
+        <div className="footer-bottom">
+          <div className="footer-bottom-inner">
+            <p>© 2026 UltimateHealth. Built with passion for a healthier community.</p>
+            <div className="footer-bottom-links">
+              <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>
+              <a href={TERMS_OF_USE_URL}>Terms of Use</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {comingSoonModal && (
+        <div className="modal-overlay active" onClick={closeComingSoonModal} role="dialog" aria-modal="true" aria-labelledby="coming-soon-modal-title">
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontSize: "4rem", marginBottom: 16 }}>🚀</div>
+            <h2 id="coming-soon-modal-title">Launching Soon!</h2>
+            <p style={{ color: "var(--text-muted)", fontSize: "1rem", marginBottom: 8 }}>
+              We&apos;re currently in final testing. We&apos;re <strong>85%</strong> of the way there!
+            </p>
+            <div className="progress-container"><div className="progress-bar"></div></div>
+            <button type="button" className="close-modal-btn" onClick={closeComingSoonModal}>Close</button>
+          </div>
+        </div>
+      )}
+
+      {appleModal && (
+        <div className="modal-overlay active" onClick={closeAppleModal} role="dialog" aria-modal="true" aria-labelledby="testflight-modal-title">
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontSize: "3.5rem", marginBottom: 16 }}>✈️</div>
+            <h2 id="testflight-modal-title">Join the iOS TestFlight</h2>
+            <p style={{ color: "var(--text-muted)", marginBottom: 24 }}>Help us build the ultimate experience</p>
+            <div style={{ textAlign: "left", fontSize: "0.95rem", color: "var(--text-dark)", background: "#f8fafc", padding: 24, borderRadius: 16, marginBottom: 24, borderLeft: "4px solid #007aff" }}>
+              <p style={{ marginBottom: 12 }}>We have decided to release via <strong>TestFlight</strong> first before moving to a full App Store launch.</p>
+              <p style={{ marginBottom: 12 }}><strong>🔹 Why TestFlight?</strong> Early feedback, real-world testing, and faster iteration.</p>
+              <p style={{ marginBottom: 12 }}><strong>🔹 What this means:</strong> The app will be available to invited testers only via TestFlight.</p>
+              <p><strong>Are you ready to test?</strong> Enter your email below to request an invitation.</p>
+            </div>
+            {!testerSuccess ? (
+              <div>
+                <input type="email" placeholder="Enter your Apple ID email" className="waitlist-input"
+                  maxLength={120}
+                  value={testerEmail} onChange={(e) => setTesterEmail(e.target.value)} />
+                <button className="nav-btn-sm"
+                  type="button"
+                  style={{ width: "100%", height: 48, border: "none", cursor: "pointer", fontWeight: "bold", fontSize: "1rem" }}
+                  onClick={sendTesterEmail}>
+                  Send Invitation Request
+                </button>
+              </div>
+            ) : (
+              <div style={{ padding: 24, color: "#059669", background: "#d1fae5", borderRadius: 12 }}>
+                <p style={{ margin: 0, fontWeight: 600 }}>✅ <strong>Request Sent!</strong> We&apos;ll notify you as soon as the test link is ready.</p>
+              </div>
+            )}
+            <button type="button" className="close-modal-btn" onClick={closeAppleModal}>
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
+
+      {screenshotModal && (
+        <div className="screenshot-modal active" onClick={closeScreenshotModal}>
+          <div className="screenshot-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="screenshot-modal-close" type="button" aria-label="Close screenshot preview" onClick={closeScreenshotModal}>×</button>
+            <button className="screenshot-modal-nav screenshot-modal-prev" type="button" aria-label="Previous screenshot" onClick={() => navigateScreenshot(-1)}>
+              <i className="fas fa-chevron-left"></i>
+            </button>
+            <Image
+              src={selectedScreenshot.src}
+              alt={selectedScreenshot.caption}
+              width={390}
+              height={780}
+              sizes="(max-width: 768px) 80vw, 390px"
+              className="screenshot-modal-image"
+            />
+            <button className="screenshot-modal-nav screenshot-modal-next" type="button" aria-label="Next screenshot" onClick={() => navigateScreenshot(1)}>
+              <i className="fas fa-chevron-right"></i>
+            </button>
+            <div className="screenshot-caption">{selectedScreenshot.caption}</div>
+          </div>
+        </div>
+      )}
       <ScrollToTop />
-      <ScrollReveal />
-      <DnaCursor />
     </>
   );
 }
