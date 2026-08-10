@@ -430,7 +430,19 @@ cd frontend
 yarn install
 ```
 
-**4. Run the App**
+**4. Install Expo and EAS CLI**
+```bash
+npm install -g expo-cli eas-cli
+```
+
+**5. Android SDK Setup (Linux/macOS)**
+```bash
+chmod +x setup-android.sh
+./setup-android.sh
+```
+> Skip this step if you only plan to preview the app via Expo Go (step 6 below) rather than building natively.
+
+**6. Run the App**
 
 ```bash
 # Android
@@ -443,17 +455,6 @@ npx expo run:ios
 
 # Quick preview via Expo Go
 npx expo start
-```
-
-**Android SDK Setup (Linux/macOS)**
-```bash
-chmod +x setup-android.sh
-./setup-android.sh
-```
-
-**Install Expo and EAS CLI**
-```bash
-npm install -g expo-cli eas-cli
 ```
 
 ---
