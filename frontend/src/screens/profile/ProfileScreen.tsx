@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Alert, useColorScheme, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import { StyleSheet, View, Text, useColorScheme, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import React, {useCallback, useState} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';

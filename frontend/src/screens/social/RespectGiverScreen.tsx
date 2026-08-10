@@ -9,7 +9,6 @@ import {
   Dimensions,
   TouchableOpacity,
   Easing,
-  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -42,7 +41,7 @@ const FloatingDot = ({ delay, size, x, color }: { delay: number; size: number; x
         }),
       ]),
     ).start();
-  }, []);
+  }, [anim, delay]);
 
   const translateY = anim.interpolate({ inputRange: [0, 1], outputRange: [0, -18] });
   const opacity = anim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0.3, 0.9, 0.3] });
@@ -86,7 +85,7 @@ const QuoteCard = ({ text, delay }: { text: string; delay: number }) => {
         easing: Easing.out(Easing.cubic),
       }),
     ]).start();
-  }, []);
+  }, [delay, fadeAnim, slideAnim]);
 
   return (
     <Animated.View
@@ -110,7 +109,7 @@ const InsightPill = ({ icon, label, delay }: { icon: keyof typeof MaterialCommun
       Animated.spring(scale, { toValue: 1, delay, useNativeDriver: true, tension: 80, friction: 8 }),
       Animated.timing(fade, { toValue: 1, delay, duration: 400, useNativeDriver: true }),
     ]).start();
-  }, []);
+  }, [delay, fade, scale]);
 
   return (
     <Animated.View style={[styles.pill, { opacity: fade, transform: [{ scale }] }]}>
@@ -156,7 +155,7 @@ const RespectGiverScreen = ({ navigation }: { navigation: any }) => {
 
     // Badge pop
     Animated.spring(badgeFade, { toValue: 1, delay: 800, useNativeDriver: true, tension: 100, friction: 6 }).start();
-  }, []);
+  }, [badgeFade, glowPulse, heroFade, heroScale, ringAnim]);
 
   const ringRotate = ringAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] });
 

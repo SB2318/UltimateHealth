@@ -11,7 +11,6 @@ import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import ActivityOverview from '../../components/profile/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
-const TabsFlatList = Tabs.FlatList as any;
 import ArticleCard from '../../components/article/ArticleCard';
 import UserArticleCard from '../../components/article/UserArticleCard';
 import { useTheme } from 'tamagui';
@@ -30,6 +29,8 @@ import {useUpdateViewCount} from '../../hooks/article/useUpdateViewCount';
 import { useGetAuthorProfile } from '../../hooks/profile/useGetAuthorProfile';
 import {useGetTotalLikeViewStatus} from '../../hooks/analytics/useGetTotalLikeViewStatus';
 import { NoArticleState } from '../../components/common/EmptyStates';
+
+const TabsFlatList = Tabs.FlatList as any;
 
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const theme = useTheme();

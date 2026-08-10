@@ -1,9 +1,8 @@
 import { StyleSheet, Dimensions, useColorScheme, ScrollView, SafeAreaView, ActivityIndicator, TextInput } from 'react-native';
-import { YStack, XStack, Text, Card, View, Button, Separator, Theme } from 'tamagui';
+import { YStack, XStack, Text, Card, View, Button } from 'tamagui';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LineChart } from 'react-native-chart-kit';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { useEffect, useState } from 'react';
 import { PRIMARY_COLOR, BUTTON_COLOR } from '../../lib/ui/Theme';
 import { wp, hp, fp } from '../../lib/ui/Metric';
@@ -127,7 +126,7 @@ const WellnessDashboardScreen = () => {
 
   const recommendations = (() => {
     const m = todayLog?.metrics;
-    const list: Array<{id: string; type: 'warning' | 'success' | 'info'; text: string; icon: string; iconColor: string}> = [];
+    const list: {id: string; type: 'warning' | 'success' | 'info'; text: string; icon: string; iconColor: string}[] = [];
     if (!m) return list;
     if ((m.steps ?? 0) < 10000) list.push({id: '1', type: 'info', text: `You are ${Math.max(0, 10000 - (m.steps ?? 0)).toLocaleString('en-US')} steps away from your daily goal.`, icon: 'trending-up-outline', iconColor: '#FF9800'});
     if ((m.waterMl ?? 0) < 2500) list.push({id: '2', type: 'warning', text: `Increase water intake: ${((2500 - (m.waterMl ?? 0)) / 1000).toFixed(1)}L remaining to your daily hydration target.`, icon: 'water-outline', iconColor: '#2196F3'});

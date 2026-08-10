@@ -1,7 +1,7 @@
  
  
 // PodcastSearch.tsx
-import React, {useEffect, useState, useCallback, useRef} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {PodcastData, PodcastSearchProp} from '../../schemas/type';

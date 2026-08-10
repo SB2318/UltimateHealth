@@ -21,7 +21,7 @@ interface FloatingSpeedSelectorProps {
   onClose: () => void;
 }
 
-export const FloatingSpeedSelector: React.FC<FloatingSpeedSelectorProps> = ({
+const FloatingSpeedSelector: React.FC<FloatingSpeedSelectorProps> = ({
   currentSpeed,
   onSpeedSelect,
   visible,

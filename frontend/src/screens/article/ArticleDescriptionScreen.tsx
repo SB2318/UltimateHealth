@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
  
 // @ts-nocheck
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState, useCallback} from 'react';
 import { View,
   Text,
   StyleSheet,
@@ -12,6 +12,7 @@ import { View,
   Alert,
   Modal,
    FlatList ,
+   Animated,
    } from 'react-native';
 import {useAppSelector} from '../../store/hooks';
 import {ArticleDescriptionProp, Category} from '../../schemas/type';
@@ -28,6 +29,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ttsLanguageList } from '@/src/lib/utils/Utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { saveProgress, getProgress } from '../../lib/services/ReadingProgressService';
 
 const ARTICLE_TITLE_MAX_LENGTH = 150;
 const ARTICLE_DESCRIPTION_MAX_LENGTH = 500;
@@ -48,6 +50,37 @@ const ArticleDescriptionScreen = ({
   const {categories} = useAppSelector((state: any) => state.data);
   const [imageUtils, setImageUtils] = useState('');
   const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const scrollYRef = useRef(new Animated.Value(0));
+  const scrollY = scrollYRef.current;
+  const [contentHeight, setContentHeight] = useState(0);
+  const [viewHeight, setViewHeight] = useState(0);
+
+  const progress = scrollY.interpolate({
+    inputRange: [0, Math.max(1, contentHeight - viewHeight)],
+    outputRange: [0, 1],
+    extrapolate: "clamp",
+  });
+
+  const onScrollEnd = useCallback(async () => {
+    if (!article) return;
+    const currentY = (scrollY as any).__getValue();
+    const pct = contentHeight > viewHeight ? Math.min(currentY / (contentHeight - viewHeight), 1) : 0;
+    if (article._id || article.id) {
+      await saveProgress((article._id || article.id) as string, Math.round(pct * 100));
+    }
+  }, [article, contentHeight, viewHeight]);
+
+  useEffect(() => {
+    if (article && (article._id || article.id)) {
+      getProgress((article._id || article.id) as string).then((p) => {
+        if (p && p.scrollPosition > 0.05) {
+          // Optionally show a "Resume from XX%" toast
+          // Scroll to the saved position
+        }
+      });
+    }
+  }, [article]);
 
   /** Restore draft from AsyncStorage if this is a new article (not an edit or translation) */
   useEffect(() => {
@@ -285,12 +318,38 @@ const ArticleDescriptionScreen = ({
 
   return (
     <SafeAreaView style={styles.container}>
+      <Animated.View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 3,
+          backgroundColor: "#4F46E5",
+          opacity: progress.interpolate({
+            inputRange: [0, 0.02],
+            outputRange: [0, 1],
+          }),
+          transform: [{ scaleX: progress }],
+          transformOrigin: "left",
+          zIndex: 10,
+        }}
+      />
       <KeyboardAwareScrollView
         style={{width: '100%', flex: 1}}
         bottomOffset={50}
         showsVerticalScrollIndicator={false}
         extraKeyboardSpace={20}
         keyboardShouldPersistTaps="handled"
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
+          {useNativeDriver: false}
+        )}
+        onContentSizeChange={(_w, h) => setContentHeight(h)}
+        onLayout={(e) => setViewHeight(e.nativeEvent.layout.height)}
+        onMomentumScrollEnd={onScrollEnd}
+        onScrollEndDrag={onScrollEnd}
         contentContainerStyle={{
           flexGrow: 1,
           paddingBottom: hp(18),

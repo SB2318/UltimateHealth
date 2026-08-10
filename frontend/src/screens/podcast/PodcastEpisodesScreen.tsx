@@ -59,7 +59,7 @@ const PodcastEpisodesScreen: React.FC = () => {
       // Simulate API call
       await new Promise<void>(resolve => setTimeout(() => resolve(), 1500));
       setEpisodes(MOCK_EPISODES);
-    } catch (err) {
+    } catch {
       setError('Failed to load episodes. Please try again.');
     } finally {
       setIsLoading(false);
