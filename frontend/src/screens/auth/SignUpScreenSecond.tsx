@@ -17,7 +17,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {useVerificationMailMutation} from '@/src/hooks/auth/useMailVerification';
 import {useRegdMutation} from '@/src/hooks/auth/useUserRegistration';
 type AxiosError = any;
-let validator = require('email-validator');
+import validator from 'email-validator';
 const signupSecondSchema = z.object({
   specialization: z
     .string()

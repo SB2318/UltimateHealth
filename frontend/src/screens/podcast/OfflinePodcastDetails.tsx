@@ -27,7 +27,7 @@ import Snackbar from 'react-native-snackbar';
 import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import Share from 'react-native-share';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import Icon from '@expo/vector-icons/MaterialIcons';
+
 import {useSocket} from '../../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import {useAudioPlayer} from 'expo-audio';
@@ -169,7 +169,7 @@ export default function OfflinePodcastDetail({
               />
             ) : (
               <View style={styles.iconContainer}>
-                <Icon name="person" size={40} color="#555" />
+                <MaterialIcons name="person" size={40} color="#555" />
               </View>
             )}
           </TouchableOpacity>

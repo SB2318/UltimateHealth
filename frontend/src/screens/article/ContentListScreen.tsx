@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Alert, useColorScheme, FlatList, RefreshControl, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, View, Text, useColorScheme, FlatList, RefreshControl, TouchableOpacity, Platform } from 'react-native';
 import React, {useCallback, useState, useMemo} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
@@ -6,15 +6,13 @@ import ArticleCard from '../../components/article/ArticleCard';
 import {useAppSelector} from '../../store/hooks';
 import { useTheme } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {ArticleData} from '../../schemas/type';
+import {ArticleData, RootStackParamList} from '../../schemas/type';
 import Loader from '../../components/common/Loader';
 import {useFocusEffect} from '@react-navigation/native';
-import Snackbar from 'react-native-snackbar';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
 import {wp, hp, fp} from '../../lib/ui/Metric';
 import {StackScreenProps} from '@react-navigation/stack';
-import {RootStackParamList} from '../../schemas/type';
 
 type Props = StackScreenProps<RootStackParamList, 'ContentListScreen'>;
 
@@ -22,7 +20,6 @@ const ContentListScreen = ({navigation, route}: Props) => {
   const initialType = route.params?.type || 'articles';
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
-  const {isConnected} = useAppSelector((state: any) => state.network);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [selectedTab, setSelectedTab] = useState<'articles' | 'reposts' | 'saved'>(initialType);
@@ -41,14 +38,14 @@ const ContentListScreen = ({navigation, route}: Props) => {
     }, [refetch]),
   );
 
-  const handleReportAction = (item: ArticleData) => {
+  const handleReportAction = useCallback((item: ArticleData) => {
     navigation.navigate('ReportScreen', {
       articleId: item._id,
       authorId: item.authorId as string,
       commentId: null,
       podcastId: null,
     });
-  };
+  }, [navigation]);
 
   const renderItem = useCallback(
     ({item}: {item: ArticleData}) => {
@@ -70,6 +67,7 @@ const ContentListScreen = ({navigation, route}: Props) => {
       selectedCardId,
       navigation,
       onRefresh,
+      handleReportAction,
     ],
   );
 
