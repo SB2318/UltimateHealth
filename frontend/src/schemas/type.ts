@@ -911,3 +911,35 @@ export type NearbyEventsResponse = {
   message: string;
   data: HealthEvent[];
 };
+
+export type WellnessMetrics = {
+  steps?: number;
+  activeMinutes?: number;
+  sleepHours?: number;
+  waterMl?: number;
+  caloriesBurned?: number;
+  breathingSessionMinutes?: number;
+};
+
+export type WellnessLogPayload = {
+  date: string; // YYYY-MM-DD (required by POST /wellness/log)
+  metrics?: Partial<WellnessMetrics>;
+};
+
+export type WellnessLog = {
+  userId: string;
+  date: string; // YYYY-MM-DD
+  metrics: WellnessMetrics;
+  createdAt?: string;
+};
+
+export type WellnessLogResponse = {
+  success: boolean;
+  message?: string;
+  data?: WellnessLog;
+};
+
+export type WeeklyWellnessResponse = {
+  success: boolean;
+  data: WellnessLog[];
+};
