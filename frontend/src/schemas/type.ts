@@ -146,6 +146,8 @@ export type RootStackParamList = {
   RespectGiverScreen: undefined;
   ContentListScreen: { type: 'articles' | 'reposts' | 'saved' };
   PodcastEpisodesScreen: undefined;
+  NearbyHealthEventsScreen: undefined;
+  EventDetailsScreen: { event: HealthEvent; distance?: number };
 };
 
 export type RedirectTo = {
@@ -880,4 +882,32 @@ export type NotificationPreferencesResponse = {
   contentClusters?: Category[];
   message: string;
   error?: string;
+};
+
+export type EventType = 'Blood Donation Drive' | 'Health Camp' | 'Yoga / Wellness Meetup' | 'Community Health Event' | string;
+
+export type EventLocation = {
+  type: 'Point';
+  coordinates: [number, number]; // [longitude, latitude]
+};
+
+export type HealthEvent = {
+  _id: string;
+  title: string;
+  description: string;
+  organizer: string;
+  type: EventType;
+  address: string;
+  date: string;
+  time: string;
+  location: EventLocation;
+  createdAt: string;
+  updatedAt: string;
+  distance?: number;
+};
+
+export type NearbyEventsResponse = {
+  success: boolean;
+  message: string;
+  data: HealthEvent[];
 };

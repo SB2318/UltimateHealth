@@ -66,6 +66,8 @@ import RespectGiverScreen from '../screens/social/RespectGiverScreen';
 import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
 
 import ChatbotScreen from '../screens/ai/ChatbotScreen';
+import NearbyHealthEventsScreen from '../screens/settings/NearbyHealthEventsScreen';
+import EventDetailsScreen from '../screens/settings/EventDetailsScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -171,6 +173,16 @@ const StackNavigation = () => {
       <Stack.Screen
         name="NewPasswordScreen"
         component={NewPasswordScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="NearbyHealthEventsScreen"
+        component={NearbyHealthEventsScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="EventDetailsScreen"
+        component={EventDetailsScreen}
         options={{headerShown: false}}
       />
 
