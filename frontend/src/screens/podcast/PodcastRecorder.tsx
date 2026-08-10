@@ -204,25 +204,6 @@ const stopRecording = async () => {
     setUiState('review');
   };
 
-  const handleReRecord = async () => {
-    if (filePath) {
-      try {
-        const exists = await RNFS.exists(filePath);
-        if (exists) {
-          await RNFS.unlink(filePath);
-          console.log('File deleted:', filePath);
-        }
-      } catch (err) {
-        console.warn('Error deleting file:', err);
-      }
-    }
-    setFilePath(null);
-    // unlink file path
-    setAmplitudes([]);
-    setRecordTime('00:00:00');
-    setUiState('idle');
-  };
-
   const unlinkFile = useCallback(async () => {
     if (filePath) {
       try {
@@ -237,20 +218,55 @@ const stopRecording = async () => {
     }
   }, [filePath]);
 
-  const handleUpload = useCallback(async () => {
-    setUploading(false);
-    setUiState('idle');
-    setFilePath(null);
-    setAmplitudes([]);
-    setRecordTime('00:00:00');
-    await unlinkFile();
-  }, [unlinkFile]);
+  /**
+   * Returns the screen to its empty state.
+   *
+   * `deleteFile` must be false when the take is already gone from disk —
+   * otherwise this would try to unlink a path that no longer exists.
+   */
+  const resetRecording = useCallback(
+    async ({deleteFile}: {deleteFile: boolean}) => {
+      if (deleteFile) {
+        await unlinkFile();
+      }
+      setUploading(false);
+      setUiState('idle');
+      setFilePath(null);
+      setAmplitudes([]);
+      setRecordTime('00:00:00');
+    },
+    [unlinkFile],
+  );
+
+  // RETRY: the user explicitly wants to throw this take away.
+  const handleReRecord = useCallback(
+    () => resetRecording({deleteFile: true}),
+    [resetRecording],
+  );
 
   useFocusEffect(
     useCallback(() => {
-      handleUpload();
+      // Previewing a take navigates to PodcastPlayer, so coming back here is a
+      // normal part of the flow and must NOT discard the recording. The only
+      // reason to clear on focus is that the file is genuinely gone — the
+      // player unlinks it after a successful upload — in which case the review
+      // controls would be pointing at a path that no longer exists.
+      let cancelled = false;
+
+      if (filePath) {
+        RNFS.exists(filePath)
+          .then(exists => {
+            if (!cancelled && !exists) {
+              resetRecording({deleteFile: false});
+            }
+          })
+          .catch(err =>
+            console.warn('Could not verify the recording still exists:', err),
+          );
+      }
 
       return () => {
+        cancelled = true;
         stopTimer();
 
         if (isRecordingRef.current) {
@@ -263,7 +279,7 @@ const stopRecording = async () => {
           isRecordingRef.current = false;
         }
       };
-    }, [audioRecorder, handleUpload]),
+    }, [audioRecorder, filePath, resetRecording]),
   );
 
   // useEffect(() => {

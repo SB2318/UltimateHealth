@@ -1,7 +1,7 @@
  
  
 // PodcastSearch.tsx
-import React, {useEffect, useState, useCallback, useRef} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {PodcastData, PodcastSearchProp} from '../../schemas/type';
@@ -18,6 +18,7 @@ import {Feather} from '@expo/vector-icons';
 import {useUpdatePodcastViewcount} from '../../hooks/podcast/useUpdatePodcastViewcount';
 import {useGetSearchPodcasts} from '../../hooks/podcast/useGetSearchPodcasts';
 import { sanitizeSearchInput, isValidSearchInput } from '../../lib/utils/SearchUtils';
+import { useDebounce } from '../../hooks/useDebounce';
 import { useColorScheme } from 'react-native-gifted-chat/lib/hooks/useColorScheme';
 
 const SKELETON_COUNT = 5;
@@ -31,8 +32,8 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
   const [totalPages, setTotalPages] = useState(0);
   const [searchData, setSearchData] = useState<PodcastData[]>([]);
   const theme = useTheme();
-  const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isDarkMode = useColorScheme() === 'dark';
+  const debouncedRawQuery = useDebounce(query, SEARCH_DEBOUNCE_MS);
 
   useFocusEffect(
     useCallback(() => {
@@ -43,25 +44,18 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
         setPage(1);
         setTotalPages(0);
         setSearchData([]);
-        if (debounceTimer.current) clearTimeout(debounceTimer.current);
       };
     }, []),
   );
 
   // Debounce query changes and reset pagination so a new search always starts at page 1.
   useEffect(() => {
-    if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    debounceTimer.current = setTimeout(() => {
-      const sanitizedQuery = sanitizeSearchInput(query);
-      setDebouncedQuery(isValidSearchInput(sanitizedQuery) ? sanitizedQuery : '');
-      setPage(1);
-      setTotalPages(0);
-      setSearchData([]);
-    }, SEARCH_DEBOUNCE_MS);
-    return () => {
-      if (debounceTimer.current) clearTimeout(debounceTimer.current);
-    };
-  }, [query]);
+    const sanitizedQuery = sanitizeSearchInput(debouncedRawQuery);
+    setDebouncedQuery(isValidSearchInput(sanitizedQuery) ? sanitizedQuery : '');
+    setPage(1);
+    setTotalPages(0);
+    setSearchData([]);
+  }, [debouncedRawQuery]);
 
   const {mutate: updateViewCount} = useUpdatePodcastViewcount();
 

@@ -24,7 +24,7 @@ import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import {useSocket} from '../../contexts/SocketContext';
 //import CommentScreen from '../CommentScreen';
 import {setUserHandle} from '../../store/UserSlice';
-import {handleExternalClick, StatusEnum} from '../../lib/utils/Utils';
+import {handleExternalClick, sanitizeHtml, StatusEnum} from '../../lib/utils/Utils';
 import ReviewItem from '../../components/article/ReviewItem';
 import {Button, Spinner, TextArea, YStack, Text} from 'tamagui';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
@@ -223,8 +223,8 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
                   rel: 'stylesheet',
                 },
               ]}
-              originWhitelist={['*']}
-              source={{html: htmlContent ?? noDataHtml}}
+              originWhitelist={['http://*', 'https://*']}
+              source={{html: sanitizeHtml(htmlContent ?? noDataHtml)}}
               scalesPageToFit={true}
               viewportContent={'width=device-width, user-scalable=no'}
               onShouldStartLoadWithRequest={handleExternalClick}

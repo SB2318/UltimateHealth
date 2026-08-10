@@ -507,7 +507,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
               rel: 'stylesheet',
             },
           ]}
-          originWhitelist={['*']}
+          originWhitelist={['http://*', 'https://*']}
           source={{
             html: createHTMLStructure(
               title,

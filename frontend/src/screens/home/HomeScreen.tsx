@@ -54,6 +54,7 @@ import {useRequestArticleEdit} from '../../hooks/article/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../../hooks/notification/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../../hooks/article/useGetPaginatedArticles';
 import { sanitizeSearchInput, isValidSearchInput } from '../../lib/utils/SearchUtils';
+import { useDebounce } from '../../hooks/useDebounce';
 
 
 import {
@@ -113,6 +114,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [sortingType, setSortingType] = useState<string>('');
   const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 300);
   const {isConnected} = useAppSelector((state: any) => state.network);
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   // const [repostItem, setRepostItem] = useState<ArticleData | null>(null);
@@ -516,7 +518,7 @@ useEffect(() => {
     }
   }, [isFetching, refreshing]);
 
-  const handleSearch = (textInput: string) => {
+  const handleSearch = useCallback((textInput: string) => {
   // Sanitize and validate the search input
   const sanitizedInput = sanitizeSearchInput(textInput);
 
@@ -543,7 +545,11 @@ useEffect(() => {
     });
     dispatch(setSearchedArticles({ searchedArticles: matchesSearch }));
   }
-};
+  }, [dispatch]);
+
+  useEffect(() => {
+    handleSearch(debouncedSearchText);
+  }, [debouncedSearchText, handleSearch]);
 
   const listData = useMemo(() => {
     if (showSavedOnly) {
@@ -762,7 +768,6 @@ useEffect(() => {
             handlePresentModalPress={handlePresentModalPress}
             onTextInputChange={(text: string) => {
               setSearchText(text);
-              handleSearch(text);
             }}
             onNotificationClick={() => {
               if (isGuest) {
@@ -910,7 +915,8 @@ useEffect(() => {
       <View style={styles.articleContainer}>
         <FlashList
           data={listData}
-          estimatedItemSize={100}
+          estimatedItemSize={380}
+          drawDistance={300}
           renderItem={renderItem}
           keyExtractor={(item:any) => item._id.toString()}
           contentContainerStyle={styles.flatListContentContainer}

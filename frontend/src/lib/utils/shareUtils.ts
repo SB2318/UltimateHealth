@@ -13,7 +13,30 @@ export const generateArticleShareUrl = (
   authorId: string | number,
   recordId: string
 ): string => {
-  return `${SHARE_BASE_URL}/api/share/article?articleId=${articleId}&authorId=${authorId}&recordId=${recordId}`;
+  const params = new URLSearchParams({
+    articleId: String(articleId),
+    authorId: String(authorId),
+    recordId,
+  });
+
+  return `${SHARE_BASE_URL}/api/share/article?${params.toString()}`;
+};
+/**
+ * Generates the unified share URL for a podcast.
+ * @param trackId The ID of the podcast track.
+ * @param audioUrl The podcast audio URL.
+ * @returns The absolute share URL with safely encoded query parameters.
+ */
+export const generatePodcastShareUrl = (
+  trackId: string | number,
+  audioUrl: string
+): string => {
+  const params = new URLSearchParams({
+    trackId: String(trackId),
+    audioUrl,
+  });
+
+  return `${SHARE_BASE_URL}/api/share/podcast?${params.toString()}`;
 };
 
 /**

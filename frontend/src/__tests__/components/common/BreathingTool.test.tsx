@@ -117,7 +117,10 @@ describe('BreathingTool Component', () => {
     await waitFor(() => {
       expect(authAxios.post).toHaveBeenCalledWith(
         expect.any(String),
-        { breathingSessionMinutes: 1 }
+        expect.objectContaining({
+          date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+          metrics: {breathingSessionMinutes: 1},
+        }),
       );
     });
   });
@@ -138,7 +141,10 @@ describe('BreathingTool Component', () => {
     await waitFor(() => {
       expect(authAxios.post).toHaveBeenCalledWith(
         expect.any(String),
-        { breathingSessionMinutes: 2 }
+        expect.objectContaining({
+          date: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
+          metrics: {breathingSessionMinutes: 2},
+        }),
       );
     });
   });

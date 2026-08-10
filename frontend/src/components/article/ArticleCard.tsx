@@ -76,7 +76,6 @@ const ArticleCard = ({
     border: isDarkMode ? '#374151' : '#F0F0F0',
     icon: isDarkMode ? '#D1D5DB' : '#414A4C',
   };
-  const readTime = calculateReadTime(item.content || item.body || '');
   const socket = useSocket();
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
@@ -582,9 +581,12 @@ const ArticleCard = ({
     {formatDateShort(item?.lastUpdated)}
   </Text>
   <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
-  <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
-    {getReadTime(item?.title + ' ' + (item?.description || ''))}
-  </Text>
+  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    <IonIcons name="time-outline" size={13} color={themeColors.secondaryText} style={{marginRight: 4}} />
+    <Text style={[styles.footerText1, {color: themeColors.secondaryText, marginBottom: 0}]}>
+      {getReadTime(item?.content || item?.body || item?.description || item?.title || '')}
+    </Text>
+  </View>
   {(item?.trustUsers?.length ?? 0) > 0 && (
     <>
       <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
@@ -594,7 +596,6 @@ const ArticleCard = ({
     </>
   )}
 </View>
-          <Text style={[styles.readTime, {color: themeColors.secondaryText}]}>{readTime} min read</Text>
           <EditRequestModal
             visible={requestModalVisible}
             callback={(reason: string) => {

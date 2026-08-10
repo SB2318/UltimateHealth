@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/immutability, react-hooks/refs, react-hooks/static-components, react-hooks/exhaustive-deps, react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars */
+
 import React, {useCallback} from 'react';
 import {
   StyleSheet,
@@ -18,6 +18,7 @@ import {LogoutScreenProp} from '@/src/schemas/type';
 import {useUserLogout} from '@/src/hooks/auth/useUserLogout';
 import {useTheme} from 'tamagui';
 import { useColorScheme } from 'react-native-gifted-chat/lib/hooks/useColorScheme';
+import {useQueryClient} from '@tanstack/react-query';
 type AxiosError = any;
 
 const DEFAULT_PROFILE_IMAGE =
@@ -29,16 +30,18 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const {mutate: logout} = useUserLogout();  
+  const queryClient = useQueryClient();
   const isDarkMode = useColorScheme() === 'dark';
 
   const completeLocalLogout = useCallback(async () => {
     await clearStorage();
     dispatch(resetUserState());
+    queryClient.clear();
     navigation.reset({
       index: 0,
       routes: [{name: 'LoginScreen'}],
     });
-  }, [dispatch, navigation]);
+  }, [dispatch, navigation, queryClient]);
 
   const handleLogout = () => {
     logout(

@@ -118,7 +118,8 @@ const UPDATE_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferenc
 const REGISTER_PUSH_TOKEN = `${PROD_URL}/user/register-device-token`;
 
 /** Wellness */
-const LOG_WELLNESS_METRICS = `${PROD_URL}/wellness`;
+const LOG_WELLNESS_API = `${PROD_URL}/wellness/log`;
+const GET_WELLNESS_WEEKLY_API = `${PROD_URL}/wellness/weekly`;
 
 /** Nearby Health Events */
 const NEARBY_EVENTS_API = `${PROD_URL}/events/nearby`;
@@ -211,6 +212,7 @@ export {
   UPDATE_NOTIFICATION_PREFERENCES,
   GET_READ_HISTORY,
   SHARE_BASE_URL,
-  LOG_WELLNESS_METRICS,
+  LOG_WELLNESS_API,
+  GET_WELLNESS_WEEKLY_API,
   NEARBY_EVENTS_API,
 };

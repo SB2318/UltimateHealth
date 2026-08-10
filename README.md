@@ -430,7 +430,19 @@ cd frontend
 yarn install
 ```
 
-**4. Run the App**
+**4. Install Expo and EAS CLI**
+```bash
+npm install -g expo-cli eas-cli
+```
+
+**5. Android SDK Setup (Linux/macOS)**
+```bash
+chmod +x setup-android.sh
+./setup-android.sh
+```
+> Skip this step if you only plan to preview the app via Expo Go (step 6 below) rather than building natively.
+
+**6. Run the App**
 
 ```bash
 # Android
@@ -443,17 +455,6 @@ npx expo run:ios
 
 # Quick preview via Expo Go
 npx expo start
-```
-
-**Android SDK Setup (Linux/macOS)**
-```bash
-chmod +x setup-android.sh
-./setup-android.sh
-```
-
-**Install Expo and EAS CLI**
-```bash
-npm install -g expo-cli eas-cli
 ```
 
 ---
@@ -1199,6 +1200,16 @@ We welcome contributions from everyone — developers, designers, writers, and t
        <td align="center"><a href="https://github.com/reddypnipun"><img src="https://avatars.githubusercontent.com/u/230384897?v=4" width="120px;" alt=""/><br/><sub><b>NIPUNKUMAR REDDY</b></sub></a></td>
      <td align="center"><a href="https://github.com/gauridhingra03"><img src="https://avatars.githubusercontent.com/u/202611157?v=4" width="120px;" alt=""/><br/><sub><b>gauridhingra03</b></sub></a></td>
      <td align="center"><a href="https://github.com/udaycodespace"><img src="https://avatars.githubusercontent.com/u/211140575?v=4" width="120px;" alt=""/><br/><sub><b>SOMAPURAM UDAY</b></sub></a></td>
+     <td align="center"><a href="https://github.com/Anijesh"><img src="https://avatars.githubusercontent.com/u/190940845?v=4" width="120px;" alt=""/><br/><sub><b>Anijesh Kumar</b></sub></a></td>
+     <td align="center"><a href="https://github.com/sureshsuriya"><img src="https://avatars.githubusercontent.com/u/115452537?v=4" width="120px;" alt=""/><br/><sub><b>Suresh</b></sub></a></td>
+ </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/Yuvraj-Sarathe"><img src="https://avatars.githubusercontent.com/u/216678101?v=4" width="120px;" alt=""/><br/><sub><b>Yuvraj Sarathe</b></sub></a></td>
+       <td align="center"><a href="https://github.com/sasikiranambati"><img src="https://avatars.githubusercontent.com/u/239514881?v=4" width="120px;" alt=""/><br/><sub><b>sasikiranambati</b></sub></a></td>
+     <td align="center"><a href="https://github.com/namann5"><img src="https://avatars.githubusercontent.com/u/211621538?v=4" width="120px;" alt=""/><br/><sub><b>Naman Singh</b></sub></a></td>
+     <td align="center"><a href="https://github.com/aeriellaaa"><img src="https://avatars.githubusercontent.com/u/202282989?v=4" width="120px;" alt=""/><br/><sub><b>Akshata Srivastava</b></sub></a></td>
+     <td align="center"><a href="https://github.com/GeethaBurigalla"><img src="https://avatars.githubusercontent.com/u/262814665?v=4" width="120px;" alt=""/><br/><sub><b>Geetha</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
@@ -1209,8 +1220,10 @@ We welcome contributions from everyone — developers, designers, writers, and t
 
 Made with love by the [UltimateHealth Community](https://github.com/SB2318/UltimateHealth/graphs/contributors)
 
-Star this repo if you find it helpful — it motivates us to keep building!
+## FAQ
 
-[![Star History Chart](https://api.star-history.com/svg?repos=SB2318/UltimateHealth&type=Date)](https://star-history.com/#SB2318/UltimateHealth&Date)
+### Who owned this software?
+
+=> All Engineering Students.
 
 </div>

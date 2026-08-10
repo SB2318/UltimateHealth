@@ -3,6 +3,7 @@ import axios from 'axios';
 import {GET_NOTIFICATION_PREFERENCES} from '../../lib/api/APIUtils';
 import {NotificationPreferencesResponse} from '../../schemas/type';
 import {useAppSelector} from '../../store/hooks';
+import {RootState} from '../../store/ReduxStore';
 type AxiosError = any;
 
 const fetchNotificationPreferences = async (): Promise<NotificationPreferencesResponse> => {
@@ -13,10 +14,11 @@ const fetchNotificationPreferences = async (): Promise<NotificationPreferencesRe
 export const useGetNotificationPreferences = (
   isConnected: boolean,
 ): UseQueryResult<NotificationPreferencesResponse, AxiosError> => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const isGuest = useAppSelector((state: RootState) => state.user.isGuest);
+  const userId = useAppSelector((state: RootState) => state.user.user_id);
 
   return useQuery({
-    queryKey: ['notification-preferences'],
+    queryKey: ['notification-preferences', userId],
     queryFn: fetchNotificationPreferences,
     enabled: isConnected && !isGuest,
   });

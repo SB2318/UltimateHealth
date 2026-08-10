@@ -133,6 +133,20 @@ describe('ChatbotScreen', () => {
     });
   });
 
+  const setNetwork = (isConnected: boolean) =>
+    mockuseAppSelector.mockImplementation((selector: any) =>
+      selector({
+        user: {
+          user_id: 'user-1',
+          user_token: 'token-xyz',
+        },
+        network: {isConnected},
+      }),
+    );
+
+  const goOffline = () => setNetwork(false);
+  const goOnline = () => setNetwork(true);
+
   const renderScreen = () =>
     render(
       <ChatbotScreen
@@ -253,5 +267,61 @@ describe('ChatbotScreen', () => {
     expect(getByText('Failed to send message')).toBeTruthy();
     expect(getByText('Unable to connect. Please check your internet connection and try again.')).toBeTruthy();
     expect(mockSendMessageToAI).not.toHaveBeenCalled();
+  });
+
+  it('keeps retry inert while the device is still offline', () => {
+    goOffline();
+
+    const {getByTestId, getByText, queryByText, getByLabelText, getAllByText} =
+      renderScreen();
+
+    const giftedChat = getByTestId('mock-gifted-chat');
+    fireEvent(giftedChat, 'onSend', [{text: 'Hello when offline', _id: 1, createdAt: new Date(), user: {_id: 1}}]);
+
+    // The control announces why it cannot be used instead of offering a retry
+    // that is guaranteed to fail.
+    expect(getByText('Waiting for connection')).toBeTruthy();
+    expect(queryByText('Retry')).toBeNull();
+
+    const retryBtn = getByLabelText('Retry unavailable, waiting for a network connection');
+    expect(retryBtn.props.accessibilityState.disabled).toBe(true);
+
+    fireEvent.press(retryBtn);
+
+    // Still exactly one failure card, and nothing was sent.
+    expect(getAllByText('Failed to send message')).toHaveLength(1);
+    expect(mockSendMessageToAI).not.toHaveBeenCalled();
+  });
+
+  it('sends the stored prompt once the connection is back', () => {
+    goOffline();
+
+    const {getByTestId, getByText, rerender, queryByText} = renderScreen();
+
+    const giftedChat = getByTestId('mock-gifted-chat');
+    fireEvent(giftedChat, 'onSend', [{text: 'My knee hurts', _id: 1, createdAt: new Date(), user: {_id: 1}}]);
+
+    expect(getByText('Waiting for connection')).toBeTruthy();
+
+    // Network comes back.
+    goOnline();
+    rerender(
+      <ChatbotScreen
+        navigation={{navigate: mockNavigate, goBack: mockGoBack} as any}
+        route={{} as any}
+      />,
+    );
+
+    const retryBtn = getByText('Retry');
+    expect(retryBtn).toBeTruthy();
+
+    fireEvent.press(retryBtn);
+
+    // The failure card is cleared and the original prompt is resent.
+    expect(queryByText('Failed to send message')).toBeNull();
+    expect(mockSendMessageToAI).toHaveBeenCalledWith(
+      expect.objectContaining({text: 'My knee hurts'}),
+      expect.any(Object),
+    );
   });
 });

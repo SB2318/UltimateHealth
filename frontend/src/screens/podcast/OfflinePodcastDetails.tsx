@@ -14,11 +14,11 @@ import {ON_PRIMARY_COLOR, BUTTON_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme'
 import SliderRN from '@react-native-community/slider';
 import { formatDateWithTime } from '../../lib/utils/dateUtils';
 import Ionicons from '@expo/vector-icons/Ionicons';
-// eslint-disable-next-line import/no-duplicates
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
 import {formatCount, updateOfflinePodcastLikeStatus} from '../../lib/utils/Utils';
+import {generatePodcastShareUrl} from '../../lib/utils/shareUtils';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import type {ComponentType} from 'react';
 import {useEffect, useState} from 'react';
@@ -26,7 +26,7 @@ import Snackbar from 'react-native-snackbar';
 import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import Share from 'react-native-share';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import Icon from '@expo/vector-icons/MaterialIcons';
+
 import {useSocket} from '../../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import {useAudioPlayer} from 'expo-audio';
@@ -91,7 +91,7 @@ export default function OfflinePodcastDetail({
 
   const handleShare = async () => {
     try {
-      const url = `https://uhsocial.in/api/share/podcast?trackId=${podcast._id}&audioUrl=${podcast.audio_url}`;
+      const url = generatePodcastShareUrl(podcast._id, podcast.audio_url);
       await Share.open({
         title: podcast?.title,
         message: `${podcast?.title} : Check out this awesome podcast on UltimateHealth app!`,
@@ -168,7 +168,7 @@ export default function OfflinePodcastDetail({
               />
             ) : (
               <View style={styles.iconContainer}>
-                <Icon name="person" size={40} color="#555" />
+                <MaterialIcons name="person" size={40} color="#555" />
               </View>
             )}
           </TouchableOpacity>

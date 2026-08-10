@@ -911,7 +911,6 @@ export type NearbyEventsResponse = {
   message: string;
   data: HealthEvent[];
 };
-
 export type WellnessMetrics = {
   steps?: number;
   activeMinutes?: number;
