@@ -45,7 +45,7 @@ export default function AuthShell({
           width === "lg" ? "max-w-xl" : "max-w-md"
         )}
       >
-        <div className="rounded-3xl border border-white/70 bg-white shadow-xl transition-colors duration-300 dark:border-white/10 dark:bg-slate-900 dark:shadow-xl">
+        <div className="min-w-0 max-w-full rounded-3xl border border-white/70 bg-white shadow-xl transition-colors duration-300 dark:border-white/10 dark:bg-slate-900 dark:shadow-xl">
           <div className="flex flex-col items-center gap-3 px-6! pt-8! text-center sm:px-9!">
             <Link
               href={withBasePath("/")}
@@ -73,7 +73,9 @@ export default function AuthShell({
             />
           </div>
 
-          <div className="px-6! py-7! sm:px-9!">{children}</div>
+          <div className="w-full min-w-0 max-w-full px-6! py-7! sm:px-9!">
+            {children}
+          </div>
         </div>
 
         {footer && (
@@ -88,7 +90,7 @@ export default function AuthShell({
 
 /** Input styling shared by every auth field, so focus states stay consistent. */
 export const authFieldClass =
-  "h-11! px-3.5! rounded-xl border-slate-200 bg-white/70 text-slate-900 shadow-sm transition-all duration-200 placeholder:text-slate-400 focus-visible:border-[#667eea] focus-visible:ring-4 focus-visible:ring-[#667eea]/15 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus-visible:border-[#818cf8] dark:focus-visible:ring-[#818cf8]/20";
+   "h-11! w-full max-w-full min-w-0 px-3.5! rounded-xl border-slate-200 bg-white/70 text-slate-900 shadow-sm transition-all duration-200 placeholder:text-slate-400 focus-visible:border-[#667eea] focus-visible:ring-4 focus-visible:ring-[#667eea]/15 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus-visible:border-[#818cf8] dark:focus-visible:ring-[#818cf8]/20";
 
 /** The primary action on every auth form. */
 export const authSubmitClass =
