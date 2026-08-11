@@ -3,6 +3,7 @@ import {Category, CategoryType, PodcastData} from '../../schemas/type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GET_STORAGE_DATA} from '../api/APIUtils';
 import {Alert, Linking, Platform, PermissionsAndroid} from 'react-native';
+import {sanitizeHtml} from './htmlSanitizer';
 
 let RNFS: any = null;
 
@@ -84,26 +85,9 @@ export const handleExternalClick = (request: any) => {
   return false;
 };
 
-// Minimal HTML sanitizer for content rendered inside WebViews.
-// Strips executable/embedding tags, event-handler attributes and
-// javascript: URLs while preserving article formatting.
-export const sanitizeHtml = (html: string | null | undefined): string => {
-  if (!html) return '';
-  return html
-    .replace(/<\s*script\b[\s\S]*?<\s*\/\s*script\s*>/gi, '')
-    .replace(/<\s*script\b[^>]*\/?>/gi, '')
-    .replace(/<\s*iframe\b[\s\S]*?<\s*\/\s*iframe\s*>/gi, '')
-    .replace(/<\s*iframe\b[^>]*\/?>/gi, '')
-    .replace(/<\s*object\b[\s\S]*?<\s*\/\s*object\s*>/gi, '')
-    .replace(/<\s*object\b[^>]*\/?>/gi, '')
-    .replace(/<\s*embed\b[^>]*\/?>/gi, '')
-    .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
-    .replace(
-      /\s(href|src)\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi,
-      (match, attr, value) =>
-        /javascript:/i.test(value) ? ` ${attr}="#"` : match,
-    );
-};
+// Sanitizer for content rendered inside WebViews.
+// Re-exported so existing imports stay valid.
+export {sanitizeHtml};
 
 export function msToTime(ms: number): string {
   let totalSeconds = Math.floor(ms / 1000);
