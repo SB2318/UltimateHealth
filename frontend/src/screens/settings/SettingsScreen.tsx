@@ -215,6 +215,15 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('WellnessDashboardScreen')}
             isDark={isDark}
           />
+          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <SettingsRow
+            icon="map-marker-radius-outline"
+            iconColor="#10B981"
+            label="Nearby Health Events"
+            sublabel="Blood drives, health camps, meetups"
+            onPress={() => go('NearbyHealthEventsScreen')}
+            isDark={isDark}
+          />
         </View>
 
         {/* ── LEGAL & PRIVACY ── */}

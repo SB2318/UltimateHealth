@@ -121,6 +121,9 @@ const REGISTER_PUSH_TOKEN = `${PROD_URL}/user/register-device-token`;
 const LOG_WELLNESS_API = `${PROD_URL}/wellness/log`;
 const GET_WELLNESS_WEEKLY_API = `${PROD_URL}/wellness/weekly`;
 
+/** Nearby Health Events */
+const NEARBY_EVENTS_API = `${PROD_URL}/events/nearby`;
+
 export {
   LOGIN_API,
   REGISTRATION_API,
@@ -211,4 +214,5 @@ export {
   SHARE_BASE_URL,
   LOG_WELLNESS_API,
   GET_WELLNESS_WEEKLY_API,
+  NEARBY_EVENTS_API,
 };

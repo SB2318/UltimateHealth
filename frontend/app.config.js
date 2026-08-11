@@ -23,6 +23,7 @@ const defaultStaticConfig = {
       NSMicrophoneUsageDescription: "App requires microphone access to record audio.",
       NSPhotoLibraryAddUsageDescription: "App needs access to save recordings.",
       NSPhotoLibraryUsageDescription: "App needs access to select or manage audio files.",
+      NSLocationWhenInUseUsageDescription: "App requires location access to find nearby health events.",
       UIBackgroundModes: ["audio"]
     }
   },
@@ -34,7 +35,9 @@ const defaultStaticConfig = {
       "RECEIVE_BOOT_COMPLETED",
       "POST_NOTIFICATIONS",
       "READ_MEDIA_AUDIO",
-      "MODIFY_AUDIO_SETTINGS"
+      "MODIFY_AUDIO_SETTINGS",
+      "ACCESS_COARSE_LOCATION",
+      "ACCESS_FINE_LOCATION"
     ],
     blockedPermissions: [
       "android.permission.SYSTEM_ALERT_WINDOW",
