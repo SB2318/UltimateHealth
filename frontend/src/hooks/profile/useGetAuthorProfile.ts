@@ -23,7 +23,20 @@ export const useGetAuthorProfile = (
         url = `${PROD_URL}/user/getuserprofile?id=${user_id}`;
       }
       const response = await axios.get(url);
-      console.log("Fetched author profile:", response.data);
+      if (__DEV__) {
+        // Log only safe profile metadata. The full User payload can contain
+        // email, password, refreshToken, otp and contact_detail.phone_no, so
+        // it must never be dumped to logs in any build.
+        const profile = response.data?.data as User | undefined;
+        console.log('[useGetAuthorProfile] user_id:', profile?._id);
+        console.log('[useGetAuthorProfile] user_handle:', profile?.user_handle);
+        console.log('[useGetAuthorProfile] user_name:', profile?.user_name);
+        console.log(
+          '[useGetAuthorProfile] hasProfileImage:',
+          typeof profile?.Profile_image === 'string' &&
+            profile.Profile_image.length > 0,
+        );
+      }
       return response.data.data as User;
     },
     enabled: !!isConnected
