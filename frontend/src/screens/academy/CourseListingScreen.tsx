@@ -1,16 +1,40 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+﻿import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ACADEMY_BACKGROUND, ACADEMY_PRIMARY, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_BORDER, ACADEMY_SURFACE } from '../../lib/ui/Theme';
 import { ACADEMY_COURSES } from '../../lib/utils/AcademyMockData';
 import CourseCard from '../../components/academy/CourseCard';
+import CourseSkeletonCard from '../../components/academy/CourseSkeletonCard';
+
+// Number of placeholder cards shown while course data is loading.
+const SKELETON_COUNT = 5;
+// Simulated fetch latency for the (currently local/mock) course data — this
+// stands in for the real network delay once courses are served from an API.
+const MOCK_FETCH_DELAY_MS = 600;
 
 const CATEGORIES = ['All', 'Fundamentals', 'Patient Care', 'Departments', 'Technology'];
 
 const CourseListingScreen = ({ navigation }: any) => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), MOCK_FETCH_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [isLoading, fadeAnim]);
 
   const filteredCourses = ACADEMY_COURSES.filter(course => {
     const matchesCategory = activeCategory === 'All' || course.category === activeCategory;
@@ -57,19 +81,27 @@ const CourseListingScreen = ({ navigation }: any) => {
       </View>
 
       <ScrollView style={styles.courseList} contentContainerStyle={styles.courseListContent}>
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map(course => (
-            <CourseCard 
-              key={course.id} 
-              course={course} 
-              onPress={() => navigation.navigate('CourseDetail', { courseId: course.id })} 
-            />
+        {isLoading ? (
+          Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+            <CourseSkeletonCard key={`course-skeleton-${i}`} />
           ))
         ) : (
-          <View style={styles.emptyState}>
-            <MaterialCommunityIcons name="book-search-outline" size={64} color={ACADEMY_BORDER} />
-            <Text style={styles.emptyStateText}>No courses found.</Text>
-          </View>
+          <Animated.View style={{ opacity: fadeAnim }}>
+            {filteredCourses.length > 0 ? (
+              filteredCourses.map(course => (
+                <CourseCard 
+                  key={course.id} 
+                  course={course} 
+                  onPress={() => navigation.navigate('CourseDetail', { courseId: course.id })} 
+                />
+              ))
+            ) : (
+              <View style={styles.emptyState}>
+                <MaterialCommunityIcons name="book-search-outline" size={64} color={ACADEMY_BORDER} />
+                <Text style={styles.emptyStateText}>No courses found.</Text>
+              </View>
+            )}
+          </Animated.View>
         )}
       </ScrollView>
     </SafeAreaView>
