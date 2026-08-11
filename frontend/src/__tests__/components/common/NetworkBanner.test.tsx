@@ -1,12 +1,12 @@
- 
 import React from 'react';
 import { render } from '@testing-library/react-native';
 
-import { useNetInfo } from '@react-native-community/netinfo';
+import { useAppSelector } from '@/src/store/hooks';
 import { NetworkBanner } from '@/src/components/common/NetworkBanner';
 
-jest.mock('@react-native-community/netinfo', () => ({
-  useNetInfo: jest.fn(),
+
+jest.mock('@/src/store/hooks', () => ({
+  useAppSelector: jest.fn(),
 }));
 
 jest.mock('react-native-safe-area-context', () => ({
@@ -31,63 +31,49 @@ describe('NetworkBanner', () => {
     jest.clearAllMocks();
   });
 
-  it('does not render anything when online initially', () => {
-    (useNetInfo as jest.Mock).mockReturnValue({
-      isConnected: true,
-      isInternetReachable: true,
-    });
-    const { queryByText } = render(<NetworkBanner />);
-    expect(queryByText('No Internet Connection')).toBeNull();
-    expect(queryByText('Back online')).toBeNull();
-  });
+it('does not render anything when online initially', () => {
+  (useAppSelector as jest.Mock).mockReturnValue(true);
 
-  it('renders correctly when the app goes offline', () => {
-    (useNetInfo as jest.Mock).mockReturnValue({
-      isConnected: false,
-      isInternetReachable: false,
-    });
+  const { queryByText } = render(<NetworkBanner />);
+  expect(queryByText('No Internet Connection')).toBeNull();
+  expect(queryByText('Back online')).toBeNull();
+});
+
+it('renders correctly when the app goes offline', () => {
+  (useAppSelector as jest.Mock).mockReturnValue(false);
     const { getByText } = render(<NetworkBanner />);
     expect(getByText('No Internet Connection')).toBeTruthy();
   });
 
   it('shows "Back online" message when connectivity is restored', () => {
     // Start offline
-    (useNetInfo as jest.Mock).mockReturnValue({
-      isConnected: false,
-      isInternetReachable: false,
-    });
+    (useAppSelector as jest.Mock).mockReturnValue(false);
     const { getByText, rerender } = render(<NetworkBanner />);
     expect(getByText('No Internet Connection')).toBeTruthy();
 
     // Mock restore connectivity
-    (useNetInfo as jest.Mock).mockReturnValue({
-      isConnected: true,
-      isInternetReachable: true,
-    });
+    (useAppSelector as jest.Mock).mockReturnValue(true);
     rerender(<NetworkBanner />);
     
     expect(getByText('Back online')).toBeTruthy();
   });
 
   it('handles rapid changes in network status gracefully', () => {
-    (useNetInfo as jest.Mock).mockReturnValue({
-      isConnected: true,
-      isInternetReachable: true,
-    });
+    (useAppSelector as jest.Mock).mockReturnValue(true);
     const { getByText, rerender } = render(<NetworkBanner />);
     
     // Offline
-    (useNetInfo as jest.Mock).mockReturnValue({ isConnected: false, isInternetReachable: false });
+    (useAppSelector as jest.Mock).mockReturnValue(false);
     rerender(<NetworkBanner />);
     expect(getByText('No Internet Connection')).toBeTruthy();
     
     // Online
-    (useNetInfo as jest.Mock).mockReturnValue({ isConnected: true, isInternetReachable: true });
+    (useAppSelector as jest.Mock).mockReturnValue(true);
     rerender(<NetworkBanner />);
     expect(getByText('Back online')).toBeTruthy();
     
     // Offline again rapidly
-    (useNetInfo as jest.Mock).mockReturnValue({ isConnected: false, isInternetReachable: false });
+    (useAppSelector as jest.Mock).mockReturnValue(false);
     rerender(<NetworkBanner />);
     expect(getByText('No Internet Connection')).toBeTruthy();
   });
