@@ -58,7 +58,6 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   const [showQuotaModal, setShowQuotaModal] = useState<boolean>(false);
   const isMountedRef = useRef(true);
   const {data: user} = useGetProfile();
-  // const token = 'GPMFAQIV2BGXCWYMCVQ3IPVXSOOLI53H5NYA'; //token
 
   const [activeSpeakingId, setActiveSpeakingId] = useState<string | number | null>(null);
 
