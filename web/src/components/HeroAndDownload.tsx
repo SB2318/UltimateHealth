@@ -355,19 +355,6 @@ function AndroidStoreButtons() {
             <strong>UHealth Admin</strong>
           </div>
         </a>
-        <a
-          href="https://play.google.com/store/apps/details?id=com.ultimatehealth.admin&hl=en-US"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="uh-store-btn uh-store-admin"
-          aria-label="Download UHealth Admin on Google Play"
-        >
-          <i className="fab fa-google-play" aria-hidden="true" />
-          <div>
-            <small>Now on</small>
-            <strong>Google Play</strong>
-          </div>
-        </a>
       </div>
     </div>
   );
