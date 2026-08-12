@@ -1216,7 +1216,8 @@ We welcome contributions from everyone — developers, designers, writers, and t
 
    <tr>
     <td align="center"><a href="https://github.com/salonisingh-5"><img src="https://avatars.githubusercontent.com/u/268205463?v=4" width="120px;" alt=""/><br/><sub><b>salonisingh-5</b></sub></a></td>
-   </tr>
+       <td align="center"><a href="https://github.com/srishti-1935"><img src="https://avatars.githubusercontent.com/u/201977756?v=4" width="120px;" alt=""/><br/><sub><b>Srishti Srivastava</b></sub></a></td>
+ </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
