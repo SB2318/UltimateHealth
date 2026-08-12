@@ -242,7 +242,12 @@ const MedicalGlossaryScreen = ({navigation}: any) => {
               Medical Glossary
             </Text>
           </YStack>
-          <YStack width={40} />
+          <TouchableOpacity
+            style={[styles.backButton, {backgroundColor: theme.backgroundLight?.val}]}
+            onPress={() => navigation.navigate('HealthTermComparison')}
+            accessibilityLabel="Compare health terms">
+            <Ionicon name="git-compare-outline" size={22} color={PRIMARY_COLOR} />
+          </TouchableOpacity>
         </XStack>
 
         <XStack

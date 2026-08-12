@@ -148,6 +148,7 @@ export type RootStackParamList = {
   PodcastEpisodesScreen: undefined;
   NearbyHealthEventsScreen: undefined;
   EventDetailsScreen: { event: HealthEvent; distance?: number };
+  HealthTermComparison: undefined;
 };
 
 export type RedirectTo = {

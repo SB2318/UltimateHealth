@@ -68,6 +68,8 @@ import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
 import ChatbotScreen from '../screens/ai/ChatbotScreen';
 import NearbyHealthEventsScreen from '../screens/settings/NearbyHealthEventsScreen';
 import EventDetailsScreen from '../screens/settings/EventDetailsScreen';
+import HealthTermComparisonScreen from '../screens/HealthTermComparisonScreen';
+
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -999,6 +1001,11 @@ const StackNavigation = () => {
           headerTintColor: 'white',
           headerBackTitleVisible: false,
         } as any}
+      />
+      <Stack.Screen
+        name="HealthTermComparison"
+        component={HealthTermComparisonScreen}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
