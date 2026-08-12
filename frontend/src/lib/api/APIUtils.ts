@@ -22,6 +22,7 @@ const CONTENT_CHECKER_PROD: string = extra.CONTENT_CHECKER_PROD;
 const SHARE_BASE_URL = 'https://uhsocial.in';
 
 const LOGIN_API = `${PROD_URL}/user/login`;
+const GOOGLE_AUTH_API = `${PROD_URL}/auth/google`;
 const REGISTRATION_API = `${PROD_URL}/user/register`;
 const ARTICLE_TAGS_API = `${PROD_URL}/articles/tags`;
 const GET_PROFILE_API = `${PROD_URL}/user/getprofile`;
@@ -126,6 +127,7 @@ const NEARBY_EVENTS_API = `${PROD_URL}/events/nearby`;
 
 export {
   LOGIN_API,
+  GOOGLE_AUTH_API,
   REGISTRATION_API,
   ARTICLE_TAGS_API,
   GET_PROFILE_API,
