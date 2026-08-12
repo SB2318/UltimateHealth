@@ -95,6 +95,15 @@ const LIKE_PODCAST = `${PROD_URL}/podcast/like`;
 const SEARCH_PODCAST = `${PROD_URL}/podcast/search`;
 const FILTER_PODCAST = `${PROD_URL}/podcast/filter`;
 const UPLOAD_PODCAST = `${PROD_URL}/podcast/create`;
+const PODCAST_UPLOAD_SESSION_API = `${PROD_URL}/podcasts/uploads`;
+const PODCAST_UPLOAD_CHUNK_API = (uploadId: string, chunkNumber: number) =>
+  `${PROD_URL}/podcasts/uploads/${uploadId}/chunks/${chunkNumber}`;
+const PODCAST_UPLOAD_STATUS_API = (uploadId: string) =>
+  `${PROD_URL}/podcasts/uploads/${uploadId}`;
+const PODCAST_UPLOAD_COMPLETE_API = (uploadId: string) =>
+  `${PROD_URL}/podcasts/uploads/${uploadId}/complete`;
+const PODCAST_UPLOAD_CANCEL_API = (uploadId: string) =>
+  `${PROD_URL}/podcasts/uploads/${uploadId}`;
 const GET_PLAYLIST = `${PROD_URL}/podcast/get-my-playlists`;
 const CREATE_PLAYLIST = `${PROD_URL}/podcast/create-playlist`;
 const ADD_TO_PLAYLIST = `${PROD_URL}/podcast/add-podcast-to-playlist`;
@@ -199,6 +208,11 @@ export {
   ADD_TO_PLAYLIST,
   UPDATE_PODCAST_PLAYLIST,
   UPLOAD_PODCAST,
+  PODCAST_UPLOAD_SESSION_API,
+  PODCAST_UPLOAD_CHUNK_API,
+  PODCAST_UPLOAD_STATUS_API,
+  PODCAST_UPLOAD_COMPLETE_API,
+  PODCAST_UPLOAD_CANCEL_API,
   DISCARDED_PODCASTS,
   PENDING_PODCASTS,
   USER_PUBLISHED_PODCASTS,
