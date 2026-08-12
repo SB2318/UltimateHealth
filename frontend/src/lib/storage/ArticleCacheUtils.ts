@@ -3,22 +3,23 @@ import {ArticleData} from '../../schemas/type';
 import {debugError} from '../utils/debugLog';
 
 /**
- * Offline reading cache for recently viewed articles.
+ * Offline reading cache for articles the reader has finished.
  *
- * Article detail and body are fetched over the network on every open, so a
- * user with no connection cannot re-read something they opened minutes ago.
- * Each viewed article is stored here instead, and the read hooks fall back to
- * this cache when the request fails for connectivity reasons.
+ * Nothing is written here for merely opening an article: a browsing session
+ * would otherwise fill the device with articles nobody intends to re-read.
+ * The write happens once, at the same point the read event fires — when the
+ * reader reaches the end of the article. Everything else stays in memory for
+ * the session (see `offlineSlice`) and is gone when the app unmounts.
  *
- * The cache is bounded two ways: by recency (`MAX_CACHED_ARTICLES`) and by age
- * (`CACHE_TTL_MS`), so it cannot grow without limit or serve stale health
- * content indefinitely.
+ * What is kept is bounded two ways: by recency (`MAX_CACHED_ARTICLES`) and by
+ * age (`CACHE_TTL_MS`), so the cache cannot grow without limit or serve stale
+ * health content indefinitely.
  */
 
 /** AsyncStorage key holding the serialised cache. */
 export const ARTICLE_CACHE_KEY = 'OFFLINE_ARTICLE_CACHE';
 
-/** How many recently viewed articles are retained. */
+/** How many fully read articles are retained. */
 export const MAX_CACHED_ARTICLES = 20;
 
 /** Entries older than this are dropped on the next read or write. */
@@ -31,7 +32,7 @@ export type CachedArticle = {
   /** PocketBase record id, used to match the separately fetched body. */
   recordId?: string;
   htmlContent?: string;
-  /** Epoch ms of the most recent view; drives both LRU order and expiry. */
+  /** Epoch ms of the moment the article was finished; drives LRU and expiry. */
   cachedAt: number;
 };
 
@@ -67,20 +68,24 @@ const writeCache = async (entries: CachedArticle[]): Promise<void> => {
 
 /**
  * Drops expired entries and trims to the most recent `MAX_CACHED_ARTICLES`.
- * Entries are held newest-first, so the tail is the least recently viewed.
+ * Entries are held newest-first, so the tail is the least recently finished.
  */
 const prune = (entries: CachedArticle[], now: number): CachedArticle[] =>
   entries.filter(entry => !isExpired(entry, now)).slice(0, MAX_CACHED_ARTICLES);
 
 /**
- * Records a viewed article, moving it to the front of the cache.
+ * Stores an article the reader has finished, moving it to the front.
  *
- * Re-viewing an article refreshes its timestamp, so actively read articles
- * survive eviction while forgotten ones age out.
+ * Called once per article from the fully-read handler on the detail screen.
+ * Re-reading refreshes the entry, so articles a reader returns to survive
+ * eviction while ones finished long ago age out. The body is passed in
+ * alongside the metadata so the whole article is readable offline — it is
+ * already in memory by the time the reader reaches the end.
  */
-export const cacheArticleDetail = async (
+export const cacheFullyReadArticle = async (
   articleId: number,
   article: ArticleData,
+  htmlContent?: string,
 ): Promise<void> => {
   if (!articleId || !article) {
     return;
@@ -93,40 +98,15 @@ export const cacheArticleDetail = async (
   const updated: CachedArticle = {
     articleId,
     article,
-    // Preserve any body already cached for this article.
     recordId: article.pb_recordId || existing?.recordId,
-    htmlContent: existing?.htmlContent,
+    // Keep the body already stored if this read did not carry one, so a
+    // re-read that finishes before the content request cannot blank it.
+    htmlContent:
+      typeof htmlContent === 'string' ? htmlContent : existing?.htmlContent,
     cachedAt: now,
   };
 
   const remaining = entries.filter(entry => entry.articleId !== articleId);
-  await writeCache(prune([updated, ...remaining], now));
-};
-
-/**
- * Attaches a fetched article body to its cached entry.
- *
- * The body is fetched by PocketBase record id in a separate request, so it is
- * matched back to the article that carries the same `pb_recordId`. A body with
- * no cached article is not stored — it would be unreadable offline anyway.
- */
-export const cacheArticleContent = async (
-  recordId: string,
-  htmlContent: string,
-): Promise<void> => {
-  if (!recordId || typeof htmlContent !== 'string') {
-    return;
-  }
-
-  const now = Date.now();
-  const entries = await readCache();
-  const index = entries.findIndex(entry => entry.recordId === recordId);
-  if (index === -1) {
-    return;
-  }
-
-  const updated = {...entries[index], htmlContent, cachedAt: now};
-  const remaining = entries.filter((_, i) => i !== index);
   await writeCache(prune([updated, ...remaining], now));
 };
 
@@ -177,6 +157,22 @@ export const getCachedArticles = async (): Promise<CachedArticle[]> => {
 export const isArticleCached = async (articleId: number): Promise<boolean> => {
   const entry = await getCachedArticle(articleId);
   return entry !== null;
+};
+
+/**
+ * Drops expired entries. Run when the app unmounts so storage is not left
+ * holding articles past their TTL until the reader happens to browse again.
+ */
+export const pruneArticleCache = async (): Promise<void> => {
+  const entries = await readCache();
+  if (entries.length === 0) {
+    return;
+  }
+
+  const pruned = prune(entries, Date.now());
+  if (pruned.length !== entries.length) {
+    await writeCache(pruned);
+  }
 };
 
 /** Removes every cached article. */

@@ -57,6 +57,7 @@ import {useGetProfile} from '@/src/hooks/profile/useGetProfile';
 import {useLikeArticle} from '@/src/hooks/article/useLikeArticle';
 import {useUpdateFollowStatusByArticle} from '@/src/hooks/social/useUpdateFollowStatus';
 import {useUpdateReadEvent} from '@/src/hooks/article/useUpdateReadEvent';
+import {useSaveFullyReadArticle} from '@/src/hooks/article/useSaveFullyReadArticle';
 import {getReadTime} from '../../lib/utils/readTime';
 import {useUpdateViewCount} from '@/src/hooks/article/useUpdateViewCount';
 import {useSaveArticle} from '@/src/hooks/article/useSaveArticle';
@@ -258,6 +259,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     isError: contentError,
     refetch: refetchContent,
   } = useGetArticleContent(resolvedRecordId);
+
+  // Stores the article for offline reading once the reader reaches its end.
+  const markArticleFullyRead = useSaveFullyReadArticle(
+    articleId,
+    article,
+    articleContent,
+  );
 
   // Coalesce refetches from rapid like/follow/save/trust taps. Each mutation's
   // onSuccess previously fired its own refetch(); a burst produced one network
@@ -924,6 +932,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     layout: number,
   ) => {
     if (layout + offset >= height) {
+      // Reaching the end is what makes an article worth keeping on the device,
+      // so offline storage is driven by the same signal as the read event.
+      // Guests never report a read event but do finish articles, so this is
+      // deliberately outside the check below.
+      markArticleFullyRead();
+
       if (
         article &&
         !readEventSave &&

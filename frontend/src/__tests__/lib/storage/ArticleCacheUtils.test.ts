@@ -3,13 +3,13 @@ import {
   ARTICLE_CACHE_KEY,
   CACHE_TTL_MS,
   MAX_CACHED_ARTICLES,
-  cacheArticleContent,
-  cacheArticleDetail,
+  cacheFullyReadArticle,
   clearArticleCache,
   getCachedArticle,
   getCachedArticleContent,
   getCachedArticles,
   isArticleCached,
+  pruneArticleCache,
 } from '../../../lib/storage/ArticleCacheUtils';
 
 /** In-memory stand-in for AsyncStorage so cache contents are observable. */
@@ -56,18 +56,19 @@ describe('ArticleCacheUtils', () => {
     );
   });
 
-  it('caches a viewed article and reads it back', async () => {
-    await cacheArticleDetail(1, makeArticle(1));
+  it('stores a fully read article with its body and reads it back', async () => {
+    await cacheFullyReadArticle(1, makeArticle(1), '<p>Body</p>');
 
     const cached = await getCachedArticle(1);
     expect(cached?.article.title).toBe('Article 1');
+    expect(await getCachedArticleContent('rec-1')).toBe('<p>Body</p>');
     expect(await isArticleCached(1)).toBe(true);
     expect(await isArticleCached(999)).toBe(false);
   });
 
   it('retains only the most recent MAX_CACHED_ARTICLES articles', async () => {
     for (let id = 1; id <= MAX_CACHED_ARTICLES + 5; id++) {
-      await cacheArticleDetail(id, makeArticle(id));
+      await cacheFullyReadArticle(id, makeArticle(id));
     }
 
     const cached = await getCachedArticles();
@@ -79,24 +80,23 @@ describe('ArticleCacheUtils', () => {
     expect(await isArticleCached(MAX_CACHED_ARTICLES + 5)).toBe(true);
   });
 
-  it('moves a re-viewed article to the front so it survives eviction', async () => {
-    await cacheArticleDetail(1, makeArticle(1));
-    for (let id = 2; id <= MAX_CACHED_ARTICLES; id++) {
-      await cacheArticleDetail(id, makeArticle(id));
+  it('moves a re-read article to the front so it survives eviction', async () => {
+    for (let id = 1; id <= MAX_CACHED_ARTICLES; id++) {
+      await cacheFullyReadArticle(id, makeArticle(id));
     }
 
-    // Re-open article 1, then push enough new articles to overflow the cache.
-    await cacheArticleDetail(1, makeArticle(1));
-    await cacheArticleDetail(101, makeArticle(101));
+    // Finish article 1 again, then push a new one to overflow the cache.
+    await cacheFullyReadArticle(1, makeArticle(1));
+    await cacheFullyReadArticle(101, makeArticle(101));
 
-    // Article 2 was the least recently viewed and is gone; article 1 remains.
+    // Article 2 was the least recently finished and is gone; article 1 stays.
     expect(await isArticleCached(1)).toBe(true);
     expect(await isArticleCached(2)).toBe(false);
   });
 
-  it('does not store duplicate entries when an article is re-viewed', async () => {
-    await cacheArticleDetail(1, makeArticle(1));
-    await cacheArticleDetail(1, makeArticle(1, {title: 'Updated'}));
+  it('does not store duplicate entries when an article is re-read', async () => {
+    await cacheFullyReadArticle(1, makeArticle(1));
+    await cacheFullyReadArticle(1, makeArticle(1, {title: 'Updated'}));
 
     const cached = await getCachedArticles();
     expect(cached).toHaveLength(1);
@@ -104,7 +104,7 @@ describe('ArticleCacheUtils', () => {
   });
 
   it('expires articles older than the TTL', async () => {
-    await cacheArticleDetail(1, makeArticle(1));
+    await cacheFullyReadArticle(1, makeArticle(1), '<p>Body</p>');
 
     // Age the entry past the 7-day TTL.
     const aged = readRaw().map((entry: any) => ({
@@ -114,31 +114,41 @@ describe('ArticleCacheUtils', () => {
     store[ARTICLE_CACHE_KEY] = JSON.stringify(aged);
 
     expect(await getCachedArticle(1)).toBeNull();
+    expect(await getCachedArticleContent('rec-1')).toBeNull();
     expect(await isArticleCached(1)).toBe(false);
     expect(await getCachedArticles()).toHaveLength(0);
   });
 
-  it('attaches article content to the cached entry by record id', async () => {
-    await cacheArticleDetail(1, makeArticle(1));
-    await cacheArticleContent('rec-1', '<p>Body</p>');
+  it('keeps the stored body when a re-read carries no content', async () => {
+    await cacheFullyReadArticle(1, makeArticle(1), '<p>Body</p>');
+    await cacheFullyReadArticle(1, makeArticle(1, {title: 'Updated'}));
 
+    // Re-reading refreshes metadata but must not blank the offline body.
     expect(await getCachedArticleContent('rec-1')).toBe('<p>Body</p>');
   });
 
-  it('preserves cached content when the article is re-viewed', async () => {
-    await cacheArticleDetail(1, makeArticle(1));
-    await cacheArticleContent('rec-1', '<p>Body</p>');
-    await cacheArticleDetail(1, makeArticle(1, {title: 'Updated'}));
+  it('ignores an article with no id', async () => {
+    await cacheFullyReadArticle(0, makeArticle(0));
 
-    // Re-viewing refreshes metadata but must not discard the offline body.
-    expect(await getCachedArticleContent('rec-1')).toBe('<p>Body</p>');
-  });
-
-  it('ignores content for an article that is not cached', async () => {
-    await cacheArticleContent('rec-unknown', '<p>Orphan</p>');
-
-    expect(await getCachedArticleContent('rec-unknown')).toBeNull();
     expect(await getCachedArticles()).toHaveLength(0);
+  });
+
+  it('drops expired entries when the cache is pruned on app unmount', async () => {
+    await cacheFullyReadArticle(1, makeArticle(1));
+    await cacheFullyReadArticle(2, makeArticle(2));
+
+    // Age only article 1 past the TTL.
+    const aged = readRaw().map((entry: any) =>
+      entry.articleId === 1
+        ? {...entry, cachedAt: Date.now() - CACHE_TTL_MS - 1}
+        : entry,
+    );
+    store[ARTICLE_CACHE_KEY] = JSON.stringify(aged);
+
+    await pruneArticleCache();
+
+    expect(readRaw()).toHaveLength(1);
+    expect(readRaw()[0].articleId).toBe(2);
   });
 
   it('recovers from corrupt cache data instead of throwing', async () => {
@@ -148,12 +158,12 @@ describe('ArticleCacheUtils', () => {
     expect(await getCachedArticles()).toEqual([]);
 
     // The cache is usable again after the reset.
-    await cacheArticleDetail(1, makeArticle(1));
+    await cacheFullyReadArticle(1, makeArticle(1));
     expect(await isArticleCached(1)).toBe(true);
   });
 
   it('clears every cached article', async () => {
-    await cacheArticleDetail(1, makeArticle(1));
+    await cacheFullyReadArticle(1, makeArticle(1));
     await clearArticleCache();
 
     expect(await getCachedArticles()).toEqual([]);

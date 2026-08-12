@@ -2,7 +2,8 @@ import {useEffect, useState} from 'react';
 import {isArticleCached} from '@/src/lib/storage/ArticleCacheUtils';
 
 /**
- * Reports whether an article is stored for offline reading.
+ * Reports whether an article is stored for offline reading, which happens
+ * once the reader has finished it.
  *
  * Used to surface the "Available Offline" badge. The lookup hits AsyncStorage,
  * so it runs in an effect and is guarded against setting state after unmount.

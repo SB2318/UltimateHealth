@@ -2,18 +2,24 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {renderHook, waitFor} from '@testing-library/react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {configureStore} from '@reduxjs/toolkit';
+import {Provider} from 'react-redux';
 import React from 'react';
 import {useGetArticleDetails} from '@/src/hooks/article/useGetArticleDetail';
 import {useGetArticleContent} from '@/src/hooks/article/useGetArticleContent';
 import {
-  cacheArticleContent,
-  cacheArticleDetail,
+  ARTICLE_CACHE_KEY,
+  cacheFullyReadArticle,
 } from '@/src/lib/storage/ArticleCacheUtils';
+import offlineReducer, {
+  cacheSessionArticle,
+  cacheSessionContent,
+} from '@/src/store/offlineSlice';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-/** In-memory AsyncStorage so the cache persists across hooks within a test. */
+/** In-memory AsyncStorage so the device cache is observable within a test. */
 let store: Record<string, string> = {};
 
 /**
@@ -23,7 +29,9 @@ let store: Record<string, string> = {};
  */
 let clients: QueryClient[] = [];
 
-function makeWrapper() {
+const makeStore = () => configureStore({reducer: {offline: offlineReducer}});
+
+function makeWrapper(reduxStore = makeStore()) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {retry: false, gcTime: 0},
@@ -31,14 +39,25 @@ function makeWrapper() {
     },
   });
   clients.push(queryClient);
-  return ({children}: {children: React.ReactNode}) =>
-    React.createElement(QueryClientProvider, {client: queryClient}, children);
+
+  const wrapper = ({children}: {children: React.ReactNode}) =>
+    React.createElement(Provider, {
+      store: reduxStore,
+      children: React.createElement(
+        QueryClientProvider,
+        {client: queryClient},
+        children,
+      ),
+    });
+
+  return {wrapper, reduxStore};
 }
 
 const article = {
   _id: '1',
   title: 'Managing Hypertension',
   pb_recordId: 'rec-1',
+  status: 'published',
 } as any;
 
 /** Axios reports a connectivity failure as an error carrying no `response`. */
@@ -80,63 +99,103 @@ describe('offline article reading', () => {
     );
   });
 
-  it('caches an article automatically when it is viewed online', async () => {
+  it('writes nothing to the device when an article is merely opened', async () => {
     mockedAxios.get.mockResolvedValueOnce({data: {article}});
+    const {wrapper, reduxStore} = makeWrapper();
 
-    const {result} = renderHook(() => useGetArticleDetails(1), {
-      wrapper: makeWrapper(),
-    });
-
+    const {result} = renderHook(() => useGetArticleDetails(1), {wrapper});
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    // Cached as a side effect of viewing — no explicit "save" needed.
-    expect(store.OFFLINE_ARTICLE_CACHE).toBeDefined();
-    expect(JSON.parse(store.OFFLINE_ARTICLE_CACHE)[0].articleId).toBe(1);
+    // Opening is not reading: storage stays untouched, the copy is in memory.
+    expect(store[ARTICLE_CACHE_KEY]).toBeUndefined();
+    expect(reduxStore.getState().offline.articles[0].articleId).toBe(1);
   });
 
-  it('serves a previously viewed article when the device is offline', async () => {
-    await cacheArticleDetail(1, article);
+  it('keeps an opened article body in memory rather than on the device', async () => {
+    mockedAxios.get.mockResolvedValueOnce({data: {htmlContent: '<p>Body</p>'}});
+    const {wrapper, reduxStore} = makeWrapper();
+
+    const {result} = renderHook(() => useGetArticleContent('rec-1'), {wrapper});
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(store[ARTICLE_CACHE_KEY]).toBeUndefined();
+    expect(reduxStore.getState().offline.contents[0].htmlContent).toBe(
+      '<p>Body</p>',
+    );
+  });
+
+  it('serves an article opened this session when connectivity drops', async () => {
+    const reduxStore = makeStore();
+    reduxStore.dispatch(cacheSessionArticle({articleId: 1, article}));
     mockedAxios.get.mockRejectedValueOnce(offlineError());
 
     const {result} = renderHook(() => useGetArticleDetails(1), {
-      wrapper: makeWrapper(),
+      wrapper: makeWrapper(reduxStore).wrapper,
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data?.title).toBe('Managing Hypertension');
   });
 
-  it('serves cached article body when the device is offline', async () => {
-    await cacheArticleDetail(1, article);
-    await cacheArticleContent('rec-1', '<p>Body</p>');
+  it('serves an article body opened this session when connectivity drops', async () => {
+    const reduxStore = makeStore();
+    reduxStore.dispatch(
+      cacheSessionContent({recordId: 'rec-1', htmlContent: '<p>Body</p>'}),
+    );
     mockedAxios.get.mockRejectedValueOnce(offlineError());
 
     const {result} = renderHook(() => useGetArticleContent('rec-1'), {
-      wrapper: makeWrapper(),
+      wrapper: makeWrapper(reduxStore).wrapper,
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toBe('<p>Body</p>');
   });
 
-  it('still fails offline when the article was never viewed', async () => {
+  it('serves a fully read article offline in a later session', async () => {
+    // Stored when the reader reached the end; the session cache is empty here,
+    // standing in for the app having been closed and reopened.
+    await cacheFullyReadArticle(1, article, '<p>Body</p>');
+    mockedAxios.get.mockRejectedValueOnce(offlineError());
+
+    const {result} = renderHook(() => useGetArticleDetails(1), {
+      wrapper: makeWrapper().wrapper,
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data?.title).toBe('Managing Hypertension');
+  });
+
+  it('serves a fully read article body offline in a later session', async () => {
+    await cacheFullyReadArticle(1, article, '<p>Body</p>');
+    mockedAxios.get.mockRejectedValueOnce(offlineError());
+
+    const {result} = renderHook(() => useGetArticleContent('rec-1'), {
+      wrapper: makeWrapper().wrapper,
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(result.current.data).toBe('<p>Body</p>');
+  });
+
+  it('still fails offline for an article that was never read', async () => {
     mockedAxios.get.mockRejectedValueOnce(offlineError());
 
     const {result} = renderHook(() => useGetArticleDetails(42), {
-      wrapper: makeWrapper(),
+      wrapper: makeWrapper().wrapper,
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
   });
 
   it('does not mask a server error with stale cached content', async () => {
-    await cacheArticleDetail(1, article);
+    await cacheFullyReadArticle(1, article, '<p>Body</p>');
     // A 404 is a real answer — an article removed upstream must not keep
     // rendering from cache, which matters for retracted health content.
     mockedAxios.get.mockRejectedValueOnce({response: {status: 404}});
 
     const {result} = renderHook(() => useGetArticleDetails(1), {
-      wrapper: makeWrapper(),
+      wrapper: makeWrapper().wrapper,
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));

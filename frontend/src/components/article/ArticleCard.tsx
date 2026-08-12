@@ -78,7 +78,7 @@ const ArticleCard = ({
     icon: isDarkMode ? '#D1D5DB' : '#414A4C',
   };
   const socket = useSocket();
-  // Whether this article has been cached for offline reading.
+  // Whether this article was read through and kept for offline reading.
   const isAvailableOffline = useIsArticleCached(Number(item?._id));
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
