@@ -307,6 +307,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 keyboardType="default"
                 placeholder="Enter your podcast title"
                 placeholderTextColor="#6b7280"
+                maxLength={100}
                 style={[
                   styles.inputControl,
                   submitted && titleError ? styles.inputControlError : null,
@@ -325,6 +326,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                   }
                 }}
               />
+              <Text style={styles.charCounter}>{title.length}/100</Text>
               {submitted && titleError ? (
                 <Text style={styles.errorText}>{titleError}</Text>
               ) : null}
