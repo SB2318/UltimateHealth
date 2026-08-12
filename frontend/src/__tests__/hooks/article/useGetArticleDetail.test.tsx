@@ -25,15 +25,11 @@ function makeWrapper() {
   });
   clients.push(queryClient);
   const store = configureStore({reducer: {offline: offlineReducer}});
-  return ({children}: {children: React.ReactNode}) =>
-    React.createElement(Provider, {
-      store,
-      children: React.createElement(
-        QueryClientProvider,
-        {client: queryClient},
-        children,
-      ),
-    });
+  return ({children}: {children: React.ReactNode}) => (
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </Provider>
+  );
 }
 
 describe('useGetArticleDetails', () => {

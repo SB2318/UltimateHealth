@@ -40,15 +40,11 @@ function makeWrapper(reduxStore = makeStore()) {
   });
   clients.push(queryClient);
 
-  const wrapper = ({children}: {children: React.ReactNode}) =>
-    React.createElement(Provider, {
-      store: reduxStore,
-      children: React.createElement(
-        QueryClientProvider,
-        {client: queryClient},
-        children,
-      ),
-    });
+  const wrapper = ({children}: {children: React.ReactNode}) => (
+    <Provider store={reduxStore}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </Provider>
+  );
 
   return {wrapper, reduxStore};
 }
