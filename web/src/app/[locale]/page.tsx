@@ -658,8 +658,8 @@ export default function Home() {
         </PageWrapper>
 
         <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>App Experience</a>
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
+          <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>App Experience</a>
           <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
           <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
           <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
@@ -677,90 +677,6 @@ export default function Home() {
         onJoinTestFlight={openAppleModal}
         onShowComingSoon={openComingSoonModal}
       />
-
-      {/* ── Screenshots ── */}
-      <Section id="screenshots">
-        <PageWrapper>
-          <h2>App Experience</h2>
-          <p className="center">A closer look at what UltimateHealth offers, screen by screen</p>
-
-          <div className="screenshot-details">
-            <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
-              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setUserSliderOpen((o) => !o); }}>
-              <span style={{ color: "var(--primary)" }}>{userSliderOpen ? "▼" : "▶"}</span> UltimateHealth App
-            </div>
-            {userSliderOpen && (
-              <div className="screenshot-slider-container">
-                <div className="screenshots-wrapper" ref={userSliderRef}>
-                  {extendedUserScreenshots.map((s, i) => (
-                    <div
-                      key={`user-${i}`}
-                      className="screenshot-box"
-                      onClick={() => openScreenshotModal(s.src)}
-                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`Open ${s.caption} screenshot`}
-                    >
-                      <div className="screenshot-image-frame">
-                        <Image
-                          src={s.src}
-                          alt={s.caption}
-                          fill
-                          sizes="(max-width: 768px) 260px, 300px"
-                          className="screenshot-image"
-                        />
-                      </div>
-                      <div className="screenshot-card-caption">{s.caption}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="slider-nav">
-                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, -1, userScreenshots.length)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, 1, userScreenshots.length)}><i className="fas fa-chevron-right"></i></button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="screenshot-details">
-            <div className="screenshot-summary" onClick={() => setAdminSliderOpen((o) => !o)} role="button" tabIndex={0}
-              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setAdminSliderOpen((o) => !o); }}>
-              <span style={{ color: "var(--primary)" }}>{adminSliderOpen ? "▼" : "▶"}</span> UHealth Admin App
-            </div>
-            {adminSliderOpen && (
-              <div className="screenshot-slider-container">
-                <div className="screenshots-wrapper" ref={adminSliderRef}>
-                  {extendedAdminScreenshots.map((s, i) => (
-                    <div
-                      key={`admin-${i}`}
-                      className="screenshot-box"
-                      onClick={() => openScreenshotModal(s.src)}
-                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`Open ${s.caption} screenshot`}
-                    >
-                      <Image
-                        src={s.src}
-                        alt={s.caption}
-                        fill
-                        sizes="(max-width: 768px) 260px, 300px"
-                        className="screenshot-image"
-                      />
-                      <div className="screenshot-card-caption">{s.caption}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="slider-nav">
-                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, -1, adminScreenshots.length)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, 1, adminScreenshots.length)}><i className="fas fa-chevron-right"></i></button>
-                </div>
-              </div>
-            )}
-          </div>
-        </PageWrapper>
-      </Section>
 
       {/* ── Features ── */}
       <Section id="features" className="feature-section-premium scroll-reveal">
@@ -928,6 +844,90 @@ export default function Home() {
                 </div>
               ))}
             </div>
+          </div>
+        </PageWrapper>
+      </Section>
+
+      {/* ── Screenshots ── */}
+      <Section id="screenshots">
+        <PageWrapper>
+          <h2>App Experience</h2>
+          <p className="center">A closer look at what UltimateHealth offers, screen by screen</p>
+
+          <div className="screenshot-details">
+            <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setUserSliderOpen((o) => !o); }}>
+              <span style={{ color: "var(--primary)" }}>{userSliderOpen ? "▼" : "▶"}</span> UltimateHealth App
+            </div>
+            {userSliderOpen && (
+              <div className="screenshot-slider-container">
+                <div className="screenshots-wrapper" ref={userSliderRef}>
+                  {extendedUserScreenshots.map((s, i) => (
+                    <div
+                      key={`user-${i}`}
+                      className="screenshot-box"
+                      onClick={() => openScreenshotModal(s.src)}
+                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${s.caption} screenshot`}
+                    >
+                      <div className="screenshot-image-frame">
+                        <Image
+                          src={s.src}
+                          alt={s.caption}
+                          fill
+                          sizes="(max-width: 768px) 260px, 300px"
+                          className="screenshot-image"
+                        />
+                      </div>
+                      <div className="screenshot-card-caption">{s.caption}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="slider-nav">
+                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, -1, userScreenshots.length)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, 1, userScreenshots.length)}><i className="fas fa-chevron-right"></i></button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="screenshot-details">
+            <div className="screenshot-summary" onClick={() => setAdminSliderOpen((o) => !o)} role="button" tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setAdminSliderOpen((o) => !o); }}>
+              <span style={{ color: "var(--primary)" }}>{adminSliderOpen ? "▼" : "▶"}</span> UHealth Admin App
+            </div>
+            {adminSliderOpen && (
+              <div className="screenshot-slider-container">
+                <div className="screenshots-wrapper" ref={adminSliderRef}>
+                  {extendedAdminScreenshots.map((s, i) => (
+                    <div
+                      key={`admin-${i}`}
+                      className="screenshot-box"
+                      onClick={() => openScreenshotModal(s.src)}
+                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${s.caption} screenshot`}
+                    >
+                      <Image
+                        src={s.src}
+                        alt={s.caption}
+                        fill
+                        sizes="(max-width: 768px) 260px, 300px"
+                        className="screenshot-image"
+                      />
+                      <div className="screenshot-card-caption">{s.caption}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="slider-nav">
+                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, -1, adminScreenshots.length)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, 1, adminScreenshots.length)}><i className="fas fa-chevron-right"></i></button>
+                </div>
+              </div>
+            )}
           </div>
         </PageWrapper>
       </Section>
