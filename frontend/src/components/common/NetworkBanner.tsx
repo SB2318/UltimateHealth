@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
  
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { useNetInfo } from '@react-native-community/netinfo';
+import { StyleSheet, Text, useColorScheme } from 'react-native';
+import { useAppSelector } from '../../store/hooks';
+import type { RootState } from '../../store/ReduxStore';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -17,14 +18,21 @@ const BANNER_ANIMATION_DURATION = 300;
 const BANNER_DISPLAY_DURATION_ONLINE = 3000;
 
 export function NetworkBanner() {
-  const netInfo = useNetInfo();
-  const insets = useSafeAreaInsets();
+  
+    const insets = useSafeAreaInsets();
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const isConnected = useAppSelector(
+    (state: RootState) => state.network.isConnected,
+  );
+
+  const isOffline = isConnected === false;
   const [hasBeenOffline, setHasBeenOffline] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   const translateY = useSharedValue(-100);
 
-  const isOffline = netInfo.isConnected === false && netInfo.isInternetReachable === false;
+ 
 
   useEffect(() => {
     if (isOffline) {
