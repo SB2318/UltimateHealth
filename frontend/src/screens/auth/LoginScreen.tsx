@@ -296,7 +296,9 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
           paddingHorizontal="$2"
           borderRadius="$5"
           gap="$2"
-          elevation={1}>
+          elevation={3}
+          borderWidth={1}
+          borderColor={isDarkMode ? '$gray8' : '$gray5'}>
           <YStack alignItems="center" marginBottom="$4" gap="$2">
             <Image
               source={require('../../../assets/images/icon.png')}
@@ -421,33 +423,44 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
             <XStack
               justifyContent="space-between"
               alignItems="center"
+              flexWrap="wrap"
               marginTop="$2"
-              paddingHorizontal="$2">
-              <Text
-                color={isDarkMode ? '$gray400' : '$gray700'}
-                fontWeight="500"
-                fontSize={13}
+              gap="$2">
+              <Button
+                chromeless
+                paddingVertical="$2"
+                paddingHorizontal="$2"
+                marginHorizontal="$-2"
                 pressStyle={{opacity: 0.7}}
-                cursor="pointer"
                 onPress={() => {
                   setRequestVerification(true);
                   setEmailInputVisible(true);
                 }}>
-                Request Verification
-              </Text>
+                <Text
+                  color="$blue10"
+                  fontWeight="600"
+                  fontSize={14}>
+                  Request Verification
+                </Text>
+              </Button>
 
-              <Text
-                color="$blue10"
-                fontWeight="600"
-                fontSize={13}
+              <Button
+                chromeless
+                paddingVertical="$2"
+                paddingHorizontal="$2"
+                marginHorizontal="$-2"
                 pressStyle={{opacity: 0.7}}
-                cursor="pointer"
                 onPress={() => {
                   setEmailInputVisible(true);
                   setRequestVerification(false);
                 }}>
-                Forgot Password?
-              </Text>
+                <Text
+                  color="$blue10"
+                  fontWeight="600"
+                  fontSize={14}>
+                  Forgot Password?
+                </Text>
+              </Button>
             </XStack>
 
           <Button
