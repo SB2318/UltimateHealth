@@ -356,7 +356,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 textAlignVertical="top"
                 style={[
                   styles.aboutInput,
-                  descriptionError ? styles.inputControlError : null,
+                  submitted && descriptionError ? styles.inputControlError : null,
                 ]}
                 multiline
                 numberOfLines={4}
@@ -365,18 +365,20 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 onChangeText={(text: string) => {
                   if (text.length <= 160) {
                     setDescription(text);
-                    if (!text.trim()) {
-                      setDescriptionError('Please provide a description for your podcast.');
-                    } else if (text.trim().length < 10) {
-                      setDescriptionError('Description must be at least 10 characters.');
-                    } else {
-                      setDescriptionError('');
+                    if (submitted) {
+                      if (!text.trim()) {
+                        setDescriptionError('Please provide a description for your podcast.');
+                      } else if (text.trim().length < 10) {
+                        setDescriptionError('Description must be at least 10 characters.');
+                      } else {
+                        setDescriptionError('');
+                      }
                     }
                   }
                 }}
               />
               <Text style={styles.charCounter}>{description.length}/160</Text>
-              {descriptionError ? (
+              {submitted && descriptionError ? (
                 <Text style={styles.errorText}>{descriptionError}</Text>
               ) : null}
             </View>
