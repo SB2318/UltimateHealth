@@ -258,9 +258,9 @@ const FilterModal = ({
                   <Text style={styles.selectedCategoriesLabel}>Selected:</Text>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     <View style={styles.selectedCategoriesChips}>
-                      {selectCategoryList.map((item, index) => (
+                      {selectCategoryList.map((item) => (
                         <TouchableOpacity
-                          key={index}
+                          key={item._id}
                           style={styles.selectedCategoryChip}
                           onPress={() => handleCategorySelection(item)}>
                           <Text style={styles.selectedCategoryChipText}>
@@ -275,7 +275,7 @@ const FilterModal = ({
               )}
 
               <View style={styles.categoryGrid}>
-                {filteredCategories.map((item, index) => {
+                {filteredCategories.map((item) => {
                   const isSelected = selectCategoryList.some(i => 
                     (i.id !== undefined && item?.id !== undefined && i.id === item.id) ||
                     (i._id !== undefined && item?._id !== undefined && i._id === item._id) ||
@@ -283,7 +283,7 @@ const FilterModal = ({
                   );
                   return (
                     <TouchableOpacity
-                      key={index}
+                      key={item._id}
                       style={[
                         styles.categoryCard,
                         isSelected && styles.categoryCardSelected,

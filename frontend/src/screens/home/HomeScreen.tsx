@@ -721,11 +721,11 @@ useEffect(() => {
             {selectedTags &&
               selectedTags.length > 0 &&
               !searchMode &&
-              selectedTags.map((item: Category, index: number) => {
+              selectedTags.map((item: Category) => {
                 const isActive = selectedCategory && (selectedCategory._id === item._id || selectedCategory.id === item.id || selectedCategory.name === item.name);
                 return (
                   <TouchableOpacity
-                    key={index}
+                    key={item._id}
                     style={{
                       ...styles.button,
                       backgroundColor: isActive ? '#000A60' : 'white',
@@ -881,7 +881,7 @@ useEffect(() => {
           {selectedTags &&
             selectedTags.length > 0 &&
             !searchMode &&
-            selectedTags.map((item: Category, index: number) => {
+            selectedTags.map((item: Category) => {
               // Category chips visually appear inactive when Saved filter is on —
               // they are still clickable to switch away from Saved mode.
               const isActive = !showSavedOnly &&
@@ -889,7 +889,7 @@ useEffect(() => {
                 (selectedCategory._id === item._id || selectedCategory.id === item.id || selectedCategory.name === item.name);
               return (
                 <TouchableOpacity
-                  key={index}
+                  key={item._id}
                   style={{
                     ...styles.button,
                     backgroundColor: isActive ? '#000A60' : 'white',
