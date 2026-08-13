@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { setAudioModeAsync } from 'expo-audio';
+import React, {useEffect, useState} from 'react';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {setAudioModeAsync} from 'expo-audio';
 import * as Sentry from '@sentry/react-native';
-import { logger } from './src/lib/services/monitoring/logger';
+import * as SplashScreen from 'expo-splash-screen';
+import {loadAsync} from 'expo-font';
+import {Asset} from 'expo-asset';
+import {logger} from './src/lib/services/monitoring/logger';
 
 import AppContent from './src/components/common/AppContent';
+
+SplashScreen.preventAutoHideAsync().catch(() => {
+  // Splash screen may already be controlled by the native runtime.
+});
 
 function App() {
   const [queryClient] = useState(
@@ -19,37 +26,68 @@ function App() {
       }),
   );
 
+  const [appReady, setAppReady] = useState(false);
+
   useEffect(() => {
     let isMounted = true;
 
-    const configureAudio = async () => {
+    const initializeApp = async () => {
       try {
-        await setAudioModeAsync({
-          playsInSilentMode: true,
-          allowsRecording: true,
-        });
-      } catch (error) {
-        // Prevent state/logging side-effects if unmounted
-        if (!isMounted) return;
+        await Promise.all([
+          loadAsync({
+            Lobster: require('./assets/fonts/Lobster-Regular.ttf'),
+          }),
 
+          Asset.loadAsync([
+            require('./assets/images/adaptive-icon.png'),
+            require('./assets/images/ic_ultimatehealth_appicon.png'),
+          ]),
+
+          setAudioModeAsync({
+            playsInSilentMode: true,
+            allowsRecording: true,
+          }),
+        ]);
+      } catch (error) {
         Sentry.captureException(error, {
-          tags: { feature: 'audio_playback' },
-          extra: { context: 'App startup audio configuration' },
+          tags: {feature: 'app_initialization'},
+          extra: {context: 'App startup resource preloading'},
         });
 
         if (__DEV__) {
-          logger.error('[App] Failed to configure audio mode:', error);
+          logger.error(
+            '[App] Failed to preload startup resources:',
+            error,
+          );
+        }
+      } finally {
+        if (!isMounted) return;
+
+        setAppReady(true);
+
+        try {
+          await SplashScreen.hideAsync();
+        } catch (error) {
+          if (__DEV__) {
+            logger.error(
+              '[App] Failed to hide native splash screen:',
+              error,
+            );
+          }
         }
       }
     };
 
-    configureAudio();
+    initializeApp();
 
-    // Cleanup function
     return () => {
       isMounted = false;
     };
   }, []);
+
+  if (!appReady) {
+    return null;
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -58,5 +96,4 @@ function App() {
   );
 }
 
-// 3. Using standard Sentry wrapping (or keep your custom one if verified)
 export default Sentry.wrap(App);
