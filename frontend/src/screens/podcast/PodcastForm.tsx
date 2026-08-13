@@ -307,25 +307,25 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 keyboardType="default"
                 placeholder="Enter your podcast title"
                 placeholderTextColor="#6b7280"
+                maxLength={100}
                 style={[
                   styles.inputControl,
-                  submitted && titleError ? styles.inputControlError : null,
+                  titleError ? styles.inputControlError : null,
                 ]}
                 value={title}
                 onChangeText={(text: string) => {
                   setTitle(text);
-                  if (submitted) {
-                    if (!text.trim()) {
-                      setTitleError('Podcast title is required.');
-                    } else if (text.trim().length < 3) {
-                      setTitleError('Title must be at least 3 characters.');
-                    } else {
-                      setTitleError('');
-                    }
+                  if (!text.trim()) {
+                    setTitleError('Podcast title is required.');
+                  } else if (text.trim().length < 3) {
+                    setTitleError('Title must be at least 3 characters.');
+                  } else {
+                    setTitleError('');
                   }
                 }}
               />
-              {submitted && titleError ? (
+              <Text style={styles.charCounter}>{title.length}/100</Text>
+              {titleError ? (
                 <Text style={styles.errorText}>{titleError}</Text>
               ) : null}
             </View>
