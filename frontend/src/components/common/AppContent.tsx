@@ -31,6 +31,8 @@ import { initMonitoring } from '../../lib/services/monitoring/sentry';
 import { useCheckTokenStatus } from '../../hooks/auth/useGetTokenStatus';
 import { setUserToken, setGuestMode, setUserId, setUserHandle } from '../../store/UserSlice';
 import { setConnected } from '../../store/NetworkSlice';
+import { clearSessionArticles } from '../../store/offlineSlice';
+import { pruneArticleCache } from '../../lib/storage/ArticleCacheUtils';
 import { RootState } from '../../store/ReduxStore';
 
 import StackNavigation from '../../navigations/StackNavigation';
@@ -59,6 +61,17 @@ export default function AppContent() {
     initMonitoring();
     setupAxiosInterceptor();
   }, []);
+
+  // Offline reading (#1880). Articles opened during a session are held in
+  // memory only; that copy is released when the app unmounts. What stays on
+  // the device is limited to articles the reader finished, and expired ones
+  // are dropped here rather than waiting for the next time they browse.
+  useEffect(() => {
+    return () => {
+      dispatch(clearSessionArticles());
+      pruneArticleCache();
+    };
+  }, [dispatch]);
 
   // Hydrate Redux from secure storage on app start.
   // This runs once on mount to restore session state.
