@@ -68,11 +68,36 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
   const handleChange = (text: string, index: number) => {
     setErrorMessages(undefined);
 
+    const digits = text.replace(/\D/g, '');
+
+    if (digits.length === 0) {
+      return;
+    }
+
+    // Multi-character input (e.g. a pasted OTP code): distribute the digits
+    // across the boxes starting at the current one and move focus to the
+    // first box that was not filled.
+    if (digits.length > 1) {
+      const newOtp = [...otp];
+      let cursor = index;
+      for (const digit of digits) {
+        if (cursor >= newOtp.length) break;
+        newOtp[cursor] = digit;
+        cursor += 1;
+      }
+      setOtp(newOtp);
+      inputs.current[Math.min(cursor, newOtp.length - 1)]?.focus();
+      return;
+    }
+
+    // Single digit typed by the user: overwrite the current box and advance
+    // to the next one. Each box is controlled, so it never holds more than
+    // one digit even though maxLength is no longer used.
     const newOtp = [...otp];
-    newOtp[index] = text;
+    newOtp[index] = digits;
     setOtp(newOtp);
 
-    if (text && index < otp.length - 1) {
+    if (index < otp.length - 1) {
       inputs.current[index + 1]?.focus();
     }
   };
@@ -159,7 +184,6 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
                   onChangeText={text => handleChange(text, index)}
                   onKeyPress={e => handleKeyPress(e, index)}
                   keyboardType="numeric"
-                  maxLength={1}
                   textAlign="center"
                   fontSize={28}
                   fontWeight="700"
