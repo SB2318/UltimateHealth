@@ -1,6 +1,6 @@
- 
 import React, { ReactNode } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+
 
 interface Props {
   children: ReactNode;
@@ -8,10 +8,12 @@ interface Props {
   onRetry?: () => void;
 }
 
+
 interface State {
   hasError: boolean;
   error: Error | null;
 }
+
 
 export class ErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -19,13 +21,16 @@ export class ErrorBoundary extends React.Component<Props, State> {
     this.state = { hasError: false, error: null };
   }
 
+
   static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
   }
 
+
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('ErrorBoundary caught:', error);
   }
+
 
   handleReset = () => {
     this.setState({ hasError: false, error: null });
@@ -33,6 +38,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
       this.props.onRetry();
     }
   };
+
 
   render() {
     if (this.state.hasError) {
@@ -47,6 +53,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
               <TouchableOpacity 
                 style={styles.button}
                 onPress={this.handleReset}
+                accessibilityRole="button"
+                accessibilityLabel="Try again"
               >
                 <Text style={styles.buttonText}>Try Again</Text>
               </TouchableOpacity>
@@ -56,9 +64,11 @@ export class ErrorBoundary extends React.Component<Props, State> {
       );
     }
 
+
     return this.props.children;
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {

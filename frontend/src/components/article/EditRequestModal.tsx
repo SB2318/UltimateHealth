@@ -1,4 +1,3 @@
- 
 import {View, Text, StyleSheet, Modal, TouchableOpacity} from 'react-native';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {hp, wp} from '../../lib/ui/Metric';
@@ -14,7 +13,6 @@ export default function EditRequestModal({
   callback: (reason: string) => void;
   dismiss: () => void;
 }) {
-
   return (
     <Modal
       animationType="slide"
@@ -25,7 +23,11 @@ export default function EditRequestModal({
         <View style={styles.modalContainer}>
           <View style={styles.header}>
             <Text style={styles.modalTitle}>Improvement Reason</Text>
-            <TouchableOpacity onPress={dismiss}>
+            <TouchableOpacity
+              onPress={dismiss}
+              accessibilityRole="button"
+              accessibilityLabel="Close improvement reason"
+              accessibilityHint="Closes the improvement reason dialog">
               <Ionicon name="close" size={30} color="white" />
             </TouchableOpacity>
           </View>

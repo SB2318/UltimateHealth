@@ -1,24 +1,52 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ACADEMY_BACKGROUND, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_PRIMARY } from '../../lib/ui/Theme';
-import { ACADEMY_COURSES, ACADEMY_USER_STATS } from '../../lib/utils/AcademyMockData';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {
+  ACADEMY_BACKGROUND,
+  ACADEMY_TEXT_PRIMARY,
+  ACADEMY_TEXT_SECONDARY,
+  ACADEMY_PRIMARY,
+} from '../../lib/ui/Theme';
+import {
+  ACADEMY_COURSES,
+  ACADEMY_USER_STATS,
+} from '../../lib/utils/AcademyMockData';
 import ProgressCard from '../../components/academy/ProgressCard';
 import CourseCard from '../../components/academy/CourseCard';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
 
-const AcademyHomeScreen = ({ navigation }: any) => {
+const AcademyHomeScreen = ({navigation}: any) => {
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
         {/* Header Section */}
         <View style={styles.header}>
           <View>
             <Text style={styles.title}>Hospital Learning Academy</Text>
-            <Text style={styles.subtitle}>Learn how hospitals actually work.</Text>
+            <Text style={styles.subtitle}>
+              Learn how hospitals actually work.
+            </Text>
           </View>
-          <TouchableOpacity style={styles.profileIcon} onPress={() => navigation.navigate('AcademyProfile')}>
-            <MaterialCommunityIcons name="account-circle" size={36} color={ACADEMY_PRIMARY} />
+
+          <TouchableOpacity
+            style={styles.profileIcon}
+            onPress={() => navigation.navigate('AcademyProfile')}
+            accessibilityRole="button"
+            accessibilityLabel="Open academy profile"
+            accessibilityHint="Opens your academy profile">
+            <MaterialCommunityIcons
+              name="account-circle"
+              size={36}
+              color={ACADEMY_PRIMARY}
+            />
           </TouchableOpacity>
         </View>
 
@@ -27,35 +55,64 @@ const AcademyHomeScreen = ({ navigation }: any) => {
 
         <View style={styles.statsContainer}>
           <View style={styles.statBox}>
-            <MaterialCommunityIcons name="clock-outline" size={24} color={ACADEMY_PRIMARY} />
-            <Text style={styles.statValue}>{ACADEMY_USER_STATS.hoursLearned}h</Text>
+            <MaterialCommunityIcons
+              name="clock-outline"
+              size={24}
+              color={ACADEMY_PRIMARY}
+            />
+            <Text style={styles.statValue}>
+              {ACADEMY_USER_STATS.hoursLearned}h
+            </Text>
             <Text style={styles.statLabel}>Learned</Text>
           </View>
+
           <View style={styles.statBox}>
-            <MaterialCommunityIcons name="fire" size={24} color="#F59E0B" />
-            <Text style={styles.statValue}>{ACADEMY_USER_STATS.currentStreak}</Text>
+            <MaterialCommunityIcons
+              name="fire"
+              size={24}
+              color="#F59E0B"
+            />
+            <Text style={styles.statValue}>
+              {ACADEMY_USER_STATS.currentStreak}
+            </Text>
             <Text style={styles.statLabel}>Day Streak</Text>
           </View>
+
           <View style={styles.statBox}>
-            <MaterialCommunityIcons name="certificate-outline" size={24} color={ACADEMY_PRIMARY} />
-            <Text style={styles.statValue}>{ACADEMY_USER_STATS.certificatesEarned}</Text>
+            <MaterialCommunityIcons
+              name="certificate-outline"
+              size={24}
+              color={ACADEMY_PRIMARY}
+            />
+            <Text style={styles.statValue}>
+              {ACADEMY_USER_STATS.certificatesEarned}
+            </Text>
             <Text style={styles.statLabel}>Certificates</Text>
           </View>
         </View>
 
         {/* Action Buttons */}
         <View style={styles.actionRow}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.primaryButton}
             onPress={() => navigation.navigate('CourseListing')}
-          >
+            accessibilityRole="button"
+            accessibilityLabel="Browse courses"
+            accessibilityHint="Opens the course listing">
             <Text style={styles.primaryButtonText}>Browse Courses</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
+
+          <TouchableOpacity
             style={styles.secondaryButton}
             onPress={() => navigation.navigate('HospitalMap')}
-          >
-            <MaterialCommunityIcons name="map-marker-radius" size={20} color={ACADEMY_PRIMARY} />
+            accessibilityRole="button"
+            accessibilityLabel="Open hospital map"
+            accessibilityHint="Opens the hospital map">
+            <MaterialCommunityIcons
+              name="map-marker-radius"
+              size={20}
+              color={ACADEMY_PRIMARY}
+            />
             <Text style={styles.secondaryButtonText}>Hospital Map</Text>
           </TouchableOpacity>
         </View>
@@ -63,19 +120,26 @@ const AcademyHomeScreen = ({ navigation }: any) => {
         {/* Recent/Recommended Courses */}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Continue Learning</Text>
-          <TouchableOpacity>
+
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="See all courses"
+            accessibilityHint="Shows all available courses">
             <Text style={styles.seeAll}>See All</Text>
           </TouchableOpacity>
         </View>
-        
+
         {ACADEMY_COURSES.slice(0, 2).map(course => (
-          <CourseCard 
-            key={course.id} 
-            course={course} 
-            onPress={() => navigation.navigate('CourseDetail', { courseId: course.id })} 
+          <CourseCard
+            key={course.id}
+            course={course}
+            onPress={() =>
+              navigation.navigate('CourseDetail', {
+                courseId: course.id,
+              })
+            }
           />
         ))}
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -128,7 +192,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.03,
     shadowRadius: 5,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     elevation: 1,
   },
   statValue: {

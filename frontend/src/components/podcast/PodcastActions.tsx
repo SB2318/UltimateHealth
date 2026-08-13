@@ -1,4 +1,3 @@
- 
 // @ts-nocheck
 import React, { useCallback, useMemo } from 'react';
 import {
@@ -9,12 +8,13 @@ import {
 } from 'react-native';
 import {
     BottomSheetBackdrop,
-    BottomSheetBackdropProps,
+  BottomSheetBackdropProps,
   BottomSheetModal,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import Icon from '@expo/vector-icons/MaterialIcons';
 import { PRIMARY_COLOR } from '../../lib/ui/Theme';
+
 
 const ActionItem = ({
   icon,
@@ -30,7 +30,9 @@ const ActionItem = ({
   <TouchableOpacity
     onPress={onPress}
     style={styles.actionItem}
-    activeOpacity={0.7}>
+    activeOpacity={0.7}
+    accessibilityRole="button"
+    accessibilityLabel={label}>
     <View style={[styles.iconContainer, iconColor && {backgroundColor: `${iconColor}15`}]}>
       <Icon name={icon as any} size={22} color={iconColor || PRIMARY_COLOR} />
     </View>
@@ -38,17 +40,19 @@ const ActionItem = ({
   </TouchableOpacity>
 );
 
+
 interface Props {
    onShare: ()=> void;
-   onReport: ()=> void;
-   onDownload: ()=> void;
-   onSave: ()=> void;
-   downloaded: boolean;
+  onReport: ()=> void;
+  onDownload: ()=> void;
+  onSave: ()=> void;
+  downloaded: boolean;
 }
  
 const PodcastActions = React.forwardRef(
   ({ onShare, onReport, onDownload, onSave, downloaded}: Props, ref: any) => {
     const snapPoints = useMemo(() => ['40%'], []);
+
 
     const handleAction = (action: () => void) => {
       console.log('click');
@@ -56,6 +60,7 @@ const PodcastActions = React.forwardRef(
       //onClear();
       ref?.current?.dismiss();
     };
+
 
     const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -109,7 +114,9 @@ const PodcastActions = React.forwardRef(
   }
 );
 
+
 export default PodcastActions;
+
 
 const styles = StyleSheet.create({
   sheetContent: {

@@ -1,5 +1,5 @@
- 
- 
+
+
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
 import {YStack, XStack, Text, Avatar, Paragraph} from 'tamagui';
@@ -100,7 +100,7 @@ export default function CommentItem({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         backgroundColor: 'white',
-        borderRadius: 8, 
+        borderRadius: 8,
       }}
       paddingHorizontal={10}
       paddingVertical={6}
@@ -193,9 +193,16 @@ export default function CommentItem({
               )}
             </XStack>
 
-            <TouchableOpacity onPress={handleAnimation}>
-              <Entypo name="dots-three-vertical" size={18} color="#666" />
-            </TouchableOpacity>
+           <TouchableOpacity
+            onPress={handleAnimation}
+            accessibilityRole="button"
+            accessibilityLabel="Open comment actions">
+          <Entypo
+             name="dots-three-vertical"
+             size={18}
+             color="#666"
+          />
+          </TouchableOpacity>
           </XStack>
 
           <Paragraph color="$gray11" fontSize={16}>
@@ -211,7 +218,15 @@ export default function CommentItem({
             {commentLikeLoading && isSelected ? (
               <LoadingSpinner size="small" />
             ) : (
+
               <TouchableOpacity
+                accessibilityRole="button"
+                accessibilityLabel={
+                  item.likedUsers.some(id => id === userId)
+                    ? 'Unlike comment'
+                    : 'Like comment'
+                }
+
                 onPress={() => {
                   width.value = withTiming(0, {duration: 250});
                   yValue.value = withTiming(100, {duration: 250});

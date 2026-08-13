@@ -8,21 +8,26 @@ import {
   StyleSheet,
 } from 'react-native';
 
+
 type Props = {
   visible: boolean;
   onClose: () => void;
   onSave: () => void;
   onReset: () => void;
 
+
   showAcademyCard: boolean;
   setShowAcademyCard: React.Dispatch<React.SetStateAction<boolean>>;
+
 
   showCategoryFilters: boolean;
   setShowCategoryFilters: React.Dispatch<React.SetStateAction<boolean>>;
 
+
   showSavedFilter: boolean;
   setShowSavedFilter: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 
 const CustomizeHomepageModal = ({
   visible,
@@ -47,6 +52,7 @@ const CustomizeHomepageModal = ({
         <View style={styles.container}>
           <Text style={styles.title}>Customize Homepage</Text>
 
+
           <View style={styles.row}>
             <Text>Show Academy Card</Text>
             <Switch
@@ -54,6 +60,7 @@ const CustomizeHomepageModal = ({
               onValueChange={setShowAcademyCard}
             />
           </View>
+
 
           <View style={styles.row}>
             <Text>Show Category Filters</Text>
@@ -63,6 +70,7 @@ const CustomizeHomepageModal = ({
             />
           </View>
 
+
           <View style={styles.row}>
             <Text>Show Saved Filter</Text>
             <Switch
@@ -71,21 +79,35 @@ const CustomizeHomepageModal = ({
             />
           </View>
 
+
           <TouchableOpacity
             style={styles.resetButton}
             onPress={onReset}
+            accessibilityRole="button"
+            accessibilityLabel="Reset to default"
+            accessibilityHint="Resets homepage customization settings to their default values"
           >
             <Text style={styles.resetText}>Reset to Default</Text>
           </TouchableOpacity>
 
+
           <TouchableOpacity
             style={styles.saveButton}
             onPress={onSave}
+            accessibilityRole="button"
+            accessibilityLabel="Save homepage customization"
+            accessibilityHint="Saves your homepage customization settings"
           >
             <Text style={styles.saveText}>Save</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={onClose}>
+
+          <TouchableOpacity
+            onPress={onClose}
+            accessibilityRole="button"
+            accessibilityLabel="Cancel"
+            accessibilityHint="Closes the customization dialog without saving"
+          >
             <Text style={styles.cancel}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -94,7 +116,9 @@ const CustomizeHomepageModal = ({
   );
 };
 
+
 export default CustomizeHomepageModal;
+
 
 const styles = StyleSheet.create({
   overlay: {
@@ -104,12 +128,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+
   container: {
     width: '90%',
     backgroundColor: '#fff',
     borderRadius: 15,
     padding: 20,
   },
+
 
   title: {
     fontSize: 20,
@@ -118,12 +144,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
+
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 10,
   },
+
 
   saveButton: {
     backgroundColor: '#000A60',
@@ -133,10 +161,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
+
   saveText: {
     color: '#fff',
     fontWeight: 'bold',
   },
+
 
   resetButton: {
     padding: 12,
@@ -144,10 +174,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
+
   resetText: {
     color: '#000A60',
     fontWeight: 'bold',
   },
+
 
   cancel: {
     marginTop: 15,

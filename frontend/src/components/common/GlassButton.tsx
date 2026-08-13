@@ -1,7 +1,5 @@
- 
- 
 // @ts-nocheck
-import React, { useRef } from 'react';
+import React, {useRef} from 'react';
 import {
   Pressable,
   Text,
@@ -12,12 +10,22 @@ import {
   Animated,
   ActivityIndicator,
 } from 'react-native';
-import { GlassStyles, ProfessionalColors, Typography } from '../../styles/GlassStyles';
+import {
+  GlassStyles,
+  ProfessionalColors,
+  Typography,
+} from '../../styles/GlassStyles';
 
 interface GlassButtonProps {
   title: string;
   onPress: () => void;
-  variant?: 'default' | 'primary' | 'secondary' | 'outline' | 'glass' | 'danger';
+  variant?:
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'outline'
+    | 'glass'
+    | 'danger';
   size?: 'sm' | 'md' | 'lg';
   borderRadius?: 'none' | 'sm' | 'md' | 'lg' | 'full';
   disabled?: boolean;
@@ -71,10 +79,14 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
       case 'danger':
         return GlassStyles.btnDanger;
       case 'glass':
-        return isDarkMode ? GlassStyles.glassButton : GlassStyles.glassButtonLight;
+        return isDarkMode
+          ? GlassStyles.glassButton
+          : GlassStyles.glassButtonLight;
       case 'default':
       default:
-        return isDarkMode ? GlassStyles.glassButton : GlassStyles.glassButtonLight;
+        return isDarkMode
+          ? GlassStyles.glassButton
+          : GlassStyles.glassButtonLight;
     }
   };
 
@@ -107,13 +119,21 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
   };
 
   const getTextColor = () => {
-    if (variant === 'primary' || variant === 'secondary' || variant === 'danger') {
+    if (
+      variant === 'primary' ||
+      variant === 'secondary' ||
+      variant === 'danger'
+    ) {
       return ProfessionalColors.white;
     }
+
     if (variant === 'outline') {
       return ProfessionalColors.primary;
     }
-    return isDarkMode ? ProfessionalColors.white : ProfessionalColors.gray800;
+
+    return isDarkMode
+      ? ProfessionalColors.white
+      : ProfessionalColors.gray800;
   };
 
   const getTextSizeStyle = () => {
@@ -137,8 +157,18 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
       accessible={true}
       accessibilityRole="button"
       accessibilityLabel={title}
-      accessibilityState={{ disabled: disabled || loading }}
-      style={({ pressed }) => [
+      accessibilityState={{
+        disabled: disabled || loading,
+        busy: loading,
+      }}
+      accessibilityHint={
+        loading
+          ? 'Please wait while the action is processing'
+          : disabled
+          ? 'This button is currently disabled'
+          : undefined
+      }
+      style={({pressed}) => [
         {
           width: fullWidth ? '100%' : 'auto',
           alignSelf: fullWidth ? 'stretch' : 'center',
@@ -146,33 +176,35 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
           alignItems: 'center',
           flexDirection: 'row',
         },
-        disabled && { opacity: 0.5 },
-      ]}
-    >
+        disabled && {opacity: 0.5},
+      ]}>
       <Animated.View
         style={[
           getVariantStyle(),
           getSizeStyle(),
           getRadiusStyle(),
           {
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'row',
           },
           style,
-        ]}
-      >
+        ]}>
         {loading ? (
           <ActivityIndicator
             testID="loading-spinner"
             size="small"
             color={
-              variant === 'primary' || variant === 'secondary' || variant === 'danger'
+              variant === 'primary' ||
+              variant === 'secondary' ||
+              variant === 'danger'
                 ? ProfessionalColors.white
                 : ProfessionalColors.primary
             }
+            accessibilityLabel="Loading"
+            accessibilityRole="progressbar"
           />
         ) : (
           <Text
@@ -184,8 +216,7 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
                 fontWeight: '600',
               },
               textStyle,
-            ]}
-          >
+            ]}>
             {title}
           </Text>
         )}
@@ -195,4 +226,3 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
 };
 
 export default GlassButton;
-

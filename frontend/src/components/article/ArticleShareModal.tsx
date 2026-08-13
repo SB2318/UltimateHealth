@@ -32,7 +32,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import ArticleShareCard, {ArticleShareCardProps} from './ArticleShareCard';
-import { useArticleShare } from '../../hooks/article/useArticleShare';
+import {useArticleShare} from '../../hooks/article/useArticleShare';
 
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -105,7 +105,8 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
         activeOpacity={1}
         onPress={onClose}
         accessibilityRole="button"
-        accessibilityLabel="Close dialog"
+        accessibilityLabel="Close share article dialog"
+        accessibilityHint="Closes the share article dialog"
       />
 
       {/* ── Sheet ────────────────────────────────────────────────────── */}
@@ -122,8 +123,13 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
               onPress={onClose}
               style={styles.closeBtn}
               accessibilityRole="button"
-              accessibilityLabel="Close share article dialog">
-              <Text style={styles.closeBtnText}>✕</Text>
+              accessibilityLabel="Close share article dialog"
+              accessibilityHint="Closes the share article dialog">
+              <Text
+                style={styles.closeBtnText}
+                accessible={false}>
+                ✕
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -143,12 +149,32 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
             disabled={isCapturing}
             activeOpacity={0.85}
             accessibilityRole="button"
-            accessibilityLabel="Share article card">
+            accessibilityLabel={
+              isCapturing ? 'Sharing article card' : 'Share article card'
+            }
+            accessibilityHint={
+              isCapturing
+                ? 'Please wait while the article card is being prepared'
+                : 'Shares the article card'
+            }
+            accessibilityState={{
+              disabled: isCapturing,
+              busy: isCapturing,
+            }}>
             {isCapturing ? (
-              <ActivityIndicator color={COLORS.white} size="small" />
+              <ActivityIndicator
+                color={COLORS.white}
+                size="small"
+                accessible={true}
+                accessibilityLabel="Preparing article card for sharing"
+              />
             ) : (
               <>
-                <Text style={styles.shareBtnIcon}>⬆ </Text>
+                <Text
+                  style={styles.shareBtnIcon}
+                  accessible={false}>
+                  ⬆{' '}
+                </Text>
                 <Text style={styles.shareBtnLabel}>Share Card</Text>
               </>
             )}

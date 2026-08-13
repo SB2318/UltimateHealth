@@ -194,6 +194,7 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
               name="headset"
               size={28}
               color={ProfessionalColors.primary}
+              accessible={false}
             />
             <YStack>
               <Text style={styles.headerTitle}>Podcasts</Text>
@@ -251,7 +252,10 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
           onPress={() => {
             console.log('Add icon clicked');
             navigation.navigate('PodcastForm');
-          }}>
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Create Podcast"
+          accessibilityHint="Opens the podcast creation form">
           <CreateIcon
             callback={() => {
               console.log('Add icon clicked');
@@ -359,4 +363,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-

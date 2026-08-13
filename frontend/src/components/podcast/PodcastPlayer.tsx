@@ -310,7 +310,11 @@ const PodcastPlayer = ({navigation}: any) => {
       <View style={styles.actionsContainer}>
         <View style={styles.actionsContent}>
           <View style={styles.likeContainer}>
-            <TouchableOpacity onPress={handleLike}>
+            <TouchableOpacity
+              onPress={handleLike}
+              accessibilityRole="button"
+              accessibilityLabel={isLiked ? 'Unlike podcast' : 'Like podcast'}
+              accessibilityState={{selected: isLiked}}>
               {isLiked ? (
                 <Ionicons name="heart-sharp" color={'white'} size={30} />
               ) : (
@@ -319,17 +323,23 @@ const PodcastPlayer = ({navigation}: any) => {
             </TouchableOpacity>
             <Text style={styles.likeText}>30</Text>
           </View>
-          <TouchableOpacity onPress={handleDownload}>
+          <TouchableOpacity
+            onPress={handleDownload}
+            accessibilityRole="button"
+            accessibilityLabel="Download podcast">
             <Entypo name="download" color={'white'} size={24} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleShare}>
+          <TouchableOpacity
+            onPress={handleShare}
+            accessibilityRole="button"
+            accessibilityLabel="Share podcast">
             <EvilIcons name="sc-telegram" color={'white'} size={30} />
           </TouchableOpacity>
         </View>
       </View>
 
       {/* @ts-ignore */}
-<Slider
+      <Slider
         style={styles.slider}
         minimumValue={0}
         maximumValue={1}
@@ -339,6 +349,16 @@ const PodcastPlayer = ({navigation}: any) => {
         onSlidingStart={handleSlidingStart}
         onValueChange={handleSliderValueChange}
         onSlidingComplete={handleSlidingComplete}
+        accessibilityRole="adjustable"
+        accessibilityLabel="Podcast playback position"
+        accessibilityValue={{
+          min: 0,
+          max: duration,
+          now: currentPosition,
+          text: `${Math.floor(currentPosition / 1000 / 60)} minutes ${Math.floor(
+            (currentPosition / 1000) % 60,
+          )} seconds`,
+        }}
       />
 
       <View style={styles.timeContainer}>
@@ -357,17 +377,32 @@ const PodcastPlayer = ({navigation}: any) => {
       </View>
 
       <View style={styles.controlContainer}>
-        <TouchableOpacity style={styles.controlButton} onPress={handleBackward}>
+        <TouchableOpacity
+          style={styles.controlButton}
+          onPress={handleBackward}
+          accessibilityRole="button"
+          accessibilityLabel="Skip backward">
           <Feather size={30} color={'white'} name="skip-back" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.playButton} onPress={handlePlay}>
+
+        <TouchableOpacity
+          style={styles.playButton}
+          onPress={handlePlay}
+          accessibilityRole="button"
+          accessibilityLabel={isPlaying ? 'Pause podcast' : 'Play podcast'}
+          accessibilityState={{busy: isPlaying}}>
           {isPlaying ? (
             <FontAwesome6 size={15} color={PRIMARY_COLOR} name="pause" />
           ) : (
             <FontAwesome6 size={15} color={PRIMARY_COLOR} name="play" />
           )}
         </TouchableOpacity>
-        <TouchableOpacity style={styles.controlButton} onPress={handleForward}>
+
+        <TouchableOpacity
+          style={styles.controlButton}
+          onPress={handleForward}
+          accessibilityRole="button"
+          accessibilityLabel="Skip forward">
           <Feather size={30} color={'white'} name="skip-forward" />
         </TouchableOpacity>
       </View>
@@ -469,4 +504,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-

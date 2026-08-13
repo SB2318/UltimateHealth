@@ -1,12 +1,10 @@
- 
- 
 import {useCallback, useEffect, useState} from 'react';
 import { View,
   StyleSheet,
   TouchableOpacity,
   Text,
    FlatList ,
- } from 'react-native';
+  } from 'react-native';
 import {ArticleData} from '../../schemas/type';
 import {useAppSelector} from '../../store/hooks';
 import ReviewCard from '../../components/article/ReviewCard';
@@ -15,6 +13,7 @@ import {hp, wp} from '../../lib/ui/Metric';
 import Loader from '../../components/common/Loader';
 import {useGetAllArticlesForUser} from '@/src/hooks/article/useGetUserAllArticles';
 import {NoArticleState} from '../../components/common/EmptyStates';
+
 
 export default function ArticleWorkSpace({
   handleClickAction,
@@ -32,7 +31,9 @@ export default function ArticleWorkSpace({
   const [discardLabel, setDiscardLabel] = useState('Discard');
   const [articleData, setArticleData] = useState<ArticleData[]>([]);
 
+
   const [pageLoading, setPageLoading] = useState(false);
+
 
   const {isLoading, refetch} = useGetAllArticlesForUser({
     page,
@@ -46,12 +47,15 @@ export default function ArticleWorkSpace({
     setDiscardLabel,
   });
 
+
   useEffect(() => {
     refetch();
     setPageLoading(false);
   }, [page, refetch, selectedStatus]);
 
+
   const [selectedCardId, setSelectedCardId] = useState<string>('');
+
 
   const categories = [
     {
@@ -68,12 +72,14 @@ export default function ArticleWorkSpace({
     },
   ];
 
+
   const onRefresh = () => {
     setRefreshing(true);
     setPage(1);
     refetch();
     setRefreshing(false);
   };
+
 
   const renderItem = useCallback(
     ({item}: {item: ArticleData}) => {
@@ -88,6 +94,7 @@ export default function ArticleWorkSpace({
     },
     [handleClickAction, selectedCardId],
   );
+
 
   return (
     <View style={{flex: 1, backgroundColor: ON_PRIMARY_COLOR}}>
@@ -108,6 +115,12 @@ export default function ArticleWorkSpace({
                 setPage(1);
                 setArticleData([]);
                 setPageLoading(true);
+              }}
+              accessibilityRole="tab"
+              accessibilityLabel={`${item.label} articles`}
+              accessibilityHint={`Shows ${item.label.toLowerCase()} articles`}
+              accessibilityState={{
+                selected: selectedStatus === item.status,
               }}>
               <Text
                 style={{
@@ -123,6 +136,7 @@ export default function ArticleWorkSpace({
             </TouchableOpacity>
           ))}
         </View>
+
 
         {isLoading || pageLoading ? (
           <Loader />
@@ -149,6 +163,7 @@ export default function ArticleWorkSpace({
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -193,4 +208,3 @@ const styles = StyleSheet.create({
     paddingBottom: hp(2),
   },
 });
-

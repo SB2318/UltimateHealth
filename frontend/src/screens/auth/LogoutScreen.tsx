@@ -1,4 +1,3 @@
-
 import React, {useCallback} from 'react';
 import {
   StyleSheet,
@@ -17,7 +16,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {LogoutScreenProp} from '@/src/schemas/type';
 import {useUserLogout} from '@/src/hooks/auth/useUserLogout';
 import {useTheme} from 'tamagui';
-import { useColorScheme } from 'react-native-gifted-chat/lib/hooks/useColorScheme';
+import {useColorScheme} from 'react-native-gifted-chat/lib/hooks/useColorScheme';
 import {useQueryClient} from '@tanstack/react-query';
 type AxiosError = any;
 
@@ -26,10 +25,10 @@ const DEFAULT_PROFILE_IMAGE =
 
 const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
   const {profile_image, username} = route.params;
- // const {user_token} = useAppSelector((state: any) => state.user);
+  // const {user_token} = useAppSelector((state: any) => state.user);
   const dispatch = useAppDispatch();
   const theme = useTheme();
-  const {mutate: logout} = useUserLogout();  
+  const {mutate: logout} = useUserLogout();
   const queryClient = useQueryClient();
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -71,16 +70,26 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
       },
     );
   };
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')}}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor:
+          theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff'),
+      }}>
       <View style={styles.container}>
         <View style={styles.alert}>
           <View style={styles.alertContent}>
             <Image
               alt=""
+              accessible={false}
               style={[
                 styles.alertAvatar,
-                !profile_image && {borderWidth: 0.5, borderColor: theme.black?.val},
+                !profile_image && {
+                  borderWidth: 0.5,
+                  borderColor: theme.black?.val,
+                },
               ]}
               source={{
                 uri: profile_image
@@ -91,26 +100,38 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
               }}
             />
 
-            <Text style={[
-              styles.alertTitle,
-              {color:theme.color?.val}]}>
+            <Text
+              style={[
+                styles.alertTitle,
+                {color: theme.color?.val},
+              ]}>
               Log out of
               {'\n'}
               {username}
             </Text>
 
-            <Text style={[
-              styles.alertMessage,
-              {color:theme.gray500?.val}]}>
+            <Text
+              style={[
+                styles.alertMessage,
+                {color: theme.gray500?.val},
+              ]}>
               Are you sure you would like to log out of this account ?
             </Text>
           </View>
 
-          <TouchableOpacity onPress={handleLogout}>
+          <TouchableOpacity
+            onPress={handleLogout}
+            accessibilityRole="button"
+            accessibilityLabel="Yes, log me out"
+            accessibilityHint="Logs you out of this account">
             <View style={styles.btn}>
-              <Text style={[
-                styles.btnText,
-                {color:theme.white?.val}]}>Yes, log me out</Text>
+              <Text
+                style={[
+                  styles.btnText,
+                  {color: theme.white?.val},
+                ]}>
+                Yes, log me out
+              </Text>
             </View>
           </TouchableOpacity>
 
@@ -118,7 +139,10 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
             <TouchableOpacity
               onPress={() => {
                 navigation.goBack();
-              }}>
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="Cancel"
+              accessibilityHint="Cancels logout and returns to the previous screen">
               <View style={styles.btnSecondary}>
                 <Text style={styles.btnSecondaryText}>Cancel</Text>
               </View>
@@ -166,7 +190,6 @@ const styles = StyleSheet.create({
     fontSize: 34,
     lineHeight: 44,
     fontWeight: '700',
-    
     textAlign: 'center',
   },
   alertMessage: {
@@ -175,7 +198,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     fontWeight: '500',
-   
   },
   /** Button */
   btn: {
@@ -193,7 +215,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     lineHeight: 24,
     fontWeight: '600',
-   
   },
   btnSecondary: {
     flexDirection: 'row',

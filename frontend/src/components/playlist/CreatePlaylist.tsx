@@ -1,25 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // @ts-nocheck
 import React, {useState} from 'react';
-import { Modal,
+import {
+  Modal,
   View,
   Text,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-   TextInput ,
- } from 'react-native';
+  TextInput,
+} from 'react-native';
 import {useAppSelector} from '../../store/hooks';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import Entypo from '@expo/vector-icons/Entypo';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from '@expo/vector-icons/Feather';
 import {PlayList} from '../../schemas/type';
 import Snackbar from 'react-native-snackbar';
 import NoInternet from '../common/NoInternet';
 import {useGetPlaylists} from '../../hooks/playlist/useGetPlaylists';
 import {useUpdatePodcastPlaylist} from '../../hooks/podcast/useUpdatePodcastPlaylist';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 interface Props {
@@ -27,6 +28,7 @@ interface Props {
   visible: boolean;
   dismiss: () => void;
 }
+
 export default function CreatePlaylist({visible, dismiss}: Props) {
   const {user_token} = useAppSelector((state: any) => state.user);
   // const [selectedPlaylistId, setSelectedPlaylistId] = useState<string>('');
@@ -52,6 +54,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
       setRemovePlaylistIds(prev => prev.filter(it => it !== id));
     }
   };
+
   const onClear = (id: string) => {
     // Add the playlist id to remove playlist id
     console.log('on clear');
@@ -164,12 +167,24 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
       <View style={styles.itemContainer}>
         {!removePlaylistIds.includes(item._id) &&
         (addedPlaylistIds.includes(item._id) ||
-          item.podcasts.some((p: any) => typeof p === 'string' ? p === addedPodcastId : p._id === addedPodcastId)) ? (
-          <TouchableOpacity onPress={() => onClear(item._id)}>
+          item.podcasts.some((p: any) =>
+            typeof p === 'string' ? p === addedPodcastId : p._id === addedPodcastId,
+          )) ? (
+          <TouchableOpacity
+            onPress={() => onClear(item._id)}
+            accessibilityRole="checkbox"
+            accessibilityLabel={`Remove podcast from ${item.title} playlist`}
+            accessibilityState={{checked: true}}
+          >
             <FontAwesome name="check-square" size={26} color="#5F9EA0" />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={() => onCheck(item._id)}>
+          <TouchableOpacity
+            onPress={() => onCheck(item._id)}
+            accessibilityRole="checkbox"
+            accessibilityLabel={`Add podcast to ${item.title} playlist`}
+            accessibilityState={{checked: false}}
+          >
             <Feather name="square" size={26} color="#7393B3" />
           </TouchableOpacity>
         )}
@@ -199,14 +214,20 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
         <View style={styles.modalContent}>
           <View style={styles.header}>
             <Text style={styles.headerSubTitle}>Save to Playlist</Text>
+
             <TouchableOpacity
               onPress={() => {
                 clear();
                 dismiss();
-              }}>
+              }}
+              accessibilityRole="button"
+              accessibilityLabel="Close save to playlist"
+              accessibilityHint="Closes the playlist dialog"
+            >
               <Feather name="x" size={24} color="#6b7280" />
             </TouchableOpacity>
           </View>
+
           {playlists && playlists.length > 0 ? (
             <>
               <Text style={styles.sectionLabel}>Your Playlists</Text>
@@ -226,8 +247,12 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
           )}
 
           <Text style={styles.sectionLabel}>Create New Playlist</Text>
+
           <TextInput
-            style={[styles.textInput, playlistNameError ? styles.textInputError : null]}
+            style={[
+              styles.textInput,
+              playlistNameError ? styles.textInputError : null,
+            ]}
             placeholder="Enter playlist name"
             placeholderTextColor="#9ca3af"
             value={inputValue}
@@ -237,21 +262,26 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
                 if (!text.trim()) {
                   setPlaylistNameError('Playlist name cannot be empty.');
                 } else if (text.trim().length < 2) {
-                  setPlaylistNameError('Playlist name must be at least 2 characters.');
+                  setPlaylistNameError(
+                    'Playlist name must be at least 2 characters.',
+                  );
                 } else {
                   setPlaylistNameError('');
                 }
               }
             }}
           />
+
           {playlistNameError ? (
             <Text style={styles.errorText}>{playlistNameError}</Text>
           ) : null}
+
           {/**
            *  <TouchableOpacity style={styles.addButton} onPress={createPlaylist}>
             <Text style={styles.addButtonText}>Add</Text>
           </TouchableOpacity>
            */}
+
           {(addedPlaylistIds.length > 0 ||
             removePlaylistIds.length > 0 ||
             inputValue !== '') && (
@@ -269,14 +299,24 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
                   onPress={() => {
                     // Validate playlist name if creating a new one
                     if (inputValue !== '' && !inputValue.trim()) {
-                      setPlaylistNameError('Playlist name cannot be empty.');
+                      setPlaylistNameError(
+                        'Playlist name cannot be empty.',
+                      );
                       return;
                     }
-                    if (inputValue !== '' && inputValue.trim().length < 2) {
-                      setPlaylistNameError('Playlist name must be at least 2 characters.');
+
+                    if (
+                      inputValue !== '' &&
+                      inputValue.trim().length < 2
+                    ) {
+                      setPlaylistNameError(
+                        'Playlist name must be at least 2 characters.',
+                      );
                       return;
                     }
+
                     setPlaylistNameError('');
+
                     updatePlaylist(
                       {
                         addPlaylistIds: addedPlaylistIds,
@@ -301,7 +341,11 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
                         },
                       },
                     );
-                  }}>
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel="Save playlist changes"
+                  accessibilityHint="Saves the selected playlist changes"
+                >
                   <Text style={styles.addButtonText}>Save</Text>
                 </TouchableOpacity>
               )}
@@ -320,6 +364,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
     </Modal>
   );
 }
+
 const styles = StyleSheet.create({
   modal: {
     position: 'relative',
@@ -330,12 +375,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 5,
   },
+
   overlay: {
     position: 'absolute',
     height: '100%',
     width: '100%',
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
+
   modalContent: {
     flex: 1,
     width: '92%',
@@ -352,17 +399,20 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 8,
   },
+
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
   },
+
   headerSubTitle: {
     fontSize: 20,
     color: '#1a1a1a',
     fontWeight: '700',
   },
+
   sectionLabel: {
     fontSize: 14,
     color: '#6b7280',
@@ -372,22 +422,26 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
+
   noPlaylistsContainer: {
     alignItems: 'center',
     paddingVertical: 24,
     paddingHorizontal: 16,
   },
+
   noPlaylistsText: {
     fontSize: 14,
     color: '#9ca3af',
     marginTop: 8,
     fontWeight: '500',
   },
+
   headerCloseText: {
     fontSize: 16,
     color: '#313131',
     fontWeight: '400',
   },
+
   createNewBtnStyle: {
     marginTop: 20,
     alignItems: 'center',
@@ -441,6 +495,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 15,
   },
+
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',

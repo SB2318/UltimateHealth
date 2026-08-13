@@ -1,19 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
- 
+
 // @ts-nocheck
 import React, {useEffect, useRef, useState, useCallback} from 'react';
-import { View,
+import {
+  View,
   Text,
   StyleSheet,
-   TextInput ,
+  TextInput,
   TouchableOpacity,
-   ScrollView ,
+  ScrollView,
   Image,
   Alert,
   Modal,
-   FlatList ,
-   Animated,
-   } from 'react-native';
+  FlatList,
+  Animated,
+} from 'react-native';
 import {useAppSelector} from '../../store/hooks';
 import {ArticleDescriptionProp, Category} from '../../schemas/type';
 import Ionicon from '@expo/vector-icons/Ionicons';
@@ -25,22 +26,27 @@ import {
 } from 'react-native-image-picker';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import {hp} from '../../lib/ui/Metric';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ttsLanguageList } from '@/src/lib/utils/Utils';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {ttsLanguageList} from '@/src/lib/utils/Utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { saveProgress, getProgress } from '../../lib/services/ReadingProgressService';
+import {
+  saveProgress,
+  getProgress,
+} from '../../lib/services/ReadingProgressService';
 
 const ARTICLE_TITLE_MAX_LENGTH = 150;
 const ARTICLE_DESCRIPTION_MAX_LENGTH = 500;
 const COUNTER_WARNING_THRESHOLD = 0.9;
 const ARTICLE_DRAFT_KEY = '@article_description_draft';
+
 const ArticleDescriptionScreen = ({
   navigation,
   route,
 }: ArticleDescriptionProp) => {
   const {article, htmlContent, translationSource} = route.params || {};
   const isTranslation = Boolean(translationSource);
+
   const [title, setTitle] = useState('');
   const [authorName, setAuthorName] = useState('');
   const [description, setDescription] = useState('');
@@ -49,31 +55,46 @@ const ArticleDescriptionScreen = ({
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const {categories} = useAppSelector((state: any) => state.data);
   const [imageUtils, setImageUtils] = useState('');
-  const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   const scrollYRef = useRef(new Animated.Value(0));
   const scrollY = scrollYRef.current;
+
   const [contentHeight, setContentHeight] = useState(0);
   const [viewHeight, setViewHeight] = useState(0);
 
   const progress = scrollY.interpolate({
     inputRange: [0, Math.max(1, contentHeight - viewHeight)],
     outputRange: [0, 1],
-    extrapolate: "clamp",
+    extrapolate: 'clamp',
   });
 
   const onScrollEnd = useCallback(async () => {
     if (!article) return;
+
     const currentY = (scrollY as any).__getValue();
-    const pct = contentHeight > viewHeight ? Math.min(currentY / (contentHeight - viewHeight), 1) : 0;
+
+    const pct =
+      contentHeight > viewHeight
+        ? Math.min(
+            currentY / (contentHeight - viewHeight),
+            1,
+          )
+        : 0;
+
     if (article._id || article.id) {
-      await saveProgress((article._id || article.id) as string, Math.round(pct * 100));
+      await saveProgress(
+        (article._id || article.id) as string,
+        Math.round(pct * 100),
+      );
     }
   }, [article, contentHeight, viewHeight]);
 
   useEffect(() => {
     if (article && (article._id || article.id)) {
-      getProgress((article._id || article.id) as string).then((p) => {
+      getProgress((article._id || article.id) as string).then(p => {
         if (p && p.scrollPosition > 0.05) {
           // Optionally show a "Resume from XX%" toast
           // Scroll to the saved position
@@ -82,53 +103,93 @@ const ArticleDescriptionScreen = ({
     }
   }, [article]);
 
-  /** Restore draft from AsyncStorage if this is a new article (not an edit or translation) */
+  /** Restore draft from AsyncStorage if this is a new article */
   useEffect(() => {
     if (!article && !isTranslation) {
       AsyncStorage.getItem(ARTICLE_DRAFT_KEY).then(raw => {
         if (!raw) return;
+
         try {
           const draft = JSON.parse(raw);
-          if (draft.title || draft.authorName || draft.description) {
+
+          if (
+            draft.title ||
+            draft.authorName ||
+            draft.description
+          ) {
             Alert.alert(
               'Restore Draft',
               'You have an unsaved draft. Would you like to continue where you left off?',
               [
-                {text: 'Discard', style: 'destructive', onPress: () => AsyncStorage.removeItem(ARTICLE_DRAFT_KEY)},
+                {
+                  text: 'Discard',
+                  style: 'destructive',
+                  onPress: () =>
+                    AsyncStorage.removeItem(ARTICLE_DRAFT_KEY),
+                },
                 {
                   text: 'Restore',
                   onPress: () => {
                     if (draft.title) setTitle(draft.title);
-                    if (draft.authorName) setAuthorName(draft.authorName);
-                    if (draft.description) setDescription(draft.description);
-                    if (draft.selectedGenres) setSelectedGenres(draft.selectedGenres);
-                    if (draft.language) setLanguage(draft.language);
-                    if (draft.imageUtils) setImageUtils(draft.imageUtils);
+                    if (draft.authorName)
+                      setAuthorName(draft.authorName);
+                    if (draft.description)
+                      setDescription(draft.description);
+                    if (draft.selectedGenres)
+                      setSelectedGenres(draft.selectedGenres);
+                    if (draft.language)
+                      setLanguage(draft.language);
+                    if (draft.imageUtils)
+                      setImageUtils(draft.imageUtils);
                   },
                 },
               ],
             );
           }
         } catch (_) {
-          // Corrupt draft — ignore
           AsyncStorage.removeItem(ARTICLE_DRAFT_KEY);
         }
       });
     }
   }, []);
 
-  /** Auto-save draft to AsyncStorage (debounced 800ms) for new articles only */
+  /** Auto-save draft */
   useEffect(() => {
     if (article || isTranslation) return;
-    if (draftSaveTimerRef.current) clearTimeout(draftSaveTimerRef.current);
+
+    if (draftSaveTimerRef.current) {
+      clearTimeout(draftSaveTimerRef.current);
+    }
+
     draftSaveTimerRef.current = setTimeout(() => {
-      const draft = {title, authorName, description, selectedGenres, language, imageUtils};
-      AsyncStorage.setItem(ARTICLE_DRAFT_KEY, JSON.stringify(draft)).catch(() => {});
+      const draft = {
+        title,
+        authorName,
+        description,
+        selectedGenres,
+        language,
+        imageUtils,
+      };
+
+      AsyncStorage.setItem(
+        ARTICLE_DRAFT_KEY,
+        JSON.stringify(draft),
+      ).catch(() => {});
     }, 800);
+
     return () => {
-      if (draftSaveTimerRef.current) clearTimeout(draftSaveTimerRef.current);
+      if (draftSaveTimerRef.current) {
+        clearTimeout(draftSaveTimerRef.current);
+      }
     };
-  }, [title, authorName, description, selectedGenres, language, imageUtils]);
+  }, [
+    title,
+    authorName,
+    description,
+    selectedGenres,
+    language,
+    imageUtils,
+  ]);
 
   /** Set Initial Value for edits/translations */
   useEffect(() => {
@@ -137,34 +198,50 @@ const ArticleDescriptionScreen = ({
       setAuthorName(article.authorName);
       setDescription(article.description);
       setSelectedGenres(article.tags);
+
       if (isTranslation) {
         setLanguage('');
       }
+
       setImageUtils(
-        article.imageUtils && article.imageUtils.length > 0
+        article.imageUtils &&
+          article.imageUtils.length > 0
           ? article.imageUtils[0]
           : '',
       );
     }
   }, [article, isTranslation]);
+
   const handleGenrePress = (genre: Category) => {
     if (isSelected(genre)) {
       setSelectedGenres(
         selectedGenres.filter(item => {
-          const matchId = genre.id !== undefined && item.id === genre.id;
-          const matchDbId = genre._id !== undefined && item._id === genre._id;
-          const matchName = genre.id === undefined && genre._id === undefined && item.name === genre.name;
+          const matchId =
+            genre.id !== undefined && item.id === genre.id;
+
+          const matchDbId =
+            genre._id !== undefined &&
+            item._id === genre._id;
+
+          const matchName =
+            genre.id === undefined &&
+            genre._id === undefined &&
+            item.name === genre.name;
+
           return !(matchId || matchDbId || matchName);
-        })
+        }),
       );
     } else if (selectedGenres.length < 5) {
-      // Check if the length of selected genres is less than 5
-      setSelectedGenres([...selectedGenres, genre]); // Add the new genre to the selected genres array
+      setSelectedGenres([...selectedGenres, genre]);
     }
   };
 
   const isSelected = (genre: Category) =>
-    selectedGenres.some(item => item.id === genre.id || item._id === genre._id);
+    selectedGenres.some(
+      item =>
+        item.id === genre.id ||
+        item._id === genre._id,
+    );
 
   const handleCreatePost = () => {
     if (title === '') {
@@ -177,33 +254,38 @@ const ArticleDescriptionScreen = ({
       Alert.alert('Please give proper description');
       return;
     } else if (selectedGenres.length === 0) {
-      Alert.alert('Please select at least one suitable tags for your article.');
+      Alert.alert(
+        'Please select at least one suitable tags for your article.',
+      );
       return;
     } else if (isTranslation && !language) {
-      Alert.alert('Please select a target language for the translation.');
+      Alert.alert(
+        'Please select a target language for the translation.',
+      );
       return;
     } else if (
       isTranslation &&
       language === translationSource?.sourceLanguage
     ) {
-      Alert.alert('Please choose a language different from the source article.');
+      Alert.alert(
+        'Please choose a language different from the source article.',
+      );
       return;
-    }
-
-    // Later purpose
-    else if (imageUtils.length === 0) {
-      Alert.alert('Please upload one  image for your article.');
+    } else if (imageUtils.length === 0) {
+      Alert.alert(
+        'Please upload one image for your article.',
+      );
       return;
     }
 
     navigation.navigate('EditorScreen', {
-      title: title,
-      authorName: authorName,
-      description: description,
-      selectedGenres: selectedGenres,
-      imageUtils: imageUtils,
-      htmlContent: htmlContent,
-      language: language,
+      title,
+      authorName,
+      description,
+      selectedGenres,
+      imageUtils,
+      htmlContent,
+      language,
       requestId: undefined,
       pb_record_id: undefined,
       articleData: isTranslation ? undefined : article,
@@ -217,53 +299,90 @@ const ArticleDescriptionScreen = ({
       includeBase64: true,
     };
 
-    launchImageLibrary(options, (response: ImagePickerResponse) => {
-      if (response.didCancel) {
-        //console.log('User cancelled image picker');
-      } else if (response.errorMessage) {
-        if (__DEV__) console.log('ImagePicker Error:', response.errorMessage);
-      } else if (response.assets) {
-        const {uri, fileSize} = response.assets[0];
+    launchImageLibrary(
+      options,
+      (response: ImagePickerResponse) => {
+        if (response.didCancel) {
+          // User cancelled image picker
+        } else if (response.errorMessage) {
+          if (__DEV__) {
+            console.log(
+              'ImagePicker Error:',
+              response.errorMessage,
+            );
+          }
+        } else if (response.assets) {
+          const {uri, fileSize} = response.assets[0];
 
-        // Check file size (1 MB limit)
-        if (fileSize && fileSize > 1024 * 1024) {
-          Alert.alert('Error', 'File size exceeds 1 MB.');
-          return;
-        }
+          if (
+            fileSize &&
+            fileSize > 1024 * 1024
+          ) {
+            Alert.alert(
+              'Error',
+              'File size exceeds 1 MB.',
+            );
+            return;
+          }
 
-        if (uri) {
-          ImageResizer.createResizedImage(uri, 1000, 1000, 'JPEG', 80)
-            .then(resizedImage => {
-              setImageUtils(resizedImage.uri);
-            })
-            .catch(err => {
-              if (__DEV__) console.log('Image resize failed, using original:', err);
-              setImageUtils(uri);
-            });
+          if (uri) {
+            ImageResizer.createResizedImage(
+              uri,
+              1000,
+              1000,
+              'JPEG',
+              80,
+            )
+              .then(resizedImage => {
+                setImageUtils(resizedImage.uri);
+              })
+              .catch(err => {
+                if (__DEV__) {
+                  console.log(
+                    'Image resize failed, using original:',
+                    err,
+                  );
+                }
+
+                setImageUtils(uri);
+              });
+          }
         }
-      }
-    });
+      },
+    );
   };
 
   const availableLanguages = isTranslation
     ? ttsLanguageList.filter(
-        lang => lang.code !== translationSource?.sourceLanguage,
+        lang =>
+          lang.code !==
+          translationSource?.sourceLanguage,
       )
     : ttsLanguageList;
 
-  const isNearLimit = (value: string, limit: number) =>
-    value.length >= limit * COUNTER_WARNING_THRESHOLD;
+  const isNearLimit = (
+    value: string,
+    limit: number,
+  ) => value.length >= limit * COUNTER_WARNING_THRESHOLD;
 
   const handleTitleChange = (text: string) => {
-    setTitle(text.slice(0, ARTICLE_TITLE_MAX_LENGTH));
+    setTitle(
+      text.slice(0, ARTICLE_TITLE_MAX_LENGTH),
+    );
   };
 
   const handleDescriptionChange = (text: string) => {
-    setDescription(text.slice(0, ARTICLE_DESCRIPTION_MAX_LENGTH));
+    setDescription(
+      text.slice(0, ARTICLE_DESCRIPTION_MAX_LENGTH),
+    );
   };
 
   const getLanguageLabel = (value: string) => {
-    return ttsLanguageList.find(lang => lang.code === value)?.name || 'Select language';
+    return (
+      ttsLanguageList.find(
+        lang => lang.code === value,
+      )?.name || 'Select language'
+    );
   };
 
   const LanguageSelector = () => {
@@ -272,18 +391,40 @@ const ArticleDescriptionScreen = ({
         animationType="slide"
         transparent={true}
         visible={languageModalVisible}
-        onRequestClose={() => setLanguageModalVisible(false)}>
+        onRequestClose={() =>
+          setLanguageModalVisible(false)
+        }>
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPress={() => setLanguageModalVisible(false)}>
+          onPress={() =>
+            setLanguageModalVisible(false)
+          }
+          accessibilityRole="button"
+          accessibilityLabel="Close language selection"
+          accessibilityHint="Closes the language selection menu">
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Select Language</Text>
-              <TouchableOpacity onPress={() => setLanguageModalVisible(false)}>
-                <Ionicon name="close" size={24} color="#222" />
+              <Text style={styles.modalTitle}>
+                Select Language
+              </Text>
+
+              <TouchableOpacity
+                onPress={() =>
+                  setLanguageModalVisible(false)
+                }
+                accessibilityRole="button"
+                accessibilityLabel="Close language selection"
+                accessibilityHint="Closes the language selection menu">
+                <Ionicon
+                  name="close"
+                  size={24}
+                  color="#222"
+                  accessible={false}
+                />
               </TouchableOpacity>
             </View>
+
             <FlatList
               data={availableLanguages}
               keyExtractor={item => item.code}
@@ -291,21 +432,35 @@ const ArticleDescriptionScreen = ({
                 <TouchableOpacity
                   style={[
                     styles.languageItem,
-                    language === item.code && styles.selectedLanguageItem,
+                    language === item.code &&
+                      styles.selectedLanguageItem,
                   ]}
                   onPress={() => {
                     setLanguage(item.code);
                     setLanguageModalVisible(false);
+                  }}
+                  accessibilityRole="radio"
+                  accessibilityLabel={`Language: ${item.name}`}
+                  accessibilityState={{
+                    selected:
+                      language === item.code,
                   }}>
                   <Text
                     style={[
                       styles.languageItemText,
-                      language === item.code && styles.selectedLanguageItemText,
+                      language === item.code &&
+                        styles.selectedLanguageItemText,
                     ]}>
                     {item.name}
                   </Text>
+
                   {language === item.code && (
-                    <Ionicon name="checkmark" size={20} color={PRIMARY_COLOR} />
+                    <Ionicon
+                      name="checkmark"
+                      size={20}
+                      color={PRIMARY_COLOR}
+                      accessible={false}
+                    />
                   )}
                 </TouchableOpacity>
               )}
@@ -320,21 +475,22 @@ const ArticleDescriptionScreen = ({
     <SafeAreaView style={styles.container}>
       <Animated.View
         style={{
-          position: "absolute",
+          position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           height: 3,
-          backgroundColor: "#4F46E5",
+          backgroundColor: '#4F46E5',
           opacity: progress.interpolate({
             inputRange: [0, 0.02],
             outputRange: [0, 1],
           }),
-          transform: [{ scaleX: progress }],
-          transformOrigin: "left",
+          transform: [{scaleX: progress}],
+          transformOrigin: 'left',
           zIndex: 10,
         }}
       />
+
       <KeyboardAwareScrollView
         style={{width: '100%', flex: 1}}
         bottomOffset={50}
@@ -343,11 +499,25 @@ const ArticleDescriptionScreen = ({
         keyboardShouldPersistTaps="handled"
         scrollEventThrottle={16}
         onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {useNativeDriver: false}
+          [
+            {
+              nativeEvent: {
+                contentOffset: {
+                  y: scrollY,
+                },
+              },
+            },
+          ],
+          {useNativeDriver: false},
         )}
-        onContentSizeChange={(_w, h) => setContentHeight(h)}
-        onLayout={(e) => setViewHeight(e.nativeEvent.layout.height)}
+        onContentSizeChange={(_w, h) =>
+          setContentHeight(h)
+        }
+        onLayout={e =>
+          setViewHeight(
+            e.nativeEvent.layout.height,
+          )
+        }
         onMomentumScrollEnd={onScrollEnd}
         onScrollEndDrag={onScrollEnd}
         contentContainerStyle={{
@@ -355,210 +525,436 @@ const ArticleDescriptionScreen = ({
           paddingBottom: hp(18),
           paddingHorizontal: 6,
         }}>
-      <View style={styles.form}>
-        {LanguageSelector()}
+        <View style={styles.form}>
+          {LanguageSelector()}
 
-        {/* Header Section */}
-        <View style={styles.headerSection}>
-          <Text style={styles.sectionTitle}>Article Details</Text>
-          <Text style={styles.sectionSubtitle}>
-            {isTranslation
-              ? `Create a translated version of "${translationSource?.sourceTitle}"`
-              : 'Fill in the information below to create your article'}
-          </Text>
-        </View>
+          {/* Header Section */}
+          <View style={styles.headerSection}>
+            <Text style={styles.sectionTitle}>
+              Article Details
+            </Text>
 
-        {isTranslation && (
-          <View style={styles.translationNotice}>
-            <Ionicon name="language-outline" size={20} color={PRIMARY_COLOR} />
-            <View style={styles.translationNoticeTextWrapper}>
-              <Text style={styles.translationNoticeTitle}>Translation article</Text>
-              <Text style={styles.translationNoticeText}>
-                Source language: {getLanguageLabel(translationSource?.sourceLanguage ?? '')}
-              </Text>
-            </View>
+            <Text style={styles.sectionSubtitle}>
+              {isTranslation
+                ? `Create a translated version of "${translationSource?.sourceTitle}"`
+                : 'Fill in the information below to create your article'}
+            </Text>
           </View>
-        )}
 
-        {/* Image Upload Section */}
-        <View style={styles.section}>
-          <Text style={styles.inputLabel}>
-            <Ionicon name="image-outline" size={18} color="#222" /> Cover Image
-          </Text>
-          {imageUtils ? (
-            <View style={styles.imageContainer}>
-              <Image source={{uri: imageUtils}} style={styles.image} />
-              <View style={styles.imageOverlay}>
-                <TouchableOpacity
-                  style={styles.changeButton}
-                  onPress={selectImage}>
-                  <Ionicon name="pencil" size={16} color="#222" />
-                  <Text style={styles.changeButtonText}>Change</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={() => setImageUtils('')}>
-                  <Ionicon name="trash" size={16} color="#fff" />
-                  <Text style={styles.deleteButtonText}>Delete</Text>
-                </TouchableOpacity>
+          {isTranslation && (
+            <View style={styles.translationNotice}>
+              <Ionicon
+                name="language-outline"
+                size={20}
+                color={PRIMARY_COLOR}
+                accessible={false}
+              />
+
+              <View
+                style={
+                  styles.translationNoticeTextWrapper
+                }>
+                <Text
+                  style={
+                    styles.translationNoticeTitle
+                  }>
+                  Translation article
+                </Text>
+
+                <Text
+                  style={
+                    styles.translationNoticeText
+                  }>
+                  Source language:{' '}
+                  {getLanguageLabel(
+                    translationSource?.sourceLanguage ??
+                      '',
+                  )}
+                </Text>
               </View>
             </View>
-          ) : (
-            <TouchableOpacity
-              style={styles.uploadContainer}
-              onPress={selectImage}>
-              <Ionicon name="cloud-upload" size={40} color={PRIMARY_COLOR} />
-              <Text style={styles.uploadText}>Upload Cover Image</Text>
-              <Text style={styles.uploadHint}>Maximum file size: 1MB • JPG, PNG</Text>
-            </TouchableOpacity>
           )}
-        </View>
 
-        {/* Basic Information Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Basic Information</Text>
-
-          {/* Title */}
-          <View style={styles.input}>
+          {/* Image Upload Section */}
+          <View style={styles.section}>
             <Text style={styles.inputLabel}>
-              <Ionicon name="newspaper-outline" size={18} color="#222" /> Title *
+              <Ionicon
+                name="image-outline"
+                size={18}
+                color="#222"
+                accessible={false}
+              />{' '}
+              Cover Image
             </Text>
-            <TextInput
-              autoCapitalize="sentences"
-              autoCorrect={false}
-              keyboardType="default"
-              placeholder="Enter your article title"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              value={title}
-              onChangeText={handleTitleChange}
-              maxLength={ARTICLE_TITLE_MAX_LENGTH}
-            />
-            <Text
-              style={[
-                styles.charCounter,
-                isNearLimit(title, ARTICLE_TITLE_MAX_LENGTH) &&
-                  styles.charCounterWarning,
-              ]}>
-              {title.length} / {ARTICLE_TITLE_MAX_LENGTH}
-            </Text>
-          </View>
 
-          {/* Author Name */}
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>
-              <Ionicon name="person-outline" size={18} color="#222" /> Author Name *
-            </Text>
-            <TextInput
-              autoCapitalize="words"
-              autoCorrect={false}
-              keyboardType="default"
-              placeholder="Enter author name"
-              placeholderTextColor="#6b7280"
-              style={styles.inputControl}
-              value={authorName}
-              onChangeText={setAuthorName}
-            />
-          </View>
+            {imageUtils ? (
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{uri: imageUtils}}
+                  style={styles.image}
+                  accessibilityLabel="Article cover image"
+                />
 
-          {/* Language Dropdown */}
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>
-              <Ionicon name="globe-outline" size={18} color="#222" /> Language *
-            </Text>
-            <TouchableOpacity
-              style={styles.languageSelector}
-              onPress={() => setLanguageModalVisible(true)}>
-              <Text style={styles.languageSelectorText}>
-                {language ? getLanguageLabel(language) : 'Select target language'}
-              </Text>
-              <Ionicon name="chevron-down" size={20} color="#6b7280" />
-            </TouchableOpacity>
-          </View>
+                <View
+                  style={styles.imageOverlay}>
+                  <TouchableOpacity
+                    style={styles.changeButton}
+                    onPress={selectImage}
+                    accessibilityRole="button"
+                    accessibilityLabel="Change cover image"
+                    accessibilityHint="Opens the image picker to select a new cover image">
+                    <Ionicon
+                      name="pencil"
+                      size={16}
+                      color="#222"
+                      accessible={false}
+                    />
 
-          {/* Description */}
-          <View style={styles.input}>
-            <Text style={styles.inputLabel}>
-              <Ionicon name="document-text-outline" size={18} color="#222" /> Description *
-            </Text>
-            <TextInput
-              placeholder="Provide a brief overview of your article"
-              placeholderTextColor="#6b7280"
-              textAlignVertical="top"
-              style={styles.aboutInput}
-              multiline
-              numberOfLines={4}
-              autoCapitalize="sentences"
-              value={description}
-              onChangeText={handleDescriptionChange}
-              maxLength={ARTICLE_DESCRIPTION_MAX_LENGTH}
-            />
-            <Text
-              style={[
-                styles.charCounter,
-                isNearLimit(description, ARTICLE_DESCRIPTION_MAX_LENGTH) &&
-                  styles.charCounterWarning,
-              ]}>
-              {description.length} / {ARTICLE_DESCRIPTION_MAX_LENGTH}
-            </Text>
-          </View>
-        </View>
+                    <Text
+                      style={
+                        styles.changeButtonText
+                      }>
+                      Change
+                    </Text>
+                  </TouchableOpacity>
 
-        {/* Tags Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>
-            <Ionicon name="pricetag-outline" size={18} color="#222" /> Tags
-          </Text>
-          <Text style={styles.sectionSubtitle}>
-            Select up to 5 tags to help people discover your article
-          </Text>
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() =>
+                      setImageUtils('')
+                    }
+                    accessibilityRole="button"
+                    accessibilityLabel="Delete cover image"
+                    accessibilityHint="Removes the current article cover image">
+                    <Ionicon
+                      name="trash"
+                      size={16}
+                      color="#fff"
+                      accessible={false}
+                    />
 
-          {selectedGenres.length > 0 && (
-            <View style={styles.selectedGenresWrapper}>
-              {selectedGenres.map((genre, index) => (
-                <View key={index} style={styles.selectedGenreChip}>
-                  <Text style={styles.selectedGenreChipText}>#{genre.name}</Text>
-                  <TouchableOpacity onPress={() => handleGenrePress(genre)}>
-                    <Ionicon name="close-circle" size={18} color={PRIMARY_COLOR} />
+                    <Text
+                      style={
+                        styles.deleteButtonText
+                      }>
+                      Delete
+                    </Text>
                   </TouchableOpacity>
                 </View>
-              ))}
-            </View>
-          )}
-
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.genreContainer}>
-            {categories.map((genre: Category, index: number) => (
+              </View>
+            ) : (
               <TouchableOpacity
-                key={index}
-                style={[
-                  styles.genreButton,
-                  isSelected(genre) && styles.selectedGenreButton,
-                ]}
-                onPress={() => handleGenrePress(genre)}>
+                style={styles.uploadContainer}
+                onPress={selectImage}
+                accessibilityRole="button"
+                accessibilityLabel="Upload cover image"
+                accessibilityHint="Opens the image picker to select an article cover image">
+                <Ionicon
+                  name="cloud-upload"
+                  size={40}
+                  color={PRIMARY_COLOR}
+                  accessible={false}
+                />
+
                 <Text
-                  style={[
-                    styles.genreButtonText,
-                    isSelected(genre) && styles.selectedGenreButtonText,
-                  ]}>
-                  #{genre.name}
+                  style={styles.uploadText}>
+                  Upload Cover Image
+                </Text>
+
+                <Text
+                  style={styles.uploadHint}>
+                  Maximum file size: 1MB • JPG, PNG
                 </Text>
               </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
+            )}
+          </View>
 
-        {/* Submit Button */}
-        <TouchableOpacity
-          style={styles.submitButton}
-          onPress={handleCreatePost}>
-          <Text style={styles.submitButtonText}>Continue to Editor</Text>
-          <Ionicon name="arrow-forward" size={20} color="#fff" />
-        </TouchableOpacity>
-      </View>
-    </KeyboardAwareScrollView>
+          {/* Basic Information Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              Basic Information
+            </Text>
+
+            {/* Title */}
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>
+                <Ionicon
+                  name="newspaper-outline"
+                  size={18}
+                  color="#222"
+                  accessible={false}
+                />{' '}
+                Title *
+              </Text>
+
+              <TextInput
+                autoCapitalize="sentences"
+                autoCorrect={false}
+                keyboardType="default"
+                placeholder="Enter your article title"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={title}
+                onChangeText={handleTitleChange}
+                maxLength={ARTICLE_TITLE_MAX_LENGTH}
+                accessibilityLabel="Article title"
+                accessibilityHint="Enter the title of your article"
+              />
+
+              <Text
+                style={[
+                  styles.charCounter,
+                  isNearLimit(
+                    title,
+                    ARTICLE_TITLE_MAX_LENGTH,
+                  ) &&
+                    styles.charCounterWarning,
+                ]}>
+                {title.length} /{' '}
+                {ARTICLE_TITLE_MAX_LENGTH}
+              </Text>
+            </View>
+
+            {/* Author Name */}
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>
+                <Ionicon
+                  name="person-outline"
+                  size={18}
+                  color="#222"
+                  accessible={false}
+                />{' '}
+                Author Name *
+              </Text>
+
+              <TextInput
+                autoCapitalize="words"
+                autoCorrect={false}
+                keyboardType="default"
+                placeholder="Enter author name"
+                placeholderTextColor="#6b7280"
+                style={styles.inputControl}
+                value={authorName}
+                onChangeText={setAuthorName}
+                accessibilityLabel="Author name"
+                accessibilityHint="Enter the author's name"
+              />
+            </View>
+
+            {/* Language Dropdown */}
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>
+                <Ionicon
+                  name="globe-outline"
+                  size={18}
+                  color="#222"
+                  accessible={false}
+                />{' '}
+                Language *
+              </Text>
+
+              <TouchableOpacity
+                style={styles.languageSelector}
+                onPress={() =>
+                  setLanguageModalVisible(true)
+                }
+                accessibilityRole="button"
+                accessibilityLabel={`Language: ${
+                  language
+                    ? getLanguageLabel(language)
+                    : 'Select target language'
+                }`}
+                accessibilityHint="Opens the language selection menu">
+                <Text
+                  style={
+                    styles.languageSelectorText
+                  }>
+                  {language
+                    ? getLanguageLabel(language)
+                    : 'Select target language'}
+                </Text>
+
+                <Ionicon
+                  name="chevron-down"
+                  size={20}
+                  color="#6b7280"
+                  accessible={false}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* Description */}
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>
+                <Ionicon
+                  name="document-text-outline"
+                  size={18}
+                  color="#222"
+                  accessible={false}
+                />{' '}
+                Description *
+              </Text>
+
+              <TextInput
+                placeholder="Provide a brief overview of your article"
+                placeholderTextColor="#6b7280"
+                textAlignVertical="top"
+                style={styles.aboutInput}
+                multiline
+                numberOfLines={4}
+                autoCapitalize="sentences"
+                value={description}
+                onChangeText={
+                  handleDescriptionChange
+                }
+                maxLength={
+                  ARTICLE_DESCRIPTION_MAX_LENGTH
+                }
+                accessibilityLabel="Article description"
+                accessibilityHint="Enter a brief overview of your article"
+              />
+
+              <Text
+                style={[
+                  styles.charCounter,
+                  isNearLimit(
+                    description,
+                    ARTICLE_DESCRIPTION_MAX_LENGTH,
+                  ) &&
+                    styles.charCounterWarning,
+                ]}>
+                {description.length} /{' '}
+                {ARTICLE_DESCRIPTION_MAX_LENGTH}
+              </Text>
+            </View>
+          </View>
+
+          {/* Tags Section */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              <Ionicon
+                name="pricetag-outline"
+                size={18}
+                color="#222"
+                accessible={false}
+              />{' '}
+              Tags
+            </Text>
+
+            <Text style={styles.sectionSubtitle}>
+              Select up to 5 tags to help people discover your article
+            </Text>
+
+            {selectedGenres.length > 0 && (
+              <View
+                style={
+                  styles.selectedGenresWrapper
+                }>
+                {selectedGenres.map(
+                  (genre, index) => (
+                    <View
+                      key={index}
+                      style={
+                        styles.selectedGenreChip
+                      }>
+                      <Text
+                        style={
+                          styles.selectedGenreChipText
+                        }>
+                        #{genre.name}
+                      </Text>
+
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleGenrePress(genre)
+                        }
+                        accessibilityRole="button"
+                        accessibilityLabel={`Remove tag ${genre.name}`}
+                        accessibilityHint={`Removes ${genre.name} from selected tags`}>
+                        <Ionicon
+                          name="close-circle"
+                          size={18}
+                          color={PRIMARY_COLOR}
+                          accessible={false}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  ),
+                )}
+              </View>
+            )}
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={
+                styles.genreContainer
+              }>
+              {categories.map(
+                (
+                  genre: Category,
+                  index: number,
+                ) => {
+                  const selected =
+                    isSelected(genre);
+
+                  return (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        styles.genreButton,
+                        selected &&
+                          styles.selectedGenreButton,
+                      ]}
+                      onPress={() =>
+                        handleGenrePress(genre)
+                      }
+                      accessibilityRole="checkbox"
+                      accessibilityLabel={`Tag ${genre.name}`}
+                      accessibilityHint={
+                        selected
+                          ? `Removes ${genre.name} from selected tags`
+                          : `Adds ${genre.name} to selected tags`
+                      }
+                      accessibilityState={{
+                        checked: selected,
+                      }}>
+                      <Text
+                        style={[
+                          styles.genreButtonText,
+                          selected &&
+                            styles.selectedGenreButtonText,
+                        ]}>
+                        #{genre.name}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                },
+              )}
+            </ScrollView>
+          </View>
+
+          {/* Submit Button */}
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleCreatePost}
+            accessibilityRole="button"
+            accessibilityLabel="Continue to editor"
+            accessibilityHint="Validates the article details and continues to the editor">
+            <Text
+              style={styles.submitButtonText}>
+              Continue to Editor
+            </Text>
+
+            <Ionicon
+              name="arrow-forward"
+              size={20}
+              color="#fff"
+              accessible={false}
+            />
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -893,4 +1289,3 @@ const styles = StyleSheet.create({
 });
 
 export default ArticleDescriptionScreen;
-

@@ -2,20 +2,30 @@
 // @ts-nocheck
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
-import { Alert,
-   FlatList ,
+import {
+  Alert,
+  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
   StyleSheet,
-   TextInput ,
+  TextInput,
   TouchableOpacity,
-  View
-  } from 'react-native';
+  View,
+} from 'react-native';
 
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { H3, Image, Paragraph, Text, YStack, TextArea, XStack, Button } from 'tamagui';
+import {
+  H3,
+  Image,
+  Paragraph,
+  Text,
+  YStack,
+  TextArea,
+  XStack,
+  Button,
+} from 'tamagui';
 
 import CommentItem from '../../components/article/CommentItem';
 import { BaseEmptyState } from '../../components/common/EmptyStates';
@@ -109,7 +119,7 @@ const CommentScreen = ({
   const [commentsError, setCommentsError] =
     useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] =
-  useState<boolean>(false);
+    useState<boolean>(false);
   const [
     commentLikeLoading,
     setCommentLikeLoading,
@@ -311,7 +321,6 @@ const CommentScreen = ({
   const handleMentionClick = (
     user_handle: string,
   ) => {
-
     console.log('Mention clicked:', user_handle);
     navigation.navigate('UserProfileScreen', {
       author_handle: user_handle,
@@ -361,55 +370,55 @@ const CommentScreen = ({
   };
 
   const handleCommentSubmit = () => {
-  if (isSubmitting) return;
+    if (isSubmitting) return;
 
-  if (!newComment.trim()) {
-    Alert.alert(
-      'Please enter a comment before submitting.',
+    if (!newComment.trim()) {
+      Alert.alert(
+        'Please enter a comment before submitting.',
+      );
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const formatted = replaceTriggerValues(
+      newComment,
+      ({name}) => `@${name}`,
     );
-    return;
-  }
 
-  setIsSubmitting(true);
+    if (!socket) {
+      setIsSubmitting(false);
+      return;
+    }
 
-  const formatted = replaceTriggerValues(
-    newComment,
-    ({name}) => `@${name}`,
-  );
+    if (editMode && editCommentId) {
+      socket.emit('edit-comment', {
+        commentId: editCommentId,
+        content: formatted,
+        articleId: route.params.articleId,
+        userId: user_id,
+      });
 
-  if (!socket) {
-    setIsSubmitting(false);
-    return;
-  }
+      setEditMode(false);
+      setEditCommentId(null);
+    } else {
+      const newCommentObj = {
+        userId: user_id,
+        articleId: route.params.articleId,
+        content: formatted,
+        parentCommentId: null,
+        mentionedUsers: mentions,
+      };
 
-  if (editMode && editCommentId) {
-    socket.emit('edit-comment', {
-      commentId: editCommentId,
-      content: formatted,
-      articleId: route.params.articleId,
-      userId: user_id,
-    });
+      socket.emit('comment', newCommentObj);
+    }
 
-    setEditMode(false);
-    setEditCommentId(null);
-  } else {
-    const newCommentObj = {
-      userId: user_id,
-      articleId: route.params.articleId,
-      content: formatted,
-      parentCommentId: null,
-      mentionedUsers: mentions,
-    };
+    setNewComment('');
 
-    socket.emit('comment', newCommentObj);
-  }
-
-  setNewComment('');
-
-  setTimeout(() => {
-    setIsSubmitting(false);
-  }, 1500);
-};
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 1500);
+  };
 
   const handleReportAction = (
     commentId: string,
@@ -461,7 +470,11 @@ const CommentScreen = ({
                   one,
                 ]);
               }}
-              style={styles.suggestionItem}>
+              style={styles.suggestionItem}
+              accessibilityRole="button"
+              accessibilityLabel={`Mention ${one.user_handle}`}
+              accessibilityHint="Selects this user to mention in your comment"
+            >
               <Image
                 source={{
                   uri: one.Profile_image
@@ -473,6 +486,9 @@ const CommentScreen = ({
                     : DEFAULT_AVATAR_URL,
                 }}
                 style={styles.profileImage2}
+                accessible={true}
+                accessibilityRole="image"
+                accessibilityLabel={`${one.user_handle} profile picture`}
               />
 
               <Text style={styles.username2}>
@@ -535,7 +551,11 @@ const CommentScreen = ({
         </Text>
         <TouchableOpacity
           style={styles.emptyButton}
-          onPress={() => inputRef.current?.focus()}>
+          onPress={() => inputRef.current?.focus()}
+          accessibilityRole="button"
+          accessibilityLabel="Add a comment"
+          accessibilityHint="Focuses the comment input"
+        >
           <Text style={styles.emptyButtonText}>Add a Comment</Text>
         </TouchableOpacity>
       </View>
@@ -556,211 +576,264 @@ const CommentScreen = ({
           />
         </SafeAreaView>
       }>
-    <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView
-        style={{flex: 1}}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.select({
-          ios: 0,
-          android: 20,
-        })}>
-        <FlatList
-          ref={flatListRef}
-          data={comments}
-          keyExtractor={item => item._id}
-          keyboardShouldPersistTaps="handled"
-          ListHeaderComponent={
-            <View>
-              <YStack gap="$3">
-                <View
-                  style={
-                    styles.articleTitleCard
-                  }>
-                  <H3
-                    fontSize={20}
-                    color="#1F2937"
-                    fontWeight={'700'}>
-                    {article?.title}
-                  </H3>
-                </View>
-
-                <View
-                  style={
-                    styles.imageContainer
-                  }>
-                  <Image
-                    source={{
-                      uri: article?.imageUtils?.[0]
-                        ? article.imageUtils[0].startsWith('http')
-                          ? article.imageUtils[0]
-                          : `${GET_IMAGE}/${article.imageUtils[0]}`
-                        : DEFAULT_AVATAR_URL, // FIX: guard against missing/empty imageUtils array
-                    }}
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={Platform.select({
+            ios: 0,
+            android: 20,
+          })}>
+          <FlatList
+            ref={flatListRef}
+            data={comments}
+            keyExtractor={item => item._id}
+            keyboardShouldPersistTaps="handled"
+            ListHeaderComponent={
+              <View>
+                <YStack gap="$3">
+                  <View
                     style={
-                      styles.articleImage
-                    }
-                  />
-                </View>
-
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate(
-                      'ArticleScreen',
-                      {
-                        articleId: Number(
-                          article?._id,
-                        ),
-                        authorId:
-                          article?.authorId
-                            ? article.authorId.toString()
-                            : '', // FIX: guard against missing authorId
-                        recordId:
-                          article?.pb_recordId,
-                      },
-                    )
-                  }
-                  style={
-                    styles.viewArticleButton
-                  }>
-                  <Text
-                    style={
-                      styles.viewArticleText
+                      styles.articleTitleCard
                     }>
-                    View Full Article
-                  </Text>
-                </TouchableOpacity>
+                    <H3
+                      fontSize={20}
+                      color="#1F2937"
+                      fontWeight={'700'}>
+                      {article?.title}
+                    </H3>
+                  </View>
 
-                <View
-                  style={
-                    styles.descriptionCard
-                  }>
-                  <Paragraph
-                    color="#4B5563"
-                    fontSize={15}
-                    lineHeight={22}>
-                    {article?.description}
-                  </Paragraph>
-                </View>
-
-                {renderSuggestions({
-                  suggestions: filteredUsers,
-                  ...triggers.mention
-                })}
-
-                {/* Comment input */}
-                <SafeAreaView edges={['bottom']}>
-                  <TextInput
-                    ref={inputRef}
-                    {...textInputProps}
-                    style={styles.textInput}
-                    placeholder="Add a comment..."
-                    placeholderTextColor="#9CA3AF"
-                    multiline
-                    maxLength={MAX_COMMENT_LENGTH}
-                  />
-
-                  <XStack justifyContent="space-between" alignItems="center" mt="$2" px="$2" width="100%">
-
-                    <Text
-                      fontSize="$2"
-                      color={newComment.length >= 480 ? '$red10' : '$colorMuted'}
-                      fontWeight={newComment.length >= 480 ? '600' : '400'}
-                    >
-                      {newComment.length} / {MAX_COMMENT_LENGTH}
-                    </Text>
-
-                    <TouchableOpacity
-                      style={[
-                        styles.submitButton,
-                        {
-                          opacity:
-                            newComment.trim().length === 0 || isSubmitting
-                              ? 0.5
-                              : 1,
-                        },
-                      ]}
-                      disabled={
-                        newComment.trim().length === 0 ||
-                        isSubmitting
+                  <View
+                    style={
+                      styles.imageContainer
+                    }>
+                    <Image
+                      source={{
+                        uri: article?.imageUtils?.[0]
+                          ? article.imageUtils[0].startsWith('http')
+                            ? article.imageUtils[0]
+                            : `${GET_IMAGE}/${article.imageUtils[0]}`
+                          : DEFAULT_AVATAR_URL,
+                      }}
+                      style={
+                        styles.articleImage
                       }
-                      onPress={handleCommentSubmit}
-                    >
-                      <Text style={styles.submitButtonText}>
-                        {isSubmitting
-                          ? 'Posting...'
-                          : editMode
-                          ? 'Update Comment'
-                          : 'Submit Comment'}
-                      </Text>
-                    </TouchableOpacity>
-                  </XStack>
-                </SafeAreaView>
+                      accessible={true}
+                      accessibilityRole="image"
+                      accessibilityLabel={`${article?.title || 'Article'} image`}
+                    />
+                  </View>
 
-                <View
-                  style={
-                    styles.commentsHeader
-                  }>
-                  <Text
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate(
+                        'ArticleScreen',
+                        {
+                          articleId: Number(
+                            article?._id,
+                          ),
+                          authorId:
+                            article?.authorId
+                              ? article.authorId.toString()
+                              : '',
+                          recordId:
+                            article?.pb_recordId,
+                        },
+                      )
+                    }
                     style={
-                      styles.commentsHeaderText
+                      styles.viewArticleButton
+                    }
+                    accessibilityRole="button"
+                    accessibilityLabel="View full article"
+                    accessibilityHint="Opens the complete article"
+                  >
+                    <Text
+                      style={
+                        styles.viewArticleText
+                      }>
+                      View Full Article
+                    </Text>
+                  </TouchableOpacity>
+
+                  <View
+                    style={
+                      styles.descriptionCard
                     }>
-                    {comments.length}{' '}
-                    {comments.length === 1
-                      ? 'Comment'
-                      : 'Comments'}
-                  </Text>
-                </View>
-              </YStack>
-            </View>
-          }
-          renderItem={({item}) => (
-            <CommentItem
-              item={item}
-              isSelected={
-                selectedCommentId ===
-                item._id
-              }
-              userId={user_id}
-              setSelectedCommentId={
-                setSelectedCommentId
-              }
-              handleEditAction={
-                handleEditAction
-              }
-              deleteAction={
-                handleDeleteAction
-              }
-              handleLikeAction={
-                handleLikeAction
-              }
-              commentLikeLoading={
-                commentLikeLoading
-              }
-              handleMentionClick={
-                handleMentionClick
-              }
-              handleReportAction={
-                handleReportAction
-              }
-              isFromArticle={false}
-            />
-          )}
-          ListEmptyComponent={renderCommentsEmpty}
-          contentContainerStyle={[
-            styles.scrollContent,
-            {
-              paddingBottom:
-                keyboardHeight > 0
-                  ? keyboardHeight + (Platform.OS === 'ios' ? 0 : 20)
-                  : 20,
-            },
-          ]}
-          showsVerticalScrollIndicator={
-            false
-          }
-        />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+                    <Paragraph
+                      color="#4B5563"
+                      fontSize={15}
+                      lineHeight={22}>
+                      {article?.description}
+                    </Paragraph>
+                  </View>
+
+                  {renderSuggestions({
+                    suggestions: filteredUsers,
+                    ...triggers.mention
+                  })}
+
+                  {/* Comment input */}
+                  <SafeAreaView edges={['bottom']}>
+                    <TextInput
+                      ref={inputRef}
+                      {...textInputProps}
+                      style={styles.textInput}
+                      placeholder="Add a comment..."
+                      placeholderTextColor="#9CA3AF"
+                      multiline
+                      maxLength={MAX_COMMENT_LENGTH}
+                      accessible={true}
+                      accessibilityRole="text"
+                      accessibilityLabel={
+                        editMode
+                          ? 'Edit comment'
+                          : 'Add a comment'
+                      }
+                      accessibilityHint={
+                        editMode
+                          ? 'Enter the updated comment'
+                          : 'Enter your comment'
+                      }
+                    />
+
+                    <XStack
+                      justifyContent="space-between"
+                      alignItems="center"
+                      mt="$2"
+                      px="$2"
+                      width="100%">
+                      <Text
+                        fontSize="$2"
+                        color={
+                          newComment.length >= 480
+                            ? '$red10'
+                            : '$colorMuted'
+                        }
+                        fontWeight={
+                          newComment.length >= 480
+                            ? '600'
+                            : '400'
+                        }
+                        accessibilityLabel={`${newComment.length} of ${MAX_COMMENT_LENGTH} characters`}
+                      >
+                        {newComment.length} / {MAX_COMMENT_LENGTH}
+                      </Text>
+
+                      <TouchableOpacity
+                        style={[
+                          styles.submitButton,
+                          {
+                            opacity:
+                              newComment.trim().length === 0 ||
+                              isSubmitting
+                                ? 0.5
+                                : 1,
+                          },
+                        ]}
+                        disabled={
+                          newComment.trim().length === 0 ||
+                          isSubmitting
+                        }
+                        onPress={handleCommentSubmit}
+                        accessibilityRole="button"
+                        accessibilityLabel={
+                          isSubmitting
+                            ? 'Posting comment'
+                            : editMode
+                            ? 'Update comment'
+                            : 'Submit comment'
+                        }
+                        accessibilityHint={
+                          editMode
+                            ? 'Updates your existing comment'
+                            : 'Posts your comment'
+                        }
+                        accessibilityState={{
+                          disabled:
+                            newComment.trim().length === 0 ||
+                            isSubmitting,
+                          busy: isSubmitting,
+                        }}>
+                        <Text style={styles.submitButtonText}>
+                          {isSubmitting
+                            ? 'Posting...'
+                            : editMode
+                            ? 'Update Comment'
+                            : 'Submit Comment'}
+                        </Text>
+                      </TouchableOpacity>
+                    </XStack>
+                  </SafeAreaView>
+
+                  <View
+                    style={
+                      styles.commentsHeader
+                    }>
+                    <Text
+                      style={
+                        styles.commentsHeaderText
+                      }>
+                      {comments.length}{' '}
+                      {comments.length === 1
+                        ? 'Comment'
+                        : 'Comments'}
+                    </Text>
+                  </View>
+                </YStack>
+              </View>
+            }
+            renderItem={({item}) => (
+              <CommentItem
+                item={item}
+                isSelected={
+                  selectedCommentId ===
+                  item._id
+                }
+                userId={user_id}
+                setSelectedCommentId={
+                  setSelectedCommentId
+                }
+                handleEditAction={
+                  handleEditAction
+                }
+                deleteAction={
+                  handleDeleteAction
+                }
+                handleLikeAction={
+                  handleLikeAction
+                }
+                commentLikeLoading={
+                  commentLikeLoading
+                }
+                handleMentionClick={
+                  handleMentionClick
+                }
+                handleReportAction={
+                  handleReportAction
+                }
+                isFromArticle={false}
+              />
+            )}
+            ListEmptyComponent={renderCommentsEmpty}
+            contentContainerStyle={[
+              styles.scrollContent,
+              {
+                paddingBottom:
+                  keyboardHeight > 0
+                    ? keyboardHeight +
+                      (Platform.OS === 'ios' ? 0 : 20)
+                    : 20,
+              },
+            ]}
+            showsVerticalScrollIndicator={
+              false
+            }
+            accessibilityLabel="Comments list"
+          />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </ErrorBoundary>
   );
 };
@@ -887,10 +960,12 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
     paddingHorizontal: 20,
   },
+
   emptyIcon: {
     fontSize: 60,
     marginBottom: 16,
   },
+
   emptyTitle: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -898,18 +973,21 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     textAlign: 'center',
   },
+
   emptySubtitle: {
     fontSize: 14,
     color: '#888',
     marginBottom: 24,
     textAlign: 'center',
   },
+
   emptyButton: {
     backgroundColor: PRIMARY_COLOR,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
   },
+
   emptyButtonText: {
     color: '#fff',
     fontWeight: 'bold',

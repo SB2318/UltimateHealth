@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { View,
+import {
+  View,
   StyleSheet,
-   ScrollView ,
+  ScrollView,
   TouchableOpacity,
   Text,
   Image,
   Alert,
   Platform,
- } from 'react-native';
+} from 'react-native';
 import {OfflinePodcastDetailProp, PodcastData} from '../../schemas/type';
 import {hp} from '../../lib/ui/Metric';
 import {ON_PRIMARY_COLOR, BUTTON_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import SliderRN from '@react-native-community/slider';
-import { formatDateWithTime } from '../../lib/utils/dateUtils';
+import {formatDateWithTime} from '../../lib/utils/dateUtils';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -31,7 +32,7 @@ import {useSocket} from '../../contexts/SocketContext';
 import {Feather} from '@expo/vector-icons';
 import {useAudioPlayer} from 'expo-audio';
 import {useLikePodcast} from '../../hooks/podcast/useLikePodcast';
- 
+
 const Slider = SliderRN as any;
 
 export default function OfflinePodcastDetail({
@@ -57,7 +58,8 @@ export default function OfflinePodcastDetail({
 
   const player = useAudioPlayer(`file://${podcast.filePath}`);
 
-  const {mutate: likePodcast, isPending: likePodcastPending} = useLikePodcast();
+  const {mutate: likePodcast, isPending: likePodcastPending} =
+    useLikePodcast();
 
   useEffect(() => {
     //console.log("File path", `${filePath}`);
@@ -125,6 +127,7 @@ export default function OfflinePodcastDetail({
       return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
   };
+
   return (
     <ScrollView style={styles.container}>
       <Image
@@ -132,6 +135,7 @@ export default function OfflinePodcastDetail({
           uri: 'https://t3.ftcdn.net/jpg/05/10/75/30/360_F_510753092_f4AOmCJAczuGgRLCmHxmowga2tC9VYQP.jpg',
         }}
         style={styles.podcastImage}
+        accessible={false}
       />
 
       <View
@@ -149,7 +153,12 @@ export default function OfflinePodcastDetail({
               //navigation.navigate('UserProfileScreen', {
               //  authorId: authorId,
               // });
-            }}>
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={`View profile of ${
+              podcast?.user_id?.user_name || 'podcast author'
+            }`}
+            accessibilityHint="Opens the author's profile">
             {podcast?.user_id.Profile_image && isConnected ? (
               <Image
                 source={{
@@ -172,6 +181,7 @@ export default function OfflinePodcastDetail({
               </View>
             )}
           </TouchableOpacity>
+
           <View>
             <Text style={styles.authorName}>
               {podcast ? podcast?.user_id.user_name : ''}
@@ -190,6 +200,13 @@ export default function OfflinePodcastDetail({
       <View style={styles.footerOptions}>
         <TouchableOpacity
           style={styles.footerItem}
+          accessibilityRole="button"
+          accessibilityLabel={
+            currentPodcast?.likedUsers.includes(user_id)
+              ? `Unlike podcast. ${currentPodcast?.likedUsers?.length || 0} likes`
+              : `Like podcast. ${currentPodcast?.likedUsers?.length || 0} likes`
+          }
+          accessibilityHint="Toggles your like on this podcast"
           onPress={() => {
             if (isConnected) {
               likePodcast(podcast._id, {
@@ -204,7 +221,6 @@ export default function OfflinePodcastDetail({
                     podcast.likedUsers.push(user_id);
                     setCurrentPodcast(podcast);
                     if (data?.likeStatus) {
-                      // data.userId, data.articleId, data.podcastId, data.articleRecordId, data.title, data.message
                       if (socket) {
                         socket.emit('notification', {
                           type: 'likePost',
@@ -247,11 +263,21 @@ export default function OfflinePodcastDetail({
           </Text>
         </TouchableOpacity>
 
-        <View>
+        <View
+          accessible
+          accessibilityLabel="Podcast downloaded">
           <MaterialIcons name="done" size={24} color="green" />
         </View>
+
         <TouchableOpacity
           style={styles.footerItem}
+          accessibilityRole="button"
+          accessibilityLabel={`Comments. ${
+            podcast?.commentCount
+              ? formatCount(podcast?.commentCount)
+              : 0
+          } comments`}
+          accessibilityHint="Opens the podcast comments"
           onPress={() => {
             if (isConnected) {
               // handleDiscussion(); // You need to define this
@@ -262,29 +288,42 @@ export default function OfflinePodcastDetail({
               });
             }
           }}>
-          <Ionicons name="chatbubble-outline" size={24} color="#1E1E1E" />
+          <Ionicons
+            name="chatbubble-outline"
+            size={24}
+            color="#1E1E1E"
+          />
           <Text style={styles.likeCount}>
-            {podcast?.commentCount ? formatCount(podcast?.commentCount) : 0}
+            {podcast?.commentCount
+              ? formatCount(podcast?.commentCount)
+              : 0}
           </Text>
         </TouchableOpacity>
 
-        {
-          <TouchableOpacity
-            onPress={() => {
-              if (isConnected) {
-                handleShare();
-              } else {
-                Snackbar.show({
-                  text: 'You are currently offline',
-                  duration: Snackbar.LENGTH_SHORT,
-                });
-              }
-            }}>
-            <Ionicons name="share-outline" size={27} color="#1E1E1E" />
-          </TouchableOpacity>
-        }
+        <TouchableOpacity
+          accessibilityRole="button"
+          accessibilityLabel="Share podcast"
+          accessibilityHint="Opens sharing options for this podcast"
+          onPress={() => {
+            if (isConnected) {
+              handleShare();
+            } else {
+              Snackbar.show({
+                text: 'You are currently offline',
+                duration: Snackbar.LENGTH_SHORT,
+              });
+            }
+          }}>
+          <Ionicons
+            name="share-outline"
+            size={27}
+            color="#1E1E1E"
+          />
+        </TouchableOpacity>
       </View>
+
       <Text style={styles.episodeTitle}>{podcast?.title}</Text>
+
       <View>
         <Text
           style={styles.podcastTitle}
@@ -292,10 +331,23 @@ export default function OfflinePodcastDetail({
           ellipsizeMode="tail">
           {podcast?.description}
         </Text>
+
         {podcast &&
           podcast.description &&
           podcast?.description?.length > 100 && (
-            <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
+            <TouchableOpacity
+              onPress={() => setIsExpanded(!isExpanded)}
+              accessibilityRole="button"
+              accessibilityLabel={
+                isExpanded
+                  ? 'Read less description'
+                  : 'Read more description'
+              }
+              accessibilityHint={
+                isExpanded
+                  ? 'Collapses the podcast description'
+                  : 'Expands the podcast description'
+              }>
               <Text style={styles.readMoreText}>
                 {isExpanded ? 'Read Less ' : 'Read More '}
               </Text>
@@ -316,7 +368,6 @@ export default function OfflinePodcastDetail({
           {formatDateWithTime(podcast?.updated_at)}
         </Text>
         {podcast && (
-           
           <Text style={styles.metaText}>
             {podcast?.viewUsers.length <= 1
               ? `${podcast?.viewUsers.length} view`
@@ -333,6 +384,9 @@ export default function OfflinePodcastDetail({
         minimumTrackTintColor={PRIMARY_COLOR}
         maximumTrackTintColor="#ccc"
         thumbTintColor={PRIMARY_COLOR}
+        accessibilityRole="adjustable"
+        accessibilityLabel="Podcast playback position"
+        accessibilityHint="Adjusts the current playback position"
         onSlidingComplete={async (value: number) => {
           // seek to selected time
           await player.seekTo(value);
@@ -345,22 +399,40 @@ export default function OfflinePodcastDetail({
             player.currentStatus ? player.currentStatus.currentTime : 0,
           )}
         </Text>
-        <Text style={styles.time}>{formatTime(player.duration || 1)}</Text>
+        <Text style={styles.time}>
+          {formatTime(player.duration || 1)}
+        </Text>
       </View>
 
       {player.currentStatus.isBuffering && (
-        <Text style={styles.bufferingText}>⏳ Buffering... please wait</Text>
+        <Text style={styles.bufferingText}>
+          ⏳ Buffering... please wait
+        </Text>
       )}
 
       <TouchableOpacity
         style={[
           styles.listenButton,
-          player.currentStatus.isBuffering && styles.listenButtonDisabled,
+          player.currentStatus.isBuffering &&
+            styles.listenButtonDisabled,
         ]}
         onPress={handleListenPress}
-        disabled={player.currentStatus.isBuffering}>
+        disabled={player.currentStatus.isBuffering}
+        accessibilityRole="button"
+        accessibilityLabel={
+          player.currentStatus.playing
+            ? 'Pause podcast'
+            : 'Listen to podcast'
+        }
+        accessibilityHint={
+          player.currentStatus.playing
+            ? 'Pauses podcast playback'
+            : 'Starts podcast playback'
+        }>
         <Text style={styles.listenText}>
-          {player.currentStatus.playing ? '⏸️Pause' : '🎧 Listen Now'}
+          {player.currentStatus.playing
+            ? '⏸️Pause'
+            : '🎧 Listen Now'}
         </Text>
       </TouchableOpacity>
     </ScrollView>

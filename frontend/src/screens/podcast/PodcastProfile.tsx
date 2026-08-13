@@ -98,6 +98,9 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
     <TouchableOpacity
       style={styles.playlistCard}
       activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={`Open playlist ${item.title}`}
+      accessibilityHint="Opens this playlist"
       onPress={() => {
         navigation.navigate('PlaylistDetailScreen', {
           playlist: item,
@@ -118,7 +121,12 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
           {Array.isArray(item.podcasts) ? item.podcasts.length : 0} podcasts
         </Text>
       </View>
-      <Feather name="chevron-right" size={20} color="#9ca3af" />
+      <Feather
+        name="chevron-right"
+        size={20}
+        color="#9ca3af"
+        accessible={false}
+      />
     </TouchableOpacity>
   );
 
@@ -185,14 +193,19 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
                     : `${GET_STORAGE_DATA}/${user?.Profile_image}`,
                 }}
                 style={styles.profileImage}
+                accessible={true}
+                accessibilityLabel={`${user?.user_name || 'User'} profile picture`}
               />
             ) : (
               <View
-                style={[styles.profileImage, styles.profileImagePlaceholder]}>
+                style={[styles.profileImage, styles.profileImagePlaceholder]}
+                accessible={true}
+                accessibilityLabel="Default user profile picture">
                 <MaterialCommunityIcons
                   name="account"
                   size={60}
                   color="#9ca3af"
+                  accessible={false}
                 />
               </View>
             )}
@@ -218,16 +231,28 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
           <TouchableOpacity
             style={{...styles.createButton,  marginVertical: 4}}
             activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel="Visit Workspace"
+            accessibilityHint="Opens your podcast workspace"
             onPress={() => navigation.navigate('OverviewScreen')}>
             
             <Text style={styles.createButtonText}>Visit Workspace</Text>
           </TouchableOpacity>
+
           {/* Create Podcast Button */}
           <TouchableOpacity
             style={styles.createButton}
             activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel="Create Podcast"
+            accessibilityHint="Opens the podcast creation form"
             onPress={() => navigation.navigate('PodcastForm')}>
-            <Ionicons name="mic" size={20} color="#ffffff" />
+            <Ionicons
+              name="mic"
+              size={20}
+              color="#ffffff"
+              accessible={false}
+            />
             <Text style={styles.createButtonText}>Create Podcast</Text>
           </TouchableOpacity>
         </View>
@@ -237,11 +262,15 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
           <TouchableOpacity
             style={[styles.tab, selectedTab === 'podcasts' && styles.activeTab]}
             onPress={() => setSelectedTab('podcasts')}
-            activeOpacity={0.7}>
+            activeOpacity={0.7}
+            accessibilityRole="tab"
+            accessibilityLabel="Podcasts"
+            accessibilityState={{selected: selectedTab === 'podcasts'}}>
             <MaterialCommunityIcons
               name="microphone"
               size={20}
               color={selectedTab === 'podcasts' ? PRIMARY_COLOR : '#6b7280'}
+              accessible={false}
             />
             <Text
               style={[
@@ -258,11 +287,15 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
               selectedTab === 'playlists' && styles.activeTab,
             ]}
             onPress={() => setSelectedTab('playlists')}
-            activeOpacity={0.7}>
+            activeOpacity={0.7}
+            accessibilityRole="tab"
+            accessibilityLabel="Playlists"
+            accessibilityState={{selected: selectedTab === 'playlists'}}>
             <MaterialCommunityIcons
               name="playlist-music"
               size={20}
               color={selectedTab === 'playlists' ? PRIMARY_COLOR : '#6b7280'}
+              accessible={false}
             />
             <Text
               style={[
@@ -300,6 +333,7 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
                   name="microphone-off"
                   size={64}
                   color="#d1d5db"
+                  accessible={false}
                 />
                 <Text style={styles.emptyText}>No podcasts yet</Text>
                 <Text style={styles.emptySubText}>
@@ -307,6 +341,9 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
                 </Text>
                 <TouchableOpacity
                   style={styles.emptyButton}
+                  accessibilityRole="button"
+                  accessibilityLabel="Create Podcast"
+                  accessibilityHint="Opens the podcast creation form"
                   onPress={() => navigation.navigate('PodcastForm')}>
                   <Text style={styles.emptyButtonText}>Create Podcast</Text>
                 </TouchableOpacity>
@@ -326,6 +363,7 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
                 name="playlist-music-outline"
                 size={64}
                 color="#d1d5db"
+                accessible={false}
               />
               <Text style={styles.emptyText}>No playlists yet</Text>
               <Text style={styles.emptySubText}>
@@ -544,4 +582,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

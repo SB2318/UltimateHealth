@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 import React, {useCallback, useState} from 'react';
-import { FlatList ,
+import {
+  FlatList,
   StyleSheet,
   Text,
   View,
   Image,
   TouchableOpacity,
   Alert,
- } from 'react-native';
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useFocusEffect} from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
@@ -42,8 +43,17 @@ function timeAgo(timestamp: number): string {
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
 const EmptyHistory = () => (
-  <View style={styles.emptyContainer}>
-    <Ionicon name="time-outline" size={64} color="#c0c0c0" />
+  <View
+    style={styles.emptyContainer}
+    accessible={true}
+    accessibilityRole="text"
+    accessibilityLabel="No reading history yet. Articles you open will appear here.">
+    <Ionicon
+      name="time-outline"
+      size={64}
+      color="#c0c0c0"
+      accessible={false}
+    />
     <Text style={styles.emptyTitle}>No reading history yet</Text>
     <Text style={styles.emptySubtitle}>
       Articles you open will appear here.
@@ -62,28 +72,54 @@ const HistoryRow = React.memo(({item, onPress}: RowProps) => (
   <TouchableOpacity
     style={styles.row}
     onPress={() => onPress(item)}
-    activeOpacity={0.7}>
+    activeOpacity={0.7}
+    accessibilityRole="button"
+    accessibilityLabel={`Open article ${item.title}`}
+    accessibilityHint="Opens this article">
     {item.coverImage ? (
-      <Image source={{uri: item.coverImage}} style={styles.thumbnail} />
+      <Image
+        source={{uri: item.coverImage}}
+        style={styles.thumbnail}
+        accessible={true}
+        accessibilityLabel={`Cover image for ${item.title}`}
+      />
     ) : (
-      <View style={[styles.thumbnail, styles.thumbnailPlaceholder]}>
-        <Ionicon name="document-text-outline" size={28} color="#aaa" />
+      <View
+        style={[styles.thumbnail, styles.thumbnailPlaceholder]}
+        accessible={false}>
+        <Ionicon
+          name="document-text-outline"
+          size={28}
+          color="#aaa"
+          accessible={false}
+        />
       </View>
     )}
+
     <View style={styles.rowContent}>
       <Text style={styles.rowTitle} numberOfLines={2}>
         {item.title}
       </Text>
+
       <Text style={styles.rowMeta} numberOfLines={1}>
         {item.authorName}
         {item.category ? ` · ${item.category}` : ''}
       </Text>
+
       <Text style={styles.rowTime}>{timeAgo(item.viewedAt)}</Text>
     </View>
-    <Ionicon name="chevron-forward" size={20} color="#c0c0c0" />
+
+    <Ionicon
+      name="chevron-forward"
+      size={20}
+      color="#c0c0c0"
+      accessible={false}
+    />
   </TouchableOpacity>
 ));
+
 HistoryRow.displayName = 'HistoryRow';
+
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 const ReadingHistoryScreen = ({navigation}: Props) => {
@@ -125,7 +161,6 @@ const ReadingHistoryScreen = ({navigation}: Props) => {
     ({item}: {item: ReadingHistoryItem}) => (
       <HistoryRow item={item} onPress={handleRowPress} />
     ),
-     
     [],
   );
 
@@ -137,11 +172,22 @@ const ReadingHistoryScreen = ({navigation}: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       {history.length > 0 && (
-        <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
-          <Ionicon name="trash-outline" size={18} color="#EF4444" />
+        <TouchableOpacity
+          style={styles.clearButton}
+          onPress={handleClear}
+          accessibilityRole="button"
+          accessibilityLabel="Clear reading history"
+          accessibilityHint="Permanently removes all reading history">
+          <Ionicon
+            name="trash-outline"
+            size={18}
+            color="#EF4444"
+            accessible={false}
+          />
           <Text style={styles.clearText}>Clear History</Text>
         </TouchableOpacity>
       )}
+
       <FlatList
         data={history}
         renderItem={renderItem}
@@ -152,6 +198,7 @@ const ReadingHistoryScreen = ({navigation}: Props) => {
         ]}
         ListEmptyComponent={<EmptyHistory />}
         showsVerticalScrollIndicator={false}
+        accessibilityLabel="Reading history list"
       />
     </SafeAreaView>
   );

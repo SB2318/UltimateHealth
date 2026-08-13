@@ -1,4 +1,3 @@
- 
 // @ts-nocheck
 import React, {
   FC,
@@ -8,15 +7,16 @@ import React, {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { FlatList ,
+import {FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   Modal,
   View,
- } from 'react-native';
+} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AddSpecializationModal from '../profile/AddSpecializationModal';
+
 
 interface Props {
   label: string;
@@ -29,6 +29,7 @@ interface Props {
   specialization: string;
   setspecialization: Dispatch<SetStateAction<string>>;
 }
+
 
 const Dropdown: FC<Props> = ({
   label,
@@ -47,19 +48,23 @@ const Dropdown: FC<Props> = ({
   >(undefined);
   const [dropdownTop, setDropdownTop] = useState(0);
 
+
   const handleModal = () => {
     setVisible(false);
     setIsModalVisible(true);
   };
+
 
   const handleCloseModal = () => {
     setIsModalVisible(false);
     setVisible(true);
   };
 
+
   const toggleDropdown = (): void => {
     visible ? setVisible(false) : openDropdown();
   };
+
 
   const openDropdown = (): void => {
     DropdownButton?.current?.measure((_fx: number, _fy: number, _w: number, h: number, _px: number, py: number) => {
@@ -68,20 +73,28 @@ const Dropdown: FC<Props> = ({
     setVisible(true);
   };
 
+
   const onItemPress = (item: {name: string; id: number}): void => {
     setSelected(item);
     setVisible(false);
   };
+
 
   const renderItem = ({
     item,
   }: {
     item: {name: string; id: number};
   }): ReactElement<any, any> => (
-    <TouchableOpacity style={styles.item} onPress={() => onItemPress(item)}>
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => onItemPress(item)}
+      accessibilityRole="button"
+      accessibilityLabel={`Select ${item?.name}`}
+      accessibilityHint={`Selects ${item?.name} as the specialization`}>
       <Text>{item?.name}</Text>
     </TouchableOpacity>
   );
+
 
   const renderDropdown = (): ReactElement<any, any> => {
     return (
@@ -92,7 +105,10 @@ const Dropdown: FC<Props> = ({
         style={styles.modal}>
         <TouchableOpacity
           style={styles.overlay}
-          onPress={() => setVisible(false)}>
+          onPress={() => setVisible(false)}
+          accessibilityRole="button"
+          accessibilityLabel="Close specialization dropdown"
+          accessibilityHint="Closes the specialization dropdown">
           <View style={[styles.dropdown, {top: dropdownTop}]}>
             <FlatList
               showsVerticalScrollIndicator={false}
@@ -100,7 +116,12 @@ const Dropdown: FC<Props> = ({
               renderItem={renderItem}
               keyExtractor={(_item, index) => index.toString()}
               ListFooterComponent={
-                <TouchableOpacity onPress={handleModal} style={styles.footer}>
+                <TouchableOpacity
+                  onPress={handleModal}
+                  style={styles.footer}
+                  accessibilityRole="button"
+                  accessibilityLabel="Add more specialization"
+                  accessibilityHint="Opens the form to add a new specialization">
                   <Text>Add more</Text>
                   <Ionicons name="add" size={23} />
                 </TouchableOpacity>
@@ -112,12 +133,21 @@ const Dropdown: FC<Props> = ({
     );
   };
 
+
   return (
     <>
       <TouchableOpacity
         ref={DropdownButton}
         style={styles.button}
-        onPress={toggleDropdown}>
+        onPress={toggleDropdown}
+        accessibilityRole="button"
+        accessibilityLabel={selected ? selected.name : label}
+        accessibilityHint={
+          visible
+            ? 'Closes the specialization dropdown'
+            : 'Opens the specialization dropdown'
+        }
+        accessibilityState={{expanded: visible}}>
         {renderDropdown()}
         <Text style={styles.buttonText}>
           {selected ? selected?.name : label}
@@ -138,6 +168,7 @@ const Dropdown: FC<Props> = ({
     </>
   );
 };
+
 
 const styles = StyleSheet.create({
   button: {
@@ -193,5 +224,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 });
+
 
 export default Dropdown;

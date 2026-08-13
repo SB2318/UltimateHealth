@@ -1,5 +1,3 @@
- 
- 
 import React, {useEffect, useState} from 'react';
 import { View,
   Text,
@@ -146,11 +144,14 @@ const NotificationPreferencesScreen = ({
   return (
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
       {/* Header banner */}
-      <View style={styles.headerBanner}>
+      <View
+        style={styles.headerBanner}
+        accessibilityRole="header">
         <MaterialCommunityIcons
           name="bell-cog-outline"
           size={30}
           color="white"
+          accessible={false}
         />
         <View style={styles.headerTextContainer}>
           <Text style={styles.headerTitle}>Content Interests</Text>
@@ -173,6 +174,7 @@ const NotificationPreferencesScreen = ({
                 size={20}
                 color="#9ca3af"
                 style={styles.searchIcon}
+                accessible={false}
               />
               <TextInput
                 style={styles.searchInput}
@@ -182,13 +184,16 @@ const NotificationPreferencesScreen = ({
                 onChangeText={setSearchQuery}
                 autoCapitalize="none"
                 autoCorrect={false}
-                accessibilityLabel="Search preferences input"
+                accessibilityRole="search"
+                accessibilityLabel="Search preferences"
+                accessibilityHint="Enter a keyword to filter notification topics"
                 testID="search-input"
               />
               {searchQuery.length > 0 && (
                 <TouchableOpacity
                   onPress={() => setSearchQuery('')}
                   accessibilityLabel="Clear search text"
+                  accessibilityHint="Clears the current search"
                   accessibilityRole="button"
                   style={styles.clearButton}
                   testID="clear-search-button">
@@ -196,6 +201,7 @@ const NotificationPreferencesScreen = ({
                     name="close-circle"
                     size={18}
                     color="#9ca3af"
+                    accessible={false}
                   />
                 </TouchableOpacity>
               )}
@@ -220,13 +226,22 @@ const NotificationPreferencesScreen = ({
                           isSelected && styles.chipSelected,
                         ]}
                         activeOpacity={0.75}
-                        onPress={() => toggleTag(tag._id)}>
+                        onPress={() => toggleTag(tag._id)}
+                        accessibilityRole="checkbox"
+                        accessibilityLabel={tag.name}
+                        accessibilityHint={
+                          isSelected
+                            ? `Deselect ${tag.name}`
+                            : `Select ${tag.name}`
+                        }
+                        accessibilityState={{checked: isSelected}}>
                         {isSelected && (
                           <MaterialCommunityIcons
                             name="check-circle"
                             size={16}
                             color="white"
                             style={styles.chipIcon}
+                            accessible={false}
                           />
                         )}
                         <Text
@@ -248,12 +263,30 @@ const NotificationPreferencesScreen = ({
                     onPress={() => {
                       const visibleIds = (filteredCategories ?? []).map(t => t._id);
                       setSelectedIds(prev => Array.from(new Set([...prev, ...visibleIds])));
-                    }}>
+                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel="Select all visible preferences"
+                    accessibilityHint={
+                      isFiltering
+                        ? 'Selects all currently visible notification topics'
+                        : 'Selects all notification topics'
+                    }>
                     <Text style={styles.bulkBtnText}>Select All</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[styles.bulkBtn, styles.bulkBtnClear]}
                     onPress={handleClearAll}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      isFiltering
+                        ? 'Clear all visible preferences'
+                        : 'Clear all preferences'
+                    }
+                    accessibilityHint={
+                      isFiltering
+                        ? 'Deselects all currently visible notification topics'
+                        : 'Deselects all notification topics'
+                    }
                     testID="clear-all-button">
                     <Text style={[styles.bulkBtnText, {color: '#6b7280'}]}>
                       {isFiltering ? 'Clear Visible' : 'Clear All'}
@@ -268,6 +301,7 @@ const NotificationPreferencesScreen = ({
                   size={48}
                   color="#9ca3af"
                   style={styles.emptyStateIcon}
+                  accessible={false}
                 />
                 <Text style={styles.emptyStateTitle}>No preferences found</Text>
                 <Text style={styles.emptyStateSubtitle}>
@@ -289,7 +323,11 @@ const NotificationPreferencesScreen = ({
               style={[styles.saveBtn, isSaving && styles.saveBtnDisabled]}
               onPress={handleSave}
               disabled={isSaving}
-              activeOpacity={0.85}>
+              activeOpacity={0.85}
+              accessibilityRole="button"
+              accessibilityLabel="Save notification preferences"
+              accessibilityHint="Saves your selected notification topics"
+              accessibilityState={{disabled: isSaving}}>
               {isSaving ? (
                 <LoadingSpinner size="small" color="white" />
               ) : (
@@ -505,4 +543,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
- 
- 
+
+
 import React, {useEffect, useRef, useState} from 'react';
 import { StyleSheet,
   Text,
@@ -61,7 +61,10 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
             } else {
               Alert.alert('Error', 'Please enter at least 20 characters');
             }
-          }}>
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Preview article"
+          accessibilityHint="Opens the article preview if the article has enough content">
           <Fontisto name="preview" size={26} color="white" />
         </TouchableOpacity>
       ),
@@ -183,7 +186,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   //     // Insert video through local file url
   //     RichText.current?.insertVideo(fileUri);
   //   } else {
-  //     console.log('No video selected');
+  //     console.log('No image selected');
   //   }
   // }
   /*
@@ -290,7 +293,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
           [actions.undo]: ({tintColor}: {tintColor: string}) => (
             <IonIcon name="arrow-undo" color={tintColor} size={28} />
           ),
-          [actions.redo]: ({tintColor}: {tintColor: string}) => (
+          [actions.redo]: ({tintColor}: {tintColor}) => (
             <IonIcon name="arrow-redo" color={tintColor} size={28} />
           ),
           [actions.heading1]: ({tintColor}: {tintColor: string}) => (
@@ -325,6 +328,8 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         initialHeight={650}
         useContainer={true}
         pasteAsPlainText={false}
+        accessibilityLabel="Article editor"
+        accessibilityHint="Enter and edit the content of your article"
       />
 
       {/* Character Count Helper */}
@@ -362,7 +367,10 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
             styles.tabButton,
             activeTab === 'editor' && styles.tabButtonActive,
           ]}
-          onPress={() => setActiveTab('editor')}>
+          onPress={() => setActiveTab('editor')}
+          accessibilityRole="tab"
+          accessibilityLabel="Editor"
+          accessibilityState={{selected: activeTab === 'editor'}}>
           <Text
             style={[
               styles.tabLabel,
@@ -371,12 +379,16 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
             Editor
           </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={[
             styles.tabButton,
             activeTab === 'preview' && styles.tabButtonActive,
           ]}
-          onPress={() => setActiveTab('preview')}>
+          onPress={() => setActiveTab('preview')}
+          accessibilityRole="tab"
+          accessibilityLabel="Preview"
+          accessibilityState={{selected: activeTab === 'preview'}}>
           <Text
             style={[
               styles.tabLabel,
@@ -539,4 +551,3 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
   },
 });
-

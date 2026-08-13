@@ -1,45 +1,50 @@
- 
-import { StyleSheet,
+import {
+  StyleSheet,
   Text,
-   TextInput ,
+  TextInput,
   TouchableOpacity,
   View,
- } from 'react-native';
+} from 'react-native';
 import React, {useState} from 'react';
 import Feather from '@expo/vector-icons/Feather';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import {useForm, Controller} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
-import { passwordSchema, PasswordFormData } from '../../schemas/zod/profileSchemas';
+import {
+  passwordSchema,
+  PasswordFormData,
+} from '../../schemas/zod/profileSchemas';
 
 interface PasswordTabProps {
   handleSubmitPassword: (data: PasswordFormData) => void;
 }
 
-const PasswordTab = ({
-  handleSubmitPassword,
-}: PasswordTabProps) => {
-  const { control, handleSubmit } = useForm<PasswordFormData>({
+const PasswordTab = ({handleSubmitPassword}: PasswordTabProps) => {
+  const {control, handleSubmit} = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema),
     mode: 'onChange',
     defaultValues: {
       old_password: '',
       new_password: '',
       confirm_password: '',
-    }
+    },
   });
+
   // State hooks to manage visibility of passwords
   const [isVisibleOldPassword, setisVisibleOldPassword] = useState(false);
   const [isVisibleNewPassword, setisVisibleNewPassword] = useState(false);
   const [isVisibleConfirmPassword, setisVisibleConfirmPassword] =
     useState(false);
+
   // Toggle functions to change password visibility
   const toggleOldPassword = () => {
     setisVisibleOldPassword(!isVisibleOldPassword);
   };
+
   const toggleNewPassword = () => {
     setisVisibleNewPassword(!isVisibleNewPassword);
   };
+
   const toggleConfirmPassword = () => {
     setisVisibleConfirmPassword(!isVisibleConfirmPassword);
   };
@@ -53,29 +58,57 @@ const PasswordTab = ({
           <Controller
             control={control}
             name="old_password"
-            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+            render={({
+              field: {onChange, onBlur, value},
+              fieldState: {error},
+            }) => (
               <>
                 <View style={styles.passwordContainer}>
                   <TextInput
                     secureTextEntry={!isVisibleOldPassword}
                     placeholder="Enter your current password"
                     placeholderTextColor="#6b7280"
-                    style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
+                    style={[
+                      styles.inputControl,
+                      error && {
+                        borderColor: '#ef4444',
+                        borderWidth: 2,
+                      },
+                    ]}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
+
                   <TouchableOpacity
                     style={styles.eyeIcon}
-                    onPress={toggleOldPassword}>
+                    onPress={toggleOldPassword}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      isVisibleOldPassword
+                        ? 'Hide old password'
+                        : 'Show old password'
+                    }
+                    accessibilityHint="Toggles visibility of the old password">
                     {isVisibleOldPassword ? (
-                      <Feather name="eye-off" color={'#6b7280'} size={20} />
+                      <Feather
+                        name="eye-off"
+                        color={'#6b7280'}
+                        size={20}
+                      />
                     ) : (
-                      <Feather name="eye" color={'#6b7280'} size={20} />
+                      <Feather
+                        name="eye"
+                        color={'#6b7280'}
+                        size={20}
+                      />
                     )}
                   </TouchableOpacity>
                 </View>
-                {error && <Text style={styles.errorText}>{error.message}</Text>}
+
+                {error && (
+                  <Text style={styles.errorText}>{error.message}</Text>
+                )}
               </>
             )}
           />
@@ -87,29 +120,57 @@ const PasswordTab = ({
           <Controller
             control={control}
             name="new_password"
-            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+            render={({
+              field: {onChange, onBlur, value},
+              fieldState: {error},
+            }) => (
               <>
                 <View style={styles.passwordContainer}>
                   <TextInput
                     secureTextEntry={!isVisibleNewPassword}
                     placeholder="At least 8 characters"
                     placeholderTextColor="#6b7280"
-                    style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
+                    style={[
+                      styles.inputControl,
+                      error && {
+                        borderColor: '#ef4444',
+                        borderWidth: 2,
+                      },
+                    ]}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
+
                   <TouchableOpacity
                     style={styles.eyeIcon}
-                    onPress={toggleNewPassword}>
+                    onPress={toggleNewPassword}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      isVisibleNewPassword
+                        ? 'Hide new password'
+                        : 'Show new password'
+                    }
+                    accessibilityHint="Toggles visibility of the new password">
                     {isVisibleNewPassword ? (
-                      <Feather name="eye-off" color={'#6b7280'} size={20} />
+                      <Feather
+                        name="eye-off"
+                        color={'#6b7280'}
+                        size={20}
+                      />
                     ) : (
-                      <Feather name="eye" color={'#6b7280'} size={20} />
+                      <Feather
+                        name="eye"
+                        color={'#6b7280'}
+                        size={20}
+                      />
                     )}
                   </TouchableOpacity>
                 </View>
-                {error && <Text style={styles.errorText}>{error.message}</Text>}
+
+                {error && (
+                  <Text style={styles.errorText}>{error.message}</Text>
+                )}
               </>
             )}
           />
@@ -121,29 +182,57 @@ const PasswordTab = ({
           <Controller
             control={control}
             name="confirm_password"
-            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+            render={({
+              field: {onChange, onBlur, value},
+              fieldState: {error},
+            }) => (
               <>
                 <View style={styles.passwordContainer}>
                   <TextInput
                     secureTextEntry={!isVisibleConfirmPassword}
                     placeholder="Re-enter your new password"
                     placeholderTextColor="#6b7280"
-                    style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
+                    style={[
+                      styles.inputControl,
+                      error && {
+                        borderColor: '#ef4444',
+                        borderWidth: 2,
+                      },
+                    ]}
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
+
                   <TouchableOpacity
                     style={styles.eyeIcon}
-                    onPress={toggleConfirmPassword}>
+                    onPress={toggleConfirmPassword}
+                    accessibilityRole="button"
+                    accessibilityLabel={
+                      isVisibleConfirmPassword
+                        ? 'Hide confirm password'
+                        : 'Show confirm password'
+                    }
+                    accessibilityHint="Toggles visibility of the confirm password">
                     {isVisibleConfirmPassword ? (
-                      <Feather name="eye-off" color={'#6b7280'} size={20} />
+                      <Feather
+                        name="eye-off"
+                        color={'#6b7280'}
+                        size={20}
+                      />
                     ) : (
-                      <Feather name="eye" color={'#6b7280'} size={20} />
+                      <Feather
+                        name="eye"
+                        color={'#6b7280'}
+                        size={20}
+                      />
                     )}
                   </TouchableOpacity>
                 </View>
-                {error && <Text style={styles.errorText}>{error.message}</Text>}
+
+                {error && (
+                  <Text style={styles.errorText}>{error.message}</Text>
+                )}
               </>
             )}
           />
@@ -151,7 +240,12 @@ const PasswordTab = ({
       </View>
 
       {/* Save Button */}
-      <TouchableOpacity onPress={handleSubmit(handleSubmitPassword)} style={styles.btn}>
+      <TouchableOpacity
+        onPress={handleSubmit(handleSubmitPassword)}
+        style={styles.btn}
+        accessibilityRole="button"
+        accessibilityLabel="Save password"
+        accessibilityHint="Saves your new password">
         <Text style={styles.btnText}>Save</Text>
       </TouchableOpacity>
     </View>

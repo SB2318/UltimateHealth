@@ -1,20 +1,26 @@
- 
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
-  View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Platform
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+  Platform,
 } from 'react-native';
 
 export default function WearableSyncCard() {
   const [syncing, setSyncing] = useState(false);
   const [data, setData] = useState<{
-    steps: number; heartRate: number; sleep: number
+    steps: number;
+    heartRate: number;
+    sleep: number;
   } | null>(null);
 
   async function handleSync() {
     setSyncing(true);
     // Dummy data for now — real API baad mein connect karenge
     await new Promise<void>(res => setTimeout(() => res(), 1500));
-    setData({ steps: 7842, heartRate: 72, sleep: 6.5 });
+    setData({steps: 7842, heartRate: 72, sleep: 6.5});
     setSyncing(false);
   }
 
@@ -40,17 +46,28 @@ export default function WearableSyncCard() {
           </View>
         </View>
       ) : (
-        <Text style={styles.hint}>Sync karo apna wearable data dekhne ke liye</Text>
+        <Text style={styles.hint}>
+          Sync karo apna wearable data dekhne ke liye
+        </Text>
       )}
 
       <TouchableOpacity
         style={[styles.button, syncing && styles.buttonDisabled]}
         onPress={handleSync}
-        disabled={syncing}>
-        {syncing
-          ? <ActivityIndicator color="#fff" />
-          : <Text style={styles.buttonText}>🔄 Sync Now</Text>
+        disabled={syncing}
+        accessibilityRole="button"
+        accessibilityLabel={syncing ? 'Syncing wearable data' : 'Sync wearable data'}
+        accessibilityHint={
+          syncing
+            ? 'Please wait while your wearable data is being synchronized'
+            : 'Synchronizes your wearable health data'
         }
+        accessibilityState={{disabled: syncing, busy: syncing}}>
+        {syncing ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.buttonText}>🔄 Sync Now</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -66,18 +83,47 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#ddd',
   },
-  title: { fontSize: 15, fontWeight: '600', color: '#111', marginBottom: 12 },
-  hint: { fontSize: 13, color: '#999', marginBottom: 12 },
-  statsRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
-  stat: { alignItems: 'center' },
-  statValue: { fontSize: 18, fontWeight: '600', color: '#111' },
-  statLabel: { fontSize: 11, color: '#888', marginTop: 2 },
+  title: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#111',
+    marginBottom: 12,
+  },
+  hint: {
+    fontSize: 13,
+    color: '#999',
+    marginBottom: 12,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  stat: {
+    alignItems: 'center',
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111',
+  },
+  statLabel: {
+    fontSize: 11,
+    color: '#888',
+    marginTop: 2,
+  },
   button: {
     backgroundColor: '#378ADD',
     borderRadius: 8,
     padding: 12,
     alignItems: 'center',
   },
-  buttonDisabled: { backgroundColor: '#aac8ef' },
-  buttonText: { color: '#fff', fontSize: 14, fontWeight: '500' },
+  buttonDisabled: {
+    backgroundColor: '#aac8ef',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '500',
+  },
 });

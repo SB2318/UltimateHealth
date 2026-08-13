@@ -587,7 +587,10 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
                   ]}
                   onPress={() => {
                     handleTab(tab);
-                  }}>
+                  }}
+                  accessibilityRole="tab"
+                  accessibilityLabel={tab}
+                  accessibilityState={{selected: currentTab === tab}}>
                   <Text
                     style={[
                       styles.tabText,
@@ -701,4 +704,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileEditScreen;
-

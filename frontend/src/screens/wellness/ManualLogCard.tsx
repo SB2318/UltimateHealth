@@ -1,21 +1,24 @@
- 
 import React, { useState } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet
 } from 'react-native';
+
 
 export default function ManualLogCard() {
   const [water, setWater] = useState(0);
   const [calories, setCalories] = useState(0);
   const [mood, setMood] = useState('');
 
+
   const moods = ['😔', '😐', '🙂', '😄', '🤩'];
   const waterGoal = 2500;
   const calGoal = 2000;
 
+
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>Today&apos;s Log</Text>
+
 
       {/* Water */}
       <View style={styles.card}>
@@ -29,10 +32,15 @@ export default function ManualLogCard() {
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setWater(w => Math.min(w + 250, waterGoal))}>
+          onPress={() => setWater(w => Math.min(w + 250, waterGoal))}
+          accessibilityRole="button"
+          accessibilityLabel="Add 250 milliliters of water"
+          accessibilityHint="Adds 250 milliliters to your water intake"
+        >
           <Text style={styles.buttonText}>+ Add 250 ml</Text>
         </TouchableOpacity>
       </View>
+
 
       {/* Calories */}
       <View style={styles.card}>
@@ -46,17 +54,28 @@ export default function ManualLogCard() {
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setCalories(c => Math.min(c + 300, calGoal))}>
+          onPress={() => setCalories(c => Math.min(c + 300, calGoal))}
+          accessibilityRole="button"
+          accessibilityLabel="Log meal"
+          accessibilityHint="Adds 300 calories to your calorie intake"
+        >
           <Text style={styles.buttonText}>+ Log Meal (300 kcal)</Text>
         </TouchableOpacity>
       </View>
+
 
       {/* Mood */}
       <View style={styles.card}>
         <Text style={styles.label}>😊 Mood</Text>
         <View style={styles.moodRow}>
           {moods.map((m) => (
-            <TouchableOpacity key={m} onPress={() => setMood(m)}>
+            <TouchableOpacity
+              key={m}
+              onPress={() => setMood(m)}
+              accessibilityRole="button"
+              accessibilityLabel={`Select mood ${m}`}
+              accessibilityState={{ selected: mood === m }}
+            >
               <Text style={[
                 styles.moodEmoji,
                 mood === m && styles.moodSelected
@@ -69,6 +88,7 @@ export default function ManualLogCard() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: { padding: 16 },

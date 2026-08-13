@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
- 
+
 import {useCallback, useEffect, useState} from 'react';
 import {Alert, StyleSheet} from 'react-native';
 import {PodcastPlayerScreenProps} from '../../schemas/type';
@@ -28,7 +28,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const [position, setPosition] = useState(0);
   const [speed, setSpeed] = useState(1);
   const [isSpeedSelectorVisible, setIsSpeedSelectorVisible] = useState(false);
-  
+
   const [duration, setDuration] = useState(0);
   const theme = useTheme();
   const {title, description, selectedGenres, imageUtils, filePath} =
@@ -44,11 +44,12 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const {mutate: uploadPodcast, isPending: uploadPodcastPending} =
     useUploadPodcast();
 
- const player = useAudioPlayer(
-  filePath ? `file://${filePath}` : null
-);
+  const player = useAudioPlayer(
+    filePath ? `file://${filePath}` : null,
+  );
 
   const formatPlaybackSpeed = (playbackSpeed: number) => `${playbackSpeed}x`;
+
   const formatSecTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
@@ -67,18 +68,21 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const [uiState, setUiState] = useState<
     'idle' | 'recording' | 'review' | 'playing' | 'paused' | 'uploading'
   >('idle');
+
   const [uploading, setUploading] = useState(false);
 
   // Handle transitions
 
   const handlePlay = async () => {
     if (!player) return;
+
     // If the track has fully finished, restart from the beginning.
     // Otherwise resume from the current paused position.
     if (duration > 0 && !isNaN(duration) && position >= duration - 0.5) {
       await player.seekTo(0);
       setPosition(0);
     }
+
     player.play();
     setUiState('playing');
     setIsPlaying(true);
@@ -86,13 +90,13 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
 
   const handlePause = async () => {
     console.log('Pause called');
+
     if (!player) return;
+
     player.pause();
     setUiState('paused');
     setIsPlaying(false);
   };
-
-
 
   const SKIP_TIME = 5; // seconds
 
@@ -126,6 +130,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
     if (filePath) {
       try {
         const exists = await RNFS.exists(filePath);
+
         if (exists) {
           await RNFS.unlink(filePath);
           console.log('File deleted:', filePath);
@@ -168,6 +173,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
     try {
       // Show confirmation alert
       const confirmation = await showConfirmationAlert();
+
       if (!confirmation) {
         return;
       }
@@ -203,25 +209,34 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
                 text: 'Podcast submitted for review',
                 duration: Snackbar.LENGTH_SHORT,
               });
+
               navigation.navigate('TabNavigation');
             },
+
             onError: async error => {
               // Handle upload error
               await handleUpload();
+
               Snackbar.show({
                 text: 'Upload failed',
                 duration: Snackbar.LENGTH_SHORT,
               });
+
               console.error('Upload error:', error);
             },
           },
         );
       } else {
-        Alert.alert('Error', 'Could not upload the podcast. Please try again.');
+        Alert.alert(
+          'Error',
+          'Could not upload the podcast. Please try again.',
+        );
       }
     } catch (err) {
       console.error('Image processing failed:', err);
+
       Alert.alert('Error', 'Could not process the images.');
+
       await handleUpload();
     }
   };
@@ -258,6 +273,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         'JPEG', // Format
         100, // Quality
       );
+
       return resizedImageUri;
     } catch (err) {
       console.error('Failed to resize image:', err);
@@ -270,6 +286,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
 
     const interval = setInterval(() => {
       const status = player.currentStatus;
+
       if (status) {
         setPosition(status.currentTime);
         setDuration(player.duration || status.duration || 0);
@@ -288,6 +305,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   // if(uploadPodcastPending){
   //   return <Loader/>
   // }
+
   return (
     <Theme name="dark">
       <YStack
@@ -296,6 +314,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         padding="$5"
         paddingTop="$8"
         justifyContent="space-between">
+
         {/* Header Section */}
         <YStack mb="$4" width="100%" paddingHorizontal="$1">
           <Text
@@ -306,6 +325,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             letterSpacing={1}>
             NOW PLAYING
           </Text>
+
           <Text
             color="#F1F5F9"
             fontSize={28}
@@ -316,6 +336,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             allowFontScaling>
             {title}
           </Text>
+
           <Text
             color="#94A3B8"
             fontSize={16}
@@ -342,9 +363,18 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             onPress={handlePostSubmit}
             pressStyle={{scale: 0.95, backgroundColor: '#334155'}}
             alignSelf="center"
-            justifyContent="center">
-            <AntDesign name="cloud-upload" size={50} color={'#60A5FA'} />
+            justifyContent="center"
+            accessibilityRole="button"
+            accessibilityLabel="Upload podcast"
+            accessibilityHint="Uploads this podcast for review">
+
+            <AntDesign
+              name="cloud-upload"
+              size={50}
+              color={'#60A5FA'}
+            />
           </Circle>
+
           <Text
             marginTop="$3"
             color="#60A5FA"
@@ -366,7 +396,12 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
         </YStack>
 
         {/* Progress Slider Section */}
-        <YStack my="$4" bg="#1E293B" borderRadius={16} padding="$4">
+        <YStack
+          my="$4"
+          bg="#1E293B"
+          borderRadius={16}
+          padding="$4">
+
           <Slider
             style={styles.slider}
             minimumValue={0}
@@ -383,7 +418,10 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             }}
           />
 
-          <XStack justifyContent="space-between" marginTop="$2">
+          <XStack
+            justifyContent="space-between"
+            marginTop="$2">
+
             <Text
               color="#94A3B8"
               fontSize={14}
@@ -391,6 +429,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
               style={{fontFamily: 'monospace'}}>
               {formatSecTime(position)}
             </Text>
+
             <Text
               color="#94A3B8"
               fontSize={14}
@@ -398,6 +437,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
               style={{fontFamily: 'monospace'}}>
               {formatSecTime(duration)}
             </Text>
+
           </XStack>
         </YStack>
 
@@ -408,17 +448,29 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
           marginTop="$5"
           marginBottom="$4"
           space="$6">
+
           {/* Backward Button */}
           <Circle
             size={65}
             backgroundColor="#1E293B"
             borderWidth={2}
             borderColor="#334155"
-            pressStyle={{scale: 0.9, backgroundColor: '#334155'}}
+            pressStyle={{
+              scale: 0.9,
+              backgroundColor: '#334155',
+            }}
             onPress={handleBackward}
             justifyContent="center"
-            alignItems="center">
-            <Ionicons name="play-back" size={28} color="#94A3B8" />
+            alignItems="center"
+            accessibilityRole="button"
+            accessibilityLabel="Go back 5 seconds"
+            accessibilityHint="Moves the podcast playback back by 5 seconds">
+
+            <Ionicons
+              name="play-back"
+              size={28}
+              color="#94A3B8"
+            />
           </Circle>
 
           {/* Play/Pause Button */}
@@ -439,11 +491,31 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
               }
             }}
             justifyContent="center"
-            alignItems="center">
+            alignItems="center"
+            accessibilityRole="button"
+            accessibilityLabel={
+              player?.currentStatus.playing
+                ? 'Pause podcast'
+                : 'Play podcast'
+            }
+            accessibilityHint={
+              player?.currentStatus.playing
+                ? 'Pauses the podcast'
+                : 'Starts playing the podcast'
+            }>
+
             {player?.currentStatus.playing ? (
-              <Ionicons name="pause" size={45} color="white" />
+              <Ionicons
+                name="pause"
+                size={45}
+                color="white"
+              />
             ) : (
-              <Ionicons name="play" size={45} color="white" />
+              <Ionicons
+                name="play"
+                size={45}
+                color="white"
+              />
             )}
           </Circle>
 
@@ -456,9 +528,19 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             backgroundColor="$backgroundHover"
             borderWidth={1}
             borderColor="$borderColor"
-            pressStyle={{scale: 0.94, backgroundColor: '$backgroundPress'}}
-            onPress={() => setIsSpeedSelectorVisible(true)}>
-            <Text color="$color" fontSize={14} fontWeight="800">
+            pressStyle={{
+              scale: 0.94,
+              backgroundColor: '$backgroundPress',
+            }}
+            onPress={() => setIsSpeedSelectorVisible(true)}
+            accessibilityRole="button"
+            accessibilityLabel={`Playback speed ${formatPlaybackSpeed(speed)}`}
+            accessibilityHint="Opens playback speed options">
+
+            <Text
+              color="$color"
+              fontSize={14}
+              fontWeight="800">
               {formatPlaybackSpeed(speed)}
             </Text>
           </Button>
@@ -469,12 +551,24 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             backgroundColor="#1E293B"
             borderWidth={2}
             borderColor="#334155"
-            pressStyle={{scale: 0.9, backgroundColor: '#334155'}}
+            pressStyle={{
+              scale: 0.9,
+              backgroundColor: '#334155',
+            }}
             onPress={handleForward}
             justifyContent="center"
-            alignItems="center">
-            <Ionicons name="play-forward" size={28} color="#94A3B8" />
+            alignItems="center"
+            accessibilityRole="button"
+            accessibilityLabel="Go forward 5 seconds"
+            accessibilityHint="Moves the podcast playback forward by 5 seconds">
+
+            <Ionicons
+              name="play-forward"
+              size={28}
+              color="#94A3B8"
+            />
           </Circle>
+
         </XStack>
 
         {/* Footer Info */}
@@ -514,15 +608,16 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginBottom: 2,
   },
+
   timeRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 4,
     marginBottom: 12,
   },
+
   time: {
     fontSize: 13,
     color: '#777',
   },
 });
-

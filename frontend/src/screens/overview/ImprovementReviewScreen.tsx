@@ -172,7 +172,10 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
                 {
                   backgroundColor: 'white',
                 },
-              ]}>
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Edit article"
+              accessibilityHint="Opens the article editor">
               <FontAwesome5 name="pencil-alt" size={24} color={PRIMARY_COLOR} />
             </TouchableOpacity>
           )}
@@ -368,6 +371,8 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
                borderColor={PRIMARY_COLOR}
                   backgroundColor="#fff"
                    textAlignVertical="top"
+                  accessibilityLabel="Comment"
+                  accessibilityHint="Enter your thoughts or ask a question"
                   />
 
             {feedback.length > 0 && (
@@ -397,7 +402,10 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
                       }
 
                       setFeedback('');
-                    }}>
+                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel="Post Comment"
+                    accessibilityHint="Posts your comment">
                     <Text color="#ffffff" fontSize={16} fontWeight="700">
                       Post Comment
                     </Text>
@@ -443,7 +451,10 @@ const ImprovementReviewScreen = ({navigation, route}: ImpvReviewScreenProp) => {
               navigation.navigate('UserProfileScreen', {
                 authorId: authorId,
               });
-            }}>
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={`View profile of ${user ? user.user_name : 'author'}`}
+            accessibilityHint="Opens the author's profile">
             {user && user.Profile_image && user.Profile_image !== '' ? (
               <Image
                 source={{
@@ -691,4 +702,3 @@ const styles = StyleSheet.create({
     marginBottom: hp(0.8),
   },
 });
-

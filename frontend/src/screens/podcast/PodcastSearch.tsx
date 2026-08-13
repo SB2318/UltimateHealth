@@ -1,8 +1,6 @@
- 
- 
 // PodcastSearch.tsx
 import React, {useEffect, useState, useCallback} from 'react';
-import { Pressable,  FlatList , AccessibilityInfo } from 'react-native';
+import {Pressable, FlatList, AccessibilityInfo} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {PodcastData, PodcastSearchProp} from '../../schemas/type';
 
@@ -17,9 +15,12 @@ import {XStack, YStack, Input, Separator, Text, useTheme} from 'tamagui';
 import {Feather} from '@expo/vector-icons';
 import {useUpdatePodcastViewcount} from '../../hooks/podcast/useUpdatePodcastViewcount';
 import {useGetSearchPodcasts} from '../../hooks/podcast/useGetSearchPodcasts';
-import { sanitizeSearchInput, isValidSearchInput } from '../../lib/utils/SearchUtils';
-import { useDebounce } from '../../hooks/useDebounce';
-import { useColorScheme } from 'react-native-gifted-chat/lib/hooks/useColorScheme';
+import {
+  sanitizeSearchInput,
+  isValidSearchInput,
+} from '../../lib/utils/SearchUtils';
+import {useDebounce} from '../../hooks/useDebounce';
+import {useColorScheme} from 'react-native-gifted-chat/lib/hooks/useColorScheme';
 
 const SKELETON_COUNT = 5;
 const SEARCH_DEBOUNCE_MS = 350;
@@ -82,13 +83,18 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
 
   useEffect(() => {
     if (isLoading && debouncedQuery !== '') {
-      AccessibilityInfo.announceForAccessibility('Loading podcast results');
+      AccessibilityInfo.announceForAccessibility(
+        'Loading podcast results',
+      );
     }
   }, [isLoading, debouncedQuery]);
 
   const renderItem = ({item}: {item: PodcastData}) => (
     <Pressable
       style={{padding: 10}}
+      accessibilityRole="button"
+      accessibilityLabel={`Open podcast ${item?.title || ''}`}
+      accessibilityHint="Opens the podcast details"
       onPress={() => {
         if (item) {
           updateViewCount(item._id, {
@@ -149,7 +155,10 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
     <YStack
       flex={1}
       height={'100%'}
-      backgroundColor={theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')}
+      backgroundColor={
+        theme?.background?.val ??
+        (isDarkMode ? '#121212' : '#ffffff')
+      }
       paddingTop="$2"
       justifyContent="flex-start">
 
@@ -159,14 +168,34 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
         paddingTop="$7"
         paddingBottom="$3"
         backgroundColor={theme.backgroundStrong?.val}>
+
         <YStack marginBottom="$3">
           <XStack alignItems="center" gap="$3">
-            <Feather name="mic" size={24} color={PRIMARY_COLOR} />
+            <Feather
+              name="mic"
+              size={24}
+              color={PRIMARY_COLOR}
+              accessible={false}
+            />
+
             <YStack>
-              <Text style={{fontSize: 24, fontWeight: '800', color: theme?.color?.val ?? (isDarkMode ? '#ffffff' : '#000000')}}>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: '800',
+                  color:
+                    theme?.color?.val ??
+                    (isDarkMode ? '#ffffff' : '#000000'),
+                }}>
                 Discover Podcasts
               </Text>
-              <Text style={{fontSize: 13, color: theme.colorMuted?.val, marginTop: 2}}>
+
+              <Text
+                style={{
+                  fontSize: 13,
+                  color: theme.colorMuted?.val,
+                  marginTop: 2,
+                }}>
                 {searchData.length > 0
                   ? `${searchData.length} results found`
                   : 'Search for your favorite content'}
@@ -177,24 +206,36 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
 
         {/* Search Bar */}
         <XStack
+          accessible={false}
           alignItems="center"
           backgroundColor={theme.backgroundHover?.val}
           borderRadius={12}
           paddingHorizontal="$3"
           paddingVertical="$2"
           borderWidth={1.5}
-          borderColor={query ? PRIMARY_COLOR : theme.borderColor?.val ?? 'transparent'}
+          borderColor={
+            query
+              ? PRIMARY_COLOR
+              : theme.borderColor?.val ?? 'transparent'
+          }
           gap="$3"
           shadowColor="#000"
           shadowOffset={{width: 0, height: 2}}
           shadowOpacity={query ? 0.1 : 0.05}
           shadowRadius={4}
           elevation={query ? 3 : 1}>
+
           <Feather
             name="search"
             size={20}
-            color={query ? PRIMARY_COLOR : (theme.colorMuted?.val as string)}
+            color={
+              query
+                ? PRIMARY_COLOR
+                : (theme.colorMuted?.val as string)
+            }
+            accessible={false}
           />
+
           <Input
             flex={1}
             size="$5"
@@ -207,14 +248,22 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
             color={theme.color?.val ?? '#000'}
             fontSize={14}
             fontWeight="500"
+            accessible={true}
+            accessibilityRole="search"
+            accessibilityLabel="Search podcasts"
+            accessibilityHint="Enter a podcast title, topic, or host to search"
             focusStyle={{
               outlineWidth: 0,
               borderColor: 'transparent',
               boxShadow: 'none',
             }}
           />
+
           {query ? (
             <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Clear podcast search"
+              accessibilityHint="Clears the current search text"
               onPress={() => {
                 setQuery('');
                 setDebouncedQuery('');
@@ -222,23 +271,33 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                 setTotalPages(0);
                 setSearchData([]);
               }}>
-              <Feather name="x-circle" size={18} color={theme.colorMuted?.val as string} />
+              <Feather
+                name="x-circle"
+                size={18}
+                color={theme.colorMuted?.val as string}
+                accessible={false}
+              />
             </Pressable>
           ) : null}
         </XStack>
       </YStack>
 
-      <Separator borderColor={theme.borderColor?.val ?? 'transparent'} />
+      <Separator
+        borderColor={theme.borderColor?.val ?? 'transparent'}
+      />
 
       {/* Results / Skeleton Section */}
       <YStack paddingHorizontal="$3" flex={1}>
         {isLoading && debouncedQuery !== '' ? (
           <FlatList
             data={Array.from({length: SKELETON_COUNT}, (_, i) => i)}
-            keyExtractor={(_: number, index: number) => `skeleton-${index}`}
+            keyExtractor={(_: number, index: number) =>
+              `skeleton-${index}`
+            }
             renderItem={() => <PodcastSkeletonCard />}
             scrollEnabled={false}
             contentContainerStyle={listContentStyle}
+            accessibilityLabel="Loading podcast search results"
           />
         ) : (
           <FlatList
@@ -247,12 +306,15 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
             renderItem={renderItem}
             ListHeaderComponent={
               debouncedQuery !== '' && searchData.length > 0 ? (
-                <YStack paddingVertical="$3" paddingHorizontal="$2">
+                <YStack
+                  paddingVertical="$3"
+                  paddingHorizontal="$2">
                   <Text
                     fontSize={13}
                     fontWeight="700"
                     color={theme.colorMuted?.val}
-                    letterSpacing={1}>
+                    letterSpacing={1}
+                    accessibilityRole="header">
                     SEARCH RESULTS
                   </Text>
                 </YStack>
@@ -261,14 +323,27 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
             ListEmptyComponent={
               debouncedQuery === '' ? (
                 <YStack
+                  accessible={true}
+                  accessibilityLabel="Start your search"
                   alignItems="center"
                   justifyContent="center"
                   paddingVertical="$10"
                   gap="$3">
-                  <Feather name="headphones" size={64} color={theme.colorMuted?.val as string} />
-                  <Text fontSize={18} fontWeight="700" color={theme.colorMuted?.val}>
+
+                  <Feather
+                    name="headphones"
+                    size={64}
+                    color={theme.colorMuted?.val as string}
+                    accessible={false}
+                  />
+
+                  <Text
+                    fontSize={18}
+                    fontWeight="700"
+                    color={theme.colorMuted?.val}>
                     Start Your Search
                   </Text>
+
                   <Text
                     fontSize={14}
                     color={theme.colorMuted?.val}
@@ -279,6 +354,8 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                 </YStack>
               ) : (
                 <YStack
+                  accessible={true}
+                  accessibilityLabel="No podcast search results found"
                   alignItems="center"
                   justifyContent="center"
                   paddingVertical="$8">
@@ -287,15 +364,17 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
               )
             }
             onEndReached={() => {
-              if (page < totalPages) setPage(prev => prev + 1);
+              if (page < totalPages) {
+                setPage(prev => prev + 1);
+              }
             }}
             onEndReachedThreshold={0.5}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={listContentStyle}
+            accessibilityLabel="Podcast search results"
           />
         )}
       </YStack>
     </YStack>
   );
 }
-

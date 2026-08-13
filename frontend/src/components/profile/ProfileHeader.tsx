@@ -120,6 +120,9 @@ const ProfileHeader = ({
             !profileImg && {borderWidth: 1, borderColor: themeColors.border},
             { backgroundColor: themeColors.iconBackground }
           ]}
+          accessible={true}
+          accessibilityRole="image"
+          accessibilityLabel={`${username || 'User'} profile picture`}
         />
         <Text style={[styles.nameText, {color: themeColors.text}]} numberOfLines={1}>
           {username || 'Unknown User'}
@@ -202,7 +205,7 @@ const ProfileHeader = ({
               style={[
                 styles.primaryBtn,
                 {
-                  backgroundColor:   PRIMARY_COLOR,
+                  backgroundColor: PRIMARY_COLOR,
                   borderWidth: 1.5,
                   borderColor: isFollowing ? PRIMARY_COLOR : 'transparent',
                 },
@@ -213,7 +216,7 @@ const ProfileHeader = ({
                 size={20}
                 color={'white'}
               />
-              <Text style={[styles.primaryBtnText, {color:  'white' }]}>
+              <Text style={[styles.primaryBtnText, {color: 'white' }]}>
                 {isFollowing ? 'Following' : 'Follow'}
               </Text>
             </AccessibleTouchable>
@@ -239,8 +242,8 @@ const ProfileHeader = ({
           <Pressable
             onPress={onFollowerPress}
             style={styles.statItem}
-
-            accessibilityLabel="Followers"
+            accessibilityRole="button"
+            accessibilityLabel={`Followers: ${followers || 0}`}
             accessibilityHint="Opens followers list"
           >
             <Text style={[styles.statValue, {color: themeColors.text}]} numberOfLines={1}>{followers || 0}</Text>
@@ -252,8 +255,8 @@ const ProfileHeader = ({
           <Pressable
             onPress={onFollowingPress}
             style={styles.statItem}
-
-            accessibilityLabel="Following"
+            accessibilityRole="button"
+            accessibilityLabel={`Following: ${followings || 0}`}
             accessibilityHint="Opens following users list"
           >
             <Text style={[styles.statValue, {color: themeColors.text}]} numberOfLines={1}>{followings || 0}</Text>
@@ -471,4 +474,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

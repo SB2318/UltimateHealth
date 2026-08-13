@@ -67,7 +67,14 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
     const coords = event.location?.coordinates;
     if (!coords || !Array.isArray(coords) || coords.length !== 2) return;
     const [longitude, latitude] = coords;
-    if (typeof longitude !== 'number' || typeof latitude !== 'number' || !isFinite(longitude) || !isFinite(latitude)) return;
+    if (
+      typeof longitude !== 'number' ||
+      typeof latitude !== 'number' ||
+      !isFinite(longitude) ||
+      !isFinite(latitude)
+    ) {
+      return;
+    }
 
     const mapUrl = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
     await safeOpenUrl(mapUrl, {
@@ -81,50 +88,109 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
       <StatusBar style={isDark ? 'light' : 'dark'} />
 
       {/* Header */}
-      <View style={[styles.header, { backgroundColor: headerBg, borderBottomColor: headerBorder }]}>
+      <View
+        style={[
+          styles.header,
+          { backgroundColor: headerBg, borderBottomColor: headerBorder },
+        ]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
           accessibilityLabel="Go back"
-          accessibilityRole="button"
-        >
+          accessibilityHint="Returns to the previous screen"
+          accessibilityRole="button">
           <FontAwesome6 name="arrow-left" size={18} color={textColor} />
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: textColor }]}>Event Details</Text>
+
+        <Text
+          style={[styles.headerTitle, { color: textColor }]}
+          accessibilityRole="header">
+          Event Details
+        </Text>
+
         <View style={{ width: wp(10) }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}>
+
         {/* Event Classification Tag */}
-        <View style={[styles.typeBadge, { backgroundColor: theme.bg, borderColor: theme.text }]}>
-          <MaterialCommunityIcons name={theme.icon} size={18} color={theme.text} style={styles.badgeIcon} />
-          <Text style={[styles.typeText, { color: theme.text }]}>{event.type}</Text>
+        <View
+          style={[
+            styles.typeBadge,
+            { backgroundColor: theme.bg, borderColor: theme.text },
+          ]}>
+          <MaterialCommunityIcons
+            name={theme.icon}
+            size={18}
+            color={theme.text}
+            style={styles.badgeIcon}
+            accessible={false}
+          />
+          <Text style={[styles.typeText, { color: theme.text }]}>
+            {event.type}
+          </Text>
         </View>
 
         {/* Event Title */}
-        <Text style={[styles.title, { color: textColor }]}>{event.title}</Text>
+        <Text style={[styles.title, { color: textColor }]}>
+          {event.title}
+        </Text>
 
         {/* Organizer Section */}
-        <View style={[styles.sectionCard, { backgroundColor: cardBg, borderColor: cardBorder }]}>
+        <View
+          style={[
+            styles.sectionCard,
+            { backgroundColor: cardBg, borderColor: cardBorder },
+          ]}>
           <View style={styles.organizerRow}>
-            <View style={[styles.iconContainer, { backgroundColor: 'rgba(0, 10, 96, 0.06)' }]}>
-              <FontAwesome6 name="user-tie" size={16} color={PRIMARY_COLOR} />
+            <View
+              style={[
+                styles.iconContainer,
+                { backgroundColor: 'rgba(0, 10, 96, 0.06)' },
+              ]}>
+              <FontAwesome6
+                name="user-tie"
+                size={16}
+                color={PRIMARY_COLOR}
+                accessible={false}
+              />
             </View>
+
             <View style={styles.organizerDetails}>
-              <Text style={[styles.infoLabel, { color: subtextColor }]}>ORGANIZER</Text>
-              <Text style={[styles.infoValue, { color: textColor }]}>{event.organizer}</Text>
+              <Text style={[styles.infoLabel, { color: subtextColor }]}>
+                ORGANIZER
+              </Text>
+              <Text style={[styles.infoValue, { color: textColor }]}>
+                {event.organizer}
+              </Text>
             </View>
           </View>
         </View>
 
         {/* Event Schedule Info */}
-        <View style={[styles.sectionCard, { backgroundColor: cardBg, borderColor: cardBorder }]}>
-          <Text style={[styles.sectionTitle, { color: textColor }]}>Schedule & Location</Text>
+        <View
+          style={[
+            styles.sectionCard,
+            { backgroundColor: cardBg, borderColor: cardBorder },
+          ]}>
+          <Text style={[styles.sectionTitle, { color: textColor }]}>
+            Schedule & Location
+          </Text>
 
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="calendar-range" size={20} color={PRIMARY_COLOR} style={styles.infoIcon} />
+            <MaterialCommunityIcons
+              name="calendar-range"
+              size={20}
+              color={PRIMARY_COLOR}
+              style={styles.infoIcon}
+              accessible={false}
+            />
             <View style={styles.infoTextWrapper}>
-              <Text style={[styles.infoLabel, { color: subtextColor }]}>DATE</Text>
+              <Text style={[styles.infoLabel, { color: subtextColor }]}>
+                DATE
+              </Text>
               <Text style={[styles.infoValue, { color: textColor }]}>
                 {formatDateShortYear(event.date)}
               </Text>
@@ -134,20 +200,41 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
           <View style={[styles.divider, { backgroundColor: cardBorder }]} />
 
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="clock-time-four-outline" size={20} color={PRIMARY_COLOR} style={styles.infoIcon} />
+            <MaterialCommunityIcons
+              name="clock-time-four-outline"
+              size={20}
+              color={PRIMARY_COLOR}
+              style={styles.infoIcon}
+              accessible={false}
+            />
             <View style={styles.infoTextWrapper}>
-              <Text style={[styles.infoLabel, { color: subtextColor }]}>TIME</Text>
-              <Text style={[styles.infoValue, { color: textColor }]}>{event.time}</Text>
+              <Text style={[styles.infoLabel, { color: subtextColor }]}>
+                TIME
+              </Text>
+              <Text style={[styles.infoValue, { color: textColor }]}>
+                {event.time}
+              </Text>
             </View>
           </View>
 
           {distance !== undefined ? (
             <>
-              <View style={[styles.divider, { backgroundColor: cardBorder }]} />
+              <View
+                style={[styles.divider, { backgroundColor: cardBorder }]}
+              />
+
               <View style={styles.infoRow}>
-                <MaterialIcons name="navigation" size={20} color={PRIMARY_COLOR} style={styles.infoIcon} />
+                <MaterialIcons
+                  name="navigation"
+                  size={20}
+                  color={PRIMARY_COLOR}
+                  style={styles.infoIcon}
+                  accessible={false}
+                />
                 <View style={styles.infoTextWrapper}>
-                  <Text style={[styles.infoLabel, { color: subtextColor }]}>DISTANCE</Text>
+                  <Text style={[styles.infoLabel, { color: subtextColor }]}>
+                    DISTANCE
+                  </Text>
                   <Text style={[styles.infoValue, { color: textColor }]}>
                     {formatDistance(distance)} away
                   </Text>
@@ -159,10 +246,20 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
           <View style={[styles.divider, { backgroundColor: cardBorder }]} />
 
           <View style={styles.infoRow}>
-            <MaterialCommunityIcons name="map-marker-radius" size={20} color={PRIMARY_COLOR} style={styles.infoIcon} />
+            <MaterialCommunityIcons
+              name="map-marker-radius"
+              size={20}
+              color={PRIMARY_COLOR}
+              style={styles.infoIcon}
+              accessible={false}
+            />
             <View style={styles.infoTextWrapper}>
-              <Text style={[styles.infoLabel, { color: subtextColor }]}>ADDRESS</Text>
-              <Text style={[styles.infoValue, { color: textColor }]}>{event.address}</Text>
+              <Text style={[styles.infoLabel, { color: subtextColor }]}>
+                ADDRESS
+              </Text>
+              <Text style={[styles.infoValue, { color: textColor }]}>
+                {event.address}
+              </Text>
             </View>
           </View>
 
@@ -170,25 +267,47 @@ const EventDetailsScreen = ({ route, navigation }: EventDetailsScreenProps) => {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={handleOpenMaps}
-              style={[styles.directionsButton, { backgroundColor: PRIMARY_COLOR }]}
+              style={[
+                styles.directionsButton,
+                { backgroundColor: PRIMARY_COLOR },
+              ]}
               accessibilityLabel="Get directions in Google Maps"
-              accessibilityRole="button"
-            >
-              <MaterialCommunityIcons name="google-maps" size={20} color="white" style={{ marginRight: 6 }} />
+              accessibilityHint="Opens the event location in Google Maps"
+              accessibilityRole="button">
+              <MaterialCommunityIcons
+                name="google-maps"
+                size={20}
+                color="white"
+                style={{ marginRight: 6 }}
+                accessible={false}
+              />
               <Text style={styles.directionsText}>Get Directions</Text>
             </TouchableOpacity>
           ) : null}
         </View>
 
         {/* Description Section */}
-        <View style={[styles.sectionCard, { backgroundColor: cardBg, borderColor: cardBorder }]}>
-          <Text style={[styles.sectionTitle, { color: textColor }]}>About the Event</Text>
-          <Text style={[styles.description, { color: textColor }]}>{event.description}</Text>
+        <View
+          style={[
+            styles.sectionCard,
+            { backgroundColor: cardBg, borderColor: cardBorder },
+          ]}>
+          <Text style={[styles.sectionTitle, { color: textColor }]}>
+            About the Event
+          </Text>
+          <Text style={[styles.description, { color: textColor }]}>
+            {event.description}
+          </Text>
         </View>
 
         {/* Safe Footnote */}
         <View style={styles.footnoteWrapper}>
-          <MaterialIcons name="security" size={14} color={subtextColor} />
+          <MaterialIcons
+            name="security"
+            size={14}
+            color={subtextColor}
+            accessible={false}
+          />
           <Text style={[styles.footnote, { color: subtextColor }]}>
             Verified event listed on UltimateHealth platform.
           </Text>

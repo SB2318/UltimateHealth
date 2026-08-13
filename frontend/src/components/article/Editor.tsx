@@ -205,7 +205,9 @@ export default function Editor({
           // emit socket event for feedback
           const ans = createFeebackHTMLStructure(feedback);
           callback(ans);
-        }}>
+        }}
+        accessibilityRole="button"
+        accessibilityLabel="Submit feedback">
         <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
     </View>
