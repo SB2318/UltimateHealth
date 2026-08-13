@@ -39,21 +39,17 @@ const NotificationPreferencesScreen = ({
   const {data: preferencesData, isLoading: prefsLoading} =
     useGetNotificationPreferences(isConnected);
 
-  console.log("Preference data", preferencesData);
   // Mutation to save
   const {mutate: updatePreferences, isPending: isSaving} =
     useUpdateNotificationPreferences();
 
   // Pre-fill selections once both data sets are ready
   useEffect(() => {
-    console.log('Fetched Preferences Data:', preferencesData);
     if (preferencesData) {
       // Support both { preferences: { contentClusters: [] } } and { contentClusters: [] }
       const clusters =
         preferencesData.preferences?.contentClusters ||
         preferencesData.contentClusters;
-
-      console.log("Clusters", clusters);
 
       if (Array.isArray(clusters)) {
         setSelectedIds(clusters.map(cluster => cluster._id));
@@ -121,7 +117,6 @@ const NotificationPreferencesScreen = ({
       {contentClusters: payload},
       {
         onSuccess: () => {
-          console.log('Preferences saved successfully:', selectedIds);
           queryClient.invalidateQueries({
             queryKey: ['notification-preferences'],
           });
