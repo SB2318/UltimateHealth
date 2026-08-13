@@ -156,3 +156,11 @@ jest.mock('react-native-tts', () => ({
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
 }));
+
+jest.mock('@react-native-community/netinfo', () => {
+  return {
+    addEventListener: jest.fn(() => jest.fn()),
+    fetch: jest.fn(() => Promise.resolve({ isConnected: true, isInternetReachable: true })),
+    useNetInfo: jest.fn(() => ({ isConnected: true, isInternetReachable: true })),
+  };
+});

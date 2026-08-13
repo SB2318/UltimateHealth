@@ -13,6 +13,7 @@ import {
   teardownExpiredSession,
 } from './sessionTeardown';
 import {logApiError} from '../services/monitoring/networkLogger';
+import {enqueueOfflineWrite} from './offlineQueue';
 
 /**
  * Module-scoped flag to suppress duplicate "session expired" notifications
@@ -62,6 +63,14 @@ export const resetSessionExpiredNotification = (): void => {
 const handleError = async (error: any) => {
   // Log the API error securely without exposing secrets
   logApiError(error, undefined, {handler: 'axiosInterceptor'});
+
+  const isNetworkError = !error.response && error.isAxiosError;
+  const method = error.config?.method?.toUpperCase();
+  
+  if (isNetworkError && method && method !== 'GET') {
+    const { url, method: configMethod, data, headers } = error.config;
+    await enqueueOfflineWrite({ url, method: configMethod, data, headers });
+  }
 
   if (error?.response?.status === 401) {
     try {
