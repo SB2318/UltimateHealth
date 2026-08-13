@@ -41,9 +41,10 @@ export default function ScrollToTop() {
     <button
       className="scroll-to-top" title="Back to top"
       onClick={scrollToTop}
-      aria-label="Scroll to top"
+      aria-label="Scroll back to top"
+      title="Back to top"
     >
-      <svg className="progress-ring" width="56" height="56">
+      <svg className="progress-ring" width="56" height="56" aria-hidden="true">
         <circle
           cx="28"
           cy="28"
@@ -60,7 +61,7 @@ export default function ScrollToTop() {
         />
       </svg>
 
-      <span className="arrow">↑</span>
+      <span className="arrow" aria-hidden="true">↑</span>
     </button>
   );
 }
