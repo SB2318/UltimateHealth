@@ -310,24 +310,22 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 maxLength={100}
                 style={[
                   styles.inputControl,
-                  submitted && titleError ? styles.inputControlError : null,
+                  titleError ? styles.inputControlError : null,
                 ]}
                 value={title}
                 onChangeText={(text: string) => {
                   setTitle(text);
-                  if (submitted) {
-                    if (!text.trim()) {
-                      setTitleError('Podcast title is required.');
-                    } else if (text.trim().length < 3) {
-                      setTitleError('Title must be at least 3 characters.');
-                    } else {
-                      setTitleError('');
-                    }
+                  if (!text.trim()) {
+                    setTitleError('Podcast title is required.');
+                  } else if (text.trim().length < 3) {
+                    setTitleError('Title must be at least 3 characters.');
+                  } else {
+                    setTitleError('');
                   }
                 }}
               />
               <Text style={styles.charCounter}>{title.length}/100</Text>
-              {submitted && titleError ? (
+              {titleError ? (
                 <Text style={styles.errorText}>{titleError}</Text>
               ) : null}
             </View>
@@ -358,7 +356,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 textAlignVertical="top"
                 style={[
                   styles.aboutInput,
-                  submitted && descriptionError ? styles.inputControlError : null,
+                  descriptionError ? styles.inputControlError : null,
                 ]}
                 multiline
                 numberOfLines={4}
@@ -367,20 +365,18 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 onChangeText={(text: string) => {
                   if (text.length <= 160) {
                     setDescription(text);
-                    if (submitted) {
-                      if (!text.trim()) {
-                        setDescriptionError('Please provide a description for your podcast.');
-                      } else if (text.trim().length < 10) {
-                        setDescriptionError('Description must be at least 10 characters.');
-                      } else {
-                        setDescriptionError('');
-                      }
+                    if (!text.trim()) {
+                      setDescriptionError('Please provide a description for your podcast.');
+                    } else if (text.trim().length < 10) {
+                      setDescriptionError('Description must be at least 10 characters.');
+                    } else {
+                      setDescriptionError('');
                     }
                   }
                 }}
               />
               <Text style={styles.charCounter}>{description.length}/160</Text>
-              {submitted && descriptionError ? (
+              {descriptionError ? (
                 <Text style={styles.errorText}>{descriptionError}</Text>
               ) : null}
             </View>
