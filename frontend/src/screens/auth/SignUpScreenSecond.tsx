@@ -129,7 +129,6 @@ const SignupPageSecond = ({navigation, route}: SignUpScreenSecondProp) => {
               }
             }
           } else {
-            console.log('General User Registration Error', err);
             Alert.alert('Registration failed', 'Please try again');
           }
         },

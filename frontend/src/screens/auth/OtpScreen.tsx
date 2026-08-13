@@ -56,7 +56,6 @@ export default function OtpScreen({navigation, route}: OtpScreenProp) {
             });
           },
           onError: (error: AxiosError) => {
-            console.log('OTP ERROR', error);
             setErrorMessages(['The code you entered is invalid or has expired. Please try again.']);
             Alert.alert('Invalid or expired OTP', 'Please request a new code and try again.');
           },

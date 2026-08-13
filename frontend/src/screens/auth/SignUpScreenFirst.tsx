@@ -172,7 +172,6 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                   });
               }
             } else {
-              console.log('Email Verification error', err);
               Snackbar.show({
                 text: 'An error occured, try again!',
                 duration: Snackbar.LENGTH_SHORT,
@@ -274,7 +273,6 @@ const SignupPageFirst = ({navigation}: SignUpScreenFirstProp) => {
                 );
             }
           } else {
-            console.log('General User Registration Error', err);
             Alert.alert('Registration failed', 'Please try again');
           }
         },
