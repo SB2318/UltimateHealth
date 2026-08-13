@@ -3,7 +3,12 @@ import {Alert} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import authAxios from '../../../lib/api/authAxios';
 import store from '../../../store/ReduxStore';
-import {setUserHandle, setUserId, setUserToken} from '../../../store/UserSlice';
+import {
+  setGuestMode,
+  setUserHandle,
+  setUserId,
+  setUserToken,
+} from '../../../store/UserSlice';
 import {SECURE_KEYS} from '../../../lib/storage/SecureStorageUtils';
 import {
   resetSessionExpiredNotification,
@@ -25,6 +30,11 @@ let secureStoreData: Record<string, string> = {};
 let deleteGate: Promise<void> | null = null;
 
 const unauthorizedError = () => ({response: {status: 401}});
+
+const unauthorizedErrorFor = (url: string) => ({
+  response: {status: 401},
+  config: {url},
+});
 
 const flushMicrotasks = () => new Promise(resolve => setImmediate(resolve));
 
@@ -71,6 +81,7 @@ describe('401 session teardown', () => {
     store.dispatch(setUserToken('stale-token'));
     store.dispatch(setUserId('user-1'));
     store.dispatch(setUserHandle('@user'));
+    store.dispatch(setGuestMode(false));
   });
 
   afterEach(() => {
@@ -214,5 +225,48 @@ describe('401 session teardown', () => {
 
     expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
     expect(store.getState().user.user_token).toBe('stale-token');
+  });
+
+  describe('auth-attempt 401 (#2366)', () => {
+    const authAttemptUrls = [
+      '/api/user/login',
+      '/api/user/register',
+      '/api/user/forgotpassword',
+      '/api/user/verifyOtp',
+      '/api/user/verifypassword',
+      '/api/user/update-password',
+      '/api/user/verifyEmail',
+      '/api/user/resend-verification-mail',
+    ];
+
+    it.each(authAttemptUrls)(
+      'does NOT tear down the session when %s rejects with 401',
+      async url => {
+        setupAxiosInterceptor();
+        const onError = getResponseErrorHandler();
+
+        const error = unauthorizedErrorFor(url);
+        await expect(onError(error)).rejects.toBe(error);
+
+        expect(SecureStore.deleteItemAsync).not.toHaveBeenCalled();
+        const state = store.getState().user;
+        expect(state.user_token).toBe('stale-token');
+        expect(state.isGuest).toBe(false);
+      },
+    );
+
+    it('tears down for a 401 on a protected resource (getprofile)', async () => {
+      setupAxiosInterceptor();
+      const onError = getResponseErrorHandler();
+
+      await expect(
+        onError(unauthorizedErrorFor('/api/user/getprofile')),
+      ).rejects.toBeDefined();
+
+      expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith(
+        SECURE_KEYS.USER_TOKEN,
+      );
+      expect(store.getState().user.isGuest).toBe(true);
+    });
   });
 });

@@ -37,6 +37,31 @@ let _axiosResId: number | null = null;
 let _authAxiosResId: number | null = null;
 
 /**
+ * Session-creation / credential-check endpoints that legitimately return HTTP
+ * 401 when the supplied credentials are wrong (login, registration, OTP
+ * verification, email verification, password change). A 401 from these
+ * endpoints is a *credential failure*, NOT an expired session — tearing down
+ * the user's otherwise-valid session here would force-log them out to guest
+ * mode. Genuine session expiry only produces a 401 on requests against
+ * protected resources, which are not listed here.
+ */
+const AUTH_ATTEMPT_ENDPOINTS = [
+  '/user/login',
+  '/user/register',
+  '/user/forgotpassword',
+  '/user/verifyOtp',
+  '/user/verifypassword',
+  '/user/update-password',
+  '/user/verifyEmail',
+  '/user/resend-verification-mail',
+];
+
+const isAuthAttemptEndpoint = (error: any): boolean => {
+  const url: string = error?.config?.url ?? '';
+  return AUTH_ATTEMPT_ENDPOINTS.some(path => url.includes(path));
+};
+
+/**
  * Resets the session-expired notification flag.
  * Call this from your login success handler so that if the *new* session
  * later expires, the user sees the notification again.
@@ -72,7 +97,11 @@ const handleError = async (error: any) => {
     await enqueueOfflineWrite({ url, method: configMethod, data, headers });
   }
 
-  if (error?.response?.status === 401) {
+  // A 401 from a credential-check endpoint (login, OTP, password change, ...)
+  // means the submitted credentials were wrong — not that the session expired.
+  // Only tear down the session when a 401 rejects an authenticated request
+  // against a protected resource.
+  if (error?.response?.status === 401 && !isAuthAttemptEndpoint(error)) {
     try {
       await teardownExpiredSession();
     } catch (teardownError) {
