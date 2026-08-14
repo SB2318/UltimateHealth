@@ -17,49 +17,49 @@ export const glossaryTerms: GlossaryTerm[] = [
     term: 'Hypertension',
     definition:
       'A condition in which blood pressure remains consistently elevated above the healthy range.',
-    category: 'Cardiology',
+    category: 'Cardiovascular Health',
     relatedTerms: ['Blood pressure', 'Heart health', 'Stroke risk'],
   },
   {
     term: 'Hypotension',
     definition:
       'Abnormally low blood pressure that can cause dizziness, fainting, and in severe cases, life-threatening shock.',
-    category: 'Cardiology',
+    category: 'Cardiovascular Health',
     relatedTerms: ['Blood pressure', 'Dizziness', 'Fainting'],
   },
   {
     term: 'Glucose',
     definition:
       'A simple sugar that the body uses as a primary source of energy, especially after digestion.',
-    category: 'Metabolism',
+    category: 'Metabolic Health',
     relatedTerms: ['Diabetes', 'Insulin'],
   },
   {
     term: 'Type 1 Diabetes',
     definition:
       'An autoimmune condition where the pancreas produces little or no insulin, requiring daily insulin therapy.',
-    category: 'Endocrinology',
+    category: 'Metabolic Health',
     relatedTerms: ['Insulin', 'Autoimmune', 'Blood sugar'],
   },
   {
     term: 'Type 2 Diabetes',
     definition:
       'A metabolic disorder where the body does not use insulin effectively, often linked to lifestyle factors.',
-    category: 'Endocrinology',
+    category: 'Metabolic Health',
     relatedTerms: ['Insulin resistance', 'Obesity', 'Blood sugar'],
   },
   {
     term: 'Asthma',
     definition:
       'A chronic respiratory condition characterized by airway inflammation, narrowing, and reversible obstruction causing wheezing and breathlessness.',
-    category: 'Pulmonology',
+    category: 'Respiratory Health',
     relatedTerms: ['Bronchospasm', 'Inhaler', 'Allergies'],
   },
   {
     term: 'COPD',
     definition:
       'Chronic Obstructive Pulmonary Disease — a group of progressive lung diseases including emphysema and chronic bronchitis that block airflow.',
-    category: 'Pulmonology',
+    category: 'Respiratory Health',
     relatedTerms: ['Emphysema', 'Bronchitis', 'Smoking'],
   },
   {
@@ -108,14 +108,14 @@ export const glossaryTerms: GlossaryTerm[] = [
     term: 'Stroke',
     definition:
       'A medical emergency occurring when blood supply to part of the brain is cut off, causing brain cells to die.',
-    category: 'Neurology',
+    category: 'Neurological Health',
     relatedTerms: ['Blood clot', 'Brain', 'Hypertension'],
   },
   {
     term: 'Heart Attack',
     definition:
       'A medical emergency where blood flow to part of the heart muscle is blocked, causing tissue damage or death.',
-    category: 'Cardiology',
+    category: 'Cardiovascular Health',
     relatedTerms: ['Myocardial infarction', 'Coronary artery', 'Chest pain'],
   },
   {
