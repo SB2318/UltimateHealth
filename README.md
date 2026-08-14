@@ -167,6 +167,7 @@ The badges displayed at the top of this README provide a quick overview of the r
 
 ## 📖 Overview
 Our AI bot suite handles the initial pipeline automatically. See [Automation & Bot System](#-automation--bot-system) for a full breakdown.
+> Documentation update for issue #2224.
 
 ---
 
