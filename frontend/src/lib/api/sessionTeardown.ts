@@ -7,6 +7,7 @@ import {
 } from '../../store/UserSlice';
 import {KEYS, removeItem} from '../utils/Utils';
 import {SECURE_KEYS, secureRemoveItem} from '../storage/SecureStorageUtils';
+import {clearOfflineQueue} from './offlineQueue';
 
 /**
  * Shared session-teardown state for the 401 handling in the axios layer.
@@ -53,6 +54,7 @@ const clearExpiredSession = async (): Promise<void> => {
       removeItem(KEYS.USER_TOKEN_EXPIRY_DATE),
       removeItem(KEYS.USER_ID),
       removeItem(KEYS.USER_HANDLE),
+      clearOfflineQueue(),
     ]);
   } catch (storageError) {
     console.error('Failed to clear auth storage safely:', storageError);
