@@ -1,17 +1,37 @@
-
 import React, {useCallback, useEffect, useState} from 'react';
-import { FlatList , Pressable, View, StyleSheet } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
-import {OfflinePodcastListProp, PodcastData} from '../../schemas/type';
-import {deleteFromDownloads, msToTime, readDownloadedPodcasts} from '../../lib/utils/Utils';
+import {
+  FlatList,
+  Pressable,
+  View,
+  StyleSheet,
+} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+import {
+  OfflinePodcastListProp,
+  PodcastData,
+} from '../../schemas/type';
+import {
+  deleteFromDownloads,
+  msToTime,
+  readDownloadedPodcasts,
+} from '../../lib/utils/Utils';
 import PodcastCard from '../../components/podcast/PodcastCard';
 import {hp} from '../../lib/ui/Metric';
 import {ON_PRIMARY_COLOR} from '../../lib/ui/Theme';
 import Snackbar from 'react-native-snackbar';
-import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../store/hooks';
 import CreatePlaylist from '../../components/playlist/CreatePlaylist';
-import { setaddedPodcastId, setRemovePlaylistId } from '../../store/dataSlice';
-import { NoOfflinePodcastsState, OfflinePodcastLoadErrorState } from '../../components/common/EmptyStates';
+import {
+  setaddedPodcastId,
+  setRemovePlaylistId,
+} from '../../store/dataSlice';
+import {
+  NoOfflinePodcastsState,
+  OfflinePodcastLoadErrorState,
+} from '../../components/common/EmptyStates';
 
 export default function OfflinePodcastList({
   navigation,
@@ -19,7 +39,8 @@ export default function OfflinePodcastList({
   const [podcasts, setPodcasts] = useState<PodcastData[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
   const {user_id} = useAppSelector((state: any) => state.user);
-  const [playlistModalOpen, setPlaylistModalOpen] = useState<boolean>(false);
+  const [playlistModalOpen, setPlaylistModalOpen] =
+    useState<boolean>(false);
   //const [playlistIds, setPlaylistIds] = useState<string[]>([]);
   const dispatch = useAppDispatch();
 
@@ -28,9 +49,10 @@ export default function OfflinePodcastList({
     setPlaylistModalOpen(true);
     dispatch(setaddedPodcastId(id));
   };
+
   const closePlaylist = () => {
     setPlaylistModalOpen(false);
-   // setPlaylistIds([]);
+    // setPlaylistIds([]);
     dispatch(setRemovePlaylistId(''));
   };
 
@@ -66,7 +88,7 @@ export default function OfflinePodcastList({
     });
   };
 
-  const navigateToReport = (podcastId: string)=> {
+  const navigateToReport = (podcastId: string) => {
     navigation.navigate('ReportScreen', {
       articleId: '',
       authorId: user_id,
@@ -75,14 +97,16 @@ export default function OfflinePodcastList({
     });
   };
 
- 
-
   const renderItem = ({item}: {item: PodcastData}) => (
     <Pressable
       onPress={() => {
         //playPodcast(item);
         navigateToDetail(item);
-      }}>
+      }}
+      accessibilityRole="button"
+      accessibilityLabel={`Open offline podcast ${item?.title || ''}`}
+      accessibilityHint="Opens the podcast details"
+    >
       <PodcastCard
         id={item._id}
         title={item.title}
@@ -117,29 +141,37 @@ export default function OfflinePodcastList({
         handleReport={() => {
           navigateToReport(item._id);
         }}
-       playlistAct={openPlaylist}
+        playlistAct={openPlaylist}
       />
     </Pressable>
   );
+
   return (
-    <View style={styles.container}>
+    <View
+      style={styles.container}
+      accessible={false}
+    >
       <FlatList
         data={podcasts}
-        keyExtractor={(item: PodcastData) => item._id.toString()}
+        keyExtractor={(item: PodcastData) =>
+          item._id.toString()
+        }
         renderItem={renderItem}
+        accessibilityLabel="Offline podcasts list"
         ListEmptyComponent={
-  loadError ? (
-    <OfflinePodcastLoadErrorState
-      message={loadError}
-      onRetry={loadPodcasts}
-    />
-  ) : (
-    <NoOfflinePodcastsState
-      onBrowse={() => navigation.goBack()}
-    />
-  )
-}
+          loadError ? (
+            <OfflinePodcastLoadErrorState
+              message={loadError}
+              onRetry={loadPodcasts}
+            />
+          ) : (
+            <NoOfflinePodcastsState
+              onBrowse={() => navigation.goBack()}
+            />
+          )
+        }
       />
+
       <CreatePlaylist
         visible={playlistModalOpen}
         dismiss={closePlaylist}
@@ -176,4 +208,3 @@ const styles = StyleSheet.create({
     color: '#666',
   },
 });
-

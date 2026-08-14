@@ -1,10 +1,10 @@
- 
 import React, {useCallback} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,  ScrollView , ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import {INDIAN_LANGUAGES, LanguageCode} from '../../constants/languages';
 import {usePreferences} from '../../contexts/PreferencesContext';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+
 
 interface LanguagePreferenceSelectorProps {
   /** Optional title for the selector */
@@ -19,6 +19,7 @@ interface LanguagePreferenceSelectorProps {
   maxLanguagesToSelect?: number;
 }
 
+
 /**
  * LanguagePreferenceSelector - Component for users to select preferred languages
  * Saves preferences to PreferencesContext which persists to secure storage
@@ -32,19 +33,23 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
 }) => {
   const {preferredLanguages, setPreferredLanguages, isLoading} = usePreferences();
 
+
   const toggleLanguage = useCallback(
     (languageCode: LanguageCode) => {
       setPreferredLanguages(prev => {
         const isSelected = prev.includes(languageCode);
 
+
         if (isSelected) {
           return prev.filter(lang => lang !== languageCode);
         }
+
 
         // Check max limit if specified
         if (maxLanguagesToSelect && prev.length >= maxLanguagesToSelect) {
           return prev; // Don't allow selecting more than max
         }
+
 
         return [...prev, languageCode];
       });
@@ -52,14 +57,17 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
     [setPreferredLanguages, maxLanguagesToSelect]
   );
 
+
   const selectAll = useCallback(() => {
     const allCodes: LanguageCode[] = INDIAN_LANGUAGES.map(lang => lang.code);
     setPreferredLanguages(allCodes);
   }, [setPreferredLanguages]);
 
+
   const clearAll = useCallback(() => {
     setPreferredLanguages([]);
   }, [setPreferredLanguages]);
+
 
   if (isLoading) {
     return (
@@ -70,6 +78,7 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
     );
   }
 
+
   return (
     <View style={styles.container}>
       {showHeader && (
@@ -79,21 +88,30 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
         </View>
       )}
 
+
       {/* Quick Actions */}
       <View style={styles.quickActionsContainer}>
         <TouchableOpacity
           style={[styles.quickActionButton, {borderColor: PRIMARY_COLOR}]}
-          onPress={selectAll}>
+          onPress={selectAll}
+          accessibilityRole="button"
+          accessibilityLabel="Select all languages"
+          accessibilityHint="Selects all available languages">
           <MaterialIcons name="select-all" size={16} color={PRIMARY_COLOR} />
           <Text style={[styles.quickActionText, {color: PRIMARY_COLOR}]}>Select All</Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={[styles.quickActionButton, {borderColor: '#ef4444'}]}
-          onPress={clearAll}>
+          onPress={clearAll}
+          accessibilityRole="button"
+          accessibilityLabel="Clear all languages"
+          accessibilityHint="Removes all selected languages">
           <MaterialIcons name="clear-all" size={16} color="#ef4444" />
           <Text style={[styles.quickActionText, {color: '#ef4444'}]}>Clear All</Text>
         </TouchableOpacity>
       </View>
+
 
       {/* Language Selection Grid */}
       <ScrollView
@@ -108,6 +126,7 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
             preferredLanguages.length >= maxLanguagesToSelect
           );
 
+
           return (
             <TouchableOpacity
               key={index}
@@ -118,7 +137,20 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
               ].filter(Boolean)}
               onPress={() => toggleLanguage(language.code)}
               disabled={isDisabled}
-              activeOpacity={isDisabled ? 1 : 0.7}>
+              activeOpacity={isDisabled ? 1 : 0.7}
+              accessibilityRole="checkbox"
+              accessibilityLabel={language.name}
+              accessibilityHint={
+                isDisabled
+                  ? `Maximum of ${maxLanguagesToSelect} languages can be selected`
+                  : isSelected
+                    ? `Deselect ${language.name}`
+                    : `Select ${language.name}`
+              }
+              accessibilityState={{
+                checked: isSelected,
+                disabled: isDisabled,
+              }}>
               <View
                 style={[
                   styles.checkbox,
@@ -129,6 +161,7 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
                   <MaterialIcons name="check" size={14} color="white" />
                 )}
               </View>
+
               <Text
                 style={[
                   styles.languageName,
@@ -137,6 +170,7 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
                 ].filter(Boolean)}>
                 {language.name}
               </Text>
+
               <Text
                 style={[
                   styles.languageCode,
@@ -150,6 +184,7 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
         })}
       </ScrollView>
 
+
       {/* Selection Summary */}
       {preferredLanguages.length > 0 && (
         <View style={styles.summaryContainer}>
@@ -161,6 +196,7 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
         </View>
       )}
 
+
       {/* Save Button (if callback provided) */}
       {onSave && (
         <TouchableOpacity
@@ -169,13 +205,20 @@ const LanguagePreferenceSelector: React.FC<LanguagePreferenceSelectorProps> = ({
             preferredLanguages.length === 0 ? styles.saveButtonDisabled : null
           ].filter(Boolean)}
           onPress={onSave}
-          disabled={preferredLanguages.length === 0}>
+          disabled={preferredLanguages.length === 0}
+          accessibilityRole="button"
+          accessibilityLabel="Save language preferences"
+          accessibilityHint="Saves your selected language preferences"
+          accessibilityState={{
+            disabled: preferredLanguages.length === 0,
+          }}>
           <Text style={styles.saveButtonText}>Save Preferences</Text>
         </TouchableOpacity>
       )}
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -339,5 +382,6 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
+
 
 export default LanguagePreferenceSelector;

@@ -1,4 +1,3 @@
- 
 import React, {useRef} from 'react';
 import {TouchableOpacity, Alert, StyleSheet, View} from 'react-native';
 import {YStack, XStack, Image, Text} from 'tamagui';
@@ -13,7 +12,7 @@ import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import {GlassStyles, ProfessionalColors, BorderRadius} from '../../styles/GlassStyles';
 import {useAppSelector} from '../../store/hooks';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
-import { PODCAST_CARD } from '@/src/constants/podcastCard';
+import {PODCAST_CARD} from '@/src/constants/podcastCard';
 import {getPlaybackPosition, PlaybackPosition} from '../../lib/platform/PlaybackManager';
 
 interface PodcastProps {
@@ -104,7 +103,14 @@ const PodcastCard = ({
       : 'https://t3.ftcdn.net/jpg/05/10/75/30/360_F_510753092_f4AOmCJAczuGgRLCmHxmowga2tC9VYQP.jpg';
 
   return (
-    <TouchableOpacity onPress={handleClick} activeOpacity={0.9} style={styles.cardWrapper}>
+    <TouchableOpacity
+      onPress={handleClick}
+      activeOpacity={0.9}
+      style={styles.cardWrapper}
+      accessibilityRole="button"
+      accessibilityLabel={`Open podcast: ${title}`}
+      accessibilityHint={`Opens the podcast by ${host}`}
+    >
       <View style={[GlassStyles.glassCardElevated, styles.cardContainer]}>
         <View style={styles.imageContainer}>
           <Image
@@ -119,7 +125,14 @@ const PodcastCard = ({
           </View>
           {progress && (
             <View style={styles.progressBarContainer}>
-              <View style={[styles.progressBar, { width: `${progress.duration > 0 ? Math.min(progress.position / progress.duration, 1) * 100 : 0}%` }]} />
+              <View
+                style={[
+                  styles.progressBar,
+                  {
+                    width: `${progress.duration > 0 ? Math.min(progress.position / progress.duration, 1) * 100 : 0}%`,
+                  },
+                ]}
+              />
             </View>
           )}
         </View>
@@ -135,8 +148,15 @@ const PodcastCard = ({
           </Text>
 
           <XStack alignItems="center" gap="$2">
-            <Ionicons name="person-circle-outline" size={18} color={ProfessionalColors.gray600} />
-            <Text fontSize={14} fontWeight="500" color={ProfessionalColors.gray700}>
+            <Ionicons
+              name="person-circle-outline"
+              size={18}
+              color={ProfessionalColors.gray600}
+            />
+            <Text
+              fontSize={14}
+              fontWeight="500"
+              color={ProfessionalColors.gray700}>
               {host}
             </Text>
           </XStack>
@@ -149,17 +169,34 @@ const PodcastCard = ({
             ))}
           </XStack>
 
-          <XStack alignItems="center" justifyContent="space-between" marginTop="$2">
+          <XStack
+            alignItems="center"
+            justifyContent="space-between"
+            marginTop="$2">
             <XStack alignItems="center" gap="$1">
-              <Ionicons name="eye-outline" size={16} color={ProfessionalColors.gray600} />
-              <Text fontSize={13} fontWeight="500" color={ProfessionalColors.gray600}>
+              <Ionicons
+                name="eye-outline"
+                size={16}
+                color={ProfessionalColors.gray600}
+              />
+              <Text
+                fontSize={13}
+                fontWeight="500"
+                color={ProfessionalColors.gray600}>
                 {views <= 1 ? `${views} view` : `${formatCount(views)} views`}
               </Text>
             </XStack>
 
             <XStack alignItems="center" gap="$1">
-              <Ionicons name="time-outline" size={16} color={ProfessionalColors.gray600} />
-              <Text fontSize={13} fontWeight="500" color={ProfessionalColors.gray600}>
+              <Ionicons
+                name="time-outline"
+                size={16}
+                color={ProfessionalColors.gray600}
+              />
+              <Text
+                fontSize={13}
+                fontWeight="500"
+                color={ProfessionalColors.gray600}>
                 {duration}
               </Text>
             </XStack>
@@ -170,8 +207,15 @@ const PodcastCard = ({
           <TouchableOpacity
             style={[styles.menuButton, GlassStyles.glassContainer]}
             onPress={handleOpenSheet}
-            activeOpacity={0.7}>
-            <Entypo name="dots-three-vertical" size={18} color={ProfessionalColors.gray800} />
+            activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel={`Podcast actions for ${title}`}
+            accessibilityHint="Opens more actions for this podcast">
+            <Entypo
+              name="dots-three-vertical"
+              size={18}
+              color={ProfessionalColors.gray800}
+            />
           </TouchableOpacity>
         )}
 

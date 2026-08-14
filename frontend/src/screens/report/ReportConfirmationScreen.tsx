@@ -1,12 +1,12 @@
- 
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,  ScrollView  } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import {ReportConfirmationScreenProp} from '../../schemas/type';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {hp, wp, fp} from '../../lib/ui/Metric';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+
 
 export default function ReportConfirmationScreen({
   navigation,
@@ -26,6 +26,7 @@ export default function ReportConfirmationScreen({
           </View>
         </View>
 
+
         {/* Main Content */}
         <View style={styles.contentSection}>
           <Text style={styles.mainTitle}>Thanks for helping our community</Text>
@@ -33,6 +34,7 @@ export default function ReportConfirmationScreen({
             Your report helps us protect the community from harmful content and maintain a safe environment for everyone.
           </Text>
         </View>
+
 
         {/* Emergency Section */}
         <View style={styles.emergencyCard}>
@@ -47,12 +49,14 @@ export default function ReportConfirmationScreen({
           </View>
         </View>
 
+
         {/* What to Expect Section */}
         <View style={styles.infoSection}>
           <View style={styles.infoHeader}>
             <MaterialCommunityIcons name="information" size={24} color={PRIMARY_COLOR} />
             <Text style={styles.infoTitle}>What you can expect</Text>
           </View>
+
 
           <View style={styles.infoCard}>
             <View style={styles.infoBullet}>
@@ -63,6 +67,7 @@ export default function ReportConfirmationScreen({
             </Text>
           </View>
 
+
           <View style={styles.infoCard}>
             <View style={styles.infoBullet}>
               <Ionicons name="eye-off" size={20} color={PRIMARY_COLOR} />
@@ -71,6 +76,7 @@ export default function ReportConfirmationScreen({
               Your report is confidential. The person you reported won&apos;t know it was you.
             </Text>
           </View>
+
 
           <View style={styles.infoCard}>
             <View style={styles.infoBullet}>
@@ -82,12 +88,16 @@ export default function ReportConfirmationScreen({
           </View>
         </View>
 
+
         {/* Return Button */}
         <TouchableOpacity
           style={styles.returnButton}
           onPress={() => {
             navigation.navigate('TabNavigation');
-          }}>
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Return to Home"
+          accessibilityHint="Returns you to the home screen">
           <Text style={styles.returnButtonText}>Return to Home</Text>
           <Ionicons name="home" size={20} color="white" style={{marginLeft: 8}} />
         </TouchableOpacity>
@@ -95,6 +105,7 @@ export default function ReportConfirmationScreen({
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   safeArea: {

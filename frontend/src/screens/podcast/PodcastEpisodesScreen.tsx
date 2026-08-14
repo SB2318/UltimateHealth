@@ -16,14 +16,18 @@ import {RootStackParamList} from '../../schemas/type';
 import EpisodeCard from '../../components/podcast/EpisodeCard';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 
-type NavigationProp = StackNavigationProp<RootStackParamList, 'PodcastEpisodesScreen'>;
+type NavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'PodcastEpisodesScreen'
+>;
 
 // Mock Data
 const MOCK_EPISODES = [
   {
     id: '1',
     name: 'Introduction to Mental Health',
-    description: 'A deep dive into the basics of mental well-being, discussing common challenges and initial steps to seek help.',
+    description:
+      'A deep dive into the basics of mental well-being, discussing common challenges and initial steps to seek help.',
     podcastsCount: 5,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -31,15 +35,17 @@ const MOCK_EPISODES = [
   {
     id: '2',
     name: 'Nutrition & Brain Function',
-    description: 'How what you eat affects how you feel. We explore the gut-brain connection and dietary recommendations.',
+    description:
+      'How what you eat affects how you feel. We explore the gut-brain connection and dietary recommendations.',
     podcastsCount: 3,
-    createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-    updatedAt: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+    updatedAt: new Date(Date.now() - 3600000).toISOString(),
   },
   {
     id: '3',
     name: 'Fitness over 40',
-    description: 'Tips and tricks for staying active and healthy as you age. Featuring interviews with fitness experts.',
+    description:
+      'Tips and tricks for staying active and healthy as you age. Featuring interviews with fitness experts.',
     podcastsCount: 8,
     createdAt: new Date(Date.now() - 172800000).toISOString(),
     updatedAt: new Date(Date.now() - 86400000).toISOString(),
@@ -48,7 +54,8 @@ const MOCK_EPISODES = [
 
 const PodcastEpisodesScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
-  const [episodes, setEpisodes] = useState<typeof MOCK_EPISODES>([]);
+  const [episodes, setEpisodes] =
+    useState<typeof MOCK_EPISODES>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +64,9 @@ const PodcastEpisodesScreen: React.FC = () => {
     try {
       // setError(null);
       // Simulate API call
-      await new Promise<void>(resolve => setTimeout(() => resolve(), 1500));
+      await new Promise<void>(resolve =>
+        setTimeout(() => resolve(), 1500),
+      );
       setEpisodes(MOCK_EPISODES);
     } catch {
       setError('Failed to load episodes. Please try again.');
@@ -82,24 +91,49 @@ const PodcastEpisodesScreen: React.FC = () => {
 
   const renderEmptyState = () => (
     <View style={styles.emptyStateContainer}>
-      <Ionicon name="albums-outline" size={80} color="#ccc" />
+      <Ionicon
+        name="albums-outline"
+        size={80}
+        color="#ccc"
+        accessible={false}
+      />
+
       <Text style={styles.emptyStateTitle}>No Episodes Yet</Text>
+
       <Text style={styles.emptyStateDesc}>
         Create your first podcast episode to start organizing your podcasts.
       </Text>
+
       <TouchableOpacity
         style={styles.emptyStateButton}
-        onPress={() => navigation.navigate('PodcastForm')}>
-        <Text style={styles.emptyStateButtonText}>Create Episode</Text>
+        onPress={() => navigation.navigate('PodcastForm')}
+        accessibilityRole="button"
+        accessibilityLabel="Create Episode"
+        accessibilityHint="Opens the form to create a new podcast episode">
+        <Text style={styles.emptyStateButtonText}>
+          Create Episode
+        </Text>
       </TouchableOpacity>
     </View>
   );
 
   const renderErrorState = () => (
     <View style={styles.centerContainer}>
-      <Ionicon name="warning-outline" size={48} color="red" />
+      <Ionicon
+        name="warning-outline"
+        size={48}
+        color="red"
+        accessible={false}
+      />
+
       <Text style={styles.errorText}>{error}</Text>
-      <TouchableOpacity style={styles.retryButton} onPress={fetchEpisodes}>
+
+      <TouchableOpacity
+        style={styles.retryButton}
+        onPress={fetchEpisodes}
+        accessibilityRole="button"
+        accessibilityLabel="Retry loading episodes"
+        accessibilityHint="Attempts to load the podcast episodes again">
         <Text style={styles.retryButtonText}>Retry</Text>
       </TouchableOpacity>
     </View>
@@ -109,8 +143,16 @@ const PodcastEpisodesScreen: React.FC = () => {
     return (
       <View style={styles.centerContainer}>
         {/* Simple skeleton loading placeholder */}
-        <ActivityIndicator size="large" color={PRIMARY_COLOR} />
-        <Text style={styles.loadingText}>Loading episodes...</Text>
+        <ActivityIndicator
+          size="large"
+          color={PRIMARY_COLOR}
+          accessible
+          accessibilityLabel="Loading episodes"
+        />
+
+        <Text style={styles.loadingText}>
+          Loading episodes...
+        </Text>
       </View>
     );
   }
@@ -124,15 +166,31 @@ const PodcastEpisodesScreen: React.FC = () => {
       <FlatList
         data={episodes}
         keyExtractor={item => item.id}
-        contentContainerStyle={episodes.length === 0 ? styles.emptyListContent : styles.listContent}
+        contentContainerStyle={
+          episodes.length === 0
+            ? styles.emptyListContent
+            : styles.listContent
+        }
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[PRIMARY_COLOR]} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={[PRIMARY_COLOR]}
+            accessibilityLabel="Refresh episodes"
+          />
         }
         renderItem={({item}) => (
           <EpisodeCard
             episode={item}
-            onPress={() => console.log('Navigate to episode detail', item.id)}
-            onEdit={() => navigation.navigate('PodcastForm')}
+            onPress={() =>
+              console.log(
+                'Navigate to episode detail',
+                item.id,
+              )
+            }
+            onEdit={() =>
+              navigation.navigate('PodcastForm')
+            }
             onDelete={() => handleDelete(item.id)}
           />
         )}
@@ -141,8 +199,16 @@ const PodcastEpisodesScreen: React.FC = () => {
 
       <TouchableOpacity
         style={styles.fab}
-        onPress={() => navigation.navigate('PodcastForm')}>
-        <Ionicon name="add" size={32} color="#fff" />
+        onPress={() => navigation.navigate('PodcastForm')}
+        accessibilityRole="button"
+        accessibilityLabel="Create new podcast episode"
+        accessibilityHint="Opens the form to create a new podcast episode">
+        <Ionicon
+          name="add"
+          size={32}
+          color="#fff"
+          accessible={false}
+        />
       </TouchableOpacity>
     </SafeAreaView>
   );

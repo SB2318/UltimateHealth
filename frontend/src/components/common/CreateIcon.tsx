@@ -1,16 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { StyleSheet, TouchableOpacity} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Entypo from '@expo/vector-icons/Entypo';
 import {BUTTON_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {AddIconProp} from '../../schemas/type';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const CreateIcon = ({callback}: AddIconProp) => {
   return (
     <SafeAreaView style={styles.firstcontaner}>
-      <TouchableOpacity style={styles.circleview} onPress={callback}>
-        <Entypo name="modern-mic" size={28} color='white' />
+      <TouchableOpacity
+        style={styles.circleview}
+        onPress={callback}
+        accessibilityRole="button"
+        accessibilityLabel="Create podcast"
+        accessibilityHint="Creates a new podcast">
+        <Entypo name="modern-mic" size={28} color="white" />
       </TouchableOpacity>
     </SafeAreaView>
   );

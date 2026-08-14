@@ -140,7 +140,9 @@ const FilterModal = ({
           <Text style={styles.title}>Filters & Search</Text>
           <TouchableOpacity
             style={styles.closeButton}
-            onPress={handleDismissModalPress}>
+            onPress={handleDismissModalPress}
+            accessibilityRole="button"
+            accessibilityLabel="Close filters">
             <MaterialIcons name="close" size={24} color={'#6b7280'} />
           </TouchableOpacity>
         </View>
@@ -165,10 +167,13 @@ const FilterModal = ({
                   onChangeText={setSearchQuery}
                 />
                 {searchQuery.length > 0 && (
-                  <TouchableOpacity onPress={() => setSearchQuery('')}>
-                    <MaterialIcons name="close" size={20} color="#9ca3af" />
-                  </TouchableOpacity>
-                )}
+                  <TouchableOpacity
+                  onPress={() => setSearchQuery('')}
+                  accessibilityRole="button"
+                  accessibilityLabel="Clear search">
+                  <MaterialIcons name="close" size={20} color="#9ca3af" />
+                 </TouchableOpacity>
+               )}
               </View>
             </View>
             {/* Sort By */}
@@ -187,7 +192,9 @@ const FilterModal = ({
                     onPress={() => {
                       setSelectedCategory(item);
                       setSortingType(item);
-                    }}>
+                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Sort by ${item}`}>
                     <Text
                       style={[
                         styles.chipText,
@@ -216,7 +223,9 @@ const FilterModal = ({
                       styles.chip,
                       selectedLanguages.includes(lang.code) && styles.chipSelected,
                     ]}
-                    onPress={() => toggleLanguage(lang.code)}>
+                    onPress={() => toggleLanguage(lang.code)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Select language: ${lang.name}`}>
                     <Text
                       style={[
                         styles.chipText,
@@ -247,7 +256,9 @@ const FilterModal = ({
                 </Text>
                 <TouchableOpacity
                   style={styles.seeAllButton}
-                  onPress={handlePresentModalPress}>
+                  onPress={handlePresentModalPress}
+                  accessibilityRole="button"
+                  accessibilityLabel="See all categories">
                   <Text style={styles.seeAllText}>See all</Text>
                   <MaterialIcons name="chevron-right" color={PRIMARY_COLOR} size={20} />
                 </TouchableOpacity>
@@ -262,7 +273,9 @@ const FilterModal = ({
                         <TouchableOpacity
                           key={item._id}
                           style={styles.selectedCategoryChip}
-                          onPress={() => handleCategorySelection(item)}>
+                          onPress={() => handleCategorySelection(item)}
+                          accessibilityRole="button"
+                          accessibilityLabel={`Remove category: ${item.name}`}>
                           <Text style={styles.selectedCategoryChipText}>
                             {item.name}
                           </Text>
@@ -288,7 +301,13 @@ const FilterModal = ({
                         styles.categoryCard,
                         isSelected && styles.categoryCardSelected,
                       ]}
-                      onPress={() => handleCategorySelection(item)}>
+                      onPress={() => handleCategorySelection(item)}
+                      accessibilityRole="button"
+                      accessibilityLabel={
+                        isSelected
+                          ? `Selected category: ${item?.name}`
+                          : `Select category: ${item?.name}`
+                      }>
                       <Text
                         style={[
                           styles.categoryCardText,
@@ -320,7 +339,9 @@ const FilterModal = ({
         <View style={[styles.footer, { paddingBottom: insets.bottom }]}>
           <TouchableOpacity
             style={styles.resetButton}
-            onPress={handleReset}>
+            onPress={handleReset}
+            accessibilityRole="button"
+            accessibilityLabel="Reset filters">
             <MaterialIcons name="refresh" size={20} color={PRIMARY_COLOR} />
             <Text style={styles.resetButtonText}>Reset</Text>
           </TouchableOpacity>
@@ -329,7 +350,9 @@ const FilterModal = ({
             onPress={() => {
               handleFilterApply();
               handleDismissModalPress();
-            }}>
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Apply filters">
             <MaterialIcons name="check" size={20} color="white" />
             <Text style={styles.applyButtonText}>Apply Filters</Text>
           </TouchableOpacity>
@@ -594,4 +617,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 });
-

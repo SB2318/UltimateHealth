@@ -1,5 +1,4 @@
- 
-import {
+ import {
   StyleSheet,
   Text,
   View,
@@ -43,7 +42,10 @@ const PodcastReviewCard = ({
       : 'https://t3.ftcdn.net/jpg/05/10/75/30/360_F_510753092_f4AOmCJAczuGgRLCmHxmowga2tC9VYQP.jpg';
 
   // Get host/author name
-  const hostName = item?.user_id?.user_name || item?.user_id?.user_handle || 'Unknown Host';
+  const hostName =
+    item?.user_id?.user_name ||
+    item?.user_id?.user_handle ||
+    'Unknown Host';
 
   const formattedDuration = msToTime(item?.duration || 0);
 
@@ -51,13 +53,21 @@ const PodcastReviewCard = ({
     <Pressable
       onPress={() => {
         onNavigate(item);
-      }}>
+      }}
+      accessibilityRole="button"
+      accessibilityLabel={`Open podcast ${item?.title || ''}`}
+      accessibilityHint="Opens the podcast details">
       <View style={styles.cardContainer}>
         {/* Cover Image Section */}
         <View style={styles.imageContainer}>
-          <Image source={{uri}} style={styles.image} />
+          <Image
+            source={{uri}}
+            style={styles.image}
+            accessibilityLabel={`Cover image for ${item?.title || 'podcast'}`}
+          />
+
           {/* Play Button Overlay */}
-          <View style={styles.playOverlay}>
+          <View style={styles.playOverlay} pointerEvents="none">
             <View style={styles.playButton}>
               <Ionicons name="play" size={32} color="white" />
             </View>
@@ -69,7 +79,10 @@ const PodcastReviewCard = ({
           {onMenuPress && (
             <TouchableOpacity
               style={styles.menuIconContainer}
-              onPress={onMenuPress}>
+              onPress={onMenuPress}
+              accessibilityRole="button"
+              accessibilityLabel={`More options for ${item?.title || 'podcast'}`}
+              accessibilityHint="Opens podcast options">
               <Entypo
                 name="dots-three-vertical"
                 size={20}
@@ -86,7 +99,10 @@ const PodcastReviewCard = ({
           )}
 
           {/* Title */}
-          <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
+          <Text
+            style={styles.title}
+            numberOfLines={2}
+            ellipsizeMode="tail">
             {item?.title}
           </Text>
 
@@ -96,6 +112,8 @@ const PodcastReviewCard = ({
               name="person-circle-outline"
               size={18}
               color={PRIMARY_COLOR}
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no"
             />
             <Text style={styles.hostText}>
               {hostName}
@@ -104,8 +122,19 @@ const PodcastReviewCard = ({
 
           {/* Stats Row */}
           <View style={styles.statsContainer}>
-            <View style={styles.statItem}>
-              <Ionicons name="eye-outline" size={16} color="#666666" />
+            <View
+              style={styles.statItem}
+              accessible={true}
+              accessibilityLabel={`${item?.viewUsers?.length || 0} ${
+                item?.viewUsers?.length === 1 ? 'view' : 'views'
+              }`}>
+              <Ionicons
+                name="eye-outline"
+                size={16}
+                color="#666666"
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no"
+              />
               <Text style={styles.statText}>
                 {item?.viewUsers?.length <= 1
                   ? `${item?.viewUsers?.length || 0} view`
@@ -113,8 +142,17 @@ const PodcastReviewCard = ({
               </Text>
             </View>
 
-            <View style={styles.statItem}>
-              <Ionicons name="time-outline" size={16} color="#666666" />
+            <View
+              style={styles.statItem}
+              accessible={true}
+              accessibilityLabel={`Duration ${formattedDuration}`}>
+              <Ionicons
+                name="time-outline"
+                size={16}
+                color="#666666"
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no"
+              />
               <Text style={styles.statText}>
                 {formattedDuration}
               </Text>
@@ -127,7 +165,12 @@ const PodcastReviewCard = ({
               style={{
                 ...styles.statusText,
                 color: backgroundColor,
-              }}>
+              }}
+              accessibilityLabel={`Status: ${
+                item?.status
+                  ? item.status.toLocaleUpperCase()
+                  : 'PENDING'
+              }`}>
               {item?.status ? item.status.toLocaleUpperCase() : 'PENDING'}
             </Text>
 
@@ -135,13 +178,18 @@ const PodcastReviewCard = ({
               style={styles.viewInnerContainer}
               onPress={() => {
                 onNavigate(item);
-              }}>
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={`View ${item?.title || 'podcast'}`}
+              accessibilityHint="Opens the podcast details">
               <Text style={styles.viewText}>View</Text>
               <AntDesign
                 name="arrow-right"
                 size={16}
                 color={PRIMARY_COLOR}
                 style={{marginTop: 2}}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no"
               />
             </TouchableOpacity>
           </View>

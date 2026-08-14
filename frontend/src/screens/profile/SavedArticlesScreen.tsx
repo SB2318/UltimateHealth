@@ -1,15 +1,25 @@
- 
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, View, Text, FlatList, TouchableOpacity, useColorScheme} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  useColorScheme,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import {useTheme} from 'tamagui';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import {SavedArticlesScreenProp, ArticleData} from '../../schemas/type';
+import {
+  SavedArticlesScreenProp,
+  ArticleData,
+} from '../../schemas/type';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import {NoArticleState} from '../../components/common/EmptyStates';
 import UserArticleCard from '../../components/article/UserArticleCard';
 import {useFocusEffect} from '@react-navigation/native';
+
 
 const SavedArticlesScreen = ({navigation}: SavedArticlesScreenProp) => {
   const theme = useTheme();
@@ -18,16 +28,19 @@ const SavedArticlesScreen = ({navigation}: SavedArticlesScreenProp) => {
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [refreshing, setRefreshing] = useState(false);
 
+
   useFocusEffect(
     useCallback(() => {
       refetch();
     }, [refetch])
   );
 
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     refetch().finally(() => setRefreshing(false));
   }, [refetch]);
+
 
   const renderItem = useCallback(
     ({item}: {item: ArticleData}) => {
@@ -48,28 +61,72 @@ const SavedArticlesScreen = ({navigation}: SavedArticlesScreenProp) => {
     [selectedCardId, navigation, onRefresh],
   );
 
+
   if (isLoading) {
     return (
-      <SafeAreaView style={[styles.loadingContainer, {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')}]}>
+      <SafeAreaView
+        style={[
+          styles.loadingContainer,
+          {
+            backgroundColor:
+              theme?.background?.val ??
+              (isDarkMode ? '#121212' : '#ffffff'),
+          },
+        ]}
+        accessible={true}
+        accessibilityRole="progressbar"
+        accessibilityLabel="Loading saved articles">
       </SafeAreaView>
     );
   }
 
+
   return (
-    <SafeAreaView style={[styles.container, {backgroundColor: isDarkMode ? '#121212' : '#ffffff'}]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        {backgroundColor: isDarkMode ? '#121212' : '#ffffff'},
+      ]}>
+
       <StatusBar style={isDarkMode ? 'light' : 'dark'} />
-      
+
+
       {/* Header */}
-      <View style={[styles.header, {borderBottomColor: isDarkMode ? '#374151' : '#e5e7eb'}]}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <FontAwesome6 size={20} name="arrow-left" color={isDarkMode ? '#ffffff' : '#000000'} />
+      <View
+        style={[
+          styles.header,
+          {
+            borderBottomColor: isDarkMode ? '#374151' : '#e5e7eb',
+          },
+        ]}>
+
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Returns to the previous screen">
+
+          <FontAwesome6
+            size={20}
+            name="arrow-left"
+            color={isDarkMode ? '#ffffff' : '#000000'}
+            accessible={false}
+          />
         </TouchableOpacity>
+
         <View style={styles.headerTitleContainer}>
-          <Text style={[styles.headerTitle, {color: isDarkMode ? '#ffffff' : '#111827'}]}>
+          <Text
+            style={[
+              styles.headerTitle,
+              {color: isDarkMode ? '#ffffff' : '#111827'},
+            ]}
+            accessibilityRole="header">
             Saved Articles ({user?.savedArticles?.length || 0})
           </Text>
         </View>
       </View>
+
 
       <FlatList
         data={user?.savedArticles ?? []}
@@ -80,12 +137,16 @@ const SavedArticlesScreen = ({navigation}: SavedArticlesScreenProp) => {
         ListEmptyComponent={<NoArticleState />}
         onRefresh={onRefresh}
         refreshing={refreshing}
+        accessibilityRole="list"
+        accessibilityLabel="Saved articles list"
       />
     </SafeAreaView>
   );
 };
 
+
 export default SavedArticlesScreen;
+
 
 const styles = StyleSheet.create({
   container: {

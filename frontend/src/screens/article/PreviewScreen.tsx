@@ -102,7 +102,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                 duration: Snackbar.LENGTH_SHORT,
               });
             }
-          }}>
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Submit article"
+          accessibilityHint="Submits your article for review">
           <Text style={styles.textWhite}>Submit</Text>
         </TouchableOpacity>
       ),
@@ -485,7 +488,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
               });
             }
           }}
-          activeOpacity={0.8}>
+          activeOpacity={0.8}
+          accessibilityRole="button"
+          accessibilityLabel="Get AI suggestions"
+          accessibilityHint="Uses AI to analyze your article and provide suggestions">
           <Text style={styles.continueButtonText}>Get AI Suggestions</Text>
         </TouchableOpacity>
       </View>

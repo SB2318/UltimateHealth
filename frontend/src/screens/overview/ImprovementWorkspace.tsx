@@ -19,6 +19,7 @@ import {useGetAllImprovementsForReview} from '@/src/hooks/improvement/useGetUser
 import {ProfessionalColors} from '../../styles/GlassStyles';
 import {NoArticleState} from '../../components/common/EmptyStates';
 
+
 export default function ImprovementWorkspace({
   handleImprovementClick,
 }: {
@@ -29,6 +30,7 @@ export default function ImprovementWorkspace({
   const {user_token} = useAppSelector((state: any) => state.user);
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
+
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedStatus, setSelectedStatus] = useState(1);
@@ -38,6 +40,7 @@ export default function ImprovementWorkspace({
   const [discardLabel, setDiscardLabel] = useState('Discard');
   const [improvementData, setImprovementData] = useState<EditRequest[]>([]);
   const [pageLoading, setPageLoading] = useState(false);
+
 
   const {isLoading, refetch} = useGetAllImprovementsForReview({
     page,
@@ -51,10 +54,12 @@ export default function ImprovementWorkspace({
     setDiscardLabel,
   });
 
+
   useEffect(() => {
     refetch();
     setPageLoading(false);
   }, [page, selectedStatus, refetch]);
+
 
   const categories = [
     {
@@ -71,12 +76,14 @@ export default function ImprovementWorkspace({
     },
   ];
 
+
   const onRefresh = () => {
     setRefreshing(true);
     setPage(1);
     refetch();
     setRefreshing(false);
   };
+
 
   const renderItem = useCallback(
     ({item}: {item: EditRequest}) => {
@@ -86,6 +93,7 @@ export default function ImprovementWorkspace({
     },
     [handleImprovementClick],
   );
+
 
   return (
     <View style={{flex: 1, backgroundColor: theme.background?.val as string}}>
@@ -109,7 +117,11 @@ export default function ImprovementWorkspace({
                 setPage(1);
                 setImprovementData([]);
                 setPageLoading(true);
-              }}>
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={item.label}
+              accessibilityHint={`Shows ${item.label.toLowerCase()} improvement requests`}
+              accessibilityState={{selected: selectedStatus === item.status}}>
               <Text
                 style={{
                   ...styles.labelStyle,
@@ -124,6 +136,7 @@ export default function ImprovementWorkspace({
             </TouchableOpacity>
           ))}
         </View>
+
 
         {isLoading || pageLoading ? (
           <Loader />
@@ -154,6 +167,7 @@ export default function ImprovementWorkspace({
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -201,4 +215,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-

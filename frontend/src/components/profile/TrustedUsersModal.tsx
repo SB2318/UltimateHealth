@@ -1,13 +1,13 @@
- 
 // @ts-nocheck
-import { View,
+import {
+  View,
   Text,
   StyleSheet,
   Modal,
   TouchableOpacity,
-   FlatList ,
+  FlatList,
   Image,
- } from 'react-native';
+} from 'react-native';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {hp, wp} from '../../lib/ui/Metric';
 import Ionicon from '@expo/vector-icons/Ionicons';
@@ -23,6 +23,7 @@ const getProfileImageUri = (profileImage?: string) => {
   if (!profileImage?.trim()) {
     return DEFAULT_AVATAR;
   }
+
   return profileImage.startsWith('http')
     ? profileImage
     : `${GET_STORAGE_DATA}/${profileImage}`;
@@ -49,6 +50,7 @@ export default function TrustedUsersModal({
         source={{uri: getProfileImageUri(item.Profile_image)}}
         style={styles.avatar}
       />
+
       <View style={styles.userInfo}>
         <Text style={styles.userName}>{item.user_name}</Text>
         <Text style={styles.userHandle}>@{item.user_handle}</Text>
@@ -67,7 +69,12 @@ export default function TrustedUsersModal({
         <View style={styles.modalContainer}>
           <View style={styles.header}>
             <Text style={styles.modalTitle}>🛡️ Trusted Readers</Text>
-            <TouchableOpacity onPress={onClose}>
+
+            <TouchableOpacity
+              onPress={onClose}
+              accessibilityRole="button"
+              accessibilityLabel="Close trusted readers"
+              accessibilityHint="Closes the trusted readers dialog">
               <Ionicon name="close" size={28} color="white" />
             </TouchableOpacity>
           </View>
@@ -91,7 +98,7 @@ export default function TrustedUsersModal({
           ) : (
             <FlatList
               data={trustedUsers}
-              keyExtractor={(item) => item._id || item.user_handle}
+              keyExtractor={item => item._id || item.user_handle}
               renderItem={renderItem}
               contentContainerStyle={styles.listContent}
             />

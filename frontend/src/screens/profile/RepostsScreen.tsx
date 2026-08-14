@@ -1,6 +1,12 @@
- 
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, View, Text, FlatList, TouchableOpacity, useColorScheme} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  useColorScheme,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {StatusBar} from 'expo-status-bar';
 import {useTheme} from 'tamagui';
@@ -11,6 +17,7 @@ import {NoArticleState} from '../../components/common/EmptyStates';
 import UserArticleCard from '../../components/article/UserArticleCard';
 import {useFocusEffect} from '@react-navigation/native';
 
+
 const RepostsScreen = ({navigation}: RepostsScreenProp) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
@@ -18,16 +25,19 @@ const RepostsScreen = ({navigation}: RepostsScreenProp) => {
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [refreshing, setRefreshing] = useState(false);
 
+
   useFocusEffect(
     useCallback(() => {
       refetch();
     }, [refetch])
   );
 
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     refetch().finally(() => setRefreshing(false));
-  },[refetch]);
+  }, [refetch]);
+
 
   const renderItem = useCallback(
     ({item}: {item: ArticleData}) => {
@@ -48,28 +58,67 @@ const RepostsScreen = ({navigation}: RepostsScreenProp) => {
     [selectedCardId, navigation, onRefresh],
   );
 
+
   if (isLoading) {
     return (
-      <SafeAreaView style={[styles.loadingContainer, {backgroundColor: theme.background?.val ?? '#ffffff'}]}>
+      <SafeAreaView
+        style={[
+          styles.loadingContainer,
+          {backgroundColor: theme.background?.val ?? '#ffffff'},
+        ]}
+        accessible={true}
+        accessibilityRole="progressbar"
+        accessibilityLabel="Loading reposts">
       </SafeAreaView>
     );
   }
 
+
   return (
-    <SafeAreaView style={[styles.container, {backgroundColor: isDarkMode ? '#121212' : '#ffffff'}]}>
+    <SafeAreaView
+      style={[
+        styles.container,
+        {backgroundColor: isDarkMode ? '#121212' : '#ffffff'},
+      ]}>
+
       <StatusBar style={isDarkMode ? 'light' : 'dark'} />
-      
+
+
       {/* Header */}
-      <View style={[styles.header, {borderBottomColor: isDarkMode ? '#374151' : '#e5e7eb'}]}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <FontAwesome6 size={20} name="arrow-left" color={isDarkMode ? '#ffffff' : '#000000'} />
+      <View
+        style={[
+          styles.header,
+          {
+            borderBottomColor: isDarkMode ? '#374151' : '#e5e7eb',
+          },
+        ]}>
+
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Returns to the previous screen">
+          <FontAwesome6
+            size={20}
+            name="arrow-left"
+            color={isDarkMode ? '#ffffff' : '#000000'}
+            accessible={false}
+          />
         </TouchableOpacity>
+
         <View style={styles.headerTitleContainer}>
-          <Text style={[styles.headerTitle, {color: isDarkMode ? '#ffffff' : '#111827'}]}>
+          <Text
+            style={[
+              styles.headerTitle,
+              {color: isDarkMode ? '#ffffff' : '#111827'},
+            ]}
+            accessibilityRole="header">
             Reposts ({user?.repostArticles?.length || 0})
           </Text>
         </View>
       </View>
+
 
       <FlatList
         data={user?.repostArticles ?? []}
@@ -80,12 +129,16 @@ const RepostsScreen = ({navigation}: RepostsScreenProp) => {
         ListEmptyComponent={<NoArticleState />}
         onRefresh={onRefresh}
         refreshing={refreshing}
+        accessibilityLabel="Reposted articles list"
+        accessibilityRole="list"
       />
     </SafeAreaView>
   );
 };
 
+
 export default RepostsScreen;
+
 
 const styles = StyleSheet.create({
   container: {

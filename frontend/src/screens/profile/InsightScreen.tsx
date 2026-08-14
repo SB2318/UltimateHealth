@@ -14,6 +14,7 @@ import Snackbar from 'react-native-snackbar';
 import {useAppSelector} from '../../store/hooks';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
+
 const InsightScreen = ({navigation}: InsightScreenProp) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,9 +24,12 @@ const InsightScreen = ({navigation}: InsightScreenProp) => {
   const [authorId, setAuthorId] = useState<string>('');
   const [recordId, setRecordId] = useState<string>('');
 
+
   const {data: user, isLoading} = useGetProfile();
 
+
   const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
+
 
   const onArticleViewed = ({
     articleId,
@@ -40,6 +44,7 @@ const InsightScreen = ({navigation}: InsightScreenProp) => {
       setArticleId(articleId);
       setAuthorId(authorId);
       setRecordId(recordId);
+
 
       updateViewCount(Number(articleId), {
         onSuccess: async () => {
@@ -61,6 +66,7 @@ const InsightScreen = ({navigation}: InsightScreenProp) => {
     }
   };
 
+
   if (isLoading) {
     return (
       <SafeAreaView
@@ -76,6 +82,7 @@ const InsightScreen = ({navigation}: InsightScreenProp) => {
     );
   }
 
+
   return (
     <SafeAreaView
       style={[
@@ -89,14 +96,23 @@ const InsightScreen = ({navigation}: InsightScreenProp) => {
       <View style={[styles.header, {borderBottomColor: isDarkMode ? '#374151' : '#e5e7eb'}]}>
         <TouchableOpacity
           style={styles.backButton}
-          onPress={() => navigation.goBack()}>
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Returns to the previous screen">
           <FontAwesome6 size={20} name="arrow-left" color={isDarkMode ? '#ffffff' : '#000000'} />
         </TouchableOpacity>
         <View style={styles.headerTitleContainer}>
-            <FontAwesome6 name="chart-simple" size={18} color={PRIMARY_COLOR} />
+            <FontAwesome6
+              name="chart-simple"
+              size={18}
+              color={PRIMARY_COLOR}
+              accessible={false}
+            />
             <View style={styles.titleTextContainer} />
         </View>
       </View>
+
 
       <View style={styles.content}>
         <ActivityOverview
@@ -110,7 +126,9 @@ const InsightScreen = ({navigation}: InsightScreenProp) => {
   );
 };
 
+
 export default InsightScreen;
+
 
 const styles = StyleSheet.create({
   container: {

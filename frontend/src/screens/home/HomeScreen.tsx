@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
- 
+
 // @ts-nocheck
 import { StyleSheet,
   View,
@@ -731,7 +731,12 @@ useEffect(() => {
                       backgroundColor: isActive ? '#000A60' : 'white',
                       borderColor: isActive ? '#000A60' : '#D1D5DB',
                     }}
-                    onPress={() => handleCategoryClick(item)}>
+                    onPress={() => handleCategoryClick(item)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${item.name} category`}
+                    accessibilityHint={`Shows articles in the ${item.name} category`}
+                    accessibilityState={{selected: Boolean(isActive)}}
+                  >
                     <Text
                       style={{
                         ...styles.labelStyle,
@@ -792,7 +797,10 @@ useEffect(() => {
         marginRight: 16,
         marginTop: 10,
         marginBottom: 10,
-      }}>
+      }}
+      accessibilityRole="button"
+      accessibilityLabel="Customize Homepage"
+      accessibilityHint="Opens homepage customization settings">
       <Text
         style={{
           color: '#000A60',
@@ -821,6 +829,9 @@ useEffect(() => {
     <TouchableOpacity
       style={styles.academyCard}
       onPress={() => navigation.navigate('Academy')}
+      accessibilityRole="button"
+      accessibilityLabel="Hospital Learning Academy"
+      accessibilityHint="Opens the Hospital Learning Academy"
     >
       <View style={{ flex: 1 }}>
         <Text style={styles.academyCardTitle}>
@@ -864,11 +875,18 @@ useEffect(() => {
                 }}
                 onPress={handleToggleSavedOnly}
                 accessibilityRole="button"
-              accessibilityLabel={
-                showSavedOnly
-                  ? 'Saved articles filter active. Tap to show all articles.'
-                  : 'Tap to filter by saved articles'
-              }>
+                accessibilityLabel={
+                  showSavedOnly
+                    ? 'Saved articles filter'
+                    : 'Saved articles'
+                }
+                accessibilityHint={
+                  showSavedOnly
+                    ? 'Turns off the saved articles filter'
+                    : 'Shows only your saved articles'
+                }
+                accessibilityState={{selected: showSavedOnly}}
+              >
               <Text
                 style={{
                   ...styles.labelStyle,
@@ -897,9 +915,10 @@ useEffect(() => {
                   }}
                   onPress={() => handleCategoryClick(item)}
                   accessibilityRole="button"
-                  accessibilityLabel={`Filter by ${item.name}${
-                    isActive ? ', currently active' : ''
-                  }`}>
+                  accessibilityLabel={`${item.name} category`}
+                  accessibilityHint={`Shows articles in the ${item.name} category`}
+                  accessibilityState={{selected: Boolean(isActive)}}
+                >
                   <Text
                     style={{
                       ...styles.labelStyle,
@@ -1279,4 +1298,3 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 });
-

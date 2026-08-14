@@ -1,83 +1,167 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ACADEMY_BACKGROUND, ACADEMY_PRIMARY, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_SURFACE, ACADEMY_BORDER } from '../../lib/ui/Theme';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {
+  ACADEMY_BACKGROUND,
+  ACADEMY_PRIMARY,
+  ACADEMY_TEXT_PRIMARY,
+  ACADEMY_TEXT_SECONDARY,
+  ACADEMY_SURFACE,
+  ACADEMY_BORDER,
+} from '../../lib/ui/Theme';
 
-const LessonReaderScreen = ({ route, navigation }: any) => {
+const LessonReaderScreen = ({route, navigation}: any) => {
   // In a real app, fetch lesson data using route.params.lessonId
-  
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconButton}>
-          <MaterialCommunityIcons name="close" size={24} color={ACADEMY_TEXT_PRIMARY} />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.iconButton}
+          accessibilityRole="button"
+          accessibilityLabel="Close lesson"
+          accessibilityHint="Returns to the previous screen">
+          <MaterialCommunityIcons
+            name="close"
+            size={24}
+            color={ACADEMY_TEXT_PRIMARY}
+          />
         </TouchableOpacity>
+
         <View style={styles.progressContainer}>
           <View style={styles.progressBar}>
-            <View style={[styles.progressFill, { width: '50%' }]} />
+            <View style={[styles.progressFill, {width: '50%'}]} />
           </View>
         </View>
-        <TouchableOpacity style={styles.iconButton}>
-          <MaterialCommunityIcons name="bookmark-outline" size={24} color={ACADEMY_TEXT_PRIMARY} />
+
+        <TouchableOpacity
+          style={styles.iconButton}
+          accessibilityRole="button"
+          accessibilityLabel="Bookmark lesson"
+          accessibilityHint="Bookmarks this lesson">
+          <MaterialCommunityIcons
+            name="bookmark-outline"
+            size={24}
+            color={ACADEMY_TEXT_PRIMARY}
+          />
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
         <Text style={styles.categoryLabel}>MODULE 1 • LESSON 1</Text>
+
         <Text style={styles.lessonTitle}>What is a Hospital?</Text>
-        
+
         {/* Placeholder for Large Illustration */}
         <View style={styles.illustrationContainer}>
-          <MaterialCommunityIcons name="hospital-building" size={80} color={ACADEMY_PRIMARY} />
+          <MaterialCommunityIcons
+            name="hospital-building"
+            size={80}
+            color={ACADEMY_PRIMARY}
+          />
         </View>
 
         <Text style={styles.paragraph}>
-          A hospital is a health care institution providing patient treatment with specialized medical and nursing staff and medical equipment. The best-known type of hospital is the general hospital, which typically has an emergency department to treat urgent health problems ranging from fire and accident victims to a sudden illness.
+          A hospital is a health care institution providing patient treatment
+          with specialized medical and nursing staff and medical equipment. The
+          best-known type of hospital is the general hospital, which typically
+          has an emergency department to treat urgent health problems ranging
+          from fire and accident victims to a sudden illness.
         </Text>
 
         {/* Medical Alert / Callout */}
         <View style={styles.calloutContainer}>
           <View style={styles.calloutIcon}>
-            <MaterialCommunityIcons name="lightbulb-on" size={24} color="#F59E0B" />
+            <MaterialCommunityIcons
+              name="lightbulb-on"
+              size={24}
+              color="#F59E0B"
+            />
           </View>
+
           <View style={styles.calloutContent}>
             <Text style={styles.calloutTitle}>Quick Fact</Text>
+
             <Text style={styles.calloutText}>
-              The earliest documented institutions aiming to provide cures were ancient Egyptian temples.
+              The earliest documented institutions aiming to provide cures were
+              ancient Egyptian temples.
             </Text>
           </View>
         </View>
 
         <Text style={styles.paragraph}>
-          A district hospital typically is the major health care facility in its region, with large numbers of beds for intensive care and additional beds for patients who need long-term care. Specialized hospitals include trauma centers, rehabilitation hospitals, children's hospitals, seniors' (geriatric) hospitals, and hospitals for dealing with specific medical needs.
+          A district hospital typically is the major health care facility in
+          its region, with large numbers of beds for intensive care and
+          additional beds for patients who need long-term care. Specialized
+          hospitals include trauma centers, rehabilitation hospitals,
+          children's hospitals, seniors' (geriatric) hospitals, and hospitals
+          for dealing with specific medical needs.
         </Text>
 
         {/* Expandable Section / Medical Terminology */}
         <View style={styles.terminologyCard}>
           <Text style={styles.terminologyTitle}>Medical Terminology</Text>
+
           <View style={styles.termRow}>
             <Text style={styles.termName}>Outpatient (OPD)</Text>
-            <Text style={styles.termDesc}>A patient who is not hospitalized overnight but who visits a hospital, clinic, or associated facility for diagnosis or treatment.</Text>
+
+            <Text style={styles.termDesc}>
+              A patient who is not hospitalized overnight but who visits a
+              hospital, clinic, or associated facility for diagnosis or
+              treatment.
+            </Text>
           </View>
+
           <View style={styles.termRow}>
             <Text style={styles.termName}>Inpatient (IPD)</Text>
-            <Text style={styles.termDesc}>A patient who stays in a hospital while under treatment.</Text>
+
+            <Text style={styles.termDesc}>
+              A patient who stays in a hospital while under treatment.
+            </Text>
           </View>
         </View>
-
       </ScrollView>
 
       {/* Bottom Actions */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.actionButton}>
-          <MaterialCommunityIcons name="robot-outline" size={24} color={ACADEMY_PRIMARY} />
+        <TouchableOpacity
+          style={styles.actionButton}
+          accessibilityRole="button"
+          accessibilityLabel="Ask AI"
+          accessibilityHint="Opens the AI assistant for this lesson">
+          <MaterialCommunityIcons
+            name="robot-outline"
+            size={24}
+            color={ACADEMY_PRIMARY}
+          />
+
           <Text style={styles.actionText}>Ask AI</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.nextButton} onPress={() => navigation.goBack()}>
+
+        <TouchableOpacity
+          style={styles.nextButton}
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel="Complete lesson"
+          accessibilityHint="Marks the lesson as complete and returns to the previous screen">
           <Text style={styles.nextButtonText}>Complete Lesson</Text>
-          <MaterialCommunityIcons name="check-circle-outline" size={20} color="#fff" style={{marginLeft: 8}} />
+
+          <MaterialCommunityIcons
+            name="check-circle-outline"
+            size={20}
+            color="#fff"
+            style={{marginLeft: 8}}
+          />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -153,7 +237,7 @@ const styles = StyleSheet.create({
   },
   calloutContainer: {
     flexDirection: 'row',
-    backgroundColor: '#FFFBEB', // Light amber
+    backgroundColor: '#FFFBEB',
     padding: 16,
     borderRadius: 12,
     borderLeftWidth: 4,
@@ -242,7 +326,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
-  }
+  },
 });
 
 export default LessonReaderScreen;

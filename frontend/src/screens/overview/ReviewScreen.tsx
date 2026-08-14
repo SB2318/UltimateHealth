@@ -107,7 +107,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
       socket.off('connect', onConnect);
       socket.off('error', onError);
       socket.off('review-comments');
-      socket.off('new-feedback');
+      socket.off('new-feedback', onNewFeedback);
     };
   }, [socket, route.params.articleId]);
 
@@ -146,7 +146,10 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
                 {
                   backgroundColor: 'white',
                 },
-              ]}>
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Edit article"
+              accessibilityHint="Opens the article editor">
               <FontAwesome5 name="pencil-alt" size={24} color={PRIMARY_COLOR} />
             </TouchableOpacity>
           )}
@@ -202,7 +205,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
                 💬 Add a Comment
               </Text>
               <TextArea
-                id="general-review-input"     // 👈 Added unique web platform ID
+                id="general-review-input"
                 name="generalReviewContent"
                 placeholder="Share your thoughts or ask a question..."
                 value={feedback}
@@ -217,6 +220,8 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
                 borderColor={PRIMARY_COLOR}
                 backgroundColor="#fff"
                 textAlignVertical="top"
+                accessibilityLabel="Comment"
+                accessibilityHint="Enter your thoughts or ask a question"
               />
 
               {feedback.length > 0 && (
@@ -245,7 +250,10 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
                         }
 
                         setFeedback('');
-                      }}>
+                      }}
+                      accessibilityRole="button"
+                      accessibilityLabel="Post Comment"
+                      accessibilityHint="Posts your comment">
                       <Text color="#ffffff" fontSize={16} fontWeight="700">
                         Post Comment
                       </Text>
@@ -260,7 +268,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
         {isLoading ? (
           <YStack
             padding={wp(4)}
-            marginTop={hp(1)} // reduced
+            marginTop={hp(1)}
             alignItems="center"
             space="$2">
             <Spinner size="small" color="#8FA3C0" />
@@ -291,7 +299,10 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
               navigation.navigate('UserProfileScreen', {
                 authorId: authorId,
               });
-            }}>
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={`View profile of ${user ? user?.user_name : 'article author'}`}
+            accessibilityHint="Opens the author's profile">
             {user && user.Profile_image && user.Profile_image !== '' ? (
               <Image
                 source={{

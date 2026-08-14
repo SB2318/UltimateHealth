@@ -438,7 +438,12 @@ const ArticleCard = ({
     onPress={handleCardPress}>
       <View style={[styles.cardContainer, {backgroundColor: themeColors.surface}]}>
         {/* Image Section */}
-<Pressable onPress={handleImagePress} style={styles.imageWrapper}>
+<Pressable
+  onPress={handleImagePress}
+  style={styles.imageWrapper}
+  accessibilityRole="button"
+  accessibilityLabel={`Open article image for ${item?.title}`}
+  accessibilityHint="Double tap to open the article or like it">
   <ImageFallback
     source={{
       uri: item?.imageUtils && item.imageUtils.length > 0

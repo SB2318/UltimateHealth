@@ -1,4 +1,3 @@
- 
 import React, { useState } from 'react';
 import {
   View,
@@ -19,13 +18,16 @@ import { PersonaLobbyScreenProps, Character } from '../../schemas/type';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
+
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width / 2 - 24;
+
 
 const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
   const { isConnected } = useAppSelector((state: any) => state.network);
   const { data: characters, isLoading, error } = useGetCharacters(isConnected);
   const [activeTab, setActiveTab] = useState<'AI' | 'Experts'>('AI');
+
 
   const handleCharacterSelect = (character: Character) => {
     navigation.navigate('ChatbotScreen', {
@@ -35,12 +37,16 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
     });
   };
 
+
   const renderCharacterCard = ({ item }: { item: Character }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => handleCharacterSelect(item)}
-        style={styles.cardContainer}>
+        style={styles.cardContainer}
+        accessibilityRole="button"
+        accessibilityLabel={`Chat with ${item.name}`}
+        accessibilityHint={`Opens a chat with ${item.name}`}>
         <View style={styles.imageContainer}>
           <Image source={{ uri: item.avatarUrl }} style={styles.avatar} />
           <View style={styles.onlineBadge} />
@@ -59,6 +65,7 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
     );
   };
 
+
   const renderComingSoon = () => (
     <View style={styles.comingSoonContainer}>
       <View style={styles.comingSoonIconContainer}>
@@ -74,6 +81,7 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
     </View>
   );
 
+
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
       <View style={styles.header}>
@@ -85,7 +93,10 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
         <View style={styles.tabContainer}>
           <TouchableOpacity
             style={[styles.tabButton, activeTab === 'AI' && styles.tabButtonActive]}
-            onPress={() => setActiveTab('AI')}>
+            onPress={() => setActiveTab('AI')}
+            accessibilityRole="tab"
+            accessibilityLabel="AI Assistants"
+            accessibilityState={{ selected: activeTab === 'AI' }}>
             <Text
               style={[
                 styles.tabText,
@@ -94,9 +105,13 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
               AI Assistants
             </Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.tabButton, activeTab === 'Experts' && styles.tabButtonActive]}
-            onPress={() => setActiveTab('Experts')}>
+            onPress={() => setActiveTab('Experts')}
+            accessibilityRole="tab"
+            accessibilityLabel="Consult Experts"
+            accessibilityState={{ selected: activeTab === 'Experts' }}>
             <Text
               style={[
                 styles.tabText,
@@ -107,6 +122,7 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
           </TouchableOpacity>
         </View>
       </View>
+
 
       <View style={styles.content}>
         {activeTab === 'Experts' ? (
@@ -141,6 +157,7 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
     </SafeAreaView>
   );
 };
+
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -336,5 +353,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 });
+
 
 export default PersonaLobbyScreen;

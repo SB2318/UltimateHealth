@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {useEffect, useState} from 'react';
-import { View,
+import {
+  View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   Platform,
-   ScrollView ,
- } from 'react-native';
+  ScrollView,
+} from 'react-native';
 import {SocialScreenProps} from '../../schemas/type';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
@@ -78,9 +79,12 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
               style={[
                 styles.userCard,
                 {
-                  marginBottom: index === socials.length - 1
-                    ? (Platform.OS === 'ios' ? insets.bottom + 20 : insets.bottom + 40)
-                    : 12,
+                  marginBottom:
+                    index === socials.length - 1
+                      ? Platform.OS === 'ios'
+                        ? insets.bottom + 20
+                        : insets.bottom + 40
+                      : 12,
                 },
               ]}>
               <View style={styles.authorContainer}>
@@ -91,7 +95,10 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                       author_handle: undefined,
                     });
                   }}
-                  activeOpacity={0.7}>
+                  activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel={`View profile of ${follower?.user_name || 'user'}`}
+                  accessibilityHint="Opens this user's profile">
                   {follower.Profile_image && follower.Profile_image !== '' ? (
                     <Image
                       source={{
@@ -100,6 +107,7 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                           : `${GET_STORAGE_DATA}/${follower.Profile_image}`,
                       }}
                       style={styles.authorImage}
+                      accessible={false}
                     />
                   ) : (
                     <Image
@@ -107,9 +115,11 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                         uri: 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
                       }}
                       style={styles.authorImage}
+                      accessible={false}
                     />
                   )}
                 </TouchableOpacity>
+
                 <View style={styles.userInfo}>
                   <Text style={styles.authorName} numberOfLines={1}>
                     {follower ? follower?.user_name : ''}
@@ -132,14 +142,14 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                     <TouchableOpacity
                       style={[
                         styles.followButton,
-                        follower.followers && follower.followers.includes(user_id)
+                        follower.followers &&
+                        follower.followers.includes(user_id)
                           ? styles.followingButton
-                          : null
+                          : null,
                       ]}
                       onPress={() => {
                         followMutate(follower._id, {
                           onSuccess: data => {
-
                             if (data) {
                               emitFollowNotification(
                                 socket,
@@ -148,11 +158,13 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                               );
                               refetch();
                             }
-
                           },
 
                           onError: err => {
-                            console.log('Update Follow mutation error', err);
+                            console.log(
+                              'Update Follow mutation error',
+                              err,
+                            );
                             Snackbar.show({
                               text: 'Try again!',
                               duration: Snackbar.LENGTH_SHORT,
@@ -160,7 +172,23 @@ export default function Socialcreen({navigation, route}: SocialScreenProps) {
                           },
                         });
                       }}
-                      activeOpacity={0.7}>
+                      activeOpacity={0.7}
+                      accessibilityRole="button"
+                      accessibilityLabel={
+                        follower.followers &&
+                        follower.followers.includes(user_id)
+                          ? `Following ${follower?.user_name || 'user'}`
+                          : `Follow ${follower?.user_name || 'user'}`
+                      }
+                      accessibilityHint={
+                        follower.followers &&
+                        follower.followers.includes(user_id)
+                          ? 'You are currently following this user'
+                          : 'Follows this user'
+                      }
+                      accessibilityState={{
+                        disabled: false,
+                      }}>
                       <Text style={styles.followButtonText}>
                         {follower.followers &&
                         follower.followers.includes(user_id)

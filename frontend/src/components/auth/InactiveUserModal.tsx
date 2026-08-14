@@ -1,13 +1,14 @@
- 
 import React from 'react';
 import { Modal, TouchableOpacity, Text, View, StyleSheet, Linking } from 'react-native';
 import { hp } from '../../lib/ui/Metric';
+
 
 interface InactiveUserModalProps {
   open: boolean;
   onRequestAdmin: () => void;
   reason?: string;
 }
+
 
 const InactiveUserModal: React.FC<InactiveUserModalProps> = ({
   open,
@@ -20,6 +21,7 @@ const InactiveUserModal: React.FC<InactiveUserModalProps> = ({
         '.%0D%0A%0D%0APlease%20assist%20me%20with%20this%20issue.%0D%0A%0D%0AThank%20you.'
     );
   };
+
 
   return (
     <Modal
@@ -39,7 +41,14 @@ const InactiveUserModal: React.FC<InactiveUserModalProps> = ({
             support team for assistance.
           </Text>
 
-          <TouchableOpacity onPress={handleContactSupport} style={styles.button} activeOpacity={0.8}>
+
+          <TouchableOpacity
+            onPress={handleContactSupport}
+            style={styles.button}
+            activeOpacity={0.8}
+            accessibilityRole="button"
+            accessibilityLabel="Contact Support"
+            accessibilityHint="Opens your email app to contact support about your account restriction">
             <Text style={styles.buttonText}> Contact Support</Text>
           </TouchableOpacity>
         </View>
@@ -47,6 +56,7 @@ const InactiveUserModal: React.FC<InactiveUserModalProps> = ({
     </Modal>
   );
 };
+
 
 const styles = StyleSheet.create({
   overlay: {
@@ -90,5 +100,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
 
 export default InactiveUserModal;

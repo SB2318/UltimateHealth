@@ -1,12 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ACADEMY_BACKGROUND, ACADEMY_PRIMARY, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_SURFACE, ACADEMY_BORDER } from '../../lib/ui/Theme';
-import { ACADEMY_COURSES } from '../../lib/utils/AcademyMockData';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {
+  ACADEMY_BACKGROUND,
+  ACADEMY_PRIMARY,
+  ACADEMY_TEXT_PRIMARY,
+  ACADEMY_TEXT_SECONDARY,
+  ACADEMY_SURFACE,
+  ACADEMY_BORDER,
+} from '../../lib/ui/Theme';
+import {ACADEMY_COURSES} from '../../lib/utils/AcademyMockData';
 
-const CourseDetailScreen = ({ route, navigation }: any) => {
-  const { courseId } = route.params;
+const CourseDetailScreen = ({route, navigation}: any) => {
+  const {courseId} = route.params;
   const course = ACADEMY_COURSES.find(c => c.id === courseId);
 
   if (!course) {
@@ -22,11 +35,26 @@ const CourseDetailScreen = ({ route, navigation }: any) => {
       <ScrollView style={styles.container} bounces={false}>
         {/* Header / Banner */}
         <View style={styles.bannerContainer}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-            <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            accessibilityHint="Returns to the previous screen">
+            <MaterialCommunityIcons
+              name="arrow-left"
+              size={24}
+              color="#fff"
+            />
           </TouchableOpacity>
+
           <View style={styles.bannerContent}>
-            <MaterialCommunityIcons name={course.imageIcon as any} size={64} color="#fff" style={styles.bannerIcon} />
+            <MaterialCommunityIcons
+              name={course.imageIcon as any}
+              size={64}
+              color="#fff"
+              style={styles.bannerIcon}
+            />
             <Text style={styles.courseTitle}>{course.title}</Text>
             <Text style={styles.courseCategory}>{course.category}</Text>
           </View>
@@ -36,16 +64,32 @@ const CourseDetailScreen = ({ route, navigation }: any) => {
           {/* Meta Info */}
           <View style={styles.metaRow}>
             <View style={styles.metaItem}>
-              <MaterialCommunityIcons name="signal" size={20} color={ACADEMY_PRIMARY} />
+              <MaterialCommunityIcons
+                name="signal"
+                size={20}
+                color={ACADEMY_PRIMARY}
+              />
               <Text style={styles.metaText}>{course.difficulty}</Text>
             </View>
+
             <View style={styles.metaItem}>
-              <MaterialCommunityIcons name="clock-outline" size={20} color={ACADEMY_PRIMARY} />
+              <MaterialCommunityIcons
+                name="clock-outline"
+                size={20}
+                color={ACADEMY_PRIMARY}
+              />
               <Text style={styles.metaText}>{course.duration}</Text>
             </View>
+
             <View style={styles.metaItem}>
-              <MaterialCommunityIcons name="book-open-outline" size={20} color={ACADEMY_PRIMARY} />
-              <Text style={styles.metaText}>{course.lessonsCount} Lessons</Text>
+              <MaterialCommunityIcons
+                name="book-open-outline"
+                size={20}
+                color={ACADEMY_PRIMARY}
+              />
+              <Text style={styles.metaText}>
+                {course.lessonsCount} Lessons
+              </Text>
             </View>
           </View>
 
@@ -65,44 +109,96 @@ const CourseDetailScreen = ({ route, navigation }: any) => {
 
           {/* Modules/Syllabus */}
           <Text style={styles.sectionTitle}>Syllabus</Text>
+
           {course.modules.length > 0 ? (
             course.modules.map((module, index) => (
               <View key={module.id} style={styles.moduleContainer}>
                 <View style={styles.moduleHeader}>
-                  <Text style={styles.moduleTitle}>Module {index + 1}: {module.title}</Text>
+                  <Text style={styles.moduleTitle}>
+                    Module {index + 1}: {module.title}
+                  </Text>
                 </View>
+
                 {module.lessons.map((lesson, lIndex) => (
-                  <TouchableOpacity 
-                    key={lesson.id} 
+                  <TouchableOpacity
+                    key={lesson.id}
                     style={styles.lessonRow}
-                    onPress={() => navigation.navigate('LessonReader', { lessonId: lesson.id })}
-                  >
+                    onPress={() =>
+                      navigation.navigate('LessonReader', {
+                        lessonId: lesson.id,
+                      })
+                    }
+                    accessibilityRole="button"
+                    accessibilityLabel={`Open lesson ${lIndex + 1}: ${lesson.title}`}
+                    accessibilityHint={`Opens the lesson ${lesson.completed ? 'to review' : 'to start learning'}`}>
                     <View style={styles.lessonIconContainer}>
-                      <MaterialCommunityIcons 
-                        name={lesson.completed ? "check-circle" : (lesson.type === 'video' ? 'play-circle-outline' : 'file-document-outline')} 
-                        size={24} 
-                        color={lesson.completed ? ACADEMY_PRIMARY : ACADEMY_TEXT_SECONDARY} 
+                      <MaterialCommunityIcons
+                        name={
+                          lesson.completed
+                            ? 'check-circle'
+                            : lesson.type === 'video'
+                            ? 'play-circle-outline'
+                            : 'file-document-outline'
+                        }
+                        size={24}
+                        color={
+                          lesson.completed
+                            ? ACADEMY_PRIMARY
+                            : ACADEMY_TEXT_SECONDARY
+                        }
                       />
                     </View>
+
                     <View style={styles.lessonContent}>
-                      <Text style={styles.lessonTitle}>{lIndex + 1}. {lesson.title}</Text>
-                      <Text style={styles.lessonDuration}>{lesson.duration}</Text>
+                      <Text style={styles.lessonTitle}>
+                        {lIndex + 1}. {lesson.title}
+                      </Text>
+
+                      <Text style={styles.lessonDuration}>
+                        {lesson.duration}
+                      </Text>
                     </View>
-                    <MaterialCommunityIcons name="chevron-right" size={20} color={ACADEMY_TEXT_SECONDARY} />
+
+                    <MaterialCommunityIcons
+                      name="chevron-right"
+                      size={20}
+                      color={ACADEMY_TEXT_SECONDARY}
+                    />
                   </TouchableOpacity>
                 ))}
               </View>
             ))
           ) : (
-            <Text style={styles.emptyText}>Modules are being prepared.</Text>
+            <Text style={styles.emptyText}>
+              Modules are being prepared.
+            </Text>
           )}
         </View>
       </ScrollView>
 
       {/* Sticky Bottom Action */}
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.startButton} onPress={() => navigation.navigate('LessonReader', { lessonId: 'l1' })}>
-          <Text style={styles.startButtonText}>{course.progress > 0 ? 'Continue Learning' : 'Start Learning'}</Text>
+        <TouchableOpacity
+          style={styles.startButton}
+          onPress={() =>
+            navigation.navigate('LessonReader', {lessonId: 'l1'})
+          }
+          accessibilityRole="button"
+          accessibilityLabel={
+            course.progress > 0
+              ? 'Continue learning'
+              : 'Start learning'
+          }
+          accessibilityHint={
+            course.progress > 0
+              ? 'Continues the course from your current progress'
+              : 'Starts the course lessons'
+          }>
+          <Text style={styles.startButtonText}>
+            {course.progress > 0
+              ? 'Continue Learning'
+              : 'Start Learning'}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -153,7 +249,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     padding: 20,
-    paddingBottom: 100, // space for bottom bar
+    paddingBottom: 100,
   },
   metaRow: {
     flexDirection: 'row',
@@ -161,11 +257,11 @@ const styles = StyleSheet.create({
     backgroundColor: ACADEMY_SURFACE,
     padding: 16,
     borderRadius: 16,
-    marginTop: -40, // overlap with banner
+    marginTop: -40,
     shadowColor: '#000',
     shadowOpacity: 0.05,
     shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     elevation: 3,
     marginBottom: 24,
   },
@@ -275,7 +371,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
-  }
+  },
 });
 
 export default CourseDetailScreen;

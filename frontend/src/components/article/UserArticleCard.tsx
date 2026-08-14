@@ -9,13 +9,13 @@ import {
   useColorScheme,
   Dimensions,
 } from 'react-native';
-import { ArticleCardProps, ArticleData } from '../../schemas/type';
+import {ArticleCardProps, ArticleData} from '../../schemas/type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { PRIMARY_COLOR } from '../../lib/ui/Theme';
-import { getReadTime } from '../../lib/utils/readTime';
+import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {getReadTime} from '../../lib/utils/readTime';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 
 const UserArticleCard = ({
   item,
@@ -24,21 +24,24 @@ const UserArticleCard = ({
   setSelectedCardId,
 }: ArticleCardProps) => {
   const isDarkMode = useColorScheme() === 'dark';
-  
+
   // Safe extraction of author info based on previous fixes
-  const authorName = typeof item.authorId === 'object' && item.authorId !== null 
-    ? (item.authorId as any).user_name 
-    : item.authorName || 'Unknown Author';
-    
-  const authorImage = typeof item.authorId === 'object' && item.authorId !== null 
-    ? (item.authorId as any).Profile_image 
-    : 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
+  const authorName =
+    typeof item.authorId === 'object' && item.authorId !== null
+      ? (item.authorId as any).user_name
+      : item.authorName || 'Unknown Author';
+
+  const authorImage =
+    typeof item.authorId === 'object' && item.authorId !== null
+      ? (item.authorId as any).Profile_image
+      : 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
 
   const handlePress = () => {
     setSelectedCardId(String(item._id));
-    const finalAuthorId = typeof item.authorId === 'object' && item.authorId !== null 
-      ? (item.authorId as any)._id 
-      : String(item.authorId);
+    const finalAuthorId =
+      typeof item.authorId === 'object' && item.authorId !== null
+        ? (item.authorId as any)._id
+        : String(item.authorId);
 
     const nav = navigation as any;
     nav.navigate('ArticleScreen', {
@@ -49,53 +52,127 @@ const UserArticleCard = ({
 
   return (
     <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Open article ${item?.title || 'article'}`}
+      accessibilityHint="Opens the full article"
       onPress={handlePress}
-      style={({ pressed }: { pressed: boolean }) => [
+      style={({pressed}: {pressed: boolean}) => [
         styles.cardContainer,
         {
           backgroundColor: isDarkMode ? '#1F2937' : '#FFFFFF',
           borderColor: isDarkMode ? '#374151' : '#F1F5F9',
-          transform: [{ scale: pressed ? 0.98 : 1 }],
+          transform: [{scale: pressed ? 0.98 : 1}],
           shadowColor: isDarkMode ? '#000' : '#8A9DB0',
         },
       ]}>
-      
       {/* Top Section: Author & Meta */}
       <View style={styles.header}>
         <View style={styles.authorInfo}>
-          <Image source={{ uri: authorImage }} style={styles.avatar} />
+          <Image
+            source={{uri: authorImage}}
+            style={styles.avatar}
+            accessibilityRole="image"
+            accessibilityLabel={`${authorName} profile picture`}
+          />
           <View>
-            <Text style={[styles.authorName, { color: isDarkMode ? '#F9FAFB' : '#111827' }]}>
+            <Text
+              style={[
+                styles.authorName,
+                {color: isDarkMode ? '#F9FAFB' : '#111827'},
+              ]}>
               {authorName}
             </Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
-              <Text style={[styles.metaText, { color: isDarkMode ? '#9CA3AF' : '#6B7280' }]}>
-                {item.status === 'published' ? 'Published' : 'Draft'} • {item.lastUpdated ? new Date(item.lastUpdated).toLocaleDateString() : 'Recent'}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}>
+              <Text
+                style={[
+                  styles.metaText,
+                  {color: isDarkMode ? '#9CA3AF' : '#6B7280'},
+                ]}>
+                {item.status === 'published' ? 'Published' : 'Draft'} •{' '}
+                {item.lastUpdated
+                  ? new Date(item.lastUpdated).toLocaleDateString()
+                  : 'Recent'}
               </Text>
-              <Text style={[styles.metaText, { color: isDarkMode ? '#9CA3AF' : '#6B7280' }]}> • </Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
-                <Ionicons name="time-outline" size={12} color={isDarkMode ? '#9CA3AF' : '#6B7280'} style={{ marginRight: 4 }} />
-                <Text style={[styles.metaText, { color: isDarkMode ? '#9CA3AF' : '#6B7280', marginTop: 0 }]}>
-                  {getReadTime(item.content || item.body || item.description || item.title || '')}
+              <Text
+                style={[
+                  styles.metaText,
+                  {color: isDarkMode ? '#9CA3AF' : '#6B7280'},
+                ]}>
+                {' '}
+                •{' '}
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginTop: 2,
+                }}>
+                <Ionicons
+                  name="time-outline"
+                  size={12}
+                  color={isDarkMode ? '#9CA3AF' : '#6B7280'}
+                  style={{marginRight: 4}}
+                  accessibilityElementsHidden={true}
+                  importantForAccessibility="no"
+                />
+                <Text
+                  style={[
+                    styles.metaText,
+                    {
+                      color: isDarkMode ? '#9CA3AF' : '#6B7280',
+                      marginTop: 0,
+                    },
+                  ]}>
+                  {getReadTime(
+                    item.content ||
+                      item.body ||
+                      item.description ||
+                      item.title ||
+                      '',
+                  )}
                 </Text>
               </View>
             </View>
           </View>
         </View>
-        
+
         {/* Simple interactions */}
-        <View style={styles.actions}>
-          <FontAwesome6 name="bookmark" size={16} color={isDarkMode ? '#9CA3AF' : '#6B7280'} />
+        <View
+          style={styles.actions}
+          accessibilityRole="image"
+          accessibilityLabel="Article saved">
+          <FontAwesome6
+            name="bookmark"
+            size={16}
+            color={isDarkMode ? '#9CA3AF' : '#6B7280'}
+            accessibilityElementsHidden={true}
+            importantForAccessibility="no"
+          />
         </View>
       </View>
 
       {/* Main Content */}
       <View style={styles.body}>
-        <Text style={[styles.title, { color: isDarkMode ? '#F3F4F6' : '#1F2937' }]} numberOfLines={2}>
+        <Text
+          style={[
+            styles.title,
+            {color: isDarkMode ? '#F3F4F6' : '#1F2937'},
+          ]}
+          numberOfLines={2}>
           {item.title}
         </Text>
         {item.description ? (
-          <Text style={[styles.description, { color: isDarkMode ? '#D1D5DB' : '#4B5563' }]} numberOfLines={2}>
+          <Text
+            style={[
+              styles.description,
+              {color: isDarkMode ? '#D1D5DB' : '#4B5563'},
+            ]}
+            numberOfLines={2}>
             {item.description}
           </Text>
         ) : null}
@@ -103,18 +180,36 @@ const UserArticleCard = ({
 
       {/* Tags Section */}
       <View style={styles.footer}>
-        {item.tags && Array.isArray(item.tags) && item.tags.slice(0, 3).map((tag: any, index: number) => {
-          const tagName = typeof tag === 'object' ? tag.name : tag;
-          return tagName ? (
-            <View key={index} style={[styles.tagPill, { backgroundColor: isDarkMode ? '#374151' : '#F3F4F6' }]}>
-              <Text style={[styles.tagText, { color: isDarkMode ? '#D1D5DB' : '#4B5563' }]}>
-                #{tagName}
-              </Text>
-            </View>
-          ) : null;
-        })}
+        {item.tags &&
+          Array.isArray(item.tags) &&
+          item.tags.slice(0, 3).map((tag: any, index: number) => {
+            const tagName = typeof tag === 'object' ? tag.name : tag;
+            return tagName ? (
+              <View
+                key={index}
+                style={[
+                  styles.tagPill,
+                  {
+                    backgroundColor: isDarkMode ? '#374151' : '#F3F4F6',
+                  },
+                ]}
+                accessible={false}>
+                <Text
+                  style={[
+                    styles.tagText,
+                    {color: isDarkMode ? '#D1D5DB' : '#4B5563'},
+                  ]}>
+                  #{tagName}
+                </Text>
+              </View>
+            ) : null;
+          })}
         {item.tags && item.tags.length > 3 && (
-          <Text style={[styles.moreTags, { color: PRIMARY_COLOR }]}>+{item.tags.length - 3}</Text>
+          <Text
+            style={[styles.moreTags, {color: PRIMARY_COLOR}]}
+            accessibilityLabel={`${item.tags.length - 3} more tags`}>
+            +{item.tags.length - 3}
+          </Text>
         )}
       </View>
     </Pressable>
@@ -131,7 +226,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    shadowOffset: { width: 0, height: 8 },
+    shadowOffset: {width: 0, height: 8},
     shadowOpacity: 0.08,
     shadowRadius: 16,
     elevation: 4,

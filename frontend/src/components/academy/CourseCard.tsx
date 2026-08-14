@@ -13,7 +13,8 @@ interface CourseCardProps {
 
 const CourseCard = ({ course, onPress }: CourseCardProps) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
+    <TouchableOpacity  accessibilityRole="button"
+  accessibilityLabel={`Open course: ${course.title}`}style={styles.card} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.iconContainer}>
         <MaterialCommunityIcons name={course.imageIcon as IconName} size={40} color={ACADEMY_PRIMARY} />
       </View>

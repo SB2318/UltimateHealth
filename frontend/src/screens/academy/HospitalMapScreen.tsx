@@ -1,44 +1,148 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ACADEMY_BACKGROUND, ACADEMY_PRIMARY, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_SURFACE, ACADEMY_BORDER } from '../../lib/ui/Theme';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {
+  ACADEMY_BACKGROUND,
+  ACADEMY_PRIMARY,
+  ACADEMY_TEXT_PRIMARY,
+  ACADEMY_TEXT_SECONDARY,
+  ACADEMY_SURFACE,
+  ACADEMY_BORDER,
+} from '../../lib/ui/Theme';
 
 const DEPARTMENTS = [
-  { id: 'reception', name: 'Reception', icon: 'monitor-dashboard', color: '#3B82F6', row: 0, col: 0 },
-  { id: 'emergency', name: 'Emergency', icon: 'ambulance', color: '#EF4444', row: 0, col: 1 },
-  { id: 'opd', name: 'OPD', icon: 'stethoscope', color: '#10B981', row: 1, col: 0 },
-  { id: 'pharmacy', name: 'Pharmacy', icon: 'pill', color: '#F59E0B', row: 1, col: 1 },
-  { id: 'radiology', name: 'Radiology', icon: 'radioactive', color: '#8B5CF6', row: 2, col: 0 },
-  { id: 'lab', name: 'Laboratory', icon: 'flask', color: '#06B6D4', row: 2, col: 1 },
-  { id: 'icu', name: 'ICU', icon: 'bed-outline', color: '#EF4444', row: 3, col: 0 },
-  { id: 'ot', name: 'Operation Theater', icon: 'needle', color: '#10B981', row: 3, col: 1 },
+  {
+    id: 'reception',
+    name: 'Reception',
+    icon: 'monitor-dashboard',
+    color: '#3B82F6',
+    row: 0,
+    col: 0,
+  },
+  {
+    id: 'emergency',
+    name: 'Emergency',
+    icon: 'ambulance',
+    color: '#EF4444',
+    row: 0,
+    col: 1,
+  },
+  {
+    id: 'opd',
+    name: 'OPD',
+    icon: 'stethoscope',
+    color: '#10B981',
+    row: 1,
+    col: 0,
+  },
+  {
+    id: 'pharmacy',
+    name: 'Pharmacy',
+    icon: 'pill',
+    color: '#F59E0B',
+    row: 1,
+    col: 1,
+  },
+  {
+    id: 'radiology',
+    name: 'Radiology',
+    icon: 'radioactive',
+    color: '#8B5CF6',
+    row: 2,
+    col: 0,
+  },
+  {
+    id: 'lab',
+    name: 'Laboratory',
+    icon: 'flask',
+    color: '#06B6D4',
+    row: 2,
+    col: 1,
+  },
+  {
+    id: 'icu',
+    name: 'ICU',
+    icon: 'bed-outline',
+    color: '#EF4444',
+    row: 3,
+    col: 0,
+  },
+  {
+    id: 'ot',
+    name: 'Operation Theater',
+    icon: 'needle',
+    color: '#10B981',
+    row: 3,
+    col: 1,
+  },
 ];
 
-const HospitalMapScreen = ({ navigation }: any) => {
+const HospitalMapScreen = ({navigation}: any) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={ACADEMY_TEXT_PRIMARY} />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.iconButton}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Returns to the previous screen">
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={24}
+            color={ACADEMY_TEXT_PRIMARY}
+          />
         </TouchableOpacity>
+
         <Text style={styles.headerTitle}>Hospital Map</Text>
-        <View style={{ width: 40 }} />
+
+        <View style={{width: 40}} />
       </View>
 
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.instructions}>Tap on a department to view its workflow.</Text>
-        
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
+        <Text style={styles.instructions}>
+          Tap on a department to view its workflow.
+        </Text>
+
         <View style={styles.mapGrid}>
           {DEPARTMENTS.map(dept => (
-            <TouchableOpacity 
-              key={dept.id} 
-              style={[styles.deptCard, { borderTopColor: dept.color }]}
-              onPress={() => navigation.navigate('Workflow', { deptId: dept.id, deptName: dept.name, color: dept.color })}
-            >
-              <View style={[styles.iconContainer, { backgroundColor: `${dept.color}15` }]}>
-                <MaterialCommunityIcons name={dept.icon as any} size={32} color={dept.color} />
+            <TouchableOpacity
+              key={dept.id}
+              style={[
+                styles.deptCard,
+                {borderTopColor: dept.color},
+              ]}
+              onPress={() =>
+                navigation.navigate('Workflow', {
+                  deptId: dept.id,
+                  deptName: dept.name,
+                  color: dept.color,
+                })
+              }
+              accessibilityRole="button"
+              accessibilityLabel={`${dept.name} department`}
+              accessibilityHint={`Opens the ${dept.name} department workflow`}>
+              <View
+                style={[
+                  styles.iconContainer,
+                  {backgroundColor: `${dept.color}15`},
+                ]}>
+                <MaterialCommunityIcons
+                  name={dept.icon as any}
+                  size={32}
+                  color={dept.color}
+                />
               </View>
+
               <Text style={styles.deptName}>{dept.name}</Text>
             </TouchableOpacity>
           ))}
@@ -100,7 +204,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.05,
     shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     elevation: 2,
   },
   iconContainer: {
@@ -116,7 +220,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: ACADEMY_TEXT_PRIMARY,
     textAlign: 'center',
-  }
+  },
 });
 
 export default HospitalMapScreen;

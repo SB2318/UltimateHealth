@@ -1,4 +1,3 @@
- 
 import React from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import {hp, wp} from '../../lib/ui/Metric';
@@ -26,7 +25,13 @@ const NoInternet = ({onRetry}: NoInternetProps) => {
         <Text style={styles.subtitle}>
           It seems there is something wrong with your internet connection!
         </Text>
-        <TouchableOpacity style={styles.button} onPress={onRetry}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={onRetry}
+          accessibilityRole="button"
+          accessibilityLabel="Try again"
+          accessibilityHint="Retries the internet connection"
+        >
           <Text style={styles.buttonText}>Try again</Text>
         </TouchableOpacity>
       </View>

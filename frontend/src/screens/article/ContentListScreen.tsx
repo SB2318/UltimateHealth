@@ -4,6 +4,7 @@ import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import ArticleCard from '../../components/article/ArticleCard';
 
+
 import { useTheme } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData, RootStackParamList} from '../../schemas/type';
@@ -14,7 +15,9 @@ import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
 import {wp, hp, fp} from '../../lib/ui/Metric';
 import {StackScreenProps} from '@react-navigation/stack';
 
+
 type Props = StackScreenProps<RootStackParamList, 'ContentListScreen'>;
+
 
 const ContentListScreen = ({navigation, route}: Props) => {
   const initialType = route.params?.type || 'articles';
@@ -24,7 +27,9 @@ const ContentListScreen = ({navigation, route}: Props) => {
   const [selectedCardId, setSelectedCardId] = useState<string>('');
   const [selectedTab, setSelectedTab] = useState<'articles' | 'reposts' | 'saved'>(initialType);
 
+
   const {data: user, refetch, isLoading} = useGetProfile();
+
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -32,11 +37,13 @@ const ContentListScreen = ({navigation, route}: Props) => {
     setRefreshing(false);
   }, [refetch]);
 
+
   useFocusEffect(
     useCallback(() => {
       refetch();
     }, [refetch]),
   );
+
 
   const handleReportAction = useCallback((item: ArticleData) => {
     navigation.navigate('ReportScreen', {
@@ -46,6 +53,7 @@ const ContentListScreen = ({navigation, route}: Props) => {
       podcastId: null,
     });
   }, [navigation]);
+
 
   const renderItem = useCallback(
     ({item}: {item: ArticleData}) => {
@@ -71,6 +79,7 @@ const ContentListScreen = ({navigation, route}: Props) => {
     ],
   );
 
+
   if (isLoading) {
     return (
       <SafeAreaView
@@ -84,6 +93,7 @@ const ContentListScreen = ({navigation, route}: Props) => {
     );
   }
 
+
   const themeColors = {
     background: isDarkMode ? '#121212' : '#ffffff',
     card: isDarkMode ? '#1f2937' : '#ffffff',
@@ -93,6 +103,7 @@ const ContentListScreen = ({navigation, route}: Props) => {
     iconBackground: isDarkMode ? '#374151' : '#f3f4f6',
   };
 
+
   const listData = useMemo(() => {
     if (!user) return [];
     if (selectedTab === 'articles') return user.articles || [];
@@ -100,6 +111,7 @@ const ContentListScreen = ({navigation, route}: Props) => {
     if (selectedTab === 'saved') return user.savedArticles || [];
     return [];
   }, [user, selectedTab]);
+
 
   const renderTabs = () => (
     <View style={[styles.tabsContainer, { backgroundColor: themeColors.background, borderBottomColor: themeColors.border }]}>
@@ -120,6 +132,10 @@ const ContentListScreen = ({navigation, route}: Props) => {
             key={tab}
             style={[styles.tab, isSelected ? { borderBottomColor: PRIMARY_COLOR } : {}]}
             onPress={() => setSelectedTab(tab)}
+            accessibilityRole="tab"
+            accessibilityLabel={labels[tab]}
+            accessibilityState={{ selected: isSelected }}
+            accessibilityHint={`Shows your ${labels[tab].toLowerCase()}`}
           >
             <Text style={[styles.tabText, { color: isSelected ? PRIMARY_COLOR : themeColors.textSecondary }, isSelected ? styles.tabTextActive : {}]}>
               {labels[tab]}
@@ -132,6 +148,7 @@ const ContentListScreen = ({navigation, route}: Props) => {
       })}
     </View>
   );
+
 
   const renderEmptyComponent = () => (
     <View style={styles.emptyContainer}>
@@ -146,6 +163,7 @@ const ContentListScreen = ({navigation, route}: Props) => {
       </Text>
     </View>
   );
+
 
   return (
     <SafeAreaView
@@ -174,7 +192,9 @@ const ContentListScreen = ({navigation, route}: Props) => {
   );
 };
 
-export default ContentListScreen;
+
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -228,3 +248,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   }
 });
+
+
+export default ContentListScreen;

@@ -158,15 +158,18 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         </View>
 
         <View style={styles.content}>
-           <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#111827' }]}>Profile Details</Text>
-           <Text style={[styles.subtitle, { color: isDarkMode ? '#9CA3AF' : '#6B7280' }]}>To edit your details, click the gear icon in the header.</Text>
-           
-           <TouchableOpacity 
-             style={styles.editButton}
-             onPress={() => navigation.navigate('ProfileEditScreen')}
-           >
-             <Text style={styles.editButtonText}>Edit Profile Information</Text>
-           </TouchableOpacity>
+          <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#111827' }]}>Profile Details</Text>
+          <Text style={[styles.subtitle, { color: isDarkMode ? '#9CA3AF' : '#6B7280' }]}>To edit your details, click the gear icon in the header.</Text>
+
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => navigation.navigate('ProfileEditScreen')}
+            accessibilityRole="button"
+            accessibilityLabel="Edit Profile Information"
+            accessibilityHint="Opens the profile editing screen"
+          >
+            <Text style={styles.editButtonText}>Edit Profile Information</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

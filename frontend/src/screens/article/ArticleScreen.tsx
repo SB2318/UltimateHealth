@@ -1101,7 +1101,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           ) : (
             <TouchableOpacity
               onPress={handleLike}
-              style={[styles.likeButton, { backgroundColor: themeColors.floatingButtonBg }]}>
+              style={[styles.likeButton, { backgroundColor: themeColors.floatingButtonBg }]}
+              accessibilityRole="button"
+              accessibilityLabel={isLiked ? 'Unlike article' : 'Like article'}
+              accessibilityHint={isLiked ? 'Removes your like from this article' : 'Likes this article'}
+              accessibilityState={{disabled: likeMutationPending}}>
               <Ionicons
                 name={isLiked ? 'heart' : 'heart-outline'}
                 size={26}
@@ -1118,7 +1122,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 handleTtsPlay();
               }
             }}
-            style={[styles.playButton, { backgroundColor: themeColors.floatingButtonBg }]}>
+            style={[styles.playButton, { backgroundColor: themeColors.floatingButtonBg }]}
+            accessibilityRole="button"
+            accessibilityLabel={playerVisible ? 'Stop article audio' : 'Play article audio'}
+            accessibilityHint={playerVisible ? 'Stops reading the article aloud' : 'Reads the article aloud'}>
             <Ionicons
               name="headset"
               size={24}
@@ -1251,8 +1258,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                       <TouchableOpacity
                         key={option}
                         onPress={() => handleSelectFontSize(option)}
-                        accessibilityRole="button"
-                        accessibilityLabel={`${label} font size option`}
+                        accessibilityRole="radio"
+                        accessibilityLabel={`${label} font size`}
+                        accessibilityHint={`Sets article text to ${label.toLowerCase()} size`}
                         accessibilityState={{selected: isSelected}}
                         hitSlop={{top: 8, bottom: 8, left: 8, right: 8}}
                         style={[
@@ -1284,8 +1292,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   onPress={toggleDyslexiaMode}
                   accessibilityRole="switch"
                   accessibilityState={{ checked: isDyslexiaMode }}
-                  accessibilityLabel="Toggle Dyslexia-Friendly Reading Mode"
-                  accessibilityHint="Toggles the reading mode to use a dyslexia-friendly font and spacing"
+                  accessibilityLabel="Dyslexia-Friendly Reading Mode"
+                  accessibilityHint="Toggles dyslexia-friendly formatting for the article"
                   style={[
                     styles.dyslexiaButton,
                     {
@@ -1459,6 +1467,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         <View style={[styles.authorRow, { borderBottomColor: footerColors.border }]}>
           <View style={styles.authorContainer}>
             <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel="View author profile"
+              accessibilityHint="Opens the author's profile"
               onPress={() => {
                 if (isGuest) {
                   navigation.navigate('GuestPlaceholderScreen', {
@@ -1504,6 +1515,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               </Text>
               {article && article.contributors && article.contributors.length > 0 && (
                 <TouchableOpacity
+                  accessibilityRole="button"
+                  accessibilityLabel="View all contributors"
+                  accessibilityHint="Opens the list of article contributors"
                   onPress={() => {
                     if (isGuest) {
                       navigation.navigate('GuestPlaceholderScreen', {
@@ -1530,7 +1544,13 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             followMutationPending ? (
               <LoadingSpinner size={40} />
             ) : (
-              <TouchableOpacity style={styles.followButton} onPress={handleFollow}>
+              <TouchableOpacity
+                style={styles.followButton}
+                onPress={handleFollow}
+                accessibilityRole="button"
+                accessibilityLabel={localIsFollowing ? 'Unfollow author' : 'Follow author'}
+                accessibilityHint={localIsFollowing ? 'Stops following this author' : 'Follows this author'}
+                accessibilityState={{disabled: followMutationPending}}>
                 <Text style={styles.followButtonText}>
                   {localIsFollowing
                     ? 'Following'
@@ -1562,7 +1582,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               },
             ]}
             onPress={handleLike}
-            disabled={likeMutationPending}>
+            disabled={likeMutationPending}
+            accessibilityRole="button"
+            accessibilityLabel={isLiked ? 'Unlike article' : 'Like article'}
+            accessibilityHint={isLiked ? 'Removes your like from this article' : 'Likes this article'}
+            accessibilityState={{disabled: likeMutationPending}}>
             {likeMutationPending ? (
               <LoadingSpinner size={18} />
             ) : (
@@ -1586,6 +1610,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Comment on article"
+            accessibilityHint="Opens the comments for this article"
             style={[
               styles.actionButtonFooter,
               {backgroundColor: footerColors.pillBackground},
@@ -1619,6 +1646,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Share article"
+            accessibilityHint="Opens sharing options for this article"
             style={[
               styles.actionButtonFooter,
               {backgroundColor: footerColors.pillBackground},
@@ -1631,6 +1661,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Copy article link"
+            accessibilityHint="Copies the article link to the clipboard"
             style={[
               styles.actionButtonFooter,
               {backgroundColor: footerColors.pillBackground},
@@ -1643,6 +1676,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Translate article"
+            accessibilityHint="Opens the article translation screen"
             style={[
               styles.actionButtonFooter,
               {backgroundColor: footerColors.pillBackground},
@@ -1659,6 +1695,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Improve article"
+            accessibilityHint="Opens the article editor to improve this article"
             style={[
               styles.actionButtonFooter,
               {backgroundColor: footerColors.pillBackground},
@@ -1675,6 +1714,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           </TouchableOpacity>
 
           <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel={article?.savedUsers?.includes(user_id) ? 'Remove article from saved' : 'Save article'}
+            accessibilityHint={article?.savedUsers?.includes(user_id) ? 'Removes this article from your saved articles' : 'Saves this article for later'}
+            accessibilityState={{disabled: saveMutationPending}}
             style={[
               styles.actionButtonFooter,
               {
@@ -1729,8 +1772,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             onPress={handleTrust}
             disabled={trustMutationPending}
             accessibilityRole="button"
-            accessibilityLabel="Trust this article"
-            accessibilityHint="Marks or unmarks this article as trusted">
+            accessibilityLabel={isTrusted ? 'Remove article trust' : 'Trust article'}
+            accessibilityHint={isTrusted ? 'Removes your trust from this article' : 'Marks this article as trusted'}
+            accessibilityState={{disabled: trustMutationPending}}>
             {trustMutationPending ? (
               <LoadingSpinner size={18} />
             ) : (
@@ -1759,7 +1803,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             {/* Speed button */}
             <TouchableOpacity
               style={styles.ttsSpeedButton}
-              onPress={() => setIsSpeedSelectorVisible(true)}>
+              onPress={() => setIsSpeedSelectorVisible(true)}
+              accessibilityRole="button"
+              accessibilityLabel={`Playback speed ${speechRate} times`}
+              accessibilityHint="Opens playback speed options">
               <Text style={[styles.ttsSpeedText, {color: themeColors.buttonTextActive}]}>{`${speechRate}x`}</Text>
             </TouchableOpacity>
 
@@ -1771,7 +1818,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                 !isPlaying && !isPaused && {opacity: 0.4},
               ]}
               onPress={handleTtsPause}
-              disabled={!isPlaying && !isPaused}>
+              disabled={!isPlaying && !isPaused}
+              accessibilityRole="button"
+              accessibilityLabel={isPaused ? 'Resume article audio' : 'Pause article audio'}
+              accessibilityHint={isPaused ? 'Resumes reading the article aloud' : 'Pauses reading the article aloud'}
+              accessibilityState={{disabled: !isPlaying && !isPaused}}>
               <Ionicons
                 name={isPaused ? 'play' : 'pause'}
                 size={18}
@@ -1782,7 +1833,10 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             {/* Stop button */}
             <TouchableOpacity
               style={[styles.ttsControlButton, {backgroundColor: themeColors.ttsControlButtonBg}]}
-              onPress={handleTtsStop}>
+              onPress={handleTtsStop}
+              accessibilityRole="button"
+              accessibilityLabel="Stop article audio"
+              accessibilityHint="Stops reading the article aloud">
               <Ionicons name="stop" size={18} color={themeColors.ttsStopColor} />
             </TouchableOpacity>
 

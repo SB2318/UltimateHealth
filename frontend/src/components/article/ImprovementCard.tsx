@@ -1,4 +1,3 @@
- 
 import {
   StyleSheet,
   Text,
@@ -37,6 +36,9 @@ const ImprovementCard = ({item, onNavigate}: ImprovementCardProps) => {
 
   return (
     <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Open improvement request for ${item?.article?.title || 'article'}`}
+      accessibilityHint="Opens the improvement request"
       onPress={() => {
         onNavigate(item);
       }}>
@@ -111,7 +113,10 @@ const ImprovementCard = ({item, onNavigate}: ImprovementCardProps) => {
               onPress={() => {
                 // onclick(item);
                 onNavigate(item);
-              }}>
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={`View improvement request for ${item?.article?.title || 'article'}`}
+              accessibilityHint="Opens the improvement request">
               <Text style={styles.viewText}>View</Text>
               <AntDesign
                 name="arrow-right"

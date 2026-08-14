@@ -1,15 +1,18 @@
- 
-import { StyleSheet,
+import {
+  StyleSheet,
   Text,
-   TextInput ,
+  TextInput,
   TouchableOpacity,
   View,
- } from 'react-native';
+} from 'react-native';
 import React, {useEffect} from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import {useForm, Controller} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
-import { contactSchema, ContactFormData } from '../../schemas/zod/profileSchemas';
+import {
+  contactSchema,
+  ContactFormData,
+} from '../../schemas/zod/profileSchemas';
 
 export interface ProfileEditContactTab {
   user: any;
@@ -20,13 +23,13 @@ const ContactTab = ({
   user,
   handleSubmitContactDetails,
 }: ProfileEditContactTab) => {
-  const { control, handleSubmit, reset } = useForm<ContactFormData>({
+  const {control, handleSubmit, reset} = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
     mode: 'onChange',
     defaultValues: {
       phone_number: user?.contact_detail?.phone_no || '',
       contact_email: user?.contact_detail?.email_id || '',
-    }
+    },
   });
 
   useEffect(() => {
@@ -35,6 +38,7 @@ const ContactTab = ({
       contact_email: user?.contact_detail?.email_id || '',
     });
   }, [user, reset]);
+
   return (
     <View style={styles.container}>
       {/* Content Container */}
@@ -42,23 +46,37 @@ const ContactTab = ({
         {/* Phone Number Input */}
         <View style={styles.input}>
           <Text style={styles.inputLabel}>Phone Number</Text>
+
           <Controller
             control={control}
             name="phone_number"
-            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+            render={({
+              field: {onChange, onBlur, value},
+              fieldState: {error},
+            }) => (
               <>
                 <TextInput
                   clearButtonMode="while-editing"
+                  accessibilityLabel="Phone Number"
                   placeholder="Enter phone number with country code (e.g. +1234567890)"
                   placeholderTextColor="#6b7280"
-                  style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
+                  style={[
+                    styles.inputControl,
+                    error && {
+                      borderColor: '#ef4444',
+                      borderWidth: 2,
+                    },
+                  ]}
                   value={value}
                   keyboardType="phone-pad"
                   maxLength={15}
                   onChangeText={onChange}
                   onBlur={onBlur}
                 />
-                {error && <Text style={styles.errorText}>{error.message}</Text>}
+
+                {error && (
+                  <Text style={styles.errorText}>{error.message}</Text>
+                )}
               </>
             )}
           />
@@ -67,23 +85,37 @@ const ContactTab = ({
         {/* Contact Email Input */}
         <View style={styles.input}>
           <Text style={styles.inputLabel}>Contact Email</Text>
+
           <Controller
             control={control}
             name="contact_email"
-            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+            render={({
+              field: {onChange, onBlur, value},
+              fieldState: {error},
+            }) => (
               <>
                 <TextInput
                   clearButtonMode="while-editing"
+                  accessibilityLabel="Contact Email"
                   placeholder="Enter your contact email address"
                   placeholderTextColor="#6b7280"
-                  style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
+                  style={[
+                    styles.inputControl,
+                    error && {
+                      borderColor: '#ef4444',
+                      borderWidth: 2,
+                    },
+                  ]}
                   value={value}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   onChangeText={onChange}
                   onBlur={onBlur}
                 />
-                {error && <Text style={styles.errorText}>{error.message}</Text>}
+
+                {error && (
+                  <Text style={styles.errorText}>{error.message}</Text>
+                )}
               </>
             )}
           />
@@ -91,7 +123,12 @@ const ContactTab = ({
       </View>
 
       {/* Save Button */}
-      <TouchableOpacity onPress={handleSubmit(handleSubmitContactDetails)} style={styles.btn}>
+      <TouchableOpacity
+        onPress={handleSubmit(handleSubmitContactDetails)}
+        style={styles.btn}
+        accessibilityRole="button"
+        accessibilityLabel="Save contact details"
+        accessibilityHint="Saves your phone number and contact email">
         <Text style={styles.btnText}>Save</Text>
       </TouchableOpacity>
     </View>

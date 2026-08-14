@@ -1,4 +1,4 @@
- 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {useState} from 'react';
 import { View,
    ScrollView ,
@@ -65,12 +65,17 @@ export default function ReportScreen({navigation, route}: ReportScreenProp) {
                 selectedReasonId === reason._id && styles.optionCardSelected,
               ]}
               onPress={() => setSelectedReasonId(reason._id)}
-              activeOpacity={0.7}>
+              activeOpacity={0.7}
+              accessibilityRole="radio"
+              accessibilityLabel={reason.reason}
+              accessibilityState={{
+                selected: selectedReasonId === reason._id,
+              }}
+              accessibilityHint="Selects this reason for the report">
               <View style={styles.optionContent}>
                 <RadioButton
                   value={reason.reason}
                   status={selectedReasonId === reason._id ? 'checked' : 'unchecked'}
-                  onPress={() => setSelectedReasonId(reason._id)}
                   color={PRIMARY_COLOR}
                 />
                 <Text
@@ -135,33 +140,43 @@ export default function ReportScreen({navigation, route}: ReportScreenProp) {
                     text: 'Report',
                     style: 'destructive',
                     onPress: () => {
-                        submitReport(
-                          {
-                            articleId: podcastId ? null : Number(articleId),
-                            podcastId: podcastId,
-                            commentId: commentId,
-                            reportedBy: user_id,
-                            reasonId: selectedReasonId,
-                            authorId: authorId,
+                      submitReport(
+                        {
+                          articleId: podcastId ? null : Number(articleId),
+                          podcastId: podcastId,
+                          commentId: commentId,
+                          reportedBy: user_id,
+                          reasonId: selectedReasonId,
+                          authorId: authorId,
+                        },
+                        {
+                          onSuccess: () => {
+                            Snackbar.show({
+                              text: 'Report submitted successfully',
+                              duration: Snackbar.LENGTH_SHORT,
+                            });
+                            navigation.navigate('ReportConfirmationScreen');
                           },
-                          {
-                            onSuccess: () => {
-                              Snackbar.show({
-                                text: 'Report submitted successfully',
-                                duration: Snackbar.LENGTH_SHORT,
-                              });
-                              navigation.navigate('ReportConfirmationScreen');
-                            },
-                            onError: () => {
-                              Alert.alert('Error', 'Something went wrong. Please try again.');
-                            },
+                          onError: () => {
+                            Alert.alert('Error', 'Something went wrong. Please try again.');
                           },
-                        );
-                      },
+                        },
+                      );
                     },
-                  ],
-                  {cancelable: true},
-                );
+                  },
+                ],
+                {cancelable: true},
+              );
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Submit Report"
+            accessibilityHint={
+              isConnected
+                ? 'Submits the selected report reason'
+                : 'Connect to the internet before submitting the report'
+            }
+            accessibilityState={{
+              disabled: !isConnected,
             }}>
             <Text style={styles.submitButtonText}>Submit Report</Text>
             <Ionicons name="arrow-forward" size={20} color="white" style={{marginLeft: 8}} />

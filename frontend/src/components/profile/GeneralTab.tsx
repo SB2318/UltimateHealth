@@ -1,17 +1,20 @@
- 
-import { StyleSheet,
+import {
+  StyleSheet,
   Text,
-   TextInput ,
+  TextInput,
   TouchableOpacity,
   View,
   Image,
- } from 'react-native';
+} from 'react-native';
 import React, {memo, useEffect} from 'react';
 import Feather from '@expo/vector-icons/Feather';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import {useForm, Controller} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
-import { generalSchema, GeneralFormData } from '../../schemas/zod/profileSchemas';
+import {
+  generalSchema,
+  GeneralFormData,
+} from '../../schemas/zod/profileSchemas';
 
 interface ProfileEditGeneralTab {
   user: any;
@@ -27,7 +30,7 @@ const GeneralTab = ({
   handleSubmitGeneralDetails,
   selectImage,
 }: ProfileEditGeneralTab) => {
-  const { control, handleSubmit, reset } = useForm<GeneralFormData>({
+  const {control, handleSubmit, reset} = useForm<GeneralFormData>({
     resolver: zodResolver(generalSchema),
     mode: 'onChange',
     defaultValues: {
@@ -35,7 +38,7 @@ const GeneralTab = ({
       userHandle: user?.user_handle || '',
       email: user?.email || '',
       about: user?.about || '',
-    }
+    },
   });
 
   useEffect(() => {
@@ -63,8 +66,14 @@ const GeneralTab = ({
               !imgUrl && {borderWidth: 0.5, borderColor: 'black'},
             ]}
           />
+
           <View style={styles.editIconContainer}>
-            <TouchableOpacity style={styles.editIcon} onPress={selectImage}>
+            <TouchableOpacity
+              style={styles.editIcon}
+              onPress={selectImage}
+              accessibilityRole="button"
+              accessibilityLabel="Change profile picture"
+              accessibilityHint="Opens the image picker to select a new profile picture">
               <Feather name="edit-3" color="black" size={25} />
             </TouchableOpacity>
           </View>
@@ -76,17 +85,29 @@ const GeneralTab = ({
           <Controller
             control={control}
             name="username"
-            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+            render={({
+              field: {onChange, onBlur, value},
+              fieldState: {error},
+            }) => (
               <>
                 <TextInput
+                  accessibilityLabel="Username"
                   placeholder="Enter your full name"
                   placeholderTextColor="#6b7280"
-                  style={[styles.inputControl, error && { borderColor: '#ef4444', borderWidth: 2 }]}
+                  style={[
+                    styles.inputControl,
+                    error && {
+                      borderColor: '#ef4444',
+                      borderWidth: 2,
+                    },
+                  ]}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
                 />
-                {error && <Text style={styles.errorText}>{error.message}</Text>}
+                {error && (
+                  <Text style={styles.errorText}>{error.message}</Text>
+                )}
               </>
             )}
           />
@@ -98,9 +119,10 @@ const GeneralTab = ({
           <Controller
             control={control}
             name="userHandle"
-            render={({ field: { value } }) => (
+            render={({field: {value}}) => (
               <TextInput
                 editable={false}
+                accessibilityLabel="User handle"
                 placeholder="Enter your userhandle"
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
@@ -116,8 +138,9 @@ const GeneralTab = ({
           <Controller
             control={control}
             name="email"
-            render={({ field: { value } }) => (
+            render={({field: {value}}) => (
               <TextInput
+                accessibilityLabel="Email"
                 placeholder="Enter your email"
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
@@ -134,20 +157,32 @@ const GeneralTab = ({
           <Controller
             control={control}
             name="about"
-            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+            render={({
+              field: {onChange, onBlur, value},
+              fieldState: {error},
+            }) => (
               <>
                 <TextInput
+                  accessibilityLabel="About"
                   placeholder="Tell us something about yourself..."
                   placeholderTextColor="#6b7280"
                   textAlignVertical="top"
-                  style={[styles.aboutInput, error && { borderColor: '#ef4444', borderWidth: 2 }]}
+                  style={[
+                    styles.aboutInput,
+                    error && {
+                      borderColor: '#ef4444',
+                      borderWidth: 2,
+                    },
+                  ]}
                   multiline={true}
                   numberOfLines={4}
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
                 />
-                {error && <Text style={styles.errorText}>{error.message}</Text>}
+                {error && (
+                  <Text style={styles.errorText}>{error.message}</Text>
+                )}
               </>
             )}
           />
@@ -155,7 +190,12 @@ const GeneralTab = ({
       </View>
 
       {/* Save Button */}
-      <TouchableOpacity onPress={handleSubmit(handleSubmitGeneralDetails)} style={styles.btn}>
+      <TouchableOpacity
+        onPress={handleSubmit(handleSubmitGeneralDetails)}
+        style={styles.btn}
+        accessibilityRole="button"
+        accessibilityLabel="Save profile details"
+        accessibilityHint="Saves your profile information">
         <Text style={styles.btnText}>Save</Text>
       </TouchableOpacity>
     </View>

@@ -1,20 +1,30 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ACADEMY_BACKGROUND, ACADEMY_PRIMARY, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_SURFACE, ACADEMY_BORDER } from '../../lib/ui/Theme';
+import React, {useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {
+  ACADEMY_BACKGROUND,
+  ACADEMY_PRIMARY,
+  ACADEMY_TEXT_PRIMARY,
+  ACADEMY_TEXT_SECONDARY,
+  ACADEMY_SURFACE,
+  ACADEMY_BORDER,
+} from '../../lib/ui/Theme';
 
-const QuizScreen = ({ navigation }: any) => {
+const QuizScreen = ({navigation}: any) => {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
-  const question = "Which department is responsible for dispensing medications prescribed by doctors?";
+  const question =
+    'Which department is responsible for dispensing medications prescribed by doctors?';
+
   const options = [
-    { id: 1, text: "Radiology" },
-    { id: 2, text: "Emergency" },
-    { id: 3, text: "Pharmacy" },
-    { id: 4, text: "Laboratory" },
+    {id: 1, text: 'Radiology'},
+    {id: 2, text: 'Emergency'},
+    {id: 3, text: 'Pharmacy'},
+    {id: 4, text: 'Laboratory'},
   ];
+
   const correctOption = 3;
 
   const handleSubmit = () => {
@@ -28,27 +38,47 @@ const QuizScreen = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconButton}>
-          <MaterialCommunityIcons name="close" size={24} color={ACADEMY_TEXT_PRIMARY} />
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.iconButton}
+          accessibilityRole="button"
+          accessibilityLabel="Close knowledge check"
+          accessibilityHint="Returns to the previous screen">
+          <MaterialCommunityIcons
+            name="close"
+            size={24}
+            color={ACADEMY_TEXT_PRIMARY}
+          />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Knowledge Check</Text>
-        <View style={{ width: 40 }} />
+
+        <Text
+          style={styles.headerTitle}
+          accessibilityRole="header">
+          Knowledge Check
+        </Text>
+
+        <View style={{width: 40}} />
       </View>
 
       <View style={styles.container}>
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>{question}</Text>
+          <Text
+            style={styles.questionText}
+            accessibilityRole="text"
+            accessibilityLabel={`Question: ${question}`}>
+            {question}
+          </Text>
         </View>
 
         <View style={styles.optionsContainer}>
-          {options.map((option) => {
+          {options.map(option => {
             const isSelected = selectedOption === option.id;
             const isCorrect = option.id === correctOption;
-            
+
             let backgroundColor = ACADEMY_SURFACE;
             let borderColor = ACADEMY_BORDER;
             let textColor = ACADEMY_TEXT_PRIMARY;
-            
+
             if (submitted) {
               if (isCorrect) {
                 backgroundColor = '#D1FAE5';
@@ -63,34 +93,94 @@ const QuizScreen = ({ navigation }: any) => {
               textColor = ACADEMY_PRIMARY;
             }
 
+            let accessibilityState: {
+              selected?: boolean;
+              disabled?: boolean;
+            } = {
+              selected: isSelected,
+              disabled: submitted,
+            };
+
+            let accessibilityHint =
+              'Selects this answer option';
+
+            if (submitted && isCorrect) {
+              accessibilityHint = 'This is the correct answer';
+            } else if (submitted && isSelected && !isCorrect) {
+              accessibilityHint = 'This answer is incorrect';
+            }
+
             return (
               <TouchableOpacity
                 key={option.id}
-                style={[styles.optionCard, { backgroundColor, borderColor }]}
-                onPress={() => !submitted && setSelectedOption(option.id)}
+                style={[
+                  styles.optionCard,
+                  {backgroundColor, borderColor},
+                ]}
+                onPress={() =>
+                  !submitted && setSelectedOption(option.id)
+                }
                 activeOpacity={submitted ? 1 : 0.7}
-              >
-                <Text style={[styles.optionText, { color: textColor }]}>{option.text}</Text>
+                disabled={submitted}
+                accessibilityRole="radio"
+                accessibilityLabel={`Option ${option.id}: ${option.text}`}
+                accessibilityHint={accessibilityHint}
+                accessibilityState={accessibilityState}>
+                <Text
+                  style={[
+                    styles.optionText,
+                    {color: textColor},
+                  ]}>
+                  {option.text}
+                </Text>
+
                 {submitted && isCorrect && (
-                  <MaterialCommunityIcons name="check-circle" size={24} color={ACADEMY_PRIMARY} />
+                  <MaterialCommunityIcons
+                    name="check-circle"
+                    size={24}
+                    color={ACADEMY_PRIMARY}
+                    accessible={false}
+                  />
                 )}
+
                 {submitted && isSelected && !isCorrect && (
-                  <MaterialCommunityIcons name="close-circle" size={24} color="#EF4444" />
+                  <MaterialCommunityIcons
+                    name="close-circle"
+                    size={24}
+                    color="#EF4444"
+                    accessible={false}
+                  />
                 )}
               </TouchableOpacity>
             );
           })}
         </View>
-
       </View>
 
       <View style={styles.bottomBar}>
-        <TouchableOpacity 
-          style={[styles.submitButton, selectedOption === null && styles.submitButtonDisabled]} 
+        <TouchableOpacity
+          style={[
+            styles.submitButton,
+            selectedOption === null &&
+              styles.submitButtonDisabled,
+          ]}
           onPress={handleSubmit}
           disabled={selectedOption === null}
-        >
-          <Text style={styles.submitButtonText}>{submitted ? 'Continue' : 'Check Answer'}</Text>
+          accessibilityRole="button"
+          accessibilityLabel={
+            submitted ? 'Continue' : 'Check answer'
+          }
+          accessibilityHint={
+            submitted
+              ? 'Continue to the next screen'
+              : 'Submit your selected answer'
+          }
+          accessibilityState={{
+            disabled: selectedOption === null,
+          }}>
+          <Text style={styles.submitButtonText}>
+            {submitted ? 'Continue' : 'Check Answer'}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -162,7 +252,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
-  }
+  },
 });
 
 export default QuizScreen;

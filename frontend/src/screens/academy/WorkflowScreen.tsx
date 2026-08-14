@@ -1,46 +1,111 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ACADEMY_BACKGROUND, ACADEMY_TEXT_PRIMARY, ACADEMY_TEXT_SECONDARY, ACADEMY_SURFACE, ACADEMY_BORDER } from '../../lib/ui/Theme';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {
+  ACADEMY_BACKGROUND,
+  ACADEMY_TEXT_PRIMARY,
+  ACADEMY_TEXT_SECONDARY,
+  ACADEMY_SURFACE,
+  ACADEMY_BORDER,
+} from '../../lib/ui/Theme';
 
-const WorkflowScreen = ({ route, navigation }: any) => {
-  const { deptName = "Department", color = "#3B82F6" } = route.params || {};
+const WorkflowScreen = ({route, navigation}: any) => {
+  const {deptName = 'Department', color = '#3B82F6'} =
+    route.params || {};
 
   // Mock workflow steps
   const steps = [
-    { id: 1, title: 'Patient Arrival', desc: 'Patient enters the department.' },
-    { id: 2, title: 'Assessment', desc: 'Initial checks and vitals recorded.' },
-    { id: 3, title: 'Treatment', desc: 'Core medical procedure or consultation.' },
-    { id: 4, title: 'Documentation', desc: 'Notes added to the EHR system.' }
+    {
+      id: 1,
+      title: 'Patient Arrival',
+      desc: 'Patient enters the department.',
+    },
+    {
+      id: 2,
+      title: 'Assessment',
+      desc: 'Initial checks and vitals recorded.',
+    },
+    {
+      id: 3,
+      title: 'Treatment',
+      desc: 'Core medical procedure or consultation.',
+    },
+    {
+      id: 4,
+      title: 'Documentation',
+      desc: 'Notes added to the EHR system.',
+    },
   ];
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={[styles.header, { backgroundColor: color }]}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
+      <View style={[styles.header, {backgroundColor: color}]}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.iconButton}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Returns to the previous screen">
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={24}
+            color="#fff"
+            accessible={false}
+          />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{deptName} Workflow</Text>
-        <View style={{ width: 40 }} />
+
+        <Text
+          style={styles.headerTitle}
+          accessibilityRole="header">
+          {deptName} Workflow
+        </Text>
+
+        <View style={{width: 40}} />
       </View>
 
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}>
         {steps.map((step, index) => (
           <View key={step.id} style={styles.stepContainer}>
-            <View style={[styles.stepNumber, { backgroundColor: color }]}>
-              <Text style={styles.stepNumberText}>{step.id}</Text>
+            <View
+              style={[styles.stepNumber, {backgroundColor: color}]}
+              accessible
+              accessibilityRole="text"
+              accessibilityLabel={`Step ${step.id}`}>
+              <Text style={styles.stepNumberText}>
+                {step.id}
+              </Text>
             </View>
-            <View style={styles.stepCard}>
-              <Text style={styles.stepTitle}>{step.title}</Text>
-              <Text style={styles.stepDesc}>{step.desc}</Text>
+
+            <View
+              style={styles.stepCard}
+              accessible
+              accessibilityRole="text"
+              accessibilityLabel={`${step.title}. ${step.desc}`}>
+              <Text style={styles.stepTitle}>
+                {step.title}
+              </Text>
+
+              <Text style={styles.stepDesc}>
+                {step.desc}
+              </Text>
             </View>
+
             {index < steps.length - 1 && (
-              <MaterialCommunityIcons 
-                name="arrow-down-thick" 
-                size={24} 
-                color={ACADEMY_BORDER} 
+              <MaterialCommunityIcons
+                name="arrow-down-thick"
+                size={24}
+                color={ACADEMY_BORDER}
                 style={styles.arrowIcon}
+                accessible={false}
               />
             )}
           </View>
@@ -119,7 +184,7 @@ const styles = StyleSheet.create({
   },
   arrowIcon: {
     marginVertical: 4,
-  }
+  },
 });
 
 export default WorkflowScreen;

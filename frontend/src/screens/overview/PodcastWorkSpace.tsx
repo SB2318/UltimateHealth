@@ -6,7 +6,7 @@ import { View,
   TouchableOpacity,
   Text,
    FlatList ,
- } from 'react-native';
+  } from 'react-native';
 import {PodcastData} from '../../schemas/type';
 import {useAppSelector} from '../../store/hooks';
 import PodcastReviewCard from '../../components/podcast/PodcastReviewCard';
@@ -17,6 +17,7 @@ import {useGetPendingPodcasts} from '@/src/hooks/podcast/useGetPendingPodcasts';
 import {useGetDiscardedPodcasts} from '@/src/hooks/podcast/useGetDiscardedPodcast';
 import {useGetUserPublishedPodcasts} from '@/src/hooks/podcast/useGetUserPublishedPodcasts';
 import {NoPodcastState} from '../../components/common/EmptyStates';
+
 
 export default function PodcastWorkSpace({
   handleClickAction,
@@ -29,14 +30,17 @@ export default function PodcastWorkSpace({
   const [totalPublishPages, setTotalPublishPages] = useState(0);
   const [publishedPodcasts, setPublishedPodcasts] = useState<PodcastData[]>([]);
 
+
   const [pendingPage, setPendingPage] = useState(1);
   const [totalPendingPages, setTotalPendingPages] = useState(0);
   const [pendingPodcasts, setPendingPodcasts] = useState<PodcastData[]>([]);
   const [selectedStatus, setSelectedStatus] = useState(1);
 
+
   const [discardedPage, setDiscardedPage] = useState(1);
   const [totalDiscardedPages, setTotalDiscardedPages] = useState(0);
   const [discardedPodcasts, setDiscardedPodcasts] = useState<PodcastData[]>([]);
+
 
   const {
     data: publishedPodcastsData,
@@ -44,11 +48,13 @@ export default function PodcastWorkSpace({
     refetch: publishedPodcastsRefetch,
   } = useGetUserPublishedPodcasts(publishedPage, isConnected);
 
+
   const {
     data: pendingPodcastsData,
     isLoading: pendingPodcastsLoading,
     refetch: pendingPodcastsRefetch,
   } = useGetPendingPodcasts(pendingPage, isConnected);
+
 
   const {
     data: discardedPodcastsData,
@@ -56,11 +62,13 @@ export default function PodcastWorkSpace({
     refetch: discardedPodcastsRefetch,
   } = useGetDiscardedPodcasts(discardedPage, isConnected);
 
+
   useEffect(() => {
     if (publishedPodcastsData) {
       if (Number(publishedPage) === 1 && publishedPodcastsData.totalPages) {
         let totalPage = publishedPodcastsData.totalPages;
         setTotalPublishPages(totalPage);
+
 
         setPublishedPodcasts(publishedPodcastsData.publishedPodcasts);
       } else {
@@ -75,11 +83,13 @@ export default function PodcastWorkSpace({
     }
   }, [publishedPodcastsData, publishedPage, publishedPodcasts]);
 
+
   useEffect(() => {
     if (pendingPodcastsData) {
       if (Number(pendingPage) === 1 && pendingPodcastsData.totalPages) {
         let totalPage = pendingPodcastsData.totalPages;
         setTotalPendingPages(totalPage);
+
 
         setPendingPodcasts(pendingPodcastsData.pendingPodcasts);
       } else {
@@ -94,11 +104,13 @@ export default function PodcastWorkSpace({
     }
   }, [pendingPage, pendingPodcastsData]);
 
+
   useEffect(() => {
     if (discardedPodcastsData) {
       if (Number(discardedPage) === 1 && discardedPodcastsData.totalPages) {
         let totalPage = discardedPodcastsData.totalPages;
         setTotalDiscardedPages(totalPage);
+
 
         setDiscardedPodcasts(discardedPodcastsData.discardedPodcasts);
       } else {
@@ -113,10 +125,13 @@ export default function PodcastWorkSpace({
     }
   }, [ discardedPodcastsData, discardedPage]);
 
+
   const categories = [1, 2, 3];
+
 
   const onRefresh = () => {
     setRefreshing(true);
+
 
     if (selectedStatus === 2) {
       setPendingPage(1);
@@ -131,6 +146,7 @@ export default function PodcastWorkSpace({
     setRefreshing(false);
   };
 
+
   const renderItem = useCallback(
     ({item}: {item: PodcastData}) => {
       return (
@@ -144,6 +160,7 @@ export default function PodcastWorkSpace({
     },
     [handleClickAction],
   );
+
 
   return (
     <View style={{flex: 1, backgroundColor: ON_PRIMARY_COLOR}}>
@@ -161,7 +178,23 @@ export default function PodcastWorkSpace({
               onPress={() => {
                 setSelectedStatus(item);
                 //setSelectedCategory(item);
-              }}>
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={
+                item === 1
+                  ? 'Published'
+                  : item === 2
+                    ? 'Pending'
+                    : 'Discarded'
+              }
+              accessibilityHint={`Shows ${
+                item === 1
+                  ? 'published'
+                  : item === 2
+                    ? 'pending'
+                    : 'discarded'
+              } podcasts`}
+              accessibilityState={{selected: selectedStatus === item}}>
               <Text
                 style={{
                   ...styles.labelStyle,
@@ -180,6 +213,7 @@ export default function PodcastWorkSpace({
             </TouchableOpacity>
           ))}
         </View>
+
 
         {publishedPodcastsLoading ||
         pendingPodcastsLoading ||
@@ -225,6 +259,7 @@ export default function PodcastWorkSpace({
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -269,4 +304,3 @@ const styles = StyleSheet.create({
     paddingBottom: hp(2),
   },
 });
-

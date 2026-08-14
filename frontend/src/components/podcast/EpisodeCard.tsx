@@ -35,14 +35,30 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
   const toggleMenu = () => setMenuVisible(!menuVisible);
 
   return (
-    <Pressable style={styles.card} onPress={onPress}>
+    <Pressable
+      style={styles.card}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Open episode ${episode.name}`}
+      accessibilityHint="Opens the episode details">
       <View style={styles.cardHeader}>
         <View style={styles.titleContainer}>
           <Text style={styles.title} numberOfLines={1}>
             {episode.name}
           </Text>
         </View>
-        <TouchableOpacity style={styles.moreButton} onPress={toggleMenu}>
+
+        <TouchableOpacity
+          style={styles.moreButton}
+          onPress={toggleMenu}
+          accessibilityRole="button"
+          accessibilityLabel={`More options for ${episode.name}`}
+          accessibilityHint={
+            menuVisible
+              ? 'Closes episode options'
+              : 'Opens episode options'
+          }
+          accessibilityState={{expanded: menuVisible}}>
           <Ionicon name="ellipsis-vertical" size={20} color="#666" />
         </TouchableOpacity>
       </View>
@@ -54,15 +70,22 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
             onPress={() => {
               toggleMenu();
               onEdit();
-            }}>
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={`Edit ${episode.name}`}
+            accessibilityHint="Opens the episode editor">
             <Text style={styles.menuText}>Edit</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.menuItem}
             onPress={() => {
               toggleMenu();
               onDelete();
-            }}>
+            }}
+            accessibilityRole="button"
+            accessibilityLabel={`Delete ${episode.name}`}
+            accessibilityHint="Deletes this episode">
             <Text style={[styles.menuText, {color: 'red'}]}>Delete</Text>
           </TouchableOpacity>
         </View>
@@ -75,8 +98,11 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
       <View style={styles.footer}>
         <View style={styles.statContainer}>
           <Ionicon name="mic-outline" size={16} color={PRIMARY_COLOR} />
-          <Text style={styles.statText}>{episode.podcastsCount} Podcasts</Text>
+          <Text style={styles.statText}>
+            {episode.podcastsCount} Podcasts
+          </Text>
         </View>
+
         <View style={styles.dateContainer}>
           <Text style={styles.dateText}>
             Updated {format(new Date(episode.updatedAt), 'MMM d, yyyy')}

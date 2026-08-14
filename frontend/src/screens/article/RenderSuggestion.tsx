@@ -8,6 +8,7 @@ import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 // ✅ Re-introduced original project helpers for security sanitization and link safety
 import { createHTMLStructure, handleExternalClick } from '../../lib/utils/Utils';
 
+
 export default function RenderSuggestion({
   navigation,
   route,
@@ -16,15 +17,18 @@ export default function RenderSuggestion({
   const dispatch = useAppDispatch();
   const readabilityScore = readability_score ?? 0;
 
+
   const handleAccept = () => {
     dispatch(setSuggestionAccepted({ selection: true }));
     navigation.goBack();
   };
 
+
   const handleCancel = () => {
     dispatch(setSuggestionAccepted({ selection: false }));
     navigation.goBack();
   };
+
 
   // ✅ Format reading time display (improved null safety)
   const formatReadingTime = (time: string | undefined | null): string => {
@@ -39,24 +43,37 @@ export default function RenderSuggestion({
     return `${minutes} min read`;
   };
 
+
   // ✅ Wraps the content through the project's sanitization utility to prevent XSS flaws
-  const formattedHtml = createHTMLStructure('', htmlContent || '<p>No suggestions available.</p>', [], '', '');
+  const formattedHtml = createHTMLStructure(
+    '',
+    htmlContent || '<p>No suggestions available.</p>',
+    [],
+    '',
+    '',
+  );
+
 
   return (
     <View style={styles.container}>
       {/* 📊 Display Readability Metrics */}
       <View style={styles.metricsContainer}>
         <Text style={styles.scoreTitle}>Readability Score</Text>
-        <Text style={[
-          styles.scoreNumber,
-          { color: (readability_score ?? 0) >= 60 ? '#059669' : '#dc2626' }
-        ]}>
+        <Text
+          style={[
+            styles.scoreNumber,
+            {
+              color:
+                (readability_score ?? 0) >= 60 ? '#059669' : '#dc2626',
+            },
+          ]}>
           {readability_score ?? '--'}/100
         </Text>
         <Text style={styles.readingTime}>
           ⏱ {formatReadingTime(reading_time)}
         </Text>
       </View>
+
 
       {/* 🌟 Optional: Add warning if reading time is missing (for debugging) */}
       {!reading_time && __DEV__ && (
@@ -66,6 +83,7 @@ export default function RenderSuggestion({
           </Text>
         </View>
       )}
+
 
       {/* 🌐 Render Highlighted Complex Sentences Safely */}
       <AutoHeightWebView
@@ -82,19 +100,31 @@ export default function RenderSuggestion({
         onShouldStartLoadWithRequest={handleExternalClick}
       />
 
+
       {/* Buttons */}
       <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={handleCancel}
+          accessibilityRole="button"
+          accessibilityLabel="Dismiss suggestions"
+          accessibilityHint="Dismisses the suggestions and returns to the previous screen">
           <Text style={styles.cancelText}>Dismiss</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.acceptButton} onPress={handleAccept}>
+        <TouchableOpacity
+          style={styles.acceptButton}
+          onPress={handleAccept}
+          accessibilityRole="button"
+          accessibilityLabel="Apply suggestions"
+          accessibilityHint="Applies the suggestions and returns to the previous screen">
           <Text style={styles.acceptText}>Apply Suggestions</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#ffffff', padding: 16 },

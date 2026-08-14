@@ -174,7 +174,13 @@ const RespectGiverScreen = ({ navigation }: { navigation: any }) => {
 
       {/* Navigation header */}
       <View style={styles.navHeader}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backBtn}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Returns to the previous screen"
+        >
           <MaterialIcons name="arrow-back-ios" size={20} color="#E2E8F0" />
         </TouchableOpacity>
         <Text style={styles.navTitle}>Respect Giver</Text>

@@ -6,10 +6,10 @@ import {
   Pressable,
   TouchableOpacity,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {fp, hp} from '../../lib/ui/Metric';
 import {ReviewCardProps} from '../../schemas/type';
-import { formatDateShortYear } from '../../lib/utils/dateUtils';
+import {formatDateShortYear} from '../../lib/utils/dateUtils';
 import {BUTTON_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {formatCount, StatusEnum} from '../../lib/utils/Utils';
 import {
@@ -58,6 +58,9 @@ const ReviewCard = ({
 
   return (
     <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Open review for ${item?.title || 'article'}`}
+      accessibilityHint="Opens the review details"
       onPress={() => {
         width.value = withTiming(0, {duration: 250});
         yValue.value = withTiming(100, {duration: 250});
@@ -75,32 +78,38 @@ const ReviewCard = ({
 
         <View style={styles.textContainer}>
           {/* Share Icon */}
-       
-             <ArticleFloatingMenu
-                items={[
-                  {
-                    articleId: item._id,
-                    name: 'Request to edit',
-                    action: () => {
-                      handleAnimation();
-                    },
-                    icon: 'edit',
-                  },
-                ]}
-                visible={menuVisible} 
-                onDismiss={()=>{
-                 setMenuVisible(false);
-                } }  
-              />
-         
+
+          <ArticleFloatingMenu
+            items={[
+              {
+                articleId: item._id,
+                name: 'Request to edit',
+                action: () => {
+                  handleAnimation();
+                },
+                icon: 'edit',
+              },
+            ]}
+            visible={menuVisible}
+            onDismiss={() => {
+              setMenuVisible(false);
+            }}
+          />
 
           {/* Icon for more options */}
           <TouchableOpacity
             style={styles.shareIconContainer}
             onPress={() => {
-              setMenuVisible(true)
-            }}>
-            <Entypo name="dots-three-vertical" size={20} color={'black'} />
+              setMenuVisible(true);
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Open review actions"
+            accessibilityHint="Opens additional review options">
+            <Entypo
+              name="dots-three-vertical"
+              size={20}
+              color={'black'}
+            />
           </TouchableOpacity>
 
           {/* Title & Footer Text */}
@@ -140,7 +149,10 @@ const ReviewCard = ({
               style={styles.viewInnnerContainer}
               onPress={() => {
                 onclick(item);
-              }}>
+              }}
+              accessibilityRole="button"
+              accessibilityLabel={`View review for ${item?.title || 'article'}`}
+              accessibilityHint="Opens the review details">
               <Text style={styles.viewText}>View</Text>
               <AntDesign
                 name="arrow-right"

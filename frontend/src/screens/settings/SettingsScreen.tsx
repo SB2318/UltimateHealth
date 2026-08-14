@@ -20,7 +20,10 @@ type SettingsScreenProps = { navigation: any };
 
 // ─── Section Header ───────────────────────────────────────────────────────────
 const SectionLabel = ({ label, isDark }: { label: string; isDark: boolean }) => (
-  <Text style={[styles.sectionLabel, { color: isDark ? '#6B7280' : '#9CA3AF' }]}>
+  <Text
+    style={[styles.sectionLabel, { color: isDark ? '#6B7280' : '#9CA3AF' }]}
+    accessibilityRole="header"
+  >
     {label}
   </Text>
 );
@@ -62,18 +65,44 @@ const SettingsRow = ({
       activeOpacity={0.6}
       onPress={onPress}
       style={[styles.row, { backgroundColor: bg, borderColor: border }]}
+      accessibilityRole="button"
+      accessibilityLabel={sublabel ? `${label}. ${sublabel}` : label}
+      accessibilityHint={
+        destructive
+          ? 'Signs you out of your account'
+          : `Opens ${label}`
+      }
     >
-      <View style={[styles.iconWrap, { backgroundColor: iconBg }]}>
-        <MaterialCommunityIcon name={icon as any} size={22} color={destructive ? '#EF4444' : iconColor} />
+      <View
+        style={[styles.iconWrap, { backgroundColor: iconBg }]}
+        accessible={false}
+      >
+        <MaterialCommunityIcon
+          name={icon as any}
+          size={22}
+          color={destructive ? '#EF4444' : iconColor}
+          accessible={false}
+        />
       </View>
+
       <View style={styles.rowText}>
-        <Text style={[styles.rowLabel, { color: textColor }]}>{label}</Text>
+        <Text style={[styles.rowLabel, { color: textColor }]}>
+          {label}
+        </Text>
         {sublabel ? (
-          <Text style={[styles.rowSublabel, { color: subColor }]}>{sublabel}</Text>
+          <Text style={[styles.rowSublabel, { color: subColor }]}>
+            {sublabel}
+          </Text>
         ) : null}
       </View>
+
       {!hideChevron && (
-        <MaterialIcons name="chevron-right" size={24} color={subColor} />
+        <MaterialIcons
+          name="chevron-right"
+          size={24}
+          color={subColor}
+          accessible={false}
+        />
       )}
     </TouchableOpacity>
   );
@@ -111,7 +140,10 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
         style: 'destructive',
         onPress: () => {
           const stackNav = navigation.getParent() ?? navigation;
-          (stackNav as any).navigate('LogoutScreen', { profile_image: '', username: '' });
+          (stackNav as any).navigate('LogoutScreen', {
+            profile_image: '',
+            username: '',
+          });
         },
       },
     ]);
@@ -122,8 +154,21 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
       <StatusBar style={isDark ? 'light' : 'dark'} />
 
       {/* ── Header ── */}
-      <View style={[styles.header, { backgroundColor: headerBg, borderBottomColor: headerBorder }]}>
-        <Text style={[styles.headerTitle, { color: headerText }]}>Settings</Text>
+      <View
+        style={[
+          styles.header,
+          {
+            backgroundColor: headerBg,
+            borderBottomColor: headerBorder,
+          },
+        ]}
+      >
+        <Text
+          style={[styles.headerTitle, { color: headerText }]}
+          accessibilityRole="header"
+        >
+          Settings
+        </Text>
       </View>
 
       <ScrollView
@@ -141,7 +186,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('ProfileScreen')}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="bell-outline"
             iconColor="#8B5CF6"
@@ -150,7 +201,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('NotificationPreferencesScreen')}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="view-dashboard"
             iconColor={PRIMARY_COLOR}
@@ -172,7 +229,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('InsightScreen')}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="file-document-outline"
             iconColor="#3B82F6"
@@ -181,7 +244,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('ContentListScreen', { type: 'articles' })}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="repeat-variant"
             iconColor="#F59E0B"
@@ -189,7 +258,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('ContentListScreen', { type: 'reposts' })}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="bookmark-outline"
             iconColor="#3B82F6"
@@ -198,7 +273,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('ContentListScreen', { type: 'saved' })}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="history"
             iconColor="#6366F1"
@@ -206,7 +287,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('ReadingHistoryScreen')}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="heart-pulse"
             iconColor="#EF4444"
@@ -215,7 +302,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('WellnessDashboardScreen')}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="map-marker-radius-outline"
             iconColor="#10B981"
@@ -237,7 +330,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('Privacy')}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="book-open-outline"
             iconColor="#3B82F6"
@@ -245,7 +344,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('CommunityGuidelines')}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="source-branch"
             iconColor="#6366F1"
@@ -253,7 +358,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('OpenSourcePage')}
             isDark={isDark}
           />
-          <View style={[styles.divider, { backgroundColor: isDark ? '#374151' : '#F3F4F6' }]} />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
           <SettingsRow
             icon="account-group-outline"
             iconColor="#F59E0B"
@@ -304,7 +415,12 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
         </View>
 
         {/* ── Footer note ── */}
-        <Text style={[styles.footer, { color: isDark ? '#4B5563' : '#9CA3AF' }]}>
+        <Text
+          style={[
+            styles.footer,
+            { color: isDark ? '#4B5563' : '#9CA3AF' },
+          ]}
+        >
           UltimateHealth · Built with ❤️ for better health
         </Text>
       </ScrollView>

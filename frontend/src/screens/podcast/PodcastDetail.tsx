@@ -464,7 +464,9 @@ useEffect(() => {
 
         <TouchableOpacity
           testID="podcast-detail-retry-button"
-          accessibilityLabel="podcast-detail-retry-button"
+          accessibilityLabel="Retry loading podcast details"
+          accessibilityRole="button"
+          accessibilityHint="Attempts to load the podcast details again"
           style={styles.retryButton}
           onPress={() => {
             refetch();
@@ -485,6 +487,8 @@ useEffect(() => {
         uri: getFormattedSource(podcast.cover_image) ?? undefined,
       }}
       style={useSplitLayout ? styles.coverImageLandscape : styles.coverImage}
+      accessible={true}
+      accessibilityLabel={`Podcast cover image for ${podcast?.title}`}
     />
   );
 
@@ -517,6 +521,7 @@ useEffect(() => {
           accessibilityLabel={isDescriptionExpanded ? "Read Less" : "Read More"}
           accessibilityRole="button"
           accessibilityHint="Toggles between expanding and collapsing the full podcast description text"
+          accessibilityState={{expanded: isDescriptionExpanded}}
           onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
           style={styles.readMoreButton}
         >
@@ -552,6 +557,9 @@ useEffect(() => {
 
       <TouchableOpacity
         style={styles.retryAudioButton}
+        accessibilityRole="button"
+        accessibilityLabel="Retry audio playback"
+        accessibilityHint="Attempts to reconnect and reload the podcast"
         onPress={() => {
           refetch();
         }}>
@@ -567,6 +575,8 @@ useEffect(() => {
       style={[styles.sliderContainer, GlassStyles.glassContainerDark]}>
       <Slider
         testID="podcast-progress-slider"
+        accessibilityLabel="Podcast playback progress"
+        accessibilityHint="Adjusts the current playback position"
         style={styles.slider}
         minimumValue={0}
         maximumValue={duration}
@@ -602,7 +612,9 @@ useEffect(() => {
       <XStack justifyContent="space-around" alignItems="center">
         <TouchableOpacity
           testID="podcast-back-button"
-          accessibilityLabel="podcast-back-button"
+          accessibilityLabel="Rewind 5 seconds"
+          accessibilityRole="button"
+          accessibilityHint="Moves playback backward by 5 seconds"
           disabled={!isConnected}
           onPress={handleBackward}
           style={styles.controlButton}>
@@ -611,7 +623,10 @@ useEffect(() => {
 
         <TouchableOpacity
           testID="podcast-play-pause-button"
-          accessibilityLabel="podcast-play-pause-button"
+          accessibilityLabel={playing ? "Pause podcast" : "Play podcast"}
+          accessibilityRole="button"
+          accessibilityHint={playing ? "Pauses the podcast" : "Starts playing the podcast"}
+          accessibilityState={{disabled: !isConnected}}
           disabled={!isConnected}
           onPress={() =>
             player.currentStatus.playing ? handlePause() : handlePlay()
@@ -626,7 +641,9 @@ useEffect(() => {
 
         <TouchableOpacity
           testID="podcast-forward-button"
-          accessibilityLabel="podcast-forward-button"
+          accessibilityLabel="Forward 5 seconds"
+          accessibilityRole="button"
+          accessibilityHint="Moves playback forward by 5 seconds"
           disabled={!isConnected}
           onPress={handleForward}
           style={styles.controlButton}>
@@ -635,7 +652,9 @@ useEffect(() => {
 
         <TouchableOpacity
           testID="podcast-speed-button"
-          accessibilityLabel={`Playback speed: ${speed}x. Tap to change.`}
+          accessibilityLabel={`Playback speed: ${speed}x`}
+          accessibilityRole="button"
+          accessibilityHint="Changes the podcast playback speed"
           onPress={handleSpeedChange}
           style={{ marginLeft: 10 }}>
           <XStack
@@ -664,6 +683,10 @@ useEffect(() => {
         ) : (
           <TouchableOpacity
             style={styles.actionButton}
+            accessibilityRole="button"
+            accessibilityLabel={isLike ? `Unlike podcast${likeCount > 0 ? `, ${formatCount(likeCount)} likes` : ''}` : `Like podcast${likeCount > 0 ? `, ${formatCount(likeCount)} likes` : ''}`}
+            accessibilityHint={isGuest ? "Requires sign in to like this podcast" : "Likes or unlikes this podcast"}
+            accessibilityState={{selected: isLike}}
             onPress={() => {
               if (isGuest) {
                 navigation.navigate('GuestPlaceholderScreen', {
@@ -716,6 +739,9 @@ useEffect(() => {
         ) : (
           <TouchableOpacity
             style={styles.actionButton}
+            accessibilityRole="button"
+            accessibilityLabel="Download podcast"
+            accessibilityHint={isGuest ? "Requires sign in to download this podcast" : "Downloads this podcast for offline listening"}
             onPress={async () => {
               if (isGuest) {
                 navigation.navigate('GuestPlaceholderScreen', {
@@ -749,6 +775,9 @@ useEffect(() => {
         {/* COMMENTS */}
         <TouchableOpacity
           style={styles.actionButton}
+          accessibilityRole="button"
+          accessibilityLabel={`Podcast comments${podcast?.commentCount ? `, ${formatCount(podcast.commentCount)} comments` : ''}`}
+          accessibilityHint={isGuest ? "Requires sign in to view and post comments" : "Opens the podcast comments"}
           onPress={() => {
             if (isGuest) {
               navigation.navigate('GuestPlaceholderScreen', {
@@ -784,6 +813,9 @@ useEffect(() => {
         {/* SHARE */}
         <TouchableOpacity
           style={styles.actionButton}
+          accessibilityRole="button"
+          accessibilityLabel="Share podcast"
+          accessibilityHint="Opens sharing options for this podcast"
           onPress={handleShare}>
           <Ionicons name="share-outline" size={26} color="white" />
         </TouchableOpacity>
