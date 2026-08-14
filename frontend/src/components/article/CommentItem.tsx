@@ -68,7 +68,7 @@ export default function CommentItem({
   };
 
   const formatWithOrdinal = (date: string) =>
-    formatWithOrdinalAndDay(date);
+    formatRelativeTime(date);
 
   // Render mentions inline
   const renderTextWithMentions = (text: string) => {
