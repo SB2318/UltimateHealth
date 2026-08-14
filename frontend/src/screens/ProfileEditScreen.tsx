@@ -29,6 +29,7 @@ import {
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import useUploadImage from '../hooks/useUploadImage';
 import Snackbar from 'react-native-snackbar';
+import {useQueryClient} from '@tanstack/react-query';
 import {useGetUserDetails} from '../hooks/useGetUserDetails';
 import {useUpdatePassword} from '../hooks/useUpdatePassword';
 import {useUpdateProfileImage} from '../hooks/useUpdateProfileImage';
@@ -77,15 +78,18 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
 
   const {data: user} = useGetUserDetails(isConnected);
 
+  const queryClient = useQueryClient();
 
+  const getProfileImageUrl = (image: string): string =>
+    image
+      ? image.startsWith('http')
+        ? image
+        : `${GET_STORAGE_DATA}/${image}`
+      : '';
 
   useEffect(() => {
     if (user) {
-      setUserProfileImage(
-        user.Profile_image ?
-        user.Profile_image.startsWith("http") ? user.Profile_image :
-         `${GET_STORAGE_DATA}/${user.Profile_image}` : '',
-      );
+      setUserProfileImage(getProfileImageUrl(user.Profile_image));
     }
   }, [user]);
   // Boolean to check if the user is a doctor
@@ -410,7 +414,9 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
                   {
                     text: 'Cancel',
                     onPress: () => {
-                      setUserProfileImage(user?.Profile_image || '');
+                      setUserProfileImage(
+                        getProfileImageUrl(user?.Profile_image || ''),
+                      );
                     },
                     style: 'cancel',
                   },
@@ -423,6 +429,12 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
 
                           updateProfileImage(result as string, {
                             onSuccess: _data => {
+                              setUserProfileImage(
+                                getProfileImageUrl(result as string),
+                              );
+                              queryClient.invalidateQueries({
+                                queryKey: ['get-user-details-by-id'],
+                              });
                               Alert.alert(
                                 'Success',
                                 'Profile updated successfully',
