@@ -23,6 +23,8 @@ const NAMED_ENTITIES: Record<string, string> = {
   excl: '!',
   period: '.',
   comma: ',',
+  tab: '\t',
+  newline: '\n',
 };
 
 const decodeHtmlEntities = (value: string): string =>
@@ -106,11 +108,16 @@ const SAFE_URL_ATTRS = new Set(['href', 'src']);
 const SAFE_URL_SCHEMES = new Set(['http', 'https', 'mailto', 'tel', 'sms']);
 
 const isSafeUrl = (value: string): boolean => {
-  const trimmed = value.trim();
-  if (!trimmed) {
+  // The WHATWG URL parser strips ASCII tab, LF and CR from the whole input
+  // BEFORE parsing the scheme (https://url.spec.whatwg.org/#ascii-tab-or-newline).
+  // Mirror that here so an entity-encoded control character smuggled into a
+  // scheme name (e.g. `java&#10;script:`) can never make the scheme regex
+  // fail and fall through to the "no scheme -> safe" branch below.
+  const normalized = value.replace(/[\t\n\r]/g, '').trim();
+  if (!normalized) {
     return false;
   }
-  const scheme = trimmed.match(/^([a-z][a-z0-9+.-]*):/i)?.[1]?.toLowerCase();
+  const scheme = normalized.match(/^([a-z][a-z0-9+.-]*):/i)?.[1]?.toLowerCase();
   if (!scheme) {
     return true;
   }

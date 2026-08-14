@@ -47,6 +47,39 @@ describe('sanitizeHtml', () => {
     expect(out).not.toContain('javascript');
   });
 
+  it('blocks javascript: scheme smuggled in via ASCII control characters', () => {
+    expect(sanitizeHtml('<a href="java&#10;script:alert(1)">click</a>')).toBe(
+      '<a>click</a>',
+    );
+    expect(sanitizeHtml('<a href="java&#9;script:alert(1)">click</a>')).toBe(
+      '<a>click</a>',
+    );
+    expect(sanitizeHtml('<a href="java&#13;script:alert(1)">click</a>')).toBe(
+      '<a>click</a>',
+    );
+    expect(sanitizeHtml('<img src="java&#10;script:alert(1)">')).toBe(
+      '<img>',
+    );
+  });
+
+  it('blocks whitespace-entity variants (Tab, NewLine) of the javascript scheme', () => {
+    expect(sanitizeHtml('<a href="java&Tab;script:alert(1)">click</a>')).toBe(
+      '<a>click</a>',
+    );
+    expect(
+      sanitizeHtml('<a href="java&NewLine;script:alert(1)">click</a>'),
+    ).toBe('<a>click</a>');
+  });
+
+  it('still allows relative and http(s) URLs after control-character handling', () => {
+    expect(sanitizeHtml('<img src="/img.png" alt="x">')).toBe(
+      '<img src="/img.png" alt="x">',
+    );
+    expect(
+      sanitizeHtml('<a href="https://example.com/a">x</a>'),
+    ).toBe('<a href="https://example.com/a">x</a>');
+  });
+
   it('blocks vbscript: and non-image data: schemes', () => {
     expect(
       sanitizeHtml('<a href="vbscript:msgbox(1)">x</a>'),
