@@ -91,6 +91,7 @@ const GeneralTab = ({
             }) => (
               <>
                 <TextInput
+                  accessibilityLabel="Username"
                   placeholder="Enter your full name"
                   placeholderTextColor="#6b7280"
                   style={[
@@ -121,6 +122,7 @@ const GeneralTab = ({
             render={({field: {value}}) => (
               <TextInput
                 editable={false}
+                accessibilityLabel="User handle"
                 placeholder="Enter your userhandle"
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
@@ -138,6 +140,7 @@ const GeneralTab = ({
             name="email"
             render={({field: {value}}) => (
               <TextInput
+                accessibilityLabel="Email"
                 placeholder="Enter your email"
                 placeholderTextColor="#6b7280"
                 style={styles.inputControl}
@@ -160,6 +163,7 @@ const GeneralTab = ({
             }) => (
               <>
                 <TextInput
+                  accessibilityLabel="About"
                   placeholder="Tell us something about yourself..."
                   placeholderTextColor="#6b7280"
                   textAlignVertical="top"

@@ -57,6 +57,7 @@ const ContactTab = ({
               <>
                 <TextInput
                   clearButtonMode="while-editing"
+                  accessibilityLabel="Phone Number"
                   placeholder="Enter phone number with country code (e.g. +1234567890)"
                   placeholderTextColor="#6b7280"
                   style={[
@@ -95,6 +96,7 @@ const ContactTab = ({
               <>
                 <TextInput
                   clearButtonMode="while-editing"
+                  accessibilityLabel="Contact Email"
                   placeholder="Enter your contact email address"
                   placeholderTextColor="#6b7280"
                   style={[
