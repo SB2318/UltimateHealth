@@ -14,7 +14,7 @@ const userScreenshots = [
   { src: "/assets/podcast-form.jpeg", caption: "Podcast Form" },
   { src: "/assets/podcast-list-screen.jpeg", caption: "Podcast Listing" },
   { src: "/assets/podcast-play-screen.jpeg", caption: "Podcast Player" },
-  { src: "/assets/podcast-play-screen-2.jpeg", caption: "Podcast Player" },
+  { src: "/assets/podcast-play-screen-2.jpeg", caption: "Now Playing" },
   { src: "/assets/podcast-recording.jpeg", caption: "Podcast Recorder" },
   { src: "/assets/podcast-upload.jpeg", caption: "Podcast Upload" },
   { src: "/assets/notification-screen.jpeg", caption: "Notification" },
