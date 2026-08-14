@@ -53,7 +53,7 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
   const {isConnected} = useSelector((state: any) => state.network);
 
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const [isTyping, setIsTyping] = useState<boolean>(true);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const isMountedRef = useRef(true);
   const dispatch = useDispatch();
   const {data: user} = useGetProfile();
@@ -103,10 +103,12 @@ const ChatbotScreen = ({navigation}: ChatBotScreenProps) => {
         },
         ...refined.reverse(),
       ]);
-
-      safeSetIsTyping(false);
     }
   }, [conversations, safeSetIsTyping, safeSetMessages]);
+
+  useEffect(() => {
+    safeSetIsTyping(messageProcessPending);
+  }, [messageProcessPending, safeSetIsTyping]);
 
   const convertToGiftedFormat = (items: Message[]): IMessage[] => {
     return items.map(m => ({
