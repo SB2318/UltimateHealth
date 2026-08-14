@@ -300,7 +300,7 @@ describe('PodcastDetail', () => {
   it('switches play control state when the play button is pressed', () => {
     const {getByLabelText} = renderScreen();
 
-    fireEvent.press(getByLabelText('podcast-play-pause-button'));
+    fireEvent.press(getByLabelText('Play podcast'));
 
     expect(mockPlayer.play).toHaveBeenCalled();
   });
@@ -308,9 +308,9 @@ describe('PodcastDetail', () => {
   it('renders accessible controls and slider labels', () => {
     const {getByLabelText, getByTestId} = renderScreen();
 
-    expect(getByLabelText('podcast-back-button')).toBeTruthy();
-    expect(getByLabelText('podcast-play-pause-button')).toBeTruthy();
-    expect(getByLabelText('podcast-forward-button')).toBeTruthy();
+    expect(getByLabelText('Rewind 5 seconds')).toBeTruthy();
+    expect(getByLabelText('Play podcast')).toBeTruthy();
+    expect(getByLabelText('Forward 5 seconds')).toBeTruthy();
     expect(getByTestId('podcast-progress-slider')).toBeTruthy();
   });
 
@@ -495,7 +495,7 @@ describe('PodcastDetail', () => {
 
     // Play the audio
     await act(async () => {
-      fireEvent.press(getByLabelText('podcast-play-pause-button'));
+      fireEvent.press(getByLabelText('Play podcast'));
     });
 
     // 1.5 -> 2.0 (playing)
