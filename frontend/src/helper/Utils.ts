@@ -130,6 +130,11 @@ export function formatCount(count: number) {
   }
 }
 
+export function formatViewCount(count?: number) {
+  const views = count ?? 0;
+  return `${views} ${views === 1 ? 'view' : 'views'}`;
+}
+
 export const handleExternalClick = (request: any) => {
   const {url} = request;
 

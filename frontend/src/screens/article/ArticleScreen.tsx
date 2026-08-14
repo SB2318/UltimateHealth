@@ -27,6 +27,7 @@ import { generateArticleSummary, ArticleSummary } from '../../services/SummarySe
 
 import {
   formatCount,
+  formatViewCount,
   handleExternalClick,
   retrieveItem,
   StatusEnum,
@@ -762,9 +763,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         <View style={styles.contentContainer}>
           {article && (
             <Text style={{...styles.viewText, marginBottom: 10}}>
-              {article?.viewCount
-                ? article.viewCount > 1
-                : `${article.viewCount} view`}
+              {formatViewCount(article.viewCount)}
             </Text>
           )}
           {article && article?.tags && (
