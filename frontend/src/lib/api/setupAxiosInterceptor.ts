@@ -93,8 +93,13 @@ const handleError = async (error: any) => {
   const method = error.config?.method?.toUpperCase();
   
   if (isNetworkError && method && method !== 'GET') {
-    const { url, method: configMethod, data, headers } = error.config;
-    await enqueueOfflineWrite({ url, method: configMethod, data, headers });
+    // NEVER persist `headers`: error.config.headers contains the live
+    // `Authorization: Bearer <token>`, and writing it to AsyncStorage would
+    // store the session credential in plaintext on disk. The replay path in
+    // offlineQueue relies on the global request interceptor to re-attach a
+    // fresh token for the current session instead.
+    const { url, method: configMethod, data } = error.config;
+    await enqueueOfflineWrite({ url, method: configMethod, data });
   }
 
   // A 401 from a credential-check endpoint (login, OTP, password change, ...)

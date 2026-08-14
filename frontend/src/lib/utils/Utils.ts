@@ -12,6 +12,7 @@ if (Platform.OS !== 'web') {
 }
 
 import {secureClearAllItems} from '../storage/SecureStorageUtils';
+import {clearOfflineQueue} from '../api/offlineQueue';
 import { debugLog, debugWarn, debugError } from '../utils/debugLog';
 import {
   deleteItem as deletePodcastCache,
@@ -148,6 +149,7 @@ export const clearStorage = async () => {
       AsyncStorage.removeItem(KEYS.USER_TOKEN_EXPIRY_DATE),
       AsyncStorage.removeItem(KEYS.USER_ID),
       AsyncStorage.removeItem(KEYS.USER_HANDLE),
+      clearOfflineQueue(),
     ]);
     await secureClearAllItems();
     debugLog('All user-related storage cleared successfully.');
