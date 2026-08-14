@@ -57,6 +57,63 @@ describe('ReadingHistoryService', () => {
     expect(mockStorage.remove).toHaveBeenCalledWith('reading_history');
   });
 
+  it('prunes malformed entries on read and self-heals storage', () => {
+    const valid = {
+      articleId: '1',
+      title: 'Test',
+      authorName: 'Author',
+      category: 'Health',
+      coverImage: '',
+      viewedAt: 123,
+    };
+
+    mockStorage.getString.mockReturnValue(
+      JSON.stringify([valid, null, {}, {articleId: '3'}]),
+    );
+
+    expect(getReadingHistory()).toEqual([valid]);
+    expect(mockStorage.set).toHaveBeenCalledTimes(1);
+
+    const savedHistory = JSON.parse(
+      mockStorage.set.mock.calls[0][1],
+    );
+    expect(savedHistory).toEqual([valid]);
+  });
+
+  it('keeps recording new views after a corrupted entry is pruned', () => {
+    const valid = {
+      articleId: '1',
+      title: 'Test',
+      authorName: 'Author',
+      category: 'Health',
+      coverImage: '',
+      viewedAt: 1000,
+    };
+
+    mockStorage.getString.mockReturnValue(
+      JSON.stringify([valid, null, {}]),
+    );
+
+    jest.spyOn(Date, 'now').mockReturnValue(2000);
+
+    recordArticleView({
+      articleId: '2',
+      title: 'Newest',
+      authorName: 'Author',
+      category: 'Health',
+      coverImage: '',
+    });
+
+    const setCalls = mockStorage.set.mock.calls;
+    const savedHistory = JSON.parse(
+      setCalls[setCalls.length - 1][1],
+    );
+
+    expect(savedHistory[0].articleId).toBe('2');
+    expect(savedHistory).toHaveLength(2);
+    expect(savedHistory[1]).toEqual(valid);
+  });
+
   it('records a new article view with timestamp', () => {
     mockStorage.getString.mockReturnValue(undefined);
 

@@ -29,8 +29,33 @@ export type ReadingHistoryItem = {
 };
 
 /**
+ * Runtime shape check for a stored history entry.
+ *
+ * History is persisted as opaque JSON, so a single malformed entry (a `null`,
+ * an empty object, or a partial write from an interrupted `set`) must never be
+ * able to crash `recordArticleView` (which reads `h.articleId`) or the Reading
+ * History screen (which reads `item.title`, `item.coverImage`, ...).
+ */
+function isValidHistoryItem(item: unknown): item is ReadingHistoryItem {
+  return (
+    !!item &&
+    typeof item === 'object' &&
+    typeof (item as ReadingHistoryItem).articleId === 'string' &&
+    typeof (item as ReadingHistoryItem).title === 'string' &&
+    typeof (item as ReadingHistoryItem).authorName === 'string' &&
+    typeof (item as ReadingHistoryItem).category === 'string' &&
+    typeof (item as ReadingHistoryItem).coverImage === 'string' &&
+    typeof (item as ReadingHistoryItem).viewedAt === 'number' &&
+    Number.isFinite((item as ReadingHistoryItem).viewedAt)
+  );
+}
+
+/**
  * Load the history array from MMKV.
  * Returns [] on missing key, MMKV unavailable, or corrupted JSON.
+ *
+ * Malformed elements are pruned on read (self-healing) so one bad record can
+ * never brick history recording; the cleaned array is written back.
  */
 export function getReadingHistory(): ReadingHistoryItem[] {
   try {
@@ -40,7 +65,11 @@ export function getReadingHistory(): ReadingHistoryItem[] {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed as ReadingHistoryItem[];
+    const valid = parsed.filter(isValidHistoryItem);
+    if (valid.length !== parsed.length) {
+      saveHistory(valid);
+    }
+    return valid;
   } catch {
     // Corrupted data — wipe and start fresh
     try { getStorage()?.remove(HISTORY_KEY); } catch {}
@@ -107,6 +136,6 @@ export function recordArticleView(
  */
 export function clearReadingHistory(): void {
   try {
-    getStorage()?.remove(HISTORY_KEY)
+    getStorage()?.remove(HISTORY_KEY);
   } catch {}
 }
