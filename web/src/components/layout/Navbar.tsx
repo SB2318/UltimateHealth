@@ -1,5 +1,5 @@
 "use client";
-
+import { ModeToggle } from "@/components/mode-toggle";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -112,6 +112,15 @@ export default function Navbar({ activeSection }: NavbarProps) {
               <span className="nav-item-text">Join Us to Contribute</span>
             </Link>
           </li>
+          <li
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginLeft: "10px",
+            }}
+          >
+            <ModeToggle />
+          </li>
           <li style={{ display: "flex", alignItems: "center" }}>
             <a href={withBasePath("/#downloads")} className="nav-btn-sm">
               <i className="fas fa-user" aria-hidden="true"></i>
@@ -159,6 +168,15 @@ export default function Navbar({ activeSection }: NavbarProps) {
           Join Us to Contribute
         </Link>
         <a href={withBasePath("/#downloads")} onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "1rem",
+          }}
+        >
+          <ModeToggle />
+        </div>
       </nav>
     </header>
   );
