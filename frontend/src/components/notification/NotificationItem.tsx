@@ -1,7 +1,5 @@
- 
- 
 // @ts-nocheck
-import {formatTimeWithDate} from '../../lib/utils/dateUtils';
+import {formatRelativeTime} from '../../lib/utils/dateUtils';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
   PanResponder,
@@ -169,7 +167,7 @@ export default function NotificationItem({
             </Text>
             <Text style={styles.footerText}>
               Received at: {' '}
-              {formatTimeWithDate(item?.timestamp)}
+              {formatRelativeTime(item?.timestamp)}
             </Text>
           </View>
         </Pressable>
@@ -255,4 +253,3 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 });
-

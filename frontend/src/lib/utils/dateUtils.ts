@@ -1,4 +1,4 @@
-import { format, isValid, getYear, parse, parseISO } from 'date-fns';
+import { format, isValid, getYear, parse, parseISO, formatDistanceToNow } from 'date-fns';
 import { enUS, es, fr, de, hi } from 'date-fns/locale';
 import type { Locale } from 'date-fns';
 import { TZDateMini } from '@date-fns/tz';
@@ -89,6 +89,33 @@ const getValidDate = (date: Date | string | number | null | undefined): Date | n
   }
   
   return null;
+};
+
+/**
+ * Format recent timestamps as relative time.
+ * Example: "5 minutes ago", "2 hours ago", "3 days ago".
+ * Falls back to a localized full date for older entries.
+ */
+export const formatRelativeTime = (
+  date: Date | string | number | null | undefined
+): string => {
+  const validDate = getValidDate(date);
+  if (!validDate) return '';
+
+  const now = new Date();
+  const diffInDays =
+    Math.abs(now.getTime() - validDate.getTime()) / (1000 * 60 * 60 * 24);
+
+  if (diffInDays <= 7) {
+    return formatDistanceToNow(validDate, {
+      addSuffix: true,
+      locale: activeLocale,
+    });
+  }
+
+  return format(validDate, "d MMM, yyyy, h:mm a", {
+    locale: activeLocale,
+  });
 };
 
 /**
