@@ -55,7 +55,7 @@ jest.mock('tamagui', () => {
 });
 
 describe('GlossaryBottomSheet', () => {
-  const glossaryTerm = testGlossaryTerms[0];
+  const glossaryTerm = testGlossaryTerms.find(t => t.term === 'Hypertension')!;
 
   it('renders glossary term details when visible', () => {
     const { getByText } = render(
@@ -70,7 +70,7 @@ describe('GlossaryBottomSheet', () => {
     );
 
     expect(getByText('Hypertension')).toBeTruthy();
-    expect(getByText('Cardiology')).toBeTruthy();
+    expect(getByText(glossaryTerm.category!)).toBeTruthy();
     expect(getByText(glossaryTerm.definition)).toBeTruthy();
     expect(getByText('Blood pressure')).toBeTruthy();
   });
