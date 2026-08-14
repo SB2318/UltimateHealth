@@ -6,6 +6,7 @@ import {
   formatDateShortYear,
   formatWithOrdinalAndDay,
   formatDateShort,
+  formatRelativeTime,
 } from '../../../lib/utils/dateUtils';
 
 jest.mock('expo-localization', () => ({
@@ -75,6 +76,45 @@ describe('dateUtils', () => {
       expect(formatWithOrdinalAndDay(null)).toBe('');
       expect(formatWithOrdinalAndDay(undefined)).toBe('');
       expect(formatWithOrdinalAndDay('invalid')).toBe('');
+    });
+
+    it('formats formatRelativeTime for recent timestamps', () => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date('2026-05-26T16:30:00Z'));
+
+      expect(formatRelativeTime('2026-05-26T16:25:00Z')).toBe('5 minutes ago');
+      expect(formatRelativeTime('2026-05-26T14:30:00Z')).toBe('about 2 hours ago');
+      expect(formatRelativeTime('2026-05-23T16:30:00Z')).toBe('3 days ago');
+      expect(formatRelativeTime('2026-05-19T16:30:00Z')).toBe('7 days ago');
+
+      jest.useRealTimers();
+    });
+
+    it('falls back to a localized full date for older timestamps', () => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date('2026-06-05T16:30:00Z'));
+
+      expect(formatRelativeTime('2026-05-26T14:30:00Z')).toBe(
+        '26 May, 2026, 2:30 PM'
+      );
+
+      // More than one month old
+      expect(formatRelativeTime('2026-04-26T14:30:00Z')).toBe(
+        '26 Apr, 2026, 2:30 PM'
+      );
+
+      // More than one year old
+      expect(formatRelativeTime('2025-05-26T14:30:00Z')).toBe(
+        '26 May, 2025, 2:30 PM'
+      );
+
+      jest.useRealTimers();
+    });
+
+    it('returns an empty string for invalid relative timestamps', () => {
+      expect(formatRelativeTime(null)).toBe('');
+      expect(formatRelativeTime(undefined)).toBe('');
+      expect(formatRelativeTime('invalid')).toBe('');
     });
 
     it('formats formatDateShort correctly', () => {

@@ -166,7 +166,6 @@ export default function NotificationItem({
               {item?.message} {' '}
             </Text>
             <Text style={styles.footerText}>
-              Received at: {' '}
               {formatRelativeTime(item?.timestamp)}
             </Text>
           </View>
