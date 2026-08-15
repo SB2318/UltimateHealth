@@ -225,7 +225,7 @@ export default function ScreenshotGallery() {
           <div className="screenshot-details">
             <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setUserSliderOpen((o) => !o); }}>
-              <span style={{ color: "var(--primary)" }}>{userSliderOpen ? "▼" : "▶"}</span> UltimateHealth App
+              <i className={`fas fa-caret-${userSliderOpen ? 'down' : 'right'}`} style={{ color: "var(--primary)", marginRight: "8px" }} aria-hidden="true" /> UltimateHealth App
             </div>
             {userSliderOpen && (
               <div className="screenshot-slider-container">
@@ -264,7 +264,7 @@ export default function ScreenshotGallery() {
           <div className="screenshot-details">
             <div className="screenshot-summary" onClick={() => setAdminSliderOpen((o) => !o)} role="button" tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setAdminSliderOpen((o) => !o); }}>
-              <span style={{ color: "var(--primary)" }}>{adminSliderOpen ? "▼" : "▶"}</span> UHealth Admin App
+              <i className={`fas fa-caret-${adminSliderOpen ? 'down' : 'right'}`} style={{ color: "var(--primary)", marginRight: "8px" }} aria-hidden="true" /> UHealth Admin App
             </div>
             {adminSliderOpen && (
               <div className="screenshot-slider-container">

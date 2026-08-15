@@ -14,11 +14,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const locales = [
-    { code: "en", label: "🇬🇧 English (en)" },
-    { code: "de", label: "🇩🇪 German (de)" },
-    { code: "es", label: "🇪🇸 Spanish (es)" },
-    { code: "fr", label: "🇫🇷 French (fr)" },
-    { code: "hr", label: "🇭🇷 Croatian (hr)" },
+    { code: "en", label: "English (en)" },
+    { code: "de", label: "German (de)" },
+    { code: "es", label: "Spanish (es)" },
+    { code: "fr", label: "French (fr)" },
+    { code: "hr", label: "Croatian (hr)" },
 ];
 
 export function LanguageSwitcher() {

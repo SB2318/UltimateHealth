@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { ModeToggle } from "@/components/mode-toggle";
 import { PageWrapper } from "@/components/layout";
 import { withBasePath } from "@/lib/basePath";
+import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const SECTION_IDS = ["features", "screenshots", "programs", "contact"];
 
@@ -104,7 +105,8 @@ export default function SiteHeader() {
               <span className="nav-item-text">Join Us to Contribute</span>
             </Link>
           </li>
-          <li style={{ display: "flex", alignItems: "center" }}>
+          <li style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <LanguageSwitcher />
             <ModeToggle />
           </li>
           <li style={{ display: "flex", alignItems: "center" }}>
@@ -128,7 +130,8 @@ export default function SiteHeader() {
         <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
         <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
         <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
-        <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "16px", padding: "8px 0" }}>
+          <LanguageSwitcher />
           <ModeToggle />
         </div>
       </nav>
