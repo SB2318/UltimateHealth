@@ -32,22 +32,29 @@ const HomeScreenHeader = ({
         </Button>
 
         {/* Center search bar wrapper */}
-        <XStack 
-          flex={1} 
-          alignItems="center" 
+        <XStack
+          flex={1}
+          minWidth={0}
+          height={42}
+          alignItems="center"
           backgroundColor={surface}
-          borderWidth={1.5} 
-          borderColor="#4D6360" 
-          borderRadius={10} 
-          paddingHorizontal="$2" 
-          minHeight={40}
+          borderWidth={1.5}
+          borderColor="#4D6360"
+          borderRadius={10}
+          paddingHorizontal="$2"
         >
-          <Feather name="search" size={18} color={mutedText} style={{ marginLeft: 4 }} />
-          
-          <Input 
+          <Feather
+            name="search"
+            size={18}
+            color={mutedText}
+            style={{ marginRight: 8 }}
+          />
+
+          <Input
             unstyled
             flex={1}
-            paddingLeft={8}
+            minWidth={0}
+            paddingHorizontal={0}
             paddingVertical={4}
             placeholder="Search articles..."
             placeholderTextColor={mutedText}
