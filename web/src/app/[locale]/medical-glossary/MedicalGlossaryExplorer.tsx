@@ -86,9 +86,7 @@ export default function MedicalGlossaryExplorer() {
   const filteredEntries = useMemo(() => {
     const q = searchQuery.toLowerCase();
     return glossaryEntries.filter((entry) => {
-      const matchesSearch =
-        entry.term.toLowerCase().includes(q) ||
-        entry.definition.toLowerCase().includes(q);
+      const matchesSearch = entry.term.toLowerCase().includes(q);
       const matchesCategory =
         selectedCategory === "All" || entry.category === selectedCategory;
       return matchesSearch && matchesCategory;
