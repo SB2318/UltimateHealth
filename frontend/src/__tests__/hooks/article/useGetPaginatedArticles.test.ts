@@ -32,15 +32,16 @@ describe('useGetPaginatedArticle', () => {
     expect(result.current.data?.totalPages).toBe(5);
   });
 
-  it('returns null on catch', async () => {
+  it('surfaces request failures as query errors instead of swallowing them', async () => {
     mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
 
     const {result} = renderHook(() => useGetPaginatedArticle(true, 1), {
       wrapper: makeWrapper(),
     });
 
-    await waitFor(() => expect(result.current.isSuccess).toBe(true)); // Try/catch inside queryFn
-    expect(result.current.data).toBeNull();
+    await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(result.current.error).toBeInstanceOf(Error);
+    expect(result.current.data).toBeUndefined();
   });
 
   it('does not fetch if not connected', async () => {
