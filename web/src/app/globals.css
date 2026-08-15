@@ -1149,12 +1149,12 @@ p.center {
 
 .mod-icon {
   display: flex;
-  justify-content: left;
-  align-items: left;
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-  color: #667eea ;
-  transition: transform 0.35s ease;
+  justify-content: flex-start;
+  align-items: flex-start;
+  font-size: 1.75rem;
+  margin-bottom: 14px;
+  color: #667eea;
+  transition: color 0.35s ease;
 }
 .mod-icon i {
   background: var(--gradient-primary);
@@ -1162,17 +1162,23 @@ p.center {
   background-clip: text;
 }
 .mod-card {
-  border: 2px solid rgba(102, 126, 234, 0.1); 
-  transition: all 0.35s ease;
-  border-radius: 16 px;
+  border-left: 3px solid rgba(102, 126, 234, 0.25);
+  padding: 4px 0 4px 24px;
+  transition: border-color 0.35s ease;
 }
-.mod-card:hover { 
-  transform: translateY(-10px);
-  border-color: var(--primary); 
-  box-shadow: 0 20px 40px -10px rgba(102, 126, 234, 0.25); 
+.mod-card:hover {
+  border-left-color: var(--primary);
 }
-.mod-card:hover .mod-icon {
-  transform: rotate(8deg);
+.mod-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+.mod-card p {
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin: 0;
 }
 
 /* ==================== PROGRAM CARDS ==================== */
@@ -1309,7 +1315,7 @@ section#contact.contact-section > .container > p.center {
 .contact-info-cards {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 4px;
   margin-bottom: 32px;
   position: relative;
 }
@@ -1318,17 +1324,17 @@ section#contact.contact-section > .container > p.center {
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
-  padding: 15px 18px;
-  transition: var(--transition);
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: border-color 0.2s ease;
+}
+
+.contact-info-card:last-child {
+  border-bottom: none;
 }
 
 .contact-info-card:hover {
-  background: rgba(255, 255, 255, 0.13);
   border-color: rgba(196, 181, 253, 0.4);
-  transform: translateX(4px);
 }
 
 .contact-info-icon {
@@ -3141,12 +3147,17 @@ html.dark .feature-card-premium {
 }
 html.dark .feature-item,
 html.dark .feature-card,
-html.dark .mod-card,
 html.dark .program-card,
 html.dark .download-card,
 html.dark .modal-content {
   background: #1e293b;
   border-color: rgba(255,255,255,0.05);
+}
+html.dark .mod-card {
+  border-left-color: rgba(167, 139, 250, 0.35);
+}
+html.dark .mod-card h3 {
+  color: #f1f5f9;
 }
 
 html.dark section#contact.contact-section { background: #0f172a; }
