@@ -75,7 +75,7 @@
     "qrcode-terminal": "^0.12.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-hook-form": "^7.78.0",
+    "react-hook-form": "^7.85.0",
     "react-native": "0.86.2",
     "react-native-chart-kit": "^6.12.0",
     "react-native-collapsible-tab-view": "^8.0.1",
