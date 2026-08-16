@@ -3383,16 +3383,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-firebase/messaging@npm:^23.4.1":
-  version: 23.8.8
-  resolution: "@react-native-firebase/messaging@npm:23.8.8"
+"@react-native-firebase/messaging@npm:^26.2.0":
+  version: 26.2.0
+  resolution: "@react-native-firebase/messaging@npm:26.2.0"
   peerDependencies:
-    "@react-native-firebase/app": 23.8.8
+    "@react-native-firebase/app": 26.2.0
     expo: ">=47.0.0"
   peerDependenciesMeta:
     expo:
       optional: true
-  checksum: 10c0/f6a7d8cfc292d1445ea93ea262b2a22cbf51970be71008c55f1a3d992eaaae45940f937a3cde52f32d069dbf4bf8dec2e2c5215e6b3bddb8ed41d9d43da6dcde
+  checksum: 10c0/ee94dcad59745c4ca4181c4c81b7ff21c688d296a465f1380957f07875886a05773b1e6d0a2d7e666105ff922ba2907be5a1315fde6aab13ea1f999a396c55ad
   languageName: node
   linkType: hard
 
@@ -15350,7 +15350,7 @@ __metadata:
     "@react-native-community/netinfo": "npm:12.0.1"
     "@react-native-community/slider": "npm:5.2.0"
     "@react-native-firebase/app": "npm:^23.4.1"
-    "@react-native-firebase/messaging": "npm:^23.4.1"
+    "@react-native-firebase/messaging": "npm:^26.2.0"
     "@react-native/jest-preset": "npm:^0.86.0"
     "@react-navigation/bottom-tabs": "npm:^7.18.14"
     "@react-navigation/elements": "npm:^2.9.36"
