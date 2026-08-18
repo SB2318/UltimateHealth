@@ -1223,6 +1223,10 @@ We welcome contributions from everyone — developers, designers, writers, and t
      <td align="center"><a href="https://github.com/tejo123-HUB"><img src="https://avatars.githubusercontent.com/u/218343195?v=4" width="120px;" alt=""/><br/><sub><b>tejo123-HUB</b></sub></a></td>
      <td align="center"><a href="https://github.com/palaklohia"><img src="https://avatars.githubusercontent.com/u/219238003?v=4" width="120px;" alt=""/><br/><sub><b>palaklohia</b></sub></a></td>
  </tr>
+
+   <tr>
+    <td align="center"><a href="https://github.com/rish0000-dot"><img src="https://avatars.githubusercontent.com/u/189544159?v=4" width="120px;" alt=""/><br/><sub><b>Rishabh Sharma</b></sub></a></td>
+   </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
