@@ -2949,21 +2949,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lottiefiles/dotlottie-react@npm:^0.19.4":
-  version: 0.19.12
-  resolution: "@lottiefiles/dotlottie-react@npm:0.19.12"
+"@lottiefiles/dotlottie-react@npm:^0.19.14":
+  version: 0.19.14
+  resolution: "@lottiefiles/dotlottie-react@npm:0.19.14"
   dependencies:
-    "@lottiefiles/dotlottie-web": "npm:0.78.2"
+    "@lottiefiles/dotlottie-web": "npm:0.79.1"
   peerDependencies:
     react: ^17 || ^18 || ^19
-  checksum: 10c0/495f58eb9f559c6956aa3ab7931dcca54a18aa30b65cb234f2abffb4c8f9ba99ca77d960d1e80b00ca9d5ff099aa9ab51d44240e7c66b425102d38c17f7ead06
+  checksum: 10c0/284be0f2661b2aff7b03ab82a4981e4cebaec52b47db21853e9507c4c1f3deeaa22f12d01643bab6a3d8da763523d679b4d9f6c0da2d750d0864a21dddf0d2e1
   languageName: node
   linkType: hard
 
-"@lottiefiles/dotlottie-web@npm:0.78.2":
-  version: 0.78.2
-  resolution: "@lottiefiles/dotlottie-web@npm:0.78.2"
-  checksum: 10c0/16ef56ea87a5c1d2bfff673025112f9fb61ef4c613db0fbc4e406b61d6c43f0224938e94fc95f6e0c53ba1a6552db14aa478c537fd8e40672fb1eb9f9615023a
+"@lottiefiles/dotlottie-web@npm:0.79.1":
+  version: 0.79.1
+  resolution: "@lottiefiles/dotlottie-web@npm:0.79.1"
+  checksum: 10c0/59a4c9f80fba5bcc841c97390b5bfb9ba7e9c6e5dd86d581b22e144e7dd852f45ec196495cfffecc192f98b899b3aea68bf8749e93d69fb52828542625e92839
   languageName: node
   linkType: hard
 
@@ -15345,7 +15345,7 @@ __metadata:
     "@expo/vector-icons": "npm:^15.0.3"
     "@gorhom/bottom-sheet": "npm:^5.2.6"
     "@hookform/resolvers": "npm:^5.4.0"
-    "@lottiefiles/dotlottie-react": "npm:^0.19.4"
+    "@lottiefiles/dotlottie-react": "npm:^0.19.14"
     "@react-native-async-storage/async-storage": "npm:2.2.0"
     "@react-native-community/netinfo": "npm:12.0.1"
     "@react-native-community/slider": "npm:5.2.0"
