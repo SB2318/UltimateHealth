@@ -10,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Entypo from '@expo/vector-icons/Entypo';
 import {FontAwesome, Fontisto} from '@expo/vector-icons';
-import { formatWithOrdinalAndDay } from '../../lib/utils/dateUtils';
+import { formatWithOrdinalAndDay, formatRelativeTime } from '../../lib/utils/dateUtils';
 import ArticleFloatingMenu from '../home/AnimatedMenu';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {Comment} from '../../schemas/type';
