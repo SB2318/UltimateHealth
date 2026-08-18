@@ -90,8 +90,13 @@ jobs:
             const fs = require('fs');
             let content = process.env.GOOGLE_SERVICES_JSON;
             if (!content || content.trim().length === 0) {
-              console.error('GOOGLE_SERVICES_JSON is empty!');
-              process.exit(1);
+              console.warn('GOOGLE_SERVICES_JSON secret not found (fork PR). Creating fallback google-services.json for build validation.');
+              const fallback = {
+                project_info: { project_number: "123456789", project_id: "dummy-project", storage_bucket: "dummy.appspot.com" },
+                client: [{ client_info: { mobilesdk_app_id: "1:123456789:android:123456789", android_client_info: { package_name: "com.ultimatehealth.app" } }, api_key: [{ current_key: "dummy-api-key" }] }]
+              };
+              fs.writeFileSync('android/app/google-services.json', JSON.stringify(fallback, null, 2));
+              process.exit(0);
             }
             let parsed;
             try {
