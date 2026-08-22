@@ -5,12 +5,6 @@ import {GET_STORAGE_DATA} from '../api/APIUtils';
 import {Alert, Linking, Platform, PermissionsAndroid} from 'react-native';
 import {sanitizeHtml} from './htmlSanitizer';
 
-let RNFS: any = null;
-
-if (Platform.OS !== 'web') {
-  RNFS = require('react-native-fs');
-}
-
 import {secureClearAllItems} from '../storage/SecureStorageUtils';
 import {clearOfflineQueue} from '../api/offlineQueue';
 import { debugLog, debugWarn, debugError } from '../utils/debugLog';
@@ -20,6 +14,12 @@ import {
   setItem as setPodcastCache,
   type PodcastDownloadRecord,
 } from '../storage/MMKVUtils';
+
+let RNFS: any = null;
+
+if (Platform.OS !== 'web') {
+  RNFS = require('react-native-fs');
+}
 
 export const checkInternetConnection = (
   callback: (isConnected: boolean) => void,

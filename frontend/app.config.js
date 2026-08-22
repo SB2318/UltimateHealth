@@ -107,6 +107,8 @@ const defaultStaticConfig = {
         }
       }
     ],
+    "expo-asset",
+    "expo-image",
     "./plugins/withWebViewDebug.js"
   ],
   

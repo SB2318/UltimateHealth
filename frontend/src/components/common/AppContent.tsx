@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+ 
 // @ts-nocheck
 import React, { useEffect, useRef, useCallback } from 'react';
 import { useColorScheme, View } from 'react-native';

@@ -1,4 +1,4 @@
-﻿// CourseSkeletonCard.tsx
+// CourseSkeletonCard.tsx
 // Placeholder shown in place of CourseCard while course data is loading.
 // Mirrors CourseCard's layout (icon box + title/meta/progress lines) and
 // reuses the shimmer approach already established by PodcastSkeletonCard.

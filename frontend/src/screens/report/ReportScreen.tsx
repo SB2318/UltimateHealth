@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import React, {useState} from 'react';
 import { View,
    ScrollView ,
