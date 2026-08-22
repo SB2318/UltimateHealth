@@ -20,7 +20,7 @@ import {
   setAudioModeAsync,
   useAudioRecorderState,
 } from 'expo-audio';
-import audioModule from '@/modules/audio-module';
+
 import {useFocusEffect} from '@react-navigation/native';
 import {Circle, Theme, XStack, YStack, Text} from 'tamagui';
 import LottieView from 'lottie-react-native';

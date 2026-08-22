@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {setAudioModeAsync} from 'expo-audio';
+
 import * as Sentry from '@sentry/react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import {loadAsync} from 'expo-font';
@@ -43,10 +43,12 @@ function App() {
             require('./assets/images/ic_ultimatehealth_appicon.png'),
           ]),
 
-          setAudioModeAsync({
-            playsInSilentMode: true,
-            allowsRecording: true,
-          }),
+          import('expo-audio').then(({setAudioModeAsync}) =>
+            setAudioModeAsync({
+              playsInSilentMode: true,
+              allowsRecording: true,
+            }),
+          ),
         ]);
       } catch (error) {
         Sentry.captureException(error, {
