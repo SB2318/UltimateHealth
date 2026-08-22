@@ -16,6 +16,7 @@ import PersonaLobbyScreen from '../screens/ai/PersonaLobbyScreen';
 import AcademyStackNavigation from './AcademyStackNavigation';
 import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
 import { useAppSelector } from '../store/hooks';
+import DoctorProfileBanner from '../components/auth/DoctorProfileBanner';
 
 
 
@@ -26,98 +27,103 @@ const SettingsGuestScreen = () => <GuestPlaceholderScreen title="Settings" descr
 
 const TabNavigation = () => {
   const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const doctorProfileIncomplete = useAppSelector((state: any) => state.user.doctorProfileIncomplete);
   return (
-    <Tab.Navigator
-      id={undefined as never}
-      initialRouteName="Home"
-      tabBar={props => <TabBar {...props} />}>
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          headerShown: false,
-           headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerTitleStyle: {
-            color: 'white',
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Podcasts"
-        component={PodcastsScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: '🎧 Podcasts',
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerTitleStyle: {
-            fontSize: 23,
-            marginBottom: 12,
-            color: 'white',
-          },
-          headerRight: () => (
-            <HeaderRightMenu
-              onClick={() => {
-                (navigation as any).navigate('PodcastSearch');
-              }}
-            />
-          ),
-        })}
-      />
+    <React.Fragment>
+      <Tab.Navigator
+        id={undefined as never}
+        initialRouteName="Home"
+        tabBar={props => <TabBar {...props} />}>
+        {/* ... existing screens ... */}
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            headerShown: false,
+             headerStyle: {
+              backgroundColor: '#000A60',
+            },
+            headerTitleStyle: {
+              color: 'white',
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Podcasts"
+          component={PodcastsScreen}
+          options={({navigation}) => ({
+            headerShown: true,
+            headerTitle: '🎧 Podcasts',
+            headerTransparent: true,
+            headerStyle: {
+              backgroundColor: '#000A60',
+            },
+            headerTitleStyle: {
+              fontSize: 23,
+              marginBottom: 12,
+              color: 'white',
+            },
+            headerRight: () => (
+              <HeaderRightMenu
+                onClick={() => {
+                  (navigation as any).navigate('PodcastSearch');
+                }}
+              />
+            ),
+          })}
+        />
 
-      <Tab.Screen
-        name="Chatbot"
-        component={isGuest ? ChatbotGuestScreen : PersonaLobbyScreen}
-        options={({navigation}) => ({
-          headerTitleAlign: 'center',
-          title: 'Chatbot',
-          headerShown: false,
-          headerBackTitleVisible: false,
-          headerStyle: {
-            backgroundColor: BUTTON_COLOR,
-          },
-          headerTintColor: 'white',
-          headerShadowVisible: false,
-          tabBarHideOnKeyboard: true,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{
-                marginLeft: 15,
-                height: 35,
-                width: 35,
-                borderRadius: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'white',
-              }}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={20} name="arrow-left" color="black" />
-            </TouchableOpacity>
-          ),
-        })}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={isGuest ? SettingsGuestScreen : SettingsScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
+        <Tab.Screen
+          name="Chatbot"
+          component={isGuest ? ChatbotGuestScreen : PersonaLobbyScreen}
+          options={({navigation}) => ({
+            headerTitleAlign: 'center',
+            title: 'Chatbot',
+            headerShown: false,
+            headerBackTitleVisible: false,
+            headerStyle: {
+              backgroundColor: BUTTON_COLOR,
+            },
+            headerTintColor: 'white',
+            headerShadowVisible: false,
+            tabBarHideOnKeyboard: true,
+            headerLeft: () => (
+              <TouchableOpacity
+                style={{
+                  marginLeft: 15,
+                  height: 35,
+                  width: 35,
+                  borderRadius: 50,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'white',
+                }}
+                onPress={() => {
+                  navigation.goBack();
+                }}>
+                <FontAwesome6 size={20} name="arrow-left" color="black" />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Tab.Screen
+          name="Settings"
+          component={isGuest ? SettingsGuestScreen : SettingsScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
 
-      <Tab.Screen
-        name="Academy"
-        component={AcademyStackNavigation}
-        options={{
-          headerShown: false,
-        }}
-      />
-    </Tab.Navigator>
+        <Tab.Screen
+          name="Academy"
+          component={AcademyStackNavigation}
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Tab.Navigator>
+      {!isGuest && doctorProfileIncomplete && <DoctorProfileBanner />}
+    </React.Fragment>
   );
 };
 export default TabNavigation;

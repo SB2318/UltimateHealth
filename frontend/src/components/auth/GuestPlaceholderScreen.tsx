@@ -82,7 +82,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
           onPress={() => {
             navigation.reset({
               index: 0,
-              routes: [{ name: 'LoginScreen' }],
+              routes: [{ name: 'SignInScreen' }],
             });
           }}
         >
@@ -99,7 +99,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
           pressStyle={{ scale: 0.97 }}
           animation="fast"
           onPress={() => {
-            navigation.navigate('SignUpScreenFirst');
+            navigation.navigate('SignInScreen');
           }}
         >
           <Text fontSize={18} color="$color" fontWeight="600">
@@ -132,7 +132,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
         onDismiss={() => setIsBenefitsModalVisible(false)}
         onSignUp={() => {
           setIsBenefitsModalVisible(false);
-          navigation.navigate('SignUpScreenFirst');
+          navigation.navigate('SignInScreen');
         }}
       />
     </YStack>

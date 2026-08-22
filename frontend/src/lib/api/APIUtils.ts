@@ -124,6 +124,9 @@ const GET_WELLNESS_WEEKLY_API = `${PROD_URL}/wellness/weekly`;
 /** Nearby Health Events */
 const NEARBY_EVENTS_API = `${PROD_URL}/events/nearby`;
 
+/** Google Auth */
+const GOOGLE_AUTH_API = `${PROD_URL}/user/google-auth`;
+
 export {
   LOGIN_API,
   REGISTRATION_API,
@@ -215,4 +218,5 @@ export {
   LOG_WELLNESS_API,
   GET_WELLNESS_WEEKLY_API,
   NEARBY_EVENTS_API,
+  GOOGLE_AUTH_API,
 };

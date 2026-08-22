@@ -38,7 +38,7 @@ const LogoutScreen = ({navigation, route}: LogoutScreenProp) => {
     queryClient.clear();
     navigation.reset({
       index: 0,
-      routes: [{name: 'LoginScreen'}],
+      routes: [{name: 'SignInScreen'}],
     });
   }, [dispatch, navigation, queryClient]);
 

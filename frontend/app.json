@@ -120,7 +120,8 @@
           "organization": "ultimatehealth",
           "project": "ultimatehealth"
         }
-      ]
+      ],
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "reactCompiler": true

@@ -8,6 +8,7 @@ const userSlice = createSlice({
     user_handle: '',
     social_user_id: '',
     isGuest: false,
+    doctorProfileIncomplete: false,
   },
 
   reducers: {
@@ -28,12 +29,16 @@ const userSlice = createSlice({
     setGuestMode(state, action) {
       state.isGuest = action.payload;
     },
+    setDoctorProfileIncomplete(state, action) {
+      state.doctorProfileIncomplete = action.payload;
+    },
     resetUserState(state) {
       state.user_id = '';
       state.user_token = '';
       state.user_handle = '';
       state.social_user_id = '';
       state.isGuest = false;
+      state.doctorProfileIncomplete = false;
     },
   },
 });
@@ -45,6 +50,7 @@ export const {
   resetUserState,
   setSocialUserId,
   setGuestMode,
+  setDoctorProfileIncomplete,
 } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -3406,6 +3406,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-google-signin/google-signin@npm:^16.1.4":
+  version: 16.1.4
+  resolution: "@react-native-google-signin/google-signin@npm:16.1.4"
+  peerDependencies:
+    expo: ">=52.0.40"
+    react: "*"
+    react-native: "*"
+  peerDependenciesMeta:
+    expo:
+      optional: true
+  checksum: 10c0/fc3f446a8ed2f19621768286a48ec1b06f375ac492e05602903df192abe36e5cd00b756fb6b564904bde658351c58889a1f5060b649d17b2502708659d5362d9
+  languageName: node
+  linkType: hard
+
 "@react-native/assets-registry@npm:0.86.2":
   version: 0.86.2
   resolution: "@react-native/assets-registry@npm:0.86.2"
@@ -15441,6 +15455,7 @@ __metadata:
     "@react-native-community/slider": "npm:5.2.0"
     "@react-native-firebase/app": "npm:^23.4.1"
     "@react-native-firebase/messaging": "npm:^23.4.1"
+    "@react-native-google-signin/google-signin": "npm:^16.1.4"
     "@react-native/jest-preset": "npm:^0.86.0"
     "@react-navigation/bottom-tabs": "npm:^7.18.14"
     "@react-navigation/elements": "npm:^2.9.36"

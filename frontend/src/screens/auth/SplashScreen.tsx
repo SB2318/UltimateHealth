@@ -38,7 +38,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
     } else {
       navigation.reset({
         index: 0,
-        routes: [{name: 'LoginScreen'}],
+        routes: [{name: 'SignInScreen'}],
       });
     }
   }, [navigation, user_token]);

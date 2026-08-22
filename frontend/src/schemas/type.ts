@@ -6,14 +6,10 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
-  LoginScreen: {
+  SignInScreen: {
     redirectTo?: RedirectTo;
   };
   TabNavigation: undefined;
-  SignUpScreenFirst: undefined;
-  SignUpScreenSecond: {user: UserDetail};
-  OtpScreen: {email: string};
-  NewPasswordScreen: {email: string; resetToken?: string};
   EditorScreen: {
     title: string;
     authorName: string;
@@ -193,7 +189,12 @@ export type TabParamList = {
 
 export type SplashScreenProp =
   | StackScreenProps<RootStackParamList, 'SplashScreen'>
-  | StackScreenProps<RootStackParamList, 'LoginScreen'>;
+  | StackScreenProps<RootStackParamList, 'SignInScreen'>;
+
+export type SignInScreenProp = StackScreenProps<
+  RootStackParamList,
+  'SignInScreen'
+>;
 
 export type NewPasswordScreenProp = StackScreenProps<
   RootStackParamList,

@@ -3,11 +3,7 @@ import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import TabNavigation from './TabNavigation';
 import SplashScreen from '../screens/auth/SplashScreen';
-import LoginScreen from '../screens/auth/LoginScreen';
-import SignUpScreenFirst from '../screens/auth/SignUpScreenFirst';
-import SignUpScreenSecond from '../screens/auth/SignUpScreenSecond';
-import OtpScreen from '../screens/auth/OtpScreen';
-import NewPasswordScreen from '../screens/auth/NewPasswordScreen';
+import SignInScreen from '../screens/auth/SignInScreen';
 import CommentScreen from '../screens/article/CommentScreen';
 import ReportScreen from '../screens/report/ReportScreen';
 import ReportConfirmationScreen from '../screens/report/ReportConfirmationScreen';
@@ -76,7 +72,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const ROOT_SCREENS: string[] = [
   'TabNavigation',
-  'LoginScreen',
+  'SignInScreen',
   'LogoutScreen',
   'GuestPlaceholderScreen',
 ];
@@ -147,34 +143,13 @@ const StackNavigation = () => {
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
+        name="SignInScreen"
+        component={SignInScreen}
         options={{headerShown: false}}
       />
-      <Stack.Screen
-        name="SignUpScreenFirst"
-        component={SignUpScreenFirst}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SignUpScreenSecond"
-        component={SignUpScreenSecond}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="OtpScreen"
-        component={OtpScreen}
-        options={{headerShown: false}}
-      />
-
       <Stack.Screen
         name="PodcastPlayer"
         component={PodcastPlayer}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="NewPasswordScreen"
-        component={NewPasswordScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
