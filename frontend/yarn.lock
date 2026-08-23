@@ -3950,9 +3950,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/expo-upload-sourcemaps@npm:8.21.0":
-  version: 8.21.0
-  resolution: "@sentry/expo-upload-sourcemaps@npm:8.21.0"
+"@sentry/expo-upload-sourcemaps@npm:8.23.0":
+  version: 8.23.0
+  resolution: "@sentry/expo-upload-sourcemaps@npm:8.23.0"
   dependencies:
     "@sentry/cli": "npm:3.6.2"
   peerDependencies:
@@ -3965,7 +3965,7 @@ __metadata:
       optional: true
   bin:
     expo-upload-sourcemaps: cli.js
-  checksum: 10c0/c0acc8c7371b27d6a458e7c8d32374319fb47485109ec30be4758b80a28d081f54b0d184c67019eaa3ed5a45b9c37be3834bdc4379bd4f0054d1ec600609d2c2
+  checksum: 10c0/032e25c3314fe273e05a34b2783a9becf74915e8b8cf2bd9bbc7d55f01e166b223b7457ea5c09fa02e0f63444db2fd2dfb957d35167e46f6315a0ede0dccfe1f
   languageName: node
   linkType: hard
 
@@ -3978,15 +3978,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/react-native@npm:^8.20.0":
-  version: 8.21.0
-  resolution: "@sentry/react-native@npm:8.21.0"
+"@sentry/react-native@npm:^8.23.0":
+  version: 8.23.0
+  resolution: "@sentry/react-native@npm:8.23.0"
   dependencies:
     "@sentry/browser": "npm:10.69.0"
     "@sentry/bundler-plugins": "npm:10.69.0"
     "@sentry/cli": "npm:3.6.2"
     "@sentry/core": "npm:10.69.0"
-    "@sentry/expo-upload-sourcemaps": "npm:8.21.0"
+    "@sentry/expo-upload-sourcemaps": "npm:8.23.0"
     "@sentry/react": "npm:10.69.0"
   peerDependencies:
     expo: ">=49.0.0"
@@ -4000,7 +4000,7 @@ __metadata:
     sentry-eas-build-on-error: scripts/eas-build-hook.js
     sentry-eas-build-on-success: scripts/eas-build-hook.js
     sentry-expo-upload-sourcemaps: scripts/expo-upload-sourcemaps.js
-  checksum: 10c0/02c8903a52b49e336ff3ec281384de9acb7e6bcc7fdde53e8bd009874b47ef733ac5b4f90d36f5666ba722ce84b4e0f162ac7d5d2b19ba3ea2394fa2cf0fa652
+  checksum: 10c0/8fa7fa9b6a77e7dee5ebb3650ee3788558a604bfc7ef430ec538a62a8a63569c05de5471de195c9a57c0431f02c5fb95bbf888717d90679dfd5ce8705e0afdc5
   languageName: node
   linkType: hard
 
@@ -15447,7 +15447,7 @@ __metadata:
     "@react-navigation/native": "npm:^7.3.14"
     "@react-navigation/stack": "npm:^7.10.17"
     "@reduxjs/toolkit": "npm:^2.9.2"
-    "@sentry/react-native": "npm:^8.20.0"
+    "@sentry/react-native": "npm:^8.23.0"
     "@shopify/flash-list": "npm:2.0.2"
     "@tamagui/animations-react-native": "npm:^2.6.0"
     "@tamagui/sheet": "npm:^1.135.6"
