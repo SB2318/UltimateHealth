@@ -105,6 +105,11 @@
 </div>
 
 
+## APP and WEB UPDATE:
+
+1. **GSSOC CONTRIBUTOR'S TASK LIVE with new authentication system (UPCOMING, NEXT WEEK)**
+2. **New Article Publish**
+
 ---
 
 ## 📛 Repository Badges Explained
