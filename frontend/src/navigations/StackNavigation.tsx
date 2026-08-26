@@ -65,6 +65,7 @@ import ChatbotScreen from '../screens/ai/ChatbotScreen';
 import NearbyHealthEventsScreen from '../screens/settings/NearbyHealthEventsScreen';
 import EventDetailsScreen from '../screens/settings/EventDetailsScreen';
 import HealthTermComparisonScreen from '../screens/HealthTermComparisonScreen';
+import MedicalGlossaryScreen from '../screens/MedicalGlossaryScreen';
 
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -923,7 +924,7 @@ const StackNavigation = () => {
           headerBackTitleVisible: false,
         })}
       />
-      {/* <Stack.Screen
+      <Stack.Screen
         name="ChatbotScreen"
         component={ChatbotScreen}
         options={({navigation}) => ({
@@ -950,7 +951,7 @@ const StackNavigation = () => {
             </TouchableOpacity>
           ),
         })}
-      /> */}
+      />
       <Stack.Screen
         name="PlaylistDetailScreen"
         component={PlaylistDetailScreen}
@@ -980,6 +981,11 @@ const StackNavigation = () => {
       <Stack.Screen
         name="HealthTermComparison"
         component={HealthTermComparisonScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MedicalGlossaryScreen"
+        component={MedicalGlossaryScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

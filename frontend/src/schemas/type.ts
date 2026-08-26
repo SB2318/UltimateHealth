@@ -145,6 +145,7 @@ export type RootStackParamList = {
   NearbyHealthEventsScreen: undefined;
   EventDetailsScreen: { event: HealthEvent; distance?: number };
   HealthTermComparison: undefined;
+  MedicalGlossaryScreen: undefined;
 };
 
 export type RedirectTo = {
@@ -196,10 +197,6 @@ export type SignInScreenProp = StackScreenProps<
   'SignInScreen'
 >;
 
-export type NewPasswordScreenProp = StackScreenProps<
-  RootStackParamList,
-  'NewPasswordScreen'
->;
 
 export type UserProfileScreenProp = StackScreenProps<
   RootStackParamList,
@@ -225,19 +222,6 @@ export type WellnessDashboardScreenProp = StackScreenProps<
   RootStackParamList,
   'WellnessDashboardScreen'
 >;
-
-export type OtpScreenProp = StackScreenProps<RootStackParamList, 'OtpScreen'>;
-
-export type SignUpScreenFirstProp = StackScreenProps<
-  RootStackParamList,
-  'SignUpScreenFirst'
->;
-
-export type SignUpScreenSecondProp = StackScreenProps<
-  RootStackParamList,
-  'SignUpScreenSecond'
->;
-
 export type PodcastProfileProp = StackScreenProps<
   RootStackParamList,
   'PodcastProfile'
@@ -258,10 +242,6 @@ export type PodcastFormProp = StackScreenProps<
   'PodcastForm'
 >;
 
-export type LoginScreenProp = StackScreenProps<
-  RootStackParamList,
-  'LoginScreen'
->;
 
 export type LogoutScreenProp = StackScreenProps<
   RootStackParamList,
@@ -281,6 +261,11 @@ export type PodcastDetailScreenProp = StackScreenProps<
 export type ReviewScreenProp = StackScreenProps<
   RootStackParamList,
   'ReviewScreen'
+>;
+
+export type MedicalGlossaryScreenProp = StackScreenProps<
+  RootStackParamList,
+  'MedicalGlossaryScreen'
 >;
 
 export type PodcastSearchProp = StackScreenProps<

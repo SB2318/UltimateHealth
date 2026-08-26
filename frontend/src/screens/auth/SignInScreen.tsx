@@ -13,12 +13,15 @@ import { useGoogleAuthMutation } from '../../hooks/auth/useGoogleAuth';
 import { useRequestVerification } from '../../hooks/auth/useResendVerification';
 import EmailVerifyModal from '../../components/auth/EmailVerifyModal';
 import { SECURE_KEYS, secureStoreItem } from '../../lib/storage/SecureStorageUtils';
+import Constants from 'expo-constants';
 
 const { width } = Dimensions.get('window');
 
-// Configure Google Sign-In (Should ideally also be at app root, but safe here)
+
+const extra = Constants.expoConfig?.extra ?? {};
+
 GoogleSignin.configure({
-  webClientId: 'YOUR_WEB_CLIENT_ID.apps.googleusercontent.com', // MUST BE REPLACED WITH ACTUAL CONFIG
+  webClientId: extra.WEB_CLIENT_ID, 
   offlineAccess: true,
 });
 

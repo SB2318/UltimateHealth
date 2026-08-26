@@ -162,6 +162,7 @@ module.exports = ({ config }) => {
       FIREBASE_SENDER_ID: process.env.FIREBASE_SENDER_ID,
       FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
       FIREBASE_DATABASE_URL: process.env.FIREBASE_DATABASE_URL,
+      WEB_CLIENT_ID: process.env.WEB_CLIENT_ID,
     }
   };
 };

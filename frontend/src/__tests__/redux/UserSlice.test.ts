@@ -52,6 +52,7 @@ describe('UserSlice reducers', () => {
       user_handle: 'handle_xyz',
       social_user_id: 'social_123',
       isGuest: true,
+      doctorProfileIncomplete: false,
     };
     const actual = reducer(modifiedState, resetUserState());
     expect(actual).toEqual(initialState);

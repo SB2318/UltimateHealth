@@ -3,7 +3,7 @@
 // Values are injected at build time from environment variables via app.config.js.
 // To override for local development, set the following in your .env file
 // (see .env.example for the full list):
-//
+
 //   PROD_URL=http://10.0.2.2:3000/api        # Android emulator
 //   PROD_URL=http://localhost:3000/api        # iOS simulator
 //   SOCKET_PROD=http://10.0.2.2:3000
@@ -44,7 +44,7 @@ const GET_ARTICLE_TRANSLATIONS = (articleId: string | number) =>
 const GET_USER_DETAILS_API = `${PROD_URL}/user/getdetails`;
 const UPDATE_USER_GENERAL_DETAILS = `${PROD_URL}/user/update-general-details`;
 const UPDATE_READ_EVENT = `${PROD_URL}/article/readEvent`;
-const GET_READ_HISTORY = `${PROD_URL}/article/read-history`;
+const GET_READ_HISTORY = `${PROD_URL}/articles/read-history`;
 const UPDATE_USER_PASSWORD = `${PROD_URL}/user/update-password`;
 const UPDATE_USER_CONTACT_DETAILS = `${PROD_URL}/user/update-contact-details`;
 const UPDATE_USER_PROFESSIONAL_DETAILS = `${PROD_URL}/user/update-professional-details`;
