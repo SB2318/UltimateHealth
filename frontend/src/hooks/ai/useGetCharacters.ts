@@ -6,7 +6,6 @@ import axios from "axios";
 
 type AxiosError = any;
 
-
 export const useGetCharacters = (isConnected: boolean): UseQueryResult<
   Character[],
   AxiosError
