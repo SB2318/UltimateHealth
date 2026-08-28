@@ -8,10 +8,10 @@
 
 <p>A fully open-source health library, article management, and AI-powered wellness platform delivering trusted, multilingual content worldwide.</p>
 
-[![Live Web Demo](https://img.shields.io/badge/Live%20Web%20Demo-4CAF50?style=for-the-badge&logo=globe&logoColor=white)](https://uhsocial.in/frontend/v2)
+[![Live Web Demo](https://img.shields.io/badge/Live%20Web%20Demo-4CAF50?style=for-the-badge&logo=globe&logoColor=white)](https://ultimatehealth.blog/frontend/v2)
 [![Android App](https://img.shields.io/badge/Android%20App-Play%20Store-34A853?style=for-the-badge&logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth)
-[![API Docs](https://img.shields.io/badge/API%20Docs-007ACC?style=for-the-badge&logo=swagger&logoColor=white)](https://uhsocial.in/docs)
-[![Content API](https://img.shields.io/badge/Content%20API-FF6B00?style=for-the-badge&logo=python&logoColor=white)](https://uhsocial.in/content-intel/docs)
+[![API Docs](https://img.shields.io/badge/API%20Docs-007ACC?style=for-the-badge&logo=swagger&logoColor=white)](https://ultimatehealth.blog/docs)
+[![Content API](https://img.shields.io/badge/Content%20API-FF6B00?style=for-the-badge&logo=python&logoColor=white)](https://ultimatehealth.blog/content-intel/docs)
 
 </div>
 
@@ -181,7 +181,7 @@ Our AI bot suite handles the initial pipeline automatically. See [Automation & B
 
 **UltimateHealth** (also known as **HealthGuide**) is a fully open-source platform that combines a React Native mobile app, a Next.js web frontend, a Node.js REST API, and a Python content intelligence service — all working together to deliver trusted health content worldwide.
 
-> Live Platform: [uhsocial.in](https://uhsocial.in/frontend/v2) &nbsp;|&nbsp; Android App: [Play Store](https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth)
+> Live Platform: [ultimatehealth.blog](https://ultimatehealth.blog/frontend/v2) &nbsp;|&nbsp; Android App: [Play Store](https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth)
 
 ---
 
@@ -287,7 +287,7 @@ The following table explains which technologies power different features of Ulti
 | Framework | Express.js |
 | Database | [MongoDB](https://www.mongodb.com/) + Mongoose ODM |
 | Authentication | JWT (JSON Web Tokens) |
-| API Docs | Swagger — [uhsocial.in/docs](https://uhsocial.in/docs) |
+| API Docs | Swagger — [ultimatehealth.blog/docs](https://ultimatehealth.blog/docs) |
 
 </details>
 
@@ -299,7 +299,7 @@ The following table explains which technologies power different features of Ulti
 |---|---|
 | Language | Python |
 | Purpose | Plagiarism detection, grammar analysis, originality scoring |
-| API Docs | [uhsocial.in/content-intel/docs](https://uhsocial.in/content-intel/docs) |
+| API Docs | [ultimatehealth.blog/content-intel/docs](https://ultimatehealth.blog/content-intel/docs) |
 
 </details>
 
@@ -311,7 +311,7 @@ The following table explains which technologies power different features of Ulti
 |---|---|
 | Framework | React |
 | Branch | `web` branch |
-| Live URL | [uhsocial.in/frontend/v2](https://uhsocial.in/frontend/v2) |
+| Live URL | [ultimatehealth.blog/frontend/v2](https://ultimatehealth.blog/frontend/v2) |
 
 </details>
 
@@ -606,9 +606,9 @@ For more details on our testing standards, refer to [TEST_GUIDELINES.md](docs/TE
 
 | Service | URL | Purpose | Repository |
 |---|---|---|---|
-| REST API | [uhsocial.in/docs](https://uhsocial.in/docs) | Backend API (Node.js + MongoDB) | [ultimatehealth-backend](https://github.com/SB2318/ultimatehealth-backend) |
-| Content Intelligence | [uhsocial.in/content-intel/docs](https://uhsocial.in/content-intel/docs) | Plagiarism and grammar checks (Python) | [VeriWise-Content-Check](https://github.com/SB2318/VeriWise-Content-Check) |
-| Web Frontend | [uhsocial.in/frontend/v2](https://uhsocial.in/frontend/v2) | React web app (web branch) | [UltimateHealth](https://github.com/SB2318/UltimateHealth) |
+| REST API | [ultimatehealth.blog/docs](https://ultimatehealth.blog/docs) | Backend API (Node.js + MongoDB) | [ultimatehealth-backend](https://github.com/SB2318/ultimatehealth-backend) |
+| Content Intelligence | [ultimatehealth.blog/content-intel/docs](https://ultimatehealth.blog/content-intel/docs) | Plagiarism and grammar checks (Python) | [VeriWise-Content-Check](https://github.com/SB2318/VeriWise-Content-Check) |
+| Web Frontend | [ultimatehealth.blog/frontend/v2](https://ultimatehealth.blog/frontend/v2) | React web app (web branch) | [UltimateHealth](https://github.com/SB2318/UltimateHealth) |
 | Android App | [Play Store](https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth) | Published Android app | [UltimateHealth](https://github.com/SB2318/UltimateHealth) |
 
 ### Submodule Repositories
