@@ -19,7 +19,7 @@ import {GlassStyles} from '../../styles/GlassStyles';
 
 import {useAudioPlayer, type AudioPlayer} from 'expo-audio';
 
-// GET_IMAGE is defined as `${PROD_URL}/getfile` (resolves to absolute URL: https://uhsocial.in/api/getfile).
+// GET_IMAGE is defined as `${PROD_URL}/getfile` (resolves to absolute URL: https://ultimatehealth.blog/api/getfile).
 // This absolute, securely-configured endpoint ensures that relative resource paths cannot access local device files via traversal.
 import {GET_IMAGE} from '../../lib/api/APIUtils';
 import {useAppSelector} from '../../store/hooks';
@@ -54,7 +54,7 @@ const isAllowedUrl = (urlStr?: string | null): boolean => {
     if (!match) return false;
     const hostname = match[1].toLowerCase();
     return (
-      hostname === 'uhsocial.in' ||
+      hostname === 'ultimatehealth.blog' ||
       hostname === 'localhost' ||
       hostname === '10.0.2.2'
     );
