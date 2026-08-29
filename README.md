@@ -8,6 +8,8 @@
 
 <p>A fully open-source health library, article management, and AI-powered wellness platform delivering trusted, multilingual content worldwide.</p>
 
+
+
 [![Live Web Demo](https://img.shields.io/badge/Live%20Web%20Demo-4CAF50?style=for-the-badge&logo=globe&logoColor=white)](https://ultimatehealth.blog/frontend/v2)
 [![Android App](https://img.shields.io/badge/Android%20App-Play%20Store-34A853?style=for-the-badge&logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth)
 [![API Docs](https://img.shields.io/badge/API%20Docs-007ACC?style=for-the-badge&logo=swagger&logoColor=white)](https://ultimatehealth.blog/docs)
@@ -109,6 +111,10 @@
 
 1. **GSSOC CONTRIBUTOR'S TASK LIVE with new authentication system (UPCOMING, NEXT WEEK)**
 2. **New Article Publish**
+
+> UltimateHealth has now moved to a new domain! 🚀
+
+Some broken links may still exist on the server due to references to our old URL. We’re already working on it, and everything will be resolved in the next update.
 
 ---
 
