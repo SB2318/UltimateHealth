@@ -9674,14 +9674,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gifted-charts-core@npm:0.1.81":
-  version: 0.1.81
-  resolution: "gifted-charts-core@npm:0.1.81"
+"gifted-charts-core@npm:0.1.82":
+  version: 0.1.82
+  resolution: "gifted-charts-core@npm:0.1.82"
   peerDependencies:
     react: "*"
     react-native: "*"
     react-native-svg: "*"
-  checksum: 10c0/7f8e0e7005bf94376738257cc9225cbb19236d7543e166d77c8028be2f96be6b34300dc6c45b4f471ae8f25e6c55413d8347416400a37d2a45099dddc042c102
+  checksum: 10c0/9ecde10c31b413bfef530ae859e0884ca695e26913a9f98c79ad678abb88116b04dc673e65877388e991a420ef8348b9ad469b65fa144d827ed442e151ed44be
   languageName: node
   linkType: hard
 
@@ -13548,11 +13548,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gifted-charts@npm:^1.4.77":
-  version: 1.4.77
-  resolution: "react-native-gifted-charts@npm:1.4.77"
+"react-native-gifted-charts@npm:^1.4.78":
+  version: 1.4.78
+  resolution: "react-native-gifted-charts@npm:1.4.78"
   dependencies:
-    gifted-charts-core: "npm:0.1.81"
+    gifted-charts-core: "npm:0.1.82"
   peerDependencies:
     expo-linear-gradient: "*"
     react: "*"
@@ -13564,7 +13564,7 @@ __metadata:
       optional: true
     react-native-linear-gradient:
       optional: true
-  checksum: 10c0/d31030b1117fefed61a03da043c29e94422688933b5736c7ba49b667cb682978608ae6521d9d9eaae40d6fd7be9b6ae7b35f3732082e6f3cc4f2fef4214ead21
+  checksum: 10c0/e2439a89b42abd75e56ab9b5ae305d5823b8c4271ab5fb061df37d3780b21e8bad177485b368c6e2efbbcdf45f0d4ac17780c52b2f9fb826bd9777f4e90b971c
   languageName: node
   linkType: hard
 
@@ -15507,7 +15507,7 @@ __metadata:
     react-native-element-dropdown: "npm:^2.12.4"
     react-native-fs: "npm:^2.20.0"
     react-native-gesture-handler: "npm:~2.32.0"
-    react-native-gifted-charts: "npm:^1.4.77"
+    react-native-gifted-charts: "npm:^1.4.78"
     react-native-gifted-chat: "npm:^3.3.3"
     react-native-html-to-pdf: "npm:^1.3.0"
     react-native-image-picker: "npm:^8.2.1"
