@@ -1,6 +1,11 @@
 // /* eslint-disable @typescript-eslint/no-unused-vars */
-// import React from 'react';
-// import {render, fireEvent, waitFor} from '@testing-library/react-native';
+// SignUpScreenFirst tests are temporarily disabled while the component is being refactored.
+// TODO: Uncomment and update tests after signup flow refactor is complete.
+describe('SignUpScreenFirst (placeholder)', () => {
+  it.todo('renders sign up form inputs correctly');
+});
+
+
 // import {Alert} from 'react-native';
 // import SignupPageFirst from '@/src/screens/auth/SignUpScreenFirst';
 

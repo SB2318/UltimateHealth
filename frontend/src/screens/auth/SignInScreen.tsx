@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, KeyboardAvoidingView, Platform, Dimensions, useColorScheme } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Image, KeyboardAvoidingView, Platform, Dimensions, useColorScheme } from 'react-native';
 import { YStack, Text, Button, XStack, ScrollView, Spinner } from 'tamagui';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing, runOnJS } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
@@ -218,7 +218,7 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
                 <RoleCard 
                   type="General User"
                   title="Patient / User"
-                  description="Find health events, manage care, and learn."
+                  description="Find health articles, manage care, and learn."
                   icon="account-outline"
                 />
                 <RoleCard 

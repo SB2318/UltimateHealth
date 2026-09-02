@@ -153,6 +153,8 @@ jest.mock('react-native-tts', () => ({
   setDefaultPitch: jest.fn(),
   speak: jest.fn(() => Promise.resolve()),
   stop: jest.fn(() => Promise.resolve()),
+  // voices() is called in ChatbotScreen, PodcastPlayer, ArticleScreen, MultiLanguageService
+  voices: jest.fn(() => Promise.resolve([])),
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
 }));

@@ -141,8 +141,30 @@ const StackNavigation = () => {
       <Stack.Screen
         name="ChatbotScreen"
         component={ChatbotScreen}
-        options={{headerShown: false}}
+        options={({navigation}) => ({
+          headerTitleAlign: 'center',
+          title: 'Chatbot',
+          headerShown: true,
+          headerBackTitleVisible: false,
+          headerShadowVisible: false,
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{
+                marginLeft: 15,
+                height: 40,
+                width: 40,
+                borderRadius: 50,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'white',
+              }}
+              onPress={() => navigation.goBack()}>
+              <FontAwesome6 size={20} name="arrow-left" color="black" />
+            </TouchableOpacity>
+          ),
+        })}
       />
+
       <Stack.Screen
         name="SignInScreen"
         component={SignInScreen}
@@ -924,34 +946,7 @@ const StackNavigation = () => {
           headerBackTitleVisible: false,
         })}
       />
-      <Stack.Screen
-        name="ChatbotScreen"
-        component={ChatbotScreen}
-        options={({navigation}) => ({
-          headerTitleAlign: 'center',
-          title: 'Chatbot',
-          headerShown: true,
-          headerBackTitleVisible: false,
-          headerShadowVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{
-                marginLeft: 15,
-                height: 40,
-                width: 40,
-                borderRadius: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'white',
-              }}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={20} name="arrow-left" color="black" />
-            </TouchableOpacity>
-          ),
-        })}
-      />
+
       <Stack.Screen
         name="PlaylistDetailScreen"
         component={PlaylistDetailScreen}
