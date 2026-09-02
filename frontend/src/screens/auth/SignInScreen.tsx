@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import messaging from '@react-native-firebase/messaging';
 
 import { SignInScreenProp } from '../../schemas/type';
 import { useAppDispatch } from '../../store/hooks';
@@ -71,10 +72,29 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       const idToken = userInfo.data?.idToken;
+      const user = userInfo.data?.user;
       
       if (!idToken) throw new Error('No ID token present');
 
-      const response = await googleAuthMutation.mutateAsync({ idToken, role });
+      let fcmToken;
+      try {
+        fcmToken = await messaging().getToken();
+      } catch (e) {
+        console.log('Failed to get FCM token', e);
+      }
+
+      const payload: any = { 
+        idToken, 
+        role,
+        email: user?.email,
+        uid: user?.id,
+        user_name: user?.name,
+        Profile_image: user?.photo,
+        isDoctor: role === 'Doctor',
+        fcmToken,
+      };
+
+      const response = await googleAuthMutation.mutateAsync(payload);
 
       if (response.newUser) {
         setVerificationEmail(userInfo.data?.user.email || null);
@@ -109,6 +129,7 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
           setVerificationEmail(error.response?.data?.email || 'your email');
           await GoogleSignin.signOut();
         } else {
+          console.error('Google Sign-In Error:', error);
           alert(error.response?.data?.message || error.message || 'Something went wrong');
         }
       }
@@ -265,11 +286,11 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
             alignItems="center"
             justifyContent="space-between"
             paddingHorizontal="$4"
-            paddingTop={insets.top + 8}
+            paddingTop={insets.top + 7}
             paddingBottom="$2"
             position="absolute"
             top={0} left={0} right={0}
-            zIndex={10}
+            zIndex={9}
           >
             <Button
               size="$4"
@@ -287,7 +308,7 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
           </XStack>
 
           {/* Centered content */}
-          <YStack flex={1} justifyContent="center" alignItems="center" paddingHorizontal="$4" paddingBottom="$6">
+          <YStack flex={1} justifyContent="center" alignItems="center" paddingHorizontal="$4" paddingBottom="$7">
             {/* Role icon */}
             <YStack
               width={84} height={84}
@@ -344,14 +365,14 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
             {/* Guest link */}
             <Button
               chromeless
-              marginTop="$4"
+              marginTop="$3"
               onPress={handleGuestContinue}
               pressStyle={{ opacity: 0.6 }}
             >
               <Text
                 color={isDarkMode ? '$gray11' : '$gray10'}
                 fontWeight="600"
-                fontSize={14}
+                fontSize={13}
                 textAlign="center"
               >
                 Continue as Guest instead

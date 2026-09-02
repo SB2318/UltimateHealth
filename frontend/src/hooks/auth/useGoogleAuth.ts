@@ -8,6 +8,17 @@ type AxiosError = any;
 type GoogleAuthReq = {
   idToken: string;
   role: 'General User' | 'Doctor';
+  email?: string;
+  uid?: string;
+  user_name?: string;
+  user_handle?: string;
+  isDoctor?: boolean;
+  Profile_image?: string;
+  qualification?: string;
+  specialization?: string;
+  Years_of_experience?: string | number;
+  contact_detail?: string;
+  fcmToken?: string;
 };
 
 export type GoogleAuthResponse = {
@@ -19,24 +30,22 @@ export type GoogleAuthResponse = {
   doctorProfileIncomplete?: boolean;
 };
 
-const googleAuthFunc = async ({
-  idToken,
-  role,
-}: GoogleAuthReq): Promise<GoogleAuthResponse> => {
+
+const googleAuthFunc = async (req: GoogleAuthReq): Promise<GoogleAuthResponse> => {
+  const { idToken, role, ...bodyData } = req;
   const res = await axios.post(
     GOOGLE_AUTH_API,
-    {
-      idToken,
-      role,
-    },
+    bodyData,
     {
       headers: {
         'x-client-type': 'mobile',
+        'Authorization': `Bearer ${idToken}`,
       },
     },
   );
-
+  console.log('Google Auth Response:', res.data); // Log the response data for debugging
   const responseData = res.data?.data ?? res.data;
+
   return responseData as GoogleAuthResponse;
 };
 
