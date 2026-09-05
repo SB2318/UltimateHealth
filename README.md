@@ -35,7 +35,7 @@ You can build and run the web application using Docker.
 
 2. **Run the Docker container**
    \\\ash
-   docker run -p 3000:3000 ultimatehealth-web
+   docker run -p 5000:5000 ultimatehealth-web
    \\\
-   The application will be accessible at \http://localhost:3000\.
+   The application will be accessible at \http://localhost:5000\.
 
