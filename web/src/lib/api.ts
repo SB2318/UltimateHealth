@@ -1,6 +1,6 @@
 import { normalizeApiUrl } from "./api-url.mjs";
 
-const DEFAULT_API_BASE_URL = "https://uhsocial.in/api";
+const DEFAULT_API_BASE_URL = "https://ultimatehealth.blog/api";
 
 export { normalizeApiUrl };
 

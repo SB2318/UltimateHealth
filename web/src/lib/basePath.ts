@@ -1,6 +1,6 @@
 /**
  * Get the basePath from environment variables
- * This is useful for apps deployed on a subdirectory like /frontend/v2/
+ * This is useful for apps deployed on a subdirectory like /web/
  */
 export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
@@ -9,7 +9,7 @@ export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
  * Useful for internal navigation links
  *
  * @param path - The path relative to the app root (e.g., "/contribute")
- * @returns The path with basePath prepended (e.g., "/frontend/v2/contribute")
+ * @returns The path with basePath prepended (e.g., "/web/contribute")
  */
 export function withBasePath(path: string): string {
   // Don't modify external URLs (http://, https://, mailto:, etc.)
