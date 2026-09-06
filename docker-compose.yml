@@ -8,4 +8,6 @@ services:
     container_name: ultimatehealth-web
     ports:
       - "5000:5000"
+    environment:
+      - NEXT_PUBLIC_BASE_PATH=/web
     restart: unless-stopped

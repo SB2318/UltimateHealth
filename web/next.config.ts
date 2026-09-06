@@ -3,7 +3,14 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
 
+const rawBasePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "/web";
+const basePath =
+  rawBasePath && rawBasePath.trim() !== "" && rawBasePath.startsWith("/")
+    ? rawBasePath.trim()
+    : undefined;
+
 const nextConfig: NextConfig = {
+  ...(basePath ? { basePath } : {}),
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [25, 50, 75],
