@@ -1,0 +1,42 @@
+{
+  "cookie": {
+    "message": "Utilizamos cookies para mejorar su experiencia en nuestro sitio.",
+    "accept": "Aceptar todo",
+    "decline": "Rechazar",
+    "learnMore": "Más información"
+},
+  "Login": {
+    "heading": "Inicio de sesión requerido",
+    "description": "Inicia sesión para continuar con la eliminación de la cuenta.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Contraseña",
+    "processingTitle": "Procesando",
+    "processingDescription": "Iniciando sesión.",
+    "successTitle": "Inicio de sesión exitoso",
+    "successDescription": "Redirigiendo a la eliminación de la cuenta.",
+    "failedTitle": "Error al iniciar sesión",
+    "failedDefaultDescription": "Verifica tus datos e inténtalo de nuevo.",
+    "serverErrorTitle": "Error del servidor",
+    "submitButton": "Iniciar sesión",
+    "submitButtonLoading": "Iniciando sesión..."
+  },
+  "NotFound": {
+    "title": "Página no encontrada",
+    "heading": "404",
+    "description": "Parece que la página que buscas se ha perdido. Te ayudamos a volver al buen camino de la información de salud.",
+    "goHome": "Ir al inicio",
+    "browseArticles": "Ver artículos",
+    "medicalGlossary": "Glosario médico"
+  },
+  "ErrorPage": {
+    "title": "Algo salió mal",
+    "heading": "¡Ups!",
+    "description": "Ocurrió un error inesperado al cargar esta página. No te preocupes, nuestro equipo ya fue notificado. Por favor, inténtalo de nuevo.",
+    "tryAgain": "Intentar de nuevo",
+    "goHome": "Ir al inicio"
+  }
+  
+}
+

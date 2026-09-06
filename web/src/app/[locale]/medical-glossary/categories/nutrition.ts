@@ -1,0 +1,22 @@
+export const nutritionTerms = [
+  { term: "Nutrition Term 1", definition: "Nutrition definition 1.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 2", definition: "Nutrition definition 2.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 3", definition: "Nutrition definition 3.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 4", definition: "Nutrition definition 4.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 5", definition: "Nutrition definition 5.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 6", definition: "Nutrition definition 6.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 7", definition: "Nutrition definition 7.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 8", definition: "Nutrition definition 8.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 9", definition: "Nutrition definition 9.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 10", definition: "Nutrition definition 10.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 11", definition: "Nutrition definition 11.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 12", definition: "Nutrition definition 12.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 13", definition: "Nutrition definition 13.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 14", definition: "Nutrition definition 14.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 15", definition: "Nutrition definition 15.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 16", definition: "Nutrition definition 16.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 17", definition: "Nutrition definition 17.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 18", definition: "Nutrition definition 18.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 19", definition: "Nutrition definition 19.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] },
+  { term: "Nutrition Term 20", definition: "Nutrition definition 20.", category: "Nutrition", relatedTerms: ["Diet","Health","Wellness"] }
+];

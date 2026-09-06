@@ -1,0 +1,22 @@
+export const infectiousDiseaseTerms = [
+  { term: "Infectious Disease Term 1", definition: "Infectious disease definition 1.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 2", definition: "Infectious disease definition 2.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 3", definition: "Infectious disease definition 3.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 4", definition: "Infectious disease definition 4.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 5", definition: "Infectious disease definition 5.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 6", definition: "Infectious disease definition 6.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 7", definition: "Infectious disease definition 7.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 8", definition: "Infectious disease definition 8.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 9", definition: "Infectious disease definition 9.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 10", definition: "Infectious disease definition 10.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 11", definition: "Infectious disease definition 11.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 12", definition: "Infectious disease definition 12.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 13", definition: "Infectious disease definition 13.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 14", definition: "Infectious disease definition 14.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 15", definition: "Infectious disease definition 15.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 16", definition: "Infectious disease definition 16.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 17", definition: "Infectious disease definition 17.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 18", definition: "Infectious disease definition 18.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 19", definition: "Infectious disease definition 19.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] },
+  { term: "Infectious Disease Term 20", definition: "Infectious disease definition 20.", category: "Infectious Diseases", relatedTerms: ["Infection","Virus","Bacteria"] }
+];

@@ -1,0 +1,41 @@
+{
+  "cookie": {
+    "message": "Nous utilisons des cookies pour améliorer votre expérience sur notre site.",
+    "accept": "Tout accepter",
+    "decline": "Refuser",
+    "learnMore": "En savoir plus"
+},
+  "Login": {
+    "heading": "Connexion requise",
+    "description": "Veuillez vous connecter pour continuer la suppression du compte.",
+    "emailLabel": "E-mail",
+    "emailPlaceholder": "Entrez votre e-mail",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Mot de passe",
+    "processingTitle": "Traitement en cours",
+    "processingDescription": "Connexion en cours.",
+    "successTitle": "Connexion réussie",
+    "successDescription": "Redirection vers la suppression du compte.",
+    "failedTitle": "Échec de la connexion",
+    "failedDefaultDescription": "Veuillez vérifier vos informations et réessayer.",
+    "serverErrorTitle": "Erreur serveur",
+    "submitButton": "Connexion",
+    "submitButtonLoading": "Connexion en cours..."
+  },
+  "NotFound": {
+    "title": "Page introuvable",
+    "heading": "404",
+    "description": "La page que vous recherchez semble s'être égarée. Laissez-nous vous aider à retrouver votre chemin vers de bonnes informations de santé.",
+    "goHome": "Retour à l'accueil",
+    "browseArticles": "Parcourir les articles",
+    "medicalGlossary": "Glossaire médical"
+  },
+  "ErrorPage": {
+    "title": "Une erreur est survenue",
+    "heading": "Oups !",
+    "description": "Une erreur inattendue s'est produite lors du chargement de cette page. Ne vous inquiétez pas, notre équipe a été informée. Veuillez réessayer.",
+    "tryAgain": "Réessayer",
+    "goHome": "Retour à l'accueil"
+  }
+}
+

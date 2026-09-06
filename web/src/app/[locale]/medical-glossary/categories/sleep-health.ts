@@ -1,0 +1,22 @@
+export const sleepHealthTerms = [
+  { term: "Sleep Term 1", definition: "Sleep health definition 1.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 2", definition: "Sleep health definition 2.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 3", definition: "Sleep health definition 3.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 4", definition: "Sleep health definition 4.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 5", definition: "Sleep health definition 5.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 6", definition: "Sleep health definition 6.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 7", definition: "Sleep health definition 7.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 8", definition: "Sleep health definition 8.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 9", definition: "Sleep health definition 9.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 10", definition: "Sleep health definition 10.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 11", definition: "Sleep health definition 11.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 12", definition: "Sleep health definition 12.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 13", definition: "Sleep health definition 13.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 14", definition: "Sleep health definition 14.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 15", definition: "Sleep health definition 15.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 16", definition: "Sleep health definition 16.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 17", definition: "Sleep health definition 17.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 18", definition: "Sleep health definition 18.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 19", definition: "Sleep health definition 19.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] },
+  { term: "Sleep Term 20", definition: "Sleep health definition 20.", category: "Sleep Health", relatedTerms: ["Sleep","Rest","Recovery"] }
+];

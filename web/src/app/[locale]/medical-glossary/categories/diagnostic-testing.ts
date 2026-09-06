@@ -1,0 +1,22 @@
+export const diagnosticTerms = [
+  { term: "Diagnostic Term 1", definition: "Diagnostic testing definition 1.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 2", definition: "Diagnostic testing definition 2.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 3", definition: "Diagnostic testing definition 3.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 4", definition: "Diagnostic testing definition 4.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 5", definition: "Diagnostic testing definition 5.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 6", definition: "Diagnostic testing definition 6.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 7", definition: "Diagnostic testing definition 7.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 8", definition: "Diagnostic testing definition 8.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 9", definition: "Diagnostic testing definition 9.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 10", definition: "Diagnostic testing definition 10.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 11", definition: "Diagnostic testing definition 11.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 12", definition: "Diagnostic testing definition 12.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 13", definition: "Diagnostic testing definition 13.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 14", definition: "Diagnostic testing definition 14.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 15", definition: "Diagnostic testing definition 15.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 16", definition: "Diagnostic testing definition 16.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 17", definition: "Diagnostic testing definition 17.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 18", definition: "Diagnostic testing definition 18.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 19", definition: "Diagnostic testing definition 19.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] },
+  { term: "Diagnostic Term 20", definition: "Diagnostic testing definition 20.", category: "Diagnostic Testing", relatedTerms: ["Testing","Diagnosis","Health"] }
+];

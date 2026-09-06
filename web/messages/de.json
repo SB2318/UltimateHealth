@@ -1,0 +1,42 @@
+{
+   "cookie": {
+    "message": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern.",
+    "accept": "Alle akzeptieren",
+    "decline": "Ablehnen",
+    "learnMore": "Mehr erfahren"
+},
+  "Login": {
+    "heading": "Anmeldung erforderlich",
+    "description": "Bitte melden Sie sich an, um mit der Kontolöschung fortzufahren.",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "Geben Sie Ihre E-Mail-Adresse ein",
+    "passwordLabel": "Passwort",
+    "passwordPlaceholder": "Passwort",
+    "processingTitle": "Verarbeitung",
+    "processingDescription": "Sie werden angemeldet.",
+    "successTitle": "Anmeldung erfolgreich",
+    "successDescription": "Weiterleitung zur Kontolöschung.",
+    "failedTitle": "Anmeldung fehlgeschlagen",
+    "failedDefaultDescription": "Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.",
+    "serverErrorTitle": "Serverfehler",
+    "submitButton": "Anmelden",
+    "submitButtonLoading": "Anmeldung läuft..."
+  },
+  "NotFound": {
+    "title": "Seite nicht gefunden",
+    "heading": "404",
+    "description": "Die gesuchte Seite scheint nicht mehr zu existieren. Wir helfen dir, den Weg zurück zu finden.",
+    "goHome": "Zur Startseite",
+    "browseArticles": "Artikel durchsuchen",
+    "medicalGlossary": "Medizinisches Glossar"
+  },
+  "ErrorPage": {
+    "title": "Etwas ist schiefgelaufen",
+    "heading": "Hoppla!",
+    "description": "Beim Laden dieser Seite ist ein unerwarteter Fehler aufgetreten. Unser Team wurde bereits informiert. Bitte versuche es erneut.",
+    "tryAgain": "Erneut versuchen",
+    "goHome": "Zur Startseite"
+  }
+ 
+}
+
