@@ -13,7 +13,7 @@
 [![Live Web Demo](https://img.shields.io/badge/Live%20Web%20Demo-4CAF50?style=for-the-badge&logo=globe&logoColor=white)](https://ultimatehealth.blog/web/)
 [![Android App](https://img.shields.io/badge/Android%20App-Play%20Store-34A853?style=for-the-badge&logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth)
 [![API Docs](https://img.shields.io/badge/API%20Docs-007ACC?style=for-the-badge&logo=swagger&logoColor=white)](https://ultimatehealth.blog/docs)
-[![Content API](https://img.shields.io/badge/Content%20API-FF6B00?style=for-the-badge&logo=python&logoColor=white)](https://ultimatehealth.blog/content-intel/docs)
+[![Content API](https://img.shields.io/badge/Content%20API-FF6B00?style=for-the-badge&logo=python&logoColor=white)](https://ultimatehealth.blog/veriwise/docs)
 
 </div>
 
@@ -306,8 +306,8 @@ The following table explains which technologies power different features of Ulti
 |---|---|
 | Language | Python |
 | Purpose | Plagiarism detection, grammar analysis, originality scoring |
-| API Base | [ultimatehealth.blog/content-intel](https://ultimatehealth.blog/content-intel) |
-| API Docs | [ultimatehealth.blog/content-intel/docs](https://ultimatehealth.blog/content-intel/docs) |
+| API Base | [ultimatehealth.blog/veriwise](https://ultimatehealth.blog/veriwise) |
+| API Docs | [ultimatehealth.blog/veriwise/docs](https://ultimatehealth.blog/veriwise/docs) |
 
 </details>
 
@@ -615,7 +615,7 @@ For more details on our testing standards, refer to [TEST_GUIDELINES.md](docs/TE
 | Service | URL | Purpose | Repository |
 |---|---|---|---|
 | REST API (Node.js) | [ultimatehealth.blog/api](https://ultimatehealth.blog/api) &bull; [Docs](https://ultimatehealth.blog/docs) | Backend API (Node.js + MongoDB) | [ultimatehealth-backend](https://github.com/SB2318/ultimatehealth-backend) |
-| Content Intelligence (Python) | [ultimatehealth.blog/content-intel](https://ultimatehealth.blog/content-intel) &bull; [Docs](https://ultimatehealth.blog/content-intel/docs) | Plagiarism and grammar checks (Python) | [VeriWise-Content-Check](https://github.com/SB2318/VeriWise-Content-Check) |
+| Content Intelligence (Python) | [ultimatehealth.blog/veriwise](https://ultimatehealth.blog/veriwise) &bull; [Docs](https://ultimatehealth.blog/veriwise/docs) | Plagiarism and grammar checks (Python) | [VeriWise-Content-Check](https://github.com/SB2318/VeriWise-Content-Check) |
 | Web Frontend | [ultimatehealth.blog/web/](https://ultimatehealth.blog/web/) | Next.js web app (web branch) | [UltimateHealth](https://github.com/SB2318/UltimateHealth) |
 | Android App | [Play Store](https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth) | Published Android app | [UltimateHealth](https://github.com/SB2318/UltimateHealth) |
 

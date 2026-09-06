@@ -151,7 +151,7 @@ module.exports = ({ config }) => {
       SOCKET_PROD:
         process.env.SOCKET_PROD ?? "https://ultimatehealth.blog",
       CONTENT_CHECKER_PROD:
-        process.env.CONTENT_CHECKER_PROD ?? "https://ultimatehealth.blog/content-intel",
+        process.env.CONTENT_CHECKER_PROD ?? "https://ultimatehealth.blog/veriwise",
       FIREBASE_API_KEY_ANDROID: process.env.FIREBASE_API_KEY_ANDROID,
       FIREBASE_API_KEY_IOS: process.env.FIREBASE_API_KEY_IOS,
       FIREBASE_APP_ID_ANDROID: process.env.FIREBASE_APP_ID_ANDROID,
