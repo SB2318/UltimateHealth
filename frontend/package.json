@@ -124,7 +124,7 @@
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "jest": "^29.7.0",
     "jest-expo": "~57.0.4",
-    "knip": "^6.29.0",
+    "knip": "^6.35.1",
     "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
     "react-native-svg-transformer": "^1.5.1",
