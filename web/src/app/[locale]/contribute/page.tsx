@@ -1762,10 +1762,9 @@ export default function ContributePage() {
     { href: '/#screenshots', label: 'Screenshots', icon: 'fa-image' },
     { href: '/#programs', label: 'Community Programs', icon: 'fa-code-branch' },
     {
-      href: 'https://uhsocial.in/docs',
-      label: 'Read Articles',
-      icon: 'fa-file-lines',
-      external: true,
+  href: '/articles',
+  label: 'Read Articles',
+  icon: 'fa-file-lines',
     },
     { href: '/#downloads', label: 'Login / Register', icon: 'fa-user' },
   ]
