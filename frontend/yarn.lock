@@ -8378,9 +8378,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-expo@npm:~57.0.0":
-  version: 57.0.1
-  resolution: "eslint-config-expo@npm:57.0.1"
+"eslint-config-expo@npm:~57.0.2":
+  version: 57.0.2
+  resolution: "eslint-config-expo@npm:57.0.2"
   dependencies:
     "@typescript-eslint/eslint-plugin": "npm:^8.59.0"
     "@typescript-eslint/parser": "npm:^8.59.0"
@@ -8392,7 +8392,7 @@ __metadata:
     globals: "npm:^16.0.0"
   peerDependencies:
     eslint: ">=8.10"
-  checksum: 10c0/22f031f870e5b390c529a55e61204d076275fdad38db9033a08722c9c76f11b5c8875f5ee420024e2c3ab31abdce124b55720ab291e1f6eff6f19d0759c50567
+  checksum: 10c0/6473cd9c083335a37ca0dd406fa9b3b99bf4bfe25d7321ed09f65ce146319efbefa8db3d8c9df98eddae5352b5ae1181070504676b242373d971ab1ff520e431
   languageName: node
   linkType: hard
 
@@ -15465,7 +15465,7 @@ __metadata:
     date-fns: "npm:^4.1.0"
     email-validator: "npm:^2.0.4"
     eslint: "npm:^9.25.0"
-    eslint-config-expo: "npm:~57.0.0"
+    eslint-config-expo: "npm:~57.0.2"
     eslint-plugin-react-compiler: "npm:^19.1.0-rc.2"
     expo: "npm:~57.0.15"
     expo-asset: "npm:~57.0.13"
