@@ -1,6 +1,5 @@
 import { StyleSheet, Dimensions, useColorScheme, ScrollView, SafeAreaView, ActivityIndicator, TextInput } from 'react-native';
 import { YStack, XStack, Text, Card, View, Button } from 'tamagui';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LineChart } from 'react-native-chart-kit';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useState } from 'react';
@@ -14,7 +13,9 @@ import { buildChartData, calculateDashboardScore, formatMetricValue, metricGoal,
 
 const WellnessDashboardScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  const bottomBarHeight = useBottomTabBarHeight();
+  // This screen is mounted in the root stack (not inside the tab navigator),
+  // so use a stable inset instead of the tab-only hook.
+  const bottomBarHeight = 24;
   const screenWidth = Dimensions.get('window').width;
 
   const { isConnected } = useAppSelector((state: any) => state.network);

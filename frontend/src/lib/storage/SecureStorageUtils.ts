@@ -1,5 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Platform} from 'react-native';
 
 export const SECURE_KEYS = {
   USER_TOKEN: 'SECURE_USER_TOKEN',
@@ -29,6 +30,14 @@ export const secureStoreItem = async (
       return false;
     }
 
+    if (Platform.OS === 'web') {
+      if (!isPlaintextFallbackAllowed(key)) {
+        return false;
+      }
+      await AsyncStorage.setItem(`FALLBACK_${key}`, value);
+      return true;
+    }
+
     try {
       await SecureStore.setItemAsync(key, value);
       await AsyncStorage.removeItem(`FALLBACK_${key}`);
@@ -54,6 +63,13 @@ export const secureRetrieveItem = async (
   key: SecureKey,
 ): Promise<string | null> => {
   try {
+    if (Platform.OS === 'web') {
+      if (!isPlaintextFallbackAllowed(key)) {
+        return null;
+      }
+      return (await AsyncStorage.getItem(`FALLBACK_${key}`)) || null;
+    }
+
     let value = await SecureStore.getItemAsync(key);
     if (!value && isPlaintextFallbackAllowed(key)) {
       value = await AsyncStorage.getItem(`FALLBACK_${key}`);
@@ -78,6 +94,11 @@ export const secureRetrieveItem = async (
 
 export const secureRemoveItem = async (key: SecureKey): Promise<boolean> => {
   try {
+    if (Platform.OS === 'web') {
+      await AsyncStorage.removeItem(`FALLBACK_${key}`);
+      return true;
+    }
+
     await SecureStore.deleteItemAsync(key);
     await AsyncStorage.removeItem(`FALLBACK_${key}`);
     return true;
@@ -106,4 +127,3 @@ export const secureClearAllItems = async (): Promise<void> => {
     console.error('[SecureStorage] Error clearing all items:', error);
   }
 };
-

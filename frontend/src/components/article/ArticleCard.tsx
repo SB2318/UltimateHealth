@@ -40,14 +40,10 @@ import ArticleFloatingMenu from './ArticleFloatingMenu';
 
 import { generateArticleShareUrl, copyArticleShareLink } from '../../lib/utils/shareUtils';
 import Entypo from '@expo/vector-icons/Entypo';
-import Share from 'react-native-share';
-import RNFS from 'react-native-fs';
-import {generatePDF} from 'react-native-html-to-pdf';
 import {useSocket} from '../../contexts/SocketContext';
 import EditRequestModal from './EditRequestModal';
 import {FontAwesome, FontAwesome6} from '@expo/vector-icons';
 import LoadingSpinner from '../common/LoadingSpinner';
-import Snackbar from 'react-native-snackbar';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import {useLikeArticle} from '../../hooks/article/useLikeArticle';
 import {useSaveArticle} from '../../hooks/article/useSaveArticle';
@@ -57,6 +53,15 @@ import { ReadingDifficulty, getArticleDifficulty } from './ReadingDifficulty';
 import {useDoubleTap} from '../../hooks/common/useDoubleTap';
 import {useIsArticleCached} from '../../hooks/article/useIsArticleCached';
 import { ImageFallback } from '../common/ImageFallback';
+
+const Snackbar =
+  Platform.OS === 'web'
+    ? {
+        LENGTH_SHORT: 2000,
+        LENGTH_LONG: 3500,
+        show: ({text}: {text: string}) => Alert.alert('', text),
+      }
+    : require('react-native-snackbar').default;
 
 const ArticleCard = ({
   item,
@@ -240,13 +245,29 @@ const ArticleCard = ({
       const resolvedAuthorId = (item.authorId as any)?._id || item.authorId;
       const url = generateArticleShareUrl(item._id, resolvedAuthorId, item.pb_recordId);
 
-      const result = await Share.open({
-        title: item.title,
-        message: `${item.title} : Check out this awesome post on UltimateHealth app!`,
-        // Most Recent APK: 0.7.4
-        url: url,
-        subject: 'Article Post',
-      });
+      if (Platform.OS === 'web') {
+        if (typeof navigator !== 'undefined' && navigator.share) {
+          await navigator.share({
+            title: item.title,
+            text: `${item.title} : Check out this awesome post on UltimateHealth app!`,
+            url,
+          });
+        } else if (typeof navigator !== 'undefined' && navigator.clipboard) {
+          await navigator.clipboard.writeText(url);
+          Snackbar.show({
+            text: 'Article link copied',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        }
+      } else {
+        const Share = require('react-native-share').default;
+        await Share.open({
+          title: item.title,
+          message: `${item.title} : Check out this awesome post on UltimateHealth app!`,
+          url,
+          subject: 'Article Post',
+        });
+      }
       setMenuVisible(false);
     } catch (error) {
       Alert.alert('Error', 'Something went wrong while sharing.');
@@ -340,6 +361,13 @@ const ArticleCard = ({
 
   const generatePDFData = async (title: string, htmlContent: string) => {
     try {
+      if (Platform.OS === 'web') {
+        Alert.alert('PDF download', 'PDF export is available in the mobile development build.');
+        return;
+      }
+
+      const RNFS = require('react-native-fs').default;
+      const {generatePDF} = require('react-native-html-to-pdf');
       const safeTitle = title.substring(0, 15).replace(/[^a-zA-Z0-9]/g, '_');
       const fileName = `${safeTitle}.pdf`;
 

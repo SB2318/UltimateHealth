@@ -44,6 +44,9 @@ export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({ children }) 
     let unsubscribeTokenRefresh: (() => void) | null = null;
 
     const initializeFirebase = async () => {
+      if (Platform.OS === 'web') {
+        return;
+      }
       try {
         const requiredFields = ['apiKey', 'appId', 'projectId', 'messagingSenderId'];
         const missingFields = requiredFields.filter(

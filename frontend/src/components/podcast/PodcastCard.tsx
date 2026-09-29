@@ -14,6 +14,7 @@ import {useAppSelector} from '../../store/hooks';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {PODCAST_CARD} from '@/src/constants/podcastCard';
 import {getPlaybackPosition, PlaybackPosition} from '../../lib/platform/PlaybackManager';
+import {ImageFallback} from '../common/ImageFallback';
 
 interface PodcastProps {
   id: string;
@@ -113,10 +114,10 @@ const PodcastCard = ({
     >
       <View style={[GlassStyles.glassCardElevated, styles.cardContainer]}>
         <View style={styles.imageContainer}>
-          <Image
+          <ImageFallback
             source={{uri}}
-            style={styles.coverImage}
-            borderRadius={BorderRadius.lg}
+            fallbackSource={require('../../assets/images/icon.png')}
+            style={[styles.coverImage, {borderRadius: BorderRadius.lg}]}
           />
           <View style={styles.imageOverlay}>
             <View style={[styles.playButton, GlassStyles.glassContainer]}>

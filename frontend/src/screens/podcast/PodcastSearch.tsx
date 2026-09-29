@@ -9,7 +9,7 @@ import PodcastCard from '../../components/podcast/PodcastCard';
 import PodcastSkeletonCard from '../../components/podcast/PodcastSkeletonCard';
 import {msToTime} from '../../lib/utils/Utils';
 import Snackbar from 'react-native-snackbar';
-import NoResults from '../../components/common/NoResult';
+import {NoSearchResultsState} from '../../components/common/EmptyStates';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {XStack, YStack, Input, Separator, Text, useTheme} from 'tamagui';
 import {Feather} from '@expo/vector-icons';
@@ -21,6 +21,7 @@ import {
 } from '../../lib/utils/SearchUtils';
 import {useDebounce} from '../../hooks/useDebounce';
 import {useColorScheme} from 'react-native-gifted-chat/lib/hooks/useColorScheme';
+import {Ionicons} from '@expo/vector-icons';
 
 const SKELETON_COUNT = 5;
 const SEARCH_DEBOUNCE_MS = 350;
@@ -161,6 +162,14 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
       }
       paddingTop="$2"
       justifyContent="flex-start">
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Back to podcasts"
+        onPress={() => navigation.goBack()}
+        style={{paddingHorizontal: 16, paddingVertical: 10, flexDirection: 'row', alignItems: 'center', gap: 6}}>
+        <Ionicons name="arrow-back" size={22} color={PRIMARY_COLOR} />
+        <Text color={PRIMARY_COLOR} fontWeight="700">Back to Podcasts</Text>
+      </Pressable>
 
       {/* Header */}
       <YStack
@@ -359,7 +368,10 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                   alignItems="center"
                   justifyContent="center"
                   paddingVertical="$8">
-                  <NoResults />
+                  <NoSearchResultsState
+                    contentType="podcasts"
+                    onClear={() => setQuery('')}
+                  />
                 </YStack>
               )
             }

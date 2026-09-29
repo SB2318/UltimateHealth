@@ -8,6 +8,8 @@ import { StyleSheet,
   TouchableOpacity,
   FlatList,
   ScrollView,
+  Platform,
+  Pressable,
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -55,6 +57,7 @@ import {useGetUnreadNotificationCount} from '../../hooks/notification/useGetUnre
 import {useGetPaginatedArticle} from '../../hooks/article/useGetPaginatedArticles';
 import { sanitizeSearchInput, isValidSearchInput } from '../../lib/utils/SearchUtils';
 import { useDebounce } from '../../hooks/useDebounce';
+import {demoArticles, demoCategories, demoPodcasts} from '../../lib/demo/demoContent';
 
 
 import {
@@ -105,6 +108,60 @@ const SavedArticleEmptyState = () => (
       Tap the bookmark icon on any article to save it for later.
     </Text>
   </View>
+);
+
+const WebDemoHome = ({navigation}: {navigation: any}) => (
+  <SafeAreaView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.webDemoContainer}>
+      <Text style={styles.webDemoEyebrow}>WEB DEMO MODE</Text>
+      <Text style={styles.webDemoTitle}>UltimateHealth content showcase</Text>
+      <Text style={styles.webDemoIntro}>
+        Local sample content is shown in the browser because the production API
+        does not allow localhost requests. The native app still uses the live API.
+      </Text>
+      <Pressable
+        style={styles.webDemoPlanCard}
+        onPress={() => {
+          const stackNav = navigation.getParent?.() ?? navigation;
+          stackNav.navigate('WellnessDashboardScreen');
+        }}
+        accessibilityRole="button"
+        accessibilityLabel="Open your wellness plan">
+        <Text style={styles.webDemoPlanEyebrow}>NEW · OFFLINE-FIRST FEATURE</Text>
+        <Text style={styles.webDemoPlanTitle}>Track your 7-day wellness plan</Text>
+        <Text style={styles.webDemoPlanBody}>
+          Log sleep, hydration, movement, and breathing. Your demo progress is
+          saved in this browser and works without an account.
+        </Text>
+        <Text style={styles.webDemoPlanAction}>Open wellness dashboard →</Text>
+      </Pressable>
+      <Text style={styles.webDemoSection}>Featured articles</Text>
+      {demoArticles.map(article => (
+        <Pressable
+          key={article._id}
+          style={styles.webDemoCard}
+          onPress={() =>
+            navigation.navigate('ArticleScreen', {
+              articleId: Number(article._id.replace(/\D/g, '')) || 1,
+              authorId: article.authorId,
+              recordId: article.pb_recordId,
+            })
+          }>
+          <Text style={styles.webDemoTag}>{article.tags[0].name}</Text>
+          <Text style={styles.webDemoCardTitle}>{article.title}</Text>
+          <Text style={styles.webDemoCardBody}>{article.description}</Text>
+          <Text style={styles.webDemoMeta}>Estimated reading time: 1 min</Text>
+        </Pressable>
+      ))}
+      <Text style={styles.webDemoSection}>Podcast preview</Text>
+      <View style={styles.webDemoCard}>
+        <Text style={styles.webDemoTag}>PODCAST</Text>
+        <Text style={styles.webDemoCardTitle}>{demoPodcasts[0].title}</Text>
+        <Text style={styles.webDemoCardBody}>{demoPodcasts[0].description}</Text>
+        <Text style={styles.webDemoMeta}>5 min episode · Demo audio available</Text>
+      </View>
+    </ScrollView>
+  </SafeAreaView>
 );
 
 // Here The purpose of using Redux is to maintain filter state throughout the app session. globally
@@ -415,12 +472,24 @@ useEffect(() => {
   };
 
   const {
-    data: articleData,
+    data: remoteArticleData,
     isLoading,
     isFetching,
     isError,
     refetch,
   } = useGetPaginatedArticle(isConnected, page);
+  const articleData =
+    Platform.OS === 'web'
+      ? {articles: demoArticles, totalPages: 1}
+      : remoteArticleData;
+
+  useEffect(() => {
+    if (Platform.OS === 'web') {
+      dispatch(setSelectedTags({selectedTags: []}));
+      dispatch(setFilteredArticles(demoArticles));
+      dispatch(setTags({tags: demoCategories}));
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (articleData) {
@@ -641,6 +710,10 @@ useEffect(() => {
         <ErrorState onRetry={refetch} />
       </SafeAreaView>
     );
+  }
+
+  if (Platform.OS === 'web') {
+    return <WebDemoHome navigation={navigation} />;
   }
 
   if (isLoading) {
@@ -1007,6 +1080,105 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F8FF',
     justifyContent: 'flex-start',
     alignItems: 'stretch',
+  },
+  webDemoContainer: {
+    padding: 24,
+    paddingBottom: 48,
+  },
+  webDemoEyebrow: {
+    color: '#007AFF',
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 1,
+    marginBottom: 8,
+  },
+  webDemoTitle: {
+    color: '#111827',
+    fontSize: 28,
+    fontWeight: '800',
+    marginBottom: 10,
+  },
+  webDemoIntro: {
+    color: '#4B5563',
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  webDemoPlanCard: {
+    backgroundColor: '#0F52BA',
+    borderRadius: 18,
+    marginBottom: 22,
+    padding: 20,
+    shadowColor: '#0F52BA',
+    shadowOpacity: 0.2,
+    shadowRadius: 14,
+  },
+  webDemoPlanEyebrow: {
+    color: '#BFDBFE',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.8,
+    marginBottom: 8,
+  },
+  webDemoPlanTitle: {
+    color: '#FFFFFF',
+    fontSize: 21,
+    fontWeight: '800',
+    marginBottom: 8,
+  },
+  webDemoPlanBody: {
+    color: '#DBEAFE',
+    fontSize: 14,
+    lineHeight: 21,
+    marginBottom: 14,
+  },
+  webDemoPlanAction: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '800',
+  },
+  webDemoSection: {
+    color: '#111827',
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 12,
+    marginTop: 10,
+  },
+  webDemoCard: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#DDE7F0',
+    borderRadius: 16,
+    borderWidth: 1,
+    marginBottom: 14,
+    padding: 18,
+    shadowColor: '#1D4ED8',
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+  },
+  webDemoTag: {
+    color: '#007AFF',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.8,
+    marginBottom: 8,
+    textTransform: 'uppercase',
+  },
+  webDemoCardTitle: {
+    color: '#111827',
+    fontSize: 19,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  webDemoCardBody: {
+    color: '#4B5563',
+    fontSize: 14,
+    lineHeight: 21,
+    marginBottom: 12,
+  },
+  webDemoMeta: {
+    color: '#6B7280',
+    fontSize: 12,
+    fontWeight: '600',
   },
 
   blockContainer: {

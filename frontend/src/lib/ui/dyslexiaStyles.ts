@@ -16,10 +16,19 @@ export const generateArticleStyles = (
       font-weight: normal;
       font-style: normal;
     }
+    html, body {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
     body { 
       font-family: ${isDyslexiaMode ? DYSLEXIA_FONT_FAMILY : DEFAULT_FONT_FAMILY} !important; 
       font-size: ${articleFontSize}px !important; 
       line-height: ${isDyslexiaMode ? 2.0 : 1.6} !important;
+      overflow-wrap: anywhere !important;
+      word-break: break-word !important;
       ${isDyslexiaMode ? `
         letter-spacing: 0.15em !important;
         word-spacing: 0.35em !important;
@@ -40,6 +49,8 @@ export const generateArticleStyles = (
       font-size: ${articleFontSize}px !important; 
       ${isDyslexiaMode ? 'margin-bottom: 1.5em !important;' : ''}
     }
-    img, video, iframe { max-width: 100%; height: auto; }
+    img, video, iframe, svg { max-width: 100% !important; height: auto; }
+    table { display: block !important; max-width: 100% !important; overflow-x: auto !important; }
+    pre, code { max-width: 100% !important; white-space: pre-wrap !important; overflow-wrap: anywhere !important; }
   `;
 };

@@ -1,7 +1,7 @@
  
 // @ts-nocheck
 import React, { useEffect, useRef, useCallback } from 'react';
-import { useColorScheme, View } from 'react-native';
+import { useColorScheme, View, Platform } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, useTheme } from 'tamagui';
@@ -112,6 +112,9 @@ export default function AppContent() {
   }, []);
 
   useEffect(() => {
+    if (Platform.OS === 'web') {
+      return;
+    }
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       if (__DEV__) {
         console.log('Foreground notification received:', remoteMessage);
@@ -162,6 +165,9 @@ export default function AppContent() {
   }, [tokenRes, user_token, isGuest]);
 
   useEffect(() => {
+    if (Platform.OS === 'web') {
+      return;
+    }
     const handleNotificationResponse = async (
       response: Notifications.NotificationResponse,
     ) => {
