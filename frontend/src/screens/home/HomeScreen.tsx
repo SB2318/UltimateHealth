@@ -1094,14 +1094,15 @@ const styles = StyleSheet.create({
   },
   webDemoTitle: {
     color: '#111827',
-    fontSize: 28,
+    fontSize: 24,
+    lineHeight: 30,
     fontWeight: '800',
     marginBottom: 10,
   },
   webDemoIntro: {
     color: '#4B5563',
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: 14,
+    lineHeight: 20,
     marginBottom: 24,
   },
   webDemoPlanCard: {
@@ -1122,7 +1123,8 @@ const styles = StyleSheet.create({
   },
   webDemoPlanTitle: {
     color: '#FFFFFF',
-    fontSize: 21,
+    fontSize: 19,
+    lineHeight: 25,
     fontWeight: '800',
     marginBottom: 8,
   },
