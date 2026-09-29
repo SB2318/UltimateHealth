@@ -3,12 +3,12 @@ import React, {useCallback, useState, useMemo} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import ArticleCard from '../../components/article/ArticleCard';
+import ArticleSkeletonCard from '../../components/article/ArticleSkeletonCard'; 
 
 
 import { useTheme } from 'tamagui';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ArticleData, RootStackParamList} from '../../schemas/type';
-import Loader from '../../components/common/Loader';
 import {useFocusEffect} from '@react-navigation/native';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
@@ -17,7 +17,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 
 
 type Props = StackScreenProps<RootStackParamList, 'ContentListScreen'>;
-
+const ARTICLE_SKELETON_PLACEHOLDERS = [1 , 2 ,3 ];
 
 const ContentListScreen = ({navigation, route}: Props) => {
   const initialType = route.params?.type || 'articles';
@@ -84,11 +84,17 @@ const ContentListScreen = ({navigation, route}: Props) => {
     return (
       <SafeAreaView
         style={[
-          styles.loadingContainer,
+          styles.container,
           {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')},
         ]}>
         <StatusBar style={isDarkMode ? 'light' : 'dark'} />
-        <Loader />
+        <View
+          style={styles.skeletonContainer}
+          accessibilityLabel="Loading articles">
+          {ARTICLE_SKELETON_PLACEHOLDERS.map(i => (
+            <ArticleSkeletonCard key={`content-article-skeleton-${i}`} />
+          ))}
+        </View>
       </SafeAreaView>
     );
   }
@@ -202,8 +208,8 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal : wp(4),
+    paddingTop : hp(2),
   },
   tabsContainer: {
     flexDirection: 'row',
