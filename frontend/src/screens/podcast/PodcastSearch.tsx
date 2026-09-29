@@ -1,6 +1,6 @@
 // PodcastSearch.tsx
 import React, {useEffect, useState, useCallback} from 'react';
-import {Pressable, FlatList, AccessibilityInfo} from 'react-native';
+import {Pressable, FlatList, AccessibilityInfo, Platform} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {PodcastData, PodcastSearchProp} from '../../schemas/type';
 
@@ -56,7 +56,9 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
     setDebouncedQuery(isValidSearchInput(sanitizedQuery) ? sanitizedQuery : '');
     setPage(1);
     setTotalPages(0);
-    setSearchData([]);
+    if (!isValidSearchInput(sanitizedQuery)) {
+      setSearchData([]);
+    }
   }, [debouncedRawQuery]);
 
   const {mutate: updateViewCount} = useUpdatePodcastViewcount();
@@ -297,7 +299,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
 
       {/* Results / Skeleton Section */}
       <YStack paddingHorizontal="$3" flex={1}>
-        {isLoading && debouncedQuery !== '' ? (
+        {isLoading && debouncedQuery !== '' && Platform.OS !== 'web' ? (
           <FlatList
             data={Array.from({length: SKELETON_COUNT}, (_, i) => i)}
             keyExtractor={(_: number, index: number) =>

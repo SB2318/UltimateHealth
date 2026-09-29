@@ -52,6 +52,6 @@ export const useGetWeeklyWellness = (
       if (body?.success === false) throw new Error('Failed to load wellness data');
       return Array.isArray(body?.data) ? body.data : [];
     },
-    enabled: isConnected,
+    enabled: Platform.OS === 'web' || isConnected,
   });
 };
