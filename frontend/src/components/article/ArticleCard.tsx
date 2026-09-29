@@ -15,10 +15,10 @@ import AccessibleTouchable from '../common/AccessibleTouchable';
 import {fp} from '../../lib/ui/Metric';
 import {ArticleCardProps, ArticleData} from '../../schemas/type';
 import { formatDateShort } from '../../lib/utils/dateUtils';
-import { getReadTime, calculateReadTime } from '../../lib/utils/readTime';
+import IonIcons from '@expo/vector-icons/Ionicons';
+import ReadingTimeBadge from './ReadingTimeBadge';
 import {useAppSelector} from '../../store/hooks';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import IonIcons from '@expo/vector-icons/Ionicons';
 import {GET_IMAGE} from '../../lib/api/APIUtils';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
@@ -617,12 +617,9 @@ const ArticleCard = ({
     {formatDateShort(item?.lastUpdated)}
   </Text>
   <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
-  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-    <IonIcons name="time-outline" size={13} color={themeColors.secondaryText} style={{marginRight: 4}} />
-    <Text style={[styles.footerText1, {color: themeColors.secondaryText, marginBottom: 0}]}>
-      {getReadTime(item?.content || item?.body || item?.description || item?.title || '')}
-    </Text>
-  </View>
+  <ReadingTimeBadge
+    content={item?.content || item?.body || item?.description || item?.title || ''}
+  />
   {(item?.trustUsers?.length ?? 0) > 0 && (
     <>
       <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
@@ -1125,11 +1122,6 @@ const styles = StyleSheet.create({
     backgroundColor: ON_PRIMARY_COLOR,
     padding: 6,
     borderRadius: 20,
-  },
-  readTime: {
-    fontSize: 12,
-    color: "#6B7280", // Gray text
-    marginTop: 4,
   },
 });
 
