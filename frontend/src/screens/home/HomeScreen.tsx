@@ -10,6 +10,7 @@ import { StyleSheet,
   ScrollView,
   Platform,
   Pressable,
+  TextInput,
 } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -110,9 +111,22 @@ const SavedArticleEmptyState = () => (
   </View>
 );
 
-const WebDemoHome = ({navigation}: {navigation: any}) => (
+const WebDemoHome = ({navigation}: {navigation: any}) => {
+  const [articleQuery, setArticleQuery] = useState('');
+  const normalizedQuery = articleQuery.trim().toLowerCase();
+  const visibleArticles = demoArticles.filter(article =>
+    `${article.title} ${article.description} ${article.tags.map(tag => tag.name).join(' ')}`
+      .toLowerCase()
+      .includes(normalizedQuery),
+  );
+
+  return (
   <SafeAreaView style={styles.container}>
-    <ScrollView contentContainerStyle={styles.webDemoContainer}>
+    <ScrollView
+      contentContainerStyle={styles.webDemoContainer}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator
+    >
       <Text style={styles.webDemoEyebrow}>WEB DEMO MODE</Text>
       <Text style={styles.webDemoTitle}>UltimateHealth content showcase</Text>
       <Text style={styles.webDemoIntro}>
@@ -135,8 +149,27 @@ const WebDemoHome = ({navigation}: {navigation: any}) => (
         </Text>
         <Text style={styles.webDemoPlanAction}>Open wellness dashboard →</Text>
       </Pressable>
-      <Text style={styles.webDemoSection}>Featured articles</Text>
-      {demoArticles.map(article => (
+      <Text style={styles.webDemoSection}>Find an article</Text>
+      <View style={styles.webDemoSearch}>
+        <TextInput
+          value={articleQuery}
+          onChangeText={setArticleQuery}
+          placeholder="Search running, sleep, nutrition..."
+          placeholderTextColor="#64748B"
+          style={styles.webDemoSearchInput}
+          accessibilityLabel="Search articles"
+          returnKeyType="search"
+        />
+        {articleQuery ? (
+          <Pressable onPress={() => setArticleQuery('')} accessibilityLabel="Clear article search">
+            <Text style={styles.webDemoSearchClear}>×</Text>
+          </Pressable>
+        ) : null}
+      </View>
+      <Text style={styles.webDemoSection}>
+        {normalizedQuery ? `${visibleArticles.length} matching articles` : 'Featured articles'}
+      </Text>
+      {visibleArticles.map(article => (
         <Pressable
           key={article._id}
           style={styles.webDemoCard}
@@ -162,7 +195,8 @@ const WebDemoHome = ({navigation}: {navigation: any}) => (
       </View>
     </ScrollView>
   </SafeAreaView>
-);
+  );
+};
 
 // Here The purpose of using Redux is to maintain filter state throughout the app session. globally
 const HomeScreen = ({navigation}: HomeScreenProps) => {
@@ -1145,6 +1179,28 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 12,
     marginTop: 10,
+  },
+  webDemoSearch: {
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#CBD5E1',
+    borderRadius: 12,
+    borderWidth: 1,
+    flexDirection: 'row',
+    minHeight: 46,
+    paddingHorizontal: 12,
+  },
+  webDemoSearchInput: {
+    color: '#172033',
+    flex: 1,
+    fontSize: 15,
+    paddingVertical: 10,
+  } as any,
+  webDemoSearchClear: {
+    color: '#64748B',
+    fontSize: 24,
+    lineHeight: 24,
+    paddingLeft: 8,
   },
   webDemoCard: {
     backgroundColor: '#FFFFFF',
