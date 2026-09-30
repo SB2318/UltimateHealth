@@ -1239,7 +1239,8 @@ We welcome contributions from everyone — developers, designers, writers, and t
 
    <tr>
     <td align="center"><a href="https://github.com/rish0000-dot"><img src="https://avatars.githubusercontent.com/u/189544159?v=4" width="120px;" alt=""/><br/><sub><b>Rishabh Sharma</b></sub></a></td>
-   </tr>
+       <td align="center"><a href="https://github.com/Omkar482185"><img src="https://avatars.githubusercontent.com/u/215218105?v=4" width="120px;" alt=""/><br/><sub><b>OMKAR SALUNKHE</b></sub></a></td>
+ </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
