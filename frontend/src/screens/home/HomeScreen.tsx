@@ -28,6 +28,7 @@ import {
 } from '../../lib/ui/Theme';
 import AddIcon from '../../components/common/AddIcon';
 import ArticleCard from '../../components/article/ArticleCard';
+import ArtcleSkeleton from '../../components/article/ArticleSkeletonCard';
 
 import HomeScreenHeader from '../../components/home/HomeScreenHeader';
 import {ArticleData, Category, HomeScreenProps} from '../../schemas/type';
@@ -64,20 +65,23 @@ import {demoArticles, demoCategories, demoPodcasts} from '../../lib/demo/demoCon
 import {
   OfflineArticleState,
   NoArticleState,
-  BaseEmptyState,
 } from '../../components/common/EmptyStates';
 
 const HOMEPAGE_SETTINGS_KEY = 'homepage_customization';
 
 // Loading State Component with Animation
+
+const ARTICLE_SKELETON_PLACEHOLDERS = [1 , 2 ,3];
+
 const LoadingState = () => {
   return (
-    <BaseEmptyState
-      iconEmoji="📚"
-      title="Loading Articles"
-      description="Gathering the latest health insights for you..."
-      loading={true}
-    />
+    <View
+      style={styles.articleSkeletonContainer}
+      accessibilityLabel="Loading articles">
+      {ARTICLE_SKELETON_PLACEHOLDERS.map(i => (
+        <ArticleSkeletonCard key={`article-skeleton-${i}`} />
+      ))}
+    </View>
   );
 };
 
@@ -1277,6 +1281,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginTop: 10,
     paddingBottom: 120,
+  },
+  articleSkeletonContainer:{
+    flex: 1,
+    width : '100%',
+    paddingHorizontal: 16,
+    marginTop : 10,
   },
   homePlusIconview: {
     bottom: 100,

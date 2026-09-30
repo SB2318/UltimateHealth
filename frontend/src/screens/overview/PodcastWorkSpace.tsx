@@ -12,11 +12,14 @@ import {useAppSelector} from '../../store/hooks';
 import PodcastReviewCard from '../../components/podcast/PodcastReviewCard';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {hp, wp} from '../../lib/ui/Metric';
-import Loader from '../../components/common/Loader';
+import PodcastSkeletonCard from '../../components/podcast/PodcastSkeletonCard';
 import {useGetPendingPodcasts} from '@/src/hooks/podcast/useGetPendingPodcasts';
 import {useGetDiscardedPodcasts} from '@/src/hooks/podcast/useGetDiscardedPodcast';
 import {useGetUserPublishedPodcasts} from '@/src/hooks/podcast/useGetUserPublishedPodcasts';
 import {NoPodcastState} from '../../components/common/EmptyStates';
+
+
+const PODCAST_SKELETON_PLACEHOLDERS = [1 , 2 , 3];
 
 
 export default function PodcastWorkSpace({
@@ -218,7 +221,13 @@ export default function PodcastWorkSpace({
         {publishedPodcastsLoading ||
         pendingPodcastsLoading ||
         discardedPodcastsLoading ? (
-          <Loader />
+          <View
+            style={[styles.articleContainer, styles.podcastSkeletonContainer]}
+            accessibilityLabel="Loading podcasts">
+            {PODCAST_SKELETON_PLACEHOLDERS.map(i => (
+              <PodcastSkeletonCard key={`podcast-workspace-skeleton-${i}`} />
+            ))}
+          </View>
         ) : (
           <View style={styles.articleContainer}>
             <FlatList
@@ -296,6 +305,10 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 0,
     marginBottom: hp(13),
+  },
+  podcastSkeletonContainer:{
+paddingHorizontal: wp(4),
+paddingTop: hp(1),
   },
   flatListContentContainer: {
     paddingHorizontal: wp(4),
