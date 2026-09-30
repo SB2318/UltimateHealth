@@ -1,6 +1,6 @@
  
 import React, {useCallback, useEffect, useState} from 'react';
-import {Image, StyleSheet, ActivityIndicator} from 'react-native';
+import {Image, StyleSheet, ActivityIndicator, Platform} from 'react-native';
 import {YStack, Text, Button} from 'tamagui';
 import Animated, {
   useSharedValue,
@@ -9,8 +9,9 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import {SplashScreenProp} from '../../schemas/type';
-import {useAppSelector} from '../../store/hooks';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {RootState} from '../../store/ReduxStore';
+import {setGuestMode} from '../../store/UserSlice';
 
 export default function SplashScreen({navigation}: SplashScreenProp) {
   const opacity = useSharedValue(0);
@@ -20,6 +21,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
   // `user_token` is hydrated from secure storage by AppContent on mount.
   // We wait briefly to allow hydration to complete before deciding where to navigate.
   const user_token = useAppSelector((state: RootState) => state.user.user_token);
+  const dispatch = useAppDispatch();
 
   // Brief hydration delay so AppContent can populate Redux before we navigate
   const [hydrated, setHydrated] = useState(false);
@@ -30,6 +32,14 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
   }, []);
 
   const navigateBasedOnAuth = useCallback(() => {
+    if (Platform.OS === 'web') {
+      dispatch(setGuestMode(true));
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'TabNavigation'}],
+      });
+      return;
+    }
     if (user_token) {
       navigation.reset({
         index: 0,
@@ -41,7 +51,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
         routes: [{name: 'LoginScreen'}],
       });
     }
-  }, [navigation, user_token]);
+  }, [dispatch, navigation, user_token]);
 
   useEffect(() => {
     if (hydrated) {

@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, useColorScheme, FlatList, RefreshControl, TouchableOpacity, Platform } from 'react-native';
-import React, {useCallback, useState, useMemo} from 'react';
+import React, {useCallback, useEffect, useState, useMemo} from 'react';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import ArticleCard from '../../components/article/ArticleCard';
@@ -31,11 +31,18 @@ const ContentListScreen = ({navigation, route}: Props) => {
   const {data: user, refetch, isLoading} = useGetProfile();
 
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    refetch();
-    setRefreshing(false);
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
   }, [refetch]);
+
+  useEffect(() => {
+    setSelectedTab(initialType);
+  }, [initialType]);
 
 
   useFocusEffect(
@@ -158,8 +165,15 @@ const ContentListScreen = ({navigation, route}: Props) => {
         color={themeColors.textSecondary} 
         style={{ opacity: 0.5, marginBottom: hp(2) }}
       />
+      <Text style={[styles.emptyTitle, {color: themeColors.text}]}>
+        No {selectedTab} yet
+      </Text>
       <Text style={[styles.emptyText, { color: themeColors.textSecondary }]}>
-        No {selectedTab} yet.
+        {selectedTab === 'saved'
+          ? 'Save articles while browsing to find them here.'
+          : selectedTab === 'reposts'
+            ? 'Reposted articles will appear here.'
+            : 'Publish your first article to build your collection.'}
       </Text>
     </View>
   );
@@ -246,6 +260,13 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: fp(4.2),
     fontWeight: '500',
+    textAlign: 'center',
+  },
+  emptyTitle: {
+    fontSize: fp(4.5),
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: hp(1),
   }
 });
 

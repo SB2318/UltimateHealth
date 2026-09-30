@@ -1,8 +1,8 @@
 # Frontend run instructions
 
 Prerequisites
-- Node.js (16+ recommended)
-- npm or yarn
+- Node.js 20 (the version pinned by the repository)
+- Yarn 4 (the package manager declared by `package.json`)
 - For native builds: Android Studio / Xcode (optional for run:android/run:ios)
 - For push notifications: run on a physical device; configure FCM for Android
 
@@ -12,29 +12,28 @@ Quick start
 
 ```bash
 cd frontend
-npm install
-# or
-# yarn
+yarn install
 ```
 
 2. Run the app
 
 ```bash
-npm run start
-# or
-# expo start
+yarn start
 ```
 
-3. Run on Android device/emulator
+3. Run the Expo development build
 
 ```bash
-npm run android
+yarn expo start --dev-client
 ```
 
-4. Run preflight check (useful if you see errors in the editor)
+The app uses native modules that are not available in Expo Go. Install or build the
+development client first, then scan the QR code from the development build.
+
+4. Run on Android device/emulator
 
 ```bash
-node ./scripts/check-environment.js
+yarn android
 ```
 
 Notes

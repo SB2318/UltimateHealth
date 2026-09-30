@@ -1,11 +1,11 @@
-import { StyleSheet, Dimensions, useColorScheme, ScrollView, SafeAreaView, ActivityIndicator, TextInput } from 'react-native';
+import { StyleSheet, Dimensions, useColorScheme, ScrollView, SafeAreaView, ActivityIndicator, TextInput, Platform } from 'react-native';
 import { YStack, XStack, Text, Card, View, Button } from 'tamagui';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { LineChart } from 'react-native-chart-kit';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { PRIMARY_COLOR, BUTTON_COLOR } from '../../lib/ui/Theme';
-import { wp, hp, fp } from '../../lib/ui/Metric';
+import { wp, hp, fp as mobileFp } from '../../lib/ui/Metric';
 import { useAppSelector } from '../../store/hooks';
 import { useGetWeeklyWellness } from '../../hooks/wellness/useGetWeeklyWellness';
 import { useLogWellness } from '../../hooks/wellness/useLogWellness';
@@ -13,8 +13,13 @@ import { wellnessLogPayloadSchema } from '../../schemas/zod/wellnessSchemas';
 import { buildChartData, calculateDashboardScore, formatMetricValue, metricGoal, getTodayDateString, getTodayLog } from '../../lib/utils/wellnessUtils';
 
 const WellnessDashboardScreen = () => {
+  const navigation = useNavigation<any>();
   const isDarkMode = useColorScheme() === 'dark';
-  const bottomBarHeight = useBottomTabBarHeight();
+  const fp = (percent: number) =>
+    Platform.OS === 'web' ? Math.min(percent * 6.5, 48) : mobileFp(percent);
+  // This screen is mounted in the root stack (not inside the tab navigator),
+  // so use a stable inset instead of the tab-only hook.
+  const bottomBarHeight = 24;
   const screenWidth = Dimensions.get('window').width;
 
   const { isConnected } = useAppSelector((state: any) => state.network);
@@ -156,14 +161,29 @@ const WellnessDashboardScreen = () => {
         </View>
       ) : (
         <ScrollView
+          style={styles.scrollView}
+          nestedScrollEnabled
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingBottom: bottomBarHeight + hp(4),
             paddingHorizontal: wp(4)
+            ,
+            ...(Platform.OS === 'web' ? {alignSelf: 'center', maxWidth: 1180, width: '100%'} : {}),
           }}
         >
           {/* Header Greeting */}
           <YStack marginVertical="$3">
+            <Button
+              size="$3"
+              alignSelf="flex-start"
+              marginBottom="$2"
+              backgroundColor={isDarkMode ? '#10206D' : '#E5EEF9'}
+              icon={<Ionicons name="arrow-back" size={18} color={isDarkMode ? '#FFFFFF' : '#0F52BA'} />}
+              onPress={() => navigation.goBack()}
+              accessibilityRole="button"
+              accessibilityLabel="Go back from wellness dashboard">
+              <Text color={isDarkMode ? '#FFFFFF' : '#0F52BA'}>Back</Text>
+            </Button>
             <Text fontSize={fp(7)} fontWeight="800" color={isDarkMode ? '#FFFFFF' : '#0F52BA'}>
               Wellness Dashboard
             </Text>
@@ -455,6 +475,9 @@ const WellnessDashboardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  scrollView: {
+    flex: 1,
   },
   centerContainer: {
     flex: 1,

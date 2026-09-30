@@ -1,28 +1,32 @@
+const WORDS_PER_MINUTE = 200;
+
 /**
- * Strips HTML tags and calculates estimated read time
- * @param content - Raw HTML or plain text article content
- * @returns A string like "5 min read"
+ * Converts article HTML or plain text into the words used for read-time
+ * estimation.
  */
-export function getReadTime(content: string): string {
+export function getReadableWordCount(content?: string | null): number {
   if (!content || content.trim().length === 0) {
-    return '1 min read';
+    return 0;
   }
 
-  // Strip HTML tags, images, and metadata
   const plainText = content
-    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-    .replace(/<img[^>]*>/gi, '')
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<img[^>]*>/gi, ' ')
     .replace(/<[^>]*>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
+    .replace(/&(?:nbsp|amp|lt|gt|quot|#39);/gi, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
-  const wordsPerMinute = 200; // Average reading speed
-  const wordCount = plainText.split(/\s+/).filter(w => w.length > 0).length;
-  const minutes = Math.ceil(wordCount / wordsPerMinute);
+  return plainText ? plainText.split(/\s+/).length : 0;
+}
 
-  return `${minutes} min read`;
+/**
+ * Calculates estimated reading time from raw HTML or plain text.
+ * A short or empty article is always presented as a one-minute read.
+ */
+export function getReadTime(content: string): string {
+  return `${calculateReadTime(content)} min read`;
 }
 
 /**
@@ -31,11 +35,6 @@ export function getReadTime(content: string): string {
  * @returns Estimated read time in minutes
  */
 export function calculateReadTime(content: string): number {
-  if (!content || content.trim().length === 0) {
-    return 1; // Default to 1 minute for empty content
-  }
-
-  const wordsPerMinute = 200; // Average reading speed
-  const wordCount = content.split(/\s+/).filter(w => w.length > 0).length;
-  return Math.ceil(wordCount / wordsPerMinute);
+  const wordCount = getReadableWordCount(content);
+  return Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE));
 }

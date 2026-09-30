@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
  
 import {useEffect, useState, useMemo} from 'react';
+import {Platform} from 'react-native';
 import { StyleSheet,
   TouchableOpacity,
  // NativeModules,
@@ -29,6 +30,7 @@ import { NoPodcastState } from '../../components/common/EmptyStates';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import PodcastSkeletonCard from '../../components/podcast/PodcastSkeletonCard';
 import {usePreferences} from '../../contexts/PreferencesContext';
+import {demoPodcasts} from '../../lib/demo/demoContent';
 
 //const {WavAudioRecorder} = NativeModules;
 //const recorderEvents = new NativeEventEmitter(WavAudioRecorder);
@@ -49,10 +51,14 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
   const {preferredLanguages} = usePreferences();
 
   const {
-    data: podcastData,
+    data: remotePodcastData,
     isLoading,
     refetch,
   } = useGetAllPodcasts(isConnected, page);
+  const podcastData =
+    Platform.OS === 'web'
+      ? {allPodcasts: demoPodcasts, totalPages: 1}
+      : remotePodcastData;
 
   const {mutate: updateViewCount} = useUpdatePodcastViewcount();
 
@@ -218,6 +224,10 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
             data={filteredPodcasts}
             renderItem={renderItem}
             keyExtractor={(item: PodcastData) => item._id.toString()}
+            initialNumToRender={6}
+            maxToRenderPerBatch={6}
+            windowSize={7}
+            removeClippedSubviews
             contentContainerStyle={styles.flatListContentContainer}
             refreshing={refreshing}
             onRefresh={onRefresh}

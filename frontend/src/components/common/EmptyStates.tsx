@@ -228,6 +228,32 @@ export const NoPodcastState = ({
   />
 );
 
+export const NoSearchResultsState = ({
+  contentType = 'content',
+  onClear,
+}: {
+  contentType?: 'articles' | 'podcasts' | 'content';
+  onClear?: () => void;
+}) => (
+  <BaseEmptyState
+    iconEmoji="🧭"
+    title={`No ${contentType} match that search`}
+    description="Try a shorter phrase, a broader health topic, or remove one of your filters."
+    actionText={onClear ? 'Clear search' : undefined}
+    onAction={onClear}
+  />
+);
+
+export const NetworkErrorState = ({onRetry}: {onRetry?: () => void}) => (
+  <BaseEmptyState
+    iconEmoji="📡"
+    title="Something went wrong"
+    description="We could not reach the content service. Your saved local demo content is still available."
+    actionText={onRetry ? 'Try again' : undefined}
+    onAction={onRetry}
+  />
+);
+
 export const NoNotificationState = ({ onRefresh }: { onRefresh?: () => void }) => {
   const isDarkMode = useColorScheme() === 'dark';
   return (
@@ -406,4 +432,3 @@ const styles = StyleSheet.create({
     borderRadius: 2.5,
   },
 });
-
