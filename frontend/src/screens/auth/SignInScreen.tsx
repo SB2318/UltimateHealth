@@ -30,7 +30,9 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   
-  const [role, setRole] = useState<'General User' | 'Doctor'>('General User');
+  const [role, setRole] = useState<'General User' | 'Doctor'>(
+    route?.params?.role || 'General User'
+  );
   const [step, setStep] = useState<1 | 2>(1);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState<string | null>(null);

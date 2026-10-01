@@ -39,6 +39,7 @@ import StackNavigation from '../../navigations/StackNavigation';
 import { CustomAlertDialog } from './CustomAlert';
 import UpdateModal from '../auth/UpdateModal';
 import { NetworkBanner } from './NetworkBanner';
+import OnboardingModal from './OnboardingModal';
 
 export default function AppContent() {
   const navigationRef = useRef<NavigationContainerRef<any> | null>(null);
@@ -225,6 +226,18 @@ function AppInner({
 }) {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
+  const { user_token, isGuest } = useAppSelector((state: RootState) => state.user);
+
+  // Show onboarding until the user authenticates or explicitly picks guest mode.
+  const showOnboarding = !user_token && !isGuest;
+
+  const handleSignInUser = () => {
+    navigationRef.current?.navigate('SignInScreen', { role: 'General User' });
+  };
+
+  const handleSignInDoctor = () => {
+    navigationRef.current?.navigate('SignInScreen', { role: 'Doctor' });
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: theme?.background?.get() ?? (isDarkMode ? '#121212' : '#ffffff') }}>
@@ -233,6 +246,15 @@ function AppInner({
       </NavigationContainer>
       <CustomAlertDialog key={'alert'} />
       <UpdateModal visible={visible} storeUrl={storeUrl} />
+
+      {/* Onboarding — shown until user signs in or continues as guest */}
+      <OnboardingModal
+        visible={showOnboarding}
+        onClose={handleSignInUser}
+        onSignInUser={handleSignInUser}
+        onSignInDoctor={handleSignInDoctor}
+        onContinue={() => {}}
+      />
     </View>
   );
 }

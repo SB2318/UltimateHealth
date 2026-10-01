@@ -8,6 +8,7 @@ export type RootStackParamList = {
   SplashScreen: undefined;
   SignInScreen: {
     redirectTo?: RedirectTo;
+    role?: 'General User' | 'Doctor';
   };
   TabNavigation: undefined;
   EditorScreen: {

@@ -995,6 +995,8 @@ useEffect(() => {
   setShowSavedFilter={setShowSavedFilter}
 />
 
+      {/* ── ONBOARDING MODAL (first-launch only) ── */}
+
 </SafeAreaView>
   );
 };
