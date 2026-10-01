@@ -52,12 +52,12 @@ const defaultStaticConfig = {
         data: [
           {
             scheme: "https",
-            host: "uhsocial.in",
+            host: "ultimatehealth.blog",
             pathPrefix: "/api/share/article"
           },
           {
             scheme: "https",
-            host: "uhsocial.in",
+            host: "ultimatehealth.blog",
             pathPrefix: "/api/share/podcast"
           }
         ]
@@ -147,11 +147,11 @@ module.exports = ({ config }) => {
       // API URLs — read from environment variables with production fallbacks.
       // Override these in your local .env file (see .env.example).
       PROD_URL:
-        process.env.PROD_URL ?? "https://uhsocial.in/api",
+        process.env.PROD_URL ?? "https://ultimatehealth.blog/api",
       SOCKET_PROD:
-        process.env.SOCKET_PROD ?? "https://uhsocial.in",
+        process.env.SOCKET_PROD ?? "https://ultimatehealth.blog",
       CONTENT_CHECKER_PROD:
-        process.env.CONTENT_CHECKER_PROD ?? "https://uhsocial.in/content-intel",
+        process.env.CONTENT_CHECKER_PROD ?? "https://ultimatehealth.blog/content-intel",
       FIREBASE_API_KEY_ANDROID: process.env.FIREBASE_API_KEY_ANDROID,
       FIREBASE_API_KEY_IOS: process.env.FIREBASE_API_KEY_IOS,
       FIREBASE_APP_ID_ANDROID: process.env.FIREBASE_APP_ID_ANDROID,

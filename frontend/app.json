@@ -54,12 +54,12 @@
           "data": [
             {
               "scheme": "https",
-              "host": "uhsocial.in",
+              "host": "ultimatehealth.blog",
               "pathPrefix": "/api/share/article"
             },
             {
               "scheme": "https",
-              "host": "uhsocial.in",
+              "host": "ultimatehealth.blog",
               "pathPrefix": "/api/share/podcast"
             }
           ]
