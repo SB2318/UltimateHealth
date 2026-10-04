@@ -173,7 +173,8 @@ export const WebDemoHome = ({navigation}: {navigation: any}) => {
       <Text style={styles.webDemoSection}>
         {normalizedQuery ? `${visibleArticles.length} matching articles` : 'Featured articles'}
       </Text>
-      {visibleArticles.map(article => (
+      <View style={styles.webDemoArticleGrid}>
+      {visibleArticles.map((article, index) => (
         <Pressable
           key={article._id}
           style={styles.webDemoCard}
@@ -184,12 +185,18 @@ export const WebDemoHome = ({navigation}: {navigation: any}) => {
               recordId: article.pb_recordId,
             })
           }>
+          <View style={[styles.webDemoThumbnail, {backgroundColor: ['#DBEAFE', '#DCFCE7', '#FEF3C7'][index % 3]}]}>
+            <Text style={styles.webDemoThumbnailIcon}>
+              {article.tags[0].name === 'Sleep' ? '🌙' : article.tags[0].name === 'Nutrition' ? '🥗' : '🫶'}
+            </Text>
+          </View>
           <Text style={styles.webDemoTag}>{article.tags[0].name}</Text>
           <Text style={styles.webDemoCardTitle}>{article.title}</Text>
           <Text style={styles.webDemoCardBody}>{article.description}</Text>
           <Text style={styles.webDemoMeta}>Estimated reading time: 1 min</Text>
         </Pressable>
       ))}
+      </View>
       <Text style={styles.webDemoSection}>Podcast preview</Text>
       <View style={styles.webDemoCard}>
         <Text style={styles.webDemoTag}>PODCAST</Text>
@@ -1207,6 +1214,9 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   webDemoCard: {
+    flexBasis: 310,
+    flexGrow: 1,
+    maxWidth: 520,
     backgroundColor: '#FFFFFF',
     borderColor: '#DDE7F0',
     borderRadius: 16,
@@ -1216,6 +1226,23 @@ const styles = StyleSheet.create({
     shadowColor: '#1D4ED8',
     shadowOpacity: 0.08,
     shadowRadius: 12,
+  },
+  webDemoArticleGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 14,
+    alignItems: 'stretch',
+  },
+  webDemoThumbnail: {
+    alignItems: 'center',
+    borderRadius: 12,
+    height: 92,
+    justifyContent: 'center',
+    marginBottom: 14,
+    width: '100%',
+  },
+  webDemoThumbnailIcon: {
+    fontSize: 36,
   },
   webDemoTag: {
     color: '#007AFF',
