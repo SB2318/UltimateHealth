@@ -178,6 +178,8 @@ export const WebDemoHome = ({navigation}: {navigation: any}) => {
         <Pressable
           key={article._id}
           style={styles.webDemoCard}
+          accessibilityRole="button"
+          accessibilityLabel={`Read article ${article.title}`}
           onPress={() =>
             navigation.navigate('ArticleScreen', {
               articleId: Number(article._id.replace(/\D/g, '')) || 1,
