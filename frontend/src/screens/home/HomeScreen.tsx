@@ -111,7 +111,7 @@ const SavedArticleEmptyState = () => (
   </View>
 );
 
-const WebDemoHome = ({navigation}: {navigation: any}) => {
+export const WebDemoHome = ({navigation}: {navigation: any}) => {
   const [articleQuery, setArticleQuery] = useState('');
   const normalizedQuery = articleQuery.trim().toLowerCase();
   const visibleArticles = demoArticles.filter(article =>
@@ -137,7 +137,11 @@ const WebDemoHome = ({navigation}: {navigation: any}) => {
         style={styles.webDemoPlanCard}
         onPress={() => {
           const stackNav = navigation.getParent?.() ?? navigation;
-          stackNav.navigate('WellnessDashboardScreen');
+          if (Platform.OS === 'web') {
+            stackNav.replace('WellnessDashboardScreen');
+          } else {
+            stackNav.navigate('WellnessDashboardScreen');
+          }
         }}
         accessibilityRole="button"
         accessibilityLabel="Open your wellness plan">

@@ -1,7 +1,7 @@
  
 // @ts-nocheck
 import React, { useEffect, useRef, useCallback } from 'react';
-import { useColorScheme, View, Platform } from 'react-native';
+import { Platform, useColorScheme, View } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, useTheme } from 'tamagui';
@@ -34,8 +34,10 @@ import { setConnected } from '../../store/NetworkSlice';
 import { clearSessionArticles } from '../../store/offlineSlice';
 import { pruneArticleCache } from '../../lib/storage/ArticleCacheUtils';
 import { RootState } from '../../store/ReduxStore';
+import type { RootStackParamList } from '../../schemas/type';
 
 import StackNavigation from '../../navigations/StackNavigation';
+import WebDemoShell from '../../screens/web/WebDemoShell';
 import { CustomAlertDialog } from './CustomAlert';
 import UpdateModal from '../auth/UpdateModal';
 import { NetworkBanner } from './NetworkBanner';
@@ -54,6 +56,10 @@ export default function AppContent() {
   );
 
   const { data: tokenRes } = useCheckTokenStatus();
+  // The browser build is a public showcase because the production API
+  // requires authentication and is not reachable from localhost. Native
+  // builds keep the regular auth flow.
+  const isWebDemo = Platform.OS === 'web';
 
   useNotificationListeners();
 
@@ -190,6 +196,9 @@ export default function AppContent() {
   }, [user_token, isGuest]);
 
   useEffect(() => {
+    if (Platform.OS === 'web') {
+      return;
+    }
     firebaseInit();
     cleanUpDownloads();
   }, []);
@@ -204,12 +213,18 @@ export default function AppContent() {
             <PreferencesProvider>
               <SocketProvider>
                 <View style={{ flex: 1 }}>
-                  <NetworkBanner />
-                  <AppInner
-                    navigationRef={navigationRef}
-                    visible={visible}
-                    storeUrl={storeUrl}
-                  />
+                  {isWebDemo ? (
+                    <WebDemoShell />
+                  ) : (
+                    <>
+                      <NetworkBanner />
+                      <AppInner
+                        navigationRef={navigationRef}
+                        visible={visible}
+                        storeUrl={storeUrl}
+                      />
+                    </>
+                  )}
                 </View>
               </SocketProvider>
             </PreferencesProvider>
@@ -224,10 +239,12 @@ function AppInner({
   navigationRef,
   visible,
   storeUrl,
+  initialRouteName,
 }: {
   navigationRef: React.RefObject<NavigationContainerRef<any> | null>;
   visible: boolean;
   storeUrl: string;
+  initialRouteName?: keyof RootStackParamList;
 }) {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
@@ -235,7 +252,7 @@ function AppInner({
   return (
     <View style={{ flex: 1, backgroundColor: theme?.background?.get() ?? (isDarkMode ? '#121212' : '#ffffff') }}>
       <NavigationContainer ref={navigationRef}>
-        <StackNavigation />
+        <StackNavigation initialRouteName={initialRouteName} />
       </NavigationContainer>
       <CustomAlertDialog key={'alert'} />
       <UpdateModal visible={visible} storeUrl={storeUrl} />

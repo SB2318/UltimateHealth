@@ -53,5 +53,11 @@ export const useGetWeeklyWellness = (
       return Array.isArray(body?.data) ? body.data : [];
     },
     enabled: Platform.OS === 'web' || isConnected,
+    staleTime: Platform.OS === 'web' ? Infinity : 1000 * 60,
+    gcTime: 1000 * 60 * 30,
+    refetchOnMount: Platform.OS !== 'web',
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: false,
   });
 };

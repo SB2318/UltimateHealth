@@ -3,27 +3,25 @@ import { YStack, XStack, Text, Card, View, Button } from 'tamagui';
 import { LineChart } from 'react-native-chart-kit';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { PRIMARY_COLOR, BUTTON_COLOR } from '../../lib/ui/Theme';
 import { wp, hp, fp as mobileFp } from '../../lib/ui/Metric';
 import { useAppSelector } from '../../store/hooks';
 import { useGetWeeklyWellness } from '../../hooks/wellness/useGetWeeklyWellness';
 import { useLogWellness } from '../../hooks/wellness/useLogWellness';
 import { wellnessLogPayloadSchema } from '../../schemas/zod/wellnessSchemas';
-import { buildChartData, calculateDashboardScore, formatMetricValue, metricGoal, getTodayDateString, getTodayLog } from '../../lib/utils/wellnessUtils';
+import { buildChartData, calculateDashboardScore, calculateWellnessInsights, formatMetricValue, metricGoal, getTodayDateString, getTodayLog } from '../../lib/utils/wellnessUtils';
+import HealthCalculator from '../../components/wellness/HealthCalculator';
 
-const WellnessDashboardScreen = () => {
-  const navigation = useNavigation<any>();
+const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => void; reset?: (state: {index: number; routes: {name: string}[]}) => void}}) => {
   const isDarkMode = useColorScheme() === 'dark';
+  const bottomBarHeight = 24;
   const fp = (percent: number) =>
     Platform.OS === 'web' ? Math.min(percent * 6.5, 48) : mobileFp(percent);
-  // This screen is mounted in the root stack (not inside the tab navigator),
-  // so use a stable inset instead of the tab-only hook.
-  const bottomBarHeight = 24;
   const screenWidth = Dimensions.get('window').width;
 
   const { isConnected } = useAppSelector((state: any) => state.network);
-  const { data: weeklyLogs = [], isLoading, isError, refetch } = useGetWeeklyWellness(isConnected);
+  const { data: weeklyLogs, isLoading, isError, refetch } = useGetWeeklyWellness(isConnected);
+  const logs = weeklyLogs ?? [];
 
   // Manual log form state (D-05: validated before any network call)
   const [stepsInput, setStepsInput] = useState('');
@@ -69,9 +67,10 @@ const WellnessDashboardScreen = () => {
     logMutation.mutate(parsed.data);
   };
 
-  const todayLog = getTodayLog(weeklyLogs);
+  const todayLog = getTodayLog(logs);
   const todayMetrics = todayLog?.metrics ?? {}; // server rows may omit `metrics` (MAJOR-01)
-  const wellnessScore = calculateDashboardScore(weeklyLogs);
+  const wellnessScore = calculateDashboardScore(logs);
+  const wellnessInsights = calculateWellnessInsights(logs);
 
   const metrics = [
     {
@@ -116,7 +115,7 @@ const WellnessDashboardScreen = () => {
     }
   ];
 
-  const weeklyChart = buildChartData(weeklyLogs);
+  const weeklyChart = buildChartData(logs);
   const chartData = {
     labels: weeklyChart.labels,
     datasets: [
@@ -128,6 +127,8 @@ const WellnessDashboardScreen = () => {
     ],
     legend: ['Wellness Trend']
   };
+  const trendValues = weeklyChart.datasets[0].data;
+  const trendMax = Math.max(...trendValues, 1);
 
   const recommendations = (() => {
     const m = todayLog?.metrics;
@@ -154,11 +155,6 @@ const WellnessDashboardScreen = () => {
             <Button onPress={() => refetch()} marginTop="$3" backgroundColor={BUTTON_COLOR}><Text color="#FFFFFF">Retry</Text></Button>
           </Card>
         </View>
-      ) : weeklyLogs.length === 0 ? (
-        <View style={styles.centerContainer}>
-          <Text fontSize={fp(4)} fontWeight="600" color={isDarkMode ? '#FFFFFF' : '#333333'}>No wellness data yet</Text>
-          <Text fontSize={fp(3.2)} color={isDarkMode ? '#B0C4DE' : '#777777'} marginTop="$1">Log today&apos;s metrics to see your dashboard.</Text>
-        </View>
       ) : (
         <ScrollView
           style={styles.scrollView}
@@ -166,9 +162,10 @@ const WellnessDashboardScreen = () => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingBottom: bottomBarHeight + hp(4),
-            paddingHorizontal: wp(4)
-            ,
-            ...(Platform.OS === 'web' ? {alignSelf: 'center', maxWidth: 1180, width: '100%'} : {}),
+            paddingHorizontal: wp(4),
+            ...(Platform.OS === 'web'
+              ? {alignSelf: 'center', maxWidth: 1180, width: '100%'}
+              : {}),
           }}
         >
           {/* Header Greeting */}
@@ -179,7 +176,16 @@ const WellnessDashboardScreen = () => {
               marginBottom="$2"
               backgroundColor={isDarkMode ? '#10206D' : '#E5EEF9'}
               icon={<Ionicons name="arrow-back" size={18} color={isDarkMode ? '#FFFFFF' : '#0F52BA'} />}
-              onPress={() => navigation.goBack()}
+              onPress={() => {
+                if (Platform.OS === 'web' && navigation?.reset) {
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'TabNavigation'}],
+                  });
+                  return;
+                }
+                navigation?.goBack?.();
+              }}
               accessibilityRole="button"
               accessibilityLabel="Go back from wellness dashboard">
               <Text color={isDarkMode ? '#FFFFFF' : '#0F52BA'}>Back</Text>
@@ -238,6 +244,42 @@ const WellnessDashboardScreen = () => {
             </XStack>
           </Card>
 
+          <HealthCalculator isDarkMode={isDarkMode} />
+
+          <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
+            Weekly Insights
+          </Text>
+          <Card
+            padding={14}
+            borderRadius={16}
+            backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
+            elevate
+            bordered
+            borderWidth={0.6}
+            borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
+            marginBottom={16}
+          >
+            <XStack justifyContent="space-between" gap="$2">
+              <YStack flex={1} alignItems="center">
+                <Text fontSize={fp(6)} fontWeight="800" color={PRIMARY_COLOR}>{wellnessInsights.daysLogged}</Text>
+                <Text textAlign="center" fontSize={fp(2.8)} color={isDarkMode ? '#B0C4DE' : '#777777'}>Days logged</Text>
+              </YStack>
+              <YStack flex={1} alignItems="center">
+                <Text fontSize={fp(6)} fontWeight="800" color="#FF9800">{wellnessInsights.currentStreak}</Text>
+                <Text textAlign="center" fontSize={fp(2.8)} color={isDarkMode ? '#B0C4DE' : '#777777'}>Day streak</Text>
+              </YStack>
+              <YStack flex={1} alignItems="center">
+                <Text fontSize={fp(6)} fontWeight="800" color="#4CAF50">{wellnessInsights.completionRate}%</Text>
+                <Text textAlign="center" fontSize={fp(2.8)} color={isDarkMode ? '#B0C4DE' : '#777777'}>Goal days</Text>
+              </YStack>
+            </XStack>
+            <Text marginTop="$3" textAlign="center" fontSize={fp(3.1)} color={isDarkMode ? '#B0C4DE' : '#777777'}>
+              {wellnessInsights.daysLogged === 0
+                ? 'Log your first metrics below to start building your weekly insights.'
+                : `${wellnessInsights.goalDays} of ${wellnessInsights.daysLogged} logged days reached at least two daily goals.`}
+            </Text>
+          </Card>
+
           {/* Metrics Grid */}
           <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
             Today's Metrics
@@ -290,7 +332,7 @@ const WellnessDashboardScreen = () => {
           </XStack>
 
           {/* Line Chart Section */}
-          {weeklyLogs.length > 0 && (
+          {logs.length > 0 && (
             <>
               <Text fontSize={fp(4.5)} fontWeight="700" color={isDarkMode ? '#FFFFFF' : '#333333'} marginBottom={10}>
                 Weekly Trend
@@ -307,33 +349,59 @@ const WellnessDashboardScreen = () => {
                 overflow="hidden"
                 alignItems="center"
               >
-                <LineChart
-                  data={chartData}
-                  width={screenWidth - wp(12)}
-                  height={200}
-                  chartConfig={{
-                    backgroundColor: isDarkMode ? '#001280' : '#FFFFFF',
-                    backgroundGradientFrom: isDarkMode ? '#001280' : '#FFFFFF',
-                    backgroundGradientTo: isDarkMode ? '#001280' : '#FFFFFF',
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => isDarkMode ? `rgba(255, 255, 255, ${opacity})` : `rgba(15, 82, 186, ${opacity})`,
-                    labelColor: (opacity = 1) => isDarkMode ? `rgba(176, 196, 222, ${opacity})` : `rgba(102, 102, 102, ${opacity})`,
-                    propsForDots: {
-                      r: '4',
-                      strokeWidth: '2',
-                      stroke: PRIMARY_COLOR
-                    },
-                    propsForBackgroundLines: {
-                      stroke: isDarkMode ? '#334EBC' : '#E5E7EB',
-                      strokeDasharray: ''
-                    }
-                  }}
-                  bezier
-                  style={{
-                    marginVertical: 4,
-                    borderRadius: 16
-                  }}
-                />
+                {Platform.OS === 'web' ? (
+                  <View style={styles.webTrend}>
+                    <XStack alignItems="flex-end" justifyContent="space-between" height={160} width="100%">
+                      {trendValues.map((value, index) => (
+                        <YStack key={`${weeklyChart.labels[index]}-${value}`} alignItems="center" flex={1} gap="$2">
+                          <View
+                            style={[
+                              styles.webTrendBar,
+                              {
+                                height: `${Math.max((value / trendMax) * 100, 8)}%`,
+                                backgroundColor: isDarkMode ? '#4DD0E1' : PRIMARY_COLOR,
+                              },
+                            ]}
+                          />
+                          <Text fontSize={12} color={isDarkMode ? '#B0C4DE' : '#666666'}>
+                            {weeklyChart.labels[index]}
+                          </Text>
+                        </YStack>
+                      ))}
+                    </XStack>
+                    <Text textAlign="center" fontSize={12} color={isDarkMode ? '#B0C4DE' : '#666666'} marginTop="$2">
+                      Daily steps trend
+                    </Text>
+                  </View>
+                ) : (
+                  <LineChart
+                    data={chartData}
+                    width={screenWidth - wp(12)}
+                    height={200}
+                    chartConfig={{
+                      backgroundColor: isDarkMode ? '#001280' : '#FFFFFF',
+                      backgroundGradientFrom: isDarkMode ? '#001280' : '#FFFFFF',
+                      backgroundGradientTo: isDarkMode ? '#001280' : '#FFFFFF',
+                      decimalPlaces: 0,
+                      color: (opacity = 1) => isDarkMode ? `rgba(255, 255, 255, ${opacity})` : `rgba(15, 82, 186, ${opacity})`,
+                      labelColor: (opacity = 1) => isDarkMode ? `rgba(176, 196, 222, ${opacity})` : `rgba(102, 102, 102, ${opacity})`,
+                      propsForDots: {
+                        r: '4',
+                        strokeWidth: '2',
+                        stroke: PRIMARY_COLOR
+                      },
+                      propsForBackgroundLines: {
+                        stroke: isDarkMode ? '#334EBC' : '#E5E7EB',
+                        strokeDasharray: ''
+                      }
+                    }}
+                    bezier
+                    style={{
+                      marginVertical: 4,
+                      borderRadius: 16
+                    }}
+                  />
+                )}
               </Card>
             </>
           )}
@@ -506,6 +574,17 @@ const styles = StyleSheet.create({
   progressBarFill: {
     height: '100%',
     borderRadius: 3
+  },
+  webTrend: {
+    width: '100%',
+    minHeight: 190,
+    paddingHorizontal: 8,
+    paddingTop: 8,
+  },
+  webTrendBar: {
+    width: '58%',
+    minHeight: 12,
+    borderRadius: 6,
   },
   logInput: {
     flex: 1,

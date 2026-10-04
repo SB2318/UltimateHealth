@@ -538,6 +538,22 @@ const LoginScreen = ({navigation, route}: LoginScreenProp) => {
                 Continue as Guest
               </Text>
             </Button>
+
+            <Button
+              size="$4"
+              chromeless
+              alignSelf="center"
+              width="100%"
+              marginTop="$2"
+              pressStyle={{opacity: 0.7}}
+              onPress={() => navigation.navigate('WellnessPreviewScreen')}>
+              <Text
+                fontWeight="600"
+                fontSize={15}
+                color={isDarkMode ? '$blue5' : '$blue10'}>
+                Preview Wellness Features
+              </Text>
+            </Button>
           </YStack>
         </YStack>
 

@@ -72,12 +72,14 @@ describe('WellnessDashboardScreen - State Rendering Tests', () => {
     expect(mockRefetch).toHaveBeenCalled();
   });
 
-  it('renders empty state when there is no wellness data yet', () => {
+  it('keeps the logging dashboard available when there is no wellness data yet', () => {
     useGetWeeklyWellness.mockReturnValue({ data: [], isLoading: false, isError: false, refetch: jest.fn() });
 
     const { getByText } = render(<WellnessDashboardScreen />);
 
-    expect(getByText('No wellness data yet')).toBeTruthy();
+    expect(getByText('Weekly Insights')).toBeTruthy();
+    expect(getByText('Log your first metrics below to start building your weekly insights.')).toBeTruthy();
+    expect(getByText('Log Today')).toBeTruthy();
   });
 
   it('renders data-driven dashboard when weekly logs exist', () => {
