@@ -127,12 +127,14 @@ export const WebDemoHome = ({navigation}: {navigation: any}) => {
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator
     >
-      <Text style={styles.webDemoEyebrow}>WEB DEMO MODE</Text>
-      <Text style={styles.webDemoTitle}>UltimateHealth content showcase</Text>
-      <Text style={styles.webDemoIntro}>
-        Local sample content is shown in the browser because the production API
-        does not allow localhost requests. The native app still uses the live API.
-      </Text>
+      <View style={styles.webDemoHero}>
+        <Text style={styles.webDemoEyebrow}>WEB DEMO MODE</Text>
+        <Text style={styles.webDemoTitle}>UltimateHealth content showcase</Text>
+        <Text style={styles.webDemoIntro}>
+          Local sample content is shown in the browser because the production API
+          does not allow localhost requests. The native app still uses the live API.
+        </Text>
+      </View>
       <Pressable
         style={styles.webDemoPlanCard}
         onPress={() => {
@@ -1133,24 +1135,30 @@ const styles = StyleSheet.create({
     paddingBottom: 48,
   },
   webDemoEyebrow: {
-    color: '#007AFF',
+    color: '#BFDBFE',
     fontSize: 12,
     fontWeight: '800',
     letterSpacing: 1,
     marginBottom: 8,
   },
   webDemoTitle: {
-    color: '#111827',
+    color: '#FFFFFF',
     fontSize: 24,
     lineHeight: 30,
     fontWeight: '800',
     marginBottom: 10,
   },
   webDemoIntro: {
-    color: '#4B5563',
+    color: '#E0F2FE',
     fontSize: 14,
     lineHeight: 20,
     marginBottom: 24,
+  },
+  webDemoHero: {
+    backgroundColor: '#0B2A5B',
+    borderRadius: 18,
+    marginBottom: 22,
+    padding: 24,
   },
   webDemoPlanCard: {
     backgroundColor: '#0F52BA',
