@@ -56,3 +56,45 @@ export const getTodayLog = (logs: WellnessLog[], today = new Date()): WellnessLo
   const todayStr = getTodayDateString(today);
   return logs.find(l => l.date === todayStr) ?? null;
 };
+
+export type WellnessInsights = {
+  daysLogged: number;
+  goalDays: number;
+  completionRate: number;
+  currentStreak: number;
+};
+
+/**
+ * Summarize the returned weekly logs for a motivational, non-clinical insight card.
+ * A day counts toward the goal when at least two metrics reach their daily goals.
+ */
+export const calculateWellnessInsights = (logs: WellnessLog[], today = new Date()): WellnessInsights => {
+  const rows = logs
+    .filter(log => log.metrics && Object.keys(log.metrics).length > 0)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const goalDays = rows.filter(log => {
+    const metrics = log.metrics;
+    const completedGoals = [
+      metricGoal('steps', metrics.steps),
+      metricGoal('waterMl', metrics.waterMl),
+      metricGoal('sleepHours', metrics.sleepHours),
+      metricGoal('activeMinutes', metrics.activeMinutes),
+    ].filter(progress => progress >= 1).length;
+    return completedGoals >= 2;
+  }).length;
+
+  const dateSet = new Set(rows.map(log => log.date));
+  let currentStreak = 0;
+  const cursor = new Date(today);
+  while (dateSet.has(getTodayDateString(cursor))) {
+    currentStreak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+
+  return {
+    daysLogged: rows.length,
+    goalDays,
+    completionRate: rows.length === 0 ? 0 : Math.round((goalDays / rows.length) * 100),
+    currentStreak,
+  };
+};

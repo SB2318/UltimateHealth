@@ -3,6 +3,7 @@ import {
   metricGoal,
   buildChartData,
   calculateDashboardScore,
+  calculateWellnessInsights,
   getTodayLog,
 } from '../../../lib/utils/wellnessUtils';
 import {WellnessLog} from '../../../schemas/type';
@@ -105,6 +106,34 @@ describe('getTodayLog', () => {
     const today = getTodayLog(logs, new Date('2026-08-07T12:00:00'));
     expect(today?.date).toBe('2026-08-07');
     expect(today?.metrics.steps).toBe(10000);
+  });
+
+  describe('calculateWellnessInsights', () => {
+    it('counts logged days, goal days, and the current streak', () => {
+      const today = new Date('2026-08-07T12:00:00');
+      const fullMetrics = {steps: 10000, waterMl: 2500, sleepHours: 8, activeMinutes: 30};
+      const logs: WellnessLog[] = [
+        {userId: 'u1', date: '2026-08-05', metrics: fullMetrics},
+        {userId: 'u1', date: '2026-08-06', metrics: {steps: 10000, waterMl: 2500}},
+        {userId: 'u1', date: '2026-08-07', metrics: fullMetrics},
+      ];
+
+      expect(calculateWellnessInsights(logs, today)).toEqual({
+        daysLogged: 3,
+        goalDays: 3,
+        completionRate: 100,
+        currentStreak: 3,
+      });
+    });
+
+    it('returns an empty insight summary without logs', () => {
+      expect(calculateWellnessInsights([], new Date('2026-08-07T12:00:00'))).toEqual({
+        daysLogged: 0,
+        goalDays: 0,
+        completionRate: 0,
+        currentStreak: 0,
+      });
+    });
   });
 
   it('returns null when no log exists for today', () => {

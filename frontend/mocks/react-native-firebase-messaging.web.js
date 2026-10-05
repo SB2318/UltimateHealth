@@ -7,10 +7,7 @@ const messaging = () => ({
   setBackgroundMessageHandler: () => undefined,
 });
 
-messaging.AuthorizationStatus = {
-  AUTHORIZED: 1,
-  PROVISIONAL: 2,
-};
+messaging.AuthorizationStatus = {AUTHORIZED: 1, PROVISIONAL: 2};
 
 module.exports = messaging;
 module.exports.default = messaging;
