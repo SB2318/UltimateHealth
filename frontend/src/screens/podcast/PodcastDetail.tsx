@@ -17,7 +17,11 @@ import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import Slider from '../../components/podcast/SliderCompat';
 import {GlassStyles} from '../../styles/GlassStyles';
 
-import {useAudioPlayer, type AudioPlayer} from 'expo-audio';
+import {
+  setAudioModeAsync,
+  useAudioPlayer,
+  type AudioPlayer,
+} from 'expo-audio';
 
 // GET_IMAGE is defined as `${PROD_URL}/getfile` (resolves to absolute URL: https://ultimatehealth.blog/api/getfile).
 // This absolute, securely-configured endpoint ensures that relative resource paths cannot access local device files via traversal.
@@ -119,6 +123,29 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const player = useAudioPlayer(initialSource) as AudioPlayer & {
     setRateAsync: (rate: number, shouldPlay: boolean, pitchCorrectionQuality: string) => Promise<void>;
   };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const configureBackgroundPlayback = async () => {
+      try {
+        await setAudioModeAsync({
+          playsInSilentMode: true,
+          shouldPlayInBackground: true,
+        });
+      } catch (error) {
+        if (isMounted) {
+          console.warn('Failed to enable background podcast playback:', error);
+        }
+      }
+    };
+
+    void configureBackgroundPlayback();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (podcast?.audio_url) {
