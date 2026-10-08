@@ -12,6 +12,7 @@ import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import CookieConsent from "@/components/ui/cookie-consent";
+import OnboardingModalWeb from "@/components/home/OnboardingModalWeb";
 
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
 // A single Inter instance backs both --font-inter and --font-heading; declaring it
@@ -81,7 +82,11 @@ export default async function RootLayout({
             disableTransitionOnChange
             nonce={nonce}
           >
-            <TooltipProvider>{children} <CookieConsent /></TooltipProvider>
+            <TooltipProvider>
+              {children}
+              <CookieConsent />
+              <OnboardingModalWeb />
+            </TooltipProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
         

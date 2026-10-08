@@ -988,7 +988,7 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
       };
     default:
       return {
-        startTour: 'START TOUR',
+        startTour: 'START',
         back: 'Back',
         nextStage: 'Next Stage',
         completeTour: 'Complete Tour',

@@ -209,15 +209,16 @@ export default function OurContributorsPage() {
       <style>{`
         .contrib-wall-page {
           min-height: 100vh;
-          background: #f8fafc;
+          background: #0c0c14;
           font-family: 'Inter', system-ui, sans-serif;
         }
         .contrib-wall-hero {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 60%, #f5576c 100%);
+          background: linear-gradient(135deg, #131322 0%, #1a1a35 60%, #251830 100%);
           padding: 140px 24px 80px;
           text-align: center;
           position: relative;
           overflow: hidden;
+          border-bottom: 1px solid #252538;
         }
         .contrib-wall-hero::before {
           content: '';
@@ -229,59 +230,59 @@ export default function OurContributorsPage() {
         .contrib-wall-hero-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
         .contrib-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
-          background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+          background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3);
           border-radius: 50px; padding: 6px 18px; margin-bottom: 24px;
-          color: rgba(255,255,255,0.95); font-size: 0.78rem; font-weight: 800;
+          color: #a78bfa; font-size: 0.78rem; font-weight: 800;
           letter-spacing: 0.08em; text-transform: uppercase;
         }
         .contrib-wall-title {
-          font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; color: white;
-          line-height: 1.15; margin: 0 0 18px; text-shadow: 0 2px 12px rgba(0,0,0,0.18);
+          font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; color: #f1f5f9;
+          line-height: 1.15; margin: 0 0 18px; text-shadow: 0 2px 12px rgba(0,0,0,0.4);
         }
         .contrib-wall-sub {
-          font-size: 1.1rem; color: rgba(255,255,255,0.82); line-height: 1.8;
+          font-size: 1.1rem; color: #94a3b8; line-height: 1.8;
           margin: 0 0 40px;
         }
         .contrib-stat-row {
           display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px;
         }
         .contrib-stat-chip {
-          background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+          background: rgba(255,255,255,0.05); border: 1px solid #252538;
           border-radius: 16px; padding: 14px 24px; text-align: center; backdrop-filter: blur(8px);
           min-width: 110px;
         }
-        .contrib-stat-num { font-size: 1.8rem; font-weight: 900; color: white; line-height: 1; }
-        .contrib-stat-label { font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.65); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+        .contrib-stat-num { font-size: 1.8rem; font-weight: 900; color: #f1f5f9; line-height: 1; }
+        .contrib-stat-label { font-size: 0.75rem; font-weight: 700; color: #94a3b8; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
 
         /* ── Admin card ── */
         .admin-section { max-width: 1200px; margin: -48px auto 0; padding: 0 24px 0; position: relative; z-index: 10; }
         .admin-card {
-          background: white; border-radius: 24px; padding: 36px 40px;
-          box-shadow: 0 20px 60px rgba(102,126,234,0.18); border: 2px solid rgba(102,126,234,0.15);
+          background: #13131f; border-radius: 24px; padding: 36px 40px;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.4); border: 1px solid #252538;
           display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
         }
         .admin-avatar {
           width: 88px; height: 88px; border-radius: 50%;
-          border: 4px solid #667eea; box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+          border: 4px solid #7c3aed; box-shadow: 0 0 0 4px rgba(124,58,237,0.2);
           object-fit: cover; flex-shrink: 0;
         }
         .admin-badge {
           display: inline-flex; align-items: center; gap: 6px;
-          background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+          background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white;
           font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
           padding: 4px 12px; border-radius: 50px; margin-bottom: 6px;
         }
-        .admin-name { font-size: 1.4rem; font-weight: 900; color: #1e293b; margin: 0 0 4px; }
-        .admin-handle { font-size: 0.9rem; color: #667eea; font-weight: 600; }
-        .admin-desc { font-size: 0.88rem; color: #64748b; line-height: 1.6; margin-top: 8px; max-width: 480px; }
+        .admin-name { font-size: 1.4rem; font-weight: 900; color: #f1f5f9; margin: 0 0 4px; }
+        .admin-handle { font-size: 0.9rem; color: #a78bfa; font-weight: 600; }
+        .admin-desc { font-size: 0.88rem; color: #94a3b8; line-height: 1.6; margin-top: 8px; max-width: 480px; }
         .admin-link {
           margin-left: auto; display: inline-flex; align-items: center; gap: 8px;
-          background: linear-gradient(135deg, #667eea, #764ba2); color: white;
+          background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white;
           padding: 12px 24px; border-radius: 50px; text-decoration: none; font-weight: 700;
-          font-size: 0.9rem; white-space: nowrap; box-shadow: 0 6px 20px rgba(102,126,234,0.3);
+          font-size: 0.9rem; white-space: nowrap; box-shadow: 0 6px 20px rgba(124,58,237,0.3);
           transition: transform 0.2s, box-shadow 0.2s;
         }
-        .admin-link:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(102,126,234,0.4); }
+        .admin-link:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(124,58,237,0.4); }
 
         /* ── Search + Filter ── */
         .contrib-controls {
@@ -289,32 +290,32 @@ export default function OurContributorsPage() {
           display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
         }
         .contrib-search-wrap { flex: 1; min-width: 260px; position: relative; }
-        .contrib-search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; }
+        .contrib-search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #64748b; pointer-events: none; }
         .contrib-search {
           width: 100%; height: 52px; padding: 0 16px 0 48px; border-radius: 14px;
-          border: 1.5px solid #e2e8f0; background: white; font-size: 15px; color: #1e293b;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.04); outline: none; box-sizing: border-box;
+          border: 1px solid #252538; background: #13131f; font-size: 15px; color: #f1f5f9;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2); outline: none; box-sizing: border-box;
           transition: border-color 0.2s, box-shadow 0.2s;
         }
-        .contrib-search:focus { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.12); }
-        .contrib-search::placeholder { color: #94a3b8; }
+        .contrib-search:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.2); }
+        .contrib-search::placeholder { color: #64748b; }
         .contrib-year-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
         .contrib-year-tab {
           height: 52px; padding: 0 22px; border-radius: 14px; font-size: 14px; font-weight: 700;
-          cursor: pointer; border: 1.5px solid #e2e8f0; background: white; color: #64748b;
+          cursor: pointer; border: 1px solid #252538; background: #13131f; color: #94a3b8;
           transition: all 0.2s;
         }
-        .contrib-year-tab:hover { border-color: #667eea; color: #667eea; }
-        .contrib-year-tab.active { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-color: transparent; box-shadow: 0 4px 14px rgba(102,126,234,0.3); }
+        .contrib-year-tab:hover { border-color: #7c3aed; color: #a78bfa; }
+        .contrib-year-tab.active { background: linear-gradient(135deg, #7c3aed, #a78bfa); color: white; border-color: transparent; box-shadow: 0 4px 14px rgba(124,58,237,0.3); }
 
         /* ── Count line ── */
         .contrib-count-bar {
           max-width: 1200px; margin: 20px auto 0; padding: 0 24px;
           display: flex; align-items: center; gap: 12px;
         }
-        .contrib-count-line { flex: 1; height: 1px; background: #e2e8f0; }
-        .contrib-count-text { font-size: 13px; font-weight: 600; color: #94a3b8; white-space: nowrap; }
-        .contrib-count-text span { color: #475569; }
+        .contrib-count-line { flex: 1; height: 1px; background: #252538; }
+        .contrib-count-text { font-size: 13px; font-weight: 600; color: #64748b; white-space: nowrap; }
+        .contrib-count-text span { color: #a78bfa; }
 
         /* ── Grid ── */
         .contrib-grid {
@@ -323,42 +324,42 @@ export default function OurContributorsPage() {
           grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         }
         .contrib-card {
-          background: white; border-radius: 20px; border: 1px solid #e2e8f0;
+          background: #13131f; border-radius: 20px; border: 1px solid #252538;
           padding: 28px 20px 24px; text-align: center; cursor: default;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.2);
           transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
           position: relative; overflow: hidden;
           display: flex; flex-direction: column; align-items: center;
         }
-        .contrib-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(102,126,234,0.14); border-color: #c7d2fe; }
+        .contrib-card:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(124,58,237,0.2); border-color: #7c3aed; }
         .contrib-card-accent {
           position: absolute; top: 0; left: 0; right: 0; height: 3px;
-          background: linear-gradient(90deg, #667eea, #764ba2, #f5576c);
+          background: linear-gradient(90deg, #7c3aed, #a78bfa, #f0006a);
           opacity: 0; transition: opacity 0.3s;
         }
         .contrib-card:hover .contrib-card-accent { opacity: 1; }
         .contrib-card-img {
           width: 72px; height: 72px; border-radius: 50%; object-fit: cover;
-          border: 2px solid #e2e8f0; margin-bottom: 14px;
+          border: 2px solid #252538; margin-bottom: 14px;
           transition: border-color 0.25s;
         }
-        .contrib-card:hover .contrib-card-img { border-color: #818cf8; }
-        .contrib-card-name { font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 4px; line-height: 1.3; }
-        .contrib-card-handle { font-size: 12px; color: #667eea; font-weight: 600; margin-bottom: 12px; }
+        .contrib-card:hover .contrib-card-img { border-color: #a78bfa; }
+        .contrib-card-name { font-size: 14px; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; line-height: 1.3; }
+        .contrib-card-handle { font-size: 12px; color: #a78bfa; font-weight: 600; margin-bottom: 12px; }
         .contrib-card-years { display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; }
         .contrib-year-pip {
           font-size: 10px; font-weight: 800; letter-spacing: 0.04em;
           padding: 2px 8px; border-radius: 50px;
         }
-        .pip-2024 { background: #fef3c7; color: #d97706; }
-        .pip-2026 { background: #ede9fe; color: #7c3aed; }
+        .pip-2024 { background: rgba(217,119,6,0.15); color: #fbbf24; }
+        .pip-2026 { background: rgba(124,58,237,0.15); color: #a78bfa; }
         .contrib-card-gh {
           margin-top: 14px; display: inline-flex; align-items: center; gap: 5px;
           font-size: 11px; font-weight: 700; color: #94a3b8; text-decoration: none;
-          padding: 5px 12px; border-radius: 50px; border: 1px solid #e2e8f0;
-          transition: all 0.2s; background: #f8fafc;
+          padding: 5px 12px; border-radius: 50px; border: 1px solid #252538;
+          transition: all 0.2s; background: #0c0c14;
         }
-        .contrib-card-gh:hover { background: #667eea; color: white; border-color: #667eea; }
+        .contrib-card-gh:hover { background: #7c3aed; color: white; border-color: #7c3aed; }
 
         /* ── Empty state ── */
         .contrib-empty { text-align: center; padding: 80px 24px; color: #94a3b8; }

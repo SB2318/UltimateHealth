@@ -43,7 +43,7 @@
     "articles": "Articles",
     "glossary": "Glossaire",
     "joinUs": "Rejoignez-nous",
-    "startTour": "Visite guidée"
+    "startTour": "Explorer la plateforme"
   },
   "hero": {
     "badge": "Open Source · Porté par la Communauté · Toujours Gratuit",
@@ -53,7 +53,7 @@
     "headlineAnd": "&",
     "headlineDignity": "de la Dignité",
     "subtitle": "Parce qu'on ne peut pas soigner une personne qu'on ne respecte pas. Connaissances médicales ouvertes, glossaire et IA — dans votre langue.",
-    "startTour": "Visite guidée",
+    "startTour": "Explorer la plateforme",
     "readArticles": "Lire les articles",
     "androidApp": "App Android",
     "statArticles": "Articles",
@@ -126,5 +126,49 @@
     "portal3Title": "Contribuer sur GitHub",
     "portal3Desc": "Aidez à développer des outils de santé ouverts sur GitHub.",
     "portal3Action": "Rejoindre GitHub"
+  },
+  "glossary": {
+    "sectionBadge": "Glossaire Médical",
+    "title": "Un moyen plus clair d'explorer les termes de santé",
+    "description": "Parcourez des définitions concises, explorez les concepts associés et recherchez par terme médical, catégorie ou mot-clé.",
+    "searchPlaceholder": "Rechercher des termes médicaux...",
+    "categoryAll": "Tous",
+    "showingCount": "Affichage de",
+    "terms": "termes",
+    "noResultsTitle": "Aucun terme trouvé pour",
+    "noResults": "Aucun terme du glossaire trouvé.",
+    "relatedTerms": "Termes Associés"
+  },
+  "contribute": {
+    "sectionBadge": "Collaboration Open Source",
+    "title": "Rejoignez-nous & contribuez à UltimateHealth",
+    "subtitle": "Aidez à créer, traduire et améliorer des ressources de santé open source pour les communautés del mundo.",
+    "startContributing": "Commencer à Contribuer",
+    "viewRepo": "Voir le dépôt GitHub",
+    "meetContributors": "Rencontrer nos contributeurs",
+    "waysTitle": "Façons de Contribuer",
+    "waysSubtitle": "Chaque contribution — code, traduction de termes médicaux ou tests — compte.",
+    "wayCode": "Développement Logiciel",
+    "wayCodeItems": "React, Next.js, React Native, TypeScript, APIs",
+    "wayDoc": "Rédaction Médicale & Traduction",
+    "wayDocItems": "Articles de santé, traductions régionales, glossaire",
+    "wayDesign": "Design UI/UX & Accessibilité",
+    "wayDesignItems": "Design d'interface, dispositions mobiles, accessibilité",
+    "wayTesting": "Tests & Assurance Qualité",
+    "wayTestingItems": "Signaler des bugs, tester de nouvelles fonctionnalités",
+    "gssocBadge": "GSSoC 2026",
+    "gssocTitle": "GirlScript Summer of Code 2026",
+    "gssocDesc": "UltimateHealth participe à des programmes open source comme GSSoC, ouverts à tous les niveaux.",
+    "communityTitle": "Communauté & Support",
+    "communitySubtitle": "Impliquez-vous sur GitHub ou contactez l'équipe directement.",
+    "githubIssuesTitle": "Issues GitHub",
+    "githubIssuesDesc": "Trouvez des issues accessibles aux débutants ou signalez des bugs.",
+    "openIssues": "Parcourir les Issues",
+    "guideTitle": "Guide de Contribution",
+    "guideDesc": "Consultez notre guide de configuration et notre workflow Git.",
+    "readGuide": "Lire le Guide",
+    "emailTitle": "Support Direct",
+    "emailDesc": "Contactez l'équipe pour toute question ou proposition.",
+    "sendEmail": "Envoyer un e-mail"
   }
 }

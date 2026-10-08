@@ -43,7 +43,7 @@
     "articles": "Artikel",
     "glossary": "Glossar",
     "joinUs": "Mitmachen",
-    "startTour": "Tour starten"
+    "startTour": "Plattform Erkunden"
   },
   "hero": {
     "badge": "Open Source · Community-Getrieben · Dauerhaft Kostenlos",
@@ -53,7 +53,7 @@
     "headlineAnd": "&",
     "headlineDignity": "Würde",
     "subtitle": "Denn man kann niemanden heilen, den man nicht respektiert. Offenes medizinisches Wissen, Glossar und KI-Unterstützung — in Ihrer Sprache.",
-    "startTour": "Tour starten",
+    "startTour": "Plattform Erkunden",
     "readArticles": "Artikel lesen",
     "androidApp": "Android-App",
     "statArticles": "Artikel",
@@ -126,5 +126,49 @@
     "portal3Title": "Auf GitHub beitragen",
     "portal3Desc": "Bauen Sie offene Gesundheitswerkzeuge mit unserer weltweiten Community.",
     "portal3Action": "Auf GitHub mitmachen"
+  },
+  "glossary": {
+    "sectionBadge": "Medizinisches Glossar",
+    "title": "Gesundheitsbegriffe verständlich erklärt",
+    "description": "Durchsuchen Sie prägnante Definitionen, verwandte Konzepte und suchen Sie nach medizinischen Begriffen, Kategorien oder Schlüsselwörtern.",
+    "searchPlaceholder": "Medizinische Begriffe suchen...",
+    "categoryAll": "Alle",
+    "showingCount": "Zeige",
+    "terms": "Begriffe",
+    "noResultsTitle": "Keine Begriffe gefunden für",
+    "noResults": "Keine Glossarbegriffe gefunden.",
+    "relatedTerms": "Verwandte Begriffe"
+  },
+  "contribute": {
+    "sectionBadge": "Open-Source-Zusammenarbeit",
+    "title": "Machen Sie mit & unterstützen Sie UltimateHealth",
+    "subtitle": "Helfen Sie mit, Open-Source-Gesundheitsressourcen für Gemeinschaften weltweit aufzubauen, zu übersetzen und zu verbessern.",
+    "startContributing": "Mitwirken starten",
+    "viewRepo": "GitHub-Repository anzeigen",
+    "meetContributors": "Unsere Mitwirkenden",
+    "waysTitle": "Möglichkeiten der Mitwirkung",
+    "waysSubtitle": "Jeder Beitrag – ob Code, Übersetzung medizinischer Begriffe oder Testen von Funktionen – zählt.",
+    "wayCode": "Softwareentwicklung",
+    "wayCodeItems": "React, Next.js, React Native, TypeScript, APIs",
+    "wayDoc": "Medizin & Übersetzung",
+    "wayDocItems": "Gesundheitsartikel, regionale Übersetzungen, Glossarbegriffe",
+    "wayDesign": "UI/UX & Barrierefreiheit",
+    "wayDesignItems": "Schnittstellendesign, mobile Layouts, Barrierefreiheit",
+    "wayTesting": "QA & Testing",
+    "wayTestingItems": "Fehler melden, Funktionen testen",
+    "gssocBadge": "GSSoC 2026",
+    "gssocTitle": "GirlScript Summer of Code 2026",
+    "gssocDesc": "UltimateHealth nimmt an Open-Source-Programmen wie GSSoC teil und heißt Mitwirkende aller Erfahrungsstufen willkommen.",
+    "communityTitle": "Community & Support",
+    "communitySubtitle": "Engagieren Sie sich über GitHub oder kontaktieren Sie das Team direkt.",
+    "githubIssuesTitle": "GitHub Issues",
+    "githubIssuesDesc": "Finden Sie einsteigerfreundliche Issues oder melden Sie Fehler.",
+    "openIssues": "Offene Issues durchsuchen",
+    "guideTitle": "Mitwirkungs-Leitfaden",
+    "guideDesc": "Lesen Sie unseren Leitfaden zur Einrichtung und zum Git-Workflow.",
+    "readGuide": "Leitfaden lesen",
+    "emailTitle": "Direkter Kontakt",
+    "emailDesc": "Kontaktieren Sie die Entwickler bei Fragen oder Vorschlägen.",
+    "sendEmail": "E-Mail senden"
   }
 }

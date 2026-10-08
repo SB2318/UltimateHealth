@@ -11,12 +11,11 @@ import PurposeSection from "@/components/home/PurposeSection";
 import WhatWeDoSection from "@/components/home/WhatWeDoSection";
 import ChainReactionStoryboard from "@/components/home/ChainReactionStoryboard";
 import PortalSwitcherCTA from "@/components/home/PortalSwitcherCTA";
-import OnboardingModalWeb from "@/components/home/OnboardingModalWeb";
 
 /**
  * Revamped Vice-Styled Creative Landing Page:
  * 1. Site Header & Nav
- * 2. Vice Hero (Cinematic Cyberpunk HUD, Orbitron Tagline, Start Tour CTA, Live Stats)
+ * 2. Vice Hero (Cinematic Cyberpunk HUD, Orbitron Tagline, Start CTA, Live Stats)
  * 3. What Our Purpose Is (Respect Giver Manifesto & Core Pillars)
  * 4. What We Do (Knowledge Engine: Library, Glossary, AI Assistant, Doctor Suite)
  * 5. The Chain Reaction Storyboard (01 Discover -> 02 Engage -> 03 Contribute -> 04 Transform)
@@ -43,8 +42,6 @@ export default function Home() {
       <ScrollToTop />
       <ScrollReveal />
       <DnaCursor />
-      {/* Onboarding tour modal – auto-shows once per session, re-openable via floating pill or 'T' key */}
-      <OnboardingModalWeb />
     </main>
   );
 }

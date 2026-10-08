@@ -43,7 +43,7 @@
     "articles": "Članci",
     "glossary": "Rječnik",
     "joinUs": "Pridruži se",
-    "startTour": "Započni Tour"
+    "startTour": "Istražite platformu"
   },
   "hero": {
     "badge": "Otvoreni Kod · Vođeno Zajednicom · Uvijek Besplatno",
@@ -53,7 +53,7 @@
     "headlineAnd": "i",
     "headlineDignity": "Dostojanstvu",
     "subtitle": "Jer ne možete izliječiti osobu koju ne poštujete. Otvoreno medicinsko znanje, rječnik i AI podrška — na vašem jeziku.",
-    "startTour": "Započni Tour",
+    "startTour": "Istražite platformu",
     "readArticles": "Čitaj Članke",
     "androidApp": "Android Aplikacija",
     "statArticles": "Članci",
@@ -126,5 +126,49 @@
     "portal3Title": "Doprinesite na GitHubu",
     "portal3Desc": "Pomozite u izgradnji otvorenih zdravstvenih alata na GitHubu.",
     "portal3Action": "Pridruži se na GitHubu"
+  },
+  "glossary": {
+    "sectionBadge": "Medicinski Glosar",
+    "title": "Jasniji način istraživanja zdravstvenih pojmova",
+    "description": "Pregledajte sažete definicije, istražite povezane koncepte i pretražujte po medicinskom pojmu, kategoriji ili ključnoj riječi.",
+    "searchPlaceholder": "Pretraži medicinske pojmove...",
+    "categoryAll": "Sve",
+    "showingCount": "Prikazuje se",
+    "terms": "pojmova",
+    "noResultsTitle": "Nije pronađen nijedan pojam za",
+    "noResults": "Nisu pronađeni pojmovi u glosaru.",
+    "relatedTerms": "Povezani Pojmovi"
+  },
+  "contribute": {
+    "sectionBadge": "Open Source Suradnja",
+    "title": "Pridružite se i doprinesite projektu UltimateHealth",
+    "subtitle": "Pomozite u izgradnji, prevođenju i poboljšanju otvorenih zdravstvenih resursa za zajednice diljem svijeta.",
+    "startContributing": "Započni Doprinos",
+    "viewRepo": "Pogledaj GitHub Spremište",
+    "meetContributors": "Upoznajte naše suradnike",
+    "waysTitle": "Načini Doprinosa",
+    "waysSubtitle": "Svaki doprinos — pisanje koda, prevođenje medicinskih pojmova ili testiranje — iznimno je vrijedan.",
+    "wayCode": "Razvoj Softvera",
+    "wayCodeItems": "React, Next.js, React Native, TypeScript, API-ji",
+    "wayDoc": "Medicinsko Pisanje i Prijevod",
+    "wayDocItems": "Zdravstveni članci, regionalni prijevodi, rječnik",
+    "wayDesign": "Dizajn Sučelja i Pristupačnost",
+    "wayDesignItems": "Dizajn sučelja, mobilni raspored, pristupačnost",
+    "wayTesting": "Testiranje i Kontrola Kvalitete",
+    "wayTestingItems": "Prijavi greške, testiraj nove funkcionalnosti",
+    "gssocBadge": "GSSoC 2026",
+    "gssocTitle": "GirlScript Summer of Code 2026",
+    "gssocDesc": "UltimateHealth sudjeluje u open-source programima poput GSSoC-a, dobrodošli su svi stupnjevi iskustva.",
+    "communityTitle": "Zajednica i Podrška",
+    "communitySubtitle": "Uključite se putem GitHub-a ili kontaktirajte tim izravno.",
+    "githubIssuesTitle": "GitHub Zadaci (Issues)",
+    "githubIssuesDesc": "Pronađite zadatke prilagođene početnicima ili prijavite greške.",
+    "openIssues": "Pregledaj Otvorene Zadatke",
+    "guideTitle": "Vodič za Doprinos",
+    "guideDesc": "Pročitajte naš korak-po-korak vodič za postavljanje i Git radni tijek.",
+    "readGuide": "Pročitaj Vodič",
+    "emailTitle": "Izravna Podrška",
+    "emailDesc": "Kontaktirajte tim izravno s pitanjima ili prijedlozima.",
+    "sendEmail": "Pošalji E-poštu"
   }
 }

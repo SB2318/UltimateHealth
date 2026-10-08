@@ -1,30 +1,31 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { glossaryEntries } from "./glossary-data";
 
+/* ── Dark-themed category badge colors ── */
 const BADGE_STYLES: Record<string, { bg: string; color: string }> = {
-  "Blood Health":        { bg: "#fff1f2", color: "#e11d48" },
-  "Cardiovascular Health": { bg: "#fef2f2", color: "#dc2626" },
-  "Respiratory Health":  { bg: "#eff6ff", color: "#2563eb" },
-  "Digestive Health":    { bg: "#fffbeb", color: "#d97706" },
-  "Metabolic Health":    { bg: "#fff7ed", color: "#ea580c" },
-  "Mental Health":       { bg: "#f5f3ff", color: "#7c3aed" },
-  "Neurological Health": { bg: "#faf5ff", color: "#9333ea" },
-  "Immune Health":       { bg: "#f0fdf4", color: "#16a34a" },
-  "Bone & Joint Health": { bg: "#fefce8", color: "#ca8a04" },
-  "Skin Health":         { bg: "#fdf2f8", color: "#db2777" },
-  "Liver Health":        { bg: "#f7fee7", color: "#65a30d" },
-  "Urinary Health":      { bg: "#ecfeff", color: "#0891b2" },
-  "Nutrition":           { bg: "#f0fdfa", color: "#0d9488" },
-  "Sleep Health":        { bg: "#eef2ff", color: "#4f46e5" },
-  "Preventive Health":   { bg: "#ecfdf5", color: "#059669" },
-  "Diagnostic Testing":  { bg: "#f8fafc", color: "#475569" },
-  "Infectious Diseases": { bg: "#fef2f2", color: "#b91c1c" },
-  "Oncology":            { bg: "#fdf4ff", color: "#a21caf" },
+  "Blood Health":          { bg: "rgba(225,29,72,0.12)", color: "#fb7185" },
+  "Cardiovascular Health": { bg: "rgba(220,38,38,0.12)", color: "#f87171" },
+  "Respiratory Health":    { bg: "rgba(37,99,235,0.12)", color: "#60a5fa" },
+  "Digestive Health":      { bg: "rgba(217,119,6,0.12)", color: "#fbbf24" },
+  "Metabolic Health":      { bg: "rgba(234,88,12,0.12)", color: "#fb923c" },
+  "Mental Health":         { bg: "rgba(124,58,237,0.12)", color: "#a78bfa" },
+  "Neurological Health":   { bg: "rgba(147,51,234,0.12)", color: "#c084fc" },
+  "Immune Health":         { bg: "rgba(22,163,74,0.12)",  color: "#4ade80" },
+  "Bone & Joint Health":   { bg: "rgba(202,138,4,0.12)",  color: "#facc15" },
+  "Skin Health":           { bg: "rgba(219,39,119,0.12)", color: "#f472b6" },
+  "Liver Health":          { bg: "rgba(101,163,13,0.12)", color: "#a3e635" },
+  "Urinary Health":        { bg: "rgba(8,145,178,0.12)",  color: "#22d3ee" },
+  "Nutrition":             { bg: "rgba(13,148,136,0.12)", color: "#2dd4bf" },
+  "Sleep Health":          { bg: "rgba(79,70,229,0.12)",  color: "#818cf8" },
+  "Preventive Health":     { bg: "rgba(5,150,105,0.12)",  color: "#34d399" },
+  "Diagnostic Testing":    { bg: "rgba(71,85,105,0.12)",  color: "#94a3b8" },
+  "Infectious Diseases":   { bg: "rgba(185,28,28,0.12)",  color: "#fca5a5" },
+  "Oncology":              { bg: "rgba(162,28,175,0.12)", color: "#e879f9" },
 };
-
-const DEFAULT_BADGE = { bg: "#f1f5f9", color: "#475569" };
+const DEFAULT_BADGE = { bg: "rgba(71,85,105,0.12)", color: "#94a3b8" };
 
 function RelatedTermButton({ term, onClick }: { term: string; onClick: () => void }) {
   return (
@@ -32,7 +33,27 @@ function RelatedTermButton({ term, onClick }: { term: string; onClick: () => voi
       type="button"
       onClick={onClick}
       aria-label={`View related term: ${term}`}
-      className="text-xs font-medium text-slate-600 bg-slate-50 border border-slate-200 rounded-md px-2 py-0.5 cursor-pointer transition-colors hover:bg-slate-200 hover:border-slate-300"
+      style={{
+        fontSize: "11px",
+        fontWeight: 600,
+        color: "#94a3b8",
+        background: "rgba(37,37,56,0.6)",
+        border: "1px solid #2e2e50",
+        borderRadius: "8px",
+        padding: "3px 10px",
+        cursor: "pointer",
+        transition: "all 0.15s ease",
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.background = "#2e2e50";
+        (e.currentTarget as HTMLElement).style.borderColor = "#3e3e60";
+        (e.currentTarget as HTMLElement).style.color = "#e2e8f0";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.background = "rgba(37,37,56,0.6)";
+        (e.currentTarget as HTMLElement).style.borderColor = "#2e2e50";
+        (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+      }}
     >
       {term}
     </button>
@@ -43,10 +64,12 @@ function RelatedTermsList({
   currentTerm,
   relatedTerms,
   onTermClick,
+  label,
 }: {
   currentTerm: string;
   relatedTerms?: string[];
   onTermClick: (term: string) => void;
+  label: string;
 }) {
   const filteredRelated = useMemo(() => {
     return Array.from(new Set(relatedTerms || [])).filter(
@@ -57,17 +80,22 @@ function RelatedTermsList({
   if (filteredRelated.length === 0) return null;
 
   return (
-    <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid #f1f5f9" }}>
-      <div style={{ fontSize: "10px", fontWeight: 700, color: "#94a3b8", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
-        Related Terms
+    <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid #252538" }}>
+      <div
+        style={{
+          fontSize: "10px",
+          fontWeight: 700,
+          color: "#64748b",
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
+          marginBottom: "8px",
+        }}
+      >
+        {label}
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
         {filteredRelated.map((term) => (
-          <RelatedTermButton
-            key={term}
-            term={term}
-            onClick={() => onTermClick(term)}
-          />
+          <RelatedTermButton key={term} term={term} onClick={() => onTermClick(term)} />
         ))}
       </div>
     </div>
@@ -75,6 +103,7 @@ function RelatedTermsList({
 }
 
 export default function MedicalGlossaryExplorer() {
+  const t = useTranslations("glossary");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -86,7 +115,9 @@ export default function MedicalGlossaryExplorer() {
   const filteredEntries = useMemo(() => {
     const q = searchQuery.toLowerCase();
     return glossaryEntries.filter((entry) => {
-      const matchesSearch = entry.term.toLowerCase().includes(q);
+      const matchesSearch =
+        entry.term.toLowerCase().includes(q) ||
+        entry.definition.toLowerCase().includes(q);
       const matchesCategory =
         selectedCategory === "All" || entry.category === selectedCategory;
       return matchesSearch && matchesCategory;
@@ -94,17 +125,16 @@ export default function MedicalGlossaryExplorer() {
   }, [searchQuery, selectedCategory]);
 
   return (
-    /* isolation wrapper — prevents global h2/p/section styles from bleeding in */
-    <div style={{ all: "revert", fontFamily: "inherit" }} className="w-full">
+    <div className="w-full">
       <div className="w-full flex flex-col items-stretch gap-8">
 
         {/* ── Search & Filter Panel ── */}
         <div
           style={{
-            background: "#ffffff",
-            border: "1px solid #e2e8f0",
+            background: "#13131f",
+            border: "1px solid #252538",
             borderRadius: "16px",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+            boxShadow: "0 2px 16px rgba(0,0,0,0.25)",
             padding: "16px",
             display: "flex",
             gap: "12px",
@@ -114,17 +144,51 @@ export default function MedicalGlossaryExplorer() {
           {/* Search */}
           <div style={{ flex: 1, minWidth: "240px", position: "relative" }}>
             <svg
-              style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "#94a3b8", width: 18, height: 18, pointerEvents: "none" }}
-              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+              style={{
+                position: "absolute",
+                left: 14,
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "#64748b",
+                width: 18,
+                height: 18,
+                pointerEvents: "none",
+              }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
             </svg>
             <input
               type="text"
-              placeholder="Search medical terms..."
+              placeholder={t("searchPlaceholder")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-12 pl-11 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 outline-none transition-all focus:border-indigo-400 focus:ring-4 focus:ring-indigo-400/15"
+              style={{
+                width: "100%",
+                height: "48px",
+                paddingLeft: "44px",
+                paddingRight: "16px",
+                borderRadius: "12px",
+                border: "1px solid #252538",
+                background: "#0c0c14",
+                fontSize: "14px",
+                color: "#e2e8f0",
+                outline: "none",
+                transition: "border-color 0.2s ease",
+              }}
+              onFocus={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "#7c3aed";
+              }}
+              onBlur={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "#252538";
+              }}
             />
           </div>
 
@@ -133,15 +197,49 @@ export default function MedicalGlossaryExplorer() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full h-12 pl-4 pr-10 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 outline-none appearance-none cursor-pointer transition-colors hover:border-slate-300 focus:border-indigo-400"
+              style={{
+                width: "100%",
+                height: "48px",
+                paddingLeft: "16px",
+                paddingRight: "40px",
+                borderRadius: "12px",
+                border: "1px solid #252538",
+                background: "#0c0c14",
+                fontSize: "14px",
+                color: "#e2e8f0",
+                outline: "none",
+                appearance: "none",
+                cursor: "pointer",
+                transition: "border-color 0.2s ease",
+              }}
+              onFocus={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "#7c3aed";
+              }}
+              onBlur={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "#252538";
+              }}
             >
               {categories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat} value={cat} style={{ background: "#13131f", color: "#e2e8f0" }}>
+                  {cat === "All" ? t("categoryAll") : cat}
+                </option>
               ))}
             </select>
             <svg
-              style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "#94a3b8", width: 16, height: 16, pointerEvents: "none" }}
-              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+              style={{
+                position: "absolute",
+                right: 12,
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "#64748b",
+                width: 16,
+                height: 16,
+                pointerEvents: "none",
+              }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
@@ -150,21 +248,45 @@ export default function MedicalGlossaryExplorer() {
 
         {/* ── Count Bar ── */}
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div style={{ flex: 1, height: 1, background: "#e2e8f0" }} />
-          <span style={{ fontSize: "13px", fontWeight: 600, color: "#94a3b8", whiteSpace: "nowrap" }}>
-            Showing&nbsp;
-            <span style={{ color: "#475569" }}>{filteredEntries.length}</span>
-            &nbsp;terms
+          <div style={{ flex: 1, height: 1, background: "#252538" }} />
+          <span
+            style={{
+              fontSize: "13px",
+              fontWeight: 600,
+              color: "#64748b",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {t("showingCount")}&nbsp;
+            <span style={{ color: "#a78bfa" }}>{filteredEntries.length}</span>
+            &nbsp;{t("terms")}
           </span>
-          <div style={{ flex: 1, height: 1, background: "#e2e8f0" }} />
+          <div style={{ flex: 1, height: 1, background: "#252538" }} />
         </div>
 
         {/* ── Grid ── */}
         {filteredEntries.length === 0 ? (
-          <div style={{ background: "#fff", border: "1.5px dashed #e2e8f0", borderRadius: "16px", padding: "64px 32px", textAlign: "center" }}>
+          <div
+            style={{
+              background: "#13131f",
+              border: "1.5px dashed #252538",
+              borderRadius: "16px",
+              padding: "64px 32px",
+              textAlign: "center",
+            }}
+          >
             <div style={{ fontSize: "40px", marginBottom: "12px" }}>🔍</div>
-            <p style={{ fontSize: "16px", fontWeight: 700, color: "#334155", margin: 0 }}>
-              {searchQuery ? `No glossary terms found matching "${searchQuery}".` : "No glossary terms found."}
+            <p
+              style={{
+                fontSize: "16px",
+                fontWeight: 700,
+                color: "#94a3b8",
+                margin: 0,
+              }}
+            >
+              {searchQuery
+                ? `${t("noResultsTitle")} "${searchQuery}".`
+                : t("noResults")}
             </p>
           </div>
         ) : (
@@ -181,35 +303,87 @@ export default function MedicalGlossaryExplorer() {
               return (
                 <div
                   key={`${entry.term}-${i}`}
-                  className="group relative flex flex-col bg-white border border-slate-200 rounded-2xl p-6 shadow-sm overflow-hidden transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_8px_28px_rgba(79,70,229,0.12)] hover:border-indigo-200 cursor-default"
+                  style={{
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
+                    background: "#13131f",
+                    border: "1px solid #252538",
+                    borderRadius: "16px",
+                    padding: "24px",
+                    overflow: "hidden",
+                    transition: "all 0.2s ease",
+                    cursor: "default",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "#7c3aed";
+                    (e.currentTarget as HTMLElement).style.background = "#181828";
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
+                    (e.currentTarget as HTMLElement).style.boxShadow =
+                      "0 8px 28px rgba(124,58,237,0.15)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "#252538";
+                    (e.currentTarget as HTMLElement).style.background = "#13131f";
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                  }}
                 >
                   {/* Top accent bar */}
-                  <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: "linear-gradient(90deg, #818cf8, #a78bfa, #f472b6)", opacity: 0.7, borderRadius: "16px 16px 0 0" }} />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: "3px",
+                      background: "linear-gradient(90deg, #7c3aed, #a78bfa, #f0006a)",
+                      opacity: 0.6,
+                      borderRadius: "16px 16px 0 0",
+                    }}
+                  />
 
                   {/* Category Badge */}
                   <div style={{ marginBottom: "14px", marginTop: "4px" }}>
-                    <span style={{
-                      display: "inline-block",
-                      background: badge.bg,
-                      color: badge.color,
-                      fontSize: "10px",
-                      fontWeight: 800,
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase",
-                      padding: "4px 10px",
-                      borderRadius: "8px",
-                    }}>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        background: badge.bg,
+                        color: badge.color,
+                        fontSize: "10px",
+                        fontWeight: 800,
+                        letterSpacing: "0.1em",
+                        textTransform: "uppercase",
+                        padding: "4px 10px",
+                        borderRadius: "8px",
+                      }}
+                    >
                       {entry.category}
                     </span>
                   </div>
 
                   {/* Term */}
-                  <div style={{ fontSize: "17px", fontWeight: 700, color: "#1e293b", lineHeight: 1.35, marginBottom: "10px" }}>
+                  <div
+                    style={{
+                      fontSize: "17px",
+                      fontWeight: 700,
+                      color: "#f1f5f9",
+                      lineHeight: 1.35,
+                      marginBottom: "10px",
+                    }}
+                  >
                     {entry.term}
                   </div>
 
                   {/* Definition */}
-                  <div style={{ fontSize: "13.5px", color: "#64748b", lineHeight: 1.65, flex: 1 }}>
+                  <div
+                    style={{
+                      fontSize: "13.5px",
+                      color: "#94a3b8",
+                      lineHeight: 1.65,
+                      flex: 1,
+                    }}
+                  >
                     {entry.definition}
                   </div>
 
@@ -217,6 +391,7 @@ export default function MedicalGlossaryExplorer() {
                   <RelatedTermsList
                     currentTerm={entry.term}
                     relatedTerms={entry.relatedTerms}
+                    label={t("relatedTerms")}
                     onTermClick={(term) => {
                       setSearchQuery(term);
                       setSelectedCategory("All");
