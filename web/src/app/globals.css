@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Permanent+Marker&family=Press+Start+2P&display=swap');
 /* Unified global stylesheet compiled on Next.js setup */
 @import "tailwindcss";
 /* Design tokens + shadcn base layer. Imported here (instead of separately from
@@ -12,6 +13,18 @@
   --container-padding-sm: 1.5rem;
   --container-padding-lg: 2rem;
   --container-padding-xl: 3rem;
+  --color-vice-pink: #ff007f;
+  --color-vice-magenta: #ff0055;
+  --color-vice-cyan: #00f0ff;
+  --color-vice-purple: #9d00ff;
+  --color-vice-yellow: #ffea00;
+  --color-vice-orange: #ff5500;
+  --color-vice-dark: #0b0b12;
+  --color-vice-card: #141424;
+  --color-vice-border: #262640;
+  --color-vice-neonGreen: #39ff14;
+  --font-vice: "Orbitron", "Rajdhani", sans-serif;
+  --font-stencil: "Impact", sans-serif;
 }
 
 html { scroll-behavior: smooth; }
@@ -79,12 +92,71 @@ html { scroll-behavior: smooth; }
   to   { opacity: 1; transform: translateX(0); }
 }
 
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 8px rgba(255,0,127,0.8)); }
+  50%       { opacity: 0.7; filter: drop-shadow(0 0 15px rgba(0,240,255,0.9)); }
+}
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+@keyframes neonFlicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0; }
+}
+@keyframes floatBounce {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33%       { transform: translateY(-12px) rotate(1deg); }
+  66%       { transform: translateY(-6px) rotate(-1deg); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes borderGlow {
+  0%, 100% { border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+  50%       { border-color: rgba(255, 0, 127, 0.4); box-shadow: 0 0 20px rgba(255, 0, 127, 0.3); }
+}
+
+/* =============================================================
+   GLOBAL VICE DARK UTILITIES
+   ============================================================= */
+.vice-scanline {
+  pointer-events: none;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,240,255,0.35) 50%, transparent 100%);
+  animation: scanline 8s linear infinite;
+  z-index: 5;
+}
+.vice-pulse-glow { animation: pulseGlow 2s infinite ease-in-out; }
+.vice-flicker    { animation: neonFlicker 4s infinite step-end; }
+.vice-float      { animation: floatBounce 6s ease-in-out infinite; }
+
+/* Vice neon text gradient helper */
+.vice-text-gradient {
+  background: linear-gradient(135deg, #00f0ff 0%, #ff007f 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.vice-text-shimmer {
+  background: linear-gradient(90deg, #00f0ff, #ff007f, #ffea00, #00f0ff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
 /* =============================================================
    LANDING PAGE SCOPED STYLES
    ============================================================= */
 
 * {
   margin: 0;
+
   padding: 0;
   box-sizing: border-box;
 }
@@ -115,10 +187,10 @@ html { scroll-behavior: smooth; }
     linear-gradient(160deg, #f8f7ff 0%, #f3f0ff 40%, #fdf4ff 70%, #f8f7ff 100%);
 }
 
-/* ── Light-mode page background ── */
-html:not(.dark) body {
-  background: var(--page-bg-mesh);
-  background-attachment: fixed;
+/* ── Global Dark Vice Background ── */
+body {
+  background: #0b0b12 !important;
+  color: #f8fafc !important;
 }
 
 .container {
@@ -299,14 +371,19 @@ body.touch-device .dna-cursor-canvas {
 .header {
   position: fixed;
   top: 0; left: 0; right: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(11, 11, 18, 0.92) !important;
+  backdrop-filter: blur(14px);
+  padding: 14px 0;
+  border-bottom: 1px solid #262640 !important;
   z-index: 1000;
   transition: var(--transition);
 }
-.header.scrolled { box-shadow: var(--shadow-md); padding: 12px 0; }
+.header.scrolled {
+  background: rgba(11, 11, 18, 0.98) !important;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.4) !important;
+  padding: 10px 0;
+}
 
 .nav { display: flex; justify-content: space-between; align-items: center; }
 
@@ -320,13 +397,21 @@ body.touch-device .dna-cursor-canvas {
   gap: 12px;
   font-size: 1.5rem;
   font-weight: 800;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* Do NOT apply gradient text globally — child spans control their own color */
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  color: #ffffff;
   text-decoration: none;
   transition: var(--transition);
   white-space: nowrap;
   flex-shrink: 0;
+}
+/* Child spans explicitly control their own fill */
+.logo span {
+  -webkit-text-fill-color: inherit;
+  background: none;
+  -webkit-background-clip: unset;
 }
 .logo:hover { transform: translateY(-2px); }
 .logo-icon {
@@ -366,11 +451,15 @@ html.dark .logo:hover .logo-icon {
 }
 .nav-links a {
   text-decoration: none;
-  color: var(--text-dark);
+  color: #94a3b8 !important;
   font-weight: 600;
   font-size: 0.95rem;
   position: relative;
   transition: var(--transition);
+}
+.nav-links a:hover,
+.nav-links a.active {
+  color: #00f0ff !important;
 }
 
 .nav-link-item {
@@ -380,18 +469,18 @@ html.dark .logo:hover .logo-icon {
   justify-content: center;
   text-align: center;
   gap: 4px;
-  min-width: 100px;
+  min-width: 90px;
   padding: 4px 0;
 }
 
 .nav-item-icon {
   font-size: 1.05rem;
-  color: #667eea; /* primary indigo — consistent with brand */
+  color: #00f0ff !important;
   line-height: 1;
   transition: all 0.2s ease;
 }
 html.dark .nav-item-icon {
-  color: #818cf8; /* indigo-400 — readable on dark bg */
+  color: #00f0ff !important;
 }
 
 .nav-item-text {
@@ -492,26 +581,29 @@ html.dark .nav-item-icon {
   flex-direction: column;
   gap: 16px;
   padding: 20px 24px;
-  background: white;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(11, 11, 18, 0.98);
+  border-top: 1px solid #262640;
   position: absolute;
   top: 100%; left: 0; right: 0;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+  backdrop-filter: blur(20px);
 }
 .mobile-nav.open { display: flex; }
 .mobile-nav a {
   text-decoration: none;
-  color: var(--text-dark);
+  color: #94a3b8;
   font-weight: 600;
   font-size: 1rem;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(38,38,64,0.6);
+  transition: color 0.2s ease;
 }
+.mobile-nav a:hover { color: #00f0ff; }
 
 /* Mirrors the desktop highlight so the current page is obvious in the drawer. */
 .mobile-nav a.active {
-  color: var(--primary);
-  box-shadow: inset 3px 0 0 0 var(--primary);
+  color: #00f0ff;
+  box-shadow: inset 3px 0 0 0 #00f0ff;
   padding-left: 12px;
 }
 
@@ -1533,7 +1625,8 @@ section#contact.contact-section > .container > p.center {
 
 /* ==================== FOOTER ==================== */
 footer {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  background: #0b0b12;
+  border-top: 1px solid #262640;
   color: #94a3b8;
   padding: 64px 0 0;
   text-align: left;
@@ -1977,10 +2070,10 @@ footer {
 
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-inter);
-  letter-spacing: -0.02em;
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+  letter-spacing: -0.01em;
   margin: 0;
-  color: var(--text-dark);
+  color: #ffffff;
 }
 
 h1 {
@@ -3160,34 +3253,40 @@ html.dark .dark-input { color: #f1f5f9; }
 html.dark .dark-input::placeholder { color: #475569; }
 
 html.dark .nav-links a {
-  color: #f1f5f9;
+  color: #94a3b8;
 }
 
 html.dark .nav-links a:hover {
-  color: #a78bfa;
+  color: #00f0ff !important;
 }
 
 /* Needs to outrank `html.dark .nav-links a` above, which would otherwise
    repaint the active entry with the default light-on-dark colour. */
 html.dark .nav-links a.active,
 html.dark .mobile-nav a.active {
-  color: #a78bfa;
+  color: #00f0ff;
 }
 
 html.dark .mobile-nav a.active {
-  box-shadow: inset 3px 0 0 0 #a78bfa;
+  box-shadow: inset 3px 0 0 0 #00f0ff;
 }
 
 html.dark .nav-links a:focus-visible,
 html.dark .mobile-nav a:focus-visible,
 html.dark .mobile-menu-toggle:focus-visible {
-  outline-color: #a78bfa;
+  outline-color: #00f0ff;
 }
 
+/* FIX: Do NOT restore the gradient text-fill hack on the logo in dark mode */
 html.dark .logo {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: unset !important;
+  color: #ffffff !important;
+}
+html.dark .logo span {
+  -webkit-text-fill-color: inherit;
+  background: none;
 }
 
 html.dark .mobile-menu-toggle {
@@ -3195,14 +3294,80 @@ html.dark .mobile-menu-toggle {
 }
 
 html.dark .nav-item-icon {
-  color: #D4AF37;
+  color: #00f0ff !important;
 }
 
 html.dark .glow-toggle-btn {
   color: #94a3b8;
 }
-/* Fix nav button visibility in both modes */
-.nav-btn-sm {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  color: white !important;
+
+/* =====================================================================
+   VICE DARK MASTER OVERRIDE — ensures full dark mode for ALL sections
+   ===================================================================== */
+/* Program Cards → Vice dark */
+.program-card {
+  background: #141424 !important;
+  border-color: rgba(38,38,64,0.8) !important;
+  color: #ffffff !important;
 }
+.program-card:hover {
+  border-color: rgba(0,240,255,0.4) !important;
+  box-shadow: 0 0 20px rgba(0,240,255,0.15) !important;
+}
+.program-card h3 { color: #ffffff !important; }
+.program-card p  { color: #94a3b8 !important; }
+
+/* Contact section → Vice dark */
+section#contact.contact-section {
+  background: #0b0b12 !important;
+  border-top: 1px solid #262640;
+}
+section#contact.contact-section h2 {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  color: #ffffff !important;
+}
+section#contact.contact-section > div > p.center,
+section#contact.contact-section p.center {
+  -webkit-text-fill-color: #94a3b8 !important;
+  color: #94a3b8 !important;
+}
+
+/* Screenshot gallery → Vice dark */
+.screenshot-gallery-section {
+  background: #0b0b12 !important;
+}
+
+/* Section base → all sections dark */
+section {
+  background: #0b0b12;
+}
+
+/* Global h2 color guarantee */
+h2 { color: #ffffff !important; }
+h3 { color: #ffffff !important; }
+
+/* Nav btn Vice styling */
+.nav-btn-sm {
+  background: rgba(20,20,36,0.9) !important;
+  border: 1px solid rgba(0,240,255,0.4) !important;
+  color: #00f0ff !important;
+  padding: 6px 14px !important;
+  border-radius: 12px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+.nav-btn-sm:hover {
+  border-color: rgba(255,0,127,0.5) !important;
+  color: #ff007f !important;
+  box-shadow: 0 0 15px rgba(0,240,255,0.2) !important;
+}
+

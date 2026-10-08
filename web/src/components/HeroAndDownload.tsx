@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import TestFlightCta from "@/components/home/TestFlightCta";
+import StartTourHeroBtn from "@/components/home/StartTourHeroBtn";
 import { withBasePath } from "@/lib/basePath";
 
 const activityItems = [
@@ -68,21 +69,33 @@ export default function HeroAndDownload() {
         <div className="container">
           <div className="uh-hero-inner">
             <div className="uh-hero-left scroll-reveal-left">
-              <div className="uh-hero-badge">
-                <span className="uh-badge-dot" />
-                Open Source Health Platform
+              <div className="uh-hero-badge" style={{ borderColor: 'rgba(0, 240, 255, 0.5)', color: '#00f0ff', background: 'rgba(0, 240, 255, 0.08)' }}>
+                <span className="uh-badge-dot" style={{ backgroundColor: '#00f0ff' }} />
+                RESPECT GIVER // OPEN SOURCE HEALTH PLATFORM
               </div>
 
               <h1 className="uh-hero-title">
-                Collaborative Health Knowledge Through <em>Open Source</em>
+                Health in Body, Mind &amp; <em style={{ background: 'linear-gradient(135deg, #00f0ff, #ff007f)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Dignity</em>
               </h1>
 
               <p className="uh-hero-subtitle">
-                UltimateHealth lets people publish health knowledge in their own language,
-                review community content, and share podcasts with the world.
+                Because you cannot heal a person you do not respect. A global open-source health intelligence ecosystem offering verified medical knowledge, interactive glossary, and AI wellness guidance in your language.
               </p>
 
-              <div className="uh-hero-buttons">
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '24px' }}>
+                <span style={{ fontSize: '10px', fontFamily: 'monospace', fontWeight: 800, padding: '3px 10px', borderRadius: '6px', background: 'rgba(0,240,255,0.1)', color: '#00f0ff', border: '1px solid rgba(0,240,255,0.3)' }}>
+                  ● CORE: ACTIVE
+                </span>
+                <span style={{ fontSize: '10px', fontFamily: 'monospace', fontWeight: 800, padding: '3px 10px', borderRadius: '6px', background: 'rgba(255,0,127,0.1)', color: '#ff007f', border: '1px solid rgba(255,0,127,0.3)' }}>
+                  ● RESPECT PROTOCOL: ONLINE
+                </span>
+                <span style={{ fontSize: '10px', fontFamily: 'monospace', fontWeight: 800, padding: '3px 10px', borderRadius: '6px', background: 'rgba(255,234,0,0.1)', color: '#ffea00', border: '1px solid rgba(255,234,0,0.3)' }}>
+                  ● 100% OPEN SOURCE
+                </span>
+              </div>
+
+              <div className="uh-hero-buttons" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
+                <StartTourHeroBtn />
                 <a
                   href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
                   target="_blank"

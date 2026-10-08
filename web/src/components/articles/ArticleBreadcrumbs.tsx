@@ -35,7 +35,7 @@ export default function ArticleBreadcrumbs({
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href={withBasePath("/")}>Home</Link>
+              <Link href="/">Home</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
 
@@ -43,7 +43,7 @@ export default function ArticleBreadcrumbs({
 
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href={withBasePath("/articles")}>Articles</Link>
+              <Link href="/articles">Articles</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
 
@@ -51,7 +51,7 @@ export default function ArticleBreadcrumbs({
 
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href={categoryHref ?? withBasePath("/articles")}>
+              <Link href={categoryHref ?? "/articles"}>
                 {category}
               </Link>
             </BreadcrumbLink>

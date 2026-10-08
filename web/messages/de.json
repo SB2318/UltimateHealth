@@ -1,10 +1,10 @@
 {
-   "cookie": {
+  "cookie": {
     "message": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern.",
     "accept": "Alle akzeptieren",
     "decline": "Ablehnen",
     "learnMore": "Mehr erfahren"
-},
+  },
   "Login": {
     "heading": "Anmeldung erforderlich",
     "description": "Bitte melden Sie sich an, um mit der Kontolöschung fortzufahren.",
@@ -36,7 +36,95 @@
     "description": "Beim Laden dieser Seite ist ein unerwarteter Fehler aufgetreten. Unser Team wurde bereits informiert. Bitte versuche es erneut.",
     "tryAgain": "Erneut versuchen",
     "goHome": "Zur Startseite"
+  },
+  "nav": {
+    "purpose": "Unser Ziel",
+    "whatWeDo": "Was wir tun",
+    "articles": "Artikel",
+    "glossary": "Glossar",
+    "joinUs": "Mitmachen",
+    "startTour": "Tour starten"
+  },
+  "hero": {
+    "badge": "Open Source · Community-Getrieben · Dauerhaft Kostenlos",
+    "headlineHealthIn": "Gesundheit für",
+    "headlineBody": "Körper",
+    "headlineMind": "Geist",
+    "headlineAnd": "&",
+    "headlineDignity": "Würde",
+    "subtitle": "Denn man kann niemanden heilen, den man nicht respektiert. Offenes medizinisches Wissen, Glossar und KI-Unterstützung — in Ihrer Sprache.",
+    "startTour": "Tour starten",
+    "readArticles": "Artikel lesen",
+    "androidApp": "Android-App",
+    "statArticles": "Artikel",
+    "statLanguages": "Sprachen",
+    "statFree": "Kostenlos & Offen",
+    "statAi": "KI-Beratung"
+  },
+  "purpose": {
+    "sectionBadge": "Unser Zweck",
+    "title": "Was unser Ziel ist",
+    "description": "UltimateHealth steht für Gesundheit im ganzheitlichen Sinne — Körper, Geist und Würde.",
+    "moumitaBadge": "Inspiration",
+    "moumitaDept": "Pneumologie · R.G. Kar Medical College",
+    "moumitaQuote": "Gesundheitsversorgung beginnt damit, den ganzen Menschen zu sehen — Körper, Geist und Würde.",
+    "readVision": "Ihr Lebenswerk & Vision lesen",
+    "pillar1Title": "Empathie zuerst",
+    "pillar1Body": "Jeder Mensch verdient gesundheitliche Aufklärung und Begleitung mit uneingeschränkter Würde.",
+    "pillar2Title": "Universeller Zugang",
+    "pillar2Body": "Gesundheitswissen sollte niemals hinter Bezahlschranken oder Sprachbarrieren verborgen sein. Wir teilen Leitfäden in 7+ Sprachen.",
+    "pillar3Title": "Positive Wirkung",
+    "pillar3Body": "Mit Würde behandelte Menschen tragen diesen Respekt weiter und stärken Gemeinschaften."
+  },
+  "whatWeDo": {
+    "sectionBadge": "Funktionen",
+    "title": "Was wir bieten",
+    "description": "Von Artikeln und medizinischen Begriffen bis hin zu freiwilligen ärztlichen Reviews und KI-Unterstützung.",
+    "item1Title": "Gesundheitsartikel",
+    "item1Tag": "100+ Artikel",
+    "item1Desc": "Leitfäden für Gesundheit und Wohlbefinden in mehreren Sprachen, für jeden frei zugänglich.",
+    "item1Action": "Artikel lesen",
+    "item2Title": "Medizinisches Glossar",
+    "item2Tag": "Verständliche Begriffe",
+    "item2Desc": "Klare Erklärungen komplexer klinischer Fachbegriffe mit Sofortsuche und Tooltips.",
+    "item2Action": "Glossar durchsuchen",
+    "item3Title": "KI-Gesundheitsassistent",
+    "item3Tag": "Alltägliche Beratung",
+    "item3Desc": "Stellen Sie alltägliche Gesundheitsfragen für nicht-diagnostische Orientierung und Tipps.",
+    "item3Action": "In der App",
+    "item4Title": "Ärztliche Prüfung",
+    "item4Tag": "Klinische Beratung",
+    "item4Desc": "Freiwillige Ärzte überprüfen öffentliche Inhalte zur Qualitätssicherung.",
+    "item4Action": "Ärzte-Bereich"
+  },
+  "storyboard": {
+    "sectionBadge": "Die Phasen",
+    "title": "Die Kettenreaktion",
+    "description": "Respekt und Würde schaffen eine nachhaltige Bewegung für globale Gesundheitsbildung.",
+    "step1Title": "Wissen entdecken",
+    "step1Desc": "Lesen Sie Gesundheitsartikel und Definitionen in Ihrer Sprache ohne Bezahlschranken.",
+    "step2Title": "KI fragen & Podcasts hören",
+    "step2Desc": "Nutzen Sie den KI-Assistenten und hören Sie Community-Podcasts.",
+    "step3Title": "Auf GitHub mitwirken",
+    "step3Desc": "Schließen Sie sich Entwicklern, Studenten und Übersetzern auf GitHub an.",
+    "step4Title": "Würde verbreiten",
+    "step4Desc": "Respektvoller Umgang fördert ein gesundes Miteinander."
+  },
+  "portals": {
+    "sectionBadge": "Loslegen",
+    "title": "Wählen Sie Ihren Bereich",
+    "description": "Finden Sie Gesundheitswissen, engagieren Sie sich als Arzt oder entwickeln Sie auf GitHub.",
+    "portal1Badge": "Patienten-Hub",
+    "portal1Title": "Artikel & Glossar",
+    "portal1Desc": "Artikel lesen, medizinische Begriffe suchen oder den KI-Assistenten befragen.",
+    "portal1Action": "Artikel entdecken",
+    "portal2Badge": "Ärzte-Suite",
+    "portal2Title": "Freiwillige Beratung",
+    "portal2Desc": "Einladung an Mediziner zur Überprüfung von Inhalten und Unterstützung.",
+    "portal2Action": "Ärzte-Suite",
+    "portal3Badge": "Open Source",
+    "portal3Title": "Auf GitHub beitragen",
+    "portal3Desc": "Bauen Sie offene Gesundheitswerkzeuge mit unserer weltweiten Community.",
+    "portal3Action": "Auf GitHub mitmachen"
   }
- 
 }
-

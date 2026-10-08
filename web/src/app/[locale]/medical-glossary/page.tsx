@@ -13,8 +13,9 @@ export const metadata: Metadata = {
 
 export default function MedicalGlossaryPage() {
   return (
-    <main className="min-h-screen bg-[linear-gradient(180deg,#f8fafc_0%,#ecfdf5_55%,#f8fafc_100%)] text-slate-950 pt-20">
+    <>
       <Navbar />
+      <main className="min-h-screen bg-[linear-gradient(180deg,#f8fafc_0%,#ecfdf5_55%,#f8fafc_100%)] text-slate-950">
 
       <section className="pt-32 pb-8 text-center">
         <PageWrapper className="flex flex-col items-center justify-center">
@@ -37,5 +38,6 @@ export default function MedicalGlossaryPage() {
         </div>
       </div>
     </main>
+    </>
   );
 }

@@ -1,15 +1,15 @@
 {
   "cookie": {
-    "message": "Utilizamos cookies para mejorar su experiencia en nuestro sitio.",
-    "accept": "Aceptar todo",
+    "message": "Utilizamos cookies para mejorar su experiencia en nuestro sitio web.",
+    "accept": "Aceptar todas",
     "decline": "Rechazar",
     "learnMore": "Más información"
-},
+  },
   "Login": {
     "heading": "Inicio de sesión requerido",
-    "description": "Inicia sesión para continuar con la eliminación de la cuenta.",
+    "description": "Inicie sesión para continuar con la eliminación de la cuenta.",
     "emailLabel": "Correo electrónico",
-    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "emailPlaceholder": "Ingrese su correo electrónico",
     "passwordLabel": "Contraseña",
     "passwordPlaceholder": "Contraseña",
     "processingTitle": "Procesando",
@@ -17,7 +17,7 @@
     "successTitle": "Inicio de sesión exitoso",
     "successDescription": "Redirigiendo a la eliminación de la cuenta.",
     "failedTitle": "Error al iniciar sesión",
-    "failedDefaultDescription": "Verifica tus datos e inténtalo de nuevo.",
+    "failedDefaultDescription": "Por favor verifique sus datos e intente nuevamente.",
     "serverErrorTitle": "Error del servidor",
     "submitButton": "Iniciar sesión",
     "submitButtonLoading": "Iniciando sesión..."
@@ -25,18 +25,106 @@
   "NotFound": {
     "title": "Página no encontrada",
     "heading": "404",
-    "description": "Parece que la página que buscas se ha perdido. Te ayudamos a volver al buen camino de la información de salud.",
+    "description": "La página que busca no existe. Le ayudamos a encontrar el camino de regreso.",
     "goHome": "Ir al inicio",
-    "browseArticles": "Ver artículos",
+    "browseArticles": "Explorar artículos",
     "medicalGlossary": "Glosario médico"
   },
   "ErrorPage": {
     "title": "Algo salió mal",
     "heading": "¡Ups!",
-    "description": "Ocurrió un error inesperado al cargar esta página. No te preocupes, nuestro equipo ya fue notificado. Por favor, inténtalo de nuevo.",
+    "description": "Ocurrió un error inesperado al cargar esta página. Por favor intente de nuevo.",
     "tryAgain": "Intentar de nuevo",
     "goHome": "Ir al inicio"
+  },
+  "nav": {
+    "purpose": "Nuestro Propósito",
+    "whatWeDo": "Qué Hacemos",
+    "articles": "Artículos",
+    "glossary": "Glosario",
+    "joinUs": "Únete",
+    "startTour": "Iniciar Tour"
+  },
+  "hero": {
+    "badge": "Código Abierto · Impulsado por la Comunidad · Gratis Siempre",
+    "headlineHealthIn": "Salud en",
+    "headlineBody": "Cuerpo",
+    "headlineMind": "Mente",
+    "headlineAnd": "y",
+    "headlineDignity": "Dignidad",
+    "subtitle": "Porque no puedes curar a quien no respetas. Conocimiento médico abierto, glosario y guía de IA — en tu idioma.",
+    "startTour": "Iniciar Tour",
+    "readArticles": "Leer Artículos",
+    "androidApp": "App Android",
+    "statArticles": "Artículos",
+    "statLanguages": "Idiomas",
+    "statFree": "Gratis y Abierto",
+    "statAi": "Guía de IA"
+  },
+  "purpose": {
+    "sectionBadge": "Nuestro Propósito",
+    "title": "Cuál es Nuestro Propósito",
+    "description": "UltimateHealth defiende la salud en su sentido pleno: cuerpo, mente y dignidad.",
+    "moumitaBadge": "Inspiración",
+    "moumitaDept": "Neumología · R.G. Kar Medical College",
+    "moumitaQuote": "La atención médica comienza viendo al ser humano completo: cuerpo, mente y dignidad.",
+    "readVision": "Leer su obra de vida y visión",
+    "pillar1Title": "Empatía Primero",
+    "pillar1Body": "Cada persona merece información y orientación médica con absoluta dignidad.",
+    "pillar2Title": "Acceso Universal",
+    "pillar2Body": "El conocimiento de salud nunca debe estar restringido por muros de pago o barreras lingüísticas.",
+    "pillar3Title": "Efecto Multiplicador",
+    "pillar3Body": "Una persona tratada con dignidad transmite ese respeto y fortalece a su comunidad."
+  },
+  "whatWeDo": {
+    "sectionBadge": "Capacidades",
+    "title": "Qué Hacemos",
+    "description": "Desde artículos de salud comunitaria y términos clínicos hasta revisión médica voluntaria y asistencia con IA.",
+    "item1Title": "Biblioteca de Artículos",
+    "item1Tag": "100+ Artículos",
+    "item1Desc": "Guías de salud comunitaria en múltiples idiomas accesibles sin costo.",
+    "item1Action": "Ver artículos",
+    "item2Title": "Glosario Médico",
+    "item2Tag": "Definiciones Claras",
+    "item2Desc": "Explicaciones sencillas de términos médicos con búsqueda rápida.",
+    "item2Action": "Buscar glosario",
+    "item3Title": "Asistente de Salud IA",
+    "item3Tag": "Orientación de Bienestar",
+    "item3Desc": "Haga preguntas cotidianas de salud para orientación no diagnóstica.",
+    "item3Action": "En la app",
+    "item4Title": "Revisión Médica Voluntaria",
+    "item4Tag": "Asesoría Clínica",
+    "item4Desc": "Médicos voluntarios revisan el contenido público para mantener la precisión.",
+    "item4Action": "Suite Médica"
+  },
+  "storyboard": {
+    "sectionBadge": "El Proceso",
+    "title": "La Reacción en Cadena",
+    "description": "El respeto mutuo genera una comunidad de salud empoderada y solidaria.",
+    "step1Title": "Descubrir Guías",
+    "step1Desc": "Lea artículos de salud y definiciones en su idioma sin barreras.",
+    "step2Title": "Preguntar a IA y Podcasts",
+    "step2Desc": "Consulte al asistente de IA y escuche podcasts comunitarios.",
+    "step3Title": "Contribuir en GitHub",
+    "step3Desc": "Únase a desarrolladores y traductores en GitHub.",
+    "step4Title": "Promover la Dignidad",
+    "step4Desc": "El respeto genera bienestar continuo en la sociedad."
+  },
+  "portals": {
+    "sectionBadge": "Comenzar",
+    "title": "Elija su Espacio",
+    "description": "Ya sea para consultar salud, asesorar como médico o programar en GitHub.",
+    "portal1Badge": "Hub de Salud",
+    "portal1Title": "Artículos y Glosario",
+    "portal1Desc": "Explore artículos, consulte el glosario o pregunte a la IA.",
+    "portal1Action": "Ver Artículos",
+    "portal2Badge": "Suite Médica",
+    "portal2Title": "Asesoría Voluntaria",
+    "portal2Desc": "Espacio para que médicos y estudiantes revisen contenidos.",
+    "portal2Action": "Suite Médica",
+    "portal3Badge": "Código Abierto",
+    "portal3Title": "Colaborar en GitHub",
+    "portal3Desc": "Ayude a construir herramientas de salud abiertas en GitHub.",
+    "portal3Action": "Unirse en GitHub"
   }
-  
 }
-

@@ -4,7 +4,7 @@
     "accept": "Accept All",
     "decline": "Decline",
     "learnMore": "Learn More"
-},
+  },
   "Login": {
     "heading": "Login Required",
     "description": "Please log in to continue to account deletion.",
@@ -36,8 +36,95 @@
     "description": "We hit an unexpected error while loading this page. Don't worry, our team has been notified. Please try again.",
     "tryAgain": "Try Again",
     "goHome": "Go Home"
+  },
+  "nav": {
+    "purpose": "Our Purpose",
+    "whatWeDo": "What We Do",
+    "articles": "Articles",
+    "glossary": "Glossary",
+    "joinUs": "Join Us",
+    "startTour": "Start Tour"
+  },
+  "hero": {
+    "badge": "Open Source · Community-Driven · Free Forever",
+    "headlineHealthIn": "Health in",
+    "headlineBody": "Body",
+    "headlineMind": "Mind",
+    "headlineAnd": "&",
+    "headlineDignity": "Dignity",
+    "subtitle": "Because you cannot heal a person you do not respect. Open-source medical knowledge, interactive glossary, and AI guidance — in your language.",
+    "startTour": "Start Tour",
+    "readArticles": "Read Articles",
+    "androidApp": "Android App",
+    "statArticles": "Articles",
+    "statLanguages": "Languages",
+    "statFree": "Free & Open",
+    "statAi": "AI Guidance"
+  },
+  "purpose": {
+    "sectionBadge": "Our Purpose",
+    "title": "What Our Purpose Is",
+    "description": "UltimateHealth stands for health in its fullest sense — body, mind, and dignity. Because you cannot heal a person you do not respect.",
+    "moumitaBadge": "Inspiration",
+    "moumitaDept": "Chest Medicine · R.G. Kar Medical College",
+    "moumitaQuote": "Healthcare begins with seeing the whole human being — body, mind, and dignity. True care requires uncompromised dedication and genuine human respect.",
+    "readVision": "Read Her Life Work & Vision",
+    "pillar1Title": "Empathy First",
+    "pillar1Body": "Every person deserves health insights and guidance delivered with uncompromised dignity. Healthcare begins with seeing the whole human being.",
+    "pillar2Title": "Universal Access",
+    "pillar2Body": "Health and wellness knowledge should never be gated behind subscriptions, paywalls, or language barriers. We share educational health guides across 7+ Indian and global languages for free.",
+    "pillar3Title": "Ripple Effect",
+    "pillar3Body": "A person treated with genuine dignity carries it forward. Every act of respect starts a chain reaction, supporting communities from the inside out."
+  },
+  "whatWeDo": {
+    "sectionBadge": "Capabilities",
+    "title": "What We Do",
+    "description": "From community health articles and plain-language medical terms to voluntary doctor review and AI guidance — built for real human utility.",
+    "item1Title": "Health Article Library",
+    "item1Tag": "100+ Articles",
+    "item1Desc": "Community-reviewed health and wellness guides translated across multiple languages, accessible to everyone without paywalls.",
+    "item1Action": "Browse articles",
+    "item2Title": "Medical Glossary",
+    "item2Tag": "Plain-Language Definitions",
+    "item2Desc": "Clear explanations for complex clinical terms, with instant search and in-line tooltips while reading articles.",
+    "item2Action": "Search glossary",
+    "item3Title": "AI Health Assistant",
+    "item3Tag": "Triage & Wellness Guidance",
+    "item3Desc": "Ask everyday health and wellness questions for non-diagnostic guidance, self-care suggestions, and triage recommendations.",
+    "item3Action": "Available in app",
+    "item4Title": "Volunteer Doctor Review",
+    "item4Tag": "Clinical Advisory",
+    "item4Desc": "Volunteering doctors review public health content and sign moderation protocols to help maintain medical accuracy.",
+    "item4Action": "Doctor suite"
+  },
+  "storyboard": {
+    "sectionBadge": "The Storyboard",
+    "title": "The Chain Reaction",
+    "description": "A person who is truly respected rarely needs to take it from another. When one person is treated with dignity, they pass it on to the next.",
+    "step1Title": "Explore Health Guides",
+    "step1Desc": "Browse community health articles and clinical definitions in your language without paywalls or tracking.",
+    "step2Title": "Ask AI & Listen to Podcasts",
+    "step2Desc": "Ask the AI assistant for general wellness guidance and listen to community-recorded health podcasts.",
+    "step3Title": "Contribute on GitHub",
+    "step3Desc": "Join students, developers, and translators building open-source health resources on GitHub.",
+    "step4Title": "Promote Empathy & Dignity",
+    "step4Desc": "When people are treated with respect, they carry it forward — creating a supportive cycle in health awareness."
+  },
+  "portals": {
+    "sectionBadge": "Get Started",
+    "title": "Choose Your Space",
+    "description": "Whether you are seeking reliable health advice, contributing clinical expertise, or building tools on GitHub — find your space below.",
+    "portal1Badge": "Health Hub",
+    "portal1Title": "Articles & Glossary",
+    "portal1Desc": "Browse community health articles, look up terms in the medical glossary, or ask general questions using the AI assistant.",
+    "portal1Action": "Explore Articles",
+    "portal2Badge": "Doctor Suite",
+    "portal2Title": "Volunteer Clinical Advisory",
+    "portal2Desc": "An open invitation for doctors and medical trainees to volunteer, review community-submitted health content, and sign the Moderator Agreement.",
+    "portal2Action": "Doctor Suite",
+    "portal3Badge": "Open Source",
+    "portal3Title": "Contribute on GitHub",
+    "portal3Desc": "Help build open-source health tools. Developers, translators, writers, and UI/UX designers are welcome to collaborate on GitHub.",
+    "portal3Action": "Join on GitHub"
   }
-  
 }
-
-

@@ -42,19 +42,19 @@ export default async function NotFound() {
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
               <Link
-                href={withBasePath("/")}
+                href="/"
                 className="text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-full hover:opacity-90 hover:scale-105 transition-all shadow-lg shadow-purple-500/30 !px-2 !py-[5px]"
               >
                 {t("goHome")}
               </Link>
               <Link
-                href={withBasePath("/articles")}
+                href="/articles"
                 className="text-sm font-semibold text-[#667eea] dark:text-indigo-300 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full hover:bg-slate-50 dark:hover:bg-white/20 transition-colors !px-2 !py-[5px]"
               >
                 {t("browseArticles")}
               </Link>
               <Link
-                href={withBasePath("/medical-glossary")}
+                href="/medical-glossary"
                 className="text-sm font-semibold text-[#667eea] dark:text-indigo-300 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full hover:bg-slate-50 dark:hover:bg-white/20 transition-colors !px-2 !py-[5px]"
               >
                 {t("medicalGlossary")}

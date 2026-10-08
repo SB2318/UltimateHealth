@@ -71,7 +71,7 @@ interface RelatedArticleCardProps {
 function RelatedArticleCard({ article }: RelatedArticleCardProps) {
   const formattedDate = format(parseISO(article.publishedAt), "MMM d, yyyy");
   const icon = getCategoryIcon(article.category);
-  const articleUrl = withBasePath(`/articles/${article.id}`);
+  const articleUrl = `/articles/${article.id}`;
 
   return (
     <article className="relative group flex flex-col bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-sm hover:-translate-y-1 transition-all duration-300 focus-within:ring-2 focus-within:ring-[#667eea]">

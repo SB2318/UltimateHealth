@@ -49,13 +49,13 @@ export default function SiteFooter() {
 
         <div className="footer-links-col">
           <h3>Quick Links</h3>
-          <Link href={withBasePath("/")}>Home</Link>
+          <Link href="/">Home</Link>
           <a href="#features">Features</a>
           <a href="#programs">Programs</a>
           <a href="#screenshots">Screenshots</a>
           <a href="#contact">Contact</a>
-          <Link href={withBasePath("/articles")}>Health Articles</Link>
-          <Link href={withBasePath("/contribute")}>Join Us &amp; Contribute</Link>
+          <Link href="/articles">Health Articles</Link>
+          <Link href="/contribute">Join Us &amp; Contribute</Link>
         </div>
 
         <div className="footer-links-col">

@@ -1,41 +1,130 @@
 {
   "cookie": {
-    "message": "Koristimo kolačiće kako bismo poboljšali vaše iskustvo na našoj stranici.",
+    "message": "Koristimo kolačiće kako bismo poboljšali vaše iskustvo pregledavanja.",
     "accept": "Prihvati sve",
     "decline": "Odbij",
-    "learnMore": "Saznaj više"
-},
+    "learnMore": "Saznajte više"
+  },
   "Login": {
     "heading": "Potrebna prijava",
-    "description": "Prijavite se za nastavak brisanja računa.",
+    "description": "Prijavite se kako biste nastavili s brisanjem računa.",
     "emailLabel": "E-pošta",
     "emailPlaceholder": "Unesite svoju e-poštu",
     "passwordLabel": "Lozinka",
     "passwordPlaceholder": "Lozinka",
-    "processingTitle": "Obrada u tijeku",
+    "processingTitle": "Obrada",
     "processingDescription": "Prijava u tijeku.",
     "successTitle": "Prijava uspješna",
     "successDescription": "Preusmjeravanje na brisanje računa.",
     "failedTitle": "Prijava neuspješna",
-    "failedDefaultDescription": "Provjerite svoje podatke i pokušajte ponovno.",
-    "serverErrorTitle": "Greška poslužitelja",
+    "failedDefaultDescription": "Provjerite podatke i pokušajte ponovno.",
+    "serverErrorTitle": "Pogreška poslužitelja",
     "submitButton": "Prijava",
     "submitButtonLoading": "Prijava u tijeku..."
   },
   "NotFound": {
     "title": "Stranica nije pronađena",
     "heading": "404",
-    "description": "Čini se da je stranica koju tražite nestala. Pomoći ćemo vam pronaći put natrag do korisnih zdravstvenih informacija.",
-    "goHome": "Idi na početnu",
+    "description": "Stranica koju tražite ne postoji. Pomoći ćemo vam pronaći put natrag.",
+    "goHome": "Početna",
     "browseArticles": "Pregledaj članke",
-    "medicalGlossary": "Medicinski pojmovnik"
+    "medicalGlossary": "Medicinski rječnik"
   },
   "ErrorPage": {
     "title": "Nešto je pošlo po zlu",
     "heading": "Ups!",
-    "description": "Došlo je do neočekivane pogreške prilikom učitavanja ove stranice. Ne brinite, naš tim je obaviješten. Pokušajte ponovno.",
+    "description": "Došlo je do neočekivane pogreške pri učitavanju ove stranice.",
     "tryAgain": "Pokušaj ponovno",
-    "goHome": "Idi na početnu"
+    "goHome": "Početna"
+  },
+  "nav": {
+    "purpose": "Naša Svrha",
+    "whatWeDo": "Što Radimo",
+    "articles": "Članci",
+    "glossary": "Rječnik",
+    "joinUs": "Pridruži se",
+    "startTour": "Započni Tour"
+  },
+  "hero": {
+    "badge": "Otvoreni Kod · Vođeno Zajednicom · Uvijek Besplatno",
+    "headlineHealthIn": "Zdravlje u",
+    "headlineBody": "Tijelu",
+    "headlineMind": "Umu",
+    "headlineAnd": "i",
+    "headlineDignity": "Dostojanstvu",
+    "subtitle": "Jer ne možete izliječiti osobu koju ne poštujete. Otvoreno medicinsko znanje, rječnik i AI podrška — na vašem jeziku.",
+    "startTour": "Započni Tour",
+    "readArticles": "Čitaj Članke",
+    "androidApp": "Android Aplikacija",
+    "statArticles": "Članci",
+    "statLanguages": "Jezici",
+    "statFree": "Besplatno & Otvoreno",
+    "statAi": "AI Podrška"
+  },
+  "purpose": {
+    "sectionBadge": "Naša Svrha",
+    "title": "Koja je Naša Svrha",
+    "description": "UltimateHealth se zalaže za zdravlje u cjelokupnom smislu: tijelo, um i dostojanstvo.",
+    "moumitaBadge": "Inspiracija",
+    "moumitaDept": "Pulmologija · R.G. Kar Medical College",
+    "moumitaQuote": "Zdravstvena skrb započinje sagledavanjem cjelokupnog ljudskog bića: tijela, uma i dostojanstva.",
+    "readVision": "Pročitajte njezin rad i viziju",
+    "pillar1Title": "Empatija na prvom mjestu",
+    "pillar1Body": "Svatko zaslužuje zdravstvene informacije i vodstvo uz potpuno dostojanstvo.",
+    "pillar2Title": "Univerzalni pristup",
+    "pillar2Body": "Zdravstveno znanje nikada ne bi smjelo biti skriveno iza pretplata ili jezičnih barijera.",
+    "pillar3Title": "Pozitivan utjecaj",
+    "pillar3Body": "Poštovanje stvara zdravije i povezanije društvo."
+  },
+  "whatWeDo": {
+    "sectionBadge": "Mogućnosti",
+    "title": "Što Radimo",
+    "description": "Od članaka zajednice i jednostavnih medicinskih pojmova do dobrovoljnih liječničkih pregleda i AI pomoći.",
+    "item1Title": "Baza Članaka",
+    "item1Tag": "100+ Članaka",
+    "item1Desc": "Vodiči za zdravlje na više jezika dostupni svima besplatno.",
+    "item1Action": "Pregledaj članke",
+    "item2Title": "Medicinski Rječnik",
+    "item2Tag": "Jednostavni Pojmovi",
+    "item2Desc": "Jasna objašnjenja složenih medicinskih pojmova uz brzu pretragu.",
+    "item2Action": "Pretraži rječnik",
+    "item3Title": "AI Zdravstveni Asistent",
+    "item3Tag": "Savjeti za zdravlje",
+    "item3Desc": "Postavite svakodnevna zdravstvena pitanja za ne-dijagnostičko usmjeravanje.",
+    "item3Action": "U aplikaciji",
+    "item4Title": "Dobrovoljni Pregled Liječnika",
+    "item4Tag": "Kliničko Savjetovanje",
+    "item4Desc": "Liječnici volonteri pregledavaju javni sadržaj radi točnosti.",
+    "item4Action": "Liječnički Suite"
+  },
+  "storyboard": {
+    "sectionBadge": "Faze",
+    "title": "Lančana Reakcija",
+    "description": "Uzajamno poštovanje stvara osnaženu i zdravu zajednicu.",
+    "step1Title": "Otkrijte Vodiče",
+    "step1Desc": "Čitajte zdravstvene članke na svom jeziku besplatno.",
+    "step2Title": "Pitajte AI & Slušajte Podcaste",
+    "step2Desc": "Pitajte AI asistenta i slušajte podcaste zajednice.",
+    "step3Title": "Doprinesite na GitHubu",
+    "step3Desc": "Pridružite se programerima i prevoditeljima na GitHubu.",
+    "step4Title": "Širite Dostojanstvo",
+    "step4Desc": "Dostojanstvo stvara pozitivne promjene u zdravstvu."
+  },
+  "portals": {
+    "sectionBadge": "Započni",
+    "title": "Odaberite Svoj Prostor",
+    "description": "Bilo da tražite savjete, želite pomoći kao liječnik ili graditi na GitHubu.",
+    "portal1Badge": "Korisnički Hub",
+    "portal1Title": "Članci i Rječnik",
+    "portal1Desc": "Pregledajte članke, pretražite rječnik ili pitajte AI.",
+    "portal1Action": "Pregledaj Članke",
+    "portal2Badge": "Liječnički Suite",
+    "portal2Title": "Dobrovoljno Savjetovanje",
+    "portal2Desc": "Otvoreni prostor za liječnike i studente medicine.",
+    "portal2Action": "Liječnički Suite",
+    "portal3Badge": "Otvoreni Kod",
+    "portal3Title": "Doprinesite na GitHubu",
+    "portal3Desc": "Pomozite u izgradnji otvorenih zdravstvenih alata na GitHubu.",
+    "portal3Action": "Pridruži se na GitHubu"
   }
 }
-

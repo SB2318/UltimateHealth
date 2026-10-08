@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
 
-import { PageWrapper, Section } from "@/components/layout";
+import { PageWrapper } from "@/components/layout";
 
 const userScreenshots = [
   { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
@@ -217,10 +217,54 @@ export default function ScreenshotGallery() {
 
   return (
     <>
-      <Section id="screenshots">
+      <section
+        id="screenshots"
+        style={{
+          background: "#0c0c14",
+          borderTop: "1px solid #252538",
+          padding: "96px 24px",
+        }}
+      >
         <PageWrapper>
-          <h2>App Experience</h2>
-          <p className="center">A closer look at what UltimateHealth offers, screen by screen</p>
+          {/* Section header */}
+          <div style={{ maxWidth: "640px", marginBottom: "48px" }}>
+            <p
+              style={{
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: "#00e5ff",
+                fontFamily: "monospace",
+                marginBottom: "12px",
+              }}
+            >
+              Screenshots
+            </p>
+            <h2
+              style={{
+                fontSize: "clamp(1.75rem, 4vw, 2.25rem)",
+                fontWeight: 800,
+                lineHeight: 1.15,
+                letterSpacing: "-0.025em",
+                color: "#f1f5f9",
+                margin: "0 0 16px 0",
+                fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
+              }}
+            >
+              App Experience
+            </h2>
+            <p
+              style={{
+                fontSize: "1rem",
+                lineHeight: 1.65,
+                color: "#64748b",
+                margin: 0,
+              }}
+            >
+              A closer look at what UltimateHealth offers, screen by screen.
+            </p>
+          </div>
 
           <div className="screenshot-details">
             <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
@@ -298,7 +342,7 @@ export default function ScreenshotGallery() {
             )}
           </div>
         </PageWrapper>
-      </Section>
+      </section>
 
       {screenshotModal && (
         <div className="screenshot-modal active" onClick={closeScreenshotModal}>

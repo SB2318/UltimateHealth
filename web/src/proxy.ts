@@ -31,25 +31,10 @@ export default function proxy(request: NextRequest) {
 
   const csp = cspDirectives.join("; ");
 
-  const intlResponse = intlMiddleware(request);
+  request.headers.set("x-nonce", nonce);
+  request.headers.set("Content-Security-Policy", csp);
 
-  if (intlResponse.headers.get("location")) {
-    applySecurityHeaders(intlResponse, csp, nonce);
-    return intlResponse;
-  }
-
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-nonce", nonce);
-  requestHeaders.set("Content-Security-Policy", csp);
-
-  const response = NextResponse.next({
-    request: { headers: requestHeaders },
-  });
-
-  intlResponse.headers.forEach((value, key) => {
-    response.headers.set(key, value);
-  });
-
+  const response = intlMiddleware(request);
   applySecurityHeaders(response, csp, nonce);
   return response;
 }
@@ -78,6 +63,8 @@ function applySecurityHeaders(
 
 export const config = {
   matcher: [
+    '/',
+    '/(en|hi|bn|ta|or|de|es|fr|hr)/:path*',
     {
       source: "/((?!api|_next/static|_next/image|favicon\\.ico|.*\\..*).*)",
       missing: [

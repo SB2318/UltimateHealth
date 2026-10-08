@@ -1,4 +1,4 @@
-import { PageWrapper, Section } from "@/components/layout";
+import { PageWrapper } from "@/components/layout";
 
 import ContactForm from "./ContactForm";
 
@@ -8,12 +8,53 @@ import ContactForm from "./ContactForm";
  */
 export default function ContactSection() {
   return (
-    <Section className="contact-section scroll-reveal" id="contact">
+    <section
+      id="contact"
+      style={{
+        background: "#0c0c14",
+        borderTop: "1px solid #252538",
+        padding: "96px 24px",
+      }}
+    >
       <PageWrapper>
-        <h2>Connect With Us</h2>
-        <p className="center" style={{ marginBottom: 56 }}>
-          Have questions or want to collaborate? We&apos;d love to hear from you.
-        </p>
+        <div style={{ maxWidth: "640px", marginBottom: "48px" }}>
+          <p
+            style={{
+              fontSize: "0.75rem",
+              fontWeight: 700,
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: "#00e5ff",
+              fontFamily: "monospace",
+              marginBottom: "12px",
+            }}
+          >
+            Contact
+          </p>
+          <h2
+            style={{
+              fontSize: "clamp(1.75rem, 4vw, 2.25rem)",
+              fontWeight: 800,
+              lineHeight: 1.15,
+              letterSpacing: "-0.025em",
+              color: "#f1f5f9",
+              margin: "0 0 16px 0",
+              fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
+            }}
+          >
+            Connect With Us
+          </h2>
+          <p
+            style={{
+              fontSize: "1rem",
+              lineHeight: 1.65,
+              color: "#64748b",
+              margin: 0,
+            }}
+          >
+            Have questions or want to collaborate? We&apos;d love to hear from you.
+          </p>
+        </div>
 
         <div className="contact-dark-card">
           <div className="contact-dark-left">
@@ -77,6 +118,6 @@ export default function ContactSection() {
           </div>
         </div>
       </PageWrapper>
-    </Section>
+    </section>
   );
 }

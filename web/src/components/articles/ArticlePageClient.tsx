@@ -61,7 +61,7 @@ export default function ArticlePageClient({
           <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between gap-4">
             {/* Back link */}
             <Link
-              href={withBasePath("/articles")}
+              href="/articles"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-[#667eea] hover:text-[#5568d3] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#667eea] rounded-full px-3 py-2 border border-gray-200 shrink-0"
             >
               <i className="fas fa-arrow-left text-xs" aria-hidden="true" />
@@ -199,7 +199,7 @@ function ArticleFooter({ article }: { article: Article }) {
             {article.tags.map((tag) => (
               <Link
                 key={tag}
-                href={withBasePath(`/articles?tag=${encodeURIComponent(tag)}`)}
+                href={`/articles?tag=${encodeURIComponent(tag)}`}
                 className="text-sm text-[#667eea] bg-[#667eea]/8 border border-[#667eea]/20 px-4 py-1.5 rounded-full hover:bg-[#667eea]/15 transition-colors font-medium"
               >
                 #{tag}
@@ -212,7 +212,7 @@ function ArticleFooter({ article }: { article: Article }) {
       {/* Back link */}
       <div className="mt-10 flex justify-center">
         <Link
-          href={withBasePath("/articles")}
+          href="/articles"
           className="inline-flex items-center gap-2 text-sm font-semibold text-[#667eea] hover:text-[#5568d3] transition-colors border border-[#667eea]/30 rounded-full px-6 py-2.5 hover:bg-[#667eea]/5"
         >
           <i className="fas fa-arrow-left text-xs" aria-hidden="true" />
@@ -231,7 +231,7 @@ function ArticlePageFooter() {
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
         <div className="flex items-center gap-2">
           <Link
-            href={withBasePath("/")}
+            href="/"
             className="font-bold text-white hover:text-[#667eea] transition-colors"
           >
             UltimateHealth
@@ -240,19 +240,19 @@ function ArticlePageFooter() {
         </div>
         <div className="flex items-center gap-4">
           <Link
-            href={withBasePath("/medical-glossary")}
+            href="/medical-glossary"
             className="hover:text-[#94a3b8] transition-colors"
           >
             Medical Glossary
           </Link>
           <Link
-            href={withBasePath("/contribute")}
+            href="/contribute"
             className="hover:text-[#94a3b8] transition-colors"
           >
             Contribute
           </Link>
           <Link
-            href={withBasePath("/")}
+            href="/"
             className="hover:text-[#94a3b8] transition-colors"
           >
             Home
