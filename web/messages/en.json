@@ -43,7 +43,8 @@
     "articles": "Articles",
     "glossary": "Glossary",
     "joinUs": "Join Us",
-    "startTour": "Explore Platform"
+    "startTour": "Explore Platform",
+    "podcasts": "Podcasts"
   },
   "hero": {
     "badge": "Open Source · Community-Driven · Free Forever",
@@ -81,7 +82,7 @@
     "title": "What We Do",
     "description": "From community health articles and plain-language medical terms to voluntary doctor review and AI guidance — built for real human utility.",
     "item1Title": "Health Article Library",
-    "item1Tag": "100+ Articles",
+    "item1Tag": "30+ Curated Articles",
     "item1Desc": "Community-reviewed health and wellness guides translated across multiple languages, accessible to everyone without paywalls.",
     "item1Action": "Browse articles",
     "item2Title": "Medical Glossary",

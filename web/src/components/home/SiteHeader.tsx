@@ -29,12 +29,13 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isArticles = pathname.includes("/articles");
+  const isPodcasts = pathname.includes("/podcasts");
   const isGlossary = pathname.includes("/medical-glossary");
   const isContribute =
     pathname.includes("/contribute") ||
     pathname.includes("/our-contributors") ||
     pathname.includes("/contributors");
-  const isHome = !isArticles && !isGlossary && !isContribute;
+  const isHome = !isArticles && !isPodcasts && !isGlossary && !isContribute;
 
   // ── Scroll listener ──
   useEffect(() => {
@@ -133,6 +134,16 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
             >
               <i className="fas fa-file-lines nav-item-icon" aria-hidden="true" />
               <span className="nav-item-text">{tNav("articles")}</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/podcasts"
+              className={`nav-link-item${isPodcasts ? " active" : ""}`}
+              aria-current={isPodcasts ? "page" : undefined}
+            >
+              <i className="fas fa-podcast nav-item-icon" aria-hidden="true" />
+              <span className="nav-item-text">{tNav("podcasts")}</span>
             </Link>
           </li>
           <li>
@@ -246,6 +257,9 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
         </Link>
         <Link href="/articles" onClick={() => setMobileMenuOpen(false)}>
           {tNav("articles")}
+        </Link>
+        <Link href="/podcasts" onClick={() => setMobileMenuOpen(false)}>
+          {tNav("podcasts")}
         </Link>
         <Link
           href="/medical-glossary"

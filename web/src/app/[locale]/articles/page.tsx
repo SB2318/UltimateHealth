@@ -3,13 +3,14 @@ import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { withBasePath } from "@/lib/basePath";
 import type { ApiArticle, ApiArticlesResponse } from "@/types/api-article";
-
 import { Navbar, PageWrapper, Section } from "@/components/layout";
+import { Footer } from "@/components/ui/footer";
+import { Sparkles, BookOpen } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Health Articles | UltimateHealth",
   description:
-    "Browse evidence-based health and wellness articles written by medical professionals on UltimateHealth.",
+    "Explore community-reviewed health and wellness guides inspired by Dr. Moumita Debnath's clinical research and patient dignity.",
 };
 
 interface PageProps {
@@ -20,23 +21,25 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const page = typeof params.page === "string" ? parseInt(params.page, 10) : 1;
   const limit = 9;
-  
+
   let data: ApiArticlesResponse = { articles: [], totalPages: 1, currentPage: 1 };
   let actualTotalPages = 1;
-  
+
   try {
     const res = await fetch(`https://uhsocial.in/api/articles/?page=${page}&limit=${limit}`, {
-      cache: 'no-store'
+      cache: "no-store",
     });
     if (res.ok) {
       data = await res.json();
     }
-    
+
     actualTotalPages = data.totalPages || 1;
 
     // Fallback for API bug where totalPages is missing on page > 1
     if (page > 1 && !data.totalPages) {
-      const p1Res = await fetch(`https://uhsocial.in/api/articles/?page=1&limit=${limit}`, { cache: 'no-store' });
+      const p1Res = await fetch(`https://uhsocial.in/api/articles/?page=1&limit=${limit}`, {
+        cache: "no-store",
+      });
       if (p1Res.ok) {
         const p1Data = await p1Res.json();
         actualTotalPages = p1Data.totalPages || 1;
@@ -53,218 +56,461 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#f8fafc] text-slate-900 overflow-x-hidden">
+      <main style={{ minHeight: "100vh", background: "#0c0c14", color: "#f1f5f9" }}>
+        {/* ── Hero Section ── */}
+        <section
+          style={{
+            paddingTop: "130px",
+            paddingBottom: "80px",
+            textAlign: "center",
+            borderBottom: "1px solid #252538",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Subtle Ambient Radial Glow */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: "20%",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "700px",
+              height: "400px",
+              background: "radial-gradient(ellipse, rgba(124, 58, 237, 0.16) 0%, transparent 70%)",
+              pointerEvents: "none",
+            }}
+          />
 
-      {/* ── Hero ── */}
-      <section className="relative w-full overflow-hidden bg-gradient-to-b from-[#eef2ff] to-[#f8fafc] pt-36 pb-24 px-4 flex justify-center border-b border-slate-100">
-        {/* Decorative background blobs */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full pointer-events-none opacity-60">
-          <div className="absolute top-10 left-[10%] w-64 h-64 bg-indigo-300 rounded-full mix-blend-multiply filter blur-[80px] opacity-40"></div>
-          <div className="absolute top-10 right-[10%] w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-[80px] opacity-30"></div>
-          <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20"></div>
-        </div>
-
-        <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center gap-y-6">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-indigo-100 shadow-sm backdrop-blur-md transition-transform hover:scale-105">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-indigo-500"></span>
-            </span>
-            <span className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-indigo-700">
+          <div style={{ maxWidth: "880px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
+            {/* Knowledge Hub Tag */}
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "rgba(124, 58, 237, 0.14)",
+                border: "1px solid rgba(124, 58, 237, 0.35)",
+                borderRadius: "50px",
+                padding: "6px 18px",
+                marginBottom: "20px",
+                color: "#a78bfa",
+                fontSize: "0.75rem",
+                fontWeight: 800,
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                fontFamily: "monospace",
+              }}
+            >
+              <BookOpen size={14} color="#a78bfa" />
               Health Knowledge Hub
-            </span>
-          </div>
-          
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">
-            Elevate Your <br className="hidden sm:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#667eea] to-[#764ba2]">Health Literacy</span>
-          </h1>
-          
-          <p className="text-lg sm:text-xl text-slate-600 font-medium leading-relaxed max-w-2xl mt-2">
-            Explore evidence-based articles crafted by leading medical professionals. 
-            From cardiovascular wellness to mental resilience, discover resources to support your health and well-being.
-          </p>
-        </div>
-      </section>
-
-      {/* ── Articles grid ── */}
-      <Section className="bg-white border-t border-slate-100 flex justify-center">
-        <div className="w-full max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
-          <div className="mb-16 flex items-center justify-between border-b border-slate-200 pb-6">
-            <h2 className="text-2xl font-black text-slate-900 m-0 leading-none">
-              All Articles
-            </h2>
-            <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
-              Page {currentPage} of {totalPages}
-            </span>
             </div>
 
-            {articles.length === 0 ? (
-              <div className="py-20 text-center text-slate-500">
-                No articles found.
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-                {articles.map((article) => (
-                  <ArticleCard key={article._id} article={article} />
-                ))}
-              </div>
-            )}
+            <h1
+              style={{
+                fontSize: "clamp(2.2rem, 5vw, 3.8rem)",
+                fontWeight: 800,
+                letterSpacing: "-0.025em",
+                lineHeight: 1.15,
+                color: "#f1f5f9",
+                fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
+                marginBottom: "18px",
+              }}
+            >
+              Elevate Your <br />
+              <span
+                style={{
+                  background: "linear-gradient(135deg, #00e5ff 0%, #7c3aed 50%, #f0006a 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
+                Health Literacy
+              </span>
+            </h1>
 
-            {/* ── Pagination ── */}
-            {totalPages > 1 && (
-              <div className="mt-32 pt-12 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-2">
-                {currentPage > 1 ? (
-                  <Link
-                    href={withBasePath(`/articles?page=${currentPage - 1}`)}
-                    className="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-[#667eea] transition-colors"
-                  >
-                    ← Previous
-                  </Link>
-                ) : (
-                  <span className="px-5 py-2.5 text-sm font-semibold text-slate-400 bg-slate-50 border border-slate-100 rounded-lg cursor-not-allowed">
-                    ← Previous
-                  </span>
-                )}
-                
-                <div className="flex items-center justify-center gap-2 mx-4">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                    <Link
-                      key={p}
-                      href={withBasePath(`/articles?page=${p}`)}
-                      className={`w-10 h-10 flex items-center justify-center text-sm font-bold rounded-lg transition-all ${
-                        p === currentPage
-                          ? "bg-[#667eea] text-white shadow-md scale-105"
-                          : "text-slate-600 hover:bg-slate-100 hover:scale-105"
-                      }`}
-                    >
-                      {p}
-                    </Link>
-                  ))}
-                </div>
+            <p
+              style={{
+                fontSize: "1.08rem",
+                lineHeight: 1.75,
+                color: "#94a3b8",
+                maxWidth: "680px",
+                margin: "0 auto",
+              }}
+            >
+              Explore evidence-based health and wellness resources crafted by community contributors.
+              From pulmonary wellness to mental resilience, discover insights to support your everyday well-being.
+            </p>
 
-                {currentPage < totalPages ? (
-                  <Link
-                    href={withBasePath(`/articles?page=${currentPage + 1}`)}
-                    className="px-5 py-2.5 text-sm font-semibold text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-[#667eea] transition-colors"
-                  >
-                    Next →
-                  </Link>
-                ) : (
-                  <span className="px-5 py-2.5 text-sm font-semibold text-slate-400 bg-slate-50 border border-slate-100 rounded-lg cursor-not-allowed">
-                    Next →
-                  </span>
-                )}
+            {/* ── Moumita Debnath Research Dedication & 30 Curated Articles Coming Soon Banner ── */}
+            <div
+              style={{
+                background: "#13131f",
+                border: "1px solid #252538",
+                borderRadius: "20px",
+                padding: "24px 28px",
+                maxWidth: "720px",
+                margin: "32px auto 0",
+                textAlign: "left",
+                boxShadow: "0 12px 36px rgba(0,0,0,0.35)",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px", flexWrap: "wrap" }}>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    padding: "4px 12px",
+                    borderRadius: "50px",
+                    background: "rgba(240, 0, 106, 0.16)",
+                    border: "1px solid rgba(240, 0, 106, 0.4)",
+                    color: "#f0006a",
+                    fontSize: "0.72rem",
+                    fontWeight: 800,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  <Sparkles size={12} />
+                  Coming Soon
+                </span>
+                <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#e2e8f0", letterSpacing: "0.04em" }}>
+                  30+ Curated Clinical Articles
+                </span>
               </div>
-            )}
+              <p style={{ fontSize: "0.92rem", color: "#94a3b8", lineHeight: 1.65, margin: 0 }}>
+                Inspired by <strong style={{ color: "#f1f5f9" }}>Dr. Moumita Debnath&apos;s</strong> clinical life work and pulmonary medicine training at R.G. Kar Medical College, we are curating <strong style={{ color: "#f1f5f9" }}>30 foundational health guides</strong> covering chest medicine, respiratory wellness, preventive care, and patient dignity — launching across all 9 proposed Indian and global languages.
+              </p>
+            </div>
           </div>
-        </Section>
+        </section>
 
-        {/* ── Footer ── */}
-        <footer className="border-t border-slate-100 bg-[#f8fafc] py-8 text-center text-sm text-slate-400">
-          <PageWrapper>
-            <Link href={withBasePath("/")} className="hover:text-[#667eea] transition-colors font-semibold">
-              ← Back to UltimateHealth
-            </Link>
-          </PageWrapper>
-        </footer>
+        {/* ── Articles Grid ── */}
+        <section style={{ padding: "64px 24px 100px", maxWidth: "1280px", margin: "0 auto" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderBottom: "1px solid #252538",
+              paddingBottom: "20px",
+              marginBottom: "40px",
+            }}
+          >
+            <h2
+              style={{
+                fontSize: "1.75rem",
+                fontWeight: 800,
+                color: "#f1f5f9",
+                margin: 0,
+                fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
+              }}
+            >
+              All Articles
+            </h2>
+            <span
+              style={{
+                fontSize: "0.75rem",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.1em",
+                color: "#64748b",
+              }}
+            >
+              Page {currentPage} of {totalPages}
+            </span>
+          </div>
+
+          {articles.length === 0 ? (
+            <div
+              style={{
+                background: "#13131f",
+                border: "1.5px dashed #252538",
+                borderRadius: "16px",
+                padding: "64px 32px",
+                textAlign: "center",
+                color: "#94a3b8",
+              }}
+            >
+              <div style={{ fontSize: "3rem", marginBottom: "12px" }}>📖</div>
+              <p style={{ fontSize: "1.1rem", fontWeight: 700, margin: 0, color: "#f1f5f9" }}>
+                Articles are preparing for publication.
+              </p>
+              <p style={{ fontSize: "0.9rem", color: "#64748b", marginTop: "6px" }}>
+                Check back soon or explore our Medical Glossary.
+              </p>
+            </div>
+          ) : (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+                gap: "24px",
+              }}
+            >
+              {articles.map((article) => (
+                <ArticleCard key={article._id} article={article} />
+              ))}
+            </div>
+          )}
+
+          {/* ── Pagination ── */}
+          {totalPages > 1 && (
+            <div
+              style={{
+                marginTop: "64px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                flexWrap: "wrap",
+              }}
+            >
+              {currentPage > 1 ? (
+                <Link
+                  href={withBasePath(`/articles?page=${currentPage - 1}`)}
+                  style={{
+                    padding: "10px 18px",
+                    fontSize: "0.875rem",
+                    fontWeight: 700,
+                    color: "#f1f5f9",
+                    background: "#13131f",
+                    border: "1px solid #252538",
+                    borderRadius: "10px",
+                    textDecoration: "none",
+                  }}
+                >
+                  ← Previous
+                </Link>
+              ) : (
+                <span
+                  style={{
+                    padding: "10px 18px",
+                    fontSize: "0.875rem",
+                    fontWeight: 700,
+                    color: "#475569",
+                    background: "#0c0c14",
+                    border: "1px solid #1a1a28",
+                    borderRadius: "10px",
+                    cursor: "not-allowed",
+                  }}
+                >
+                  ← Previous
+                </span>
+              )}
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <Link
+                  key={p}
+                  href={withBasePath(`/articles?page=${p}`)}
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "0.875rem",
+                    fontWeight: 700,
+                    borderRadius: "10px",
+                    textDecoration: "none",
+                    background: p === currentPage ? "#7c3aed" : "#13131f",
+                    color: p === currentPage ? "#ffffff" : "#94a3b8",
+                    border: p === currentPage ? "1px solid #a78bfa" : "1px solid #252538",
+                  }}
+                >
+                  {p}
+                </Link>
+              ))}
+
+              {currentPage < totalPages ? (
+                <Link
+                  href={withBasePath(`/articles?page=${currentPage + 1}`)}
+                  style={{
+                    padding: "10px 18px",
+                    fontSize: "0.875rem",
+                    fontWeight: 700,
+                    color: "#f1f5f9",
+                    background: "#13131f",
+                    border: "1px solid #252538",
+                    borderRadius: "10px",
+                    textDecoration: "none",
+                  }}
+                >
+                  Next →
+                </Link>
+              ) : (
+                <span
+                  style={{
+                    padding: "10px 18px",
+                    fontSize: "0.875rem",
+                    fontWeight: 700,
+                    color: "#475569",
+                    background: "#0c0c14",
+                    border: "1px solid #1a1a28",
+                    borderRadius: "10px",
+                    cursor: "not-allowed",
+                  }}
+                >
+                  Next →
+                </span>
+              )}
+            </div>
+          )}
+        </section>
+
+        <Footer />
       </main>
     </>
   );
 }
 
-
 function ArticleCard({ article }: { article: ApiArticle }) {
   const date = article.publishedDate ? format(parseISO(article.publishedDate), "MMM d, yyyy") : "Unknown date";
-  
-  // Try to use a cover image if available, else fallback to a nice gradient
+
   const rawImg = article.imageUtils && article.imageUtils.length > 0 ? article.imageUtils[0] : null;
-  const imageUrl = rawImg 
-    ? (rawImg.startsWith("http") ? rawImg : withBasePath(`/api/proxy-image?url=${encodeURIComponent(`https://uhsocial.in/api/getFile/${rawImg}`)}`))
+  const imageUrl = rawImg
+    ? rawImg.startsWith("http")
+      ? rawImg
+      : withBasePath(`/api/proxy-image?url=${encodeURIComponent(`https://uhsocial.in/api/getFile/${rawImg}`)}`)
     : null;
 
   return (
     <a
       href={withBasePath(`/articles/${article._id}`)}
-      className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-100 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1"
+      style={{
+        background: "#13131f",
+        border: "1px solid #252538",
+        borderRadius: "16px",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        textDecoration: "none",
+        transition: "border-color 0.2s ease, transform 0.2s ease",
+      }}
+      className="group hover:-translate-y-1 hover:border-[#7c3aed]"
     >
       {/* Thumbnail */}
-      <div className="relative aspect-[16/9] overflow-hidden bg-slate-100 flex items-center justify-center">
+      <div
+        style={{
+          position: "relative",
+          aspectRatio: "16/9",
+          overflow: "hidden",
+          background: "#0c0c14",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         {imageUrl ? (
           /* eslint-disable-next-line @next/next/no-img-element */
-          <img 
-            src={imageUrl} 
-            alt={`Cover image for article: ${article.title}`} 
+          <img
+            src={imageUrl}
+            alt={`Cover image for article: ${article.title}`}
             loading="lazy"
-            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[#eef2ff] to-[#e0e7ff] flex items-center justify-center">
-            <span className="text-4xl" aria-hidden="true">📋</span>
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              background: "linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(0, 229, 255, 0.1))",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "2rem",
+            }}
+          >
+            📋
           </div>
         )}
       </div>
 
       {/* Body */}
-      <div className="flex flex-col flex-1 p-6 md:p-8 items-center text-center">
+      <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
         {/* Tags */}
-        <div className="flex flex-wrap justify-center gap-2 mb-5">
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "14px" }}>
           {article.tags?.length > 0 ? (
             article.tags.map((tag) => (
-              <span 
-                key={tag._id} 
-                className="inline-flex px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#667eea] bg-[#667eea]/10 rounded-full"
+              <span
+                key={tag._id}
+                style={{
+                  display: "inline-block",
+                  padding: "3px 10px",
+                  borderRadius: "50px",
+                  fontSize: "11px",
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  background: "rgba(124, 58, 237, 0.15)",
+                  color: "#a78bfa",
+                  border: "1px solid rgba(124, 58, 237, 0.3)",
+                }}
               >
                 {tag.name}
               </span>
             ))
           ) : (
-            <span className="inline-flex px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest text-slate-500 bg-slate-100 rounded-full">
+            <span
+              style={{
+                display: "inline-block",
+                padding: "3px 10px",
+                borderRadius: "50px",
+                fontSize: "11px",
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                background: "rgba(255, 255, 255, 0.05)",
+                color: "#94a3b8",
+              }}
+            >
               General
             </span>
           )}
         </div>
 
-        <h2 className="font-extrabold text-[#1e293b] leading-snug tracking-wide line-clamp-2 mb-3 group-hover:text-[#667eea] transition-colors text-[17px] md:text-lg px-1">
+        <h3
+          style={{
+            fontSize: "1.1rem",
+            fontWeight: 800,
+            color: "#f1f5f9",
+            lineHeight: 1.35,
+            marginBottom: "10px",
+          }}
+        >
           {article.title}
-        </h2>
-        
-        <p className="text-[13px] md:text-sm text-slate-500 line-clamp-3 leading-[1.7] tracking-wide flex-1 mb-6 px-1">
+        </h3>
+
+        <p
+          style={{
+            fontSize: "0.875rem",
+            color: "#94a3b8",
+            lineHeight: 1.6,
+            flex: 1,
+            marginBottom: "20px",
+          }}
+        >
           {article.description}
         </p>
 
-        {/* Footer (Author & Meta) - Centered */}
-        <div className="flex flex-col items-center justify-center pt-6 border-t border-slate-100 mt-auto w-full gap-3">
-          <div className="flex items-center gap-3">
-            {article.authorId?.Profile_image ? (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img 
-                src={article.authorId.Profile_image} 
-                alt={`Profile picture of ${article.authorId.user_name || "Author"}`} 
-                loading="lazy"
-                className="w-10 h-10 rounded-full object-cover shadow-sm"
-              />
-            ) : (
-              <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center text-white font-bold text-sm shadow-sm">
-                {article.authorId?.user_name ? article.authorId.user_name.substring(0, 2).toUpperCase() : "U"}
-              </span>
-            )}
-            <span className="font-bold text-[15px] text-slate-700">
-              {article.authorId?.user_name || "Unknown Author"}
-            </span>
-          </div>
-          
-          <div className="flex items-center justify-center gap-3 text-xs text-slate-400 font-semibold tracking-wide">
-            <time dateTime={article.publishedDate}>{date}</time>
-            <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-            <span className="flex items-center gap-1.5">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-              {article.viewCount || 0} views
-            </span>
-          </div>
+        {/* Footer (Author & Meta) */}
+        <div
+          style={{
+            paddingTop: "16px",
+            borderTop: "1px solid #252538",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            fontSize: "0.78rem",
+            color: "#64748b",
+          }}
+        >
+          <span style={{ fontWeight: 600, color: "#cbd5e1" }}>
+            {article.authorId?.user_name || "Community Medical Contributor"}
+          </span>
+          <time dateTime={article.publishedDate}>{date}</time>
         </div>
       </div>
     </a>

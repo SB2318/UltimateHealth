@@ -6,32 +6,24 @@ import { type RefObject, useCallback, useEffect, useRef, useState } from "react"
 import { PageWrapper } from "@/components/layout";
 
 const userScreenshots = [
-  { src: "/assets/article-home-screen.jpeg", caption: "Home Screen" },
-  { src: "/assets/article-detail-screen.jpeg", caption: "Reading View" },
-  { src: "/assets/article-discussion-screen-for-user.jpeg", caption: "Article Discussion" },
-  { src: "/assets/article-writing-screen.jpeg", caption: "Writing Form" },
-  { src: "/assets/article-writing-screen-2.jpeg", caption: "Select Language" },
-  { src: "/assets/podcast-form.jpeg", caption: "Podcast Form" },
-  { src: "/assets/podcast-list-screen.jpeg", caption: "Podcast Listing" },
-  { src: "/assets/podcast-play-screen.jpeg", caption: "Podcast Player" },
-  { src: "/assets/podcast-play-screen-2.jpeg", caption: "Podcast Player" },
-  { src: "/assets/podcast-recording.jpeg", caption: "Podcast Recorder" },
-  { src: "/assets/podcast-upload.jpeg", caption: "Podcast Upload" },
-  { src: "/assets/notification-screen.jpeg", caption: "Notification" },
-  { src: "/assets/ultimate-health-about.jpeg", caption: "App Info" },
-  { src: "/assets/terms_cond_page.jpeg", caption: "Terms And Condition" },
+  { src: "/ap-asset/page-1.webp", caption: "App Welcome & Introduction" },
+  { src: "/ap-asset/page-2.webp", caption: "Community Health Articles" },
+  { src: "/ap-asset/page-3.webp", caption: "Article Detail & Reading View" },
+  { src: "/ap-asset/page-4.webp", caption: "Podcast Player & Audio Stream" },
+  { src: "/ap-asset/page-5.webp", caption: "Medical Glossary Explorer" },
+  { src: "/ap-asset/page-6.webp", caption: "User Health Dashboard" },
+  { src: "/assets/article-home-screen.jpeg", caption: "Articles Library" },
+  { src: "/assets/podcast-list-screen.jpeg", caption: "Podcast Episodes" },
 ];
 
 const adminScreenshots = [
-  { src: "/assets/admin_dashboard.jpeg", caption: "Admin Dashboard" },
-  { src: "/assets/admin_dashboard2.jpeg", caption: "Admin Dashboard Second" },
-  { src: "/assets/article_view_unassign.jpeg", caption: "Article View Unassign" },
-  { src: "/assets/article_view_unassign1.jpeg", caption: "Article View Unassign" },
-  { src: "/assets/article_view_assign.jpeg", caption: "Article View Assign" },
-  { src: "/assets/article_action.jpeg", caption: "Article Action" },
-  { src: "/assets/podcast_action.jpeg", caption: "Podcast Action" },
-  { src: "/assets/podcast_live.jpeg", caption: "Podcast Live State" },
-  { src: "/assets/admin_insights.jpeg", caption: "Admin Insights" },
+  { src: "/admin-asset/page-1.webp", caption: "Admin Clinical Overview" },
+  { src: "/admin-asset/page-2.webp", caption: "Doctor Content Moderation" },
+  { src: "/admin-asset/page-3.webp", caption: "Article Review & Approval" },
+  { src: "/admin-asset/page-4.webp", caption: "Community Health Metrics" },
+  { src: "/admin-asset/page-5.webp", caption: "Moderator Agreement Protocol" },
+  { src: "/assets/admin_dashboard.jpeg", caption: "Analytics Dashboard" },
+  { src: "/assets/admin_insights.jpeg", caption: "Healthcare Insights" },
 ];
 
 const allScreenshots = [...userScreenshots, ...adminScreenshots];
