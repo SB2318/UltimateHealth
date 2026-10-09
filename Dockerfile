@@ -1,31 +1,30 @@
-FROM node:22-alpine AS base
+FROM node:22-alpine AS builder
 
-# Install dependencies only when needed
-FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY web/package.json web/package-lock.json ./
-RUN npm ci || npm install
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
 ENV NEXT_PUBLIC_BASE_PATH=/web
-ENV NODE_OPTIONS="--max-old-space-size=2048"
-ENV NEXT_BUILD_WORKERS=1
-ENV NEXT_PRIVATE_WORKERS=1
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+
+# Install dependencies directly inside builder stage
+COPY web/package.json web/package-lock.json ./
+RUN npm ci
+
+# Copy application source code
 COPY web/ ./
-RUN rm -rf node_modules .next
-COPY --from=deps /app/node_modules ./node_modules
+
+# Run production build
 RUN npm run build
 
-# Production image, copy all the files and run next
-FROM base AS runner
+# Production runner stage
+FROM node:22-alpine AS runner
 WORKDIR /app
+
 ENV NODE_ENV=production
 ENV PORT=5000
 ENV NEXT_PUBLIC_BASE_PATH=/web
+ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
