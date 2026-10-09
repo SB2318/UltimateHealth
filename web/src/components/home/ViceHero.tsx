@@ -186,10 +186,10 @@ export default function Hero() {
           animationDelay: '0.85s',
         }}>
           {[
-            { val: '100+',  label: tHero('statArticles') },
+            { val: '30+',   label: tHero('statArticles') },
             { val: '7+',    label: tHero('statLanguages') },
             { val: '100%',  label: tHero('statFree') },
-            { val: '24/7',  label: tHero('statAi') },
+            { val: 'App/Web', label: tHero('statAi') },
           ].map(({ val, label }) => (
             <div key={label} style={{
               background: '#151b26', padding: '18px 10px',

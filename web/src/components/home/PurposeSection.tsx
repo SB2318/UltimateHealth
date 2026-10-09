@@ -192,6 +192,12 @@ export default function PurposeSection() {
               <span>{t('readVision')}</span>
               <ArrowRight style={{ width: 14, height: 14 }} />
             </button>
+            
+            <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <p style={{ fontSize: '0.78125rem', color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
+                <strong style={{ color: '#cbd5e1' }}>Memorial &amp; Removal Notice:</strong> UltimateHealth is an independent, non-commercial open-source tribute. If family members or authorized representatives wish for any dedication, name, or photo to be modified or removed, please contact <a href="mailto:ultimate.health25@gmail.com" style={{ color: '#2dd4bf', textDecoration: 'underline' }}>ultimate.health25@gmail.com</a> and it will be updated or removed immediately without condition.
+              </p>
+            </div>
           </div>
         </div>
 

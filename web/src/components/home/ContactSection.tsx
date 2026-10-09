@@ -31,21 +31,21 @@ export default function ContactSection() {
             className="uh-display"
             style={{
               fontSize: "clamp(1.875rem, 4.5vw, 2.75rem)",
-              color: "#f1f5f9",
+              color: "#f8fafc",
               margin: "0 0 16px 0",
             }}
           >
-            Connect With Us
+            Contribute, Suggest, or Contact
           </h2>
           <p
             style={{
               fontSize: "1rem",
               lineHeight: 1.65,
-              color: "#64748b",
+              color: "#94a3b8",
               margin: 0,
             }}
           >
-            Have questions or want to collaborate? We&apos;d love to hear from you.
+            Submit article corrections, volunteer for clinical review, or collaborate on open health tools.
           </p>
         </div>
 
@@ -55,31 +55,31 @@ export default function ContactSection() {
               <i className="fas fa-heart-pulse" aria-hidden="true" />
               UltimateHealth
             </div>
-            <h3 className="contact-dark-title">Let&apos;s Talk<br />Health Together</h3>
+            <h3 className="contact-dark-title">Get Involved in<br />Open Health</h3>
             <p className="contact-dark-subtitle">
-              Questions about our platform? We&apos;re here to help. Reach out and we&apos;ll respond promptly.
+              Have a guide correction, translation suggestion, or clinical inquiry? Reach out directly to the core team.
             </p>
 
             <div className="contact-info-cards">
               <div className="contact-info-card">
                 <div className="contact-info-icon"><i className="fas fa-envelope"></i></div>
                 <div>
-                  <strong>Email Us</strong>
+                  <strong>Email Core Team</strong>
                   <p>ultimate.health25@gmail.com</p>
                 </div>
               </div>
               <div className="contact-info-card">
-                <div className="contact-info-icon"><i className="fas fa-comment-dots"></i></div>
+                <div className="contact-info-icon"><i className="fas fa-code-pull-request"></i></div>
                 <div>
-                  <strong>Quick Response</strong>
-                  <p>We aim to reply within 24 hours.</p>
+                  <strong>GitHub Contributions</strong>
+                  <p>Submit PRs for code, articles &amp; docs.</p>
                 </div>
               </div>
               <div className="contact-info-card">
-                <div className="contact-info-icon"><i className="fas fa-layer-group"></i></div>
+                <div className="contact-info-icon"><i className="fas fa-user-doctor"></i></div>
                 <div>
-                  <strong>Multiple Channels</strong>
-                  <p>Reach us via email, GitHub, or this form.</p>
+                  <strong>Clinical Advisory</strong>
+                  <p>Doctors can sign moderation protocols.</p>
                 </div>
               </div>
             </div>
@@ -104,8 +104,8 @@ export default function ContactSection() {
           </div>
 
           <div className="contact-dark-right uh-dark-aligned">
-            <h3 className="contact-form-title">Send us a Message</h3>
-            <p className="contact-form-subtitle">We typically respond within 24 hours</p>
+            <h3 className="contact-form-title">Send a Note</h3>
+            <p className="contact-form-subtitle">We review every community suggestion and respond within 24 hours.</p>
 
             <ContactForm />
           </div>

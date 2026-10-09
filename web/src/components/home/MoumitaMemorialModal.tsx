@@ -344,15 +344,15 @@ export default function MoumitaMemorialModal({
             style={{
               padding: '16px 20px',
               borderRadius: '12px',
-              backgroundColor: 'rgba(240, 0, 106, 0.08)',
-              borderLeft: '4px solid #f0006a',
+              backgroundColor: 'rgba(244, 63, 94, 0.08)',
+              borderLeft: '4px solid #f43f5e',
             }}
           >
             <p
               style={{
                 fontSize: '0.95rem',
                 fontStyle: 'italic',
-                color: '#f1f5f9',
+                color: '#f8fafc',
                 lineHeight: 1.6,
                 margin: 0,
               }}
@@ -367,11 +367,26 @@ export default function MoumitaMemorialModal({
                 fontSize: '0.8rem',
                 fontFamily: 'monospace',
                 fontWeight: 600,
-                color: '#f0006a',
+                color: '#f43f5e',
               }}
             >
-              &mdash; Dr. Moumita Debnath Vision
+              &mdash; Dedicated with profound respect to Dr. Moumita Debnath
             </span>
+          </div>
+
+          {/* Legal Non-Commercial & Voluntary Removal Policy */}
+          <div
+            style={{
+              marginTop: '16px',
+              padding: '14px 16px',
+              borderRadius: '10px',
+              backgroundColor: '#151b26',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+            }}
+          >
+            <p style={{ fontSize: '0.78125rem', color: '#94a3b8', margin: 0, lineHeight: 1.55 }}>
+              <strong style={{ color: '#cbd5e1' }}>Memorial &amp; Removal Notice:</strong> UltimateHealth is an independent, non-commercial open-source health education project. If family members, legal heirs, or authorized representatives wish for any name, image, or dedication to be modified or removed, please contact <a href="mailto:ultimate.health25@gmail.com" style={{ color: '#2dd4bf', textDecoration: 'underline' }}>ultimate.health25@gmail.com</a> and it will be updated or removed immediately without condition.
+            </p>
           </div>
         </div>
 
