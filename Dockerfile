@@ -15,6 +15,7 @@ ENV NODE_OPTIONS="--max-old-space-size=3072"
 ENV NEXT_PRIVATE_WORKERS=2
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY web/ ./
+RUN rm -rf node_modules .next
 COPY --from=deps /app/node_modules ./node_modules
 RUN npm run build
 
