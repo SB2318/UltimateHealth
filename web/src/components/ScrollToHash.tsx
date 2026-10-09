@@ -18,15 +18,21 @@ export default function ScrollToHash() {
 
     const id = hash.replace('#', '');
 
-    // Small delay so the page layout is complete before we scroll
-    const timer = setTimeout(() => {
+    const scrollToElement = () => {
       const el = document.getElementById(id);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 120);
+    };
 
-    return () => clearTimeout(timer);
+    scrollToElement();
+    const timer1 = setTimeout(scrollToElement, 150);
+    const timer2 = setTimeout(scrollToElement, 450);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
   }, [pathname]);
 
   return null;

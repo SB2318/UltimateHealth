@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Play } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { ModeToggle } from "@/components/mode-toggle";
 import { PageWrapper } from "@/components/layout";
 import { withBasePath } from "@/lib/basePath";
@@ -23,6 +23,7 @@ const SECTION_IDS = [
 
 export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) {
   const tNav = useTranslations("nav");
+  const locale = useLocale();
   const pathname = usePathname() || "";
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
@@ -70,8 +71,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
       el.scrollIntoView({ behavior: "smooth" });
       setMobileMenuOpen(false);
     } else {
-      // Element is NOT on this page — let the Link navigate normally.
-      // The ScrollToHash component in the layout will handle smooth scroll on arrival.
+      // Element is NOT on this page — let the Link navigate normally to /${locale}#${id}
       setMobileMenuOpen(false);
     }
   };
@@ -92,7 +92,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
     >
       <PageWrapper as="div" className="nav">
         {/* Logo */}
-        <Link href="/" className="logo flex items-center gap-2.5">
+        <Link href={`/${locale}`} className="logo flex items-center gap-2.5">
           <div className="logo-icon">
             <Image
               src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
@@ -111,7 +111,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
         <ul className="nav-links">
           <li>
             <Link
-              href="/#purpose"
+              href={`/${locale}#purpose`}
               onClick={(e) => handleScrollTo("purpose", e)}
               className={`nav-link-item${isHome && activeSection === "purpose" ? " active" : ""}`}
               aria-current={isHome && activeSection === "purpose" ? "location" : undefined}
@@ -122,7 +122,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           </li>
           <li>
             <Link
-              href="/#what-we-do"
+              href={`/${locale}#what-we-do`}
               onClick={(e) => handleScrollTo("what-we-do", e)}
               className={`nav-link-item${isHome && activeSection === "what-we-do" ? " active" : ""}`}
               aria-current={isHome && activeSection === "what-we-do" ? "location" : undefined}
@@ -254,10 +254,10 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           <Play style={{ width: 14, height: 14, fill: "currentColor" }} />
           <span>{tNav("startTour")}</span>
         </button>
-        <Link href="/#purpose" onClick={(e) => handleScrollTo("purpose", e)}>
+        <Link href={`/${locale}#purpose`} onClick={(e) => handleScrollTo("purpose", e)}>
           {tNav("purpose")}
         </Link>
-        <Link href="/#what-we-do" onClick={(e) => handleScrollTo("what-we-do", e)}>
+        <Link href={`/${locale}#what-we-do`} onClick={(e) => handleScrollTo("what-we-do", e)}>
           {tNav("whatWeDo")}
         </Link>
         <Link href="/articles" onClick={() => setMobileMenuOpen(false)}>
