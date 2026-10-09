@@ -12,8 +12,8 @@ const basePath =
 const nextConfig: NextConfig = {
   ...(basePath ? { basePath } : {}),
 
-  eslint: {
-    ignoreDuringBuilds: true,
+  experimental: {
+    cpus: 1,
   },
   typescript: {
     ignoreBuildErrors: true,

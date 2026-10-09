@@ -11,8 +11,9 @@ RUN npm ci || npm install
 FROM base AS builder
 WORKDIR /app
 ENV NEXT_PUBLIC_BASE_PATH=/web
-ENV NODE_OPTIONS="--max-old-space-size=3072"
-ENV NEXT_PRIVATE_WORKERS=2
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+ENV NEXT_BUILD_WORKERS=1
+ENV NEXT_PRIVATE_WORKERS=1
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY web/ ./
 RUN rm -rf node_modules .next
