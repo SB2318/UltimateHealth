@@ -118,6 +118,36 @@ html { scroll-behavior: smooth; }
   50%       { border-color: rgba(255, 0, 127, 0.4); box-shadow: 0 0 20px rgba(255, 0, 127, 0.3); }
 }
 
+/* ── Professional Page Entrance ── */
+@keyframes page-enter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-badge-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes hero-heading-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-sub-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes hero-cta-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-stats-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* =============================================================
    GLOBAL VICE DARK UTILITIES
    ============================================================= */
@@ -128,10 +158,13 @@ html { scroll-behavior: smooth; }
   height: 4px;
   background: linear-gradient(90deg, transparent 0%, rgba(0,240,255,0.35) 50%, transparent 100%);
   animation: scanline 8s linear infinite;
+  animation-delay: 1.8s;
+  opacity: 0;
+  animation-fill-mode: forwards;
   z-index: 5;
 }
-.vice-pulse-glow { animation: pulseGlow 2s infinite ease-in-out; }
-.vice-flicker    { animation: neonFlicker 4s infinite step-end; }
+.vice-pulse-glow { animation: pulseGlow 2s infinite ease-in-out; animation-delay: 1.5s; }
+.vice-flicker    { animation: neonFlicker 4s infinite step-end; animation-delay: 2s; }
 .vice-float      { animation: floatBounce 6s ease-in-out infinite; }
 
 /* Vice neon text gradient helper */
@@ -191,6 +224,7 @@ html { scroll-behavior: smooth; }
 body {
   background: #0b0b12 !important;
   color: #f8fafc !important;
+  animation: page-enter 0.4s ease-out both;
 }
 
 .container {
@@ -203,56 +237,31 @@ body {
 /* ==================== ANIMATIONS ==================== */
 
 /* ==================== SCROLL ANIMATIONS ==================== */
-.fade-in {
-  opacity: 0;
-  transform: translateY(30px);
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
-}
-
-.fade-in:nth-child(1) { transition-delay: 0s; }
-.fade-in:nth-child(2) { transition-delay: 0.15s; }
-.fade-in:nth-child(3) { transition-delay: 0.3s; }
-.fade-in:nth-child(4) { transition-delay: 0.45s; }
-.fade-in:nth-child(5) { transition-delay: 0.6s; }
-.fade-in:nth-child(6) { transition-delay: 0.75s; }
-.fade-in:nth-child(n+7) { transition-delay: 0.9s; }
-
-.fade-in.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+/* Canonical scroll-reveal rules are defined near the uh-fade-up keyframes below.
+   They use animation-play-state: paused → running (on .revealed / .visible).
+   Only the reduced-motion override lives here. */
 
 @media (prefers-reduced-motion: reduce) {
   .fade-in,
   .scroll-reveal,
   .scroll-reveal-left,
-  .scroll-reveal-right {
-    transition-delay: 0s !important;
+  .scroll-reveal-right,
+  .scroll-reveal-scale {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
-.scroll-reveal-left {
-  opacity: 0;
-  transform: translateX(-60px);
-  transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.scroll-reveal-left.revealed { opacity: 1; transform: translateX(0); }
-
-.scroll-reveal-right {
-  opacity: 0;
-  transform: translateX(60px);
-  transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.scroll-reveal-right.revealed { opacity: 1; transform: translateX(0); }
-
+/* scroll-reveal-scale still uses transition for backwards compat */
 .scroll-reveal-scale {
   opacity: 0;
-  transform: scale(0.9);
-  transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: scale(0.95);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 .scroll-reveal-scale.revealed { opacity: 1; transform: scale(1); }
+
+
 
 /* ==================== DNA HELIX CURSOR CANVAS ==================== */
 /*
@@ -368,6 +377,10 @@ body.touch-device .dna-cursor-canvas {
 }
 
 /* ==================== HEADER ==================== */
+@keyframes header-drop-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 .header {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -377,6 +390,7 @@ body.touch-device .dna-cursor-canvas {
   border-bottom: 1px solid #262640 !important;
   z-index: 1000;
   transition: var(--transition);
+  animation: header-drop-in 0.5s cubic-bezier(0.22,1,0.36,1) both;
 }
 .header.scrolled {
   background: rgba(11, 11, 18, 0.98) !important;
@@ -577,7 +591,7 @@ html.dark .nav-item-icon {
 }
 
 .mobile-nav {
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 20px 24px;
@@ -587,8 +601,17 @@ html.dark .nav-item-icon {
   top: 100%; left: 0; right: 0;
   box-shadow: 0 20px 40px rgba(0,0,0,0.8);
   backdrop-filter: blur(20px);
+  /* Smooth slide-down animation */
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
 }
-.mobile-nav.open { display: flex; }
+.mobile-nav.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
 .mobile-nav a {
   text-decoration: none;
   color: #94a3b8;
@@ -2725,11 +2748,34 @@ i, svg {
 }
 
 /* ── Scroll reveal animations ── */
-.scroll-reveal-left  { animation: uh-slide-left  0.8s cubic-bezier(.22,1,.36,1) both; }
-.scroll-reveal-right { animation: uh-slide-right 0.8s cubic-bezier(.22,1,.36,1) 0.2s both; }
-.scroll-reveal       { animation: uh-fade-up 0.8s cubic-bezier(.22,1,.36,1) both; }
-.fade-in             { animation: uh-fade-up 0.8s cubic-bezier(.22,1,.36,1) both; }
-.fade-in:nth-child(2) { animation-delay: 0.15s; }
+.scroll-reveal-left,
+.scroll-reveal-right,
+.scroll-reveal,
+.fade-in {
+  animation-fill-mode: both;
+  animation-play-state: paused;
+}
+.scroll-reveal-left  { animation: uh-slide-left  0.7s cubic-bezier(.22,1,.36,1) both; }
+.scroll-reveal-right { animation: uh-slide-right 0.7s cubic-bezier(.22,1,.36,1) 0.1s both; }
+.scroll-reveal       { animation: uh-fade-up 0.65s cubic-bezier(.22,1,.36,1) both; }
+.fade-in             { animation: uh-fade-up 0.65s cubic-bezier(.22,1,.36,1) both; }
+
+/* Stagger siblings inside a grid/flex container */
+.scroll-reveal:nth-child(2),
+.fade-in:nth-child(2) { animation-delay: 0.1s; }
+.scroll-reveal:nth-child(3),
+.fade-in:nth-child(3) { animation-delay: 0.2s; }
+.scroll-reveal:nth-child(4),
+.fade-in:nth-child(4) { animation-delay: 0.3s; }
+
+/* Observer fires → unpause → animation plays from its from-state */
+.scroll-reveal.revealed,
+.scroll-reveal-left.revealed,
+.scroll-reveal-right.revealed,
+.fade-in.visible,
+.fade-in.revealed {
+  animation-play-state: running;
+}
 
 
 

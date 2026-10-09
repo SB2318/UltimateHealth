@@ -59,7 +59,7 @@ export default function WhatWeDoSection() {
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Section Header */}
-        <div style={{ maxWidth: '640px', marginBottom: '56px' }}>
+        <div className="scroll-reveal" style={{ maxWidth: '640px', marginBottom: '56px' }}>
           <p
             style={{
               fontSize: '0.75rem',
@@ -113,6 +113,7 @@ export default function WhatWeDoSection() {
             return (
               <div
                 key={idx}
+                className="scroll-reveal"
                 style={{
                   background: '#13131f',
                   border: '1px solid #252538',

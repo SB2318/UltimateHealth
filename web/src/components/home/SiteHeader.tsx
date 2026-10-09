@@ -65,8 +65,13 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
   const handleScrollTo = (id: string, e: React.MouseEvent) => {
     const el = document.getElementById(id);
     if (el) {
+      // Element exists on this page — prevent navigation and scroll smoothly
       e.preventDefault();
       el.scrollIntoView({ behavior: "smooth" });
+      setMobileMenuOpen(false);
+    } else {
+      // Element is NOT on this page — let the Link navigate normally.
+      // The ScrollToHash component in the layout will handle smooth scroll on arrival.
       setMobileMenuOpen(false);
     }
   };

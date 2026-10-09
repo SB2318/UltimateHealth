@@ -3,8 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { ArrowRight, BookOpen, Download, Play } from 'lucide-react';
-import { withBasePath } from '@/lib/basePath';
+import { BookOpen, Download, Play } from 'lucide-react';
 
 export default function Hero() {
   const tHero = useTranslations('hero');
@@ -40,7 +39,7 @@ export default function Hero() {
         overflow: 'hidden',
       }}
     >
-      {/* Single, restrained ambient glow â€” top-center */}
+      {/* Ambient glow — fades in gently after page loads */}
       <div style={{
         position: 'absolute',
         top: '-20%',
@@ -48,33 +47,42 @@ export default function Hero() {
         transform: 'translateX(-50%)',
         width: '800px',
         height: '500px',
-        background: 'radial-gradient(ellipse at center, rgba(0,229,255,0.07) 0%, transparent 65%)',
+        background: 'radial-gradient(ellipse at center, rgba(0,229,255,0.05) 0%, transparent 65%)',
         pointerEvents: 'none',
+        animation: 'hero-sub-in 1.4s ease both',
+        animationDelay: '0.5s',
       }} />
+
       {/* Subtle grid */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
-        backgroundImage: 'linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)',
+        backgroundImage: 'linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px)',
         backgroundSize: '48px 48px',
       }} />
 
-      {/* â”€â”€ Content container â”€â”€ */}
+      {/* ── Content container ── */}
       <div style={{ position: 'relative', zIndex: 1, maxWidth: '760px', width: '100%', textAlign: 'center' }}>
 
-        {/* Status pill */}
+        {/* Status pill — arrives first (150ms) */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: '8px',
           padding: '6px 14px', borderRadius: '9999px', marginBottom: '32px',
           background: 'rgba(0,229,255,0.06)',
-          border: '1px solid rgba(0,229,255,0.2)',
+          border: '1px solid rgba(0,229,255,0.18)',
+          animation: 'hero-badge-in 0.55s cubic-bezier(0.22,1,0.36,1) both',
+          animationDelay: '0.15s',
         }}>
-          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#00e5ff', boxShadow: '0 0 8px #00e5ff', display: 'inline-block', flexShrink: 0 }} />
+          <span style={{
+            width: 7, height: 7, borderRadius: '50%',
+            background: '#00e5ff', boxShadow: '0 0 6px #00e5ff',
+            display: 'inline-block', flexShrink: 0,
+          }} />
           <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', fontWeight: 700, letterSpacing: '0.12em', color: '#00e5ff', textTransform: 'uppercase' }}>
             {tHero('badge')}
           </span>
         </div>
 
-        {/* Headline â€” max 60px, tight leading */}
+        {/* Headline — arrives second (320ms) */}
         <h1 style={{
           fontSize: 'clamp(2.5rem, 7vw, 3.75rem)',
           fontWeight: 800,
@@ -83,6 +91,8 @@ export default function Hero() {
           color: '#f1f5f9',
           marginBottom: '24px',
           fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
+          animation: 'hero-heading-in 0.65s cubic-bezier(0.22,1,0.36,1) both',
+          animationDelay: '0.32s',
         }}>
           {tHero('headlineHealthIn')}{' '}
           <span style={{ color: '#00e5ff' }}>{tHero('headlineBody')}</span>,{' '}
@@ -91,7 +101,7 @@ export default function Hero() {
           <span style={{ color: '#f5c518' }}>{tHero('headlineDignity')}</span>
         </h1>
 
-        {/* One-line mission */}
+        {/* Subtitle — arrives third (520ms) */}
         <p style={{
           fontSize: '1.125rem',
           lineHeight: 1.65,
@@ -100,13 +110,19 @@ export default function Hero() {
           maxWidth: '560px',
           marginLeft: 'auto',
           marginRight: 'auto',
+          animation: 'hero-sub-in 0.6s ease both',
+          animationDelay: '0.52s',
         }}>
           {tHero('subtitle')}
         </p>
 
-        {/* CTA row */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center', marginBottom: '64px' }}>
-          {/* Primary */}
+        {/* CTA row — arrives fourth (680ms) */}
+        <div style={{
+          display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center', marginBottom: '64px',
+          animation: 'hero-cta-in 0.6s cubic-bezier(0.22,1,0.36,1) both',
+          animationDelay: '0.68s',
+        }}>
+          {/* Primary CTA */}
           <button
             onClick={triggerTour}
             style={{
@@ -116,7 +132,7 @@ export default function Hero() {
               fontWeight: 700, fontSize: '0.875rem',
               letterSpacing: '0.04em', textTransform: 'uppercase',
               border: 'none', cursor: 'pointer',
-              boxShadow: '0 0 24px rgba(0,229,255,0.3)',
+              boxShadow: '0 0 18px rgba(0,229,255,0.22)',
               transition: 'opacity 0.15s ease, transform 0.15s ease',
             }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.88'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
@@ -126,7 +142,7 @@ export default function Hero() {
             {tHero('startTour')}
           </button>
 
-          {/* Secondary */}
+          {/* Secondary CTA */}
           <Link
             href="/articles"
             style={{
@@ -144,7 +160,7 @@ export default function Hero() {
             {tHero('readArticles')}
           </Link>
 
-          {/* Ghost */}
+          {/* Ghost CTA */}
           <a
             href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
             target="_blank" rel="noopener noreferrer"
@@ -164,13 +180,15 @@ export default function Hero() {
           </a>
         </div>
 
-        {/* â”€â”€ Stats â”€â”€ */}
+        {/* Stats — arrives last (850ms) */}
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px',
           background: '#252538',
           border: '1px solid #252538',
           borderRadius: '16px',
           overflow: 'hidden',
+          animation: 'hero-stats-in 0.6s ease both',
+          animationDelay: '0.85s',
         }}>
           {[
             { val: '100+',  label: tHero('statArticles'),  color: '#00e5ff' },

@@ -44,6 +44,7 @@ export default function PurposeSection() {
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Section label */}
         <p
+          className="scroll-reveal"
           style={{
             fontSize: '0.75rem',
             fontWeight: 700,
@@ -58,7 +59,7 @@ export default function PurposeSection() {
         </p>
 
         {/* Section Header */}
-        <div style={{ maxWidth: '680px', marginBottom: '40px' }}>
+        <div className="scroll-reveal" style={{ maxWidth: '680px', marginBottom: '40px' }}>
           <h2
             style={{
               fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
@@ -86,6 +87,7 @@ export default function PurposeSection() {
 
         {/* ── Featured Memorial & Vision Card: Dr. Moumita Debnath ── */}
         <div
+          className="scroll-reveal"
           style={{
             background: 'linear-gradient(135deg, #151526 0%, #11111e 100%)',
             border: '1px solid rgba(240, 0, 106, 0.35)',
