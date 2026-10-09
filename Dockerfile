@@ -2,6 +2,7 @@ FROM node:22-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY web/package.json web/package-lock.json ./
 RUN npm ci || npm install
@@ -10,6 +11,7 @@ RUN npm ci || npm install
 FROM base AS builder
 WORKDIR /app
 ENV NEXT_PUBLIC_BASE_PATH=/web
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 COPY web/ ./
 COPY --from=deps /app/node_modules ./node_modules
 RUN npm run build
