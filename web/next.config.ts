@@ -13,28 +13,30 @@ const nextConfig: NextConfig = {
   ...(basePath ? { basePath } : {}),
 
   // ── Fallback redirects ──────────────────────────────────────────────────
-  // next-intl middleware handles most locale routing, but these cover edge
-  // cases: bare root visits that miss the middleware (e.g. static host
-  // configs, direct IP access, or crawler bots ignoring redirects).
+  // next-intl middleware handles locale routing. When basePath is active (e.g. /web),
+  // Next.js handles /web natively. Returning /web -> /web/:path* redirects when basePath is set
+  // causes infinite 307 redirect loops on production servers.
   async redirects() {
+    if (basePath) {
+      return [];
+    }
+
     return [
-      // If someone visits /web or /web/ locally (without basePath set), redirect them to /en
       {
         source: "/web",
-        destination: basePath ? `${basePath}/en` : "/en",
+        destination: "/en",
         permanent: false,
         basePath: false,
       },
       {
         source: "/web/",
-        destination: basePath ? `${basePath}/en` : "/en",
+        destination: "/en",
         permanent: false,
         basePath: false,
       },
-      // If visiting /web/:path* locally, strip /web and redirect directly to /:path*
       {
         source: "/web/:path*",
-        destination: basePath ? `${basePath}/:path*` : "/:path*",
+        destination: "/:path*",
         permanent: false,
         basePath: false,
       },
