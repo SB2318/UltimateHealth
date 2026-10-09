@@ -13,6 +13,7 @@ WORKDIR /app
 ENV NEXT_PUBLIC_BASE_PATH=/web
 ENV NODE_OPTIONS="--max-old-space-size=3072"
 ENV NEXT_PRIVATE_WORKERS=2
+ENV NEXT_TELEMETRY_DISABLED=1
 COPY web/ ./
 COPY --from=deps /app/node_modules ./node_modules
 RUN npm run build

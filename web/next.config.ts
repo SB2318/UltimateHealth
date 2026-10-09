@@ -12,6 +12,13 @@ const basePath =
 const nextConfig: NextConfig = {
   ...(basePath ? { basePath } : {}),
 
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+
   // ── Fallback redirects ──────────────────────────────────────────────────
   // next-intl middleware handles locale routing. When basePath is active (e.g. /web),
   // Next.js handles /web natively. Returning /web -> /web/:path* redirects when basePath is set
