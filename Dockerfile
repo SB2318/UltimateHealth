@@ -15,7 +15,7 @@ RUN npm ci
 COPY web/ ./
 
 # Run production build
-RUN npm run build
+RUN npm run build && rm -rf .next/cache && npm prune --production
 
 # Production runner stage
 FROM node:22-alpine AS runner
