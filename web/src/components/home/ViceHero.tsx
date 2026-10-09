@@ -39,21 +39,7 @@ export default function Hero() {
         overflow: 'hidden',
       }}
     >
-      {/* Ambient glow — fades in gently after page loads */}
-      <div style={{
-        position: 'absolute',
-        top: '-20%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '800px',
-        height: '500px',
-        background: 'radial-gradient(ellipse at center, rgba(0,229,255,0.05) 0%, transparent 65%)',
-        pointerEvents: 'none',
-        animation: 'hero-sub-in 1.4s ease both',
-        animationDelay: '0.5s',
-      }} />
-
-      {/* Subtle grid */}
+      {/* Subtle grid — structural, not decorative */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         backgroundImage: 'linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px)',
@@ -63,50 +49,46 @@ export default function Hero() {
       {/* ── Content container ── */}
       <div style={{ position: 'relative', zIndex: 1, maxWidth: '760px', width: '100%', textAlign: 'center' }}>
 
-        {/* Status pill — arrives first (150ms) */}
+        {/* Status indicator — text-only, no glowing dot */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: '8px',
-          padding: '6px 14px', borderRadius: '9999px', marginBottom: '32px',
-          background: 'rgba(0,229,255,0.06)',
-          border: '1px solid rgba(0,229,255,0.18)',
-          animation: 'hero-badge-in 0.55s cubic-bezier(0.22,1,0.36,1) both',
-          animationDelay: '0.15s',
+          marginBottom: '28px',
         }}>
           <span style={{
-            width: 7, height: 7, borderRadius: '50%',
-            background: '#00e5ff', boxShadow: '0 0 6px #00e5ff',
-            display: 'inline-block', flexShrink: 0,
-          }} />
-          <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', fontWeight: 700, letterSpacing: '0.12em', color: '#00e5ff', textTransform: 'uppercase' }}>
+            fontSize: '0.6875rem', fontFamily: 'monospace', fontWeight: 700,
+            letterSpacing: '0.14em', color: '#475569', textTransform: 'uppercase',
+            animation: 'hero-badge-in 0.55s cubic-bezier(0.22,1,0.36,1) both',
+            animationDelay: '0.15s',
+          }}>
             {tHero('badge')}
           </span>
         </div>
 
-        {/* Headline — arrives second (320ms) */}
-        <h1 style={{
-          fontSize: 'clamp(2.5rem, 7vw, 3.75rem)',
-          fontWeight: 800,
-          lineHeight: 1.1,
-          letterSpacing: '-0.03em',
-          color: '#f1f5f9',
-          marginBottom: '24px',
-          fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
-          animation: 'hero-heading-in 0.65s cubic-bezier(0.22,1,0.36,1) both',
-          animationDelay: '0.32s',
-        }}>
+        {/* Headline — DM Serif Display */}
+        <h1
+          className="uh-display"
+          style={{
+            fontSize: 'clamp(2.75rem, 8vw, 4.5rem)',
+            lineHeight: 1.08,
+            color: '#f8fafc',
+            marginBottom: '20px',
+            animation: 'hero-heading-in 0.65s cubic-bezier(0.22,1,0.36,1) both',
+            animationDelay: '0.32s',
+          }}
+        >
           {tHero('headlineHealthIn')}{' '}
-          <span style={{ color: '#00e5ff' }}>{tHero('headlineBody')}</span>,{' '}
-          <span style={{ color: '#f0006a' }}>{tHero('headlineMind')}</span>{' '}
+          <span>{tHero('headlineBody')}</span>,{' '}
+          <span>{tHero('headlineMind')}</span>{' '}
           {tHero('headlineAnd')}{' '}
-          <span style={{ color: '#f5c518' }}>{tHero('headlineDignity')}</span>
+          <span style={{ color: '#2dd4bf' }}>{tHero('headlineDignity')}</span>
         </h1>
 
-        {/* Subtitle — arrives third (520ms) */}
+        {/* Subtitle */}
         <p style={{
-          fontSize: '1.125rem',
-          lineHeight: 1.65,
-          color: '#64748b',
-          marginBottom: '48px',
+          fontSize: '1.0625rem',
+          lineHeight: 1.7,
+          color: '#94a3b8',
+          marginBottom: '8px',
           maxWidth: '560px',
           marginLeft: 'auto',
           marginRight: 'auto',
@@ -116,7 +98,20 @@ export default function Hero() {
           {tHero('subtitle')}
         </p>
 
-        {/* CTA row — arrives fourth (680ms) */}
+        {/* Motto — "Minimal Information. Real Information." */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          marginBottom: '44px',
+          animation: 'hero-sub-in 0.6s ease both',
+          animationDelay: '0.6s',
+        }}>
+          <span className="uh-motto">
+            Minimal Information. Real Information.
+          </span>
+        </div>
+
+        {/* CTA row */}
         <div style={{
           display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center', marginBottom: '64px',
           animation: 'hero-cta-in 0.6s cubic-bezier(0.22,1,0.36,1) both',
@@ -128,17 +123,17 @@ export default function Hero() {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '13px 28px', borderRadius: '10px',
-              background: '#00e5ff', color: '#0c0c14',
+              background: '#2dd4bf', color: '#0d1117',
               fontWeight: 700, fontSize: '0.875rem',
               letterSpacing: '0.04em', textTransform: 'uppercase',
               border: 'none', cursor: 'pointer',
-              boxShadow: '0 0 18px rgba(0,229,255,0.22)',
+              boxShadow: '0 4px 16px rgba(45, 212, 191, 0.25)',
               transition: 'opacity 0.15s ease, transform 0.15s ease',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.88'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.92'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}
           >
-            <Play style={{ width: 14, height: 14, fill: '#0c0c14' }} />
+            <Play style={{ width: 13, height: 13, fill: '#0d1117' }} />
             {tHero('startTour')}
           </button>
 
@@ -148,13 +143,13 @@ export default function Hero() {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '13px 24px', borderRadius: '10px',
-              background: 'transparent', color: '#f1f5f9',
+              background: 'transparent', color: '#f8fafc',
               fontWeight: 600, fontSize: '0.875rem',
-              border: '1px solid #252538', textDecoration: 'none',
+              border: '1px solid rgba(255, 255, 255, 0.12)', textDecoration: 'none',
               transition: 'border-color 0.15s ease, color 0.15s ease',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#00e5ff'; (e.currentTarget as HTMLElement).style.color = '#00e5ff'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = '#252538'; (e.currentTarget as HTMLElement).style.color = '#f1f5f9'; }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#2dd4bf'; (e.currentTarget as HTMLElement).style.color = '#2dd4bf'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255, 255, 255, 0.12)'; (e.currentTarget as HTMLElement).style.color = '#f8fafc'; }}
           >
             <BookOpen style={{ width: 14, height: 14 }} />
             {tHero('readArticles')}
@@ -167,46 +162,46 @@ export default function Hero() {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '13px 20px', borderRadius: '10px',
-              background: 'transparent', color: '#64748b',
+              background: 'transparent', color: '#94a3b8',
               fontWeight: 600, fontSize: '0.875rem',
               border: '1px solid transparent', textDecoration: 'none',
               transition: 'color 0.15s ease',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#f1f5f9'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#64748b'; }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = '#f8fafc'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = '#94a3b8'; }}
           >
             <Download style={{ width: 14, height: 14 }} />
             {tHero('androidApp')}
           </a>
         </div>
 
-        {/* Stats — arrives last (850ms) */}
+        {/* Stats — unified single-accent palette */}
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px',
-          background: '#252538',
-          border: '1px solid #252538',
-          borderRadius: '16px',
+          background: 'rgba(255, 255, 255, 0.08)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: '12px',
           overflow: 'hidden',
           animation: 'hero-stats-in 0.6s ease both',
           animationDelay: '0.85s',
         }}>
           {[
-            { val: '100+',  label: tHero('statArticles'),  color: '#00e5ff' },
-            { val: '7+',    label: tHero('statLanguages'), color: '#f0006a' },
-            { val: '100%',  label: tHero('statFree'),      color: '#f5c518' },
-            { val: '24/7',  label: tHero('statAi'),        color: '#22c55e' },
-          ].map(({ val, label, color }) => (
+            { val: '100+',  label: tHero('statArticles') },
+            { val: '7+',    label: tHero('statLanguages') },
+            { val: '100%',  label: tHero('statFree') },
+            { val: '24/7',  label: tHero('statAi') },
+          ].map(({ val, label }) => (
             <div key={label} style={{
-              background: '#13131f', padding: '20px 12px',
+              background: '#151b26', padding: '18px 10px',
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px',
             }}>
               <span style={{
-                fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                fontSize: 'clamp(1.375rem, 3.5vw, 1.875rem)',
                 fontWeight: 800,
                 fontFamily: '"Orbitron", monospace',
-                color, lineHeight: 1,
+                color: '#2dd4bf', lineHeight: 1,
               }}>{val}</span>
-              <span style={{ fontSize: '0.7rem', fontWeight: 600, color: '#374151', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              <span className="uh-stat-label" style={{ fontSize: '0.6875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#94a3b8' }}>
                 {label}
               </span>
             </div>

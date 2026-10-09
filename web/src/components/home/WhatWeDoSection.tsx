@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { BookOpen, Stethoscope, Bot, Languages, ArrowRight } from 'lucide-react';
-import { withBasePath } from '@/lib/basePath';
 
 export default function WhatWeDoSection() {
   const t = useTranslations('whatWeDo');
@@ -17,7 +16,7 @@ export default function WhatWeDoSection() {
       desc: t('item1Desc'),
       link: '/articles',
       actionText: t('item1Action'),
-      accent: '#00e5ff',
+      accent: '#2dd4bf',
     },
     {
       icon: Languages,
@@ -26,7 +25,7 @@ export default function WhatWeDoSection() {
       desc: t('item2Desc'),
       link: '/medical-glossary',
       actionText: t('item2Action'),
-      accent: '#7c3aed',
+      accent: '#2dd4bf',
     },
     {
       icon: Bot,
@@ -35,7 +34,7 @@ export default function WhatWeDoSection() {
       desc: t('item3Desc'),
       link: '#',
       actionText: t('item3Action'),
-      accent: '#f0006a',
+      accent: '#2dd4bf',
     },
     {
       icon: Stethoscope,
@@ -44,7 +43,7 @@ export default function WhatWeDoSection() {
       desc: t('item4Desc'),
       link: '/admin-agreement',
       actionText: t('item4Action'),
-      accent: '#22c55e',
+      accent: '#2dd4bf',
     },
   ];
 
@@ -60,50 +59,30 @@ export default function WhatWeDoSection() {
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Section Header */}
         <div className="scroll-reveal" style={{ maxWidth: '640px', marginBottom: '56px' }}>
-          <p
-            style={{
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#00e5ff',
-              fontFamily: 'monospace',
-              marginBottom: '12px',
-            }}
-          >
+          <p className="uh-section-label" style={{ color: '#00e5ff', marginBottom: '12px' }}>
             {t('sectionBadge')}
           </p>
           <h2
+            className="uh-display"
             style={{
-              fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
-              fontWeight: 800,
-              lineHeight: 1.15,
-              letterSpacing: '-0.025em',
+              fontSize: 'clamp(1.875rem, 4.5vw, 2.75rem)',
               color: '#f1f5f9',
               margin: '0 0 16px 0',
-              fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
             }}
           >
             {t('title')}
           </h2>
-          <p
-            style={{
-              fontSize: '1rem',
-              lineHeight: 1.65,
-              color: '#64748b',
-              margin: 0,
-            }}
-          >
+          <p style={{ fontSize: '1rem', lineHeight: 1.65, color: '#64748b', margin: 0 }}>
             {t('description')}
           </p>
         </div>
 
-        {/* 2x2 Grid with disciplined 32px padding */}
+        {/* 2x2 Grid with left-border accent on hover */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '20px',
+            gap: '16px',
           }}
         >
           {capabilities.map((item, idx) => {
@@ -113,25 +92,8 @@ export default function WhatWeDoSection() {
             return (
               <div
                 key={idx}
-                className="scroll-reveal"
-                style={{
-                  background: '#13131f',
-                  border: '1px solid #252538',
-                  borderRadius: '16px',
-                  padding: '32px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  transition: 'border-color 0.2s ease, background 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = '#2e2e50';
-                  (e.currentTarget as HTMLElement).style.background = '#181828';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = '#252538';
-                  (e.currentTarget as HTMLElement).style.background = '#13131f';
-                }}
+                className="scroll-reveal uh-card-capability"
+                style={{ '--uh-card-accent': item.accent } as React.CSSProperties}
               >
                 <div>
                   <div
@@ -139,33 +101,33 @@ export default function WhatWeDoSection() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      marginBottom: '20px',
+                      marginBottom: '18px',
                     }}
                   >
                     <div
                       style={{
-                        width: '42px',
-                        height: '42px',
+                        width: '40px',
+                        height: '40px',
                         borderRadius: '10px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: `${item.accent}14`,
-                        border: `1px solid ${item.accent}30`,
+                        background: `${item.accent}12`,
+                        border: `1px solid ${item.accent}28`,
                       }}
                     >
-                      <Icon style={{ width: 20, height: 20, color: item.accent }} />
+                      <Icon style={{ width: 18, height: 18, color: item.accent }} />
                     </div>
 
                     <span
                       style={{
-                        fontSize: '0.75rem',
+                        fontSize: '0.6875rem',
                         fontWeight: 600,
-                        color: '#94a3b8',
-                        background: 'rgba(255,255,255,0.04)',
-                        padding: '4px 10px',
-                        borderRadius: '6px',
-                        border: '1px solid rgba(255,255,255,0.06)',
+                        color: '#64748b',
+                        background: 'rgba(255,255,255,0.03)',
+                        padding: '3px 9px',
+                        borderRadius: '5px',
+                        border: '1px solid rgba(255,255,255,0.05)',
                       }}
                     >
                       {item.tag}
@@ -174,11 +136,10 @@ export default function WhatWeDoSection() {
 
                   <h3
                     style={{
-                      fontSize: '1.125rem',
+                      fontSize: '1.0625rem',
                       fontWeight: 700,
                       color: '#f1f5f9',
-                      margin: '0 0 10px 0',
-                      letterSpacing: '-0.01em',
+                      margin: '0 0 8px 0',
                     }}
                   >
                     {item.title}
@@ -189,14 +150,14 @@ export default function WhatWeDoSection() {
                       fontSize: '0.875rem',
                       lineHeight: 1.65,
                       color: '#64748b',
-                      margin: '0 0 24px 0',
+                      margin: '0 0 20px 0',
                     }}
                   >
                     {item.desc}
                   </p>
                 </div>
 
-                <div style={{ paddingTop: '16px', borderTop: '1px solid #1f1f30' }}>
+                <div style={{ paddingTop: '14px', borderTop: '1px solid #1a1a2c' }}>
                   {isExternalOrInternalLink ? (
                     <Link
                       href={item.link}
@@ -206,7 +167,7 @@ export default function WhatWeDoSection() {
                         gap: '6px',
                         fontSize: '0.875rem',
                         fontWeight: 600,
-                        color: '#00e5ff',
+                        color: item.accent,
                         textDecoration: 'none',
                         transition: 'gap 0.15s ease',
                       }}
@@ -218,14 +179,14 @@ export default function WhatWeDoSection() {
                       }}
                     >
                       <span>{item.actionText}</span>
-                      <ArrowRight style={{ width: 14, height: 14 }} />
+                      <ArrowRight style={{ width: 13, height: 13 }} />
                     </Link>
                   ) : (
                     <span
                       style={{
                         fontSize: '0.8125rem',
                         fontWeight: 500,
-                        color: '#475569',
+                        color: '#334155',
                       }}
                     >
                       {item.actionText}

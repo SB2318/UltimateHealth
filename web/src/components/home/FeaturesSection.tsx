@@ -18,32 +18,32 @@ const upcoming = [
     title: 'AI Personal Chat',
     sub: 'Characters Chat',
     desc: 'Chat with health-focused AI personas for general guidance and wellness conversations.',
-    accent: '#667eea',
-    glow: 'rgba(102,126,234,0.15)',
+    accent: '#2dd4bf',
+    glow: 'rgba(45,212,191,0.12)',
   },
   {
     icon: 'fa-hospital',
     title: 'Hospital Learning System',
     sub: 'Structured Health Education',
     desc: 'Health education resources for patients, students, and caregivers.',
-    accent: '#22c55e',
-    glow: 'rgba(34,197,94,0.12)',
+    accent: '#2dd4bf',
+    glow: 'rgba(45,212,191,0.12)',
   },
   {
     icon: 'fa-user-doctor',
     title: 'Connect with a Doctor',
     sub: 'Voluntary Suggestions Only',
     desc: 'Doctors who choose to volunteer their time can offer health suggestions to the community. No one is forced — only those who genuinely want to help.',
-    accent: '#f59e0b',
-    glow: 'rgba(245,158,11,0.12)',
+    accent: '#2dd4bf',
+    glow: 'rgba(45,212,191,0.12)',
   },
   {
     icon: 'fa-dna',
     title: 'AI Health Analytics',
     sub: 'Personalized Wellness Insights',
     desc: 'View health reports, trends, and wellness recommendations based on your health data.',
-    accent: '#f5576c',
-    glow: 'rgba(245,87,108,0.12)',
+    accent: '#2dd4bf',
+    glow: 'rgba(45,212,191,0.12)',
   },
 ];
 
@@ -55,7 +55,7 @@ export default function FeaturesSection() {
   return (
     <Section id="features" className="feature-section-premium scroll-reveal">
       <PageWrapper>
-        <h2>UltimateHealth Features</h2>
+        <h2 className="uh-display">UltimateHealth Features</h2>
         <p className="center">
           An open-source health platform with AI assistance, trusted articles, multilingual content, and community-driven knowledge — free for everyone.
         </p>
@@ -76,22 +76,22 @@ export default function FeaturesSection() {
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
-              background: 'linear-gradient(135deg, rgba(102,126,234,0.12), rgba(245,87,108,0.12))',
-              border: '1px solid rgba(102,126,234,0.25)',
+              background: 'rgba(45,212,191,0.12)',
+              border: '1px solid rgba(45,212,191,0.25)',
               borderRadius: '50px', padding: '6px 18px', marginBottom: '16px',
               fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.1em',
-              textTransform: 'uppercase', color: '#667eea',
+              textTransform: 'uppercase', color: '#2dd4bf',
             }}>
               <i className="fas fa-rocket" style={{ fontSize: '0.7rem' }}></i>
               Arriving October 2026
             </div>
-            <h3 style={{
-              fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 900, color: '#1e293b',
+            <h3 className="uh-display" style={{
+              fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)', color: '#f8fafc',
               marginBottom: '10px', lineHeight: 1.3,
             }}>
               What&apos;s Coming Next
             </h3>
-            <p style={{ color: '#64748b', fontSize: '1rem', maxWidth: '520px', margin: '0 auto', lineHeight: 1.7 }}>
+            <p style={{ color: '#94a3b8', fontSize: '1rem', maxWidth: '520px', margin: '0 auto', lineHeight: 1.7 }}>
               As an open-source project, these upcoming features are community-built and <strong>free for all</strong>.
             </p>
           </div>
@@ -102,40 +102,31 @@ export default function FeaturesSection() {
                 key={i}
                 className="uh-upcoming-card fade-in"
                 style={{
-                  background: `linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)`,
-                  borderRadius: '20px',
+                  background: `#151b26`,
+                  borderRadius: '12px',
                   padding: '32px 28px',
-                  border: `1.5px solid ${f.accent}33`,
+                  border: `1px solid rgba(255,255,255,0.08)`,
                   position: 'relative',
                   overflow: 'hidden',
                   transition: 'transform 0.3s, box-shadow 0.3s',
-                  // Hover glow is applied from CSS off this property. It used to be an
-                  // onMouseEnter/onMouseLeave pair, which forced the whole section to
-                  // be a client component.
                   '--uh-upcoming-glow': f.glow,
                 } as React.CSSProperties}
               >
-                {/* glow blob */}
-                <div style={{
-                  position: 'absolute', top: '-30px', right: '-30px', width: '120px', height: '120px',
-                  borderRadius: '50%', background: f.glow, filter: 'blur(30px)', pointerEvents: 'none',
-                }} />
-
                 {/* top row */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '20px' }}>
                   <div style={{
-                    width: 52, height: 52, borderRadius: '14px',
-                    background: `linear-gradient(135deg, ${f.accent}33, ${f.accent}18)`,
-                    border: `1px solid ${f.accent}44`,
+                    width: 44, height: 44, borderRadius: '10px',
+                    background: `rgba(45,212,191,0.12)`,
+                    border: `1px solid rgba(45,212,191,0.25)`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: f.accent, fontSize: '1.3rem',
+                    color: '#2dd4bf', fontSize: '1.1rem',
                   }}>
                     <i className={`fas ${f.icon}`} aria-hidden="true" />
                   </div>
                   <span style={{
                     fontSize: '0.65rem', fontWeight: 800, letterSpacing: '0.1em',
-                    textTransform: 'uppercase', color: '#fbbf24',
-                    background: 'rgba(251,191,36,0.12)', border: '1px solid rgba(251,191,36,0.25)',
+                    textTransform: 'uppercase', color: '#2dd4bf',
+                    background: 'rgba(45,212,191,0.12)', border: '1px solid rgba(45,212,191,0.25)',
                     borderRadius: '50px', padding: '3px 10px',
                     whiteSpace: 'nowrap',
                   }}>
@@ -143,20 +134,20 @@ export default function FeaturesSection() {
                   </span>
                 </div>
 
-                <div style={{ fontSize: '1.15rem', fontWeight: 800, color: 'white', marginBottom: '4px', lineHeight: 1.3 }}>
+                <div style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f8fafc', marginBottom: '4px', lineHeight: 1.3 }}>
                   {f.title}
                 </div>
-                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: f.accent, marginBottom: '12px', letterSpacing: '0.04em' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#2dd4bf', marginBottom: '12px', letterSpacing: '0.04em' }}>
                   {f.sub}
                 </div>
-                <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', lineHeight: 1.7, margin: 0 }}>
+                <p style={{ color: '#94a3b8', fontSize: '0.9rem', lineHeight: 1.7, margin: 0 }}>
                   {f.desc}
                 </p>
 
                 {/* bottom divider + free badge */}
                 <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <i className="fas fa-lock-open" style={{ color: f.accent, fontSize: '0.75rem' }}></i>
-                  <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>
+                  <i className="fas fa-lock-open" style={{ color: '#2dd4bf', fontSize: '0.75rem' }}></i>
+                  <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>
                     Open Source · Free for All
                   </span>
                 </div>

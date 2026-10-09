@@ -19,27 +19,20 @@ export default function ContactSection() {
       <PageWrapper>
         <div style={{ maxWidth: "640px", marginBottom: "48px" }}>
           <p
+            className="uh-section-label"
             style={{
-              fontSize: "0.75rem",
-              fontWeight: 700,
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
               color: "#00e5ff",
-              fontFamily: "monospace",
               marginBottom: "12px",
             }}
           >
             Contact
           </p>
           <h2
+            className="uh-display"
             style={{
-              fontSize: "clamp(1.75rem, 4vw, 2.25rem)",
-              fontWeight: 800,
-              lineHeight: 1.15,
-              letterSpacing: "-0.025em",
+              fontSize: "clamp(1.875rem, 4.5vw, 2.75rem)",
               color: "#f1f5f9",
               margin: "0 0 16px 0",
-              fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
             }}
           >
             Connect With Us
@@ -57,7 +50,7 @@ export default function ContactSection() {
         </div>
 
         <div className="contact-dark-card">
-          <div className="contact-dark-left">
+          <div className="contact-dark-left uh-dark-aligned">
             <div className="contact-left-badge">
               <i className="fas fa-heart-pulse" aria-hidden="true" />
               UltimateHealth
@@ -110,7 +103,7 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <div className="contact-dark-right">
+          <div className="contact-dark-right uh-dark-aligned">
             <h3 className="contact-form-title">Send us a Message</h3>
             <p className="contact-form-subtitle">We typically respond within 24 hours</p>
 

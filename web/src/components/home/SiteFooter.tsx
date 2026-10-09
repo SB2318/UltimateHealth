@@ -21,6 +21,7 @@ export default function SiteFooter() {
         <div className="footer-brand">
           <h2>UltimateHealth</h2>
           <p className="footer-note">Open-source health and wellness for everyone.</p>
+          <p className="footer-motto">Minimal Information. Real Information.</p>
 
           <NewsletterForm />
 

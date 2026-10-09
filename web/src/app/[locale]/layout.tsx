@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, DM_Sans } from 'next/font/google'
+import { Inter, DM_Sans, DM_Serif_Display } from 'next/font/google'
 import '../globals.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import { cn } from '@/lib/utils'
@@ -16,6 +16,12 @@ import OnboardingModalWeb from "@/components/home/OnboardingModalWeb";
 import ScrollToHash from "@/components/ScrollToHash";
 
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
+const dmSerifDisplay = DM_Serif_Display({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-serif',
+  display: 'swap',
+})
 // A single Inter instance backs both --font-inter and --font-heading; declaring it
 // twice shipped two identical @font-face sets and duplicated the font files.
 const inter = Inter({
@@ -72,7 +78,7 @@ export default async function RootLayout({
       nonce={nonce}
       data-nonce={nonce}
       suppressHydrationWarning
-      className={cn('font-sans', dmSans.variable, inter.variable)}
+      className={cn('font-sans', dmSans.variable, inter.variable, dmSerifDisplay.variable)}
     >
       <body className={`${inter.className} antialiased`}>
         <NextIntlClientProvider messages={messages}>

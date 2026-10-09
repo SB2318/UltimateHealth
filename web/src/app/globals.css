@@ -25,6 +25,8 @@
   --color-vice-neonGreen: #39ff14;
   --font-vice: "Orbitron", "Rajdhani", sans-serif;
   --font-stencil: "Impact", sans-serif;
+  /* Editorial serif — used for section display headings */
+  --font-serif: var(--font-serif, "Georgia", "Times New Roman", serif);
 }
 
 html { scroll-behavior: smooth; }
@@ -3417,3 +3419,516 @@ h3 { color: #ffffff !important; }
   box-shadow: 0 0 15px rgba(0,240,255,0.2) !important;
 }
 
+
+
+/* ================================================================
+   UH DESIGN REFINEMENT — PHASE 3
+   Editorial typography, section differentiation, and consistency.
+   Added 2026-10. Preference: clarity over decoration.
+   ================================================================ */
+
+/* ── UH Editorial Typography ──────────────────────────────────── */
+
+/*
+ * .uh-display — serif heading for section titles that carry meaning.
+ * Replaces the Orbitron display weight which reads as "gaming/SaaS"
+ * rather than "trusted health resource". DM Serif Display is humanist,
+ * warm, and conveys considered editorial judgment.
+ */
+.uh-display {
+  font-family: var(--font-serif), "Georgia", serif !important;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+/*
+ * Monospace section labels — Orbitron only for small uppercase badges.
+ */
+.uh-section-label {
+  font-family: "Orbitron", monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ── Section Differentiators ───────────────────────────────────── */
+
+.uh-section-alt {
+  background: #0f0f1c !important;
+}
+.uh-section-deep {
+  background: #080811 !important;
+}
+
+/* ── Motto Tagline ────────────────────────────────────────────── */
+/*
+ * "Minimal Information. Real Information." — the founding philosophy.
+ * Displayed as an editorial aside in the hero and footer.
+ */
+.uh-motto {
+  display: inline-block;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 0.9375rem;
+  font-style: italic;
+  color: #94a3b8;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 18px;
+}
+
+.footer-motto {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: #475569;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* ── Hero Decoration — Remove Generic "AI Slop" Elements ──────── */
+/*
+ * The animated ambient glow blob in the hero is the most recognisable
+ * element of generic dark SaaS templates. Hiding it makes the hero
+ * rely on its typography and content instead.
+ */
+.uh-hero-no-glow {
+  display: none !important;
+}
+
+/* Hero badge — remove glowing dot effect, replace with static mark */
+.uh-hero-badge-dot {
+  box-shadow: none !important;
+  background: currentColor !important;
+  opacity: 0.7;
+}
+
+/* ── Card Visual Differentiators ──────────────────────────────── */
+
+/* WhatWeDo capability cards: left-border accent on hover */
+.uh-card-capability {
+  background: #13131f;
+  border: 1px solid #252538;
+  border-radius: 10px;
+  padding: 28px 28px;
+  transition: border-color 0.2s ease, background 0.2s ease,
+              border-left-color 0.2s ease;
+  border-left: 3px solid transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.uh-card-capability:hover {
+  border-left-color: var(--uh-card-accent, #00e5ff);
+  border-color: #2e2e50;
+  background: #15152a;
+}
+
+/* Storyboard: numbered timeline rows — flat, connected */
+.uh-storyboard-timeline {
+  display: flex;
+  flex-direction: column;
+}
+.uh-card-step {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 24px;
+  align-items: flex-start;
+  padding: 28px 0;
+  border-top: 1px solid #1c1c2e;
+}
+.uh-card-step:last-child {
+  border-bottom: 1px solid #1c1c2e;
+}
+.uh-card-step-number {
+  font-family: "Orbitron", monospace;
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  padding-top: 4px;
+  flex-shrink: 0;
+}
+
+/* Programs: inline list with logo left, text right */
+.uh-program-list {
+  display: flex;
+  flex-direction: column;
+}
+.uh-program-row {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 24px;
+  align-items: center;
+  padding: 24px 0;
+  border-top: 1px solid #1c1c2e;
+}
+.uh-program-row:last-child {
+  border-bottom: 1px solid #1c1c2e;
+}
+.uh-program-logo-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  height: 56px;
+  flex-shrink: 0;
+}
+.uh-program-text-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.uh-program-text-cell h3 {
+  font-size: 0.9375rem !important;
+  font-weight: 700;
+  color: #e2e8f0 !important;
+  margin: 0 0 2px 0;
+}
+.uh-program-text-cell p {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ── Contact Section — Dark Palette Alignment ──────────────────── */
+/*
+ * The contact left panel (#3d1a78 purple) and right panel (pure white)
+ * are both replaced with dark-navy colours matching the site palette.
+ * The two-panel structure and all form functionality is preserved.
+ */
+.contact-dark-left.uh-dark-aligned {
+  background: linear-gradient(160deg, #0f0f24 0%, #131330 60%, #0c0c1e 100%) !important;
+  border-right: 1px solid #252538;
+}
+.contact-dark-right.uh-dark-aligned {
+  background: #0f0f1c !important;
+  border-left: none !important;
+}
+.contact-dark-right.uh-dark-aligned .contact-form-title {
+  color: #f1f5f9 !important;
+}
+.contact-dark-right.uh-dark-aligned .contact-form-subtitle {
+  color: #64748b !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-field-group {
+  background: #1a1a2e !important;
+  border-color: #252545 !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-field-group:focus-within {
+  border-color: #00e5ff !important;
+  background: #1e1e35 !important;
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.08) !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-input {
+  color: #f1f5f9 !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-input::placeholder {
+  color: #475569 !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-field-icon {
+  color: #475569 !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-field-group:focus-within .dark-field-icon {
+  color: #00e5ff !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-submit-btn {
+  background: linear-gradient(135deg, #00b4cc 0%, #00e5ff 100%) !important;
+  color: #0c0c14 !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-submit-btn:hover {
+  box-shadow: 0 8px 24px rgba(0, 229, 255, 0.25) !important;
+}
+.contact-dark-right.uh-dark-aligned .contact-trust-text {
+  color: #475569 !important;
+}
+.contact-dark-right.uh-dark-aligned .contact-success-box h4 {
+  color: #f1f5f9 !important;
+}
+
+/* ── FeaturesSection Dark Palette Fix ─────────────────────────── */
+/*
+ * FeaturesSection was light-themed (white background, glassmorphism
+ * white cards, gradient text headings) — entirely disconnected from
+ * the rest of the site. This overrides it to use the dark palette.
+ */
+.feature-section-premium {
+  background: #0c0c14 !important;
+}
+.feature-section-premium::before,
+.feature-section-premium::after {
+  display: none !important;
+}
+.feature-section-premium h2 {
+  color: #f1f5f9 !important;
+  background: none !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  text-align: left;
+}
+.feature-section-premium p.center {
+  text-align: left;
+  color: #64748b !important;
+  -webkit-text-fill-color: #64748b !important;
+  margin-left: 0;
+  margin-right: 0;
+}
+.feature-card-premium {
+  background: #13131f !important;
+  border: 1px solid #252538 !important;
+  border-left: 3px solid transparent !important;
+  border-radius: 10px !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+.feature-card-premium::before {
+  display: none !important;
+}
+.feature-card-premium:hover {
+  background: #15152a !important;
+  border-color: #2e2e50 !important;
+  border-left-color: #667eea !important;
+  box-shadow: none !important;
+  transform: translateY(-3px) !important;
+}
+.feature-card-premium h3 {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: #f1f5f9 !important;
+  background: none !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  margin-bottom: 10px;
+}
+.feature-card-premium p {
+  color: #64748b !important;
+  font-size: 0.875rem !important;
+  line-height: 1.65 !important;
+}
+.feature-icon-wrapper {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+  background: rgba(102, 126, 234, 0.1) !important;
+  border: 1px solid rgba(102, 126, 234, 0.22) !important;
+  font-size: 1rem !important;
+  box-shadow: none !important;
+  margin-bottom: 14px !important;
+}
+
+/* Upcoming features section — match dark palette */
+.uh-upcoming-card {
+  background: linear-gradient(135deg, #111120 0%, #0f0f1e 100%) !important;
+  border-radius: 10px !important;
+}
+
+/* ── Purpose Section — Dr. Moumita Memorial Card ──────────────── */
+/*
+ * The memorial card already has good emotional weight. Minor refinements
+ * to make it feel more like a document/record than a UI card.
+ */
+.uh-memorial-card {
+  background: linear-gradient(135deg, #0f0f20 0%, #0c0c1a 100%) !important;
+  border: 1px solid rgba(240, 0, 106, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 
+              inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+}
+
+/* ── Hero Stats — Contrast Fix ────────────────────────────────── */
+/*
+ * The stat labels (#374151) failed contrast on the dark card background.
+ * Raised to #475569 which passes WCAG AA at this size.
+ */
+.uh-stat-label {
+  color: #475569 !important;
+}
+
+/* ── Scroll Reveal — consolidated ──────────────────────────────── */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: uh-fade-up 0.55s ease forwards;
+  animation-play-state: paused;
+}
+.scroll-reveal.revealed {
+  animation-play-state: running;
+}
+
+/* ── Mobile Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .uh-program-row {
+    grid-template-columns: 70px 1fr;
+    gap: 14px;
+    padding: 18px 0;
+  }
+  .uh-card-step {
+    grid-template-columns: 44px 1fr;
+    gap: 16px;
+    padding: 22px 0;
+  }
+  .uh-card-step-number {
+    font-size: 1.375rem;
+  }
+  .uh-program-logo-cell {
+    height: 48px;
+  }
+}
+
+/* ── Reduced Motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .uh-motto,
+  .uh-display,
+  .uh-card-capability,
+  .uh-card-step,
+  .uh-program-row,
+  .feature-card-premium {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* END UH DESIGN REFINEMENT — PHASE 3 */
+
+
+/* ================================================================
+   UH EYE COMFORT & NAV HEARTBEAT ANIMATION — REFINEMENT
+   Soft slate backgrounds, gentle pastel-medical tones, low glare,
+   and subtle heartbeat animation on active/hovered nav links.
+   ================================================================ */
+
+/* ── Soft Gentle Heartbeat Animation for Nav Links ───────────────── */
+@keyframes gentle-heartbeat {
+  0% { transform: scale(1); filter: drop-shadow(0 0 0px transparent); }
+  15% { transform: scale(1.22); color: #f43f5e !important; filter: drop-shadow(0 0 6px rgba(244, 63, 94, 0.4)); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.14); color: #f43f5e !important; filter: drop-shadow(0 0 4px rgba(244, 63, 94, 0.3)); }
+  75%, 100% { transform: scale(1); }
+}
+
+/* Nav Item Icon Heartbeat on Hover & Active State */
+.nav-link-item:hover .nav-item-icon,
+.nav-link-item.active .nav-item-icon {
+  animation: gentle-heartbeat 1.6s ease-in-out infinite !important;
+  color: #f43f5e !important;
+}
+
+.mobile-nav a:hover,
+.mobile-nav a.active {
+  color: #2dd4bf !important;
+}
+
+/* Smooth active indicator pulse on nav link item */
+.nav-link-item.active {
+  position: relative;
+  color: #2dd4bf !important;
+}
+
+.nav-link-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 2px;
+  background: #2dd4bf !important;
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(45, 212, 191, 0.5);
+  transition: width 0.3s ease;
+}
+
+/* ── Eye-Comfort Slate Color Palette (No Glare, Soft Contrast) ────── */
+body {
+  background: #0d1117 !important;
+  color: #cbd5e1 !important;
+}
+
+section {
+  background: #0d1117 !important;
+}
+
+.uh-section-alt {
+  background: #111622 !important;
+}
+
+.uh-section-deep {
+  background: #090d14 !important;
+}
+
+/* Softer card backgrounds & muted border opacities */
+.uh-card-capability,
+.uh-upcoming-card,
+.feature-card-premium {
+  background: #151b26 !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
+}
+
+.uh-card-capability:hover,
+.feature-card-premium:hover {
+  background: #1a2232 !important;
+  border-color: rgba(45, 212, 191, 0.25) !important;
+}
+
+/* Soft Off-White for Headings (No harsh glaring white on black) */
+h1, h2, h3, h4, .uh-display {
+  color: #f8fafc !important;
+}
+
+/* Soft muted slate for body paragraphs */
+p, .uh-card-capability p, .feature-card-premium p {
+  color: #94a3b8 !important;
+}
+
+/* Softer CTA button styling */
+.nav-btn-sm {
+  background: rgba(45, 212, 191, 0.1) !important;
+  border: 1px solid rgba(45, 212, 191, 0.3) !important;
+  color: #2dd4bf !important;
+}
+
+.nav-btn-sm:hover {
+  background: #2dd4bf !important;
+  color: #0d1117 !important;
+  box-shadow: 0 4px 16px rgba(45, 212, 191, 0.3) !important;
+}
+
+/* Header bar background softness */
+.header {
+  background: rgba(13, 17, 23, 0.88) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+.header.scrolled {
+  background: rgba(13, 17, 23, 0.96) !important;
+  border-bottom: 1px solid rgba(45, 212, 191, 0.25) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Contact section eye-comfort dark alignment */
+.contact-dark-left.uh-dark-aligned {
+  background: linear-gradient(160deg, #111622 0%, #161d2d 100%) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+.contact-dark-right.uh-dark-aligned {
+  background: #0d1117 !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-field-group {
+  background: #151b26 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-field-group:focus-within {
+  border-color: #2dd4bf !important;
+  background: #1a2232 !important;
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+}
+.contact-dark-right.uh-dark-aligned .dark-submit-btn {
+  background: linear-gradient(135deg, #0d9488 0%, #2dd4bf 100%) !important;
+  color: #0d1117 !important;
+}
+
+/* END EYE COMFORT & HEARTBEAT ANIMATION */

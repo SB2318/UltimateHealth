@@ -17,7 +17,7 @@ export default function PortalSwitcherCTA() {
       desc: t('portal1Desc'),
       link: '/articles',
       actionText: t('portal1Action'),
-      accent: '#00e5ff',
+      accent: '#2dd4bf',
     },
     {
       icon: Stethoscope,
@@ -26,7 +26,7 @@ export default function PortalSwitcherCTA() {
       desc: t('portal2Desc'),
       link: '/admin-agreement',
       actionText: t('portal2Action'),
-      accent: '#22c55e',
+      accent: '#2dd4bf',
     },
     {
       icon: Code2,
@@ -35,15 +35,15 @@ export default function PortalSwitcherCTA() {
       desc: t('portal3Desc'),
       link: '/contribute',
       actionText: t('portal3Action'),
-      accent: '#f0006a',
+      accent: '#2dd4bf',
     },
   ];
 
   return (
     <section
       id="portals"
+      className="uh-section-deep"
       style={{
-        background: '#0c0c14',
         borderTop: '1px solid #252538',
         padding: '96px 24px',
       }}
@@ -51,28 +51,15 @@ export default function PortalSwitcherCTA() {
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Section Header */}
         <div style={{ maxWidth: '640px', marginBottom: '56px' }}>
-          <p
-            style={{
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#00e5ff',
-              fontFamily: 'monospace',
-              marginBottom: '12px',
-            }}
-          >
+          <p className="uh-section-label" style={{ color: '#00e5ff', marginBottom: '12px' }}>
             {t('sectionBadge')}
           </p>
           <h2
+            className="uh-display"
             style={{
-              fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
-              fontWeight: 800,
-              lineHeight: 1.15,
-              letterSpacing: '-0.025em',
+              fontSize: 'clamp(1.875rem, 4.5vw, 2.75rem)',
               color: '#f1f5f9',
               margin: '0 0 16px 0',
-              fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
             }}
           >
             {t('title')}

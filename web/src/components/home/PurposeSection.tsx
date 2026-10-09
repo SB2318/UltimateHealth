@@ -16,27 +16,27 @@ export default function PurposeSection() {
       icon: Heart,
       title: t('pillar1Title'),
       body: t('pillar1Body'),
-      accent: '#f0006a',
+      accent: '#2dd4bf',
     },
     {
       icon: Scale,
       title: t('pillar2Title'),
       body: t('pillar2Body'),
-      accent: '#00e5ff',
+      accent: '#2dd4bf',
     },
     {
       icon: Sparkles,
       title: t('pillar3Title'),
       body: t('pillar3Body'),
-      accent: '#f5c518',
+      accent: '#2dd4bf',
     },
   ];
 
   return (
     <section
       id="purpose"
+      className="uh-section-alt"
       style={{
-        background: '#0c0c14',
         borderTop: '1px solid #252538',
         padding: '96px 24px',
       }}
@@ -44,14 +44,9 @@ export default function PurposeSection() {
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Section label */}
         <p
-          className="scroll-reveal"
+          className="scroll-reveal uh-section-label"
           style={{
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: '#f0006a',
-            fontFamily: 'monospace',
+            color: '#2dd4bf',
             marginBottom: '16px',
           }}
         >
@@ -61,14 +56,11 @@ export default function PurposeSection() {
         {/* Section Header */}
         <div className="scroll-reveal" style={{ maxWidth: '680px', marginBottom: '40px' }}>
           <h2
+            className="uh-display"
             style={{
-              fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
-              fontWeight: 800,
-              lineHeight: 1.15,
-              letterSpacing: '-0.025em',
+              fontSize: 'clamp(1.875rem, 4.5vw, 2.75rem)',
               color: '#f1f5f9',
               margin: '0 0 16px 0',
-              fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
             }}
           >
             {t('title')}
@@ -87,7 +79,7 @@ export default function PurposeSection() {
 
         {/* ── Featured Memorial & Vision Card: Dr. Moumita Debnath ── */}
         <div
-          className="scroll-reveal"
+          className="scroll-reveal uh-memorial-card"
           style={{
             background: 'linear-gradient(135deg, #151526 0%, #11111e 100%)',
             border: '1px solid rgba(240, 0, 106, 0.35)',
@@ -134,9 +126,9 @@ export default function PurposeSection() {
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: '#f0006a',
-                  background: 'rgba(240,0,106,0.12)',
-                  border: '1px solid rgba(240,0,106,0.3)',
+                  color: '#f43f5e',
+                  background: 'rgba(244,63,94,0.12)',
+                  border: '1px solid rgba(244,63,94,0.3)',
                   padding: '3px 8px',
                   borderRadius: '6px',
                 }}
@@ -152,7 +144,7 @@ export default function PurposeSection() {
               style={{
                 fontSize: '1.2rem',
                 fontWeight: 700,
-                color: '#ffffff',
+                color: '#f8fafc',
                 margin: '0 0 6px 0',
               }}
             >
@@ -177,9 +169,9 @@ export default function PurposeSection() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                background: 'rgba(240,0,106,0.15)',
-                border: '1px solid rgba(240,0,106,0.4)',
-                color: '#ff4081',
+                background: 'rgba(244,63,94,0.15)',
+                border: '1px solid rgba(244,63,94,0.35)',
+                color: '#f43f5e',
                 padding: '8px 16px',
                 borderRadius: '8px',
                 fontSize: '0.8125rem',
@@ -188,12 +180,12 @@ export default function PurposeSection() {
                 transition: 'all 0.15s ease',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = '#f0006a';
-                (e.currentTarget as HTMLElement).style.color = '#ffffff';
+                (e.currentTarget as HTMLElement).style.background = '#f43f5e';
+                (e.currentTarget as HTMLElement).style.color = '#0d1117';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'rgba(240,0,106,0.15)';
-                (e.currentTarget as HTMLElement).style.color = '#ff4081';
+                (e.currentTarget as HTMLElement).style.background = 'rgba(244,63,94,0.15)';
+                (e.currentTarget as HTMLElement).style.color = '#f43f5e';
               }}
             >
               <BookOpen style={{ width: 14, height: 14 }} />

@@ -10,7 +10,7 @@ const programs = [
     badge: 'Open Source Week',
     title: 'IEEE IGDTUW',
     desc: 'An intensive event fostering global collaboration and high-level skill-building across open-source ecosystems.',
-    accent: '#00e5ff',
+    accent: '#2dd4bf',
   },
   {
     logo: 'https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00',
@@ -18,7 +18,7 @@ const programs = [
     badge: 'Cloud Hackathon',
     title: 'Vultr Cloud Innovate',
     desc: 'Developing scalable infrastructure solutions for health accessibility challenges using cloud computing.',
-    accent: '#f0006a',
+    accent: '#2dd4bf',
   },
   {
     logo: 'https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png',
@@ -26,7 +26,7 @@ const programs = [
     badge: 'Summer 2024',
     title: 'GirlScript Summer of Code',
     desc: 'A 3-month mentorship initiative bringing international contributors into real-world software development.',
-    accent: '#f5c518',
+    accent: '#2dd4bf',
   },
   {
     logo: 'https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png',
@@ -34,7 +34,7 @@ const programs = [
     badge: 'Summer 2026',
     title: 'GirlScript Summer of Code 2026',
     desc: 'Large-scale collaborative program welcoming developers, translators, and documentation writers worldwide.',
-    accent: '#7c3aed',
+    accent: '#2dd4bf',
   },
 ];
 
@@ -50,142 +50,65 @@ export default function ProgramsSection() {
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Section Header */}
-        <div style={{ maxWidth: '640px', marginBottom: '56px' }}>
-          <p
-            style={{
-              fontSize: '0.75rem',
-              fontWeight: 700,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#f5c518',
-              fontFamily: 'monospace',
-              marginBottom: '12px',
-            }}
-          >
+        <div style={{ maxWidth: '640px', marginBottom: '48px' }}>
+          <p className="uh-section-label" style={{ color: '#f5c518', marginBottom: '12px' }}>
             Community
           </p>
           <h2
+            className="uh-display"
             style={{
-              fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
-              fontWeight: 800,
-              lineHeight: 1.15,
-              letterSpacing: '-0.025em',
+              fontSize: 'clamp(1.875rem, 4.5vw, 2.75rem)',
               color: '#f1f5f9',
               margin: '0 0 16px 0',
-              fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
             }}
           >
             Programs &amp; Hackathons
           </h2>
-          <p
-            style={{
-              fontSize: '1rem',
-              lineHeight: 1.65,
-              color: '#64748b',
-              margin: 0,
-            }}
-          >
+          <p style={{ fontSize: '1rem', lineHeight: 1.65, color: '#64748b', margin: 0 }}>
             Collaborating with tech communities to mentor contributors and advance open health tech.
           </p>
         </div>
 
-        {/* 4 Cards */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '20px',
-          }}
-        >
+        {/* Inline list — logo left, text right */}
+        <div className="uh-program-list">
           {programs.map((p, i) => (
-            <div
-              key={i}
-              style={{
-                background: '#13131f',
-                border: '1px solid #252538',
-                borderRadius: '16px',
-                padding: '28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                transition: 'background 0.2s ease, border-color 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = '#181828';
-                (e.currentTarget as HTMLElement).style.borderColor = '#2e2e50';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = '#13131f';
-                (e.currentTarget as HTMLElement).style.borderColor = '#252538';
-              }}
-            >
-              <div>
-                <div
+            <div key={i} className="uh-program-row">
+              <div className="uh-program-logo-cell">
+                <Image
+                  src={p.logo}
+                  alt={p.alt}
+                  width={100}
+                  height={36}
                   style={{
-                    height: '56px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    marginBottom: '20px',
-                    padding: '8px 12px',
-                    borderRadius: '10px',
-                    background: 'rgba(255,255,255,0.02)',
-                    border: '1px solid rgba(255,255,255,0.05)',
+                    maxHeight: '32px',
+                    width: 'auto',
+                    objectFit: 'contain',
+                    filter: 'brightness(0) invert(1) opacity(0.75)',
                   }}
-                >
-                  <Image
-                    src={p.logo}
-                    alt={p.alt}
-                    width={140}
-                    height={40}
+                />
+              </div>
+
+              <div className="uh-program-text-cell">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span
                     style={{
-                      maxHeight: '36px',
-                      width: 'auto',
-                      objectFit: 'contain',
-                      filter: 'brightness(0) invert(1) opacity(0.8)',
+                      fontSize: '0.6875rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      color: p.accent,
+                      background: `${p.accent}12`,
+                      border: `1px solid ${p.accent}22`,
+                      padding: '2px 7px',
+                      borderRadius: '4px',
+                      flexShrink: 0,
                     }}
-                  />
+                  >
+                    {p.badge}
+                  </span>
+                  <h3>{p.title}</h3>
                 </div>
-
-                <span
-                  style={{
-                    fontSize: '0.6875rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    color: p.accent,
-                    background: `${p.accent}12`,
-                    border: `1px solid ${p.accent}25`,
-                    padding: '3px 8px',
-                    borderRadius: '5px',
-                    display: 'inline-block',
-                    marginBottom: '14px',
-                  }}
-                >
-                  {p.badge}
-                </span>
-
-                <h3
-                  style={{
-                    fontSize: '1rem',
-                    fontWeight: 700,
-                    color: '#f1f5f9',
-                    margin: '0 0 10px 0',
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  {p.title}
-                </h3>
-
-                <p
-                  style={{
-                    fontSize: '0.875rem',
-                    lineHeight: 1.6,
-                    color: '#64748b',
-                    margin: 0,
-                  }}
-                >
-                  {p.desc}
-                </p>
+                <p>{p.desc}</p>
               </div>
             </div>
           ))}
