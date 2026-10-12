@@ -3930,4 +3930,113 @@ p, .uh-card-capability p, .feature-card-premium p {
   color: #0d1117 !important;
 }
 
+/* ─── ARTICLE DETAILS HTML CONTENT PROFESSIONAL TYPOGRAPHY (DARK THEME) ─── */
+.article-html-content {
+  color: #cbd5e1 !important;
+  line-height: 1.85 !important;
+  font-size: 1.125rem !important;
+  text-align: left !important;
+}
+
+.article-html-content h1,
+.article-html-content h2,
+.article-html-content h3,
+.article-html-content h4 {
+  text-align: left !important;
+  background: transparent !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+.article-html-content h2 {
+  font-size: 1.65rem !important;
+  font-weight: 700 !important;
+  color: #f8fafc !important;
+  margin-top: 2.75rem !important;
+  margin-bottom: 1rem !important;
+  padding-bottom: 0.5rem !important;
+  border-bottom: 1px solid #252538 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.article-html-content h3 {
+  font-size: 1.3rem !important;
+  font-weight: 600 !important;
+  color: #f1f5f9 !important;
+  margin-top: 2rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.article-html-content h4 {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  color: #e2e8f0 !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.article-html-content p {
+  color: #cbd5e1 !important;
+  margin-bottom: 1.4rem !important;
+  line-height: 1.85 !important;
+  text-align: left !important;
+}
+
+.article-html-content ul,
+.article-html-content ol {
+  margin: 1.25rem 0 !important;
+  padding-left: 1.75rem !important;
+  color: #cbd5e1 !important;
+  text-align: left !important;
+}
+
+.article-html-content li {
+  margin-bottom: 0.6rem !important;
+  line-height: 1.75 !important;
+  color: #cbd5e1 !important;
+}
+
+.article-html-content ul {
+  list-style-type: disc !important;
+}
+
+.article-html-content ol {
+  list-style-type: decimal !important;
+}
+
+.article-html-content a {
+  color: #2dd4bf !important;
+  text-decoration: underline !important;
+  font-weight: 500 !important;
+}
+
+.article-html-content a:hover {
+  color: #5eead4 !important;
+}
+
+.article-html-content strong {
+  color: #f8fafc !important;
+  font-weight: 600 !important;
+}
+
+.article-html-content img {
+  border-radius: 1rem !important;
+  margin: 2rem auto !important;
+  max-width: 100% !important;
+  height: auto !important;
+  border: 1px solid #252538 !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
+}
+
+.article-html-content blockquote {
+  border-left: 4px solid #2dd4bf !important;
+  padding-left: 1.25rem !important;
+  margin: 1.75rem 0 !important;
+  color: #94a3b8 !important;
+  font-style: italic !important;
+  background: rgba(45, 212, 191, 0.08) !important;
+  padding-top: 0.85rem !important;
+  padding-bottom: 0.85rem !important;
+  border-radius: 0 0.5rem 0.5rem 0 !important;
+}
+
 /* END EYE COMFORT & HEARTBEAT ANIMATION */

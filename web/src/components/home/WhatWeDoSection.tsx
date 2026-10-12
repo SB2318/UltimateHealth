@@ -59,7 +59,7 @@ export default function WhatWeDoSection() {
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Section Header */}
         <div className="scroll-reveal" style={{ maxWidth: '640px', marginBottom: '56px' }}>
-          <p className="uh-section-label" style={{ color: '#00e5ff', marginBottom: '12px' }}>
+          <p className="uh-section-label" style={{ color: '#2dd4bf', marginBottom: '12px' }}>
             {t('sectionBadge')}
           </p>
           <h2

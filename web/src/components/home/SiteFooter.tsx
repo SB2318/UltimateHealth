@@ -64,7 +64,7 @@ export default function SiteFooter() {
           <a href={HELP_CENTER_URL} target="_blank" rel="noopener noreferrer">Help Center</a>
           <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
           <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">Feedback</a>
-          <a href="https://uhsocial.in/docs" target="_blank" rel="noopener noreferrer">API Docs</a>
+          <a href="https://ultimatehealth.blog/docs" target="_blank" rel="noopener noreferrer">API Docs</a>
         </div>
       </PageWrapper>
 

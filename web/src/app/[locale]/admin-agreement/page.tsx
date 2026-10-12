@@ -265,7 +265,7 @@ function AdminAgreementContent() {
     setLocked(true);
 
     try {
-      const response = await fetch("https://uhsocial.in/api/admin/upload-agreement", {
+      const response = await fetch("https://ultimatehealth.blog/api/admin/upload-agreement", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -284,7 +284,7 @@ function AdminAgreementContent() {
       showMessage("success", "✓ Agreement signed & uploaded successfully! Redirecting to your PDF...");
       setTimeout(() => {
         if (data.pdfUrl) window.location.href = data.pdfUrl;
-        else if (data.key) window.location.href = `https://uhsocial.in/api/getFile/${data.key}`;
+        else if (data.key) window.location.href = `https://ultimatehealth.blog/api/getFile/${data.key}`;
         else window.location.href = "/admin/dashboard";
       }, 2000);
     } catch (err: unknown) {

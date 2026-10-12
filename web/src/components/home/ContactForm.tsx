@@ -33,7 +33,7 @@ export default function ContactForm() {
     }
   };
 
-  // ── Contact form submit → uhsocial.in API ──
+  // ── Contact form submit → ultimatehealth.blog API ──
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = contactName.trim();

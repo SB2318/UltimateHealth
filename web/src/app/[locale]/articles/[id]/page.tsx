@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Article } from "@/types/article";
 import ArticlePageClient from "@/components/articles/ArticlePageClient";
 import { withBasePath } from "@/lib/basePath";
+import { resolveArticleImageUrl } from "@/lib/article-image";
 
 interface PageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -49,7 +50,7 @@ function resolveImageUrl(imageUtils: string[]): string | null {
   if (!raw) return null;
   if (raw.startsWith("http")) return raw;
   return withBasePath(
-    `/api/proxy-image?url=${encodeURIComponent(`https://uhsocial.in/api/getFile/${raw}`)}`
+    `/api/proxy-image?url=${encodeURIComponent(`https://ultimatehealth.blog/api/getFile/${raw}`)}`
   );
 }
 
@@ -75,7 +76,10 @@ function mapToArticle(apiArticle: ApiArticleDetail): Article {
     title: apiArticle.title,
     excerpt: apiArticle.description,
     content: { blocks: [] }, // replaced by htmlContent prop
-    imageUrl: resolveImageUrl(apiArticle.imageUtils),
+    imageUrl: resolveArticleImageUrl(apiArticle.imageUtils, {
+      title: apiArticle.title,
+      category,
+    }),
     imageAlt: apiArticle.title,
     author: {
       name: authorName,
@@ -95,7 +99,7 @@ async function fetchArticle(
   id: string
 ): Promise<{ article: Article; pbRecordId: string } | null> {
   try {
-    const res = await fetch(`https://uhsocial.in/api/articles/${id}`, {
+    const res = await fetch(`https://ultimatehealth.blog/api/articles/${id}`, {
       next: { revalidate: 300 },
     });
     if (!res.ok) return null;
@@ -114,7 +118,7 @@ async function fetchArticle(
 async function fetchHtmlContent(pbRecordId: string): Promise<string | null> {
   try {
     const res = await fetch(
-      `https://uhsocial.in/api/articles/get-article-content/${pbRecordId}`,
+      `https://ultimatehealth.blog/api/articles/get-article-content/${pbRecordId}`,
       { next: { revalidate: 300 } }
     );
     if (!res.ok) return null;

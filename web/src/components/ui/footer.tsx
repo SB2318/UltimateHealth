@@ -11,10 +11,10 @@ export const Footer = () => {
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   const isValidEmail = (email: string) => EMAIL_PATTERN.test(email.trim())
   const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL || 'https://uhsocial.in'
+    process.env.NEXT_PUBLIC_API_BASE_URL || 'https://ultimatehealth.blog'
   // Owner-configurable frontend URLs (set in deployment env when needed)
   const HELP_CENTER_URL =
-    process.env.NEXT_PUBLIC_HELP_CENTER_URL || 'https://uhsocial.in/docs'
+    process.env.NEXT_PUBLIC_HELP_CENTER_URL || 'https://ultimatehealth.blog/docs'
   const FEEDBACK_URL =
     process.env.NEXT_PUBLIC_FEEDBACK_URL ||
     'https://github.com/SB2318/UltimateHealth/issues'
@@ -223,7 +223,7 @@ export const Footer = () => {
             Feedback
           </a>
           <a
-            href="https://uhsocial.in/docs"
+            href="https://ultimatehealth.blog/docs"
             target="_blank"
             rel="noopener noreferrer"
           >

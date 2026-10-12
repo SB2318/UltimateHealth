@@ -11,6 +11,7 @@ import PurposeSection from "@/components/home/PurposeSection";
 import WhatWeDoSection from "@/components/home/WhatWeDoSection";
 import ChainReactionStoryboard from "@/components/home/ChainReactionStoryboard";
 import PortalSwitcherCTA from "@/components/home/PortalSwitcherCTA";
+import HomeArticlesPreview from "@/components/home/HomeArticlesPreview";
 
 /**
  * Revamped Vice-Styled Creative Landing Page:
@@ -33,6 +34,7 @@ export default function Home() {
       <ViceHero />
       <PurposeSection />
       <WhatWeDoSection />
+      <HomeArticlesPreview />
       <ChainReactionStoryboard />
       <PortalSwitcherCTA />
       <ScreenshotGallery />

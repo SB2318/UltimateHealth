@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { withBasePath } from "@/lib/basePath";
+import { resolveArticleImageUrl } from "@/lib/article-image";
 import type { ApiArticle, ApiArticlesResponse } from "@/types/api-article";
 import { Navbar, PageWrapper, Section } from "@/components/layout";
 import { Footer } from "@/components/ui/footer";
@@ -26,7 +27,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
   let actualTotalPages = 1;
 
   try {
-    const res = await fetch(`https://uhsocial.in/api/articles/?page=${page}&limit=${limit}`, {
+    const res = await fetch(`https://ultimatehealth.blog/api/articles/?page=${page}&limit=${limit}`, {
       next: { revalidate: 300 }, // ISR: revalidate every 5 minutes
     });
     if (res.ok) {
@@ -37,7 +38,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
 
     // Fallback for API bug where totalPages is missing on page > 1
     if (page > 1 && !data.totalPages) {
-      const p1Res = await fetch(`https://uhsocial.in/api/articles/?page=1&limit=${limit}`, {
+      const p1Res = await fetch(`https://ultimatehealth.blog/api/articles/?page=1&limit=${limit}`, {
         next: { revalidate: 300 },
       });
       if (p1Res.ok) {
@@ -369,12 +370,10 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
 function ArticleCard({ article }: { article: ApiArticle }) {
   const date = article.publishedDate ? format(parseISO(article.publishedDate), "MMM d, yyyy") : "Unknown date";
 
-  const rawImg = article.imageUtils && article.imageUtils.length > 0 ? article.imageUtils[0] : null;
-  const imageUrl = rawImg
-    ? rawImg.startsWith("http")
-      ? rawImg
-      : withBasePath(`/api/proxy-image?url=${encodeURIComponent(`https://uhsocial.in/api/getFile/${rawImg}`)}`)
-    : null;
+  const imageUrl = resolveArticleImageUrl(article.imageUtils, {
+    title: article.title,
+    category: article.tags?.[0]?.name,
+  });
 
   return (
     <Link

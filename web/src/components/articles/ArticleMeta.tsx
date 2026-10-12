@@ -30,35 +30,35 @@ export default function ArticleMeta({ article, className = "" }: ArticleMetaProp
           {article.author.avatarInitials}
         </div>
         <div className="leading-tight">
-          <p className="text-sm font-semibold text-[#2d3748]">
+          <p className="text-sm font-semibold !text-slate-100" style={{ color: "#f8fafc" }}>
             {article.author.name}
           </p>
-          <p className="text-xs text-[#718096]">{article.author.role}</p>
+          <p className="text-xs !text-slate-400" style={{ color: "#94a3b8" }}>{article.author.role}</p>
         </div>
       </div>
 
       {/* Vertical divider (desktop only) */}
       <div
-        className="hidden sm:block h-8 w-px bg-gray-200 flex-shrink-0"
+        className="hidden sm:block h-8 w-px bg-[#252538] flex-shrink-0"
         aria-hidden="true"
       />
 
       {/* Publication date */}
-      <div className="flex items-center gap-1.5 text-sm text-[#718096]">
-        <i className="fas fa-calendar-alt text-xs" aria-hidden="true" />
+      <div className="flex items-center gap-1.5 text-sm !text-slate-300" style={{ color: "#cbd5e1" }}>
+        <i className="fas fa-calendar-alt text-xs text-slate-400" aria-hidden="true" />
         <time dateTime={article.publishedAt} className="font-medium">
           {formattedDate}
         </time>
         {updatedDate && (
-          <span className="text-xs text-[#718096]/60 ml-1">
+          <span className="text-xs text-slate-500 ml-1">
             (Updated {updatedDate})
           </span>
         )}
       </div>
 
       {/* Reading time */}
-      <div className="flex items-center gap-1.5 text-sm text-[#718096]">
-        <i className="fas fa-clock text-xs" aria-hidden="true" />
+      <div className="flex items-center gap-1.5 text-sm !text-slate-300" style={{ color: "#cbd5e1" }}>
+        <i className="fas fa-clock text-xs text-slate-400" aria-hidden="true" />
         <span className="font-medium">{article.readingTime}</span>
       </div>
     </div>
