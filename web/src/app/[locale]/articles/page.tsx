@@ -27,7 +27,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
 
   try {
     const res = await fetch(`https://uhsocial.in/api/articles/?page=${page}&limit=${limit}`, {
-      cache: "no-store",
+      next: { revalidate: 300 }, // ISR: revalidate every 5 minutes
     });
     if (res.ok) {
       data = await res.json();
@@ -38,7 +38,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
     // Fallback for API bug where totalPages is missing on page > 1
     if (page > 1 && !data.totalPages) {
       const p1Res = await fetch(`https://uhsocial.in/api/articles/?page=1&limit=${limit}`, {
-        cache: "no-store",
+        next: { revalidate: 300 },
       });
       if (p1Res.ok) {
         const p1Data = await p1Res.json();
@@ -377,7 +377,7 @@ function ArticleCard({ article }: { article: ApiArticle }) {
     : null;
 
   return (
-    <a
+    <Link
       href={withBasePath(`/articles/${article._id}`)}
       style={{
         background: "#13131f",
@@ -389,7 +389,7 @@ function ArticleCard({ article }: { article: ApiArticle }) {
         textDecoration: "none",
         transition: "border-color 0.2s ease, transform 0.2s ease",
       }}
-      className="group hover:-translate-y-1 hover:border-[#7c3aed]"
+      className="group hover:-translate-y-1 hover:border-[#2dd4bf]"
     >
       {/* Thumbnail */}
       <div
@@ -513,6 +513,6 @@ function ArticleCard({ article }: { article: ApiArticle }) {
           <time dateTime={article.publishedDate}>{date}</time>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

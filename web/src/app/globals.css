@@ -226,7 +226,6 @@ html { scroll-behavior: smooth; }
 body {
   background: #0b0b12 !important;
   color: #f8fafc !important;
-  animation: page-enter 0.4s ease-out both;
 }
 
 .container {

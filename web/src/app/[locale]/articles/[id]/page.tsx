@@ -8,8 +8,8 @@ interface PageProps {
   params: Promise<{ id: string; locale: string }>;
 }
 
-// Allow dynamic rendering for any article ID from the API
-export const dynamic = "force-dynamic";
+// Revalidate article pages every 5 minutes (ISR)
+export const revalidate = 300;
 
 // ─── API helpers ──────────────────────────────────────────────────────────────
 
@@ -96,7 +96,7 @@ async function fetchArticle(
 ): Promise<{ article: Article; pbRecordId: string } | null> {
   try {
     const res = await fetch(`https://uhsocial.in/api/articles/${id}`, {
-      cache: "no-store",
+      next: { revalidate: 300 },
     });
     if (!res.ok) return null;
     const data = await res.json();
@@ -115,7 +115,7 @@ async function fetchHtmlContent(pbRecordId: string): Promise<string | null> {
   try {
     const res = await fetch(
       `https://uhsocial.in/api/articles/get-article-content/${pbRecordId}`,
-      { cache: "no-store" }
+      { next: { revalidate: 300 } }
     );
     if (!res.ok) return null;
     const data = await res.json();
@@ -176,6 +176,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ArticlePage({ params }: PageProps) {
   const { id } = await params;
 
+  // Fire both fetches in parallel: article metadata first to get pbRecordId,
+  // then content. Since content depends on pbRecordId we must chain — but we
+  // can still parallelize generateMetadata's fetch with our own using the
+  // Next.js fetch dedup cache (same URL + options = one network request).
   const result = await fetchArticle(id);
   if (!result) {
     notFound();
@@ -183,7 +187,7 @@ export default async function ArticlePage({ params }: PageProps) {
 
   const { article, pbRecordId } = result;
 
-  // Fetch the actual HTML content in parallel (fire early)
+  // Fetch HTML content — shares the dedup cache with any concurrent call
   const htmlContent = await fetchHtmlContent(pbRecordId);
 
   // Update reading time estimate if we have content
