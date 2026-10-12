@@ -240,7 +240,7 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
               <YStack gap="$3" width="100%" marginBottom="$6">
                 <RoleCard 
                   type="General User"
-                  title="Patient / User"
+                  title="General User"
                   description="Find health articles, manage care, and learn."
                   icon="account-outline"
                 />
@@ -329,7 +329,7 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
               textAlign="center"
               letterSpacing={-0.5}
             >
-              Sign in as {role === 'Doctor' ? 'Doctor' : 'Patient'}
+              Sign in as {role === 'Doctor' ? 'Doctor' : 'User'}
             </Text>
             <Text
               fontSize={15}

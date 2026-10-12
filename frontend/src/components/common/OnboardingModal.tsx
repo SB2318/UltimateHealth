@@ -74,10 +74,10 @@ const ONBOARDING_SLIDES = [
     badgeIcon: 'rocket-launch',
     title: 'Ready to Transform Your Life?',
     subtitle:
-      'Choose your portal below to sign in as a Patient / User or Doctor, or continue as a Guest.',
+      '',
     quote:
       'Step into a world where your health matters, your voice is heard, and respect is standard.',
-    pillars: ['Patient Portal', 'Doctor Suite', 'Guest Mode'],
+    pillars: ['Health Articles', 'Contribution Dashboard', 'AI Guidance', 'Guest Mode'],
     isFinal: true,
   },
 ];

@@ -260,6 +260,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     refetch: refetchContent,
   } = useGetArticleContent(resolvedRecordId);
 
+  console.log("Article Content:", articleContent);
+
   // Stores the article for offline reading once the reader reaches its end.
   const markArticleFullyRead = useSaveFullyReadArticle(
     articleId,
