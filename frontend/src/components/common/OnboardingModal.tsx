@@ -338,27 +338,11 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                       style={styles.gradientBtnInner}
                     >
                       <FontAwesome6 name="user-doctor" size={17} color="#FFF" />
-                      <Text style={styles.roleBtnText}>Sign In as Doctor</Text>
+                      <Text style={styles.roleBtnText}>Star Browsing</Text>
                       <Ionicons name="arrow-forward" size={18} color="#FFF" />
                     </LinearGradient>
                   </TouchableOpacity>
 
-                  {/* Secondary CTA: Continue as Guest */}
-                  <TouchableOpacity
-                    onPress={handleGuestContinue}
-                    style={[
-                      styles.continueOutlineBtn,
-                      {
-                        backgroundColor: theme.outlineBtnBg,
-                        borderColor: theme.outlineBtnBorder,
-                      },
-                    ]}
-                    activeOpacity={0.8}
-                  >
-                    <Text style={[styles.continueOutlineText, { color: theme.outlineBtnText }]}>
-                      Continue as Guest
-                    </Text>
-                  </TouchableOpacity>
                 </View>
               ) : (
                 <View style={styles.stepActionRow}>
