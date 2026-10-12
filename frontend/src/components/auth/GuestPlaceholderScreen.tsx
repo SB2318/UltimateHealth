@@ -15,7 +15,7 @@ interface GuestPlaceholderScreenProps {
 
 const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
   title = 'Join the Community',
-  description = 'Sign up or sign in to access personalized features, interact with the community, and manage your profile.',
+  description = 'Sign in with Google to access personalized features, interact with the community, and manage your profile.',
 }) => {
   const inset = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -87,23 +87,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
           }}
         >
           <Text fontSize={18} color="$white" fontWeight="600">
-            Sign In
-          </Text>
-        </Button>
-
-        <Button
-          variant="outlined"
-          borderColor="$borderColor"
-          size="$6"
-          borderRadius="$4"
-          pressStyle={{ scale: 0.97 }}
-          animation="fast"
-          onPress={() => {
-            navigation.navigate('SignInScreen');
-          }}
-        >
-          <Text fontSize={18} color="$color" fontWeight="600">
-            Sign Up
+            Sign In with Google
           </Text>
         </Button>
       </YStack>

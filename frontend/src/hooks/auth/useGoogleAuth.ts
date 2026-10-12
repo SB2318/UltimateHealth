@@ -33,6 +33,15 @@ export type GoogleAuthResponse = {
 
 const googleAuthFunc = async (req: GoogleAuthReq): Promise<GoogleAuthResponse> => {
   const { idToken, role, ...bodyData } = req;
+
+  console.log('\n======================================================');
+  console.log('🚀 [GOOGLE AUTH API] Mutating /user/google-auth');
+  console.log('📍 Endpoint Path: /user/google-auth');
+  console.log('🔑 Authorization Header: Bearer ' + (idToken ? idToken.substring(0, 20) + '...' : 'MISSING'));
+  console.log('📱 Header x-client-type: mobile');
+  console.log('📦 Request Body Payload:', JSON.stringify(bodyData, null, 2));
+  console.log('======================================================\n');
+
   const res = await axios.post(
     GOOGLE_AUTH_API,
     bodyData,
@@ -43,7 +52,8 @@ const googleAuthFunc = async (req: GoogleAuthReq): Promise<GoogleAuthResponse> =
       },
     },
   );
-  console.log('Google Auth Response:', res.data); // Log the response data for debugging
+
+  console.log('✅ [GOOGLE AUTH API] Response Received:', JSON.stringify(res.data, null, 2));
   const responseData = res.data?.data ?? res.data;
 
   return responseData as GoogleAuthResponse;

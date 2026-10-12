@@ -18,9 +18,7 @@ export default function DoctorProfileBanner({ onCompletePress }: DoctorProfileBa
     if (onCompletePress) {
       onCompletePress();
     } else {
-      // Default navigation to profile edit or specialized doctor profile screen
-      // Assuming 'ProfileEditScreen' or similar exists; adjust as needed based on actual routes
-      // navigation.navigate('UserProfileScreen'); 
+      navigation.navigate('ProfileEditScreen');
     }
   };
 

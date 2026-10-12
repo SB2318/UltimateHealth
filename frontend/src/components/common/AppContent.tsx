@@ -156,7 +156,7 @@ export default function AppContent() {
         isAuthenticated,
       );
     } else if (!isAuthenticated) {
-      navigationRef.current.navigate('LoginScreen');
+      navigationRef.current.navigate('SignInScreen');
     }
 
     pendingDeepLinkRef.current = null;

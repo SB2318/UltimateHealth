@@ -237,7 +237,7 @@ export const navigateDeepLink = (
   isAuthenticated: boolean,
 ) => {
   if (target.requiresAuth && !isAuthenticated) {
-    navigation.navigate('LoginScreen', {
+    navigation.navigate('SignInScreen', {
       redirectTo: {
         name: target.name,
         params: target.params,

@@ -142,7 +142,7 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
 
   const handleGuestContinue = () => {
     dispatch(setGuestMode(true));
-    dispatch(setUserToken(null));
+    dispatch(setUserToken(''));
     navigation.reset({ index: 0, routes: [{ name: 'TabNavigation' }] });
   };
 

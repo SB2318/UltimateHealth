@@ -21,6 +21,7 @@ import LanguagePreferenceSelector from '../../components/profile/LanguagePrefere
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {setDoctorProfileIncomplete} from '../../store/UserSlice';
 import {ProfileEditScreenProp} from '../../schemas/type';
 import {
   GET_STORAGE_DATA,
@@ -268,6 +269,7 @@ const ProfileEditScreen = ({navigation}: ProfileEditScreenProp) => {
       },
       {
         onSuccess: _data => {
+          dispatch(setDoctorProfileIncomplete(false));
           Alert.alert('Success', 'Details submitted successfully');
         //  navigation.goBack();
         },
