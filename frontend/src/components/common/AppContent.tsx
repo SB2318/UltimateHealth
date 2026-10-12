@@ -234,10 +234,9 @@ function AppInner({
   const handleSignInUser = () => {
     navigationRef.current?.navigate('SignInScreen', { role: 'General User' });
   };
-
-  const handleSignInDoctor = () => {
-    navigationRef.current?.navigate('SignInScreen', { role: 'Doctor' });
-  };
+  const handleGuest = ()=>{
+   navigationRef.current?.reset({index: 0, routes: [{name: 'TabNavigation'}]});
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: theme?.background?.get() ?? (isDarkMode ? '#121212' : '#ffffff') }}>
@@ -252,8 +251,9 @@ function AppInner({
         visible={showOnboarding}
         onClose={handleSignInUser}
         onSignInUser={handleSignInUser}
-        onSignInDoctor={handleSignInDoctor}
-        onContinue={() => {}}
+        onSignInDoctor={handleSignInUser}
+        onContinue={()=>{}}
+        onGuestContinue={handleGuest}
       />
     </View>
   );

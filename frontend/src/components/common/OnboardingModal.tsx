@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState, useRef } from 'react';
+import React, {useState, useRef} from 'react';
 import {
   Modal,
   View,
@@ -11,15 +11,14 @@ import {
   Image,
   useColorScheme,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import {LinearGradient} from 'expo-linear-gradient';
 import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import { GlassContainer } from './GlassContainer';
-import { useAppDispatch } from '../../store/hooks';
-import { setGuestMode } from '../../store/UserSlice';
+import {useAppDispatch} from '../../store/hooks';
+import {setGuestMode, setUserToken} from '../../store/UserSlice';
 
-const { width: SCREEN_W, height: SCREEN_H } = Dimensions.get('window');
+const {width: SCREEN_W, height: SCREEN_H} = Dimensions.get('window');
 
 // Image paths from frontend/assets/images/
 const appIconImage = require('../../../assets/images/icon.png');
@@ -31,6 +30,7 @@ interface OnboardingModalProps {
   onSignInUser?: () => void;
   onSignInDoctor?: () => void;
   onContinue?: () => void;
+  onGuestContinue?: () => void;
 }
 
 const ONBOARDING_SLIDES = [
@@ -39,8 +39,10 @@ const ONBOARDING_SLIDES = [
     badge: 'WELCOME TO ULTIMATEHEALTH',
     badgeIcon: 'heart-pulse',
     title: 'Health in Body, Mind & Dignity',
-    subtitle: 'Your single repository for verified health insights, compassionate care, and holistic wellness.',
-    quote: 'UltimateHealth stands for health in its fullest sense — body, mind, and dignity. Because you cannot heal a person you do not respect.',
+    subtitle:
+      'Your single repository for verified health insights, compassionate care, and holistic wellness.',
+    quote:
+      'UltimateHealth stands for health in its fullest sense — body, mind, and dignity. Because you cannot heal a person you do not respect.',
     pillars: ['Verified Insights', 'Open-Source', 'Holistic Care'],
   },
   {
@@ -48,8 +50,10 @@ const ONBOARDING_SLIDES = [
     badge: 'RESPECT GIVER • MOUMITA DEBNATH',
     badgeIcon: 'shield-star',
     title: 'Justice & Hope in Action',
-    subtitle: 'Inspired by Moumita Debnath’s vision of unwavering dignity, compassion, and equality.',
-    quote: 'Justice is not a destination — it is a direction. If we can restore dignity to even one soul, we plant a seed that outlives us all.',
+    subtitle:
+      'Inspired by Moumita Debnath’s vision of unwavering dignity, compassion, and equality.',
+    quote:
+      'Justice is not a destination — it is a direction. If we can restore dignity to even one soul, we plant a seed that outlives us all.',
     pillars: ['Empathy', 'Justice', 'Hope', 'Dignity'],
     hasProfileImage: true,
   },
@@ -58,8 +62,10 @@ const ONBOARDING_SLIDES = [
     badge: 'THE CHAIN REACTION',
     badgeIcon: 'link-variant',
     title: 'Break the Chain with Recognition',
-    subtitle: 'Every act of respect creates ripples that transform lives and build stronger communities.',
-    quote: 'A person who is truly respected rarely needs to take it from another. When one person is treated with dignity, they carry it forward.',
+    subtitle:
+      'Every act of respect creates ripples that transform lives and build stronger communities.',
+    quote:
+      'A person who is truly respected rarely needs to take it from another. When one person is treated with dignity, they carry it forward.',
     pillars: ['Empowerment', 'Community', 'Light'],
   },
   {
@@ -67,8 +73,10 @@ const ONBOARDING_SLIDES = [
     badge: 'YOUR WELLNESS JOURNEY',
     badgeIcon: 'rocket-launch',
     title: 'Ready to Transform Your Life?',
-    subtitle: 'Choose your portal below to sign in as a Patient / User or Doctor, or continue as a Guest.',
-    quote: 'Step into a world where your health matters, your voice is heard, and respect is standard.',
+    subtitle:
+      'Choose your portal below to sign in as a Patient / User or Doctor, or continue as a Guest.',
+    quote:
+      'Step into a world where your health matters, your voice is heard, and respect is standard.',
     pillars: ['Patient Portal', 'Doctor Suite', 'Guest Mode'],
     isFinal: true,
   },
@@ -80,6 +88,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
   onSignInUser,
   onSignInDoctor,
   onContinue,
+  onGuestContinue,
 }) => {
   const colorScheme = useColorScheme();
   const dispatch = useAppDispatch();
@@ -95,7 +104,10 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
     if (activeSlideIndex < ONBOARDING_SLIDES.length - 1) {
       const nextIndex = activeSlideIndex + 1;
       setActiveSlideIndex(nextIndex);
-      scrollRef.current?.scrollTo({ x: nextIndex * (SCREEN_W * 0.88), animated: true });
+      scrollRef.current?.scrollTo({
+        x: nextIndex * (SCREEN_W * 0.88),
+        animated: true,
+      });
       if (onContinue) onContinue();
     } else {
       if (onSignInUser) onSignInUser();
@@ -115,39 +127,62 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
   // Continue as Guest (dispatches Redux state -> hides modal)
   const handleGuestContinue = () => {
     dispatch(setGuestMode(true));
-    onClose();
+    dispatch(setUserToken(''));
+    onGuestContinue && onGuestContinue();
   };
 
   // Dynamic Theme Colors
   const theme = {
     overlayBg: isDarkMode ? 'rgba(5, 2, 15, 0.85)' : 'rgba(15, 23, 42, 0.65)',
-    ambientGlow: isDarkMode ? 'rgba(124, 58, 237, 0.18)' : 'rgba(59, 130, 246, 0.15)',
+    ambientGlow: isDarkMode
+      ? 'rgba(124, 58, 237, 0.18)'
+      : 'rgba(59, 130, 246, 0.15)',
     cardBg: isDarkMode ? 'rgba(23, 13, 48, 0.96)' : 'rgba(255, 255, 255, 0.98)',
-    cardBorder: isDarkMode ? 'rgba(167, 139, 250, 0.3)' : 'rgba(226, 232, 240, 0.9)',
-    borderBottomHeader: isDarkMode ? 'rgba(139, 92, 246, 0.15)' : 'rgba(226, 232, 240, 0.8)',
+    cardBorder: isDarkMode
+      ? 'rgba(167, 139, 250, 0.3)'
+      : 'rgba(226, 232, 240, 0.9)',
+    borderBottomHeader: isDarkMode
+      ? 'rgba(139, 92, 246, 0.15)'
+      : 'rgba(226, 232, 240, 0.8)',
     brandText: isDarkMode ? '#F3E8FF' : '#0F172A',
     skipBg: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.06)',
     skipText: isDarkMode ? 'rgba(226, 232, 240, 0.75)' : '#475569',
     badgeBg: isDarkMode ? 'rgba(124, 58, 237, 0.85)' : '#6D28D9',
-    badgeBorder: isDarkMode ? 'rgba(192, 132, 252, 0.4)' : 'rgba(167, 139, 250, 0.5)',
+    badgeBorder: isDarkMode
+      ? 'rgba(192, 132, 252, 0.4)'
+      : 'rgba(167, 139, 250, 0.5)',
     badgeText: '#FFFFFF',
     slideTitle: isDarkMode ? '#F3E8FF' : '#0F172A',
     slideSubtitle: isDarkMode ? 'rgba(196, 181, 253, 0.85)' : '#334155',
     quoteBg: isDarkMode ? 'rgba(255, 255, 255, 0.04)' : '#F3E8FF',
     quoteBorderLeft: isDarkMode ? '#C084FC' : '#7C3AED',
-    quoteBorderOther: isDarkMode ? 'rgba(139, 92, 246, 0.2)' : 'rgba(192, 132, 252, 0.4)',
+    quoteBorderOther: isDarkMode
+      ? 'rgba(139, 92, 246, 0.2)'
+      : 'rgba(192, 132, 252, 0.4)',
     quoteText: isDarkMode ? 'rgba(233, 213, 255, 0.95)' : '#3B0764',
     pillBg: isDarkMode ? 'rgba(124, 58, 237, 0.18)' : 'rgba(124, 58, 237, 0.1)',
-    pillBorder: isDarkMode ? 'rgba(167, 139, 250, 0.3)' : 'rgba(167, 139, 250, 0.4)',
+    pillBorder: isDarkMode
+      ? 'rgba(167, 139, 250, 0.3)'
+      : 'rgba(167, 139, 250, 0.4)',
     pillText: isDarkMode ? '#E9D5FF' : '#5B21B6',
     pillIcon: isDarkMode ? '#C084FC' : '#7C3AED',
-    dotInactive: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(15, 23, 42, 0.2)',
+    dotInactive: isDarkMode
+      ? 'rgba(255, 255, 255, 0.2)'
+      : 'rgba(15, 23, 42, 0.2)',
     dotActive: isDarkMode ? '#C084FC' : '#7C3AED',
-    secondaryBtnBg: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.05)',
-    secondaryBtnBorder: isDarkMode ? 'rgba(192, 132, 252, 0.3)' : 'rgba(124, 58, 237, 0.3)',
+    secondaryBtnBg: isDarkMode
+      ? 'rgba(255, 255, 255, 0.08)'
+      : 'rgba(15, 23, 42, 0.05)',
+    secondaryBtnBorder: isDarkMode
+      ? 'rgba(192, 132, 252, 0.3)'
+      : 'rgba(124, 58, 237, 0.3)',
     secondaryBtnText: isDarkMode ? '#E9D5FF' : '#4C1D95',
-    outlineBtnBg: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(15, 23, 42, 0.03)',
-    outlineBtnBorder: isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(15, 23, 42, 0.15)',
+    outlineBtnBg: isDarkMode
+      ? 'rgba(255, 255, 255, 0.05)'
+      : 'rgba(15, 23, 42, 0.03)',
+    outlineBtnBorder: isDarkMode
+      ? 'rgba(255, 255, 255, 0.15)'
+      : 'rgba(15, 23, 42, 0.15)',
     outlineBtnText: isDarkMode ? 'rgba(226, 232, 240, 0.8)' : '#475569',
   };
 
@@ -156,9 +191,8 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
       visible={visible}
       transparent
       animationType="fade"
-      onRequestClose={onClose}
-    >
-      <View style={[styles.overlay, { backgroundColor: theme.overlayBg }]}>
+      onRequestClose={onClose}>
+      <View style={[styles.overlay, {backgroundColor: theme.overlayBg}]}>
         {/* Ambient background gradient */}
         <LinearGradient
           colors={
@@ -170,7 +204,9 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
         />
 
         {/* Ambient background glow */}
-        <View style={[styles.ambientGlow, { backgroundColor: theme.ambientGlow }]} />
+        <View
+          style={[styles.ambientGlow, {backgroundColor: theme.ambientGlow}]}
+        />
 
         <View
           style={[
@@ -179,24 +215,30 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
               backgroundColor: theme.cardBg,
               borderColor: theme.cardBorder,
             },
-          ]}
-        >
+          ]}>
           {/* Header Bar with App Icon Logo */}
-          <View style={[styles.headerBar, { borderBottomColor: theme.borderBottomHeader }]}>
+          <View
+            style={[
+              styles.headerBar,
+              {borderBottomColor: theme.borderBottomHeader},
+            ]}>
             <View style={styles.appBrand}>
               <View style={styles.logoBadge}>
                 <Image source={appIconImage} style={styles.appLogo} />
               </View>
-              <Text style={[styles.brandText, { color: theme.brandText }]}>UltimateHealth</Text>
+              <Text style={[styles.brandText, {color: theme.brandText}]}>
+                UltimateHealth
+              </Text>
             </View>
 
             <TouchableOpacity
               onPress={handleGuestContinue}
-              style={[styles.skipBtn, { backgroundColor: theme.skipBg }]}
+              style={[styles.skipBtn, {backgroundColor: theme.skipBg}]}
               accessibilityRole="button"
-              accessibilityLabel="Continue as guest"
-            >
-              <Text style={[styles.skipText, { color: theme.skipText }]}>Guest</Text>
+              accessibilityLabel="Continue as guest">
+              <Text style={[styles.skipText, {color: theme.skipText}]}>
+                Guest
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -207,14 +249,13 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             scrollEventThrottle={16}
-            onMomentumScrollEnd={(e) => {
+            onMomentumScrollEnd={e => {
               const contentOffsetX = e.nativeEvent.contentOffset.x;
               const index = Math.round(contentOffsetX / (SCREEN_W * 0.88));
               setActiveSlideIndex(index);
             }}
-            contentContainerStyle={styles.scrollContent}
-          >
-            {ONBOARDING_SLIDES.map((slide) => (
+            contentContainerStyle={styles.scrollContent}>
+            {ONBOARDING_SLIDES.map(slide => (
               <View key={slide.id} style={styles.slideContainer}>
                 {/* Badge Header */}
                 <View
@@ -224,26 +265,45 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                       backgroundColor: theme.badgeBg,
                       borderColor: theme.badgeBorder,
                     },
-                  ]}
-                >
-                  <MaterialCommunityIcon name={slide.badgeIcon as any} size={14} color={theme.badgeText} />
-                  <Text style={[styles.badgeText, { color: theme.badgeText }]}>{slide.badge}</Text>
+                  ]}>
+                  <MaterialCommunityIcon
+                    name={slide.badgeIcon as any}
+                    size={14}
+                    color={theme.badgeText}
+                  />
+                  <Text style={[styles.badgeText, {color: theme.badgeText}]}>
+                    {slide.badge}
+                  </Text>
                 </View>
 
                 {/* Profile Image Preview if Slide 2 */}
                 {slide.hasProfileImage && (
-                  <View style={[styles.profileAvatarWrapper, { borderColor: isDarkMode ? '#C084FC' : '#7C3AED' }]}>
+                  <View
+                    style={[
+                      styles.profileAvatarWrapper,
+                      {borderColor: isDarkMode ? '#C084FC' : '#7C3AED'},
+                    ]}>
                     <Image source={pdmImage} style={styles.profileAvatar} />
                     <LinearGradient
-                      colors={['transparent', isDarkMode ? 'rgba(124, 58, 237, 0.4)' : 'rgba(124, 58, 237, 0.25)']}
+                      colors={[
+                        'transparent',
+                        isDarkMode
+                          ? 'rgba(124, 58, 237, 0.4)'
+                          : 'rgba(124, 58, 237, 0.25)',
+                      ]}
                       style={styles.avatarGradient}
                     />
                   </View>
                 )}
 
                 {/* Slide Title & Subtitle */}
-                <Text style={[styles.slideTitle, { color: theme.slideTitle }]}>{slide.title}</Text>
-                <Text style={[styles.slideSubtitle, { color: theme.slideSubtitle }]}>{slide.subtitle}</Text>
+                <Text style={[styles.slideTitle, {color: theme.slideTitle}]}>
+                  {slide.title}
+                </Text>
+                <Text
+                  style={[styles.slideSubtitle, {color: theme.slideSubtitle}]}>
+                  {slide.subtitle}
+                </Text>
 
                 {/* Quote Card */}
                 <View
@@ -254,15 +314,16 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                       borderLeftColor: theme.quoteBorderLeft,
                       borderColor: theme.quoteBorderOther,
                     },
-                  ]}
-                >
+                  ]}>
                   <MaterialCommunityIcon
                     name="format-quote-open"
                     size={22}
                     color={isDarkMode ? '#C084FC' : '#7C3AED'}
-                    style={{ marginBottom: 4 }}
+                    style={{marginBottom: 4}}
                   />
-                  <Text style={[styles.quoteText, { color: theme.quoteText }]}>{slide.quote}</Text>
+                  <Text style={[styles.quoteText, {color: theme.quoteText}]}>
+                    {slide.quote}
+                  </Text>
                 </View>
 
                 {/* Pillars Chips */}
@@ -276,10 +337,16 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                           backgroundColor: theme.pillBg,
                           borderColor: theme.pillBorder,
                         },
-                      ]}
-                    >
-                      <Ionicons name="sparkles-outline" size={12} color={theme.pillIcon} />
-                      <Text style={[styles.pillChipText, { color: theme.pillText }]}>{pill}</Text>
+                      ]}>
+                      <Ionicons
+                        name="sparkles-outline"
+                        size={12}
+                        color={theme.pillIcon}
+                      />
+                      <Text
+                        style={[styles.pillChipText, {color: theme.pillText}]}>
+                        {pill}
+                      </Text>
                     </View>
                   ))}
                 </View>
@@ -296,8 +363,11 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   key={dotIdx}
                   style={[
                     styles.dot,
-                    { backgroundColor: theme.dotInactive },
-                    activeSlideIndex === dotIdx && [styles.activeDot, { backgroundColor: theme.dotActive }],
+                    {backgroundColor: theme.dotInactive},
+                    activeSlideIndex === dotIdx && [
+                      styles.activeDot,
+                      {backgroundColor: theme.dotActive},
+                    ],
                   ]}
                 />
               ))}
@@ -311,38 +381,47 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   <TouchableOpacity
                     onPress={handleUserSignIn}
                     style={styles.roleSignInBtn}
-                    activeOpacity={0.85}
-                  >
+                    activeOpacity={0.85}>
                     <LinearGradient
-                      colors={isDarkMode ? ['#7C3AED', '#C084FC'] : ['#6D28D9', '#2563EB']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={styles.gradientBtnInner}
-                    >
-                      <MaterialCommunityIcon name="account-heart-outline" size={20} color="#FFF" />
-                      <Text style={styles.roleBtnText}>Sign In as Patient / User</Text>
+                      colors={
+                        isDarkMode
+                          ? ['#7C3AED', '#C084FC']
+                          : ['#6D28D9', '#2563EB']
+                      }
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={styles.gradientBtnInner}>
+                      <MaterialCommunityIcon
+                        name="account-heart-outline"
+                        size={20}
+                        color="#FFF"
+                      />
+                      <Text style={styles.roleBtnText}>
+                        Sign In as Patient / User
+                      </Text>
                       <Ionicons name="arrow-forward" size={18} color="#FFF" />
                     </LinearGradient>
                   </TouchableOpacity>
 
                   {/* Sign in as Doctor */}
                   <TouchableOpacity
-                    onPress={handleDoctorSignIn}
+                    onPress={handleGuestContinue}
                     style={styles.roleSignInBtn}
-                    activeOpacity={0.85}
-                  >
+                    activeOpacity={0.85}>
                     <LinearGradient
-                      colors={isDarkMode ? ['#059669', '#10B981'] : ['#047857', '#059669']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={styles.gradientBtnInner}
-                    >
+                      colors={
+                        isDarkMode
+                          ? ['#059669', '#10B981']
+                          : ['#047857', '#059669']
+                      }
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={styles.gradientBtnInner}>
                       <FontAwesome6 name="user-doctor" size={17} color="#FFF" />
-                      <Text style={styles.roleBtnText}>Star Browsing</Text>
+                      <Text style={styles.roleBtnText}>Start Browsing</Text>
                       <Ionicons name="arrow-forward" size={18} color="#FFF" />
                     </LinearGradient>
                   </TouchableOpacity>
-
                 </View>
               ) : (
                 <View style={styles.stepActionRow}>
@@ -356,9 +435,12 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                         borderColor: theme.secondaryBtnBorder,
                       },
                     ]}
-                    activeOpacity={0.8}
-                  >
-                    <Text style={[styles.secondaryJoinText, { color: theme.secondaryBtnText }]}>
+                    activeOpacity={0.8}>
+                    <Text
+                      style={[
+                        styles.secondaryJoinText,
+                        {color: theme.secondaryBtnText},
+                      ]}>
                       Guest
                     </Text>
                   </TouchableOpacity>
@@ -367,14 +449,16 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                   <TouchableOpacity
                     onPress={handleNext}
                     style={styles.continuePrimaryBtn}
-                    activeOpacity={0.85}
-                  >
+                    activeOpacity={0.85}>
                     <LinearGradient
-                      colors={isDarkMode ? ['#7C3AED', '#007AFF'] : ['#6D28D9', '#2563EB']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={styles.gradientBtnInner}
-                    >
+                      colors={
+                        isDarkMode
+                          ? ['#7C3AED', '#007AFF']
+                          : ['#6D28D9', '#2563EB']
+                      }
+                      start={{x: 0, y: 0}}
+                      end={{x: 1, y: 0}}
+                      style={styles.gradientBtnInner}>
                       <Text style={styles.continuePrimaryText}>Continue</Text>
                       <Ionicons name="chevron-forward" size={18} color="#FFF" />
                     </LinearGradient>
@@ -411,7 +495,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
+    shadowOffset: {width: 0, height: 10},
     shadowOpacity: 0.2,
     shadowRadius: 20,
     elevation: 16,
