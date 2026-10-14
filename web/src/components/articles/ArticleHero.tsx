@@ -7,32 +7,28 @@ interface ArticleHeroProps {
 }
 
 /**
- * Full-width hero section for an article page.
+ * Hero section for an article detail page.
  *
- * Desktop layout:
- *   [Full-width hero image]
- *   [Category badge]
- *   [H1 Title]
- *   [Subtitle]
- *   [Author • Date • Reading time]
- *   [Tags]
+ * Layout (desktop & mobile — single centered column):
+ *   [H1 Title — centered]
+ *   [Subtitle — centered]
+ *   [Author • Date • Reading time — centered]
+ *   [Hero image — full column width, rounded]
+ *   [Tags — centered, wrapping chips with generous gap]
+ *   [Divider]
  *
- * Mobile: Identical structure, stacked vertically with adjusted typography.
+ * The category badge has been intentionally removed from here
+ * because it was overlapping with the sticky navigation header.
+ * Category is still shown inside the breadcrumb trail.
  */
 export default function ArticleHero({ article }: ArticleHeroProps) {
   return (
-    <header className="max-w-[880px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 text-center">
-      {/* ── Category badge (Centered) ── */}
-      <div className="mb-4 flex justify-center">
-        <span className="inline-block text-xs font-bold uppercase tracking-wider text-[#2dd4bf] bg-[#2dd4bf]/10 px-3.5 py-1.5 rounded-full border border-[#2dd4bf]/25 shadow-sm">
-          {article.category}
-        </span>
-      </div>
+    <header className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 text-center">
 
       {/* ── Title (Centered, Editorial) ── */}
       <h1
         style={{ color: "#f8fafc" }}
-        className="text-3xl sm:text-4xl lg:text-5xl font-extrabold !text-white leading-[1.2] tracking-tight mb-5 max-w-[840px] mx-auto"
+        className="text-3xl sm:text-4xl lg:text-5xl font-extrabold !text-white leading-[1.2] tracking-tight mb-6 mx-auto text-center"
       >
         {article.title}
       </h1>
@@ -41,7 +37,7 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
       {article.subtitle && (
         <p
           style={{ color: "#94a3b8" }}
-          className="text-lg sm:text-xl !text-slate-400 leading-relaxed mb-6 font-light max-w-[720px] mx-auto"
+          className="text-lg sm:text-xl !text-slate-400 leading-relaxed mb-6 font-light max-w-[720px] mx-auto text-center"
         >
           {article.subtitle}
         </p>
@@ -52,8 +48,8 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
         <ArticleMeta article={article} />
       </div>
 
-      {/* ── Hero banner image (Centered container with 16/9 aspect and rounded corners) ── */}
-      <div className="relative overflow-hidden bg-[#13131f] aspect-[16/9] md:aspect-[21/9] max-h-[460px] border border-[#252538] rounded-2xl shadow-2xl mb-8">
+      {/* ── Hero banner image (full column width, rounded) ── */}
+      <div className="relative overflow-hidden bg-[#13131f] aspect-[16/9] md:aspect-[21/9] max-h-[460px] border border-[#252538] rounded-2xl shadow-2xl mb-6">
         {article.imageUrl ? (
           <img
             src={article.imageUrl}
@@ -71,13 +67,16 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
         )}
       </div>
 
-      {/* ── Tags (Centered) ── */}
+      {/* ── Tags: centered, wrapping, with generous spacing ── */}
       {article.tags.length > 0 && (
-        <div className="flex flex-wrap justify-center gap-2 mb-6" aria-label="Article tags">
+        <div
+          className="flex flex-wrap justify-center gap-3 mb-8 px-2"
+          aria-label="Article tags"
+        >
           {article.tags.map((tag) => (
             <span
               key={tag}
-              className="text-xs text-slate-300 bg-[#13131f] border border-[#252538] px-3.5 py-1.5 rounded-full hover:border-[#2dd4bf]/40 transition-colors cursor-default"
+              className="text-xs font-medium text-[#2dd4bf] bg-[#2dd4bf]/10 border border-[#2dd4bf]/25 px-4 py-1.5 rounded-full hover:bg-[#2dd4bf]/20 transition-colors cursor-default whitespace-nowrap"
             >
               #{tag}
             </span>
@@ -87,7 +86,7 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
 
       {/* Visual separator */}
       <div
-        className="mt-6 mb-10 h-px bg-[#252538] max-w-[760px] mx-auto"
+        className="mb-10 h-px bg-[#252538] mx-auto"
         aria-hidden="true"
       />
     </header>

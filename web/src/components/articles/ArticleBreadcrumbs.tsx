@@ -28,10 +28,7 @@ export default function ArticleBreadcrumbs({
   categoryHref,
 }: ArticleBreadcrumbsProps) {
   return (
-    <nav aria-label="Page navigation" className=" flex items-center justify-between ">
-     
-      {/* Breadcrumb trail */}
-      <Breadcrumb>
+    <Breadcrumb className="flex items-center">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
@@ -68,7 +65,6 @@ export default function ArticleBreadcrumbs({
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
-      </Breadcrumb> 
-    </nav>
+      </Breadcrumb>
   );
 }

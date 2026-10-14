@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
-import { withBasePath } from "@/lib/basePath";
 import { resolveArticleImageUrl } from "@/lib/article-image";
 import type { ApiArticle, ApiArticlesResponse } from "@/types/api-article";
 import { Navbar, PageWrapper, Section } from "@/components/layout";
@@ -11,7 +10,7 @@ import { Sparkles, BookOpen } from "lucide-react";
 export const metadata: Metadata = {
   title: "Health Articles | UltimateHealth",
   description:
-    "Explore community-reviewed health and wellness guides inspired by Dr. Moumita Debnath's clinical research and patient dignity.",
+    "Explore admin-reviewed health and wellness guides. Dedicated memorial clinical guides in honour of Dr. Moumita Debnath are arriving separately.",
 };
 
 interface PageProps {
@@ -20,39 +19,44 @@ interface PageProps {
 
 export default async function ArticlesPage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const page = typeof params.page === "string" ? parseInt(params.page, 10) : 1;
+  const page = Math.max(1, typeof params.page === "string" ? parseInt(params.page, 10) : 1);
   const limit = 9;
+  const BASE = "https://ultimatehealth.blog/api/articles";
+  const ISR = { next: { revalidate: 300 } } as const;
 
-  let data: ApiArticlesResponse = { articles: [], totalPages: 1, currentPage: 1 };
-  let actualTotalPages = 1;
+  let articles: ApiArticle[] = [];
+  let totalPages = 1;
+  let currentPage = page;
 
   try {
-    const res = await fetch(`https://ultimatehealth.blog/api/articles/?page=${page}&limit=${limit}`, {
-      next: { revalidate: 300 }, // ISR: revalidate every 5 minutes
-    });
-    if (res.ok) {
-      data = await res.json();
-    }
-
-    actualTotalPages = data.totalPages || 1;
-
-    // Fallback for API bug where totalPages is missing on page > 1
-    if (page > 1 && !data.totalPages) {
-      const p1Res = await fetch(`https://ultimatehealth.blog/api/articles/?page=1&limit=${limit}`, {
-        next: { revalidate: 300 },
-      });
-      if (p1Res.ok) {
-        const p1Data = await p1Res.json();
-        actualTotalPages = p1Data.totalPages || 1;
+    if (page === 1) {
+      // Single call — only page 1 returns totalPages from this API
+      const res = await fetch(`${BASE}/?page=1&limit=${limit}`, ISR);
+      if (res.ok) {
+        const d: ApiArticlesResponse = await res.json();
+        articles = d.articles ?? [];
+        totalPages = d.totalPages ?? 1;
+      }
+    } else {
+      // Parallel: page 1 (for totalPages) + current page (for articles)
+      const [p1Res, pgRes] = await Promise.all([
+        fetch(`${BASE}/?page=1&limit=${limit}`, ISR),
+        fetch(`${BASE}/?page=${page}&limit=${limit}`, ISR),
+      ]);
+      const p1Data: ApiArticlesResponse = p1Res.ok ? await p1Res.json() : { articles: [], totalPages: 1 };
+      const pgData: ApiArticlesResponse = pgRes.ok ? await pgRes.json() : { articles: [], totalPages: 1 };
+      totalPages = p1Data.totalPages ?? 1;
+      articles = pgData.articles ?? [];
+      // Out-of-range page? fall back to page 1
+      if (articles.length === 0 && page > totalPages) {
+        articles = p1Data.articles ?? [];
+        currentPage = 1;
       }
     }
   } catch (error) {
     console.error("Failed to fetch articles:", error);
   }
 
-  const articles = data.articles || (Array.isArray(data) ? data : []);
-  const totalPages = actualTotalPages;
-  const currentPage = page;
 
   return (
     <>
@@ -178,11 +182,11 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
                   Coming Soon
                 </span>
                 <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#e2e8f0", letterSpacing: "0.04em" }}>
-                  30+ Curated Clinical Articles
+                  Separate Memorial Series · 30 Dedicated Clinical Articles
                 </span>
               </div>
               <p style={{ fontSize: "0.92rem", color: "#94a3b8", lineHeight: 1.65, margin: 0 }}>
-                Inspired by <strong style={{ color: "#f1f5f9" }}>Dr. Moumita Debnath&apos;s</strong> clinical life work and pulmonary medicine training at R.G. Kar Medical College, we are curating <strong style={{ color: "#f1f5f9" }}>30 foundational health guides</strong> covering chest medicine, respiratory wellness, preventive care, and patient dignity — launching across all 9 proposed Indian and global languages.
+                In honor of <strong style={{ color: "#f1f5f9" }}>Dr. Moumita Debnath&apos;s</strong> clinical dedication and chest medicine training at R.G. Kar Medical College, a dedicated memorial series of <strong style={{ color: "#f1f5f9" }}>30 clinical research &amp; respiratory guides</strong> will be released separately across all 9 languages. The articles listed below are our platform&apos;s general admin-reviewed community health library.
               </p>
             </div>
           </div>
@@ -271,7 +275,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
             >
               {currentPage > 1 ? (
                 <Link
-                  href={withBasePath(`/articles?page=${currentPage - 1}`)}
+                  href={`/articles?page=${currentPage - 1}`}
                   style={{
                     padding: "10px 18px",
                     fontSize: "0.875rem",
@@ -305,7 +309,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                 <Link
                   key={p}
-                  href={withBasePath(`/articles?page=${p}`)}
+                  href={`/articles?page=${p}`}
                   style={{
                     width: "40px",
                     height: "40px",
@@ -327,7 +331,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
 
               {currentPage < totalPages ? (
                 <Link
-                  href={withBasePath(`/articles?page=${currentPage + 1}`)}
+                  href={`/articles?page=${currentPage + 1}`}
                   style={{
                     padding: "10px 18px",
                     fontSize: "0.875rem",
@@ -377,7 +381,7 @@ function ArticleCard({ article }: { article: ApiArticle }) {
 
   return (
     <Link
-      href={withBasePath(`/articles/${article._id}`)}
+      href={`/articles/${article._id}`}
       style={{
         background: "#13131f",
         border: "1px solid #252538",

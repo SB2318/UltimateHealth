@@ -7,7 +7,6 @@
 
 import Link from "next/link";
 import { ArrowRight, BookOpen, Clock, Tag } from "lucide-react";
-import { withBasePath } from "@/lib/basePath";
 import type { ApiArticle } from "@/types/api-article";
 import { format, parseISO } from "date-fns";
 
@@ -103,7 +102,7 @@ function MoumitaSpotlightCard() {
               letterSpacing: "0.04em",
             }}
           >
-            First Article Announcement
+            Dedicated Series Announcement
           </span>
         </div>
 
@@ -129,13 +128,12 @@ function MoumitaSpotlightCard() {
             maxWidth: "520px",
           }}
         >
-          Every health article in this library is published in her memory — a young physician
-          who believed that dignity and knowledge belong to everyone. Her vision shapes how we
-          write, review, and share health information.
+          Published in honour of her memory and clinical commitment to patient dignity.
+          Her dedicated <strong style={{ color: "#f8fafc" }}>30 clinical research &amp; chest medicine guides</strong> are currently being curated and will be released separately. In the meantime, explore our general admin-reviewed community health library below.
         </p>
 
         <Link
-          href={withBasePath("/articles")}
+          href="/articles"
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -149,7 +147,7 @@ function MoumitaSpotlightCard() {
           }}
         >
           <BookOpen style={{ width: 15, height: 15 }} />
-          <span>Read the Articles</span>
+          <span>Explore General Health Library</span>
           <ArrowRight style={{ width: 14, height: 14 }} />
         </Link>
       </div>
@@ -188,7 +186,7 @@ function MoumitaSpotlightCard() {
 }
 
 // ── Individual article card ───────────────────────────────────────────────────
-function ArticlePreviewCard({ article, featured }: { article: ApiArticle; featured?: boolean }) {
+function ArticlePreviewCard({ article }: { article: ApiArticle }) {
   const thumb = resolveArticleImageUrl(article.imageUtils, {
     title: article.title,
     category: article.tags?.[0]?.name,
@@ -199,18 +197,16 @@ function ArticlePreviewCard({ article, featured }: { article: ApiArticle; featur
 
   return (
     <Link
-      href={withBasePath(`/articles/${article._id}`)}
+      href={`/articles/${article._id}`}
       style={{
         background: "#0f111a",
         border: "1px solid rgba(255,255,255,0.06)",
         borderRadius: "16px",
         overflow: "hidden",
         display: "flex",
-        flexDirection: featured ? "row" : "column",
+        flexDirection: "column",
         textDecoration: "none",
         transition: "border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease",
-        flexWrap: featured ? "wrap" : undefined,
-        minHeight: featured ? "240px" : undefined,
       }}
       className="group hover:-translate-y-1 hover:border-[#2dd4bf] hover:shadow-[0_8px_32px_rgba(45,212,191,0.08)]"
     >
@@ -221,22 +217,14 @@ function ArticlePreviewCard({ article, featured }: { article: ApiArticle; featur
           src={thumb}
           alt={article.title}
           loading="lazy"
-          style={{
-            width: featured ? "260px" : "100%",
-            height: featured ? "100%" : "180px",
-            objectFit: "cover",
-            flexShrink: 0,
-            minHeight: featured ? "200px" : undefined,
-          }}
+          style={{ width: "100%", height: "180px", objectFit: "cover", flexShrink: 0 }}
         />
       ) : (
         <div
           style={{
-            width: featured ? "260px" : "100%",
-            height: featured ? "100%" : "180px",
-            minHeight: featured ? "200px" : undefined,
-            background:
-              "linear-gradient(135deg, rgba(45,212,191,0.08) 0%, rgba(255,255,255,0.02) 100%)",
+            width: "100%",
+            height: "180px",
+            background: "linear-gradient(135deg, rgba(45,212,191,0.08) 0%, rgba(255,255,255,0.02) 100%)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -250,14 +238,14 @@ function ArticlePreviewCard({ article, featured }: { article: ApiArticle; featur
       {/* Content */}
       <div
         style={{
-          padding: featured ? "28px 28px" : "20px 20px 24px",
+          padding: "20px 20px 24px",
           flex: 1,
           display: "flex",
           flexDirection: "column",
           gap: "10px",
         }}
       >
-        {/* Category + reading time */}
+        {/* Category + date */}
         <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
           <span
             style={{
@@ -295,14 +283,14 @@ function ArticlePreviewCard({ article, featured }: { article: ApiArticle; featur
         {/* Title */}
         <h3
           style={{
-            fontSize: featured ? "1.1875rem" : "1rem",
+            fontSize: "1rem",
             fontWeight: 700,
             color: "#f1f5f9",
             margin: 0,
             lineHeight: 1.4,
             letterSpacing: "-0.01em",
             display: "-webkit-box",
-            WebkitLineClamp: featured ? 3 : 2,
+            WebkitLineClamp: 2,
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
           }}
@@ -320,7 +308,7 @@ function ArticlePreviewCard({ article, featured }: { article: ApiArticle; featur
               margin: 0,
               flex: 1,
               display: "-webkit-box",
-              WebkitLineClamp: featured ? 4 : 2,
+              WebkitLineClamp: 2,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
             }}
@@ -379,7 +367,7 @@ function EmptyState() {
       <p style={{ fontSize: "0.9375rem", margin: 0 }}>
         Articles loading — check back shortly or{" "}
         <Link
-          href={withBasePath("/articles")}
+          href="/articles"
           style={{ color: "#2dd4bf", textDecoration: "underline" }}
         >
           browse the full library
@@ -444,13 +432,13 @@ export default async function HomeArticlesPreview() {
                 maxWidth: "480px",
               }}
             >
-              Community-reviewed health guides written with clarity, peer feedback, and
+              Health guides reviewed by our admin team with clarity, clinical moderation, and
               respect for the reader.
             </p>
           </div>
 
           <Link
-            href={withBasePath("/articles")}
+            href="/articles"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -484,11 +472,10 @@ export default async function HomeArticlesPreview() {
 
           {/* ② Real articles from API */}
           {hasArticles ? (
-            articles.map((article, i) => (
+            articles.map((article) => (
               <ArticlePreviewCard
                 key={article._id}
                 article={article}
-                featured={i === 0}
               />
             ))
           ) : (
@@ -509,10 +496,10 @@ export default async function HomeArticlesPreview() {
             <p style={{ fontSize: "0.9375rem", color: "#475569", marginBottom: "20px" }}>
               {articles.length < 6
                 ? `Showing all ${articles.length} available articles`
-                : "Showing 6 of 30+ peer-reviewed guides"}
+                : "Showing 6 of 30+ admin-reviewed guides"}
             </p>
             <Link
-              href={withBasePath("/articles")}
+              href="/articles"
               style={{
                 display: "inline-flex",
                 alignItems: "center",

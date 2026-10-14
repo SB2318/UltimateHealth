@@ -18,7 +18,7 @@ export default function ArticleMeta({ article, className = "" }: ArticleMetaProp
 
   return (
     <div
-      className={`flex flex-wrap items-center gap-x-5 gap-y-3 ${className}`}
+      className={`flex flex-wrap items-center justify-center gap-x-5 gap-y-3 ${className}`}
     >
       {/* Author avatar + name/role */}
       <div className="flex items-center gap-3">
@@ -46,7 +46,7 @@ export default function ArticleMeta({ article, className = "" }: ArticleMetaProp
       {/* Publication date */}
       <div className="flex items-center gap-1.5 text-sm !text-slate-300" style={{ color: "#cbd5e1" }}>
         <i className="fas fa-calendar-alt text-xs text-slate-400" aria-hidden="true" />
-        <time dateTime={article.publishedAt} className="font-medium">
+        <time dateTime={article.publishedAt} className="font-medium" suppressHydrationWarning>
           {formattedDate}
         </time>
         {updatedDate && (

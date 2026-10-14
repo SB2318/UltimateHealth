@@ -27,40 +27,67 @@ function cleanArticleHtml(rawHtml?: string): string | undefined {
 
   let cleaned = rawHtml;
 
-  // 1. Strip script tags completely (e.g. Tailwind CDN injected in HTML)
-  cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, "");
-
-  // 2. Strip style and link tags from head/body
+  // 1. Strip script / style / link / meta / title / doctype tags
   cleaned = cleaned
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<link[\s\S]*?>/gi, "");
+    .replace(/<link[^>]*>/gi, "")
+    .replace(/<meta[^>]*>/gi, "")
+    .replace(/<title[\s\S]*?<\/title>/gi, "")
+    .replace(/<!DOCTYPE[^>]*>/gi, "");
 
-  // 3. Extract body content if wrapped in full HTML document
-  const bodyMatch = cleaned.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-  if (bodyMatch && bodyMatch[1]) {
-    cleaned = bodyMatch[1];
-  } else {
-    cleaned = cleaned
-      .replace(/<!DOCTYPE[^>]*>/gi, "")
-      .replace(/<\/?html[^>]*>/gi, "")
-      .replace(/<head[\s\S]*?<\/head>/gi, "")
-      .replace(/<\/?body[^>]*>/gi, "");
+  // 2. Strip comment-delimited chrome sections:
+  //    <!-- Navbar -->, <!-- Hero Banner -->, <!-- Footer --> etc.
+  //    Removes the comment marker + all content up to the next comment.
+  cleaned = cleaned.replace(
+    /<!--\s*(?:navbar|nav(?:\s*bar)?|hero(?:\s*banner)?|header|footer|top\s*bar|site\s*(?:header|footer)|breadcrumb)[^-]*-->([\s\S]*?)(?=<!--|$)/gi,
+    ""
+  );
+
+  // 3. Strip ALL remaining HTML comments
+  cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, "");
+
+  // 4. Strip semantic nav / header / footer elements
+  cleaned = cleaned
+    .replace(/<nav[\s\S]*?<\/nav>/gi, "")
+    .replace(/<header[\s\S]*?<\/header>/gi, "")
+    .replace(/<footer[\s\S]*?<\/footer>/gi, "");
+
+  // 5. Strip divs/sections whose class contains nav/navbar/hero/footer/banner.
+  //    Run 5 passes to peel nested elements layer by layer.
+  const chromeRe =
+    /<(?:div|section|aside)[^>]*class="[^"]*(?:navbar|nav-bar|site-nav|hero(?:-banner|-bg|-section|-wrap)?|banner|page-header|page-footer|site-footer|top-bar|breadcrumb-bar)[^"]*"[\s\S]*?<\/(?:div|section|aside)>/gi;
+  for (let i = 0; i < 5; i++) {
+    cleaned = cleaned.replace(chromeRe, "");
   }
 
-  // 4. Remove redundant header or hero section (such as <section class="hero...">...</section> or <header>...</header>)
+  // 6. Extract body content if the string is a full HTML document
+  const bodyMatch = cleaned.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  if (bodyMatch?.[1]) {
+    cleaned = bodyMatch[1];
+  } else {
+    cleaned = cleaned.replace(/<\/?(html|head|body)[^>]*>/gi, "");
+  }
+
+  // 7. Remove duplicate <h1> (already rendered by ArticleHero above the fold)
+  cleaned = cleaned.replace(/<h1[^>]*>[\s\S]*?<\/h1>/gi, "");
+
+  // 8. Belt-and-suspenders: remove any remaining hero sections by class
   cleaned = cleaned
-    .replace(/<section[^>]*class=["'][^"']*hero[^"']*["'][\s\S]*?<\/section>/gi, "")
-    .replace(/<header[\s\S]*?<\/header>/gi, "");
+    .replace(/<section[^>]*class="[^"]*hero[^"]*"[\s\S]*?<\/section>/gi, "")
+    .replace(/<div[^>]*class="[^"]*hero[^"]*"[\s\S]*?<\/div>/gi, "");
 
-  // 5. Remove any top-level duplicate <h1> inside article content (already rendered by ArticleHero)
-  cleaned = cleaned.replace(/<h1[^>]*>[\s\S]*?<\/h1>/i, "");
-
-  // 6. Remove stray plain text before the first HTML tag (e.g. raw title strings like "\n\nHemophilia\n\n<article>")
+  // 9. Remove stray plain text before the first HTML tag
   cleaned = cleaned.replace(/^[\s\r\n]*[^<]+?(?=<)/i, "");
 
-  // 7. Unwrap outer <article> or generic wrapper tags
-  cleaned = cleaned.trim();
-  cleaned = cleaned.replace(/^<article[^>]*>/i, "").replace(/<\/article>$/i, "");
+  // 10. Unwrap outer <article> / <section> wrapper tags (keep inner content)
+  cleaned = cleaned.replace(/<\/?(article|section)[^>]*>/gi, "");
+
+  // 11. Unwrap pure layout container divs from the backend template
+  cleaned = cleaned.replace(
+    /<div[^>]*class="[^"]*(?:max-w-|prose\s|mx-auto)[^"]*"[^>]*>/gi,
+    ""
+  );
 
   return cleaned.trim();
 }
@@ -93,7 +120,7 @@ export default function ArticlePageClient({
       </div>
 
       <div
-        className="min-h-screen bg-[#0c0c14] text-[#f1f5f9]"
+        className="min-h-screen w-full bg-[#0c0c14] text-[#f1f5f9] flex flex-col items-center"
         style={
           {
             "--article-sticky-header-height": `${ARTICLE_STICKY_HEADER_HEIGHT_PX}px`,
@@ -101,8 +128,8 @@ export default function ArticlePageClient({
         }
       >
         {/* ── Sticky top navigation bar ── */}
-        <div className="sticky top-0 z-50 bg-[#0c0c14]/90 backdrop-blur-md border-b border-[#252538] shadow-lg transition-all">
-          <div className="max-w-[880px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+        <div className="sticky top-0 z-50 w-full bg-[#0c0c14]/90 backdrop-blur-md border-b border-[#252538] shadow-lg transition-all">
+          <div className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
             {/* Back link */}
             <Link
               href="/articles"
@@ -127,41 +154,39 @@ export default function ArticlePageClient({
           </div>
         </div> 
 
-        <main>
+        <main className="w-full">
           {/* ── Hero: image + title + metadata ── */}
           <ArticleHero article={article} />
 
-          {/* ── Article body ── */}
+          {/* ── Article body: single centered reading column ── */}
           <div
             id="article-body"
-            className="max-w-[880px] mx-auto px-4 sm:px-6 lg:px-8 pb-20"
+            className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pb-20"
           >
-            <div className="max-w-[760px] w-full mx-auto">
-              <article
-                aria-label={article.title}
-                className="[font-size:var(--article-font-size)]"
-                style={{ "--article-font-size": `${FONT_SIZE_MAP[fontSize]}px` } as CSSProperties}
-              >
-                {cleanedHtml ? (
-                  /* Cleaned HTML from the API — stripped of outer headers/html/body wrappers */
-                  <div
-                    className="article-html-content prose max-w-none"
-                    // The HTML comes from UH's own backend; content is controlled
-                    // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{ __html: cleanedHtml }}
-                  />
-                ) : (
-                  <ArticleContent content={article.content} />
-                )}
-              </article>
+            <article
+              aria-label={article.title}
+              className="[font-size:var(--article-font-size)]"
+              style={{ "--article-font-size": `${FONT_SIZE_MAP[fontSize]}px` } as CSSProperties}
+            >
+              {cleanedHtml ? (
+                /* Cleaned HTML from the API — stripped of outer headers/html/body wrappers */
+                <div
+                  className="article-html-content prose max-w-none"
+                  // The HTML comes from UH's own backend; content is controlled
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{ __html: cleanedHtml }}
+                />
+              ) : (
+                <ArticleContent content={article.content} />
+              )}
+            </article>
 
-              {/* ── Article footer: share + attribution ── */}
-              <ArticleFooter article={article} />
-            </div>
+            {/* ── Article footer: share + attribution ── */}
+            <ArticleFooter article={article} />
 
-            {/* ── Table of Contents Sidebar (only for structured content) ── */}
+            {/* ── Table of Contents Sidebar (only for structured content, no htmlContent) ── */}
             {!htmlContent && (
-              <aside className="hidden lg:block lg:w-[250px] print:hidden">
+              <aside className="hidden lg:block lg:w-[250px] print:hidden mt-8">
                 <div className="sticky top-[var(--article-sticky-header-height)] max-h-[calc(100vh-var(--article-sticky-header-height))] overflow-y-auto pr-2">
                   <TableOfContents content={article.content} />
                 </div>
@@ -171,12 +196,12 @@ export default function ArticlePageClient({
         </main>
 
         {/* ── Related articles ── */}
-        <div className="print:hidden">
-        <RelatedArticles articles={relatedArticles} />
+        <div className="w-full print:hidden">
+          <RelatedArticles articles={relatedArticles} />
         </div>
         {/* ── Platform footer ── */}
-        <div className="print:hidden">
-        <ArticlePageFooter />
+        <div className="w-full print:hidden">
+          <ArticlePageFooter />
         </div>
       </div>
       {/* ── Floating print/export button ── */}
