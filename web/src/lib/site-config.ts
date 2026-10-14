@@ -4,7 +4,7 @@
  * without dragging one another across the server/client boundary.
  */
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://ultimatehealth.blog";
-export const HELP_CENTER_URL = process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https://ultimatehealth.blog/docs";
+export const HELP_CENTER_URL = process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https://ultimatehealth.blog/api/docs";
 export const FEEDBACK_URL = process.env.NEXT_PUBLIC_FEEDBACK_URL || "https://github.com/SB2318/UltimateHealth/issues";
 export const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "";
 export const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "";

@@ -1,17 +1,15 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import Link from "next/link";
 import type { Article } from "@/types/article";
-import { withBasePath } from "@/lib/basePath";
 import { defaultGlossaryTerms } from "@/lib/article-data";
 import { GlossaryProvider } from "./GlossaryProvider";
 import ReadingProgressBar from "./ReadingProgressBar";
-import ArticleBreadcrumbs from "./ArticleBreadcrumbs";
 import ArticleHero from "./ArticleHero";
 import ArticleContent from "./ArticleContent";
 import RelatedArticles from "./RelatedArticles";
-import AccessibilityControls, { type FontSize } from "./AccessibilityControls";
+import { type FontSize } from "./AccessibilityControls";
 import TableOfContents from "./TableOfContents";
 import { ARTICLE_STICKY_HEADER_HEIGHT_PX } from "./article-layout.js";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -110,17 +108,36 @@ export default function ArticlePageClient({
   htmlContent,
 }: ArticlePageClientProps) {
   const [fontSize, setFontSize] = useState<FontSize>("md");
+  const [heroVisible, setHeroVisible] = useState(true);
+  // Defer dangerouslySetInnerHTML to client-only to avoid hydration mismatch.
+  // The raw API HTML can contain malformed/unclosed tags that browsers
+  // auto-correct differently than Node.js, causing SSR ↔ client DOM differences.
+  const [mounted, setMounted] = useState(false);
   const cleanedHtml = cleanArticleHtml(htmlContent);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Show article title in sticky header only after the hero H1 scrolls out of view
+  useEffect(() => {
+    const hero = document.getElementById("article-hero-title");
+    if (!hero) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setHeroVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <GlossaryProvider terms={defaultGlossaryTerms}>
-      {/* Sticky reading progress indicator */}
-      <div className="print:hidden">
+      {/* Reading progress bar — fixed to very top */}
       <ReadingProgressBar />
-      </div>
 
       <div
-        className="min-h-screen w-full bg-[#0c0c14] text-[#f1f5f9] flex flex-col items-center"
+        className="min-h-screen w-full bg-[#0c0c14] text-[#f1f5f9] flex flex-col"
         style={
           {
             "--article-sticky-header-height": `${ARTICLE_STICKY_HEADER_HEIGHT_PX}px`,
@@ -128,63 +145,96 @@ export default function ArticlePageClient({
         }
       >
         {/* ── Sticky top navigation bar ── */}
-        <div className="sticky top-0 z-50 w-full bg-[#0c0c14]/90 backdrop-blur-md border-b border-[#252538] shadow-lg transition-all">
-          <div className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
-            {/* Back link */}
+        <div className="sticky top-0 z-50 w-full bg-[#0c0c14]/95 backdrop-blur-md border-b border-[#252538] print:hidden">
+          {/* justify-between pins back-btn LEFT and font-controls RIGHT always */}
+          <div className="relative w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+
+            {/* ← Back to articles */}
             <Link
               href="/articles"
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-semibold text-slate-300 hover:text-[#2dd4bf] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2dd4bf] rounded-lg px-3 py-1.5 border border-[#252538] hover:border-[#2dd4bf]/40 bg-[#13131f] shrink-0"
+              className="inline-flex items-center gap-1.5 shrink-0 text-sm font-medium text-slate-400 hover:text-[#2dd4bf] transition-colors group z-10"
+              aria-label="Back to all articles"
             >
-              <i className="fas fa-arrow-left text-[11px]" aria-hidden="true" />
-              Articles
+              <i
+                className="fas fa-arrow-left text-[11px] transition-transform group-hover:-translate-x-0.5"
+                aria-hidden="true"
+              />
+              <span>Articles</span>
             </Link>
 
-            {/* Skip navigation for keyboard / screen reader users */}
-            <a
-              href="#article-body"
-              className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-[200px] focus:z-80 focus:px-4 focus:py-1 focus:rounded-full focus:shadow-lg focus:text-[#2dd4bf] focus:font-semibold focus:border-[#252538] focus:bg-[#13131f]"
+            {/* Article title — absolutely centered, fades in after H1 scrolls off */}
+            <p
+              className={[
+                "absolute left-1/2 -translate-x-1/2 max-w-[55%] text-sm font-semibold text-[#e2e8f0] truncate transition-all duration-300 pointer-events-none select-none",
+                heroVisible ? "opacity-0 translate-y-1" : "opacity-100 translate-y-0",
+              ].join(" ")}
+              aria-hidden={heroVisible}
             >
-              Skip to article content
-            </a>
+              {article.title}
+            </p>
 
-            <ArticleBreadcrumbs
-              category={article.category}
-              title={article.title}
-            />
+            {/* Font size controls — pinned RIGHT */}
+            <div
+              className="flex items-center gap-1 shrink-0 print:hidden z-10"
+              role="group"
+              aria-label="Text size"
+            >
+              {(["sm", "md", "lg"] as FontSize[]).map((size, i) => (
+                <button
+                  key={size}
+                  onClick={() => setFontSize(size)}
+                  aria-pressed={fontSize === size}
+                  aria-label={["Small text", "Default text size", "Large text"][i]}
+                  title={["Small", "Medium", "Large"][i]}
+                  className={[
+                    "w-7 h-7 rounded-md flex items-center justify-center font-bold transition-all duration-150 border",
+                    ["text-xs", "text-sm", "text-base"][i],
+                    fontSize === size
+                      ? "bg-[#2dd4bf]/15 border-[#2dd4bf]/50 text-[#2dd4bf]"
+                      : "border-transparent text-slate-500 hover:text-slate-300",
+                  ].join(" ")}
+                >
+                  A
+                </button>
+              ))}
+            </div>
           </div>
-        </div> 
+        </div>
 
         <main className="w-full">
-          {/* ── Hero: image + title + metadata ── */}
+          {/* ── Hero: title + metadata + image + tags ── */}
           <ArticleHero article={article} />
 
           {/* ── Article body: single centered reading column ── */}
           <div
             id="article-body"
-            className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pb-20"
+            className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pb-24"
           >
             <article
               aria-label={article.title}
               className="[font-size:var(--article-font-size)]"
               style={{ "--article-font-size": `${FONT_SIZE_MAP[fontSize]}px` } as CSSProperties}
+              suppressHydrationWarning
             >
-              {cleanedHtml ? (
-                /* Cleaned HTML from the API — stripped of outer headers/html/body wrappers */
+              {/* Render real HTML only after client mount to avoid hydration
+                  mismatch caused by malformed/unclosed tags in the API response
+                  being auto-corrected differently by Node.js vs the browser. */}
+              {mounted && cleanedHtml ? (
                 <div
                   className="article-html-content prose max-w-none"
-                  // The HTML comes from UH's own backend; content is controlled
                   // eslint-disable-next-line react/no-danger
                   dangerouslySetInnerHTML={{ __html: cleanedHtml }}
+                  suppressHydrationWarning
                 />
               ) : (
                 <ArticleContent content={article.content} />
               )}
             </article>
 
-            {/* ── Article footer: share + attribution ── */}
+            {/* ── Article footer: author card + back link ── */}
             <ArticleFooter article={article} />
 
-            {/* ── Table of Contents Sidebar (only for structured content, no htmlContent) ── */}
+            {/* ── Table of Contents (only for structured content) ── */}
             {!htmlContent && (
               <aside className="hidden lg:block lg:w-[250px] print:hidden mt-8">
                 <div className="sticky top-[var(--article-sticky-header-height)] max-h-[calc(100vh-var(--article-sticky-header-height))] overflow-y-auto pr-2">
@@ -199,27 +249,14 @@ export default function ArticlePageClient({
         <div className="w-full print:hidden">
           <RelatedArticles articles={relatedArticles} />
         </div>
-        {/* ── Platform footer ── */}
+
+        {/* ── Page footer ── */}
         <div className="w-full print:hidden">
           <ArticlePageFooter />
         </div>
       </div>
-      {/* ── Floating print/export button ── */}
-      <button
-        onClick={() => window.print()}
-        className="fixed bottom-24 right-6 z-50 w-12 h-12 rounded-full bg-white shadow-lg border border-gray-300 flex items-center justify-center text-[#4c51bf] hover:bg-[#4c51bf] hover:text-white transition-colors print:hidden"
-        aria-label="Print or save article as PDF"
-        title="Print / Save as PDF"
-      >
-      <i className="fas fa-print text-lg" aria-hidden="true" />
-      </button>
-      {/* ── Floating accessibility controls ── */}
-      <div className="print:hidden">
-      <AccessibilityControls
-        fontSize={fontSize}
-        onFontSizeChange={setFontSize}
-      />
-      </div>
+
+      {/* ── Scroll to top ── */}
       <div className="print:hidden">
         <ScrollToTop />
       </div>
@@ -227,28 +264,28 @@ export default function ArticlePageClient({
   );
 }
 
-// ─── Article footer (post-content) ───────────────────────────────────────────
+// ─── Article footer (post-content) ─────────────────────────────────────────
 
 function ArticleFooter({ article }: { article: Article }) {
   return (
-    <footer className="mt-16 pt-10 border-t border-[#252538]">
+    <div className="mt-14 pt-8 border-t border-[#252538]">
       {/* Author card */}
-      <div className="flex items-start gap-4 p-6 bg-[#13131f] rounded-2xl border border-[#252538]">
+      <div className="flex items-start gap-4 p-5 sm:p-6 bg-[#13131f] rounded-2xl border border-[#252538]">
         <div
-          className="w-14 h-14 rounded-full flex items-center justify-center text-white text-lg font-bold shrink-0 [background:var(--avatar-bg)]"
+          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-white text-base sm:text-lg font-bold shrink-0 [background:var(--avatar-bg)]"
           style={{ "--avatar-bg": article.author.avatarColor } as CSSProperties}
           aria-hidden="true"
         >
           {article.author.avatarInitials}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#2dd4bf] mb-1">
+          <p className="text-[11px] font-bold uppercase tracking-widest text-[#2dd4bf] mb-1">
             About the Author
           </p>
-          <h3 className="font-bold text-[#f8fafc] text-lg leading-tight mb-0.5">
+          <h3 className="font-bold text-[#f8fafc] text-base leading-tight mb-0.5">
             {article.author.name}
           </h3>
-          <p className="text-sm text-[#94a3b8]">{article.author.role}</p>
+          <p className="text-xs text-[#94a3b8]">{article.author.role}</p>
           <p className="text-sm text-[#cbd5e1] mt-2 leading-relaxed">
             A contributing expert to the UltimateHealth platform, committed to
             delivering evidence-based health information accessible to everyone.
@@ -256,76 +293,55 @@ function ArticleFooter({ article }: { article: Article }) {
         </div>
       </div>
 
-      {/* Tags */}
-      {article.tags.length > 0 && (
-        <div className="mt-8">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#94a3b8] mb-3">
-            Topics
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {article.tags.map((tag) => (
-              <Link
-                key={tag}
-                href={`/articles?tag=${encodeURIComponent(tag)}`}
-                className="text-xs text-[#2dd4bf] bg-[#2dd4bf]/10 border border-[#2dd4bf]/25 px-3.5 py-1.5 rounded-full hover:bg-[#2dd4bf]/20 transition-colors font-medium"
-              >
-                #{tag}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Back link */}
-      <div className="mt-10 flex justify-center">
+      {/* Post-article navigation row */}
+      <div className="mt-8 pt-6 border-t border-[#252538]/60 flex items-center justify-between gap-4">
         <Link
           href="/articles"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[#2dd4bf] hover:bg-[#2dd4bf]/10 transition-colors border border-[#2dd4bf]/30 rounded-full px-6 py-2.5 bg-[#13131f]"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-[#2dd4bf] hover:text-[#5eead4] transition-colors group"
         >
-          <i className="fas fa-arrow-left text-xs" aria-hidden="true" />
-          Back to All Articles
+          <i className="fas fa-arrow-left text-xs transition-transform group-hover:-translate-x-1" aria-hidden="true" />
+          <span>Back to all articles</span>
         </Link>
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
+        >
+          <span>Back to top</span>
+          <i className="fas fa-arrow-up text-[10px]" aria-hidden="true" />
+        </button>
       </div>
-    </footer>
+    </div>
   );
 }
 
-// ─── Minimal page-level footer ────────────────────────────────────────────────
+// ─── Minimal page-level footer ─────────────────────────────────────────────
 
 function ArticlePageFooter() {
   return (
-    <div className="bg-[#0f172a] text-[#64748b] py-8">
-      <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+    <footer className="w-full bg-[#08080f] border-t border-[#252538] text-[#64748b] py-8">
+      <div className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm">
         <div className="flex items-center gap-2">
           <Link
             href="/"
-            className="font-bold text-white hover:text-[#667eea] transition-colors"
+            className="font-bold text-slate-300 hover:text-[#2dd4bf] transition-colors"
           >
             UltimateHealth
           </Link>
-          <span>— Open-source health knowledge for everyone</span>
+          <span className="text-[#3d4f63]">—</span>
+          <span>Open-source health knowledge for everyone</span>
         </div>
-        <div className="flex items-center gap-4">
-          <Link
-            href="/medical-glossary"
-            className="hover:text-[#94a3b8] transition-colors"
-          >
+        <div className="flex items-center gap-5">
+          <Link href="/medical-glossary" className="hover:text-slate-300 transition-colors">
             Medical Glossary
           </Link>
-          <Link
-            href="/contribute"
-            className="hover:text-[#94a3b8] transition-colors"
-          >
+          <Link href="/contribute" className="hover:text-slate-300 transition-colors">
             Contribute
           </Link>
-          <Link
-            href="/"
-            className="hover:text-[#94a3b8] transition-colors"
-          >
+          <Link href="/" className="hover:text-slate-300 transition-colors">
             Home
           </Link>
         </div>
       </div>
-    </div>
+    </footer>
   );
 }

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-import { API_BASE_URL, isValidEmail } from "@/lib/site-config";
+import { isValidEmail } from "@/lib/site-config";
+import { withBasePath } from "@/lib/basePath";
 
 /**
  * Footer newsletter signup — the only interactive part of the footer, so it is
@@ -28,7 +29,7 @@ export default function NewsletterForm() {
     }
     setNewsletterStatus("sending");
     try {
-      const res = await fetch(`${API_BASE_URL}/api/newsletter/subscribe`, {
+      const res = await fetch(withBasePath("/api/newsletter/subscribe"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: trimmedNewsletterEmail }),

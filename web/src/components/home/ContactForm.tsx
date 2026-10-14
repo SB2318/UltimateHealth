@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-import { API_BASE_URL, isValidEmail } from "@/lib/site-config";
+import { isValidEmail } from "@/lib/site-config";
+import { withBasePath } from "@/lib/basePath";
 
 /**
  * Contact form. The surrounding "Connect With Us" section is static and stays on
@@ -46,7 +47,7 @@ export default function ContactForm() {
     }
     setContactStatus("sending");
     try {
-      const res = await fetch(`${API_BASE_URL}/api/contact`, {
+      const res = await fetch(withBasePath("/api/contact"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

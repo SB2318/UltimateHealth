@@ -23,10 +23,11 @@ interface ArticleHeroProps {
  */
 export default function ArticleHero({ article }: ArticleHeroProps) {
   return (
-    <header className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 text-center">
+    <header className="article-hero w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-2 text-center">
 
-      {/* ── Title (Centered, Editorial) ── */}
+      {/* ── Title ── */}
       <h1
+        id="article-hero-title"
         style={{ color: "#f8fafc" }}
         className="text-3xl sm:text-4xl lg:text-5xl font-extrabold !text-white leading-[1.2] tracking-tight mb-6 mx-auto text-center"
       >

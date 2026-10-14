@@ -30,6 +30,7 @@ import {
   FlaskConical,
 } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { withBasePath } from '@/lib/basePath';
 
@@ -1005,6 +1006,13 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
 
 export default function OnboardingModalWeb() {
   const locale = useLocale();
+  const pathname = usePathname();
+  // Only display the floating Tour HUD launcher on the landing/home page
+  const isHomePage =
+    !pathname ||
+    pathname === '/' ||
+    /^\/(?:web\/)?(?:en|hi|bn|te|ta|mr|gu|kn|ml|pa|ur)?\/?$/.test(pathname);
+
   const [isOpen, setIsOpen] = useState(false);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -1033,7 +1041,7 @@ export default function OnboardingModalWeb() {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === 't' || e.key === 'T') && !isOpen) {
+      if ((e.key === 't' || e.key === 'T') && !isOpen && isHomePage) {
         const activeTag = (document.activeElement?.tagName || '').toLowerCase();
         if (activeTag !== 'input' && activeTag !== 'textarea') {
           e.preventDefault();
@@ -1106,25 +1114,27 @@ export default function OnboardingModalWeb() {
         }
       `}</style>
 
-      {/* ── Persistent Floating HUD Launcher (Bottom-Left) ── */}
-      <aside aria-label="Tour Quick Launcher" className="fixed bottom-6 left-6 z-40">
-        <button
-          onClick={openTour}
-          className="group flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#090914]/90 hover:bg-[#121226] border border-[#00f0ff]/50 hover:border-[#ff007f] text-white shadow-[0_0_25px_rgba(0,240,255,0.3)] hover:shadow-[0_0_30px_rgba(255,0,127,0.4)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
-          title="Start UltimateHealth Tour (Press T)"
-        >
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f0ff] opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-[#00f0ff]"></span>
-          </span>
-          <span className="text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#00f0ff] via-purple-300 to-[#ff007f] bg-clip-text text-transparent">
-            {ui.startTour}
-          </span>
-          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-[10px] font-mono text-cyan-300">
-            T
-          </span>
-        </button>
-      </aside>
+      {/* ── Persistent Floating HUD Launcher (Bottom-Left, Home/Landing page only) ── */}
+      {isHomePage && (
+        <aside aria-label="Tour Quick Launcher" className="fixed bottom-6 left-6 z-40">
+          <button
+            onClick={openTour}
+            className="group flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#090914]/90 hover:bg-[#121226] border border-[#00f0ff]/50 hover:border-[#ff007f] text-white shadow-[0_0_25px_rgba(0,240,255,0.3)] hover:shadow-[0_0_30px_rgba(255,0,127,0.4)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+            title="Start UltimateHealth Tour (Press T)"
+          >
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f0ff] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#00f0ff]"></span>
+            </span>
+            <span className="text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#00f0ff] via-purple-300 to-[#ff007f] bg-clip-text text-transparent">
+              {ui.startTour}
+            </span>
+            <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-[10px] font-mono text-cyan-300">
+              T
+            </span>
+          </button>
+        </aside>
+      )}
 
       {/* ── Fullscreen Backdrop & Centered Modal ── */}
       <AnimatePresence>

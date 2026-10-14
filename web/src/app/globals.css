@@ -3931,6 +3931,18 @@ p, .uh-card-capability p, .feature-card-premium p {
   color: #0d1117 !important;
 }
 
+/* ─── ARTICLE PAGE LAYOUT CENTERING (guaranteed, context-independent) ─── */
+/* These rules ensure the reading column is always centered regardless of
+   any flex/grid context introduced by parent layout components.          */
+.article-hero,
+#article-body {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: 860px !important;
+  width: 100% !important;
+}
+
 /* ─── ARTICLE DETAILS HTML CONTENT PROFESSIONAL TYPOGRAPHY (DARK THEME) ─── */
 .article-html-content {
   color: #cbd5e1 !important;

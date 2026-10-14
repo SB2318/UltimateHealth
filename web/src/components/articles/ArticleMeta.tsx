@@ -50,7 +50,7 @@ export default function ArticleMeta({ article, className = "" }: ArticleMetaProp
           {formattedDate}
         </time>
         {updatedDate && (
-          <span className="text-xs text-slate-500 ml-1">
+          <span className="text-xs text-slate-500 ml-1" suppressHydrationWarning>
             (Updated {updatedDate})
           </span>
         )}
