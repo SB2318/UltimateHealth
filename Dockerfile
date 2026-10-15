@@ -5,7 +5,7 @@ WORKDIR /app
 
 ENV NEXT_PUBLIC_BASE_PATH=/web
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_OPTIONS="--max-old-space-size=2048"
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 # Install dependencies directly inside builder stage
 COPY web/package.json web/package-lock.json ./

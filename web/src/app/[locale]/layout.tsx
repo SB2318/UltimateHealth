@@ -77,6 +77,7 @@ export default async function RootLayout({
       lang={locale}
       nonce={nonce}
       data-nonce={nonce}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={cn('font-sans', dmSans.variable, inter.variable, dmSerifDisplay.variable)}
     >

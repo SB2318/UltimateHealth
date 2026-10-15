@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-const PLATFORM_GUIDE_BGM_URL = 'https://ultimatehealth.blog/api/getfile/krishna_flute.mp3';
 import {
   Heart,
   Mic2,
@@ -30,32 +28,43 @@ import {
   Star,
   Globe,
   FlaskConical,
+  Play,
+  Pause,
 } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { withBasePath } from '@/lib/basePath';
+import { useModalAudio } from '@/lib/audio/modalAudioController';
 
-// Web Audio API Sound Synthesizer for High-Tech SFX
+// Web Audio API Sound Synthesizer for High-Tech SFX (Singleton context to prevent memory/thread leaks)
+let sharedTourAudioCtx: AudioContext | null = null;
 const playNeonSFX = (frequency = 600, duration = 0.08, type: OscillatorType = 'sine') => {
   try {
+    if (typeof window === 'undefined') return;
     const AudioContextClass =
       window.AudioContext ||
       (window as unknown as { webkitAudioContext: typeof window.AudioContext }).webkitAudioContext;
     if (!AudioContextClass) return;
-    const ctx = new AudioContextClass();
+    if (!sharedTourAudioCtx || sharedTourAudioCtx.state === 'closed') {
+      sharedTourAudioCtx = new AudioContextClass();
+    }
+    if (sharedTourAudioCtx.state === 'suspended') {
+      sharedTourAudioCtx.resume().catch(() => {});
+    }
+    const ctx = sharedTourAudioCtx;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = type;
     osc.frequency.setValueAtTime(frequency, ctx.currentTime);
-    gain.gain.setValueAtTime(0.04, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    gain.gain.setValueAtTime(0.03, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
     osc.connect(gain);
     gain.connect(ctx.destination);
     osc.start();
     osc.stop(ctx.currentTime + duration);
   } catch {
-    // Ignore if audio policy blocks
+    // Graceful fallback
   }
 };
 
@@ -84,7 +93,7 @@ const getTourSteps = (locale: string): TourStep[] => {
         tabLabel: 'प्रेरणा और दृष्टिकोण',
         badge: 'रोगी सेवा के प्रति समर्पण',
         title: 'डॉ. मौमिता देबनाथ: जीवन और प्रेरणा',
-        subtitle: 'आर.जी. कर मेडिकल कॉलेज में चेस्ट मेडिसिन की समर्पित स्नातकोत्तर प्रशिक्षु, जिनकी करुणा और मानवीय दृष्टिकोण ने इस परियोजना को प्रेरित किया।',
+        subtitle: 'चेस्ट मेडिसिन (श्वसन रोग) की समर्पित स्नातकोत्तर प्रशिक्षु डॉक्टर, जिनकी करुणा और मानवीय दृष्टिकोण ने इस परियोजना को प्रेरित किया।',
         quote: 'स्वास्थ्य सेवा की शुरुआत पूरे इंसान को देखने से होती है — शरीर, मन और सम्मान। सच्ची देखभाल मानवीय आदर से ही संभव है।',
         author: 'डॉ. मौमिता देबनाथ की स्मृति में',
         accentColor: '#ff007f',
@@ -240,7 +249,7 @@ const getTourSteps = (locale: string): TourStep[] => {
         tabLabel: 'অনুপ্রেরণা ও দৃষ্টিভঙ্গি',
         badge: 'রোগী সেবায় উৎসর্গ',
         title: 'ডাঃ মৌমিতা দেবনাথ: জীবন ও অনুপ্রেরণা',
-        subtitle: 'আর.জি. কর মেডিকেল কলেজের বক্ষব্যাধি বিভাগের নিবেদিতপ্রাণ স্নাতকোত্তর গবেষক, যাঁর মানবিক দৃষ্টিভঙ্গি এই প্রকল্পকে অনুপ্রাণিত করেছে।',
+        subtitle: 'বক্ষব্যাধি (পালমোনোলজি) বিভাগের নিবেদিতপ্রাণ স্নাতকোত্তর ট্রেইনি চিকিৎসক, যাঁর মানবিক দৃষ্টিভঙ্গি এই প্রকল্পকে অনুপ্রাণিত করেছে।',
         quote: 'চিকিৎসা সেবার সূচনা হয় একজন মানুষকে সম্পূর্ণভাবে জানার মাধ্যমে — দেহ, মন এবং মানবিক মর্যাদা দিয়ে।',
         author: 'ডাঃ মৌমিতা দেবনাথের স্মরণে',
         accentColor: '#ff007f',
@@ -396,7 +405,7 @@ const getTourSteps = (locale: string): TourStep[] => {
         tabLabel: 'ஊக்கம் & பார்வை',
         badge: 'நோயாளி சேவைக்கான அர்ப்பணிப்பு',
         title: 'டாக்டர் மௌமிதா தேப்நாத்: வாழ்க்கை & ஊக்கம்',
-        subtitle: 'ஆர்.ஜி. கர் மருத்துவக் கல்லூரியின் மார்பு மருத்துவப் பிரிவு முதுகலை பயிற்சியாளர், இவரது மனிதநேயமும் அர்ப்பணிப்பும் இந்தத் திட்டத்திற்கு உந்துசக்தியாக அமைந்தது.',
+        subtitle: 'மார்பு மருத்துவப் பிரிவு முதுகலை பயிற்சியாளர் மருத்துவர், இவரது மனிதநேயமும் அர்ப்பணிப்பும் இந்தத் திட்டத்திற்கு உந்துசக்தியாக அமைந்தது.',
         quote: 'சுகாதார சேவை என்பது ஒரு மனிதனை முழுமையாகப் பார்ப்பதில் தொடங்குகிறது — உடல், மனம் மற்றும் கண்ணியம். உண்மையான கவனிப்புக்கு அசைக்க முடியாத அர்ப்பணிப்பும் மனித மரியாதையும் தேவை.',
         author: 'டாக்டர் மௌமிதா தேப்நாத் அவர்களின் நினைவாக',
         accentColor: '#ff007f',
@@ -552,7 +561,7 @@ const getTourSteps = (locale: string): TourStep[] => {
         tabLabel: 'ପ୍ରେରଣା ଓ ଦୃଷ୍ଟିକୋଣ',
         badge: 'ରୋଗୀ ସେବା ପ୍ରତି ସମର୍ପଣ',
         title: 'ଡାକ୍ତର ମୌମିତା ଦେବନାଥ: ଜୀବନ ଓ ପ୍ରେରଣା',
-        subtitle: 'ଆର୍.ଜି. କର ମେଡିକାଲ କଲେଜର ଛାତି ରୋଗ ବିଭାଗର ନିଷ୍ଠାପର ସ୍ନାତକୋତ୍ତର ଗବେଷକ, ଯାହାଙ୍କର ମାନବିକ ଦୃଷ୍ଟିକୋଣ ଏହି ପ୍ରକଳ୍ପକୁ ପ୍ରେରିତ କରିଛି।',
+        subtitle: 'ଛାତି ଓ ଶ୍ୱାସରୋଗ ବିଭାଗର ନିଷ୍ଠାପର ସ୍ନାତକୋତ୍ତର ପ୍ରଶିକ୍ଷାର୍ଥୀ ଡାକ୍ତର, ଯାହାଙ୍କର ମାନବିକ ଦୃଷ୍ଟିକୋଣ ଏହି ପ୍ରକଳ୍ପକୁ ପ୍ରେରିତ କରିଛି।',
         quote: 'ସ୍ୱାସ୍ଥ୍ୟସେବାର ଆରମ୍ଭ ଜଣେ ବ୍ୟକ୍ତିଙ୍କୁ ସମ୍ପୂର୍ଣ୍ଣ ରୂପେ ଦେଖିବାରୁ ଆରମ୍ଭ ହୁଏ — ଶରୀର, ମନ ଏବଂ ସମ୍ମାନ। ପ୍ରକୃତ ସେବା ପାଇଁ ଅତୁଳନୀୟ ସମର୍ପଣ ଏବଂ ମାନବିକ ଆଦର ଆବଶ୍ୟକ।',
         author: 'ଡାକ୍ତର ମୌମିତା ଦେବନାଥଙ୍କ ସ୍ମୃତିରେ',
         accentColor: '#ff007f',
@@ -708,7 +717,7 @@ const getTourSteps = (locale: string): TourStep[] => {
       tabLabel: 'Inspiration & Vision',
       badge: 'DEDICATION TO PATIENT CARE',
       title: 'Dr. Moumita Debnath: Life & Inspiration',
-      subtitle: 'Junior doctor and postgraduate trainee in Chest Medicine at R.G. Kar Medical College, whose dedication to empathetic care and patient dignity inspired this project.',
+      subtitle: 'Postgraduate resident doctor specializing in Pulmonary & Chest Medicine, whose clinical devotion to empathetic care and patient dignity inspired this project.',
       quote:
         'Healthcare begins with seeing the whole human being — body, mind, and dignity. True care requires uncompromised dedication and genuine human respect.',
       author: 'In Memory of Dr. Moumita Debnath',
@@ -873,6 +882,10 @@ interface TourUiLabels {
   doctorSuiteDesc: string;
   openSquad: string;
   openSquadDesc: string;
+  highlights: string;
+  choosePortal: string;
+  playMusic: string;
+  stopMusic: string;
 }
 
 const getTourUiLabels = (locale: string): TourUiLabels => {
@@ -890,6 +903,10 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
         doctorSuiteDesc: 'समीक्षा और प्रोटोकॉल',
         openSquad: 'ओपन स्क्वाड',
         openSquadDesc: 'गिटहब ओपन सोर्स',
+        highlights: 'प्रमुख विशेषताएं और क्षमताएं',
+        choosePortal: 'अपना पसंदीदा अनुभाग चुनें:',
+        playMusic: 'संगीत चलाएं',
+        stopMusic: 'संगीत रोकें',
       };
     case 'bn':
       return {
@@ -904,6 +921,10 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
         doctorSuiteDesc: 'পর্যালোচনা ও প্রোটোকল',
         openSquad: 'ওপেন স্কোয়াড',
         openSquadDesc: 'গিটহাব ওপেন সোর্স',
+        highlights: 'প্রধান বৈশিষ্ট্য ও সেবাসমূহ',
+        choosePortal: 'আপনার পছন্দের বিভাগ বেছে নিন:',
+        playMusic: 'সঙ্গীত চালান',
+        stopMusic: 'সঙ্গীত বন্ধ করুন',
       };
     case 'ta':
       return {
@@ -918,6 +939,10 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
         doctorSuiteDesc: 'மதிப்பாய்வு & நெறிமுறைகள்',
         openSquad: 'திறந்த படை',
         openSquadDesc: 'GitHub திறந்த மூலம்',
+        highlights: 'முக்கிய சிறப்பம்சங்கள்',
+        choosePortal: 'உங்கள் பகுதியைத் தேர்வுசெய்க:',
+        playMusic: 'இசை இயக்கு',
+        stopMusic: 'இசை நிறுத்து',
       };
     case 'or':
       return {
@@ -932,6 +957,10 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
         doctorSuiteDesc: 'ସମୀକ୍ଷା ଓ ପ୍ରୋଟୋକଲ୍',
         openSquad: 'ଓପନ୍ ସ୍କ୍ୱାଡ୍',
         openSquadDesc: 'GitHub ଓପନ୍ ସୋର୍ସ୍',
+        highlights: 'ପ୍ରମୁଖ ବିଶେଷତା ଓ ସୁବିଧା',
+        choosePortal: 'ଆପଣଙ୍କ ପସନ୍ଦର ପୋର୍ଟାଲ୍ ଚୟନ କରନ୍ତୁ:',
+        playMusic: 'ସଙ୍ଗୀତ ଚଳାନ୍ତୁ',
+        stopMusic: 'ସଙ୍ଗୀତ ବନ୍ଦ କରନ୍ତୁ',
       };
     case 'de':
       return {
@@ -946,6 +975,10 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
         doctorSuiteDesc: 'Überprüfung & Protokolle',
         openSquad: 'Open Squad',
         openSquadDesc: 'GitHub Open Source',
+        highlights: 'HIGHLIGHTS & FUNKTIONEN',
+        choosePortal: 'Wählen Sie Ihren Zielbereich:',
+        playMusic: 'Musik abspielen',
+        stopMusic: 'Musik anhalten',
       };
     case 'es':
       return {
@@ -960,6 +993,10 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
         doctorSuiteDesc: 'Revisión y Protocolos',
         openSquad: 'Escuadrón Abierto',
         openSquadDesc: 'Código Abierto GitHub',
+        highlights: 'CARACTERÍSTICAS PRINCIPALES',
+        choosePortal: 'Elija su portal de destino:',
+        playMusic: 'Reproducir música',
+        stopMusic: 'Detener música',
       };
     case 'fr':
       return {
@@ -974,6 +1011,10 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
         doctorSuiteDesc: 'Revue & Protocoles',
         openSquad: 'Équipe Ouverte',
         openSquadDesc: 'Open Source sur GitHub',
+        highlights: 'POINTS FORTS ET FONCTIONNALITÉS',
+        choosePortal: 'Choisissez votre portail de destination :',
+        playMusic: 'Lancer la musique',
+        stopMusic: 'Arrêter la musique',
       };
     case 'hr':
       return {
@@ -988,6 +1029,10 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
         doctorSuiteDesc: 'Pregled i Protokoli',
         openSquad: 'Otvoreni Tim',
         openSquadDesc: 'GitHub Otvoreni Kod',
+        highlights: 'GLAVNE ZNAČAJKE',
+        choosePortal: 'Odaberite portal koji želite istražiti:',
+        playMusic: 'Pokreni glazbu',
+        stopMusic: 'Zaustavi glazbu',
       };
     default:
       return {
@@ -1002,6 +1047,10 @@ const getTourUiLabels = (locale: string): TourUiLabels => {
         doctorSuiteDesc: 'Review & Protocols',
         openSquad: 'Open Squad',
         openSquadDesc: 'GitHub Open Source',
+        highlights: 'HIGHLIGHTS & CAPABILITIES',
+        choosePortal: 'Choose Your Destination Portal:',
+        playMusic: 'Play Music',
+        stopMusic: 'Stop Music',
       };
   }
 };
@@ -1018,81 +1067,87 @@ export default function OnboardingModalWeb() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Global Audio controller hook for tour
+  const { isPlaying, toggle: toggleAudio, play: startAudio, stop: stopAudio } = useModalAudio('tour');
 
   const TOUR_STEPS = getTourSteps(locale);
   const ui = getTourUiLabels(locale);
-
-  // Background Music (Flute) Lifecycle
-  useEffect(() => {
-    if (!isOpen) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-      return;
-    }
-
-    if (!audioRef.current) {
-      const audio = new Audio(PLATFORM_GUIDE_BGM_URL);
-      audio.loop = true;
-      audio.volume = 0.25;
-      audioRef.current = audio;
-    }
-
-    const audio = audioRef.current;
-    if (soundEnabled) {
-      audio.play().catch(() => {
-        // Autoplay policy fallback
-      });
-    } else {
-      audio.pause();
-    }
-
-    return () => {
-      audio.pause();
-    };
-  }, [isOpen, soundEnabled]);
 
   const openTour = useCallback(() => {
     setActiveStepIndex(0);
     setIsOpen(true);
     if (soundEnabled) {
       playNeonSFX(880, 0.12, 'sine');
-      if (audioRef.current) {
-        audioRef.current.play().catch(() => {});
-      }
     }
-  }, [soundEnabled]);
+    startAudio();
+  }, [soundEnabled, startAudio]);
 
   const closeTour = useCallback(() => {
     sessionStorage.setItem('uh_onboarding_seen', 'true');
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
+    stopAudio();
     setIsOpen(false);
-  }, []);
+  }, [stopAudio]);
 
-  // Listen for custom trigger event from Hero or Navbar
+  // Handle open-uh-tour custom trigger event
   useEffect(() => {
     const handleTrigger = () => openTour();
     window.addEventListener('open-uh-tour', handleTrigger);
     return () => window.removeEventListener('open-uh-tour', handleTrigger);
   }, [openTour]);
 
-  // Keyboard navigation
+  // Sync audio with modal open state
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.key === 't' || e.key === 'T') && !isOpen && isHomePage) {
-        const activeTag = (document.activeElement?.tagName || '').toLowerCase();
-        if (activeTag !== 'input' && activeTag !== 'textarea') {
-          e.preventDefault();
-          openTour();
-        }
-      }
-      if (!isOpen) return;
+    if (!isOpen) {
+      stopAudio();
+      return;
+    }
+  }, [isOpen, stopAudio]);
 
+
+
+  const step = TOUR_STEPS[activeStepIndex];
+  const StepIcon = step.icon;
+
+  const handleNext = useCallback(() => {
+    if (activeStepIndex < TOUR_STEPS.length - 1) {
+      if (soundEnabled) playNeonSFX(600 + activeStepIndex * 70, 0.08, 'triangle');
+      setActiveStepIndex((prev) => prev + 1);
+    } else {
+      if (soundEnabled) playNeonSFX(980, 0.15, 'sine');
+      closeTour();
+    }
+  }, [activeStepIndex, TOUR_STEPS.length, soundEnabled, closeTour]);
+
+  const handlePrev = useCallback(() => {
+    if (activeStepIndex > 0) {
+      if (soundEnabled) playNeonSFX(500, 0.08, 'sine');
+      setActiveStepIndex((prev) => prev - 1);
+    }
+  }, [activeStepIndex, soundEnabled]);
+
+  const handleSelectStep = useCallback(
+    (index: number) => {
+      if (soundEnabled) playNeonSFX(720, 0.06, 'sine');
+      setActiveStepIndex(index);
+    },
+    [soundEnabled]
+  );
+
+  // Prevent background scrolling while open
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen]);
+
+  // Keyboard navigation inside modal
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeTour();
       if (e.key === 'ArrowRight') {
         e.preventDefault();
@@ -1103,39 +1158,44 @@ export default function OnboardingModalWeb() {
         handlePrev();
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  });
+  }, [isOpen, closeTour, handleNext, handlePrev]);
 
-  const step = TOUR_STEPS[activeStepIndex];
-  const StepIcon = step.icon;
-
-  const handleNext = () => {
-    if (activeStepIndex < TOUR_STEPS.length - 1) {
-      if (soundEnabled) playNeonSFX(600 + activeStepIndex * 70, 0.08, 'triangle');
-      setActiveStepIndex((prev) => prev + 1);
-    } else {
-      if (soundEnabled) playNeonSFX(980, 0.15, 'sine');
-      closeTour();
-    }
-  };
-
-  const handlePrev = () => {
-    if (activeStepIndex > 0) {
-      if (soundEnabled) playNeonSFX(500, 0.08, 'sine');
-      setActiveStepIndex((prev) => prev - 1);
-    }
-  };
-
-  const handleSelectStep = (index: number) => {
-    if (soundEnabled) playNeonSFX(720, 0.06, 'sine');
-    setActiveStepIndex(index);
-  };
+  // Press 'T' to open tour on home page
+  useEffect(() => {
+    const handleShortcut = (e: KeyboardEvent) => {
+      if ((e.key === 't' || e.key === 'T') && !isOpen && isHomePage) {
+        const activeTag = (document.activeElement?.tagName || '').toLowerCase();
+        if (activeTag !== 'input' && activeTag !== 'textarea') {
+          e.preventDefault();
+          openTour();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleShortcut);
+    return () => window.removeEventListener('keydown', handleShortcut);
+  }, [isOpen, isHomePage, openTour]);
 
   return (
     <>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+
+        .uh-bengali-font {
+          font-family: 'Hind Siliguri', 'Noto Sans Bengali', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+        .uh-bengali-font h2,
+        .uh-bengali-font h3,
+        .uh-bengali-font h4 {
+          letter-spacing: normal !important;
+          line-height: 1.35 !important;
+        }
+        .uh-bengali-font p,
+        .uh-bengali-font span {
+          line-height: 1.6 !important;
+        }
+
         .uh-tour-scrollbar {
           scrollbar-width: thin;
           scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
@@ -1157,27 +1217,29 @@ export default function OnboardingModalWeb() {
         .dark .uh-tour-scrollbar::-webkit-scrollbar-thumb {
           background: rgba(255, 255, 255, 0.22);
         }
-        .uh-tour-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(148, 163, 184, 0.55);
-        }
-        .dark .uh-tour-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(255, 255, 255, 0.4);
+
+        @media (prefers-reduced-motion: reduce) {
+          *, ::before, ::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+          }
         }
       `}</style>
 
       {/* ── Persistent Floating HUD Launcher (Bottom-Left, Home/Landing page only) ── */}
       {isHomePage && (
-        <aside aria-label="Tour Quick Launcher" className="fixed bottom-6 left-6 z-40">
+        <aside aria-label="Tour Quick Launcher" className="fixed bottom-5 left-5 sm:bottom-6 sm:left-6 z-40">
           <button
             onClick={openTour}
-            className="group flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/95 dark:bg-[#090914]/90 hover:bg-slate-50 dark:hover:bg-[#121226] border border-teal-500/40 dark:border-[#00f0ff]/50 text-slate-800 dark:text-white shadow-xl shadow-teal-500/10 dark:shadow-[0_0_25px_rgba(0,240,255,0.3)] hover:shadow-2xl hover:border-teal-600 dark:hover:border-[#ff007f] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+            className="group flex items-center gap-2.5 sm:gap-3 px-4 sm:px-5 py-2.5 sm:py-3 rounded-2xl bg-white/95 dark:bg-[#0c0d18]/90 hover:bg-slate-50 dark:hover:bg-[#151528] border border-teal-500/40 dark:border-cyan-400/50 text-slate-800 dark:text-white shadow-xl shadow-teal-500/10 dark:shadow-[0_0_30px_rgba(0,240,255,0.25)] hover:shadow-2xl hover:border-teal-600 dark:hover:border-cyan-300 backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
             title="Start UltimateHealth Tour (Press T)"
           >
             <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-500 dark:bg-[#00f0ff] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-teal-600 dark:bg-[#00f0ff]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-500 dark:bg-cyan-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-teal-600 dark:bg-cyan-400"></span>
             </span>
-            <span className="text-xs font-black tracking-widest uppercase bg-gradient-to-r from-teal-600 via-purple-600 to-pink-600 dark:from-[#00f0ff] dark:via-purple-300 dark:to-[#ff007f] bg-clip-text text-transparent">
+            <span className="text-xs font-black tracking-widest uppercase bg-gradient-to-r from-teal-600 via-purple-600 to-pink-600 dark:from-cyan-400 dark:via-purple-300 dark:to-pink-400 bg-clip-text text-transparent">
               {ui.startTour}
             </span>
             <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/20 text-[10px] font-mono text-teal-700 dark:text-cyan-300 font-bold">
@@ -1191,109 +1253,147 @@ export default function OnboardingModalWeb() {
       <AnimatePresence>
         {isOpen && (
           <div
-            className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-slate-900/60 dark:bg-black/85 backdrop-blur-md overflow-hidden"
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-5 md:p-6 lg:p-8 bg-slate-950/75 backdrop-blur-md overflow-y-auto"
             role="dialog"
             aria-modal="true"
             aria-labelledby="tour-dialog-title"
+            onClick={closeTour}
           >
             {/* Ambient Aura */}
             <div
-              className="absolute w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none opacity-25 dark:opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-colors duration-500"
+              className="absolute w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none opacity-20 dark:opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-colors duration-500"
               style={{ backgroundColor: step.accentColor }}
             />
 
-            {/* ── Modal Container ── */}
+            {/* ── Modal Container (Consistent 8px scale, 24-32px padding, rounded-2xl/3xl) ── */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 16 }}
+              initial={{ opacity: 0, scale: 0.96, y: 14 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: 16 }}
-              transition={{ duration: 0.22, ease: 'easeOut' }}
-              className="relative w-full max-w-[980px] max-h-[88vh] flex flex-col rounded-2xl sm:rounded-3xl bg-white dark:bg-[#0e0e1a] border border-slate-200/90 dark:border-[#26263e] shadow-2xl shadow-slate-900/20 dark:shadow-[0_25px_70px_rgba(0,0,0,0.9)] overflow-hidden font-sans"
+              exit={{ opacity: 0, scale: 0.96, y: 14 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className={`relative w-[96%] sm:w-full max-w-[960px] lg:max-w-[1020px] max-h-[94vh] sm:max-h-[88vh] h-[min(92vh,740px)] min-h-[500px] sm:min-h-[540px] my-auto mx-auto flex flex-col rounded-2xl sm:rounded-3xl bg-white dark:bg-[#12111d] border border-slate-200 dark:border-white/10 shadow-2xl overflow-hidden font-sans ${
+                locale === 'bn' ? 'uh-bengali-font' : ''
+              }`}
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Grid overlay */}
+              {/* Top edge progress bar (Full width, synced to step: Step 1 of 5 = 20%) */}
               <div
-                className="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
-                style={{
-                  backgroundImage:
-                    'linear-gradient(rgba(0,0,0,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.15) 1px,transparent 1px)',
-                  backgroundSize: '24px 24px',
-                }}
-              />
-
-              {/* Progress bar */}
-              <div className="h-[3px] bg-slate-100 dark:bg-[#1e293b] shrink-0">
-                <motion.div
+                role="progressbar"
+                aria-valuenow={activeStepIndex + 1}
+                aria-valuemin={1}
+                aria-valuemax={TOUR_STEPS.length}
+                aria-label="Presentation tour progress"
+                className="w-full h-1 bg-slate-100 dark:bg-white/10 shrink-0"
+              >
+                <div
+                  className="h-full transition-all duration-300 ease-out"
                   style={{
-                    height: '100%',
                     width: `${((activeStepIndex + 1) / TOUR_STEPS.length) * 100}%`,
                     backgroundColor: step.accentColor,
-                    boxShadow: `0 0 12px ${step.accentColor}`,
-                    transition: 'width 0.3s ease, background-color 0.4s',
+                    boxShadow: `0 0 10px ${step.accentColor}`,
                   }}
                 />
               </div>
 
-              {/* ── Header Bar ── */}
-              <div className="flex items-center justify-between px-5 sm:px-7 py-3 border-b border-slate-100 dark:border-white/10 bg-slate-50/90 dark:bg-[#0d0d1c]/95 backdrop-blur-sm shrink-0 z-10">
-                <div className="flex items-center gap-3">
-                  <span
-                    className="font-mono text-[11px] font-black tracking-wider px-2.5 py-1 rounded-md"
+              {/* ── Header Bar (Reduced excessive vertical whitespace, consistent row alignment) ── */}
+              <div className="h-13 sm:h-14 flex items-center justify-between px-6 sm:px-8 lg:px-10 border-b border-slate-200/80 dark:border-white/10 bg-slate-100/70 dark:bg-[#161526] shrink-0 z-10">
+                {/* Coordinated Top-Left Progress Component (Point 2: height, width, center alignment) */}
+                <div className="flex items-center gap-2.5">
+                  <div
+                    className="min-h-[36px] sm:min-h-[38px] px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl border shadow-2xs inline-flex items-center justify-center gap-2.5 sm:gap-3"
                     style={{
-                      color: step.accentColor,
-                      background: `${step.accentColor}18`,
-                      border: `1px solid ${step.accentColor}44`,
+                      background: `${step.accentColor}14`,
+                      borderColor: `${step.accentColor}33`,
                     }}
                   >
-                    {ui.stageBadge} {step.stepNum} / 05
-                  </span>
-                  <span className="font-mono text-[11px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
-                    {step.badge}
-                  </span>
+                    <span className="w-2 h-2 rounded-full shrink-0 self-center" style={{ backgroundColor: step.accentColor }} />
+                    <span
+                      className="font-mono text-[11.5px] sm:text-xs font-bold tracking-wider leading-none self-center"
+                      style={{ color: step.accentColor }}
+                    >
+                      {ui.stageBadge} 0{activeStepIndex + 1} / 0{TOUR_STEPS.length}
+                    </span>
+                    {/* Synchronized mini progress bar */}
+                    <div className="hidden sm:block w-16 sm:w-20 h-2 rounded-full bg-slate-200 dark:bg-white/15 overflow-hidden ml-0.5 self-center">
+                      <div
+                        className="h-full rounded-full transition-all duration-300 ease-out"
+                        style={{
+                          width: `${((activeStepIndex + 1) / TOUR_STEPS.length) * 100}%`,
+                          backgroundColor: step.accentColor,
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-1.5">
+
+                {/* Top-Right Horizontal Toolbar: Audio toggle & Close button in consistent row */}
+                <div className="flex items-center gap-2 sm:gap-3">
+                  {/* Audio Toggle Button (Point 1: centered with each element aligned) */}
                   <button
-                    onClick={() => {
-                      setSoundEnabled((v) => {
-                        const next = !v;
-                        if (audioRef.current) {
-                          if (next) audioRef.current.play().catch(() => {});
-                          else audioRef.current.pause();
-                        }
-                        return next;
-                      });
-                    }}
-                    className={`p-2 rounded-xl border border-transparent transition-colors cursor-pointer ${
-                      soundEnabled
-                        ? 'text-teal-600 dark:text-cyan-400 bg-teal-50 dark:bg-cyan-500/10 hover:bg-teal-100 dark:hover:bg-cyan-500/20'
-                        : 'text-slate-400 hover:text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
+                    onClick={toggleAudio}
+                    type="button"
+                    aria-label={isPlaying ? ui.stopMusic : ui.playMusic}
+                    aria-pressed={isPlaying}
+                    title={isPlaying ? ui.stopMusic : ui.playMusic}
+                    className={`h-9 sm:h-9.5 px-3.5 sm:px-4 rounded-xl inline-flex items-center justify-center gap-2 text-xs font-semibold tracking-wide transition-all cursor-pointer border active:scale-95 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:outline-none shadow-2xs text-center ${
+                      isPlaying
+                        ? 'bg-pink-600 text-white border-pink-700 hover:bg-pink-700 shadow-sm shadow-pink-600/20'
+                        : 'bg-white text-slate-800 border-slate-300 hover:bg-slate-50 dark:bg-white/10 dark:text-white dark:border-white/20'
                     }`}
-                    title={soundEnabled ? 'Mute BGM & SFX' : 'Unmute BGM & SFX'}
-                    aria-label={soundEnabled ? 'Mute sound' : 'Unmute sound'}
                   >
-                    {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                    {isPlaying ? (
+                      <span className="inline-flex items-center justify-center gap-2">
+                        <Volume2 size={15} className="animate-pulse shrink-0 self-center" aria-hidden="true" />
+                        <span className="font-semibold leading-none self-center">{ui.stopMusic}</span>
+                        <span className="inline-flex items-center justify-center gap-0.5 h-3 self-center ml-0.5" aria-hidden="true">
+                          <span className="w-0.5 h-3 bg-white rounded-full animate-[pulse_0.6s_ease-in-out_infinite]" />
+                          <span className="w-0.5 h-1.5 bg-white rounded-full animate-[pulse_0.8s_ease-in-out_infinite_0.2s]" />
+                          <span className="w-0.5 h-2.5 bg-white rounded-full animate-[pulse_0.7s_ease-in-out_infinite_0.4s]" />
+                        </span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center justify-center gap-2">
+                        <Play size={13} className="shrink-0 text-pink-600 dark:text-pink-400 self-center" aria-hidden="true" />
+                        <span className="font-semibold leading-none self-center">{ui.playMusic}</span>
+                      </span>
+                    )}
                   </button>
+
+                  {/* Close Button: vertically centered and correctly inset */}
                   <button
                     onClick={closeTour}
-                    className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
-                    aria-label="Close Tour"
+                    type="button"
+                    className="w-9 h-9 sm:w-9.5 sm:h-9.5 rounded-lg sm:rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200/70 dark:hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-slate-300 dark:hover:border-white/20 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:outline-none"
+                    aria-label="Close presentation tour"
                   >
-                    <X size={18} />
+                    <X size={18} aria-hidden="true" />
                   </button>
                 </div>
               </div>
 
-              {/* ── Tab Navigation ── */}
-              <div className="uh-tour-scrollbar flex items-center gap-2 px-5 sm:px-7 py-2.5 border-b border-slate-100 dark:border-white/5 bg-slate-100/70 dark:bg-[#0a0a16] overflow-x-auto shrink-0 z-10">
+              {/* ── Five-Step Navigation Strip (Point 3: comfortable internal padding, no button edge sticking) ── */}
+              <nav
+                role="tablist"
+                aria-label="Five-step presentation navigation"
+                className="uh-tour-scrollbar flex items-center justify-start sm:justify-center gap-2 sm:gap-2.5 px-4 sm:px-8 lg:px-10 py-2.5 border-b border-slate-200/80 dark:border-white/10 bg-slate-50/70 dark:bg-[#0c0d18] overflow-x-auto shrink-0 z-10"
+              >
                 {TOUR_STEPS.map((s, idx) => {
                   const isActive = idx === activeStepIndex;
+                  const isCompleted = idx < activeStepIndex;
                   return (
                     <button
                       key={s.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-current={isActive ? 'step' : undefined}
                       onClick={() => handleSelectStep(idx)}
-                      className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-mono text-xs font-bold shrink-0 transition-all cursor-pointer border ${
+                      className={`h-9 sm:h-9.5 px-3.5 sm:px-4.5 py-1.5 rounded-xl text-[11.5px] sm:text-xs font-semibold shrink-0 transition-all cursor-pointer border inline-flex items-center justify-center gap-2 sm:gap-2.5 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:outline-none ${
                         isActive
-                          ? 'bg-white dark:bg-white/10 shadow-xs border-slate-300 dark:border-transparent'
-                          : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 border-transparent hover:bg-white/40 dark:hover:bg-white/5'
+                          ? 'shadow-xs font-bold'
+                          : isCompleted
+                          ? 'border-slate-200/90 dark:border-white/15 bg-slate-100/90 hover:bg-slate-200/80 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] text-slate-700 dark:text-slate-300'
+                          : 'border-slate-200/60 dark:border-white/5 bg-slate-100/50 hover:bg-slate-200/70 dark:bg-white/[0.03] dark:hover:bg-white/[0.07] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white'
                       }`}
                       style={
                         isActive
@@ -1305,190 +1405,328 @@ export default function OnboardingModalWeb() {
                           : undefined
                       }
                     >
-                      <span
-                        className="w-1.5 h-1.5 rounded-full shrink-0 transition-colors"
-                        style={{
-                          background: isActive ? s.accentColor : '#94a3b8',
-                        }}
-                      />
-                      {s.stepNum}. {s.tabLabel}
+                      {isCompleted ? (
+                        <CheckCircle2 size={14} className="shrink-0 text-emerald-500 dark:text-emerald-400" aria-hidden="true" />
+                      ) : (
+                        <span
+                          className="w-2 h-2 rounded-full shrink-0 transition-colors"
+                          style={{
+                            background: isActive ? s.accentColor : '#94a3b8',
+                            boxShadow: isActive ? `0 0 6px ${s.accentColor}` : 'none',
+                          }}
+                        />
+                      )}
+                      <span className="font-mono text-[11px] font-bold opacity-80">{s.stepNum}</span>
+                      <span className="whitespace-nowrap leading-none font-medium">{s.tabLabel}</span>
                     </button>
                   );
                 })}
-              </div>
+              </nav>
 
-              {/* ── Main Body: Smooth Styled Scroll Container ── */}
-              <div className="uh-tour-scrollbar flex-1 min-h-0 overflow-y-auto p-5 sm:p-7 grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch z-10">
-                {/* Left Card */}
-                <div className="flex flex-col justify-between rounded-2xl p-6 sm:p-7 bg-gradient-to-br from-slate-50 via-white to-slate-100/70 dark:from-[#111124] dark:to-[#0a0a14] border border-slate-200/90 dark:border-white/10 relative overflow-hidden h-full min-h-[340px] shadow-sm">
-                  {/* Glow blob */}
-                  <div
-                    className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-[50px] opacity-25 dark:opacity-35 pointer-events-none"
-                    style={{ background: step.accentColor }}
-                  />
-
-                  {/* Top content */}
-                  <div className="relative">
-                    {/* Icon */}
+              {/* ── Main Body: Vertically balanced, consistent grid spacing, sensible max width ── */}
+              <div className="uh-tour-scrollbar flex-1 min-h-0 overflow-y-auto px-6 sm:px-8 lg:px-10 py-5 sm:py-6 flex flex-col text-slate-700 dark:text-slate-300 overscroll-contain z-10">
+                {/* Point 5: Centered max-width content container */}
+                <div className="w-full max-w-[920px] lg:max-w-[960px] mx-auto my-auto max-sm:my-0 flex flex-col gap-6 sm:gap-7 items-center justify-center">
+                  {/* Step Header: Eyebrow Badge, Main Heading, Subtitle */}
+                  <div className="flex flex-col items-center text-center shrink-0 mx-auto w-full">
+                    {/* Point 4: Dedication to patient care eyebrow badge with generous padding and vertical margins */}
                     <div
-                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
-                      style={{
-                        background: `linear-gradient(135deg, ${step.accentColor}25, ${step.accentColor}08)`,
-                        border: `1.5px solid ${step.accentColor}55`,
-                        boxShadow: `0 0 16px ${step.glowColor}`,
-                      }}
-                    >
-                      <StepIcon style={{ width: 20, height: 20, color: step.accentColor }} />
-                    </div>
-
-                    {/* Badge */}
-                    <span
-                      className="inline-block font-mono text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded mb-3"
+                      className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-bold tracking-wider uppercase shadow-2xs mt-2 sm:mt-2.5 mb-3.5 sm:mb-4"
                       style={{
                         color: step.accentColor,
-                        background: `${step.accentColor}18`,
-                        border: `1px solid ${step.accentColor}44`,
+                        background: `${step.accentColor}14`,
+                        border: `1px solid ${step.accentColor}33`,
                       }}
                     >
-                      {step.badge}
-                    </span>
+                      <StepIcon size={14} style={{ color: step.accentColor }} className="shrink-0" />
+                      <span className="leading-none">{step.badge}</span>
+                    </div>
 
-                    {/* Title */}
+                    {/* Main heading — centered, strengthened hierarchy without being oversized */}
                     <h2
                       id="tour-dialog-title"
-                      className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight mb-2.5 tracking-tight"
+                      className="text-[21px] sm:text-[24px] lg:text-[26px] font-bold text-slate-900 dark:text-white leading-snug tracking-tight m-0 mb-2 sm:mb-2.5 max-w-[760px] mx-auto"
                     >
                       {step.title}
                     </h2>
 
-                    {/* Subtitle */}
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed m-0">
+                    {/* Subtitle — constrained to ~760-850px width, natural text wrapping */}
+                    <p className="text-[14px] sm:text-[15px] lg:text-[16px] text-slate-600 dark:text-slate-300 leading-relaxed m-0 text-center max-w-[760px] lg:max-w-[820px] mx-auto">
                       {step.subtitle}
                     </p>
                   </div>
 
-                  {/* Quote Footer */}
-                  <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-white/10 relative">
-                    {/* Step 1 portrait */}
-                    {activeStepIndex === 0 && (
-                      <div className="flex items-center gap-3.5 mb-3.5">
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/assets/moumita-debnath.jpg`}
-                          alt="Dr. Moumita Debnath"
-                          className="w-13 h-15 rounded-xl object-cover object-top border-2 border-pink-500/40 shrink-0 shadow-md shadow-pink-500/10"
-                        />
-                        <div>
-                          <span className="text-sm font-bold text-slate-900 dark:text-white block mb-0.5">
-                            Dr. Moumita Debnath
-                          </span>
-                          <span className="text-xs text-slate-500 dark:text-slate-400 block">
-                            MD Chest Medicine · Respiratory Care &amp; Research
-                          </span>
-                        </div>
-                      </div>
-                    )}
-
-                    <p className="text-xs text-slate-700 dark:text-slate-300 italic leading-relaxed mb-2">
-                      &ldquo;{step.quote}&rdquo;
-                    </p>
-                    <span className="font-mono text-xs font-bold text-slate-500 dark:text-slate-400 block">
-                      &mdash; {step.author}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Right Column: Key Pillars & Interactive Capabilities */}
-                <div className="flex flex-col">
-                  {/* Section heading */}
-                  <div className="flex items-center gap-2 mb-3.5">
-                    <Sparkles style={{ width: 14, height: 14, color: step.accentColor, flexShrink: 0 }} />
-                    <span className="font-mono text-[11px] font-black tracking-widest uppercase text-slate-500 dark:text-slate-400">
-                      HIGHLIGHTS &amp; CAPABILITIES
-                    </span>
-                  </div>
-
-                  {/* Bullet cards */}
-                  <div className="flex flex-col gap-2.5 mb-5">
-                    {step.bullets.map((b, i) => {
-                      const BulletIcon = b.icon || CheckCircle2;
-                      return (
-                        <div
-                          key={i}
-                          className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50/90 hover:bg-slate-100/90 dark:bg-white/[0.03] dark:hover:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.07] transition-colors shadow-xs"
-                        >
-                          <div
-                            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
-                            style={{
-                              background: `${step.accentColor}18`,
-                              color: step.accentColor,
-                            }}
-                          >
-                            <BulletIcon size={15} />
+                  {/* Point 5: 2-Column Balanced Centered Grid (Left ~42% & Right ~58%, 28-32px gap) */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-8 items-start justify-center w-full shrink-0">
+                    {/* Left Column (~42%): Profile Card + Quote Card */}
+                    <div className="lg:col-span-5 w-full flex flex-col gap-4 sm:gap-5 justify-start">
+                      {/* Step Feature Visual Showcase Cards */}
+                      {activeStepIndex === 0 && (
+                        /* Point 6: Profile Card with generous padding and spacing */
+                        <div className="flex flex-row items-center gap-4 sm:gap-5 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-rose-50/70 via-slate-50/90 to-white dark:from-rose-950/25 dark:via-[#161528] dark:to-[#12111d] border border-rose-200/90 dark:border-rose-900/50 shadow-2xs">
+                          {/* Profile image: preserved crop, rounded, shadowed */}
+                          <div className="relative w-22 h-22 sm:w-24 sm:h-24 lg:w-[104px] lg:h-[104px] rounded-2xl overflow-hidden border-2 border-white dark:border-white/20 shadow-md shrink-0">
+                            <img
+                              src={withBasePath('/assets/moumita-debnath.jpg')}
+                              alt="Dr. Moumita Debnath, Postgraduate Resident Doctor in Pulmonary and Chest Medicine"
+                              className="w-full h-full object-cover object-top"
+                              loading="eager"
+                            />
                           </div>
-                          <div>
-                            <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">
-                              {b.title}
-                            </h4>
-                            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed m-0">
-                              {b.desc}
+                          {/* Profile text: clean typographic hierarchy */}
+                          <div className="flex-1 min-w-0 flex flex-col justify-center py-0.5">
+                            <span className="text-[17px] sm:text-[19px] font-bold text-slate-900 dark:text-white block mb-1 leading-snug">
+                              {locale === 'bn' ? 'ডাঃ মৌমিতা দেবনাথ' : locale === 'hi' ? 'डॉ. मौमिता देबनाथ' : 'Dr. Moumita Debnath'}
+                            </span>
+                            <span className="text-[13px] sm:text-[13.5px] text-slate-600 dark:text-slate-200 block font-normal leading-snug mb-2">
+                              {locale === 'bn'
+                                ? 'স্নাতকোত্তর ট্রেইনি চিকিৎসক · এমডি বক্ষব্যাধি'
+                                : locale === 'hi'
+                                ? 'स्नातकोत्तर प्रशिक्षु डॉक्टर · एमडी चेस्ट मेडिसिन'
+                                : 'Postgraduate Resident Doctor · MD Chest Medicine'}
+                            </span>
+                            <span className="inline-flex items-start gap-1.5 text-[12px] sm:text-[13px] text-rose-600 dark:text-rose-400 font-medium">
+                              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 dark:bg-rose-400 shrink-0 mt-1.5" />
+                              <span className="leading-snug break-words">
+                                {locale === 'bn'
+                                  ? 'বক্ষব্যাধি ও পালমোনোলজি বিভাগ'
+                                  : locale === 'hi'
+                                  ? 'श्वसन व पल्मोनोलॉजी विभाग'
+                                  : 'Department of Pulmonary & Respiratory Medicine'}
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Point 8: Stage 2 Knowledge Hub Card with comfortable padding & spacing */}
+                      {activeStepIndex === 1 && (
+                        <div className="flex items-center gap-4 sm:gap-5 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-cyan-50/60 via-slate-50/80 to-white dark:from-cyan-950/20 dark:via-[#161528] dark:to-[#12111d] border border-cyan-200/80 dark:border-cyan-900/40 shadow-2xs">
+                          <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-cyan-500/15 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30">
+                            <BookOpen size={22} />
+                          </div>
+                          <div className="min-w-0 flex-1 py-0.5">
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <span className="text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-300">
+                                {locale === 'bn' ? 'জ্ঞান কেন্দ্র' : locale === 'hi' ? 'ज्ञान केंद्र' : 'Knowledge Hub'}
+                              </span>
+                              <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-100 dark:bg-cyan-950 text-cyan-800 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-800">
+                                Open Access
+                              </span>
+                            </div>
+                            <div className="flex flex-wrap gap-1.5 text-[11px] font-medium text-slate-600 dark:text-slate-300">
+                              <span className="px-2.5 py-1 rounded-md bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                                {locale === 'bn' ? 'সুস্থতা নির্দেশিকা' : 'Wellness Guides'}
+                              </span>
+                              <span className="px-2.5 py-1 rounded-md bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                                {locale === 'bn' ? 'চিকিৎসা পরিভাষা' : 'Medical Dictionary'}
+                              </span>
+                              <span className="px-2.5 py-1 rounded-md bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
+                                Multilingual
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Point 8: Stage 3 Community Audio Card with comfortable padding & spacing */}
+                      {activeStepIndex === 2 && (
+                        <div className="flex items-center gap-4 sm:gap-5 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-amber-50/60 via-slate-50/80 to-white dark:from-amber-950/20 dark:via-[#161528] dark:to-[#12111d] border border-amber-200/80 dark:border-amber-900/40 shadow-2xs">
+                          <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                            <Headphones size={22} />
+                          </div>
+                          <div className="min-w-0 flex-1 py-0.5">
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                                {locale === 'bn' ? 'কমিউনিটির কণ্ঠস্বর' : 'Voice of Community'}
+                              </span>
+                              <span className="inline-flex items-center gap-1.5 text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" /> Live Web Audio
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1.5 h-4">
+                              <span className="w-1 h-3 bg-amber-500 rounded-full animate-[pulse_0.7s_infinite]" />
+                              <span className="w-1 h-4 bg-amber-500 rounded-full animate-[pulse_0.5s_infinite_0.1s]" />
+                              <span className="w-1 h-2 bg-amber-500 rounded-full animate-[pulse_0.8s_infinite_0.3s]" />
+                              <span className="w-1 h-3.5 bg-amber-500 rounded-full animate-[pulse_0.6s_infinite_0.2s]" />
+                              <span className="w-1 h-2 bg-amber-500 rounded-full animate-[pulse_0.9s_infinite_0.4s]" />
+                              <span className="text-[11px] text-slate-600 dark:text-slate-300 ml-2 font-medium">Stories &amp; Conversations</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Point 8: Stage 4 AI Health Companion Card with comfortable padding & spacing */}
+                      {activeStepIndex === 3 && (
+                        <div className="flex items-center gap-4 sm:gap-5 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-emerald-50/60 via-slate-50/80 to-white dark:from-emerald-950/20 dark:via-[#161528] dark:to-[#12111d] border border-emerald-200/80 dark:border-emerald-900/40 shadow-2xs">
+                          <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                            <Bot size={22} />
+                          </div>
+                          <div className="min-w-0 flex-1 py-0.5">
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                                {locale === 'bn' ? 'এআই স্বাস্থ্য সঙ্গী' : 'AI Health Companion'}
+                              </span>
+                              <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                Safe &amp; Private
+                              </span>
+                            </div>
+                            <p className="text-xs text-slate-600 dark:text-slate-200 font-medium m-0 leading-relaxed">
+                              {locale === 'bn'
+                                ? 'লক্ষণ পর্যালোচনা, চিকিৎসকের জন্য প্রশ্ন তৈরি, ১০০% বিনামূল্যে।'
+                                : 'Explore symptoms, prepare doctor questions, 100% free guidance.'}
                             </p>
                           </div>
                         </div>
-                      );
-                    })}
+                      )}
+
+                      {/* Point 8: Stage 5 Global Ecosystem Card with comfortable padding & spacing */}
+                      {activeStepIndex === 4 && (
+                        <div className="flex items-center gap-4 sm:gap-5 p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-purple-50/60 via-slate-50/80 to-white dark:from-purple-950/20 dark:via-[#161528] dark:to-[#12111d] border border-purple-200/80 dark:border-purple-900/40 shadow-2xs">
+                          <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 bg-purple-500/15 text-purple-600 dark:text-purple-400 border border-purple-500/30">
+                            <Rocket size={22} />
+                          </div>
+                          <div className="min-w-0 flex-1 py-0.5">
+                            <div className="flex items-center justify-between gap-2 mb-2">
+                              <span className="text-xs font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300">
+                                {locale === 'bn' ? 'বিশ্বজনীন ইকোসিস্টেম' : 'Global Ecosystem'}
+                              </span>
+                              <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                                GitHub
+                              </span>
+                            </div>
+                            <p className="text-xs text-slate-600 dark:text-slate-200 font-medium m-0 leading-relaxed">
+                              {locale === 'bn'
+                                ? 'চিকিৎসক, শিক্ষার্থী, অনুবাদক এবং ডেভেলপারদের স্বাগত।'
+                                : 'Doctors, medical trainees, translators, and contributors welcome.'}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Point 6: Quote Card with generous padding away from the left pink border line */}
+                      {step.quote && (
+                        <div
+                          className="w-full p-4 sm:p-5 pl-5 sm:pl-6 rounded-2xl border-l-4 transition-colors shadow-2xs"
+                          style={{
+                            backgroundColor: `${step.accentColor}0a`,
+                            borderLeftColor: step.accentColor,
+                            borderTop: `1px solid ${step.accentColor}25`,
+                            borderRight: `1px solid ${step.accentColor}25`,
+                            borderBottom: `1px solid ${step.accentColor}25`,
+                          }}
+                        >
+                          <p className="text-[13.5px] sm:text-[14.5px] lg:text-[15px] text-slate-700 dark:text-slate-200 italic font-serif leading-relaxed m-0">
+                            &ldquo;{step.quote}&rdquo;
+                          </p>
+                          <span
+                            className="text-xs sm:text-[13px] font-semibold block tracking-wide mt-2.5 sm:mt-3"
+                            style={{ color: step.accentColor }}
+                          >
+                            &mdash; {step.author}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Right Column (~58%): Feature Section */}
+                    <div className="lg:col-span-7 w-full flex flex-col justify-start">
+                      {/* Point 7: Highlights & Capabilities header with proper margin and padding */}
+                      <div className="flex items-center gap-2.5 px-1 py-1 mb-3.5 sm:mb-4 mt-0.5">
+                        <Sparkles size={16} style={{ color: step.accentColor }} className="shrink-0" />
+                        <span className="font-mono text-xs sm:text-[13px] font-bold tracking-wider uppercase text-slate-600 dark:text-slate-300">
+                          {ui.highlights}
+                        </span>
+                      </div>
+
+                      {/* Point 6: Three feature cards with generous internal padding and icon-to-text spacing */}
+                      <div className="flex flex-col gap-3.5 sm:gap-4">
+                        {step.bullets.map((b, i) => {
+                          const BulletIcon = b.icon || CheckCircle2;
+                          return (
+                            <div
+                              key={i}
+                              className="flex items-start gap-4 sm:gap-4.5 p-4 sm:p-4.5 rounded-2xl bg-slate-50/90 hover:bg-slate-100/70 dark:bg-white/[0.04] dark:hover:bg-white/[0.07] border border-slate-200/90 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 transition-all shadow-2xs group"
+                            >
+                              {/* Standardized 48px icon container */}
+                              <div
+                                className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 shadow-2xs transition-transform group-hover:scale-105"
+                                style={{
+                                  background: `${step.accentColor}18`,
+                                  color: step.accentColor,
+                                  border: `1px solid ${step.accentColor}33`,
+                                }}
+                              >
+                                <BulletIcon size={20} />
+                              </div>
+
+                              {/* Comfortable gap and padding so text doesn't stick to card boundary */}
+                              <div className="flex-1 min-w-0 py-0.5">
+                                <h3 className="text-[15px] sm:text-[16px] lg:text-[16.5px] font-semibold text-slate-900 dark:text-white mb-1.5 leading-snug">
+                                  {b.title}
+                                </h3>
+                                <p className="text-[13px] sm:text-[14px] lg:text-[14.5px] font-normal text-slate-600 dark:text-slate-200 leading-relaxed m-0">
+                                  {b.desc}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Step 5 Portal CTA */}
+                  {/* Step 5 Full-Width Destination Portal Selector (Point 8) */}
                   {step.portalCta && (
-                    <div className="mt-auto">
-                      <span className="font-mono text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block mb-2.5">
-                        🚀 CHOOSE YOUR DESTINATION PORTAL:
+                    <div className="pt-4 border-t border-slate-200/80 dark:border-white/10 shrink-0 w-full">
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block mb-3 text-center">
+                        🚀 {ui.choosePortal}
                       </span>
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                         <Link
-                          href="/articles"
+                          href={withBasePath(`/${locale}/articles`)}
                           onClick={closeTour}
-                          className="p-3 rounded-xl bg-slate-50 hover:bg-cyan-50/50 dark:bg-[#0e0e1e] dark:hover:bg-cyan-950/20 border border-cyan-400/30 hover:border-cyan-500/60 no-underline flex flex-col gap-1.5 transition-all shadow-xs group"
+                          className="p-4 rounded-xl bg-white hover:bg-cyan-50/50 dark:bg-[#111222] dark:hover:bg-cyan-950/20 border border-slate-200 dark:border-white/10 hover:border-cyan-500/60 no-underline flex flex-col gap-2 transition-all shadow-2xs group"
                         >
                           <div className="flex items-center gap-2">
-                            <User size={14} className="text-cyan-600 dark:text-cyan-400" />
-                            <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300">
+                            <User size={18} className="text-cyan-600 dark:text-cyan-400 shrink-0" />
+                            <span className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300 truncate">
                               {ui.patientHub}
                             </span>
                           </div>
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
+                          <span className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                             {ui.patientHubDesc}
                           </span>
                         </Link>
 
                         <Link
-                          href="/admin-agreement"
+                          href={withBasePath(`/${locale}/admin-agreement`)}
                           onClick={closeTour}
-                          className="p-3 rounded-xl bg-slate-50 hover:bg-emerald-50/50 dark:bg-[#0e0e1e] dark:hover:bg-emerald-950/20 border border-emerald-400/30 hover:border-emerald-500/60 no-underline flex flex-col gap-1.5 transition-all shadow-xs group"
+                          className="p-4 rounded-xl bg-white hover:bg-emerald-50/50 dark:bg-[#111222] dark:hover:bg-emerald-950/20 border border-slate-200 dark:border-white/10 hover:border-emerald-500/60 no-underline flex flex-col gap-2 transition-all shadow-2xs group"
                         >
                           <div className="flex items-center gap-2">
-                            <Stethoscope size={14} className="text-emerald-600 dark:text-emerald-400" />
-                            <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-300">
+                            <Stethoscope size={18} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+                            <span className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-300 truncate">
                               {ui.doctorSuite}
                             </span>
                           </div>
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
+                          <span className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                             {ui.doctorSuiteDesc}
                           </span>
                         </Link>
 
                         <Link
-                          href="/contribute"
+                          href={withBasePath(`/${locale}/contribute`)}
                           onClick={closeTour}
-                          className="p-3 rounded-xl bg-slate-50 hover:bg-rose-50/50 dark:bg-[#0e0e1e] dark:hover:bg-rose-950/20 border border-rose-400/30 hover:border-rose-500/60 no-underline flex flex-col gap-1.5 transition-all shadow-xs group"
+                          className="p-4 rounded-xl bg-white hover:bg-rose-50/50 dark:bg-[#111222] dark:hover:bg-rose-950/20 border border-slate-200 dark:border-white/10 hover:border-rose-500/60 no-underline flex flex-col gap-2 transition-all shadow-2xs group"
                         >
                           <div className="flex items-center gap-2">
-                            <Code2 size={14} className="text-rose-600 dark:text-rose-400" />
-                            <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-300">
+                            <Code2 size={18} className="text-rose-600 dark:text-rose-400 shrink-0" />
+                            <span className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-300 truncate">
                               {ui.openSquad}
                             </span>
                           </div>
-                          <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
+                          <span className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                             {ui.openSquadDesc}
                           </span>
                         </Link>
@@ -1498,58 +1736,68 @@ export default function OnboardingModalWeb() {
                 </div>
               </div>
 
-              {/* ── Bottom Controls Bar ── */}
-              <div className="flex items-center justify-between px-5 sm:px-7 py-3.5 border-t border-slate-100 dark:border-white/10 bg-slate-50 dark:bg-[#090918] shrink-0 z-20 rounded-b-2xl sm:rounded-b-3xl">
-                {/* Step dots */}
-                <div className="flex items-center gap-2">
+              {/* ── Bottom Navigation / Footer (Anchored, 48px CTA button, pill & dots indicators) ── */}
+              <footer className="h-14 sm:h-16 flex items-center justify-between px-6 sm:px-8 lg:px-10 border-t border-slate-200/90 dark:border-white/10 bg-slate-100/80 dark:bg-[#161526] shrink-0 z-20 pb-[max(0px,env(safe-area-inset-bottom))]">
+                {/* Five slide indicators: active is pink pill, inactive are neutral dots */}
+                <div className="flex items-center gap-2" role="tablist" aria-label="Slide indicators">
                   {TOUR_STEPS.map((s, idx) => {
                     const isActive = idx === activeStepIndex;
                     return (
                       <button
                         key={s.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
                         onClick={() => handleSelectStep(idx)}
-                        className="h-2.5 rounded-full border-none cursor-pointer p-0 transition-all duration-300"
+                        className={`h-2.5 rounded-full border-none cursor-pointer p-0 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:outline-none ${
+                          isActive
+                            ? ''
+                            : 'bg-slate-300 hover:bg-slate-400 dark:bg-white/20 dark:hover:bg-white/40'
+                        }`}
                         style={{
                           width: isActive ? 28 : 10,
-                          backgroundColor: isActive
-                            ? s.accentColor
-                            : '#cbd5e1',
-                          boxShadow: isActive ? `0 0 10px ${s.accentColor}` : 'none',
+                          backgroundColor: isActive ? step.accentColor : undefined,
+                          boxShadow: isActive ? `0 0 10px ${step.accentColor}` : 'none',
                         }}
                         title={`${ui.stageBadge} ${s.stepNum}: ${s.tabLabel}`}
+                        aria-label={`Go to step ${idx + 1}: ${s.tabLabel}`}
                       />
                     );
                   })}
                 </div>
 
-                {/* Buttons */}
-                <div className="flex items-center gap-3">
+                {/* Previous & Primary next-step button */}
+                <div className="flex items-center gap-2.5 sm:gap-3">
                   {activeStepIndex > 0 && (
                     <button
                       onClick={handlePrev}
-                      className="flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl border border-slate-200 dark:border-white/20 bg-white dark:bg-white/5 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-bold cursor-pointer hover:bg-slate-100 dark:hover:bg-white/10 transition-colors shadow-xs"
+                      type="button"
+                      className="inline-flex items-center justify-center gap-1.5 px-3.5 sm:px-4 h-10 sm:h-11 rounded-xl border border-slate-300 dark:border-white/20 bg-white dark:bg-white/5 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold cursor-pointer hover:bg-slate-100 dark:hover:bg-white/10 transition-colors shadow-2xs active:scale-95 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:outline-none"
                     >
                       <ChevronLeft size={16} />
-                      {ui.back}
+                      <span className="leading-none">{ui.back}</span>
                     </button>
                   )}
+                  {/* Next-step button: content-driven width, label and arrow centered together */}
                   <button
                     onClick={handleNext}
-                    className="flex items-center gap-1.5 px-5 sm:px-6 py-2.5 rounded-xl border-none text-slate-950 font-mono font-black text-xs sm:text-sm tracking-wider uppercase cursor-pointer hover:brightness-110 active:scale-95 transition-all shadow-md"
+                    type="button"
+                    className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 h-10 sm:h-11 rounded-xl font-bold text-xs sm:text-sm tracking-wide cursor-pointer active:scale-95 transition-all shadow-sm text-white focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:outline-none"
                     style={{
-                      background: step.accentColor,
-                      boxShadow: `0 0 16px ${step.glowColor}`,
+                      backgroundColor: step.accentColor === '#ffea00' ? '#d97706' : step.accentColor,
+                      color: '#ffffff',
                     }}
                   >
-                    {activeStepIndex === TOUR_STEPS.length - 1 ? ui.completeTour : ui.nextStage}
-                    <ChevronRight size={16} />
+                    <span className="leading-none">{activeStepIndex === TOUR_STEPS.length - 1 ? ui.completeTour : ui.nextStage}</span>
+                    <ChevronRight size={17} className="shrink-0" />
                   </button>
                 </div>
-              </div>
+              </footer>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
+
     </>
   );
 }

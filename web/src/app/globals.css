@@ -767,7 +767,7 @@ section:nth-child(even) {
 }
 
 
-h2 {
+section h2, .section-heading h2 {
   text-align: center;
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   font-weight: 700;
@@ -784,6 +784,13 @@ p.center {
   line-height: 1.7;
   font-weight: 400;
   color: var(--text-muted);
+}
+
+/* ==================== DIALOG ISOLATION ==================== */
+[role="dialog"] footer {
+  padding: 0 !important;
+  background: transparent !important;
+  border-top: none !important;
 }
 
 /* ==================== STORE BUTTONS ==================== */
@@ -1729,7 +1736,7 @@ section#contact.contact-section > .container > p.center {
 }
 
 /* ==================== FOOTER ==================== */
-footer {
+footer:not([role="dialog"] *) {
   background: #f8fafc;
   border-top: 1px solid #e2e8f0;
   color: #64748b;
@@ -1737,7 +1744,7 @@ footer {
   text-align: left;
 }
 
-html.dark footer {
+html.dark footer:not([role="dialog"] *) {
   background: #0b0b12;
   border-top: 1px solid #262640;
   color: #94a3b8;
@@ -2191,12 +2198,69 @@ html.dark .footer-subscribe-input::placeholder { color: #475569; }
 }
  /* ==================== TYPOGRAPHY SYSTEM ==================== */
 
-/* Headings */
+/* Headings - Standard Humanist Editorial Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Orbitron', 'Rajdhani', sans-serif;
-  letter-spacing: -0.01em;
+  font-family: var(--font-inter), var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.015em;
   margin: 0;
-  color: #ffffff;
+  color: inherit;
+}
+
+/* Explicit Vice/Cyberpunk styling only where requested */
+.theme-vice h1, .theme-vice h2, .theme-vice h3,
+.font-vice {
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
+}
+
+/* Scoped dialog typography protection — ensures all modals render clean, readable text */
+[role="dialog"],
+[role="dialog"] h1,
+[role="dialog"] h2,
+[role="dialog"] h3,
+[role="dialog"] h4,
+[role="dialog"] h5,
+[role="dialog"] h6,
+[role="dialog"] p,
+[role="dialog"] span,
+[role="dialog"] div,
+[role="dialog"] button,
+.dialog-content,
+.modal-content {
+  font-family: var(--font-inter), var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+[role="dialog"] h1,
+[role="dialog"] h2,
+[role="dialog"] h3,
+[role="dialog"] h4,
+[role="dialog"] h5,
+[role="dialog"] h6 {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: currentColor !important;
+  letter-spacing: -0.015em !important;
+  text-align: left !important;
+  color: inherit !important;
+}
+
+[role="dialog"] h1 {
+  font-size: 1.375rem !important;
+  line-height: 1.25 !important;
+}
+
+[role="dialog"] h2 {
+  font-size: 1.0625rem !important;
+  line-height: 1.35 !important;
+}
+
+[role="dialog"] h3 {
+  font-size: 0.9375rem !important;
+  line-height: 1.4 !important;
+}
+
+[role="dialog"] h4 {
+  font-size: 0.875rem !important;
+  line-height: 1.4 !important;
 }
 
 h1 {

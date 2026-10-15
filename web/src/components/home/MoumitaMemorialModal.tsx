@@ -1,245 +1,314 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { X, Heart, Shield, Sparkles, Stethoscope, Volume2, VolumeX } from 'lucide-react';
+import { X, Shield, Sparkles, Stethoscope, Volume2, HeartHandshake, Play } from 'lucide-react';
 import { withBasePath } from '@/lib/basePath';
+import { useModalAudio } from '@/lib/audio/modalAudioController';
 
 interface MoumitaMemorialModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const LIFESTORY_BGM_URL = 'https://ultimatehealth.blog/api/getfile/life-story-bgm.mp3';
-
 export default function MoumitaMemorialModal({
   isOpen,
   onClose,
 }: MoumitaMemorialModalProps) {
-  const [musicEnabled, setMusicEnabled] = useState(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
 
-  // Background Music Lifecycle
-  useEffect(() => {
-    if (!isOpen) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-      return;
-    }
+  // Global audio controller hook for Memorial tribute track
+  const { isPlaying, toggle, play, stop } = useModalAudio('memorial');
 
-    if (!audioRef.current) {
-      const audio = new Audio(LIFESTORY_BGM_URL);
-      audio.loop = true;
-      audio.volume = 0.3;
-      audioRef.current = audio;
-    }
-
-    const audio = audioRef.current;
-    if (musicEnabled) {
-      audio.play().catch(() => {
-        // Autoplay policy fallback
-      });
-    } else {
-      audio.pause();
-    }
-
-    return () => {
-      audio.pause();
-    };
-  }, [isOpen, musicEnabled]);
-
-  // Handle Mute/Unmute
-  const toggleMusic = () => {
-    setMusicEnabled((prev) => {
-      const next = !prev;
-      if (audioRef.current) {
-        if (next) {
-          audioRef.current.play().catch(() => {});
-        } else {
-          audioRef.current.pause();
-        }
-      }
-      return next;
-    });
-  };
-
-  // Close on Escape key press
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
-
-  // Prevent background scrolling when open
+  // When memorial modal opens, auto-play its music (stops any other track).
+  // When closed, stop the audio.
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      play();
     } else {
-      document.body.style.overflow = '';
+      stop();
     }
-    return () => {
-      document.body.style.overflow = '';
+  }, [isOpen, play, stop]);
+
+  // Focus trap and keyboard handling
+  useEffect(() => {
+    if (!isOpen) return;
+
+    previousActiveElement.current = document.activeElement as HTMLElement;
+
+    // Focus the close button on mount for quick keyboard exit
+    const timer = setTimeout(() => {
+      const closeBtn = modalRef.current?.querySelector<HTMLElement>('button[aria-label="Close memorial dialog"]');
+      closeBtn?.focus();
+    }, 50);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+
+      // Tab trap
+      if (e.key === 'Tab' && modalRef.current) {
+        const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
-  }, [isOpen]);
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Prevent background scrolling while open
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = prevOverflow;
+      previousActiveElement.current?.focus();
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/85 backdrop-blur-md transition-opacity duration-200"
+      className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 md:p-8 bg-slate-950/75 backdrop-blur-sm transition-opacity duration-200 overflow-y-auto"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-labelledby="moumita-modal-title"
+      aria-labelledby="memorial-dialog-title"
     >
+      {/* Main Memorial Dialog Card */}
       <div
-        className="relative w-full max-w-[720px] max-h-[90vh] flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-[#11111d] border border-slate-200 dark:border-[#2a2a44] shadow-2xl transition-all duration-200"
+        ref={modalRef}
+        className="relative w-full max-w-[720px] h-[min(85vh,720px)] my-auto mx-auto flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-[#12111d] border border-slate-200 dark:border-white/10 shadow-2xl font-sans"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header bar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-[#222238] bg-slate-50/90 dark:bg-[#151524]">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]" />
-            <span className="text-[0.75rem] font-mono font-bold tracking-wider uppercase text-rose-600 dark:text-rose-400">
-              Life Work &amp; Vision // Respect Giver
+        {/* Compact, Dignified Header Bar */}
+        <header
+          className="flex items-center justify-between px-6 sm:px-8 py-3.5 sm:py-4 bg-slate-100/80 dark:bg-[#161526] border-b border-slate-200 dark:border-white/10 shrink-0 gap-3"
+          style={{ minHeight: '56px', padding: '12px 28px' }}
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0 animate-pulse shadow-[0_0_8px_rgba(244,63,94,0.6)]" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 truncate">
+              Sacred Life Work &amp; Vision · Respect Giver
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            {/* Background Music Toggle Button */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            {/* Prominent High-Visibility Stop / Play Audio Control Button */}
             <button
-              onClick={toggleMusic}
+              onClick={toggle}
               type="button"
-              aria-label={musicEnabled ? 'Mute background music' : 'Play background music'}
-              title={musicEnabled ? 'Mute Music' : 'Play Music'}
-              className="p-1.5 rounded-lg text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/40 transition-colors"
+              aria-label={isPlaying ? 'Stop Tribute Music' : 'Play Tribute Music'}
+              title={isPlaying ? 'Click to Stop Tribute Music' : 'Click to Play Peaceful Tribute Music'}
+              className={`inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-bold tracking-wide transition-all cursor-pointer border active:scale-95 focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:outline-none ${
+                isPlaying
+                  ? 'bg-rose-600 text-white border-rose-700 hover:bg-rose-700 shadow-md shadow-rose-600/25'
+                  : 'bg-white text-slate-800 border-slate-300 hover:bg-slate-50 dark:bg-white/10 dark:text-white dark:border-white/20 shadow-xs'
+              }`}
             >
-              {musicEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+              {isPlaying ? (
+                <>
+                  <Volume2 size={16} className="animate-pulse shrink-0" />
+                  <span>Stop Music</span>
+                  <span className="flex items-end gap-0.5 h-3 ml-0.5">
+                    <span className="w-0.5 h-3 bg-white rounded-full animate-[pulse_0.6s_ease-in-out_infinite]" />
+                    <span className="w-0.5 h-1.5 bg-white rounded-full animate-[pulse_0.8s_ease-in-out_infinite_0.2s]" />
+                    <span className="w-0.5 h-2.5 bg-white rounded-full animate-[pulse_0.7s_ease-in-out_infinite_0.4s]" />
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Play size={15} className="shrink-0 text-rose-600 dark:text-rose-400" />
+                  <span>Play Music</span>
+                </>
+              )}
             </button>
 
             {/* Close Button */}
             <button
               onClick={onClose}
               type="button"
-              aria-label="Close modal"
-              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-white/10 transition-colors"
+              aria-label="Close memorial dialog"
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200/70 dark:hover:bg-white/10 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:outline-none"
             >
               <X size={18} />
             </button>
           </div>
-        </div>
+        </header>
 
-        {/* Scrollable Modal Content */}
-        <div className="overflow-y-auto px-6 py-7 flex flex-col gap-6 text-slate-700 dark:text-slate-300">
-          {/* Profile Card */}
-          <div className="flex flex-row gap-6 items-center p-5 rounded-2xl bg-rose-50/50 dark:bg-[#161628] border border-rose-100 dark:border-[#282845] flex-wrap">
-            <div className="relative w-[110px] h-[130px] rounded-xl overflow-hidden border-2 border-rose-400/50 flex-shrink-0 shadow-md">
+        {/* Scrollable Content Area with Equal Gap Distribution Across All Cards */}
+        <div
+          className="flex-1 min-h-0 overflow-y-auto px-6 sm:px-8 py-5 flex flex-col gap-5 text-slate-700 dark:text-slate-300 overscroll-contain"
+          style={{ padding: '20px 28px' }}
+        >
+          {/* 1. Hero Doctor Card - Generously Padded Dignified Profile Frame */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 sm:p-7 rounded-2xl bg-gradient-to-br from-rose-50/70 via-slate-50/90 to-white dark:from-rose-950/25 dark:via-[#161528] dark:to-[#12111d] border border-rose-200/90 dark:border-rose-900/50 shadow-sm shrink-0">
+            {/* Doctor Portrait */}
+            <div className="relative w-28 h-36 sm:w-32 sm:h-40 rounded-2xl overflow-hidden border-2 border-white dark:border-white/20 shadow-md shrink-0">
               <Image
                 src={withBasePath('/assets/moumita-debnath.jpg')}
-                alt="Dr. Moumita Debnath"
+                alt="Portrait of Dr. Moumita Debnath"
                 fill
                 unoptimized
-                style={{ objectFit: 'cover' }}
-                sizes="110px"
+                style={{ objectFit: 'cover', objectPosition: 'top' }}
+                sizes="(max-width: 640px) 112px, 128px"
                 priority
               />
             </div>
 
-            <div className="flex-1 min-w-[240px]">
-              <span className="text-[0.75rem] font-bold text-teal-600 dark:text-cyan-400 tracking-wide uppercase inline-block mb-1">
-                In Honor of Medical Excellence &amp; Care
+            {/* Profile Information with Clear Hierarchy & Breathing Room */}
+            <div className="flex-1 text-center sm:text-left min-w-0 flex flex-col justify-center">
+              <span className="text-[11px] sm:text-xs font-bold text-rose-600 dark:text-rose-400 tracking-wider uppercase mb-2 inline-block">
+                Pulmonary Medicine · Compassionate Care
               </span>
-              <h2
-                id="moumita-modal-title"
-                className="text-2xl font-extrabold text-slate-900 dark:text-white mb-1.5 font-['Orbitron',sans-serif]"
+              
+              <div
+                id="memorial-dialog-title"
+                role="heading"
+                aria-level={2}
+                className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug mb-2"
+                style={{ background: 'none', WebkitTextFillColor: 'currentColor' }}
               >
                 Dr. Moumita Debnath
-              </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">
-                Post-Graduate Resident Doctor · Department of Pulmonary (Chest) Medicine
-                <br />
-                <span className="font-semibold text-slate-800 dark:text-slate-200">
-                  R.G. Kar Medical College and Hospital
-                </span>
+              </div>
+
+              <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-normal mb-4">
+                Postgraduate Resident Doctor · Department of Pulmonary &amp; Chest Medicine
               </p>
-              <div className="flex gap-2 flex-wrap">
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300 border border-rose-200 dark:border-rose-500/30 font-semibold">
+
+              {/* Badges with Generous Padding and Font Sizing */}
+              <div className="flex flex-wrap items-center gap-2.5 justify-center sm:justify-start pt-0.5">
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-rose-100/90 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-800 text-xs font-semibold shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
                   Doctor of the People
                 </span>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-700 dark:bg-cyan-500/15 dark:text-cyan-300 border border-teal-200 dark:border-cyan-500/30 font-semibold">
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-white/20 text-xs font-semibold shadow-2xs">
+                  <HeartHandshake size={14} className="text-rose-600 dark:text-rose-400 shrink-0" />
                   Respect Giver Inspiration
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Biography & Dedication */}
-          <div className="flex flex-col gap-4">
-            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-              <Stethoscope className="w-4 h-4 text-rose-500" />
-              Her Life and Devotion to Pulmonary Medicine
-            </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed m-0">
-              Dr. Moumita Debnath was a brilliant, hardworking postgraduate trainee doctor specializing in Chest Medicine
-              at R.G. Kar Medical College. Known among colleagues and professors for her deep compassion and tireless work ethic,
-              she routinely devoted herself to demanding clinical shifts caring for critically ill respiratory patients with warmth,
-              gentle guidance, and clinical precision.
-            </p>
-
-            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 mt-2">
-              <Shield className="w-4 h-4 text-teal-600 dark:text-cyan-400" />
-              Commitment to Patient Dignity &amp; Compassion
-            </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed m-0">
-              She believed that medical care extends beyond clinical procedures — that listening attentively to patients,
-              easing their anxieties, and extending unconditional respect are essential elements of true healing. Her approach
-              to patient interaction set an inspiring benchmark for healthcare professionals.
-            </p>
-
-            <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2 mt-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              Why UltimateHealth Honors Her Legacy
-            </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed m-0">
-              UltimateHealth established the <strong className="text-slate-900 dark:text-white">Respect Giver Protocol</strong> inspired by
-              her vision of empathetic healthcare. Healthcare is fundamentally about human beings — you cannot heal a person
-              you do not respect. This open-source platform exists to carry forward her devotion to patient welfare, verified knowledge,
-              and healthcare dignity for all.
-            </p>
+          {/* 2. Content Card: Devotion to Pulmonary Medicine */}
+          <div className="flex items-start gap-4 sm:gap-5 p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#151424] border border-slate-200/90 dark:border-white/10 shadow-xs hover:border-rose-200 dark:hover:border-rose-900/40 transition-all shrink-0">
+            <div className="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200/80 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+              <Stethoscope size={21} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div
+                role="heading"
+                aria-level={3}
+                className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2 leading-snug"
+                style={{ background: 'none', WebkitTextFillColor: 'currentColor' }}
+              >
+                Her Calling &amp; Devotion to Pulmonary Medicine
+              </div>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed m-0">
+                Dr. Moumita Debnath was a dedicated postgraduate trainee doctor specializing in Chest Medicine.
+                Colleagues and senior professors remembered her for clinical precision, infinite patience, and steady reassurance to critically ill respiratory patients.
+              </p>
+            </div>
           </div>
 
-          {/* Quote Banner */}
-          <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/25 border-l-4 border-rose-500">
-            <p className="text-sm italic text-slate-800 dark:text-slate-100 leading-relaxed m-0">
-              &ldquo;Healthcare begins with seeing the whole human being — body, mind, and dignity.
-              If we can restore dignity to even one soul, we plant a seed of wellness that outlives us all.&rdquo;
-            </p>
-            <span className="block mt-2 text-xs font-mono font-semibold text-rose-600 dark:text-rose-400">
-              &mdash; Dedicated with profound respect to Dr. Moumita Debnath
-            </span>
+          {/* 3. Content Card: Patient Dignity & Compassion */}
+          <div className="flex items-start gap-4 sm:gap-5 p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#151424] border border-slate-200/90 dark:border-white/10 shadow-xs hover:border-rose-200 dark:hover:border-rose-900/40 transition-all shrink-0">
+            <div className="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200/80 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+              <Shield size={21} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div
+                role="heading"
+                aria-level={3}
+                className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2 leading-snug"
+                style={{ background: 'none', WebkitTextFillColor: 'currentColor' }}
+              >
+                Patient Dignity &amp; Compassion
+              </div>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed m-0">
+                She believed that healing is fundamentally human, and medical prescriptions work best when accompanied by genuine empathy.
+                She listened patiently to vulnerable families from rural districts, explaining diagnoses in simple terms and restoring faith in compassionate healthcare.
+              </p>
+            </div>
           </div>
 
-          {/* Legal Non-Commercial & Voluntary Removal Policy */}
-          <div className="p-3.5 rounded-lg bg-slate-100 dark:bg-[#151b26] border border-slate-200 dark:border-white/10">
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed m-0">
-              <strong className="text-slate-800 dark:text-slate-200">Memorial &amp; Removal Notice:</strong> UltimateHealth is an independent, non-commercial open-source health education project. If family members, legal heirs, or authorized representatives wish for any name, image, or dedication to be modified or removed, please contact <a href="mailto:ultimate.health25@gmail.com" className="text-teal-600 dark:text-teal-400 underline font-medium">ultimate.health25@gmail.com</a> and it will be updated or removed immediately without condition.
-            </p>
+          {/* 4. Content Card: Why UltimateHealth Honors Her Memory */}
+          <div className="flex items-start gap-4 sm:gap-5 p-5 sm:p-6 rounded-2xl bg-white dark:bg-[#151424] border border-slate-200/90 dark:border-white/10 shadow-xs hover:border-rose-200 dark:hover:border-rose-900/40 transition-all shrink-0">
+            <div className="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200/80 dark:border-rose-900/50 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+              <Sparkles size={21} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div
+                role="heading"
+                aria-level={3}
+                className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2 leading-snug"
+                style={{ background: 'none', WebkitTextFillColor: 'currentColor' }}
+              >
+                Why UltimateHealth Honors Her Memory
+              </div>
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed m-0">
+                UltimateHealth established the <strong className="font-semibold text-slate-900 dark:text-white">Respect Giver Protocol</strong> directly
+                inspired by her ethos. Healthcare is not a commercial marketplace — true care starts with human dignity. This open-source platform exists to carry forward her devotion to patient welfare, verified free health knowledge, and safety for all healthcare workers.
+              </p>
+            </div>
+          </div>
+
+          {/* 5. Distinct Removal & Editorial Notice Box */}
+          <div className="p-5 sm:p-6 rounded-2xl bg-amber-500/10 dark:bg-amber-950/30 border border-amber-500/30 dark:border-amber-500/30 shadow-2xs shrink-0 flex items-start gap-4">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-800 dark:text-amber-300 flex items-center justify-center shrink-0 mt-0.5">
+              <Shield size={17} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-bold text-amber-900 dark:text-amber-300 uppercase tracking-wider mb-1.5">
+                Memorial &amp; Removal Notice
+              </div>
+              <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed m-0">
+                UltimateHealth is an independent, non-commercial open-source health education project. If family members or authorized representatives wish for any dedication, name, or image to be modified or removed, please email{' '}
+                <a
+                  href="mailto:ultimate.health25@gmail.com"
+                  className="text-amber-800 dark:text-amber-300 underline font-semibold hover:text-amber-900 dark:hover:text-amber-200"
+                >
+                  ultimate.health25@gmail.com
+                </a>{' '}
+                and it will be addressed immediately without condition.
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="px-6 py-4 border-t border-slate-200 dark:border-[#222238] bg-slate-50 dark:bg-[#151524] flex justify-end">
+        {/* Pinned Action Footer Bar with Slim, Compact Proportions */}
+        <div
+          role="region"
+          aria-label="Memorial controls"
+          className="px-6 sm:px-8 py-3 bg-slate-100/80 dark:bg-[#161526] border-t border-slate-200 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 shrink-0"
+          style={{ padding: '12px 28px', margin: 0, minHeight: '52px' }}
+        >
+          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+            Respect Giver · Healer Dignity Protocol
+          </span>
           <button
             onClick={onClose}
             type="button"
-            className="px-5 py-2.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm transition-opacity shadow-sm"
+            className="w-full sm:w-auto min-w-[130px] h-9 sm:h-9.5 px-6 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-rose-600 dark:hover:bg-rose-700 text-white font-medium text-xs sm:text-sm tracking-wide shadow-sm hover:shadow transition-all active:scale-95 flex items-center justify-center cursor-pointer focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:outline-none"
           >
-            Close &amp; Honor Life Work
+            Close Memorial
           </button>
         </div>
       </div>
