@@ -29,6 +29,11 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
   const [activeSection, setActiveSection] = useState<string>("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const articlesHref = withBasePath(`/${locale}/articles`);
+  const podcastsHref = withBasePath(`/${locale}/podcasts`);
+  const glossaryHref = withBasePath(`/${locale}/medical-glossary`);
+  const contributeHref = withBasePath(`/${locale}/contribute`);
+
   const isArticles = pathname.includes("/articles");
   const isPodcasts = pathname.includes("/podcasts");
   const isGlossary = pathname.includes("/medical-glossary");
@@ -133,7 +138,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           </li>
           <li>
             <Link
-              href="/articles"
+              href={articlesHref}
               className={`nav-link-item${isArticles ? " active" : ""}`}
               aria-current={isArticles ? "page" : undefined}
             >
@@ -143,7 +148,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           </li>
           <li>
             <Link
-              href="/podcasts"
+              href={podcastsHref}
               className={`nav-link-item${isPodcasts ? " active" : ""}`}
               aria-current={isPodcasts ? "page" : undefined}
             >
@@ -153,7 +158,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           </li>
           <li>
             <Link
-              href="/medical-glossary"
+              href={glossaryHref}
               className={`nav-link-item${isGlossary ? " active" : ""}`}
               aria-current={isGlossary ? "page" : undefined}
             >
@@ -163,7 +168,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           </li>
           <li>
             <Link
-              href="/contribute"
+              href={contributeHref}
               className={`nav-link-item${isContribute ? " active" : ""}`}
               aria-current={isContribute ? "page" : undefined}
             >
@@ -260,19 +265,19 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
         <Link href={`/${locale}#what-we-do`} onClick={(e) => handleScrollTo("what-we-do", e)}>
           {tNav("whatWeDo")}
         </Link>
-        <Link href="/articles" onClick={() => setMobileMenuOpen(false)}>
+        <Link href={articlesHref} onClick={() => setMobileMenuOpen(false)}>
           {tNav("articles")}
         </Link>
-        <Link href="/podcasts" onClick={() => setMobileMenuOpen(false)}>
+        <Link href={podcastsHref} onClick={() => setMobileMenuOpen(false)}>
           {tNav("podcasts")}
         </Link>
         <Link
-          href="/medical-glossary"
+          href={glossaryHref}
           onClick={() => setMobileMenuOpen(false)}
         >
           {tNav("glossary")}
         </Link>
-        <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>
+        <Link href={contributeHref} onClick={() => setMobileMenuOpen(false)}>
           {tNav("joinUs")}
         </Link>
         <div

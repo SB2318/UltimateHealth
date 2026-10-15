@@ -2,7 +2,13 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Search, X, Globe, Filter } from "lucide-react";
 import { glossaryEntries } from "./glossary-data";
+import {
+  HINDI_GLOSSARY_ENTRIES,
+  BENGALI_GLOSSARY_ENTRIES,
+  LocalizedGlossaryEntry,
+} from "./glossary-translations";
 
 /* ── Dark-themed category badge colors ── */
 const BADGE_STYLES: Record<string, { bg: string; color: string }> = {
@@ -104,175 +110,403 @@ function RelatedTermsList({
 
 export default function MedicalGlossaryExplorer() {
   const t = useTranslations("glossary");
+  const tArticles = useTranslations("articles");
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("all");
+  const [searchFocused, setSearchFocused] = useState(false);
+
+  // Combine all glossary entries with language tags
+  const allEntries: LocalizedGlossaryEntry[] = useMemo(() => {
+    const english: LocalizedGlossaryEntry[] = glossaryEntries.map((e) => ({
+      ...e,
+      language: "en",
+      languageName: "English",
+    }));
+
+    const hindi: LocalizedGlossaryEntry[] = HINDI_GLOSSARY_ENTRIES.map((e) => ({
+      ...e,
+      language: "hi",
+      languageName: "हिन्दी (Hindi)",
+    }));
+
+    const bengali: LocalizedGlossaryEntry[] = BENGALI_GLOSSARY_ENTRIES.map((e) => ({
+      ...e,
+      language: "bn",
+      languageName: "বাংলা (Bengali)",
+    }));
+
+    return [...english, ...hindi, ...bengali];
+  }, []);
+
+  // Language stats
+  const languageStats = useMemo(() => {
+    const counts: Record<string, { name: string; count: number }> = {
+      en: { name: "English", count: glossaryEntries.length },
+      hi: { name: "हिन्दी (Hindi)", count: HINDI_GLOSSARY_ENTRIES.length },
+      bn: { name: "বাংলা (Bengali)", count: BENGALI_GLOSSARY_ENTRIES.length },
+    };
+
+    return Object.entries(counts).map(([code, item]) => ({
+      code,
+      name: item.name,
+      count: item.count,
+    }));
+  }, []);
 
   const categories = useMemo(
-    () => ["All", ...Array.from(new Set(glossaryEntries.map((e) => e.category))).sort()],
-    []
+    () => ["All", ...Array.from(new Set(allEntries.map((e) => e.category))).sort()],
+    [allEntries]
   );
 
   const filteredEntries = useMemo(() => {
-    const q = searchQuery.toLowerCase();
-    return glossaryEntries.filter((entry) => {
-      const matchesSearch =
-        entry.term.toLowerCase().includes(q) ||
-        entry.definition.toLowerCase().includes(q);
-      const matchesCategory =
-        selectedCategory === "All" || entry.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+    const q = searchQuery.toLowerCase().trim();
+
+    return allEntries.filter((entry) => {
+      // Language filter
+      if (selectedLanguage !== "all" && entry.language !== selectedLanguage) {
+        return false;
+      }
+
+      // Category filter
+      if (selectedCategory !== "All" && entry.category !== selectedCategory) {
+        return false;
+      }
+
+      // Search query match
+      if (q) {
+        const matchesTerm = entry.term.toLowerCase().includes(q);
+        const matchesDef = entry.definition.toLowerCase().includes(q);
+        const matchesRelated = entry.relatedTerms?.some((r) => r.toLowerCase().includes(q));
+        if (!matchesTerm && !matchesDef && !matchesRelated) {
+          return false;
+        }
+      }
+
+      return true;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [allEntries, searchQuery, selectedCategory, selectedLanguage]);
+
+  const clearAllFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("All");
+    setSelectedLanguage("all");
+  };
 
   return (
-    <div className="w-full">
-      <div className="w-full flex flex-col items-stretch gap-8">
-
-        {/* ── Search & Filter Panel ── */}
+    <div style={{ width: "100%" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px", width: "100%" }}>
+        {/* ── Search & Filter Controls Card (Matching ArticlesExplorer Vice Styling) ── */}
         <div
           style={{
             background: "#13131f",
             border: "1px solid #252538",
-            borderRadius: "16px",
-            boxShadow: "0 2px 16px rgba(0,0,0,0.25)",
-            padding: "16px",
+            borderRadius: "20px",
+            padding: "24px",
+            boxShadow: "0 12px 36px rgba(0,0,0,0.4)",
             display: "flex",
-            gap: "12px",
-            flexWrap: "wrap",
+            flexDirection: "column",
+            gap: "20px",
           }}
         >
-          {/* Search */}
-          <div style={{ flex: 1, minWidth: "240px", position: "relative" }}>
-            <svg
-              style={{
-                position: "absolute",
-                left: 14,
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "#64748b",
-                width: 18,
-                height: 18,
-                pointerEvents: "none",
-              }}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            <input
-              type="text"
-              placeholder={t("searchPlaceholder")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: "100%",
-                height: "48px",
-                paddingLeft: "44px",
-                paddingRight: "16px",
-                borderRadius: "12px",
-                border: "1px solid #252538",
-                background: "#0c0c14",
-                fontSize: "14px",
-                color: "#e2e8f0",
-                outline: "none",
-                transition: "border-color 0.2s ease",
-              }}
-              onFocus={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "#7c3aed";
-              }}
-              onBlur={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "#252538";
-              }}
-            />
-          </div>
-
-          {/* Category Filter */}
-          <div style={{ width: "220px", minWidth: "180px", position: "relative" }}>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              style={{
-                width: "100%",
-                height: "48px",
-                paddingLeft: "16px",
-                paddingRight: "40px",
-                borderRadius: "12px",
-                border: "1px solid #252538",
-                background: "#0c0c14",
-                fontSize: "14px",
-                color: "#e2e8f0",
-                outline: "none",
-                appearance: "none",
-                cursor: "pointer",
-                transition: "border-color 0.2s ease",
-              }}
-              onFocus={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "#7c3aed";
-              }}
-              onBlur={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "#252538";
-              }}
-            >
-              {categories.map((cat) => (
-                <option key={cat} value={cat} style={{ background: "#13131f", color: "#e2e8f0" }}>
-                  {cat === "All" ? t("categoryAll") : cat}
-                </option>
-              ))}
-            </select>
-            <svg
-              style={{
-                position: "absolute",
-                right: 12,
-                top: "50%",
-                transform: "translateY(-50%)",
-                color: "#64748b",
-                width: 16,
-                height: 16,
-                pointerEvents: "none",
-              }}
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </div>
-
-        {/* ── Count Bar ── */}
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <div style={{ flex: 1, height: 1, background: "#252538" }} />
-          <span
+          {/* Row 1: Search Bar & Category Dropdown */}
+          <div
             style={{
-              fontSize: "13px",
-              fontWeight: 600,
-              color: "#64748b",
-              whiteSpace: "nowrap",
+              display: "flex",
+              gap: "14px",
+              flexWrap: "wrap",
+              alignItems: "center",
             }}
           >
-            {t("showingCount")}&nbsp;
-            <span style={{ color: "#a78bfa" }}>{filteredEntries.length}</span>
-            &nbsp;{t("terms")}
-          </span>
-          <div style={{ flex: 1, height: 1, background: "#252538" }} />
+            {/* Search Input */}
+            <div style={{ flex: 1, minWidth: "260px", position: "relative" }}>
+              <div
+                style={{
+                  position: "absolute",
+                  left: "16px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  display: "flex",
+                  alignItems: "center",
+                  pointerEvents: "none",
+                }}
+              >
+                <Search size={18} color={searchFocused ? "#00e5ff" : "#94a3b8"} />
+              </div>
+
+              <input
+                type="text"
+                value={searchQuery}
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t("searchPlaceholder")}
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  height: "50px",
+                  background: "#0c0c14",
+                  border: searchFocused ? "1.5px solid #00e5ff" : "1.5px solid #252538",
+                  borderRadius: "14px",
+                  paddingLeft: "46px",
+                  paddingRight: "40px",
+                  fontSize: "0.95rem",
+                  color: "#f1f5f9",
+                  outline: "none",
+                  transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+                  boxShadow: searchFocused ? "0 0 16px rgba(0, 229, 255, 0.15)" : "none",
+                }}
+              />
+
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  aria-label="Clear search"
+                  style={{
+                    position: "absolute",
+                    right: "14px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "transparent",
+                    border: "none",
+                    color: "#94a3b8",
+                    cursor: "pointer",
+                    padding: "4px",
+                    display: "flex",
+                    alignItems: "center",
+                    borderRadius: "6px",
+                  }}
+                >
+                  <X size={18} />
+                </button>
+              )}
+            </div>
+
+            {/* Category Dropdown */}
+            <div style={{ width: "220px", minWidth: "180px", position: "relative" }}>
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  height: "50px",
+                  paddingLeft: "16px",
+                  paddingRight: "40px",
+                  borderRadius: "14px",
+                  border: "1.5px solid #252538",
+                  background: "#0c0c14",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  color: "#e2e8f0",
+                  outline: "none",
+                  appearance: "none",
+                  cursor: "pointer",
+                  transition: "border-color 0.2s ease",
+                }}
+                onFocus={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "#7c3aed";
+                }}
+                onBlur={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = "#252538";
+                }}
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat} style={{ background: "#13131f", color: "#e2e8f0" }}>
+                    {cat === "All" ? `${t("categoryAll")} Categories` : cat}
+                  </option>
+                ))}
+              </select>
+              <div
+                style={{
+                  position: "absolute",
+                  right: 14,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  pointerEvents: "none",
+                  color: "#64748b",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Filter size={15} />
+              </div>
+            </div>
+          </div>
+
+          {/* Row 2: Language Filter Pills Bar */}
+          <div
+            style={{
+              borderTop: "1px solid #1f1f30",
+              paddingTop: "18px",
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "10px",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                marginRight: "6px",
+                color: "#94a3b8",
+                fontSize: "0.82rem",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                flexShrink: 0,
+              }}
+            >
+              <Globe size={15} color="#00e5ff" />
+              <span>{tArticles("filterLanguage")}:</span>
+            </div>
+
+            {/* All Languages Tab */}
+            <button
+              type="button"
+              onClick={() => setSelectedLanguage("all")}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 16px",
+                borderRadius: "50px",
+                fontSize: "0.82rem",
+                fontWeight: 800,
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+                border: selectedLanguage === "all" ? "1px solid transparent" : "1px solid #252538",
+                background:
+                  selectedLanguage === "all"
+                    ? "linear-gradient(135deg, #00e5ff 0%, #7c3aed 100%)"
+                    : "#0c0c14",
+                color: selectedLanguage === "all" ? "#ffffff" : "#94a3b8",
+                boxShadow:
+                  selectedLanguage === "all" ? "0 4px 16px rgba(0, 229, 255, 0.25)" : "none",
+              }}
+            >
+              <span>{tArticles("allLanguages")}</span>
+              <span
+                style={{
+                  fontSize: "0.72rem",
+                  fontFamily: "monospace",
+                  padding: "2px 7px",
+                  borderRadius: "20px",
+                  background: selectedLanguage === "all" ? "rgba(255, 255, 255, 0.25)" : "#1e1e30",
+                  color: selectedLanguage === "all" ? "#ffffff" : "#94a3b8",
+                }}
+              >
+                {allEntries.length}
+              </span>
+            </button>
+
+            {/* Language Pills */}
+            {languageStats.map((item) => {
+              const isSelected = selectedLanguage === item.code;
+              return (
+                <button
+                  key={item.code}
+                  type="button"
+                  onClick={() => setSelectedLanguage(item.code)}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "8px 16px",
+                    borderRadius: "50px",
+                    fontSize: "0.82rem",
+                    fontWeight: 800,
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    border: isSelected ? "1px solid #00e5ff" : "1px solid #252538",
+                    background: isSelected ? "#00e5ff" : "#0c0c14",
+                    color: isSelected ? "#0a0a14" : "#94a3b8",
+                    boxShadow: isSelected ? "0 4px 16px rgba(0, 229, 255, 0.3)" : "none",
+                  }}
+                >
+                  <span>{item.name}</span>
+                  <span
+                    style={{
+                      fontSize: "0.72rem",
+                      fontFamily: "monospace",
+                      padding: "2px 7px",
+                      borderRadius: "20px",
+                      background: isSelected ? "rgba(0, 0, 0, 0.25)" : "#1e1e30",
+                      color: isSelected ? "#0a0a14" : "#94a3b8",
+                      fontWeight: isSelected ? 900 : 700,
+                    }}
+                  >
+                    {item.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* ── Grid ── */}
+        {/* ── Summary & Stats Row ── */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderBottom: "1px solid #252538",
+            paddingBottom: "16px",
+            flexWrap: "wrap",
+            gap: "12px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <span
+              style={{
+                fontSize: "0.82rem",
+                fontWeight: 800,
+                padding: "4px 12px",
+                borderRadius: "50px",
+                background: "rgba(0, 229, 255, 0.12)",
+                border: "1px solid rgba(0, 229, 255, 0.3)",
+                color: "#00e5ff",
+                letterSpacing: "0.04em",
+              }}
+            >
+              {t("showingCount")} {filteredEntries.length} {t("terms")}
+            </span>
+          </div>
+
+          {(searchQuery || selectedCategory !== "All" || selectedLanguage !== "all") && (
+            <button
+              type="button"
+              onClick={clearAllFilters}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "#f0006a",
+                fontWeight: 700,
+                fontSize: "0.85rem",
+                cursor: "pointer",
+                textDecoration: "underline",
+                textUnderlineOffset: "4px",
+              }}
+            >
+              {tArticles("clearFilters")}
+            </button>
+          )}
+        </div>
+
+        {/* ── Cards Grid ── */}
         {filteredEntries.length === 0 ? (
           <div
             style={{
               background: "#13131f",
               border: "1.5px dashed #252538",
-              borderRadius: "16px",
+              borderRadius: "20px",
               padding: "64px 32px",
               textAlign: "center",
+              color: "#94a3b8",
             }}
           >
             <div style={{ fontSize: "40px", marginBottom: "12px" }}>🔍</div>
@@ -281,20 +515,37 @@ export default function MedicalGlossaryExplorer() {
                 fontSize: "16px",
                 fontWeight: 700,
                 color: "#94a3b8",
-                margin: 0,
+                margin: "0 0 16px",
               }}
             >
               {searchQuery
                 ? `${t("noResultsTitle")} "${searchQuery}".`
                 : t("noResults")}
             </p>
+            <button
+              type="button"
+              onClick={clearAllFilters}
+              style={{
+                padding: "10px 22px",
+                borderRadius: "12px",
+                background: "linear-gradient(135deg, #00e5ff 0%, #7c3aed 100%)",
+                color: "#ffffff",
+                fontSize: "0.85rem",
+                fontWeight: 800,
+                border: "none",
+                cursor: "pointer",
+                boxShadow: "0 4px 16px rgba(0, 229, 255, 0.25)",
+              }}
+            >
+              {tArticles("clearFilters")}
+            </button>
           </div>
         ) : (
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-              gap: "20px",
+              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+              gap: "24px",
               width: "100%",
             }}
           >
@@ -302,34 +553,32 @@ export default function MedicalGlossaryExplorer() {
               const badge = BADGE_STYLES[entry.category] ?? DEFAULT_BADGE;
               return (
                 <div
-                  key={`${entry.term}-${i}`}
+                  key={`${entry.term}-${entry.language}-${i}`}
                   style={{
                     position: "relative",
                     display: "flex",
                     flexDirection: "column",
                     background: "#13131f",
                     border: "1px solid #252538",
-                    borderRadius: "16px",
+                    borderRadius: "18px",
                     padding: "24px",
                     overflow: "hidden",
-                    transition: "all 0.2s ease",
+                    transition: "all 0.25s ease",
                     cursor: "default",
                   }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "#7c3aed";
-                    (e.currentTarget as HTMLElement).style.background = "#181828";
+                    (e.currentTarget as HTMLElement).style.borderColor = "#00e5ff";
                     (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
                     (e.currentTarget as HTMLElement).style.boxShadow =
-                      "0 8px 28px rgba(124,58,237,0.15)";
+                      "0 10px 30px rgba(0, 229, 255, 0.1)";
                   }}
                   onMouseLeave={(e) => {
                     (e.currentTarget as HTMLElement).style.borderColor = "#252538";
-                    (e.currentTarget as HTMLElement).style.background = "#13131f";
                     (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
                     (e.currentTarget as HTMLElement).style.boxShadow = "none";
                   }}
                 >
-                  {/* Top accent bar */}
+                  {/* Top glowing accent bar */}
                   <div
                     style={{
                       position: "absolute",
@@ -337,65 +586,92 @@ export default function MedicalGlossaryExplorer() {
                       left: 0,
                       right: 0,
                       height: "3px",
-                      background: "linear-gradient(90deg, #7c3aed, #a78bfa, #f0006a)",
-                      opacity: 0.6,
-                      borderRadius: "16px 16px 0 0",
+                      background: "linear-gradient(90deg, #00e5ff, #7c3aed, #f0006a)",
+                      opacity: 0.8,
                     }}
                   />
 
-                  {/* Category Badge */}
-                  <div style={{ marginBottom: "14px", marginTop: "4px" }}>
+                  {/* Header: Category Badge + Language Pill */}
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginBottom: "14px",
+                      marginTop: "4px",
+                      gap: "8px",
+                    }}
+                  >
                     <span
                       style={{
                         display: "inline-block",
+                        padding: "3px 10px",
+                        borderRadius: "50px",
+                        fontSize: "11px",
+                        fontWeight: 800,
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
                         background: badge.bg,
                         color: badge.color,
-                        fontSize: "10px",
-                        fontWeight: 800,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "4px 10px",
-                        borderRadius: "8px",
+                        border: `1px solid ${badge.color}33`,
                       }}
                     >
                       {entry.category}
                     </span>
+
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                        background: "rgba(12, 12, 20, 0.85)",
+                        border: "1px solid rgba(0, 229, 255, 0.3)",
+                        color: "#00e5ff",
+                        padding: "2px 8px",
+                        borderRadius: "50px",
+                        fontSize: "10px",
+                        fontWeight: 800,
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      <Globe size={10} />
+                      <span>{entry.languageName}</span>
+                    </span>
                   </div>
 
                   {/* Term */}
-                  <div
+                  <h3
                     style={{
-                      fontSize: "17px",
-                      fontWeight: 700,
-                      color: "#f1f5f9",
-                      lineHeight: 1.35,
-                      marginBottom: "10px",
+                      fontSize: "1.2rem",
+                      fontWeight: 800,
+                      color: "#f8fafc",
+                      lineHeight: 1.3,
+                      margin: "0 0 10px",
+                      fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
                     }}
                   >
                     {entry.term}
-                  </div>
+                  </h3>
 
                   {/* Definition */}
-                  <div
+                  <p
                     style={{
-                      fontSize: "13.5px",
+                      fontSize: "0.9rem",
                       color: "#94a3b8",
                       lineHeight: 1.65,
+                      margin: 0,
                       flex: 1,
                     }}
                   >
                     {entry.definition}
-                  </div>
+                  </p>
 
                   {/* Related Terms */}
                   <RelatedTermsList
                     currentTerm={entry.term}
                     relatedTerms={entry.relatedTerms}
+                    onTermClick={(term) => setSearchQuery(term)}
                     label={t("relatedTerms")}
-                    onTermClick={(term) => {
-                      setSearchQuery(term);
-                      setSelectedCategory("All");
-                    }}
                   />
                 </div>
               );

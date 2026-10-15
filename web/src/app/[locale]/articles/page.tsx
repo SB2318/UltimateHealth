@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { format, parseISO } from "date-fns";
-import { resolveArticleImageUrl } from "@/lib/article-image";
+import { getTranslations } from "next-intl/server";
 import type { ApiArticle, ApiArticlesResponse } from "@/types/api-article";
-import { Navbar, PageWrapper, Section } from "@/components/layout";
+import SiteHeader from "@/components/home/SiteHeader";
 import { Footer } from "@/components/ui/footer";
 import { Sparkles, BookOpen } from "lucide-react";
+import ArticlesExplorer from "@/components/articles/ArticlesExplorer";
 
 export const metadata: Metadata = {
   title: "Health Articles | UltimateHealth",
@@ -14,53 +13,33 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function ArticlesPage({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const page = Math.max(1, typeof params.page === "string" ? parseInt(params.page, 10) : 1);
-  const limit = 9;
+export default async function ArticlesPage({ params }: PageProps) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "articles" });
+
   const BASE = "https://ultimatehealth.blog/api/articles";
   const ISR = { next: { revalidate: 300 } } as const;
 
   let articles: ApiArticle[] = [];
-  let totalPages = 1;
-  let currentPage = page;
 
   try {
-    if (page === 1) {
-      // Single call — only page 1 returns totalPages from this API
-      const res = await fetch(`${BASE}/?page=1&limit=${limit}`, ISR);
-      if (res.ok) {
-        const d: ApiArticlesResponse = await res.json();
-        articles = d.articles ?? [];
-        totalPages = d.totalPages ?? 1;
-      }
-    } else {
-      // Parallel: page 1 (for totalPages) + current page (for articles)
-      const [p1Res, pgRes] = await Promise.all([
-        fetch(`${BASE}/?page=1&limit=${limit}`, ISR),
-        fetch(`${BASE}/?page=${page}&limit=${limit}`, ISR),
-      ]);
-      const p1Data: ApiArticlesResponse = p1Res.ok ? await p1Res.json() : { articles: [], totalPages: 1 };
-      const pgData: ApiArticlesResponse = pgRes.ok ? await pgRes.json() : { articles: [], totalPages: 1 };
-      totalPages = p1Data.totalPages ?? 1;
-      articles = pgData.articles ?? [];
-      // Out-of-range page? fall back to page 1
-      if (articles.length === 0 && page > totalPages) {
-        articles = p1Data.articles ?? [];
-        currentPage = 1;
-      }
+    // Fetch all library articles to enable instant client-side search & language filtering
+    const res = await fetch(`${BASE}/?limit=100`, ISR);
+    if (res.ok) {
+      const d: ApiArticlesResponse = await res.json();
+      articles = d.articles ?? [];
     }
   } catch (error) {
     console.error("Failed to fetch articles:", error);
   }
 
-
   return (
     <>
-      <Navbar />
+      <SiteHeader />
       <main style={{ minHeight: "100vh", background: "#0c0c14", color: "#f1f5f9" }}>
         {/* ── Hero Section ── */}
         <section
@@ -109,7 +88,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
               }}
             >
               <BookOpen size={14} color="#a78bfa" />
-              Health Knowledge Hub
+              {t("badge")}
             </div>
 
             <h1
@@ -123,7 +102,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
                 marginBottom: "18px",
               }}
             >
-              Elevate Your <br />
+              {t("titlePart1")} <br />
               <span
                 style={{
                   background: "linear-gradient(135deg, #00e5ff 0%, #7c3aed 50%, #f0006a 100%)",
@@ -131,7 +110,7 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
                   WebkitTextFillColor: "transparent",
                 }}
               >
-                Health Literacy
+                {t("titleHighlight")}
               </span>
             </h1>
 
@@ -144,11 +123,10 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
                 margin: "0 auto",
               }}
             >
-              Explore evidence-based health and wellness resources crafted by community contributors.
-              From pulmonary wellness to mental resilience, discover insights to support your everyday well-being.
+              {t("description")}
             </p>
 
-            {/* ── Moumita Debnath Research Dedication & 30 Curated Articles Coming Soon Banner ── */}
+            {/* ── Moumita Debnath Research Dedication Banner ── */}
             <div
               style={{
                 background: "#13131f",
@@ -179,343 +157,26 @@ export default async function ArticlesPage({ searchParams }: PageProps) {
                   }}
                 >
                   <Sparkles size={12} />
-                  Coming Soon
+                  {t("memorialBadge")}
                 </span>
                 <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#e2e8f0", letterSpacing: "0.04em" }}>
-                  Separate Memorial Series · 30 Dedicated Clinical Articles
+                  {t("memorialTitle")}
                 </span>
               </div>
               <p style={{ fontSize: "0.92rem", color: "#94a3b8", lineHeight: 1.65, margin: 0 }}>
-                In honor of <strong style={{ color: "#f1f5f9" }}>Dr. Moumita Debnath&apos;s</strong> clinical dedication and chest medicine training at R.G. Kar Medical College, a dedicated memorial series of <strong style={{ color: "#f1f5f9" }}>30 clinical research &amp; respiratory guides</strong> will be released separately across all 9 languages. The articles listed below are our platform&apos;s general admin-reviewed community health library.
+                {t("memorialDesc")}
               </p>
             </div>
           </div>
         </section>
 
-        {/* ── Articles Grid ── */}
+        {/* ── Articles Directory with Instant Search, Language Filter & Pagination ── */}
         <section style={{ padding: "64px 24px 100px", maxWidth: "1280px", margin: "0 auto" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderBottom: "1px solid #252538",
-              paddingBottom: "20px",
-              marginBottom: "40px",
-            }}
-          >
-            <h2
-              style={{
-                fontSize: "1.75rem",
-                fontWeight: 800,
-                color: "#f1f5f9",
-                margin: 0,
-                fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
-              }}
-            >
-              All Articles
-            </h2>
-            <span
-              style={{
-                fontSize: "0.75rem",
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                color: "#64748b",
-              }}
-            >
-              Page {currentPage} of {totalPages}
-            </span>
-          </div>
-
-          {articles.length === 0 ? (
-            <div
-              style={{
-                background: "#13131f",
-                border: "1.5px dashed #252538",
-                borderRadius: "16px",
-                padding: "64px 32px",
-                textAlign: "center",
-                color: "#94a3b8",
-              }}
-            >
-              <div style={{ fontSize: "3rem", marginBottom: "12px" }}>📖</div>
-              <p style={{ fontSize: "1.1rem", fontWeight: 700, margin: 0, color: "#f1f5f9" }}>
-                Articles are preparing for publication.
-              </p>
-              <p style={{ fontSize: "0.9rem", color: "#64748b", marginTop: "6px" }}>
-                Check back soon or explore our Medical Glossary.
-              </p>
-            </div>
-          ) : (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-                gap: "24px",
-              }}
-            >
-              {articles.map((article) => (
-                <ArticleCard key={article._id} article={article} />
-              ))}
-            </div>
-          )}
-
-          {/* ── Pagination ── */}
-          {totalPages > 1 && (
-            <div
-              style={{
-                marginTop: "64px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "10px",
-                flexWrap: "wrap",
-              }}
-            >
-              {currentPage > 1 ? (
-                <Link
-                  href={`/articles?page=${currentPage - 1}`}
-                  style={{
-                    padding: "10px 18px",
-                    fontSize: "0.875rem",
-                    fontWeight: 700,
-                    color: "#f1f5f9",
-                    background: "#13131f",
-                    border: "1px solid #252538",
-                    borderRadius: "10px",
-                    textDecoration: "none",
-                  }}
-                >
-                  ← Previous
-                </Link>
-              ) : (
-                <span
-                  style={{
-                    padding: "10px 18px",
-                    fontSize: "0.875rem",
-                    fontWeight: 700,
-                    color: "#475569",
-                    background: "#0c0c14",
-                    border: "1px solid #1a1a28",
-                    borderRadius: "10px",
-                    cursor: "not-allowed",
-                  }}
-                >
-                  ← Previous
-                </span>
-              )}
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <Link
-                  key={p}
-                  href={`/articles?page=${p}`}
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "0.875rem",
-                    fontWeight: 700,
-                    borderRadius: "10px",
-                    textDecoration: "none",
-                    background: p === currentPage ? "#7c3aed" : "#13131f",
-                    color: p === currentPage ? "#ffffff" : "#94a3b8",
-                    border: p === currentPage ? "1px solid #a78bfa" : "1px solid #252538",
-                  }}
-                >
-                  {p}
-                </Link>
-              ))}
-
-              {currentPage < totalPages ? (
-                <Link
-                  href={`/articles?page=${currentPage + 1}`}
-                  style={{
-                    padding: "10px 18px",
-                    fontSize: "0.875rem",
-                    fontWeight: 700,
-                    color: "#f1f5f9",
-                    background: "#13131f",
-                    border: "1px solid #252538",
-                    borderRadius: "10px",
-                    textDecoration: "none",
-                  }}
-                >
-                  Next →
-                </Link>
-              ) : (
-                <span
-                  style={{
-                    padding: "10px 18px",
-                    fontSize: "0.875rem",
-                    fontWeight: 700,
-                    color: "#475569",
-                    background: "#0c0c14",
-                    border: "1px solid #1a1a28",
-                    borderRadius: "10px",
-                    cursor: "not-allowed",
-                  }}
-                >
-                  Next →
-                </span>
-              )}
-            </div>
-          )}
+          <ArticlesExplorer initialArticles={articles} locale={locale} />
         </section>
 
         <Footer />
       </main>
     </>
-  );
-}
-
-function ArticleCard({ article }: { article: ApiArticle }) {
-  const date = article.publishedDate ? format(parseISO(article.publishedDate), "MMM d, yyyy") : "Unknown date";
-
-  const imageUrl = resolveArticleImageUrl(article.imageUtils, {
-    title: article.title,
-    category: article.tags?.[0]?.name,
-  });
-
-  return (
-    <Link
-      href={`/articles/${article._id}`}
-      style={{
-        background: "#13131f",
-        border: "1px solid #252538",
-        borderRadius: "16px",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        textDecoration: "none",
-        transition: "border-color 0.2s ease, transform 0.2s ease",
-      }}
-      className="group hover:-translate-y-1 hover:border-[#2dd4bf]"
-    >
-      {/* Thumbnail */}
-      <div
-        style={{
-          position: "relative",
-          aspectRatio: "16/9",
-          overflow: "hidden",
-          background: "#0c0c14",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {imageUrl ? (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            src={imageUrl}
-            alt={`Cover image for article: ${article.title}`}
-            loading="lazy"
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-        ) : (
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              background: "linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(0, 229, 255, 0.1))",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "2rem",
-            }}
-          >
-            📋
-          </div>
-        )}
-      </div>
-
-      {/* Body */}
-      <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
-        {/* Tags */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "14px" }}>
-          {article.tags?.length > 0 ? (
-            article.tags.map((tag) => (
-              <span
-                key={tag._id}
-                style={{
-                  display: "inline-block",
-                  padding: "3px 10px",
-                  borderRadius: "50px",
-                  fontSize: "11px",
-                  fontWeight: 800,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  background: "rgba(124, 58, 237, 0.15)",
-                  color: "#a78bfa",
-                  border: "1px solid rgba(124, 58, 237, 0.3)",
-                }}
-              >
-                {tag.name}
-              </span>
-            ))
-          ) : (
-            <span
-              style={{
-                display: "inline-block",
-                padding: "3px 10px",
-                borderRadius: "50px",
-                fontSize: "11px",
-                fontWeight: 800,
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                background: "rgba(255, 255, 255, 0.05)",
-                color: "#94a3b8",
-              }}
-            >
-              General
-            </span>
-          )}
-        </div>
-
-        <h3
-          style={{
-            fontSize: "1.1rem",
-            fontWeight: 800,
-            color: "#f1f5f9",
-            lineHeight: 1.35,
-            marginBottom: "10px",
-          }}
-        >
-          {article.title}
-        </h3>
-
-        <p
-          style={{
-            fontSize: "0.875rem",
-            color: "#94a3b8",
-            lineHeight: 1.6,
-            flex: 1,
-            marginBottom: "20px",
-          }}
-        >
-          {article.description}
-        </p>
-
-        {/* Footer (Author & Meta) */}
-        <div
-          style={{
-            paddingTop: "16px",
-            borderTop: "1px solid #252538",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontSize: "0.78rem",
-            color: "#64748b",
-          }}
-        >
-          <span style={{ fontWeight: 600, color: "#cbd5e1" }}>
-            {article.authorId?.user_name || "Community Medical Contributor"}
-          </span>
-          <time dateTime={article.publishedDate}>{date}</time>
-        </div>
-      </div>
-    </Link>
   );
 }

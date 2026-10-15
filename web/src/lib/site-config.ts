@@ -8,8 +8,12 @@ export const HELP_CENTER_URL = process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https
 export const FEEDBACK_URL = process.env.NEXT_PUBLIC_FEEDBACK_URL || "https://github.com/SB2318/UltimateHealth/issues";
 export const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || "";
 export const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "";
-export const PRIVACY_POLICY_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || "#";
-export const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || "#";
+export const PRIVACY_POLICY_URL =
+  process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL ||
+  "https://www.freeprivacypolicy.com/live/0b40215e-e456-48cc-a549-424216da1e01";
+export const TERMS_OF_USE_URL =
+  process.env.NEXT_PUBLIC_TERMS_OF_USE_URL ||
+  "https://ultimatehealth.blog/terms";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

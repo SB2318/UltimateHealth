@@ -171,5 +171,43 @@
     "emailTitle": "Direct Support",
     "emailDesc": "Contact maintainers directly for questions or partnership inquiries.",
     "sendEmail": "Send Email"
+  },
+  "articles": {
+    "badge": "Health Knowledge Hub",
+    "titlePart1": "Elevate Your",
+    "titleHighlight": "Health Literacy",
+    "description": "Explore evidence-based health and wellness resources crafted by community contributors. From pulmonary wellness to mental resilience, discover insights to support your everyday well-being.",
+    "memorialBadge": "Coming Soon",
+    "memorialTitle": "Separate Memorial Series · 30 Dedicated Clinical Articles",
+    "memorialDesc": "In honor of Dr. Moumita Debnath's clinical dedication and chest medicine training at R.G. Kar Medical College, a dedicated memorial series of 30 clinical research & respiratory guides will be released separately across all 9 languages. The articles listed below are our platform's general admin-reviewed community health library.",
+    "allArticles": "All Articles",
+    "pageOf": "Page {current} of {total}",
+    "searchPlaceholder": "Search articles by title, summary, or tag...",
+    "allLanguages": "All Languages",
+    "filterLanguage": "Language",
+    "showingCount": "Showing {count} of {total} articles",
+    "showingSingleCount": "Showing {count} article",
+    "clearFilters": "Clear filters",
+    "noResults": "No articles found matching your criteria.",
+    "noResultsSuggestion": "Try adjusting your search terms or clearing the language filter.",
+    "emptyTitle": "Articles are preparing for publication.",
+    "emptySubtitle": "Check back soon or explore our Medical Glossary.",
+    "previous": "← Previous",
+    "next": "Next →",
+    "generalTag": "General",
+    "communityAuthor": "Community Medical Contributor"
+  },
+  "podcasts": {
+    "badge": "Web Audio Streaming · Coming Soon",
+    "title": "Health Podcasts & Audio Stories",
+    "description": "Listen to community-recorded health conversations, wellness insights, and patient journeys. Web-based streaming is currently in development and launching soon.",
+    "appBannerTitle": "Want to Record & Upload Episodes?",
+    "appBannerDesc": "Recording, editing, and publishing health podcasts is exclusively supported through the UltimateHealth Android App studio. On the web platform, stream-only listening will be available.",
+    "feature1Title": "Free Web Listening",
+    "feature1Desc": "Stream verified health discussions and audio wellness guides without subscriptions.",
+    "feature2Title": "Community Voices",
+    "feature2Desc": "Episodes shared by medical trainees, patients, and health advocates.",
+    "feature3Title": "Multilingual Audio",
+    "feature3Desc": "Planned audio releases in English, Hindi, Bengali, and Indian regional languages."
   }
 }

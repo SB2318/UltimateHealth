@@ -2,6 +2,8 @@
 
 import { useState, useEffect, type CSSProperties } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { withBasePath } from "@/lib/basePath";
 import type { Article } from "@/types/article";
 import { defaultGlossaryTerms } from "@/lib/article-data";
 import { GlossaryProvider } from "./GlossaryProvider";
@@ -267,6 +269,12 @@ export default function ArticlePageClient({
 // ─── Article footer (post-content) ─────────────────────────────────────────
 
 function ArticleFooter({ article }: { article: Article }) {
+  const pathname = usePathname() || "";
+  const segments = pathname.split("/").filter(Boolean);
+  const knownLocales = ["en", "hi", "bn", "ta", "or", "de", "es", "fr", "hr"];
+  const currentLocale = segments.find((s) => knownLocales.includes(s)) || "en";
+  const articlesUrl = withBasePath(`/${currentLocale}/articles`);
+
   return (
     <div className="mt-14 pt-8 border-t border-[#252538]">
       {/* Author card */}
@@ -296,7 +304,7 @@ function ArticleFooter({ article }: { article: Article }) {
       {/* Post-article navigation row */}
       <div className="mt-8 pt-6 border-t border-[#252538]/60 flex items-center justify-between gap-4">
         <Link
-          href="/articles"
+          href={articlesUrl}
           className="inline-flex items-center gap-2 text-sm font-semibold text-[#2dd4bf] hover:text-[#5eead4] transition-colors group"
         >
           <i className="fas fa-arrow-left text-xs transition-transform group-hover:-translate-x-1" aria-hidden="true" />
@@ -317,12 +325,22 @@ function ArticleFooter({ article }: { article: Article }) {
 // ─── Minimal page-level footer ─────────────────────────────────────────────
 
 function ArticlePageFooter() {
+  const pathname = usePathname() || "";
+  const segments = pathname.split("/").filter(Boolean);
+  const knownLocales = ["en", "hi", "bn", "ta", "or", "de", "es", "fr", "hr"];
+  const currentLocale = segments.find((s) => knownLocales.includes(s)) || "en";
+
+  const homeUrl = withBasePath(`/${currentLocale}`);
+  const articlesUrl = withBasePath(`/${currentLocale}/articles`);
+  const glossaryUrl = withBasePath(`/${currentLocale}/medical-glossary`);
+  const contributeUrl = withBasePath(`/${currentLocale}/contribute`);
+
   return (
     <footer className="w-full bg-[#08080f] border-t border-[#252538] text-[#64748b] py-8">
       <div className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm">
         <div className="flex items-center gap-2">
           <Link
-            href="/"
+            href={homeUrl}
             className="font-bold text-slate-300 hover:text-[#2dd4bf] transition-colors"
           >
             UltimateHealth
@@ -331,13 +349,16 @@ function ArticlePageFooter() {
           <span>Open-source health knowledge for everyone</span>
         </div>
         <div className="flex items-center gap-5">
-          <Link href="/medical-glossary" className="hover:text-slate-300 transition-colors">
+          <Link href={articlesUrl} className="hover:text-slate-300 transition-colors">
+            All Articles
+          </Link>
+          <Link href={glossaryUrl} className="hover:text-slate-300 transition-colors">
             Medical Glossary
           </Link>
-          <Link href="/contribute" className="hover:text-slate-300 transition-colors">
+          <Link href={contributeUrl} className="hover:text-slate-300 transition-colors">
             Contribute
           </Link>
-          <Link href="/" className="hover:text-slate-300 transition-colors">
+          <Link href={homeUrl} className="hover:text-slate-300 transition-colors">
             Home
           </Link>
         </div>

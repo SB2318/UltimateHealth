@@ -2,14 +2,15 @@
 
 import { useTranslations } from 'next-intl';
 import MedicalGlossaryExplorer from './MedicalGlossaryExplorer';
-import { Navbar } from '@/components/layout';
+import SiteHeader from '@/components/home/SiteHeader';
+import { Footer } from '@/components/ui/footer';
 
 export default function MedicalGlossaryPage() {
   const t = useTranslations('glossary');
 
   return (
     <>
-      <Navbar />
+      <SiteHeader />
       <main
         style={{
           minHeight: '100vh',
@@ -20,13 +21,41 @@ export default function MedicalGlossaryPage() {
         {/* ── Hero Section ── */}
         <section
           style={{
-            paddingTop: '128px',
-            paddingBottom: '32px',
+            paddingTop: '130px',
+            paddingBottom: '40px',
             textAlign: 'center',
             borderBottom: '1px solid #252538',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 24px' }}>
+          {/* Subtle Ambient Radial Glow */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              top: '20%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '600px',
+              height: '350px',
+              background:
+                'radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(6, 182, 212, 0.04) 50%, transparent 70%)',
+              filter: 'blur(50px)',
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          />
+
+          <div
+            style={{
+              maxWidth: '900px',
+              margin: '0 auto',
+              padding: '0 24px',
+              position: 'relative',
+              zIndex: 1,
+            }}
+          >
             <p
               style={{
                 fontSize: '0.75rem',
@@ -89,6 +118,8 @@ export default function MedicalGlossaryPage() {
             <MedicalGlossaryExplorer />
           </div>
         </div>
+
+        <Footer />
       </main>
     </>
   );

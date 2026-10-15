@@ -14,7 +14,16 @@ import {
 import NewsletterForm from "./NewsletterForm";
 
 /** Site footer — static apart from the newsletter form island. */
-export default function SiteFooter() {
+export default function SiteFooter({ locale = "en" }: { locale?: string }) {
+  const homeUrl = withBasePath(`/${locale}`);
+  const featuresUrl = "#what-we-do";
+  const programsUrl = "#programs";
+  const screenshotsUrl = "#screenshots";
+  const contactUrl = "#contact";
+  const articlesUrl = withBasePath(`/${locale}/articles`);
+  const glossaryUrl = withBasePath(`/${locale}/medical-glossary`);
+  const contributeUrl = withBasePath(`/${locale}/contribute`);
+
   return (
     <footer>
       <PageWrapper className="footer-grid">
@@ -50,19 +59,20 @@ export default function SiteFooter() {
 
         <div className="footer-links-col">
           <h3>Quick Links</h3>
-          <Link href="/">Home</Link>
-          <a href="#features">Features</a>
-          <a href="#programs">Programs</a>
-          <a href="#screenshots">Screenshots</a>
-          <a href="#contact">Contact</a>
-          <Link href="/articles">Health Articles</Link>
-          <Link href="/contribute">Join Us &amp; Contribute</Link>
+          <Link href={homeUrl}>Home</Link>
+          <a href={featuresUrl}>Features</a>
+          <a href={programsUrl}>Programs</a>
+          <a href={screenshotsUrl}>Screenshots</a>
+          <a href={contactUrl}>Contact</a>
+          <Link href={articlesUrl}>Health Articles</Link>
+          <Link href={glossaryUrl}>Medical Glossary</Link>
+          <Link href={contributeUrl}>Join Us &amp; Contribute</Link>
         </div>
 
         <div className="footer-links-col">
           <h3>Support</h3>
           <a href={HELP_CENTER_URL} target="_blank" rel="noopener noreferrer">Help Center</a>
-          <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
+          <a href={contactUrl}>Contact Us</a>
           <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">Feedback</a>
           <a href="https://ultimatehealth.blog/api/docs" target="_blank" rel="noopener noreferrer">API Docs</a>
         </div>
@@ -72,8 +82,8 @@ export default function SiteFooter() {
         <div className="footer-bottom-inner">
           <p>© 2026 UltimateHealth. Built with passion for a healthier community.</p>
           <div className="footer-bottom-links">
-            <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>
-            <a href={TERMS_OF_USE_URL}>Terms of Use</a>
+            <a href={PRIVACY_POLICY_URL} target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+            <a href={TERMS_OF_USE_URL} target="_blank" rel="noopener noreferrer">Terms of Use</a>
           </div>
         </div>
       </div>

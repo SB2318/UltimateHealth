@@ -1,27 +1,36 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 
 import { PageWrapper } from '../layout'
 
 import { withBasePath } from '@/lib/basePath'
-import { useState } from 'react'
+import {
+  FEEDBACK_URL,
+  HELP_CENTER_URL,
+  INSTAGRAM_URL,
+  PRIVACY_POLICY_URL,
+  TELEGRAM_URL,
+  TERMS_OF_USE_URL,
+  isValidEmail,
+} from '@/lib/site-config'
 
 export const Footer = () => {
-  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  const isValidEmail = (email: string) => EMAIL_PATTERN.test(email.trim())
-  const API_BASE_URL =
-    process.env.NEXT_PUBLIC_API_BASE_URL || 'https://ultimatehealth.blog'
-  // Owner-configurable frontend URLs (set in deployment env when needed)
-  const HELP_CENTER_URL =
-    process.env.NEXT_PUBLIC_HELP_CENTER_URL || 'https://ultimatehealth.blog/docs'
-  const FEEDBACK_URL =
-    process.env.NEXT_PUBLIC_FEEDBACK_URL ||
-    'https://github.com/SB2318/UltimateHealth/issues'
-  const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_URL || ''
-  const INSTAGRAM_URL = process.env.NEXT_PUBLIC_INSTAGRAM_URL || ''
-  const PRIVACY_POLICY_URL = process.env.NEXT_PUBLIC_PRIVACY_POLICY_URL || '#'
-  const TERMS_OF_USE_URL = process.env.NEXT_PUBLIC_TERMS_OF_USE_URL || '#'
+  const pathname = usePathname() || ''
+  const segments = pathname.split('/').filter(Boolean)
+  const knownLocales = ['en', 'hi', 'bn', 'ta', 'or', 'de', 'es', 'fr', 'hr']
+  const currentLocale = segments.find((s) => knownLocales.includes(s)) || 'en'
+
+  const homeUrl = withBasePath(`/${currentLocale}`)
+  const featuresUrl = withBasePath(`/${currentLocale}#features`)
+  const programsUrl = withBasePath(`/${currentLocale}#programs`)
+  const screenshotsUrl = withBasePath(`/${currentLocale}#screenshots`)
+  const contactUrl = withBasePath(`/${currentLocale}#contact`)
+  const articlesUrl = withBasePath(`/${currentLocale}/articles`)
+  const glossaryUrl = withBasePath(`/${currentLocale}/medical-glossary`)
+  const contributeUrl = withBasePath(`/${currentLocale}/contribute`)
   // ── Newsletter state ──
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterStatus, setNewsletterStatus] = useState<
@@ -204,12 +213,14 @@ export const Footer = () => {
         {/* Quick Links */}
         <div className="footer-links-col">
           <h3>Quick Links</h3>
-          <Link href={withBasePath('/')}>Home</Link>
-          <a href={withBasePath('#features')}>Features</a>
-          <a href={withBasePath('#programs')}>Programs</a>
-          <a href={withBasePath('#screenshots')}>Screenshots</a>
-          <a href={withBasePath('#contact')}>Contact</a>
-          <Link href="/contribute">Join Us &amp; Contribute</Link>
+          <Link href={homeUrl}>Home</Link>
+          <a href={featuresUrl}>Features</a>
+          <a href={programsUrl}>Programs</a>
+          <a href={screenshotsUrl}>Screenshots</a>
+          <a href={contactUrl}>Contact</a>
+          <Link href={articlesUrl}>Health Articles</Link>
+          <Link href={glossaryUrl}>Medical Glossary</Link>
+          <Link href={contributeUrl}>Join Us &amp; Contribute</Link>
         </div>
 
         {/* Support */}
@@ -218,7 +229,7 @@ export const Footer = () => {
           <a href={HELP_CENTER_URL} target="_blank" rel="noopener noreferrer">
             Help Center
           </a>
-          <a href="mailto:ultimate.health25@gmail.com">Contact Us</a>
+          <a href={contactUrl}>Contact Us</a>
           <a href={FEEDBACK_URL} target="_blank" rel="noopener noreferrer">
             Feedback
           </a>
@@ -239,8 +250,12 @@ export const Footer = () => {
             © 2026 UltimateHealth. Built with passion for a healthier community.
           </p>
           <div className="footer-bottom-links">
-            <a href={PRIVACY_POLICY_URL}>Privacy Policy</a>
-            <a href={TERMS_OF_USE_URL}>Terms of Use</a>
+            <a href={PRIVACY_POLICY_URL} target="_blank" rel="noopener noreferrer">
+              Privacy Policy
+            </a>
+            <a href={TERMS_OF_USE_URL} target="_blank" rel="noopener noreferrer">
+              Terms of Use
+            </a>
           </div>
         </div>
       </div>

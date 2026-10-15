@@ -1,18 +1,17 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { Headphones, Radio, Sparkles, Smartphone, Volume2, Mic, ArrowLeft } from 'lucide-react';
-import { Navbar } from '@/components/layout';
+import { Headphones, Radio, Sparkles, Smartphone, Mic } from 'lucide-react';
+import SiteHeader from '@/components/home/SiteHeader';
 import { Footer } from '@/components/ui/footer';
 
 export default function PodcastsPage() {
-  const tNav = useTranslations('nav');
+  const t = useTranslations('podcasts');
 
   return (
     <>
-      <Navbar />
+      <SiteHeader />
       <main style={{ background: '#0c0c14', color: '#f1f5f9', minHeight: '100vh' }}>
         {/* ── Hero / Coming Soon Section ── */}
         <section
@@ -61,7 +60,7 @@ export default function PodcastsPage() {
               }}
             >
               <Radio size={14} className="animate-pulse" />
-              Web Audio Streaming · Coming Soon
+              {t('badge')}
             </div>
 
             <h1
@@ -75,7 +74,7 @@ export default function PodcastsPage() {
                 marginBottom: '20px',
               }}
             >
-              Health Podcasts &amp; Audio Stories
+              {t('title')}
             </h1>
 
             <p
@@ -87,8 +86,7 @@ export default function PodcastsPage() {
                 margin: '0 auto 36px',
               }}
             >
-              Listen to community-recorded health conversations, wellness insights, and patient journeys.
-              Web-based streaming is currently in development and launching soon.
+              {t('description')}
             </p>
 
             {/* Mobile App clarification banner */}
@@ -123,10 +121,10 @@ export default function PodcastsPage() {
               </div>
               <div>
                 <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9', margin: '0 0 6px' }}>
-                  Want to Record &amp; Upload Episodes?
+                  {t('appBannerTitle')}
                 </h4>
                 <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.6, margin: 0 }}>
-                  Recording, editing, and publishing health podcasts is exclusively supported through the <strong>UltimateHealth Android App</strong> studio. On the web platform, stream-only listening will be available.
+                  {t('appBannerDesc')}
                 </p>
               </div>
             </div>
@@ -143,20 +141,20 @@ export default function PodcastsPage() {
               {[
                 {
                   icon: Headphones,
-                  title: 'Free Web Listening',
-                  desc: 'Stream verified health discussions and audio wellness guides without subscriptions.',
+                  title: t('feature1Title'),
+                  desc: t('feature1Desc'),
                   accent: '#a78bfa',
                 },
                 {
                   icon: Mic,
-                  title: 'Community Voices',
-                  desc: 'Episodes shared by medical trainees, patients, and health advocates.',
+                  title: t('feature2Title'),
+                  desc: t('feature2Desc'),
                   accent: '#f0006a',
                 },
                 {
                   icon: Sparkles,
-                  title: 'Multilingual Audio',
-                  desc: 'Planned audio releases in English, Hindi, Bengali, and Indian regional languages.',
+                  title: t('feature3Title'),
+                  desc: t('feature3Desc'),
                   accent: '#00e5ff',
                 },
               ].map((card, idx) => {

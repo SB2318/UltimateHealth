@@ -27,7 +27,13 @@ import HomeArticlesPreview from "@/components/home/HomeArticlesPreview";
  * 10. Site Footer
  * 11. Onboarding Tour Modal (2-Column Cyberpunk Modal)
  */
-export default function Home() {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
   return (
     <main className="bg-vice-dark min-h-screen text-white overflow-x-hidden selection:bg-vice-pink selection:text-white">
       <SiteHeader />
@@ -40,7 +46,7 @@ export default function Home() {
       <ScreenshotGallery />
       <ProgramsSection />
       <ContactSection />
-      <SiteFooter />
+      <SiteFooter locale={locale} />
       <ScrollToTop />
       <ScrollReveal />
       <DnaCursor />
