@@ -5,7 +5,9 @@ WORKDIR /app
 
 ENV NEXT_PUBLIC_BASE_PATH=/web
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NODE_OPTIONS="--max-old-space-size=2048"
+ENV NEXT_BUILD_WORKERS=1
+ENV NEXT_PRIVATE_WORKERS=1
 
 # Install pnpm
 RUN npm install -g pnpm
