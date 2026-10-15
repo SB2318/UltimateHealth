@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { User, Stethoscope, Code2, ArrowRight } from 'lucide-react';
+import { User, Stethoscope, Code2, ArrowRight, Edit3 } from 'lucide-react';
 
 export default function PortalSwitcherCTA() {
   const t = useTranslations('portals');
@@ -35,6 +35,16 @@ export default function PortalSwitcherCTA() {
       link: '/contribute',
       actionText: t('portal3Action'),
       accent: '#0d9488',
+    },
+    {
+      icon: Edit3,
+      badge: 'App Studio',
+      title: 'Improve Articles',
+      desc: 'Suggest guide edits, improve translations, or write verified wellness content directly in the UltimateHealth mobile app.',
+      link: 'https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth',
+      actionText: 'Improve in App',
+      accent: '#0d9488',
+      isExternal: true,
     },
   ];
 
@@ -75,11 +85,11 @@ export default function PortalSwitcherCTA() {
           </p>
         </div>
 
-        {/* 3 Portal Cards */}
+        {/* 4 Portal Cards */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
             gap: '24px',
           }}
         >
@@ -171,37 +181,73 @@ export default function PortalSwitcherCTA() {
                   </p>
                 </div>
 
-                <Link
-                  href={portal.link}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    padding: '12px 20px',
-                    borderRadius: '10px',
-                    background: 'var(--explorer-bg, #f8fafc)',
-                    border: '1px solid var(--explorer-border, #e2e8f0)',
-                    color: 'var(--site-heading, #0f172a)',
-                    fontSize: '0.875rem',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = portal.accent;
-                    (e.currentTarget as HTMLElement).style.borderColor = portal.accent;
-                    (e.currentTarget as HTMLElement).style.color = '#ffffff';
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = 'var(--explorer-bg, #f8fafc)';
-                    (e.currentTarget as HTMLElement).style.borderColor = 'var(--explorer-border, #e2e8f0)';
-                    (e.currentTarget as HTMLElement).style.color = 'var(--site-heading, #0f172a)';
-                  }}
-                >
-                  <span>{portal.actionText}</span>
-                  <ArrowRight style={{ width: 14, height: 14 }} />
-                </Link>
+                {portal.link.startsWith('http') ? (
+                  <a
+                    href={portal.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      padding: '12px 20px',
+                      borderRadius: '10px',
+                      background: 'var(--explorer-bg, #f8fafc)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
+                      color: 'var(--site-heading, #0f172a)',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.background = portal.accent;
+                      (e.currentTarget as HTMLElement).style.borderColor = portal.accent;
+                      (e.currentTarget as HTMLElement).style.color = '#ffffff';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.background = 'var(--explorer-bg, #f8fafc)';
+                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--explorer-border, #e2e8f0)';
+                      (e.currentTarget as HTMLElement).style.color = 'var(--site-heading, #0f172a)';
+                    }}
+                  >
+                    <span>{portal.actionText}</span>
+                    <ArrowRight style={{ width: 14, height: 14 }} />
+                  </a>
+                ) : (
+                  <Link
+                    href={portal.link}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      padding: '12px 20px',
+                      borderRadius: '10px',
+                      background: 'var(--explorer-bg, #f8fafc)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
+                      color: 'var(--site-heading, #0f172a)',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'all 0.2s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.background = portal.accent;
+                      (e.currentTarget as HTMLElement).style.borderColor = portal.accent;
+                      (e.currentTarget as HTMLElement).style.color = '#ffffff';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.background = 'var(--explorer-bg, #f8fafc)';
+                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--explorer-border, #e2e8f0)';
+                      (e.currentTarget as HTMLElement).style.color = 'var(--site-heading, #0f172a)';
+                    }}
+                  >
+                    <span>{portal.actionText}</span>
+                    <ArrowRight style={{ width: 14, height: 14 }} />
+                  </Link>
+                )}
               </div>
             );
           })}

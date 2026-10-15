@@ -29,11 +29,11 @@ export default function WhatWeDoSection() {
     },
     {
       icon: Bot,
-      title: t('item3Title'),
-      tag: t('item3Tag'),
-      desc: t('item3Desc'),
-      link: '#',
-      actionText: t('item3Action'),
+      title: t('item3Title') || 'AI Health Assistant & Wellness Dashboard',
+      tag: t('item3Tag') || 'Google Play App',
+      desc: t('item3Desc') || 'Ask everyday health questions for non-diagnostic guidance. Your wellness dashboard and personalized health plan will be there.',
+      link: 'https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth',
+      actionText: t('item3Action') || 'Get on Google Play',
       accent: '#0d9488',
     },
     {
@@ -159,28 +159,55 @@ export default function WhatWeDoSection() {
 
                 <div style={{ paddingTop: '14px', borderTop: '1px solid var(--explorer-border, #e2e8f0)' }}>
                   {isExternalOrInternalLink ? (
-                    <Link
-                      href={item.link}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        fontSize: '0.875rem',
-                        fontWeight: 600,
-                        color: item.accent,
-                        textDecoration: 'none',
-                        transition: 'gap 0.15s ease',
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.gap = '10px';
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.gap = '6px';
-                      }}
-                    >
-                      <span>{item.actionText}</span>
-                      <ArrowRight style={{ width: 13, height: 13 }} />
-                    </Link>
+                    item.link.startsWith('http') ? (
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          fontSize: '0.875rem',
+                          fontWeight: 600,
+                          color: item.accent,
+                          textDecoration: 'none',
+                          transition: 'gap 0.15s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLElement).style.gap = '10px';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLElement).style.gap = '6px';
+                        }}
+                      >
+                        <span>{item.actionText}</span>
+                        <ArrowRight style={{ width: 13, height: 13 }} />
+                      </a>
+                    ) : (
+                      <Link
+                        href={item.link}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          fontSize: '0.875rem',
+                          fontWeight: 600,
+                          color: item.accent,
+                          textDecoration: 'none',
+                          transition: 'gap 0.15s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.currentTarget as HTMLElement).style.gap = '10px';
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.currentTarget as HTMLElement).style.gap = '6px';
+                        }}
+                      >
+                        <span>{item.actionText}</span>
+                        <ArrowRight style={{ width: 13, height: 13 }} />
+                      </Link>
+                    )
                   ) : (
                     <span
                       style={{

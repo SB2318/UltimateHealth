@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { type RefObject, useCallback, useEffect, useRef, useState } from "react";
+import { withBasePath } from "@/lib/basePath";
 
 import { PageWrapper } from "@/components/layout";
 
@@ -279,9 +280,10 @@ export default function ScreenshotGallery() {
                     >
                     <div className="screenshot-image-frame">
                       <Image
-                        src={s.src}
+                        src={withBasePath(s.src)}
                         alt={s.caption}
                         fill
+                        unoptimized
                         sizes="(max-width: 768px) 260px, 300px"
                         className="screenshot-image"
                       />
@@ -317,9 +319,10 @@ export default function ScreenshotGallery() {
                       aria-label={`Open ${s.caption} screenshot`}
                     >
                       <Image
-                        src={s.src}
+                        src={withBasePath(s.src)}
                         alt={s.caption}
                         fill
+                        unoptimized
                         sizes="(max-width: 768px) 260px, 300px"
                         className="screenshot-image"
                       />
@@ -334,6 +337,8 @@ export default function ScreenshotGallery() {
               </div>
             )}
           </div>
+
+
         </PageWrapper>
       </section>
 
@@ -345,10 +350,11 @@ export default function ScreenshotGallery() {
               <i className="fas fa-chevron-left"></i>
             </button>
             <Image
-              src={selectedScreenshot.src}
+              src={withBasePath(selectedScreenshot.src)}
               alt={selectedScreenshot.caption}
               width={390}
               height={780}
+              unoptimized
               sizes="(max-width: 768px) 80vw, 390px"
               className="screenshot-modal-image"
             />

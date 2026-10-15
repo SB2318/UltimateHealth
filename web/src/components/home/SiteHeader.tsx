@@ -182,7 +182,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
             <LanguageSwitcher />
             <ModeToggle />
           </li>
-          <li style={{ display: "flex", alignItems: "center", marginLeft: "4px" }}>
+          <li style={{ display: "none", alignItems: "center", marginLeft: "4px" }}>
             <button
               type="button"
               onClick={openTour}
@@ -238,7 +238,7 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           type="button"
           onClick={openTour}
           style={{
-            display: "flex",
+            display: "none",
             alignItems: "center",
             justifyContent: "center",
             gap: "8px",

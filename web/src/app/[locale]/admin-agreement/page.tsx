@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { PageWrapper, Section } from "@/components/layout";
+import { withBasePath } from "@/lib/basePath";
 import {
   canvasPixelsHaveInk,
   denormalizeCanvasPoint,
@@ -19,13 +20,114 @@ type Stroke = Point[];
 const SIGNATURE_STROKE = "#2d3748";
 const SIGNATURE_LINE_WIDTH = 2;
 
+function generateAgreementPdfBase64(
+  fullName: string,
+  role: string,
+  email: string,
+  timestamp: string
+): string {
+  const sanitize = (str: string) => (str || "").replace(/[()\\]/g, "\\$&");
+  const textCommands = [
+    "BT",
+    "/F2 16 Tf",
+    "50 790 Td",
+    "(ULTIMATEHEALTH - ADMIN & MODERATOR AGREEMENT) Tj",
+    "0 -26 Td",
+    "/F1 9 Tf",
+    `(${sanitize("Generated & Signed on: " + timestamp)}) Tj`,
+    "0 -24 Td",
+    "/F2 11 Tf",
+    "(1. APPLICANT & CREDENTIAL DETAILS) Tj",
+    "0 -16 Td",
+    "/F1 9 Tf",
+    `(${sanitize("Full Legal Name: " + fullName)}) Tj`,
+    "0 -14 Td",
+    `(${sanitize("Designation / Role: " + role)}) Tj`,
+    "0 -14 Td",
+    `(${sanitize("Official Email: " + email)}) Tj`,
+    "0 -14 Td",
+    `(${sanitize("Verification Status: Certified & Digitally Signed")}) Tj`,
+    "0 -24 Td",
+    "/F2 11 Tf",
+    "(2. CORE STANDARDS & NON-DIAGNOSTIC BOUNDARY) Tj",
+    "0 -16 Td",
+    "/F1 9 Tf",
+    "(UltimateHealth provides health education and non-diagnostic triage only.) Tj",
+    "0 -14 Td",
+    "(All administrators and moderators agree to strictly maintain these boundaries.) Tj",
+    "0 -14 Td",
+    "(Patient information is strictly confidential and will never be shared without consent.) Tj",
+    "0 -24 Td",
+    "/F2 11 Tf",
+    "(3. PROFESSIONAL CONDUCT & COMMUNITY SAFETY) Tj",
+    "0 -16 Td",
+    "/F1 9 Tf",
+    "(Moderators shall adhere to evidence-based health guidance and objective standards.) Tj",
+    "0 -14 Td",
+    "(All review decisions must be documented, justified, and transparent.) Tj",
+    "0 -24 Td",
+    "/F2 11 Tf",
+    "(4. DIGITAL SIGNATURE & VERIFICATION RECORD) Tj",
+    "0 -16 Td",
+    "/F1 9 Tf",
+    `(${sanitize("Signed by: " + fullName + " (" + role + ")")}) Tj`,
+    "0 -14 Td",
+    `(${sanitize("Timestamp: " + timestamp)}) Tj`,
+    "0 -14 Td",
+    "(Digital ink signature verified and officially archived.) Tj",
+    "ET",
+  ].join("\n");
+
+  const contentLen = new TextEncoder().encode(textCommands).length;
+
+  let pdf = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";
+  const offsets: number[] = [];
+
+  function addObj(num: number, body: string) {
+    offsets[num] = new TextEncoder().encode(pdf).length;
+    pdf += `${num} 0 obj\n${body}\nendobj\n`;
+  }
+
+  addObj(1, "<< /Type /Catalog /Pages 2 0 R >>");
+  addObj(2, "<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
+  addObj(
+    3,
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>"
+  );
+  addObj(4, `<< /Length ${contentLen} >>\nstream\n${textCommands}\nendstream`);
+  addObj(5, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
+  addObj(6, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
+
+  const startxref = new TextEncoder().encode(pdf).length;
+  pdf += "xref\n0 7\n";
+  pdf += "0000000000 65535 f \n";
+  for (let i = 1; i <= 6; i++) {
+    pdf += `${String(offsets[i]).padStart(10, "0")} 00000 n \n`;
+  }
+  pdf += `trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n${startxref}\n%%EOF\n`;
+
+  const bytes = new TextEncoder().encode(pdf);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  if (typeof window !== "undefined" && typeof window.btoa === "function") {
+    return window.btoa(binary);
+  }
+  return Buffer.from(binary, "binary").toString("base64");
+}
+
 /* ---------- inner component (needs useSearchParams) ---------- */
 function AdminAgreementContent() {
   const searchParams = useSearchParams();
 
   // form state
   const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [designation, setDesignation] = useState("");
+  const [proofFile, setProofFile] = useState<File | null>(null);
+  const [proofFileName, setProofFileName] = useState("");
+  const [proofFileBase64, setProofFileBase64] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -47,14 +149,15 @@ function AdminAgreementContent() {
   const isValidFullName = (name: string) =>
     name.trim().split(" ").filter((p) => p.length > 0).length >= 2;
 
+  const isValidEmail = (val: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim());
+
   const canvasHasInk = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return false;
 
     // Read pixels from the full device-pixel backing store.
-    // Note: ensure our drawing + transform use the same coordinate space,
-    // otherwise alpha sampling can become inconsistent on high-DPI displays.
     const pixels = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
     return canvasPixelsHaveInk(pixels);
   }, []);
@@ -65,9 +168,41 @@ function AdminAgreementContent() {
 
   const canAccept =
     isValidFullName(fullName) &&
+    isValidEmail(email) &&
     designation.trim() !== "" &&
+    Boolean(proofFile) &&
     isSignatureValid() &&
     agreed;
+
+  const handleProofChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.name.toLowerCase().endsWith(".pdf") && file.type !== "application/pdf") {
+      showMessage("error", "✗ Please upload a valid PDF document for doctor verification.", true);
+      return;
+    }
+
+    if (file.size > 15 * 1024 * 1024) {
+      showMessage("error", "✗ PDF document size must be under 15 MB.", true);
+      return;
+    }
+
+    setProofFile(file);
+    setProofFileName(file.name);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setProofFileBase64(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeProof = () => {
+    setProofFile(null);
+    setProofFileName("");
+    setProofFileBase64("");
+  };
 
   /* ---------- canvas setup ---------- */
   const drawStrokes = useCallback((ctx: CanvasRenderingContext2D, width: number, height: number) => {
@@ -228,11 +363,19 @@ function AdminAgreementContent() {
   /* ---------- accept ---------- */
   const handleAccept = async () => {
     if (!isValidFullName(fullName)) {
-      showMessage("error", "✗ Please enter your full name", true);
+      showMessage("error", "✗ Please enter your full name (at least 2 words)", true);
+      return;
+    }
+    if (!isValidEmail(email)) {
+      showMessage("error", "✗ Please enter a valid email address", true);
       return;
     }
     if (!designation.trim()) {
-      showMessage("error", "✗ Please enter your designation", true);
+      showMessage("error", "✗ Please enter your designation / clinical role", true);
+      return;
+    }
+    if (!proofFile) {
+      showMessage("error", "✗ Please upload your doctor verification or working proof PDF document", true);
       return;
     }
     if (!isSignatureValid() || !canvasHasInk()) {
@@ -244,14 +387,8 @@ function AdminAgreementContent() {
       return;
     }
 
-    const token = searchParams.get("token");
-    if (!token) {
-      showMessage("error", "✗ Unauthorized: Token missing", true);
-      return;
-    }
-
     setLoading(true);
-    showMessage("info", "Generating agreement PDF...");
+    showMessage("info", "Submitting application and doctor verification proof...");
 
     // lock the form
     const dataUrl = canvasRef.current!.toDataURL("image/png");
@@ -265,6 +402,8 @@ function AdminAgreementContent() {
     setLocked(true);
 
     try {
+      /* PREVIOUS API CALL (Commented out as requested):
+      const token = searchParams.get("token");
       const response = await fetch("https://ultimatehealth.blog/api/admin/upload-agreement", {
         method: "POST",
         headers: {
@@ -277,16 +416,91 @@ function AdminAgreementContent() {
           signature: dataUrl,
         }),
       });
-
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "Upload failed");
+      */
 
-      showMessage("success", "✓ Agreement signed & uploaded successfully! Redirecting to your PDF...");
-      setTimeout(() => {
-        if (data.pdfUrl) window.location.href = data.pdfUrl;
-        else if (data.key) window.location.href = `https://ultimatehealth.blog/api/getFile/${data.key}`;
-        else window.location.href = "/admin/dashboard";
-      }, 2000);
+      // 1. Generate the signed agreement PDF as base64
+      const agreementPdfBase64 = generateAgreementPdfBase64(
+        fullName.trim(),
+        designation.trim(),
+        email.trim(),
+        ts
+      );
+
+      // 2. Prepare structured template message for the verification team
+      const templateMessage = `=====================================================
+ULTIMATEHEALTH - DOCTOR & MODERATOR VERIFICATION
+=====================================================
+
+APPLICANT PROFILE:
+- Full Legal Name: ${fullName.trim()}
+- Designation / Role: ${designation.trim()}
+- Official Email: ${email.trim()}
+- Submission Timestamp: ${ts}
+- Verification Status: Digitally Signed & Submitted for Review
+
+ATTACHED DOCUMENTS:
+1. ${fullName.trim().replace(/\s+/g, "_")}_Admin_Agreement.pdf
+   - Type: Digitally Signed Official Admin Agreement (Generated PDF)
+   - Content: Complete acceptance of non-diagnostic boundaries & patient confidentiality
+2. ${proofFileName || "Doctor_Working_Proof.pdf"}
+   - Type: Candidate Hospital ID / Medical License Proof (Uploaded PDF)
+
+TERMS CONFIRMATION:
+[X] Core Standards Accepted: Educational guidance only, strict non-diagnostic boundary
+[X] Professional Conduct Accepted: Objective moderation and community safety
+[X] Patient Confidentiality Accepted: No unauthorized sharing of user data
+[X] Digital Signature Stamped & Logged
+
+-----------------------------------------------------
+UltimateHealth Verification Portal - Automated Application Dispatch
+=====================================================`;
+
+      // 3. Prepare clean base64 data for the uploaded proof
+      const cleanProofBase64 = proofFileBase64.includes(",")
+        ? proofFileBase64.split(",")[1]
+        : proofFileBase64;
+
+      const attachments = [
+        {
+          filename: `${fullName.trim().replace(/\s+/g, "_")}_Admin_Agreement.pdf`,
+          contentType: "application/pdf",
+          content: agreementPdfBase64,
+          data: `data:application/pdf;base64,${agreementPdfBase64}`,
+          encoding: "base64",
+        },
+        {
+          filename: proofFileName || "Doctor_Working_Proof.pdf",
+          contentType: "application/pdf",
+          content: cleanProofBase64,
+          data: proofFileBase64,
+          encoding: "base64",
+        },
+      ];
+
+      // 4. Submit via the same API as contact us / send message
+      const response = await fetch(withBasePath("/api/contact"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: fullName.trim(),
+          email: email.trim(),
+          subject: `Doctor Verification Application: ${fullName.trim()} - ${designation.trim()}`,
+          message: templateMessage,
+          attachments,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Submission failed");
+
+      showMessage(
+        "success",
+        `✓ Application & working proof submitted successfully! Our verification team has received your signed agreement and verification documents and will contact you at ${email.trim()}.`
+      );
     } catch (err: unknown) {
       setLocked(false);
       showMessage("error", "✗ " + (err instanceof Error ? err.message : "Unknown error"), true);
@@ -505,6 +719,24 @@ function AdminAgreementContent() {
               )}
             </div>
 
+            {/* Email */}
+            <div style={css.inputGroup}>
+              <label style={css.label}>Email Address <span style={{ color: "#e53e3e" }}>*</span></label>
+              {locked ? (
+                <div style={css.lockedField}>{email}</div>
+              ) : (
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="e.g., doctor@hospital.org"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  style={css.input}
+                />
+              )}
+            </div>
+
             {/* Designation */}
             <div style={css.inputGroup}>
               <label style={css.label}>Designation/Role <span style={{ color: "#e53e3e" }}>*</span></label>
@@ -514,12 +746,73 @@ function AdminAgreementContent() {
                 <input
                   id="designation"
                   type="text"
-                  placeholder="e.g., Moderator, Content Reviewer"
+                  placeholder="e.g., Medical Officer, Clinical Specialist, Moderator"
                   required
                   value={designation}
                   onChange={(e) => setDesignation(e.target.value)}
                   style={css.input}
                 />
+              )}
+            </div>
+
+            {/* Doctor or Working Proof (PDF) */}
+            <div style={css.inputGroup}>
+              <label style={css.label}>
+                Doctor Verification / Working Proof (PDF) <span style={{ color: "#e53e3e" }}>*</span>
+              </label>
+              {locked ? (
+                <div style={css.lockedField}>
+                  📄 {proofFileName || "Doctor_Verification_Proof.pdf"}
+                </div>
+              ) : (
+                <div>
+                  {proofFileName ? (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 8 }}>
+                      <span style={{ fontSize: 13, color: "#166534", fontWeight: 500, display: "flex", alignItems: "center", gap: 6 }}>
+                        📄 {proofFileName}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={removeProof}
+                        style={{ background: "transparent", border: "none", color: "#dc2626", fontSize: 13, fontWeight: 600, cursor: "pointer", padding: "4px 8px" }}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <input
+                        id="doctorProof"
+                        type="file"
+                        accept="application/pdf,.pdf"
+                        onChange={handleProofChange}
+                        style={{ display: "none" }}
+                      />
+                      <label
+                        htmlFor="doctorProof"
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 8,
+                          padding: "10px 16px",
+                          borderRadius: 8,
+                          border: "1px dashed #6366f1",
+                          background: "#eef2ff",
+                          color: "#4338ca",
+                          fontSize: 13,
+                          fontWeight: 600,
+                          cursor: "pointer",
+                          transition: "background 0.2s",
+                        }}
+                      >
+                        📎 Upload Doctor or Hospital Working Proof (PDF, max 15MB)
+                      </label>
+                      <p style={{ margin: "6px 0 0", fontSize: 12, color: "#6b7280" }}>
+                        Upload your medical license, hospital ID card, or official working credential in PDF format.
+                      </p>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
 

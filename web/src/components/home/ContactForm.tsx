@@ -5,22 +5,18 @@ import { useState } from "react";
 import { isValidEmail } from "@/lib/site-config";
 import { withBasePath } from "@/lib/basePath";
 
-/**
- * Contact form. The surrounding "Connect With Us" section is static and stays on
- * the server; only this form is hydrated.
- *
- * Backend route needed: POST /api/contact on NEXT_PUBLIC_API_BASE_URL
- * See /contact_newsletter_guide.md for the Express route implementation
- */
+
 export default function ContactForm() {
   const [contactName, setContactName] = useState("");
   const [contactNameError, setContactNameError] = useState("");
   const [contactEmail, setContactEmail] = useState("");
+  const [contactEmailError, setContactEmailError] = useState("");
   const [contactSubject, setContactSubject] = useState("");
+  const [contactSubjectError, setContactSubjectError] = useState("");
   const [contactMessage, setContactMessage] = useState("");
+  const [contactMessageError, setContactMessageError] = useState("");
   const [contactStatus, setContactStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
-  // ── Contact name validation ──
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setContactName(value);
@@ -34,17 +30,76 @@ export default function ContactForm() {
     }
   };
 
-  // ── Contact form submit → ultimatehealth.blog API ──
+  
+  const validateEmail = (value: string): string => {
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return "Email address is required.";
+    }
+    if (!isValidEmail(trimmed)) {
+      return "Please enter a valid email address (e.g. name@example.com).";
+    }
+    return "";
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setContactEmail(value);
+    if (contactEmailError) {
+      setContactEmailError(validateEmail(value));
+    }
+  };
+
+  const handleEmailBlur = () => {
+    setContactEmailError(validateEmail(contactEmail));
+  };
+
+
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = contactName.trim();
     const trimmedEmail = contactEmail.trim();
     const trimmedSubject = contactSubject.trim();
     const trimmedMessage = contactMessage.trim();
-    if (!trimmedName || !isValidEmail(trimmedEmail) || !trimmedSubject || !trimmedMessage) {
-      alert("Please complete the form with a valid email address.");
+
+    let hasError = false;
+
+    if (!trimmedName) {
+      setContactNameError("Name is required.");
+      hasError = true;
+    } else if (/[^a-zA-Z\s\-']/.test(trimmedName)) {
+      setContactNameError("Name can only contain letters, spaces, hyphens, and apostrophes.");
+      hasError = true;
+    } else {
+      setContactNameError("");
+    }
+
+    const emailErr = validateEmail(trimmedEmail);
+    if (emailErr) {
+      setContactEmailError(emailErr);
+      hasError = true;
+    } else {
+      setContactEmailError("");
+    }
+
+    if (!trimmedSubject) {
+      setContactSubjectError("Subject is required.");
+      hasError = true;
+    } else {
+      setContactSubjectError("");
+    }
+
+    if (!trimmedMessage) {
+      setContactMessageError("Message is required.");
+      hasError = true;
+    } else {
+      setContactMessageError("");
+    }
+
+    if (hasError) {
       return;
     }
+
     setContactStatus("sending");
     try {
       const res = await fetch(withBasePath("/api/contact"), {
@@ -59,7 +114,14 @@ export default function ContactForm() {
       });
       if (!res.ok) throw new Error("Failed");
       setContactStatus("success");
-      setContactName(""); setContactEmail(""); setContactSubject(""); setContactMessage("");
+      setContactName("");
+      setContactEmail("");
+      setContactSubject("");
+      setContactMessage("");
+      setContactNameError("");
+      setContactEmailError("");
+      setContactSubjectError("");
+      setContactMessageError("");
     } catch {
       window.location.href = `mailto:ultimate.health25@gmail.com?subject=${encodeURIComponent(trimmedSubject)}&body=${encodeURIComponent(`From: ${trimmedName} (${trimmedEmail})\n\n${trimmedMessage}`)}`;
       setContactStatus("error");
@@ -80,7 +142,8 @@ export default function ContactForm() {
   }
 
   return (
-    <form className="contact-dark-form" autoComplete="off" onSubmit={handleContactSubmit}>
+    <form className="contact-dark-form" autoComplete="off" onSubmit={handleContactSubmit} noValidate>
+      {/* ── Name Field ── */}
       <div className="dark-field-group">
         <span className="dark-field-icon"><i className="fas fa-user"></i></span>
         <input
@@ -91,7 +154,8 @@ export default function ContactForm() {
           maxLength={80}
           value={contactName}
           onChange={handleNameChange}
-          aria-describedby="contact-name-error"
+          aria-describedby={contactNameError ? "contact-name-error" : undefined}
+          aria-invalid={Boolean(contactNameError)}
         />
       </div>
       {contactNameError && (
@@ -99,30 +163,81 @@ export default function ContactForm() {
           <i className="fas fa-exclamation-circle"></i> {contactNameError}
         </p>
       )}
+
+      {/* ── Email Field with Real-time & On-blur Validation ── */}
       <div className="dark-field-group">
         <span className="dark-field-icon"><i className="fas fa-envelope"></i></span>
         <input
-          type="email" className="dark-input" placeholder="Email Address *" required
+          type="email"
+          className={`dark-input${contactEmailError ? " input-error" : ""}`}
+          placeholder="Email Address *"
+          required
           maxLength={120}
-          value={contactEmail} onChange={(e) => setContactEmail(e.target.value)}
+          value={contactEmail}
+          onChange={handleEmailChange}
+          onBlur={handleEmailBlur}
+          aria-describedby={contactEmailError ? "contact-email-error" : undefined}
+          aria-invalid={Boolean(contactEmailError)}
         />
       </div>
+      {contactEmailError && (
+        <p id="contact-email-error" className="contact-error-msg" style={{ marginTop: "-8px", marginBottom: "4px" }}>
+          <i className="fas fa-exclamation-circle"></i> {contactEmailError}
+        </p>
+      )}
+
+      {/* ── Subject Field ── */}
       <div className="dark-field-group">
         <span className="dark-field-icon"><i className="fas fa-tag"></i></span>
         <input
-          type="text" className="dark-input" placeholder="Subject *" required
+          type="text"
+          className={`dark-input${contactSubjectError ? " input-error" : ""}`}
+          placeholder="Subject *"
+          required
           maxLength={120}
-          value={contactSubject} onChange={(e) => setContactSubject(e.target.value)}
+          value={contactSubject}
+          onChange={(e) => {
+            setContactSubject(e.target.value);
+            if (contactSubjectError && e.target.value.trim()) setContactSubjectError("");
+          }}
+          onBlur={() => {
+            if (!contactSubject.trim()) setContactSubjectError("Subject is required.");
+          }}
+          aria-describedby={contactSubjectError ? "contact-subject-error" : undefined}
+          aria-invalid={Boolean(contactSubjectError)}
         />
       </div>
+      {contactSubjectError && (
+        <p id="contact-subject-error" className="contact-error-msg" style={{ marginTop: "-8px", marginBottom: "4px" }}>
+          <i className="fas fa-exclamation-circle"></i> {contactSubjectError}
+        </p>
+      )}
+
+      {/* ── Message Field ── */}
       <div className="dark-field-group dark-field-textarea">
         <span className="dark-field-icon dark-field-icon-top"><i className="fas fa-comment"></i></span>
         <textarea
-          className="dark-input dark-textarea" placeholder="Your Message *" required
+          className={`dark-input dark-textarea${contactMessageError ? " input-error" : ""}`}
+          placeholder="Your Message *"
+          required
           maxLength={1500}
-          value={contactMessage} onChange={(e) => setContactMessage(e.target.value)}
+          value={contactMessage}
+          onChange={(e) => {
+            setContactMessage(e.target.value);
+            if (contactMessageError && e.target.value.trim()) setContactMessageError("");
+          }}
+          onBlur={() => {
+            if (!contactMessage.trim()) setContactMessageError("Message is required.");
+          }}
+          aria-describedby={contactMessageError ? "contact-message-error" : undefined}
+          aria-invalid={Boolean(contactMessageError)}
         ></textarea>
       </div>
+      {contactMessageError && (
+        <p id="contact-message-error" className="contact-error-msg" style={{ marginTop: "-8px", marginBottom: "4px" }}>
+          <i className="fas fa-exclamation-circle"></i> {contactMessageError}
+        </p>
+      )}
 
       {contactStatus === "error" && (
         <p className="contact-error-msg">

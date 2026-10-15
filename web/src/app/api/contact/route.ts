@@ -17,11 +17,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { name, email, subject, message } = body || {};
-    const trimmedName = String(name || "").trim().slice(0, 80);
+    const { name, email, subject, message, attachments, attachment } = body || {};
+    const trimmedName = String(name || "").trim().slice(0, 100);
     const trimmedEmail = String(email || "").trim().toLowerCase();
-    const trimmedSubject = String(subject || "").trim().slice(0, 120);
-    const trimmedMessage = String(message || "").trim().slice(0, 2000);
+    const trimmedSubject = String(subject || "").trim().slice(0, 160);
+    const trimmedMessage = String(message || "").trim();
 
     if (!trimmedName || !isValidEmail(trimmedEmail) || !trimmedSubject || !trimmedMessage) {
       return NextResponse.json(
@@ -35,20 +35,32 @@ export async function POST(req: NextRequest) {
       process.env.NEXT_PUBLIC_API_BASE_URL ||
       "https://ultimatehealth.blog";
 
+    const allAttachments = Array.isArray(attachments)
+      ? attachments
+      : attachment
+      ? [attachment]
+      : [];
+
+    const forwardPayload: Record<string, any> = {
+      name: trimmedName,
+      email: trimmedEmail,
+      subject: trimmedSubject,
+      message: trimmedMessage,
+    };
+
+    if (allAttachments.length > 0) {
+      forwardPayload.attachments = allAttachments;
+    }
+
     try {
-      // Forward to backend API server-to-server
+      // Forward to backend contact endpoint
       const res = await fetch(`${backendUrl}/api/contact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Origin: "https://ultimatehealth.blog",
         },
-        body: JSON.stringify({
-          name: trimmedName,
-          email: trimmedEmail,
-          subject: trimmedSubject,
-          message: trimmedMessage,
-        }),
+        body: JSON.stringify(forwardPayload),
       });
 
       if (res.ok) {

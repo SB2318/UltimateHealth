@@ -79,7 +79,7 @@ export default function PurposeSection() {
 
         {/* ── Featured Memorial & Vision Card: Dr. Moumita Debnath ── */}
         <div
-          className="scroll-reveal uh-memorial-card bg-rose-50/70 dark:bg-gradient-to-br dark:from-[#151526] dark:to-[#11111e]"
+          className="scroll-reveal uh-memorial-card transition-colors"
           style={{
             border: '1px solid rgba(244, 63, 94, 0.35)',
             borderRadius: '16px',

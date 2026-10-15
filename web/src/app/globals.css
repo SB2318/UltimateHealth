@@ -3618,9 +3618,15 @@ h3 { color: #ffffff !important; }
 /* ── Section Differentiators ───────────────────────────────────── */
 
 .uh-section-alt {
+  background: #f8fafc !important;
+}
+html.dark .uh-section-alt {
   background: #0f0f1c !important;
 }
 .uh-section-deep {
+  background: #f1f5f9 !important;
+}
+html.dark .uh-section-deep {
   background: #080811 !important;
 }
 
@@ -3895,6 +3901,11 @@ h3 { color: #ffffff !important; }
  * to make it feel more like a document/record than a UI card.
  */
 .uh-memorial-card {
+  background: linear-gradient(135deg, #fff5f7 0%, #ffffff 100%) !important;
+  border: 1px solid rgba(244, 63, 94, 0.28) !important;
+  box-shadow: 0 10px 30px rgba(244, 63, 94, 0.08) !important;
+}
+html.dark .uh-memorial-card {
   background: linear-gradient(135deg, #0f0f20 0%, #0c0c1a 100%) !important;
   border: 1px solid rgba(240, 0, 106, 0.3) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 

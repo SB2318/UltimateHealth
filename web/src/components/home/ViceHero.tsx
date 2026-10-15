@@ -117,11 +117,11 @@ export default function Hero() {
           animation: 'hero-cta-in 0.6s cubic-bezier(0.22,1,0.36,1) both',
           animationDelay: '0.68s',
         }}>
-          {/* Primary CTA */}
+          {/* Primary CTA (Explore Platform - hidden) */}
           <button
             onClick={triggerTour}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
+              display: 'none', alignItems: 'center', gap: '8px',
               padding: '13px 28px', borderRadius: '10px',
               background: '#0d9488', color: '#ffffff',
               fontWeight: 700, fontSize: '0.875rem',
@@ -156,10 +156,11 @@ export default function Hero() {
             {tHero('readArticles')}
           </Link>
 
-          {/* Ghost CTA */}
+          {/* Ghost CTA: Android Apps on Google Play */}
           <a
-            href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
+            href="https://play.google.com/store/apps/developer?id=Susmita+Bhattacharya"
             target="_blank" rel="noopener noreferrer"
+            title="Android Apps by Susmita Bhattacharya on Google Play"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '13px 20px', borderRadius: '10px',
