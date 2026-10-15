@@ -39,8 +39,8 @@ export default function ArticleHero({
       {/* ── Title ── */}
       <h1
         id="article-hero-title"
-        style={{ color: "#f8fafc" }}
-        className="text-3xl sm:text-4xl lg:text-5xl font-extrabold !text-white leading-[1.2] tracking-tight mb-6 mx-auto text-center"
+        style={{ color: "var(--site-heading, #0f172a)" }}
+        className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white leading-[1.2] tracking-tight mb-6 mx-auto text-center"
       >
         {article.title}
       </h1>
@@ -48,8 +48,8 @@ export default function ArticleHero({
       {/* ── Subtitle (Centered) ── */}
       {article.subtitle && (
         <p
-          style={{ color: "#94a3b8" }}
-          className="text-lg sm:text-xl !text-slate-400 leading-relaxed mb-6 font-light max-w-[720px] mx-auto text-center"
+          style={{ color: "var(--vice-muted, #475569)" }}
+          className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed mb-6 font-light max-w-[720px] mx-auto text-center"
         >
           {article.subtitle}
         </p>
@@ -76,7 +76,7 @@ export default function ArticleHero({
       {/* ── Hero banner image (full column width, rounded) ── */}
       <div
         style={{ marginBottom: "36px" }}
-        className="relative overflow-hidden bg-[#13131f] aspect-[16/9] md:aspect-[21/9] max-h-[460px] border border-[#252538] rounded-2xl shadow-2xl"
+        className="relative overflow-hidden bg-slate-100 dark:bg-[#13131f] aspect-[16/9] md:aspect-[21/9] max-h-[460px] border border-slate-200 dark:border-[#252538] rounded-2xl shadow-xl dark:shadow-2xl"
       >
         {article.imageUrl ? (
           <img
@@ -87,7 +87,7 @@ export default function ArticleHero({
         ) : (
           /* Gradient placeholder when no hero image is provided */
           <div
-            className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-teal-950/40 to-slate-900"
+            className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-teal-50 to-slate-100 dark:from-teal-950/40 dark:to-slate-900"
             aria-hidden="true"
           >
             <span className="text-6xl opacity-40">❤️</span>
@@ -114,13 +114,13 @@ export default function ArticleHero({
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: "0.08em",
-                background: "rgba(124, 58, 237, 0.15)",
-                color: "#c084fc",
-                border: "1px solid rgba(124, 58, 237, 0.35)",
-                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.25)",
+                background: "rgba(13, 148, 136, 0.1)",
+                color: "#0d9488",
+                border: "1px solid rgba(13, 148, 136, 0.3)",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
                 transition: "all 0.15s ease",
               }}
-              className="hover:scale-[1.03] hover:bg-violet-900/30 transition-all cursor-default select-none"
+              className="hover:scale-[1.03] transition-all cursor-default select-none"
             >
               <span style={{ opacity: 0.6, fontWeight: 700 }}>#</span>
               <span>{tag}</span>
@@ -131,7 +131,7 @@ export default function ArticleHero({
 
       {/* Visual separator */}
       <div
-        className="mt-6 mb-12 h-px bg-[#252538] mx-auto"
+        className="mt-6 mb-12 h-px bg-slate-200 dark:bg-[#252538] mx-auto"
         aria-hidden="true"
       />
     </header>

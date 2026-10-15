@@ -16,19 +16,19 @@ export default function PurposeSection() {
       icon: Heart,
       title: t('pillar1Title'),
       body: t('pillar1Body'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
     {
       icon: Scale,
       title: t('pillar2Title'),
       body: t('pillar2Body'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
     {
       icon: Sparkles,
       title: t('pillar3Title'),
       body: t('pillar3Body'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
   ];
 
@@ -37,7 +37,7 @@ export default function PurposeSection() {
       id="purpose"
       className="uh-section-alt"
       style={{
-        borderTop: '1px solid #252538',
+        borderTop: '1px solid var(--explorer-border, #e2e8f0)',
         padding: '96px 24px',
       }}
     >
@@ -46,7 +46,7 @@ export default function PurposeSection() {
         <p
           className="scroll-reveal uh-section-label"
           style={{
-            color: '#2dd4bf',
+            color: '#0d9488',
             marginBottom: '16px',
           }}
         >
@@ -59,7 +59,7 @@ export default function PurposeSection() {
             className="uh-display"
             style={{
               fontSize: 'clamp(1.875rem, 4.5vw, 2.75rem)',
-              color: '#f1f5f9',
+              color: 'var(--site-heading, #0f172a)',
               margin: '0 0 16px 0',
             }}
           >
@@ -69,7 +69,7 @@ export default function PurposeSection() {
             style={{
               fontSize: '1rem',
               lineHeight: 1.65,
-              color: '#64748b',
+              color: 'var(--vice-muted, #475569)',
               margin: 0,
             }}
           >
@@ -79,10 +79,9 @@ export default function PurposeSection() {
 
         {/* ── Featured Memorial & Vision Card: Dr. Moumita Debnath ── */}
         <div
-          className="scroll-reveal uh-memorial-card"
+          className="scroll-reveal uh-memorial-card bg-rose-50/70 dark:bg-gradient-to-br dark:from-[#151526] dark:to-[#11111e]"
           style={{
-            background: 'linear-gradient(135deg, #151526 0%, #11111e 100%)',
-            border: '1px solid rgba(240, 0, 106, 0.35)',
+            border: '1px solid rgba(244, 63, 94, 0.35)',
             borderRadius: '16px',
             padding: '28px',
             marginBottom: '48px',
@@ -91,7 +90,7 @@ export default function PurposeSection() {
             gap: '24px',
             alignItems: 'center',
             flexWrap: 'wrap',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
+            boxShadow: '0 10px 30px rgba(244,63,94,0.08)',
           }}
         >
           {/* Her Picture */}
@@ -104,7 +103,7 @@ export default function PurposeSection() {
               overflow: 'hidden',
               border: '2px solid rgba(240, 0, 106, 0.4)',
               flexShrink: 0,
-              boxShadow: '0 4px 16px rgba(0,0,0,0.6)',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
             }}
           >
             <Image
@@ -126,7 +125,7 @@ export default function PurposeSection() {
                   fontWeight: 700,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: '#f43f5e',
+                  color: '#e11d48',
                   background: 'rgba(244,63,94,0.12)',
                   border: '1px solid rgba(244,63,94,0.3)',
                   padding: '3px 8px',
@@ -135,7 +134,7 @@ export default function PurposeSection() {
               >
                 {t('moumitaBadge')}
               </span>
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--explorer-text-secondary, #64748b)' }}>
                 {t('moumitaDept')}
               </span>
             </div>
@@ -144,7 +143,7 @@ export default function PurposeSection() {
               style={{
                 fontSize: '1.2rem',
                 fontWeight: 700,
-                color: '#f8fafc',
+                color: 'var(--site-heading, #0f172a)',
                 margin: '0 0 6px 0',
               }}
             >
@@ -155,7 +154,7 @@ export default function PurposeSection() {
               style={{
                 fontSize: '0.925rem',
                 lineHeight: 1.6,
-                color: '#cbd5e1',
+                color: 'var(--explorer-text-secondary, #475569)',
                 margin: '0 0 14px 0',
                 fontStyle: 'italic',
               }}
@@ -169,9 +168,9 @@ export default function PurposeSection() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                background: 'rgba(244,63,94,0.15)',
+                background: 'rgba(244,63,94,0.12)',
                 border: '1px solid rgba(244,63,94,0.35)',
-                color: '#f43f5e',
+                color: '#e11d48',
                 padding: '8px 16px',
                 borderRadius: '8px',
                 fontSize: '0.8125rem',
@@ -180,12 +179,12 @@ export default function PurposeSection() {
                 transition: 'all 0.15s ease',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = '#f43f5e';
-                (e.currentTarget as HTMLElement).style.color = '#0d1117';
+                (e.currentTarget as HTMLElement).style.background = '#e11d48';
+                (e.currentTarget as HTMLElement).style.color = '#ffffff';
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = 'rgba(244,63,94,0.15)';
-                (e.currentTarget as HTMLElement).style.color = '#f43f5e';
+                (e.currentTarget as HTMLElement).style.background = 'rgba(244,63,94,0.12)';
+                (e.currentTarget as HTMLElement).style.color = '#e11d48';
               }}
             >
               <BookOpen style={{ width: 14, height: 14 }} />
@@ -193,9 +192,9 @@ export default function PurposeSection() {
               <ArrowRight style={{ width: 14, height: 14 }} />
             </button>
             
-            <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-              <p style={{ fontSize: '0.78125rem', color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
-                <strong style={{ color: '#cbd5e1' }}>Memorial &amp; Removal Notice:</strong> UltimateHealth is an independent, non-commercial open-source tribute. If family members or authorized representatives wish for any dedication, name, or photo to be modified or removed, please contact <a href="mailto:ultimate.health25@gmail.com" style={{ color: '#2dd4bf', textDecoration: 'underline' }}>ultimate.health25@gmail.com</a> and it will be updated or removed immediately without condition.
+            <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid var(--explorer-border, rgba(0,0,0,0.06))' }}>
+              <p style={{ fontSize: '0.78125rem', color: 'var(--explorer-text-muted, #64748b)', margin: 0, lineHeight: 1.5 }}>
+                <strong style={{ color: 'var(--site-heading, #0f172a)' }}>Memorial &amp; Removal Notice:</strong> UltimateHealth is an independent, non-commercial open-source tribute. If family members or authorized representatives wish for any dedication, name, or photo to be modified or removed, please contact <a href="mailto:ultimate.health25@gmail.com" style={{ color: '#0d9488', textDecoration: 'underline' }}>ultimate.health25@gmail.com</a> and it will be updated or removed immediately without condition.
               </p>
             </div>
           </div>
@@ -206,7 +205,7 @@ export default function PurposeSection() {
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            border: '1px solid #252538',
+            border: '1px solid var(--explorer-border, #e2e8f0)',
             borderRadius: '16px',
             overflow: 'hidden',
           }}
@@ -218,18 +217,12 @@ export default function PurposeSection() {
                 key={i}
                 style={{
                   padding: '32px',
-                  borderLeft: i > 0 ? '1px solid #252538' : 'none',
-                  background: '#13131f',
+                  borderLeft: i > 0 ? '1px solid var(--explorer-border, #e2e8f0)' : 'none',
+                  background: 'var(--explorer-surface, #ffffff)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '16px',
                   transition: 'background 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = '#1a1a2e';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.background = '#13131f';
                 }}
               >
                 {/* Icon box */}
@@ -241,7 +234,7 @@ export default function PurposeSection() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    background: `${p.accent}12`,
+                    background: `${p.accent}14`,
                     border: `1px solid ${p.accent}30`,
                     flexShrink: 0,
                   }}
@@ -253,7 +246,7 @@ export default function PurposeSection() {
                   style={{
                     fontSize: '1rem',
                     fontWeight: 700,
-                    color: '#f1f5f9',
+                    color: 'var(--site-heading, #0f172a)',
                     margin: 0,
                     letterSpacing: '-0.01em',
                   }}
@@ -265,7 +258,7 @@ export default function PurposeSection() {
                   style={{
                     fontSize: '0.875rem',
                     lineHeight: 1.65,
-                    color: '#64748b',
+                    color: 'var(--explorer-text-secondary, #475569)',
                     margin: 0,
                   }}
                 >

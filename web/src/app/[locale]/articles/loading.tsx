@@ -2,46 +2,50 @@
  * Streaming skeleton for the /articles route.
  * Shown instantly when navigating to this page while the server
  * fetches article data — eliminates blank-screen wait.
+ * Fully theme-adaptive (Light mode default, Dark mode supported).
  */
 export default function ArticlesLoading() {
   return (
-    <div style={{ minHeight: "100vh", background: "#0c0c14", color: "#f1f5f9" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "var(--explorer-bg, #f8fafc)",
+        color: "var(--explorer-text-primary, #0f172a)",
+      }}
+    >
       {/* Hero skeleton */}
       <div
         style={{
           padding: "80px 24px 48px",
           textAlign: "center",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          borderBottom: "1px solid var(--explorer-border, #e2e8f0)",
         }}
       >
         <div
+          className="skeleton-bar"
           style={{
             width: 120,
             height: 20,
             borderRadius: 8,
-            background: "rgba(255,255,255,0.08)",
             margin: "0 auto 16px",
-            animation: "skeleton-pulse 1.4s ease-in-out infinite",
           }}
         />
         <div
+          className="skeleton-bar"
           style={{
             width: 280,
             height: 36,
             borderRadius: 10,
-            background: "rgba(255,255,255,0.10)",
             margin: "0 auto 12px",
-            animation: "skeleton-pulse 1.4s ease-in-out infinite",
           }}
         />
         <div
+          className="skeleton-bar"
           style={{
             width: 220,
             height: 16,
             borderRadius: 6,
-            background: "rgba(255,255,255,0.06)",
             margin: "0 auto",
-            animation: "skeleton-pulse 1.4s ease-in-out infinite",
           }}
         />
       </div>
@@ -61,48 +65,46 @@ export default function ArticlesLoading() {
           <div
             key={i}
             style={{
-              background: "#13131f",
-              border: "1px solid #252538",
+              background: "var(--explorer-surface, #ffffff)",
+              border: "1px solid var(--explorer-border, #e2e8f0)",
               borderRadius: 16,
               overflow: "hidden",
+              boxShadow: "var(--explorer-card-shadow, 0 4px 16px rgba(0,0,0,0.04))",
             }}
           >
             {/* Thumbnail */}
             <div
+              className="skeleton-bar"
               style={{
                 aspectRatio: "16/9",
-                background: "rgba(255,255,255,0.05)",
-                animation: "skeleton-pulse 1.4s ease-in-out infinite",
+                borderRadius: 0,
               }}
             />
             {/* Text lines */}
             <div style={{ padding: "20px 20px 24px" }}>
               <div
+                className="skeleton-bar"
                 style={{
                   height: 20,
                   borderRadius: 6,
-                  background: "rgba(255,255,255,0.08)",
                   marginBottom: 10,
-                  animation: "skeleton-pulse 1.4s ease-in-out infinite",
                 }}
               />
               <div
+                className="skeleton-bar"
                 style={{
                   height: 14,
                   width: "80%",
                   borderRadius: 6,
-                  background: "rgba(255,255,255,0.05)",
                   marginBottom: 8,
-                  animation: "skeleton-pulse 1.4s ease-in-out infinite",
                 }}
               />
               <div
+                className="skeleton-bar"
                 style={{
                   height: 14,
                   width: "60%",
                   borderRadius: 6,
-                  background: "rgba(255,255,255,0.04)",
-                  animation: "skeleton-pulse 1.4s ease-in-out infinite",
                 }}
               />
             </div>
@@ -111,6 +113,13 @@ export default function ArticlesLoading() {
       </div>
 
       <style>{`
+        .skeleton-bar {
+          background: rgba(0, 0, 0, 0.06);
+          animation: skeleton-pulse 1.4s ease-in-out infinite;
+        }
+        html.dark .skeleton-bar {
+          background: rgba(255, 255, 255, 0.08);
+        }
         @keyframes skeleton-pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.4; }

@@ -41,6 +41,7 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "@swc/wasm": "^1.16.18",
     "@tailwindcss/postcss": "^4",
     "@types/d3-color": "^3.1.3",
     "@types/estree": "^1.0.9",
@@ -53,10 +54,18 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@swc/core",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
   "allowScripts": {
     "sharp@0.34.5": true,
     "@parcel/watcher@2.6.0": true,
-    "@swc/core@1.15.47": true,
+    "@swc/core@1.16.18": true,
     "unrs-resolver@1.12.2": true
   }
 }

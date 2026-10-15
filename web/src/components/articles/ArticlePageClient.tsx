@@ -19,6 +19,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { useArticleSpeech } from "@/hooks/use-article-speech";
 import ListenTriggerButton from "./listen/ListenTriggerButton";
 import ArticleAudioPlayer from "./listen/ArticleAudioPlayer";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const FONT_SIZE_MAP: Record<FontSize, { size: number; lineHeight: number; title: string }> = {
   sm: { size: 15, lineHeight: 1.7, title: "Small text (15px)" },
@@ -201,7 +202,7 @@ export default function ArticlePageClient({
       <ReadingProgressBar />
 
       <div
-        className="min-h-screen w-full bg-[#0c0c14] text-[#f1f5f9] flex flex-col"
+        className="min-h-screen w-full bg-[#f8fafc] dark:bg-[#0c0c14] text-slate-800 dark:text-[#f1f5f9] flex flex-col transition-colors duration-150"
         style={
           {
             "--article-sticky-header-height": `${ARTICLE_STICKY_HEADER_HEIGHT_PX}px`,
@@ -209,18 +210,18 @@ export default function ArticlePageClient({
         }
       >
         {/* ── Sticky top navigation bar ── */}
-        <div className="sticky top-0 z-50 w-full bg-[#0c0c14]/95 backdrop-blur-md border-b border-[#252538] print:hidden shadow-lg shadow-black/40">
+        <div className="sticky top-0 z-50 w-full bg-white/95 dark:bg-[#0c0c14]/95 backdrop-blur-md border-b border-slate-200 dark:border-[#252538] print:hidden shadow-sm dark:shadow-lg dark:shadow-black/40">
           <div className="relative w-full max-w-[880px] mx-auto px-6 sm:px-8 lg:px-10 h-16 flex items-center justify-between gap-4">
             {/* ← Back to articles button with generous padding and bold clear icon */}
             <Link
               href={articlesUrl}
-              className="inline-flex items-center gap-2.5 pl-3.5 pr-4 py-2 rounded-xl text-sm font-semibold text-slate-200 hover:text-white bg-[#141424] hover:bg-[#1e1e36] border border-[#2a2a44] hover:border-[#3e3e62] transition-all duration-150 group shrink-0 z-10 shadow-sm"
+              className="inline-flex items-center gap-2.5 pl-3.5 pr-4 py-2 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#141424] hover:bg-slate-200 dark:hover:bg-[#1e1e36] border border-slate-200 dark:border-[#2a2a44] hover:border-slate-300 dark:hover:border-[#3e3e62] transition-all duration-150 group shrink-0 z-10 shadow-sm"
               aria-label="Back to all articles"
             >
               <ArrowLeft
                 size={18}
                 strokeWidth={2.5}
-                className="text-[#2dd4bf] transition-transform duration-150 group-hover:-translate-x-1"
+                className="text-[#0d9488] dark:text-[#2dd4bf] transition-transform duration-150 group-hover:-translate-x-1"
                 aria-hidden="true"
               />
               <span className="tracking-wide font-medium">Articles</span>
@@ -229,13 +230,13 @@ export default function ArticlePageClient({
             {/* Middle: Category indicator (at top) or Article Title (when scrolled) */}
             <div className="absolute left-1/2 -translate-x-1/2 max-w-[45%] sm:max-w-[55%] flex items-center justify-center pointer-events-none select-none">
               {heroVisible ? (
-                <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium text-slate-400 bg-[#141422] border border-[#28283e] transition-all duration-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#2dd4bf] animate-pulse" />
+                <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-[#141422] border border-slate-200 dark:border-[#28283e] transition-all duration-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0d9488] dark:bg-[#2dd4bf] animate-pulse" />
                   <span className="truncate">{article.category || "Health Guide"}</span>
                 </div>
               ) : (
                 <p
-                  className="text-xs sm:text-sm font-semibold text-[#f1f5f9] truncate text-center transition-all duration-300 drop-shadow-sm"
+                  className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-[#f1f5f9] truncate text-center transition-all duration-300 drop-shadow-sm"
                   title={article.title}
                 >
                   {article.title}
@@ -243,7 +244,7 @@ export default function ArticlePageClient({
               )}
             </div>
 
-            {/* Right-side tools: Listen + Font size toggle + Share button */}
+            {/* Right-side tools: Listen + Font size toggle + Share button + Theme toggle */}
             <div className="flex items-center gap-2 shrink-0 z-10">
               {/* Listen to Article (Quick Header Pill) */}
               <ListenTriggerButton
@@ -255,7 +256,7 @@ export default function ArticlePageClient({
 
               {/* Font size segmented switcher */}
               <div
-                className="flex items-center bg-[#141422] border border-[#28283e] rounded-lg p-0.5"
+                className="flex items-center bg-slate-100 dark:bg-[#141422] border border-slate-200 dark:border-[#28283e] rounded-lg p-0.5"
                 role="group"
                 aria-label="Adjust text size"
               >
@@ -274,8 +275,8 @@ export default function ArticlePageClient({
                         "w-7 h-7 rounded-md flex items-center justify-center font-bold transition-all duration-150 cursor-pointer",
                         ["text-xs", "text-sm", "text-base"][i],
                         isCurrent
-                          ? "bg-[#2dd4bf]/20 border border-[#2dd4bf]/60 text-[#2dd4bf] shadow-sm"
-                          : "border border-transparent text-slate-400 hover:text-slate-200 hover:bg-[#1f1f33]",
+                          ? "bg-[#0d9488]/15 border border-[#0d9488]/50 text-[#0d9488] dark:bg-[#2dd4bf]/20 dark:border-[#2dd4bf]/60 dark:text-[#2dd4bf] shadow-sm"
+                          : "border border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-[#1f1f33]",
                       ].join(" ")}
                     >
                       A
@@ -290,20 +291,23 @@ export default function ArticlePageClient({
                 onClick={handleShare}
                 aria-label="Share article"
                 title={copied ? "Link copied to clipboard!" : "Share article"}
-                className="h-8 px-2.5 rounded-lg flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-[#141422] hover:bg-[#1f1f33] border border-[#28283e] hover:border-[#3e3e5c] transition-all duration-150 cursor-pointer"
+                className="h-8 px-2.5 rounded-lg flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#141422] hover:bg-slate-200 dark:hover:bg-[#1f1f33] border border-slate-200 dark:border-[#28283e] hover:border-slate-300 dark:hover:border-[#3e3e5c] transition-all duration-150 cursor-pointer"
               >
                 {copied ? (
                   <>
-                    <Check size={13} className="text-[#2dd4bf]" />
-                    <span className="text-[#2dd4bf] font-bold">Copied</span>
+                    <Check size={13} className="text-[#0d9488] dark:text-[#2dd4bf]" />
+                    <span className="text-[#0d9488] dark:text-[#2dd4bf] font-bold">Copied</span>
                   </>
                 ) : (
                   <>
-                    <Share2 size={13} className="text-slate-400" />
+                    <Share2 size={13} className="text-slate-500 dark:text-slate-400" />
                     <span className="hidden sm:inline">Share</span>
                   </>
                 )}
               </button>
+
+              {/* Dark/Light mode toggle */}
+              <ModeToggle />
             </div>
           </div>
         </div>
@@ -401,7 +405,7 @@ function ArticleFooter({ article }: { article: Article }) {
         marginTop: "72px",
         marginBottom: "36px",
         paddingTop: "40px",
-        borderTop: "1px solid #252538",
+        borderTop: "1px solid var(--explorer-border, #e2e8f0)",
         width: "100%",
       }}
     >
@@ -411,13 +415,13 @@ function ArticleFooter({ article }: { article: Article }) {
           marginTop: "24px",
           marginBottom: "40px",
           padding: "28px 24px",
-          background: "#13131f",
-          border: "1px solid #252538",
+          background: "var(--author-card-bg, #ffffff)",
+          border: "1px solid var(--author-card-border, #e2e8f0)",
           borderRadius: "16px",
           display: "flex",
           alignItems: "flex-start",
           gap: "18px",
-          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.35)",
+          boxShadow: "var(--explorer-card-shadow, 0 4px 20px rgba(0, 0, 0, 0.05))",
         }}
       >
         <div
@@ -433,7 +437,7 @@ function ArticleFooter({ article }: { article: Article }) {
             fontWeight: 700,
             flexShrink: 0,
             background: article.author.avatarColor,
-            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}
           aria-hidden="true"
         >
@@ -447,7 +451,7 @@ function ArticleFooter({ article }: { article: Article }) {
               fontWeight: 800,
               textTransform: "uppercase",
               letterSpacing: "0.12em",
-              color: "#2dd4bf",
+              color: "#0d9488",
             }}
           >
             About the Author
@@ -457,7 +461,7 @@ function ArticleFooter({ article }: { article: Article }) {
               margin: "0 0 4px 0",
               fontSize: "1.25rem",
               fontWeight: 700,
-              color: "#f8fafc",
+              color: "var(--author-name-color, #0f172a)",
               lineHeight: 1.25,
             }}
           >
@@ -467,7 +471,7 @@ function ArticleFooter({ article }: { article: Article }) {
             style={{
               margin: "0 0 12px 0",
               fontSize: "0.85rem",
-              color: "#94a3b8",
+              color: "var(--vice-muted, #64748b)",
               fontWeight: 500,
             }}
           >
@@ -477,7 +481,7 @@ function ArticleFooter({ article }: { article: Article }) {
             style={{
               margin: 0,
               fontSize: "0.92rem",
-              color: "#cbd5e1",
+              color: "var(--author-bio-color, #475569)",
               lineHeight: 1.7,
             }}
           >
@@ -494,7 +498,7 @@ function ArticleFooter({ article }: { article: Article }) {
           marginBottom: "24px",
           paddingTop: "28px",
           paddingBottom: "16px",
-          borderTop: "1px solid #252538",
+          borderTop: "1px solid var(--explorer-border, #e2e8f0)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -510,14 +514,14 @@ function ArticleFooter({ article }: { article: Article }) {
             alignItems: "center",
             gap: "10px",
             padding: "10px 20px",
-            background: "#141424",
-            border: "1px solid #2a2a44",
+            background: "var(--btn-bg, #ffffff)",
+            border: "1px solid var(--btn-border, #e2e8f0)",
             borderRadius: "12px",
-            color: "#2dd4bf",
+            color: "#0d9488",
             fontSize: "0.875rem",
             fontWeight: 700,
             textDecoration: "none",
-            boxShadow: "0 4px 14px rgba(0, 0, 0, 0.25)",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
             transition: "all 0.15s ease",
           }}
           aria-label="Back to all articles"
@@ -525,7 +529,7 @@ function ArticleFooter({ article }: { article: Article }) {
           <ArrowLeft
             size={16}
             strokeWidth={2.4}
-            style={{ color: "#2dd4bf" }}
+            style={{ color: "#0d9488" }}
             aria-hidden="true"
           />
           <span>Back to all articles</span>
@@ -538,19 +542,19 @@ function ArticleFooter({ article }: { article: Article }) {
             alignItems: "center",
             gap: "8px",
             padding: "9px 18px",
-            background: "#141424",
-            border: "1px solid #28283e",
+            background: "var(--btn-bg, #ffffff)",
+            border: "1px solid var(--btn-border, #e2e8f0)",
             borderRadius: "10px",
-            color: "#94a3b8",
+            color: "var(--explorer-text-muted, #64748b)",
             fontSize: "0.8rem",
             fontWeight: 600,
             cursor: "pointer",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
             transition: "all 0.15s ease",
           }}
         >
           <span>Back to top</span>
-          <ArrowUp size={14} style={{ color: "#2dd4bf" }} aria-hidden="true" />
+          <ArrowUp size={14} style={{ color: "#0d9488" }} aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -574,8 +578,8 @@ function ArticlePageFooter() {
     <footer
       style={{
         width: "100%",
-        background: "#08080f",
-        borderTop: "1px solid #252538",
+        background: "var(--footer-bg, #f8fafc)",
+        borderTop: "1px solid var(--footer-border, #e2e8f0)",
         padding: "36px 0 54px",
       }}
     >
@@ -599,27 +603,27 @@ function ArticlePageFooter() {
             flexWrap: "wrap",
             gap: "8px",
             fontSize: "0.85rem",
-            color: "#64748b",
+            color: "var(--explorer-text-muted, #64748b)",
           }}
         >
           <Link
             href={homeUrl}
             style={{
               fontWeight: 700,
-              color: "#e2e8f0",
+              color: "var(--site-heading, #0f172a)",
               textDecoration: "none",
               transition: "color 0.15s ease",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#2dd4bf";
+              (e.currentTarget as HTMLElement).style.color = "#0d9488";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#e2e8f0";
+              (e.currentTarget as HTMLElement).style.color = "var(--site-heading, #0f172a)";
             }}
           >
             UltimateHealth
           </Link>
-          <span style={{ color: "#3d4f63" }}>—</span>
+          <span style={{ color: "#94a3b8" }}>—</span>
           <span>Open-source health knowledge for everyone</span>
         </div>
 
@@ -636,48 +640,48 @@ function ArticlePageFooter() {
         >
           <Link
             href={articlesUrl}
-            style={{ color: "#94a3b8", textDecoration: "none", transition: "color 0.15s ease" }}
+            style={{ color: "var(--explorer-text-muted, #64748b)", textDecoration: "none", transition: "color 0.15s ease" }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#2dd4bf";
+              (e.currentTarget as HTMLElement).style.color = "#0d9488";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+              (e.currentTarget as HTMLElement).style.color = "var(--explorer-text-muted, #64748b)";
             }}
           >
             All Articles
           </Link>
           <Link
             href={glossaryUrl}
-            style={{ color: "#94a3b8", textDecoration: "none", transition: "color 0.15s ease" }}
+            style={{ color: "var(--explorer-text-muted, #64748b)", textDecoration: "none", transition: "color 0.15s ease" }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#2dd4bf";
+              (e.currentTarget as HTMLElement).style.color = "#0d9488";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+              (e.currentTarget as HTMLElement).style.color = "var(--explorer-text-muted, #64748b)";
             }}
           >
             Medical Glossary
           </Link>
           <Link
             href={contributeUrl}
-            style={{ color: "#94a3b8", textDecoration: "none", transition: "color 0.15s ease" }}
+            style={{ color: "var(--explorer-text-muted, #64748b)", textDecoration: "none", transition: "color 0.15s ease" }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#2dd4bf";
+              (e.currentTarget as HTMLElement).style.color = "#0d9488";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+              (e.currentTarget as HTMLElement).style.color = "var(--explorer-text-muted, #64748b)";
             }}
           >
             Contribute
           </Link>
           <Link
             href={homeUrl}
-            style={{ color: "#94a3b8", textDecoration: "none", transition: "color 0.15s ease" }}
+            style={{ color: "var(--explorer-text-muted, #64748b)", textDecoration: "none", transition: "color 0.15s ease" }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#2dd4bf";
+              (e.currentTarget as HTMLElement).style.color = "#0d9488";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+              (e.currentTarget as HTMLElement).style.color = "var(--explorer-text-muted, #64748b)";
             }}
           >
             Home

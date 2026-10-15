@@ -38,9 +38,9 @@ function formatDate(iso: string): string {
 function MoumitaSpotlightCard() {
   return (
     <div
+      className="bg-rose-50/80 dark:bg-gradient-to-br dark:from-[#120e1e] dark:via-[#0f1623] dark:to-[#130d1a]"
       style={{
         gridColumn: "1 / -1",
-        background: "linear-gradient(135deg, #120e1e 0%, #0f1623 60%, #130d1a 100%)",
         border: "1px solid rgba(244,63,94,0.30)",
         borderRadius: "20px",
         overflow: "hidden",
@@ -85,7 +85,7 @@ function MoumitaSpotlightCard() {
               fontWeight: 700,
               letterSpacing: "0.1em",
               textTransform: "uppercase",
-              color: "#f43f5e",
+              color: "#e11d48",
               background: "rgba(244,63,94,0.12)",
               border: "1px solid rgba(244,63,94,0.3)",
               padding: "3px 10px",
@@ -98,7 +98,7 @@ function MoumitaSpotlightCard() {
             style={{
               fontSize: "0.6875rem",
               fontWeight: 600,
-              color: "#64748b",
+              color: "var(--explorer-text-secondary, #64748b)",
               letterSpacing: "0.04em",
             }}
           >
@@ -110,7 +110,7 @@ function MoumitaSpotlightCard() {
           style={{
             fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)",
             fontWeight: 800,
-            color: "#f8fafc",
+            color: "var(--site-heading, #0f172a)",
             margin: 0,
             lineHeight: 1.3,
             letterSpacing: "-0.02em",
@@ -123,13 +123,13 @@ function MoumitaSpotlightCard() {
           style={{
             fontSize: "0.9375rem",
             lineHeight: 1.7,
-            color: "#94a3b8",
+            color: "var(--explorer-text-secondary, #475569)",
             margin: 0,
             maxWidth: "520px",
           }}
         >
           Published in honour of her memory and clinical commitment to patient dignity.
-          Her dedicated <strong style={{ color: "#f8fafc" }}>30 clinical research &amp; chest medicine guides</strong> are currently being curated and will be released separately. In the meantime, explore our general admin-reviewed community health library below.
+          Her dedicated <strong style={{ color: "var(--site-heading, #0f172a)" }}>30 clinical research &amp; chest medicine guides</strong> are currently being curated and will be released separately. In the meantime, explore our general admin-reviewed community health library below.
         </p>
 
         <Link
@@ -138,7 +138,7 @@ function MoumitaSpotlightCard() {
             display: "inline-flex",
             alignItems: "center",
             gap: "8px",
-            color: "#f43f5e",
+            color: "#e11d48",
             fontSize: "0.875rem",
             fontWeight: 700,
             textDecoration: "none",
@@ -170,14 +170,14 @@ function MoumitaSpotlightCard() {
           style={{
             fontSize: "1rem",
             lineHeight: 1.7,
-            color: "#cbd5e1",
+            color: "var(--explorer-text-secondary, #475569)",
             fontStyle: "italic",
             margin: 0,
           }}
         >
           &ldquo;Because you cannot heal a person you do not respect.&rdquo;
         </p>
-        <p style={{ fontSize: "0.75rem", color: "#f43f5e", fontWeight: 600, margin: 0 }}>
+        <p style={{ fontSize: "0.75rem", color: "#e11d48", fontWeight: 600, margin: 0 }}>
           — Vision &amp; Dedication
         </p>
       </div>
@@ -199,16 +199,17 @@ function ArticlePreviewCard({ article }: { article: ApiArticle }) {
     <Link
       href={`/articles/${article._id}`}
       style={{
-        background: "#0f111a",
-        border: "1px solid rgba(255,255,255,0.06)",
+        background: "var(--explorer-surface, #ffffff)",
+        border: "1px solid var(--explorer-border, #e2e8f0)",
         borderRadius: "16px",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
         textDecoration: "none",
         transition: "border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease",
+        boxShadow: "var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))",
       }}
-      className="group hover:-translate-y-1 hover:border-[#2dd4bf] hover:shadow-[0_8px_32px_rgba(45,212,191,0.08)]"
+      className="group hover:-translate-y-1 hover:border-[#0d9488] hover:shadow-[0_8px_32px_rgba(13,148,136,0.12)]"
     >
       {/* Thumbnail */}
       {thumb ? (
@@ -224,14 +225,14 @@ function ArticlePreviewCard({ article }: { article: ApiArticle }) {
           style={{
             width: "100%",
             height: "180px",
-            background: "linear-gradient(135deg, rgba(45,212,191,0.08) 0%, rgba(255,255,255,0.02) 100%)",
+            background: "var(--explorer-bg, #f1f5f9)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             flexShrink: 0,
           }}
         >
-          <BookOpen style={{ width: 32, height: 32, color: "rgba(45,212,191,0.3)" }} />
+          <BookOpen style={{ width: 32, height: 32, color: "rgba(13,148,136,0.4)" }} />
         </div>
       )}
 
@@ -254,9 +255,9 @@ function ArticlePreviewCard({ article }: { article: ApiArticle }) {
               gap: "4px",
               fontSize: "0.6875rem",
               fontWeight: 600,
-              color: "#2dd4bf",
-              background: "rgba(45,212,191,0.08)",
-              border: "1px solid rgba(45,212,191,0.18)",
+              color: "#0d9488",
+              background: "rgba(13,148,136,0.08)",
+              border: "1px solid rgba(13,148,136,0.2)",
               padding: "2px 8px",
               borderRadius: "5px",
             }}
@@ -271,7 +272,7 @@ function ArticlePreviewCard({ article }: { article: ApiArticle }) {
                 alignItems: "center",
                 gap: "4px",
                 fontSize: "0.6875rem",
-                color: "#475569",
+                color: "var(--explorer-text-muted, #64748b)",
               }}
             >
               <Clock style={{ width: 9, height: 9 }} />
@@ -285,7 +286,7 @@ function ArticlePreviewCard({ article }: { article: ApiArticle }) {
           style={{
             fontSize: "1rem",
             fontWeight: 700,
-            color: "#f1f5f9",
+            color: "var(--site-heading, #0f172a)",
             margin: 0,
             lineHeight: 1.4,
             letterSpacing: "-0.01em",
@@ -304,7 +305,7 @@ function ArticlePreviewCard({ article }: { article: ApiArticle }) {
             style={{
               fontSize: "0.85rem",
               lineHeight: 1.65,
-              color: "#64748b",
+              color: "var(--explorer-text-secondary, #475569)",
               margin: 0,
               flex: 1,
               display: "-webkit-box",
@@ -324,11 +325,11 @@ function ArticlePreviewCard({ article }: { article: ApiArticle }) {
             alignItems: "center",
             justifyContent: "space-between",
             paddingTop: "12px",
-            borderTop: "1px solid rgba(255,255,255,0.04)",
+            borderTop: "1px solid var(--explorer-border, #e2e8f0)",
             marginTop: "auto",
           }}
         >
-          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#94a3b8" }}>
+          <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--explorer-text-muted, #64748b)" }}>
             {author}
           </span>
           <span
@@ -338,7 +339,7 @@ function ArticlePreviewCard({ article }: { article: ApiArticle }) {
               gap: "4px",
               fontSize: "0.75rem",
               fontWeight: 600,
-              color: "#2dd4bf",
+              color: "#0d9488",
               opacity: 0,
               transition: "opacity 0.2s ease",
             }}
@@ -360,7 +361,7 @@ function EmptyState() {
         gridColumn: "1 / -1",
         textAlign: "center",
         padding: "64px 24px",
-        color: "#334155",
+        color: "var(--explorer-text-muted, #64748b)",
       }}
     >
       <BookOpen style={{ width: 40, height: 40, margin: "0 auto 16px", opacity: 0.3 }} />
@@ -368,7 +369,7 @@ function EmptyState() {
         Articles loading — check back shortly or{" "}
         <Link
           href="/articles"
-          style={{ color: "#2dd4bf", textDecoration: "underline" }}
+          style={{ color: "#0d9488", textDecoration: "underline" }}
         >
           browse the full library
         </Link>
@@ -387,8 +388,8 @@ export default async function HomeArticlesPreview() {
     <section
       id="articles-preview"
       style={{
-        background: "#080b12",
-        borderTop: "1px solid rgba(255,255,255,0.05)",
+        background: "var(--vice-dark, #ffffff)",
+        borderTop: "1px solid var(--vice-border, #e2e8f0)",
         padding: "96px 24px",
       }}
     >
@@ -408,7 +409,7 @@ export default async function HomeArticlesPreview() {
           <div>
             <p
               className="uh-section-label"
-              style={{ color: "#2dd4bf", marginBottom: "10px" }}
+              style={{ color: "#0d9488", marginBottom: "10px" }}
             >
               Health Library
             </p>
@@ -416,7 +417,7 @@ export default async function HomeArticlesPreview() {
               className="uh-display"
               style={{
                 fontSize: "clamp(1.75rem, 4vw, 2.5rem)",
-                color: "#f1f5f9",
+                color: "var(--site-heading, #0f172a)",
                 margin: "0 0 10px 0",
                 letterSpacing: "-0.025em",
               }}
@@ -427,7 +428,7 @@ export default async function HomeArticlesPreview() {
               style={{
                 fontSize: "1rem",
                 lineHeight: 1.65,
-                color: "#64748b",
+                color: "var(--vice-muted, #475569)",
                 margin: 0,
                 maxWidth: "480px",
               }}
@@ -443,9 +444,9 @@ export default async function HomeArticlesPreview() {
               display: "inline-flex",
               alignItems: "center",
               gap: "8px",
-              background: "rgba(45,212,191,0.08)",
-              border: "1px solid rgba(45,212,191,0.25)",
-              color: "#2dd4bf",
+              background: "rgba(13,148,136,0.08)",
+              border: "1px solid rgba(13,148,136,0.25)",
+              color: "#0d9488",
               padding: "10px 20px",
               borderRadius: "10px",
               fontSize: "0.875rem",
@@ -490,10 +491,10 @@ export default async function HomeArticlesPreview() {
               textAlign: "center",
               marginTop: "48px",
               paddingTop: "40px",
-              borderTop: "1px solid rgba(255,255,255,0.05)",
+              borderTop: "1px solid var(--explorer-border, #e2e8f0)",
             }}
           >
-            <p style={{ fontSize: "0.9375rem", color: "#475569", marginBottom: "20px" }}>
+            <p style={{ fontSize: "0.9375rem", color: "var(--explorer-text-secondary, #475569)", marginBottom: "20px" }}>
               {articles.length < 6
                 ? `Showing all ${articles.length} available articles`
                 : "Showing 6 of 30+ admin-reviewed guides"}
@@ -504,14 +505,15 @@ export default async function HomeArticlesPreview() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "10px",
-                background: "#2dd4bf",
-                color: "#0a0f1a",
+                background: "#0d9488",
+                color: "#ffffff",
                 padding: "14px 32px",
                 borderRadius: "12px",
                 fontSize: "0.9375rem",
                 fontWeight: 800,
                 textDecoration: "none",
                 letterSpacing: "-0.01em",
+                boxShadow: "0 4px 16px rgba(13, 148, 136, 0.25)",
                 transition: "opacity 0.2s ease",
               }}
             >

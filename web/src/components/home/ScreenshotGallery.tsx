@@ -212,8 +212,8 @@ export default function ScreenshotGallery() {
       <section
         id="screenshots"
         style={{
-          background: "#0c0c14",
-          borderTop: "1px solid #252538",
+          background: "var(--vice-dark, #ffffff)",
+          borderTop: "1px solid var(--vice-border, #e2e8f0)",
           padding: "96px 24px",
         }}
       >
@@ -226,7 +226,7 @@ export default function ScreenshotGallery() {
                 fontWeight: 700,
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
-                color: "#00e5ff",
+                color: "#0d9488",
                 fontFamily: "monospace",
                 marginBottom: "12px",
               }}
@@ -234,12 +234,13 @@ export default function ScreenshotGallery() {
               Screenshots
             </p>
             <h2
+              className="uh-display"
               style={{
                 fontSize: "clamp(1.75rem, 4vw, 2.25rem)",
                 fontWeight: 800,
                 lineHeight: 1.15,
                 letterSpacing: "-0.025em",
-                color: "#f1f5f9",
+                color: "var(--site-heading, #0f172a)",
                 margin: "0 0 16px 0",
                 fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
               }}
@@ -250,7 +251,7 @@ export default function ScreenshotGallery() {
               style={{
                 fontSize: "1rem",
                 lineHeight: 1.65,
-                color: "#64748b",
+                color: "var(--vice-muted, #475569)",
                 margin: 0,
               }}
             >

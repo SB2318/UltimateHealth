@@ -40,14 +40,14 @@ export default async function ArticlesPage({ params }: PageProps) {
   return (
     <>
       <SiteHeader />
-      <main style={{ minHeight: "100vh", background: "#0c0c14", color: "#f1f5f9" }}>
+      <main style={{ minHeight: "100vh", background: "var(--explorer-bg, #f8fafc)", color: "var(--explorer-text-primary, #0f172a)" }}>
         {/* ── Hero Section ── */}
         <section
           style={{
             paddingTop: "130px",
             paddingBottom: "80px",
             textAlign: "center",
-            borderBottom: "1px solid #252538",
+            borderBottom: "1px solid var(--explorer-border, #e2e8f0)",
             position: "relative",
             overflow: "hidden",
           }}
@@ -62,7 +62,7 @@ export default async function ArticlesPage({ params }: PageProps) {
               transform: "translateX(-50%)",
               width: "700px",
               height: "400px",
-              background: "radial-gradient(ellipse, rgba(124, 58, 237, 0.16) 0%, transparent 70%)",
+              background: "radial-gradient(ellipse, rgba(124, 58, 237, 0.12) 0%, transparent 70%)",
               pointerEvents: "none",
             }}
           />
@@ -74,12 +74,12 @@ export default async function ArticlesPage({ params }: PageProps) {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
-                background: "rgba(124, 58, 237, 0.14)",
-                border: "1px solid rgba(124, 58, 237, 0.35)",
+                background: "rgba(124, 58, 237, 0.12)",
+                border: "1px solid rgba(124, 58, 237, 0.3)",
                 borderRadius: "50px",
                 padding: "6px 18px",
                 marginBottom: "20px",
-                color: "#a78bfa",
+                color: "#7c3aed",
                 fontSize: "0.75rem",
                 fontWeight: 800,
                 letterSpacing: "0.12em",
@@ -87,7 +87,7 @@ export default async function ArticlesPage({ params }: PageProps) {
                 fontFamily: "monospace",
               }}
             >
-              <BookOpen size={14} color="#a78bfa" />
+              <BookOpen size={14} color="#7c3aed" />
               {t("badge")}
             </div>
 
@@ -97,7 +97,7 @@ export default async function ArticlesPage({ params }: PageProps) {
                 fontWeight: 800,
                 letterSpacing: "-0.025em",
                 lineHeight: 1.15,
-                color: "#f1f5f9",
+                color: "var(--explorer-text-primary, #0f172a)",
                 fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
                 marginBottom: "18px",
               }}
@@ -105,7 +105,7 @@ export default async function ArticlesPage({ params }: PageProps) {
               {t("titlePart1")} <br />
               <span
                 style={{
-                  background: "linear-gradient(135deg, #00e5ff 0%, #7c3aed 50%, #f0006a 100%)",
+                  background: "linear-gradient(135deg, #0d9488 0%, #7c3aed 50%, #f0006a 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}
@@ -118,7 +118,7 @@ export default async function ArticlesPage({ params }: PageProps) {
               style={{
                 fontSize: "1.08rem",
                 lineHeight: 1.75,
-                color: "#94a3b8",
+                color: "var(--explorer-text-secondary, #475569)",
                 maxWidth: "680px",
                 margin: "0 auto",
               }}
@@ -129,14 +129,14 @@ export default async function ArticlesPage({ params }: PageProps) {
             {/* ── Moumita Debnath Research Dedication Banner ── */}
             <div
               style={{
-                background: "#13131f",
-                border: "1px solid #252538",
+                background: "var(--explorer-surface, #ffffff)",
+                border: "1px solid var(--explorer-border, #e2e8f0)",
                 borderRadius: "20px",
                 padding: "24px 28px",
                 maxWidth: "720px",
                 margin: "32px auto 0",
                 textAlign: "left",
-                boxShadow: "0 12px 36px rgba(0,0,0,0.35)",
+                boxShadow: "var(--explorer-card-shadow, 0 4px 20px rgba(0,0,0,0.05))",
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px", flexWrap: "wrap" }}>
@@ -147,8 +147,8 @@ export default async function ArticlesPage({ params }: PageProps) {
                     gap: "6px",
                     padding: "4px 12px",
                     borderRadius: "50px",
-                    background: "rgba(240, 0, 106, 0.16)",
-                    border: "1px solid rgba(240, 0, 106, 0.4)",
+                    background: "rgba(240, 0, 106, 0.12)",
+                    border: "1px solid rgba(240, 0, 106, 0.3)",
                     color: "#f0006a",
                     fontSize: "0.72rem",
                     fontWeight: 800,
@@ -159,11 +159,11 @@ export default async function ArticlesPage({ params }: PageProps) {
                   <Sparkles size={12} />
                   {t("memorialBadge")}
                 </span>
-                <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#e2e8f0", letterSpacing: "0.04em" }}>
+                <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--explorer-text-primary, #0f172a)", letterSpacing: "0.04em" }}>
                   {t("memorialTitle")}
                 </span>
               </div>
-              <p style={{ fontSize: "0.92rem", color: "#94a3b8", lineHeight: 1.65, margin: 0 }}>
+              <p style={{ fontSize: "0.92rem", color: "var(--explorer-text-secondary, #475569)", lineHeight: 1.65, margin: 0 }}>
                 {t("memorialDesc")}
               </p>
             </div>

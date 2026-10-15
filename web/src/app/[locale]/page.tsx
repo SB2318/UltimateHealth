@@ -35,7 +35,7 @@ export default async function Home({
   const { locale } = await params;
 
   return (
-    <main className="bg-vice-dark min-h-screen text-white overflow-x-hidden selection:bg-vice-pink selection:text-white">
+    <main className="bg-vice-dark min-h-screen text-[var(--vice-text,#0f172a)] dark:text-white overflow-x-hidden selection:bg-vice-pink selection:text-white">
       <SiteHeader />
       <ViceHero />
       <PurposeSection />

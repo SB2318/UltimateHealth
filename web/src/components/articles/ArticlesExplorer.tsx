@@ -148,12 +148,12 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
       {/* ── Search & Language Filter Controls Card ── */}
       <div
         style={{
-          background: "#13131f",
-          border: "1px solid #252538",
+          background: "var(--explorer-surface, #ffffff)",
+          border: "1px solid var(--explorer-border, #e2e8f0)",
           borderRadius: "20px",
           padding: "24px",
           marginBottom: "36px",
-          boxShadow: "0 12px 36px rgba(0,0,0,0.4)",
+          boxShadow: "var(--explorer-card-shadow, 0 4px 20px rgba(0,0,0,0.05))",
           display: "flex",
           flexDirection: "column",
           gap: "20px",
@@ -172,7 +172,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
               pointerEvents: "none",
             }}
           >
-            <Search size={18} color={searchFocused ? "#00e5ff" : "#94a3b8"} />
+            <Search size={18} color={searchFocused ? "#0d9488" : "#94a3b8"} />
           </div>
 
           <input
@@ -185,15 +185,15 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
             style={{
               width: "100%",
               boxSizing: "border-box",
-              background: "#0c0c14",
-              border: searchFocused ? "1.5px solid #00e5ff" : "1.5px solid #252538",
+              background: "var(--explorer-bg, #f8fafc)",
+              border: searchFocused ? "1.5px solid #0d9488" : "1.5px solid var(--explorer-border, #e2e8f0)",
               borderRadius: "14px",
               padding: "14px 44px 14px 46px",
               fontSize: "0.95rem",
-              color: "#f1f5f9",
+              color: "var(--explorer-text-primary, #0f172a)",
               outline: "none",
               transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-              boxShadow: searchFocused ? "0 0 16px rgba(0, 229, 255, 0.15)" : "none",
+              boxShadow: searchFocused ? "0 0 16px rgba(13, 148, 136, 0.15)" : "none",
             }}
           />
 
@@ -209,7 +209,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                 transform: "translateY(-50%)",
                 background: "transparent",
                 border: "none",
-                color: "#94a3b8",
+                color: "var(--explorer-text-muted, #64748b)",
                 cursor: "pointer",
                 padding: "4px",
                 display: "flex",
@@ -225,7 +225,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
         {/* Language Filter Row */}
         <div
           style={{
-            borderTop: "1px solid #1f1f30",
+            borderTop: "1px solid var(--explorer-border, #e2e8f0)",
             paddingTop: "18px",
             display: "flex",
             alignItems: "center",
@@ -239,7 +239,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
               alignItems: "center",
               gap: "6px",
               marginRight: "6px",
-              color: "#94a3b8",
+              color: "var(--explorer-text-secondary, #475569)",
               fontSize: "0.82rem",
               fontWeight: 700,
               textTransform: "uppercase",
@@ -247,7 +247,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
               flexShrink: 0,
             }}
           >
-            <Globe size={15} color="#00e5ff" />
+            <Globe size={15} color="#0d9488" />
             <span>{t("filterLanguage")}:</span>
           </div>
 
@@ -265,14 +265,14 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
               fontWeight: 800,
               cursor: "pointer",
               transition: "all 0.2s ease",
-              border: selectedLanguage === "all" ? "1px solid transparent" : "1px solid #252538",
+              border: selectedLanguage === "all" ? "1px solid transparent" : "1px solid var(--explorer-border, #e2e8f0)",
               background:
                 selectedLanguage === "all"
-                  ? "linear-gradient(135deg, #00e5ff 0%, #7c3aed 100%)"
-                  : "#0c0c14",
-              color: selectedLanguage === "all" ? "#ffffff" : "#94a3b8",
+                  ? "linear-gradient(135deg, #0d9488 0%, #7c3aed 100%)"
+                  : "var(--explorer-bg, #f8fafc)",
+              color: selectedLanguage === "all" ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
               boxShadow:
-                selectedLanguage === "all" ? "0 4px 16px rgba(0, 229, 255, 0.25)" : "none",
+                selectedLanguage === "all" ? "0 4px 16px rgba(13, 148, 136, 0.25)" : "none",
             }}
           >
             <span>{t("allLanguages")}</span>
@@ -282,8 +282,8 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                 fontFamily: "monospace",
                 padding: "2px 7px",
                 borderRadius: "20px",
-                background: selectedLanguage === "all" ? "rgba(255, 255, 255, 0.25)" : "#1e1e30",
-                color: selectedLanguage === "all" ? "#ffffff" : "#94a3b8",
+                background: selectedLanguage === "all" ? "rgba(255, 255, 255, 0.25)" : "var(--explorer-surface-hover, #f1f5f9)",
+                color: selectedLanguage === "all" ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
               }}
             >
               {initialArticles.length}
@@ -308,10 +308,10 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                   fontWeight: 800,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  border: isSelected ? "1px solid #00e5ff" : "1px solid #252538",
-                  background: isSelected ? "#00e5ff" : "#0c0c14",
-                  color: isSelected ? "#0a0a14" : "#94a3b8",
-                  boxShadow: isSelected ? "0 4px 16px rgba(0, 229, 255, 0.3)" : "none",
+                  border: isSelected ? "1px solid #0d9488" : "1px solid var(--explorer-border, #e2e8f0)",
+                  background: isSelected ? "#0d9488" : "var(--explorer-bg, #f8fafc)",
+                  color: isSelected ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
+                  boxShadow: isSelected ? "0 4px 16px rgba(13, 148, 136, 0.25)" : "none",
                 }}
               >
                 <span>{item.name}</span>
@@ -321,8 +321,8 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                     fontFamily: "monospace",
                     padding: "2px 7px",
                     borderRadius: "20px",
-                    background: isSelected ? "rgba(0, 0, 0, 0.25)" : "#1e1e30",
-                    color: isSelected ? "#0a0a14" : "#94a3b8",
+                    background: isSelected ? "rgba(0, 0, 0, 0.2)" : "var(--explorer-surface-hover, #f1f5f9)",
+                    color: isSelected ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
                     fontWeight: isSelected ? 900 : 700,
                   }}
                 >
@@ -340,7 +340,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          borderBottom: "1px solid #252538",
+          borderBottom: "1px solid var(--explorer-border, #e2e8f0)",
           paddingBottom: "18px",
           marginBottom: "36px",
           flexWrap: "wrap",
@@ -352,7 +352,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
             style={{
               fontSize: "1.75rem",
               fontWeight: 800,
-              color: "#f1f5f9",
+              color: "var(--explorer-text-primary, #0f172a)",
               margin: 0,
               fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
             }}
@@ -365,9 +365,9 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
               fontWeight: 800,
               padding: "4px 12px",
               borderRadius: "50px",
-              background: "rgba(0, 229, 255, 0.12)",
-              border: "1px solid rgba(0, 229, 255, 0.3)",
-              color: "#00e5ff",
+              background: "rgba(13, 148, 136, 0.12)",
+              border: "1px solid rgba(13, 148, 136, 0.3)",
+              color: "#0d9488",
               letterSpacing: "0.04em",
             }}
           >
@@ -402,7 +402,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
               style={{
                 fontSize: "0.8rem",
                 fontWeight: 700,
-                color: "#64748b",
+                color: "var(--explorer-text-muted, #64748b)",
                 letterSpacing: "0.08em",
                 textTransform: "uppercase",
                 fontFamily: "monospace",
@@ -418,19 +418,20 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
       {paginatedArticles.length === 0 ? (
         <div
           style={{
-            background: "#13131f",
-            border: "1.5px dashed #252538",
+            background: "var(--explorer-surface, #ffffff)",
+            border: "1.5px dashed var(--explorer-border, #e2e8f0)",
             borderRadius: "20px",
             padding: "64px 32px",
             textAlign: "center",
-            color: "#94a3b8",
+            color: "var(--explorer-text-secondary, #475569)",
+            boxShadow: "var(--explorer-card-shadow, 0 4px 20px rgba(0,0,0,0.05))",
           }}
         >
           <div style={{ fontSize: "3rem", marginBottom: "12px" }}>🔍</div>
-          <p style={{ fontSize: "1.15rem", fontWeight: 700, color: "#f1f5f9", margin: "0 0 6px" }}>
+          <p style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--explorer-text-primary, #0f172a)", margin: "0 0 6px" }}>
             {t("noResults")}
           </p>
-          <p style={{ fontSize: "0.9rem", color: "#64748b", maxWidth: "480px", margin: "0 auto 24px" }}>
+          <p style={{ fontSize: "0.9rem", color: "var(--explorer-text-muted, #64748b)", maxWidth: "480px", margin: "0 auto 24px" }}>
             {t("noResultsSuggestion")}
           </p>
           <button
@@ -489,11 +490,12 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                 padding: "10px 18px",
                 fontSize: "0.875rem",
                 fontWeight: 700,
-                color: "#f1f5f9",
-                background: "#13131f",
-                border: "1px solid #252538",
+                color: "var(--explorer-text-primary, #0f172a)",
+                background: "var(--explorer-surface, #ffffff)",
+                border: "1px solid var(--explorer-border, #e2e8f0)",
                 borderRadius: "10px",
                 cursor: "pointer",
+                boxShadow: "var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))",
               }}
             >
               <ChevronLeft size={16} />
@@ -508,11 +510,12 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                 padding: "10px 18px",
                 fontSize: "0.875rem",
                 fontWeight: 700,
-                color: "#475569",
-                background: "#0c0c14",
-                border: "1px solid #1a1a28",
+                color: "var(--explorer-text-muted, #94a3b8)",
+                background: "var(--explorer-bg, #f8fafc)",
+                border: "1px solid var(--explorer-border, #e2e8f0)",
                 borderRadius: "10px",
                 cursor: "not-allowed",
+                opacity: 0.6,
               }}
             >
               <ChevronLeft size={16} />
@@ -538,10 +541,10 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                   fontWeight: 700,
                   borderRadius: "10px",
                   cursor: "pointer",
-                  background: isCurrent ? "#7c3aed" : "#13131f",
-                  color: isCurrent ? "#ffffff" : "#94a3b8",
-                  border: isCurrent ? "1px solid #a78bfa" : "1px solid #252538",
-                  boxShadow: isCurrent ? "0 4px 14px rgba(124, 58, 237, 0.4)" : "none",
+                  background: isCurrent ? "#7c3aed" : "var(--explorer-surface, #ffffff)",
+                  color: isCurrent ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
+                  border: isCurrent ? "1px solid #7c3aed" : "1px solid var(--explorer-border, #e2e8f0)",
+                  boxShadow: isCurrent ? "0 4px 14px rgba(124, 58, 237, 0.35)" : "var(--explorer-card-shadow, 0 2px 6px rgba(0,0,0,0.03))",
                 }}
               >
                 {p}
@@ -561,11 +564,12 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                 padding: "10px 18px",
                 fontSize: "0.875rem",
                 fontWeight: 700,
-                color: "#f1f5f9",
-                background: "#13131f",
-                border: "1px solid #252538",
+                color: "var(--explorer-text-primary, #0f172a)",
+                background: "var(--explorer-surface, #ffffff)",
+                border: "1px solid var(--explorer-border, #e2e8f0)",
                 borderRadius: "10px",
                 cursor: "pointer",
+                boxShadow: "var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))",
               }}
             >
               {t("next")}
@@ -580,11 +584,12 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                 padding: "10px 18px",
                 fontSize: "0.875rem",
                 fontWeight: 700,
-                color: "#475569",
-                background: "#0c0c14",
-                border: "1px solid #1a1a28",
+                color: "var(--explorer-text-muted, #94a3b8)",
+                background: "var(--explorer-bg, #f8fafc)",
+                border: "1px solid var(--explorer-border, #e2e8f0)",
                 borderRadius: "10px",
                 cursor: "not-allowed",
+                opacity: 0.6,
               }}
             >
               {t("next")}
@@ -616,16 +621,17 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
     <Link
       href={articleHref}
       style={{
-        background: "#13131f",
-        border: "1px solid #252538",
+        background: "var(--explorer-surface, #ffffff)",
+        border: "1px solid var(--explorer-border, #e2e8f0)",
         borderRadius: "16px",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
         textDecoration: "none",
+        boxShadow: "var(--explorer-card-shadow, 0 4px 16px rgba(0,0,0,0.04))",
         transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
       }}
-      className="group hover:-translate-y-1 hover:border-[#00e5ff]"
+      className="group hover:-translate-y-1 hover:border-[#0d9488]"
     >
       {/* Thumbnail */}
       <div
@@ -633,7 +639,7 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
           position: "relative",
           aspectRatio: "16/9",
           overflow: "hidden",
-          background: "#0c0c14",
+          background: "var(--explorer-surface-hover, #f1f5f9)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -652,7 +658,7 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
             style={{
               width: "100%",
               height: "100%",
-              background: "linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(0, 229, 255, 0.1))",
+              background: "linear-gradient(135deg, rgba(13, 148, 136, 0.12), rgba(124, 58, 237, 0.1))",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -672,16 +678,16 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
             display: "inline-flex",
             alignItems: "center",
             gap: "5px",
-            background: "rgba(12, 12, 20, 0.88)",
-            border: "1px solid rgba(0, 229, 255, 0.35)",
-            color: "#00e5ff",
+            background: "rgba(255, 255, 255, 0.92)",
+            border: "1px solid rgba(13, 148, 136, 0.35)",
+            color: "#0d9488",
             padding: "3px 10px",
             borderRadius: "50px",
             fontSize: "11px",
             fontWeight: 800,
             letterSpacing: "0.04em",
             backdropFilter: "blur(6px)",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
           }}
         >
           <Globe size={11} />
@@ -705,9 +711,9 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
                   fontWeight: 800,
                   textTransform: "uppercase",
                   letterSpacing: "0.08em",
-                  background: "rgba(124, 58, 237, 0.15)",
-                  color: "#a78bfa",
-                  border: "1px solid rgba(124, 58, 237, 0.3)",
+                  background: "rgba(13, 148, 136, 0.08)",
+                  color: "#0d9488",
+                  border: "1px solid rgba(13, 148, 136, 0.25)",
                 }}
               >
                 {tag.name}
@@ -723,8 +729,9 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
                 fontWeight: 800,
                 textTransform: "uppercase",
                 letterSpacing: "0.08em",
-                background: "rgba(255, 255, 255, 0.05)",
-                color: "#94a3b8",
+                background: "var(--explorer-surface-hover, #f1f5f9)",
+                color: "var(--explorer-text-secondary, #475569)",
+                border: "1px solid var(--explorer-border, #e2e8f0)",
               }}
             >
               {t("generalTag")}
@@ -737,7 +744,7 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
           style={{
             fontSize: "1.1rem",
             fontWeight: 800,
-            color: "#f1f5f9",
+            color: "var(--explorer-text-primary, #0f172a)",
             lineHeight: 1.35,
             marginBottom: "10px",
           }}
@@ -749,7 +756,7 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
         <p
           style={{
             fontSize: "0.875rem",
-            color: "#94a3b8",
+            color: "var(--explorer-text-secondary, #475569)",
             lineHeight: 1.6,
             flex: 1,
             marginBottom: "20px",
@@ -766,15 +773,15 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
         <div
           style={{
             paddingTop: "14px",
-            borderTop: "1px solid #252538",
+            borderTop: "1px solid var(--explorer-border, #e2e8f0)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             fontSize: "0.78rem",
-            color: "#64748b",
+            color: "var(--explorer-text-muted, #64748b)",
           }}
         >
-          <span style={{ fontWeight: 600, color: "#cbd5e1" }}>
+          <span style={{ fontWeight: 600, color: "var(--explorer-text-primary, #0f172a)" }}>
             {article.authorId?.user_name || article.authorName || t("communityAuthor")}
           </span>
           <time dateTime={article.publishedDate}>{date}</time>

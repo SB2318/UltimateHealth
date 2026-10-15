@@ -14,8 +14,8 @@ export default function MedicalGlossaryPage() {
       <main
         style={{
           minHeight: '100vh',
-          background: '#0c0c14',
-          color: '#f1f5f9',
+          background: 'var(--explorer-bg, #f8fafc)',
+          color: 'var(--explorer-text-primary, #0f172a)',
         }}
       >
         {/* ── Hero Section ── */}
@@ -24,7 +24,7 @@ export default function MedicalGlossaryPage() {
             paddingTop: '130px',
             paddingBottom: '40px',
             textAlign: 'center',
-            borderBottom: '1px solid #252538',
+            borderBottom: '1px solid var(--explorer-border, #e2e8f0)',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -40,7 +40,7 @@ export default function MedicalGlossaryPage() {
               width: '600px',
               height: '350px',
               background:
-                'radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, rgba(6, 182, 212, 0.04) 50%, transparent 70%)',
+                'radial-gradient(circle, rgba(13, 148, 136, 0.08) 0%, rgba(6, 182, 212, 0.03) 50%, transparent 70%)',
               filter: 'blur(50px)',
               pointerEvents: 'none',
               zIndex: 0,
@@ -62,7 +62,7 @@ export default function MedicalGlossaryPage() {
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
-                color: '#7c3aed',
+                color: '#0d9488',
                 fontFamily: 'monospace',
                 marginBottom: '16px',
               }}
@@ -75,7 +75,7 @@ export default function MedicalGlossaryPage() {
                 fontWeight: 800,
                 letterSpacing: '-0.025em',
                 lineHeight: 1.15,
-                color: '#f1f5f9',
+                color: 'var(--site-heading, #0f172a)',
                 fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
                 margin: '16px auto 0',
                 maxWidth: '800px',
@@ -87,7 +87,7 @@ export default function MedicalGlossaryPage() {
               style={{
                 fontSize: '1.1rem',
                 lineHeight: 1.7,
-                color: '#64748b',
+                color: 'var(--explorer-text-secondary, #475569)',
                 maxWidth: '640px',
                 margin: '20px auto 0',
               }}

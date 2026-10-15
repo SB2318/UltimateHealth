@@ -9,7 +9,6 @@ import {
   X,
   Volume2,
   Headphones,
-  SlidersHorizontal,
 } from "lucide-react";
 import { UseArticleSpeechReturn } from "@/hooks/use-article-speech";
 
@@ -25,7 +24,6 @@ export default function ArticleAudioPlayer({
   articleTitle,
 }: ArticleAudioPlayerProps) {
   const [showSpeedMenu, setShowSpeedMenu] = useState(false);
-  const [showVoiceMenu, setShowVoiceMenu] = useState(false);
 
   // If player is neither playing nor paused and user hasn't opened it, don't show
   if (!speech.isActive) return null;
@@ -40,11 +38,11 @@ export default function ArticleAudioPlayer({
         left: "50%",
         transform: "translateX(-50%)",
         width: "min(94vw, 860px)",
-        background: "rgba(14, 14, 24, 0.96)",
+        background: "var(--player-bg, rgba(255,255,255,0.97))",
         backdropFilter: "blur(20px)",
-        border: "1px solid #282842",
+        border: "1px solid var(--player-border, #e2e8f0)",
         borderRadius: "18px",
-        boxShadow: "0 14px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(45, 212, 191, 0.15)",
+        boxShadow: "var(--player-shadow, 0 14px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(13,148,136,0.1))",
         zIndex: 60,
         padding: "14px 20px",
         display: "flex",
@@ -71,13 +69,15 @@ export default function ArticleAudioPlayer({
               height: "38px",
               borderRadius: "10px",
               background: speech.isPlaying
-                ? "linear-gradient(135deg, rgba(45, 212, 191, 0.25), rgba(6, 182, 212, 0.25))"
-                : "rgba(30, 30, 48, 0.7)",
-              border: speech.isPlaying ? "1px solid #2dd4bf" : "1px solid #2e2e48",
+                ? "linear-gradient(135deg, rgba(13, 148, 136, 0.18), rgba(6, 182, 212, 0.18))"
+                : "var(--explorer-surface, #f1f5f9)",
+              border: speech.isPlaying
+                ? "1px solid #0d9488"
+                : "1px solid var(--explorer-border, #e2e8f0)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: speech.isPlaying ? "#2dd4bf" : "#94a3b8",
+              color: speech.isPlaying ? "#0d9488" : "var(--explorer-text-secondary, #64748b)",
               flexShrink: 0,
             }}
           >
@@ -94,7 +94,7 @@ export default function ArticleAudioPlayer({
                 margin: 0,
                 fontSize: "0.85rem",
                 fontWeight: 700,
-                color: "#f1f5f9",
+                color: "var(--explorer-text-primary, #0f172a)",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -107,7 +107,7 @@ export default function ArticleAudioPlayer({
               style={{
                 margin: "2px 0 0 0",
                 fontSize: "0.75rem",
-                color: "#94a3b8",
+                color: "var(--explorer-text-secondary, #64748b)",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -130,9 +130,9 @@ export default function ArticleAudioPlayer({
               width: "32px",
               height: "32px",
               borderRadius: "8px",
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid #252538",
-              color: "#cbd5e1",
+              background: "var(--explorer-surface, #f1f5f9)",
+              border: "1px solid var(--explorer-border, #e2e8f0)",
+              color: "var(--explorer-text-primary, #334155)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -153,14 +153,14 @@ export default function ArticleAudioPlayer({
               width: "42px",
               height: "42px",
               borderRadius: "50%",
-              background: "linear-gradient(135deg, #2dd4bf 0%, #06b6d4 100%)",
+              background: "linear-gradient(135deg, #0d9488 0%, #06b6d4 100%)",
               border: "none",
-              color: "#08080f",
+              color: "#ffffff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
-              boxShadow: "0 0 16px rgba(45, 212, 191, 0.4)",
+              boxShadow: "0 0 16px rgba(13, 148, 136, 0.35)",
               transition: "transform 0.15s ease",
             }}
             onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.94)")}
@@ -183,9 +183,9 @@ export default function ArticleAudioPlayer({
               width: "32px",
               height: "32px",
               borderRadius: "8px",
-              background: "rgba(255, 255, 255, 0.05)",
-              border: "1px solid #252538",
-              color: "#cbd5e1",
+              background: "var(--explorer-surface, #f1f5f9)",
+              border: "1px solid var(--explorer-border, #e2e8f0)",
+              color: "var(--explorer-text-primary, #334155)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -210,9 +210,9 @@ export default function ArticleAudioPlayer({
                 height: "30px",
                 padding: "0 9px",
                 borderRadius: "8px",
-                background: "rgba(255, 255, 255, 0.06)",
-                border: "1px solid #28283e",
-                color: "#2dd4bf",
+                background: "var(--explorer-surface, #f1f5f9)",
+                border: "1px solid var(--explorer-border, #e2e8f0)",
+                color: "#0d9488",
                 fontSize: "0.75rem",
                 fontWeight: 700,
                 display: "flex",
@@ -231,14 +231,14 @@ export default function ArticleAudioPlayer({
                   position: "absolute",
                   bottom: "38px",
                   right: 0,
-                  background: "#161626",
-                  border: "1px solid #2e2e48",
+                  background: "var(--player-bg, #ffffff)",
+                  border: "1px solid var(--player-border, #e2e8f0)",
                   borderRadius: "10px",
                   padding: "4px",
                   display: "flex",
                   flexDirection: "column",
                   gap: "2px",
-                  boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
+                  boxShadow: "0 10px 25px rgba(0,0,0,0.12)",
                   zIndex: 70,
                 }}
               >
@@ -255,8 +255,8 @@ export default function ArticleAudioPlayer({
                       borderRadius: "6px",
                       fontSize: "0.75rem",
                       fontWeight: 700,
-                      background: speech.speed === rate ? "rgba(45, 212, 191, 0.18)" : "transparent",
-                      color: speech.speed === rate ? "#2dd4bf" : "#cbd5e1",
+                      background: speech.speed === rate ? "rgba(13, 148, 136, 0.12)" : "transparent",
+                      color: speech.speed === rate ? "#0d9488" : "var(--explorer-text-primary, #334155)",
                       border: "none",
                       textAlign: "left",
                       cursor: "pointer",
@@ -281,14 +281,14 @@ export default function ArticleAudioPlayer({
               borderRadius: "8px",
               background: "transparent",
               border: "none",
-              color: "#94a3b8",
+              color: "var(--explorer-text-secondary, #94a3b8)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               cursor: "pointer",
             }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#f43f5e")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#94a3b8")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--explorer-text-secondary, #94a3b8)")}
           >
             <X size={16} />
           </button>
@@ -297,7 +297,7 @@ export default function ArticleAudioPlayer({
 
       {/* ── Bottom Row: Scrubber Bar & Timestamps ── */}
       <div style={{ display: "flex", alignItems: "center", gap: "10px", width: "100%" }}>
-        <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "#94a3b8", minWidth: "32px", textAlign: "right" }}>
+        <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--explorer-text-secondary, #64748b)", minWidth: "32px", textAlign: "right" }}>
           {speech.elapsedTimeStr}
         </span>
 
@@ -314,15 +314,15 @@ export default function ArticleAudioPlayer({
               width: "100%",
               height: "4px",
               borderRadius: "4px",
-              accentColor: "#2dd4bf",
-              background: `linear-gradient(to right, #2dd4bf ${speech.progressPercent}%, #252538 ${speech.progressPercent}%)`,
+              accentColor: "#0d9488",
+              background: `linear-gradient(to right, #0d9488 ${speech.progressPercent}%, var(--track-bg, #e2e8f0) ${speech.progressPercent}%)`,
               outline: "none",
               cursor: "pointer",
             }}
           />
         </div>
 
-        <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "#64748b", minWidth: "32px" }}>
+        <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--explorer-text-muted, #94a3b8)", minWidth: "32px" }}>
           {speech.totalDurationStr}
         </span>
       </div>

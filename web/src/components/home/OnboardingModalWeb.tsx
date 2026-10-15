@@ -1,7 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const PLATFORM_GUIDE_BGM_URL = 'https://ultimatehealth.blog/api/getfile/krishna_flute.mp3';
 import {
   Heart,
   Mic2,
@@ -1016,18 +1018,59 @@ export default function OnboardingModalWeb() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const TOUR_STEPS = getTourSteps(locale);
   const ui = getTourUiLabels(locale);
 
+  // Background Music (Flute) Lifecycle
+  useEffect(() => {
+    if (!isOpen) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      return;
+    }
+
+    if (!audioRef.current) {
+      const audio = new Audio(PLATFORM_GUIDE_BGM_URL);
+      audio.loop = true;
+      audio.volume = 0.25;
+      audioRef.current = audio;
+    }
+
+    const audio = audioRef.current;
+    if (soundEnabled) {
+      audio.play().catch(() => {
+        // Autoplay policy fallback
+      });
+    } else {
+      audio.pause();
+    }
+
+    return () => {
+      audio.pause();
+    };
+  }, [isOpen, soundEnabled]);
+
   const openTour = useCallback(() => {
     setActiveStepIndex(0);
     setIsOpen(true);
-    if (soundEnabled) playNeonSFX(880, 0.12, 'sine');
+    if (soundEnabled) {
+      playNeonSFX(880, 0.12, 'sine');
+      if (audioRef.current) {
+        audioRef.current.play().catch(() => {});
+      }
+    }
   }, [soundEnabled]);
 
   const closeTour = useCallback(() => {
     sessionStorage.setItem('uh_onboarding_seen', 'true');
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
     setIsOpen(false);
   }, []);
 
@@ -1095,21 +1138,29 @@ export default function OnboardingModalWeb() {
       <style>{`
         .uh-tour-scrollbar {
           scrollbar-width: thin;
+          scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+        }
+        .dark .uh-tour-scrollbar {
           scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.03);
         }
         .uh-tour-scrollbar::-webkit-scrollbar {
-          width: 7px;
-          height: 7px;
+          width: 6px;
+          height: 6px;
         }
         .uh-tour-scrollbar::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.03);
-          border-radius: 8px;
+          background: transparent;
         }
         .uh-tour-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.22);
+          background: rgba(148, 163, 184, 0.35);
           border-radius: 8px;
         }
+        .dark .uh-tour-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.22);
+        }
         .uh-tour-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(148, 163, 184, 0.55);
+        }
+        .dark .uh-tour-scrollbar::-webkit-scrollbar-thumb:hover {
           background: rgba(255, 255, 255, 0.4);
         }
       `}</style>
@@ -1119,17 +1170,17 @@ export default function OnboardingModalWeb() {
         <aside aria-label="Tour Quick Launcher" className="fixed bottom-6 left-6 z-40">
           <button
             onClick={openTour}
-            className="group flex items-center gap-3 px-5 py-3 rounded-2xl bg-[#090914]/90 hover:bg-[#121226] border border-[#00f0ff]/50 hover:border-[#ff007f] text-white shadow-[0_0_25px_rgba(0,240,255,0.3)] hover:shadow-[0_0_30px_rgba(255,0,127,0.4)] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+            className="group flex items-center gap-3 px-5 py-3 rounded-2xl bg-white/95 dark:bg-[#090914]/90 hover:bg-slate-50 dark:hover:bg-[#121226] border border-teal-500/40 dark:border-[#00f0ff]/50 text-slate-800 dark:text-white shadow-xl shadow-teal-500/10 dark:shadow-[0_0_25px_rgba(0,240,255,0.3)] hover:shadow-2xl hover:border-teal-600 dark:hover:border-[#ff007f] backdrop-blur-xl transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
             title="Start UltimateHealth Tour (Press T)"
           >
             <span className="relative flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f0ff] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#00f0ff]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-500 dark:bg-[#00f0ff] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-teal-600 dark:bg-[#00f0ff]"></span>
             </span>
-            <span className="text-xs font-black tracking-widest uppercase bg-gradient-to-r from-[#00f0ff] via-purple-300 to-[#ff007f] bg-clip-text text-transparent">
+            <span className="text-xs font-black tracking-widest uppercase bg-gradient-to-r from-teal-600 via-purple-600 to-pink-600 dark:from-[#00f0ff] dark:via-purple-300 dark:to-[#ff007f] bg-clip-text text-transparent">
               {ui.startTour}
             </span>
-            <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-white/10 border border-white/20 text-[10px] font-mono text-cyan-300">
+            <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-slate-100 dark:bg-white/10 border border-slate-200 dark:border-white/20 text-[10px] font-mono text-teal-700 dark:text-cyan-300 font-bold">
               T
             </span>
           </button>
@@ -1140,38 +1191,15 @@ export default function OnboardingModalWeb() {
       <AnimatePresence>
         {isOpen && (
           <div
-            style={{
-              position: 'fixed',
-              inset: 0,
-              zIndex: 99999,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '24px 16px',
-              background: 'rgba(0,0,0,0.88)',
-              backdropFilter: 'blur(24px)',
-              overflow: 'hidden',
-            }}
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-slate-900/60 dark:bg-black/85 backdrop-blur-md overflow-hidden"
             role="dialog"
             aria-modal="true"
             aria-labelledby="tour-dialog-title"
           >
             {/* Ambient Aura */}
             <div
-              style={{
-                position: 'absolute',
-                width: 520,
-                height: 520,
-                borderRadius: '50%',
-                filter: 'blur(140px)',
-                pointerEvents: 'none',
-                opacity: 0.22,
-                backgroundColor: step.accentColor,
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                transition: 'background-color 0.5s',
-              }}
+              className="absolute w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none opacity-25 dark:opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-colors duration-500"
+              style={{ backgroundColor: step.accentColor }}
             />
 
             {/* ── Modal Container ── */}
@@ -1180,36 +1208,20 @@ export default function OnboardingModalWeb() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 16 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
-              style={{
-                position: 'relative',
-                width: '100%',
-                maxWidth: 980,
-                maxHeight: '88vh',
-                display: 'flex',
-                flexDirection: 'column',
-                borderRadius: 20,
-                background: '#0e0e1a',
-                border: '1px solid #26263e',
-                boxShadow: '0 25px 70px rgba(0,0,0,0.9)',
-                overflow: 'hidden',
-                fontFamily: 'inherit',
-              }}
+              className="relative w-full max-w-[980px] max-h-[88vh] flex flex-col rounded-2xl sm:rounded-3xl bg-white dark:bg-[#0e0e1a] border border-slate-200/90 dark:border-[#26263e] shadow-2xl shadow-slate-900/20 dark:shadow-[0_25px_70px_rgba(0,0,0,0.9)] overflow-hidden font-sans"
             >
               {/* Grid overlay */}
               <div
+                className="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
                 style={{
-                  position: 'absolute',
-                  inset: 0,
-                  pointerEvents: 'none',
-                  opacity: 0.03,
                   backgroundImage:
-                    'linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px)',
+                    'linear-gradient(rgba(0,0,0,0.15) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.15) 1px,transparent 1px)',
                   backgroundSize: '24px 24px',
                 }}
               />
 
               {/* Progress bar */}
-              <div style={{ height: 3, background: '#1e293b', flexShrink: 0 }}>
+              <div className="h-[3px] bg-slate-100 dark:bg-[#1e293b] shrink-0">
                 <motion.div
                   style={{
                     height: '100%',
@@ -1222,27 +1234,11 @@ export default function OnboardingModalWeb() {
               </div>
 
               {/* ── Header Bar ── */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '14px 28px',
-                  borderBottom: '1px solid rgba(255,255,255,0.08)',
-                  background: 'rgba(13,13,28,0.92)',
-                  flexShrink: 0,
-                  zIndex: 10,
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div className="flex items-center justify-between px-5 sm:px-7 py-3 border-b border-slate-100 dark:border-white/10 bg-slate-50/90 dark:bg-[#0d0d1c]/95 backdrop-blur-sm shrink-0 z-10">
+                <div className="flex items-center gap-3">
                   <span
+                    className="font-mono text-[11px] font-black tracking-wider px-2.5 py-1 rounded-md"
                     style={{
-                      fontFamily: 'monospace',
-                      fontSize: 11,
-                      fontWeight: 900,
-                      letterSpacing: '0.12em',
-                      padding: '4px 10px',
-                      borderRadius: 6,
                       color: step.accentColor,
                       background: `${step.accentColor}18`,
                       border: `1px solid ${step.accentColor}44`,
@@ -1250,46 +1246,35 @@ export default function OnboardingModalWeb() {
                   >
                     {ui.stageBadge} {step.stepNum} / 05
                   </span>
-                  <span
-                    style={{
-                      fontFamily: 'monospace',
-                      fontSize: 11,
-                      fontWeight: 700,
-                      letterSpacing: '0.1em',
-                      color: '#64748b',
-                      textTransform: 'uppercase',
-                    }}
-                  >
+                  <span className="font-mono text-[11px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
                     {step.badge}
                   </span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <div className="flex items-center gap-1.5">
                   <button
-                    onClick={() => setSoundEnabled((v) => !v)}
-                    style={{
-                      padding: '6px',
-                      borderRadius: 10,
-                      background: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      color: soundEnabled ? '#22d3ee' : '#64748b',
-                      display: 'flex',
+                    onClick={() => {
+                      setSoundEnabled((v) => {
+                        const next = !v;
+                        if (audioRef.current) {
+                          if (next) audioRef.current.play().catch(() => {});
+                          else audioRef.current.pause();
+                        }
+                        return next;
+                      });
                     }}
-                    title={soundEnabled ? 'Mute' : 'Unmute'}
+                    className={`p-2 rounded-xl border border-transparent transition-colors cursor-pointer ${
+                      soundEnabled
+                        ? 'text-teal-600 dark:text-cyan-400 bg-teal-50 dark:bg-cyan-500/10 hover:bg-teal-100 dark:hover:bg-cyan-500/20'
+                        : 'text-slate-400 hover:text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5'
+                    }`}
+                    title={soundEnabled ? 'Mute BGM & SFX' : 'Unmute BGM & SFX'}
+                    aria-label={soundEnabled ? 'Mute sound' : 'Unmute sound'}
                   >
                     {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
                   </button>
                   <button
                     onClick={closeTour}
-                    style={{
-                      padding: '6px',
-                      borderRadius: 10,
-                      background: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      color: '#64748b',
-                      display: 'flex',
-                    }}
+                    className="p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 transition-colors cursor-pointer"
                     aria-label="Close Tour"
                   >
                     <X size={18} />
@@ -1298,117 +1283,59 @@ export default function OnboardingModalWeb() {
               </div>
 
               {/* ── Tab Navigation ── */}
-              <div
-                className="uh-tour-scrollbar"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  padding: '10px 28px',
-                  borderBottom: '1px solid rgba(255,255,255,0.05)',
-                  background: '#0a0a16',
-                  overflowX: 'auto',
-                  flexShrink: 0,
-                  zIndex: 10,
-                }}
-              >
-                {TOUR_STEPS.map((s, idx) => (
-                  <button
-                    key={s.id}
-                    onClick={() => handleSelectStep(idx)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 6,
-                      padding: '6px 14px',
-                      borderRadius: 12,
-                      fontFamily: 'monospace',
-                      fontSize: 11,
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      flexShrink: 0,
-                      border: `1px solid ${idx === activeStepIndex ? s.accentColor : 'transparent'}`,
-                      background: idx === activeStepIndex ? `${s.accentColor}20` : 'transparent',
-                      color: idx === activeStepIndex ? '#fff' : '#64748b',
-                      transition: 'all 0.2s',
-                    }}
-                  >
-                    <span
-                      style={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: '50%',
-                        background: idx === activeStepIndex ? s.accentColor : '#475569',
-                        flexShrink: 0,
-                      }}
-                    />
-                    {s.stepNum}. {s.tabLabel}
-                  </button>
-                ))}
+              <div className="uh-tour-scrollbar flex items-center gap-2 px-5 sm:px-7 py-2.5 border-b border-slate-100 dark:border-white/5 bg-slate-100/70 dark:bg-[#0a0a16] overflow-x-auto shrink-0 z-10">
+                {TOUR_STEPS.map((s, idx) => {
+                  const isActive = idx === activeStepIndex;
+                  return (
+                    <button
+                      key={s.id}
+                      onClick={() => handleSelectStep(idx)}
+                      className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl font-mono text-xs font-bold shrink-0 transition-all cursor-pointer border ${
+                        isActive
+                          ? 'bg-white dark:bg-white/10 shadow-xs border-slate-300 dark:border-transparent'
+                          : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 border-transparent hover:bg-white/40 dark:hover:bg-white/5'
+                      }`}
+                      style={
+                        isActive
+                          ? {
+                              borderColor: s.accentColor,
+                              backgroundColor: `${s.accentColor}18`,
+                              color: s.accentColor,
+                            }
+                          : undefined
+                      }
+                    >
+                      <span
+                        className="w-1.5 h-1.5 rounded-full shrink-0 transition-colors"
+                        style={{
+                          background: isActive ? s.accentColor : '#94a3b8',
+                        }}
+                      />
+                      {s.stepNum}. {s.tabLabel}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* ── Main Body: Smooth Styled Scroll Container ── */}
-              <div
-                className="uh-tour-scrollbar"
-                style={{
-                  flex: 1,
-                  minHeight: 0,
-                  overflowY: 'auto',
-                  padding: '24px 28px',
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                  gap: 24,
-                  alignItems: 'start',
-                  zIndex: 10,
-                }}
-              >
+              <div className="uh-tour-scrollbar flex-1 min-h-0 overflow-y-auto p-5 sm:p-7 grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch z-10">
                 {/* Left Card */}
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    borderRadius: 16,
-                    padding: '28px',
-                    background: 'linear-gradient(160deg, #111124 0%, #0a0a14 100%)',
-                    border: '1px solid rgba(255,255,255,0.09)',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    height: '100%',
-                    minHeight: 340,
-                  }}
-                >
+                <div className="flex flex-col justify-between rounded-2xl p-6 sm:p-7 bg-gradient-to-br from-slate-50 via-white to-slate-100/70 dark:from-[#111124] dark:to-[#0a0a14] border border-slate-200/90 dark:border-white/10 relative overflow-hidden h-full min-h-[340px] shadow-sm">
                   {/* Glow blob */}
                   <div
-                    style={{
-                      position: 'absolute',
-                      top: -40,
-                      right: -40,
-                      width: 130,
-                      height: 130,
-                      borderRadius: '50%',
-                      background: step.accentColor,
-                      filter: 'blur(50px)',
-                      opacity: 0.35,
-                      pointerEvents: 'none',
-                    }}
+                    className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-[50px] opacity-25 dark:opacity-35 pointer-events-none"
+                    style={{ background: step.accentColor }}
                   />
 
                   {/* Top content */}
-                  <div style={{ position: 'relative' }}>
+                  <div className="relative">
                     {/* Icon */}
                     <div
+                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
                       style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: 12,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        marginBottom: 16,
-                        background: `linear-gradient(135deg, ${step.accentColor}33, ${step.accentColor}11)`,
-                        border: `1.5px solid ${step.accentColor}77`,
-                        boxShadow: `0 0 20px ${step.glowColor}`,
+                        background: `linear-gradient(135deg, ${step.accentColor}25, ${step.accentColor}08)`,
+                        border: `1.5px solid ${step.accentColor}55`,
+                        boxShadow: `0 0 16px ${step.glowColor}`,
                       }}
                     >
                       <StepIcon style={{ width: 20, height: 20, color: step.accentColor }} />
@@ -1416,16 +1343,8 @@ export default function OnboardingModalWeb() {
 
                     {/* Badge */}
                     <span
+                      className="inline-block font-mono text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded mb-3"
                       style={{
-                        display: 'inline-block',
-                        fontFamily: 'monospace',
-                        fontSize: 9,
-                        fontWeight: 900,
-                        letterSpacing: '0.14em',
-                        textTransform: 'uppercase',
-                        padding: '3px 8px',
-                        borderRadius: 5,
-                        marginBottom: 12,
                         color: step.accentColor,
                         background: `${step.accentColor}18`,
                         border: `1px solid ${step.accentColor}44`,
@@ -1437,151 +1356,80 @@ export default function OnboardingModalWeb() {
                     {/* Title */}
                     <h2
                       id="tour-dialog-title"
-                      style={{
-                        fontSize: 22,
-                        fontWeight: 800,
-                        color: '#fff',
-                        lineHeight: 1.28,
-                        margin: '0 0 10px',
-                        letterSpacing: '-0.02em',
-                      }}
+                      className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight mb-2.5 tracking-tight"
                     >
                       {step.title}
                     </h2>
 
                     {/* Subtitle */}
-                    <p style={{ fontSize: 13, color: '#cbd5e1', lineHeight: 1.65, margin: 0 }}>
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed m-0">
                       {step.subtitle}
                     </p>
                   </div>
 
                   {/* Quote Footer */}
-                  <div
-                    style={{
-                      marginTop: 24,
-                      paddingTop: 20,
-                      borderTop: '1px solid rgba(255,255,255,0.09)',
-                      position: 'relative',
-                    }}
-                  >
+                  <div className="mt-6 pt-5 border-t border-slate-200/80 dark:border-white/10 relative">
                     {/* Step 1 portrait */}
                     {activeStepIndex === 0 && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 14 }}>
+                      <div className="flex items-center gap-3.5 mb-3.5">
                         <img
                           src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/assets/moumita-debnath.jpg`}
                           alt="Dr. Moumita Debnath"
-                          style={{
-                            width: 52,
-                            height: 60,
-                            borderRadius: 10,
-                            objectFit: 'cover',
-                            objectPosition: 'top',
-                            border: '1.5px solid rgba(236,72,153,0.5)',
-                            flexShrink: 0,
-                            boxShadow: '0 4px 16px rgba(0,0,0,0.5)',
-                          }}
+                          className="w-13 h-15 rounded-xl object-cover object-top border-2 border-pink-500/40 shrink-0 shadow-md shadow-pink-500/10"
                         />
                         <div>
-                          <span
-                            style={{
-                              fontSize: 14,
-                              fontWeight: 700,
-                              color: '#fff',
-                              display: 'block',
-                              marginBottom: 2,
-                            }}
-                          >
+                          <span className="text-sm font-bold text-slate-900 dark:text-white block mb-0.5">
                             Dr. Moumita Debnath
                           </span>
-                          <span style={{ fontSize: 11, color: '#94a3b8', display: 'block' }}>
+                          <span className="text-xs text-slate-500 dark:text-slate-400 block">
                             MD Chest Medicine · Respiratory Care &amp; Research
                           </span>
                         </div>
                       </div>
                     )}
 
-                    <p
-                      style={{
-                        fontSize: 12,
-                        color: '#cbd5e1',
-                        fontStyle: 'italic',
-                        lineHeight: 1.65,
-                        margin: '0 0 8px',
-                      }}
-                    >
+                    <p className="text-xs text-slate-700 dark:text-slate-300 italic leading-relaxed mb-2">
                       &ldquo;{step.quote}&rdquo;
                     </p>
-                    <span
-                      style={{
-                        fontFamily: 'monospace',
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: '#64748b',
-                        display: 'block',
-                      }}
-                    >
+                    <span className="font-mono text-xs font-bold text-slate-500 dark:text-slate-400 block">
                       &mdash; {step.author}
                     </span>
                   </div>
                 </div>
 
                 {/* Right Column: Key Pillars & Interactive Capabilities */}
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div className="flex flex-col">
                   {/* Section heading */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                  <div className="flex items-center gap-2 mb-3.5">
                     <Sparkles style={{ width: 14, height: 14, color: step.accentColor, flexShrink: 0 }} />
-                    <span
-                      style={{
-                        fontFamily: 'monospace',
-                        fontSize: 11,
-                        fontWeight: 900,
-                        letterSpacing: '0.12em',
-                        textTransform: 'uppercase',
-                        color: '#64748b',
-                      }}
-                    >
+                    <span className="font-mono text-[11px] font-black tracking-widest uppercase text-slate-500 dark:text-slate-400">
                       HIGHLIGHTS &amp; CAPABILITIES
                     </span>
                   </div>
 
                   {/* Bullet cards */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 20 }}>
+                  <div className="flex flex-col gap-2.5 mb-5">
                     {step.bullets.map((b, i) => {
                       const BulletIcon = b.icon || CheckCircle2;
                       return (
                         <div
                           key={i}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'flex-start',
-                            gap: 14,
-                            padding: '14px 16px',
-                            borderRadius: 12,
-                            background: 'rgba(255,255,255,0.025)',
-                            border: '1px solid rgba(255,255,255,0.06)',
-                          }}
+                          className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50/90 hover:bg-slate-100/90 dark:bg-white/[0.03] dark:hover:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.07] transition-colors shadow-xs"
                         >
                           <div
+                            className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
                             style={{
-                              width: 28,
-                              height: 28,
-                              borderRadius: 8,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              flexShrink: 0,
-                              marginTop: 1,
-                              background: `${step.accentColor}1a`,
+                              background: `${step.accentColor}18`,
                               color: step.accentColor,
                             }}
                           >
                             <BulletIcon size={15} />
                           </div>
                           <div>
-                            <h4 style={{ fontSize: 14, fontWeight: 700, color: '#fff', margin: '0 0 4px' }}>
+                            <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">
                               {b.title}
                             </h4>
-                            <p style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.6, margin: 0 }}>
+                            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed m-0">
                               {b.desc}
                             </p>
                           </div>
@@ -1592,89 +1440,57 @@ export default function OnboardingModalWeb() {
 
                   {/* Step 5 Portal CTA */}
                   {step.portalCta && (
-                    <div>
-                      <span
-                        style={{
-                          fontFamily: 'monospace',
-                          fontSize: 10,
-                          fontWeight: 700,
-                          color: '#fbbf24',
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.1em',
-                          display: 'block',
-                          marginBottom: 10,
-                        }}
-                      >
+                    <div className="mt-auto">
+                      <span className="font-mono text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block mb-2.5">
                         🚀 CHOOSE YOUR DESTINATION PORTAL:
                       </span>
-                      <div
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                          gap: 10,
-                        }}
-                      >
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                         <Link
                           href="/articles"
                           onClick={closeTour}
-                          style={{
-                            padding: '12px',
-                            borderRadius: 12,
-                            background: '#0e0e1e',
-                            border: '1px solid rgba(34,211,238,0.35)',
-                            textDecoration: 'none',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 6,
-                          }}
+                          className="p-3 rounded-xl bg-slate-50 hover:bg-cyan-50/50 dark:bg-[#0e0e1e] dark:hover:bg-cyan-950/20 border border-cyan-400/30 hover:border-cyan-500/60 no-underline flex flex-col gap-1.5 transition-all shadow-xs group"
                         >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <User size={14} style={{ color: '#22d3ee' }} />
-                            <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{ui.patientHub}</span>
+                          <div className="flex items-center gap-2">
+                            <User size={14} className="text-cyan-600 dark:text-cyan-400" />
+                            <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-300">
+                              {ui.patientHub}
+                            </span>
                           </div>
-                          <span style={{ fontSize: 11, color: '#64748b' }}>{ui.patientHubDesc}</span>
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
+                            {ui.patientHubDesc}
+                          </span>
                         </Link>
 
                         <Link
                           href="/admin-agreement"
                           onClick={closeTour}
-                          style={{
-                            padding: '12px',
-                            borderRadius: 12,
-                            background: '#0e0e1e',
-                            border: '1px solid rgba(16,185,129,0.35)',
-                            textDecoration: 'none',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 6,
-                          }}
+                          className="p-3 rounded-xl bg-slate-50 hover:bg-emerald-50/50 dark:bg-[#0e0e1e] dark:hover:bg-emerald-950/20 border border-emerald-400/30 hover:border-emerald-500/60 no-underline flex flex-col gap-1.5 transition-all shadow-xs group"
                         >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <Stethoscope size={14} style={{ color: '#10b981' }} />
-                            <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{ui.doctorSuite}</span>
+                          <div className="flex items-center gap-2">
+                            <Stethoscope size={14} className="text-emerald-600 dark:text-emerald-400" />
+                            <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-300">
+                              {ui.doctorSuite}
+                            </span>
                           </div>
-                          <span style={{ fontSize: 11, color: '#64748b' }}>{ui.doctorSuiteDesc}</span>
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
+                            {ui.doctorSuiteDesc}
+                          </span>
                         </Link>
 
                         <Link
                           href="/contribute"
                           onClick={closeTour}
-                          style={{
-                            padding: '12px',
-                            borderRadius: 12,
-                            background: '#0e0e1e',
-                            border: '1px solid rgba(255,0,127,0.35)',
-                            textDecoration: 'none',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: 6,
-                          }}
+                          className="p-3 rounded-xl bg-slate-50 hover:bg-rose-50/50 dark:bg-[#0e0e1e] dark:hover:bg-rose-950/20 border border-rose-400/30 hover:border-rose-500/60 no-underline flex flex-col gap-1.5 transition-all shadow-xs group"
                         >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <Code2 size={14} style={{ color: '#ff007f' }} />
-                            <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{ui.openSquad}</span>
+                          <div className="flex items-center gap-2">
+                            <Code2 size={14} className="text-rose-600 dark:text-rose-400" />
+                            <span className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-300">
+                              {ui.openSquad}
+                            </span>
                           </div>
-                          <span style={{ fontSize: 11, color: '#64748b' }}>{ui.openSquadDesc}</span>
+                          <span className="text-[11px] text-slate-500 dark:text-slate-400 leading-tight">
+                            {ui.openSquadDesc}
+                          </span>
                         </Link>
                       </div>
                     </div>
@@ -1683,59 +1499,35 @@ export default function OnboardingModalWeb() {
               </div>
 
               {/* ── Bottom Controls Bar ── */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '18px 28px',
-                  borderTop: '1px solid rgba(255,255,255,0.08)',
-                  background: '#090918',
-                  flexShrink: 0,
-                  zIndex: 20,
-                  borderRadius: '0 0 20px 20px',
-                }}
-              >
+              <div className="flex items-center justify-between px-5 sm:px-7 py-3.5 border-t border-slate-100 dark:border-white/10 bg-slate-50 dark:bg-[#090918] shrink-0 z-20 rounded-b-2xl sm:rounded-b-3xl">
                 {/* Step dots */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  {TOUR_STEPS.map((s, idx) => (
-                    <button
-                      key={s.id}
-                      onClick={() => handleSelectStep(idx)}
-                      style={{
-                        height: 10,
-                        width: idx === activeStepIndex ? 32 : 10,
-                        borderRadius: 999,
-                        border: 'none',
-                        cursor: 'pointer',
-                        padding: 0,
-                        background: idx === activeStepIndex ? s.accentColor : '#334155',
-                        transition: 'all 0.3s',
-                        boxShadow: idx === activeStepIndex ? `0 0 10px ${s.accentColor}` : 'none',
-                      }}
-                      title={`${ui.stageBadge} ${s.stepNum}: ${s.tabLabel}`}
-                    />
-                  ))}
+                <div className="flex items-center gap-2">
+                  {TOUR_STEPS.map((s, idx) => {
+                    const isActive = idx === activeStepIndex;
+                    return (
+                      <button
+                        key={s.id}
+                        onClick={() => handleSelectStep(idx)}
+                        className="h-2.5 rounded-full border-none cursor-pointer p-0 transition-all duration-300"
+                        style={{
+                          width: isActive ? 28 : 10,
+                          backgroundColor: isActive
+                            ? s.accentColor
+                            : '#cbd5e1',
+                          boxShadow: isActive ? `0 0 10px ${s.accentColor}` : 'none',
+                        }}
+                        title={`${ui.stageBadge} ${s.stepNum}: ${s.tabLabel}`}
+                      />
+                    );
+                  })}
                 </div>
 
                 {/* Buttons */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div className="flex items-center gap-3">
                   {activeStepIndex > 0 && (
                     <button
                       onClick={handlePrev}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8,
-                        padding: '12px 22px',
-                        borderRadius: 12,
-                        border: '1px solid rgba(255,255,255,0.18)',
-                        background: 'rgba(255,255,255,0.05)',
-                        color: '#e2e8f0',
-                        fontSize: 14,
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                      }}
+                      className="flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl border border-slate-200 dark:border-white/20 bg-white dark:bg-white/5 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-bold cursor-pointer hover:bg-slate-100 dark:hover:bg-white/10 transition-colors shadow-xs"
                     >
                       <ChevronLeft size={16} />
                       {ui.back}
@@ -1743,23 +1535,10 @@ export default function OnboardingModalWeb() {
                   )}
                   <button
                     onClick={handleNext}
+                    className="flex items-center gap-1.5 px-5 sm:px-6 py-2.5 rounded-xl border-none text-slate-950 font-mono font-black text-xs sm:text-sm tracking-wider uppercase cursor-pointer hover:brightness-110 active:scale-95 transition-all shadow-md"
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      padding: '12px 26px',
-                      borderRadius: 12,
-                      border: 'none',
                       background: step.accentColor,
-                      boxShadow: `0 0 20px ${step.glowColor}`,
-                      color: '#000',
-                      fontSize: 14,
-                      fontWeight: 900,
-                      fontFamily: 'monospace',
-                      letterSpacing: '0.08em',
-                      textTransform: 'uppercase',
-                      cursor: 'pointer',
-                      transition: 'transform 0.15s',
+                      boxShadow: `0 0 16px ${step.glowColor}`,
                     }}
                   >
                     {activeStepIndex === TOUR_STEPS.length - 1 ? ui.completeTour : ui.nextStage}

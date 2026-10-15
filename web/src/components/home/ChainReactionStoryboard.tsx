@@ -13,28 +13,28 @@ export default function ChainReactionStoryboard() {
       icon: Search,
       title: t('step1Title'),
       desc: t('step1Desc'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
     {
       step: '02',
       icon: Bot,
       title: t('step2Title'),
       desc: t('step2Desc'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
     {
       step: '03',
       icon: GitPullRequest,
       title: t('step3Title'),
       desc: t('step3Desc'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
     {
       step: '04',
       icon: Rocket,
       title: t('step4Title'),
       desc: t('step4Desc'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
   ];
 
@@ -43,24 +43,24 @@ export default function ChainReactionStoryboard() {
       id="storyboard"
       className="uh-section-alt"
       style={{
-        borderTop: '1px solid #252538',
+        borderTop: '1px solid var(--explorer-border, #e2e8f0)',
         padding: '96px 24px',
       }}
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        {/* Section Header — no badge, section differentiates via layout */}
+        {/* Section Header */}
         <div style={{ maxWidth: '640px', marginBottom: '56px' }}>
           <h2
             className="uh-display"
             style={{
               fontSize: 'clamp(1.875rem, 4.5vw, 2.75rem)',
-              color: '#f1f5f9',
+              color: 'var(--site-heading, #0f172a)',
               margin: '0 0 16px 0',
             }}
           >
             {t('title')}
           </h2>
-          <p style={{ fontSize: '1rem', lineHeight: 1.65, color: '#64748b', margin: 0 }}>
+          <p style={{ fontSize: '1rem', lineHeight: 1.65, color: 'var(--vice-muted, #475569)', margin: 0 }}>
             {t('description')}
           </p>
         </div>
@@ -97,8 +97,8 @@ export default function ChainReactionStoryboard() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: `${s.accent}10`,
-                        border: `1px solid ${s.accent}22`,
+                        background: `${s.accent}14`,
+                        border: `1px solid ${s.accent}30`,
                         flexShrink: 0,
                       }}
                     >
@@ -108,7 +108,7 @@ export default function ChainReactionStoryboard() {
                       style={{
                         fontSize: '1.0625rem',
                         fontWeight: 700,
-                        color: '#f1f5f9',
+                        color: 'var(--site-heading, #0f172a)',
                         margin: 0,
                       }}
                     >
@@ -120,7 +120,7 @@ export default function ChainReactionStoryboard() {
                     style={{
                       fontSize: '0.9375rem',
                       lineHeight: 1.65,
-                      color: '#64748b',
+                      color: 'var(--explorer-text-secondary, #475569)',
                       margin: 0,
                       maxWidth: '700px',
                     }}

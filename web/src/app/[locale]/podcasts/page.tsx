@@ -12,14 +12,20 @@ export default function PodcastsPage() {
   return (
     <>
       <SiteHeader />
-      <main style={{ background: '#0c0c14', color: '#f1f5f9', minHeight: '100vh' }}>
+      <main
+        style={{
+          background: 'var(--explorer-bg, #f8fafc)',
+          color: 'var(--explorer-text-primary, #0f172a)',
+          minHeight: '100vh',
+        }}
+      >
         {/* ── Hero / Coming Soon Section ── */}
         <section
           style={{
             paddingTop: '130px',
             paddingBottom: '80px',
             textAlign: 'center',
-            borderBottom: '1px solid #252538',
+            borderBottom: '1px solid var(--explorer-border, #e2e8f0)',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -34,7 +40,7 @@ export default function PodcastsPage() {
               transform: 'translateX(-50%)',
               width: '600px',
               height: '350px',
-              background: 'radial-gradient(ellipse, rgba(124,58,237,0.18) 0%, transparent 70%)',
+              background: 'radial-gradient(ellipse, rgba(13,148,136,0.10) 0%, transparent 70%)',
               pointerEvents: 'none',
             }}
           />
@@ -46,12 +52,12 @@ export default function PodcastsPage() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                background: 'rgba(240, 0, 106, 0.12)',
-                border: '1px solid rgba(240, 0, 106, 0.35)',
+                background: 'rgba(13, 148, 136, 0.08)',
+                border: '1px solid rgba(13, 148, 136, 0.3)',
                 borderRadius: '50px',
                 padding: '6px 18px',
                 marginBottom: '20px',
-                color: '#f0006a',
+                color: '#0d9488',
                 fontSize: '0.75rem',
                 fontWeight: 800,
                 letterSpacing: '0.12em',
@@ -69,7 +75,7 @@ export default function PodcastsPage() {
                 fontWeight: 800,
                 letterSpacing: '-0.025em',
                 lineHeight: 1.15,
-                color: '#f1f5f9',
+                color: 'var(--site-heading, #0f172a)',
                 fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
                 marginBottom: '20px',
               }}
@@ -81,7 +87,7 @@ export default function PodcastsPage() {
               style={{
                 fontSize: '1.1rem',
                 lineHeight: 1.7,
-                color: '#94a3b8',
+                color: 'var(--explorer-text-secondary, #475569)',
                 maxWidth: '680px',
                 margin: '0 auto 36px',
               }}
@@ -92,8 +98,8 @@ export default function PodcastsPage() {
             {/* Mobile App clarification banner */}
             <div
               style={{
-                background: '#13131f',
-                border: '1px solid #252538',
+                background: 'var(--explorer-surface, #f1f5f9)',
+                border: '1px solid var(--explorer-border, #e2e8f0)',
                 borderRadius: '18px',
                 padding: '24px 28px',
                 maxWidth: '640px',
@@ -109,21 +115,21 @@ export default function PodcastsPage() {
                   width: '44px',
                   height: '44px',
                   borderRadius: '12px',
-                  background: 'rgba(0, 229, 255, 0.12)',
-                  border: '1px solid rgba(0, 229, 255, 0.3)',
+                  background: 'rgba(13, 148, 136, 0.10)',
+                  border: '1px solid rgba(13, 148, 136, 0.25)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
                 }}
               >
-                <Smartphone size={22} color="#00e5ff" />
+                <Smartphone size={22} color="#0d9488" />
               </div>
               <div>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9', margin: '0 0 6px' }}>
+                <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--explorer-text-primary, #0f172a)', margin: '0 0 6px' }}>
                   {t('appBannerTitle')}
                 </h4>
-                <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.6, margin: 0 }}>
+                <p style={{ fontSize: '0.88rem', color: 'var(--explorer-text-secondary, #475569)', lineHeight: 1.6, margin: 0 }}>
                   {t('appBannerDesc')}
                 </p>
               </div>
@@ -143,19 +149,19 @@ export default function PodcastsPage() {
                   icon: Headphones,
                   title: t('feature1Title'),
                   desc: t('feature1Desc'),
-                  accent: '#a78bfa',
+                  accent: '#7c3aed',
                 },
                 {
                   icon: Mic,
                   title: t('feature2Title'),
                   desc: t('feature2Desc'),
-                  accent: '#f0006a',
+                  accent: '#e11d48',
                 },
                 {
                   icon: Sparkles,
                   title: t('feature3Title'),
                   desc: t('feature3Desc'),
-                  accent: '#00e5ff',
+                  accent: '#0d9488',
                 },
               ].map((card, idx) => {
                 const Icon = card.icon;
@@ -163,17 +169,17 @@ export default function PodcastsPage() {
                   <div
                     key={idx}
                     style={{
-                      background: '#13131f',
-                      border: '1px solid #252538',
+                      background: 'var(--explorer-surface, #f1f5f9)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
                       borderRadius: '16px',
                       padding: '22px',
                     }}
                   >
                     <Icon size={22} color={card.accent} style={{ marginBottom: '12px' }} />
-                    <h5 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f1f5f9', margin: '0 0 6px' }}>
+                    <h5 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--explorer-text-primary, #0f172a)', margin: '0 0 6px' }}>
                       {card.title}
                     </h5>
-                    <p style={{ fontSize: '0.84rem', color: '#94a3b8', lineHeight: 1.5, margin: 0 }}>
+                    <p style={{ fontSize: '0.84rem', color: 'var(--explorer-text-secondary, #475569)', lineHeight: 1.5, margin: 0 }}>
                       {card.desc}
                     </p>
                   </div>

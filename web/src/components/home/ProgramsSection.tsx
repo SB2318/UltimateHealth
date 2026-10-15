@@ -10,7 +10,7 @@ const programs = [
     badge: 'Open Source Week',
     title: 'IEEE IGDTUW',
     desc: 'An intensive event fostering global collaboration and high-level skill-building across open-source ecosystems.',
-    accent: '#2dd4bf',
+    accent: '#0d9488',
   },
   {
     logo: 'https://github.com/user-attachments/assets/2b03167c-a598-48be-9f93-66130e58ec00',
@@ -18,7 +18,7 @@ const programs = [
     badge: 'Cloud Hackathon',
     title: 'Vultr Cloud Innovate',
     desc: 'Developing scalable infrastructure solutions for health accessibility challenges using cloud computing.',
-    accent: '#2dd4bf',
+    accent: '#0d9488',
   },
   {
     logo: 'https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png',
@@ -26,7 +26,7 @@ const programs = [
     badge: 'Summer 2024',
     title: 'GirlScript Summer of Code',
     desc: 'A 3-month mentorship initiative bringing international contributors into real-world software development.',
-    accent: '#2dd4bf',
+    accent: '#0d9488',
   },
   {
     logo: 'https://user-images.githubusercontent.com/63473496/153487849-4f094c16-d21c-463e-9971-98a8af7ba372.png',
@@ -34,7 +34,7 @@ const programs = [
     badge: 'Summer 2026',
     title: 'GirlScript Summer of Code 2026',
     desc: 'Large-scale collaborative program welcoming developers, translators, and documentation writers worldwide.',
-    accent: '#2dd4bf',
+    accent: '#0d9488',
   },
 ];
 
@@ -43,28 +43,28 @@ export default function ProgramsSection() {
     <section
       id="programs"
       style={{
-        background: '#0c0c14',
-        borderTop: '1px solid #252538',
+        background: 'var(--vice-dark, #ffffff)',
+        borderTop: '1px solid var(--vice-border, #e2e8f0)',
         padding: '96px 24px',
       }}
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Section Header */}
         <div style={{ maxWidth: '640px', marginBottom: '48px' }}>
-          <p className="uh-section-label" style={{ color: '#f5c518', marginBottom: '12px' }}>
+          <p className="uh-section-label" style={{ color: '#d97706', marginBottom: '12px' }}>
             Community
           </p>
           <h2
             className="uh-display"
             style={{
               fontSize: 'clamp(1.875rem, 4.5vw, 2.75rem)',
-              color: '#f1f5f9',
+              color: 'var(--site-heading, #0f172a)',
               margin: '0 0 16px 0',
             }}
           >
             Programs &amp; Hackathons
           </h2>
-          <p style={{ fontSize: '1rem', lineHeight: 1.65, color: '#64748b', margin: 0 }}>
+          <p style={{ fontSize: '1rem', lineHeight: 1.65, color: 'var(--vice-muted, #475569)', margin: 0 }}>
             Collaborating with tech communities to mentor contributors and advance open health tech.
           </p>
         </div>
@@ -79,11 +79,11 @@ export default function ProgramsSection() {
                   alt={p.alt}
                   width={100}
                   height={36}
+                  className="opacity-80 dark:brightness-0 dark:invert"
                   style={{
                     maxHeight: '32px',
                     width: 'auto',
                     objectFit: 'contain',
-                    filter: 'brightness(0) invert(1) opacity(0.75)',
                   }}
                 />
               </div>
@@ -97,8 +97,8 @@ export default function ProgramsSection() {
                       letterSpacing: '0.08em',
                       textTransform: 'uppercase',
                       color: p.accent,
-                      background: `${p.accent}12`,
-                      border: `1px solid ${p.accent}22`,
+                      background: `${p.accent}14`,
+                      border: `1px solid ${p.accent}30`,
                       padding: '2px 7px',
                       borderRadius: '4px',
                       flexShrink: 0,

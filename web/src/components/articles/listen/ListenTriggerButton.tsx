@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Headphones, Volume2, Square } from "lucide-react";
+import { Headphones, Volume2 } from "lucide-react";
 
 interface ListenTriggerButtonProps {
   isPlaying: boolean;
@@ -33,27 +33,29 @@ export default function ListenTriggerButton({
           fontSize: "0.875rem",
           fontWeight: 700,
           background: isPlaying
-            ? "linear-gradient(135deg, rgba(45, 212, 191, 0.22), rgba(6, 182, 212, 0.22))"
-            : "rgba(20, 20, 36, 0.8)",
-          color: isPlaying ? "#2dd4bf" : "#f1f5f9",
-          border: isPlaying ? "1px solid #2dd4bf" : "1px solid #2e2e48",
+            ? "rgba(13, 148, 136, 0.12)"
+            : "var(--explorer-surface, #f1f5f9)",
+          color: isPlaying ? "#0d9488" : "var(--explorer-text-primary, #0f172a)",
+          border: isPlaying
+            ? "1px solid #0d9488"
+            : "1px solid var(--explorer-border, #e2e8f0)",
           boxShadow: isPlaying
-            ? "0 0 20px rgba(45, 212, 191, 0.35)"
-            : "0 4px 14px rgba(0, 0, 0, 0.25)",
+            ? "0 0 20px rgba(13, 148, 136, 0.2)"
+            : "0 4px 14px rgba(0, 0, 0, 0.06)",
           cursor: "pointer",
           transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
         }}
         onMouseEnter={(e) => {
           if (!isPlaying) {
-            e.currentTarget.style.borderColor = "#2dd4bf";
-            e.currentTarget.style.color = "#2dd4bf";
+            e.currentTarget.style.borderColor = "#0d9488";
+            e.currentTarget.style.color = "#0d9488";
             e.currentTarget.style.transform = "translateY(-1px)";
           }
         }}
         onMouseLeave={(e) => {
           if (!isPlaying) {
-            e.currentTarget.style.borderColor = "#2e2e48";
-            e.currentTarget.style.color = "#f1f5f9";
+            e.currentTarget.style.borderColor = "var(--explorer-border, #e2e8f0)";
+            e.currentTarget.style.color = "var(--explorer-text-primary, #0f172a)";
             e.currentTarget.style.transform = "translateY(0)";
           }
         }}
@@ -65,7 +67,7 @@ export default function ListenTriggerButton({
                 style={{
                   width: "3px",
                   height: "100%",
-                  background: "#2dd4bf",
+                  background: "#0d9488",
                   borderRadius: "2px",
                   animation: "soundwave 0.8s ease-in-out infinite alternate",
                 }}
@@ -74,7 +76,7 @@ export default function ListenTriggerButton({
                 style={{
                   width: "3px",
                   height: "60%",
-                  background: "#2dd4bf",
+                  background: "#0d9488",
                   borderRadius: "2px",
                   animation: "soundwave 0.8s ease-in-out infinite alternate 0.2s",
                 }}
@@ -83,7 +85,7 @@ export default function ListenTriggerButton({
                 style={{
                   width: "3px",
                   height: "85%",
-                  background: "#2dd4bf",
+                  background: "#0d9488",
                   borderRadius: "2px",
                   animation: "soundwave 0.8s ease-in-out infinite alternate 0.4s",
                 }}
@@ -93,15 +95,15 @@ export default function ListenTriggerButton({
           </>
         ) : (
           <>
-            <Headphones size={16} className="text-[#2dd4bf]" />
+            <Headphones size={16} className="text-[#0d9488]" />
             <span>Listen to Article</span>
             {durationStr && (
               <span
                 style={{
                   fontSize: "0.75rem",
-                  color: "#94a3b8",
+                  color: "var(--explorer-text-secondary, #64748b)",
                   padding: "2px 8px",
-                  background: "rgba(255, 255, 255, 0.05)",
+                  background: "var(--explorer-surface, rgba(0,0,0,0.04))",
                   borderRadius: "10px",
                 }}
               >
@@ -130,38 +132,42 @@ export default function ListenTriggerButton({
         gap: "6px",
         fontSize: "0.75rem",
         fontWeight: 700,
-        background: isPlaying ? "rgba(45, 212, 191, 0.16)" : "#141422",
-        color: isPlaying ? "#2dd4bf" : "#cbd5e1",
-        border: isPlaying ? "1px solid rgba(45, 212, 191, 0.5)" : "1px solid #28283e",
+        background: isPlaying
+          ? "rgba(13, 148, 136, 0.12)"
+          : "var(--explorer-surface, #f1f5f9)",
+        color: isPlaying ? "#0d9488" : "var(--explorer-text-primary, #475569)",
+        border: isPlaying
+          ? "1px solid rgba(13, 148, 136, 0.5)"
+          : "1px solid var(--explorer-border, #e2e8f0)",
         cursor: "pointer",
         transition: "all 0.15s ease",
       }}
       onMouseEnter={(e) => {
         if (!isPlaying) {
-          e.currentTarget.style.borderColor = "#3e3e5c";
-          e.currentTarget.style.color = "#ffffff";
+          e.currentTarget.style.borderColor = "#0d9488";
+          e.currentTarget.style.color = "#0d9488";
         }
       }}
       onMouseLeave={(e) => {
         if (!isPlaying) {
-          e.currentTarget.style.borderColor = "#28283e";
-          e.currentTarget.style.color = "#cbd5e1";
+          e.currentTarget.style.borderColor = "var(--explorer-border, #e2e8f0)";
+          e.currentTarget.style.color = "var(--explorer-text-primary, #475569)";
         }
       }}
     >
       {isPlaying ? (
         <>
-          <Volume2 size={13} className="text-[#2dd4bf] animate-pulse" />
-          <span style={{ color: "#2dd4bf" }}>Playing</span>
+          <Volume2 size={13} className="text-[#0d9488] animate-pulse" />
+          <span style={{ color: "#0d9488" }}>Playing</span>
         </>
       ) : isPaused ? (
         <>
-          <Headphones size={13} className="text-amber-400" />
-          <span style={{ color: "#fbbf24" }}>Paused</span>
+          <Headphones size={13} className="text-amber-500" />
+          <span style={{ color: "#f59e0b" }}>Paused</span>
         </>
       ) : (
         <>
-          <Headphones size={13} className="text-[#2dd4bf]" />
+          <Headphones size={13} className="text-[#0d9488]" />
           <span>Listen</span>
         </>
       )}

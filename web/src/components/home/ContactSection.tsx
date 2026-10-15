@@ -11,8 +11,8 @@ export default function ContactSection() {
     <section
       id="contact"
       style={{
-        background: "#0c0c14",
-        borderTop: "1px solid #252538",
+        background: "var(--vice-dark, #ffffff)",
+        borderTop: "1px solid var(--vice-border, #e2e8f0)",
         padding: "96px 24px",
       }}
     >
@@ -21,7 +21,7 @@ export default function ContactSection() {
           <p
             className="uh-section-label"
             style={{
-              color: "#00e5ff",
+              color: "#0d9488",
               marginBottom: "12px",
             }}
           >
@@ -31,7 +31,7 @@ export default function ContactSection() {
             className="uh-display"
             style={{
               fontSize: "clamp(1.875rem, 4.5vw, 2.75rem)",
-              color: "#f8fafc",
+              color: "var(--site-heading, #0f172a)",
               margin: "0 0 16px 0",
             }}
           >
@@ -41,7 +41,7 @@ export default function ContactSection() {
             style={{
               fontSize: "1rem",
               lineHeight: 1.65,
-              color: "#94a3b8",
+              color: "var(--vice-muted, #475569)",
               margin: 0,
             }}
           >

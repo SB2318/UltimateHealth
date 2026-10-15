@@ -28,29 +28,29 @@ export default function ContributePage() {
       icon: Code2,
       title: t('wayCode'),
       desc: t('wayCodeItems'),
-      accent: '#00e5ff',
-      bg: 'rgba(0, 229, 255, 0.1)',
+      accent: '#0d9488',
+      bg: 'rgba(13, 148, 136, 0.10)',
     },
     {
       icon: BookOpen,
       title: t('wayDoc'),
       desc: t('wayDocItems'),
-      accent: '#a78bfa',
-      bg: 'rgba(167, 139, 250, 0.1)',
+      accent: '#7c3aed',
+      bg: 'rgba(124, 58, 237, 0.10)',
     },
     {
       icon: Palette,
       title: t('wayDesign'),
       desc: t('wayDesignItems'),
-      accent: '#f0006a',
-      bg: 'rgba(240, 0, 106, 0.1)',
+      accent: '#e11d48',
+      bg: 'rgba(225, 29, 72, 0.10)',
     },
     {
       icon: Bug,
       title: t('wayTesting'),
       desc: t('wayTestingItems'),
-      accent: '#22c55e',
-      bg: 'rgba(34, 197, 94, 0.1)',
+      accent: '#16a34a',
+      bg: 'rgba(22, 163, 74, 0.10)',
     },
   ];
 
@@ -62,7 +62,7 @@ export default function ContributePage() {
       actionText: t('openIssues'),
       href: `${REPO_URL}/issues`,
       external: true,
-      accent: '#00e5ff',
+      accent: '#0d9488',
     },
     {
       icon: FileText,
@@ -71,7 +71,7 @@ export default function ContributePage() {
       actionText: t('readGuide'),
       href: `${REPO_URL}/blob/main/CONTRIBUTING.md`,
       external: true,
-      accent: '#a78bfa',
+      accent: '#7c3aed',
     },
     {
       icon: Mail,
@@ -80,21 +80,27 @@ export default function ContributePage() {
       actionText: t('sendEmail'),
       href: 'mailto:ultimate.health25@gmail.com',
       external: false,
-      accent: '#f0006a',
+      accent: '#e11d48',
     },
   ];
 
   return (
     <>
       <Navbar />
-      <main style={{ background: '#0c0c14', color: '#f1f5f9', minHeight: '100vh' }}>
+      <main
+        style={{
+          background: 'var(--explorer-bg, #f8fafc)',
+          color: 'var(--explorer-text-primary, #0f172a)',
+          minHeight: '100vh',
+        }}
+      >
         {/* ── Hero Section ── */}
         <section
           style={{
             paddingTop: '128px',
             paddingBottom: '64px',
             textAlign: 'center',
-            borderBottom: '1px solid #252538',
+            borderBottom: '1px solid var(--explorer-border, #e2e8f0)',
           }}
         >
           <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 24px' }}>
@@ -104,7 +110,7 @@ export default function ContributePage() {
                 fontWeight: 700,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
-                color: '#a78bfa',
+                color: '#7c3aed',
                 fontFamily: 'monospace',
                 marginBottom: '16px',
               }}
@@ -117,7 +123,7 @@ export default function ContributePage() {
                 fontWeight: 800,
                 letterSpacing: '-0.025em',
                 lineHeight: 1.2,
-                color: '#f1f5f9',
+                color: 'var(--site-heading, #0f172a)',
                 fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
                 margin: '0 auto 20px',
                 maxWidth: '800px',
@@ -129,7 +135,7 @@ export default function ContributePage() {
               style={{
                 fontSize: '1.1rem',
                 lineHeight: 1.7,
-                color: '#94a3b8',
+                color: 'var(--explorer-text-secondary, #475569)',
                 maxWidth: '640px',
                 margin: '0 auto 32px',
               }}
@@ -154,14 +160,14 @@ export default function ContributePage() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  background: 'linear-gradient(135deg, #7c3aed, #a78bfa)',
+                  background: 'linear-gradient(135deg, #7c3aed, #9333ea)',
                   color: '#ffffff',
                   padding: '12px 24px',
                   borderRadius: '50px',
                   fontWeight: 700,
                   fontSize: '0.9rem',
                   textDecoration: 'none',
-                  boxShadow: '0 4px 20px rgba(124, 58, 237, 0.3)',
+                  boxShadow: '0 4px 20px rgba(124, 58, 237, 0.25)',
                 }}
               >
                 <GitPullRequest size={16} />
@@ -176,9 +182,9 @@ export default function ContributePage() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  background: '#13131f',
-                  border: '1px solid #252538',
-                  color: '#e2e8f0',
+                  background: 'var(--explorer-surface, #f1f5f9)',
+                  border: '1px solid var(--explorer-border, #e2e8f0)',
+                  color: 'var(--explorer-text-primary, #334155)',
                   padding: '12px 24px',
                   borderRadius: '50px',
                   fontWeight: 700,
@@ -186,7 +192,7 @@ export default function ContributePage() {
                   textDecoration: 'none',
                 }}
               >
-                <ExternalLink size={16} color="#94a3b8" />
+                <ExternalLink size={16} color="#64748b" />
                 {t('viewRepo')}
               </a>
 
@@ -196,9 +202,9 @@ export default function ContributePage() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  background: '#13131f',
-                  border: '1px solid #252538',
-                  color: '#e2e8f0',
+                  background: 'var(--explorer-surface, #f1f5f9)',
+                  border: '1px solid var(--explorer-border, #e2e8f0)',
+                  color: 'var(--explorer-text-primary, #334155)',
                   padding: '12px 24px',
                   borderRadius: '50px',
                   fontWeight: 700,
@@ -206,7 +212,7 @@ export default function ContributePage() {
                   textDecoration: 'none',
                 }}
               >
-                <Users size={16} color="#00e5ff" />
+                <Users size={16} color="#0d9488" />
                 {t('meetContributors')}
               </Link>
             </div>
@@ -217,7 +223,7 @@ export default function ContributePage() {
         <section
           style={{
             padding: '80px 24px',
-            borderBottom: '1px solid #252538',
+            borderBottom: '1px solid var(--explorer-border, #e2e8f0)',
           }}
         >
           <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -226,7 +232,7 @@ export default function ContributePage() {
                 style={{
                   fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
                   fontWeight: 800,
-                  color: '#f1f5f9',
+                  color: 'var(--site-heading, #0f172a)',
                   fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
                   marginBottom: '12px',
                 }}
@@ -236,7 +242,7 @@ export default function ContributePage() {
               <p
                 style={{
                   fontSize: '1rem',
-                  color: '#94a3b8',
+                  color: 'var(--explorer-text-secondary, #475569)',
                   maxWidth: '600px',
                   margin: '0 auto',
                   lineHeight: 1.6,
@@ -259,22 +265,25 @@ export default function ContributePage() {
                   <div
                     key={idx}
                     style={{
-                      background: '#13131f',
-                      border: '1px solid #252538',
+                      background: 'var(--explorer-surface, #ffffff)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
                       borderRadius: '16px',
                       padding: '28px',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
-                      transition: 'border-color 0.2s ease, transform 0.2s ease',
+                      transition: 'border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease',
+                      boxShadow: 'var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))',
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = '#7c3aed';
+                      (e.currentTarget as HTMLElement).style.borderColor = item.accent;
                       (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 10px 28px ${item.accent}22`;
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = '#252538';
+                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--explorer-border, #e2e8f0)';
                       (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                      (e.currentTarget as HTMLElement).style.boxShadow = 'var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))';
                     }}
                   >
                     <div>
@@ -296,7 +305,7 @@ export default function ContributePage() {
                         style={{
                           fontSize: '1.15rem',
                           fontWeight: 700,
-                          color: '#f1f5f9',
+                          color: 'var(--explorer-text-primary, #0f172a)',
                           marginBottom: '8px',
                         }}
                       >
@@ -305,7 +314,7 @@ export default function ContributePage() {
                       <p
                         style={{
                           fontSize: '0.9rem',
-                          color: '#94a3b8',
+                          color: 'var(--explorer-text-secondary, #475569)',
                           lineHeight: 1.6,
                           margin: 0,
                         }}
@@ -324,14 +333,14 @@ export default function ContributePage() {
         <section
           style={{
             padding: '64px 24px',
-            borderBottom: '1px solid #252538',
+            borderBottom: '1px solid var(--explorer-border, #e2e8f0)',
           }}
         >
           <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
             <div
               style={{
-                background: '#13131f',
-                border: '1px solid #252538',
+                background: 'var(--explorer-surface, #ffffff)',
+                border: '1px solid var(--explorer-border, #e2e8f0)',
                 borderRadius: '20px',
                 padding: '36px',
                 display: 'flex',
@@ -339,6 +348,7 @@ export default function ContributePage() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 gap: '24px',
+                boxShadow: 'var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))',
               }}
             >
               <div style={{ maxWidth: '640px' }}>
@@ -351,8 +361,8 @@ export default function ContributePage() {
                     fontWeight: 800,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
-                    background: 'rgba(245, 158, 11, 0.15)',
-                    color: '#fbbf24',
+                    background: 'rgba(245, 158, 11, 0.12)',
+                    color: '#d97706',
                     border: '1px solid rgba(245, 158, 11, 0.3)',
                     marginBottom: '12px',
                   }}
@@ -363,7 +373,7 @@ export default function ContributePage() {
                   style={{
                     fontSize: '1.5rem',
                     fontWeight: 800,
-                    color: '#f1f5f9',
+                    color: 'var(--explorer-text-primary, #0f172a)',
                     marginBottom: '8px',
                   }}
                 >
@@ -372,7 +382,7 @@ export default function ContributePage() {
                 <p
                   style={{
                     fontSize: '0.95rem',
-                    color: '#94a3b8',
+                    color: 'var(--explorer-text-secondary, #475569)',
                     lineHeight: 1.6,
                     margin: 0,
                   }}
@@ -389,13 +399,14 @@ export default function ContributePage() {
                   alignItems: 'center',
                   gap: '8px',
                   background: '#f59e0b',
-                  color: '#0c0c14',
+                  color: '#ffffff',
                   padding: '12px 24px',
                   borderRadius: '12px',
                   fontWeight: 700,
                   fontSize: '0.9rem',
                   textDecoration: 'none',
                   whiteSpace: 'nowrap',
+                  boxShadow: '0 4px 14px rgba(245,158,11,0.25)',
                 }}
               >
                 {t('openIssues')} →
@@ -412,7 +423,7 @@ export default function ContributePage() {
                 style={{
                   fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
                   fontWeight: 800,
-                  color: '#f1f5f9',
+                  color: 'var(--site-heading, #0f172a)',
                   fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
                   marginBottom: '12px',
                 }}
@@ -422,7 +433,7 @@ export default function ContributePage() {
               <p
                 style={{
                   fontSize: '1rem',
-                  color: '#94a3b8',
+                  color: 'var(--explorer-text-secondary, #475569)',
                   maxWidth: '600px',
                   margin: '0 auto',
                   lineHeight: 1.6,
@@ -445,22 +456,25 @@ export default function ContributePage() {
                   <div
                     key={idx}
                     style={{
-                      background: '#13131f',
-                      border: '1px solid #252538',
+                      background: 'var(--explorer-surface, #ffffff)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
                       borderRadius: '16px',
                       padding: '28px',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
-                      transition: 'border-color 0.2s ease, transform 0.2s ease',
+                      transition: 'border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease',
+                      boxShadow: 'var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))',
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = '#7c3aed';
+                      (e.currentTarget as HTMLElement).style.borderColor = card.accent;
                       (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 10px 28px ${card.accent}22`;
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderColor = '#252538';
+                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--explorer-border, #e2e8f0)';
                       (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                      (e.currentTarget as HTMLElement).style.boxShadow = 'var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))';
                     }}
                   >
                     <div>
@@ -469,8 +483,8 @@ export default function ContributePage() {
                           width: '44px',
                           height: '44px',
                           borderRadius: '12px',
-                          background: 'rgba(255,255,255,0.05)',
-                          border: '1px solid #252538',
+                          background: `${card.accent}14`,
+                          border: `1px solid ${card.accent}33`,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -483,7 +497,7 @@ export default function ContributePage() {
                         style={{
                           fontSize: '1.15rem',
                           fontWeight: 700,
-                          color: '#f1f5f9',
+                          color: 'var(--explorer-text-primary, #0f172a)',
                           marginBottom: '8px',
                         }}
                       >
@@ -492,7 +506,7 @@ export default function ContributePage() {
                       <p
                         style={{
                           fontSize: '0.9rem',
-                          color: '#94a3b8',
+                          color: 'var(--explorer-text-secondary, #475569)',
                           lineHeight: 1.6,
                           marginBottom: '24px',
                         }}
@@ -511,7 +525,7 @@ export default function ContributePage() {
                         gap: '8px',
                         fontSize: '0.9rem',
                         fontWeight: 700,
-                        color: '#a78bfa',
+                        color: card.accent,
                         textDecoration: 'none',
                       }}
                     >

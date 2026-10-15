@@ -16,7 +16,7 @@ export default function WhatWeDoSection() {
       desc: t('item1Desc'),
       link: '/articles',
       actionText: t('item1Action'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
     {
       icon: Languages,
@@ -25,7 +25,7 @@ export default function WhatWeDoSection() {
       desc: t('item2Desc'),
       link: '/medical-glossary',
       actionText: t('item2Action'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
     {
       icon: Bot,
@@ -34,7 +34,7 @@ export default function WhatWeDoSection() {
       desc: t('item3Desc'),
       link: '#',
       actionText: t('item3Action'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
     {
       icon: Stethoscope,
@@ -43,7 +43,7 @@ export default function WhatWeDoSection() {
       desc: t('item4Desc'),
       link: '/admin-agreement',
       actionText: t('item4Action'),
-      accent: '#2dd4bf',
+      accent: '#0d9488',
     },
   ];
 
@@ -51,28 +51,28 @@ export default function WhatWeDoSection() {
     <section
       id="what-we-do"
       style={{
-        background: '#0c0c14',
-        borderTop: '1px solid #252538',
+        background: 'var(--vice-dark, #ffffff)',
+        borderTop: '1px solid var(--vice-border, #e2e8f0)',
         padding: '96px 24px',
       }}
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         {/* Section Header */}
         <div className="scroll-reveal" style={{ maxWidth: '640px', marginBottom: '56px' }}>
-          <p className="uh-section-label" style={{ color: '#2dd4bf', marginBottom: '12px' }}>
+          <p className="uh-section-label" style={{ color: '#0d9488', marginBottom: '12px' }}>
             {t('sectionBadge')}
           </p>
           <h2
             className="uh-display"
             style={{
               fontSize: 'clamp(1.875rem, 4.5vw, 2.75rem)',
-              color: '#f1f5f9',
+              color: 'var(--site-heading, #0f172a)',
               margin: '0 0 16px 0',
             }}
           >
             {t('title')}
           </h2>
-          <p style={{ fontSize: '1rem', lineHeight: 1.65, color: '#64748b', margin: 0 }}>
+          <p style={{ fontSize: '1rem', lineHeight: 1.65, color: 'var(--vice-muted, #475569)', margin: 0 }}>
             {t('description')}
           </p>
         </div>
@@ -112,8 +112,8 @@ export default function WhatWeDoSection() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: `${item.accent}12`,
-                        border: `1px solid ${item.accent}28`,
+                        background: `${item.accent}14`,
+                        border: `1px solid ${item.accent}30`,
                       }}
                     >
                       <Icon style={{ width: 18, height: 18, color: item.accent }} />
@@ -123,11 +123,11 @@ export default function WhatWeDoSection() {
                       style={{
                         fontSize: '0.6875rem',
                         fontWeight: 600,
-                        color: '#64748b',
-                        background: 'rgba(255,255,255,0.03)',
+                        color: 'var(--explorer-text-secondary, #64748b)',
+                        background: 'var(--explorer-bg, rgba(0,0,0,0.03))',
                         padding: '3px 9px',
                         borderRadius: '5px',
-                        border: '1px solid rgba(255,255,255,0.05)',
+                        border: '1px solid var(--explorer-border, #e2e8f0)',
                       }}
                     >
                       {item.tag}
@@ -138,7 +138,7 @@ export default function WhatWeDoSection() {
                     style={{
                       fontSize: '1.0625rem',
                       fontWeight: 700,
-                      color: '#f1f5f9',
+                      color: 'var(--site-heading, #0f172a)',
                       margin: '0 0 8px 0',
                     }}
                   >
@@ -149,7 +149,7 @@ export default function WhatWeDoSection() {
                     style={{
                       fontSize: '0.875rem',
                       lineHeight: 1.65,
-                      color: '#64748b',
+                      color: 'var(--explorer-text-secondary, #475569)',
                       margin: '0 0 20px 0',
                     }}
                   >
@@ -157,7 +157,7 @@ export default function WhatWeDoSection() {
                   </p>
                 </div>
 
-                <div style={{ paddingTop: '14px', borderTop: '1px solid #1a1a2c' }}>
+                <div style={{ paddingTop: '14px', borderTop: '1px solid var(--explorer-border, #e2e8f0)' }}>
                   {isExternalOrInternalLink ? (
                     <Link
                       href={item.link}
@@ -186,7 +186,7 @@ export default function WhatWeDoSection() {
                       style={{
                         fontSize: '0.8125rem',
                         fontWeight: 500,
-                        color: '#334155',
+                        color: 'var(--explorer-text-muted, #94a3b8)',
                       }}
                     >
                       {item.actionText}

@@ -90,8 +90,8 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
     <header
       className={`header font-vice ${
         scrolled
-          ? " scrolled bg-[#0b0b12]/95 border-b border-[#252538] backdrop-blur-md"
-          : "bg-[#0b0b12]/75 backdrop-blur-md border-b border-white/5"
+          ? " scrolled bg-white/95 dark:bg-[#0b0b12]/95 border-b border-slate-200 dark:border-[#252538] backdrop-blur-md"
+          : "bg-white/80 dark:bg-[#0b0b12]/75 backdrop-blur-md border-b border-slate-200/60 dark:border-white/5"
       }`}
       id="header"
     >
@@ -107,8 +107,8 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
               priority
             />
           </div>
-          <span className="font-vice font-black tracking-widest text-lg text-white">
-            ULTIMATE<span className="text-[#00e5ff]">HEALTH</span>
+          <span className="font-vice font-black tracking-widest text-lg text-slate-900 dark:text-white">
+            ULTIMATE<span className="text-[#0d9488] dark:text-[#00e5ff]">HEALTH</span>
           </span>
         </Link>
 

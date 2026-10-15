@@ -10,28 +10,28 @@ import {
   LocalizedGlossaryEntry,
 } from "./glossary-translations";
 
-/* ── Dark-themed category badge colors ── */
+/* ── Category badge colors — work on both light & dark backgrounds ── */
 const BADGE_STYLES: Record<string, { bg: string; color: string }> = {
-  "Blood Health":          { bg: "rgba(225,29,72,0.12)", color: "#fb7185" },
-  "Cardiovascular Health": { bg: "rgba(220,38,38,0.12)", color: "#f87171" },
-  "Respiratory Health":    { bg: "rgba(37,99,235,0.12)", color: "#60a5fa" },
-  "Digestive Health":      { bg: "rgba(217,119,6,0.12)", color: "#fbbf24" },
-  "Metabolic Health":      { bg: "rgba(234,88,12,0.12)", color: "#fb923c" },
-  "Mental Health":         { bg: "rgba(124,58,237,0.12)", color: "#a78bfa" },
-  "Neurological Health":   { bg: "rgba(147,51,234,0.12)", color: "#c084fc" },
-  "Immune Health":         { bg: "rgba(22,163,74,0.12)",  color: "#4ade80" },
-  "Bone & Joint Health":   { bg: "rgba(202,138,4,0.12)",  color: "#facc15" },
-  "Skin Health":           { bg: "rgba(219,39,119,0.12)", color: "#f472b6" },
-  "Liver Health":          { bg: "rgba(101,163,13,0.12)", color: "#a3e635" },
-  "Urinary Health":        { bg: "rgba(8,145,178,0.12)",  color: "#22d3ee" },
-  "Nutrition":             { bg: "rgba(13,148,136,0.12)", color: "#2dd4bf" },
-  "Sleep Health":          { bg: "rgba(79,70,229,0.12)",  color: "#818cf8" },
-  "Preventive Health":     { bg: "rgba(5,150,105,0.12)",  color: "#34d399" },
-  "Diagnostic Testing":    { bg: "rgba(71,85,105,0.12)",  color: "#94a3b8" },
-  "Infectious Diseases":   { bg: "rgba(185,28,28,0.12)",  color: "#fca5a5" },
-  "Oncology":              { bg: "rgba(162,28,175,0.12)", color: "#e879f9" },
+  "Blood Health":          { bg: "rgba(225,29,72,0.10)",   color: "#e11d48" },
+  "Cardiovascular Health": { bg: "rgba(220,38,38,0.10)",   color: "#dc2626" },
+  "Respiratory Health":    { bg: "rgba(37,99,235,0.10)",   color: "#2563eb" },
+  "Digestive Health":      { bg: "rgba(217,119,6,0.10)",   color: "#d97706" },
+  "Metabolic Health":      { bg: "rgba(234,88,12,0.10)",   color: "#ea580c" },
+  "Mental Health":         { bg: "rgba(124,58,237,0.10)",  color: "#7c3aed" },
+  "Neurological Health":   { bg: "rgba(147,51,234,0.10)",  color: "#9333ea" },
+  "Immune Health":         { bg: "rgba(22,163,74,0.10)",   color: "#16a34a" },
+  "Bone & Joint Health":   { bg: "rgba(202,138,4,0.10)",   color: "#ca8a04" },
+  "Skin Health":           { bg: "rgba(219,39,119,0.10)",  color: "#db2777" },
+  "Liver Health":          { bg: "rgba(101,163,13,0.10)",  color: "#65a30d" },
+  "Urinary Health":        { bg: "rgba(8,145,178,0.10)",   color: "#0891b2" },
+  "Nutrition":             { bg: "rgba(13,148,136,0.10)",  color: "#0d9488" },
+  "Sleep Health":          { bg: "rgba(79,70,229,0.10)",   color: "#4f46e5" },
+  "Preventive Health":     { bg: "rgba(5,150,105,0.10)",   color: "#059669" },
+  "Diagnostic Testing":    { bg: "rgba(71,85,105,0.10)",   color: "#475569" },
+  "Infectious Diseases":   { bg: "rgba(185,28,28,0.10)",   color: "#b91c1c" },
+  "Oncology":              { bg: "rgba(162,28,175,0.10)",  color: "#a21caf" },
 };
-const DEFAULT_BADGE = { bg: "rgba(71,85,105,0.12)", color: "#94a3b8" };
+const DEFAULT_BADGE = { bg: "rgba(71,85,105,0.10)", color: "#475569" };
 
 function RelatedTermButton({ term, onClick }: { term: string; onClick: () => void }) {
   return (
@@ -42,23 +42,23 @@ function RelatedTermButton({ term, onClick }: { term: string; onClick: () => voi
       style={{
         fontSize: "11px",
         fontWeight: 600,
-        color: "#94a3b8",
-        background: "rgba(37,37,56,0.6)",
-        border: "1px solid #2e2e50",
+        color: "var(--explorer-text-secondary, #64748b)",
+        background: "var(--explorer-surface, #f1f5f9)",
+        border: "1px solid var(--explorer-border, #e2e8f0)",
         borderRadius: "8px",
         padding: "3px 10px",
         cursor: "pointer",
         transition: "all 0.15s ease",
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.background = "#2e2e50";
-        (e.currentTarget as HTMLElement).style.borderColor = "#3e3e60";
-        (e.currentTarget as HTMLElement).style.color = "#e2e8f0";
+        (e.currentTarget as HTMLElement).style.background = "var(--explorer-surface-hover, #e2e8f0)";
+        (e.currentTarget as HTMLElement).style.borderColor = "#0d9488";
+        (e.currentTarget as HTMLElement).style.color = "#0d9488";
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.background = "rgba(37,37,56,0.6)";
-        (e.currentTarget as HTMLElement).style.borderColor = "#2e2e50";
-        (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+        (e.currentTarget as HTMLElement).style.background = "var(--explorer-surface, #f1f5f9)";
+        (e.currentTarget as HTMLElement).style.borderColor = "var(--explorer-border, #e2e8f0)";
+        (e.currentTarget as HTMLElement).style.color = "var(--explorer-text-secondary, #64748b)";
       }}
     >
       {term}
@@ -86,12 +86,12 @@ function RelatedTermsList({
   if (filteredRelated.length === 0) return null;
 
   return (
-    <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid #252538" }}>
+    <div style={{ marginTop: "16px", paddingTop: "14px", borderTop: "1px solid var(--explorer-border, #e2e8f0)" }}>
       <div
         style={{
           fontSize: "10px",
           fontWeight: 700,
-          color: "#64748b",
+          color: "var(--explorer-text-muted, #94a3b8)",
           letterSpacing: "0.1em",
           textTransform: "uppercase",
           marginBottom: "8px",
@@ -197,14 +197,14 @@ export default function MedicalGlossaryExplorer() {
   return (
     <div style={{ width: "100%" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: "24px", width: "100%" }}>
-        {/* ── Search & Filter Controls Card (Matching ArticlesExplorer Vice Styling) ── */}
+        {/* ── Search & Filter Controls Card ── */}
         <div
           style={{
-            background: "#13131f",
-            border: "1px solid #252538",
+            background: "var(--explorer-surface, #ffffff)",
+            border: "1px solid var(--explorer-border, #e2e8f0)",
             borderRadius: "20px",
             padding: "24px",
-            boxShadow: "0 12px 36px rgba(0,0,0,0.4)",
+            boxShadow: "var(--explorer-card-shadow, 0 4px 16px rgba(0,0,0,0.06))",
             display: "flex",
             flexDirection: "column",
             gap: "20px",
@@ -232,7 +232,7 @@ export default function MedicalGlossaryExplorer() {
                   pointerEvents: "none",
                 }}
               >
-                <Search size={18} color={searchFocused ? "#00e5ff" : "#94a3b8"} />
+                <Search size={18} color={searchFocused ? "#0d9488" : "#94a3b8"} />
               </div>
 
               <input
@@ -246,16 +246,16 @@ export default function MedicalGlossaryExplorer() {
                   width: "100%",
                   boxSizing: "border-box",
                   height: "50px",
-                  background: "#0c0c14",
-                  border: searchFocused ? "1.5px solid #00e5ff" : "1.5px solid #252538",
+                  background: "var(--explorer-bg, #f8fafc)",
+                  border: searchFocused ? "1.5px solid #0d9488" : "1.5px solid var(--explorer-border, #e2e8f0)",
                   borderRadius: "14px",
                   paddingLeft: "46px",
                   paddingRight: "40px",
                   fontSize: "0.95rem",
-                  color: "#f1f5f9",
+                  color: "var(--explorer-text-primary, #0f172a)",
                   outline: "none",
                   transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-                  boxShadow: searchFocused ? "0 0 16px rgba(0, 229, 255, 0.15)" : "none",
+                  boxShadow: searchFocused ? "0 0 16px rgba(13, 148, 136, 0.15)" : "none",
                 }}
               />
 
@@ -271,7 +271,7 @@ export default function MedicalGlossaryExplorer() {
                     transform: "translateY(-50%)",
                     background: "transparent",
                     border: "none",
-                    color: "#94a3b8",
+                    color: "var(--explorer-text-secondary, #94a3b8)",
                     cursor: "pointer",
                     padding: "4px",
                     display: "flex",
@@ -296,25 +296,25 @@ export default function MedicalGlossaryExplorer() {
                   paddingLeft: "16px",
                   paddingRight: "40px",
                   borderRadius: "14px",
-                  border: "1.5px solid #252538",
-                  background: "#0c0c14",
+                  border: "1.5px solid var(--explorer-border, #e2e8f0)",
+                  background: "var(--explorer-bg, #f8fafc)",
                   fontSize: "14px",
                   fontWeight: 600,
-                  color: "#e2e8f0",
+                  color: "var(--explorer-text-primary, #0f172a)",
                   outline: "none",
                   appearance: "none",
                   cursor: "pointer",
                   transition: "border-color 0.2s ease",
                 }}
                 onFocus={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "#7c3aed";
+                  (e.currentTarget as HTMLElement).style.borderColor = "#0d9488";
                 }}
                 onBlur={(e) => {
-                  (e.currentTarget as HTMLElement).style.borderColor = "#252538";
+                  (e.currentTarget as HTMLElement).style.borderColor = "var(--explorer-border, #e2e8f0)";
                 }}
               >
                 {categories.map((cat) => (
-                  <option key={cat} value={cat} style={{ background: "#13131f", color: "#e2e8f0" }}>
+                  <option key={cat} value={cat}>
                     {cat === "All" ? `${t("categoryAll")} Categories` : cat}
                   </option>
                 ))}
@@ -326,7 +326,7 @@ export default function MedicalGlossaryExplorer() {
                   top: "50%",
                   transform: "translateY(-50%)",
                   pointerEvents: "none",
-                  color: "#64748b",
+                  color: "var(--explorer-text-muted, #94a3b8)",
                   display: "flex",
                   alignItems: "center",
                 }}
@@ -339,7 +339,7 @@ export default function MedicalGlossaryExplorer() {
           {/* Row 2: Language Filter Pills Bar */}
           <div
             style={{
-              borderTop: "1px solid #1f1f30",
+              borderTop: "1px solid var(--explorer-border, #e2e8f0)",
               paddingTop: "18px",
               display: "flex",
               alignItems: "center",
@@ -353,7 +353,7 @@ export default function MedicalGlossaryExplorer() {
                 alignItems: "center",
                 gap: "6px",
                 marginRight: "6px",
-                color: "#94a3b8",
+                color: "var(--explorer-text-secondary, #64748b)",
                 fontSize: "0.82rem",
                 fontWeight: 700,
                 textTransform: "uppercase",
@@ -361,7 +361,7 @@ export default function MedicalGlossaryExplorer() {
                 flexShrink: 0,
               }}
             >
-              <Globe size={15} color="#00e5ff" />
+              <Globe size={15} color="#0d9488" />
               <span>{tArticles("filterLanguage")}:</span>
             </div>
 
@@ -379,14 +379,14 @@ export default function MedicalGlossaryExplorer() {
                 fontWeight: 800,
                 cursor: "pointer",
                 transition: "all 0.2s ease",
-                border: selectedLanguage === "all" ? "1px solid transparent" : "1px solid #252538",
+                border: selectedLanguage === "all" ? "1px solid transparent" : "1px solid var(--explorer-border, #e2e8f0)",
                 background:
                   selectedLanguage === "all"
-                    ? "linear-gradient(135deg, #00e5ff 0%, #7c3aed 100%)"
-                    : "#0c0c14",
-                color: selectedLanguage === "all" ? "#ffffff" : "#94a3b8",
+                    ? "linear-gradient(135deg, #0d9488 0%, #0891b2 100%)"
+                    : "var(--explorer-bg, #f8fafc)",
+                color: selectedLanguage === "all" ? "#ffffff" : "var(--explorer-text-secondary, #64748b)",
                 boxShadow:
-                  selectedLanguage === "all" ? "0 4px 16px rgba(0, 229, 255, 0.25)" : "none",
+                  selectedLanguage === "all" ? "0 4px 16px rgba(13, 148, 136, 0.25)" : "none",
               }}
             >
               <span>{tArticles("allLanguages")}</span>
@@ -396,8 +396,8 @@ export default function MedicalGlossaryExplorer() {
                   fontFamily: "monospace",
                   padding: "2px 7px",
                   borderRadius: "20px",
-                  background: selectedLanguage === "all" ? "rgba(255, 255, 255, 0.25)" : "#1e1e30",
-                  color: selectedLanguage === "all" ? "#ffffff" : "#94a3b8",
+                  background: selectedLanguage === "all" ? "rgba(255, 255, 255, 0.25)" : "var(--explorer-surface, #f1f5f9)",
+                  color: selectedLanguage === "all" ? "#ffffff" : "var(--explorer-text-secondary, #64748b)",
                 }}
               >
                 {allEntries.length}
@@ -422,10 +422,10 @@ export default function MedicalGlossaryExplorer() {
                     fontWeight: 800,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
-                    border: isSelected ? "1px solid #00e5ff" : "1px solid #252538",
-                    background: isSelected ? "#00e5ff" : "#0c0c14",
-                    color: isSelected ? "#0a0a14" : "#94a3b8",
-                    boxShadow: isSelected ? "0 4px 16px rgba(0, 229, 255, 0.3)" : "none",
+                    border: isSelected ? "1px solid #0d9488" : "1px solid var(--explorer-border, #e2e8f0)",
+                    background: isSelected ? "#0d9488" : "var(--explorer-bg, #f8fafc)",
+                    color: isSelected ? "#ffffff" : "var(--explorer-text-secondary, #64748b)",
+                    boxShadow: isSelected ? "0 4px 16px rgba(13, 148, 136, 0.25)" : "none",
                   }}
                 >
                   <span>{item.name}</span>
@@ -435,8 +435,8 @@ export default function MedicalGlossaryExplorer() {
                       fontFamily: "monospace",
                       padding: "2px 7px",
                       borderRadius: "20px",
-                      background: isSelected ? "rgba(0, 0, 0, 0.25)" : "#1e1e30",
-                      color: isSelected ? "#0a0a14" : "#94a3b8",
+                      background: isSelected ? "rgba(255, 255, 255, 0.25)" : "var(--explorer-surface, #f1f5f9)",
+                      color: isSelected ? "#ffffff" : "var(--explorer-text-secondary, #64748b)",
                       fontWeight: isSelected ? 900 : 700,
                     }}
                   >
@@ -454,7 +454,7 @@ export default function MedicalGlossaryExplorer() {
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            borderBottom: "1px solid #252538",
+            borderBottom: "1px solid var(--explorer-border, #e2e8f0)",
             paddingBottom: "16px",
             flexWrap: "wrap",
             gap: "12px",
@@ -467,9 +467,9 @@ export default function MedicalGlossaryExplorer() {
                 fontWeight: 800,
                 padding: "4px 12px",
                 borderRadius: "50px",
-                background: "rgba(0, 229, 255, 0.12)",
-                border: "1px solid rgba(0, 229, 255, 0.3)",
-                color: "#00e5ff",
+                background: "rgba(13, 148, 136, 0.10)",
+                border: "1px solid rgba(13, 148, 136, 0.25)",
+                color: "#0d9488",
                 letterSpacing: "0.04em",
               }}
             >
@@ -484,7 +484,7 @@ export default function MedicalGlossaryExplorer() {
               style={{
                 background: "transparent",
                 border: "none",
-                color: "#f0006a",
+                color: "#e11d48",
                 fontWeight: 700,
                 fontSize: "0.85rem",
                 cursor: "pointer",
@@ -501,12 +501,12 @@ export default function MedicalGlossaryExplorer() {
         {filteredEntries.length === 0 ? (
           <div
             style={{
-              background: "#13131f",
-              border: "1.5px dashed #252538",
+              background: "var(--explorer-surface, #f1f5f9)",
+              border: "1.5px dashed var(--explorer-border, #e2e8f0)",
               borderRadius: "20px",
               padding: "64px 32px",
               textAlign: "center",
-              color: "#94a3b8",
+              color: "var(--explorer-text-secondary, #64748b)",
             }}
           >
             <div style={{ fontSize: "40px", marginBottom: "12px" }}>🔍</div>
@@ -514,7 +514,7 @@ export default function MedicalGlossaryExplorer() {
               style={{
                 fontSize: "16px",
                 fontWeight: 700,
-                color: "#94a3b8",
+                color: "var(--explorer-text-secondary, #64748b)",
                 margin: "0 0 16px",
               }}
             >
@@ -528,13 +528,13 @@ export default function MedicalGlossaryExplorer() {
               style={{
                 padding: "10px 22px",
                 borderRadius: "12px",
-                background: "linear-gradient(135deg, #00e5ff 0%, #7c3aed 100%)",
+                background: "linear-gradient(135deg, #0d9488 0%, #0891b2 100%)",
                 color: "#ffffff",
                 fontSize: "0.85rem",
                 fontWeight: 800,
                 border: "none",
                 cursor: "pointer",
-                boxShadow: "0 4px 16px rgba(0, 229, 255, 0.25)",
+                boxShadow: "0 4px 16px rgba(13, 148, 136, 0.25)",
               }}
             >
               {tArticles("clearFilters")}
@@ -558,27 +558,28 @@ export default function MedicalGlossaryExplorer() {
                     position: "relative",
                     display: "flex",
                     flexDirection: "column",
-                    background: "#13131f",
-                    border: "1px solid #252538",
+                    background: "var(--explorer-surface, #ffffff)",
+                    border: "1px solid var(--explorer-border, #e2e8f0)",
                     borderRadius: "18px",
                     padding: "24px",
                     overflow: "hidden",
                     transition: "all 0.25s ease",
                     cursor: "default",
+                    boxShadow: "var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))",
                   }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "#00e5ff";
+                    (e.currentTarget as HTMLElement).style.borderColor = "#0d9488";
                     (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
                     (e.currentTarget as HTMLElement).style.boxShadow =
-                      "0 10px 30px rgba(0, 229, 255, 0.1)";
+                      "0 10px 30px rgba(13, 148, 136, 0.12)";
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "#252538";
+                    (e.currentTarget as HTMLElement).style.borderColor = "var(--explorer-border, #e2e8f0)";
                     (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                    (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))";
                   }}
                 >
-                  {/* Top glowing accent bar */}
+                  {/* Top accent bar */}
                   <div
                     style={{
                       position: "absolute",
@@ -586,8 +587,8 @@ export default function MedicalGlossaryExplorer() {
                       left: 0,
                       right: 0,
                       height: "3px",
-                      background: "linear-gradient(90deg, #00e5ff, #7c3aed, #f0006a)",
-                      opacity: 0.8,
+                      background: "linear-gradient(90deg, #0d9488, #0891b2, #7c3aed)",
+                      opacity: 0.7,
                     }}
                   />
 
@@ -613,7 +614,7 @@ export default function MedicalGlossaryExplorer() {
                         textTransform: "uppercase",
                         background: badge.bg,
                         color: badge.color,
-                        border: `1px solid ${badge.color}33`,
+                        border: `1px solid ${badge.color}44`,
                       }}
                     >
                       {entry.category}
@@ -624,9 +625,9 @@ export default function MedicalGlossaryExplorer() {
                         display: "inline-flex",
                         alignItems: "center",
                         gap: "4px",
-                        background: "rgba(12, 12, 20, 0.85)",
-                        border: "1px solid rgba(0, 229, 255, 0.3)",
-                        color: "#00e5ff",
+                        background: "rgba(13, 148, 136, 0.08)",
+                        border: "1px solid rgba(13, 148, 136, 0.25)",
+                        color: "#0d9488",
                         padding: "2px 8px",
                         borderRadius: "50px",
                         fontSize: "10px",
@@ -644,7 +645,7 @@ export default function MedicalGlossaryExplorer() {
                     style={{
                       fontSize: "1.2rem",
                       fontWeight: 800,
-                      color: "#f8fafc",
+                      color: "var(--explorer-text-primary, #0f172a)",
                       lineHeight: 1.3,
                       margin: "0 0 10px",
                       fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
@@ -657,7 +658,7 @@ export default function MedicalGlossaryExplorer() {
                   <p
                     style={{
                       fontSize: "0.9rem",
-                      color: "#94a3b8",
+                      color: "var(--explorer-text-secondary, #475569)",
                       lineHeight: 1.65,
                       margin: 0,
                       flex: 1,
