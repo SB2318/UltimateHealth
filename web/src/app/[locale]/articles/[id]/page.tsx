@@ -98,21 +98,64 @@ function mapToArticle(apiArticle: ApiArticleDetail): Article {
 async function fetchArticle(
   id: string
 ): Promise<{ article: Article; pbRecordId: string } | null> {
+  const isNumeric = /^\d+$/.test(id);
+
+  if (isNumeric) {
+    try {
+      const res = await fetch(`https://ultimatehealth.blog/api/articles/${id}`, {
+        next: { revalidate: 300 },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const apiArticle: ApiArticleDetail = data.article ?? data;
+        if (apiArticle?._id) {
+          return {
+            article: mapToArticle(apiArticle),
+            pbRecordId: apiArticle.pb_recordId,
+          };
+        }
+      }
+    } catch {
+      // Fall through to lookup
+    }
+  }
+
+  // Handle lookup by pb_recordId (or non-numeric ID) when shared with pb_recordId
   try {
-    const res = await fetch(`https://ultimatehealth.blog/api/articles/${id}`, {
+    const listRes = await fetch(`https://ultimatehealth.blog/api/articles/?limit=100`, {
       next: { revalidate: 300 },
     });
-    if (!res.ok) return null;
-    const data = await res.json();
-    const apiArticle: ApiArticleDetail = data.article ?? data;
-    if (!apiArticle?._id) return null;
-    return {
-      article: mapToArticle(apiArticle),
-      pbRecordId: apiArticle.pb_recordId,
-    };
+    if (listRes.ok) {
+      const listData = await listRes.json();
+      const articles: ApiArticleDetail[] = listData.articles ?? [];
+      const match = articles.find((a) => a.pb_recordId === id || String(a._id) === id);
+      if (match) {
+        try {
+          const detailRes = await fetch(
+            `https://ultimatehealth.blog/api/articles/${match._id}`,
+            { next: { revalidate: 300 } }
+          );
+          if (detailRes.ok) {
+            const detailData = await detailRes.json();
+            const fullArticle: ApiArticleDetail = detailData.article ?? detailData;
+            return {
+              article: mapToArticle(fullArticle),
+              pbRecordId: fullArticle.pb_recordId,
+            };
+          }
+        } catch {}
+
+        return {
+          article: mapToArticle(match),
+          pbRecordId: match.pb_recordId,
+        };
+      }
+    }
   } catch {
-    return null;
+    // Fall through
   }
+
+  return null;
 }
 
 async function fetchHtmlContent(pbRecordId: string): Promise<string | null> {
@@ -204,6 +247,7 @@ export default async function ArticlePage({ params }: PageProps) {
       article={article}
       relatedArticles={[]}
       htmlContent={htmlContent ?? undefined}
+      pbRecordId={pbRecordId}
     />
   );
 }

@@ -3946,9 +3946,10 @@ p, .uh-card-capability p, .feature-card-premium p {
 /* ─── ARTICLE DETAILS HTML CONTENT PROFESSIONAL TYPOGRAPHY (DARK THEME) ─── */
 .article-html-content {
   color: #cbd5e1 !important;
-  line-height: 1.85 !important;
-  font-size: 1.125rem !important;
+  line-height: var(--article-line-height, 1.85) !important;
+  font-size: var(--article-font-size, 1.125rem) !important;
   text-align: left !important;
+  transition: font-size 0.2s ease, line-height 0.2s ease;
 }
 
 /* Override any hardcoded light-theme classes from the backend HTML (e.g. text-zinc-700, text-gray-900, bg-white, etc.) */
@@ -3960,6 +3961,11 @@ p, .uh-card-capability p, .feature-card-premium p {
 .article-html-content [class*="text-gray-"],
 .article-html-content [class*="text-slate-"] {
   color: #cbd5e1 !important;
+}
+
+.article-html-content span:not([class*="badge"]):not([class*="icon"]) {
+  font-size: inherit !important;
+  line-height: inherit !important;
 }
 
 .article-html-content h1,
@@ -3976,7 +3982,7 @@ p, .uh-card-capability p, .feature-card-premium p {
 }
 
 .article-html-content h2 {
-  font-size: 1.65rem !important;
+  font-size: calc(var(--article-font-size, 1.125rem) * 1.45) !important;
   font-weight: 700 !important;
   color: #f8fafc !important;
   margin-top: 2.75rem !important;
@@ -3984,30 +3990,34 @@ p, .uh-card-capability p, .feature-card-premium p {
   padding-bottom: 0.5rem !important;
   border-bottom: 1px solid #252538 !important;
   letter-spacing: -0.02em !important;
+  transition: font-size 0.2s ease;
 }
 
 .article-html-content h3 {
-  font-size: 1.3rem !important;
+  font-size: calc(var(--article-font-size, 1.125rem) * 1.25) !important;
   font-weight: 600 !important;
   color: #f1f5f9 !important;
   margin-top: 2rem !important;
   margin-bottom: 0.75rem !important;
+  transition: font-size 0.2s ease;
 }
 
 .article-html-content h4 {
-  font-size: 1.1rem !important;
+  font-size: calc(var(--article-font-size, 1.125rem) * 1.1) !important;
   font-weight: 600 !important;
   color: #e2e8f0 !important;
   margin-top: 1.5rem !important;
   margin-bottom: 0.5rem !important;
+  transition: font-size 0.2s ease;
 }
 
 .article-html-content p {
   color: #cbd5e1 !important;
   margin-bottom: 1.4rem !important;
-  line-height: 1.85 !important;
+  line-height: var(--article-line-height, 1.85) !important;
   text-align: left !important;
-  font-size: 1.0625rem !important;
+  font-size: var(--article-font-size, 1.0625rem) !important;
+  transition: font-size 0.2s ease, line-height 0.2s ease;
 }
 
 .article-html-content ul,
@@ -4020,8 +4030,10 @@ p, .uh-card-capability p, .feature-card-premium p {
 
 .article-html-content li {
   margin-bottom: 0.6rem !important;
-  line-height: 1.75 !important;
+  line-height: var(--article-line-height, 1.75) !important;
   color: #cbd5e1 !important;
+  font-size: var(--article-font-size, 1.0625rem) !important;
+  transition: font-size 0.2s ease, line-height 0.2s ease;
 }
 
 .article-html-content ul {

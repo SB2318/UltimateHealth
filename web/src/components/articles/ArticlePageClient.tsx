@@ -3,6 +3,7 @@
 import { useState, useEffect, type CSSProperties } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowLeft, Share2, Check, ArrowUp } from "lucide-react";
 import { withBasePath } from "@/lib/basePath";
 import type { Article } from "@/types/article";
 import { defaultGlossaryTerms } from "@/lib/article-data";
@@ -15,11 +16,14 @@ import { type FontSize } from "./AccessibilityControls";
 import TableOfContents from "./TableOfContents";
 import { ARTICLE_STICKY_HEADER_HEIGHT_PX } from "./article-layout.js";
 import ScrollToTop from "@/components/ScrollToTop";
+import { useArticleSpeech } from "@/hooks/use-article-speech";
+import ListenTriggerButton from "./listen/ListenTriggerButton";
+import ArticleAudioPlayer from "./listen/ArticleAudioPlayer";
 
-const FONT_SIZE_MAP: Record<FontSize, number> = {
-  sm: 16,
-  md: 18,
-  lg: 20,
+const FONT_SIZE_MAP: Record<FontSize, { size: number; lineHeight: number; title: string }> = {
+  sm: { size: 15, lineHeight: 1.7, title: "Small text (15px)" },
+  md: { size: 18, lineHeight: 1.85, title: "Default text (18px)" },
+  lg: { size: 22, lineHeight: 2.0, title: "Large text (22px)" },
 };
 
 function cleanArticleHtml(rawHtml?: string): string | undefined {
@@ -89,6 +93,9 @@ function cleanArticleHtml(rawHtml?: string): string | undefined {
     ""
   );
 
+  // 12. Strip hardcoded inline font-size styles so dynamic font size switching functions cleanly
+  cleaned = cleaned.replace(/font-size:\s*[^;"]+;?/gi, "");
+
   return cleaned.trim();
 }
 
@@ -97,6 +104,7 @@ interface ArticlePageClientProps {
   relatedArticles: Article[];
   /** Raw HTML content fetched from the get-article-content API endpoint */
   htmlContent?: string;
+  pbRecordId?: string;
 }
 
 /**
@@ -108,18 +116,72 @@ export default function ArticlePageClient({
   article,
   relatedArticles,
   htmlContent,
+  pbRecordId,
 }: ArticlePageClientProps) {
+  const pathname = usePathname() || "";
+  const segments = pathname.split("/").filter(Boolean);
+  const knownLocales = ["en", "hi", "bn", "ta", "or", "de", "es", "fr", "hr"];
+  const currentLocale = segments.find((s) => knownLocales.includes(s)) || "en";
+  const articlesUrl = withBasePath(`/${currentLocale}/articles`);
+
   const [fontSize, setFontSize] = useState<FontSize>("md");
   const [heroVisible, setHeroVisible] = useState(true);
-  // Defer dangerouslySetInnerHTML to client-only to avoid hydration mismatch.
-  // The raw API HTML can contain malformed/unclosed tags that browsers
-  // auto-correct differently than Node.js, causing SSR ↔ client DOM differences.
+  const [copied, setCopied] = useState(false);
   const [mounted, setMounted] = useState(false);
   const cleanedHtml = cleanArticleHtml(htmlContent);
 
+  // Modular speech synthesis engine hook
+  const speech = useArticleSpeech(article, htmlContent);
+
+  // Load saved font size preference from localStorage
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem("uh_article_font_size") as FontSize | null;
+      if (saved && (saved === "sm" || saved === "md" || saved === "lg")) {
+        setFontSize(saved);
+      }
+    } catch {}
     setMounted(true);
   }, []);
+
+  const handleFontSizeChange = (size: FontSize) => {
+    setFontSize(size);
+    try {
+      localStorage.setItem("uh_article_font_size", size);
+    } catch {}
+  };
+
+  const handleShare = async () => {
+    let url = typeof window !== "undefined" ? window.location.href : "";
+    if (typeof window !== "undefined") {
+      const shareId = pbRecordId || article.id;
+      url = `${window.location.origin}${articlesUrl}/${shareId}`;
+    }
+    if (!url) return;
+
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: article.title,
+          text: article.excerpt || article.title,
+          url,
+        });
+        return;
+      } catch {
+        // Fallback to clipboard if share was cancelled or failed
+      }
+    }
+
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(url);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error("Clipboard copy failed:", err);
+      }
+    }
+  };
 
   // Show article title in sticky header only after the hero H1 scrolls out of view
   useEffect(() => {
@@ -147,65 +209,114 @@ export default function ArticlePageClient({
         }
       >
         {/* ── Sticky top navigation bar ── */}
-        <div className="sticky top-0 z-50 w-full bg-[#0c0c14]/95 backdrop-blur-md border-b border-[#252538] print:hidden">
-          {/* justify-between pins back-btn LEFT and font-controls RIGHT always */}
-          <div className="relative w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-
-            {/* ← Back to articles */}
+        <div className="sticky top-0 z-50 w-full bg-[#0c0c14]/95 backdrop-blur-md border-b border-[#252538] print:hidden shadow-lg shadow-black/40">
+          <div className="relative w-full max-w-[880px] mx-auto px-6 sm:px-8 lg:px-10 h-16 flex items-center justify-between gap-4">
+            {/* ← Back to articles button with generous padding and bold clear icon */}
             <Link
-              href="/articles"
-              className="inline-flex items-center gap-1.5 shrink-0 text-sm font-medium text-slate-400 hover:text-[#2dd4bf] transition-colors group z-10"
+              href={articlesUrl}
+              className="inline-flex items-center gap-2.5 pl-3.5 pr-4 py-2 rounded-xl text-sm font-semibold text-slate-200 hover:text-white bg-[#141424] hover:bg-[#1e1e36] border border-[#2a2a44] hover:border-[#3e3e62] transition-all duration-150 group shrink-0 z-10 shadow-sm"
               aria-label="Back to all articles"
             >
-              <i
-                className="fas fa-arrow-left text-[11px] transition-transform group-hover:-translate-x-0.5"
+              <ArrowLeft
+                size={18}
+                strokeWidth={2.5}
+                className="text-[#2dd4bf] transition-transform duration-150 group-hover:-translate-x-1"
                 aria-hidden="true"
               />
-              <span>Articles</span>
+              <span className="tracking-wide font-medium">Articles</span>
             </Link>
 
-            {/* Article title — absolutely centered, fades in after H1 scrolls off */}
-            <p
-              className={[
-                "absolute left-1/2 -translate-x-1/2 max-w-[55%] text-sm font-semibold text-[#e2e8f0] truncate transition-all duration-300 pointer-events-none select-none",
-                heroVisible ? "opacity-0 translate-y-1" : "opacity-100 translate-y-0",
-              ].join(" ")}
-              aria-hidden={heroVisible}
-            >
-              {article.title}
-            </p>
-
-            {/* Font size controls — pinned RIGHT */}
-            <div
-              className="flex items-center gap-1 shrink-0 print:hidden z-10"
-              role="group"
-              aria-label="Text size"
-            >
-              {(["sm", "md", "lg"] as FontSize[]).map((size, i) => (
-                <button
-                  key={size}
-                  onClick={() => setFontSize(size)}
-                  aria-pressed={fontSize === size}
-                  aria-label={["Small text", "Default text size", "Large text"][i]}
-                  title={["Small", "Medium", "Large"][i]}
-                  className={[
-                    "w-7 h-7 rounded-md flex items-center justify-center font-bold transition-all duration-150 border",
-                    ["text-xs", "text-sm", "text-base"][i],
-                    fontSize === size
-                      ? "bg-[#2dd4bf]/15 border-[#2dd4bf]/50 text-[#2dd4bf]"
-                      : "border-transparent text-slate-500 hover:text-slate-300",
-                  ].join(" ")}
+            {/* Middle: Category indicator (at top) or Article Title (when scrolled) */}
+            <div className="absolute left-1/2 -translate-x-1/2 max-w-[45%] sm:max-w-[55%] flex items-center justify-center pointer-events-none select-none">
+              {heroVisible ? (
+                <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium text-slate-400 bg-[#141422] border border-[#28283e] transition-all duration-300">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2dd4bf] animate-pulse" />
+                  <span className="truncate">{article.category || "Health Guide"}</span>
+                </div>
+              ) : (
+                <p
+                  className="text-xs sm:text-sm font-semibold text-[#f1f5f9] truncate text-center transition-all duration-300 drop-shadow-sm"
+                  title={article.title}
                 >
-                  A
-                </button>
-              ))}
+                  {article.title}
+                </p>
+              )}
+            </div>
+
+            {/* Right-side tools: Listen + Font size toggle + Share button */}
+            <div className="flex items-center gap-2 shrink-0 z-10">
+              {/* Listen to Article (Quick Header Pill) */}
+              <ListenTriggerButton
+                variant="header"
+                isPlaying={speech.isPlaying}
+                isPaused={speech.isPaused}
+                onClick={speech.togglePlay}
+              />
+
+              {/* Font size segmented switcher */}
+              <div
+                className="flex items-center bg-[#141422] border border-[#28283e] rounded-lg p-0.5"
+                role="group"
+                aria-label="Adjust text size"
+              >
+                {(["sm", "md", "lg"] as FontSize[]).map((size, i) => {
+                  const isCurrent = fontSize === size;
+                  const config = FONT_SIZE_MAP[size];
+                  return (
+                    <button
+                      key={size}
+                      type="button"
+                      onClick={() => handleFontSizeChange(size)}
+                      aria-pressed={isCurrent}
+                      aria-label={config.title}
+                      title={config.title}
+                      className={[
+                        "w-7 h-7 rounded-md flex items-center justify-center font-bold transition-all duration-150 cursor-pointer",
+                        ["text-xs", "text-sm", "text-base"][i],
+                        isCurrent
+                          ? "bg-[#2dd4bf]/20 border border-[#2dd4bf]/60 text-[#2dd4bf] shadow-sm"
+                          : "border border-transparent text-slate-400 hover:text-slate-200 hover:bg-[#1f1f33]",
+                      ].join(" ")}
+                    >
+                      A
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Share / Copy link button */}
+              <button
+                type="button"
+                onClick={handleShare}
+                aria-label="Share article"
+                title={copied ? "Link copied to clipboard!" : "Share article"}
+                className="h-8 px-2.5 rounded-lg flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-[#141422] hover:bg-[#1f1f33] border border-[#28283e] hover:border-[#3e3e5c] transition-all duration-150 cursor-pointer"
+              >
+                {copied ? (
+                  <>
+                    <Check size={13} className="text-[#2dd4bf]" />
+                    <span className="text-[#2dd4bf] font-bold">Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 size={13} className="text-slate-400" />
+                    <span className="hidden sm:inline">Share</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
         </div>
 
         <main className="w-full">
-          {/* ── Hero: title + metadata + image + tags ── */}
-          <ArticleHero article={article} />
+          {/* ── Hero: title + metadata + listen CTA + image + tags ── */}
+          <ArticleHero
+            article={article}
+            onListenToggle={speech.togglePlay}
+            isListening={speech.isPlaying}
+            isPaused={speech.isPaused}
+            listenDurationStr={speech.totalDurationStr}
+          />
 
           {/* ── Article body: single centered reading column ── */}
           <div
@@ -214,8 +325,14 @@ export default function ArticlePageClient({
           >
             <article
               aria-label={article.title}
-              className="[font-size:var(--article-font-size)]"
-              style={{ "--article-font-size": `${FONT_SIZE_MAP[fontSize]}px` } as CSSProperties}
+              className="[font-size:var(--article-font-size)] transition-all duration-200"
+              style={
+                {
+                  "--article-font-size": `${FONT_SIZE_MAP[fontSize].size}px`,
+                  "--article-line-height": `${FONT_SIZE_MAP[fontSize].lineHeight}`,
+                  marginBottom: "56px",
+                } as CSSProperties
+              }
               suppressHydrationWarning
             >
               {/* Render real HTML only after client mount to avoid hydration
@@ -262,6 +379,9 @@ export default function ArticlePageClient({
       <div className="print:hidden">
         <ScrollToTop />
       </div>
+
+      {/* ── Docked Article Audio Player ── */}
+      <ArticleAudioPlayer speech={speech} articleTitle={article.title} />
     </GlossaryProvider>
   );
 }
@@ -276,46 +396,161 @@ function ArticleFooter({ article }: { article: Article }) {
   const articlesUrl = withBasePath(`/${currentLocale}/articles`);
 
   return (
-    <div className="mt-14 pt-8 border-t border-[#252538]">
-      {/* Author card */}
-      <div className="flex items-start gap-4 p-5 sm:p-6 bg-[#13131f] rounded-2xl border border-[#252538]">
+    <div
+      style={{
+        marginTop: "72px",
+        marginBottom: "36px",
+        paddingTop: "40px",
+        borderTop: "1px solid #252538",
+        width: "100%",
+      }}
+    >
+      {/* Author card with explicit vertical margins and padding */}
+      <div
+        style={{
+          marginTop: "24px",
+          marginBottom: "40px",
+          padding: "28px 24px",
+          background: "#13131f",
+          border: "1px solid #252538",
+          borderRadius: "16px",
+          display: "flex",
+          alignItems: "flex-start",
+          gap: "18px",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.35)",
+        }}
+      >
         <div
-          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-white text-base sm:text-lg font-bold shrink-0 [background:var(--avatar-bg)]"
-          style={{ "--avatar-bg": article.author.avatarColor } as CSSProperties}
+          style={{
+            width: "56px",
+            height: "56px",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#ffffff",
+            fontSize: "1.1rem",
+            fontWeight: 700,
+            flexShrink: 0,
+            background: article.author.avatarColor,
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+          }}
           aria-hidden="true"
         >
           {article.author.avatarInitials}
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-widest text-[#2dd4bf] mb-1">
+        <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
+          <p
+            style={{
+              margin: "0 0 6px 0",
+              fontSize: "11px",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "#2dd4bf",
+            }}
+          >
             About the Author
           </p>
-          <h3 className="font-bold text-[#f8fafc] text-base leading-tight mb-0.5">
+          <h3
+            style={{
+              margin: "0 0 4px 0",
+              fontSize: "1.25rem",
+              fontWeight: 700,
+              color: "#f8fafc",
+              lineHeight: 1.25,
+            }}
+          >
             {article.author.name}
           </h3>
-          <p className="text-xs text-[#94a3b8]">{article.author.role}</p>
-          <p className="text-sm text-[#cbd5e1] mt-2 leading-relaxed">
+          <p
+            style={{
+              margin: "0 0 12px 0",
+              fontSize: "0.85rem",
+              color: "#94a3b8",
+              fontWeight: 500,
+            }}
+          >
+            {article.author.role}
+          </p>
+          <p
+            style={{
+              margin: 0,
+              fontSize: "0.92rem",
+              color: "#cbd5e1",
+              lineHeight: 1.7,
+            }}
+          >
             A contributing expert to the UltimateHealth platform, committed to
             delivering evidence-based health information accessible to everyone.
           </p>
         </div>
       </div>
 
-      {/* Post-article navigation row */}
-      <div className="mt-8 pt-6 border-t border-[#252538]/60 flex items-center justify-between gap-4">
+      {/* Post-article navigation row with explicit vertical margins and padding */}
+      <div
+        style={{
+          marginTop: "40px",
+          marginBottom: "24px",
+          paddingTop: "28px",
+          paddingBottom: "16px",
+          borderTop: "1px solid #252538",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "16px",
+          width: "100%",
+        }}
+      >
         <Link
           href={articlesUrl}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-[#2dd4bf] hover:text-[#5eead4] transition-colors group"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: "10px 20px",
+            background: "#141424",
+            border: "1px solid #2a2a44",
+            borderRadius: "12px",
+            color: "#2dd4bf",
+            fontSize: "0.875rem",
+            fontWeight: 700,
+            textDecoration: "none",
+            boxShadow: "0 4px 14px rgba(0, 0, 0, 0.25)",
+            transition: "all 0.15s ease",
+          }}
+          aria-label="Back to all articles"
         >
-          <i className="fas fa-arrow-left text-xs transition-transform group-hover:-translate-x-1" aria-hidden="true" />
+          <ArrowLeft
+            size={16}
+            strokeWidth={2.4}
+            style={{ color: "#2dd4bf" }}
+            aria-hidden="true"
+          />
           <span>Back to all articles</span>
         </Link>
         <button
+          type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "9px 18px",
+            background: "#141424",
+            border: "1px solid #28283e",
+            borderRadius: "10px",
+            color: "#94a3b8",
+            fontSize: "0.8rem",
+            fontWeight: 600,
+            cursor: "pointer",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+            transition: "all 0.15s ease",
+          }}
         >
           <span>Back to top</span>
-          <i className="fas fa-arrow-up text-[10px]" aria-hidden="true" />
+          <ArrowUp size={14} style={{ color: "#2dd4bf" }} aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -336,29 +571,115 @@ function ArticlePageFooter() {
   const contributeUrl = withBasePath(`/${currentLocale}/contribute`);
 
   return (
-    <footer className="w-full bg-[#08080f] border-t border-[#252538] text-[#64748b] py-8">
-      <div className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm">
-        <div className="flex items-center gap-2">
+    <footer
+      style={{
+        width: "100%",
+        background: "#08080f",
+        borderTop: "1px solid #252538",
+        padding: "36px 0 54px",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "880px",
+          margin: "0 auto",
+          padding: "0 28px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "18px",
+        }}
+      >
+        {/* Brand & tagline (Aligned on the left matching top Back to Articles button) */}
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "8px",
+            fontSize: "0.85rem",
+            color: "#64748b",
+          }}
+        >
           <Link
             href={homeUrl}
-            className="font-bold text-slate-300 hover:text-[#2dd4bf] transition-colors"
+            style={{
+              fontWeight: 700,
+              color: "#e2e8f0",
+              textDecoration: "none",
+              transition: "color 0.15s ease",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#2dd4bf";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#e2e8f0";
+            }}
           >
             UltimateHealth
           </Link>
-          <span className="text-[#3d4f63]">—</span>
+          <span style={{ color: "#3d4f63" }}>—</span>
           <span>Open-source health knowledge for everyone</span>
         </div>
-        <div className="flex items-center gap-5">
-          <Link href={articlesUrl} className="hover:text-slate-300 transition-colors">
+
+        {/* Navigation links (Aligned on the right) */}
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "24px",
+            fontSize: "0.85rem",
+            fontWeight: 600,
+          }}
+        >
+          <Link
+            href={articlesUrl}
+            style={{ color: "#94a3b8", textDecoration: "none", transition: "color 0.15s ease" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#2dd4bf";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+            }}
+          >
             All Articles
           </Link>
-          <Link href={glossaryUrl} className="hover:text-slate-300 transition-colors">
+          <Link
+            href={glossaryUrl}
+            style={{ color: "#94a3b8", textDecoration: "none", transition: "color 0.15s ease" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#2dd4bf";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+            }}
+          >
             Medical Glossary
           </Link>
-          <Link href={contributeUrl} className="hover:text-slate-300 transition-colors">
+          <Link
+            href={contributeUrl}
+            style={{ color: "#94a3b8", textDecoration: "none", transition: "color 0.15s ease" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#2dd4bf";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+            }}
+          >
             Contribute
           </Link>
-          <Link href={homeUrl} className="hover:text-slate-300 transition-colors">
+          <Link
+            href={homeUrl}
+            style={{ color: "#94a3b8", textDecoration: "none", transition: "color 0.15s ease" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#2dd4bf";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "#94a3b8";
+            }}
+          >
             Home
           </Link>
         </div>

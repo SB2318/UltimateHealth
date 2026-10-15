@@ -1,9 +1,14 @@
 
 import type { Article } from "@/types/article";
 import ArticleMeta from "./ArticleMeta";
+import ListenTriggerButton from "./listen/ListenTriggerButton";
 
 interface ArticleHeroProps {
   article: Article;
+  onListenToggle?: () => void;
+  isListening?: boolean;
+  isPaused?: boolean;
+  listenDurationStr?: string;
 }
 
 /**
@@ -21,7 +26,13 @@ interface ArticleHeroProps {
  * because it was overlapping with the sticky navigation header.
  * Category is still shown inside the breadcrumb trail.
  */
-export default function ArticleHero({ article }: ArticleHeroProps) {
+export default function ArticleHero({
+  article,
+  onListenToggle,
+  isListening,
+  isPaused,
+  listenDurationStr,
+}: ArticleHeroProps) {
   return (
     <header className="article-hero w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-2 text-center">
 
@@ -44,13 +55,29 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
         </p>
       )}
 
-      {/* ── Author, date, reading time (Centered) ── */}
-      <div className="flex justify-center mb-8">
+      {/* ── Author, date, reading time (Centered) with comfortable vertical spacing ── */}
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "28px", marginBottom: "20px" }}>
         <ArticleMeta article={article} />
       </div>
 
+      {/* ── Listen to Article CTA ── */}
+      {onListenToggle && (
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "32px" }}>
+          <ListenTriggerButton
+            variant="hero"
+            isPlaying={Boolean(isListening)}
+            isPaused={Boolean(isPaused)}
+            onClick={onListenToggle}
+            durationStr={listenDurationStr}
+          />
+        </div>
+      )}
+
       {/* ── Hero banner image (full column width, rounded) ── */}
-      <div className="relative overflow-hidden bg-[#13131f] aspect-[16/9] md:aspect-[21/9] max-h-[460px] border border-[#252538] rounded-2xl shadow-2xl mb-6">
+      <div
+        style={{ marginBottom: "36px" }}
+        className="relative overflow-hidden bg-[#13131f] aspect-[16/9] md:aspect-[21/9] max-h-[460px] border border-[#252538] rounded-2xl shadow-2xl"
+      >
         {article.imageUrl ? (
           <img
             src={article.imageUrl}
@@ -68,18 +95,35 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
         )}
       </div>
 
-      {/* ── Tags: centered, wrapping, with generous spacing ── */}
+      {/* ── Tags: button pills with generous spacing, styled like the card tags ── */}
       {article.tags.length > 0 && (
         <div
-          className="flex flex-wrap justify-center gap-3 mb-8 px-2"
+          className="flex flex-wrap items-center justify-center gap-3 my-8 pt-3 pb-4 px-2"
           aria-label="Article tags"
         >
           {article.tags.map((tag) => (
             <span
               key={tag}
-              className="text-xs font-medium text-[#2dd4bf] bg-[#2dd4bf]/10 border border-[#2dd4bf]/25 px-4 py-1.5 rounded-full hover:bg-[#2dd4bf]/20 transition-colors cursor-default whitespace-nowrap"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "5px",
+                padding: "6px 14px",
+                borderRadius: "50px",
+                fontSize: "11px",
+                fontWeight: 800,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                background: "rgba(124, 58, 237, 0.15)",
+                color: "#c084fc",
+                border: "1px solid rgba(124, 58, 237, 0.35)",
+                boxShadow: "0 2px 8px rgba(0, 0, 0, 0.25)",
+                transition: "all 0.15s ease",
+              }}
+              className="hover:scale-[1.03] hover:bg-violet-900/30 transition-all cursor-default select-none"
             >
-              #{tag}
+              <span style={{ opacity: 0.6, fontWeight: 700 }}>#</span>
+              <span>{tag}</span>
             </span>
           ))}
         </div>
@@ -87,7 +131,7 @@ export default function ArticleHero({ article }: ArticleHeroProps) {
 
       {/* Visual separator */}
       <div
-        className="mb-10 h-px bg-[#252538] mx-auto"
+        className="mt-6 mb-12 h-px bg-[#252538] mx-auto"
         aria-hidden="true"
       />
     </header>

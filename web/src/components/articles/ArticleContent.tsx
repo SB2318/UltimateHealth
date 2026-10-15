@@ -109,9 +109,9 @@ const CALLOUT_CONFIG: Record<CalloutVariant, CalloutConfig> = {
 // ─── Block renderers ──────────────────────────────────────────────────────────
 
 const HEADING_CLASSES: Record<HeadingLevel, string> = {
-  2: "text-2xl md:text-3xl font-bold text-[#1a202c] mt-12 mb-5 pb-2 border-b border-gray-100 scroll-mt-[var(--article-sticky-header-height,85px)]",
-  3: "text-xl md:text-2xl font-semibold text-[#2d3748] mt-9 mb-3 scroll-mt-[var(--article-sticky-header-height,85px)]",
-  4: "text-lg md:text-xl font-semibold text-[#4a5568] mt-7 mb-2 scroll-mt-[var(--article-sticky-header-height,85px)]",
+  2: "text-2xl md:text-3xl font-bold text-[#f8fafc] mt-12 mb-5 pb-2 border-b border-[#252538] scroll-mt-[var(--article-sticky-header-height,85px)]",
+  3: "text-xl md:text-2xl font-semibold text-[#f1f5f9] mt-9 mb-3 scroll-mt-[var(--article-sticky-header-height,85px)]",
+  4: "text-lg md:text-xl font-semibold text-[#e2e8f0] mt-7 mb-2 scroll-mt-[var(--article-sticky-header-height,85px)]",
 };
 
 const HEADING_TAGS: Record<HeadingLevel, "h2" | "h3" | "h4"> = {
@@ -194,7 +194,11 @@ function renderBlock(
       return (
         <p
           key={index}
-          className="text-[#374151] leading-[1.875] mb-6"
+          className="text-[#cbd5e1] mb-6 transition-all duration-200"
+          style={{
+            fontSize: "var(--article-font-size, 1.0625rem)",
+            lineHeight: "var(--article-line-height, 1.85)",
+          }}
         >
           {isHtml ? (
             /* HTML paragraphs (inline bold, italics, links) are safe — data is controlled */
