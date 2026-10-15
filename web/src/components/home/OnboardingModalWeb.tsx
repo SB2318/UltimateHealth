@@ -1703,7 +1703,7 @@ export default function OnboardingModalWeb() {
                       </span>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                         <Link
-                          href={withBasePath(`/${locale}/articles`)}
+                          href={`/${locale}/articles`}
                           onClick={closeTour}
                           className="p-4 rounded-xl bg-[#141528]/80 hover:bg-[#1c1d35] border border-white/10 hover:border-cyan-500/60 no-underline flex flex-col gap-2 transition-all shadow-xs group"
                         >
@@ -1719,7 +1719,7 @@ export default function OnboardingModalWeb() {
                         </Link>
 
                         <Link
-                          href={withBasePath(`/${locale}/admin-agreement`)}
+                          href={`/${locale}/admin-agreement`}
                           onClick={closeTour}
                           className="p-4 rounded-xl bg-[#141528]/80 hover:bg-[#1c1d35] border border-white/10 hover:border-emerald-500/60 no-underline flex flex-col gap-2 transition-all shadow-xs group"
                         >
@@ -1735,7 +1735,7 @@ export default function OnboardingModalWeb() {
                         </Link>
 
                         <Link
-                          href={withBasePath(`/${locale}/contribute`)}
+                          href={`/${locale}/contribute`}
                           onClick={closeTour}
                           className="p-4 rounded-xl bg-[#141528]/80 hover:bg-[#1c1d35] border border-white/10 hover:border-rose-500/60 no-underline flex flex-col gap-2 transition-all shadow-xs group"
                         >

@@ -23,14 +23,14 @@ export const Footer = () => {
   const knownLocales = ['en', 'hi', 'bn', 'ta', 'or', 'de', 'es', 'fr', 'hr']
   const currentLocale = segments.find((s) => knownLocales.includes(s)) || 'en'
 
-  const homeUrl = withBasePath(`/${currentLocale}`)
-  const featuresUrl = withBasePath(`/${currentLocale}#features`)
-  const programsUrl = withBasePath(`/${currentLocale}#programs`)
-  const screenshotsUrl = withBasePath(`/${currentLocale}#screenshots`)
-  const contactUrl = withBasePath(`/${currentLocale}#contact`)
-  const articlesUrl = withBasePath(`/${currentLocale}/articles`)
-  const glossaryUrl = withBasePath(`/${currentLocale}/medical-glossary`)
-  const contributeUrl = withBasePath(`/${currentLocale}/contribute`)
+  const homeUrl = `/${currentLocale}`
+  const featuresUrl = `/${currentLocale}#features`
+  const programsUrl = `/${currentLocale}#programs`
+  const screenshotsUrl = `/${currentLocale}#screenshots`
+  const contactUrl = `/${currentLocale}#contact`
+  const articlesUrl = `/${currentLocale}/articles`
+  const glossaryUrl = `/${currentLocale}/medical-glossary`
+  const contributeUrl = `/${currentLocale}/contribute`
   // ── Newsletter state ──
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterStatus, setNewsletterStatus] = useState<

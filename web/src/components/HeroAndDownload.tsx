@@ -105,7 +105,7 @@ export default function HeroAndDownload() {
                   <i className="fas fa-download" aria-hidden="true" />
                   Download App
                 </a>
-                <Link href={withBasePath("/articles")} className="uh-btn-secondary">
+                <Link href="/articles" className="uh-btn-secondary">
                   <i className="fas fa-file-lines" aria-hidden="true" />
                   Read Articles
                 </Link>

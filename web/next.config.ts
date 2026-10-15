@@ -10,6 +10,7 @@ const basePath =
     : undefined;
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   ...(basePath ? { basePath } : {}),
 
   experimental: {

@@ -8,7 +8,6 @@ import { usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { ModeToggle } from "@/components/mode-toggle";
 import { PageWrapper } from "@/components/layout";
-import { withBasePath } from "@/lib/basePath";
 import { LanguageSwitcher } from "@/components/ui/language-switcher";
 
 const SECTION_IDS = [
@@ -29,10 +28,10 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
   const [activeSection, setActiveSection] = useState<string>("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const articlesHref = withBasePath(`/${locale}/articles`);
-  const podcastsHref = withBasePath(`/${locale}/podcasts`);
-  const glossaryHref = withBasePath(`/${locale}/medical-glossary`);
-  const contributeHref = withBasePath(`/${locale}/contribute`);
+  const articlesHref = `/${locale}/articles`;
+  const podcastsHref = `/${locale}/podcasts`;
+  const glossaryHref = `/${locale}/medical-glossary`;
+  const contributeHref = `/${locale}/contribute`;
 
   const isArticles = pathname.includes("/articles");
   const isPodcasts = pathname.includes("/podcasts");

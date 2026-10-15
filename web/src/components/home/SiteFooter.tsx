@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { PageWrapper } from "@/components/layout";
-import { withBasePath } from "@/lib/basePath";
 import {
   FEEDBACK_URL,
   HELP_CENTER_URL,
@@ -15,14 +14,14 @@ import NewsletterForm from "./NewsletterForm";
 
 /** Site footer — static apart from the newsletter form island. */
 export default function SiteFooter({ locale = "en" }: { locale?: string }) {
-  const homeUrl = withBasePath(`/${locale}`);
+  const homeUrl = `/${locale}`;
   const featuresUrl = "#what-we-do";
   const programsUrl = "#programs";
   const screenshotsUrl = "#screenshots";
   const contactUrl = "#contact";
-  const articlesUrl = withBasePath(`/${locale}/articles`);
-  const glossaryUrl = withBasePath(`/${locale}/medical-glossary`);
-  const contributeUrl = withBasePath(`/${locale}/contribute`);
+  const articlesUrl = `/${locale}/articles`;
+  const glossaryUrl = `/${locale}/medical-glossary`;
+  const contributeUrl = `/${locale}/contribute`;
 
   return (
     <footer>

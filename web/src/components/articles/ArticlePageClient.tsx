@@ -123,7 +123,7 @@ export default function ArticlePageClient({
   const segments = pathname.split("/").filter(Boolean);
   const knownLocales = ["en", "hi", "bn", "ta", "or", "de", "es", "fr", "hr"];
   const currentLocale = segments.find((s) => knownLocales.includes(s)) || "en";
-  const articlesUrl = withBasePath(`/${currentLocale}/articles`);
+  const articlesUrl = `/${currentLocale}/articles`;
 
   const [fontSize, setFontSize] = useState<FontSize>("md");
   const [heroVisible, setHeroVisible] = useState(true);
@@ -397,7 +397,7 @@ function ArticleFooter({ article }: { article: Article }) {
   const segments = pathname.split("/").filter(Boolean);
   const knownLocales = ["en", "hi", "bn", "ta", "or", "de", "es", "fr", "hr"];
   const currentLocale = segments.find((s) => knownLocales.includes(s)) || "en";
-  const articlesUrl = withBasePath(`/${currentLocale}/articles`);
+  const articlesUrl = `/${currentLocale}/articles`;
 
   return (
     <div
@@ -569,10 +569,10 @@ function ArticlePageFooter() {
   const knownLocales = ["en", "hi", "bn", "ta", "or", "de", "es", "fr", "hr"];
   const currentLocale = segments.find((s) => knownLocales.includes(s)) || "en";
 
-  const homeUrl = withBasePath(`/${currentLocale}`);
-  const articlesUrl = withBasePath(`/${currentLocale}/articles`);
-  const glossaryUrl = withBasePath(`/${currentLocale}/medical-glossary`);
-  const contributeUrl = withBasePath(`/${currentLocale}/contribute`);
+  const homeUrl = `/${currentLocale}`;
+  const articlesUrl = `/${currentLocale}/articles`;
+  const glossaryUrl = `/${currentLocale}/medical-glossary`;
+  const contributeUrl = `/${currentLocale}/contribute`;
 
   return (
     <footer

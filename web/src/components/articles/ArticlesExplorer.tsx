@@ -6,7 +6,6 @@ import { format, parseISO } from "date-fns";
 import { useTranslations } from "next-intl";
 import { Search, X, Globe, ChevronLeft, ChevronRight } from "lucide-react";
 import { resolveArticleImageUrl } from "@/lib/article-image";
-import { withBasePath } from "@/lib/basePath";
 import type { ApiArticle } from "@/types/api-article";
 
 interface ArticlesExplorerProps {
@@ -615,7 +614,7 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
   });
 
   const languageBadge = formatLanguageName(article.language);
-  const articleHref = withBasePath(`/${locale}/articles/${article._id}`);
+  const articleHref = `/${locale}/articles/${article._id}`;
 
   return (
     <Link

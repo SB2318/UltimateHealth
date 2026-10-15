@@ -61,7 +61,7 @@ export default function Navbar() {
   return (
     <header className={`header${scrolled ? " scrolled" : ""}`} id="header">
       <PageWrapper as="div" className="nav">
-        <Link href={withBasePath("/")} className="logo">
+        <Link href="/" className="logo">
           <div className="logo-icon">
             <Image
               src="https://raw.githubusercontent.com/SB2318/UltimateHealth/refs/heads/main/frontend/src/assets/images/adaptive-icon.png"
@@ -104,19 +104,19 @@ export default function Navbar() {
             </a>
           </li>
           <li>
-            <Link href={withBasePath("/articles")} className="nav-link-item">
+            <Link href="/articles" className="nav-link-item">
               <i className="fas fa-file-lines nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Read Articles</span>
             </Link>
           </li>
           <li>
-            <Link href={withBasePath("/medical-glossary")} className="nav-link-item">
+            <Link href="/medical-glossary" className="nav-link-item">
               <i className="fas fa-book-medical nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Medical Glossary</span>
             </Link>
           </li>
           <li>
-            <Link href={withBasePath("/contribute")} className="nav-link-item">
+            <Link href="/contribute" className="nav-link-item">
               <i className="fas fa-users nav-item-icon" aria-hidden="true"></i>
               <span className="nav-item-text">Join Us to Contribute</span>
             </Link>
@@ -141,9 +141,9 @@ export default function Navbar() {
         <a href="#screenshots" onClick={() => setMobileMenuOpen(false)}>App Experience</a>
         <a href="#features" onClick={() => setMobileMenuOpen(false)}>Platform Highlights</a>
         <a href="#programs" onClick={() => setMobileMenuOpen(false)}>Community Programs</a>
-        <Link href={withBasePath("/articles")} onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
-        <Link href={withBasePath("/medical-glossary")} onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
-        <Link href={withBasePath("/contribute")} onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
+        <Link href="/articles" onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
+        <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
+        <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
         <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
         <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
           <ModeToggle />

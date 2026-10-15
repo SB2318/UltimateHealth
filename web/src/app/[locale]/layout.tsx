@@ -87,6 +87,7 @@ export default async function RootLayout({
             attribute="class"
             defaultTheme="light"
             enableSystem={false}
+            storageKey="uh-theme-v2"
             disableTransitionOnChange
             nonce={nonce}
           >
