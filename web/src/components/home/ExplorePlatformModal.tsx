@@ -31,7 +31,6 @@ import {
   HeartHandshake,
 } from 'lucide-react';
 import { useModalAudio } from '@/lib/audio/modalAudioController';
-import { withBasePath } from '@/lib/basePath';
 
 type StoryTab = 'what-new' | 'upcoming' | 'how-to-join';
 
@@ -441,7 +440,7 @@ export default function ExplorePlatformModal() {
 
   const navigateToContributors = () => {
     closeModal();
-    router.push(withBasePath(`/${locale}/our-contributors`));
+    router.push(`/${locale}/our-contributors`);
   };
 
   const handleNext = () => {

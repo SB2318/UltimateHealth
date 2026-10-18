@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import {
   Code2,
   BookOpen,
@@ -22,6 +22,7 @@ const REPO_URL = 'https://github.com/SB2318/UltimateHealth';
 
 export default function ContributePage() {
   const t = useTranslations('contribute');
+  const locale = useLocale();
 
   const ways = [
     {
@@ -197,7 +198,7 @@ export default function ContributePage() {
               </a>
 
               <Link
-                href="/our-contributors"
+                href={`/${locale}/our-contributors`}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',

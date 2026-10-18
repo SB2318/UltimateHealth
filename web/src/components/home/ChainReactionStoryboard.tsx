@@ -24,7 +24,6 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useModalAudio } from '@/lib/audio/modalAudioController';
-import { withBasePath } from '@/lib/basePath';
 
 type StoryTab = 'evolution' | 'how-to-join';
 
@@ -1104,7 +1103,7 @@ export default function ChainReactionStoryboard() {
 
             <div className="uh-meet-actions">
               <Link
-                href={withBasePath(`/${locale}/our-contributors`)}
+                href={`/${locale}/our-contributors`}
                 className="uh-btn-meet-contributors"
                 id="explore-contributors-btn"
               >

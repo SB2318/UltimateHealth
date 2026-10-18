@@ -697,34 +697,6 @@ export default function OurContributorsPage() {
               </div>
             </div>
 
-            <div style={{ marginTop: '22px' }}>
-              <button
-                type="button"
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('open-explore-platform-modal'));
-                  window.dispatchEvent(new CustomEvent('open-explore-platform'));
-                  window.dispatchEvent(new CustomEvent('open-uh-tour'));
-                }}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '10px 22px',
-                  borderRadius: '9999px',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.04em',
-                  cursor: 'pointer',
-                  boxSizing: 'border-box',
-                  whiteSpace: 'nowrap',
-                  lineHeight: '1.2',
-                }}
-                className="text-teal-700 dark:text-cyan-300 bg-white/90 dark:bg-slate-900/80 border border-teal-500/30 dark:border-cyan-400/40 hover:bg-teal-600 hover:text-white dark:hover:bg-cyan-400 dark:hover:text-black transition-all shadow-xs"
-              >
-                <span>🚀 Explore Platform Evolution Storyboard</span>
-              </button>
-            </div>
           </div>
         </div>
 
@@ -732,7 +704,15 @@ export default function OurContributorsPage() {
         <div className="admin-section">
           <div className="admin-card">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={admin.img} alt={`Avatar of ${admin.name}`} loading="lazy" className="admin-avatar" />
+            <img
+              src={admin.img}
+              alt={`Avatar of ${admin.name}`}
+              loading="lazy"
+              className="admin-avatar"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = 'https://avatars.githubusercontent.com/u/87614560?v=4';
+              }}
+            />
             <div>
               <div className="admin-header-row">
                 <span className="admin-badge">👑 Project Admin</span>
@@ -850,7 +830,15 @@ export default function OurContributorsPage() {
                   {/* Top info */}
                   <div className="contrib-card-top">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={c.img} alt={`Avatar of ${c.name}`} loading="lazy" className="contrib-card-img" />
+                    <img
+                      src={c.img}
+                      alt={`Avatar of ${c.name}`}
+                      loading="lazy"
+                      className="contrib-card-img"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = 'https://avatars.githubusercontent.com/u/0?v=4';
+                      }}
+                    />
                     <div className="contrib-card-info">
                       <div className="contrib-card-name" title={c.name}>{c.name}</div>
                       <div className="contrib-card-handle">{c.handle}</div>

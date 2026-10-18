@@ -8,6 +8,21 @@ const intlMiddleware = createMiddleware(routing);
 export default function proxy(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
 
+  const { pathname } = request.nextUrl;
+  if (pathname.includes('/web/')) {
+    const segments = pathname.split('/').filter(Boolean);
+    const knownLocales = routing.locales;
+    const locale = segments.find((s) => knownLocales.includes(s as any)) || routing.defaultLocale;
+    const nonRouteSegments = new Set([...knownLocales, 'web']);
+    const rest = segments.filter((s) => !nonRouteSegments.has(s)).join('/');
+    const cleaned = `/${locale}${rest ? `/${rest}` : ''}`;
+    if (cleaned !== pathname) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = cleaned;
+      return NextResponse.redirect(redirectUrl, 307);
+    }
+  }
+
   const nonce = crypto.randomUUID().replace(/-/g, "");
 
   const cspDirectives = [
