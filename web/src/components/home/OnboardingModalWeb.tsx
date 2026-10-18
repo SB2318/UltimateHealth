@@ -1253,7 +1253,7 @@ export default function OnboardingModalWeb() {
       <AnimatePresence>
         {isOpen && (
           <div
-            className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-5 md:p-6 lg:p-8 bg-slate-950/75 backdrop-blur-md overflow-y-auto"
+            className="fixed inset-0 z-[99999] flex p-3 sm:p-5 md:p-6 lg:p-8 bg-slate-950/75 backdrop-blur-md overflow-y-auto"
             role="dialog"
             aria-modal="true"
             aria-labelledby="tour-dialog-title"
@@ -1271,10 +1271,12 @@ export default function OnboardingModalWeb() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 14 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
-              className={`relative w-[96%] sm:w-full max-w-[960px] lg:max-w-[1040px] max-h-[94vh] sm:max-h-[88vh] h-[min(92vh,760px)] min-h-[520px] sm:min-h-[560px] my-auto mx-auto flex flex-col rounded-2xl sm:rounded-3xl bg-[#0c0d18] border border-white/15 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85),0_0_50px_-10px_rgba(255,0,127,0.15)] overflow-hidden font-sans text-white ${
+              className={`relative w-[96%] sm:w-full max-w-[960px] lg:max-w-[1040px] my-auto mx-auto flex flex-col rounded-2xl sm:rounded-3xl bg-[#0c0d18] border border-white/15 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85),0_0_50px_-10px_rgba(255,0,127,0.15)] overflow-hidden font-sans text-white ${
                 locale === 'bn' ? 'uh-bengali-font' : ''
               }`}
               style={{
+                height: 'min(86vh, 720px)',
+                maxHeight: 'calc(100dvh - 32px)',
                 background: `radial-gradient(circle at 50% 0%, ${step.accentColor}12 0%, transparent 65%), #0c0d18`,
               }}
               onClick={(e) => e.stopPropagation()}
@@ -1344,6 +1346,7 @@ export default function OnboardingModalWeb() {
                     aria-label={isPlaying ? ui.stopMusic : ui.playMusic}
                     aria-pressed={isPlaying}
                     title={isPlaying ? ui.stopMusic : ui.playMusic}
+                    style={{ minHeight: '40px', boxSizing: 'border-box', flexShrink: 0, whiteSpace: 'nowrap' }}
                     className={`h-10 px-3.5 sm:px-4 rounded-xl inline-flex items-center justify-center gap-2.5 text-xs font-semibold tracking-wide transition-all cursor-pointer border active:scale-95 focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:outline-none shadow-xs ${
                       isPlaying
                         ? 'bg-pink-600 text-white border-pink-500 shadow-pink-500/25 hover:bg-pink-500'
@@ -1372,6 +1375,7 @@ export default function OnboardingModalWeb() {
                   <button
                     onClick={closeTour}
                     type="button"
+                    style={{ boxSizing: 'border-box', flexShrink: 0 }}
                     className="w-10 h-10 rounded-xl inline-flex items-center justify-center text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/15 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-pink-500 focus-visible:outline-none"
                     aria-label="Close presentation tour"
                   >
@@ -1755,8 +1759,13 @@ export default function OnboardingModalWeb() {
                 </div>
               </div>
 
-              {/* ── Bottom Navigation / Footer ── */}
-              <footer className="h-14 sm:h-16 flex items-center justify-between px-5 sm:px-8 lg:px-10 border-t border-white/10 bg-[#121324]/90 shrink-0 z-20 pb-[max(0px,env(safe-area-inset-bottom))]">
+              {/* ── Bottom Navigation / Controls ── */}
+              <div
+                role="region"
+                aria-label="Tour navigation"
+                className="h-14 sm:h-16 flex items-center justify-between px-5 sm:px-8 lg:px-10 border-t border-white/10 bg-[#121324]/90 shrink-0 z-20 pb-[max(0px,env(safe-area-inset-bottom))]"
+                style={{ minHeight: '56px' }}
+              >
                 {/* Five slide indicators */}
                 <div className="flex items-center gap-2" role="tablist" aria-label="Slide indicators">
                   {TOUR_STEPS.map((s, idx) => {
@@ -1814,7 +1823,7 @@ export default function OnboardingModalWeb() {
                     <ChevronRight size={17} className="shrink-0" />
                   </button>
                 </div>
-              </footer>
+              </div>
             </motion.div>
           </div>
         )}

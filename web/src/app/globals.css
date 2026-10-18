@@ -786,12 +786,7 @@ p.center {
   color: var(--text-muted);
 }
 
-/* ==================== DIALOG ISOLATION ==================== */
-[role="dialog"] footer {
-  padding: 0 !important;
-  background: transparent !important;
-  border-top: none !important;
-}
+
 
 /* ==================== STORE BUTTONS ==================== */
 .store-buttons {
@@ -1165,6 +1160,13 @@ p.center {
 .screenshot-modal-nav:hover { background: var(--primary); color: white; transform: translateY(-50%) scale(1.1); }
 .screenshot-modal-prev { left: -60px; }
 .screenshot-modal-next { right: -60px; }
+
+@media (max-width: 768px) {
+  .screenshot-modal-prev { left: 8px; }
+  .screenshot-modal-next { right: 8px; }
+  .screenshot-modal-close { top: 8px; right: 8px; }
+  .screenshot-caption { bottom: 8px; font-size: 0.85rem; }
+}
 
 .screenshot-caption {
   position: absolute;
@@ -2057,30 +2059,100 @@ html.dark .footer-subscribe-input::placeholder { color: #475569; }
   margin-top: 6px;
 }
 
-/* ==================== MODAL ==================== */
+/* ==================== UNIVERSAL MODAL SYSTEM ==================== */
 .modal-overlay {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.7);
+  background: rgba(15, 23, 42, 0.75);
   backdrop-filter: blur(8px);
-  align-items: center;
-  justify-content: center;
   z-index: 2000;
-  padding: 24px;
+  padding: 16px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 .modal-overlay.active { display: flex; }
 
 .modal-content {
   background: white;
-  padding: 48px;
-  border-radius: 28px;
-  max-width: 500px;
+  padding: 36px;
+  border-radius: 24px;
+  max-width: 540px;
   width: 100%;
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  margin: auto;
   text-align: center;
   position: relative;
+  box-sizing: border-box;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-  animation: modalAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: modalAppear 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Universal dialog & modal scrolling + button safety */
+[role="dialog"] {
+  box-sizing: border-box;
+}
+
+[role="dialog"] button,
+.modal-content button {
+  box-sizing: border-box;
+}
+
+/* Ensure modern slim scrollbars inside all modals so Windows 17px scrollbars never crowd content */
+[role="dialog"] *::-webkit-scrollbar,
+.modal-overlay *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+[role="dialog"] *::-webkit-scrollbar-track,
+.modal-overlay *::-webkit-scrollbar-track {
+  background: transparent;
+}
+[role="dialog"] *::-webkit-scrollbar-thumb,
+.modal-overlay *::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 9999px;
+}
+[role="dialog"] *::-webkit-scrollbar-thumb:hover,
+.modal-overlay *::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
+[role="dialog"] *,
+.modal-overlay * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+}
+
+/* ==================== FRACTIONAL SPACING UTILITIES (TAILWIND V4 COMPATIBILITY) ==================== */
+.px-1\.5 { padding-left: 0.375rem !important; padding-right: 0.375rem !important; }
+.px-2\.5 { padding-left: 0.625rem !important; padding-right: 0.625rem !important; }
+.px-3\.5 { padding-left: 0.875rem !important; padding-right: 0.875rem !important; }
+.px-4\.5 { padding-left: 1.125rem !important; padding-right: 1.125rem !important; }
+
+.py-0\.5 { padding-top: 0.125rem !important; padding-bottom: 0.125rem !important; }
+.py-1\.5 { padding-top: 0.375rem !important; padding-bottom: 0.375rem !important; }
+.py-2\.5 { padding-top: 0.625rem !important; padding-bottom: 0.625rem !important; }
+
+.gap-1\.5 { gap: 0.375rem !important; }
+.gap-2\.5 { gap: 0.625rem !important; }
+.gap-3\.5 { gap: 0.875rem !important; }
+
+/* Universal Badge, Pill, and Chip Protection */
+.rounded-full,
+[class*="rounded-full"] {
+  box-sizing: border-box;
+}
+
+span.rounded-full:not([class*="w-"]):not([class*="h-"]),
+span.rounded-lg:not([class*="w-"]):not([class*="h-"]),
+span.rounded-md:not([class*="w-"]):not([class*="h-"]),
+.badge,
+[class*="badge"] {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
 }
 .modal-content h2 {
   margin-bottom: 12px;
@@ -2212,55 +2284,11 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Orbitron', 'Rajdhani', sans-serif;
 }
 
-/* Scoped dialog typography protection — ensures all modals render clean, readable text */
+/* Scoped dialog typography protection — ensures modals use standard sans-serif font */
 [role="dialog"],
-[role="dialog"] h1,
-[role="dialog"] h2,
-[role="dialog"] h3,
-[role="dialog"] h4,
-[role="dialog"] h5,
-[role="dialog"] h6,
-[role="dialog"] p,
-[role="dialog"] span,
-[role="dialog"] div,
-[role="dialog"] button,
 .dialog-content,
 .modal-content {
-  font-family: var(--font-inter), var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-}
-
-[role="dialog"] h1,
-[role="dialog"] h2,
-[role="dialog"] h3,
-[role="dialog"] h4,
-[role="dialog"] h5,
-[role="dialog"] h6 {
-  background: none !important;
-  -webkit-background-clip: unset !important;
-  -webkit-text-fill-color: currentColor !important;
-  letter-spacing: -0.015em !important;
-  text-align: left !important;
-  color: inherit !important;
-}
-
-[role="dialog"] h1 {
-  font-size: 1.375rem !important;
-  line-height: 1.25 !important;
-}
-
-[role="dialog"] h2 {
-  font-size: 1.0625rem !important;
-  line-height: 1.35 !important;
-}
-
-[role="dialog"] h3 {
-  font-size: 0.9375rem !important;
-  line-height: 1.4 !important;
-}
-
-[role="dialog"] h4 {
-  font-size: 0.875rem !important;
-  line-height: 1.4 !important;
+  font-family: var(--font-inter), var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 h1 {

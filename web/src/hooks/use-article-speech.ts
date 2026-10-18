@@ -8,6 +8,11 @@ import {
   SpeechSegment,
 } from "@/lib/audio/extract-article-text";
 import { speechEngine, SpeechEngineState } from "@/lib/audio/speech-engine";
+import {
+  getListenStrings,
+  ListenStrings,
+  SupportedListenLocale,
+} from "@/lib/audio/listen-translations";
 import type { Article } from "@/types/article";
 
 export interface UseArticleSpeechReturn {
@@ -18,7 +23,11 @@ export interface UseArticleSpeechReturn {
   progressPercent: number;
   currentText: string;
   speed: number;
+  locale: SupportedListenLocale;
+  languageCode: string;
+  strings: ListenStrings;
   availableVoices: SpeechSynthesisVoice[];
+  languageVoices: SpeechSynthesisVoice[];
   selectedVoice: SpeechSynthesisVoice | null;
   totalDurationStr: string;
   elapsedTimeStr: string;
@@ -35,31 +44,33 @@ export interface UseArticleSpeechReturn {
 
 export function useArticleSpeech(
   article: Article,
-  htmlContent?: string
+  htmlContent?: string,
+  locale = "en"
 ): UseArticleSpeechReturn {
   const [engineState, setEngineState] = useState<SpeechEngineState>(
     speechEngine.getState()
   );
 
-  // Extract speech segments once when article or content changes
-  const segments: SpeechSegment[] = useMemo(() => {
+  // Extract speech segments and detect true content language
+  const { segments, detectedLocale } = useMemo(() => {
     return extractArticleSpeechSegments(
       article.title,
       article.author?.name || "Ultimate Health",
       htmlContent,
-      article.content?.blocks
+      article.content?.blocks,
+      locale
     );
-  }, [article.title, article.author?.name, htmlContent, article.content?.blocks]);
+  }, [article.title, article.author?.name, htmlContent, article.content?.blocks, locale]);
 
-  // Load article into engine
+  // Load article into speech engine with proper language detection
   useEffect(() => {
-    speechEngine.setArticle(segments, article.category || "en");
+    speechEngine.setArticle(segments, detectedLocale);
     return () => {
       speechEngine.stop();
     };
-  }, [segments, article.category]);
+  }, [segments, detectedLocale]);
 
-  // Subscribe to engine state
+  // Subscribe to engine state changes
   useEffect(() => {
     const unsubscribe = speechEngine.subscribe((newState) => {
       setEngineState(newState);
@@ -78,6 +89,10 @@ export function useArticleSpeech(
       (engineState.progressPercent / 100) * totalDurationSeconds
     );
   }, [engineState.progressPercent, totalDurationSeconds]);
+
+  const strings = useMemo(() => {
+    return getListenStrings(engineState.locale || detectedLocale);
+  }, [engineState.locale, detectedLocale]);
 
   const play = useCallback(() => speechEngine.play(), []);
   const pause = useCallback(() => speechEngine.pause(), []);
@@ -105,7 +120,11 @@ export function useArticleSpeech(
     progressPercent: engineState.progressPercent,
     currentText: engineState.currentText,
     speed: engineState.rate,
+    locale: engineState.locale || detectedLocale,
+    languageCode: engineState.languageCode,
+    strings,
     availableVoices: engineState.availableVoices,
+    languageVoices: engineState.languageVoices,
     selectedVoice: engineState.selectedVoice,
     totalDurationStr: formatDurationSeconds(totalDurationSeconds),
     elapsedTimeStr: formatDurationSeconds(elapsedSeconds),

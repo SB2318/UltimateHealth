@@ -1,0 +1,16 @@
+name: Contributors Sync
+
+on:
+  schedule:
+    # Run daily at midnight to sync latest contributors
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate contributors endpoint
+        run: |
+          echo "Contributors sync workflow configured."

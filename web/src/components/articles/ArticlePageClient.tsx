@@ -131,8 +131,8 @@ export default function ArticlePageClient({
   const [mounted, setMounted] = useState(false);
   const cleanedHtml = cleanArticleHtml(htmlContent);
 
-  // Modular speech synthesis engine hook
-  const speech = useArticleSpeech(article, htmlContent);
+  // Modular speech synthesis engine hook with localization support
+  const speech = useArticleSpeech(article, htmlContent, currentLocale);
 
   // Load saved font size preference from localStorage
   useEffect(() => {
@@ -252,6 +252,7 @@ export default function ArticlePageClient({
                 isPlaying={speech.isPlaying}
                 isPaused={speech.isPaused}
                 onClick={speech.togglePlay}
+                locale={currentLocale}
               />
 
               {/* Font size segmented switcher */}
@@ -320,6 +321,7 @@ export default function ArticlePageClient({
             isListening={speech.isPlaying}
             isPaused={speech.isPaused}
             listenDurationStr={speech.totalDurationStr}
+            locale={currentLocale}
           />
 
           {/* ── Article body: single centered reading column ── */}
@@ -385,7 +387,7 @@ export default function ArticlePageClient({
       </div>
 
       {/* ── Docked Article Audio Player ── */}
-      <ArticleAudioPlayer speech={speech} articleTitle={article.title} />
+      <ArticleAudioPlayer speech={speech} articleTitle={article.title} locale={currentLocale} />
     </GlossaryProvider>
   );
 }

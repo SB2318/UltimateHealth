@@ -9,6 +9,7 @@ interface ArticleHeroProps {
   isListening?: boolean;
   isPaused?: boolean;
   listenDurationStr?: string;
+  locale?: string;
 }
 
 /**
@@ -32,6 +33,7 @@ export default function ArticleHero({
   isListening,
   isPaused,
   listenDurationStr,
+  locale,
 }: ArticleHeroProps) {
   return (
     <header className="article-hero w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-2 text-center">
@@ -69,6 +71,7 @@ export default function ArticleHero({
             isPaused={Boolean(isPaused)}
             onClick={onListenToggle}
             durationStr={listenDurationStr}
+            locale={locale}
           />
         </div>
       )}

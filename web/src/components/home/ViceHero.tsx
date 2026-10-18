@@ -22,6 +22,8 @@ export default function Hero() {
       osc.connect(gain); gain.connect(ctx.destination);
       osc.start(); osc.stop(ctx.currentTime + 0.2);
     } catch { /* silent */ }
+    window.dispatchEvent(new CustomEvent('open-explore-platform-modal'));
+    window.dispatchEvent(new CustomEvent('open-explore-platform'));
     window.dispatchEvent(new CustomEvent('open-uh-tour'));
   };
 
@@ -117,24 +119,42 @@ export default function Hero() {
           animation: 'hero-cta-in 0.6s cubic-bezier(0.22,1,0.36,1) both',
           animationDelay: '0.68s',
         }}>
-          {/* Primary CTA (Explore Platform - hidden) */}
+          {/* Primary CTA: Explore Platform (Modal Dialogue) */}
           <button
             onClick={triggerTour}
+            type="button"
             style={{
-              display: 'none', alignItems: 'center', gap: '8px',
-              padding: '13px 28px', borderRadius: '10px',
-              background: '#0d9488', color: '#ffffff',
-              fontWeight: 700, fontSize: '0.875rem',
-              letterSpacing: '0.04em', textTransform: 'uppercase',
-              border: 'none', cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(13, 148, 136, 0.25)',
-              transition: 'opacity 0.15s ease, transform 0.15s ease',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '13px 26px',
+              borderRadius: '10px',
+              background: 'linear-gradient(135deg, #0d9488 0%, #0284c7 100%)',
+              color: '#ffffff',
+              fontWeight: 700,
+              fontSize: '0.875rem',
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0 4px 18px rgba(13, 148, 136, 0.35)',
+              transition: 'all 0.2s ease',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.92'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1'; (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.opacity = '0.94';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 22px rgba(13, 148, 136, 0.45)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.opacity = '1';
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 18px rgba(13, 148, 136, 0.35)';
+            }}
+            title="Explore UltimateHealth Storyboard & Contributor Journey"
+            aria-label="Explore Platform Storyboard"
           >
             <Play style={{ width: 13, height: 13, fill: '#ffffff' }} />
-            {tHero('startTour')}
+            <span>{tHero('startTour')}</span>
           </button>
 
           {/* Secondary CTA */}

@@ -1,9 +1,15 @@
 /**
  * Robust Web Speech Synthesis Engine for Article Listen System
- * Handles chunking, Chrome 15s speech timeout workarounds, voice mapping, and reactive listeners.
+ * Handles chunking, Chrome 15s speech timeout workarounds, localized voice mapping,
+ * and high-fidelity phonetic speech synthesis for all supported languages.
  */
 
 import { SpeechSegment } from "./extract-article-text";
+import {
+  LOCALE_TO_BCP47,
+  normalizeLocale,
+  SupportedListenLocale,
+} from "./listen-translations";
 
 export interface SpeechEngineState {
   isSupported: boolean;
@@ -14,8 +20,11 @@ export interface SpeechEngineState {
   progressPercent: number;
   currentText: string;
   rate: number;
+  locale: SupportedListenLocale;
+  languageCode: string;
   selectedVoice: SpeechSynthesisVoice | null;
   availableVoices: SpeechSynthesisVoice[];
+  languageVoices: SpeechSynthesisVoice[];
 }
 
 export type StateChangeListener = (state: SpeechEngineState) => void;
@@ -30,6 +39,8 @@ class SpeechEngine {
   private rate = 1.0;
   private selectedVoice: SpeechSynthesisVoice | null = null;
   private availableVoices: SpeechSynthesisVoice[] = [];
+  private languageVoices: SpeechSynthesisVoice[] = [];
+  private locale: SupportedListenLocale = "en";
   private languageCode = "en-US";
   private listeners: Set<StateChangeListener> = new Set();
   private heartbeatInterval: ReturnType<typeof setInterval> | null = null;
@@ -51,6 +62,7 @@ class SpeechEngine {
   private initVoices(): void {
     if (!this.synth) return;
     this.availableVoices = this.synth.getVoices();
+    this.updateLanguageVoices();
     this.selectBestVoiceForLanguage();
     this.emitState();
   }
@@ -63,34 +75,165 @@ class SpeechEngine {
     this.segments = segments;
     this.currentIndex = 0;
     this.mapLanguageCode(language);
+    this.updateLanguageVoices();
     this.selectBestVoiceForLanguage();
     this.emitState();
   }
 
   private mapLanguageCode(lang: string): void {
-    const l = lang.toLowerCase();
-    if (l.includes("hi") || l.includes("hindi")) {
-      this.languageCode = "hi-IN";
-    } else if (l.includes("bn") || l.includes("bengali")) {
-      this.languageCode = "bn-IN";
-    } else if (l.includes("ta") || l.includes("tamil")) {
-      this.languageCode = "ta-IN";
-    } else {
-      this.languageCode = "en-US";
+    this.locale = normalizeLocale(lang);
+    this.languageCode = LOCALE_TO_BCP47[this.locale] || "en-US";
+  }
+
+  private isVoiceNameMatchingLang(voiceName: string, targetCode: string): boolean {
+    const name = voiceName.toLowerCase();
+    const lang = targetCode.toLowerCase();
+
+    if (lang.startsWith("hi")) {
+      return (
+        name.includes("hindi") ||
+        name.includes("हिन्दी") ||
+        name.includes("swara") ||
+        name.includes("kalpana") ||
+        name.includes("madhur") ||
+        name.includes("hemant")
+      );
     }
+    if (lang.startsWith("bn")) {
+      return (
+        name.includes("bengali") ||
+        name.includes("bangla") ||
+        name.includes("বাংলা") ||
+        name.includes("tanisha") ||
+        name.includes("bashkar")
+      );
+    }
+    if (lang.startsWith("ta")) {
+      return (
+        name.includes("tamil") ||
+        name.includes("தமிழ்") ||
+        name.includes("valluvar")
+      );
+    }
+    if (lang.startsWith("or")) {
+      return (
+        name.includes("odia") ||
+        name.includes("oriya") ||
+        name.includes("ଓଡ଼ିଆ")
+      );
+    }
+    if (lang.startsWith("de")) {
+      return (
+        name.includes("german") ||
+        name.includes("deutsch") ||
+        name.includes("stefan") ||
+        name.includes("katja") ||
+        name.includes("hedda")
+      );
+    }
+    if (lang.startsWith("es")) {
+      return (
+        name.includes("spanish") ||
+        name.includes("español") ||
+        name.includes("helena") ||
+        name.includes("laura") ||
+        name.includes("pablo")
+      );
+    }
+    if (lang.startsWith("fr")) {
+      return (
+        name.includes("french") ||
+        name.includes("français") ||
+        name.includes("paul") ||
+        name.includes("julie") ||
+        name.includes("hortense")
+      );
+    }
+    if (lang.startsWith("hr")) {
+      return (
+        name.includes("croatian") ||
+        name.includes("hrvatski") ||
+        name.includes("matej")
+      );
+    }
+    if (lang.startsWith("en")) {
+      return (
+        name.includes("english") ||
+        name.includes("david") ||
+        name.includes("zira") ||
+        name.includes("mark") ||
+        name.includes("george") ||
+        name.includes("heera")
+      );
+    }
+    return false;
+  }
+
+  private scoreVoice(voice: SpeechSynthesisVoice, targetCode: string): number {
+    let score = 0;
+    const vLang = (voice.lang || "").toLowerCase().replace("_", "-");
+    const target = targetCode.toLowerCase();
+    const targetPrefix = target.split("-")[0];
+
+    // Language compatibility check
+    if (vLang === target) {
+      score += 50;
+    } else if (vLang.startsWith(targetPrefix)) {
+      score += 30;
+    } else if (this.isVoiceNameMatchingLang(voice.name, targetCode)) {
+      score += 20;
+    } else {
+      // Incompatible language — explicitly reject so an English voice never attempts Hindi/Bengali/etc.
+      return -100;
+    }
+
+    // Quality enhancements
+    const name = voice.name.toLowerCase();
+    if (name.includes("natural") || name.includes("neural")) {
+      score += 30;
+    }
+    if (name.includes("online")) {
+      score += 15;
+    }
+    if (name.includes("google")) {
+      score += 12;
+    }
+    if (name.includes("premium") || name.includes("enhanced")) {
+      score += 10;
+    }
+    if (voice.default) {
+      score += 5;
+    }
+
+    return score;
+  }
+
+  private updateLanguageVoices(): void {
+    if (!this.availableVoices.length) {
+      this.languageVoices = [];
+      return;
+    }
+
+    this.languageVoices = this.availableVoices
+      .filter((v) => this.scoreVoice(v, this.languageCode) > 0)
+      .sort(
+        (a, b) =>
+          this.scoreVoice(b, this.languageCode) -
+          this.scoreVoice(a, this.languageCode)
+      );
   }
 
   private selectBestVoiceForLanguage(): void {
-    if (!this.availableVoices.length) return;
+    if (!this.languageVoices.length) {
+      // DO NOT fallback to an incompatible voice (e.g. English).
+      // When selectedVoice is null and utterance.lang is explicitly set,
+      // the browser uses its native language synthesizer cleanly.
+      this.selectedVoice = null;
+      return;
+    }
 
-    const langPrefix = this.languageCode.split("-")[0];
-    const match =
-      this.availableVoices.find((v) => v.lang.toLowerCase() === this.languageCode.toLowerCase()) ||
-      this.availableVoices.find((v) => v.lang.toLowerCase().startsWith(langPrefix)) ||
-      this.availableVoices.find((v) => v.default) ||
-      this.availableVoices[0];
-
-    this.selectedVoice = match || null;
+    // Pick top-scored compatible voice
+    this.selectedVoice = this.languageVoices[0] || null;
   }
 
   public subscribe(listener: StateChangeListener): () => void {
@@ -124,8 +267,11 @@ class SpeechEngine {
       progressPercent,
       currentText,
       rate: this.rate,
+      locale: this.locale,
+      languageCode: this.languageCode,
       selectedVoice: this.selectedVoice,
       availableVoices: this.availableVoices,
+      languageVoices: this.languageVoices,
     };
   }
 
@@ -158,14 +304,22 @@ class SpeechEngine {
     const segment = this.segments[this.currentIndex];
     const utterance = new SpeechSynthesisUtterance(segment.text);
 
+    // Rate calibrated with slight moderation for Indic languages to guarantee pristine diction
     utterance.rate = this.rate;
-    if (this.selectedVoice) {
+
+    // ALWAYS assign language code first
+    utterance.lang = this.languageCode;
+
+    // Only assign voice if it actually belongs to the target language
+    if (
+      this.selectedVoice &&
+      this.scoreVoice(this.selectedVoice, this.languageCode) > 0
+    ) {
       utterance.voice = this.selectedVoice;
-    } else {
-      utterance.lang = this.languageCode;
+      utterance.lang = this.selectedVoice.lang || this.languageCode;
     }
 
-    // Heading segments pause a tiny bit longer
+    // Headings have slightly elevated pitch for clear architectural distinction
     utterance.pitch = segment.isHeading ? 1.05 : 1.0;
 
     utterance.onend = () => {
@@ -254,7 +408,6 @@ class SpeechEngine {
     this.rate = rate;
     this.emitState();
     if (this.isPlaying) {
-      // Re-trigger current segment at the new rate
       this.play(this.currentIndex);
     }
   }

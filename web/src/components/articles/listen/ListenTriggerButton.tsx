@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Headphones, Volume2 } from "lucide-react";
+import { getListenStrings } from "@/lib/audio/listen-translations";
 
 interface ListenTriggerButtonProps {
   isPlaying: boolean;
@@ -9,6 +10,7 @@ interface ListenTriggerButtonProps {
   onClick: () => void;
   variant?: "header" | "hero";
   durationStr?: string;
+  locale?: string;
 }
 
 export default function ListenTriggerButton({
@@ -17,13 +19,16 @@ export default function ListenTriggerButton({
   onClick,
   variant = "header",
   durationStr,
+  locale = "en",
 }: ListenTriggerButtonProps) {
+  const strings = getListenStrings(locale);
+
   if (variant === "hero") {
     return (
       <button
         type="button"
         onClick={onClick}
-        aria-label={isPlaying ? "Pause audio reading" : "Listen to this article"}
+        aria-label={isPlaying ? strings.paused : strings.listenToArticle}
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -44,6 +49,7 @@ export default function ListenTriggerButton({
             : "0 4px 14px rgba(0, 0, 0, 0.06)",
           cursor: "pointer",
           transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+          whiteSpace: "nowrap",
         }}
         onMouseEnter={(e) => {
           if (!isPlaying) {
@@ -91,12 +97,12 @@ export default function ListenTriggerButton({
                 }}
               />
             </div>
-            <span>Listening...</span>
+            <span>{strings.listening}</span>
           </>
         ) : (
           <>
-            <Headphones size={16} className="text-[#0d9488]" />
-            <span>Listen to Article</span>
+            <Headphones size={16} className="text-[#0d9488] shrink-0" />
+            <span>{strings.listenToArticle}</span>
             {durationStr && (
               <span
                 style={{
@@ -121,11 +127,11 @@ export default function ListenTriggerButton({
     <button
       type="button"
       onClick={onClick}
-      aria-label={isPlaying ? "Pause audio reading" : "Listen to article"}
-      title={isPlaying ? "Pause audio" : "Listen to article"}
+      aria-label={isPlaying ? strings.paused : strings.listen}
+      title={isPlaying ? strings.paused : strings.listen}
       style={{
         height: "32px",
-        padding: "0 10px",
+        padding: "0 12px",
         borderRadius: "8px",
         display: "inline-flex",
         alignItems: "center",
@@ -141,6 +147,7 @@ export default function ListenTriggerButton({
           : "1px solid var(--explorer-border, #e2e8f0)",
         cursor: "pointer",
         transition: "all 0.15s ease",
+        whiteSpace: "nowrap",
       }}
       onMouseEnter={(e) => {
         if (!isPlaying) {
@@ -157,18 +164,18 @@ export default function ListenTriggerButton({
     >
       {isPlaying ? (
         <>
-          <Volume2 size={13} className="text-[#0d9488] animate-pulse" />
-          <span style={{ color: "#0d9488" }}>Playing</span>
+          <Volume2 size={13} className="text-[#0d9488] animate-pulse shrink-0" />
+          <span style={{ color: "#0d9488" }}>{strings.playing}</span>
         </>
       ) : isPaused ? (
         <>
-          <Headphones size={13} className="text-amber-500" />
-          <span style={{ color: "#f59e0b" }}>Paused</span>
+          <Headphones size={13} className="text-amber-500 shrink-0" />
+          <span style={{ color: "#f59e0b" }}>{strings.paused}</span>
         </>
       ) : (
         <>
-          <Headphones size={13} className="text-[#0d9488]" />
-          <span>Listen</span>
+          <Headphones size={13} className="text-[#0d9488] shrink-0" />
+          <span>{strings.listen}</span>
         </>
       )}
     </button>

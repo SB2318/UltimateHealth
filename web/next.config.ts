@@ -19,9 +19,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 
   // ── Fallback redirects ──────────────────────────────────────────────────
   // next-intl middleware handles locale routing. When basePath is active (e.g. /web),

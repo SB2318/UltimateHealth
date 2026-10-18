@@ -2,7 +2,8 @@
 
 import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { X, Shield, Sparkles, Stethoscope, Volume2, HeartHandshake, Play } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Shield, Sparkles, Stethoscope, Volume2, HeartHandshake, Play, Pause } from 'lucide-react';
 import { withBasePath } from '@/lib/basePath';
 import { useModalAudio } from '@/lib/audio/modalAudioController';
 
@@ -82,22 +83,30 @@ export default function MoumitaMemorialModal({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 md:p-8 bg-slate-950/75 backdrop-blur-sm transition-opacity duration-200 overflow-y-auto"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="memorial-dialog-title"
-    >
-      {/* Main Memorial Dialog Card */}
-      <div
-        ref={modalRef}
-        className="relative w-full max-w-[720px] h-[min(85vh,720px)] my-auto mx-auto flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-[#12111d] border border-slate-200 dark:border-white/10 shadow-2xl font-sans"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <AnimatePresence>
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 md:p-8 bg-slate-950/80 backdrop-blur-md overflow-y-auto"
+          onClick={onClose}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="memorial-dialog-title"
+        >
+          {/* Main Memorial Dialog Card */}
+          <motion.div
+            ref={modalRef}
+            initial={{ opacity: 0, scale: 0.95, y: 0 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 0 }}
+            transition={{ duration: 0.2, ease: 'easeOut' }}
+            className="relative w-full max-w-[720px] m-auto flex flex-col rounded-3xl overflow-hidden bg-white dark:bg-[#12111d] border border-slate-200 dark:border-white/10 shadow-2xl font-sans"
+            style={{
+              height: 'min(85vh, 680px)',
+              maxHeight: 'calc(100dvh - 32px)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
         {/* Compact, Dignified Header Bar */}
         <header
           className="flex items-center justify-between px-6 sm:px-8 py-3.5 sm:py-4 bg-slate-100/80 dark:bg-[#161526] border-b border-slate-200 dark:border-white/10 shrink-0 gap-3"
@@ -117,27 +126,49 @@ export default function MoumitaMemorialModal({
               type="button"
               aria-label={isPlaying ? 'Stop Tribute Music' : 'Play Tribute Music'}
               title={isPlaying ? 'Click to Stop Tribute Music' : 'Click to Play Peaceful Tribute Music'}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full text-xs font-bold tracking-wide transition-all cursor-pointer border active:scale-95 focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:outline-none ${
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '7px',
+                height: '34px',
+                padding: '0 12px 0 8px',
+                borderRadius: '9999px',
+                fontSize: '11px',
+                fontWeight: 650,
+                cursor: 'pointer',
+                boxSizing: 'border-box',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                outline: 'none',
+              }}
+              className={`transition-all border active:scale-95 focus-visible:ring-2 focus-visible:ring-rose-500 ${
                 isPlaying
                   ? 'bg-rose-600 text-white border-rose-700 hover:bg-rose-700 shadow-md shadow-rose-600/25'
                   : 'bg-white text-slate-800 border-slate-300 hover:bg-slate-50 dark:bg-white/10 dark:text-white dark:border-white/20 shadow-xs'
               }`}
             >
-              {isPlaying ? (
-                <>
-                  <Volume2 size={16} className="animate-pulse shrink-0" />
-                  <span>Stop Music</span>
-                  <span className="flex items-end gap-0.5 h-3 ml-0.5">
-                    <span className="w-0.5 h-3 bg-white rounded-full animate-[pulse_0.6s_ease-in-out_infinite]" />
-                    <span className="w-0.5 h-1.5 bg-white rounded-full animate-[pulse_0.8s_ease-in-out_infinite_0.2s]" />
-                    <span className="w-0.5 h-2.5 bg-white rounded-full animate-[pulse_0.7s_ease-in-out_infinite_0.4s]" />
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Play size={15} className="shrink-0 text-rose-600 dark:text-rose-400" />
-                  <span>Play Music</span>
-                </>
+              <span
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '50%',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: isPlaying ? 'rgba(255, 255, 255, 0.22)' : '#ffe4e6',
+                  color: isPlaying ? '#ffffff' : '#e11d48',
+                  flexShrink: 0,
+                }}
+              >
+                {isPlaying ? <Pause size={10} className="fill-current" /> : <Play size={10} className="fill-current ml-0.5" />}
+              </span>
+              <span>{isPlaying ? 'Tribute Music' : 'Play Tribute'}</span>
+              {isPlaying && (
+                <span className="flex items-end gap-[2px] h-3 ml-0.5" aria-hidden="true">
+                  <span className="w-[2px] h-3 bg-white rounded-full animate-[pulse_0.6s_ease-in-out_infinite]" />
+                  <span className="w-[2px] h-1.5 bg-white rounded-full animate-[pulse_0.8s_ease-in-out_infinite_0.2s]" />
+                  <span className="w-[2px] h-2.5 bg-white rounded-full animate-[pulse_0.7s_ease-in-out_infinite_0.4s]" />
+                </span>
               )}
             </button>
 
@@ -146,9 +177,15 @@ export default function MoumitaMemorialModal({
               onClick={onClose}
               type="button"
               aria-label="Close memorial dialog"
-              className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200/70 dark:hover:bg-white/10 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:outline-none"
+              style={{
+                width: '34px',
+                height: '34px',
+                borderRadius: '10px',
+                boxSizing: 'border-box',
+              }}
+              className="flex items-center justify-center text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-white border border-slate-300 dark:border-white/15 bg-white dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:outline-none"
             >
-              <X size={18} />
+              <X size={16} />
             </button>
           </div>
         </header>
@@ -194,14 +231,42 @@ export default function MoumitaMemorialModal({
               </p>
 
               {/* Badges with Generous Padding and Font Sizing */}
-              <div className="flex flex-wrap items-center gap-2.5 justify-center sm:justify-start pt-0.5">
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-rose-100/90 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-800 text-xs font-semibold shadow-2xs">
-                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
-                  Doctor of the People
+              <div className="flex flex-wrap items-center gap-2.5 justify-center sm:justify-start pt-1">
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '7px',
+                    padding: '5px 14px',
+                    borderRadius: '9999px',
+                    fontSize: '12px',
+                    fontWeight: 650,
+                    lineHeight: '1.3',
+                    boxSizing: 'border-box',
+                    whiteSpace: 'nowrap',
+                  }}
+                  className="bg-rose-100/90 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-800 shadow-2xs"
+                >
+                  <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
+                  <span>Doctor of the People</span>
                 </span>
-                <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-white/20 text-xs font-semibold shadow-2xs">
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '7px',
+                    padding: '5px 14px',
+                    borderRadius: '9999px',
+                    fontSize: '12px',
+                    fontWeight: 650,
+                    lineHeight: '1.3',
+                    boxSizing: 'border-box',
+                    whiteSpace: 'nowrap',
+                  }}
+                  className="bg-white dark:bg-white/10 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-white/20 shadow-2xs"
+                >
                   <HeartHandshake size={14} className="text-rose-600 dark:text-rose-400 shrink-0" />
-                  Respect Giver Inspiration
+                  <span>Respect Giver Inspiration</span>
                 </span>
               </div>
             </div>
@@ -311,7 +376,9 @@ export default function MoumitaMemorialModal({
             Close Memorial
           </button>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

@@ -12,7 +12,7 @@ import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import CookieConsent from "@/components/ui/cookie-consent";
-import OnboardingModalWeb from "@/components/home/OnboardingModalWeb";
+import ExplorePlatformModal from "@/components/home/ExplorePlatformModal";
 import ScrollToHash from "@/components/ScrollToHash";
 
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
@@ -95,7 +95,7 @@ export default async function RootLayout({
               {children}
               <ScrollToHash />
               <CookieConsent />
-              <OnboardingModalWeb />
+              <ExplorePlatformModal />
             </TooltipProvider>
           </ThemeProvider>
         </NextIntlClientProvider>

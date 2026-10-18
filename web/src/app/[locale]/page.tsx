@@ -9,7 +9,6 @@ import SiteFooter from "@/components/home/SiteFooter";
 import SiteHeader from "@/components/home/SiteHeader";
 import PurposeSection from "@/components/home/PurposeSection";
 import WhatWeDoSection from "@/components/home/WhatWeDoSection";
-import ChainReactionStoryboard from "@/components/home/ChainReactionStoryboard";
 import PortalSwitcherCTA from "@/components/home/PortalSwitcherCTA";
 import HomeArticlesPreview from "@/components/home/HomeArticlesPreview";
 
@@ -41,7 +40,6 @@ export default async function Home({
       <PurposeSection />
       <WhatWeDoSection />
       <HomeArticlesPreview />
-      <ChainReactionStoryboard />
       <PortalSwitcherCTA />
       <ScreenshotGallery />
       <ProgramsSection />

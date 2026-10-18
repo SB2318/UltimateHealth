@@ -1,7 +1,14 @@
 /**
  * Text Extractor for Article Listen System
  * Extracts clean, speakable text segments from article HTML or structured blocks.
+ * Localized for all 9 supported languages with native sentence segmentation.
  */
+
+import {
+  detectContentLanguage,
+  getListenStrings,
+  SupportedListenLocale,
+} from "./listen-translations";
 
 export interface SpeechSegment {
   id: number;
@@ -13,15 +20,32 @@ export function extractArticleSpeechSegments(
   title: string,
   authorName: string,
   rawHtml?: string,
-  rawContentBlocks?: Array<{ type: string; html?: string; text?: string }>
-): SpeechSegment[] {
+  rawContentBlocks?: Array<{ type: string; html?: string; text?: string }>,
+  locale = "en"
+): { segments: SpeechSegment[]; detectedLocale: SupportedListenLocale } {
   const segments: SpeechSegment[] = [];
   let nextId = 0;
 
-  // Segment 0: Title and author intro
+  // Detect genuine language from combined sample text
+  const sampleSnippet = `${title} ${(rawHtml || "").slice(0, 500)}`;
+  const detectedLocale = detectContentLanguage(sampleSnippet, locale);
+  const strings = getListenStrings(detectedLocale);
+
+  // Segment 0: Title and author intro with natural grammar
+  let introText = `${title}. ${strings.introPrefix} ${authorName}.`;
+  if (detectedLocale === "hi") {
+    introText = `${title}। ${authorName} ${strings.introPrefix}।`;
+  } else if (detectedLocale === "bn") {
+    introText = `${title}। ${authorName} ${strings.introPrefix}।`;
+  } else if (detectedLocale === "ta") {
+    introText = `${title}. ${strings.introPrefix} ${authorName}.`;
+  } else if (detectedLocale === "or") {
+    introText = `${title}। ${authorName}${strings.introPrefix}।`;
+  }
+
   segments.push({
     id: nextId++,
-    text: `${title}. Written by ${authorName}.`,
+    text: introText,
     isHeading: true,
   });
 
@@ -55,10 +79,11 @@ export function extractArticleSpeechSegments(
         .trim();
 
       if (text.length > 2) {
-        // Split very long paragraphs into sentence chunks (max ~200 characters per speech chunk)
+        // Split very long paragraphs into natural sentence chunks (max ~200 characters per speech chunk)
+        // Splits cleanly on Latin (. ! ?) and Indic (। ॥) sentence delimiters
         const isHeading = tag.startsWith("h");
         if (text.length > 220 && !isHeading) {
-          const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
+          const sentences = text.match(/[^.!?।॥\n\r]+[.!?।॥]+|[^.!?।॥\n\r]+$/gu) || [text];
           for (const s of sentences) {
             const trimmed = s.trim();
             if (trimmed.length > 2) {
@@ -92,14 +117,14 @@ export function extractArticleSpeechSegments(
     }
   }
 
-  // End segment
+  // Localized closing segment
   segments.push({
     id: nextId++,
-    text: "Thank you for listening to this health article on UltimateHealth.",
+    text: strings.outroText,
     isHeading: false,
   });
 
-  return segments;
+  return { segments, detectedLocale };
 }
 
 /**

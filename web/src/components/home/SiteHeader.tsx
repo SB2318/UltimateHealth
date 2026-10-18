@@ -82,6 +82,8 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
 
   const openTour = () => {
     setMobileMenuOpen(false);
+    window.dispatchEvent(new CustomEvent("open-explore-platform-modal"));
+    window.dispatchEvent(new CustomEvent("open-explore-platform"));
     window.dispatchEvent(new CustomEvent("open-uh-tour"));
   };
 
@@ -181,40 +183,46 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
             <LanguageSwitcher />
             <ModeToggle />
           </li>
-          <li style={{ display: "none", alignItems: "center", marginLeft: "4px" }}>
+          <li className="hidden lg:flex items-center ml-1">
             <button
               type="button"
               onClick={openTour}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "6px",
-                padding: "8px 16px",
-                borderRadius: "10px",
-                background: "rgba(0, 229, 255, 0.12)",
-                border: "1px solid rgba(0, 229, 255, 0.35)",
-                color: "#00e5ff",
-                fontSize: "0.75rem",
+                gap: "8px",
+                height: "34px",
+                padding: "0 16px 0 10px",
+                borderRadius: "9999px",
+                fontSize: "11px",
                 fontWeight: 700,
-                letterSpacing: "0.06em",
+                letterSpacing: "0.05em",
                 textTransform: "uppercase",
                 cursor: "pointer",
-                transition: "all 0.15s ease",
+                boxSizing: "border-box",
+                whiteSpace: "nowrap",
+                lineHeight: "1",
+                outline: "none",
               }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = "#00e5ff";
-                (e.currentTarget as HTMLElement).style.color = "#0c0c14";
-                (e.currentTarget as HTMLElement).style.boxShadow =
-                  "0 0 16px rgba(0,229,255,0.4)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background =
-                  "rgba(0, 229, 255, 0.12)";
-                (e.currentTarget as HTMLElement).style.color = "#00e5ff";
-                (e.currentTarget as HTMLElement).style.boxShadow = "none";
-              }}
+              className="transition-all border bg-teal-50 dark:bg-cyan-950/40 border-teal-500/40 dark:border-cyan-400/40 text-teal-700 dark:text-cyan-300 hover:bg-teal-600 hover:text-white dark:hover:bg-cyan-400 dark:hover:text-black shadow-xs hover:scale-[1.02] active:scale-95"
+              title="Explore Platform Storyboard & Contributor Journey"
+              aria-label="Explore Platform"
             >
-              <Play style={{ width: 12, height: 12, fill: "currentColor" }} />
+              <span
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  borderRadius: "50%",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "rgba(13, 148, 136, 0.15)",
+                  flexShrink: 0,
+                }}
+                className="dark:bg-cyan-400/20"
+              >
+                <Play style={{ width: 10, height: 10, fill: "currentColor", marginLeft: 1 }} />
+              </span>
               <span>{tNav("startTour")}</span>
             </button>
           </li>
@@ -279,6 +287,14 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
         <Link href={contributeHref} onClick={() => setMobileMenuOpen(false)}>
           {tNav("joinUs")}
         </Link>
+        <button
+          type="button"
+          onClick={openTour}
+          className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-cyan-300 bg-teal-50 dark:bg-cyan-950/40 border border-teal-500/30 dark:border-cyan-400/30 my-2 cursor-pointer"
+        >
+          <Play style={{ width: 12, height: 12, fill: "currentColor" }} />
+          <span>{tNav("startTour")}</span>
+        </button>
         <div
           style={{
             display: "flex",

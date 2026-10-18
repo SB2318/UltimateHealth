@@ -25,6 +25,8 @@ export default function StartTourHeroBtn() {
       // Audio fallback
     }
 
+    window.dispatchEvent(new CustomEvent('open-explore-platform-modal'));
+    window.dispatchEvent(new CustomEvent('open-explore-platform'));
     window.dispatchEvent(new CustomEvent('open-uh-tour'));
   };
 
