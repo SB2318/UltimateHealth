@@ -88,14 +88,31 @@ function cleanArticleHtml(rawHtml?: string): string | undefined {
   // 10. Unwrap outer <article> / <section> wrapper tags (keep inner content)
   cleaned = cleaned.replace(/<\/?(article|section)[^>]*>/gi, "");
 
-  // 11. Unwrap pure layout container divs from the backend template
-  cleaned = cleaned.replace(
-    /<div[^>]*class="[^"]*(?:max-w-|prose\s|mx-auto)[^"]*"[^>]*>/gi,
-    ""
-  );
+  // 11. Remove empty paragraphs and breaks that create giant white gaps
+  cleaned = cleaned.replace(/<p>\s*(?:&nbsp;|<br\s*\/?>|\s)*<\/p>/gi, "");
 
-  // 12. Strip hardcoded inline font-size styles so dynamic font size switching functions cleanly
-  cleaned = cleaned.replace(/font-size:\s*[^;"]+;?/gi, "");
+  // 12. Strip hardcoded inline font-size and font-family styles so theme typography works smoothly
+  cleaned = cleaned
+    .replace(/font-size:\s*[^;"]+;?/gi, "")
+    .replace(/font-family:\s*[^;"]+;?/gi, "");
+
+  // 13. Balance unclosed or excess closing divs so the article container is never broken
+  const openDivCount = (cleaned.match(/<div[\s>]/gi) || []).length;
+  const closeDivCount = (cleaned.match(/<\/div>/gi) || []).length;
+  if (closeDivCount > openDivCount) {
+    let excess = closeDivCount - openDivCount;
+    // Strip excess closing </div> tags from the end
+    cleaned = cleaned.replace(/<\/div>(?![\s\S]*<\/div>)/gi, (match) => {
+      if (excess > 0) {
+        excess--;
+        return "";
+      }
+      return match;
+    });
+  } else if (openDivCount > closeDivCount) {
+    // Append missing </div> tags to close cleanly
+    cleaned += "</div>".repeat(openDivCount - closeDivCount);
+  }
 
   return cleaned.trim();
 }
@@ -346,7 +363,7 @@ export default function ArticlePageClient({
                   being auto-corrected differently by Node.js vs the browser. */}
               {mounted && cleanedHtml ? (
                 <div
-                  className="article-html-content prose max-w-none"
+                  className="article-html-content max-w-none"
                   // eslint-disable-next-line react/no-danger
                   dangerouslySetInnerHTML={{ __html: cleanedHtml }}
                   suppressHydrationWarning

@@ -18,6 +18,7 @@ export default function MoumitaMemorialModal({
 }: MoumitaMemorialModalProps) {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
+  const backdropMouseDownRef = useRef(false);
 
   // Global audio controller hook for Memorial tribute track
   const { isPlaying, toggle, play, stop } = useModalAudio('memorial');
@@ -38,10 +39,9 @@ export default function MoumitaMemorialModal({
 
     previousActiveElement.current = document.activeElement as HTMLElement;
 
-    // Focus the close button on mount for quick keyboard exit
+    // Focus modal container safely without triggering button space/enter actions
     const timer = setTimeout(() => {
-      const closeBtn = modalRef.current?.querySelector<HTMLElement>('button[aria-label="Close memorial dialog"]');
-      closeBtn?.focus();
+      modalRef.current?.focus();
     }, 50);
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -88,7 +88,15 @@ export default function MoumitaMemorialModal({
       {isOpen && (
         <div
           className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 md:p-8 bg-slate-950/80 backdrop-blur-md overflow-y-auto"
-          onClick={onClose}
+          onMouseDown={(e) => {
+            backdropMouseDownRef.current = e.target === e.currentTarget;
+          }}
+          onClick={(e) => {
+            if (backdropMouseDownRef.current && e.target === e.currentTarget) {
+              onClose();
+            }
+            backdropMouseDownRef.current = false;
+          }}
           role="dialog"
           aria-modal="true"
           aria-labelledby="memorial-dialog-title"
@@ -96,6 +104,7 @@ export default function MoumitaMemorialModal({
           {/* Main Memorial Dialog Card */}
           <motion.div
             ref={modalRef}
+            tabIndex={-1}
             initial={{ opacity: 0, scale: 0.95, y: 0 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 0 }}

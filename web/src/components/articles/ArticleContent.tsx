@@ -109,9 +109,9 @@ const CALLOUT_CONFIG: Record<CalloutVariant, CalloutConfig> = {
 // ─── Block renderers ──────────────────────────────────────────────────────────
 
 const HEADING_CLASSES: Record<HeadingLevel, string> = {
-  2: "text-2xl md:text-3xl font-bold text-[#f8fafc] mt-12 mb-5 pb-2 border-b border-[#252538] scroll-mt-[var(--article-sticky-header-height,85px)]",
-  3: "text-xl md:text-2xl font-semibold text-[#f1f5f9] mt-9 mb-3 scroll-mt-[var(--article-sticky-header-height,85px)]",
-  4: "text-lg md:text-xl font-semibold text-[#e2e8f0] mt-7 mb-2 scroll-mt-[var(--article-sticky-header-height,85px)]",
+  2: "text-2xl md:text-3xl font-bold text-slate-900 dark:text-[#f8fafc] mt-12 mb-5 pb-2 border-b border-slate-200 dark:border-[#252538] scroll-mt-[var(--article-sticky-header-height,85px)] text-left",
+  3: "text-xl md:text-2xl font-semibold text-slate-800 dark:text-[#f1f5f9] mt-9 mb-3 scroll-mt-[var(--article-sticky-header-height,85px)] text-left",
+  4: "text-lg md:text-xl font-semibold text-slate-700 dark:text-[#e2e8f0] mt-7 mb-2 scroll-mt-[var(--article-sticky-header-height,85px)] text-left",
 };
 
 const HEADING_TAGS: Record<HeadingLevel, "h2" | "h3" | "h4"> = {
@@ -194,7 +194,7 @@ function renderBlock(
       return (
         <p
           key={index}
-          className="text-[#cbd5e1] mb-6 transition-all duration-200"
+          className="text-slate-700 dark:text-[#cbd5e1] mb-6 transition-all duration-200 text-left"
           style={{
             fontSize: "var(--article-font-size, 1.0625rem)",
             lineHeight: "var(--article-line-height, 1.85)",
@@ -237,13 +237,13 @@ function renderBlock(
       return (
         <blockquote
           key={index}
-          className="relative my-10 pl-6 pr-4 py-5 border-l-4 border-[#667eea] rounded-r-2xl bg-[#667eea]/5"
+          className="relative my-8 pl-6 pr-4 py-4 border-l-4 border-[#0d9488] dark:border-[#2dd4bf] rounded-r-2xl bg-[#0d9488]/5 dark:bg-[#2dd4bf]/5 text-left"
         >
-          <p className="text-lg italic text-[#4a5568] leading-relaxed mb-0">
+          <p className="text-lg italic text-slate-700 dark:text-slate-300 leading-relaxed mb-0">
             &ldquo;{block.text}&rdquo;
           </p>
           {block.attribution && (
-            <footer className="mt-3 text-sm text-[#718096] font-medium not-italic">
+            <footer className="mt-2 text-sm text-slate-500 dark:text-slate-400 font-medium not-italic">
               — {block.attribution}
             </footer>
           )}
@@ -259,7 +259,7 @@ function renderBlock(
           role="note"
           aria-label={`${block.variant}: ${block.title}`}
           className={[
-            "my-8 rounded-2xl border p-5 flex gap-4",
+            "my-8 rounded-2xl border p-5 flex gap-4 text-left",
             cfg.bgClass,
             cfg.borderClass,
           ].join(" ")}
@@ -293,24 +293,31 @@ function renderBlock(
       const Wrapper = isOrdered ? "ol" : "ul";
 
       return (
-        <Wrapper key={index} className="my-6 space-y-3">
+        <Wrapper key={index} className="my-6 space-y-3 pl-1 text-left">
           {block.items.map((item, i) => (
-            <li key={i} className="flex gap-3 items-start text-[#374151] leading-[1.75]">
+            <li
+              key={i}
+              className="flex gap-3 items-start text-slate-700 dark:text-[#cbd5e1] leading-[1.8] text-left"
+              style={{
+                fontSize: "var(--article-font-size, 1.0625rem)",
+                lineHeight: "var(--article-line-height, 1.8)",
+              }}
+            >
               {isOrdered ? (
                 <span
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-[#667eea] bg-[#667eea]/10 flex-shrink-0 mt-0.5"
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-[#0d9488] bg-[#0d9488]/15 dark:text-[#2dd4bf] dark:bg-[#2dd4bf]/20 flex-shrink-0 mt-0.5"
                   aria-hidden="true"
                 >
                   {i + 1}
                 </span>
               ) : (
                 <span
-                  className="w-2 h-2 rounded-full bg-[#667eea] flex-shrink-0 mt-2.5"
+                  className="w-2 h-2 rounded-full bg-[#0d9488] dark:bg-[#2dd4bf] flex-shrink-0 mt-2.5"
                   aria-hidden="true"
                 />
               )}
               <span
-                className="flex-1"
+                className="flex-1 min-w-0 text-left"
                 dangerouslySetInnerHTML={{ __html: item }}
               />
             </li>

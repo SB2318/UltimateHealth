@@ -4236,10 +4236,18 @@ html.dark .contact-dark-right.uh-dark-aligned .dark-submit-btn {
   font-size: var(--article-font-size, 1.125rem) !important;
   text-align: left !important;
   transition: font-size 0.2s ease, line-height 0.2s ease;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .article-html-content * {
   border-color: #e2e8f0;
+}
+
+/* Neutralize student/contributor outer container constraints so content matches standard reading layout */
+.article-html-content [class*="max-w-"],
+.article-html-content [class*="mx-auto"] {
+  max-width: 100% !important;
 }
 
 .article-html-content span:not([class*="badge"]):not([class*="icon"]) {
@@ -4258,6 +4266,7 @@ html.dark .contact-dark-right.uh-dark-aligned .dark-submit-btn {
   -webkit-text-fill-color: initial !important;
   color: #0f172a !important;
   font-family: inherit !important;
+  scroll-margin-top: calc(var(--article-sticky-header-height, 80px) + 16px);
 }
 
 .article-html-content h2 {
@@ -4292,6 +4301,7 @@ html.dark .contact-dark-right.uh-dark-aligned .dark-submit-btn {
 
 .article-html-content p {
   color: #334155 !important;
+  margin-top: 0 !important;
   margin-bottom: 1.4rem !important;
   line-height: var(--article-line-height, 1.85) !important;
   text-align: left !important;
@@ -4299,28 +4309,96 @@ html.dark .contact-dark-right.uh-dark-aligned .dark-submit-btn {
   transition: font-size 0.2s ease, line-height 0.2s ease;
 }
 
-.article-html-content ul,
-.article-html-content ol {
-  margin: 1.25rem 0 !important;
-  padding-left: 1.75rem !important;
+/* ─── BULLET POINTS & ORDERED LIST TYPOGRAPHY ─── */
+.article-html-content ul {
+  list-style-type: disc !important;
+  list-style-position: outside !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1.5rem !important;
+  padding-left: 2rem !important;
   color: #334155 !important;
   text-align: left !important;
 }
 
-.article-html-content li {
-  margin-bottom: 0.6rem !important;
-  line-height: var(--article-line-height, 1.75) !important;
+.article-html-content ol {
+  list-style-type: decimal !important;
+  list-style-position: outside !important;
+  margin-top: 1rem !important;
+  margin-bottom: 1.5rem !important;
+  padding-left: 2rem !important;
   color: #334155 !important;
-  font-size: var(--article-font-size, 1.0625rem) !important;
-  transition: font-size 0.2s ease, line-height 0.2s ease;
+  text-align: left !important;
 }
 
-.article-html-content ul {
+.article-html-content ul > li {
   list-style-type: disc !important;
 }
 
-.article-html-content ol {
+.article-html-content ol > li {
   list-style-type: decimal !important;
+}
+
+.article-html-content li {
+  display: list-item !important;
+  margin-bottom: 0.65rem !important;
+  line-height: var(--article-line-height, 1.8) !important;
+  padding-left: 0.35rem !important;
+  color: #334155 !important;
+  font-size: var(--article-font-size, 1.0625rem) !important;
+  text-align: left !important;
+  transition: font-size 0.2s ease, line-height 0.2s ease;
+}
+
+.article-html-content li::marker {
+  color: #0d9488 !important;
+  font-weight: 600 !important;
+}
+
+/* Sub-lists & nested indentation */
+.article-html-content ul ul,
+.article-html-content ol ul {
+  list-style-type: circle !important;
+  margin-top: 0.4rem !important;
+  margin-bottom: 0.4rem !important;
+  padding-left: 1.5rem !important;
+}
+
+.article-html-content ul ul > li,
+.article-html-content ol ul > li {
+  list-style-type: circle !important;
+}
+
+.article-html-content ul ul ul,
+.article-html-content ol ul ul {
+  list-style-type: square !important;
+}
+
+.article-html-content ul ul ul > li,
+.article-html-content ol ul ul > li {
+  list-style-type: square !important;
+}
+
+.article-html-content ol ol,
+.article-html-content ul ol {
+  list-style-type: lower-alpha !important;
+  margin-top: 0.4rem !important;
+  margin-bottom: 0.4rem !important;
+  padding-left: 1.5rem !important;
+}
+
+.article-html-content ol ol > li,
+.article-html-content ul ol > li {
+  list-style-type: lower-alpha !important;
+}
+
+/* Ensure paragraph inside li doesn't break alignment or add huge margins */
+.article-html-content li p {
+  margin: 0 !important;
+  display: inline !important;
+}
+
+.article-html-content li > p:first-child {
+  display: inline !important;
 }
 
 .article-html-content a {
@@ -4333,7 +4411,8 @@ html.dark .contact-dark-right.uh-dark-aligned .dark-submit-btn {
   color: #0f766e !important;
 }
 
-.article-html-content strong {
+.article-html-content strong,
+.article-html-content b {
   color: #0f172a !important;
   font-weight: 600 !important;
 }
@@ -4411,6 +4490,16 @@ html.dark .article-html-content * {
   border-color: #252538;
 }
 
+/* Prevent contributor hardcoded light backgrounds from ruining dark mode */
+html.dark .article-html-content .bg-white,
+html.dark .article-html-content [class*="bg-white"],
+html.dark .article-html-content .bg-gray-50,
+html.dark .article-html-content [class*="bg-gray-50"] {
+  background-color: #141424 !important;
+  color: #cbd5e1 !important;
+  border-color: #252538 !important;
+}
+
 html.dark .article-html-content h1,
 html.dark .article-html-content h2,
 html.dark .article-html-content h3,
@@ -4446,6 +4535,10 @@ html.dark .article-html-content li {
   color: #cbd5e1 !important;
 }
 
+html.dark .article-html-content li::marker {
+  color: #2dd4bf !important;
+}
+
 html.dark .article-html-content a {
   color: #2dd4bf !important;
 }
@@ -4454,7 +4547,8 @@ html.dark .article-html-content a:hover {
   color: #5eead4 !important;
 }
 
-html.dark .article-html-content strong {
+html.dark .article-html-content strong,
+html.dark .article-html-content b {
   color: #f8fafc !important;
 }
 

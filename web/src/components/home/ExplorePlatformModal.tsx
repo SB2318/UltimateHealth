@@ -84,6 +84,7 @@ export default function ExplorePlatformModal() {
   const [selectedMilestoneIndex, setSelectedMilestoneIndex] = useState(0);
   const [selectedUpcomingIndex, setSelectedUpcomingIndex] = useState(0);
   const [selectedJoinIndex, setSelectedJoinIndex] = useState(0);
+  const backdropMouseDownRef = React.useRef(false);
 
   // Modal Audio Controller for Krishna Flute BGM
   const { isPlaying, toggle, play, stop } = useModalAudio('tour');
@@ -509,7 +510,15 @@ export default function ExplorePlatformModal() {
             overflowY: 'auto',
             boxSizing: 'border-box',
           }}
-          onClick={closeModal}
+          onMouseDown={(e) => {
+            backdropMouseDownRef.current = e.target === e.currentTarget;
+          }}
+          onClick={(e) => {
+            if (backdropMouseDownRef.current && e.target === e.currentTarget) {
+              closeModal();
+            }
+            backdropMouseDownRef.current = false;
+          }}
         >
           {/* Ambient Background Aura */}
           <div
