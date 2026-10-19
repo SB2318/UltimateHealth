@@ -1389,7 +1389,7 @@ export default function ExplorePlatformModal() {
                       </div>
 
                       <a
-                        href="https://github.com/Susmita-De/UltimateHealth"
+                        href="https://github.com/SB2318/UltimateHealth"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
