@@ -1,0 +1,547 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+import { useTranslations, useLocale } from 'next-intl';
+import {
+  Code2,
+  BookOpen,
+  Palette,
+  Bug,
+  GitPullRequest,
+  Users,
+  ExternalLink,
+  ArrowRight,
+  Mail,
+  FileText,
+} from 'lucide-react';
+import { Navbar } from '@/components/layout';
+import { Footer } from '@/components/ui/footer';
+
+const REPO_URL = 'https://github.com/SB2318/UltimateHealth';
+
+export default function ContributeClient() {
+  const t = useTranslations('contribute');
+  const locale = useLocale();
+
+  const ways = [
+    {
+      icon: Code2,
+      title: t('wayCode'),
+      desc: t('wayCodeItems'),
+      accent: '#0d9488',
+      bg: 'rgba(13, 148, 136, 0.10)',
+    },
+    {
+      icon: BookOpen,
+      title: t('wayDoc'),
+      desc: t('wayDocItems'),
+      accent: '#7c3aed',
+      bg: 'rgba(124, 58, 237, 0.10)',
+    },
+    {
+      icon: Palette,
+      title: t('wayDesign'),
+      desc: t('wayDesignItems'),
+      accent: '#e11d48',
+      bg: 'rgba(225, 29, 72, 0.10)',
+    },
+    {
+      icon: Bug,
+      title: t('wayTesting'),
+      desc: t('wayTestingItems'),
+      accent: '#16a34a',
+      bg: 'rgba(22, 163, 74, 0.10)',
+    },
+  ];
+
+  const communityCards = [
+    {
+      icon: GitPullRequest,
+      title: t('githubIssuesTitle'),
+      desc: t('githubIssuesDesc'),
+      actionText: t('openIssues'),
+      href: `${REPO_URL}/issues`,
+      external: true,
+      accent: '#0d9488',
+    },
+    {
+      icon: FileText,
+      title: t('guideTitle'),
+      desc: t('guideDesc'),
+      actionText: t('readGuide'),
+      href: `${REPO_URL}/blob/main/CONTRIBUTING.md`,
+      external: true,
+      accent: '#7c3aed',
+    },
+    {
+      icon: Mail,
+      title: t('emailTitle'),
+      desc: t('emailDesc'),
+      actionText: t('sendEmail'),
+      href: 'mailto:ultimate.health25@gmail.com',
+      external: false,
+      accent: '#e11d48',
+    },
+  ];
+
+  return (
+    <>
+      <Navbar />
+      <main
+        style={{
+          background: 'var(--explorer-bg, #f8fafc)',
+          color: 'var(--explorer-text-primary, #0f172a)',
+          minHeight: '100vh',
+        }}
+      >
+        {/* ── Hero Section ── */}
+        <section
+          style={{
+            paddingTop: '128px',
+            paddingBottom: '64px',
+            textAlign: 'center',
+            borderBottom: '1px solid var(--explorer-border, #e2e8f0)',
+          }}
+        >
+          <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 24px' }}>
+            <p
+              style={{
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: '#7c3aed',
+                fontFamily: 'monospace',
+                marginBottom: '16px',
+              }}
+            >
+              {t('sectionBadge')}
+            </p>
+            <h1
+              style={{
+                fontSize: 'clamp(2rem, 5vw, 3.2rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.025em',
+                lineHeight: 1.2,
+                color: 'var(--site-heading, #0f172a)',
+                fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
+                margin: '0 auto 20px',
+                maxWidth: '800px',
+              }}
+            >
+              {t('title')}
+            </h1>
+            <p
+              style={{
+                fontSize: '1.1rem',
+                lineHeight: 1.7,
+                color: 'var(--explorer-text-secondary, #475569)',
+                maxWidth: '640px',
+                margin: '0 auto 32px',
+              }}
+            >
+              {t('subtitle')}
+            </p>
+
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+              }}
+            >
+              <a
+                href={`${REPO_URL}/issues`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'linear-gradient(135deg, #7c3aed, #9333ea)',
+                  color: '#ffffff',
+                  padding: '12px 24px',
+                  borderRadius: '50px',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 20px rgba(124, 58, 237, 0.25)',
+                }}
+              >
+                <GitPullRequest size={16} />
+                {t('startContributing')}
+              </a>
+
+              <a
+                href={REPO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'var(--explorer-surface, #f1f5f9)',
+                  border: '1px solid var(--explorer-border, #e2e8f0)',
+                  color: 'var(--explorer-text-primary, #334155)',
+                  padding: '12px 24px',
+                  borderRadius: '50px',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  textDecoration: 'none',
+                }}
+              >
+                <ExternalLink size={16} color="#64748b" />
+                {t('viewRepo')}
+              </a>
+
+              <Link
+                href={`/${locale}/our-contributors`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'var(--explorer-surface, #f1f5f9)',
+                  border: '1px solid var(--explorer-border, #e2e8f0)',
+                  color: 'var(--explorer-text-primary, #334155)',
+                  padding: '12px 24px',
+                  borderRadius: '50px',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  textDecoration: 'none',
+                }}
+              >
+                <Users size={16} color="#0d9488" />
+                {t('meetContributors')}
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Ways to Contribute ── */}
+        <section
+          style={{
+            padding: '80px 24px',
+            borderBottom: '1px solid var(--explorer-border, #e2e8f0)',
+          }}
+        >
+          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+              <h2
+                style={{
+                  fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                  fontWeight: 800,
+                  color: 'var(--site-heading, #0f172a)',
+                  fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
+                  marginBottom: '12px',
+                }}
+              >
+                {t('waysTitle')}
+              </h2>
+              <p
+                style={{
+                  fontSize: '1rem',
+                  color: 'var(--explorer-text-secondary, #475569)',
+                  maxWidth: '600px',
+                  margin: '0 auto',
+                  lineHeight: 1.6,
+                }}
+              >
+                {t('waysSubtitle')}
+              </p>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: '20px',
+              }}
+            >
+              {ways.map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      background: 'var(--explorer-surface, #ffffff)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
+                      borderRadius: '16px',
+                      padding: '28px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      transition: 'border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease',
+                      boxShadow: 'var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderColor = item.accent;
+                      (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 10px 28px ${item.accent}22`;
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--explorer-border, #e2e8f0)';
+                      (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                      (e.currentTarget as HTMLElement).style.boxShadow = 'var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))';
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          borderRadius: '12px',
+                          background: item.bg,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginBottom: '20px',
+                        }}
+                      >
+                        <Icon size={24} color={item.accent} />
+                      </div>
+                      <h3
+                        style={{
+                          fontSize: '1.15rem',
+                          fontWeight: 700,
+                          color: 'var(--explorer-text-primary, #0f172a)',
+                          marginBottom: '8px',
+                        }}
+                      >
+                        {item.title}
+                      </h3>
+                      <p
+                        style={{
+                          fontSize: '0.9rem',
+                          color: 'var(--explorer-text-secondary, #475569)',
+                          lineHeight: 1.6,
+                          margin: 0,
+                        }}
+                      >
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ── GSSoC 2026 Section ── */}
+        <section
+          style={{
+            padding: '64px 24px',
+            borderBottom: '1px solid var(--explorer-border, #e2e8f0)',
+          }}
+        >
+          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+            <div
+              style={{
+                background: 'var(--explorer-surface, #ffffff)',
+                border: '1px solid var(--explorer-border, #e2e8f0)',
+                borderRadius: '20px',
+                padding: '36px',
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '24px',
+                boxShadow: 'var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))',
+              }}
+            >
+              <div style={{ maxWidth: '640px' }}>
+                <span
+                  style={{
+                    display: 'inline-block',
+                    padding: '4px 12px',
+                    borderRadius: '50px',
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                    background: 'rgba(245, 158, 11, 0.12)',
+                    color: '#d97706',
+                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                    marginBottom: '12px',
+                  }}
+                >
+                  {t('gssocBadge')}
+                </span>
+                <h3
+                  style={{
+                    fontSize: '1.5rem',
+                    fontWeight: 800,
+                    color: 'var(--explorer-text-primary, #0f172a)',
+                    marginBottom: '8px',
+                  }}
+                >
+                  {t('gssocTitle')}
+                </h3>
+                <p
+                  style={{
+                    fontSize: '0.95rem',
+                    color: 'var(--explorer-text-secondary, #475569)',
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}
+                >
+                  {t('gssocDesc')}
+                </p>
+              </div>
+              <a
+                href={`${REPO_URL}/issues?q=is%3Aissue+is%3Aopen+label%3Agssoc`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: '#f59e0b',
+                  color: '#ffffff',
+                  padding: '12px 24px',
+                  borderRadius: '12px',
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  textDecoration: 'none',
+                  whiteSpace: 'nowrap',
+                  boxShadow: '0 4px 14px rgba(245,158,11,0.25)',
+                }}
+              >
+                {t('openIssues')} →
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Community & Support ── */}
+        <section style={{ padding: '80px 24px' }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+              <h2
+                style={{
+                  fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                  fontWeight: 800,
+                  color: 'var(--site-heading, #0f172a)',
+                  fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
+                  marginBottom: '12px',
+                }}
+              >
+                {t('communityTitle')}
+              </h2>
+              <p
+                style={{
+                  fontSize: '1rem',
+                  color: 'var(--explorer-text-secondary, #475569)',
+                  maxWidth: '600px',
+                  margin: '0 auto',
+                  lineHeight: 1.6,
+                }}
+              >
+                {t('communitySubtitle')}
+              </p>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '20px',
+              }}
+            >
+              {communityCards.map((card, idx) => {
+                const Icon = card.icon;
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      background: 'var(--explorer-surface, #ffffff)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
+                      borderRadius: '16px',
+                      padding: '28px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      transition: 'border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease',
+                      boxShadow: 'var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderColor = card.accent;
+                      (e.currentTarget as HTMLElement).style.transform = 'translateY(-3px)';
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 10px 28px ${card.accent}22`;
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--explorer-border, #e2e8f0)';
+                      (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                      (e.currentTarget as HTMLElement).style.boxShadow = 'var(--explorer-card-shadow, 0 2px 8px rgba(0,0,0,0.04))';
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: '12px',
+                          background: `${card.accent}14`,
+                          border: `1px solid ${card.accent}33`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          marginBottom: '20px',
+                        }}
+                      >
+                        <Icon size={20} color={card.accent} />
+                      </div>
+                      <h3
+                        style={{
+                          fontSize: '1.15rem',
+                          fontWeight: 700,
+                          color: 'var(--explorer-text-primary, #0f172a)',
+                          marginBottom: '8px',
+                        }}
+                      >
+                        {card.title}
+                      </h3>
+                      <p
+                        style={{
+                          fontSize: '0.9rem',
+                          color: 'var(--explorer-text-secondary, #475569)',
+                          lineHeight: 1.6,
+                          marginBottom: '24px',
+                        }}
+                      >
+                        {card.desc}
+                      </p>
+                    </div>
+
+                    <a
+                      href={card.href}
+                      target={card.external ? '_blank' : undefined}
+                      rel={card.external ? 'noopener noreferrer' : undefined}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        fontSize: '0.9rem',
+                        fontWeight: 700,
+                        color: card.accent,
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {card.actionText}
+                      <ArrowRight size={16} />
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <Footer />
+      </main>
+    </>
+  );
+}

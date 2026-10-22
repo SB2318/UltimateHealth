@@ -1,9 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import type { Article } from "@/types/article";
 import ArticlePageClient from "@/components/articles/ArticlePageClient";
 import { withBasePath } from "@/lib/basePath";
 import { resolveArticleImageUrl } from "@/lib/article-image";
+import {
+  SITE_URL,
+  BRAND_NAME,
+  FULL_SITE_URL,
+  getCanonicalUrl,
+  getHreflangAlternates,
+  getRobotsNoIndex,
+  buildArticleJsonLd,
+  buildBreadcrumbJsonLd,
+} from "@/lib/seo";
 
 interface PageProps {
   params: Promise<{ id: string; locale: string }>;
@@ -60,93 +71,98 @@ function getInitials(name: string): string {
   return name.substring(0, 2).toUpperCase();
 }
 
-function estimateReadingTime(html: string): string {
-  const words = html.replace(/<[^>]+>/g, " ").trim().split(/\s+/).length;
-  const minutes = Math.max(1, Math.round(words / 200));
-  return `${minutes} min read`;
+const AVATAR_COLORS = [
+  "#0d9488",
+  "#2563eb",
+  "#7c3aed",
+  "#db2777",
+  "#d97706",
+  "#059669",
+];
+
+function pickColor(str: string): string {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
-function mapToArticle(apiArticle: ApiArticleDetail): Article {
+function estimateReadingTime(content: string): string {
+  const wordCount = content.replace(/<[^>]*>/g, " ").trim().split(/\s+/).length;
+  return `${Math.max(1, Math.ceil(wordCount / 200))} min read`;
+}
+
+function mapApiToArticle(api: ApiArticleDetail): Article {
   const authorName =
-    apiArticle.authorName || apiArticle.authorId?.user_name || "Unknown Author";
-  const category = apiArticle.tags?.[0]?.name || "Health";
+    api.authorName || api.authorId?.user_name || "Community Contributor";
+  const tagNames = Array.isArray(api.tags)
+    ? api.tags.map((t) => (typeof t === "string" ? t : t.name)).filter(Boolean)
+    : [];
 
   return {
-    id: String(apiArticle._id),
-    title: apiArticle.title,
-    excerpt: apiArticle.description,
-    content: { blocks: [] }, // replaced by htmlContent prop
-    imageUrl: resolveArticleImageUrl(apiArticle.imageUtils, {
-      title: apiArticle.title,
-      category,
-    }),
-    imageAlt: apiArticle.title,
+    id: String(api._id),
+    title: api.title,
+    subtitle: "",
+    excerpt: api.description || api.title,
+    imageUrl: resolveImageUrl(api.imageUtils),
+    imageAlt: api.title,
     author: {
       name: authorName,
       role: "Health Contributor",
       avatarInitials: getInitials(authorName),
-      avatarColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      avatarColor: pickColor(authorName),
     },
-    publishedAt: apiArticle.publishedDate,
-    updatedAt: apiArticle.lastUpdated,
-    readingTime: "5 min read", // updated after content is fetched
-    category,
-    tags: apiArticle.tags?.map((t) => t.name) ?? [],
+    publishedAt: api.publishedDate || new Date().toISOString(),
+    updatedAt: api.lastUpdated || api.publishedDate || new Date().toISOString(),
+    readingTime: "5 min read", // updated once HTML is fetched
+    category: tagNames[0] || "Health Guide",
+    tags: tagNames,
+    content: { blocks: [] }, // replaced by htmlContent prop
   };
 }
 
 async function fetchArticle(
   id: string
 ): Promise<{ article: Article; pbRecordId: string } | null> {
-  const isNumeric = /^\d+$/.test(id);
+  const ISR = { next: { revalidate: 300 } } as const;
 
-  if (isNumeric) {
-    try {
-      const res = await fetch(`https://ultimatehealth.blog/api/articles/${id}`, {
-        next: { revalidate: 300 },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const apiArticle: ApiArticleDetail = data.article ?? data;
-        if (apiArticle?._id) {
-          return {
-            article: mapToArticle(apiArticle),
-            pbRecordId: apiArticle.pb_recordId,
-          };
-        }
+  // 1. Try direct numeric ID fetch: /api/articles/{id}
+  try {
+    const res = await fetch(`https://ultimatehealth.blog/api/articles/${id}`, ISR);
+    if (res.ok) {
+      const data: ApiArticleDetail = await res.json();
+      if (data && data._id) {
+        return {
+          article: mapApiToArticle(data),
+          pbRecordId: data.pb_recordId,
+        };
       }
-    } catch {
-      // Fall through to lookup
     }
+  } catch {
+    // Fall through to slug/list search
   }
 
-  // Handle lookup by pb_recordId (or non-numeric ID) when shared with pb_recordId
+  // 2. Fallback: list all articles and match by pb_recordId or slugified title
   try {
-    const listRes = await fetch(`https://ultimatehealth.blog/api/articles/?limit=100`, {
-      next: { revalidate: 300 },
-    });
-    if (listRes.ok) {
-      const listData = await listRes.json();
-      const articles: ApiArticleDetail[] = listData.articles ?? [];
-      const match = articles.find((a) => a.pb_recordId === id || String(a._id) === id);
-      if (match) {
-        try {
-          const detailRes = await fetch(
-            `https://ultimatehealth.blog/api/articles/${match._id}`,
-            { next: { revalidate: 300 } }
-          );
-          if (detailRes.ok) {
-            const detailData = await detailRes.json();
-            const fullArticle: ApiArticleDetail = detailData.article ?? detailData;
-            return {
-              article: mapToArticle(fullArticle),
-              pbRecordId: fullArticle.pb_recordId,
-            };
-          }
-        } catch {}
+    const res = await fetch(`https://ultimatehealth.blog/api/articles/?limit=100`, ISR);
+    if (res.ok) {
+      const data = await res.json();
+      const list: ApiArticleDetail[] = data.articles ?? [];
+      const match = list.find((a) => {
+        if (a.pb_recordId === id) return true;
+        if (String(a._id) === id) return true;
+        const slug = a.title
+          ?.toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "");
+        return slug === id;
+      });
 
+      if (match) {
         return {
-          article: mapToArticle(match),
+          article: mapApiToArticle(match),
           pbRecordId: match.pb_recordId,
         };
       }
@@ -175,58 +191,81 @@ async function fetchHtmlContent(pbRecordId: string): Promise<string | null> {
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
   const result = await fetchArticle(id);
 
   if (!result) {
     return {
-      title: "Article Not Found | UltimateHealth",
-      description: "The requested article could not be found.",
+      title: "Article Not Found",
+      description: "The requested medical guide or article could not be found.",
+      robots: getRobotsNoIndex(),
     };
   }
 
   const { article } = result;
+  const canonicalUrl = getCanonicalUrl(locale, `/articles/${id}`);
+  const alternates = getHreflangAlternates(`/articles/${id}`);
+
+  let absoluteImageUrl = `${FULL_SITE_URL}/icon1.png`;
+  if (article.imageUrl) {
+    absoluteImageUrl = article.imageUrl.startsWith("http")
+      ? article.imageUrl
+      : `${SITE_URL}${article.imageUrl}`;
+  }
+
   return {
-    title: `${article.title} | UltimateHealth`,
+    title: article.title,
     description: article.excerpt,
     keywords: article.tags.join(", "),
     authors: [{ name: article.author.name }],
+    alternates: {
+      canonical: canonicalUrl,
+      languages: alternates,
+    },
     openGraph: {
-      title: article.title,
+      title: `${article.title} | ${BRAND_NAME}`,
       description: article.excerpt,
+      url: canonicalUrl,
+      siteName: BRAND_NAME,
+      locale: locale,
       type: "article",
       publishedTime: article.publishedAt,
       modifiedTime: article.updatedAt,
       authors: [article.author.name],
       tags: article.tags,
-      ...(article.imageUrl
-        ? { images: [{ url: article.imageUrl, alt: article.imageAlt }] }
-        : {}),
+      images: [
+        {
+          url: absoluteImageUrl,
+          alt: article.imageAlt || article.title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
-      title: article.title,
+      title: `${article.title} | ${BRAND_NAME}`,
       description: article.excerpt,
-      ...(article.imageUrl ? { images: [article.imageUrl] } : {}),
+      images: [absoluteImageUrl],
+      creator: "@SUSMITA2360",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   };
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-/**
- * Article detail page.
- * Fetches article metadata from /api/articles/{id} then fetches the full HTML
- * content from /api/articles/get-article-content/{pb_recordId}.
- * Passes both to ArticlePageClient for rendering.
- */
 export default async function ArticlePage({ params }: PageProps) {
-  const { id } = await params;
+  const { id, locale } = await params;
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
-  // Fire both fetches in parallel: article metadata first to get pbRecordId,
-  // then content. Since content depends on pbRecordId we must chain — but we
-  // can still parallelize generateMetadata's fetch with our own using the
-  // Next.js fetch dedup cache (same URL + options = one network request).
   const result = await fetchArticle(id);
   if (!result) {
     notFound();
@@ -234,20 +273,61 @@ export default async function ArticlePage({ params }: PageProps) {
 
   const { article, pbRecordId } = result;
 
-  // Fetch HTML content — shares the dedup cache with any concurrent call
+  // Fetch HTML content
   const htmlContent = await fetchHtmlContent(pbRecordId);
 
-  // Update reading time estimate if we have content
   if (htmlContent) {
     article.readingTime = estimateReadingTime(htmlContent);
   }
 
+  const canonicalUrl = getCanonicalUrl(locale, `/articles/${id}`);
+
+  let absoluteImageUrl = `${FULL_SITE_URL}/icon1.png`;
+  if (article.imageUrl) {
+    absoluteImageUrl = article.imageUrl.startsWith("http")
+      ? article.imageUrl
+      : `${SITE_URL}${article.imageUrl}`;
+  }
+
+  const articleJsonLd = buildArticleJsonLd({
+    title: article.title,
+    description: article.excerpt,
+    url: canonicalUrl,
+    imageUrl: absoluteImageUrl,
+    datePublished: article.publishedAt,
+    dateModified: article.updatedAt,
+    authorName: article.author.name,
+    category: article.category,
+    tags: article.tags,
+    locale: locale,
+  });
+
+  const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
+    { name: "Home", url: getCanonicalUrl(locale) },
+    { name: "Articles", url: getCanonicalUrl(locale, "/articles") },
+    { name: article.title, url: canonicalUrl },
+  ]);
+
   return (
-    <ArticlePageClient
-      article={article}
-      relatedArticles={[]}
-      htmlContent={htmlContent ?? undefined}
-      pbRecordId={pbRecordId}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }}
+      />
+      <ArticlePageClient
+        article={article}
+        relatedArticles={[]}
+        htmlContent={htmlContent ?? undefined}
+        pbRecordId={pbRecordId}
+      />
+    </>
   );
 }

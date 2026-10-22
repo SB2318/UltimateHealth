@@ -428,6 +428,28 @@ function ArticleFooter({ article }: { article: Article }) {
         width: "100%",
       }}
     >
+      {/* ── Medical Educational Disclaimer (E-E-A-T Trust Architecture) ── */}
+      <div
+        role="note"
+        aria-label="Medical disclaimer"
+        style={{
+          marginTop: "16px",
+          marginBottom: "28px",
+          padding: "20px 24px",
+          background: "rgba(13, 148, 136, 0.05)",
+          borderLeft: "4px solid #0d9488",
+          borderRadius: "0 14px 14px 0",
+          fontSize: "0.88rem",
+          lineHeight: 1.65,
+          color: "var(--explorer-text-secondary, #475569)",
+        }}
+      >
+        <strong style={{ color: "var(--site-heading, #0f172a)", display: "block", marginBottom: "6px", fontSize: "0.92rem" }}>
+          🛡️ Medical & Educational Disclaimer
+        </strong>
+        The information published on UltimateHealth is open-source and intended solely for general educational, academic, and informational purposes. It does not constitute professional medical advice, clinical diagnosis, or individualized treatment plans. Always consult a licensed healthcare professional or physician regarding any medical condition or symptoms.
+      </div>
+
       {/* Author card with explicit vertical margins and padding */}
       <div
         style={{

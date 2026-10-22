@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import ViceHero from "@/components/home/ViceHero";
 import ScrollToTop from "@/components/ScrollToTop";
 import ContactSection from "@/components/home/ContactSection";
@@ -11,21 +12,56 @@ import PurposeSection from "@/components/home/PurposeSection";
 import WhatWeDoSection from "@/components/home/WhatWeDoSection";
 import PortalSwitcherCTA from "@/components/home/PortalSwitcherCTA";
 import HomeArticlesPreview from "@/components/home/HomeArticlesPreview";
+import {
+  BRAND_NAME,
+  BRAND_MOTTO,
+  BRAND_MISSION,
+  FULL_SITE_URL,
+  getCanonicalUrl,
+  getHreflangAlternates,
+} from "@/lib/seo";
 
-/**
- * Revamped Vice-Styled Creative Landing Page:
- * 1. Site Header & Nav
- * 2. Vice Hero (Cinematic Cyberpunk HUD, Orbitron Tagline, Start CTA, Live Stats)
- * 3. What Our Purpose Is (Respect Giver Manifesto & Core Pillars)
- * 4. What We Do (Knowledge Engine: Library, Glossary, AI Assistant, Doctor Suite)
- * 5. The Chain Reaction Storyboard (01 Discover -> 02 Engage -> 03 Contribute -> 04 Transform)
- * 6. Portal Dispatch Launchpads (Patient Hub, Doctor Suite, Open Squad)
- * 7. Screenshot Gallery & Showcase
- * 8. Open Source Programs & Hackathons
- * 9. Contact Section & Newsletter
- * 10. Site Footer
- * 11. Onboarding Tour Modal (2-Column Cyberpunk Modal)
- */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const canonical = getCanonicalUrl(locale);
+  const alternates = getHreflangAlternates();
+
+  return {
+    title: `${BRAND_NAME} — ${BRAND_MOTTO}`,
+    description: `${BRAND_MISSION} Explore evidence-based health guides, interactive medical glossary, and community audio experiences.`,
+    alternates: {
+      canonical,
+      languages: alternates,
+    },
+    openGraph: {
+      title: `${BRAND_NAME} — ${BRAND_MOTTO}`,
+      description: BRAND_MISSION,
+      url: canonical,
+      siteName: BRAND_NAME,
+      locale: locale,
+      type: "website",
+      images: [
+        {
+          url: `${FULL_SITE_URL}/icon1.png`,
+          width: 512,
+          height: 512,
+          alt: "UltimateHealth Logo",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${BRAND_NAME} — ${BRAND_MOTTO}`,
+      description: BRAND_MISSION,
+      images: [`${FULL_SITE_URL}/icon1.png`],
+    },
+  };
+}
+
 export default async function Home({
   params,
 }: {
