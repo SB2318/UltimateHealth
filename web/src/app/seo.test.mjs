@@ -120,14 +120,19 @@ test("getRobotsIndexable returns permissive indexing directives with large snipp
 
 // ─── 2. Schema.org Structured Data Builders ──────────────────────────────────
 
-test("buildOrganizationJsonLd produces valid Organization schema with brand metadata", () => {
+test("buildOrganizationJsonLd produces valid Organization schema with brand metadata and disambiguation", () => {
   const schema = buildOrganizationJsonLd();
   assert.equal(schema["@context"], "https://schema.org");
   assert.equal(schema["@type"], "Organization");
   assert.equal(schema.name, "UltimateHealth");
+  assert.ok(Array.isArray(schema.alternateName));
+  assert.ok(schema.alternateName.includes("UltimateHealth Blog"));
+  assert.ok(schema.disambiguatingDescription.includes("Ultimate Health Podcast"));
   assert.equal(schema.url, "https://ultimatehealth.blog/web");
   assert.equal(schema.slogan, "Minimal Information. Real Information.");
   assert.ok(Array.isArray(schema.sameAs));
+  assert.ok(schema.sameAs.some((url) => url.includes("github.com/SB2318")));
+  assert.ok(schema.sameAs.some((url) => url.includes("linkedin.com")));
   assert.ok(Array.isArray(schema.knowsAbout));
   assert.ok(schema.knowsAbout.includes("Pulmonary & Respiratory Medicine"));
   assert.ok(schema.acknowledgment.includes("Dr. Moumita Debnath"));
@@ -153,6 +158,9 @@ test("buildWebSiteJsonLd produces valid WebSite schema with SearchAction query-i
   assert.equal(schema["@context"], "https://schema.org");
   assert.equal(schema["@type"], "WebSite");
   assert.equal(schema.name, "UltimateHealth");
+  assert.ok(Array.isArray(schema.alternateName));
+  assert.ok(schema.alternateName.includes("UltimateHealth Blog"));
+  assert.ok(schema.disambiguatingDescription.includes("Ultimate Health Podcast"));
   assert.equal(schema.url, "https://ultimatehealth.blog/web/en");
   assert.equal(schema.potentialAction["@type"], "SearchAction");
   assert.equal(

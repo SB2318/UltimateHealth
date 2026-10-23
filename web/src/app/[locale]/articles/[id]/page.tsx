@@ -132,11 +132,12 @@ async function fetchArticle(
   try {
     const res = await fetch(`https://ultimatehealth.blog/api/articles/${id}`, ISR);
     if (res.ok) {
-      const data: ApiArticleDetail = await res.json();
-      if (data && data._id) {
+      const data = await res.json();
+      const detail: ApiArticleDetail = (data && data.article) ? data.article : data;
+      if (detail && (detail._id || detail.pb_recordId)) {
         return {
-          article: mapApiToArticle(data),
-          pbRecordId: data.pb_recordId,
+          article: mapApiToArticle(detail),
+          pbRecordId: detail.pb_recordId,
         };
       }
     }
@@ -223,10 +224,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: alternates,
     },
     openGraph: {
-      title: `${article.title} | ${BRAND_NAME}`,
+      title: `${article.title} | ${BRAND_NAME} Blog`,
       description: article.excerpt,
       url: canonicalUrl,
-      siteName: BRAND_NAME,
+      siteName: `${BRAND_NAME} Blog`,
       locale: locale,
       type: "article",
       publishedTime: article.publishedAt,
@@ -242,7 +243,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: `${article.title} | ${BRAND_NAME}`,
+      title: `${article.title} | ${BRAND_NAME} Blog`,
       description: article.excerpt,
       images: [absoluteImageUrl],
       creator: "@SUSMITA2360",

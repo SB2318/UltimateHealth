@@ -31,17 +31,17 @@ export async function generateMetadata({
   const alternates = getHreflangAlternates();
 
   return {
-    title: `${BRAND_NAME} — ${BRAND_MOTTO}`,
-    description: `${BRAND_MISSION} Explore evidence-based health guides, interactive medical glossary, and community audio experiences.`,
+    title: `${BRAND_NAME} Blog — ${BRAND_MOTTO}`,
+    description: `${BRAND_NAME} (ultimatehealth.blog): ${BRAND_MISSION} Explore evidence-based health guides, interactive medical glossary, and multilingual health resources.`,
     alternates: {
       canonical,
       languages: alternates,
     },
     openGraph: {
-      title: `${BRAND_NAME} — ${BRAND_MOTTO}`,
-      description: BRAND_MISSION,
+      title: `${BRAND_NAME} Blog — ${BRAND_MOTTO}`,
+      description: `${BRAND_NAME} (ultimatehealth.blog): ${BRAND_MISSION}`,
       url: canonical,
-      siteName: BRAND_NAME,
+      siteName: `${BRAND_NAME} Blog`,
       locale: locale,
       type: "website",
       images: [
@@ -55,8 +55,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${BRAND_NAME} — ${BRAND_MOTTO}`,
-      description: BRAND_MISSION,
+      title: `${BRAND_NAME} Blog — ${BRAND_MOTTO}`,
+      description: `${BRAND_NAME} (ultimatehealth.blog): ${BRAND_MISSION}`,
       images: [`${FULL_SITE_URL}/icon1.png`],
     },
   };

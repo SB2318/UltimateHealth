@@ -20,6 +20,8 @@ export const BRAND_NAME = "UltimateHealth";
 export const BRAND_MOTTO = "Minimal Information. Real Information.";
 export const BRAND_MISSION =
   "Make trustworthy, understandable health information accessible to everyone.";
+export const BRAND_DISAMBIGUATION =
+  "UltimateHealth (https://ultimatehealth.blog) is an open-access digital health literacy and medical education publication platform with multilingual support across 9 languages, distinct from 'The Ultimate Health Podcast' audio show.";
 
 export const MEDICAL_DISCLAIMER_TEXT =
   "The information provided on UltimateHealth is for general educational and informational purposes only. It is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified healthcare provider with any questions you may have regarding a medical condition.";
@@ -117,16 +119,27 @@ export function buildOrganizationJsonLd() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: BRAND_NAME,
+    alternateName: [
+      "UltimateHealth Blog",
+      "UltimateHealth Platform",
+      "UltimateHealth Medical Guides",
+      "ultimatehealth.blog",
+    ],
+    disambiguatingDescription: BRAND_DISAMBIGUATION,
     url: FULL_SITE_URL,
     logo: `${FULL_SITE_URL}/icon1.png`,
     slogan: BRAND_MOTTO,
     description: `${BRAND_MISSION} Dedicated to compassionate health literacy and patient dignity inspired by Dr. Moumita Debnath's clinical ethos in pulmonary and chest medicine.`,
+    email: "ultimate.health25@gmail.com",
     sameAs: [
       "https://github.com/SB2318/UltimateHealth",
       "https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth",
+      "https://www.linkedin.com/in/ultimate-health-9290873a8/",
+      "https://x.com/SUSMITA2360",
     ],
     knowsAbout: [
       "Health Education",
+      "Medical Glossary",
       "Cardiovascular Health",
       "Pulmonary & Respiratory Medicine",
       "Preventive Medicine",
@@ -148,8 +161,15 @@ export function buildWebSiteJsonLd(locale = DEFAULT_LOCALE) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: BRAND_NAME,
-    alternateName: "UltimateHealth Platform",
+    alternateName: [
+      "UltimateHealth Blog",
+      "UltimateHealth Platform",
+      "UltimateHealth Medical Guides",
+      "ultimatehealth.blog",
+    ],
+    disambiguatingDescription: BRAND_DISAMBIGUATION,
     url: `${FULL_SITE_URL}/${locale}`,
+    inLanguage: SUPPORTED_LOCALES,
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -193,6 +213,8 @@ export function buildArticleJsonLd(props) {
     publisher: {
       "@type": "Organization",
       name: BRAND_NAME,
+      alternateName: "UltimateHealth Blog",
+      disambiguatingDescription: BRAND_DISAMBIGUATION,
       url: FULL_SITE_URL,
       logo: {
         "@type": "ImageObject",

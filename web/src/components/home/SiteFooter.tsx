@@ -30,6 +30,9 @@ export default function SiteFooter({ locale = "en" }: { locale?: string }) {
           <h2>UltimateHealth</h2>
           <p className="footer-note">Open-source health and wellness for everyone.</p>
           <p className="footer-motto">Minimal Information. Real Information.</p>
+          <p className="footer-about-note" style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '8px', lineHeight: 1.5, maxWidth: '340px' }}>
+            UltimateHealth (ultimatehealth.blog) is an open-access digital medical publication and health guide platform dedicated to trustworthy, multilingual health education.
+          </p>
 
           <NewsletterForm />
 
@@ -79,7 +82,7 @@ export default function SiteFooter({ locale = "en" }: { locale?: string }) {
 
       <div className="footer-bottom">
         <div className="footer-bottom-inner">
-          <p>© 2026 UltimateHealth. Built with passion for a healthier community.</p>
+          <p>© 2026 UltimateHealth (ultimatehealth.blog). Built with passion for a healthier community.</p>
           <div className="footer-bottom-links">
             <a href={PRIVACY_POLICY_URL} target="_blank" rel="noopener noreferrer">Privacy Policy</a>
             <a href={TERMS_OF_USE_URL} target="_blank" rel="noopener noreferrer">Terms of Use</a>

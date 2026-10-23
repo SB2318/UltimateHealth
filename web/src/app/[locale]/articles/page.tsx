@@ -33,11 +33,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       languages: alternates,
     },
     openGraph: {
-      title: `Health Articles & Clinical Guides | ${BRAND_NAME}`,
+      title: `Health Articles & Clinical Guides | ${BRAND_NAME} Blog`,
       description:
         "Explore open-source, evidence-based health and wellness guides reviewed for clarity and accessibility.",
       url: canonical,
-      siteName: BRAND_NAME,
+      siteName: `${BRAND_NAME} Blog`,
       locale: locale,
       type: "website",
       images: [
@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: `Health Articles & Clinical Guides | ${BRAND_NAME}`,
+      title: `Health Articles & Clinical Guides | ${BRAND_NAME} Blog`,
       description:
         "Open-source, evidence-based health guides and accessible wellness articles.",
       images: [`${FULL_SITE_URL}/icon1.png`],
