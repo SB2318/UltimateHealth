@@ -19,6 +19,7 @@ import {
   buildOrganizationJsonLd,
   buildWebSiteJsonLd,
   buildArticleJsonLd as buildArticleJsonLdCore,
+  buildHomeFaqJsonLd,
 } from "./seo-core.mjs";
 
 export {
@@ -37,6 +38,7 @@ export {
   getHreflangAlternates,
   buildOrganizationJsonLd,
   buildWebSiteJsonLd,
+  buildHomeFaqJsonLd,
 };
 
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];

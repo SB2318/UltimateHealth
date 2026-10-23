@@ -22,6 +22,7 @@ import {
   buildOrganizationJsonLd,
   buildWebSiteJsonLd,
   buildArticleJsonLd,
+  buildHomeFaqJsonLd,
 } from "../lib/seo-core.mjs";
 
 const APP_DIR = dirname(fileURLToPath(import.meta.url));
@@ -369,4 +370,23 @@ test("Article footer renders prominent visible medical educational disclaimer", 
     content.includes("Always consult a licensed healthcare professional"),
     "ArticlePageClient must advise consulting a physician"
   );
+});
+
+test("buildHomeFaqJsonLd produces valid FAQPage schema covering disambiguation, upcoming roadmap, and storyboard", () => {
+  const schema = buildHomeFaqJsonLd();
+  assert.equal(schema["@context"], "https://schema.org");
+  assert.equal(schema["@type"], "FAQPage");
+  assert.ok(Array.isArray(schema.mainEntity));
+  assert.ok(schema.mainEntity.length >= 4);
+
+  const questions = schema.mainEntity.map((q) => q.name);
+  assert.ok(questions.some((q) => q.includes("The Ultimate Health Podcast")));
+  assert.ok(questions.some((q) => q.includes("upcoming") || q.includes("roadmap")));
+  assert.ok(questions.some((q) => q.includes("languages")));
+
+  // Verify homepage embeds FaqSection and FAQPage JSON-LD
+  const homePath = join(APP_DIR, "[locale]/page.tsx");
+  const homeContent = read(homePath);
+  assert.ok(homeContent.includes("buildHomeFaqJsonLd"));
+  assert.ok(homeContent.includes("FaqSection"));
 });

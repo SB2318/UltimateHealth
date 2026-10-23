@@ -236,3 +236,52 @@ export function buildArticleJsonLd(props) {
     citation: MEDICAL_DISCLAIMER_TEXT,
   };
 }
+
+export function buildHomeFaqJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What is UltimateHealth and how is it different from The Ultimate Health Podcast?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "UltimateHealth (https://ultimatehealth.blog) is an open-access, multilingual digital health publication and patient literacy platform with clinical guides, an interactive medical glossary, and community doctor reviews across 9 languages. It is an independent web and mobile platform founded by Susmita Bhattacharya, completely distinct from 'The Ultimate Health Podcast' audio talk show.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What is new and upcoming on the UltimateHealth release storyboard and roadmap?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "On our current and upcoming release roadmap: (1) The 30-article clinical respiratory series dedicated in honor of Dr. Moumita Debnath's patient dignity ethos, (2) Expanded regional language support across India and Europe, (3) An upgraded Android mobile app with offline article caching and audio podcast waveforms, (4) Plain-language clinical term tooltips and AI-assisted triage guidance, and (5) Doctor verification protocols with clinical review badges on GitHub.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What can I use on UltimateHealth today in the current release?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "In the current release, visitors can explore 30+ curated health and wellness guides, query an interactive medical glossary for plain-language clinical definitions, stream health podcasts, view contributor profiles, and read verified medical guides completely free without paywalls or advertisements.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "In which languages are UltimateHealth medical guides available?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "UltimateHealth guides and resources are published across 9 languages: English, Hindi, Bengali, Tamil, Odia, German, Spanish, French, and Croatian, ensuring critical health literacy is accessible to non-English speakers.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How can doctors, developers, and writers contribute to UltimateHealth?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "UltimateHealth is 100% open source on GitHub (SB2318/UltimateHealth). Over 300 contributors worldwide contribute via GSSoC and open issues. Voluntary doctors can review clinical guides, translators can expand regional language versions, and developers can build accessible mobile and web features.",
+        },
+      },
+    ],
+  };
+}

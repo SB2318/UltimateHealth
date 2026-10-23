@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import ViceHero from "@/components/home/ViceHero";
 import ScrollToTop from "@/components/ScrollToTop";
 import ContactSection from "@/components/home/ContactSection";
 import DnaCursor from "@/components/home/DnaCursor";
 import ProgramsSection from "@/components/home/ProgramsSection";
+import FaqSection from "@/components/home/FaqSection";
 import ScreenshotGallery from "@/components/home/ScreenshotGallery";
 import ScrollReveal from "@/components/home/ScrollReveal";
 import SiteFooter from "@/components/home/SiteFooter";
@@ -19,6 +21,7 @@ import {
   FULL_SITE_URL,
   getCanonicalUrl,
   getHreflangAlternates,
+  buildHomeFaqJsonLd,
 } from "@/lib/seo";
 
 export async function generateMetadata({
@@ -68,22 +71,33 @@ export default async function Home({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+  const homeFaqJsonLd = buildHomeFaqJsonLd();
 
   return (
-    <main className="bg-vice-dark min-h-screen text-[var(--vice-text,#0f172a)] dark:text-white overflow-x-hidden selection:bg-vice-pink selection:text-white">
-      <SiteHeader />
-      <ViceHero />
-      <PurposeSection />
-      <WhatWeDoSection />
-      <HomeArticlesPreview />
-      <PortalSwitcherCTA />
-      <ScreenshotGallery />
-      <ProgramsSection />
-      <ContactSection />
-      <SiteFooter locale={locale} />
-      <ScrollToTop />
-      <ScrollReveal />
-      <DnaCursor />
-    </main>
+    <>
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeFaqJsonLd) }}
+      />
+      <main className="bg-vice-dark min-h-screen text-[var(--vice-text,#0f172a)] dark:text-white overflow-x-hidden selection:bg-vice-pink selection:text-white">
+        <SiteHeader />
+        <ViceHero />
+        <PurposeSection />
+        <WhatWeDoSection />
+        <HomeArticlesPreview />
+        <PortalSwitcherCTA />
+        <ScreenshotGallery />
+        <ProgramsSection />
+        <FaqSection />
+        <ContactSection />
+        <SiteFooter locale={locale} />
+        <ScrollToTop />
+        <ScrollReveal />
+        <DnaCursor />
+      </main>
+    </>
   );
 }
