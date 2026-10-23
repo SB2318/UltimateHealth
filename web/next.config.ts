@@ -21,15 +21,21 @@ const nextConfig: NextConfig = {
   },
 
   // ── Fallback redirects ──────────────────────────────────────────────────
-  // next-intl middleware handles locale routing. When basePath is active (e.g. /web),
-  // Next.js handles /web natively. Returning /web -> /web/:path* redirects when basePath is set
-  // causes infinite 307 redirect loops on production servers.
   async redirects() {
+    const localeSitemapRedirects = [
+      {
+        source: "/:locale(en|hi|bn|ta|or|de|es|fr|hr)/sitemap.xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+    ];
+
     if (basePath) {
-      return [];
+      return localeSitemapRedirects;
     }
 
     return [
+      ...localeSitemapRedirects,
       {
         source: "/web",
         destination: "/en",
@@ -58,19 +64,37 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "raw.githubusercontent.com",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "github.com",
-        pathname: "/user-attachments/assets/**",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "user-images.githubusercontent.com",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "ultimatehealth.blog",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+        pathname: "/**",
       },
     ],
   },
