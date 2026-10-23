@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: 'Contribute to Open Health Knowledge',
     description:
-      'Join UltimateHealth as an open-source contributor. Write accessible health guides, review clinical articles, translate content, or contribute code on GitHub.',
+      'Join UltimateHealth as an open-source contributor. Write health guides, review clinical articles, translate content, or contribute code on GitHub.',
     alternates: {
       canonical,
       languages: alternates,

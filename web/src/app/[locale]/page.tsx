@@ -35,7 +35,7 @@ export async function generateMetadata({
 
   return {
     title: `${BRAND_NAME} Blog — ${BRAND_MOTTO}`,
-    description: `${BRAND_NAME} (ultimatehealth.blog): ${BRAND_MISSION} Explore evidence-based health guides, interactive medical glossary, and multilingual health resources.`,
+    description: `${BRAND_NAME} (ultimatehealth.blog): Trustworthy, accessible health information. Evidence-based medical guides, interactive glossary, and 9 languages.`,
     alternates: {
       canonical,
       languages: alternates,

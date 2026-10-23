@@ -214,9 +214,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       : `${SITE_URL}${article.imageUrl}`;
   }
 
+  const rawDesc = article.excerpt || article.title || "";
+  const metaDescription =
+    rawDesc.length > 155
+      ? `${rawDesc.slice(0, 152).trim()}...`
+      : rawDesc;
+
   return {
     title: article.title,
-    description: article.excerpt,
+    description: metaDescription,
     keywords: article.tags.join(", "),
     authors: [{ name: article.author.name }],
     alternates: {

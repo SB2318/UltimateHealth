@@ -59,7 +59,7 @@ export async function generateMetadata({
       default: `${BRAND_NAME} Blog — ${BRAND_MOTTO}`,
       template: `%s | ${BRAND_NAME} Blog`,
     },
-    description: `${BRAND_NAME} (ultimatehealth.blog) is an open-access digital health literacy and medical education platform. ${BRAND_MOTTO} Evidence-based clinical articles, multilingual medical glossary, and community health guides.`,
+    description: `${BRAND_NAME} (ultimatehealth.blog): Open-access medical education platform. Minimal Information. Real Information. Evidence-based guides in 9 languages.`,
     keywords: [
       'UltimateHealth',
       'UltimateHealth Blog',

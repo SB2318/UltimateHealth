@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: "Health Articles & Clinical Guides",
     description:
-      "Explore open-source, evidence-based health and wellness guides. Features announcements for the upcoming 30-guide respiratory series dedicated in honor of Dr. Moumita Debnath's clinical dedication to patient dignity.",
+      "Explore evidence-based health guides and the upcoming 30-guide respiratory series honoring Dr. Moumita Debnath's clinical patient dignity ethos.",
     alternates: {
       canonical,
       languages: alternates,
