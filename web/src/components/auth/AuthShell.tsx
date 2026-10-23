@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-import { withBasePath } from "@/lib/basePath";
+
 
 /**
  * Shared frame for the sign-in, sign-up and password-reset pages.
@@ -48,7 +48,7 @@ export default function AuthShell({
         <div className="min-w-0 max-w-full rounded-3xl border border-white/70 bg-white shadow-xl transition-colors duration-300 dark:border-white/10 dark:bg-slate-900 dark:shadow-xl">
           <div className="flex flex-col items-center gap-3 px-6! pt-8! text-center sm:px-9!">
             <Link
-              href={withBasePath("/")}
+              href="/"
               aria-label="UltimateHealth home"
               className="group inline-flex items-center gap-2.5 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-[#667eea] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >

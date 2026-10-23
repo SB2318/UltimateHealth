@@ -18,10 +18,11 @@ export const DEFAULT_LOCALE = "en";
 
 export const BRAND_NAME = "UltimateHealth";
 export const BRAND_MOTTO = "Minimal Information. Real Information.";
+export const BRAND_SAFETY_MOTTO = "A Safe, Moderated Space for Health Literacy.";
 export const BRAND_MISSION =
   "Make trustworthy, understandable health information accessible to everyone.";
 export const BRAND_DISAMBIGUATION =
-  "UltimateHealth (https://ultimatehealth.blog) is an open-access digital health literacy and medical education publication platform with multilingual support across 9 languages, distinct from 'The Ultimate Health Podcast' audio show.";
+  "UltimateHealth (https://ultimatehealth.blog) is an open-source, multilingual digital medical publication and patient health literacy platform founded by Susmita Bhattacharya. It is dedicated to open medical knowledge, clinical guides, and the Respect Giver Protocol across 9 languages.";
 
 export const MEDICAL_DISCLAIMER_TEXT =
   "The information provided on UltimateHealth is for general educational and informational purposes only. It is not intended to be a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified healthcare provider with any questions you may have regarding a medical condition.";
@@ -244,10 +245,26 @@ export function buildHomeFaqJsonLd() {
     mainEntity: [
       {
         "@type": "Question",
-        name: "What is UltimateHealth and how is it different from The Ultimate Health Podcast?",
+        name: "How does Dr. Moumita Debnath's clinical vision and life work inspire UltimateHealth?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "UltimateHealth (https://ultimatehealth.blog) is an open-access, multilingual digital health publication and patient literacy platform with clinical guides, an interactive medical glossary, and community doctor reviews across 9 languages. It is an independent web and mobile platform founded by Susmita Bhattacharya, completely distinct from 'The Ultimate Health Podcast' audio talk show.",
+          text: "Dr. Moumita Debnath was a dedicated Postgraduate Resident Doctor in the Department of Pulmonary & Chest Medicine whose clinical philosophy was: 'Healthcare begins with seeing the whole human being — body, mind, and dignity.' UltimateHealth was deeply inspired by her compassionate patient-care ethos to establish the open-source 'Respect Giver Protocol' and a dedicated 30-article clinical respiratory education series across 9 languages to ensure free, respectful medical knowledge reaches every family.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What makes UltimateHealth unique among digital health platforms?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "UltimateHealth (https://ultimatehealth.blog) is a 100% open-source, non-commercial health education platform founded by Susmita Bhattacharya under the motto 'Minimal Information. Real Information.' Unlike commercial clinics or generic wellness portals, UltimateHealth pairs evidence-based clinical guides with an interactive plain-language medical glossary, voluntary doctor reviews, and complete multilingual translation across 9 languages without paywalls or advertisements.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How does UltimateHealth ensure content quality and maintain a safe space for users?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Content quality and user safety are foundational pillars of UltimateHealth. While our platform provides community and social interaction features, every area is actively monitored by our dedicated moderator team. We enforce a robust report-and-strike system to prevent medical misinformation, harassment, and abuse. Every reported contribution is carefully evaluated so that users have a strictly moderated, dignified, and safe space to explore sensitive health topics without fear.",
         },
       },
       {
@@ -255,7 +272,7 @@ export function buildHomeFaqJsonLd() {
         name: "What is new and upcoming on the UltimateHealth release storyboard and roadmap?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "On our current and upcoming release roadmap: (1) The 30-article clinical respiratory series dedicated in honor of Dr. Moumita Debnath's patient dignity ethos, (2) Expanded regional language support across India and Europe, (3) An upgraded Android mobile app with offline article caching and audio podcast waveforms, (4) Plain-language clinical term tooltips and AI-assisted triage guidance, and (5) Doctor verification protocols with clinical review badges on GitHub.",
+          text: "On our release storyboard and upcoming roadmap: (1) The 30-article clinical respiratory and pulmonary guide series dedicated to Dr. Moumita Debnath's patient dignity ethos, (2) Expanded regional language support across India and Europe, (3) An upgraded Android mobile app with offline article caching and audio podcast waveforms, (4) Plain-language clinical term tooltips and AI-assisted triage guidance, and (5) Doctor verification protocols with clinical review badges on GitHub.",
         },
       },
       {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, Sparkles, Layers, Globe2, Stethoscope, HeartHandshake } from 'lucide-react';
+import { HelpCircle, ChevronDown, Sparkles, Layers, Globe2, Stethoscope, HeartHandshake, ShieldCheck } from 'lucide-react';
 
 interface FaqItem {
   id: string;
@@ -13,12 +13,28 @@ interface FaqItem {
 
 const FAQS: FaqItem[] = [
   {
-    id: 'disambiguation',
-    question: 'What is UltimateHealth and how is it different from The Ultimate Health Podcast?',
+    id: 'moumita-vision',
+    question: "How does Dr. Moumita Debnath's clinical vision and life work inspire UltimateHealth?",
     answer:
-      'UltimateHealth (https://ultimatehealth.blog) is an open-access, multilingual digital health publication and patient literacy platform with clinical guides, an interactive medical glossary, and community doctor reviews across 9 languages. It is an independent web and mobile platform founded by Susmita Bhattacharya, completely distinct from "The Ultimate Health Podcast" audio talk show.',
-    tag: 'Platform Identity',
+      "Dr. Moumita Debnath was a dedicated Postgraduate Resident Doctor in the Department of Pulmonary & Chest Medicine whose clinical philosophy was: 'Healthcare begins with seeing the whole human being — body, mind, and dignity.' UltimateHealth was deeply inspired by her compassionate patient-care ethos to establish the open-source 'Respect Giver Protocol' and a dedicated 30-article clinical respiratory education series across 9 languages to ensure free, respectful medical knowledge reaches every family.",
+    tag: 'Clinical Vision & Ethos',
+    icon: Stethoscope,
+  },
+  {
+    id: 'platform-uniqueness',
+    question: 'What makes UltimateHealth unique among digital health platforms?',
+    answer:
+      'UltimateHealth (https://ultimatehealth.blog) is a 100% open-source, non-commercial health education platform founded by Susmita Bhattacharya under the motto "Minimal Information. Real Information." Unlike commercial clinics or generic wellness portals, UltimateHealth pairs evidence-based clinical guides with an interactive plain-language medical glossary, voluntary doctor reviews, and complete multilingual translation across 9 languages without paywalls or advertisements.',
+    tag: 'Open-Source Mission',
     icon: HelpCircle,
+  },
+  {
+    id: 'content-quality-safe-space',
+    question: 'How does UltimateHealth ensure content quality and maintain a safe space for users?',
+    answer:
+      'Content quality and user safety are foundational pillars of UltimateHealth. While our platform provides community and social interaction features, every area is actively monitored by our dedicated moderator team. We enforce a robust report-and-strike system to prevent medical misinformation, harassment, and abuse. Every reported contribution is carefully evaluated so that users have a strictly moderated, dignified, and safe space to explore sensitive health topics without fear.',
+    tag: 'Quality & Safe Space',
+    icon: ShieldCheck,
   },
   {
     id: 'upcoming-releases',
@@ -45,14 +61,6 @@ const FAQS: FaqItem[] = [
     icon: Globe2,
   },
   {
-    id: 'medical-accuracy',
-    question: 'How does UltimateHealth maintain medical accuracy and patient trust?',
-    answer:
-      'Under our motto "Minimal Information. Real Information.", every guide includes plain-language summaries, reputable citations, and medical disclaimers. Volunteering medical doctors and admin moderators review public health contributions to uphold clinical standards.',
-    tag: 'Clinical Trust',
-    icon: Stethoscope,
-  },
-  {
     id: 'how-to-contribute',
     question: 'How can doctors, developers, and writers contribute to UltimateHealth?',
     answer:
@@ -63,7 +71,7 @@ const FAQS: FaqItem[] = [
 ];
 
 export default function FaqSection() {
-  const [openId, setOpenId] = useState<string | null>('disambiguation');
+  const [openId, setOpenId] = useState<string | null>('moumita-vision');
 
   const toggleFaq = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id));

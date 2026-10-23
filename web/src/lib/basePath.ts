@@ -13,7 +13,12 @@ export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
  */
 export function withBasePath(path: string): string {
   // Don't modify external URLs (http://, https://, mailto:, etc.)
-  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("mailto:") || path.startsWith("tel:")) {
+  if (
+    path.startsWith("http://") ||
+    path.startsWith("https://") ||
+    path.startsWith("mailto:") ||
+    path.startsWith("tel:")
+  ) {
     return path;
   }
 
@@ -22,10 +27,26 @@ export function withBasePath(path: string): string {
     return path;
   }
 
-  // Prepend basePath to internal paths
-  if (BASE_PATH && !path.startsWith(BASE_PATH)) {
-    return `${BASE_PATH}${path}`;
+  // Prepend basePath to internal paths and collapse any duplicate basePaths
+  let clean = path;
+  if (BASE_PATH) {
+    while (clean.startsWith(`${BASE_PATH}${BASE_PATH}`)) {
+      clean = clean.slice(BASE_PATH.length);
+    }
+    if (!clean.startsWith(BASE_PATH)) {
+      clean = `${BASE_PATH}${clean}`;
+    }
   }
 
+  return clean;
+}
+
+/**
+ * Strips the basePath from an internal path if present
+ */
+export function stripBasePath(path: string): string {
+  if (BASE_PATH && path.startsWith(BASE_PATH)) {
+    return path.slice(BASE_PATH.length) || "/";
+  }
   return path;
 }

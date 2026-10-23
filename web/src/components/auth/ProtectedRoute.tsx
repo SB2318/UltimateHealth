@@ -17,7 +17,7 @@ import { useEffect, type ReactNode } from "react";
 
 import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/hooks/useAuth";
-import { withBasePath } from "@/lib/basePath";
+
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -45,7 +45,7 @@ export default function ProtectedRoute({
     // `replace` keeps the protected URL out of history, so Back does not bounce
     // the user through a redirect loop.
     router.replace(
-      `${withBasePath(redirectTo)}?next=${encodeURIComponent(next ?? "/")}`
+      `${redirectTo.replace(/^\/web/, "") || "/"}?next=${encodeURIComponent(next ?? "/")}`
     );
   }, [status, router, pathname, searchParams, redirectTo]);
 

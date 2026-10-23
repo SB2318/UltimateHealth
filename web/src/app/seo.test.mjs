@@ -128,7 +128,8 @@ test("buildOrganizationJsonLd produces valid Organization schema with brand meta
   assert.equal(schema.name, "UltimateHealth");
   assert.ok(Array.isArray(schema.alternateName));
   assert.ok(schema.alternateName.includes("UltimateHealth Blog"));
-  assert.ok(schema.disambiguatingDescription.includes("Ultimate Health Podcast"));
+  assert.ok(schema.disambiguatingDescription.includes("open-source"));
+  assert.ok(schema.disambiguatingDescription.includes("Respect Giver Protocol"));
   assert.equal(schema.url, "https://ultimatehealth.blog/web");
   assert.equal(schema.slogan, "Minimal Information. Real Information.");
   assert.ok(Array.isArray(schema.sameAs));
@@ -161,7 +162,8 @@ test("buildWebSiteJsonLd produces valid WebSite schema with SearchAction query-i
   assert.equal(schema.name, "UltimateHealth");
   assert.ok(Array.isArray(schema.alternateName));
   assert.ok(schema.alternateName.includes("UltimateHealth Blog"));
-  assert.ok(schema.disambiguatingDescription.includes("Ultimate Health Podcast"));
+  assert.ok(schema.disambiguatingDescription.includes("open-source"));
+  assert.ok(schema.disambiguatingDescription.includes("Respect Giver Protocol"));
   assert.equal(schema.url, "https://ultimatehealth.blog/web/en");
   assert.equal(schema.potentialAction["@type"], "SearchAction");
   assert.equal(
@@ -372,17 +374,41 @@ test("Article footer renders prominent visible medical educational disclaimer", 
   );
 });
 
-test("buildHomeFaqJsonLd produces valid FAQPage schema covering disambiguation, upcoming roadmap, and storyboard", () => {
+test("buildHomeFaqJsonLd produces valid FAQPage schema prioritizing Dr. Moumita Debnath's clinical vision and roadmap", () => {
   const schema = buildHomeFaqJsonLd();
   assert.equal(schema["@context"], "https://schema.org");
   assert.equal(schema["@type"], "FAQPage");
   assert.ok(Array.isArray(schema.mainEntity));
-  assert.ok(schema.mainEntity.length >= 4);
+  assert.ok(schema.mainEntity.length >= 5);
+
+  // First item MUST prioritize Dr. Moumita Debnath's clinical vision and work
+  const firstFaq = schema.mainEntity[0];
+  assert.ok(firstFaq.name.includes("Dr. Moumita Debnath"));
+  assert.ok(firstFaq.name.includes("vision"));
+  assert.ok(firstFaq.acceptedAnswer.text.includes("Postgraduate Resident Doctor"));
+  assert.ok(firstFaq.acceptedAnswer.text.includes("Department of Pulmonary & Chest Medicine"));
+  assert.ok(firstFaq.acceptedAnswer.text.includes("Respect Giver Protocol"));
+  assert.ok(firstFaq.acceptedAnswer.text.includes("30-article clinical respiratory education series"));
+  
+  // Strictly ensure no tragic or negative wording is present
+  const firstFaqAnswerLower = firstFaq.acceptedAnswer.text.toLowerCase();
+  assert.ok(!firstFaqAnswerLower.includes("tragedy"));
+  assert.ok(!firstFaqAnswerLower.includes("tragic"));
+  assert.ok(!firstFaqAnswerLower.includes("killed"));
+  assert.ok(!firstFaqAnswerLower.includes("murder"));
+  assert.ok(!firstFaqAnswerLower.includes("rape"));
+  assert.ok(!firstFaqAnswerLower.includes("death"));
 
   const questions = schema.mainEntity.map((q) => q.name);
-  assert.ok(questions.some((q) => q.includes("The Ultimate Health Podcast")));
+  assert.ok(questions.some((q) => q.includes("unique")));
+  assert.ok(questions.some((q) => q.includes("safe space") || q.includes("content quality")));
   assert.ok(questions.some((q) => q.includes("upcoming") || q.includes("roadmap")));
   assert.ok(questions.some((q) => q.includes("languages")));
+
+  const safeSpaceFaq = schema.mainEntity.find((q) => q.name.includes("safe space"));
+  assert.ok(safeSpaceFaq);
+  assert.ok(safeSpaceFaq.acceptedAnswer.text.includes("report-and-strike"));
+  assert.ok(safeSpaceFaq.acceptedAnswer.text.includes("moderator"));
 
   // Verify homepage embeds FaqSection and FAQPage JSON-LD
   const homePath = join(APP_DIR, "[locale]/page.tsx");

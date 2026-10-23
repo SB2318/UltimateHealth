@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { Check, Globe, ChevronDown } from "lucide-react";
-import { withBasePath } from "@/lib/basePath";
+import { withBasePath, BASE_PATH } from "@/lib/basePath";
 
 interface LocaleOption {
   code: string;
@@ -52,6 +52,12 @@ export function LanguageSwitcher() {
 
     // Replace current locale segment in pathname
     let cleanPath = pathname;
+
+    // Strip any leading BASE_PATH if present to prevent duplicate /web prefixes
+    if (BASE_PATH && cleanPath.startsWith(BASE_PATH)) {
+      cleanPath = cleanPath.slice(BASE_PATH.length) || "/";
+    }
+
     for (const l of locales) {
       if (cleanPath.startsWith(`/${l.code}/`) || cleanPath === `/${l.code}`) {
         cleanPath = cleanPath.replace(`/${l.code}`, `/${newLocale}`);
