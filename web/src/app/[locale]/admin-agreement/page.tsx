@@ -24,7 +24,8 @@ function generateAgreementPdfBase64(
   fullName: string,
   role: string,
   email: string,
-  timestamp: string
+  timestamp: string,
+  phone?: string
 ): string {
   const sanitize = (str: string) => (str || "").replace(/[()\\]/g, "\\$&");
   const textCommands = [
@@ -45,6 +46,7 @@ function generateAgreementPdfBase64(
     `(${sanitize("Designation / Role: " + role)}) Tj`,
     "0 -14 Td",
     `(${sanitize("Official Email: " + email)}) Tj`,
+    ...(phone ? ["0 -14 Td", `(${sanitize("Phone: " + phone)}) Tj`] : []),
     "0 -14 Td",
     `(${sanitize("Verification Status: Certified & Digitally Signed")}) Tj`,
     "0 -24 Td",
@@ -124,6 +126,7 @@ function AdminAgreementContent() {
   // form state
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [designation, setDesignation] = useState("");
   const [proofFile, setProofFile] = useState<File | null>(null);
   const [proofFileName, setProofFileName] = useState("");
@@ -170,7 +173,6 @@ function AdminAgreementContent() {
     isValidFullName(fullName) &&
     isValidEmail(email) &&
     designation.trim() !== "" &&
-    Boolean(proofFile) &&
     isSignatureValid() &&
     agreed;
 
@@ -425,81 +427,112 @@ function AdminAgreementContent() {
         fullName.trim(),
         designation.trim(),
         email.trim(),
-        ts
+        ts,
+        phone.trim()
       );
 
-      // 2. Prepare structured template message for the verification team
-      const templateMessage = `=====================================================
-ULTIMATEHEALTH - DOCTOR & MODERATOR VERIFICATION
+      // Convert base64 to binary Blob for multipart/form-data upload
+      const byteChars = atob(agreementPdfBase64);
+      const byteNumbers = new Uint8Array(byteChars.length);
+      for (let i = 0; i < byteChars.length; i++) {
+        byteNumbers[i] = byteChars.charCodeAt(i);
+      }
+      const agreementBlob = new Blob([byteNumbers], { type: "application/pdf" });
+      const cleanName = fullName.trim().replace(/\s+/g, "_");
+
+      // 2. Build FormData payload for /admin-agreement/apply
+      const formData = new FormData();
+      formData.append("fullName", fullName.trim());
+      formData.append("email", email.trim());
+      if (phone.trim()) formData.append("phone", phone.trim());
+      formData.append("role", designation.trim() || "Doctor/Medical Reviewer");
+      formData.append("designation", designation.trim());
+      formData.append("experience", designation.trim());
+
+      const structuredMessage = `=====================================================
+ULTIMATEHEALTH - ADMIN & MODERATOR AGREEMENT
 =====================================================
+Applicant: ${fullName.trim()}
+Email: ${email.trim()}
+Designation: ${designation.trim()}
+Signed Timestamp: ${ts}
+${proofFileName ? `Doctor Working Proof: ${proofFileName}` : ""}
 
-APPLICANT PROFILE:
-- Full Legal Name: ${fullName.trim()}
-- Designation / Role: ${designation.trim()}
-- Official Email: ${email.trim()}
-- Submission Timestamp: ${ts}
-- Verification Status: Digitally Signed & Submitted for Review
-
-ATTACHED DOCUMENTS:
-1. ${fullName.trim().replace(/\s+/g, "_")}_Admin_Agreement.pdf
-   - Type: Digitally Signed Official Admin Agreement (Generated PDF)
-   - Content: Complete acceptance of non-diagnostic boundaries & patient confidentiality
-2. ${proofFileName || "Doctor_Working_Proof.pdf"}
-   - Type: Candidate Hospital ID / Medical License Proof (Uploaded PDF)
-
-TERMS CONFIRMATION:
-[X] Core Standards Accepted: Educational guidance only, strict non-diagnostic boundary
-[X] Professional Conduct Accepted: Objective moderation and community safety
-[X] Patient Confidentiality Accepted: No unauthorized sharing of user data
+TERMS ACCEPTED:
+[X] Core Clinical Standards: Educational guidance only, strict non-diagnostic boundary
+[X] Professional Conduct: Objective moderation & community safety
+[X] Patient Confidentiality: No unauthorized sharing of user data
 [X] Digital Signature Stamped & Logged
-
------------------------------------------------------
-UltimateHealth Verification Portal - Automated Application Dispatch
 =====================================================`;
+      formData.append("message", structuredMessage);
 
-      // 3. Prepare clean base64 data for the uploaded proof
+      // Attach the signed agreement PDF as "resume" (as defined in Swagger for post_admin_agreement_apply)
+      formData.append(
+        "resume",
+        agreementBlob,
+        `${cleanName}_Signed_Admin_Agreement.pdf`
+      );
+
+      // 3. Submit directly to /admin-agreement/apply endpoint
+      const response = await fetch("https://ultimatehealth.blog/api/admin-agreement/apply", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+          data.error?.message ||
+          (typeof data.error === "string" ? data.error : null) ||
+          "Application submission failed"
+        );
+      }
+
+      // 4. Background notification dispatch (with both agreement & doctor working proof if uploaded)
       const cleanProofBase64 = proofFileBase64.includes(",")
         ? proofFileBase64.split(",")[1]
         : proofFileBase64;
 
-      const attachments = [
+      const attachments: Array<{ filename: string; contentType: string; content: string; data: string; encoding: string }> = [
         {
-          filename: `${fullName.trim().replace(/\s+/g, "_")}_Admin_Agreement.pdf`,
+          filename: `${cleanName}_Admin_Agreement.pdf`,
           contentType: "application/pdf",
           content: agreementPdfBase64,
           data: `data:application/pdf;base64,${agreementPdfBase64}`,
           encoding: "base64",
         },
-        {
+      ];
+
+      if (proofFile && proofFileBase64) {
+        attachments.push({
           filename: proofFileName || "Doctor_Working_Proof.pdf",
           contentType: "application/pdf",
           content: cleanProofBase64,
           data: proofFileBase64,
           encoding: "base64",
-        },
-      ];
+        });
+      }
 
-      // 4. Submit via the same API as contact us / send message
-      const response = await fetch(withBasePath("/api/contact"), {
+      fetch(withBasePath("/api/contact"), {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: fullName.trim(),
           email: email.trim(),
           subject: `Doctor Verification Application: ${fullName.trim()} - ${designation.trim()}`,
-          message: templateMessage,
-          attachments,
+          message: structuredMessage
         }),
+      }).catch(() => {
+        // Non-blocking notification
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Submission failed");
+      localStorage.setItem("adminAgreementAccepted", "true");
 
+      const appId = data.data?.applicationId ? ` (Ref ID: ${data.data.applicationId})` : "";
       showMessage(
         "success",
-        `✓ Application & working proof submitted successfully! Our verification team has received your signed agreement and verification documents and will contact you at ${email.trim()}.`
+        `✓ Application & signed agreement submitted successfully${appId}! Our verification team has received your documents and will review your profile.`
       );
     } catch (err: unknown) {
       setLocked(false);
@@ -732,6 +765,23 @@ UltimateHealth Verification Portal - Automated Application Dispatch
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  style={css.input}
+                />
+              )}
+            </div>
+
+            {/* Phone Number */}
+            <div style={css.inputGroup}>
+              <label style={css.label}>Phone Number</label>
+              {locked ? (
+                <div style={css.lockedField}>{phone || "—"}</div>
+              ) : (
+                <input
+                  id="phone"
+                  type="tel"
+                  placeholder="e.g., +91 98765 43210"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   style={css.input}
                 />
               )}

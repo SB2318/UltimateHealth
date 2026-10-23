@@ -10,10 +10,16 @@ export async function GET(request: NextRequest) {
 
   try {
     // In local dev, fetch will bypass SSL due to NODE_TLS_REJECT_UNAUTHORIZED
-    const response = await fetch(url);
+    let response = await fetch(url);
     
     if (!response.ok) {
-      return new NextResponse(`Failed to fetch image: ${response.statusText}`, { status: response.status });
+      // Fallback to default verified health image if remote URL fails
+      const fallbackUrl =
+        "https://raw.githubusercontent.com/SB2318/UltimateHealth-DataSources/refs/heads/main/assets/356561546-ddbcd3a4-8c14-449f-8fd8-c9eb63b65908.png";
+      response = await fetch(fallbackUrl);
+      if (!response.ok) {
+        return new NextResponse(`Failed to fetch image: ${response.statusText}`, { status: response.status });
+      }
     }
 
     const contentType = response.headers.get("content-type") || "image/webp";

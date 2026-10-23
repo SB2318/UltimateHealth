@@ -1,14 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Search, X, Globe, Filter } from "lucide-react";
-import { glossaryEntries } from "./glossary-data";
 import {
-  HINDI_GLOSSARY_ENTRIES,
-  BENGALI_GLOSSARY_ENTRIES,
   LocalizedGlossaryEntry,
-} from "./glossary-translations";
+  mapApiGlossaryTerm,
+} from "@/lib/glossary-service";
 
 /* ── Category badge colors — work on both light & dark backgrounds ── */
 const BADGE_STYLES: Record<string, { bg: string; color: string }> = {
@@ -108,62 +106,87 @@ function RelatedTermsList({
   );
 }
 
-export default function MedicalGlossaryExplorer() {
+export default function MedicalGlossaryExplorer({
+  initialEntries,
+}: {
+  initialEntries?: LocalizedGlossaryEntry[];
+} = {}) {
   const t = useTranslations("glossary");
   const tArticles = useTranslations("articles");
+
+  const [entries, setEntries] = useState<LocalizedGlossaryEntry[]>(
+    initialEntries && initialEntries.length > 0 ? initialEntries : []
+  );
+  const [isLoading, setIsLoading] = useState(!initialEntries || initialEntries.length === 0);
+
+  useEffect(() => {
+    if (initialEntries && initialEntries.length > 0) {
+      setEntries(initialEntries);
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+      fetch("https://ultimatehealth.blog/api/glossary?limit=500")
+        .then((res) => (res.ok ? res.json() : null))
+        .then((json) => {
+          if (!json) return;
+          const items = Array.isArray(json?.data)
+            ? json.data
+            : Array.isArray(json)
+            ? json
+            : [];
+          if (items.length > 0) {
+            setEntries(items.map(mapApiGlossaryTerm));
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [initialEntries]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("all");
   const [searchFocused, setSearchFocused] = useState(false);
 
-  // Combine all glossary entries with language tags
-  const allEntries: LocalizedGlossaryEntry[] = useMemo(() => {
-    const english: LocalizedGlossaryEntry[] = glossaryEntries.map((e) => ({
-      ...e,
-      language: "en",
-      languageName: "English",
-    }));
-
-    const hindi: LocalizedGlossaryEntry[] = HINDI_GLOSSARY_ENTRIES.map((e) => ({
-      ...e,
-      language: "hi",
-      languageName: "हिन्दी (Hindi)",
-    }));
-
-    const bengali: LocalizedGlossaryEntry[] = BENGALI_GLOSSARY_ENTRIES.map((e) => ({
-      ...e,
-      language: "bn",
-      languageName: "বাংলা (Bengali)",
-    }));
-
-    return [...english, ...hindi, ...bengali];
-  }, []);
-
-  // Language stats
+  // Dynamic language statistics computed from active entries
   const languageStats = useMemo(() => {
-    const counts: Record<string, { name: string; count: number }> = {
-      en: { name: "English", count: glossaryEntries.length },
-      hi: { name: "हिन्दी (Hindi)", count: HINDI_GLOSSARY_ENTRIES.length },
-      bn: { name: "বাংলা (Bengali)", count: BENGALI_GLOSSARY_ENTRIES.length },
-    };
+    const counts: Record<string, { name: string; count: number }> = {};
+    for (const entry of entries) {
+      const code = entry.language || "en";
+      const name =
+        entry.languageName ||
+        (code === "hi"
+          ? "हिन्दी (Hindi)"
+          : code === "bn"
+          ? "বাংলা (Bengali)"
+          : "English");
+      if (!counts[code]) {
+        counts[code] = { name, count: 0 };
+      }
+      counts[code].count++;
+    }
 
     return Object.entries(counts).map(([code, item]) => ({
       code,
       name: item.name,
       count: item.count,
     }));
-  }, []);
+  }, [entries]);
 
   const categories = useMemo(
-    () => ["All", ...Array.from(new Set(allEntries.map((e) => e.category))).sort()],
-    [allEntries]
+    () => [
+      "All",
+      ...Array.from(new Set(entries.map((e) => e.category).filter(Boolean))).sort(),
+    ],
+    [entries]
   );
 
   const filteredEntries = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
 
-    return allEntries.filter((entry) => {
+    return entries.filter((entry) => {
       // Language filter
       if (selectedLanguage !== "all" && entry.language !== selectedLanguage) {
         return false;
@@ -176,9 +199,11 @@ export default function MedicalGlossaryExplorer() {
 
       // Search query match
       if (q) {
-        const matchesTerm = entry.term.toLowerCase().includes(q);
-        const matchesDef = entry.definition.toLowerCase().includes(q);
-        const matchesRelated = entry.relatedTerms?.some((r) => r.toLowerCase().includes(q));
+        const matchesTerm = (entry.term || "").toLowerCase().includes(q);
+        const matchesDef = (entry.definition || "").toLowerCase().includes(q);
+        const matchesRelated = entry.relatedTerms?.some((r) =>
+          r.toLowerCase().includes(q)
+        );
         if (!matchesTerm && !matchesDef && !matchesRelated) {
           return false;
         }
@@ -186,7 +211,7 @@ export default function MedicalGlossaryExplorer() {
 
       return true;
     });
-  }, [allEntries, searchQuery, selectedCategory, selectedLanguage]);
+  }, [entries, searchQuery, selectedCategory, selectedLanguage]);
 
   const clearAllFilters = () => {
     setSearchQuery("");
@@ -400,7 +425,7 @@ export default function MedicalGlossaryExplorer() {
                   color: selectedLanguage === "all" ? "#ffffff" : "var(--explorer-text-secondary, #64748b)",
                 }}
               >
-                {allEntries.length}
+                {entries.length}
               </span>
             </button>
 
@@ -497,8 +522,24 @@ export default function MedicalGlossaryExplorer() {
           )}
         </div>
 
-        {/* ── Cards Grid ── */}
-        {filteredEntries.length === 0 ? (
+        {/* ── Cards Grid / Empty State / Loading State ── */}
+        {isLoading ? (
+          <div
+            style={{
+              background: "var(--explorer-surface, #f1f5f9)",
+              border: "1.5px dashed var(--explorer-border, #e2e8f0)",
+              borderRadius: "20px",
+              padding: "64px 32px",
+              textAlign: "center",
+              color: "var(--explorer-text-secondary, #64748b)",
+            }}
+          >
+            <div style={{ fontSize: "32px", marginBottom: "12px" }}>⏳</div>
+            <p style={{ fontSize: "16px", fontWeight: 700, margin: 0 }}>
+              Loading medical glossary terms...
+            </p>
+          </div>
+        ) : filteredEntries.length === 0 ? (
           <div
             style={{
               background: "var(--explorer-surface, #f1f5f9)",

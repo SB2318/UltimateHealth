@@ -92,32 +92,46 @@ export default function ExplorePlatformModal() {
   // Grounded, realistic features actively shipped or releasing in this update
   const releasingFeatures: ReleasingFeature[] = [
     {
-      title: 'Multilingual Article Audio Narration',
+      title: 'Dynamic API Medical Glossary',
       badge: 'Active Feature',
+      desc: '379+ live clinical definitions across 18 medical specialties fetched in real-time from the backend API. Completely dynamic with zero hardcoded static files, interactive synonym discovery, and multi-language support (English, Hindi, Bengali).',
+      icon: Sparkles,
+      accent: '#0d9488',
+    },
+    {
+      title: 'Digital Admin Agreement & Ink Signature',
+      badge: 'Admin Onboarding',
+      desc: 'Interactive touchscreen and mouse canvas for digital signatures, automated court-ready PDF agreement generation, and direct backend submission via the admin agreement apply endpoint.',
+      icon: HeartHandshake,
+      accent: '#7c3aed',
+    },
+    {
+      title: 'Multilingual Article Audio Narration',
+      badge: 'Accessibility',
       desc: 'Listen to articles written by our student developer contributors and reviewed by admins, with native Web Speech API synthesis in 9 languages (Hindi, Bengali, Tamil, Odia, German, Spanish, French, Croatian, English) with Indic punctuation parsing and custom speeds.',
       icon: Headphones,
-      accent: '#0d9488',
+      accent: '#2563eb',
+    },
+    {
+      title: 'Clinical Article Discovery & Related Reads',
+      badge: 'Clinical Engine',
+      desc: 'Seamless article navigation with curated related health recommendations, category-aware exploration, and high-resolution clinical imagery.',
+      icon: Layers,
+      accent: '#06b6d4',
     },
     {
       title: 'High-Contrast Dark Mode & Centered Dialogs',
       badge: 'Theme Polish',
       desc: 'Refined dark mode color palette with high-contrast text, navy backgrounds, and crisp theme borders with centered motion entry across all modal systems.',
       icon: Sparkles,
-      accent: '#06b6d4',
-    },
-    {
-      title: 'Safeguarded UI Pills & Universal Padding',
-      badge: 'Design Polish',
-      desc: 'Universal global CSS safeguards and box-sizing rules preventing badges, header pills, and dialog controls from squishing or clipping on any screen.',
-      icon: Sparkles,
-      accent: '#7c3aed',
+      accent: '#f59e0b',
     },
     {
       title: 'Live 300+ Contributor Storyboard',
       badge: 'Open Community',
       desc: 'Real-time synchronization with GitHub celebrating over 300 student developers and open-source contributors with 2,400+ commits worldwide.',
       icon: Globe2,
-      accent: '#2563eb',
+      accent: '#10b981',
     },
   ];
 
@@ -198,6 +212,22 @@ export default function ExplorePlatformModal() {
       metrics: '300+ Contributors • 2,400+ Commits',
       icon: Globe2,
       accent: '#10b981',
+    },
+    {
+      tag: 'web-release-2.3.0',
+      date: 'Latest Release',
+      badge: 'Dynamic Clinical Ecosystem',
+      title: 'Dynamic Glossary, Clinical Knowledge & Digital Agreements',
+      desc: 'Architectural transition to live API services: zero static glossary data, seamless article discovery with related health recommendations, resilient clinical imagery pipeline, and admin agreement onboarding with ink signature verification.',
+      keyIssues: [
+        'Glossary API: 379+ live medical definitions across 18 clinical categories with zero static data',
+        'Articles Engine: Curated clinical articles with automated related reads',
+        'Admin Agreement: Digital canvas signature and signed PDF application flow',
+        'Technical SEO: Optimal 140-155 character descriptions and schema enrichment',
+      ],
+      metrics: '379+ Terms • Live API Core • 0 Static Fallbacks',
+      icon: Sparkles,
+      accent: '#0d9488',
     },
   ];
 

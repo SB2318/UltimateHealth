@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import MedicalGlossaryClient from './MedicalGlossaryClient';
+import { fetchGlossaryTerms } from '@/lib/glossary-service';
 import {
   BRAND_NAME,
   FULL_SITE_URL,
@@ -58,6 +59,10 @@ export default async function MedicalGlossaryPage({ params }: PageProps) {
   const { locale } = await params;
   const nonce = (await headers()).get('x-nonce') ?? undefined;
 
+  // Fetch glossary terms dynamically from API with ISR caching and offline fallback
+  const entries = await fetchGlossaryTerms();
+  const count = entries.length > 0 ? entries.length : 380;
+
   const breadcrumbsJsonLd = buildBreadcrumbJsonLd([
     { name: 'Home', url: getCanonicalUrl(locale) },
     { name: 'Medical Glossary', url: getCanonicalUrl(locale, '/medical-glossary') },
@@ -68,7 +73,7 @@ export default async function MedicalGlossaryPage({ params }: PageProps) {
     '@type': 'MedicalWebPage',
     name: 'UltimateHealth Medical Glossary & Terminology Dictionary',
     description:
-      'Search 380+ verified, plain-language medical definitions across 18 clinical categories.',
+      `Search ${count}+ verified, plain-language medical definitions across 18 clinical categories.`,
     url: getCanonicalUrl(locale, '/medical-glossary'),
     inLanguage: locale,
     isPartOf: {
@@ -93,7 +98,7 @@ export default async function MedicalGlossaryPage({ params }: PageProps) {
         suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: JSON.stringify(glossaryPageJsonLd) }}
       />
-      <MedicalGlossaryClient />
+      <MedicalGlossaryClient initialEntries={entries} />
     </>
   );
 }

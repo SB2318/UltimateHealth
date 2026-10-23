@@ -55,14 +55,11 @@ interface ApiArticleDetail {
   content: string; // filename, e.g. "file_3u2hg8bneh.html"
 }
 
-function resolveImageUrl(imageUtils: string[]): string | null {
-  if (!imageUtils || imageUtils.length === 0) return null;
-  const raw = imageUtils[0];
-  if (!raw) return null;
-  if (raw.startsWith("http")) return raw;
-  return withBasePath(
-    `/api/proxy-image?url=${encodeURIComponent(`https://ultimatehealth.blog/api/getFile/${raw}`)}`
-  );
+function resolveImageUrl(
+  imageUtils: string[],
+  context?: { title?: string; category?: string }
+): string {
+  return resolveArticleImageUrl(imageUtils, context);
 }
 
 function getInitials(name: string): string {
@@ -106,7 +103,10 @@ function mapApiToArticle(api: ApiArticleDetail): Article {
     title: api.title,
     subtitle: "",
     excerpt: api.description || api.title,
-    imageUrl: resolveImageUrl(api.imageUtils),
+    imageUrl: resolveImageUrl(api.imageUtils, {
+      title: api.title,
+      category: tagNames[0],
+    }),
     imageAlt: api.title,
     author: {
       name: authorName,
@@ -125,10 +125,28 @@ function mapApiToArticle(api: ApiArticleDetail): Article {
 
 async function fetchArticle(
   id: string
-): Promise<{ article: Article; pbRecordId: string } | null> {
+): Promise<{ article: Article; pbRecordId: string; numericId?: number } | null> {
   const ISR = { next: { revalidate: 300 } } as const;
 
-  // 1. Try direct numeric ID fetch: /api/articles/{id}
+  // 1. Try fetching by PocketBase record ID: /api/articles/record/{pb_recordId}
+  try {
+    const res = await fetch(`https://ultimatehealth.blog/api/articles/record/${id}`, ISR);
+    if (res.ok) {
+      const data = await res.json();
+      const detail: ApiArticleDetail = (data && data.article) ? data.article : data;
+      if (detail && (detail.pb_recordId || detail._id)) {
+        return {
+          article: mapApiToArticle(detail),
+          pbRecordId: detail.pb_recordId || id,
+          numericId: detail._id,
+        };
+      }
+    }
+  } catch {
+    // Fall through to numeric ID / list search
+  }
+
+  // 2. Try direct numeric ID fetch: /api/articles/{id}
   try {
     const res = await fetch(`https://ultimatehealth.blog/api/articles/${id}`, ISR);
     if (res.ok) {
@@ -138,6 +156,7 @@ async function fetchArticle(
         return {
           article: mapApiToArticle(detail),
           pbRecordId: detail.pb_recordId,
+          numericId: detail._id,
         };
       }
     }
@@ -145,7 +164,7 @@ async function fetchArticle(
     // Fall through to slug/list search
   }
 
-  // 2. Fallback: list all articles and match by pb_recordId or slugified title
+  // 3. Fallback: list all articles and match by pb_recordId, _id, or slugified title
   try {
     const res = await fetch(`https://ultimatehealth.blog/api/articles/?limit=100`, ISR);
     if (res.ok) {
@@ -165,6 +184,7 @@ async function fetchArticle(
         return {
           article: mapApiToArticle(match),
           pbRecordId: match.pb_recordId,
+          numericId: match._id,
         };
       }
     }
@@ -173,6 +193,61 @@ async function fetchArticle(
   }
 
   return null;
+}
+
+async function fetchRelatedArticles(
+  numericId?: number,
+  currentPbRecordId?: string
+): Promise<Article[]> {
+  const ISR = { next: { revalidate: 300 } } as const;
+
+  // 1. Try endpoint /api/articles/{id}/related?limit=4
+  if (numericId) {
+    try {
+      const res = await fetch(
+        `https://ultimatehealth.blog/api/articles/${numericId}/related?limit=4`,
+        ISR
+      );
+      if (res.ok) {
+        const json = await res.json();
+        const items =
+          json.data || json.articles || json.relatedArticles || (Array.isArray(json) ? json : []);
+        if (Array.isArray(items) && items.length > 0) {
+          return items.slice(0, 4).map((api: ApiArticleDetail) => {
+            const art = mapApiToArticle(api);
+            // Prioritize pb_recordId for link navigation
+            art.id = api.pb_recordId || String(api._id);
+            return art;
+          });
+        }
+      }
+    } catch {
+      // Fall through to fallback
+    }
+  }
+
+  // 2. Fallback: fetch articles list and select other articles
+  try {
+    const res = await fetch(`https://ultimatehealth.blog/api/articles/?limit=10`, ISR);
+    if (res.ok) {
+      const json = await res.json();
+      const list: ApiArticleDetail[] = json.articles ?? [];
+      const filtered = list.filter(
+        (a) =>
+          (numericId ? a._id !== numericId : true) &&
+          (currentPbRecordId ? a.pb_recordId !== currentPbRecordId : true)
+      );
+      return filtered.slice(0, 3).map((api) => {
+        const art = mapApiToArticle(api);
+        art.id = api.pb_recordId || String(api._id);
+        return art;
+      });
+    }
+  } catch {
+    // Return empty list
+  }
+
+  return [];
 }
 
 async function fetchHtmlContent(pbRecordId: string): Promise<string | null> {
@@ -283,6 +358,9 @@ export default async function ArticlePage({ params }: PageProps) {
   // Fetch HTML content
   const htmlContent = await fetchHtmlContent(pbRecordId);
 
+  // Fetch related articles based on numeric ID or tag/category
+  const relatedArticles = await fetchRelatedArticles(result.numericId, pbRecordId);
+
   if (htmlContent) {
     article.readingTime = estimateReadingTime(htmlContent);
   }
@@ -331,7 +409,7 @@ export default async function ArticlePage({ params }: PageProps) {
       />
       <ArticlePageClient
         article={article}
-        relatedArticles={[]}
+        relatedArticles={relatedArticles}
         htmlContent={htmlContent ?? undefined}
         pbRecordId={pbRecordId}
       />

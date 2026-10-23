@@ -4,8 +4,13 @@ import { useTranslations } from 'next-intl';
 import MedicalGlossaryExplorer from './MedicalGlossaryExplorer';
 import SiteHeader from '@/components/home/SiteHeader';
 import { Footer } from '@/components/ui/footer';
+import type { LocalizedGlossaryEntry } from '@/lib/glossary-service';
 
-export default function MedicalGlossaryClient() {
+export default function MedicalGlossaryClient({
+  initialEntries,
+}: {
+  initialEntries?: LocalizedGlossaryEntry[];
+}) {
   const t = useTranslations('glossary');
 
   return (
@@ -115,7 +120,7 @@ export default function MedicalGlossaryClient() {
               padding: '0 16px',
             }}
           >
-            <MedicalGlossaryExplorer />
+            <MedicalGlossaryExplorer initialEntries={initialEntries} />
           </div>
         </div>
 

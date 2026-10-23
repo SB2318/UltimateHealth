@@ -48,7 +48,7 @@ function ArticlePreviewCard({ article }: { article: ApiArticle }) {
 
   return (
     <Link
-      href={`/articles/${article._id}`}
+      href={`/articles/${article.pb_recordId || article._id}`}
       style={{
         background: "var(--explorer-surface, #ffffff)",
         border: "1px solid var(--explorer-border, #e2e8f0)",

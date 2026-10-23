@@ -133,6 +133,22 @@ export default function ChainReactionStoryboard() {
       icon: Globe2,
       accent: '#059669',
     },
+    {
+      tag: 'web-release-2.3.0',
+      date: 'Latest Release',
+      badge: 'Dynamic Clinical Ecosystem',
+      title: 'Dynamic Glossary, Clinical Knowledge & Digital Agreements',
+      desc: 'Architectural transition to live API services: zero static glossary data, seamless article discovery with related health recommendations, resilient clinical imagery pipeline, and admin agreement onboarding with ink signature verification.',
+      keyIssues: [
+        'Glossary API: 379+ live medical definitions across 18 clinical categories with zero static data',
+        'Articles Engine: Curated clinical articles with automated related reads',
+        'Admin Agreement: Digital canvas signature and signed PDF application flow',
+        'Technical SEO: Optimal 140-155 character descriptions and schema enrichment',
+      ],
+      metrics: '379+ Terms • Live API Core • 0 Static Fallbacks',
+      icon: Sparkles,
+      accent: '#0d9488',
+    },
   ];
 
   // ── Authentic Contributor Onboarding Flow Based on Project Automation ──

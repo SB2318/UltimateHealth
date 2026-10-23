@@ -614,7 +614,7 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
   });
 
   const languageBadge = formatLanguageName(article.language);
-  const articleHref = `/${locale}/articles/${article._id}`;
+  const articleHref = `/${locale}/articles/${article.pb_recordId || article._id}`;
 
   return (
     <Link
@@ -651,6 +651,10 @@ function ArticleCard({ article, locale }: { article: ApiArticle; locale: string 
             alt={article.title}
             loading="lazy"
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            onError={(e) => {
+              e.currentTarget.src =
+                "https://raw.githubusercontent.com/SB2318/UltimateHealth-DataSources/refs/heads/main/assets/356561546-ddbcd3a4-8c14-449f-8fd8-c9eb63b65908.png";
+            }}
           />
         ) : (
           <div
