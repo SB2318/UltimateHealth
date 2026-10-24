@@ -23,7 +23,6 @@ import {
   validateUserHandle,
   validateUserName,
 } from "@/lib/auth/auth-helpers.js";
-import { withBasePath } from "@/lib/basePath";
 
 interface FieldErrors {
   user_name?: string;
@@ -145,7 +144,7 @@ export default function RegisterPage() {
       footer={
         <>
           Already have an account?{" "}
-          <Link href={withBasePath("/login")} className={authLinkClass}>
+          <Link href="/login" className={authLinkClass}>
             Sign in
           </Link>
         </>

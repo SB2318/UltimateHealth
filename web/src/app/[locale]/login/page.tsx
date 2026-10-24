@@ -18,7 +18,6 @@ import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { useAuth } from "@/hooks/useAuth";
 import { safeRedirectPath } from "@/lib/auth/auth-helpers.js";
-import { withBasePath } from "@/lib/basePath";
 
 /** Where to land after signing in when no `next` param was supplied. */
 const DEFAULT_REDIRECT = "/delete-account";
@@ -71,7 +70,7 @@ export default function UserLoginPage() {
       // enough here — see safeRedirectPath for the shapes that defeat it.
       const destination =
         safeRedirectPath(searchParams?.get("next"), window.location.origin) ??
-        withBasePath(DEFAULT_REDIRECT);
+        DEFAULT_REDIRECT;
 
       setTimeout(() => router.push(destination), 1000);
     } catch (err: unknown) {
@@ -95,7 +94,7 @@ export default function UserLoginPage() {
       footer={
         <>
           New to UltimateHealth?{" "}
-          <Link href={withBasePath("/register")} className={authLinkClass}>
+          <Link href="/register" className={authLinkClass}>
             Create an account
           </Link>
         </>
@@ -124,7 +123,7 @@ export default function UserLoginPage() {
               {t("passwordLabel")}
             </Label>
             <Link
-              href={withBasePath("/forgot-password")}
+              href="/forgot-password"
               className={`${authLinkClass} text-[0.78rem]`}
             >
               Forgot password?

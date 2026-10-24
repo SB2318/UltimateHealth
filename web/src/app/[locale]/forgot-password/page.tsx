@@ -22,7 +22,6 @@ import {
   isValidOtp,
   validatePassword,
 } from "@/lib/auth/auth-helpers.js";
-import { withBasePath } from "@/lib/basePath";
 
 /**
  * Reset is two backend calls — `/user/forgotpassword` sends a six-digit OTP,
@@ -93,7 +92,7 @@ export default function ForgotPasswordPage() {
     try {
       const message = await resetPassword({ email, otp, newPassword });
       setNotice(`${message} Redirecting you to sign in.`);
-      setTimeout(() => router.push(withBasePath("/login")), 1200);
+      setTimeout(() => router.push("/login"), 1200);
     } catch (error) {
       setFormError(
         error instanceof Error ? error.message : "Could not reset your password."
@@ -114,7 +113,7 @@ export default function ForgotPasswordPage() {
       footer={
         <>
           Remembered it?{" "}
-          <Link href={withBasePath("/login")} className={authLinkClass}>
+          <Link href="/login" className={authLinkClass}>
             Sign in
           </Link>
         </>

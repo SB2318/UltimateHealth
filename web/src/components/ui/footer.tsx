@@ -31,6 +31,7 @@ export const Footer = () => {
   const articlesUrl = `/${currentLocale}/articles`
   const glossaryUrl = `/${currentLocale}/medical-glossary`
   const contributeUrl = `/${currentLocale}/contribute`
+  const accessControlUrl = `/${currentLocale}/access-control`
   // ── Newsletter state ──
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterStatus, setNewsletterStatus] = useState<
@@ -240,6 +241,7 @@ export const Footer = () => {
           >
             API Docs
           </a>
+          <Link href={accessControlUrl}>Security &amp; RBAC</Link>
         </div>
       </PageWrapper>
 

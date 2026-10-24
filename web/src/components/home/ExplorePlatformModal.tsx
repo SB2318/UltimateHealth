@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,6 +30,7 @@ import {
   Languages,
   Radio,
   HeartHandshake,
+  ShieldCheck,
 } from 'lucide-react';
 import { useModalAudio } from '@/lib/audio/modalAudioController';
 
@@ -42,6 +44,8 @@ interface ReleaseMilestone {
   desc: string;
   keyIssues: string[];
   metrics: string;
+  location?: string;
+  locationHref?: string;
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties; size?: number }>;
   accent: string;
 }
@@ -50,6 +54,8 @@ interface ReleasingFeature {
   title: string;
   badge: string;
   desc: string;
+  location?: string;
+  locationHref?: string;
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties; size?: number }>;
   accent: string;
 }
@@ -92,44 +98,56 @@ export default function ExplorePlatformModal() {
   // Grounded, realistic features actively shipped or releasing in this update
   const releasingFeatures: ReleasingFeature[] = [
     {
+      title: 'Platform Access Control & Security Governance',
+      badge: 'Security Standard',
+      desc: 'Comprehensive governance framework detailing multi-layer protections, author content ownership, peer-review publishing standards, and user privacy safeguards.',
+      location: '/access-control',
+      locationHref: `/${locale}/access-control`,
+      icon: ShieldCheck,
+      accent: '#0d9488',
+    },
+    {
       title: 'Dynamic API Medical Glossary',
       badge: 'Active Feature',
       desc: '379+ live clinical definitions across 18 medical specialties fetched in real-time from the backend API. Completely dynamic with zero hardcoded static files, interactive synonym discovery, and multi-language support (English, Hindi, Bengali).',
+      location: '/medical-glossary',
+      locationHref: `/${locale}/medical-glossary`,
       icon: Sparkles,
-      accent: '#0d9488',
+      accent: '#2563eb',
     },
     {
       title: 'Digital Admin Agreement & Ink Signature',
       badge: 'Admin Onboarding',
       desc: 'Interactive touchscreen and mouse canvas for digital signatures, automated court-ready PDF agreement generation, and direct backend submission via the admin agreement apply endpoint.',
+      location: '/admin-agreement',
+      locationHref: `/${locale}/admin-agreement`,
       icon: HeartHandshake,
       accent: '#7c3aed',
-    },
-    {
-      title: 'Multilingual Article Audio Narration',
-      badge: 'Accessibility',
-      desc: 'Listen to articles written by our student developer contributors and reviewed by admins, with native Web Speech API synthesis in 9 languages (Hindi, Bengali, Tamil, Odia, German, Spanish, French, Croatian, English) with Indic punctuation parsing and custom speeds.',
-      icon: Headphones,
-      accent: '#2563eb',
     },
     {
       title: 'Clinical Article Discovery & Related Reads',
       badge: 'Clinical Engine',
       desc: 'Seamless article navigation with curated related health recommendations, category-aware exploration, and high-resolution clinical imagery.',
+      location: '/articles',
+      locationHref: `/${locale}/articles`,
       icon: Layers,
       accent: '#06b6d4',
     },
     {
-      title: 'High-Contrast Dark Mode & Centered Dialogs',
-      badge: 'Theme Polish',
-      desc: 'Refined dark mode color palette with high-contrast text, navy backgrounds, and crisp theme borders with centered motion entry across all modal systems.',
-      icon: Sparkles,
+      title: 'Multilingual Article Audio Narration',
+      badge: 'Accessibility',
+      desc: 'Listen to articles written by our student developer contributors and reviewed by admins, with native Web Speech API synthesis in 9 languages with Indic punctuation parsing and custom speeds.',
+      location: '/articles',
+      locationHref: `/${locale}/articles`,
+      icon: Headphones,
       accent: '#f59e0b',
     },
     {
       title: 'Live 300+ Contributor Storyboard',
       badge: 'Open Community',
       desc: 'Real-time synchronization with GitHub celebrating over 300 student developers and open-source contributors with 2,400+ commits worldwide.',
+      location: '/our-contributors',
+      locationHref: `/${locale}/our-contributors`,
       icon: Globe2,
       accent: '#10b981',
     },
@@ -217,15 +235,18 @@ export default function ExplorePlatformModal() {
       tag: 'web-release-2.3.0',
       date: 'Latest Release',
       badge: 'Dynamic Clinical Ecosystem',
-      title: 'Dynamic Glossary, Clinical Knowledge & Digital Agreements',
-      desc: 'Architectural transition to live API services: zero static glossary data, seamless article discovery with related health recommendations, resilient clinical imagery pipeline, and admin agreement onboarding with ink signature verification.',
+      title: 'Dynamic Glossary, Platform Governance & Digital Agreements',
+      desc: 'Architectural transition to live API services: zero static glossary data, platform access control & security governance, seamless article discovery with related health recommendations, resilient clinical imagery pipeline, and admin agreement onboarding with ink signature verification.',
       keyIssues: [
-        'Glossary API: 379+ live medical definitions across 18 clinical categories with zero static data',
-        'Articles Engine: Curated clinical articles with automated related reads',
-        'Admin Agreement: Digital canvas signature and signed PDF application flow',
+        'Security Governance: Platform Roles, Permissions & Privacy Safeguards at /access-control',
+        'Glossary API: 379+ live medical definitions across 18 clinical categories at /medical-glossary',
+        'Articles Engine: Curated clinical articles with automated related reads at /articles',
+        'Admin Agreement: Digital canvas signature and signed PDF application flow at /admin-agreement',
         'Technical SEO: Optimal 140-155 character descriptions and schema enrichment',
       ],
       metrics: '379+ Terms • Live API Core • 0 Static Fallbacks',
+      location: '/access-control',
+      locationHref: `/${locale}/access-control`,
       icon: Sparkles,
       accent: '#0d9488',
     },
@@ -385,11 +406,11 @@ export default function ExplorePlatformModal() {
     },
   ];
 
-  // Open modal on all associated events & hash changes
+  // Open modal on all associated events & hash changes (flute stays OFF by default)
   useEffect(() => {
     const handleOpen = () => {
       setIsOpen(true);
-      play();
+      // NOTE: Krishna flute is OFF by default; user can click the audio button to start playback
     };
 
     const handleHash = () => {
@@ -428,7 +449,7 @@ export default function ExplorePlatformModal() {
       delete win.openExplorePlatform;
       delete win.openUhTour;
     };
-  }, [play]);
+  }, []);
 
   const closeModal = useCallback(() => {
     setIsOpen(false);
@@ -915,28 +936,56 @@ export default function ExplorePlatformModal() {
                             }}
                             className="bg-white dark:bg-[#141628] border border-slate-200 dark:border-white/10 shadow-2xs"
                           >
-                            <div className="flex items-center gap-2 mb-1">
-                              <div
-                                style={{
-                                  width: '24px',
-                                  height: '24px',
-                                  borderRadius: '6px',
-                                  backgroundColor: `${f.accent}20`,
-                                  color: f.accent,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                }}
-                              >
-                                <Icon size={14} />
+                            <div className="flex items-center justify-between gap-2 mb-1">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <div
+                                  style={{
+                                    width: '24px',
+                                    height: '24px',
+                                    borderRadius: '6px',
+                                    backgroundColor: `${f.accent}20`,
+                                    color: f.accent,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  <Icon size={14} />
+                                </div>
+                                <h4 className="text-xs font-bold text-slate-900 dark:text-white m-0 truncate">
+                                  {f.title}
+                                </h4>
                               </div>
-                              <h4 className="text-xs font-bold text-slate-900 dark:text-white m-0 truncate">
-                                {f.title}
-                              </h4>
+                              {f.location && (
+                                <span
+                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded-md font-bold shrink-0"
+                                  style={{
+                                    backgroundColor: `${f.accent}15`,
+                                    color: f.accent,
+                                    border: `1px solid ${f.accent}30`,
+                                  }}
+                                >
+                                  {f.location}
+                                </span>
+                              )}
                             </div>
-                            <p className="text-[11px] leading-relaxed text-slate-600 dark:text-slate-300 m-0">
+                            <p className="text-[11px] leading-relaxed text-slate-600 dark:text-slate-300 m-0 mb-1.5">
                               {f.desc}
                             </p>
+                            {f.locationHref && (
+                              <div className="flex justify-end pt-1">
+                                <Link
+                                  href={f.locationHref}
+                                  onClick={() => setIsOpen(false)}
+                                  className="inline-flex items-center gap-1 text-[10px] font-bold transition-opacity hover:opacity-80"
+                                  style={{ color: f.accent }}
+                                >
+                                  <span>View {f.location}</span>
+                                  <ArrowRight size={10} />
+                                </Link>
+                              </div>
+                            )}
                           </div>
                         );
                       })}

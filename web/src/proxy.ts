@@ -9,17 +9,23 @@ export default function proxy(request: NextRequest) {
   const isDev = process.env.NODE_ENV === "development";
 
   const { pathname } = request.nextUrl;
-  if (pathname.includes('/web/')) {
-    const segments = pathname.split('/').filter(Boolean);
-    const knownLocales = routing.locales;
-    const locale = segments.find((s) => knownLocales.includes(s as any)) || routing.defaultLocale;
-    const nonRouteSegments = new Set([...knownLocales, 'web']);
-    const rest = segments.filter((s) => !nonRouteSegments.has(s)).join('/');
+
+  // Sanitize nested or duplicated /web and locale segments (e.g. /web/en/web/en/...)
+  const segments = pathname.split('/').filter(Boolean);
+  const knownLocales = routing.locales as readonly string[];
+  const hasWebSegment = segments.includes('web');
+  const matchedLocales = segments.filter((s) => knownLocales.includes(s));
+  const hasDuplicateLocales = matchedLocales.length > 1;
+
+  if (hasWebSegment || hasDuplicateLocales) {
+    const locale = matchedLocales[0] || routing.defaultLocale;
+    const nonContentSegments = new Set([...knownLocales, 'web']);
+    const rest = segments.filter((s) => !nonContentSegments.has(s)).join('/');
     const cleaned = `/${locale}${rest ? `/${rest}` : ''}`;
     if (cleaned !== pathname) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = cleaned;
-      return NextResponse.redirect(redirectUrl, 307);
+      return NextResponse.redirect(redirectUrl, 308);
     }
   }
 
@@ -33,8 +39,8 @@ export default function proxy(request: NextRequest) {
     "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com",
     "font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com",
     "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com https://avatars.githubusercontent.com https://ultimatehealth.blog https://picsum.photos https://encrypted-tbn0.gstatic.com https://images.unsplash.com",
-    "media-src 'self' blob: data: https://ultimatehealth.blog",
-    "connect-src 'self' https://ultimatehealth.blog https://api.github.com" + (isDev ? " http: ws:" : ""),
+    "media-src 'self' blob: data: https://ultimatehealth.blog https://uhsocial.in",
+    "connect-src 'self' https://ultimatehealth.blog https://uhsocial.in https://api.github.com" + (isDev ? " http: ws:" : ""),
     "object-src 'none'",
     "base-uri 'self'",
     "frame-ancestors 'none'",

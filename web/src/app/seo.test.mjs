@@ -269,6 +269,7 @@ test("web/src/app/sitemap.ts configures dynamic XML sitemap with 9 locales and a
   assert.ok(content.includes("/our-contributors"));
   assert.ok(content.includes("/podcasts"));
   assert.ok(content.includes("/contribute"));
+  assert.ok(content.includes("/access-control"));
 });
 
 // ─── 4. Private and Auth Route NoIndex Protection ────────────────────────────
@@ -308,6 +309,7 @@ const PUBLIC_PAGES = [
   { dir: "our-contributors", clientFile: "OurContributorsClient.tsx" },
   { dir: "podcasts", clientFile: "PodcastsClient.tsx" },
   { dir: "contribute", clientFile: "ContributeClient.tsx" },
+  { dir: "access-control", clientFile: "AccessControlClient.tsx" },
 ];
 
 for (const page of PUBLIC_PAGES) {

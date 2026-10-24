@@ -50,26 +50,15 @@ export function LanguageSwitcher() {
     setIsOpen(false);
     if (newLocale === currentLocale) return;
 
-    // Replace current locale segment in pathname
-    let cleanPath = pathname;
+    // Sanitize pathname to extract only content segments (removing any duplicate /web or locale prefixes)
+    const segments = pathname.split("/").filter(Boolean);
+    const knownCodes = new Set(locales.map((l) => l.code));
+    const nonContent = new Set([...knownCodes, "web"]);
+    const rest = segments.filter((s) => !nonContent.has(s)).join("/");
+    const finalClean = `/${newLocale}${rest ? `/${rest}` : ""}`;
 
-    // Strip any leading BASE_PATH if present to prevent duplicate /web prefixes
-    if (BASE_PATH && cleanPath.startsWith(BASE_PATH)) {
-      cleanPath = cleanPath.slice(BASE_PATH.length) || "/";
-    }
-
-    for (const l of locales) {
-      if (cleanPath.startsWith(`/${l.code}/`) || cleanPath === `/${l.code}`) {
-        cleanPath = cleanPath.replace(`/${l.code}`, `/${newLocale}`);
-        break;
-      }
-    }
-    if (!cleanPath.startsWith(`/${newLocale}`)) {
-      cleanPath = `/${newLocale}${cleanPath === "/" ? "" : cleanPath}`;
-    }
-
-    // Direct page transition to ensure complete locale change
-    window.location.href = withBasePath(cleanPath);
+    // Direct page transition with single prepended basePath
+    window.location.href = withBasePath(finalClean);
   };
 
   return (

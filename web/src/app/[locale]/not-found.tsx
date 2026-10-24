@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { withBasePath } from "@/lib/basePath";
 import { PageWrapper, Section } from "@/components/layout";
 import Image from "next/image";
 

@@ -35,6 +35,8 @@ interface ReleaseMilestone {
   desc: string;
   keyIssues: string[];
   metrics: string;
+  location?: string;
+  locationHref?: string;
   icon: React.ComponentType<{ className?: string; style?: React.CSSProperties; size?: number }>;
   accent: string;
 }
@@ -137,15 +139,18 @@ export default function ChainReactionStoryboard() {
       tag: 'web-release-2.3.0',
       date: 'Latest Release',
       badge: 'Dynamic Clinical Ecosystem',
-      title: 'Dynamic Glossary, Clinical Knowledge & Digital Agreements',
-      desc: 'Architectural transition to live API services: zero static glossary data, seamless article discovery with related health recommendations, resilient clinical imagery pipeline, and admin agreement onboarding with ink signature verification.',
+      title: 'Dynamic Glossary, Platform Governance & Digital Agreements',
+      desc: 'Architectural transition to live API services: zero static glossary data, platform access control & security governance, seamless article discovery with related health recommendations, resilient clinical imagery pipeline, and admin agreement onboarding with ink signature verification.',
       keyIssues: [
-        'Glossary API: 379+ live medical definitions across 18 clinical categories with zero static data',
-        'Articles Engine: Curated clinical articles with automated related reads',
-        'Admin Agreement: Digital canvas signature and signed PDF application flow',
+        'Security Governance: Platform Roles, Permissions & Privacy Safeguards (Location: /access-control)',
+        'Glossary API: 379+ live medical definitions across 18 clinical categories (Location: /medical-glossary)',
+        'Articles Engine: Curated clinical articles with automated related reads (Location: /articles)',
+        'Admin Agreement: Digital canvas signature and signed PDF application flow (Location: /admin-agreement)',
         'Technical SEO: Optimal 140-155 character descriptions and schema enrichment',
       ],
       metrics: '379+ Terms • Live API Core • 0 Static Fallbacks',
+      location: '/access-control',
+      locationHref: `/${locale}/access-control`,
       icon: Sparkles,
       accent: '#0d9488',
     },
@@ -1025,6 +1030,32 @@ export default function ChainReactionStoryboard() {
                       </div>
                     ))}
                   </div>
+
+                  {currentMilestone.locationHref && (
+                    <div style={{ marginTop: '16px' }}>
+                      <Link
+                        href={currentMilestone.locationHref}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          color: currentMilestone.accent,
+                          background: `${currentMilestone.accent}14`,
+                          border: `1px solid ${currentMilestone.accent}33`,
+                          borderRadius: '8px',
+                          padding: '6px 14px',
+                          textDecoration: 'none',
+                          transition: 'all 0.2s ease',
+                          width: 'fit-content',
+                        }}
+                      >
+                        <span>Visit Specification Location: {currentMilestone.location}</span>
+                        <ArrowRight size={13} />
+                      </Link>
+                    </div>
+                  )}
                 </div>
 
                 {/* Right Aside */}

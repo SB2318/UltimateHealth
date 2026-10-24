@@ -1,18 +1,19 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { withBasePath } from '@/lib/basePath';
 
 export type ModalAudioTrack = 'memorial' | 'tour';
 
 const TRACK_CONFIG: Record<ModalAudioTrack, { direct: string; proxy: string; volume: number }> = {
   memorial: {
-    direct: 'https://ultimatehealth.blog/api/getfile/life-story-bgm.mp3',
-    proxy: '/api/proxy-audio?url=' + encodeURIComponent('https://ultimatehealth.blog/api/getfile/life-story-bgm.mp3'),
+    direct: 'https://ultimatehealth.blog/api/getFile/life-story-bgm.mp3',
+    proxy: withBasePath('/api/proxy-audio?url=' + encodeURIComponent('https://ultimatehealth.blog/api/getFile/life-story-bgm.mp3')),
     volume: 0.35,
   },
   tour: {
-    direct: 'https://ultimatehealth.blog/api/getfile/krishna_flute.mp3',
-    proxy: '/api/proxy-audio?url=' + encodeURIComponent('https://ultimatehealth.blog/api/getfile/krishna_flute.mp3'),
+    direct: 'https://ultimatehealth.blog/api/getFile/krishna_flute.mp3',
+    proxy: withBasePath('/api/proxy-audio?url=' + encodeURIComponent('https://ultimatehealth.blog/api/getFile/krishna_flute.mp3')),
     volume: 0.3,
   },
 };
@@ -80,18 +81,20 @@ class ModalAudioManager {
 
     const unlock = () => {
       this.unlockListenerAttached = false;
-      window.removeEventListener('click', unlock);
-      window.removeEventListener('keydown', unlock);
-      window.removeEventListener('touchstart', unlock);
+      window.removeEventListener('click', unlock, true);
+      window.removeEventListener('pointerdown', unlock, true);
+      window.removeEventListener('keydown', unlock, true);
+      window.removeEventListener('touchstart', unlock, true);
 
       if (this.pendingTrack && this.audio && !this.isPlaying) {
         this.play(this.pendingTrack);
       }
     };
 
-    window.addEventListener('click', unlock, { once: true, passive: true });
-    window.addEventListener('keydown', unlock, { once: true, passive: true });
-    window.addEventListener('touchstart', unlock, { once: true, passive: true });
+    window.addEventListener('click', unlock, { capture: true, once: true });
+    window.addEventListener('pointerdown', unlock, { capture: true, once: true });
+    window.addEventListener('keydown', unlock, { capture: true, once: true });
+    window.addEventListener('touchstart', unlock, { capture: true, once: true });
   }
 
   public play(track: ModalAudioTrack) {
@@ -100,8 +103,9 @@ class ModalAudioManager {
 
     this.pendingTrack = track;
 
-    // If switching track, reset proxy flag and source
-    if (this.currentTrack !== track) {
+    // If switching track or source unassigned, reset proxy flag and source
+    const targetSrc = this.usingProxy ? TRACK_CONFIG[track].proxy : TRACK_CONFIG[track].direct;
+    if (this.currentTrack !== track || !audio.src || audio.src === '') {
       this.usingProxy = false;
       this.currentTrack = track;
       audio.src = TRACK_CONFIG[track].direct;

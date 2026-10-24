@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { withBasePath } from "@/lib/basePath";
 import { PageWrapper, Section } from "@/components/layout";
 
 export default function ErrorPage({
@@ -55,7 +54,7 @@ export default function ErrorPage({
                 {t("tryAgain")}
               </button>
               <Link
-                href={withBasePath("/")}
+                href="/"
                 className="text-sm font-semibold text-[#667eea] dark:text-indigo-300 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-full hover:bg-slate-50 dark:hover:bg-white/20 transition-colors !px-2 !py-[5px]"
               >
                 {t("goHome")}

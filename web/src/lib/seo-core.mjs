@@ -269,6 +269,14 @@ export function buildHomeFaqJsonLd() {
       },
       {
         "@type": "Question",
+        name: "What is UltimateHealth's Role-Based Access Control (RBAC) and content security architecture?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "UltimateHealth implements a defense-in-depth Role-Based Access Control (RBAC) and Content-Ownership (ABAC) architecture (API v3.4.0 | Backend v1.7.0). It enforces security across 3 layers: Network/rate limiting, JWT authentication with Redis token revocation, and ownership verification middlewares. Four distinct role tiers (Public Guest, User/Author, Admin/Moderator, and Super Admin) guarantee that only verified, signed administrators can publish or moderate medical articles, podcasts, and glossary terms, while cloud storage deletion is strictly restricted to Super Admins.",
+        },
+      },
+      {
+        "@type": "Question",
         name: "What is new and upcoming on the UltimateHealth release storyboard and roadmap?",
         acceptedAnswer: {
           "@type": "Answer",
