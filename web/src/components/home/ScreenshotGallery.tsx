@@ -7,22 +7,28 @@ import { withBasePath } from "@/lib/basePath";
 import { PageWrapper } from "@/components/layout";
 
 const userScreenshots = [
-  { src: "/ap-asset/page-1.webp", caption: "App Welcome & Introduction" },
-  { src: "/ap-asset/page-2.webp", caption: "Community Health Articles" },
-  { src: "/ap-asset/page-3.webp", caption: "Article Detail & Reading View" },
-  { src: "/ap-asset/page-4.webp", caption: "Podcast Player & Audio Stream" },
-  { src: "/ap-asset/page-5.webp", caption: "Medical Glossary Explorer" },
-  { src: "/ap-asset/page-6.webp", caption: "User Health Dashboard" },
+  { src: "/ap-asset/page-1.jpg", caption: "App Welcome & Introduction" },
+  { src: "/ap-asset/page-2.jpg", caption: "Community Health Articles" },
+  { src: "/ap-asset/page-3.jpg", caption: "Article Detail & Reading View" },
+  { src: "/ap-asset/page-4.jpg", caption: "Podcast Player & Audio Stream" },
+  { src: "/ap-asset/page-5.jpg", caption: "Medical Glossary Explorer" },
+  { src: "/ap-asset/page-6.jpg", caption: "User Health Dashboard" },
   { src: "/assets/article-home-screen.jpeg", caption: "Articles Library" },
   { src: "/assets/podcast-list-screen.jpeg", caption: "Podcast Episodes" },
 ];
 
 const adminScreenshots = [
-  { src: "/admin-asset/page-1.webp", caption: "Admin Clinical Overview" },
-  { src: "/admin-asset/page-2.webp", caption: "Doctor Content Moderation" },
-  { src: "/admin-asset/page-3.webp", caption: "Article Review & Approval" },
-  { src: "/admin-asset/page-4.webp", caption: "Community Health Metrics" },
-  { src: "/admin-asset/page-5.webp", caption: "Moderator Agreement Protocol" },
+  { src: "/admin-asset/page-1.jpg", caption: "Admin Clinical Overview" },
+  { src: "/admin-asset/page-2.jpg", caption: "Doctor Content Moderation" },
+  { src: "/admin-asset/page-3.jpg", caption: "Article Review & Approval" },
+  { src: "/admin-asset/page-4.jpg", caption: "Community Health Metrics" },
+  { src: "/admin-asset/page-5.jpg", caption: "Moderator Agreement Protocol" },
+  { src: "/admin-asset/page-6.jpg", caption: "Editorial Review Queue" },
+  { src: "/admin-asset/page-7.jpg", caption: "Article Improvement Verification" },
+  { src: "/admin-asset/page-8.jpg", caption: "Medical Glossary Management" },
+  { src: "/admin-asset/page-9.jpg", caption: "Podcast Moderation Studio" },
+  { src: "/admin-asset/page-10.jpg", caption: "Reviewer Onboarding & Credentials" },
+  { src: "/admin-asset/page-11.jpg", caption: "Platform Governance & Audit" },
   { src: "/assets/admin_dashboard.jpeg", caption: "Analytics Dashboard" },
   { src: "/assets/admin_insights.jpeg", caption: "Healthcare Insights" },
 ];

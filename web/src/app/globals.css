@@ -677,17 +677,18 @@ html.dark .nav-item-icon {
   flex-direction: column;
   gap: 16px;
   padding: 20px 24px;
-  background: rgba(11, 11, 18, 0.98);
-  border-top: 1px solid #262640;
+  background: rgba(255, 255, 255, 0.98);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   position: absolute;
   top: 100%; left: 0; right: 0;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(20px);
   /* Smooth slide-down animation */
   opacity: 0;
   transform: translateY(-8px);
   pointer-events: none;
-  transition: opacity 0.22s ease, transform 0.22s ease;
+  transition: opacity 0.22s ease, transform 0.22s ease, background 0.2s ease, border-color 0.2s ease;
 }
 .mobile-nav.open {
   opacity: 1;
@@ -696,19 +697,19 @@ html.dark .nav-item-icon {
 }
 .mobile-nav a {
   text-decoration: none;
-  color: #94a3b8;
+  color: #1e293b;
   font-weight: 600;
   font-size: 1rem;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(38,38,64,0.6);
-  transition: color 0.2s ease;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  transition: color 0.2s ease, padding-left 0.2s ease;
 }
-.mobile-nav a:hover { color: #00f0ff; }
+.mobile-nav a:hover { color: #0d9488; }
 
 /* Mirrors the desktop highlight so the current page is obvious in the drawer. */
 .mobile-nav a.active {
-  color: #00f0ff;
-  box-shadow: inset 3px 0 0 0 #00f0ff;
+  color: #0d9488;
+  box-shadow: inset 3px 0 0 0 #0d9488;
   padding-left: 12px;
 }
 
@@ -3448,10 +3449,15 @@ html.dark .header {
   background: rgba(15, 23, 42, 0.95);
   border-bottom-color: rgba(255,255,255,0.05);
 }
-html.dark .mobile-nav { background: #0f172a; }
+html.dark .mobile-nav {
+  background: rgba(15, 23, 42, 0.98);
+  border-top-color: rgba(255, 255, 255, 0.08);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+}
 html.dark .mobile-nav a {
   color: #f1f5f9;
-  border-bottom-color: rgba(255,255,255,0.05);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 html.dark .mobile-menu-toggle { color: #f1f5f9; }
 html.dark .screenshot-details {
@@ -4020,6 +4026,10 @@ html.dark .uh-memorial-card {
 
 .mobile-nav a:hover,
 .mobile-nav a.active {
+  color: #0d9488 !important;
+}
+html.dark .mobile-nav a:hover,
+html.dark .mobile-nav a.active {
   color: #2dd4bf !important;
 }
 

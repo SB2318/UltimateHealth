@@ -705,7 +705,7 @@ export default function AccessControlClient() {
                   <li>View published articles and related recommendations</li>
                   <li>Search and browse medical glossary definitions</li>
                   <li>Stream published podcasts, playlists, and episodes</li>
-                  <li>Stream public media assets (.webp, .jpg, .mp3, avatars)</li>
+                  <li>Stream public media assets (.jpg, .jpeg, .mp3, avatars)</li>
                   <li>Submit application to join the editorial review board</li>
                   <li>Submit inquiries via contact portal</li>
                   <li>Register for a new account or authenticate</li>
