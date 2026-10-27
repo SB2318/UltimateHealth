@@ -14,19 +14,6 @@ import AgreementTermsContent from "./components/AgreementTermsContent";
 import SignaturePad from "./components/SignaturePad";
 import SignedScreenshotPreview from "./components/SignedScreenshotPreview";
 
-async function fileToBase64(file: File): Promise<{ base64: string; dataUrl: string }> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      const base64 = dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl;
-      resolve({ base64, dataUrl });
-    };
-    reader.onerror = () => reject(new Error("Failed to read working proof document"));
-    reader.readAsDataURL(file);
-  });
-}
-
 function AdminAgreementContent() {
   const searchParams = useSearchParams();
 
@@ -177,10 +164,7 @@ function AdminAgreementContent() {
     setLocked(true);
 
     try {
-      // 1. Freshly read doctor working proof file as base64 and data URL
-      const proofData = await fileToBase64(proofFile);
-
-      // 2. Wait a tick for React to render locked state with signature image and timestamp
+      // 1. Wait a tick for React to render locked state with signature image and timestamp
       await new Promise((r) => setTimeout(r, 120));
 
       const agreementContainer = containerRef.current || document.getElementById("agreement-container");
@@ -206,7 +190,7 @@ function AdminAgreementContent() {
       const proofDocName = proofFileName || `${cleanName}_Doctor_Working_Proof.pdf`;
 
       // 4. Build FormData payload for /admin-agreement/apply
-      // Separate doctor working proof (resume/document) and agreement screenshot
+      // Text Fields
       const formData = new FormData();
       formData.append("fullName", fullName.trim());
       formData.append("email", email.trim());
@@ -225,8 +209,8 @@ Designation: ${designation.trim()}
 Signed Timestamp: ${ts}
 
 DOCUMENTS ATTACHED (2 SEPARATE FILES):
-1. Candidate Working Proof: ${proofDocName} (Uploaded PDF Credential)
-2. Signed Agreement: ${screenshotFileName} (Official Page Screenshot PNG)
+1. Candidate Working Proof (resume): ${proofDocName} (Uploaded PDF Credential)
+2. Signed Agreement (agreement): ${screenshotFileName} (Official Page Screenshot PNG)
 
 TERMS ACCEPTED:
 [X] Core Clinical Standards: Educational guidance only, strict non-diagnostic boundary
@@ -236,20 +220,9 @@ TERMS ACCEPTED:
 =====================================================`;
       formData.append("message", structuredMessage);
 
-      // Attach doctor's working proof document as primary candidate credentials
-      formData.append("resume", proofFile, proofDocName);
-      formData.append("proof", proofFile, proofDocName);
-      formData.append("workProof", proofFile, proofDocName);
-      formData.append("workingProof", proofFile, proofDocName);
-      formData.append("document", proofFile, proofDocName);
-      formData.append("proofFile", proofFile, proofDocName);
-
-      // Attach signed agreement page screenshot separately
-      formData.append("agreement", screenshot.blob, screenshotFileName);
-      formData.append("screenshot", screenshot.blob, screenshotFileName);
-      formData.append("agreementScreenshot", screenshot.blob, screenshotFileName);
-      formData.append("agreementFile", screenshot.blob, screenshotFileName);
-      formData.append("signedAgreement", screenshot.blob, screenshotFileName);
+      // Files (Strictly use these two field names)
+      formData.append("resume", proofFile, proofDocName);               // 📄 Resume / Work Proof (PDF / DOCX)
+      formData.append("agreement", screenshot.blob, screenshotFileName); // 📸 Agreement Screenshot (PNG / PDF)
 
       // 5. Submit directly to /admin-agreement/apply endpoint
       const response = await fetch("https://ultimatehealth.blog/api/admin-agreement/apply", {
@@ -267,28 +240,7 @@ TERMS ACCEPTED:
         );
       }
 
-      // 6. Background notification dispatch with 2 distinctly separated attachments:
-      // Attachment 1: Doctor's Working Proof PDF
-      // Attachment 2: Full Agreement Page Screenshot PNG
-      const attachments = [
-        {
-          filename: proofDocName,
-          contentType: "application/pdf",
-          content: proofData.base64,
-          data: proofData.dataUrl,
-          path: proofData.dataUrl,
-          encoding: "base64",
-        },
-        {
-          filename: screenshotFileName,
-          contentType: "image/png",
-          content: screenshot.base64,
-          data: screenshot.dataUrl,
-          path: screenshot.dataUrl,
-          encoding: "base64",
-        },
-      ];
-
+      // 6. Optional lightweight background notification (text only, avoiding PayloadTooLargeError)
       fetch(withBasePath("/api/contact"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -297,7 +249,6 @@ TERMS ACCEPTED:
           email: email.trim(),
           subject: `Doctor Verification Application: ${fullName.trim()} - ${designation.trim()}`,
           message: structuredMessage,
-          attachments,
         }),
       }).catch(() => {
         // Non-blocking notification
