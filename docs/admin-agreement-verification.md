@@ -77,7 +77,7 @@ The Admin Agreement flow governs the credentialing, legal agreement, and digital
 ### Phase 5: Multi-Target Network Ingestion
 * **Endpoint 1: Primary Applicant Submission (`POST /api/admin-agreement/apply`)**
   - **Content-Type:** `multipart/form-data`
-  - **Payload Structure:**
+  - **Payload Structure (Distinct File Separation):**
     ```typescript
     const formData = new FormData();
     formData.append("fullName", fullName.trim());
@@ -88,18 +88,27 @@ The Admin Agreement flow governs the credentialing, legal agreement, and digital
     formData.append("experience", designation.trim());
     formData.append("message", structuredMessageText);
 
-    // Primary legal agreement artifact (High-res PNG image screenshot)
-    formData.append("resume", screenshot.blob, `${cleanName}_Signed_Admin_Agreement.png`);
+    // 1. Candidate Doctor Working Proof (Uploaded PDF Credential / Resume)
+    formData.append("resume", proofFile, proofDocName);
+    formData.append("proof", proofFile, proofDocName);
+    formData.append("workProof", proofFile, proofDocName);
+    formData.append("workingProof", proofFile, proofDocName);
+    formData.append("document", proofFile, proofDocName);
+    formData.append("proofFile", proofFile, proofDocName);
 
-    // Doctor credential document (Uploaded PDF)
-    if (proofFile) {
-      formData.append("proof", proofFile, proofFileName);
-      formData.append("document", proofFile, proofFileName);
-    }
+    // 2. Official Signed Agreement (Full Page Screenshot PNG)
+    formData.append("agreement", screenshot.blob, screenshotFileName);
+    formData.append("screenshot", screenshot.blob, screenshotFileName);
+    formData.append("agreementScreenshot", screenshot.blob, screenshotFileName);
+    formData.append("agreementFile", screenshot.blob, screenshotFileName);
+    formData.append("signedAgreement", screenshot.blob, screenshotFileName);
     ```
 * **Endpoint 2: Real-Time Notification Alert (`POST /api/contact`)**
   - **Content-Type:** `application/json`
-  - Dispatches an automated email alert with complete Base64 attachments (both the Agreement PNG and the Doctor Proof PDF) directly to the verification mailbox (`ultimate.health25@gmail.com`).
+  - Dispatches an automated email alert with **2 clearly separated attachments**:
+    1. `proofDocName` (`application/pdf`, Base64): Doctor's actual working credential or license document.
+    2. `screenshotFileName` (`image/png`, Base64): High-resolution certified page screenshot of the signed agreement.
+  - No progress bar at bottom; clean status text for instant user feedback.
 * **Endpoint 3: Client Self-Service Download ([`components/SignedScreenshotPreview.tsx`](file:///c:/UltimateHealth/web/src/app/[locale]/admin-agreement/components/SignedScreenshotPreview.tsx))**
   - Renders a preview card of the captured agreement document on the page.
   - Provides a one-click **"📥 Download Agreement Screenshot (PNG)"** button so the applicant can retain their own legal copy.

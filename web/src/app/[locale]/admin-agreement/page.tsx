@@ -14,6 +14,19 @@ import AgreementTermsContent from "./components/AgreementTermsContent";
 import SignaturePad from "./components/SignaturePad";
 import SignedScreenshotPreview from "./components/SignedScreenshotPreview";
 
+async function fileToBase64(file: File): Promise<{ base64: string; dataUrl: string }> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      const base64 = dataUrl.includes(",") ? dataUrl.split(",")[1] : dataUrl;
+      resolve({ base64, dataUrl });
+    };
+    reader.onerror = () => reject(new Error("Failed to read working proof document"));
+    reader.readAsDataURL(file);
+  });
+}
+
 function AdminAgreementContent() {
   const searchParams = useSearchParams();
 
@@ -164,7 +177,10 @@ function AdminAgreementContent() {
     setLocked(true);
 
     try {
-      // 1. Wait a tick for React to render locked state with signature image and timestamp
+      // 1. Freshly read doctor working proof file as base64 and data URL
+      const proofData = await fileToBase64(proofFile);
+
+      // 2. Wait a tick for React to render locked state with signature image and timestamp
       await new Promise((r) => setTimeout(r, 120));
 
       const agreementContainer = containerRef.current || document.getElementById("agreement-container");
@@ -172,7 +188,7 @@ function AdminAgreementContent() {
         throw new Error("Agreement document container element was not found");
       }
 
-      // 2. Capture the entire signed agreement page as a crisp high-res screenshot
+      // 3. Capture the entire signed agreement page as a crisp high-res screenshot
       const screenshot = await captureAgreementScreenshot(
         agreementContainer,
         fullName.trim(),
@@ -187,8 +203,10 @@ function AdminAgreementContent() {
 
       const cleanName = fullName.trim().replace(/\s+/g, "_");
       const screenshotFileName = `${cleanName}_Signed_Admin_Agreement.png`;
+      const proofDocName = proofFileName || `${cleanName}_Doctor_Working_Proof.pdf`;
 
-      // 3. Build FormData payload for /admin-agreement/apply
+      // 4. Build FormData payload for /admin-agreement/apply
+      // Separate doctor working proof (resume/document) and agreement screenshot
       const formData = new FormData();
       formData.append("fullName", fullName.trim());
       formData.append("email", email.trim());
@@ -198,34 +216,42 @@ function AdminAgreementContent() {
       formData.append("experience", designation.trim());
 
       const structuredMessage = `=====================================================
-ULTIMATEHEALTH - ADMIN & MODERATOR AGREEMENT
+ULTIMATEHEALTH - ADMIN & MODERATOR VERIFICATION
 =====================================================
 Applicant: ${fullName.trim()}
 Email: ${email.trim()}
 Phone: ${phone.trim() || "N/A"}
 Designation: ${designation.trim()}
 Signed Timestamp: ${ts}
-Agreement Document: ${screenshotFileName} (Official Page Screenshot)
-${proofFileName ? `Doctor Working Proof: ${proofFileName}` : ""}
+
+DOCUMENTS ATTACHED (2 SEPARATE FILES):
+1. Candidate Working Proof: ${proofDocName} (Uploaded PDF Credential)
+2. Signed Agreement: ${screenshotFileName} (Official Page Screenshot PNG)
 
 TERMS ACCEPTED:
 [X] Core Clinical Standards: Educational guidance only, strict non-diagnostic boundary
 [X] Professional Conduct: Objective moderation & community safety
 [X] Patient Confidentiality: No unauthorized sharing of user data
-[X] Digital Signature Stamped & Logged via Page Screenshot
+[X] Digital Signature Stamped & Certified via Page Screenshot
 =====================================================`;
       formData.append("message", structuredMessage);
 
-      // Attach the verified agreement page screenshot image as "resume"
-      formData.append("resume", screenshot.blob, screenshotFileName);
+      // Attach doctor's working proof document as primary candidate credentials
+      formData.append("resume", proofFile, proofDocName);
+      formData.append("proof", proofFile, proofDocName);
+      formData.append("workProof", proofFile, proofDocName);
+      formData.append("workingProof", proofFile, proofDocName);
+      formData.append("document", proofFile, proofDocName);
+      formData.append("proofFile", proofFile, proofDocName);
 
-      // Also attach the doctor's uploaded proof document if present
-      if (proofFile) {
-        formData.append("proof", proofFile, proofFileName || "Doctor_Working_Proof.pdf");
-        formData.append("document", proofFile, proofFileName || "Doctor_Working_Proof.pdf");
-      }
+      // Attach signed agreement page screenshot separately
+      formData.append("agreement", screenshot.blob, screenshotFileName);
+      formData.append("screenshot", screenshot.blob, screenshotFileName);
+      formData.append("agreementScreenshot", screenshot.blob, screenshotFileName);
+      formData.append("agreementFile", screenshot.blob, screenshotFileName);
+      formData.append("signedAgreement", screenshot.blob, screenshotFileName);
 
-      // 4. Submit directly to /admin-agreement/apply endpoint
+      // 5. Submit directly to /admin-agreement/apply endpoint
       const response = await fetch("https://ultimatehealth.blog/api/admin-agreement/apply", {
         method: "POST",
         body: formData,
@@ -241,30 +267,27 @@ TERMS ACCEPTED:
         );
       }
 
-      // 5. Background notification dispatch (with agreement screenshot and doctor working proof)
-      const cleanProofBase64 = proofFileBase64.includes(",")
-        ? proofFileBase64.split(",")[1]
-        : proofFileBase64;
-
+      // 6. Background notification dispatch with 2 distinctly separated attachments:
+      // Attachment 1: Doctor's Working Proof PDF
+      // Attachment 2: Full Agreement Page Screenshot PNG
       const attachments = [
+        {
+          filename: proofDocName,
+          contentType: "application/pdf",
+          content: proofData.base64,
+          data: proofData.dataUrl,
+          path: proofData.dataUrl,
+          encoding: "base64",
+        },
         {
           filename: screenshotFileName,
           contentType: "image/png",
           content: screenshot.base64,
           data: screenshot.dataUrl,
+          path: screenshot.dataUrl,
           encoding: "base64",
         },
       ];
-
-      if (proofFile && proofFileBase64) {
-        attachments.push({
-          filename: proofFileName || "Doctor_Working_Proof.pdf",
-          contentType: "application/pdf",
-          content: cleanProofBase64,
-          data: proofFileBase64,
-          encoding: "base64",
-        });
-      }
 
       fetch(withBasePath("/api/contact"), {
         method: "POST",
