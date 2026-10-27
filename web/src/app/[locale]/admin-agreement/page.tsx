@@ -20,103 +20,189 @@ type Stroke = Point[];
 const SIGNATURE_STROKE = "#2d3748";
 const SIGNATURE_LINE_WIDTH = 2;
 
-function generateAgreementPdfBase64(
+async function generateCanvasCertificateFallback(
   fullName: string,
   role: string,
   email: string,
+  phone: string,
   timestamp: string,
-  phone?: string
-): string {
-  const sanitize = (str: string) => (str || "").replace(/[()\\]/g, "\\$&");
-  const textCommands = [
-    "BT",
-    "/F2 16 Tf",
-    "50 790 Td",
-    "(ULTIMATEHEALTH - ADMIN & MODERATOR AGREEMENT) Tj",
-    "0 -26 Td",
-    "/F1 9 Tf",
-    `(${sanitize("Generated & Signed on: " + timestamp)}) Tj`,
-    "0 -24 Td",
-    "/F2 11 Tf",
-    "(1. APPLICANT & CREDENTIAL DETAILS) Tj",
-    "0 -16 Td",
-    "/F1 9 Tf",
-    `(${sanitize("Full Legal Name: " + fullName)}) Tj`,
-    "0 -14 Td",
-    `(${sanitize("Designation / Role: " + role)}) Tj`,
-    "0 -14 Td",
-    `(${sanitize("Official Email: " + email)}) Tj`,
-    ...(phone ? ["0 -14 Td", `(${sanitize("Phone: " + phone)}) Tj`] : []),
-    "0 -14 Td",
-    `(${sanitize("Verification Status: Certified & Digitally Signed")}) Tj`,
-    "0 -24 Td",
-    "/F2 11 Tf",
-    "(2. CORE STANDARDS & NON-DIAGNOSTIC BOUNDARY) Tj",
-    "0 -16 Td",
-    "/F1 9 Tf",
-    "(UltimateHealth provides health education and non-diagnostic triage only.) Tj",
-    "0 -14 Td",
-    "(All administrators and moderators agree to strictly maintain these boundaries.) Tj",
-    "0 -14 Td",
-    "(Patient information is strictly confidential and will never be shared without consent.) Tj",
-    "0 -24 Td",
-    "/F2 11 Tf",
-    "(3. PROFESSIONAL CONDUCT & COMMUNITY SAFETY) Tj",
-    "0 -16 Td",
-    "/F1 9 Tf",
-    "(Moderators shall adhere to evidence-based health guidance and objective standards.) Tj",
-    "0 -14 Td",
-    "(All review decisions must be documented, justified, and transparent.) Tj",
-    "0 -24 Td",
-    "/F2 11 Tf",
-    "(4. DIGITAL SIGNATURE & VERIFICATION RECORD) Tj",
-    "0 -16 Td",
-    "/F1 9 Tf",
-    `(${sanitize("Signed by: " + fullName + " (" + role + ")")}) Tj`,
-    "0 -14 Td",
-    `(${sanitize("Timestamp: " + timestamp)}) Tj`,
-    "0 -14 Td",
-    "(Digital ink signature verified and officially archived.) Tj",
-    "ET",
-  ].join("\n");
+  signatureDataUrl: string
+): Promise<{ blob: Blob; dataUrl: string; base64: string }> {
+  return new Promise((resolve) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1200;
+    canvas.height = 1600;
+    const ctx = canvas.getContext("2d")!;
 
-  const contentLen = new TextEncoder().encode(textCommands).length;
+    // Background
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, 1200, 1600);
 
-  let pdf = "%PDF-1.4\n%\xE2\xE3\xCF\xD3\n";
-  const offsets: number[] = [];
+    // Border
+    ctx.strokeStyle = "#4f46e5";
+    ctx.lineWidth = 12;
+    ctx.strokeRect(20, 20, 1160, 1560);
 
-  function addObj(num: number, body: string) {
-    offsets[num] = new TextEncoder().encode(pdf).length;
-    pdf += `${num} 0 obj\n${body}\nendobj\n`;
+    ctx.strokeStyle = "#e0e7ff";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(32, 32, 1136, 1536);
+
+    // Header gradient
+    const grad = ctx.createLinearGradient(0, 36, 1200, 220);
+    grad.addColorStop(0, "#4f46e5");
+    grad.addColorStop(1, "#7c3aed");
+    ctx.fillStyle = grad;
+    ctx.fillRect(34, 34, 1132, 180);
+
+    // Header text
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 32px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("ULTIMATEHEALTH - ADMIN & MODERATOR AGREEMENT", 600, 105);
+    ctx.font = "18px sans-serif";
+    ctx.fillText("Official Certified Reviewer Agreement & Verification Record", 600, 145);
+
+    // Body
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#1e293b";
+
+    let y = 265;
+    const drawSectionTitle = (title: string) => {
+      ctx.fillStyle = "#4f46e5";
+      ctx.font = "bold 21px sans-serif";
+      ctx.fillText(title, 60, y);
+      y += 8;
+      ctx.strokeStyle = "#c7d2fe";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(60, y);
+      ctx.lineTo(1140, y);
+      ctx.stroke();
+      y += 28;
+      ctx.fillStyle = "#1e293b";
+      ctx.font = "16px sans-serif";
+    };
+
+    drawSectionTitle("1. APPLICANT & CREDENTIAL DETAILS");
+    ctx.fillText(`• Full Legal Name: ${fullName}`, 70, y); y += 26;
+    ctx.fillText(`• Designation / Role: ${role}`, 70, y); y += 26;
+    ctx.fillText(`• Official Email: ${email}`, 70, y); y += 26;
+    if (phone) {
+      ctx.fillText(`• Phone Number: ${phone}`, 70, y); y += 26;
+    }
+    ctx.fillText(`• Certified Timestamp: ${timestamp}`, 70, y); y += 26;
+    ctx.fillText(`• Verification Status: Digitally Signed & Officially Archived`, 70, y); y += 40;
+
+    drawSectionTitle("2. CORE CLINICAL STANDARDS & NON-DIAGNOSTIC BOUNDARY");
+    ctx.fillText("• UltimateHealth provides health education, non-diagnostic guidance, and triage only.", 70, y); y += 26;
+    ctx.fillText("• All administrators and moderators agree to strictly maintain professional non-diagnostic boundaries.", 70, y); y += 26;
+    ctx.fillText("• Content review and moderation must be objective, evidence-based, transparent, and respectful.", 70, y); y += 26;
+    ctx.fillText("• Patient confidentiality is strictly maintained; user data is never shared without authorization.", 70, y); y += 40;
+
+    drawSectionTitle("3. PROFESSIONAL CONDUCT & COMMUNITY INTEGRITY");
+    ctx.fillText("• Review submissions thoroughly against verified medical standards and guidelines.", 70, y); y += 26;
+    ctx.fillText("• Provide constructive, clear feedback to authors when revisions or corrections are required.", 70, y); y += 26;
+    ctx.fillText("• Adhere to zero-tolerance policy against bias, misinformation, and misuse of moderation privileges.", 70, y); y += 40;
+
+    drawSectionTitle("4. DIGITAL SIGNATURE & OFFICIAL VERIFICATION RECORD");
+    ctx.fillText(`Applicant Digital Signature — Stamped by: ${fullName} (${role})`, 70, y); y += 24;
+
+    const finalize = () => {
+      // Seal / badge next to signature
+      ctx.strokeStyle = "#16a34a";
+      ctx.lineWidth = 2.5;
+      ctx.strokeRect(580, y, 520, 140);
+      ctx.fillStyle = "#f0fdf4";
+      ctx.fillRect(582, y + 2, 516, 136);
+
+      ctx.fillStyle = "#166534";
+      ctx.font = "bold 19px sans-serif";
+      ctx.fillText("✓ VERIFIED & DIGITALLY ARCHIVED", 605, y + 45);
+      ctx.font = "14px sans-serif";
+      ctx.fillStyle = "#15803d";
+      ctx.fillText(`Signed Timestamp: ${timestamp}`, 605, y + 75);
+      ctx.fillText("Official UltimateHealth Editorial & Review Board Record", 605, y + 105);
+
+      // Footer
+      ctx.fillStyle = "#64748b";
+      ctx.font = "13px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("UltimateHealth Platform • https://ultimatehealth.blog • Official Document ID: UH-AGR-VERIFIED", 600, 1530);
+
+      const dataUrl = canvas.toDataURL("image/png");
+      const base64 = dataUrl.replace(/^data:image\/png;base64,/, "");
+      canvas.toBlob((blob) => {
+        resolve({ blob: blob || new Blob([], { type: "image/png" }), dataUrl, base64 });
+      }, "image/png", 0.95);
+    };
+
+    if (signatureDataUrl) {
+      const sigImg = new Image();
+      sigImg.onload = () => {
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(70, y, 450, 140);
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(71, y + 1, 448, 138);
+        ctx.drawImage(sigImg, 80, y + 10, 430, 120);
+        finalize();
+      };
+      sigImg.onerror = () => {
+        finalize();
+      };
+      sigImg.src = signatureDataUrl;
+    } else {
+      finalize();
+    }
+  });
+}
+
+async function captureAgreementScreenshot(
+  containerEl: HTMLElement,
+  fullName: string,
+  role: string,
+  email: string,
+  phone: string,
+  timestamp: string,
+  signatureDataUrl: string
+): Promise<{ blob: Blob; dataUrl: string; base64: string }> {
+  try {
+    const html2canvasModule = await import("html2canvas");
+    const html2canvas = html2canvasModule.default || html2canvasModule;
+
+    const canvas = await html2canvas(containerEl, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      backgroundColor: "#ffffff",
+      scrollX: 0,
+      scrollY: 0,
+      windowWidth: containerEl.scrollWidth || 1024,
+      onclone: (clonedDoc: Document) => {
+        const clonedContent = clonedDoc.querySelector(".agreement-scroll-content") as HTMLElement | null;
+        if (clonedContent) {
+          clonedContent.style.maxHeight = "none";
+          clonedContent.style.overflow = "visible";
+          clonedContent.style.height = "auto";
+        }
+        const hideElements = clonedDoc.querySelectorAll(".hide-in-agreement-screenshot");
+        hideElements.forEach((el) => {
+          (el as HTMLElement).style.display = "none";
+        });
+      },
+    });
+
+    const dataUrl = canvas.toDataURL("image/png");
+    const base64 = dataUrl.replace(/^data:image\/png;base64,/, "");
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Failed to create blob"))), "image/png", 0.95);
+    });
+
+    return { blob, dataUrl, base64 };
+  } catch (error) {
+    console.warn("html2canvas capture error, utilizing high-resolution canvas certificate fallback:", error);
+    return generateCanvasCertificateFallback(fullName, role, email, phone, timestamp, signatureDataUrl);
   }
-
-  addObj(1, "<< /Type /Catalog /Pages 2 0 R >>");
-  addObj(2, "<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
-  addObj(
-    3,
-    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>"
-  );
-  addObj(4, `<< /Length ${contentLen} >>\nstream\n${textCommands}\nendstream`);
-  addObj(5, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
-  addObj(6, "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>");
-
-  const startxref = new TextEncoder().encode(pdf).length;
-  pdf += "xref\n0 7\n";
-  pdf += "0000000000 65535 f \n";
-  for (let i = 1; i <= 6; i++) {
-    pdf += `${String(offsets[i]).padStart(10, "0")} 00000 n \n`;
-  }
-  pdf += `trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n${startxref}\n%%EOF\n`;
-
-  const bytes = new TextEncoder().encode(pdf);
-  let binary = "";
-  for (let i = 0; i < bytes.length; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  if (typeof window !== "undefined" && typeof window.btoa === "function") {
-    return window.btoa(binary);
-  }
-  return Buffer.from(binary, "binary").toString("base64");
 }
 
 /* ---------- inner component (needs useSearchParams) ---------- */
@@ -143,6 +229,8 @@ function AdminAgreementContent() {
   const [locked, setLocked] = useState(false);
   const [signatureDataUrl, setSignatureDataUrl] = useState<string | null>(null);
   const [signedTimestamp, setSignedTimestamp] = useState<string | null>(null);
+  const [signedScreenshotUrl, setSignedScreenshotUrl] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const strokesRef = useRef<Stroke[]>([]);
@@ -422,25 +510,31 @@ function AdminAgreementContent() {
       if (!response.ok) throw new Error(data.message || "Upload failed");
       */
 
-      // 1. Generate the signed agreement PDF as base64
-      const agreementPdfBase64 = generateAgreementPdfBase64(
+      // 1. Wait a tick for React DOM to render locked state with signature image and timestamp
+      await new Promise((r) => setTimeout(r, 120));
+
+      const agreementContainer = containerRef.current || document.getElementById("agreement-container");
+      if (!agreementContainer) {
+        throw new Error("Agreement document container element was not found");
+      }
+
+      // 2. Capture the entire signed agreement page as a crisp high-res screenshot
+      const screenshot = await captureAgreementScreenshot(
+        agreementContainer,
         fullName.trim(),
-        designation.trim(),
+        designation.trim() || "Doctor/Medical Reviewer",
         email.trim(),
+        phone.trim(),
         ts,
-        phone.trim()
+        dataUrl
       );
 
-      // Convert base64 to binary Blob for multipart/form-data upload
-      const byteChars = atob(agreementPdfBase64);
-      const byteNumbers = new Uint8Array(byteChars.length);
-      for (let i = 0; i < byteChars.length; i++) {
-        byteNumbers[i] = byteChars.charCodeAt(i);
-      }
-      const agreementBlob = new Blob([byteNumbers], { type: "application/pdf" });
-      const cleanName = fullName.trim().replace(/\s+/g, "_");
+      setSignedScreenshotUrl(screenshot.dataUrl);
 
-      // 2. Build FormData payload for /admin-agreement/apply
+      const cleanName = fullName.trim().replace(/\s+/g, "_");
+      const screenshotFileName = `${cleanName}_Signed_Admin_Agreement.png`;
+
+      // 3. Build FormData payload for /admin-agreement/apply
       const formData = new FormData();
       formData.append("fullName", fullName.trim());
       formData.append("email", email.trim());
@@ -454,26 +548,30 @@ ULTIMATEHEALTH - ADMIN & MODERATOR AGREEMENT
 =====================================================
 Applicant: ${fullName.trim()}
 Email: ${email.trim()}
+Phone: ${phone.trim() || "N/A"}
 Designation: ${designation.trim()}
 Signed Timestamp: ${ts}
+Agreement Document: ${screenshotFileName} (Official Page Screenshot)
 ${proofFileName ? `Doctor Working Proof: ${proofFileName}` : ""}
 
 TERMS ACCEPTED:
 [X] Core Clinical Standards: Educational guidance only, strict non-diagnostic boundary
 [X] Professional Conduct: Objective moderation & community safety
 [X] Patient Confidentiality: No unauthorized sharing of user data
-[X] Digital Signature Stamped & Logged
+[X] Digital Signature Stamped & Logged via Page Screenshot
 =====================================================`;
       formData.append("message", structuredMessage);
 
-      // Attach the signed agreement PDF as "resume" (as defined in Swagger for post_admin_agreement_apply)
-      formData.append(
-        "resume",
-        agreementBlob,
-        `${cleanName}_Signed_Admin_Agreement.pdf`
-      );
+      // Attach the verified agreement page screenshot image as "resume"
+      formData.append("resume", screenshot.blob, screenshotFileName);
 
-      // 3. Submit directly to /admin-agreement/apply endpoint
+      // Also attach the doctor's uploaded proof document if present
+      if (proofFile) {
+        formData.append("proof", proofFile, proofFileName || "Doctor_Working_Proof.pdf");
+        formData.append("document", proofFile, proofFileName || "Doctor_Working_Proof.pdf");
+      }
+
+      // 4. Submit directly to /admin-agreement/apply endpoint
       const response = await fetch("https://ultimatehealth.blog/api/admin-agreement/apply", {
         method: "POST",
         body: formData,
@@ -489,17 +587,17 @@ TERMS ACCEPTED:
         );
       }
 
-      // 4. Background notification dispatch (with both agreement & doctor working proof if uploaded)
+      // 5. Background notification dispatch (with agreement screenshot and doctor working proof)
       const cleanProofBase64 = proofFileBase64.includes(",")
         ? proofFileBase64.split(",")[1]
         : proofFileBase64;
 
       const attachments: Array<{ filename: string; contentType: string; content: string; data: string; encoding: string }> = [
         {
-          filename: `${cleanName}_Admin_Agreement.pdf`,
-          contentType: "application/pdf",
-          content: agreementPdfBase64,
-          data: `data:application/pdf;base64,${agreementPdfBase64}`,
+          filename: screenshotFileName,
+          contentType: "image/png",
+          content: screenshot.base64,
+          data: screenshot.dataUrl,
           encoding: "base64",
         },
       ];
@@ -521,7 +619,8 @@ TERMS ACCEPTED:
           name: fullName.trim(),
           email: email.trim(),
           subject: `Doctor Verification Application: ${fullName.trim()} - ${designation.trim()}`,
-          message: structuredMessage
+          message: structuredMessage,
+          attachments,
         }),
       }).catch(() => {
         // Non-blocking notification
@@ -555,7 +654,8 @@ TERMS ACCEPTED:
   /* ---------- render ---------- */
   return (
     <Section as="div" style={css.body}>
-      <PageWrapper as="div" style={css.container}>
+      <PageWrapper as="div">
+        <div ref={containerRef} id="agreement-container" style={css.container}>
 
         {/* Header */}
         <div style={css.header}>
@@ -565,7 +665,7 @@ TERMS ACCEPTED:
         </div>
 
         {/* Agreement content */}
-        <div style={css.content}>
+        <div className="agreement-scroll-content" style={css.content}>
           <h2 style={css.h2}>Welcome to the UltimateHealth Review Team</h2>
           <p style={css.p}>
             Thank you for joining our mission to provide high-quality, verified health content to our community.
@@ -894,7 +994,7 @@ TERMS ACCEPTED:
 
               {!locked && (
                 <div style={{ display: "flex", gap: 10, marginTop: 10, alignItems: "center", flexWrap: "wrap" as const }}>
-                  <button type="button" id="clearBtn" onClick={clearSignature} style={css.btnClear}>
+                  <button type="button" id="clearBtn" className="hide-in-agreement-screenshot" onClick={clearSignature} style={css.btnClear}>
                     Clear Signature
                   </button>
                   <span style={{ fontSize: 12, color: "#718096", fontStyle: "italic" }}>
@@ -937,7 +1037,7 @@ TERMS ACCEPTED:
 
           {/* Buttons */}
           {!locked && (
-            <div style={css.buttonGroup}>
+            <div className="hide-in-agreement-screenshot" style={css.buttonGroup}>
               <button
                 id="acceptBtn"
                 disabled={!canAccept || loading}
@@ -968,6 +1068,56 @@ TERMS ACCEPTED:
               {message.text}
             </div>
           )}
+
+          {/* Signed Agreement Page Screenshot Preview & Download */}
+          {signedScreenshotUrl && (
+            <div style={{ marginTop: 24, padding: 20, background: "#f8fafc", border: "1px solid #cbd5e1", borderRadius: 12 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12, marginBottom: 14 }}>
+                <div>
+                  <h4 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 700, color: "#1e293b" }}>
+                    📸 Verified Agreement Page Screenshot
+                  </h4>
+                  <p style={{ margin: 0, fontSize: 13, color: "#64748b" }}>
+                    Captured and digitally stamped with your verified signature. Attached directly to your application.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const a = document.createElement("a");
+                    a.href = signedScreenshotUrl;
+                    a.download = `${fullName.trim().replace(/\s+/g, "_")}_Signed_Admin_Agreement.png`;
+                    a.click();
+                  }}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 8,
+                    padding: "10px 18px",
+                    background: "#0d9488",
+                    color: "#ffffff",
+                    border: "none",
+                    borderRadius: 8,
+                    fontWeight: 600,
+                    fontSize: 13,
+                    cursor: "pointer",
+                    boxShadow: "0 2px 6px rgba(13, 148, 136, 0.25)",
+                  }}
+                >
+                  📥 Download Agreement Screenshot (PNG)
+                </button>
+              </div>
+              <div style={{ maxHeight: 380, overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: 8, background: "#ffffff", padding: 10, textAlign: "center" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={signedScreenshotUrl}
+                  alt="Official Signed Admin Agreement Screenshot"
+                  style={{ maxWidth: "100%", height: "auto", borderRadius: 6, boxShadow: "0 4px 12px rgba(0,0,0,0.08)" }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
         </div>
       </PageWrapper>
     </Section>
