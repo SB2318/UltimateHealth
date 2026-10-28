@@ -125,8 +125,8 @@ function useInfiniteSliderReset(
  * full-screen preview. Interactive, so it stays a client component.
  */
 export default function ScreenshotGallery() {
-  const [userSliderOpen, setUserSliderOpen] = useState(true);
-  const [adminSliderOpen, setAdminSliderOpen] = useState(false);
+  const [adminSliderOpen, setAdminSliderOpen] = useState(true);
+  const [userSliderOpen, setUserSliderOpen] = useState(false);
   const [screenshotModal, setScreenshotModal] = useState(false);
   const [currentScreenshot, setCurrentScreenshot] = useState(0);
 
@@ -137,10 +137,10 @@ export default function ScreenshotGallery() {
   const startAutoSlide = useCallback(() => {
     if (autoSlideTimerRef.current) clearInterval(autoSlideTimerRef.current);
     autoSlideTimerRef.current = setInterval(() => {
-      moveSlider(userSliderRef, 1);
       if (adminSliderOpen) moveSlider(adminSliderRef, 1);
+      if (userSliderOpen) moveSlider(userSliderRef, 1);
     }, 3000);
-  }, [adminSliderOpen]);
+  }, [adminSliderOpen, userSliderOpen]);
 
   const handleManualSlide = useCallback(
     (ref: RefObject<HTMLDivElement | null>, direction: number) => {
@@ -267,6 +267,44 @@ export default function ScreenshotGallery() {
           </div>
 
           <div className="screenshot-details">
+            <div className="screenshot-summary" onClick={() => setAdminSliderOpen((o) => !o)} role="button" tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setAdminSliderOpen((o) => !o); }}>
+              <i className={`fas fa-caret-${adminSliderOpen ? 'down' : 'right'}`} style={{ color: "var(--primary)", marginRight: "8px" }} aria-hidden="true" /> UltimateHealth Admin
+            </div>
+            {adminSliderOpen && (
+              <div className="screenshot-slider-container">
+                <div className="screenshots-wrapper" ref={adminSliderRef}>
+                  {extendedAdminScreenshots.map((s, i) => (
+                    <div
+                      key={`admin-${i}`}
+                      className="screenshot-box"
+                      onClick={() => openScreenshotModal(s.src)}
+                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open ${s.caption} screenshot`}
+                    >
+                      <Image
+                        src={withBasePath(s.src)}
+                        alt={s.caption}
+                        fill
+                        unoptimized
+                        sizes="(max-width: 768px) 260px, 300px"
+                        className="screenshot-image"
+                      />
+                      <div className="screenshot-card-caption">{s.caption}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="slider-nav">
+                  <button className="nav-btn" type="button" aria-label="Previous UltimateHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
+                  <button className="nav-btn" type="button" aria-label="Next UltimateHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="screenshot-details">
             <div className="screenshot-summary" onClick={() => setUserSliderOpen((o) => !o)} role="button" tabIndex={0}
               onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setUserSliderOpen((o) => !o); }}>
               <i className={`fas fa-caret-${userSliderOpen ? 'down' : 'right'}`} style={{ color: "var(--primary)", marginRight: "8px" }} aria-hidden="true" /> UltimateHealth App
@@ -301,44 +339,6 @@ export default function ScreenshotGallery() {
                 <div className="slider-nav">
                   <button className="nav-btn" type="button" aria-label="Previous UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
                   <button className="nav-btn" type="button" aria-label="Next UltimateHealth screenshot" onClick={() => handleManualSlide(userSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="screenshot-details">
-            <div className="screenshot-summary" onClick={() => setAdminSliderOpen((o) => !o)} role="button" tabIndex={0}
-              onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setAdminSliderOpen((o) => !o); }}>
-              <i className={`fas fa-caret-${adminSliderOpen ? 'down' : 'right'}`} style={{ color: "var(--primary)", marginRight: "8px" }} aria-hidden="true" /> UHealth Admin App
-            </div>
-            {adminSliderOpen && (
-              <div className="screenshot-slider-container">
-                <div className="screenshots-wrapper" ref={adminSliderRef}>
-                  {extendedAdminScreenshots.map((s, i) => (
-                    <div
-                      key={`admin-${i}`}
-                      className="screenshot-box"
-                      onClick={() => openScreenshotModal(s.src)}
-                      onKeyDown={(e) => handleScreenshotCardKeyDown(e, s.src)}
-                      role="button"
-                      tabIndex={0}
-                      aria-label={`Open ${s.caption} screenshot`}
-                    >
-                      <Image
-                        src={withBasePath(s.src)}
-                        alt={s.caption}
-                        fill
-                        unoptimized
-                        sizes="(max-width: 768px) 260px, 300px"
-                        className="screenshot-image"
-                      />
-                      <div className="screenshot-card-caption">{s.caption}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="slider-nav">
-                  <button className="nav-btn" type="button" aria-label="Previous UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, -1)}><i className="fas fa-chevron-left"></i></button>
-                  <button className="nav-btn" type="button" aria-label="Next UHealth Admin screenshot" onClick={() => handleManualSlide(adminSliderRef, 1)}><i className="fas fa-chevron-right"></i></button>
                 </div>
               </div>
             )}

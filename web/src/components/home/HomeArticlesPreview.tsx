@@ -18,7 +18,9 @@ async function fetchLatestArticles(): Promise<ApiArticle[]> {
     if (!res.ok) return [];
     const data = await res.json();
     const articles: ApiArticle[] = data.articles ?? (Array.isArray(data) ? data : []);
-    return articles.slice(0, 6);
+    return articles
+      .filter((a) => (!a.status || a.status === "published") && !a.is_removed)
+      .slice(0, 6);
   } catch {
     return [];
   }

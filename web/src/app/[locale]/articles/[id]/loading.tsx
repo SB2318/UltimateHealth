@@ -2,118 +2,58 @@
  * Streaming skeleton for /articles/[id] route.
  * Shown immediately when navigating to an article while the server
  * fetches article data and HTML content.
- * Fully theme-adaptive (Light mode default, Dark mode supported).
+ * Matches ArticlePageClient layout 1:1 to guarantee zero layout shift.
  */
 export default function ArticleDetailLoading() {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "var(--explorer-bg, #f8fafc)",
-        color: "var(--explorer-text-primary, #0f172a)",
-        maxWidth: 800,
-        margin: "0 auto",
-        padding: "80px 24px 64px",
-      }}
-    >
-      {/* Back link */}
-      <div
-        className="skeleton-bar"
-        style={{
-          width: 100,
-          height: 16,
-          borderRadius: 6,
-          marginBottom: 40,
-        }}
-      />
-
-      {/* Tags */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
-        {[60, 80, 50].map((w, i) => (
-          <div
-            key={i}
-            style={{
-              width: w,
-              height: 22,
-              borderRadius: 99,
-              background: "rgba(13,148,136,0.12)",
-              animation: "skeleton-pulse 1.4s ease-in-out infinite",
-            }}
-          />
-        ))}
+    <div className="min-h-screen w-full bg-[#f8fafc] dark:bg-[#0c0c14] text-slate-800 dark:text-[#f1f5f9] flex flex-col">
+      {/* ── Sticky top navigation bar skeleton (identical height and alignment) ── */}
+      <div className="sticky top-0 z-50 w-full bg-white dark:bg-[#0c0c14] border-b border-slate-200 dark:border-[#252538] shadow-xs dark:shadow-md">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
+          {/* Back button skeleton */}
+          <div className="w-24 h-9 rounded-xl bg-slate-200 dark:bg-slate-800/80 animate-pulse" />
+          {/* Right controls skeleton */}
+          <div className="flex items-center gap-2">
+            <div className="w-20 h-8 rounded-lg bg-slate-200 dark:bg-slate-800/80 animate-pulse" />
+            <div className="w-16 h-8 rounded-lg bg-slate-200 dark:bg-slate-800/80 animate-pulse" />
+            <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-800/80 animate-pulse" />
+          </div>
+        </div>
       </div>
 
-      {/* Title */}
-      <div
-        className="skeleton-bar"
-        style={{
-          height: 40,
-          borderRadius: 8,
-          marginBottom: 12,
-        }}
-      />
-      <div
-        className="skeleton-bar"
-        style={{
-          height: 40,
-          width: "70%",
-          borderRadius: 8,
-          marginBottom: 24,
-        }}
-      />
+      {/* ── Hero section skeleton (identical top spacing and column width) ── */}
+      <div className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 text-center">
+        {/* Category badge skeleton */}
+        <div className="inline-block w-32 h-6 rounded-full bg-teal-100 dark:bg-teal-950/60 animate-pulse mb-4 mx-auto" />
 
-      {/* Meta row */}
-      <div style={{ display: "flex", gap: 16, marginBottom: 40 }}>
-        {[120, 80, 100].map((w, i) => (
-          <div
-            key={i}
-            className="skeleton-bar"
-            style={{
-              width: w,
-              height: 14,
-              borderRadius: 6,
-            }}
-          />
-        ))}
+        {/* Title skeleton */}
+        <div className="w-4/5 h-10 sm:h-12 rounded-lg bg-slate-200 dark:bg-slate-800/80 animate-pulse mx-auto mb-3" />
+        <div className="w-3/5 h-10 sm:h-12 rounded-lg bg-slate-200 dark:bg-slate-800/80 animate-pulse mx-auto mb-4" />
+
+        {/* Meta row skeleton */}
+        <div className="flex items-center justify-center gap-4 mt-2 mb-4">
+          <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800/80 animate-pulse" />
+          <div className="w-32 h-4 rounded bg-slate-200 dark:bg-slate-800/80 animate-pulse" />
+          <div className="w-24 h-4 rounded bg-slate-200 dark:bg-slate-800/80 animate-pulse" />
+        </div>
+
+        {/* Listen CTA skeleton */}
+        <div className="w-44 h-10 rounded-full bg-slate-200 dark:bg-slate-800/80 animate-pulse mx-auto mb-6" />
+
+        {/* Hero image skeleton */}
+        <div className="w-full aspect-[16/9] md:aspect-[21/9] max-h-[460px] rounded-2xl bg-slate-200 dark:bg-slate-800/80 animate-pulse mb-8" />
+
+        {/* Body content skeleton */}
+        <div className="space-y-3 pb-24 text-left">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-4 rounded bg-slate-200 dark:bg-slate-800/80 animate-pulse"
+              style={{ width: i % 4 === 3 ? "60%" : "100%" }}
+            />
+          ))}
+        </div>
       </div>
-
-      {/* Hero image */}
-      <div
-        className="skeleton-bar"
-        style={{
-          aspectRatio: "16/9",
-          borderRadius: 16,
-          marginBottom: 40,
-        }}
-      />
-
-      {/* Body lines */}
-      {Array.from({ length: 12 }).map((_, i) => (
-        <div
-          key={i}
-          className="skeleton-bar"
-          style={{
-            height: 16,
-            width: i % 4 === 3 ? "55%" : "100%",
-            borderRadius: 6,
-            marginBottom: 12,
-          }}
-        />
-      ))}
-
-      <style>{`
-        .skeleton-bar {
-          background: rgba(0, 0, 0, 0.06);
-          animation: skeleton-pulse 1.4s ease-in-out infinite;
-        }
-        html.dark .skeleton-bar {
-          background: rgba(255, 255, 255, 0.08);
-        }
-        @keyframes skeleton-pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-      `}</style>
     </div>
   );
 }

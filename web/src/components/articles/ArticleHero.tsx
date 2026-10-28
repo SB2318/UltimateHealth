@@ -1,4 +1,3 @@
-
 import type { Article } from "@/types/article";
 import ArticleMeta from "./ArticleMeta";
 import ListenTriggerButton from "./listen/ListenTriggerButton";
@@ -16,16 +15,14 @@ interface ArticleHeroProps {
  * Hero section for an article detail page.
  *
  * Layout (desktop & mobile — single centered column):
+ *   [Category badge — centered]
  *   [H1 Title — centered]
- *   [Subtitle — centered]
+ *   [Subtitle — centered (if provided)]
  *   [Author • Date • Reading time — centered]
+ *   [Listen to Article CTA — centered]
  *   [Hero image — full column width, rounded]
  *   [Tags — centered, wrapping chips with generous gap]
  *   [Divider]
- *
- * The category badge has been intentionally removed from here
- * because it was overlapping with the sticky navigation header.
- * Category is still shown inside the breadcrumb trail.
  */
 export default function ArticleHero({
   article,
@@ -36,35 +33,38 @@ export default function ArticleHero({
   locale,
 }: ArticleHeroProps) {
   return (
-    <header className="article-hero w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-2 text-center">
+    <header className="article-hero w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-4 text-center">
+      {/* ── Category Badge (Centered) ── */}
+      {article.category && (
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800/60 mb-4 shadow-sm transition-transform hover:scale-105 select-none">
+          <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" aria-hidden="true" />
+          <span>{article.category}</span>
+        </div>
+      )}
 
       {/* ── Title ── */}
       <h1
         id="article-hero-title"
-        style={{ color: "var(--site-heading, #0f172a)" }}
-        className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white leading-[1.2] tracking-tight mb-6 mx-auto text-center"
+        className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white leading-[1.2] tracking-tight mb-4 mx-auto text-center"
       >
         {article.title}
       </h1>
 
       {/* ── Subtitle (Centered) ── */}
       {article.subtitle && (
-        <p
-          style={{ color: "var(--vice-muted, #475569)" }}
-          className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed mb-6 font-light max-w-[720px] mx-auto text-center"
-        >
+        <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed mb-4 font-normal max-w-[720px] mx-auto text-center">
           {article.subtitle}
         </p>
       )}
 
-      {/* ── Author, date, reading time (Centered) with comfortable vertical spacing ── */}
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "28px", marginBottom: "20px" }}>
+      {/* ── Author, date, reading time (Centered) ── */}
+      <div className="flex justify-center mt-2 mb-4">
         <ArticleMeta article={article} />
       </div>
 
       {/* ── Listen to Article CTA ── */}
       {onListenToggle && (
-        <div style={{ display: "flex", justifyContent: "center", marginBottom: "32px" }}>
+        <div className="flex justify-center mb-6">
           <ListenTriggerButton
             variant="hero"
             isPlaying={Boolean(isListening)}

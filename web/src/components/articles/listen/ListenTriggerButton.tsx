@@ -29,46 +29,15 @@ export default function ListenTriggerButton({
         type="button"
         onClick={onClick}
         aria-label={isPlaying ? strings.paused : strings.listenToArticle}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "10px",
-          padding: "10px 22px",
-          borderRadius: "50px",
-          fontSize: "0.875rem",
-          fontWeight: 700,
-          background: isPlaying
-            ? "rgba(13, 148, 136, 0.12)"
-            : "var(--explorer-surface, #f1f5f9)",
-          color: isPlaying ? "#0d9488" : "var(--explorer-text-primary, #0f172a)",
-          border: isPlaying
-            ? "1px solid #0d9488"
-            : "1px solid var(--explorer-border, #e2e8f0)",
-          boxShadow: isPlaying
-            ? "0 0 20px rgba(13, 148, 136, 0.2)"
-            : "0 4px 14px rgba(0, 0, 0, 0.06)",
-          cursor: "pointer",
-          transition: "all 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-          whiteSpace: "nowrap",
-        }}
-        onMouseEnter={(e) => {
-          if (!isPlaying) {
-            e.currentTarget.style.borderColor = "#0d9488";
-            e.currentTarget.style.color = "#0d9488";
-            e.currentTarget.style.transform = "translateY(-1px)";
-          }
-        }}
-        onMouseLeave={(e) => {
-          if (!isPlaying) {
-            e.currentTarget.style.borderColor = "var(--explorer-border, #e2e8f0)";
-            e.currentTarget.style.color = "var(--explorer-text-primary, #0f172a)";
-            e.currentTarget.style.transform = "translateY(0)";
-          }
-        }}
+        className={`inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md select-none ${
+          isPlaying
+            ? "bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border border-teal-500 dark:border-teal-400 shadow-[0_0_20px_rgba(13,148,136,0.25)]"
+            : "bg-white dark:bg-[#141424] text-slate-800 dark:text-slate-100 border border-slate-200 dark:border-[#2a2a44] hover:border-teal-500 dark:hover:border-teal-400 hover:text-teal-600 dark:hover:text-teal-400 hover:-translate-y-0.5"
+        }`}
       >
         {isPlaying ? (
           <>
-            <div style={{ display: "flex", alignItems: "center", gap: "2px", height: "14px" }}>
+            <div className="flex items-center gap-0.5 h-3.5" aria-hidden="true">
               <span
                 style={{
                   width: "3px",
@@ -101,18 +70,10 @@ export default function ListenTriggerButton({
           </>
         ) : (
           <>
-            <Headphones size={16} className="text-[#0d9488] shrink-0" />
+            <Headphones size={17} className="text-teal-600 dark:text-teal-400 shrink-0" />
             <span>{strings.listenToArticle}</span>
             {durationStr && (
-              <span
-                style={{
-                  fontSize: "0.75rem",
-                  color: "var(--explorer-text-secondary, #64748b)",
-                  padding: "2px 8px",
-                  background: "var(--explorer-surface, rgba(0,0,0,0.04))",
-                  borderRadius: "10px",
-                }}
-              >
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-[#202038] text-slate-600 dark:text-slate-300 ml-1">
                 {durationStr}
               </span>
             )}
@@ -129,52 +90,27 @@ export default function ListenTriggerButton({
       onClick={onClick}
       aria-label={isPlaying ? strings.paused : strings.listen}
       title={isPlaying ? strings.paused : strings.listen}
-      style={{
-        height: "32px",
-        padding: "0 12px",
-        borderRadius: "8px",
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "6px",
-        fontSize: "0.75rem",
-        fontWeight: 700,
-        background: isPlaying
-          ? "rgba(13, 148, 136, 0.12)"
-          : "var(--explorer-surface, #f1f5f9)",
-        color: isPlaying ? "#0d9488" : "var(--explorer-text-primary, #475569)",
-        border: isPlaying
-          ? "1px solid rgba(13, 148, 136, 0.5)"
-          : "1px solid var(--explorer-border, #e2e8f0)",
-        cursor: "pointer",
-        transition: "all 0.15s ease",
-        whiteSpace: "nowrap",
-      }}
-      onMouseEnter={(e) => {
-        if (!isPlaying) {
-          e.currentTarget.style.borderColor = "#0d9488";
-          e.currentTarget.style.color = "#0d9488";
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (!isPlaying) {
-          e.currentTarget.style.borderColor = "var(--explorer-border, #e2e8f0)";
-          e.currentTarget.style.color = "var(--explorer-text-primary, #475569)";
-        }
-      }}
+      className={`h-8 px-3 rounded-lg inline-flex items-center gap-1.5 text-xs font-bold transition-all duration-150 cursor-pointer select-none ${
+        isPlaying
+          ? "bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border border-teal-500/50"
+          : isPaused
+          ? "bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border border-amber-300 dark:border-amber-700/50"
+          : "bg-slate-100 dark:bg-[#141422] text-slate-700 dark:text-slate-300 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-slate-200 dark:hover:bg-[#1f1f33] border border-slate-200 dark:border-[#28283e] hover:border-teal-500/40"
+      }`}
     >
       {isPlaying ? (
         <>
-          <Volume2 size={13} className="text-[#0d9488] animate-pulse shrink-0" />
-          <span style={{ color: "#0d9488" }}>{strings.playing}</span>
+          <Volume2 size={13} className="text-teal-600 dark:text-teal-400 animate-pulse shrink-0" />
+          <span className="text-teal-700 dark:text-teal-300">{strings.playing}</span>
         </>
       ) : isPaused ? (
         <>
           <Headphones size={13} className="text-amber-500 shrink-0" />
-          <span style={{ color: "#f59e0b" }}>{strings.paused}</span>
+          <span className="text-amber-600 dark:text-amber-400">{strings.paused}</span>
         </>
       ) : (
         <>
-          <Headphones size={13} className="text-[#0d9488] shrink-0" />
+          <Headphones size={13} className="text-teal-600 dark:text-teal-400 shrink-0" />
           <span>{strings.listen}</span>
         </>
       )}

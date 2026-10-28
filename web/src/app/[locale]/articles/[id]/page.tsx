@@ -52,7 +52,9 @@ interface ApiArticleDetail {
   language: string;
   publishedDate: string;
   lastUpdated: string;
-  content: string; // filename, e.g. "file_3u2hg8bneh.html"
+  content: string;
+  status?: string;
+  is_removed?: boolean;
 }
 
 function resolveImageUrl(
@@ -134,6 +136,7 @@ async function fetchArticle(
     if (res.ok) {
       const data = await res.json();
       const detail: ApiArticleDetail = (data && data.article) ? data.article : data;
+      if (detail && (detail.status && detail.status !== "published")) return null;
       if (detail && (detail.pb_recordId || detail._id)) {
         return {
           article: mapApiToArticle(detail),
@@ -152,6 +155,7 @@ async function fetchArticle(
     if (res.ok) {
       const data = await res.json();
       const detail: ApiArticleDetail = (data && data.article) ? data.article : data;
+      if (detail && (detail.status && detail.status !== "published")) return null;
       if (detail && (detail._id || detail.pb_recordId)) {
         return {
           article: mapApiToArticle(detail),

@@ -61,7 +61,9 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
   // Extract all distinct languages available in the articles list with counts
   const languageStats = useMemo(() => {
     const counts: Record<string, number> = {};
-    initialArticles.forEach((article) => {
+    initialArticles
+      .filter((a) => (!a.status || a.status === "published") && !a.is_removed)
+      .forEach((article) => {
       const lang = article.language || "en-IN";
       counts[lang] = (counts[lang] || 0) + 1;
     });
@@ -82,6 +84,8 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
     const query = searchQuery.trim().toLowerCase();
 
     return initialArticles.filter((article) => {
+      if (article.status && article.status !== "published") return false;
+      if (article.is_removed) return false;
       // Language match
       if (selectedLanguage !== "all") {
         const articleLang = (article.language || "en-IN").toLowerCase();

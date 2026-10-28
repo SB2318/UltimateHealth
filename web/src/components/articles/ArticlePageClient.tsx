@@ -207,7 +207,7 @@ export default function ArticlePageClient({
     if (!hero) return;
     const observer = new IntersectionObserver(
       ([entry]) => setHeroVisible(entry.isIntersecting),
-      { threshold: 0.1 }
+      { rootMargin: "-64px 0px 0px 0px", threshold: 0 }
     );
     observer.observe(hero);
     return () => observer.disconnect();
@@ -227,33 +227,30 @@ export default function ArticlePageClient({
         }
       >
         {/* ── Sticky top navigation bar ── */}
-        <div className="sticky top-0 z-50 w-full bg-white/95 dark:bg-[#0c0c14]/95 backdrop-blur-md border-b border-slate-200 dark:border-[#252538] print:hidden shadow-sm dark:shadow-lg dark:shadow-black/40">
-          <div className="relative w-full max-w-[880px] mx-auto px-6 sm:px-8 lg:px-10 h-16 flex items-center justify-between gap-4">
-            {/* ← Back to articles button with generous padding and bold clear icon */}
-            <Link
-              href={articlesUrl}
-              className="inline-flex items-center gap-2.5 pl-3.5 pr-4 py-2 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#141424] hover:bg-slate-200 dark:hover:bg-[#1e1e36] border border-slate-200 dark:border-[#2a2a44] hover:border-slate-300 dark:hover:border-[#3e3e62] transition-all duration-150 group shrink-0 z-10 shadow-sm"
-              aria-label="Back to all articles"
-            >
-              <ArrowLeft
-                size={18}
-                strokeWidth={2.5}
-                className="text-[#0d9488] dark:text-[#2dd4bf] transition-transform duration-150 group-hover:-translate-x-1"
-                aria-hidden="true"
-              />
-              <span className="tracking-wide font-medium">Articles</span>
-            </Link>
+        <header className="sticky top-0 z-50 w-full bg-white dark:bg-[#0c0c14] border-b border-slate-200 dark:border-[#252538] print:hidden shadow-xs dark:shadow-md transition-colors">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
+            {/* Left: Back to articles button (anchored left, never shrinks) */}
+            <div className="flex-shrink-0 flex items-center">
+              <Link
+                href={articlesUrl}
+                className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#141424] hover:bg-slate-200 dark:hover:bg-[#1e1e36] border border-slate-200 dark:border-[#2a2a44] hover:border-slate-300 dark:hover:border-[#3e3e62] transition-all duration-150 group shadow-2xs select-none"
+                aria-label="Back to all articles"
+              >
+                <ArrowLeft
+                  size={18}
+                  strokeWidth={2.5}
+                  className="text-[#0d9488] dark:text-[#2dd4bf] transition-transform duration-150 group-hover:-translate-x-1 shrink-0"
+                  aria-hidden="true"
+                />
+                <span className="tracking-wide font-medium">Articles</span>
+              </Link>
+            </div>
 
-            {/* Middle: Category indicator (at top) or Article Title (when scrolled) */}
-            <div className="absolute left-1/2 -translate-x-1/2 max-w-[45%] sm:max-w-[55%] flex items-center justify-center pointer-events-none select-none">
-              {heroVisible ? (
-                <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-medium text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-[#141422] border border-slate-200 dark:border-[#28283e] transition-all duration-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0d9488] dark:bg-[#2dd4bf] animate-pulse" />
-                  <span className="truncate">{article.category || "Health Guide"}</span>
-                </div>
-              ) : (
+            {/* Middle: Article Title (Visible only on desktop md/lg/xl when scrolled, min-w-0 for graceful truncation) */}
+            <div className="hidden md:flex flex-1 min-w-0 justify-center px-4">
+              {!heroVisible && (
                 <p
-                  className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-[#f1f5f9] truncate text-center transition-all duration-300 drop-shadow-sm"
+                  className="text-sm font-semibold text-slate-800 dark:text-[#f1f5f9] truncate text-center max-w-sm lg:max-w-md xl:max-w-lg select-none drop-shadow-xs"
                   title={article.title}
                 >
                   {article.title}
@@ -261,16 +258,18 @@ export default function ArticlePageClient({
               )}
             </div>
 
-            {/* Right-side tools: Listen + Font size toggle + Share button + Theme toggle */}
-            <div className="flex items-center gap-2 shrink-0 z-10">
-              {/* Listen to Article (Quick Header Pill) */}
-              <ListenTriggerButton
-                variant="header"
-                isPlaying={speech.isPlaying}
-                isPaused={speech.isPaused}
-                onClick={speech.togglePlay}
-                locale={currentLocale}
-              />
+            {/* Right: Controls Group (flex-shrink-0, no overlapping, clean responsive layout) */}
+            <div className="flex-shrink-0 flex items-center gap-1.5 sm:gap-2">
+              {/* Listen to Article in header only when scrolled past hero or when playback is active */}
+              {(!heroVisible || speech.isPlaying || speech.isPaused) && (
+                <ListenTriggerButton
+                  variant="header"
+                  isPlaying={speech.isPlaying}
+                  isPaused={speech.isPaused}
+                  onClick={speech.togglePlay}
+                  locale={currentLocale}
+                />
+              )}
 
               {/* Font size segmented switcher */}
               <div
@@ -293,7 +292,7 @@ export default function ArticlePageClient({
                         "w-7 h-7 rounded-md flex items-center justify-center font-bold transition-all duration-150 cursor-pointer",
                         ["text-xs", "text-sm", "text-base"][i],
                         isCurrent
-                          ? "bg-[#0d9488]/15 border border-[#0d9488]/50 text-[#0d9488] dark:bg-[#2dd4bf]/20 dark:border-[#2dd4bf]/60 dark:text-[#2dd4bf] shadow-sm"
+                          ? "bg-[#0d9488]/15 border border-[#0d9488]/50 text-[#0d9488] dark:bg-[#2dd4bf]/20 dark:border-[#2dd4bf]/60 dark:text-[#2dd4bf] shadow-2xs"
                           : "border border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-200/60 dark:hover:bg-[#1f1f33]",
                       ].join(" ")}
                     >
@@ -328,7 +327,7 @@ export default function ArticlePageClient({
               <ModeToggle />
             </div>
           </div>
-        </div>
+        </header>
 
         <main className="w-full">
           {/* ── Hero: title + metadata + listen CTA + image + tags ── */}
@@ -625,10 +624,8 @@ function ArticlePageFooter() {
       }}
     >
       <div
+        className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8"
         style={{
-          maxWidth: "880px",
-          margin: "0 auto",
-          padding: "0 28px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",

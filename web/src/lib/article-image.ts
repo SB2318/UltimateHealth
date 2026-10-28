@@ -46,6 +46,11 @@ export function resolveArticleImageUrl(
           return trimmed.replace(/&amp;/g, "&");
         }
 
+        // Handle backend upload storage filenames (e.g. filename-12345.webp)
+        if (/\.(webp|jpg|jpeg|png|gif|svg)$/i.test(trimmed)) {
+          return `https://ultimatehealth.blog/api/getFile/${trimmed}`;
+        }
+
         // Handle specific known filenames from PocketBase/Backend database
         const lowerRaw = trimmed.toLowerCase();
         if (lowerRaw.includes("yoga")) return HEALTH_FALLBACK_IMAGES.yoga;

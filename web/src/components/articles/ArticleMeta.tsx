@@ -19,7 +19,7 @@ export default function ArticleMeta({ article, className = "" }: ArticleMetaProp
 
   return (
     <div
-      className={`flex flex-wrap items-center justify-center gap-x-6 gap-y-3 py-4 sm:py-5 ${className}`}
+      className={`flex flex-wrap items-center justify-center gap-x-6 gap-y-3 py-3 sm:py-4 ${className}`}
     >
       {/* Author avatar + name/role */}
       <div className="flex items-center gap-3">
@@ -31,35 +31,37 @@ export default function ArticleMeta({ article, className = "" }: ArticleMetaProp
           {article.author.avatarInitials}
         </div>
         <div className="leading-tight text-left">
-          <p className="text-sm font-semibold !text-slate-100" style={{ color: "#f8fafc" }}>
+          <p className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">
             {article.author.name}
           </p>
-          <p className="text-xs !text-slate-400" style={{ color: "#94a3b8" }}>{article.author.role}</p>
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+            {article.author.role}
+          </p>
         </div>
       </div>
 
       {/* Vertical divider (desktop only) */}
       <div
-        className="hidden sm:block h-8 w-px bg-[#252538] flex-shrink-0"
+        className="hidden sm:block h-7 w-px bg-slate-300 dark:bg-slate-700 flex-shrink-0"
         aria-hidden="true"
       />
 
       {/* Publication date */}
-      <div className="flex items-center gap-2 text-sm !text-slate-300" style={{ color: "#cbd5e1" }}>
-        <Calendar size={14} className="text-[#2dd4bf]/80" aria-hidden="true" />
+      <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+        <Calendar size={15} className="text-teal-600 dark:text-teal-400 shrink-0" aria-hidden="true" />
         <time dateTime={article.publishedAt} className="font-medium" suppressHydrationWarning>
           {formattedDate}
         </time>
         {updatedDate && (
-          <span className="text-xs text-slate-500 ml-1" suppressHydrationWarning>
+          <span className="text-xs text-slate-500 dark:text-slate-400 ml-1" suppressHydrationWarning>
             (Updated {updatedDate})
           </span>
         )}
       </div>
 
       {/* Reading time */}
-      <div className="flex items-center gap-2 text-sm !text-slate-300" style={{ color: "#cbd5e1" }}>
-        <Clock size={14} className="text-[#2dd4bf]/80" aria-hidden="true" />
+      <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+        <Clock size={15} className="text-teal-600 dark:text-teal-400 shrink-0" aria-hidden="true" />
         <span className="font-medium">{article.readingTime}</span>
       </div>
     </div>
