@@ -1,15 +1,18 @@
 "use client";
 
-import React, { useState, useMemo, CSSProperties } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import { useTranslations } from "next-intl";
-import { Search, X, Globe, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, X, Globe, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { resolveArticleImageUrl } from "@/lib/article-image";
-import type { ApiArticle } from "@/types/api-article";
+import { getApiUrl } from "@/lib/api";
+import type { ApiArticle, ApiArticlesResponse } from "@/types/api-article";
 
 interface ArticlesExplorerProps {
   initialArticles: ApiArticle[];
+  initialTotalPages?: number;
+  initialTotal?: number;
   locale: string;
 }
 
@@ -49,78 +52,159 @@ function formatLanguageName(code: string): string {
   return code.toUpperCase();
 }
 
-export default function ArticlesExplorer({ initialArticles, locale }: ArticlesExplorerProps) {
+function getVisiblePages(current: number, total: number): (number | string)[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  if (current <= 4) {
+    return [1, 2, 3, 4, 5, "...", total];
+  }
+  if (current >= total - 3) {
+    return [1, "...", total - 4, total - 3, total - 2, total - 1, total];
+  }
+  return [1, "...", current - 1, current, current + 1, "...", total];
+}
+
+export default function ArticlesExplorer({
+  initialArticles,
+  initialTotalPages = 1,
+  initialTotal,
+  locale,
+}: ArticlesExplorerProps) {
   const t = useTranslations("articles");
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchFocused, setSearchFocused] = useState(false);
-  const itemsPerPage = 9;
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Extract all distinct languages available in the articles list with counts
-  const languageStats = useMemo(() => {
-    const counts: Record<string, number> = {};
-    initialArticles
-      .filter((a) => (!a.status || a.status === "published") && !a.is_removed)
-      .forEach((article) => {
-      const lang = article.language || "en-IN";
-      counts[lang] = (counts[lang] || 0) + 1;
-    });
+  const [articles, setArticles] = useState<ApiArticle[]>(initialArticles);
+  const [totalPages, setTotalPages] = useState(initialTotalPages || 1);
+  const [totalCount, setTotalCount] = useState(initialTotal || (initialTotalPages * 9) || initialArticles.length);
 
-    const list = Object.entries(counts).map(([code, count]) => ({
-      code,
-      name: formatLanguageName(code),
-      count,
-    }));
+  const cacheRef = useRef<Record<string, { articles: ApiArticle[]; totalPages: number; total: number }>>({});
 
-    // Sort by count descending
-    list.sort((a, b) => b.count - a.count);
-    return list;
-  }, [initialArticles]);
+  // Debounce search input by 350ms
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery.trim());
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-  // Filter articles by query and language
-  const filteredArticles = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
+  // Sync with initial articles when props change
+  useEffect(() => {
+    setArticles(initialArticles);
+    setTotalPages(initialTotalPages || 1);
+    setTotalCount(initialTotal || (initialTotalPages * 9) || initialArticles.length);
+  }, [initialArticles, initialTotalPages, initialTotal]);
 
-    return initialArticles.filter((article) => {
-      if (article.status && article.status !== "published") return false;
-      if (article.is_removed) return false;
-      // Language match
-      if (selectedLanguage !== "all") {
-        const articleLang = (article.language || "en-IN").toLowerCase();
-        const selected = selectedLanguage.toLowerCase();
-        const matchesExact = articleLang === selected;
-        const matchesPrefix = articleLang.split("-")[0] === selected.split("-")[0];
-        if (!matchesExact && !matchesPrefix) return false;
-      }
+  // Fetch data on page change, search change, or language change
+  useEffect(() => {
+    const isInitialBrowse =
+      currentPage === 1 &&
+      selectedLanguage === "all" &&
+      !debouncedQuery;
 
-      // Search query match
-      if (query) {
-        const titleMatch = article.title?.toLowerCase().includes(query);
-        const descMatch = article.description?.toLowerCase().includes(query);
-        const tagMatch = article.tags?.some((tag) => tag.name?.toLowerCase().includes(query));
-        const authorMatch =
-          article.authorName?.toLowerCase().includes(query) ||
-          article.authorId?.user_name?.toLowerCase().includes(query);
-        if (!titleMatch && !descMatch && !tagMatch && !authorMatch) {
-          return false;
+    if (isInitialBrowse) {
+      setArticles(initialArticles);
+      setTotalPages(initialTotalPages || 1);
+      setTotalCount(initialTotal || (initialTotalPages * 9) || initialArticles.length);
+      setIsLoading(false);
+      return;
+    }
+
+    const isSearch = Boolean(debouncedQuery);
+    const cacheKey = `${isSearch ? `search:${debouncedQuery}` : "browse"}_${selectedLanguage}_${currentPage}`;
+
+    if (cacheRef.current[cacheKey]) {
+      const cached = cacheRef.current[cacheKey];
+      setArticles(cached.articles);
+      setTotalPages(cached.totalPages);
+      setTotalCount(cached.total);
+      setIsLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+    setIsLoading(true);
+    const controller = new AbortController();
+
+    const loadData = async () => {
+      try {
+        let endpoint = "";
+        const langParam = selectedLanguage !== "all" ? `&language=${encodeURIComponent(selectedLanguage)}` : "";
+
+        if (isSearch) {
+          endpoint = `/articles/search?q=${encodeURIComponent(debouncedQuery)}&page=${currentPage}&limit=9${langParam}`;
+        } else {
+          endpoint = `/articles/?page=${currentPage}&limit=9${langParam}`;
+        }
+
+        const url = getApiUrl(endpoint);
+        const res = await fetch(url, { signal: controller.signal });
+
+        if (res.ok) {
+          const data: ApiArticlesResponse = await res.json();
+          if (isMounted) {
+            const list = (data.articles ?? []).filter(
+              (a: ApiArticle) => (!a.status || a.status === "published") && !a.is_removed
+            );
+            const pages = data.totalPages ?? Math.max(1, Math.ceil(list.length / 9));
+            const total = data.total ?? (pages * 9);
+
+            cacheRef.current[cacheKey] = { articles: list, totalPages: pages, total };
+            setArticles(list);
+            setTotalPages(pages);
+            setTotalCount(total);
+          }
+        }
+      } catch (err: any) {
+        if (err.name !== "AbortError") {
+          console.error("Failed to fetch articles:", err);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
         }
       }
+    };
 
-      return true;
+    loadData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [currentPage, debouncedQuery, selectedLanguage, initialArticles, initialTotalPages, initialTotal]);
+
+  // Language options list
+  const languageOptions = useMemo(() => {
+    const defaultCodes = [
+      { code: "all", name: t("allLanguages") || "All Languages" },
+      { code: "en-IN", name: "English" },
+      { code: "hi-IN", name: "हिन्दी (Hindi)" },
+      { code: "bn-IN", name: "বাংলা (Bengali)" },
+      { code: "ta-IN", name: "தமிழ் (Tamil)" },
+      { code: "te-IN", name: "తెలుగు (Telugu)" },
+      { code: "mr-IN", name: "मराठी (Marathi)" },
+    ];
+
+    const seen = new Set(defaultCodes.map((d) => d.code));
+    const extra: { code: string; name: string }[] = [];
+
+    initialArticles.forEach((a) => {
+      const code = a.language || "en-IN";
+      if (!seen.has(code)) {
+        seen.add(code);
+        extra.push({ code, name: formatLanguageName(code) });
+      }
     });
-  }, [initialArticles, searchQuery, selectedLanguage]);
 
-  // Pagination calculation
-  const totalArticles = filteredArticles.length;
-  const totalPages = Math.max(1, Math.ceil(totalArticles / itemsPerPage));
-  const activePage = Math.min(currentPage, totalPages);
-
-  const paginatedArticles = useMemo(() => {
-    const start = (activePage - 1) * itemsPerPage;
-    return filteredArticles.slice(start, start + itemsPerPage);
-  }, [filteredArticles, activePage, itemsPerPage]);
+    return [...defaultCodes, ...extra];
+  }, [initialArticles, t]);
 
   const handleSearchChange = (val: string) => {
     setSearchQuery(val);
@@ -134,6 +218,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
 
   const clearAllFilters = () => {
     setSearchQuery("");
+    setDebouncedQuery("");
     setSelectedLanguage("all");
     setCurrentPage(1);
   };
@@ -145,6 +230,8 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  const activePage = Math.min(currentPage, Math.max(1, totalPages));
 
   return (
     <div style={{ width: "100%" }} id="articles-grid-top">
@@ -200,29 +287,41 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
             }}
           />
 
-          {searchQuery && (
-            <button
-              type="button"
-              onClick={() => handleSearchChange("")}
-              aria-label="Clear search"
-              style={{
-                position: "absolute",
-                right: "14px",
-                top: "50%",
-                transform: "translateY(-50%)",
-                background: "transparent",
-                border: "none",
-                color: "var(--explorer-text-muted, #64748b)",
-                cursor: "pointer",
-                padding: "4px",
-                display: "flex",
-                alignItems: "center",
-                borderRadius: "6px",
-              }}
-            >
-              <X size={18} />
-            </button>
-          )}
+          <div
+            style={{
+              position: "absolute",
+              right: "14px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            {isLoading && (
+              <Loader2 size={18} className="animate-spin text-teal-600" />
+            )}
+
+            {searchQuery && !isLoading && (
+              <button
+                type="button"
+                onClick={() => handleSearchChange("")}
+                aria-label="Clear search"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "var(--explorer-text-muted, #64748b)",
+                  cursor: "pointer",
+                  padding: "4px",
+                  display: "flex",
+                  alignItems: "center",
+                  borderRadius: "6px",
+                }}
+              >
+                <X size={18} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Language Filter Row */}
@@ -254,47 +353,8 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
             <span>{t("filterLanguage")}:</span>
           </div>
 
-          {/* All Languages Tab */}
-          <button
-            type="button"
-            onClick={() => handleLanguageChange("all")}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "8px 16px",
-              borderRadius: "50px",
-              fontSize: "0.82rem",
-              fontWeight: 800,
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-              border: selectedLanguage === "all" ? "1px solid transparent" : "1px solid var(--explorer-border, #e2e8f0)",
-              background:
-                selectedLanguage === "all"
-                  ? "linear-gradient(135deg, #0d9488 0%, #7c3aed 100%)"
-                  : "var(--explorer-bg, #f8fafc)",
-              color: selectedLanguage === "all" ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
-              boxShadow:
-                selectedLanguage === "all" ? "0 4px 16px rgba(13, 148, 136, 0.25)" : "none",
-            }}
-          >
-            <span>{t("allLanguages")}</span>
-            <span
-              style={{
-                fontSize: "0.72rem",
-                fontFamily: "monospace",
-                padding: "2px 7px",
-                borderRadius: "20px",
-                background: selectedLanguage === "all" ? "rgba(255, 255, 255, 0.25)" : "var(--explorer-surface-hover, #f1f5f9)",
-                color: selectedLanguage === "all" ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
-              }}
-            >
-              {initialArticles.length}
-            </span>
-          </button>
-
-          {/* Individual Language Tabs */}
-          {languageStats.map((item) => {
+          {/* Language Tabs */}
+          {languageOptions.map((item) => {
             const isSelected = selectedLanguage === item.code;
             return (
               <button
@@ -311,26 +371,29 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                   fontWeight: 800,
                   cursor: "pointer",
                   transition: "all 0.2s ease",
-                  border: isSelected ? "1px solid #0d9488" : "1px solid var(--explorer-border, #e2e8f0)",
-                  background: isSelected ? "#0d9488" : "var(--explorer-bg, #f8fafc)",
+                  border: isSelected ? "1px solid transparent" : "1px solid var(--explorer-border, #e2e8f0)",
+                  background: isSelected
+                    ? "linear-gradient(135deg, #0d9488 0%, #7c3aed 100%)"
+                    : "var(--explorer-bg, #f8fafc)",
                   color: isSelected ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
                   boxShadow: isSelected ? "0 4px 16px rgba(13, 148, 136, 0.25)" : "none",
                 }}
               >
                 <span>{item.name}</span>
-                <span
-                  style={{
-                    fontSize: "0.72rem",
-                    fontFamily: "monospace",
-                    padding: "2px 7px",
-                    borderRadius: "20px",
-                    background: isSelected ? "rgba(0, 0, 0, 0.2)" : "var(--explorer-surface-hover, #f1f5f9)",
-                    color: isSelected ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
-                    fontWeight: isSelected ? 900 : 700,
-                  }}
-                >
-                  {item.count}
-                </span>
+                {item.code === "all" && (
+                  <span
+                    style={{
+                      fontSize: "0.72rem",
+                      fontFamily: "monospace",
+                      padding: "2px 7px",
+                      borderRadius: "20px",
+                      background: isSelected ? "rgba(255, 255, 255, 0.25)" : "var(--explorer-surface-hover, #f1f5f9)",
+                      color: isSelected ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
+                    }}
+                  >
+                    {totalCount}
+                  </span>
+                )}
               </button>
             );
           })}
@@ -343,9 +406,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          borderBottom: "1px solid var(--explorer-border, #e2e8f0)",
-          paddingBottom: "18px",
-          marginBottom: "36px",
+          marginBottom: "28px",
           flexWrap: "wrap",
           gap: "12px",
         }}
@@ -360,7 +421,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
               fontFamily: '"Orbitron", "Rajdhani", system-ui, sans-serif',
             }}
           >
-            {t("allArticles")}
+            {debouncedQuery ? `Search Results for "${debouncedQuery}"` : t("allArticles")}
           </h2>
           <span
             style={{
@@ -374,9 +435,9 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
               letterSpacing: "0.04em",
             }}
           >
-            {totalArticles === 1
+            {totalCount === 1
               ? t("showingSingleCount", { count: 1 })
-              : t("showingCount", { count: totalArticles, total: initialArticles.length })}
+              : t("showingCount", { count: articles.length, total: totalCount })}
           </span>
         </div>
 
@@ -418,7 +479,7 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
       </div>
 
       {/* ── Articles Grid / Empty State ── */}
-      {paginatedArticles.length === 0 ? (
+      {articles.length === 0 ? (
         <div
           style={{
             background: "var(--explorer-surface, #ffffff)",
@@ -461,9 +522,11 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
             gap: "24px",
+            opacity: isLoading ? 0.6 : 1,
+            transition: "opacity 0.2s ease",
           }}
         >
-          {paginatedArticles.map((article) => (
+          {articles.map((article) => (
             <ArticleCard key={article._id} article={article} locale={locale} />
           ))}
         </div>
@@ -526,8 +589,23 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
             </span>
           )}
 
-          {/* Page numbers */}
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
+          {/* Page numbers with smart windowing */}
+          {getVisiblePages(activePage, totalPages).map((p, idx) => {
+            if (typeof p === "string") {
+              return (
+                <span
+                  key={`ellipsis-${idx}`}
+                  style={{
+                    width: "36px",
+                    textAlign: "center",
+                    color: "var(--explorer-text-muted, #94a3b8)",
+                    fontWeight: 700,
+                  }}
+                >
+                  ...
+                </span>
+              );
+            }
             const isCurrent = p === activePage;
             return (
               <button
@@ -547,7 +625,9 @@ export default function ArticlesExplorer({ initialArticles, locale }: ArticlesEx
                   background: isCurrent ? "#7c3aed" : "var(--explorer-surface, #ffffff)",
                   color: isCurrent ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
                   border: isCurrent ? "1px solid #7c3aed" : "1px solid var(--explorer-border, #e2e8f0)",
-                  boxShadow: isCurrent ? "0 4px 14px rgba(124, 58, 237, 0.35)" : "var(--explorer-card-shadow, 0 2px 6px rgba(0,0,0,0.03))",
+                  boxShadow: isCurrent
+                    ? "0 4px 14px rgba(124, 58, 237, 0.35)"
+                    : "var(--explorer-card-shadow, 0 2px 6px rgba(0,0,0,0.03))",
                 }}
               >
                 {p}

@@ -68,13 +68,19 @@ export default async function ArticlesPage({ params }: PageProps) {
   const ISR = { next: { revalidate: 300 } } as const;
 
   let articles: ApiArticle[] = [];
+  let totalPages = 1;
+  let totalArticles = 0;
 
   try {
-    // Fetch all library articles to enable instant client-side search & language filtering
-    const res = await fetch(`${BASE}/?limit=100`, ISR);
+    // Initial fetch with backend pagination (page 1, limit 9) for instant first-load SSR/ISR
+    const res = await fetch(`${BASE}/?page=1&limit=9`, ISR);
     if (res.ok) {
       const d: ApiArticlesResponse = await res.json();
-      articles = d.articles ?? [];
+      articles = (d.articles ?? []).filter(
+        (a) => (!a.status || a.status === "published") && !a.is_removed
+      );
+      totalPages = d.totalPages ?? Math.max(1, Math.ceil(articles.length / 9));
+      totalArticles = d.total ?? (totalPages * 9);
     }
   } catch (error) {
     console.error("Failed to fetch articles:", error);
@@ -300,7 +306,12 @@ export default async function ArticlesPage({ params }: PageProps) {
             margin: "0 auto",
           }}
         >
-          <ArticlesExplorer initialArticles={articles} locale={locale} />
+          <ArticlesExplorer
+            initialArticles={articles}
+            initialTotalPages={totalPages}
+            initialTotal={totalArticles}
+            locale={locale}
+          />
         </section>
 
         <Footer />
