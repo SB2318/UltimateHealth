@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { getApiUrl } from "@/lib/api";
+import { safeFetch } from "@/lib/safe-fetch";
 import { headers } from "next/headers";
 import type { ApiArticle, ApiArticlesResponse } from "@/types/api-article";
 import SiteHeader from "@/components/home/SiteHeader";
@@ -64,7 +66,7 @@ export default async function ArticlesPage({ params }: PageProps) {
   const t = await getTranslations({ locale, namespace: "articles" });
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
-  const BASE = "https://ultimatehealth.blog/api/articles";
+  const BASE = getApiUrl("/articles");
   const ISR = { next: { revalidate: 300 } } as const;
 
   let articles: ApiArticle[] = [];
@@ -72,9 +74,9 @@ export default async function ArticlesPage({ params }: PageProps) {
   let totalArticles = 0;
 
   try {
-    // Initial fetch with backend pagination (page 1, limit 9) for instant first-load SSR/ISR
-    const res = await fetch(`${BASE}/?page=1&limit=9`, ISR);
-    if (res.ok) {
+    // Initial fetch with backend pagination (page 1, limit 9) with safe timeout fallback
+    const res = await safeFetch(`${BASE}/?page=1&limit=9`, ISR, 2500);
+    if (res && res.ok) {
       const d: ApiArticlesResponse = await res.json();
       articles = (d.articles ?? []).filter(
         (a) => (!a.status || a.status === "published") && !a.is_removed
@@ -82,8 +84,8 @@ export default async function ArticlesPage({ params }: PageProps) {
       totalPages = d.totalPages ?? Math.max(1, Math.ceil(articles.length / 9));
       totalArticles = d.total ?? (totalPages * 9);
     }
-  } catch (error) {
-    console.error("Failed to fetch articles:", error);
+  } catch {
+    // Graceful fallback during server transition or offline dev
   }
 
   const breadcrumbsJsonLd = buildBreadcrumbJsonLd([

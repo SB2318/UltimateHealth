@@ -9,12 +9,12 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, Clock, Tag } from "lucide-react";
 import type { ApiArticle } from "@/types/api-article";
 import { format, parseISO } from "date-fns";
+import { getApiUrl } from "@/lib/api";
+import { safeFetch } from "@/lib/safe-fetch";
 
 async function fetchLatestArticles(): Promise<ApiArticle[]> {
   try {
-    const res = await fetch("https://ultimatehealth.blog/api/articles/?page=1&limit=6", {
-      next: { revalidate: 300 },
-    });
+    const res = await safeFetch(getApiUrl("/articles/?page=1&limit=6"), { next: { revalidate: 300 } }, 2500);
     if (!res.ok) return [];
     const data = await res.json();
     const articles: ApiArticle[] = data.articles ?? (Array.isArray(data) ? data : []);

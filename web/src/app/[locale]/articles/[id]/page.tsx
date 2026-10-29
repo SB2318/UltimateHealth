@@ -5,6 +5,8 @@ import type { Article } from "@/types/article";
 import ArticlePageClient from "@/components/articles/ArticlePageClient";
 import { withBasePath } from "@/lib/basePath";
 import { resolveArticleImageUrl } from "@/lib/article-image";
+import { getApiUrl } from "@/lib/api";
+import { safeFetch } from "@/lib/safe-fetch";
 import {
   SITE_URL,
   BRAND_NAME,
@@ -132,7 +134,7 @@ async function fetchArticle(
 
   // 1. Try fetching by PocketBase record ID: /api/articles/record/{pb_recordId}
   try {
-    const res = await fetch(`https://ultimatehealth.blog/api/articles/record/${id}`, ISR);
+    const res = await safeFetch(getApiUrl(`/articles/record/${id}`), ISR, 2000);
     if (res.ok) {
       const data = await res.json();
       const detail: ApiArticleDetail = (data && data.article) ? data.article : data;
@@ -151,7 +153,7 @@ async function fetchArticle(
 
   // 2. Try direct numeric ID fetch: /api/articles/{id}
   try {
-    const res = await fetch(`https://ultimatehealth.blog/api/articles/${id}`, ISR);
+    const res = await safeFetch(getApiUrl(`/articles/${id}`), ISR, 2000);
     if (res.ok) {
       const data = await res.json();
       const detail: ApiArticleDetail = (data && data.article) ? data.article : data;
@@ -170,7 +172,7 @@ async function fetchArticle(
 
   // 3. Fallback: list all articles and match by pb_recordId, _id, or slugified title
   try {
-    const res = await fetch(`https://ultimatehealth.blog/api/articles/?limit=100`, ISR);
+    const res = await safeFetch(getApiUrl(`/articles/?limit=100`), ISR, 2000);
     if (res.ok) {
       const data = await res.json();
       const list: ApiArticleDetail[] = data.articles ?? [];
@@ -208,10 +210,7 @@ async function fetchRelatedArticles(
   // 1. Try endpoint /api/articles/{id}/related?limit=4
   if (numericId) {
     try {
-      const res = await fetch(
-        `https://ultimatehealth.blog/api/articles/${numericId}/related?limit=4`,
-        ISR
-      );
+      const res = await safeFetch(getApiUrl(`/articles/${numericId}/related?limit=4`), ISR, 2000);
       if (res.ok) {
         const json = await res.json();
         const items =
@@ -232,7 +231,7 @@ async function fetchRelatedArticles(
 
   // 2. Fallback: fetch articles list and select other articles
   try {
-    const res = await fetch(`https://ultimatehealth.blog/api/articles/?limit=10`, ISR);
+    const res = await safeFetch(getApiUrl(`/articles/?limit=10`), ISR, 2000);
     if (res.ok) {
       const json = await res.json();
       const list: ApiArticleDetail[] = json.articles ?? [];
@@ -256,10 +255,7 @@ async function fetchRelatedArticles(
 
 async function fetchHtmlContent(pbRecordId: string): Promise<string | null> {
   try {
-    const res = await fetch(
-      `https://ultimatehealth.blog/api/articles/get-article-content/${pbRecordId}`,
-      { next: { revalidate: 300 } }
-    );
+    const res = await safeFetch(getApiUrl(`/articles/get-article-content/${pbRecordId}`), { next: { revalidate: 300 } }, 2000);
     if (!res.ok) return null;
     const data = await res.json();
     return (data.htmlContent as string) ?? null;

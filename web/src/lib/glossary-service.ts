@@ -88,9 +88,7 @@ export function mapApiGlossaryTerm(item: ApiGlossaryTerm): LocalizedGlossaryEntr
  */
 export async function fetchGlossaryTerms(): Promise<LocalizedGlossaryEntry[]> {
   try {
-    const res = await fetch("https://ultimatehealth.blog/api/glossary?limit=500", {
-      next: { revalidate: 3600 }, // Cache with Next.js ISR (1 hour)
-    });
+    const res = await safeFetch(getApiUrl("/glossary?limit=500"), { next: { revalidate: 3600 } }, 2500);
 
     if (res.ok) {
       const json: ApiGlossaryResponse = await res.json();

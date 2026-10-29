@@ -34,10 +34,7 @@ async function fetchDynamicArticles(): Promise<{ id: string; lastModified: Date 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 4000);
 
-    const res = await fetch("https://ultimatehealth.blog/api/articles/?limit=200", {
-      next: { revalidate: 3600 },
-      signal: controller.signal,
-    });
+    const res = await safeFetch(getApiUrl("/articles/?limit=200"), { next: { revalidate: 3600 } }, 2500);
     clearTimeout(timeout);
 
     if (res.ok) {
