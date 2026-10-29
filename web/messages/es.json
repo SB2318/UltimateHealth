@@ -171,5 +171,43 @@
     "emailTitle": "Soporte Directo",
     "emailDesc": "Contacta directamente al equipo para consultas o propuestas.",
     "sendEmail": "Enviar Correo"
+  },
+  "articles": {
+    "badge": "Centro de Conocimiento de Salud",
+    "titlePart1": "Mejore su",
+    "titleHighlight": "Educación en Salud",
+    "description": "Explore recursos de salud y bienestar basados en evidencia creados por colaboradores de la comunidad.",
+    "memorialBadge": "Próximamente",
+    "memorialTitle": "Serie Conmemorativa · 30 Artículos Clínicos Dedicados",
+    "memorialDesc": "En honor a la dedicación clínica de la Dra. Moumita Debnath, se publicará una serie conmemorativa de 30 guías clínicas.",
+    "allArticles": "Todos los Artículos",
+    "pageOf": "Página {current} de {total}",
+    "searchPlaceholder": "Buscar artículos por título, resumen o etiqueta...",
+    "allLanguages": "Todos los Idiomas",
+    "filterLanguage": "Idioma",
+    "showingCount": "Mostrando {count} de {total} artículos",
+    "showingSingleCount": "Mostrando {count} artículo",
+    "clearFilters": "Borrar filtros",
+    "noResults": "No se encontraron artículos con sus criterios.",
+    "noResultsSuggestion": "Intente ajustar los términos de búsqueda o borrar el filtro de idioma.",
+    "emptyTitle": "Los artículos se están preparando para su publicación.",
+    "emptySubtitle": "Vuelva pronto o explore nuestro Glosario Médico.",
+    "previous": "← Anterior",
+    "next": "Siguiente →",
+    "generalTag": "General",
+    "communityAuthor": "Colaborador Médico de la Comunidad"
+  },
+  "podcasts": {
+    "badge": "Transmisión de Audio Web · Próximamente",
+    "title": "Pódcasts de Salud e Historias de Audio",
+    "description": "Escuche conversaciones de salud y relatos de pacientes.",
+    "appBannerTitle": "¿Desea grabar y publicar episodios?",
+    "appBannerDesc": "La grabación y publicación se realiza mediante la app de Android UltimateHealth.",
+    "feature1Title": "Escucha Web Gratuita",
+    "feature1Desc": "Transmita discusiones médicas verificadas sin suscripción.",
+    "feature2Title": "Voces Comunitarias",
+    "feature2Desc": "Episodios compartidos por médicos en formación y pacientes.",
+    "feature3Title": "Audio Multilingüe",
+    "feature3Desc": "Lanzamientos de audio planificados en varios idiomas."
   }
 }

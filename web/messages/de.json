@@ -171,5 +171,43 @@
     "emailTitle": "Direkter Kontakt",
     "emailDesc": "Kontaktieren Sie die Entwickler bei Fragen oder Vorschlägen.",
     "sendEmail": "E-Mail senden"
+  },
+  "articles": {
+    "badge": "Gesundheits-Wissenszentrum",
+    "titlePart1": "Steigern Sie Ihre",
+    "titleHighlight": "Gesundheitskompetenz",
+    "description": "Entdecken Sie evidenzbasierte Gesundheits- und Wellness-Ressourcen von Community-Autoren.",
+    "memorialBadge": "Demnächst",
+    "memorialTitle": "Gedenkserie · 30 klinische Fachartikel",
+    "memorialDesc": "Zu Ehren des klinischen Engagements von Dr. Moumita Debnath erscheint eine eigene Gedenkserie mit 30 klinischen Leitfäden.",
+    "allArticles": "Alle Artikel",
+    "pageOf": "Seite {current} von {total}",
+    "searchPlaceholder": "Artikel nach Titel, Zusammenfassung oder Tag suchen...",
+    "allLanguages": "Alle Sprachen",
+    "filterLanguage": "Sprache",
+    "showingCount": "{count} von {total} Artikeln angezeigt",
+    "showingSingleCount": "{count} Artikel angezeigt",
+    "clearFilters": "Filter zurücksetzen",
+    "noResults": "Keine Artikel gefunden, die Ihren Kriterien entsprechen.",
+    "noResultsSuggestion": "Passen Sie Ihre Suchbegriffe an oder setzen Sie den Sprachfilter zurück.",
+    "emptyTitle": "Artikel werden für die Veröffentlichung vorbereitet.",
+    "emptySubtitle": "Schauen Sie bald wieder vorbei oder erkunden Sie unser medizinisches Glossar.",
+    "previous": "← Zurück",
+    "next": "Weiter →",
+    "generalTag": "Allgemein",
+    "communityAuthor": "Medizinischer Community-Autor"
+  },
+  "podcasts": {
+    "badge": "Web-Audio-Streaming · Demnächst",
+    "title": "Gesundheits-Podcasts & Audio-Geschichten",
+    "description": "Hören Sie von der Community aufgenommene Gesundheitsgespräche.",
+    "appBannerTitle": "Möchten Sie Episoden aufnehmen und hochladen?",
+    "appBannerDesc": "Aufnahme und Veröffentlichung sind über die UltimateHealth Android App möglich.",
+    "feature1Title": "Kostenloses Web-Hören",
+    "feature1Desc": "Streamen Sie verifizierte Gesundheitsgespräche ohne Abonnement.",
+    "feature2Title": "Community-Stimmen",
+    "feature2Desc": "Episoden von Ärzten in Weiterbildung und Patienten.",
+    "feature3Title": "Mehrsprachiges Audio",
+    "feature3Desc": "Geplante Veröffentlichungen in mehreren Sprachen."
   }
 }

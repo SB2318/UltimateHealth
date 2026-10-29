@@ -171,5 +171,43 @@
     "emailTitle": "Support Direct",
     "emailDesc": "Contactez l'équipe pour toute question ou proposition.",
     "sendEmail": "Envoyer un e-mail"
+  },
+  "articles": {
+    "badge": "Centre de Connaissances sur la Santé",
+    "titlePart1": "Améliorez Votre",
+    "titleHighlight": "Littératie en Santé",
+    "description": "Explorez des ressources de santé et de bien-être fondées sur des preuves, rédigées par des contributeurs communautaires. Du bien-être pulmonaire à la résilience mentale, découvrez des perspectives pour votre bien-être quotidien.",
+    "memorialBadge": "Bientôt Disponible",
+    "memorialTitle": "Série Mémorial Dédiée · 30 Articles Cliniques",
+    "memorialDesc": "En hommage au dévouement clinique du Dr Moumita Debnath, une série dédiée de 30 guides de recherche clinique et respiratoire sera publiée dans les 9 langues. Les articles ci-dessous constituent la bibliothèque générale de santé communautaire.",
+    "allArticles": "Tous les Articles",
+    "pageOf": "Page {current} sur {total}",
+    "searchPlaceholder": "Rechercher par titre, résumé ou étiquette...",
+    "allLanguages": "Toutes les Langues",
+    "filterLanguage": "Langue",
+    "showingCount": "Affichage de {count} sur {total} articles",
+    "showingSingleCount": "Affichage de {count} article",
+    "clearFilters": "Effacer les filtres",
+    "noResults": "Aucun article ne correspond à vos critères.",
+    "noResultsSuggestion": "Essayez d'ajuster vos termes de recherche ou d'effacer le filtre de langue.",
+    "emptyTitle": "Les articles sont en préparation pour la publication.",
+    "emptySubtitle": "Revenez bientôt ou explorez notre Glossaire Médical.",
+    "previous": "← Précédent",
+    "next": "Suivant →",
+    "generalTag": "Général",
+    "communityAuthor": "Contributeur Médical Communautaire"
+  },
+  "podcasts": {
+    "badge": "Diffusion Audio Web · Bientôt Disponible",
+    "title": "Podcasts Santé & Histoires Audio",
+    "description": "Écoutez des conversations sur la santé enregistrées par la communauté et des parcours de patients.",
+    "appBannerTitle": "Vous souhaitez enregistrer et publier des épisodes ?",
+    "appBannerDesc": "L'enregistrement et la publication de podcasts sont disponibles via l'application Android UltimateHealth.",
+    "feature1Title": "Écoute Web Gratuite",
+    "feature1Desc": "Écoutez des discussions médicales vérifiées sans abonnement.",
+    "feature2Title": "Voix de la Communauté",
+    "feature2Desc": "Épisodes partagés par des internes en médecine et des patients.",
+    "feature3Title": "Audio Multilingue",
+    "feature3Desc": "Publications audio prévues en plusieurs langues."
   }
 }
