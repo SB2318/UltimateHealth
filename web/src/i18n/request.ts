@@ -20,8 +20,8 @@ function deepMerge(target: Record<string, any>, source: Record<string, any>): Re
   return result;
 }
 
-export default getRequestConfig(async ({ requestLocale }) => {
-  let locale = await requestLocale;
+export default getRequestConfig(async (params) => {
+  let locale = params.locale || (await params.requestLocale);
   if (!locale || !routing.locales.includes(locale as any)) {
     locale = routing.defaultLocale;
   }
@@ -41,5 +41,14 @@ export default getRequestConfig(async ({ requestLocale }) => {
   return {
     locale,
     messages,
+    onError(error) {
+      if (error.code === 'MISSING_MESSAGE') {
+        return;
+      }
+      console.error(error);
+    },
+    getMessageFallback({ namespace, key }) {
+      return [namespace, key].filter(Boolean).join('.');
+    },
   };
 });
