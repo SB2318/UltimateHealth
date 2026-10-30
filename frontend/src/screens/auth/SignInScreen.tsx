@@ -101,14 +101,31 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
 
       const response = await googleAuthMutation.mutateAsync(payload);
 
-      const authToken = response.token || response.accessToken;
-      const refreshToken = response.refreshToken;
+      const extractCleanToken = (candidate: any): string | undefined => {
+        if (typeof candidate === 'string' && candidate.trim().length > 0) {
+          return candidate.trim();
+        }
+        if (candidate && typeof candidate === 'object') {
+          if (typeof candidate.accessToken === 'string' && candidate.accessToken.trim().length > 0) {
+            return candidate.accessToken.trim();
+          }
+          if (typeof candidate.token === 'string' && candidate.token.trim().length > 0) {
+            return candidate.token.trim();
+          }
+        }
+        return undefined;
+      };
+
+      const authToken =
+        extractCleanToken(response.token) || extractCleanToken(response.accessToken);
+      const refreshToken =
+        extractCleanToken(response.refreshToken);
 
       // In the instant onboarding flow, new and returning users are immediately verified
       // and issued access + refresh tokens. Proceed directly to authenticated session.
-      if (authToken) {
+      if (typeof authToken === 'string' && authToken.length > 0) {
         await secureStoreItem(SECURE_KEYS.USER_TOKEN, authToken);
-        if (refreshToken) {
+        if (typeof refreshToken === 'string' && refreshToken.length > 0) {
           await secureStoreItem(SECURE_KEYS.REFRESH_TOKEN, refreshToken);
         }
         dispatch(setUserToken(authToken));

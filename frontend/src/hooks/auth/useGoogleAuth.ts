@@ -55,12 +55,36 @@ const googleAuthFunc = async (req: GoogleAuthReq): Promise<GoogleAuthResponse> =
   );
 
   console.log('✅ [GOOGLE AUTH API] Response Received:', JSON.stringify(res.data, null, 2));
+  const extractToken = (candidate: any): string | undefined => {
+    if (typeof candidate === 'string' && candidate.trim().length > 0) {
+      return candidate.trim();
+    }
+    if (candidate && typeof candidate === 'object') {
+      if (typeof candidate.accessToken === 'string' && candidate.accessToken.trim().length > 0) {
+        return candidate.accessToken.trim();
+      }
+      if (typeof candidate.token === 'string' && candidate.token.trim().length > 0) {
+        return candidate.token.trim();
+      }
+      if (typeof candidate.refreshToken === 'string' && candidate.refreshToken.trim().length > 0) {
+        return candidate.refreshToken.trim();
+      }
+    }
+    return undefined;
+  };
+
   const raw = res.data ?? {};
   const nested = (raw.data && typeof raw.data === 'object') ? raw.data : {};
   const resolvedToken =
-    raw.token ?? nested.token ?? raw.accessToken ?? nested.accessToken;
+    extractToken(raw.token) ??
+    extractToken(nested.token) ??
+    extractToken(raw.accessToken) ??
+    extractToken(nested.accessToken);
+
   const resolvedRefreshToken =
-    raw.refreshToken ?? nested.refreshToken;
+    extractToken(raw.refreshToken) ??
+    extractToken(nested.refreshToken);
+
   const resolvedUser = raw.user ?? nested.user;
 
   const responseData: GoogleAuthResponse = {
