@@ -29,13 +29,12 @@ You can build and run the web application using Docker.
 
 1. **Build the Docker image**
    Run the following command from the root of the repository:
-   \\\ash
+   ```bash
    docker build -t ultimatehealth-web .
-   \\\
+   ```
 
 2. **Run the Docker container**
-   \\\ash
+   ```bash
    docker run -p 5000:5000 ultimatehealth-web
-   \\\
-   The application will be accessible at \http://localhost:5000\.
-
+   ```
+   The application will be accessible at `http://localhost:5000/web`.
