@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const SECURE_KEYS = {
   USER_TOKEN: 'SECURE_USER_TOKEN',
+  REFRESH_TOKEN: 'SECURE_REFRESH_TOKEN',
   EXPO_PUSH_TOKEN: 'SECURE_EXPO_PUSH_TOKEN',
   LANGUAGE_PREFERENCES: 'SECURE_LANGUAGE_PREFERENCES',
 } as const;

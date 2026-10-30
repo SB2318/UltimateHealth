@@ -101,40 +101,26 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
 
       const response = await googleAuthMutation.mutateAsync(payload);
 
-      // Check if this is a first-time sign-up or user requires email verification
-      const isFirstTime = Boolean(
-        response.newUser ||
-        (response as any).isNewUser ||
-        (response as any).new_user ||
-        (response as any).data?.newUser ||
-        (response as any).data?.isNewUser ||
-        (response.user && response.user.isVerified === false) ||
-        (response as any).isVerified === false ||
-        (response as any).requiresVerification
-      );
+      const authToken = response.token || response.accessToken;
+      const refreshToken = response.refreshToken;
 
-      const resolvedEmail =
-        response.user?.email ||
-        (response as any).email ||
-        email ||
-        'your email';
-
-      if (isFirstTime) {
-        setVerificationEmail(resolvedEmail);
-        setVerificationNotice({ email: resolvedEmail });
-        setIsVerifyModalVisible(true);
-        await GoogleSignin.signOut();
-        return; // Prevent navigating to TabNavigation
-      }
-
-      if (response.token) {
-        await secureStoreItem(SECURE_KEYS.USER_TOKEN, response.token);
-        dispatch(setUserToken(response.token));
+      // In the instant onboarding flow, new and returning users are immediately verified
+      // and issued access + refresh tokens. Proceed directly to authenticated session.
+      if (authToken) {
+        await secureStoreItem(SECURE_KEYS.USER_TOKEN, authToken);
+        if (refreshToken) {
+          await secureStoreItem(SECURE_KEYS.REFRESH_TOKEN, refreshToken);
+        }
+        dispatch(setUserToken(authToken));
         dispatch(setGuestMode(false));
-        
+
         if (response.user) {
           dispatch(setUserId(response.user._id));
-          dispatch(setUserHandle(response.user.user_name));
+          dispatch(
+            setUserHandle(
+              response.user.user_handle || response.user.user_name || '',
+            ),
+          );
         }
 
         if (role === 'Doctor' && response.doctorProfileIncomplete) {
@@ -145,7 +131,13 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
 
         navigation.reset({ index: 0, routes: [{ name: 'TabNavigation' }] });
       } else {
-        // No token returned: treat as pending verification
+        // Fallback for legacy unverified accounts without immediate token issuance
+        const resolvedEmail =
+          response.user?.email ||
+          (response as any).email ||
+          email ||
+          'your email';
+
         setVerificationEmail(resolvedEmail);
         setVerificationNotice({ email: resolvedEmail });
         setIsVerifyModalVisible(true);

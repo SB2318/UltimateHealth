@@ -24,6 +24,7 @@ type GoogleAuthReq = {
 export type GoogleAuthResponse = {
   user?: User;
   token?: string;
+  accessToken?: string;
   refreshToken?: string;
   newUser?: boolean;
   message?: string;
@@ -56,12 +57,19 @@ const googleAuthFunc = async (req: GoogleAuthReq): Promise<GoogleAuthResponse> =
   console.log('✅ [GOOGLE AUTH API] Response Received:', JSON.stringify(res.data, null, 2));
   const raw = res.data ?? {};
   const nested = (raw.data && typeof raw.data === 'object') ? raw.data : {};
+  const resolvedToken =
+    raw.token ?? nested.token ?? raw.accessToken ?? nested.accessToken;
+  const resolvedRefreshToken =
+    raw.refreshToken ?? nested.refreshToken;
+  const resolvedUser = raw.user ?? nested.user;
+
   const responseData: GoogleAuthResponse = {
     ...nested,
     ...raw,
-    user: raw.user ?? nested.user,
-    token: raw.token ?? nested.token,
-    refreshToken: raw.refreshToken ?? nested.refreshToken,
+    user: resolvedUser,
+    token: resolvedToken,
+    accessToken: resolvedToken,
+    refreshToken: resolvedRefreshToken,
     newUser: raw.newUser ?? nested.newUser ?? raw.isNewUser ?? nested.isNewUser,
     doctorProfileIncomplete: raw.doctorProfileIncomplete ?? nested.doctorProfileIncomplete,
     message: raw.message ?? nested.message,
