@@ -1,5 +1,15 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import path from "node:path";
+import fs from "node:fs";
+
+// Preload mock fonts for offline / Docker builds to prevent getaddrinfo ENOTFOUND fonts.googleapis.com
+if (!process.env.NEXT_FONT_GOOGLE_MOCKED_RESPONSES) {
+  const mockPath = path.resolve(__dirname, "src/lib/fonts-mock.json");
+  if (fs.existsSync(mockPath)) {
+    process.env.NEXT_FONT_GOOGLE_MOCKED_RESPONSES = mockPath;
+  }
+}
 
 const withNextIntl = createNextIntlPlugin();
 

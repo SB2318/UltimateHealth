@@ -1,6 +1,6 @@
 FROM node:22-alpine AS builder
 
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat ca-certificates
 WORKDIR /app
 
 ENV NEXT_PUBLIC_BASE_PATH=/web
@@ -8,6 +8,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_OPTIONS="--max-old-space-size=2048"
 ENV NEXT_BUILD_WORKERS=1
 ENV NEXT_PRIVATE_WORKERS=1
+ENV NEXT_FONT_GOOGLE_MOCKED_RESPONSES=/app/src/lib/fonts-mock.json
 
 # Install pnpm
 RUN npm install -g pnpm
