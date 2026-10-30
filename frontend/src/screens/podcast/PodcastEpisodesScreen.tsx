@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,85 +8,114 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ActivityIndicator,
+  Modal,
+  TextInput,
+  Alert,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import Ionicon from '@expo/vector-icons/Ionicons';
-import {RootStackParamList} from '../../schemas/type';
+import { RootStackParamList, PodcastEpisode } from '../../schemas/type';
 import EpisodeCard from '../../components/podcast/EpisodeCard';
-import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import { PRIMARY_COLOR } from '../../lib/ui/Theme';
+import { useGetPodcastEpisodes } from '../../hooks/podcast/useGetPodcastEpisodes';
+import { useCreatePodcastEpisode } from '../../hooks/podcast/useCreatePodcastEpisode';
+import { useDeletePodcastEpisode } from '../../hooks/podcast/useDeletePodcastEpisode';
+import Snackbar from 'react-native-snackbar';
 
 type NavigationProp = StackNavigationProp<
   RootStackParamList,
   'PodcastEpisodesScreen'
 >;
 
-// Mock Data
-const MOCK_EPISODES = [
-  {
-    id: '1',
-    name: 'Introduction to Mental Health',
-    description:
-      'A deep dive into the basics of mental well-being, discussing common challenges and initial steps to seek help.',
-    podcastsCount: 5,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    name: 'Nutrition & Brain Function',
-    description:
-      'How what you eat affects how you feel. We explore the gut-brain connection and dietary recommendations.',
-    podcastsCount: 3,
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-    updatedAt: new Date(Date.now() - 3600000).toISOString(),
-  },
-  {
-    id: '3',
-    name: 'Fitness over 40',
-    description:
-      'Tips and tricks for staying active and healthy as you age. Featuring interviews with fitness experts.',
-    podcastsCount: 8,
-    createdAt: new Date(Date.now() - 172800000).toISOString(),
-    updatedAt: new Date(Date.now() - 86400000).toISOString(),
-  },
-];
-
 const PodcastEpisodesScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
-  const [episodes, setEpisodes] =
-    useState<typeof MOCK_EPISODES>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchEpisodes = async () => {
-    try {
-      // setError(null);
-      // Simulate API call
-      await new Promise<void>(resolve =>
-        setTimeout(() => resolve(), 1500),
-      );
-      setEpisodes(MOCK_EPISODES);
-    } catch {
-      setError('Failed to load episodes. Please try again.');
-    } finally {
-      setIsLoading(false);
-      setRefreshing(false);
-    }
-  };
+  const {
+    data: episodes = [],
+    isLoading,
+    refetch,
+    isRefetching,
+    error,
+  } = useGetPodcastEpisodes();
 
-  useEffect(() => {
-    fetchEpisodes();
-  }, []);
+  const { mutate: createEpisode, isPending: isCreating } = useCreatePodcastEpisode();
+  const { mutate: deleteEpisode } = useDeletePodcastEpisode();
+
+  const [createModalVisible, setCreateModalVisible] = useState(false);
+  const [episodeName, setEpisodeName] = useState('');
+  const [episodeDescription, setEpisodeDescription] = useState('');
 
   const onRefresh = () => {
-    setRefreshing(true);
-    fetchEpisodes();
+    refetch();
   };
 
-  const handleDelete = (id: string) => {
-    setEpisodes(prev => prev.filter(ep => ep.id !== id));
+  const handleOpenCreateModal = () => {
+    setEpisodeName('');
+    setEpisodeDescription('');
+    setCreateModalVisible(true);
+  };
+
+  const handleCreateSubmit = () => {
+    if (!episodeName.trim()) {
+      Alert.alert('Validation Error', 'Episode name is required.');
+      return;
+    }
+
+    createEpisode(
+      {
+        name: episodeName.trim(),
+        description: episodeDescription.trim(),
+      },
+      {
+        onSuccess: () => {
+          setCreateModalVisible(false);
+          Snackbar.show({
+            text: 'Episode created successfully',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        },
+        onError: (err: any) => {
+          Alert.alert(
+            'Error',
+            err?.response?.data?.message || 'Failed to create episode',
+          );
+        },
+      },
+    );
+  };
+
+  const handleDelete = (id: string, name: string) => {
+    Alert.alert(
+      'Delete Episode',
+      `Are you sure you want to delete "${name}"? Podcasts inside will remain intact.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            deleteEpisode(
+              { episodeId: id },
+              {
+                onSuccess: () => {
+                  Snackbar.show({
+                    text: 'Episode deleted',
+                    duration: Snackbar.LENGTH_SHORT,
+                  });
+                },
+                onError: (err: any) => {
+                  Snackbar.show({
+                    text: err?.response?.data?.message || 'Failed to delete episode',
+                    duration: Snackbar.LENGTH_SHORT,
+                  });
+                },
+              },
+            );
+          },
+        },
+      ],
+    );
   };
 
   const renderEmptyState = () => (
@@ -97,22 +126,16 @@ const PodcastEpisodesScreen: React.FC = () => {
         color="#ccc"
         accessible={false}
       />
-
       <Text style={styles.emptyStateTitle}>No Episodes Yet</Text>
-
       <Text style={styles.emptyStateDesc}>
-        Create your first podcast episode to start organizing your podcasts.
+        Create your first podcast episode container to start organizing your podcast series.
       </Text>
-
       <TouchableOpacity
         style={styles.emptyStateButton}
-        onPress={() => navigation.navigate('PodcastForm')}
+        onPress={handleOpenCreateModal}
         accessibilityRole="button"
-        accessibilityLabel="Create Episode"
-        accessibilityHint="Opens the form to create a new podcast episode">
-        <Text style={styles.emptyStateButtonText}>
-          Create Episode
-        </Text>
+        accessibilityLabel="Create Episode">
+        <Text style={styles.emptyStateButtonText}>Create Episode</Text>
       </TouchableOpacity>
     </View>
   );
@@ -125,15 +148,15 @@ const PodcastEpisodesScreen: React.FC = () => {
         color="red"
         accessible={false}
       />
-
-      <Text style={styles.errorText}>{error}</Text>
-
+      <Text style={styles.errorText}>
+        {(error as any)?.response?.data?.message ||
+          'Failed to load episodes. Please try again.'}
+      </Text>
       <TouchableOpacity
         style={styles.retryButton}
-        onPress={fetchEpisodes}
+        onPress={() => refetch()}
         accessibilityRole="button"
-        accessibilityLabel="Retry loading episodes"
-        accessibilityHint="Attempts to load the podcast episodes again">
+        accessibilityLabel="Retry loading episodes">
         <Text style={styles.retryButtonText}>Retry</Text>
       </TouchableOpacity>
     </View>
@@ -142,74 +165,119 @@ const PodcastEpisodesScreen: React.FC = () => {
   if (isLoading) {
     return (
       <View style={styles.centerContainer}>
-        {/* Simple skeleton loading placeholder */}
-        <ActivityIndicator
-          size="large"
-          color={PRIMARY_COLOR}
-          accessible
-          accessibilityLabel="Loading episodes"
-        />
-
-        <Text style={styles.loadingText}>
-          Loading episodes...
-        </Text>
+        <ActivityIndicator size="large" color={PRIMARY_COLOR} />
+        <Text style={styles.loadingText}>Loading episodes...</Text>
       </View>
     );
   }
 
-  if (error) {
+  if (error && episodes.length === 0) {
     return renderErrorState();
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Top Header */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back">
+          <Ionicon name="arrow-back" size={24} color="#111827" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Podcast Episodes</Text>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={handleOpenCreateModal}
+          accessibilityRole="button"
+          accessibilityLabel="Add Episode">
+          <Ionicon name="add-circle" size={30} color={PRIMARY_COLOR} />
+        </TouchableOpacity>
+      </View>
+
       <FlatList
         data={episodes}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item._id || item.id || ''}
         contentContainerStyle={
-          episodes.length === 0
-            ? styles.emptyListContent
-            : styles.listContent
+          episodes.length === 0 ? styles.emptyListContent : styles.listContent
         }
         refreshControl={
           <RefreshControl
-            refreshing={refreshing}
+            refreshing={isRefetching}
             onRefresh={onRefresh}
             colors={[PRIMARY_COLOR]}
             accessibilityLabel="Refresh episodes"
           />
         }
-        renderItem={({item}) => (
+        renderItem={({ item }: { item: PodcastEpisode }) => (
           <EpisodeCard
             episode={item}
             onPress={() =>
-              console.log(
-                'Navigate to episode detail',
-                item.id,
-              )
+              navigation.navigate('PlaylistDetailScreen', {
+                episodeId: item._id,
+                title: item.name,
+              })
             }
-            onEdit={() =>
-              navigation.navigate('PodcastForm')
-            }
-            onDelete={() => handleDelete(item.id)}
+            onDelete={() => handleDelete(item._id, item.name)}
           />
         )}
         ListEmptyComponent={renderEmptyState}
       />
 
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => navigation.navigate('PodcastForm')}
-        accessibilityRole="button"
-        accessibilityLabel="Create new podcast episode"
-        accessibilityHint="Opens the form to create a new podcast episode">
-        <Ionicon
-          name="add"
-          size={32}
-          color="#fff"
-          accessible={false}
-        />
-      </TouchableOpacity>
+      {/* Create Episode Modal */}
+      <Modal
+        visible={createModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setCreateModalVisible(false)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>New Episode Container</Text>
+              <TouchableOpacity
+                onPress={() => setCreateModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="Close">
+                <Ionicon name="close" size={24} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+
+            <Text style={styles.modalLabel}>Episode Name *</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="e.g. Mental Wellness Series"
+              placeholderTextColor="#9CA3AF"
+              value={episodeName}
+              onChangeText={setEpisodeName}
+            />
+
+            <Text style={styles.modalLabel}>Description (Optional)</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              placeholder="What is this episode/show about?"
+              placeholderTextColor="#9CA3AF"
+              value={episodeDescription}
+              onChangeText={setEpisodeDescription}
+              multiline
+              numberOfLines={3}
+            />
+
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleCreateSubmit}
+              disabled={isCreating}
+              accessibilityRole="button"
+              accessibilityLabel="Create">
+              {isCreating ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text style={styles.submitButtonText}>Create Episode</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -217,88 +285,154 @@ const PodcastEpisodesScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#F9FAFB',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  backButton: {
+    padding: 4,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  addButton: {
+    padding: 2,
   },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    padding: 24,
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 14,
+    color: '#6B7280',
   },
   listContent: {
-    paddingVertical: 16,
+    paddingVertical: 12,
   },
   emptyListContent: {
     flexGrow: 1,
     justifyContent: 'center',
   },
-  loadingText: {
-    marginTop: 16,
-    color: '#666',
-    fontSize: 16,
-  },
   emptyStateContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 32,
+    paddingHorizontal: 32,
+    paddingVertical: 64,
   },
   emptyStateTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#111827',
     marginTop: 16,
+    marginBottom: 8,
   },
   emptyStateDesc: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: 14,
+    color: '#6B7280',
     textAlign: 'center',
-    marginTop: 8,
-    lineHeight: 24,
+    lineHeight: 20,
     marginBottom: 24,
   },
   emptyStateButton: {
     backgroundColor: PRIMARY_COLOR,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
   },
   emptyStateButtonText: {
-    color: '#fff',
-    fontSize: 16,
+    color: 'white',
+    fontSize: 14,
     fontWeight: '600',
   },
   errorText: {
-    fontSize: 16,
-    color: 'red',
-    marginTop: 16,
-    marginBottom: 16,
+    fontSize: 14,
+    color: '#EF4444',
     textAlign: 'center',
+    marginTop: 12,
+    marginBottom: 16,
   },
   retryButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 10,
     backgroundColor: PRIMARY_COLOR,
-    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 6,
   },
   retryButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
   },
-  fab: {
-    position: 'absolute',
-    bottom: 24,
-    right: 24,
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: PRIMARY_COLOR,
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
-    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 20,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  modalLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 6,
+    marginTop: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 14,
+    color: '#111827',
+    backgroundColor: '#F9FAFB',
+  },
+  textArea: {
+    minHeight: 70,
+    textAlignVertical: 'top',
+  },
+  submitButton: {
+    backgroundColor: PRIMARY_COLOR,
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  submitButtonText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '700',
   },
 });
 

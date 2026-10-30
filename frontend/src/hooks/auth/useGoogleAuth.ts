@@ -54,7 +54,18 @@ const googleAuthFunc = async (req: GoogleAuthReq): Promise<GoogleAuthResponse> =
   );
 
   console.log('✅ [GOOGLE AUTH API] Response Received:', JSON.stringify(res.data, null, 2));
-  const responseData = res.data?.data ?? res.data;
+  const raw = res.data ?? {};
+  const nested = (raw.data && typeof raw.data === 'object') ? raw.data : {};
+  const responseData: GoogleAuthResponse = {
+    ...nested,
+    ...raw,
+    user: raw.user ?? nested.user,
+    token: raw.token ?? nested.token,
+    refreshToken: raw.refreshToken ?? nested.refreshToken,
+    newUser: raw.newUser ?? nested.newUser ?? raw.isNewUser ?? nested.isNewUser,
+    doctorProfileIncomplete: raw.doctorProfileIncomplete ?? nested.doctorProfileIncomplete,
+    message: raw.message ?? nested.message,
+  };
 
   return responseData as GoogleAuthResponse;
 };

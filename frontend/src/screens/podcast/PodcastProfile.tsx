@@ -11,7 +11,8 @@ import { View,
   RefreshControl,
   Dimensions,
   } from 'react-native';
-import {PodcastProfileProp, PodcastData, PlayList} from '../../schemas/type';
+import {PodcastProfileProp, PodcastData, PlayList, PodcastEpisode} from '../../schemas/type';
+import {useGetPodcastEpisodes} from '../../hooks/podcast/useGetPodcastEpisodes';
 import {MaterialCommunityIcons, Feather, Ionicons} from '@expo/vector-icons';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {useAppSelector} from '../../store/hooks';
@@ -31,7 +32,7 @@ const {width} = Dimensions.get('window');
 
 export default function PodcastProfile({navigation}: PodcastProfileProp) {
   const insets = useSafeAreaInsets();
-  const [selectedTab, setSelectedTab] = useState<'podcasts' | 'playlists'>(
+  const [selectedTab, setSelectedTab] = useState<'podcasts' | 'playlists' | 'episodes'>(
     'podcasts',
   );
   const [refreshing, setRefreshing] = useState(false);
@@ -57,6 +58,11 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
   } = useGetUserPublishedPodcasts(publishedPage, isConnected);
 
   const {data: user} = useGetProfile();
+  const {
+    data: episodesData,
+    refetch: refetchEpisodes,
+    isLoading: episodesLoading,
+  } = useGetPodcastEpisodes();
 
   useEffect(() => {
     if (podcastsData) {
@@ -79,20 +85,60 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
   const playlists = playlistsData || [];
 
   const totalPlaylists = playlists.length;
+  const episodes = episodesData || [];
+  const totalEpisodes = episodes.length;
 
   useFocusEffect(
     useCallback(() => {
       refetchPlaylists();
       refetchPodcasts();
-    }, [refetchPlaylists, refetchPodcasts]),
+      refetchEpisodes();
+    }, [refetchPlaylists, refetchPodcasts, refetchEpisodes]),
   );
 
   const onRefresh = async () => {
     setRefreshing(true);
     setPublishedPage(1);
-    await Promise.all([refetchPlaylists(), refetchPodcasts()]);
+    await Promise.all([refetchPlaylists(), refetchPodcasts(), refetchEpisodes()]);
     setRefreshing(false);
   };
+
+  const renderEpisodeItem = ({item}: {item: PodcastEpisode}) => (
+    <TouchableOpacity
+      style={styles.playlistCard}
+      activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={`Open episode series ${item.name}`}
+      accessibilityHint="Opens this episode series"
+      onPress={() => {
+        navigation.navigate('PlaylistDetailScreen', {
+          episodeId: item._id || item.id,
+          title: item.name,
+        });
+      }}>
+      <View style={styles.playlistIconContainer}>
+        <MaterialCommunityIcons
+          name="filmstrip"
+          size={32}
+          color={PRIMARY_COLOR}
+        />
+      </View>
+      <View style={styles.playlistInfo}>
+        <Text style={styles.playlistTitle} numberOfLines={1}>
+          {item.name}
+        </Text>
+        <Text style={styles.playlistCount}>
+          {item.podcasts_count ?? item.podcastsCount ?? 0} podcasts
+        </Text>
+      </View>
+      <Feather
+        name="chevron-right"
+        size={20}
+        color="#9ca3af"
+        accessible={false}
+      />
+    </TouchableOpacity>
+  );
 
   const renderPlaylistItem = ({item}: {item: PlayList}) => (
     <TouchableOpacity
@@ -218,13 +264,18 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
           {/* Stats */}
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{podcasts?.length}</Text>
+              <Text style={styles.statValue}>{podcasts?.length || 0}</Text>
               <Text style={styles.statLabel}>Podcasts</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statItem}>
               <Text style={styles.statValue}>{totalPlaylists}</Text>
               <Text style={styles.statLabel}>Playlists</Text>
+            </View>
+            <View style={styles.statDivider} />
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>{totalEpisodes}</Text>
+              <Text style={styles.statLabel}>Series</Text>
             </View>
           </View>
 
@@ -305,6 +356,31 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
               Playlists
             </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              selectedTab === 'episodes' && styles.activeTab,
+            ]}
+            onPress={() => setSelectedTab('episodes')}
+            activeOpacity={0.7}
+            accessibilityRole="tab"
+            accessibilityLabel="Series"
+            accessibilityState={{selected: selectedTab === 'episodes'}}>
+            <MaterialCommunityIcons
+              name="filmstrip"
+              size={20}
+              color={selectedTab === 'episodes' ? PRIMARY_COLOR : '#6b7280'}
+              accessible={false}
+            />
+            <Text
+              style={[
+                styles.tabText,
+                selectedTab === 'episodes' && styles.activeTabText,
+              ]}>
+              Series
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Content */}
@@ -349,27 +425,70 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
                 </TouchableOpacity>
               </View>
             )
-          ) : playlists.length > 0 ? (
-            <FlatList
-              data={playlists}
-              renderItem={renderPlaylistItem}
-              keyExtractor={(item: any, index: number) => `playlist-${item._id}-${index}`}
-              scrollEnabled={false}
-              showsVerticalScrollIndicator={false}
-            />
-          ) : (
-            <View style={styles.emptyState}>
-              <MaterialCommunityIcons
-                name="playlist-music-outline"
-                size={64}
-                color="#d1d5db"
-                accessible={false}
+          ) : selectedTab === 'playlists' ? (
+            playlists.length > 0 ? (
+              <FlatList
+                data={playlists}
+                renderItem={renderPlaylistItem}
+                keyExtractor={(item: any, index: number) => `playlist-${item._id}-${index}`}
+                scrollEnabled={false}
+                showsVerticalScrollIndicator={false}
               />
-              <Text style={styles.emptyText}>No playlists yet</Text>
-              <Text style={styles.emptySubText}>
-                Save podcasts to create your first playlist
-              </Text>
-            </View>
+            ) : (
+              <View style={styles.emptyState}>
+                <MaterialCommunityIcons
+                  name="playlist-music-outline"
+                  size={64}
+                  color="#d1d5db"
+                  accessible={false}
+                />
+                <Text style={styles.emptyText}>No playlists yet</Text>
+                <Text style={styles.emptySubText}>
+                  Save podcasts to create your first playlist
+                </Text>
+              </View>
+            )
+          ) : (
+            episodes.length > 0 ? (
+              <View>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, paddingHorizontal: 4}}>
+                  <Text style={{fontSize: 14, fontWeight: '600', color: '#374151'}}>Series & Episodes</Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('PodcastEpisodesScreen')}
+                    accessibilityRole="button"
+                    accessibilityLabel="Manage Episodes">
+                    <Text style={{fontSize: 13, fontWeight: '600', color: PRIMARY_COLOR}}>Manage All</Text>
+                  </TouchableOpacity>
+                </View>
+                <FlatList
+                  data={episodes}
+                  renderItem={renderEpisodeItem}
+                  keyExtractor={(item: any, index: number) => `episode-${item._id || item.id || index}`}
+                  scrollEnabled={false}
+                  showsVerticalScrollIndicator={false}
+                />
+              </View>
+            ) : (
+              <View style={styles.emptyState}>
+                <MaterialCommunityIcons
+                  name="filmstrip-off"
+                  size={64}
+                  color="#d1d5db"
+                  accessible={false}
+                />
+                <Text style={styles.emptyText}>No series or episodes yet</Text>
+                <Text style={styles.emptySubText}>
+                  Group your podcasts into episodic series and shows
+                </Text>
+                <TouchableOpacity
+                  style={styles.emptyButton}
+                  accessibilityRole="button"
+                  accessibilityLabel="Manage Episodes"
+                  onPress={() => navigation.navigate('PodcastEpisodesScreen')}>
+                  <Text style={styles.emptyButtonText}>Create Series</Text>
+                </TouchableOpacity>
+              </View>
+            )
           )}
         </View>
       </ScrollView>

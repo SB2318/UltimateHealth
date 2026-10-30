@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image, KeyboardAvoidingView, Platform, Dimensions, useColorScheme } from 'react-native';
+import { StyleSheet, Image, KeyboardAvoidingView, Platform, Dimensions, useColorScheme, Alert } from 'react-native';
 import { YStack, Text, Button, XStack, ScrollView, Spinner } from 'tamagui';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
@@ -18,7 +18,6 @@ import Constants from 'expo-constants';
 
 const { width } = Dimensions.get('window');
 
-
 const extra = Constants.expoConfig?.extra ?? {};
 
 GoogleSignin.configure({
@@ -36,6 +35,8 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
   const [step, setStep] = useState<1 | 2>(1);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState<string | null>(null);
+  const [isVerifyModalVisible, setIsVerifyModalVisible] = useState(false);
+  const [verificationNotice, setVerificationNotice] = useState<{ email: string } | null>(null);
   
   const slideX = useSharedValue(0);
 
@@ -73,8 +74,8 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
       setIsAuthenticating(true);
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      const idToken = userInfo.data?.idToken;
-      const user = userInfo.data?.user;
+      const idToken = userInfo.data?.idToken || (userInfo as any)?.idToken;
+      const user = userInfo.data?.user || (userInfo as any)?.user;
       
       if (!idToken) throw new Error('No ID token present');
 
@@ -85,23 +86,48 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
         console.log('Failed to get FCM token', e);
       }
 
+      const email = user?.email || (userInfo as any)?.user?.email || (userInfo as any)?.data?.user?.email;
+
       const payload: any = { 
         idToken, 
         role,
-        email: user?.email,
-        uid: user?.id,
-        user_name: user?.name,
-        Profile_image: user?.photo,
+        email: email,
+        uid: user?.id || (userInfo as any)?.user?.id || (userInfo as any)?.data?.user?.id,
+        user_name: user?.name || (userInfo as any)?.user?.name || (userInfo as any)?.data?.user?.name,
+        Profile_image: user?.photo || (userInfo as any)?.user?.photo || (userInfo as any)?.data?.user?.photo,
         isDoctor: role === 'Doctor',
         fcmToken,
       };
 
       const response = await googleAuthMutation.mutateAsync(payload);
 
-      if (response.newUser) {
-        setVerificationEmail(userInfo.data?.user.email || null);
+      // Check if this is a first-time sign-up or user requires email verification
+      const isFirstTime = Boolean(
+        response.newUser ||
+        (response as any).isNewUser ||
+        (response as any).new_user ||
+        (response as any).data?.newUser ||
+        (response as any).data?.isNewUser ||
+        (response.user && response.user.isVerified === false) ||
+        (response as any).isVerified === false ||
+        (response as any).requiresVerification
+      );
+
+      const resolvedEmail =
+        response.user?.email ||
+        (response as any).email ||
+        email ||
+        'your email';
+
+      if (isFirstTime) {
+        setVerificationEmail(resolvedEmail);
+        setVerificationNotice({ email: resolvedEmail });
+        setIsVerifyModalVisible(true);
         await GoogleSignin.signOut();
-      } else if (response.token) {
+        return; // Prevent navigating to TabNavigation
+      }
+
+      if (response.token) {
         await secureStoreItem(SECURE_KEYS.USER_TOKEN, response.token);
         dispatch(setUserToken(response.token));
         dispatch(setGuestMode(false));
@@ -118,6 +144,12 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
         }
 
         navigation.reset({ index: 0, routes: [{ name: 'TabNavigation' }] });
+      } else {
+        // No token returned: treat as pending verification
+        setVerificationEmail(resolvedEmail);
+        setVerificationNotice({ email: resolvedEmail });
+        setIsVerifyModalVisible(true);
+        await GoogleSignin.signOut();
       }
     } catch (error: any) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -125,14 +157,32 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
       } else if (error.code === statusCodes.IN_PROGRESS) {
         // operation in progress
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        alert('Play services not available or outdated.');
+        Alert.alert('Play Services', 'Google Play services not available or outdated.');
       } else {
-        if (error.response?.status === 403 || error.response?.data?.message?.toLowerCase().includes('verify')) {
-          setVerificationEmail(error.response?.data?.email || 'your email');
+        const errorMsg =
+          error.response?.data?.message?.toLowerCase() ||
+          error.message?.toLowerCase() ||
+          '';
+
+        const isVerificationRequired =
+          error.response?.status === 403 ||
+          errorMsg.includes('verify') ||
+          errorMsg.includes('verification');
+
+        if (isVerificationRequired) {
+          const emailToVerify =
+            error.response?.data?.email ||
+            error.response?.data?.user?.email ||
+            verificationEmail ||
+            'your email';
+
+          setVerificationEmail(emailToVerify);
+          setVerificationNotice({ email: emailToVerify });
+          setIsVerifyModalVisible(true);
           await GoogleSignin.signOut();
         } else {
           console.error('Google Sign-In Error:', error);
-          alert(error.response?.data?.message || error.message || 'Something went wrong');
+          Alert.alert('Sign-In Error', error.response?.data?.message || error.message || 'Something went wrong');
         }
       }
     } finally {
@@ -147,8 +197,27 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
   };
 
   const handleResendVerification = () => {
-    if (verificationEmail) {
-      resendVerificationMutation.mutate({ email: verificationEmail });
+    const targetEmail = verificationEmail || verificationNotice?.email;
+    if (targetEmail) {
+      resendVerificationMutation.mutate(
+        { email: targetEmail },
+        {
+          onSuccess: (msg) => {
+            Alert.alert(
+              'Verification Email Sent',
+              msg || `A new verification email has been sent to ${targetEmail}. Please check your inbox.`,
+            );
+          },
+          onError: (err: any) => {
+            Alert.alert(
+              'Resend Failed',
+              err?.response?.data?.message || err.message || 'Failed to resend verification email. Please try again later.',
+            );
+          },
+        },
+      );
+    } else {
+      Alert.alert('Notice', 'No email address found to resend verification.');
     }
   };
 
@@ -237,10 +306,55 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
                 </Text>
               </YStack>
 
+              {/* In-screen verification notice if email verification pending */}
+              {verificationNotice && (
+                <YStack
+                  backgroundColor={isDarkMode ? 'rgba(59, 130, 246, 0.15)' : '#eff6ff'}
+                  borderColor={isDarkMode ? '#3b82f6' : '#93c5fd'}
+                  borderWidth={1.5}
+                  borderRadius="$4"
+                  padding="$3.5"
+                  marginBottom="$4"
+                  width="100%"
+                >
+                  <XStack alignItems="center" gap="$2" marginBottom="$1">
+                    <Icon name="email-alert" size={20} color="#3b82f6" />
+                    <Text fontSize={14.5} fontWeight="800" color={isDarkMode ? '#93c5fd' : '#1e40af'}>
+                      Please Verify Your Email
+                    </Text>
+                  </XStack>
+                  <Text fontSize={13} color={isDarkMode ? '#cbd5e1' : '#334155'} lineHeight={18}>
+                    Verification mail sent to <Text fontWeight="700" color={isDarkMode ? '#60a5fa' : '#1d4ed8'}>{verificationNotice.email}</Text>. Please verify your email before continuing.
+                  </Text>
+                  <XStack gap="$3" marginTop="$2.5" alignItems="center">
+                    <Button
+                      size="$3"
+                      backgroundColor="$blue10"
+                      borderRadius="$3"
+                      onPress={() => setIsVerifyModalVisible(true)}
+                      pressStyle={{ scale: 0.96 }}
+                    >
+                      <Text color="white" fontSize={12} fontWeight="700">Check Email</Text>
+                    </Button>
+                    <Button
+                      size="$3"
+                      chromeless
+                      onPress={handleResendVerification}
+                      disabled={resendVerificationMutation.isPending}
+                      pressStyle={{ opacity: 0.7 }}
+                    >
+                      <Text color="#3b82f6" fontSize={12} fontWeight="700">
+                        {resendVerificationMutation.isPending ? 'Sending...' : 'Resend Mail'}
+                      </Text>
+                    </Button>
+                  </XStack>
+                </YStack>
+              )}
+
               <YStack gap="$3" width="100%" marginBottom="$6">
                 <RoleCard 
                   type="General User"
-                  title="General User"
+                  title="Patient / User"
                   description="Find health articles, manage care, and learn."
                   icon="account-outline"
                 />
@@ -329,7 +443,7 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
               textAlign="center"
               letterSpacing={-0.5}
             >
-              Sign in as {role === 'Doctor' ? 'Doctor' : 'User'}
+              Sign in as {role === 'Doctor' ? 'Doctor' : 'Patient'}
             </Text>
             <Text
               fontSize={15}
@@ -337,10 +451,55 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
               marginTop="$3"
               textAlign="center"
               lineHeight={22}
-              marginBottom="$10"
+              marginBottom={verificationNotice ? "$4" : "$10"}
             >
               Use your Google account for a secure and seamless sign in.
             </Text>
+
+            {/* In-screen verification notice if email verification pending */}
+            {verificationNotice && (
+              <YStack
+                backgroundColor={isDarkMode ? 'rgba(59, 130, 246, 0.15)' : '#eff6ff'}
+                borderColor={isDarkMode ? '#3b82f6' : '#93c5fd'}
+                borderWidth={1.5}
+                borderRadius="$4"
+                padding="$3.5"
+                marginBottom="$5"
+                width="100%"
+              >
+                <XStack alignItems="center" gap="$2" marginBottom="$1">
+                  <Icon name="email-alert" size={20} color="#3b82f6" />
+                  <Text fontSize={14.5} fontWeight="800" color={isDarkMode ? '#93c5fd' : '#1e40af'}>
+                    Please Verify Your Email
+                  </Text>
+                </XStack>
+                <Text fontSize={13} color={isDarkMode ? '#cbd5e1' : '#334155'} lineHeight={18}>
+                  Verification mail sent to <Text fontWeight="700" color={isDarkMode ? '#60a5fa' : '#1d4ed8'}>{verificationNotice.email}</Text>. Please verify before signing in.
+                </Text>
+                <XStack gap="$3" marginTop="$2.5" alignItems="center">
+                  <Button
+                    size="$3"
+                    backgroundColor="$blue10"
+                    borderRadius="$3"
+                    onPress={() => setIsVerifyModalVisible(true)}
+                    pressStyle={{ scale: 0.96 }}
+                  >
+                    <Text color="white" fontSize={12} fontWeight="700">Check Email</Text>
+                  </Button>
+                  <Button
+                    size="$3"
+                    chromeless
+                    onPress={handleResendVerification}
+                    disabled={resendVerificationMutation.isPending}
+                    pressStyle={{ opacity: 0.7 }}
+                  >
+                    <Text color="#3b82f6" fontSize={12} fontWeight="700">
+                      {resendVerificationMutation.isPending ? 'Sending...' : 'Resend Mail'}
+                    </Text>
+                  </Button>
+                </XStack>
+              </YStack>
+            )}
 
             {/* Google Sign-In button */}
             <Button
@@ -386,10 +545,11 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
       </YStack>
 
       <EmailVerifyModal
-        visible={!!verificationEmail}
+        visible={isVerifyModalVisible}
         email={verificationEmail || undefined}
-        onDismiss={() => setVerificationEmail(null)}
+        onDismiss={() => setIsVerifyModalVisible(false)}
         onResend={handleResendVerification}
+        isResending={resendVerificationMutation.isPending}
       />
     </KeyboardAvoidingView>
   );

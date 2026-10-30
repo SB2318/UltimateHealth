@@ -13,7 +13,8 @@ import { View,
   Alert,
    } from 'react-native';
 import {useAppSelector} from '../../store/hooks';
-import {PodcastFormProp, Category} from '../../schemas/type';
+import {PodcastFormProp, Category, PodcastEpisode} from '../../schemas/type';
+import {useGetPodcastEpisodes} from '../../hooks/podcast/useGetPodcastEpisodes';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {
@@ -34,6 +35,12 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
   const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
   const [language, setLanguage] = useState('en');
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const initialEpisodeId = route.params?.episodeId;
+  const {data: episodes = []} = useGetPodcastEpisodes();
+  const [selectedEpisodeId, setSelectedEpisodeId] = useState<string | null>(
+    initialEpisodeId || null,
+  );
+  const [episodeModalVisible, setEpisodeModalVisible] = useState(false);
   const {categories} = useAppSelector((state: any) => state.data);
   const [imageUtils, setImageUtils] = useState('');
 
@@ -106,6 +113,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
       description: description,
       selectedGenres: selectedGenres,
       imageUtils: imageUtils,
+      episodeId: selectedEpisodeId || null,
     });
   };
 
@@ -217,6 +225,91 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
     );
   };
 
+  const selectedEpisode = episodes.find(
+    (ep: PodcastEpisode) => (ep._id || ep.id) === selectedEpisodeId,
+  );
+
+  const EpisodeSelector = () => {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={episodeModalVisible}
+        onRequestClose={() => setEpisodeModalVisible(false)}>
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setEpisodeModalVisible(false)}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Select Episode Series</Text>
+              <TouchableOpacity onPress={() => setEpisodeModalVisible(false)}>
+                <Ionicon name="close" size={24} color="#222" />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={[
+                styles.languageItem,
+                !selectedEpisodeId && styles.selectedLanguageItem,
+              ]}
+              onPress={() => {
+                setSelectedEpisodeId(null);
+                setEpisodeModalVisible(false);
+              }}>
+              <Text
+                style={[
+                  styles.languageItemText,
+                  !selectedEpisodeId && styles.selectedLanguageItemText,
+                ]}>
+                None (Standalone Podcast)
+              </Text>
+              {!selectedEpisodeId && (
+                <Ionicon name="checkmark" size={20} color={PRIMARY_COLOR} />
+              )}
+            </TouchableOpacity>
+            <FlatList
+              data={episodes}
+              keyExtractor={(item: PodcastEpisode) => item._id || item.id || ''}
+              renderItem={({item}: {item: PodcastEpisode}) => {
+                const epId = item._id || item.id;
+                const isItemSel = selectedEpisodeId === epId;
+                return (
+                  <TouchableOpacity
+                    style={[
+                      styles.languageItem,
+                      isItemSel && styles.selectedLanguageItem,
+                    ]}
+                    onPress={() => {
+                      setSelectedEpisodeId(epId || null);
+                      setEpisodeModalVisible(false);
+                    }}>
+                    <View style={{flex: 1}}>
+                      <Text
+                        style={[
+                          styles.languageItemText,
+                          isItemSel && styles.selectedLanguageItemText,
+                        ]}>
+                        {item.name}
+                      </Text>
+                      {item.description ? (
+                        <Text style={{fontSize: 12, color: '#6b7280'}} numberOfLines={1}>
+                          {item.description}
+                        </Text>
+                      ) : null}
+                    </View>
+                    {isItemSel && (
+                      <Ionicon name="checkmark" size={20} color={PRIMARY_COLOR} />
+                    )}
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView
@@ -231,6 +324,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
         }}>
         <WarningBox />
         <LanguageSelector />
+        <EpisodeSelector />
 
         <View style={styles.form}>
           {/* Header Section */}
@@ -340,6 +434,21 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
                 onPress={() => setLanguageModalVisible(true)}>
                 <Text style={styles.languageSelectorText}>
                   {getLanguageLabel(language)}
+                </Text>
+                <Ionicon name="chevron-down" size={20} color="#6b7280" />
+              </TouchableOpacity>
+            </View>
+
+            {/* Episode Series Dropdown */}
+            <View style={styles.input}>
+              <Text style={styles.inputLabel}>
+                <Ionicon name="albums-outline" size={18} color="#222" /> Episode Series (Optional)
+              </Text>
+              <TouchableOpacity
+                style={styles.languageSelector}
+                onPress={() => setEpisodeModalVisible(true)}>
+                <Text style={styles.languageSelectorText}>
+                  {selectedEpisode ? selectedEpisode.name : 'None (Standalone Podcast)'}
                 </Text>
                 <Ionicon name="chevron-down" size={20} color="#6b7280" />
               </TouchableOpacity>

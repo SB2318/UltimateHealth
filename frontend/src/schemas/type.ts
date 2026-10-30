@@ -50,7 +50,12 @@ export type RootStackParamList = {
     recordId?: string;
   };
   PodcastProfile: undefined;
-  PlaylistDetailScreen: { playlist: PlayList };
+  PlaylistDetailScreen: {
+    playlist?: PlayList;
+    playlistId?: string;
+    episodeId?: string;
+    title?: string;
+  };
   ReviewScreen: {
     articleId: number;
     authorId: string;
@@ -117,12 +122,17 @@ export type RootStackParamList = {
     podcast: PodcastData;
   };
   PodcastSearch: undefined;
-  PodcastForm: undefined;
+  PodcastForm:
+    | {
+        episodeId?: string;
+      }
+    | undefined;
   PodcastRecorder: {
     title: string;
     description: string;
     selectedGenres: Category[];
     imageUtils: string;
+    episodeId?: string | null;
   };
   PodcastPlayer: {
     filePath: string;
@@ -130,6 +140,7 @@ export type RootStackParamList = {
     description: string;
     selectedGenres: Category[];
     imageUtils: string;
+    episodeId?: string | null;
   };
   Privacy: undefined;
   CommunityGuidelines: undefined;
@@ -692,6 +703,22 @@ export type PodcastData = {
   downloadAt: Date | null;
   commentCount: number | 0;
   language?: string;
+  episode_id?: string | PodcastEpisode | null;
+  episode_number?: number;
+};
+
+export type PodcastEpisode = {
+  _id: string;
+  id?: string;
+  user_id?: string;
+  name: string;
+  description: string;
+  podcasts_count: number;
+  podcastsCount?: number;
+  created_at: string;
+  createdAt?: string;
+  updated_at: string;
+  updatedAt?: string;
 };
 
 export type UserStatus = {

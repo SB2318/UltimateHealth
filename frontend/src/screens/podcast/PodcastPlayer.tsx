@@ -31,7 +31,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
 
   const [duration, setDuration] = useState(0);
   const theme = useTheme();
-  const {title, description, selectedGenres, imageUtils, filePath} =
+  const {title, description, selectedGenres, imageUtils, filePath, episodeId} =
     route.params;
 
   //const [elapsedMs, setElapsedMs] = useState(0);
@@ -200,6 +200,7 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
             audio_url: audioUrl,
             cover_image: uploadedUrl,
             duration: player.duration as number,
+            episode_id: episodeId || null,
           },
           {
             onSuccess: async data => {

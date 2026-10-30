@@ -98,6 +98,15 @@ const UPLOAD_PODCAST = `${PROD_URL}/podcast/create`;
 const GET_PLAYLIST = `${PROD_URL}/podcast/get-my-playlists`;
 const CREATE_PLAYLIST = `${PROD_URL}/podcast/create-playlist`;
 const ADD_TO_PLAYLIST = `${PROD_URL}/podcast/add-podcast-to-playlist`;
+const REMOVE_PODCAST_FROM_PLAYLIST = `${PROD_URL}/podcast/remove-podcast-to-playlist`;
+const GET_PLAYLIST_DETAILS = `${PROD_URL}/podcast/playlist-details`;
+const DELETE_PLAYLIST = `${PROD_URL}/podcast/delete-playlist`;
+const GET_PODCAST_EPISODES = `${PROD_URL}/podcast-episodes`;
+const CREATE_PODCAST_EPISODE = `${PROD_URL}/podcast-episodes`;
+const GET_PODCAST_EPISODE_BY_ID = (episodeId: string) => `${PROD_URL}/podcast-episodes/${episodeId}`;
+const UPDATE_PODCAST_EPISODE = (episodeId: string) => `${PROD_URL}/podcast-episodes/${episodeId}`;
+const DELETE_PODCAST_EPISODE = (episodeId: string) => `${PROD_URL}/podcast-episodes/${episodeId}`;
+const GET_EPISODE_PODCASTS = (episodeId: string) => `${PROD_URL}/episodes/${episodeId}/podcasts`;
 const UPDATE_PODCAST_PLAYLIST = `${PROD_URL}/podcast/update-playlist`;
 
 const DISCARDED_PODCASTS = `${PROD_URL}/podcast/discarded`;
@@ -200,6 +209,15 @@ export {
   GET_PLAYLIST,
   CREATE_PLAYLIST,
   ADD_TO_PLAYLIST,
+  REMOVE_PODCAST_FROM_PLAYLIST,
+  GET_PLAYLIST_DETAILS,
+  DELETE_PLAYLIST,
+  GET_PODCAST_EPISODES,
+  CREATE_PODCAST_EPISODE,
+  GET_PODCAST_EPISODE_BY_ID,
+  UPDATE_PODCAST_EPISODE,
+  DELETE_PODCAST_EPISODE,
+  GET_EPISODE_PODCASTS,
   UPDATE_PODCAST_PLAYLIST,
   UPLOAD_PODCAST,
   DISCARDED_PODCASTS,

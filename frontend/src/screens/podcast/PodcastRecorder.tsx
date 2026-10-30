@@ -38,7 +38,7 @@ const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
   const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
   const recorderState = useAudioRecorderState(audioRecorder, 500);
   const [recordTime, setRecordTime] = useState('00:00:00');
-  const {title, description, selectedGenres, imageUtils} = route.params;
+  const {title, description, selectedGenres, imageUtils, episodeId} = route.params;
   const [filePath, setFilePath] = useState<string | null>(null);
 
   const [amplitudes, setAmplitudes] = useState<number[]>([]);
@@ -425,6 +425,7 @@ const stopRecording = async () => {
                     imageUtils,
                     selectedGenres,
                     filePath: audioRecorder.uri || '',
+                    episodeId: episodeId || null,
                   })
                 }>
                 <Icon name="play" size={36} color="#60A5FA" />
