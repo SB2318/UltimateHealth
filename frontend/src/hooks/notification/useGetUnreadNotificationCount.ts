@@ -8,6 +8,7 @@ export const useGetUnreadNotificationCount = (
   isConnected: boolean,
 ): UseQueryResult<number, AxiosError> => {
   const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const user_token = useAppSelector((state: any) => state.user.user_token);
 
   return useQuery({
     queryKey: ['get-unread-notifications-count'],
@@ -17,6 +18,6 @@ export const useGetUnreadNotificationCount = (
       );
       return response.data.unreadCount as number;
     },
-    enabled: !!isConnected && !isGuest,
+    enabled: !!isConnected && !isGuest && Boolean(user_token),
   });
 };

@@ -10,6 +10,7 @@ User,
 AxiosError
 >=>{
     const isGuest = useAppSelector(state => state.user.isGuest);
+    const user_token = useAppSelector(state => state.user.user_token);
    
     return useQuery({
     queryKey: ['get-user-details-by-id'],
@@ -18,6 +19,6 @@ AxiosError
 
       return response.data.profile as User;
     },
-    enabled: !!isConnected && !isGuest,
+    enabled: !!isConnected && !isGuest && Boolean(user_token),
   });
 }

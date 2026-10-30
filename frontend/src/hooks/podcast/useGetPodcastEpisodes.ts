@@ -10,6 +10,7 @@ type AxiosError = any;
 export const useGetPodcastEpisodes = (): UseQueryResult<PodcastEpisode[], AxiosError> => {
   const isGuest = useAppSelector((state: RootState) => state.user.isGuest);
   const userId = useAppSelector((state: RootState) => state.user.user_id);
+  const user_token = useAppSelector((state: RootState) => state.user.user_token);
 
   return useQuery({
     queryKey: ['podcast-episodes', userId],
@@ -17,6 +18,6 @@ export const useGetPodcastEpisodes = (): UseQueryResult<PodcastEpisode[], AxiosE
       const res = await axios.get(GET_PODCAST_EPISODES);
       return (res.data || []) as PodcastEpisode[];
     },
-    enabled: !isGuest,
+    enabled: !isGuest && Boolean(user_token),
   });
 };

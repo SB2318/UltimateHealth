@@ -16,10 +16,11 @@ export const useGetNotificationPreferences = (
 ): UseQueryResult<NotificationPreferencesResponse, AxiosError> => {
   const isGuest = useAppSelector((state: RootState) => state.user.isGuest);
   const userId = useAppSelector((state: RootState) => state.user.user_id);
+  const user_token = useAppSelector((state: RootState) => state.user.user_token);
 
   return useQuery({
     queryKey: ['notification-preferences', userId],
     queryFn: fetchNotificationPreferences,
-    enabled: isConnected && !isGuest,
+    enabled: isConnected && !isGuest && Boolean(user_token),
   });
 };

@@ -9,19 +9,15 @@ type AxiosError = any;
 export const useGetProfile = (): UseQueryResult<User, AxiosError> => {
   const isGuest = useAppSelector((state: RootState) => state.user.isGuest);
   const userId = useAppSelector((state: RootState) => state.user.user_id);
+  const user_token = useAppSelector((state: RootState) => state.user.user_token);
 
   return useQuery({
     queryKey: ['get-my-profile', userId],
     queryFn: async () => {
       const response = await axios.get(`${GET_PROFILE_API}`);
-      // console.log('[useGetProfile] status:', response.status);
-      //console.log('[useGetProfile] response.data keys:', Object.keys(response.data || {}));
-      //console.log('[useGetProfile] response.data:', JSON.stringify(response.data).slice(0, 500));
-
-      //console.log('[useGetProfile] response.data.user:', JSON.stringify(response.data.user).slice(0, 500));
-      const data =  response.data.data;
+      const data = response.data.data;
       return data as User;
     },
-    enabled: !isGuest,
+    enabled: !isGuest && Boolean(user_token),
   });
 };
