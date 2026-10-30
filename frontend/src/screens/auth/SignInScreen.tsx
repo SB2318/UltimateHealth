@@ -116,10 +116,12 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
         return undefined;
       };
 
-      const authToken =
-        extractCleanToken(response.token) || extractCleanToken(response.accessToken);
       const refreshToken =
         extractCleanToken(response.refreshToken);
+      const authToken =
+        refreshToken ||
+        extractCleanToken(response.token) ||
+        extractCleanToken(response.accessToken);
 
       // In the instant onboarding flow, new and returning users are immediately verified
       // and issued access + refresh tokens. Proceed directly to authenticated session.

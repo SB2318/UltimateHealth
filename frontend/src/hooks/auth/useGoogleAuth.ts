@@ -75,15 +75,16 @@ const googleAuthFunc = async (req: GoogleAuthReq): Promise<GoogleAuthResponse> =
 
   const raw = res.data ?? {};
   const nested = (raw.data && typeof raw.data === 'object') ? raw.data : {};
+  const resolvedRefreshToken =
+    extractToken(raw.refreshToken) ??
+    extractToken(nested.refreshToken);
+
   const resolvedToken =
+    resolvedRefreshToken ??
     extractToken(raw.token) ??
     extractToken(nested.token) ??
     extractToken(raw.accessToken) ??
     extractToken(nested.accessToken);
-
-  const resolvedRefreshToken =
-    extractToken(raw.refreshToken) ??
-    extractToken(nested.refreshToken);
 
   const resolvedUser = raw.user ?? nested.user;
 
