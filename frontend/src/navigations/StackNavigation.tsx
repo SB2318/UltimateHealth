@@ -704,25 +704,9 @@ const StackNavigation = () => {
       <Stack.Screen
         name="ProfileEditScreen"
         component={ProfileEditScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          title: 'Edit Profile',
-          headerBackTitleVisible: false,
-          headerTintColor: 'white',
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerShadowVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.profileScreenHeaderLeftButton}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color="white" />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="NotificationPreferencesScreen"

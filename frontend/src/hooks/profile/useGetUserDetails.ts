@@ -6,9 +6,9 @@ import { useAppSelector } from "../../store/hooks";
 type AxiosError = any;
 
 export const useGetUserDetails = (isConnected: boolean): UseQueryResult<
-User,
+User | null,
 AxiosError
->=>{
+> => {
     const isGuest = useAppSelector(state => state.user.isGuest);
     const user_token = useAppSelector(state => state.user.user_token);
    
@@ -16,9 +16,9 @@ AxiosError
     queryKey: ['get-user-details-by-id'],
     queryFn: async () => {
       const response = await axios.get(`${GET_USER_DETAILS_API}`);
-
-      return response.data.profile as User;
+      const profile = response?.data?.data ?? response?.data?.profile ?? response?.data ?? null;
+      return (profile ?? null) as User | null;
     },
     enabled: !!isConnected && !isGuest && Boolean(user_token),
   });
-}
+};

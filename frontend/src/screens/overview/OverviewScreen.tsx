@@ -82,7 +82,7 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
         {...props}
         indicatorStyle={styles.indicatorStyle}
         style={styles.tabBarStyle}
-        activeColor={PRIMARY_COLOR}
+        activeColor={BUTTON_COLOR}
         inactiveColor="#9098A3"
         labelStyle={styles.labelStyle}
         contentContainerStyle={styles.contentContainerStyle}

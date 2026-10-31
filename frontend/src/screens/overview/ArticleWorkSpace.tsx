@@ -106,9 +106,9 @@ export default function ArticleWorkSpace({
               style={{
                 ...styles.button,
                 backgroundColor:
-                  item.status !== selectedStatus ? 'white' : PRIMARY_COLOR,
+                  item.status !== selectedStatus ? 'white' : BUTTON_COLOR,
                 borderColor:
-                  item.status !== selectedStatus ? PRIMARY_COLOR : 'white',
+                  item.status !== selectedStatus ? '#D1D5DB' : BUTTON_COLOR,
               }}
               onPress={() => {
                 setSelectedStatus(item.status);

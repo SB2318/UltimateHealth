@@ -172,8 +172,8 @@ export default function PodcastWorkSpace({
               style={{
                 ...styles.button,
                 backgroundColor:
-                  selectedStatus !== item ? 'white' : PRIMARY_COLOR,
-                borderColor: selectedStatus !== item ? PRIMARY_COLOR : 'white',
+                  selectedStatus !== item ? 'white' : BUTTON_COLOR,
+                borderColor: selectedStatus !== item ? '#D1D5DB' : BUTTON_COLOR,
               }}
               onPress={() => {
                 setSelectedStatus(item);

@@ -13,20 +13,15 @@ import {
 } from 'react-native';
 import React from 'react';
 import AccessibleTouchable from '../common/AccessibleTouchable';
-import EllipseSvg from '../../assets/svg/EllipseSvg';
-import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import { BUTTON_COLOR } from '../../lib/ui/Theme';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
-import Feather from '@expo/vector-icons/Feather';
-import {RootStackParamList,ProfileHeaderProps} from '../../schemas/type';
-import {NavigationProp} from '@react-navigation/native';
-import {fp, hp, wp} from '../../lib/ui/Metric';
-
-
-import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
-import {buildMailLink, buildPhoneLink} from '../../lib/utils/contactLinks';
-import {useAppSelector} from '../../store/hooks';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { ProfileHeaderProps } from '../../schemas/type';
+import { fp, hp, wp } from '../../lib/ui/Metric';
+import { GET_STORAGE_DATA } from '../../lib/api/APIUtils';
+import { buildMailLink, buildPhoneLink } from '../../lib/utils/contactLinks';
+import { useAppSelector } from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
 
 const ProfileHeader = ({
@@ -48,142 +43,157 @@ const ProfileHeader = ({
   isFollowing,
   onFollowClick,
   onOverviewClick,
-}: ProfileHeaderProps) => {
-  const {isConnected} = useAppSelector((state: any) => state.network);
+  about,
+}: ProfileHeaderProps & { about?: string }) => {
+  const { isConnected } = useAppSelector((state: any) => state.network);
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
   const themeColors = {
-    background: isDark ? '#121212' : '#ffffff',
-    text: isDark ? '#ffffff' : '#111827',
-    textSecondary: isDark ? '#9ca3af' : '#6b7280',
-    card: isDark ? '#1f2937' : '#ffffff',
-    border: isDark ? '#374151' : '#e5e7eb',
-    iconBackground: isDark ? '#374151' : '#f3f4f6',
+    background: isDark ? '#111827' : '#FFFFFF',
+    text: isDark ? '#F9FAFB' : '#111827',
+    textSecondary: isDark ? '#9CA3AF' : '#6B7280',
+    card: isDark ? '#1F2937' : '#FFFFFF',
+    border: isDark ? '#374151' : '#E5E7EB',
+    iconBackground: isDark ? '#374151' : '#F3F4F6',
+    bannerBg: isDark ? '#1E293B' : '#000A60',
+    bioBg: isDark ? '#1F2937' : '#F8FAFC',
+    bioBorder: isDark ? '#374151' : '#E2E8F0',
   };
 
   const handleCall = (phone: string | undefined) => {
     const phoneLink = buildPhoneLink(phone, Platform.OS);
-
     if (!phoneLink) {
-      Alert.alert(
-        'Invalid Phone Number',
-        'The provided phone number is not valid.',
-      );
+      Alert.alert('Invalid Phone Number', 'The provided phone number is not valid.');
       return;
     }
-
     Linking.openURL(phoneLink).catch(() =>
-      Alert.alert(
-        'Unable to make call',
-        'Could not open the phone application. Please ensure a calling app is installed.',
-      ),
+      Alert.alert('Unable to make call', 'Could not open the phone application.'),
     );
   };
 
   const handleMail = (mail: string | undefined) => {
     const mailLink = buildMailLink(mail);
-
     if (!mailLink) {
-      Alert.alert(
-        'Invalid Email Address',
-        'The provided email address is not valid.',
-      );
+      Alert.alert('Invalid Email Address', 'The provided email address is not valid.');
       return;
     }
-
     Linking.openURL(mailLink).catch(() =>
-      Alert.alert(
-        'Unable to send email',
-        'Could not open the email application. Please ensure an email app is installed.',
-      ),
+      Alert.alert('Unable to send email', 'Could not open the email application.'),
     );
   };
 
-  // Safe image parsing
   const getProfileImageUrl = () => {
     if (!profileImg) return undefined;
-    return profileImg.startsWith('https')
+    return profileImg.startsWith('http')
       ? profileImg
       : `${GET_STORAGE_DATA}/${profileImg}`;
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: themeColors.background}]}>
-      <EllipseSvg style={styles.ellipseSvg} />
+    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
+      {/* Decorative top accent band */}
+      <View style={[styles.bannerBar, { backgroundColor: themeColors.bannerBg }]} />
+
       <View style={styles.contentContainer}>
-        {/* Profile Image & Basic Info */}
-        <Image
-          source={{ uri: getProfileImageUrl() }}
-          style={[
-            styles.profileImage,
-            !profileImg && {borderWidth: 1, borderColor: themeColors.border},
-            { backgroundColor: themeColors.iconBackground }
-          ]}
-          accessible={true}
-          accessibilityRole="image"
-          accessibilityLabel={`${username || 'User'} profile picture`}
-        />
-        <Text style={[styles.nameText, {color: themeColors.text}]} numberOfLines={1}>
-          {username || 'Unknown User'}
+        {/* Profile Image with subtle ring */}
+        <View style={styles.avatarWrapper}>
+          <Image
+            source={{
+              uri:
+                getProfileImageUrl() ||
+                'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+            }}
+            style={[
+              styles.profileImage,
+              { backgroundColor: themeColors.iconBackground, borderColor: themeColors.card },
+            ]}
+            accessible={true}
+            accessibilityRole="image"
+            accessibilityLabel={`${username || 'User'} profile picture`}
+          />
+          {isDoctor && (
+            <View style={styles.doctorBadge} accessibilityLabel="Verified Doctor">
+              <FontAwesome name="user-md" size={14} color="#FFFFFF" />
+            </View>
+          )}
+        </View>
+
+        {/* User Info */}
+        <Text style={[styles.nameText, { color: themeColors.text }]} numberOfLines={1}>
+          {username || 'Anonymous User'}
         </Text>
-        <Text style={[styles.usernameText, {color: PRIMARY_COLOR}]} numberOfLines={1}>
+        <Text style={[styles.usernameText, { color: BUTTON_COLOR }]} numberOfLines={1}>
           @{userhandle || 'username'}
         </Text>
 
-        {isDoctor && experience && (
+        {/* Doctor Experience Tag */}
+        {isDoctor && Boolean(experience) && (
           <View style={styles.experienceContainer}>
-            <FontAwesome name="stethoscope" size={hp(2.5)} color={themeColors.textSecondary} />
-            <Text style={[styles.experienceText, {color: themeColors.textSecondary}]}>
+            <FontAwesome name="stethoscope" size={14} color={themeColors.textSecondary} />
+            <Text style={[styles.experienceText, { color: themeColors.textSecondary }]}>
               {experience} years experience
             </Text>
           </View>
         )}
 
+        {/* Bio / About */}
+        {Boolean(about) && (
+          <View style={[styles.bioCard, { backgroundColor: themeColors.bioBg, borderColor: themeColors.bioBorder }]}>
+            <Text style={[styles.bioText, { color: themeColors.text }]} numberOfLines={3}>
+              {about}
+            </Text>
+          </View>
+        )}
+
         {/* Primary Actions:
-            - other === false: viewing someone else — show Follow/Unfollow OR doctor Call/Email
-            - other === true: viewing own profile — show prominent Edit Profile button
-            Doctors always see their own Call/Email buttons on their own profile too. */}
+            - other === true: viewing own profile — show Edit Profile button
+            - other === false: viewing someone else — show Follow/Unfollow OR Doctor Call/Email */}
         <View style={styles.primaryActionContainer}>
           {other ? (
-            // Own profile: Edit Profile + Logout side by side
             <View style={styles.primaryActionRow}>
               <AccessibleTouchable
                 activeOpacity={0.7}
                 onPress={() => (navigation as any).navigate('ProfileEditScreen')}
                 accessibilityLabel="Edit profile"
                 accessibilityHint="Navigates to edit profile screen"
-                style={[styles.primaryBtn, {backgroundColor: PRIMARY_COLOR, flex: 1}]}
-              >
-                <MaterialIcons name="edit" size={20} color="#ffffff" />
-                <Text style={[styles.primaryBtnText, {color: '#ffffff'}]}>Edit Profile</Text>
+                style={[styles.primaryBtn, { backgroundColor: BUTTON_COLOR, flex: 1 }]}>
+                <Ionicons name="pencil" size={18} color="#FFFFFF" />
+                <Text style={styles.primaryBtnText}>Edit Profile</Text>
               </AccessibleTouchable>
 
               <AccessibleTouchable
                 activeOpacity={0.7}
                 onPress={() => {
                   if (isConnected) {
-                    (navigation as any).navigate('LogoutScreen', { profile_image: profileImg, username: username });
+                    (navigation as any).navigate('LogoutScreen', {
+                      profile_image: profileImg,
+                      username: username,
+                    });
                   } else {
-                    Snackbar.show({ text: 'Please check your internet connection!', duration: Snackbar.LENGTH_SHORT });
+                    Snackbar.show({
+                      text: 'Please check your internet connection!',
+                      duration: Snackbar.LENGTH_SHORT,
+                    });
                   }
                 }}
                 accessibilityLabel="Logout"
                 accessibilityHint="Logs out from your account"
-                style={styles.logoutIconBtn}
-              >
+                style={[
+                  styles.logoutIconBtn,
+                  { backgroundColor: isDark ? 'rgba(239, 68, 68, 0.15)' : '#FEF2F2' },
+                ]}>
                 <MaterialIcons name="logout" size={22} color="#EF4444" />
               </AccessibleTouchable>
             </View>
           ) : isDoctor ? (
-            // Viewing a doctor's profile: Call & Email
             <View style={styles.contactContainer}>
               <AccessibleTouchable
                 activeOpacity={0.7}
                 onPress={() => handleCall(userPhoneNumber)}
                 accessibilityLabel="Call doctor"
                 accessibilityHint="Opens phone dialer to call the doctor"
-                style={[styles.iconButton, {backgroundColor: PRIMARY_COLOR}]}>
+                style={[styles.iconButton, { backgroundColor: BUTTON_COLOR }]}>
                 <MaterialIcons name="phone-in-talk" size={22} color="#ffffff" />
               </AccessibleTouchable>
               <AccessibleTouchable
@@ -191,12 +201,11 @@ const ProfileHeader = ({
                 onPress={() => handleMail(userEmailID)}
                 accessibilityLabel="Send email"
                 accessibilityHint="Opens mail app to send an email"
-                style={[styles.iconButton, {backgroundColor: PRIMARY_COLOR}]}>
+                style={[styles.iconButton, { backgroundColor: BUTTON_COLOR }]}>
                 <MaterialIcons name="email" size={22} color="#ffffff" />
               </AccessibleTouchable>
             </View>
           ) : (
-            // Viewing a regular user's profile: Follow/Unfollow
             <AccessibleTouchable
               activeOpacity={0.7}
               onPress={onFollowClick}
@@ -205,66 +214,89 @@ const ProfileHeader = ({
               style={[
                 styles.primaryBtn,
                 {
-                  backgroundColor: PRIMARY_COLOR,
+                  backgroundColor: isFollowing ? 'transparent' : BUTTON_COLOR,
                   borderWidth: 1.5,
-                  borderColor: isFollowing ? PRIMARY_COLOR : 'transparent',
+                  borderColor: BUTTON_COLOR,
                 },
-              ]}
-            >
-              <MaterialIcons
-                name={isFollowing ? 'person-outline' : 'person-add'}
-                size={20}
-                color={'white'}
+              ]}>
+              <Ionicons
+                name={isFollowing ? 'checkmark-outline' : 'person-add-outline'}
+                size={18}
+                color={isFollowing ? BUTTON_COLOR : '#FFFFFF'}
               />
-              <Text style={[styles.primaryBtnText, {color: 'white' }]}>
+              <Text
+                style={[
+                  styles.primaryBtnText,
+                  { color: isFollowing ? BUTTON_COLOR : '#FFFFFF' },
+                ]}>
                 {isFollowing ? 'Following' : 'Follow'}
               </Text>
             </AccessibleTouchable>
           )}
         </View>
 
-        {/* Stats Cards */}
-        {isDoctor && (
-          <View style={[styles.statsCard, styles.doctorInfoCard, styles.shadowProps, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}>
-            <View style={styles.statItem}>
-              <Text style={[styles.doctorInfoValue, {color: PRIMARY_COLOR}]} numberOfLines={2}>{specialization || 'N/A'}</Text>
-              <Text style={[styles.statLabel, {color: themeColors.textSecondary}]}>Specialization</Text>
-            </View>
-            <View style={[styles.statDividerFull, {backgroundColor: themeColors.border}]} />
-            <View style={styles.statItem}>
-              <Text style={[styles.doctorInfoValue, {color: PRIMARY_COLOR}]} numberOfLines={2}>{qualification || 'N/A'}</Text>
-              <Text style={[styles.statLabel, {color: themeColors.textSecondary}]}>Qualification</Text>
-            </View>
+        {/* Doctor Credentials Card */}
+        {isDoctor && (Boolean(specialization) || Boolean(qualification)) && (
+          <View
+            style={[
+              styles.statsCard,
+              styles.doctorInfoCard,
+              { backgroundColor: themeColors.card, borderColor: themeColors.border },
+            ]}>
+            {Boolean(specialization) && (
+              <View style={styles.statItem}>
+                <Text style={[styles.doctorInfoValue, { color: BUTTON_COLOR }]} numberOfLines={2}>
+                  {specialization}
+                </Text>
+                <Text style={[styles.statLabel, { color: themeColors.textSecondary }]}>Specialization</Text>
+              </View>
+            )}
+            {Boolean(specialization) && Boolean(qualification) && (
+              <View style={[styles.statDividerFull, { backgroundColor: themeColors.border }]} />
+            )}
+            {Boolean(qualification) && (
+              <View style={styles.statItem}>
+                <Text style={[styles.doctorInfoValue, { color: BUTTON_COLOR }]} numberOfLines={2}>
+                  {qualification}
+                </Text>
+                <Text style={[styles.statLabel, { color: themeColors.textSecondary }]}>Qualification</Text>
+              </View>
+            )}
           </View>
         )}
 
-        <View style={[styles.statsCard, styles.shadowProps, {backgroundColor: themeColors.card, borderColor: themeColors.border}]}>
+        {/* Followers / Following Stats Card */}
+        <View
+          style={[
+            styles.statsCard,
+            { backgroundColor: themeColors.card, borderColor: themeColors.border },
+          ]}>
           <Pressable
             onPress={onFollowerPress}
             style={styles.statItem}
             accessibilityRole="button"
             accessibilityLabel={`Followers: ${followers || 0}`}
-            accessibilityHint="Opens followers list"
-          >
-            <Text style={[styles.statValue, {color: themeColors.text}]} numberOfLines={1}>{followers || 0}</Text>
-            <Text style={[styles.statLabel, {color: themeColors.textSecondary}]}>
+            accessibilityHint="Opens followers list">
+            <Text style={[styles.statValue, { color: themeColors.text }]} numberOfLines={1}>
+              {followers || 0}
+            </Text>
+            <Text style={[styles.statLabel, { color: themeColors.textSecondary }]}>
               {followers === 1 ? 'Follower' : 'Followers'}
             </Text>
           </Pressable>
-          <View style={[styles.statDivider, {backgroundColor: themeColors.border}]} />
+          <View style={[styles.statDivider, { backgroundColor: themeColors.border }]} />
           <Pressable
             onPress={onFollowingPress}
             style={styles.statItem}
             accessibilityRole="button"
             accessibilityLabel={`Following: ${followings || 0}`}
-            accessibilityHint="Opens following users list"
-          >
-            <Text style={[styles.statValue, {color: themeColors.text}]} numberOfLines={1}>{followings || 0}</Text>
-            <Text style={[styles.statLabel, {color: themeColors.textSecondary}]}>Following</Text>
+            accessibilityHint="Opens following users list">
+            <Text style={[styles.statValue, { color: themeColors.text }]} numberOfLines={1}>
+              {followings || 0}
+            </Text>
+            <Text style={[styles.statLabel, { color: themeColors.textSecondary }]}>Following</Text>
           </Pressable>
         </View>
-
-        {/* Secondary Actions List removed as they are now in Settings */}
       </View>
     </View>
   );
@@ -274,52 +306,79 @@ export default ProfileHeader;
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: hp(3),
-    flex: 1,
+    paddingBottom: hp(2),
+    position: 'relative',
   },
-  ellipseSvg: {
-    position: 'absolute',
-    top: -1,
+  bannerBar: {
+    height: 70,
     width: '100%',
   },
   contentContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: hp(2.5),
     paddingHorizontal: wp(5),
+    marginTop: -45,
+  },
+  avatarWrapper: {
+    position: 'relative',
+    marginBottom: 8,
   },
   profileImage: {
-    height: wp(30),
-    width: wp(30),
-    borderRadius: wp(15),
-    resizeMode: 'cover',
-    marginTop: hp(1),
+    height: 96,
+    width: 96,
+    borderRadius: 48,
+    borderWidth: 3,
+  },
+  doctorBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: BUTTON_COLOR,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
   nameText: {
-    fontSize: fp(6),
-    fontWeight: 'bold',
-    marginTop: hp(1.5),
+    fontSize: 20,
+    fontWeight: '700',
+    marginTop: 4,
     textAlign: 'center',
   },
   usernameText: {
-    fontSize: fp(4.2),
-    fontWeight: '500',
-    marginTop: hp(0.5),
+    fontSize: 14,
+    fontWeight: '600',
+    marginTop: 2,
     textAlign: 'center',
   },
   experienceContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: wp(2),
-    marginTop: hp(1),
+    gap: 6,
+    marginTop: 6,
   },
   experienceText: {
-    fontSize: fp(3.8),
+    fontSize: 13,
     fontWeight: '500',
   },
+  bioCard: {
+    marginTop: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+    maxWidth: '90%',
+  },
+  bioText: {
+    fontSize: 13,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
   primaryActionContainer: {
-    marginVertical: hp(2.5),
+    marginVertical: hp(2),
     width: '100%',
   },
   primaryActionRow: {
@@ -329,12 +388,11 @@ const styles = StyleSheet.create({
     gap: wp(3),
   },
   logoutIconBtn: {
-    width: wp(13),
-    height: wp(13),
+    width: 48,
+    height: 48,
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FEF2F2',
     borderWidth: 1,
     borderColor: '#FECACA',
   },
@@ -345,69 +403,50 @@ const styles = StyleSheet.create({
     gap: wp(5),
   },
   iconButton: {
-    height: wp(13),
-    width: wp(13),
-    borderRadius: wp(6.5),
+    height: 48,
+    width: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.15,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 6,
-      },
-    }),
+    shadowColor: BUTTON_COLOR,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
   },
   primaryBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 14,
-    paddingVertical: hp(1.5),
+    height: 48,
     paddingHorizontal: wp(5),
-    gap: wp(2),
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.12,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
+    gap: 8,
+    shadowColor: BUTTON_COLOR,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
   },
   primaryBtnText: {
-    fontSize: fp(4.2),
-    fontWeight: '600',
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
   statsCard: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    marginVertical: hp(1),
+    marginVertical: hp(0.8),
     borderRadius: 16,
-    paddingVertical: hp(2.5),
+    paddingVertical: hp(1.8),
     borderWidth: 1,
-  },
-  shadowProps: {
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   statItem: {
     flex: 1,
@@ -419,58 +458,29 @@ const styles = StyleSheet.create({
     height: '60%',
   },
   statValue: {
-    fontSize: fp(5.5),
-    fontWeight: 'bold',
-    marginBottom: hp(0.5),
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 2,
     textAlign: 'center',
   },
   doctorInfoValue: {
-    fontSize: fp(4.5),
-    fontWeight: 'bold',
-    marginBottom: hp(0.5),
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 2,
     textAlign: 'center',
-    flexShrink: 1,
   },
   doctorInfoCard: {
-    paddingVertical: hp(2),
+    paddingVertical: hp(1.5),
     paddingHorizontal: wp(3),
-    alignItems: 'stretch',
-    minHeight: hp(10),
   },
   statDividerFull: {
     width: 1,
-    alignSelf: 'stretch',
-    marginVertical: hp(1),
+    height: '70%',
+    alignSelf: 'center',
   },
   statLabel: {
-    fontSize: fp(3.5),
-    fontWeight: '600',
+    fontSize: 12,
+    fontWeight: '500',
     textAlign: 'center',
-  },
-  secondaryActionContainer: {
-    width: '100%',
-    marginTop: hp(2),
-    gap: hp(1.5),
-  },
-  listButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 14,
-    paddingVertical: hp(1.5),
-    paddingHorizontal: wp(4),
-    borderWidth: 1,
-  },
-  listButtonIconBg: {
-    width: wp(10),
-    height: wp(10),
-    borderRadius: wp(5),
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: wp(3.5),
-  },
-  listButtonText: {
-    flex: 1,
-    fontSize: fp(4.2),
-    fontWeight: '600',
   },
 });

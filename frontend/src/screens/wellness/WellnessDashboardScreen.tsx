@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   StyleSheet,
@@ -7,15 +8,17 @@ import {
   ActivityIndicator,
   TextInput,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {YStack, XStack, Text, Card, View, Button} from 'tamagui';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {YStack, XStack, Text, Card, View} from 'tamagui';
 import {useBottomTabBarHeight} from '@react-navigation/bottom-tabs';
 import {LineChart} from 'react-native-chart-kit';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {StatusBar} from 'expo-status-bar';
 import {PRIMARY_COLOR, BUTTON_COLOR} from '../../lib/ui/Theme';
-import {wp, hp, fp} from '../../lib/ui/Metric';
+import {wp, hp} from '../../lib/ui/Metric';
 import {useAppSelector} from '../../store/hooks';
 import {useGetWeeklyWellness} from '../../hooks/wellness/useGetWeeklyWellness';
 import {useLogWellness} from '../../hooks/wellness/useLogWellness';
@@ -50,9 +53,18 @@ const useSafeBottomTabBarHeight = (): number => {
   }
 };
 
+const useSafeTopInset = (): number => {
+  try {
+    return useSafeAreaInsets().top;
+  } catch {
+    return 0;
+  }
+};
+
 const WellnessDashboardScreen = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const bottomBarHeight = useSafeBottomTabBarHeight();
+  const topInset = useSafeTopInset();
   const screenWidth = Dimensions.get('window').width;
 
   const {isConnected} = useAppSelector((state: any) => state.network);
@@ -73,7 +85,7 @@ const WellnessDashboardScreen = () => {
   const [logError, setLogError] = useState('');
   const logMutation = useLogWellness();
 
-  // AI Wellness Plan state (synced with GET /wellness/plan, POST /wellness/plan/generate, GET /wellness/plan/history)
+  // AI Wellness Plan state
   const [activePlan, setActivePlan] = useState<WellnessPlan | null>(null);
   const [planHistory, setPlanHistory] = useState<WellnessPlan[]>([]);
   const [showPlanHistory, setShowPlanHistory] = useState(false);
@@ -144,7 +156,7 @@ const WellnessDashboardScreen = () => {
     }
   };
 
-  // On successful log: clear the form (D-06 — the hook already invalidated the weekly query)
+  // On successful log: clear the form
   useEffect(() => {
     if (logMutation.isSuccess) {
       setStepsInput('');
@@ -184,8 +196,6 @@ const WellnessDashboardScreen = () => {
       );
       return;
     }
-    // MAJOR-02: reject an all-empty submission — otherwise a `{date, metrics:{}}`
-    // payload renders as a fabricated "Log saved" and a 0-valued row.
     if (Object.values(parsed.data.metrics ?? {}).every(v => v === undefined)) {
       setLogError('Enter at least one metric to log today.');
       return;
@@ -196,7 +206,7 @@ const WellnessDashboardScreen = () => {
 
   const planGoals = activePlan?.goals ?? null;
   const todayLog = getTodayLog(weeklyLogs);
-  const todayMetrics = todayLog?.metrics ?? {}; // server rows may omit `metrics` (MAJOR-01)
+  const todayMetrics = todayLog?.metrics ?? {};
   const wellnessScore = calculateDashboardScore(weeklyLogs, planGoals);
 
   const stepsGoal = resolveGoalForMetric('steps', planGoals);
@@ -386,74 +396,93 @@ const WellnessDashboardScreen = () => {
 
   return (
     <SafeAreaView
+      edges={['bottom', 'left', 'right']}
       style={[
         styles.container,
         {backgroundColor: isDarkMode ? '#000A60' : '#F5F7FB'},
       ]}>
       <StatusBar style="light" backgroundColor="#000A60" />
+
+      {/* Top Header Bar — eliminates white status bar and unifies design */}
+      <View
+        style={[
+          styles.headerBar,
+          {
+            paddingTop: topInset + (Platform.OS === 'android' ? 10 : 6),
+          },
+        ]}>
+        <XStack alignItems="center" justifyContent="space-between">
+          <XStack alignItems="center" gap="$2.5">
+            <View style={styles.headerIconWrapper}>
+              <MaterialCommunityIcons name="heart-pulse" size={24} color="#00BFFF" />
+            </View>
+            <YStack>
+              <Text style={styles.headerTitleText}>
+                Wellness Dashboard
+              </Text>
+              <Text style={styles.headerSubtitleText}>
+                Track your vital metrics & health score
+              </Text>
+            </YStack>
+          </XStack>
+        </XStack>
+      </View>
+
       {isLoading ? (
         <View style={styles.centerContainer}>
           <ActivityIndicator
             size="large"
-            color={PRIMARY_COLOR}
+            color={BUTTON_COLOR}
             testID="loading-indicator"
           />
         </View>
       ) : isError ? (
         <View style={styles.centerContainer}>
           <Card
-            padding={16}
-            borderRadius={12}
+            padding={20}
+            borderRadius={16}
             backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
             bordered
             borderWidth={0.6}
-            borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}>
+            borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
+            alignItems="center"
+            width="100%">
+            <Ionicons name="alert-circle-outline" size={44} color="#EF4444" style={{marginBottom: 12}} />
             <Text
-              fontSize={fp(4)}
-              fontWeight="600"
-              color={isDarkMode ? '#FFFFFF' : '#333333'}>
+              fontSize={18}
+              fontWeight="700"
+              color={isDarkMode ? '#FFFFFF' : '#111827'}
+              textAlign="center">
               Unable to load wellness data
             </Text>
             <Text
-              fontSize={fp(3.2)}
-              color={isDarkMode ? '#B0C4DE' : '#777777'}
-              marginTop="$1">
+              fontSize={14}
+              color={isDarkMode ? '#B0C4DE' : '#6B7280'}
+              marginTop="$1.5"
+              textAlign="center">
               Check your connection and try again.
             </Text>
-            <Button
+            <TouchableOpacity
               onPress={() => refetch()}
-              marginTop="$3"
-              backgroundColor={BUTTON_COLOR}>
-              <Text color="#FFFFFF">Retry</Text>
-            </Button>
+              style={styles.primaryButton}
+              accessibilityRole="button"
+              accessibilityLabel="Retry">
+              <Ionicons name="refresh" size={18} color="#FFFFFF" />
+              <Text style={styles.primaryButtonText}>Retry</Text>
+            </TouchableOpacity>
           </Card>
         </View>
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
+            paddingTop: 16,
             paddingBottom: bottomBarHeight + hp(4),
             paddingHorizontal: wp(4),
           }}>
-          {/* Header Greeting */}
-          <YStack marginVertical="$3">
-            <Text
-              fontSize={fp(7)}
-              fontWeight="800"
-              color={isDarkMode ? '#FFFFFF' : '#0F52BA'}>
-              Wellness Dashboard
-            </Text>
-            <Text
-              fontSize={fp(3.8)}
-              color={isDarkMode ? '#B0C4DE' : '#666666'}
-              marginTop="$1">
-              Track your vital metrics and customized health score.
-            </Text>
-          </YStack>
-
           {weeklyLogs.length === 0 ? (
             <Card
-              padding={20}
+              padding={24}
               borderRadius={16}
               backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
               bordered
@@ -463,20 +492,20 @@ const WellnessDashboardScreen = () => {
               alignItems="center">
               <Ionicons
                 name="pulse-outline"
-                size={32}
-                color={PRIMARY_COLOR}
+                size={36}
+                color={BUTTON_COLOR}
               />
               <Text
-                fontSize={fp(4)}
-                fontWeight="600"
-                color={isDarkMode ? '#FFFFFF' : '#333333'}
-                marginTop="$2">
+                fontSize={18}
+                fontWeight="700"
+                color={isDarkMode ? '#FFFFFF' : '#111827'}
+                marginTop="$2.5">
                 No wellness data yet
               </Text>
               <Text
-                fontSize={fp(3.2)}
-                color={isDarkMode ? '#B0C4DE' : '#777777'}
-                marginTop="$1"
+                fontSize={14}
+                color={isDarkMode ? '#B0C4DE' : '#6B7280'}
+                marginTop="$1.5"
                 textAlign="center">
                 Log today&apos;s metrics to see your dashboard.
               </Text>
@@ -496,15 +525,16 @@ const WellnessDashboardScreen = () => {
                 <XStack justifyContent="space-between" alignItems="center">
                   <YStack flex={1}>
                     <Text
-                      fontSize={fp(4.2)}
+                      fontSize={18}
                       fontWeight="700"
-                      color={isDarkMode ? '#FFFFFF' : '#333333'}>
+                      color={isDarkMode ? '#FFFFFF' : '#111827'}>
                       Overall Health Score
                     </Text>
                     <Text
-                      fontSize={fp(3.2)}
-                      color={isDarkMode ? '#B0C4DE' : '#777777'}
-                      marginTop="$1">
+                      fontSize={13.5}
+                      color={isDarkMode ? '#B0C4DE' : '#6B7280'}
+                      marginTop="$1"
+                      lineHeight={18}>
                       Your score is calculated based on sleep, steps, and
                       hydration trends.
                     </Text>
@@ -516,8 +546,8 @@ const WellnessDashboardScreen = () => {
                         borderRadius={20}
                         backgroundColor="#E8F5E9">
                         <Text
-                          fontSize={fp(3.2)}
-                          fontWeight="bold"
+                          fontSize={13}
+                          fontWeight="700"
                           color="#2E7D32">
                           {wellnessScore}% of weekly goals
                         </Text>
@@ -528,13 +558,14 @@ const WellnessDashboardScreen = () => {
                   {/* Circular Ring Presentation */}
                   <View style={styles.scoreCircle}>
                     <Text
-                      fontSize={fp(6.5)}
-                      fontWeight="bold"
-                      color={PRIMARY_COLOR}>
+                      fontSize={26}
+                      fontWeight="800"
+                      color={BUTTON_COLOR}>
                       {wellnessScore}
                     </Text>
                     <Text
-                      fontSize={fp(3)}
+                      fontSize={13}
+                      fontWeight="600"
                       color={isDarkMode ? '#FFFFFF' : '#555555'}>
                       /100
                     </Text>
@@ -544,10 +575,10 @@ const WellnessDashboardScreen = () => {
 
               {/* Metrics Grid */}
               <Text
-                fontSize={fp(4.5)}
+                fontSize={18}
                 fontWeight="700"
-                color={isDarkMode ? '#FFFFFF' : '#333333'}
-                marginBottom={10}>
+                color={isDarkMode ? '#FFFFFF' : '#111827'}
+                marginBottom={12}>
                 Today&apos;s Metrics
               </Text>
               <XStack
@@ -558,8 +589,8 @@ const WellnessDashboardScreen = () => {
                   <Card
                     key={item.id}
                     width={wp(44)}
-                    padding={12}
-                    borderRadius={12}
+                    padding={14}
+                    borderRadius={14}
                     backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
                     bordered
                     borderWidth={0.6}
@@ -571,9 +602,9 @@ const WellnessDashboardScreen = () => {
                       alignItems="center"
                       marginBottom={8}>
                       <Text
-                        fontSize={fp(3.6)}
+                        fontSize={15}
                         fontWeight="600"
-                        color={isDarkMode ? '#FFFFFF' : '#555555'}>
+                        color={isDarkMode ? '#FFFFFF' : '#4B5563'}>
                         {item.title}
                       </Text>
                       <Ionicons
@@ -585,14 +616,15 @@ const WellnessDashboardScreen = () => {
 
                     <XStack alignItems="baseline">
                       <Text
-                        fontSize={fp(5)}
-                        fontWeight="bold"
-                        color={isDarkMode ? '#FFFFFF' : '#111111'}>
+                        fontSize={20}
+                        fontWeight="800"
+                        color={isDarkMode ? '#FFFFFF' : '#111827'}>
                         {item.value}
                       </Text>
                       <Text
-                        fontSize={fp(2.8)}
-                        color={isDarkMode ? '#B0C4DE' : '#888888'}
+                        fontSize={13}
+                        fontWeight="500"
+                        color={isDarkMode ? '#B0C4DE' : '#6B7280'}
                         marginLeft={4}>
                         {item.target}
                       </Text>
@@ -612,9 +644,10 @@ const WellnessDashboardScreen = () => {
                     </View>
 
                     <Text
-                      fontSize={fp(2.8)}
-                      color={isDarkMode ? '#B0C4DE' : '#777777'}
-                      marginTop={4}>
+                      fontSize={12.5}
+                      fontWeight="500"
+                      color={isDarkMode ? '#B0C4DE' : '#6B7280'}
+                      marginTop={6}>
                       {item.description}
                     </Text>
                   </Card>
@@ -623,10 +656,10 @@ const WellnessDashboardScreen = () => {
 
               {/* Line Chart Section */}
               <Text
-                fontSize={fp(4.5)}
+                fontSize={18}
                 fontWeight="700"
-                color={isDarkMode ? '#FFFFFF' : '#333333'}
-                marginBottom={10}>
+                color={isDarkMode ? '#FFFFFF' : '#111827'}
+                marginBottom={12}>
                 Weekly Trend
               </Text>
               <Card
@@ -660,7 +693,7 @@ const WellnessDashboardScreen = () => {
                     propsForDots: {
                       r: '4',
                       strokeWidth: '2',
-                      stroke: PRIMARY_COLOR,
+                      stroke: BUTTON_COLOR,
                     },
                     propsForBackgroundLines: {
                       stroke: isDarkMode ? '#334EBC' : '#E5E7EB',
@@ -679,14 +712,14 @@ const WellnessDashboardScreen = () => {
 
           {/* Today's Log Form */}
           <Text
-            fontSize={fp(4.5)}
+            fontSize={18}
             fontWeight="700"
-            color={isDarkMode ? '#FFFFFF' : '#333333'}
-            marginBottom={10}>
+            color={isDarkMode ? '#FFFFFF' : '#111827'}
+            marginBottom={12}>
             Log Today
           </Text>
           <Card
-            padding={14}
+            padding={16}
             borderRadius={16}
             backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
             elevate
@@ -695,18 +728,18 @@ const WellnessDashboardScreen = () => {
             borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
             marginBottom={16}>
             <Text
-              fontSize={fp(3.4)}
-              color={isDarkMode ? '#B0C4DE' : '#777777'}
+              fontSize={14}
+              color={isDarkMode ? '#B0C4DE' : '#6B7280'}
               marginBottom="$3">
               Log or update today&apos;s wellness metrics.
             </Text>
             <YStack gap="$3">
               <XStack justifyContent="space-between" alignItems="center" gap="$3">
                 <Text
-                  fontSize={fp(3.2)}
+                  fontSize={15}
                   fontWeight="600"
-                  color={isDarkMode ? '#FFFFFF' : '#555555'}
-                  width={wp(28)}>
+                  color={isDarkMode ? '#FFFFFF' : '#374151'}
+                  width={wp(30)}>
                   Steps
                 </Text>
                 <TextInput
@@ -714,7 +747,7 @@ const WellnessDashboardScreen = () => {
                     styles.logInput,
                     {
                       backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB',
-                      color: isDarkMode ? '#FFFFFF' : '#333333',
+                      color: isDarkMode ? '#FFFFFF' : '#111827',
                     },
                   ]}
                   testID="log-steps"
@@ -727,10 +760,10 @@ const WellnessDashboardScreen = () => {
               </XStack>
               <XStack justifyContent="space-between" alignItems="center" gap="$3">
                 <Text
-                  fontSize={fp(3.2)}
+                  fontSize={15}
                   fontWeight="600"
-                  color={isDarkMode ? '#FFFFFF' : '#555555'}
-                  width={wp(28)}>
+                  color={isDarkMode ? '#FFFFFF' : '#374151'}
+                  width={wp(30)}>
                   Water (ml)
                 </Text>
                 <TextInput
@@ -738,7 +771,7 @@ const WellnessDashboardScreen = () => {
                     styles.logInput,
                     {
                       backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB',
-                      color: isDarkMode ? '#FFFFFF' : '#333333',
+                      color: isDarkMode ? '#FFFFFF' : '#111827',
                     },
                   ]}
                   testID="log-water"
@@ -751,10 +784,10 @@ const WellnessDashboardScreen = () => {
               </XStack>
               <XStack justifyContent="space-between" alignItems="center" gap="$3">
                 <Text
-                  fontSize={fp(3.2)}
+                  fontSize={15}
                   fontWeight="600"
-                  color={isDarkMode ? '#FFFFFF' : '#555555'}
-                  width={wp(28)}>
+                  color={isDarkMode ? '#FFFFFF' : '#374151'}
+                  width={wp(30)}>
                   Sleep (hrs)
                 </Text>
                 <TextInput
@@ -762,7 +795,7 @@ const WellnessDashboardScreen = () => {
                     styles.logInput,
                     {
                       backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB',
-                      color: isDarkMode ? '#FFFFFF' : '#333333',
+                      color: isDarkMode ? '#FFFFFF' : '#111827',
                     },
                   ]}
                   testID="log-sleep"
@@ -775,10 +808,10 @@ const WellnessDashboardScreen = () => {
               </XStack>
               <XStack justifyContent="space-between" alignItems="center" gap="$3">
                 <Text
-                  fontSize={fp(3.2)}
+                  fontSize={15}
                   fontWeight="600"
-                  color={isDarkMode ? '#FFFFFF' : '#555555'}
-                  width={wp(28)}>
+                  color={isDarkMode ? '#FFFFFF' : '#374151'}
+                  width={wp(30)}>
                   Breathing (min)
                 </Text>
                 <TextInput
@@ -786,7 +819,7 @@ const WellnessDashboardScreen = () => {
                     styles.logInput,
                     {
                       backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB',
-                      color: isDarkMode ? '#FFFFFF' : '#333333',
+                      color: isDarkMode ? '#FFFFFF' : '#111827',
                     },
                   ]}
                   testID="log-breathing"
@@ -799,10 +832,10 @@ const WellnessDashboardScreen = () => {
               </XStack>
               <XStack justifyContent="space-between" alignItems="center" gap="$3">
                 <Text
-                  fontSize={fp(3.2)}
+                  fontSize={15}
                   fontWeight="600"
-                  color={isDarkMode ? '#FFFFFF' : '#555555'}
-                  width={wp(28)}>
+                  color={isDarkMode ? '#FFFFFF' : '#374151'}
+                  width={wp(30)}>
                   Active (min)
                 </Text>
                 <TextInput
@@ -810,7 +843,7 @@ const WellnessDashboardScreen = () => {
                     styles.logInput,
                     {
                       backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB',
-                      color: isDarkMode ? '#FFFFFF' : '#333333',
+                      color: isDarkMode ? '#FFFFFF' : '#111827',
                     },
                   ]}
                   testID="log-active-minutes"
@@ -823,10 +856,10 @@ const WellnessDashboardScreen = () => {
               </XStack>
               <XStack justifyContent="space-between" alignItems="center" gap="$3">
                 <Text
-                  fontSize={fp(3.2)}
+                  fontSize={15}
                   fontWeight="600"
-                  color={isDarkMode ? '#FFFFFF' : '#555555'}
-                  width={wp(28)}>
+                  color={isDarkMode ? '#FFFFFF' : '#374151'}
+                  width={wp(30)}>
                   Calories (kcal)
                 </Text>
                 <TextInput
@@ -834,7 +867,7 @@ const WellnessDashboardScreen = () => {
                     styles.logInput,
                     {
                       backgroundColor: isDarkMode ? '#0A0F5C' : '#F5F7FB',
-                      color: isDarkMode ? '#FFFFFF' : '#333333',
+                      color: isDarkMode ? '#FFFFFF' : '#111827',
                     },
                   ]}
                   testID="log-calories"
@@ -847,54 +880,76 @@ const WellnessDashboardScreen = () => {
               </XStack>
             </YStack>
 
-            <Button
+            {/* Redesigned Modern Button with Icon & Elevation */}
+            <TouchableOpacity
               testID="log-submit"
               onPress={handleLogSubmit}
-              marginTop="$3"
-              backgroundColor={BUTTON_COLOR}>
-              <Text color="#FFFFFF">Save today&apos;s log</Text>
-            </Button>
+              disabled={logMutation.isPending}
+              style={[
+                styles.primaryButton,
+                logMutation.isPending && styles.buttonDisabled,
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Save today's log">
+              {logMutation.isPending ? (
+                <ActivityIndicator size="small" color="#FFFFFF" />
+              ) : (
+                <>
+                  <Ionicons name="checkmark-circle-outline" size={20} color="#FFFFFF" />
+                  <Text style={styles.primaryButtonText}>Save today&apos;s log</Text>
+                </>
+              )}
+            </TouchableOpacity>
 
             {logError !== '' && (
               <Text
                 testID="log-error"
-                color="#D32F2F"
-                fontSize={fp(3)}
-                marginTop="$2">
+                color="#DC2626"
+                fontSize={13.5}
+                fontWeight="500"
+                marginTop="$2.5">
                 {logError}
               </Text>
             )}
             {logMutation.isSuccess && (
               <Text
                 testID="log-success"
-                color="#2E7D32"
-                fontSize={fp(3)}
-                marginTop="$2">
+                color="#16A34A"
+                fontSize={13.5}
+                fontWeight="600"
+                marginTop="$2.5">
                 Log saved. Dashboard updated.
               </Text>
             )}
             {logMutation.isError && (
               <Text
                 testID="log-failed"
-                color="#D32F2F"
-                fontSize={fp(3)}
-                marginTop="$2">
+                color="#DC2626"
+                fontSize={13.5}
+                fontWeight="500"
+                marginTop="$2.5">
                 Failed to save log. Please try again.
               </Text>
             )}
           </Card>
 
-          {/* Guided Breathing Section */}
+          {/* Guided Breathing Section — Aligned pill toggle */}
           <XStack
             justifyContent="space-between"
             alignItems="center"
-            marginBottom={10}>
-            <Text
-              fontSize={fp(4.5)}
-              fontWeight="700"
-              color={isDarkMode ? '#FFFFFF' : '#333333'}>
-              Guided Mindfulness
-            </Text>
+            marginTop={4}
+            marginBottom={12}>
+            <XStack alignItems="center" gap="$2.5">
+              <View style={styles.sectionIconWrapper}>
+                <Ionicons name="leaf" size={18} color="#009688" />
+              </View>
+              <Text
+                fontSize={18}
+                fontWeight="700"
+                color={isDarkMode ? '#FFFFFF' : '#111827'}>
+                Guided Mindfulness
+              </Text>
+            </XStack>
             <TouchableOpacity
               onPress={() => setShowBreathingTool(prev => !prev)}
               accessibilityRole="button"
@@ -902,12 +957,22 @@ const WellnessDashboardScreen = () => {
                 showBreathingTool
                   ? 'Hide guided breathing tool'
                   : 'Open guided breathing tool'
-              }>
+              }
+              style={[
+                styles.sessionToggleBtn,
+                showBreathingTool && styles.sessionToggleBtnActive,
+              ]}>
+              <Ionicons
+                name={showBreathingTool ? 'chevron-up' : 'play'}
+                size={14}
+                color={showBreathingTool ? '#475569' : '#0F52BA'}
+              />
               <Text
-                fontSize={fp(3.3)}
-                fontWeight="700"
-                color={PRIMARY_COLOR}>
-                {showBreathingTool ? 'Hide Session ▴' : 'Start Session ▾'}
+                style={[
+                  styles.sessionToggleText,
+                  showBreathingTool && styles.sessionToggleTextActive,
+                ]}>
+                {showBreathingTool ? 'Hide Session' : 'Start Session'}
               </Text>
             </TouchableOpacity>
           </XStack>
@@ -924,20 +989,26 @@ const WellnessDashboardScreen = () => {
           <XStack
             justifyContent="space-between"
             alignItems="center"
-            marginBottom={10}>
-            <Text
-              fontSize={fp(4.5)}
-              fontWeight="700"
-              color={isDarkMode ? '#FFFFFF' : '#333333'}>
-              AI 7-Day Wellness Plan
-            </Text>
+            marginTop={4}
+            marginBottom={12}>
+            <XStack alignItems="center" gap="$2.5">
+              <View style={[styles.sectionIconWrapper, {backgroundColor: 'rgba(15, 82, 186, 0.12)'}]}>
+                <Ionicons name="sparkles" size={18} color={BUTTON_COLOR} />
+              </View>
+              <Text
+                fontSize={18}
+                fontWeight="700"
+                color={isDarkMode ? '#FFFFFF' : '#111827'}>
+                AI 7-Day Wellness Plan
+              </Text>
+            </XStack>
             {planHistory.length > 1 && (
               <TouchableOpacity
                 onPress={() => setShowPlanHistory(prev => !prev)}>
                 <Text
-                  fontSize={fp(3.2)}
+                  fontSize={13.5}
                   fontWeight="600"
-                  color={PRIMARY_COLOR}>
+                  color={BUTTON_COLOR}>
                   {showPlanHistory ? 'Hide History' : 'Past Plans'}
                 </Text>
               </TouchableOpacity>
@@ -954,7 +1025,7 @@ const WellnessDashboardScreen = () => {
             borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
             marginBottom={16}>
             {isLoadingPlan ? (
-              <ActivityIndicator size="small" color={PRIMARY_COLOR} />
+              <ActivityIndicator size="small" color={BUTTON_COLOR} />
             ) : activePlan ? (
               <YStack gap="$2.5">
                 {Boolean(activePlan.weeklyInsight) && (
@@ -967,9 +1038,9 @@ const WellnessDashboardScreen = () => {
                     />
                     <Text
                       flex={1}
-                      fontSize={fp(3.2)}
+                      fontSize={14}
                       color="#0F172A"
-                      lineHeight={18}>
+                      lineHeight={20}>
                       {activePlan.weeklyInsight}
                     </Text>
                   </View>
@@ -998,7 +1069,7 @@ const WellnessDashboardScreen = () => {
                           />
                           <Text
                             flex={1}
-                            fontSize={fp(3)}
+                            fontSize={13.5}
                             color="#92400E"
                             marginLeft={6}>
                             {warn}
@@ -1012,7 +1083,7 @@ const WellnessDashboardScreen = () => {
                   activePlan.dailyTasks.length > 0 && (
                     <YStack gap="$2" marginTop="$2">
                       <Text
-                        fontSize={fp(3.6)}
+                        fontSize={15}
                         fontWeight="700"
                         color={isDarkMode ? '#FFFFFF' : '#1E293B'}>
                         Daily Action Plan ({activePlan.dailyTasks.length} Tasks)
@@ -1030,9 +1101,9 @@ const WellnessDashboardScreen = () => {
                           />
                           <Text
                             flex={1}
-                            fontSize={fp(3.2)}
+                            fontSize={14}
                             color={isDarkMode ? '#E2E8F0' : '#334155'}
-                            lineHeight={18}>
+                            lineHeight={20}>
                             {task}
                           </Text>
                         </XStack>
@@ -1040,52 +1111,72 @@ const WellnessDashboardScreen = () => {
                     </YStack>
                   )}
 
-                <Button
+                {/* Redesigned Plan Refresh Button */}
+                <TouchableOpacity
                   testID="generate-wellness-plan-btn"
                   onPress={handleGeneratePlan}
                   disabled={isGeneratingPlan}
-                  marginTop="$3"
-                  backgroundColor={BUTTON_COLOR}>
-                  <Text color="#FFFFFF">
-                    {isGeneratingPlan
-                      ? 'Generating AI Plan...'
-                      : 'Refresh AI Plan from Latest Logs'}
-                  </Text>
-                </Button>
+                  style={[
+                    styles.primaryButton,
+                    isGeneratingPlan && styles.buttonDisabled,
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityLabel="Refresh AI Plan">
+                  {isGeneratingPlan ? (
+                    <ActivityIndicator size="small" color="#FFFFFF" />
+                  ) : (
+                    <>
+                      <Ionicons name="sparkles" size={18} color="#FFFFFF" />
+                      <Text style={styles.primaryButtonText}>
+                        Refresh AI Plan from Latest Logs
+                      </Text>
+                    </>
+                  )}
+                </TouchableOpacity>
               </YStack>
             ) : (
               <YStack gap="$2.5">
                 <Text
-                  fontSize={fp(3.4)}
-                  color={isDarkMode ? '#B0C4DE' : '#555555'}
-                  lineHeight={20}>
+                  fontSize={14}
+                  color={isDarkMode ? '#B0C4DE' : '#4B5563'}
+                  lineHeight={22}>
                   Generate a personalized, clinician-guided 7-day wellness plan
                   tailored to your logged steps, sleep, hydration, and activity.
                 </Text>
-                <Button
+                <TouchableOpacity
                   testID="generate-wellness-plan-btn"
                   onPress={handleGeneratePlan}
                   disabled={isGeneratingPlan}
-                  marginTop="$2"
-                  backgroundColor={BUTTON_COLOR}>
-                  <Text color="#FFFFFF">
-                    {isGeneratingPlan
-                      ? 'Generating AI Plan...'
-                      : 'Generate AI 7-Day Plan'}
-                  </Text>
-                </Button>
+                  style={[
+                    styles.primaryButton,
+                    isGeneratingPlan && styles.buttonDisabled,
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityLabel="Generate AI 7-Day Plan">
+                  {isGeneratingPlan ? (
+                    <ActivityIndicator size="small" color="#FFFFFF" />
+                  ) : (
+                    <>
+                      <Ionicons name="sparkles" size={18} color="#FFFFFF" />
+                      <Text style={styles.primaryButtonText}>
+                        Generate AI 7-Day Plan
+                      </Text>
+                    </>
+                  )}
+                </TouchableOpacity>
               </YStack>
             )}
 
             {planStatusMessage !== '' && (
               <Text
-                fontSize={fp(3)}
+                fontSize={13.5}
+                fontWeight="500"
                 color={
                   planStatusMessage.includes('Could not')
-                    ? '#D32F2F'
-                    : '#2E7D32'
+                    ? '#DC2626'
+                    : '#16A34A'
                 }
-                marginTop="$2">
+                marginTop="$2.5">
                 {planStatusMessage}
               </Text>
             )}
@@ -1095,18 +1186,19 @@ const WellnessDashboardScreen = () => {
           {recommendations.length > 0 && (
             <>
               <Text
-                fontSize={fp(4.5)}
+                fontSize={18}
                 fontWeight="700"
-                color={isDarkMode ? '#FFFFFF' : '#333333'}
-                marginBottom={10}>
+                color={isDarkMode ? '#FFFFFF' : '#111827'}
+                marginTop={4}
+                marginBottom={12}>
                 Insights & Recommendations
               </Text>
               <YStack gap="$3">
                 {recommendations.map(rec => (
                   <Card
                     key={rec.id}
-                    padding={12}
-                    borderRadius={12}
+                    padding={14}
+                    borderRadius={14}
                     backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
                     bordered
                     borderWidth={0.6}
@@ -1120,9 +1212,9 @@ const WellnessDashboardScreen = () => {
                       />
                       <Text
                         flex={1}
-                        fontSize={fp(3.2)}
-                        color={isDarkMode ? '#FFFFFF' : '#444444'}
-                        lineHeight={18}>
+                        fontSize={14}
+                        color={isDarkMode ? '#FFFFFF' : '#374151'}
+                        lineHeight={20}>
                         {rec.text}
                       </Text>
                     </XStack>
@@ -1141,6 +1233,43 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerBar: {
+    backgroundColor: '#000A60',
+    paddingBottom: 16,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  headerIconWrapper: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: 'rgba(0, 191, 255, 0.18)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitleText: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: 0.3,
+  },
+  headerSubtitleText: {
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.82)',
+    marginTop: 2,
+  },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -1148,14 +1277,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(8),
   },
   scoreCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 84,
+    height: 84,
+    borderRadius: 42,
     borderWidth: 6,
-    borderColor: PRIMARY_COLOR,
+    borderColor: BUTTON_COLOR,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 191, 255, 0.08)',
+    backgroundColor: 'rgba(15, 82, 186, 0.08)',
   },
   progressBarBackground: {
     height: 6,
@@ -1171,12 +1300,73 @@ const styles = StyleSheet.create({
   },
   logInput: {
     flex: 1,
-    height: 42,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    fontSize: 14,
+    height: 44,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    fontSize: 15,
     borderWidth: 1,
     borderColor: '#E5E7EB',
+  },
+  primaryButton: {
+    backgroundColor: BUTTON_COLOR,
+    height: 48,
+    borderRadius: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 14,
+    ...Platform.select({
+      ios: {
+        shadowColor: BUTTON_COLOR,
+        shadowOffset: {width: 0, height: 4},
+        shadowOpacity: 0.25,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+    letterSpacing: 0.2,
+  },
+  buttonDisabled: {
+    opacity: 0.65,
+  },
+  sectionIconWrapper: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0, 150, 136, 0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sessionToggleBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#EFF6FF',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#BFDBFE',
+  },
+  sessionToggleBtnActive: {
+    backgroundColor: '#F1F5F9',
+    borderColor: '#CBD5E1',
+  },
+  sessionToggleText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: BUTTON_COLOR,
+  },
+  sessionToggleTextActive: {
+    color: '#475569',
   },
   insightBanner: {
     flexDirection: 'row',
@@ -1188,17 +1378,17 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   focusBadge: {
-    backgroundColor: 'rgba(0, 191, 255, 0.12)',
+    backgroundColor: 'rgba(15, 82, 186, 0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(0, 191, 255, 0.35)',
+    borderColor: 'rgba(15, 82, 186, 0.35)',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 14,
   },
   focusBadgeText: {
-    fontSize: 12,
+    fontSize: 12.5,
     fontWeight: '700',
-    color: '#0369A1',
+    color: BUTTON_COLOR,
   },
   warningBanner: {
     flexDirection: 'row',

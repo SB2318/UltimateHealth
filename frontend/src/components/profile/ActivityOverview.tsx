@@ -14,7 +14,7 @@ import {
   Separator,
 } from 'tamagui';
 
-import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {PRIMARY_COLOR, BUTTON_COLOR} from '../../lib/ui/Theme';
 //import {LineChart} from 'react-native-gifted-charts';
 import {BarChart} from 'react-native-chart-kit';
 import { getCurrentYear, formatDateShortYear } from '../../lib/utils/dateUtils';
@@ -420,7 +420,7 @@ const ActivityOverview = ({
                       backgroundGradientTo: '#fff',
                       decimalPlaces: 1,
                       formatYLabel: y => Number(y).toFixed(1),
-                      color: () => PRIMARY_COLOR,
+                      color: () => BUTTON_COLOR,
                       labelColor: () => '#9CA3AF',
                       barPercentage: 0.5,
                       propsForBackgroundLines: {strokeWidth: 0},
@@ -487,7 +487,7 @@ const ActivityOverview = ({
             backgroundGradientTo: '#fff',
             decimalPlaces: 1,
             formatYLabel: y => Number(y).toFixed(1),
-            color: () => PRIMARY_COLOR,
+            color: () => BUTTON_COLOR,
             labelColor: () => '#9CA3AF',
             barPercentage: 0.45,
             propsForBackgroundLines: {strokeWidth: 0},
@@ -553,7 +553,7 @@ const ActivityOverview = ({
                 paddingVertical="$3"
                 justifyContent="center"
                 alignItems="center"
-                backgroundColor={userState === 0 ? PRIMARY_COLOR : 'transparent'}
+                backgroundColor={userState === 0 ? BUTTON_COLOR : 'transparent'}
                 onPress={() => setUserState(0)}>
                 <Text
                   fontSize={16}
@@ -569,7 +569,7 @@ const ActivityOverview = ({
                 paddingVertical="$3"
                 justifyContent="center"
                 alignItems="center"
-                backgroundColor={userState === 1 ? PRIMARY_COLOR : 'transparent'}
+                backgroundColor={userState === 1 ? BUTTON_COLOR : 'transparent'}
                 onPress={() => setUserState(1)}>
                 <Text
                   fontSize={16}
@@ -590,7 +590,7 @@ const ActivityOverview = ({
                 style={{
                   ...styles.button,
                   backgroundColor:
-                    selectedMonth === -1 ? '#EFEFEF' : PRIMARY_COLOR,
+                    selectedMonth === -1 ? '#EFEFEF' : BUTTON_COLOR,
                 }}
                 data={monthlyDrops}
                 labelField="label"
@@ -616,7 +616,7 @@ const ActivityOverview = ({
                 style={{
                   ...styles.button,
                   backgroundColor:
-                    selectedYear === -1 ? '#EFEFEF' : PRIMARY_COLOR,
+                    selectedYear === -1 ? '#EFEFEF' : BUTTON_COLOR,
                 }}
                 data={yearlyDrops}
                 labelField="label"

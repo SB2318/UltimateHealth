@@ -183,7 +183,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             iconColor={PRIMARY_COLOR}
             label="View / Edit Profile"
             sublabel="Update your name, avatar, bio"
-            onPress={() => go('ProfileScreen')}
+            onPress={() => go('ProfileEditScreen')}
             isDark={isDark}
           />
           <View

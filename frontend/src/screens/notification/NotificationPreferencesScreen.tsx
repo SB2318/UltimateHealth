@@ -19,6 +19,16 @@ import {useGetCategories} from '../../hooks/article/useGetArticleTags';
 import {useGetNotificationPreferences} from '../../hooks/notification/useGetNotificationPreferences';
 import {useUpdateNotificationPreferences} from '../../hooks/notification/useUpdateNotificationPreferences';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
+import {StatusBar} from 'expo-status-bar';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+const useSafeTopInset = (): number => {
+  try {
+    return useSafeAreaInsets().top;
+  } catch {
+    return 0;
+  }
+};
 
 const NotificationPreferencesScreen = ({
   navigation,
@@ -26,6 +36,7 @@ const NotificationPreferencesScreen = ({
   const queryClient = useQueryClient();
   const {isConnected} = useAppSelector((state: any) => state.network);
   const {isGuest} = useAppSelector((state: any) => state.user);
+  const topInset = useSafeTopInset();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -138,10 +149,18 @@ const NotificationPreferencesScreen = ({
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
+      <StatusBar style="light" backgroundColor="#000A60" />
       {/* Header banner */}
       <View
-        style={styles.headerBanner}
+        style={[styles.headerBanner, {paddingTop: Math.max(topInset, 14) + 10}]}
         accessibilityRole="header">
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back">
+          <MaterialCommunityIcons name="arrow-left" size={24} color="white" />
+        </TouchableOpacity>
         <MaterialCommunityIcons
           name="bell-cog-outline"
           size={30}
@@ -347,9 +366,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#000A60',
-    paddingHorizontal: wp(5),
-    paddingVertical: hp(3.5),
-    gap: wp(3),
+    paddingHorizontal: wp(4),
+    paddingVertical: hp(2.5),
+    gap: wp(2.5),
+  },
+  backButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 2,
   },
   headerTextContainer: {
     flex: 1,
@@ -462,14 +490,14 @@ const styles = StyleSheet.create({
     backgroundColor: ON_PRIMARY_COLOR,
   },
   saveBtn: {
-    backgroundColor: PRIMARY_COLOR,
+    backgroundColor: '#000A60',
     borderRadius: 12,
     paddingVertical: hp(2),
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: PRIMARY_COLOR,
+    shadowColor: '#000A60',
     shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.35,
     shadowRadius: 6,
     elevation: 5,
   },
