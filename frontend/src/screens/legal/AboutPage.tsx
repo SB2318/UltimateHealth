@@ -1,4 +1,3 @@
- 
 // @ts-nocheck
 import React from 'react';
 import { Share, Linking, Image, useColorScheme } from 'react-native';
@@ -42,28 +41,28 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
   };
 
   const openLink = async (url: string) => {
-  try {
-    const supported = await Linking.canOpenURL(url);
+    try {
+      const supported = await Linking.canOpenURL(url);
 
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      console.error('Cannot open URL:', url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        console.error('Cannot open URL:', url);
+      }
+    } catch (error) {
+      console.error('URL error:', error);
     }
-  } catch (error) {
-    console.error('URL error:', error);
-  }
-};
+  };
 
-  
+  const bgColor = isDarkMode ? '#000A60' : '#F0F8FF';
 
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: isDarkMode ? '#000A60' : '#F0F8FF',
+        backgroundColor: bgColor,
       }}>
-      <StatusBar style={isDarkMode ? 'light' : 'dark'} backgroundColor="#007AFF" />
+      <StatusBar style={isDarkMode ? 'light' : 'dark'} backgroundColor={bgColor} />
 
       <ScrollView
         ref={scrollRef}
@@ -73,7 +72,7 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
         flex={1}>
         <View
           flex={1}
-          backgroundColor={isDarkMode ? '#000A60' : '#F0F8FF'}
+          backgroundColor={bgColor}
           paddingHorizontal="$4">
           {/* Header Section */}
           <YStack alignItems="center" marginTop="$6" marginBottom="$5" gap="$4">

@@ -16,7 +16,8 @@ import ArticleShareModal from '../../components/article/ArticleShareModal';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {StatusBar} from 'expo-status-bar';
 import {ArticleData, ArticleScreenProp} from '../../schemas/type';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {hp} from '../../lib/ui/Metric';
@@ -64,7 +65,7 @@ import {useSaveArticle} from '@/src/hooks/article/useSaveArticle';
 import {useTrustArticle} from '@/src/hooks/article/useTrustArticle';
 import TrustedUsersModal from '../../components/profile/TrustedUsersModal';
 import {useSocket} from '../../contexts/SocketContext';
-import { copyArticleShareLink } from '../../lib/utils/shareUtils';
+import { copyArticleShareLink, generateArticleShareUrl } from '../../lib/utils/shareUtils';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import { ReadingDifficulty, getArticleDifficulty } from '../../components/article/ReadingDifficulty';
 import { useDyslexiaMode } from '../../hooks/common/useDyslexiaMode';
@@ -104,6 +105,7 @@ const isHtmlContentEmpty = (html?: string | null) => {
 const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const {articleId, authorId, recordId} = route.params;
   const {width: windowWidth} = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const getProfileImageUri = (profileImage?: string) => {
     if (!profileImage?.trim()) {
       return 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
@@ -226,21 +228,6 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   // current article. Prevents the initial layout scroll events from
   // immediately overwriting the stored value before restoration runs.
   const scrollRestoredRef = useRef(false);
-  // Key pattern: article_scroll_position_<articleId>
-  const scrollStorageKey = `article_scroll_position_${articleId}`;
-
-  // Progress Bar Shared Values
-  const scrollY = useSharedValue(0);
-  const contentHeight = useSharedValue(0);
-  const layoutHeight = useSharedValue(0);
-
-  const {mutate: followMutation, isPending: followMutationPending} =
-    useUpdateFollowStatusByArticle();
-
-  const {mutate: updateReadEvent} = useUpdateReadEvent(articleId);
-
-  const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
-
   const socket = useSocket();
   const dispatch = useAppDispatch();
 
@@ -250,9 +237,35 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     isLoading: articleLoading,
     isError: articleError,
     refetch,
-  } = useGetArticleDetails(articleId);
+  } = useGetArticleDetails(articleId, recordId);
 
+  const resolvedArticleId = article?._id
+    ? Number(article._id)
+    : !Number.isNaN(Number(articleId))
+      ? Number(articleId)
+      : 0;
+  const resolvedAuthorId =
+    (article?.authorId as any)?._id ||
+    (typeof article?.authorId === 'string' ? article.authorId : '') ||
+    authorId ||
+    '';
   const resolvedRecordId = article?.pb_recordId || recordId;
+
+  // Key pattern: article_scroll_position_<articleId>
+  const scrollStorageKey = `article_scroll_position_${resolvedArticleId || resolvedRecordId || articleId}`;
+
+  // Progress Bar Shared Values
+  const scrollY = useSharedValue(0);
+  const contentHeight = useSharedValue(0);
+  const layoutHeight = useSharedValue(0);
+
+  const {mutate: followMutation, isPending: followMutationPending} =
+    useUpdateFollowStatusByArticle();
+
+  const {mutate: updateReadEvent} = useUpdateReadEvent(resolvedArticleId);
+
+  const {mutate: updateViewCount} = useUpdateViewCount(resolvedArticleId);
+
   const {
     data: articleContent,
     isLoading: contentLoading,
@@ -264,7 +277,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   // Stores the article for offline reading once the reader reaches its end.
   const markArticleFullyRead = useSaveFullyReadArticle(
-    articleId,
+    resolvedArticleId,
     article,
     articleContent,
   );
@@ -297,11 +310,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }, [article, user_id]);
 
   const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
-    Number(articleId),
+    resolvedArticleId,
   );
 
   const {mutate: saveMutation, isPending: saveMutationPending} = useSaveArticle(
-    Number(articleId),
+    resolvedArticleId,
   );
 
   type FontSizeOption = 'small' | 'medium' | 'large';
@@ -315,7 +328,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     approved: true,
   };
   const {mutate: trustMutation, isPending: trustMutationPending} =
-    useTrustArticle(Number(articleId));
+    useTrustArticle(resolvedArticleId);
 
   const FONT_SCALE_KEY = 'article_font_scale';
   const BASE_FONT_SIZE = 16;
@@ -380,8 +393,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   }, [article]);
 
   useEffect(() => {
-    if (!isGuest) {
-      updateViewCount(articleId, {
+    if (!isGuest && resolvedArticleId > 0) {
+      updateViewCount(resolvedArticleId, {
         onError: error => {
           debugLog('Update View Count Error', error);
         },
@@ -395,7 +408,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       clearArticleTtsSubscriptions();
     };
   }, [
-    articleId,
+    resolvedArticleId,
     clearArticleTtsSubscriptions,
     isGuest,
     updateViewCount,
@@ -408,7 +421,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     // always starts from the top until its own saved position is loaded.
     scrollRestoredRef.current = false;
     refetch();
-  }, [articleId, refetch]);
+  }, [articleId, recordId, refetch]);
 
   // Cleanup: cancel any pending debounce timer when the component unmounts.
   // Prevents a stale AsyncStorage write after navigation or unmount.
@@ -545,7 +558,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     //  updateFollowMutation.mutate();
 
     if (followMutationPending) return;
-    followMutation(articleId.toString(), {
+    followMutation(String(resolvedArticleId || articleId || ""), {
       onSuccess: data => {
         //debugLog('follow success');
         if (data !== undefined) setLocalIsFollowing(data);
@@ -642,7 +655,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   const handleCopyLink = async () => {
     try {
-      copyArticleShareLink(articleId, authorId ??"", resolvedRecordId as string);
+      copyArticleShareLink(resolvedArticleId, resolvedAuthorId, resolvedRecordId as string);
       Snackbar.show({
         text: 'Link copied',
         duration: Snackbar.LENGTH_SHORT,
@@ -1031,7 +1044,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   if (articleLoading) {
     return (
-      <SafeAreaView style={[styles.container, {backgroundColor: themeColors.background}]}>
+      <SafeAreaView
+        edges={['bottom', 'left', 'right']}
+        style={[styles.container, {backgroundColor: themeColors.background}]}>
+        <StatusBar style="light" backgroundColor="#000A60" />
+        <View style={{height: insets.top, backgroundColor: '#000A60'}} />
         <BaseEmptyState
           iconEmoji="📄"
           title="Loading Article"
@@ -1044,7 +1061,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
 
   if (articleError || !article) {
     return (
-      <SafeAreaView style={[styles.container, {backgroundColor: themeColors.background}]}>
+      <SafeAreaView
+        edges={['bottom', 'left', 'right']}
+        style={[styles.container, {backgroundColor: themeColors.background}]}>
+        <StatusBar style="light" backgroundColor="#000A60" />
+        <View style={{height: insets.top, backgroundColor: '#000A60'}} />
         <NoArticleState onRefresh={refetch} />
       </SafeAreaView>
     );
@@ -1066,13 +1087,21 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     <ErrorBoundary
       onRetry={() => refetch()}
       fallback={
-        <SafeAreaView style={[styles.container, {backgroundColor: themeColors.background}]}>
+        <SafeAreaView
+          edges={['bottom', 'left', 'right']}
+          style={[styles.container, {backgroundColor: themeColors.background}]}>
+          <StatusBar style="light" backgroundColor="#000A60" />
+          <View style={{height: insets.top, backgroundColor: '#000A60'}} />
           <NoArticleState onRefresh={() => refetch()} />
         </SafeAreaView>
       }>
-    <SafeAreaView style={[styles.container, {backgroundColor: themeColors.background}]}>
+    <SafeAreaView
+      edges={['bottom', 'left', 'right']}
+      style={[styles.container, {backgroundColor: themeColors.background}]}>
+      <StatusBar style="light" backgroundColor="#000A60" />
+      <View style={{height: insets.top, backgroundColor: '#000A60'}} />
       {/* Reading Progress Bar */}
-      <Animated.View style={[styles.progressBar, progressStyle]} />
+      <Animated.View style={[styles.progressBar, {top: insets.top}, progressStyle]} />
 
       <Animated.ScrollView
         ref={scrollViewRef}
@@ -1445,6 +1474,11 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       <ArticleShareModal
         visible={shareModalVisible}
         onClose={() => setShareModalVisible(false)}
+        shareUrl={generateArticleShareUrl(
+          resolvedArticleId,
+          resolvedAuthorId,
+          resolvedRecordId || '',
+        )}
         article={{
           title: article?.title ?? '',
           authorName: article?.authorName ?? '',
@@ -1460,7 +1494,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       />
       <TrustedUsersModal
         visible={trustedUsersModalVisible}
-        articleId={Number(articleId)}
+        articleId={resolvedArticleId}
         onClose={() => setTrustedUsersModalVisible(false)}
       />
 
@@ -1482,7 +1516,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   return;
                 }
                 navigation.navigate('UserProfileScreen', {
-                  authorId: authorId,
+                  authorId: resolvedAuthorId || authorId,
                   author_handle: undefined,
                 });
               }}>

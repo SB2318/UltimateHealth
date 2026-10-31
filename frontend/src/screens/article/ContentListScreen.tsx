@@ -83,11 +83,12 @@ const ContentListScreen = ({navigation, route}: Props) => {
   if (isLoading) {
     return (
       <SafeAreaView
+        edges={['left', 'right', 'bottom']}
         style={[
           styles.loadingContainer,
           {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')},
         ]}>
-        <StatusBar style={isDarkMode ? 'light' : 'dark'} />
+        <StatusBar style="light" backgroundColor="#000A60" />
         <Loader />
       </SafeAreaView>
     );
@@ -167,11 +168,12 @@ const ContentListScreen = ({navigation, route}: Props) => {
 
   return (
     <SafeAreaView
+      edges={['left', 'right', 'bottom']}
       style={[
         styles.container,
         {backgroundColor: theme?.background?.val ?? themeColors.background},
       ]}>
-      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
+      <StatusBar style="light" backgroundColor="#000A60" />
       <FlatList
         data={listData}
         keyExtractor={(item: any, index: number) => item?._id?.toString() || index.toString()}
@@ -191,10 +193,6 @@ const ContentListScreen = ({navigation, route}: Props) => {
     </SafeAreaView>
   );
 };
-
-
-
-
 
 const styles = StyleSheet.create({
   container: {

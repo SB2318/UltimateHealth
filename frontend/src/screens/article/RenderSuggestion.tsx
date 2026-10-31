@@ -1,50 +1,42 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { RenderSuggestionProp } from '../../schemas/type';
-import { useAppDispatch } from '../../store/hooks';
-import { setSuggestionAccepted } from '../../store/dataSlice';
+import React from 'react';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
+import {StatusBar} from 'expo-status-bar';
+import {RenderSuggestionProp} from '../../schemas/type';
+import {useAppDispatch} from '../../store/hooks';
+import {setSuggestionAccepted} from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-// ✅ Re-introduced original project helpers for security sanitization and link safety
-import { createHTMLStructure, handleExternalClick } from '../../lib/utils/Utils';
-
+import {createHTMLStructure, handleExternalClick} from '../../lib/utils/Utils';
 
 export default function RenderSuggestion({
   navigation,
   route,
 }: RenderSuggestionProp) {
-  const { htmlContent, readability_score, reading_time } = route.params;
+  const {htmlContent, readability_score, reading_time, isFallback} =
+    route.params;
   const dispatch = useAppDispatch();
-  const readabilityScore = readability_score ?? 0;
-
 
   const handleAccept = () => {
-    dispatch(setSuggestionAccepted({ selection: true }));
+    dispatch(setSuggestionAccepted({selection: true}));
     navigation.goBack();
   };
-
 
   const handleCancel = () => {
-    dispatch(setSuggestionAccepted({ selection: false }));
+    dispatch(setSuggestionAccepted({selection: false}));
     navigation.goBack();
   };
 
-
-  // ✅ Format reading time display (improved null safety)
   const formatReadingTime = (time: string | undefined | null): string => {
     if (!time) {
       return 'Estimated 2-3 min read';
     }
-    // If time is a number or numeric string
     const minutes = parseInt(time, 10);
     if (isNaN(minutes)) {
-      return time; // Return as-is if not a number
+      return time;
     }
     return `${minutes} min read`;
   };
 
-
-  // ✅ Wraps the content through the project's sanitization utility to prevent XSS flaws
   const formattedHtml = createHTMLStructure(
     '',
     htmlContent || '<p>No suggestions available.</p>',
@@ -53,18 +45,31 @@ export default function RenderSuggestion({
     '',
   );
 
-
   return (
     <View style={styles.container}>
-      {/* 📊 Display Readability Metrics */}
+      <StatusBar style="light" backgroundColor="#000A60" />
+
+      {isFallback && (
+        <View style={styles.fallbackBanner}>
+          <Text style={styles.fallbackBannerTitle}>
+            Built-in Content & Grammar Checker Active
+          </Text>
+          <Text style={styles.fallbackBannerSubtext}>
+            AI server was unavailable — showing local readability analysis and
+            grammar suggestions. Yellow highlights indicate long or complex
+            sentences (&gt;25 words).
+          </Text>
+        </View>
+      )}
+
+      {/* Display Readability Metrics */}
       <View style={styles.metricsContainer}>
         <Text style={styles.scoreTitle}>Readability Score</Text>
         <Text
           style={[
             styles.scoreNumber,
             {
-              color:
-                (readability_score ?? 0) >= 60 ? '#059669' : '#dc2626',
+              color: (readability_score ?? 0) >= 60 ? '#059669' : '#dc2626',
             },
           ]}>
           {readability_score ?? '--'}/100
@@ -74,8 +79,6 @@ export default function RenderSuggestion({
         </Text>
       </View>
 
-
-      {/* 🌟 Optional: Add warning if reading time is missing (for debugging) */}
       {!reading_time && __DEV__ && (
         <View style={styles.debugContainer}>
           <Text style={styles.debugText}>
@@ -84,22 +87,19 @@ export default function RenderSuggestion({
         </View>
       )}
 
-
-      {/* 🌐 Render Highlighted Complex Sentences Safely */}
+      {/* Render Highlighted Complex Sentences Safely */}
       <AutoHeightWebView
         style={styles.webView}
         customStyle={`
           * { font-family: -apple-system, Roboto, sans-serif; font-size: 16px; line-height: 1.5; color: #1e293b; }
           .complex-sentence { background-color: #fef08a; padding: 2px; border-radius: 4px; border-bottom: 2px solid #ca8a04; }
         `}
-        source={{ html: formattedHtml }}
+        source={{html: formattedHtml}}
         originWhitelist={['http://*', 'https://*']}
         scalesPageToFit={false}
         viewportContent={'width=device-width, user-scalable=no'}
-        // ✅ Re-added link interceptor so external links safely launch default system browser
         onShouldStartLoadWithRequest={handleExternalClick}
       />
-
 
       {/* Buttons */}
       <View style={styles.buttonRow}>
@@ -111,7 +111,7 @@ export default function RenderSuggestion({
           accessibilityHint="Dismisses the suggestions and returns to the previous screen">
           <Text style={styles.cancelText}>Dismiss</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity
           style={styles.acceptButton}
           onPress={handleAccept}
@@ -125,26 +125,55 @@ export default function RenderSuggestion({
   );
 }
 
-
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#ffffff', padding: 16 },
-  metricsContainer: { 
-    padding: 16, 
-    backgroundColor: '#f8fafc', 
-    borderRadius: 12, 
-    marginBottom: 16,
-    alignItems: 'center' 
+  container: {flex: 1, backgroundColor: '#ffffff', padding: 16},
+  fallbackBanner: {
+    backgroundColor: '#EFF6FF',
+    borderLeftWidth: 4,
+    borderLeftColor: '#2563EB',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
   },
-  scoreTitle: { fontSize: 14, color: '#64748b', fontWeight: '600' },
-  scoreNumber: { fontSize: 36, fontWeight: 'bold', marginVertical: 4 },
-  readingTime: { fontSize: 14, color: '#475569' },
-  webView: { width: '100%', flex: 1, marginBottom: 16 },
-  buttonRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  cancelButton: { padding: 14, borderRadius: 8, backgroundColor: '#f1f5f9', flex: 0.48, alignItems: 'center' },
-  cancelText: { color: '#475569', fontWeight: '600' },
-  acceptButton: { padding: 14, borderRadius: 8, backgroundColor: '#0f172a', flex: 0.48, alignItems: 'center' },
-  acceptText: { color: '#ffffff', fontWeight: '600' },
-  // ✅ Added debug styles (optional, only shows in development)
+  fallbackBannerTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1E3A8A',
+    marginBottom: 2,
+  },
+  fallbackBannerSubtext: {
+    fontSize: 12,
+    color: '#1E40AF',
+    lineHeight: 18,
+  },
+  metricsContainer: {
+    padding: 16,
+    backgroundColor: '#f8fafc',
+    borderRadius: 12,
+    marginBottom: 16,
+    alignItems: 'center',
+  },
+  scoreTitle: {fontSize: 14, color: '#64748b', fontWeight: '600'},
+  scoreNumber: {fontSize: 36, fontWeight: 'bold', marginVertical: 4},
+  readingTime: {fontSize: 14, color: '#475569'},
+  webView: {width: '100%', flex: 1, marginBottom: 16},
+  buttonRow: {flexDirection: 'row', justifyContent: 'space-between'},
+  cancelButton: {
+    padding: 14,
+    borderRadius: 8,
+    backgroundColor: '#f1f5f9',
+    flex: 0.48,
+    alignItems: 'center',
+  },
+  cancelText: {color: '#475569', fontWeight: '600'},
+  acceptButton: {
+    padding: 14,
+    borderRadius: 8,
+    backgroundColor: '#0f172a',
+    flex: 0.48,
+    alignItems: 'center',
+  },
+  acceptText: {color: '#ffffff', fontWeight: '600'},
   debugContainer: {
     backgroundColor: '#fef3c7',
     padding: 8,

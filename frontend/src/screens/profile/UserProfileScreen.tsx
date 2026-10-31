@@ -13,7 +13,7 @@ import ActivityOverview from '../../components/profile/ActivityOverview';
 import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
 import ArticleCard from '../../components/article/ArticleCard';
 import UserArticleCard from '../../components/article/UserArticleCard';
-import { useTheme } from 'tamagui';
+import {useTheme} from 'tamagui';
 import {useAppSelector} from '../../store/hooks';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import ProfileHeader from '../../components/profile/ProfileHeader';
@@ -26,29 +26,29 @@ import {useSocket} from '../../contexts/SocketContext';
 import {useRequestArticleEdit} from '../../hooks/article/useRequestArticleEdit';
 import {useUpdateFollowStatus} from '../../hooks/social/useUpdateFollowStatus';
 import {useUpdateViewCount} from '../../hooks/article/useUpdateViewCount';
-import { useGetAuthorProfile } from '../../hooks/profile/useGetAuthorProfile';
+import {useGetAuthorProfile} from '../../hooks/profile/useGetAuthorProfile';
 import {useGetTotalLikeViewStatus} from '../../hooks/analytics/useGetTotalLikeViewStatus';
-import { NoArticleState } from '../../components/common/EmptyStates';
+import {NoArticleState} from '../../components/common/EmptyStates';
 
 const TabsFlatList = Tabs.FlatList as any;
 
 const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
+  const statusBarBg = isDarkMode ? '#0B1425' : '#000A60';
   const {authorId, userId, author_handle} = (route?.params || {}) as any;
-  const {userId: routeUserId, userHandle: routeUserHandle} = (route?.params || {}) as any; 
+  const {userId: routeUserId, userHandle: routeUserHandle} = (route?.params ||
+    {}) as any;
   const {user_id, user_handle} = useAppSelector(
     (state: any) => state.user || {},
   );
   const {isConnected} = useAppSelector((state: any) => state.network || {});
   const [refreshing, setRefreshing] = useState<boolean>(false);
- 
 
   const [articleId, setArticleId] = useState<number>();
   const [recordId, setRecordId] = useState<string>('');
   const [selectedCardId, setSelectedCardId] = useState<string>('');
 
-  //const [authorId, setAuthorId] = useState<string>('');
   const socket = useSocket();
   const {mutate: requestEdit, isPending: requestEditPending} =
     useRequestArticleEdit();
@@ -58,25 +58,41 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
 
   // Get the actual authorId string
-  const actualAuthorId = (typeof authorId === 'string' ? authorId : authorId?._id) || routeUserId || userId || user_id; // Prioritize authorId, fallback to current user_id
+  const actualAuthorId =
+    (typeof authorId === 'string' ? authorId : authorId?._id) ||
+    routeUserId ||
+    userId ||
+    user_id; // Prioritize authorId, fallback to current user_id
   const {
     data: user,
     refetch,
     isLoading,
-  } = useGetAuthorProfile(actualAuthorId, routeUserHandle, user_id, isConnected);
+  } = useGetAuthorProfile(
+    actualAuthorId,
+    routeUserHandle,
+    user_id,
+    isConnected,
+  );
 
   const isDoctor = user !== undefined ? user.isDoctor : false;
-  //const bottomBarHeight = useBottomTabBarHeight();
 
-  const [localIsFollowing, setLocalIsFollowing] = useState<boolean | null>(null);
-  const [localFollowerCount, setLocalFollowerCount] = useState<number | null>(null);
+  const [localIsFollowing, setLocalIsFollowing] = useState<boolean | null>(
+    null,
+  );
+  const [localFollowerCount, setLocalFollowerCount] = useState<number | null>(
+    null,
+  );
 
   useEffect(() => {
     if (user && user.followers) {
-      const isFollow = user.followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id);
-       
+      const isFollow = user.followers.some(
+        (u: any) =>
+          (u?._id && u._id.toString() === user_id) ||
+          u.toString() === user_id,
+      );
+
       setLocalIsFollowing(isFollow);
-       
+
       setLocalFollowerCount(user.followers.length);
     }
   }, [user, user_id]);
@@ -89,10 +105,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     isConnected: isConnected,
   });
 
- // console.log('UserProfileScreen - articles:', user?.articles);
- //  console.log('UserProfileScreen - reposts:', user?.repostArticles);
- const articlePosted = user?.articles ? user.articles.length : 0;
- console.log("User profile article posted", articlePosted);
+  const articlePosted = user?.articles ? user.articles.length : 0;
 
   const onArticleViewed = ({
     articleId,
@@ -141,18 +154,18 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('Current authorId:', authorId); // Check if authorId changes
       refetch();
-    }, [refetch, authorId]), // Ensure authorId is a stable value
+    }, [refetch, authorId]),
   );
 
   const handleReportAction = useCallback(
     (item: ArticleData) => {
       navigation.navigate('ReportScreen', {
         articleId: String(item._id),
-        authorId: typeof item.authorId === 'object' && item.authorId !== null 
-          ? String((item.authorId as any)._id) 
-          : String(item.authorId),
+        authorId:
+          typeof item.authorId === 'object' && item.authorId !== null
+            ? String((item.authorId as any)._id)
+            : String(item.authorId),
         commentId: null,
         podcastId: null,
       });
@@ -169,7 +182,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           success={onRefresh}
           isSelected={String(selectedCardId) === String(item?._id)}
           setSelectedCardId={setSelectedCardId}
-          handleRepostAction={()=>{}}
+          handleRepostAction={() => {}}
           handleReportAction={handleReportAction}
           handleEditRequestAction={(item, index, reason) => {
             if (isConnected) {
@@ -218,7 +231,6 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   const onFollowerClick = () => {
     if (user && user.followers.length > 0) {
-      // dispatch(setSocialUserId(user._id));
       navigation.navigate('SocialScreen', {
         type: 1,
         articleId: undefined,
@@ -230,7 +242,6 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   const onFollowingClick = () => {
     if (isConnected) {
       if (user && user.followings.length > 0) {
-        // dispatch(setSocialUserId(user._id));
         navigation.navigate('SocialScreen', {
           type: 2,
           articleId: undefined,
@@ -252,9 +263,13 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           onSuccess: data => {
             if (data !== undefined) {
               if (localIsFollowing === false && data === true) {
-                setLocalFollowerCount(prev => (prev !== null ? prev + 1 : prev));
+                setLocalFollowerCount(prev =>
+                  prev !== null ? prev + 1 : prev,
+                );
               } else if (localIsFollowing === true && data === false) {
-                setLocalFollowerCount(prev => (prev !== null ? prev - 1 : prev));
+                setLocalFollowerCount(prev =>
+                  prev !== null ? prev - 1 : prev,
+                );
               }
               setLocalIsFollowing(data);
             }
@@ -299,15 +314,14 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     const authorUser = typeof authorId === 'string' ? user : authorId;
     const articlesPostedCount = user.articles ? user.articles.length : 0;
 
-    //console.log('UserProfileScreen - articles:', articlesPostedCount);
-
     return (
       <ProfileHeader
         isDoctor={isDoctor}
         username={authorUser?.user_name || user?.user_name || ''}
         userhandle={authorUser?.user_handle || user?.user_handle || ''}
         profileImg={
-          authorUser?.Profile_image || user?.Profile_image ||
+          authorUser?.Profile_image ||
+          user?.Profile_image ||
           'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
         }
         articlesPosted={articlesPostedCount}
@@ -323,7 +337,15 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         followings={user ? user.followings.length : 0}
         onFollowerPress={onFollowerClick}
         onFollowingPress={onFollowingClick}
-        isFollowing={user && user.followers ? user.followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id) : false}
+        isFollowing={
+          user && user.followers
+            ? user.followers.some(
+                (u: any) =>
+                  (u?._id && u._id.toString() === user_id) ||
+                  u.toString() === user_id,
+              )
+            : false
+        }
         onFollowClick={handleFollow}
         onOverviewClick={() => {}}
       />
@@ -334,8 +356,18 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     return (
       <MaterialTabBar
         {...props}
-        indicatorStyle={[styles.indicatorStyle, { backgroundColor: PRIMARY_COLOR }]}
-        style={[styles.tabBarStyle, { backgroundColor: isDarkMode ? '#1f2937' : '#ffffff', borderBottomWidth: 1, borderBottomColor: isDarkMode ? '#374151' : '#f1f5f9' }]}
+        indicatorStyle={[
+          styles.indicatorStyle,
+          {backgroundColor: PRIMARY_COLOR},
+        ]}
+        style={[
+          styles.tabBarStyle,
+          {
+            backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
+            borderBottomWidth: 1,
+            borderBottomColor: isDarkMode ? '#374151' : '#f1f5f9',
+          },
+        ]}
         activeColor={PRIMARY_COLOR}
         inactiveColor={isDarkMode ? '#6b7280' : '#9098A3'}
         labelStyle={styles.labelStyle}
@@ -349,19 +381,17 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
       <SafeAreaView
         style={[
           styles.loadingContainer,
-          {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')},
+          {backgroundColor: statusBarBg},
         ]}>
-        <StatusBar
-          style={isDarkMode ? 'light' : 'dark'}
-        />
+        <StatusBar style="light" backgroundColor={statusBarBg} />
         <Loader />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme?.background?.val ?? (isDarkMode ? '#0a0f1e' : '#0F52BA') }]}>
-      <StatusBar style="light" />
+    <SafeAreaView style={[styles.container, {backgroundColor: statusBarBg}]}>
+      <StatusBar style="light" backgroundColor={statusBarBg} />
 
       {/* Floating back button over the blue top area */}
       <TouchableOpacity
@@ -370,11 +400,18 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         accessibilityLabel="Go back">
         <FontAwesome6 size={20} name="arrow-left" color="white" />
       </TouchableOpacity>
-      <View style={[styles.innerContainer, { backgroundColor: isDarkMode ? '#111827' : '#ffffff' }]}>
+      <View
+        style={[
+          styles.innerContainer,
+          {backgroundColor: isDarkMode ? '#111827' : '#ffffff'},
+        ]}>
         <Tabs.Container
           renderHeader={renderHeader}
           renderTabBar={renderTabBar}
-          containerStyle={[styles.tabsContainer, { backgroundColor: isDarkMode ? '#111827' : '#ffffff' }]}>
+          containerStyle={[
+            styles.tabsContainer,
+            {backgroundColor: isDarkMode ? '#111827' : '#ffffff'},
+          ]}>
           {/* Tab 1 */}
           <Tabs.Tab name="Insight">
             <Tabs.ScrollView
@@ -396,8 +433,13 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
               data={user?.articles || []}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={[styles.flatListContentContainer, { paddingBottom: 15 }]}
-              keyExtractor={(item: ArticleData, index: number) => item?._id?.toString() || index.toString()}
+              contentContainerStyle={[
+                styles.flatListContentContainer,
+                {paddingBottom: 15},
+              ]}
+              keyExtractor={(item: ArticleData, index: number) =>
+                item?._id?.toString() || index.toString()
+              }
               refreshing={refreshing}
               ListEmptyComponent={<NoArticleState />}
             />
@@ -408,8 +450,13 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
               data={user?.repostArticles || []}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={[styles.flatListContentContainer, { paddingBottom: 15 }]}
-              keyExtractor={(item: ArticleData, index: number) => item?._id?.toString() || index.toString()}
+              contentContainerStyle={[
+                styles.flatListContentContainer,
+                {paddingBottom: 15},
+              ]}
+              keyExtractor={(item: ArticleData, index: number) =>
+                item?._id?.toString() || index.toString()
+              }
               refreshing={refreshing}
               ListEmptyComponent={<NoArticleState />}
             />
@@ -470,7 +517,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     shadowOpacity: 0,
-    shadowOffset: { width: 0, height: 0 },
+    shadowOffset: {width: 0, height: 0},
     shadowColor: 'transparent',
   },
   message: {

@@ -1,4 +1,19 @@
-import {generatePodcastShareUrl} from '../../../lib/utils/shareUtils';
+import {
+  generateArticleShareUrl,
+  generatePodcastShareUrl,
+} from '../../../lib/utils/shareUtils';
+
+describe('generateArticleShareUrl', () => {
+  it('generates web article URL using pb_recordId', () => {
+    const url = generateArticleShareUrl(42, 'author-1', 'pb_rec_12345');
+    expect(url).toBe('https://ultimatehealth.blog/web/en/articles/pb_rec_12345');
+  });
+
+  it('falls back to articleId when recordId is empty', () => {
+    const url = generateArticleShareUrl(42, 'author-1', '');
+    expect(url).toBe('https://ultimatehealth.blog/web/en/articles/42');
+  });
+});
 
 describe('generatePodcastShareUrl', () => {
   it('encodes podcast share parameters safely', () => {

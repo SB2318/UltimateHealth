@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 
 // @ts-nocheck
-import { StyleSheet,
+import {
+  StyleSheet,
   View,
   Alert,
   Text,
@@ -9,10 +10,11 @@ import { StyleSheet,
   FlatList,
   ScrollView,
 } from 'react-native';
-import { FlashList } from '@shopify/flash-list';
+import {FlashList} from '@shopify/flash-list';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 import {
   ON_PRIMARY_COLOR,
   PRIMARY_COLOR,
@@ -23,6 +25,7 @@ import {
   EMPTY_STATE_TEXT_PRIMARY,
   EMPTY_STATE_TEXT_SECONDARY,
 } from '../../lib/ui/Theme';
+import {PROD_URL} from '../../lib/api/APIUtils';
 import AddIcon from '../../components/common/AddIcon';
 import ArticleCard from '../../components/article/ArticleCard';
 
@@ -47,15 +50,17 @@ import Snackbar from 'react-native-snackbar';
 import {useFocusEffect} from '@react-navigation/native';
 import InactiveUserModal from '../../components/auth/InactiveUserModal';
 import {StatusBar} from 'expo-status-bar';
-import { wp} from '../../lib/ui/Metric';
+import {wp} from '../../lib/ui/Metric';
 import {useGetCategories} from '../../hooks/article/useGetArticleTags';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import {useRequestArticleEdit} from '../../hooks/article/useRequestArticleEdit';
 import {useGetUnreadNotificationCount} from '../../hooks/notification/useGetUnreadNotificationCount';
 import {useGetPaginatedArticle} from '../../hooks/article/useGetPaginatedArticles';
-import { sanitizeSearchInput, isValidSearchInput } from '../../lib/utils/SearchUtils';
-import { useDebounce } from '../../hooks/useDebounce';
-
+import {
+  sanitizeSearchInput,
+  isValidSearchInput,
+} from '../../lib/utils/SearchUtils';
+import {useDebounce} from '../../hooks/useDebounce';
 
 import {
   OfflineArticleState,
@@ -79,23 +84,17 @@ const LoadingState = () => {
 
 // Error State Component
 const ErrorState = ({onRetry}: {onRetry: () => void}) => {
-  return (
-    <NoArticleState onRefresh={onRetry} />
-  );
+  return <NoArticleState onRefresh={onRetry} />;
 };
 
 // Offline State Component
 const OfflineState = () => {
-  return (
-    <OfflineArticleState />
-  );
+  return <OfflineArticleState />;
 };
 
 // Empty Article State Component (for FlatList empty state)
 const EmptyArticleState = () => {
-  return (
-    <NoArticleState />
-  );
+  return <NoArticleState />;
 };
 
 const SavedArticleEmptyState = () => (
@@ -111,7 +110,10 @@ const SavedArticleEmptyState = () => (
 const HomeScreen = ({navigation}: HomeScreenProps) => {
   const dispatch = useAppDispatch();
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
+  const [userSelectedCategory, setUserSelectedCategory] = useState(false);
   const [sortingType, setSortingType] = useState<string>('');
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 300);
@@ -123,45 +125,37 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [filterLoading, setFilterLoading] = useState<boolean>(false);
   const [customizeVisible, setCustomizeVisible] = useState(false);
 
-const [showAcademyCard, setShowAcademyCard] = useState(true);
-const [showCategoryFilters, setShowCategoryFilters] = useState(true);
-const [showSavedFilter, setShowSavedFilter] = useState(true);
-useEffect(() => {
-  const loadSettings = async () => {
-    try {
-      const saved = await AsyncStorage.getItem(HOMEPAGE_SETTINGS_KEY);
+  const [showAcademyCard, setShowAcademyCard] = useState(true);
+  const [showCategoryFilters, setShowCategoryFilters] = useState(true);
+  const [showSavedFilter, setShowSavedFilter] = useState(true);
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const saved = await AsyncStorage.getItem(HOMEPAGE_SETTINGS_KEY);
 
-      if (saved) {
-        const settings = JSON.parse(saved);
+        if (saved) {
+          const settings = JSON.parse(saved);
 
-        setShowAcademyCard(settings.showAcademyCard ?? true);
-        setShowCategoryFilters(settings.showCategoryFilters ?? true);
-        setShowSavedFilter(settings.showSavedFilter ?? true);
+          setShowAcademyCard(settings.showAcademyCard ?? true);
+          setShowCategoryFilters(settings.showCategoryFilters ?? true);
+          setShowSavedFilter(settings.showSavedFilter ?? true);
+        }
+      } catch (error) {
+        console.log('Failed to load homepage settings', error);
       }
-    } catch (error) {
-      console.log('Failed to load homepage settings', error);
-    }
-  };
+    };
 
-  loadSettings();
-}, []);
+    loadSettings();
+  }, []);
 
   // Session-level language filter (can override preferences per session)
-  const [sessionSelectedLanguages, setSessionSelectedLanguages] = useState<string[]>([]);
+  const [sessionSelectedLanguages, setSessionSelectedLanguages] = useState<
+    string[]
+  >([]);
   const {preferredLanguages, isLoading: preferencesLoading} = usePreferences();
   const {mutate: requestEdit, isPending: requestEditPending} =
     useRequestArticleEdit();
-  const handleClearAllFilters = () => {
-    // 1. Local state categories reset
-    setSelectedCategory(null);
-    setSortingType('');
-    setSearchText('');
 
-    dispatch(setSearchMode(false));
-    dispatch(setSearchedArticles([]));
-    dispatch(setFilteredArticles([]));
-    dispatch(setTags([]));
-  };
   const {
     filteredArticles,
     searchedArticles,
@@ -170,9 +164,7 @@ useEffect(() => {
     sortType,
   } = useAppSelector((state: any) => state.data);
 
-  const {user_token, isGuest} = useAppSelector(
-    (state: any) => state.user,
-  );
+  const {user_token, isGuest} = useAppSelector((state: any) => state.user);
 
   const [refreshing, setRefreshing] = useState(false);
   const [page, setPage] = useState(1);
@@ -184,8 +176,25 @@ useEffect(() => {
   // keep fetching pages when a niche category yields no new articles per page.
   const lastCategoryFilteredCountRef = useRef<number>(-1);
   const prevSelectedCategoryNameRef = useRef<string | undefined>(undefined);
+  const searchRequestIdRef = useRef<number>(0);
   const {data: user, refetch: refetchUser} = useGetProfile();
   const {data: categoryData, isSuccess} = useGetCategories(isConnected);
+
+  const handleClearAllFilters = () => {
+    // 1. Local state categories reset
+    setUserSelectedCategory(false);
+    setSelectedCategory(articleCategories[0] ?? null);
+    setSortingType('');
+    setSearchText('');
+    setSelectCategoryList([]);
+    setSessionSelectedLanguages([]);
+
+    dispatch(setSearchMode({searchMode: false}));
+    dispatch(setSearchedArticles({searchedArticles: []}));
+    dispatch(setSelectedTags({selectedTags: articleCategories}));
+    dispatch(setSortType({sortType: ''}));
+    dispatch(setFilteredArticles({filteredArticles: allArticlesRef.current}));
+  };
 
   useEffect(() => {
     if (!isSuccess || !categoryData) return;
@@ -196,9 +205,9 @@ useEffect(() => {
           selectedTags: categoryData,
         }),
       );
-      setSelectedCategory(categoryData[0]);
-    } else {
-      setSelectedCategory(selectedTags[0]);
+      setSelectedCategory(categoryData[0] ?? null);
+    } else if (!selectedCategory) {
+      setSelectedCategory(selectedTags[0] ?? null);
     }
 
     setArticleCategories(categoryData);
@@ -208,7 +217,9 @@ useEffect(() => {
   const handleCategorySelection = (category: Category) => {
     // Update Redux State
     setSelectCategoryList((prevList: any) => {
-       const isAlreadySelected = prevList.some((p: any) => p._id === category._id);
+      const isAlreadySelected = prevList.some(
+        (p: any) => p._id === category._id,
+      );
       const updatedList = isAlreadySelected
         ? prevList.filter((item: any) => item._id !== category._id)
         : [...prevList, category];
@@ -257,27 +268,17 @@ useEffect(() => {
 
   /**
    * Toggles the "Saved" filter chip.
-   * When deactivating, resets page to 1 so the main feed
-   * pagination starts fresh and onEndReached fires correctly.
-   */
-  /**
-   * Toggles the "Saved" filter chip.
    */
   const handleToggleSavedOnly = () => {
     setShowSavedOnly((prev: any) => !prev);
   };
 
   const handleCategoryClick = (category: Category) => {
-    // Deactivate Saved chip and update the active category.
-    // We do NOT clear already-fetched raw articles, allowing instant switching
-    // and seamless client-side filtering.
     setShowSavedOnly(false);
-    // Reset the sparse-category guard so the newly selected category gets a
-    // fresh auto-pagination opportunity from the current page.
+    setUserSelectedCategory(true);
     lastCategoryFilteredCountRef.current = -1;
     setSelectedCategory(category);
   };
-
 
   const handleReportAction = (item: ArticleData) => {
     navigation.navigate('ReportScreen', {
@@ -295,7 +296,7 @@ useEffect(() => {
         setSelectedCardId={setSelectedCardId}
         navigation={navigation}
         success={onRefresh}
-        handleRepostAction={()=>{}}
+        handleRepostAction={() => {}}
         handleReportAction={handleReportAction}
         handleEditRequestAction={(item, index, reason) => {
           // submitRequest
@@ -330,6 +331,7 @@ useEffect(() => {
 
   const handleFilterReset = () => {
     // Update Redux State Variables
+    setUserSelectedCategory(false);
     setSelectCategoryList([]);
     setSortingType('');
     setSessionSelectedLanguages([]);
@@ -345,11 +347,8 @@ useEffect(() => {
   const handleFilterApply = () => {
     // Update Redux State Variables
     if (selectCategoryList.length > 0) {
-      //   console.log("enter")
       dispatch(setSelectedTags({selectedTags: selectCategoryList}));
     } else {
-      //console.log("enter ele", articleCategories);
-
       dispatch(
         setSelectedTags({
           selectedTags: articleCategories,
@@ -373,27 +372,46 @@ useEffect(() => {
       return;
     }
 
-    let filtered = articleData;
+    let filtered = [...articleData];
 
-    // Filter by selected tags (categories)
-    if (selectedTags.length > 0) {
+    // Filter by selected tags (categories) when custom subset of tags is selected
+    const isCustomTagFilter =
+      selectedTags &&
+      selectedTags.length > 0 &&
+      articleCategories.length > 0 &&
+      selectedTags.length < articleCategories.length;
+
+    if (isCustomTagFilter) {
       filtered = filtered.filter(article =>
         selectedTags.some((tag: Category) =>
-          article.tags.some(category => category.name === tag.name),
+          article.tags?.some(
+            category =>
+              category?.name === tag?.name ||
+              (category?._id && tag?._id && String(category._id) === String(tag._id)),
+          ),
         ),
       );
     }
 
     // Filter by language preference
     // Priority: session-selected languages > preferred languages
-    const effectiveLanguages = sessionSelectedLanguages.length > 0 
-      ? sessionSelectedLanguages 
-      : preferredLanguages;
-    
-    if (effectiveLanguages.length > 0) {
-      filtered = filtered.filter(article =>
-        effectiveLanguages.includes(article.language || 'en-IN'),
+    const effectiveLanguages =
+      sessionSelectedLanguages.length > 0
+        ? sessionSelectedLanguages
+        : preferredLanguages;
+
+    if (effectiveLanguages && effectiveLanguages.length > 0) {
+      const effectivePrefixes = effectiveLanguages.map(l =>
+        String(l).split('-')[0].toLowerCase(),
       );
+      filtered = filtered.filter(article => {
+        const articleLang = String(article.language || 'en-IN');
+        const articlePrefix = articleLang.split('-')[0].toLowerCase();
+        return (
+          effectiveLanguages.includes(articleLang as any) ||
+          effectivePrefixes.includes(articlePrefix)
+        );
+      });
     }
 
     // Apply sorting
@@ -424,18 +442,21 @@ useEffect(() => {
 
   useEffect(() => {
     if (articleData) {
+      if (typeof articleData.totalPages === 'number') {
+        setTotalPages(articleData.totalPages);
+      }
       if (Number(page) === 1) {
         // Fresh load: replace accumulated articles entirely.
         allArticlesRef.current = articleData.articles ?? [];
-        if (articleData.totalPages) {
-          setTotalPages(articleData.totalPages);
-        }
       } else {
-        // Append new page's articles to the accumulated set.
-        allArticlesRef.current = [
-          ...allArticlesRef.current,
-          ...(articleData.articles ?? []),
-        ];
+        // Append new page's articles to the accumulated set, deduplicating by _id.
+        const existingIds = new Set(
+          allArticlesRef.current.map((a: ArticleData) => String(a._id)),
+        );
+        const incoming = (articleData.articles ?? []).filter(
+          (a: ArticleData) => !existingIds.has(String(a._id)),
+        );
+        allArticlesRef.current = [...allArticlesRef.current, ...incoming];
       }
       // Always re-apply the current filter/sort to the full accumulated list.
       updateArticles(allArticlesRef.current);
@@ -460,7 +481,12 @@ useEffect(() => {
       !selectedCategory
     ) {
       // Reset stale counter whenever the category changes or we stop paginating.
-      if (!selectedCategory || selectedCategory.name !== prevSelectedCategoryNameRef.current) lastCategoryFilteredCountRef.current = -1;
+      if (
+        !selectedCategory ||
+        selectedCategory.name !== prevSelectedCategoryNameRef.current
+      ) {
+        lastCategoryFilteredCountRef.current = -1;
+      }
       return;
     }
 
@@ -478,7 +504,7 @@ useEffect(() => {
       currentFiltered.length < 5 &&
       currentFiltered.length > lastCategoryFilteredCountRef.current
     ) {
-       prevSelectedCategoryNameRef.current = selectedCategory.name; 
+      prevSelectedCategoryNameRef.current = selectedCategory.name;
       lastCategoryFilteredCountRef.current = currentFiltered.length;
       setPage((prev: number) => prev + 1);
     }
@@ -491,7 +517,6 @@ useEffect(() => {
     totalPages,
     selectedCategory,
   ]);
-
 
   const onRefresh = () => {
     if (isConnected) {
@@ -518,34 +543,89 @@ useEffect(() => {
     }
   }, [isFetching, refreshing]);
 
-  const handleSearch = useCallback((textInput: string) => {
-  // Sanitize and validate the search input
-  const sanitizedInput = sanitizeSearchInput(textInput);
+  const handleSearch = useCallback(
+    async (textInput: string) => {
+      // Sanitize and validate the search input
+      const sanitizedInput = sanitizeSearchInput(textInput);
 
-  if (!isValidSearchInput(sanitizedInput) || allArticlesRef.current.length === 0) {
-    dispatch(setSearchedArticles({ searchedArticles: [] }));
-    dispatch(setSearchMode({ searchMode: false }));
-  } else {
-    dispatch(setSearchMode({ searchMode: true }));
-    const lowerCaseSanitizedInput = sanitizedInput.toLowerCase();
-    const matchesSearch = allArticlesRef.current.filter((article: any) => {  // ✅ use full accumulated list
-      const matchesTitle =
-        article.title && typeof article.title === 'string'
-          ? article.title.toLowerCase().includes(lowerCaseSanitizedInput)
-          : false;
-      const matchesTags =
-        article.tags && Array.isArray(article.tags)
-          ? article.tags.some(
-              (tag: any) =>
-                tag && tag.name && typeof tag.name === 'string' &&
-                tag.name.toLowerCase().includes(lowerCaseSanitizedInput),
-            )
-          : false;
-      return matchesTitle || matchesTags;
-    });
-    dispatch(setSearchedArticles({ searchedArticles: matchesSearch }));
-  }
-  }, [dispatch]);
+      if (!isValidSearchInput(sanitizedInput)) {
+        searchRequestIdRef.current += 1;
+        dispatch(setSearchedArticles({searchedArticles: []}));
+        dispatch(setSearchMode({searchMode: false}));
+        return;
+      }
+
+      dispatch(setSearchMode({searchMode: true}));
+      const lowerCaseSanitizedInput = sanitizedInput.toLowerCase();
+
+      // 1. Immediate client-side matches from already-loaded articles for instant UI feedback
+      const localMatches = allArticlesRef.current.filter((article: any) => {
+        const matchesTitle =
+          article.title && typeof article.title === 'string'
+            ? article.title.toLowerCase().includes(lowerCaseSanitizedInput)
+            : false;
+        const matchesDescription =
+          article.description && typeof article.description === 'string'
+            ? article.description.toLowerCase().includes(lowerCaseSanitizedInput)
+            : false;
+        const matchesAuthor =
+          article.authorName && typeof article.authorName === 'string'
+            ? article.authorName.toLowerCase().includes(lowerCaseSanitizedInput)
+            : false;
+        const matchesTags =
+          article.tags && Array.isArray(article.tags)
+            ? article.tags.some(
+                (tag: any) =>
+                  tag &&
+                  tag.name &&
+                  typeof tag.name === 'string' &&
+                  tag.name.toLowerCase().includes(lowerCaseSanitizedInput),
+              )
+            : false;
+        return matchesTitle || matchesDescription || matchesAuthor || matchesTags;
+      });
+      dispatch(setSearchedArticles({searchedArticles: localMatches}));
+
+      // 2. Sync with backend /api/articles/search so all published articles in DB are searched
+      if (isConnected !== false) {
+        const requestId = ++searchRequestIdRef.current;
+        try {
+          const response = await axios.get(`${PROD_URL}/articles/search`, {
+            params: {
+              q: sanitizedInput,
+              page: 1,
+              limit: 50,
+            },
+          });
+          if (requestId !== searchRequestIdRef.current) return;
+
+          const backendArticles: ArticleData[] = Array.isArray(
+            response.data?.articles,
+          )
+            ? response.data.articles
+            : [];
+
+          // Merge backend results with local matches (deduplicated by _id)
+          const seenIds = new Set<string>();
+          const merged: ArticleData[] = [];
+          for (const item of [...backendArticles, ...localMatches]) {
+            const idKey = String(item?._id ?? '');
+            if (idKey && !seenIds.has(idKey)) {
+              seenIds.add(idKey);
+              merged.push(item);
+            }
+          }
+          dispatch(setSearchedArticles({searchedArticles: merged}));
+        } catch (err) {
+          // Keep localMatches on network/server error
+          if (__DEV__) {
+            console.log('Backend article search fallback to local:', err);
+          }
+        }
+      }
+    },
+    [dispatch, isConnected],
+  );
 
   useEffect(() => {
     handleSearch(debouncedSearchText);
@@ -564,18 +644,43 @@ useEffect(() => {
     }
     if (searchMode) return searchedArticles;
 
+    if (!selectedCategory) {
+      return filteredArticles;
+    }
+
     const filtered = filteredArticles.filter(
       (article: ArticleData) =>
         article.tags &&
-        article.tags.some(tag => tag.name === selectedCategory?.name),
+        article.tags.some(
+          tag =>
+            tag?.name === selectedCategory?.name ||
+            (tag?._id &&
+              selectedCategory?._id &&
+              String(tag._id) === String(selectedCategory._id)),
+        ),
     );
 
+    // If the initial auto-selected first category has 0 matches in the loaded feed,
+    // fall back to showing all filteredArticles so the screen doesn't appear empty on launch.
+    if (filtered.length === 0 && !userSelectedCategory && filteredArticles.length > 0) {
+      return filteredArticles;
+    }
+
     return filtered;
-  }, [showSavedOnly, searchMode, searchedArticles, filteredArticles, selectedCategory, user]);
+  }, [
+    showSavedOnly,
+    searchMode,
+    searchedArticles,
+    filteredArticles,
+    selectedCategory,
+    userSelectedCategory,
+    user,
+  ]);
 
   // Check if any filters are active
   const hasActiveFilters = useMemo(() => {
-    const hasCustomCategories = selectedTags.length > 0 && selectedTags.length < articleCategories.length;
+    const hasCustomCategories =
+      selectedTags.length > 0 && selectedTags.length < articleCategories.length;
     const hasSorting = sortType !== '';
     return hasCustomCategories || hasSorting;
   }, [selectedTags, sortType, articleCategories]);
@@ -591,10 +696,11 @@ useEffect(() => {
 
   if (isConnected === false) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['left', 'right']}>
+        <StatusBar style="light" backgroundColor="#000A60" />
         <HomeScreenHeader
           handlePresentModalPress={handlePresentModalPress}
-          onTextInputChange={handleSearch}
+          onTextInputChange={(text: string) => setSearchText(text)}
           onNotificationClick={() => {
             if (isGuest) {
               navigation.navigate('GuestPlaceholderScreen', {
@@ -609,6 +715,7 @@ useEffect(() => {
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
           onFilterReset={handleClearAllFilters}
+          searchText={searchText}
         />
 
         <OfflineState />
@@ -616,12 +723,13 @@ useEffect(() => {
     );
   }
 
-  if (isError) {
+  if (isError && allArticlesRef.current.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['left', 'right']}>
+        <StatusBar style="light" backgroundColor="#000A60" />
         <HomeScreenHeader
           handlePresentModalPress={handlePresentModalPress}
-          onTextInputChange={handleSearch}
+          onTextInputChange={(text: string) => setSearchText(text)}
           onNotificationClick={() => {
             if (isGuest) {
               navigation.navigate('GuestPlaceholderScreen', {
@@ -636,6 +744,7 @@ useEffect(() => {
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
           onFilterReset={handleClearAllFilters}
+          searchText={searchText}
         />
 
         <ErrorState onRetry={refetch} />
@@ -643,12 +752,13 @@ useEffect(() => {
     );
   }
 
-  if (isLoading) {
+  if (isLoading && allArticlesRef.current.length === 0) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['left', 'right']}>
+        <StatusBar style="light" backgroundColor="#000A60" />
         <HomeScreenHeader
           handlePresentModalPress={handlePresentModalPress}
-          onTextInputChange={handleSearch}
+          onTextInputChange={(text: string) => setSearchText(text)}
           onNotificationClick={() => {
             if (isGuest) {
               navigation.navigate('GuestPlaceholderScreen', {
@@ -663,6 +773,7 @@ useEffect(() => {
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
           onFilterReset={handleClearAllFilters}
+          searchText={searchText}
         />
 
         <LoadingState />
@@ -670,12 +781,16 @@ useEffect(() => {
     );
   }
 
-  if (!articleData || !articleData.articles || articleData.articles.length === 0) {
+  if (
+    allArticlesRef.current.length === 0 &&
+    (!articleData || !articleData.articles || articleData.articles.length === 0)
+  ) {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} edges={['left', 'right']}>
+        <StatusBar style="light" backgroundColor="#000A60" />
         <HomeScreenHeader
           handlePresentModalPress={handlePresentModalPress}
-          onTextInputChange={handleSearch}
+          onTextInputChange={(text: string) => setSearchText(text)}
           onNotificationClick={() => {
             if (isGuest) {
               navigation.navigate('GuestPlaceholderScreen', {
@@ -690,6 +805,7 @@ useEffect(() => {
           unreadCount={unreadCount || 0}
           hasActiveFilters={hasActiveFilters}
           onFilterReset={handleQuickReset}
+          searchText={searchText}
         />
 
         <EmptyArticleState />
@@ -699,30 +815,33 @@ useEffect(() => {
 
   if (user && (user.isBlockUser || user.isBannedUser)) {
     return (
-      <SafeAreaView style={styles.blockContainer}>
-        <StatusBar style="light" backgroundColor="#007AFF" />
+      <SafeAreaView style={styles.blockContainer} edges={['left', 'right']}>
+        <StatusBar style="light" backgroundColor="#000A60" />
         <HomeScreenHeader
           handlePresentModalPress={handlePresentModalPress}
-          onTextInputChange={handleSearch}
+          onTextInputChange={(text: string) => setSearchText(text)}
           onNotificationClick={() => {
             navigation.navigate('NotificationScreen');
           }}
           unreadCount={unreadCount ? unreadCount : 0}
           hasActiveFilters={hasActiveFilters}
           onFilterReset={handleClearAllFilters}
+          searchText={searchText}
         />
 
         <View style={styles.buttonContainer}>
           <ScrollView
             horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            //contentContainerStyle={{flex:1}}
-          >
+            showsHorizontalScrollIndicator={false}>
             {selectedTags &&
               selectedTags.length > 0 &&
               !searchMode &&
               selectedTags.map((item: Category) => {
-                const isActive = selectedCategory && (selectedCategory._id === item._id || selectedCategory.id === item.id || selectedCategory.name === item.name);
+                const isActive =
+                  selectedCategory &&
+                  (selectedCategory._id === item._id ||
+                    selectedCategory.id === item.id ||
+                    selectedCategory.name === item.name);
                 return (
                   <TouchableOpacity
                     key={item._id}
@@ -735,8 +854,7 @@ useEffect(() => {
                     accessibilityRole="button"
                     accessibilityLabel={`${item.name} category`}
                     accessibilityHint={`Shows articles in the ${item.name} category`}
-                    accessibilityState={{selected: Boolean(isActive)}}
-                  >
+                    accessibilityState={{selected: Boolean(isActive)}}>
                     <Text
                       style={{
                         ...styles.labelStyle,
@@ -768,48 +886,51 @@ useEffect(() => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right']}>
+      <StatusBar style="light" backgroundColor="#000A60" />
       <HomeScreenHeader
-            handlePresentModalPress={handlePresentModalPress}
-            onTextInputChange={(text: string) => {
-              setSearchText(text);
-            }}
-            onNotificationClick={() => {
-              if (isGuest) {
-                navigation.navigate('GuestPlaceholderScreen', {
-                  title: 'Notifications',
-                  description: 'Sign in to see your notifications.',
-                  iconName: 'bell',
-                });
-              } else {
-                navigation.navigate('NotificationScreen');
-              }
-            }}
-            unreadCount={unreadCount ? unreadCount : 0}
-            hasActiveFilters={!!selectedCategory || sortingType !== '' || searchText !== ''}
-            onFilterReset={handleClearAllFilters}
-            searchText={searchText}
-          />
-           <TouchableOpacity
-      onPress={() => setCustomizeVisible(true)}
-      style={{
-        alignSelf: 'flex-end',
-        marginRight: 16,
-        marginTop: 10,
-        marginBottom: 10,
-      }}
-      accessibilityRole="button"
-      accessibilityLabel="Customize Homepage"
-      accessibilityHint="Opens homepage customization settings">
-      <Text
+        handlePresentModalPress={handlePresentModalPress}
+        onTextInputChange={(text: string) => {
+          setSearchText(text);
+        }}
+        onNotificationClick={() => {
+          if (isGuest) {
+            navigation.navigate('GuestPlaceholderScreen', {
+              title: 'Notifications',
+              description: 'Sign in to see your notifications.',
+              iconName: 'bell',
+            });
+          } else {
+            navigation.navigate('NotificationScreen');
+          }
+        }}
+        unreadCount={unreadCount ? unreadCount : 0}
+        hasActiveFilters={
+          hasActiveFilters || sortingType !== '' || searchText !== ''
+        }
+        onFilterReset={handleClearAllFilters}
+        searchText={searchText}
+      />
+      <TouchableOpacity
+        onPress={() => setCustomizeVisible(true)}
         style={{
-          color: '#000A60',
-          fontWeight: 'bold',
-          fontSize: 16,
-        }}>
-        ⚙ Customize Homepage
-      </Text>
-    </TouchableOpacity>
+          alignSelf: 'flex-end',
+          marginRight: 16,
+          marginTop: 10,
+          marginBottom: 10,
+        }}
+        accessibilityRole="button"
+        accessibilityLabel="Customize Homepage"
+        accessibilityHint="Opens homepage customization settings">
+        <Text
+          style={{
+            color: '#000A60',
+            fontWeight: 'bold',
+            fontSize: 16,
+          }}>
+          ⚙ Customize Homepage
+        </Text>
+      </TouchableOpacity>
       <FilterModal
         bottomSheetModalRef={bottomSheetModalRef}
         categories={articleCategories}
@@ -822,47 +943,44 @@ useEffect(() => {
         selectedLanguages={sessionSelectedLanguages}
         setSelectedLanguages={setSessionSelectedLanguages}
       />
-      
-      {/* Academy Featured Card */}
-     {showAcademyCard && (
-  <View style={styles.academyCardContainer}>
-    <TouchableOpacity
-      style={styles.academyCard}
-      onPress={() => navigation.navigate('Academy')}
-      accessibilityRole="button"
-      accessibilityLabel="Hospital Learning Academy"
-      accessibilityHint="Opens the Hospital Learning Academy"
-    >
-      <View style={{ flex: 1 }}>
-        <Text style={styles.academyCardTitle}>
-          Hospital Learning Academy
-        </Text>
-        <Text style={styles.academyCardSubtitle}>
-          Learn how hospitals work
-        </Text>
-        <View style={styles.academyProgressRow}>
-          <View style={styles.academyProgressBg}>
-            <View style={styles.academyProgressFill} />
-          </View>
-          <Text style={styles.academyProgressText}>45%</Text>
-        </View>
-      </View>
 
-      <View style={styles.academyCardButton}>
-        <Text style={styles.academyCardButtonText}>Continue</Text>
-      </View>
-    </TouchableOpacity>
-  </View>
-)}
-        {showCategoryFilters && (
+      {/* Academy Featured Card */}
+      {showAcademyCard && (
+        <View style={styles.academyCardContainer}>
+          <TouchableOpacity
+            style={styles.academyCard}
+            onPress={() => navigation.navigate('Academy')}
+            accessibilityRole="button"
+            accessibilityLabel="Hospital Learning Academy"
+            accessibilityHint="Opens the Hospital Learning Academy">
+            <View style={{flex: 1}}>
+              <Text style={styles.academyCardTitle}>
+                Hospital Learning Academy
+              </Text>
+              <Text style={styles.academyCardSubtitle}>
+                Learn how hospitals work
+              </Text>
+              <View style={styles.academyProgressRow}>
+                <View style={styles.academyProgressBg}>
+                  <View style={styles.academyProgressFill} />
+                </View>
+                <Text style={styles.academyProgressText}>45%</Text>
+              </View>
+            </View>
+
+            <View style={styles.academyCardButton}>
+              <Text style={styles.academyCardButtonText}>Continue</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      )}
+      {showCategoryFilters && (
         <View style={styles.buttonContainer}>
           <ScrollView
             horizontal={true}
             style={{width: '100%'}}
-            showsHorizontalScrollIndicator={false}
-            //contentContainerStyle={{flex:1}}
-          >
-            {!isGuest && (
+            showsHorizontalScrollIndicator={false}>
+            {!isGuest && showSavedFilter && (
               <TouchableOpacity
                 style={{
                   ...styles.button,
@@ -876,68 +994,68 @@ useEffect(() => {
                 onPress={handleToggleSavedOnly}
                 accessibilityRole="button"
                 accessibilityLabel={
-                  showSavedOnly
-                    ? 'Saved articles filter'
-                    : 'Saved articles'
+                  showSavedOnly ? 'Saved articles filter' : 'Saved articles'
                 }
                 accessibilityHint={
                   showSavedOnly
                     ? 'Turns off the saved articles filter'
                     : 'Shows only your saved articles'
                 }
-                accessibilityState={{selected: showSavedOnly}}
-              >
-              <Text
-                style={{
-                  ...styles.labelStyle,
-                  color: showSavedOnly ? 'white' : '#4B5563',
-                }}>
-                Saved
-              </Text>
-            </TouchableOpacity>
-          )}
-          {selectedTags &&
-            selectedTags.length > 0 &&
-            !searchMode &&
-            selectedTags.map((item: Category) => {
-              // Category chips visually appear inactive when Saved filter is on —
-              // they are still clickable to switch away from Saved mode.
-              const isActive = !showSavedOnly &&
-                selectedCategory &&
-                (selectedCategory._id === item._id || selectedCategory.id === item.id || selectedCategory.name === item.name);
-              return (
-                <TouchableOpacity
-                  key={item._id}
+                accessibilityState={{selected: showSavedOnly}}>
+                <Text
                   style={{
-                    ...styles.button,
-                    backgroundColor: isActive ? '#000A60' : 'white',
-                    borderColor: isActive ? '#000A60' : '#D1D5DB',
-                  }}
-                  onPress={() => handleCategoryClick(item)}
-                  accessibilityRole="button"
-                  accessibilityLabel={`${item.name} category`}
-                  accessibilityHint={`Shows articles in the ${item.name} category`}
-                  accessibilityState={{selected: Boolean(isActive)}}
-                >
-                  <Text
+                    ...styles.labelStyle,
+                    color: showSavedOnly ? 'white' : '#4B5563',
+                  }}>
+                  Saved
+                </Text>
+              </TouchableOpacity>
+            )}
+            {selectedTags &&
+              selectedTags.length > 0 &&
+              !searchMode &&
+              selectedTags.map((item: Category) => {
+                // Category chips visually appear inactive when Saved filter is on —
+                // they are still clickable to switch away from Saved mode.
+                const isActive =
+                  !showSavedOnly &&
+                  selectedCategory &&
+                  (selectedCategory._id === item._id ||
+                    selectedCategory.id === item.id ||
+                    selectedCategory.name === item.name);
+                return (
+                  <TouchableOpacity
+                    key={item._id}
                     style={{
-                      ...styles.labelStyle,
-                      color: isActive ? 'white' : '#4B5563',
-                    }}>
-                    {item.name}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-        </ScrollView>
-      </View>)}
+                      ...styles.button,
+                      backgroundColor: isActive ? '#000A60' : 'white',
+                      borderColor: isActive ? '#000A60' : '#D1D5DB',
+                    }}
+                    onPress={() => handleCategoryClick(item)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${item.name} category`}
+                    accessibilityHint={`Shows articles in the ${item.name} category`}
+                    accessibilityState={{selected: Boolean(isActive)}}>
+                    <Text
+                      style={{
+                        ...styles.labelStyle,
+                        color: isActive ? 'white' : '#4B5563',
+                      }}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+          </ScrollView>
+        </View>
+      )}
       <View style={styles.articleContainer}>
         <FlashList
           data={listData}
           estimatedItemSize={380}
           drawDistance={300}
           renderItem={renderItem}
-          keyExtractor={(item:any) => item._id.toString()}
+          keyExtractor={(item: any) => item._id.toString()}
           contentContainerStyle={styles.flatListContentContainer}
           refreshing={refreshing}
           onRefresh={onRefresh}
@@ -947,7 +1065,13 @@ useEffect(() => {
           onEndReached={() => {
             // Only paginate the main feed — saved articles are a
             // finite local list and do not use server-side pagination.
-            if (!showSavedOnly && page < totalPages) {
+            if (
+              !showSavedOnly &&
+              !searchMode &&
+              !isFetching &&
+              !isLoading &&
+              page < totalPages
+            ) {
               setPage((prev: number) => prev + 1);
             }
           }}
@@ -956,48 +1080,45 @@ useEffect(() => {
       </View>
 
       <View style={styles.homePlusIconview}>
-  <AddIcon callback={handleNoteIconClick} />
-</View>
+        <AddIcon callback={handleNoteIconClick} />
+      </View>
 
-<CustomizeHomepageModal
-  visible={customizeVisible}
-  onClose={() => setCustomizeVisible(false)}
-  onSave={async () => {
-    await AsyncStorage.setItem(
-      HOMEPAGE_SETTINGS_KEY,
-      JSON.stringify({
-        showAcademyCard,
-        showCategoryFilters,
-        showSavedFilter,
-      }),
-    );
-    setCustomizeVisible(false);
-  }}
-  onReset={async () => {
-    setShowAcademyCard(true);
-    setShowCategoryFilters(true);
-    setShowSavedFilter(true);
+      <CustomizeHomepageModal
+        visible={customizeVisible}
+        onClose={() => setCustomizeVisible(false)}
+        onSave={async () => {
+          await AsyncStorage.setItem(
+            HOMEPAGE_SETTINGS_KEY,
+            JSON.stringify({
+              showAcademyCard,
+              showCategoryFilters,
+              showSavedFilter,
+            }),
+          );
+          setCustomizeVisible(false);
+        }}
+        onReset={async () => {
+          setShowAcademyCard(true);
+          setShowCategoryFilters(true);
+          setShowSavedFilter(true);
 
-    await AsyncStorage.setItem(
-      HOMEPAGE_SETTINGS_KEY,
-      JSON.stringify({
-        showAcademyCard: true,
-        showCategoryFilters: true,
-        showSavedFilter: true,
-      }),
-    );
-  }}
-  showAcademyCard={showAcademyCard}
-  setShowAcademyCard={setShowAcademyCard}
-  showCategoryFilters={showCategoryFilters}
-  setShowCategoryFilters={setShowCategoryFilters}
-  showSavedFilter={showSavedFilter}
-  setShowSavedFilter={setShowSavedFilter}
-/>
-
-      {/* ── ONBOARDING MODAL (first-launch only) ── */}
-
-</SafeAreaView>
+          await AsyncStorage.setItem(
+            HOMEPAGE_SETTINGS_KEY,
+            JSON.stringify({
+              showAcademyCard: true,
+              showCategoryFilters: true,
+              showSavedFilter: true,
+            }),
+          );
+        }}
+        showAcademyCard={showAcademyCard}
+        setShowAcademyCard={setShowAcademyCard}
+        showCategoryFilters={showCategoryFilters}
+        setShowCategoryFilters={setShowCategoryFilters}
+        showSavedFilter={showSavedFilter}
+        setShowSavedFilter={setShowSavedFilter}
+      />
+    </SafeAreaView>
   );
 };
 
@@ -1010,13 +1131,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'stretch',
   },
-
   blockContainer: {
-    flex: 0,
+    flex: 1,
     width: '100%',
     backgroundColor: '#F0F8FF',
-    justifyContent: 'center',
-    //alignItems: 'center',
+    justifyContent: 'flex-start',
   },
   buttonContainer: {
     marginTop: wp(3),
@@ -1042,7 +1161,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     paddingHorizontal: 0,
-    zIndex: -2,
   },
   flatListContentContainer: {
     flexGrow: 1, // Allows empty-state components to fill available height
@@ -1054,7 +1172,7 @@ const styles = StyleSheet.create({
     bottom: 100,
     right: 25,
     position: 'absolute',
-    zIndex: -2,
+    zIndex: 10,
   },
 
   message: {
@@ -1225,7 +1343,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 60,
     paddingHorizontal: 24,
-    // minHeight removed: flex:1 + flexGrow:1 on contentContainerStyle fills space
   },
   emptyIconCircle: {
     width: 100,
@@ -1282,7 +1399,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 60,
     paddingHorizontal: 24,
-    // minHeight removed: flex:1 + flexGrow:1 on contentContainerStyle fills space
     backgroundColor: EMPTY_STATE_BACKGROUND,
   },
   savedEmptyTitle: {

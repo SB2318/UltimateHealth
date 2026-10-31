@@ -1,25 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/**
- * ArticleShareModal.tsx
- *
- * A bottom-sheet-style modal that shows the article preview card and
- * a "Share" button. Triggered from an article screen's share action.
- *
- * Usage:
- *   <ArticleShareModal
- *     visible={shareModalVisible}
- *     onClose={() => setShareModalVisible(false)}
- *     article={{
- *       title: 'How Stress Affects Your Body',
- *       authorName: 'Dr. Priya Mehta',
- *       category: 'Mental Health',
- *       coverImageUrl: 'https://...',
- *       authorAvatarUrl: 'https://...',
- *     }}
- *   />
- */
-
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Modal,
   View,
@@ -34,16 +14,12 @@ import {
 import ArticleShareCard, {ArticleShareCardProps} from './ArticleShareCard';
 import {useArticleShare} from '../../hooks/article/useArticleShare';
 
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 interface ArticleShareModalProps {
   visible: boolean;
   onClose: () => void;
   article: Omit<ArticleShareCardProps, 'cardRef'>;
+  shareUrl?: string;
 }
-
-// ─── Constants ────────────────────────────────────────────────────────────────
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window');
 const MODAL_HEIGHT = SCREEN_HEIGHT * 0.72;
@@ -59,16 +35,14 @@ const COLORS = {
   handle: '#CBD5D3',
 };
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
 const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
   visible,
   onClose,
   article,
+  shareUrl,
 }) => {
   const {cardRef, isCapturing, shareArticleCard} = useArticleShare();
 
-  // ── Slide-up animation ──────────────────────────────────────────────
   const [slideAnim] = useState(() => new Animated.Value(MODAL_HEIGHT));
 
   useEffect(() => {
@@ -89,7 +63,7 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
   }, [visible, slideAnim]);
 
   const handleShare = () => {
-    shareArticleCard(article.title);
+    shareArticleCard(article.title, shareUrl);
   };
 
   return (
@@ -99,7 +73,6 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
       animationType="fade"
       onRequestClose={onClose}
       statusBarTranslucent>
-      {/* ── Backdrop ─────────────────────────────────────────────────── */}
       <TouchableOpacity
         style={styles.backdrop}
         activeOpacity={1}
@@ -109,14 +82,11 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
         accessibilityHint="Closes the share article dialog"
       />
 
-      {/* ── Sheet ────────────────────────────────────────────────────── */}
       <Animated.View
         style={[styles.sheet, {transform: [{translateY: slideAnim}]}]}>
         <SafeAreaView style={styles.safeArea}>
-          {/* Handle */}
           <View style={styles.handle} />
 
-          {/* Header */}
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Share Article</Text>
             <TouchableOpacity
@@ -125,9 +95,7 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
               accessibilityRole="button"
               accessibilityLabel="Close share article dialog"
               accessibilityHint="Closes the share article dialog">
-              <Text
-                style={styles.closeBtnText}
-                accessible={false}>
+              <Text style={styles.closeBtnText} accessible={false}>
                 ✕
               </Text>
             </TouchableOpacity>
@@ -137,12 +105,10 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
             Preview your shareable card below.
           </Text>
 
-          {/* Card preview — centred, slightly scaled down so it fits */}
           <View style={styles.cardWrapper}>
             <ArticleShareCard {...article} cardRef={cardRef} />
           </View>
 
-          {/* Share button */}
           <TouchableOpacity
             style={[styles.shareBtn, isCapturing && styles.shareBtnDisabled]}
             onPress={handleShare}
@@ -170,9 +136,7 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
               />
             ) : (
               <>
-                <Text
-                  style={styles.shareBtnIcon}
-                  accessible={false}>
+                <Text style={styles.shareBtnIcon} accessible={false}>
                   ⬆{' '}
                 </Text>
                 <Text style={styles.shareBtnLabel}>Share Card</Text>
@@ -185,11 +149,9 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
   );
 };
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
-
 const styles = StyleSheet.create({
   backdrop: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: COLORS.backdrop,
   },
   sheet: {
@@ -210,8 +172,6 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     alignItems: 'center',
   },
-
-  // Handle
   handle: {
     width: 40,
     height: 4,
@@ -219,8 +179,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.handle,
     marginBottom: 16,
   },
-
-  // Header row
   header: {
     flexDirection: 'row',
     width: '100%',
@@ -241,23 +199,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: COLORS.textMid,
   },
-
   subheading: {
     alignSelf: 'flex-start',
     fontSize: 13,
     color: COLORS.textMid,
     marginBottom: 20,
   },
-
-  // Card preview area
   cardWrapper: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     transform: [{scale: 0.88}],
   },
-
-  // Share button
   shareBtn: {
     flexDirection: 'row',
     alignItems: 'center',

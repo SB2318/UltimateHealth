@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Alert,
@@ -9,11 +9,9 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import {StatusBar} from 'expo-status-bar';
 import {BUTTON_COLOR} from '../../lib/ui/Theme';
-import {
-  PocketBaseResponse,
-  PreviewScreenProp,
-} from '../../schemas/type';
+import {PocketBaseResponse, PreviewScreenProp} from '../../schemas/type';
 import {createHTMLStructure, handleExternalClick} from '../../lib/utils/Utils';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 
@@ -33,6 +31,105 @@ import {useUploadImprovementToPocketbase} from '@/src/hooks/improvement/useUploa
 import {useRenderSuggestion} from '@/src/hooks/ai/useRenderSuggestion';
 import {useDeletePocketbaseRecord} from '@/src/hooks/common/useDeletePocketbaseRecord';
 
+const COMMON_GRAMMAR_FIXES: Array<[RegExp, string]> = [
+  [/\bteh\b/gi, 'the'],
+  [/\brecieve\b/gi, 'receive'],
+  [/\boccured\b/gi, 'occurred'],
+  [/\bdefinately\b/gi, 'definitely'],
+  [/\bseperate\b/gi, 'separate'],
+  [/\bneccessary\b/gi, 'necessary'],
+  [/\baccomodate\b/gi, 'accommodate'],
+  [/\bdont\b/gi, "don't"],
+  [/\bcant\b/gi, "can't"],
+  [/\bwont\b/gi, "won't"],
+  [/\bim\b/gi, "I'm"],
+  [/\bi\b/g, 'I'],
+];
+
+const countSyllables = (word: string): number => {
+  const cleaned = word.toLowerCase().replace(/[^a-z]/g, '');
+  if (!cleaned) return 1;
+  if (cleaned.length <= 3) return 1;
+  const withoutSilentE = cleaned.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
+  const vowelGroups = withoutSilentE.replace(/^y/, '').match(/[aeiouy]{1,2}/g);
+  return Math.max(1, vowelGroups ? vowelGroups.length : 1);
+};
+
+/**
+ * Fallback Content Checker & Grammar Suggestion engine when the remote
+ * content-intel service is unreachable or returns an incomplete response.
+ */
+export const buildFallbackContentAnalysis = (rawHtml: string) => {
+  const safeHtml = rawHtml || '';
+  const plainText = safeHtml
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const words = plainText ? plainText.split(/\s+/).filter(Boolean) : [];
+  const wordCount = Math.max(1, words.length);
+  const sentences = plainText
+    ? plainText.split(/[.!?]+/).map(s => s.trim()).filter(Boolean)
+    : [];
+  const sentenceCount = Math.max(1, sentences.length);
+  const syllableCount = words.reduce((acc, w) => acc + countSyllables(w), 0);
+
+  // Flesch Reading Ease formula: 206.835 - 1.015*(words/sentences) - 84.6*(syllables/words)
+  const rawScore =
+    206.835 -
+    1.015 * (wordCount / sentenceCount) -
+    84.6 * (syllableCount / wordCount);
+  const readability_score = Math.max(
+    10,
+    Math.min(100, Math.round(Number.isFinite(rawScore) ? rawScore : 72)),
+  );
+  const minutes = Math.max(1, Math.ceil(wordCount / 200));
+  const reading_time = `${minutes} min read`;
+
+  // Apply non-destructive grammar & whitespace cleanup to text nodes (outside HTML tags)
+  const applyTextTransform = (
+    html: string,
+    transformFn: (textSegment: string) => string,
+  ): string => {
+    return html
+      .split(/(<[^>]+>)/g)
+      .map(segment => {
+        if (segment.startsWith('<') && segment.endsWith('>')) {
+          return segment;
+        }
+        return transformFn(segment);
+      })
+      .join('');
+  };
+
+  const cleanedSuggestion = applyTextTransform(safeHtml, segment => {
+    let updated = segment.replace(/[ \t]{2,}/g, ' ');
+    for (const [pattern, replacement] of COMMON_GRAMMAR_FIXES) {
+      updated = updated.replace(pattern, replacement);
+    }
+    return updated;
+  });
+
+  // Highlight complex sentences (> 25 words) for RenderSuggestion WebView
+  const highlightedHtml = applyTextTransform(cleanedSuggestion, segment => {
+    return segment.replace(/[^.!?]+[.!?]+/g, sentence => {
+      const count = sentence.trim().split(/\s+/).filter(Boolean).length;
+      if (count > 25) {
+        return `<span class="complex-sentence">${sentence}</span>`;
+      }
+      return sentence;
+    });
+  });
+
+  return {
+    readability_score,
+    reading_time,
+    full_html: highlightedHtml || cleanedSuggestion,
+    suggestion: cleanedSuggestion,
+  };
+};
+
 export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {
     article,
@@ -40,7 +137,8 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
     description,
     authorName,
     selectedGenres,
-    localImages,
+    localImages = [],
+    image,
     articleData,
     requestId,
     language,
@@ -77,314 +175,20 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   const {mutate: renderAISuggestion, isPending: renderSuggestionPending} =
     useRenderSuggestion();
 
-  // Compensating-delete hook: removes an orphaned PocketBase record when
-  // the downstream main-DB write (step 2) fails after PocketBase write
-  // (step 1) succeeded.
   const {mutate: deletePocketbaseRecord} = useDeletePocketbaseRecord();
 
   const {uploadImage, loading} = useUploadImage();
 
   const {data: user} = useGetProfile();
-  // console.log(selectedGenres);
 
-  React.useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            //createPostMutation.mutate();
-            if (isConnected) {
-              handlePostSubmit();
-            } else {
-              Snackbar.show({
-                text: 'Please check your internet connection',
-                duration: Snackbar.LENGTH_SHORT,
-              });
-            }
-          }}
-          accessibilityRole="button"
-          accessibilityLabel="Submit article"
-          accessibilityHint="Submits your article for review">
-          <Text style={styles.textWhite}>Submit</Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
-
-  const handlePostSubmit = async () => {
-    let finalArticle =
-      suggestionAccepted && suggestion !== '' ? suggestion : article;
-    let imageUtil = '';
-
-    // Resize and confirm for all images before uploading
-    try {
-      // Show confirmation alert
-      const confirmation = await showConfirmationAlert();
-      if (!confirmation) {
-        Alert.alert('Post discarded');
-        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
-        navigation.navigate('TabNavigation');
-        return;
-      }
-
-      let resultImages: string[] = [];
-
-      // Process each local image
-      for (let i = 0; i < localImages.length; i++) {
-        const localImage = localImages[i];
-
-        let uploadedUrl: string | undefined;
-
-        if (localImage.includes('api/getfile')) {
-          uploadedUrl = localImage;
-        } else {
-          // Resize the image and handle the upload
-          const resizedImageUri = await resizeImage(localImage);
-
-          uploadedUrl = await uploadImage(resizedImageUri?.uri as string);
-        }
-
-        if (i === 0 && imageUtil.length === 0) {
-          imageUtil = uploadedUrl?.includes('api/getfile')
-            ? uploadedUrl
-            : `${GET_IMAGE}/${uploadedUrl}`;
-        } else {
-          resultImages.push(`${GET_IMAGE}/${uploadedUrl}` || '');
-          finalArticle = finalArticle.replace(
-            localImage,
-            `${GET_IMAGE}/${uploadedUrl}`,
-          );
-        }
-      }
-
-      // Use a local variable so mutation callbacks get the correct value
-      // synchronously — React setState is async so imageUtils state would
-      // still be [] by the time the mutation fires in the same tick.
-      const finalImageUtils = [imageUtil, ...resultImages];
-      setImageUtils(finalImageUtils);
-
-      // Submit Improvement
-      if (requestId) {
-        uploadImprovementToPocketbase(
-          {
-            title: title,
-            htmlContent: finalArticle,
-            article_id: articleData ? articleData.pb_recordId : null,
-            record_id: pb_record_id ?? null,
-            improvement_id: requestId,
-            user_id: user_id,
-          },
-          {
-            onSuccess: (data: PocketBaseResponse) => {
-              if (data.html_file) {
-                improvementMutation(
-                  {
-                    edited_content: data.html_file,
-                    recordId: data.recordId,
-                    requestId: requestId ?? '',
-                    imageUtils: finalImageUtils,
-                  },
-                  {
-                    onSuccess: _result => {
-                      Snackbar.show({
-                        text: 'Changes submitted for review',
-                        duration: Snackbar.LENGTH_SHORT,
-                      });
-
-                      AsyncStorage.removeItem('@article_description_draft').catch(() => {});
-                      navigation.navigate('TabNavigation');
-                    },
-                    onError: error => {
-                      console.log('Article post Error', error);
-
-                      // Step 2 failed — issue a compensating DELETE to remove
-                      // the PocketBase record created in step 1 so it does not
-                      // become a permanent orphan.
-                      deletePocketbaseRecord({
-                       recordId: data.recordId,
-                       collectionName: 'edit_requests',
-                      }, {
-                        onError: cleanupErr => {
-                          console.warn(
-                            'PocketBase orphan cleanup failed for recordId:',
-                            data.recordId,
-                            cleanupErr,
-                          );
-                        },
-                      });
-
-                      Alert.alert('Error', 'Failed to upload your post');
-                    },
-                  },
-                );
-              } else {
-                Alert.alert('Failed to upload your post');
-              }
-            },
-            onError: error => {
-              console.log('Article post Error', error);
-              // console.log(error);
-
-              // Step 1 itself failed — no PocketBase record was created,
-              // so no compensating delete is needed here.
-              Alert.alert('Failed to upload your post');
-            },
-          },
-        );
-      }
-      // Submit changes or create a new post
-      else {
-        // Submit new article
-        setImageUtil(imageUtil);
-        uploadPocketbase(
-          {
-            title: title,
-            htmlContent: finalArticle,
-            articleData: articleData,
-          },
-          {
-            onSuccess: (data: PocketBaseResponse) => {
-              if (data.html_file) {
-                // Case 1: User is submitting suggested changes to an existing non published article
-                if (articleData) {
-                  submitChangesMutation(
-                    {
-                      article: data.html_file,
-                      title: title,
-                      userId: articleData
-                        ? typeof articleData.authorId === 'string'
-                          ? articleData.authorId
-                          : articleData.authorId._id
-                        : '',
-                      authorName: authorName,
-                      articleId: articleData?._id,
-                      tags: selectedGenres,
-                      imageUtils: finalImageUtils,
-                      description: description,
-                    },
-                    {
-                      onSuccess: _result => {
-                        // User will not get notified, until the article published
-
-                        Snackbar.show({
-                          text: 'Article submitted for review',
-                          duration: Snackbar.LENGTH_SHORT,
-                        });
-
-                        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
-                        navigation.navigate('TabNavigation');
-                      },
-                      onError: error => {
-                        console.log('Article post Error', error);
-                        // console.log(error);
-
-                        // Step 2 failed — compensating DELETE for the PocketBase
-                        // record created in step 1.
-                        deletePocketbaseRecord({
-                          recordId: data.recordId,
-                          collectionName: 'content',
-                        }, {
-                          onError: cleanupErr => {
-                            console.warn(
-                              'PocketBase orphan cleanup failed for recordId:',
-                              data.recordId,
-                              cleanupErr,
-                            );
-                          },
-                        });
-
-                        Alert.alert('Failed to upload your post');
-                      },
-                    },
-                  );
-                } else {
-                  // Case 2: User is submitting a new article
-                  postMutation(
-                    {
-                      title: title,
-                      authorName: authorName,
-                      authorId: user?._id ?? '',
-                      content: data.html_file,
-                      tags: selectedGenres,
-                      imageUtils: finalImageUtils,
-                      description: description,
-                      pb_recordId: data.recordId,
-                      allow_podcast: true,
-                      language: language,
-                      isTranslation: Boolean(translationSource),
-                      sourceArticleId: translationSource?.sourceArticleId,
-                      sourceArticleRecordId:
-                        translationSource?.sourceArticleRecordId,
-                      sourceLanguage: translationSource?.sourceLanguage,
-                      targetLanguage: language,
-                      translationOf: translationSource?.sourceArticleId,
-                    },
-                    {
-                      onSuccess: () => {
-                        Snackbar.show({
-                          text: translationSource
-                            ? 'Translation submitted successfully'
-                            : 'Article added successfully',
-                          duration: Snackbar.LENGTH_SHORT,
-                        });
-
-                        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
-                        navigation.navigate('TabNavigation');
-                      },
-
-                      onError: error => {
-                        console.log('Article post Error', error);
-
-                        // Step 2 failed — compensating DELETE for the PocketBase
-                        // article record created in step 1.
-                        deletePocketbaseRecord({
-                          recordId: data.recordId,
-                          collectionName: 'content',
-                        }, {
-                          onError: cleanupErr => {
-                            console.warn(
-                              'PocketBase orphan cleanup failed for recordId:',
-                              data.recordId,
-                              cleanupErr,
-                            );
-                          },
-                        });
-
-                        Snackbar.show({
-                          text: 'Failed to upload your post',
-                          duration: Snackbar.LENGTH_SHORT,
-                        });
-                      },
-                    },
-                  );
-                }
-              } else {
-                Snackbar.show({
-                  text: 'Failed to upload your post',
-                  duration: Snackbar.LENGTH_SHORT,
-                });
-              }
-            },
-            onError: error => {
-              console.log('Article post Error pb', error.message);
-
-              // Step 1 itself failed — no PocketBase record was created,
-              // so no compensating delete is needed here.
-              Alert.alert('Failed to upload your post');
-            },
-          },
-        );
-      }
-    } catch (err) {
-      console.error('Image processing failed:', err);
-      Alert.alert('Error', 'Could not process the images.');
-    }
-  };
+  const activeArticleHtml =
+    suggestionAccepted && suggestion && suggestion !== ''
+      ? suggestion
+      : article;
 
   // Helper function to show confirmation alert
   const showConfirmationAlert = () => {
-    return new Promise(resolve => {
+    return new Promise<boolean>(resolve => {
       Alert.alert(
         'Create Post',
         'Please confirm you want to upload this post.',
@@ -417,10 +221,384 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       return resizedImageUri;
     } catch (err) {
       console.error('Failed to resize image:', err);
-      // throw new Error('Image resizing failed');
+      return undefined;
     }
   };
 
+  const handlePostSubmit = useCallback(async () => {
+    let finalArticle =
+      suggestionAccepted && suggestion && suggestion !== ''
+        ? suggestion
+        : article;
+    let coverImageUtil = '';
+
+    try {
+      const confirmation = await showConfirmationAlert();
+      if (!confirmation) {
+        Alert.alert('Post discarded');
+        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
+        navigation.navigate('TabNavigation');
+        return;
+      }
+
+      const resultImages: string[] = [];
+      const effectiveLocalImages =
+        Array.isArray(localImages) && localImages.length > 0
+          ? localImages
+          : image
+            ? [image]
+            : [];
+
+      // Process each local image
+      for (let i = 0; i < effectiveLocalImages.length; i++) {
+        const localImage = effectiveLocalImages[i];
+        if (!localImage) continue;
+
+        let uploadedUrl: string | undefined;
+
+        if (
+          localImage.includes('api/getfile') ||
+          localImage.startsWith('http://') ||
+          localImage.startsWith('https://')
+        ) {
+          uploadedUrl = localImage;
+        } else {
+          const resizedImageUri = await resizeImage(localImage);
+          const sourceUri = resizedImageUri?.uri || localImage;
+          uploadedUrl = await uploadImage(sourceUri);
+        }
+
+        const resolvedUrl = uploadedUrl
+          ? uploadedUrl.includes('api/getfile') ||
+            uploadedUrl.startsWith('http://') ||
+            uploadedUrl.startsWith('https://')
+            ? uploadedUrl
+            : `${GET_IMAGE}/${uploadedUrl}`
+          : localImage;
+
+        if (i === 0 && coverImageUtil.length === 0) {
+          coverImageUtil = resolvedUrl;
+        } else {
+          resultImages.push(resolvedUrl);
+          finalArticle = finalArticle.replace(localImage, resolvedUrl);
+        }
+      }
+
+      const finalImageUtils = coverImageUtil
+        ? [coverImageUtil, ...resultImages]
+        : resultImages;
+      setImageUtils(finalImageUtils);
+
+      // Submit Improvement
+      if (requestId) {
+        uploadImprovementToPocketbase(
+          {
+            title: title,
+            htmlContent: finalArticle,
+            article_id: articleData ? articleData.pb_recordId : null,
+            record_id: pb_record_id ?? null,
+            improvement_id: requestId,
+            user_id: user_id,
+          },
+          {
+            onSuccess: (data: PocketBaseResponse) => {
+              if (data.html_file) {
+                improvementMutation(
+                  {
+                    edited_content: data.html_file,
+                    recordId: data.recordId,
+                    requestId: requestId ?? '',
+                    imageUtils: finalImageUtils,
+                  },
+                  {
+                    onSuccess: _result => {
+                      Snackbar.show({
+                        text: 'Changes submitted for review',
+                        duration: Snackbar.LENGTH_SHORT,
+                      });
+
+                      AsyncStorage.removeItem(
+                        '@article_description_draft',
+                      ).catch(() => {});
+                      navigation.navigate('TabNavigation');
+                    },
+                    onError: error => {
+                      console.log('Article post Error', error);
+
+                      deletePocketbaseRecord(
+                        {
+                          recordId: data.recordId,
+                          collectionName: 'edit_requests',
+                        },
+                        {
+                          onError: cleanupErr => {
+                            console.warn(
+                              'PocketBase orphan cleanup failed for recordId:',
+                              data.recordId,
+                              cleanupErr,
+                            );
+                          },
+                        },
+                      );
+
+                      Alert.alert('Error', 'Failed to upload your post');
+                    },
+                  },
+                );
+              } else {
+                Alert.alert('Failed to upload your post');
+              }
+            },
+            onError: error => {
+              console.log('Article post Error', error);
+              Alert.alert('Failed to upload your post');
+            },
+          },
+        );
+      } else {
+        // Submit new article or suggested changes
+        setImageUtil(coverImageUtil);
+        uploadPocketbase(
+          {
+            title: title,
+            htmlContent: finalArticle,
+            articleData: articleData,
+          },
+          {
+            onSuccess: (data: PocketBaseResponse) => {
+              if (data.html_file) {
+                if (articleData) {
+                  submitChangesMutation(
+                    {
+                      article: data.html_file,
+                      title: title,
+                      userId: articleData
+                        ? typeof articleData.authorId === 'string'
+                          ? articleData.authorId
+                          : articleData.authorId._id
+                        : '',
+                      authorName: authorName,
+                      articleId: articleData?._id,
+                      tags: selectedGenres,
+                      imageUtils: finalImageUtils,
+                      description: description,
+                    },
+                    {
+                      onSuccess: _result => {
+                        Snackbar.show({
+                          text: 'Article submitted for review',
+                          duration: Snackbar.LENGTH_SHORT,
+                        });
+
+                        AsyncStorage.removeItem(
+                          '@article_description_draft',
+                        ).catch(() => {});
+                        navigation.navigate('TabNavigation');
+                      },
+                      onError: error => {
+                        console.log('Article post Error', error);
+
+                        deletePocketbaseRecord(
+                          {
+                            recordId: data.recordId,
+                            collectionName: 'content',
+                          },
+                          {
+                            onError: cleanupErr => {
+                              console.warn(
+                                'PocketBase orphan cleanup failed for recordId:',
+                                data.recordId,
+                                cleanupErr,
+                              );
+                            },
+                          },
+                        );
+
+                        Alert.alert('Failed to upload your post');
+                      },
+                    },
+                  );
+                } else {
+                  postMutation(
+                    {
+                      title: title,
+                      authorName: authorName,
+                      authorId: user?._id ?? user_id ?? '',
+                      content: data.html_file,
+                      tags: selectedGenres,
+                      imageUtils: finalImageUtils,
+                      description: description,
+                      pb_recordId: data.recordId,
+                      allow_podcast: true,
+                      language: language,
+                      isTranslation: Boolean(translationSource),
+                      sourceArticleId: translationSource?.sourceArticleId,
+                      sourceArticleRecordId:
+                        translationSource?.sourceArticleRecordId,
+                      sourceLanguage: translationSource?.sourceLanguage,
+                      targetLanguage: language,
+                      translationOf: translationSource?.sourceArticleId,
+                    },
+                    {
+                      onSuccess: () => {
+                        Snackbar.show({
+                          text: translationSource
+                            ? 'Translation submitted successfully'
+                            : 'Article added successfully',
+                          duration: Snackbar.LENGTH_SHORT,
+                        });
+
+                        AsyncStorage.removeItem(
+                          '@article_description_draft',
+                        ).catch(() => {});
+                        navigation.navigate('TabNavigation');
+                      },
+
+                      onError: error => {
+                        console.log('Article post Error', error);
+
+                        deletePocketbaseRecord(
+                          {
+                            recordId: data.recordId,
+                            collectionName: 'content',
+                          },
+                          {
+                            onError: cleanupErr => {
+                              console.warn(
+                                'PocketBase orphan cleanup failed for recordId:',
+                                data.recordId,
+                                cleanupErr,
+                              );
+                            },
+                          },
+                        );
+
+                        Snackbar.show({
+                          text: 'Failed to upload your post',
+                          duration: Snackbar.LENGTH_SHORT,
+                        });
+                      },
+                    },
+                  );
+                }
+              } else {
+                Snackbar.show({
+                  text: 'Failed to upload your post',
+                  duration: Snackbar.LENGTH_SHORT,
+                });
+              }
+            },
+            onError: error => {
+              console.log('Article post Error pb', error.message);
+              Alert.alert('Failed to upload your post');
+            },
+          },
+        );
+      }
+    } catch (err) {
+      console.error('Image processing failed:', err);
+      Alert.alert('Error', 'Could not process the images.');
+    }
+  }, [
+    suggestionAccepted,
+    suggestion,
+    article,
+    localImages,
+    image,
+    requestId,
+    title,
+    articleData,
+    pb_record_id,
+    user_id,
+    authorName,
+    selectedGenres,
+    description,
+    user,
+    language,
+    translationSource,
+    navigation,
+  ]);
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            if (isConnected) {
+              handlePostSubmit();
+            } else {
+              Snackbar.show({
+                text: 'Please check your internet connection',
+                duration: Snackbar.LENGTH_SHORT,
+              });
+            }
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Submit article"
+          accessibilityHint="Submits your article for review">
+          <Text style={styles.textWhite}>Submit</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, isConnected, handlePostSubmit]);
+
+  const openFallbackSuggestions = () => {
+    const fallback = buildFallbackContentAnalysis(activeArticleHtml);
+    dispatch(setSuggestion({suggestion: fallback.suggestion}));
+    Snackbar.show({
+      text: 'Using built-in Content & Grammar Checker fallback',
+      duration: Snackbar.LENGTH_SHORT,
+    });
+    navigation.navigate('RenderSuggestion', {
+      htmlContent: fallback.full_html,
+      readability_score: fallback.readability_score,
+      reading_time: fallback.reading_time,
+      isFallback: true,
+    });
+  };
+
+  const handleRunContentAndGrammarCheck = () => {
+    if (!isConnected) {
+      openFallbackSuggestions();
+      return;
+    }
+
+    renderAISuggestion(
+      {
+        text: activeArticleHtml,
+      },
+      {
+        onSuccess: data => {
+          const suggestionHtml = data?.full_html ?? data?.suggested_html;
+
+          if (suggestionHtml) {
+            dispatch(
+              setSuggestion({
+                suggestion: data.suggestion || suggestionHtml,
+              }),
+            );
+
+            navigation.navigate('RenderSuggestion', {
+              htmlContent: suggestionHtml,
+              readability_score: data.readability_score,
+              reading_time: data.reading_time,
+              isFallback: false,
+            });
+          } else {
+            openFallbackSuggestions();
+          }
+        },
+        onError: error => {
+          console.log(
+            'Content checker API unavailable, using fallback:',
+            error,
+          );
+          openFallbackSuggestions();
+        },
+      },
+    );
+  };
 
   if (
     renderSuggestionPending ||
@@ -435,64 +613,34 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   }
   return (
     <View style={styles.container}>
-      {/* AI Review Card with Modern Design */}
+      <StatusBar style="light" backgroundColor="#000A60" />
+      {/* AI Content Checker & Grammar Suggestions Card with Built-In Fallback */}
       <View style={styles.aiReviewCard}>
         <View style={styles.iconContainer}>
           <Text style={styles.iconText}>✨</Text>
         </View>
         <Text style={styles.reviewTitle}>Article Ready for Review</Text>
         <Text style={styles.reviewSubtext}>
-          Enhance your content with AI-powered suggestions and improvements
+          Run Content Checker & Grammar Suggestions before submitting (includes
+          automatic fallback if AI service is busy)
         </Text>
+        {suggestionAccepted && suggestion !== '' && (
+          <View style={styles.appliedBadge}>
+            <Text style={styles.appliedBadgeText}>
+              ✓ Grammar & Readability Suggestions Applied
+            </Text>
+          </View>
+        )}
         <TouchableOpacity
           style={styles.continueButton}
-          onPress={() => {
-            if (isConnected) {
-              renderAISuggestion(
-                {
-                  text: article,
-                },
-                {
-                  onSuccess: data => {
-                    const suggestionHtml = data.full_html ?? data.suggested_html;
-
-                    if (suggestionHtml) {
-                      dispatch(setSuggestion({suggestion: data.suggestion}));
-
-                      navigation.navigate('RenderSuggestion', {
-                        htmlContent: suggestionHtml,
-                        readability_score: data.readability_score,
-                        reading_time: data.reading_time,
-                      });
-                    } else {
-                      Snackbar.show({
-                        text: 'Failed to load suggestions, try again!',
-                        duration: Snackbar.LENGTH_SHORT,
-                      });
-                    }
-                  },
-                  onError: error => {
-                    console.log('Article suggestion Error', error);
-
-                    Snackbar.show({
-                      text: 'Failed to load suggestions, try again!',
-                      duration: Snackbar.LENGTH_SHORT,
-                    });
-                  },
-                },
-              );
-            } else {
-              Snackbar.show({
-                text: 'Please check your internet connection',
-                duration: Snackbar.LENGTH_SHORT,
-              });
-            }
-          }}
+          onPress={handleRunContentAndGrammarCheck}
           activeOpacity={0.8}
           accessibilityRole="button"
           accessibilityLabel="Get AI suggestions"
-          accessibilityHint="Uses AI to analyze your article and provide suggestions">
-          <Text style={styles.continueButtonText}>Get AI Suggestions</Text>
+          accessibilityHint="Analyzes your article for grammar and readability">
+          <Text style={styles.continueButtonText}>
+            Check Content & Grammar
+          </Text>
         </TouchableOpacity>
       </View>
 
@@ -505,7 +653,6 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
         <AutoHeightWebView
           style={styles.webView}
           customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; }`}
-          onSizeUpdated={size => console.log(size.height)}
           files={[
             {
               href: 'cssfileaddress',
@@ -517,10 +664,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
           source={{
             html: createHTMLStructure(
               title,
-              article,
+              activeArticleHtml,
               selectedGenres,
               '',
-              user ? user?.user_name : '',
+              user ? user?.user_name : authorName || '',
             ),
           }}
           scalesPageToFit={true}
@@ -557,7 +704,7 @@ const styles = StyleSheet.create({
   aiReviewCard: {
     backgroundColor: '#FFFFFF',
     margin: 16,
-    padding: 24,
+    padding: 20,
     borderRadius: 16,
     alignItems: 'center',
     shadowColor: '#000',
@@ -569,31 +716,45 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
   },
   iconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     backgroundColor: '#FEF3C7',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   iconText: {
-    fontSize: 32,
+    fontSize: 28,
   },
   reviewTitle: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '700',
     color: '#1F2937',
-    marginBottom: 8,
+    marginBottom: 6,
     textAlign: 'center',
   },
   reviewSubtext: {
-    fontSize: 15,
+    fontSize: 14,
     color: '#6B7280',
     textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 22,
+    marginBottom: 16,
+    lineHeight: 20,
     paddingHorizontal: 8,
+  },
+  appliedBadge: {
+    backgroundColor: '#ECFDF5',
+    borderWidth: 1,
+    borderColor: '#A7F3D0',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    marginBottom: 14,
+  },
+  appliedBadgeText: {
+    color: '#047857',
+    fontSize: 13,
+    fontWeight: '600',
   },
   continueButton: {
     backgroundColor: BUTTON_COLOR,

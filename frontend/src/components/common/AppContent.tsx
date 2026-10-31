@@ -1,7 +1,7 @@
- 
 // @ts-nocheck
 import React, { useEffect, useRef, useCallback } from 'react';
 import { useColorScheme, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { TamaguiProvider, useTheme } from 'tamagui';
@@ -140,8 +140,6 @@ export default function AppContent() {
     };
   }, [dispatch]);
 
-
-
   useEffect(() => {
     if (!navigationRef.current || !pendingDeepLinkRef.current) return;
     if (!isGuest && !tokenRes && !user_token) return;
@@ -191,6 +189,7 @@ export default function AppContent() {
 
   return (
     <SafeAreaProvider>
+      <StatusBar style="light" backgroundColor="#000A60" />
       <TamaguiProvider
         config={config}
         defaultTheme={isDarkMode ? 'dark' : 'light'}>

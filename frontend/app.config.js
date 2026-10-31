@@ -12,7 +12,7 @@ const defaultStaticConfig = {
   scheme: "ultimatehealth",
   userInterfaceStyle: "automatic",
   androidStatusBar: {
-    backgroundColor: "#00BFFF",
+    backgroundColor: "#000A60",
     barStyle: "light-content"
   },
   ios: {
@@ -50,6 +50,16 @@ const defaultStaticConfig = {
         autoVerify: true,
         category: ["BROWSABLE", "DEFAULT"],
         data: [
+          {
+            scheme: "https",
+            host: "ultimatehealth.blog",
+            pathPrefix: "/web/en/articles"
+          },
+          {
+            scheme: "https",
+            host: "ultimatehealth.blog",
+            pathPrefix: "/web"
+          },
           {
             scheme: "https",
             host: "ultimatehealth.blog",
@@ -112,7 +122,7 @@ const defaultStaticConfig = {
     "./plugins/withWebViewDebug.js"
   ],
   
- experiments: {
+  experiments: {
     reactCompiler: true
   }
 };

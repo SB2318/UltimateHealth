@@ -1,23 +1,6 @@
 import { resolveDeepLinkTarget } from '../../../lib/platform/DeepLinkService';
 import * as ExpoLinking from 'expo-linking';
 
-// Mock expo-linking just in case it relies on native modules during tests
-// jest.mock('expo-linking', () => {
-//   return {
-//     parse: jest.fn((url: string) => {
-//       // Very basic mock of ExpoLinking.parse
-//       const urlObject = new URL(url);
-//       const path = urlObject.hostname + urlObject.pathname; // exp://host/path -> path
-//       return {
-//         path: path.startsWith('/') ? path.slice(1) : path,
-//         queryParams: {},
-//         scheme: urlObject.protocol.replace(':', ''),
-//         hostname: urlObject.hostname,
-//       };
-//     }),
-//   };
-// });
-
 jest.mock('expo-linking', () => ({
   createURL: jest.fn(() => 'ultimatehealth://'),
   parse: jest.fn((url: string) => {
@@ -35,7 +18,6 @@ jest.mock('expo-linking', () => ({
 describe('DeepLinkService', () => {
   describe('resolveDeepLinkTarget', () => {
     it('should correctly resolve the create-post deep link', () => {
-      // Mock the parse specifically for this test to match expo-linking output for ultimatehealth://create-post
       (ExpoLinking.parse as jest.Mock).mockReturnValueOnce({
         path: 'create-post',
         queryParams: {},
@@ -54,6 +36,28 @@ describe('DeepLinkService', () => {
           translationSource: undefined,
         },
         requiresAuth: true,
+      });
+    });
+
+    it('should resolve https://ultimatehealth.blog/web/en/articles/{pb_recordId} deep links', () => {
+      (ExpoLinking.parse as jest.Mock).mockReturnValueOnce({
+        path: 'web/en/articles/pb_rec_abc123',
+        queryParams: {},
+        scheme: 'https',
+        hostname: 'ultimatehealth.blog',
+      });
+
+      const url = 'https://ultimatehealth.blog/web/en/articles/pb_rec_abc123';
+      const result = resolveDeepLinkTarget(url);
+
+      expect(result).toEqual({
+        name: 'ArticleScreen',
+        params: {
+          articleId: 'pb_rec_abc123',
+          authorId: undefined,
+          recordId: 'pb_rec_abc123',
+        },
+        requiresAuth: false,
       });
     });
   });

@@ -16,7 +16,6 @@ const prefixes = [
 
 let initialUrlHandled = false;
 
-
 const restrictedRoutes = new Set([
   'EditorScreen',
   'PodcastForm',
@@ -47,22 +46,58 @@ const resolveDeepLinkTarget = (url: string): DeepLinkTarget | null => {
   const [firstSegment, secondSegment] = segments;
   const queryParams = parsed.queryParams ?? {};
 
+  // New web/deep-link format:
+  // https://ultimatehealth.blog/web/en/articles/{pb_recordId}
+  // https://ultimatehealth.blog/web/{lang}/articles/{pb_recordId}
+  // https://ultimatehealth.blog/web/articles/{pb_recordId}
+  if (firstSegment === 'web') {
+    const articlesIdx = segments.indexOf('articles');
+    if (articlesIdx !== -1 && segments[articlesIdx + 1]) {
+      const rawIdentifier = decodeURIComponent(segments[articlesIdx + 1]);
+      if (!rawIdentifier) {
+        return null;
+      }
+      const numericArticleId = parseNumericParam(
+        queryParams.articleId ?? rawIdentifier,
+      );
+      const recordId =
+        typeof queryParams.recordId === 'string' && queryParams.recordId
+          ? queryParams.recordId
+          : numericArticleId === undefined
+            ? rawIdentifier
+            : undefined;
+
+      return {
+        name: 'ArticleScreen',
+        params: {
+          articleId: numericArticleId ?? rawIdentifier,
+          authorId: queryParams.authorId,
+          recordId: recordId ?? rawIdentifier,
+        },
+      };
+    }
+  }
+
   if (firstSegment === 'api' && secondSegment === 'share') {
     const shareType = segments[2];
 
     if (shareType === 'article') {
       const articleId = parseNumericParam(queryParams.articleId);
+      const recordId =
+        typeof queryParams.recordId === 'string' && queryParams.recordId
+          ? queryParams.recordId
+          : undefined;
 
-      if (articleId === undefined) {
+      if (articleId === undefined && !recordId) {
         return null;
       }
 
       return {
         name: 'ArticleScreen',
         params: {
-          articleId,
+          articleId: articleId ?? recordId,
           authorId: queryParams.authorId,
-          recordId: queryParams.recordId,
+          recordId,
         },
       };
     }
@@ -86,19 +121,30 @@ const resolveDeepLinkTarget = (url: string): DeepLinkTarget | null => {
     }
   }
 
-  if (firstSegment === 'article') {
-    const articleId = parseNumericParam(secondSegment ?? queryParams.articleId);
+  if (firstSegment === 'article' || firstSegment === 'articles') {
+    const rawSegment = secondSegment
+      ? decodeURIComponent(secondSegment)
+      : undefined;
+    const numericArticleId = parseNumericParam(
+      rawSegment ?? queryParams.articleId,
+    );
+    const recordId =
+      typeof queryParams.recordId === 'string' && queryParams.recordId
+        ? queryParams.recordId
+        : numericArticleId === undefined && rawSegment
+          ? rawSegment
+          : undefined;
 
-    if (articleId === undefined) {
+    if (numericArticleId === undefined && !recordId) {
       return null;
     }
 
     return {
       name: 'ArticleScreen',
       params: {
-        articleId,
+        articleId: numericArticleId ?? recordId,
         authorId: queryParams.authorId,
-        recordId: queryParams.recordId,
+        recordId,
       },
     };
   }
@@ -183,13 +229,19 @@ export const resolveNotificationTarget = (
     return resolveDeepLinkTarget(data.url);
   }
 
-  if (typeof data.articleId !== 'undefined') {
+  if (
+    typeof data.articleId !== 'undefined' ||
+    (typeof data.recordId === 'string' && data.recordId.length > 0) ||
+    (typeof data.articleRecordId === 'string' && data.articleRecordId.length > 0)
+  ) {
+    const resolvedRecordId = data.recordId || data.articleRecordId;
+    const numericId = parseNumericParam(data.articleId);
     return {
       name: 'ArticleScreen',
       params: {
-        articleId: Number(data.articleId),
+        articleId: numericId ?? resolvedRecordId,
         authorId: data.authorId,
-        recordId: data.recordId,
+        recordId: resolvedRecordId,
       },
     };
   }
@@ -258,18 +310,6 @@ export const navigateDeepLink = (
   navigation.navigate(target.name as never, target.params as never);
 };
 
-/**
- * Initialises deep-link handling for the app.
- *
- * Accepts a URL callback that is invoked with the raw URL string whenever a
- * deep link is received — both on cold start (via getInitialURL) and while the
- * app is in the foreground (via the 'url' event listener). Navigation and auth
- * checks are intentionally kept out of this function; the caller is responsible
- * for resolving the URL and navigating once auth state is known.
- *
- * @param onUrl - Callback invoked with the incoming URL string.
- * @returns A cleanup function that removes the foreground URL listener.
- */
 export const initDeepLinking = (onUrl: (url: string) => void): (() => void) => {
   if (!initialUrlHandled) {
     initialUrlHandled = true;

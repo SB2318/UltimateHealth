@@ -45,7 +45,7 @@ export type RootStackParamList = {
     translationSource?: ArticleTranslationSource;
   };
   ArticleScreen: {
-    articleId: number;
+    articleId?: number | string;
     authorId?: string;
     recordId?: string;
   };
@@ -112,6 +112,7 @@ export type RootStackParamList = {
     htmlContent: string;
     readability_score?: number;
     reading_time?: string;
+    isFallback?: boolean;
   };
   PodcastDetail: {
     trackId: string;

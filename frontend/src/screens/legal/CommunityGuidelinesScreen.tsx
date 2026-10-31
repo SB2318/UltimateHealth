@@ -1,4 +1,3 @@
- 
 import React from 'react';
 import { Share, useColorScheme } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -219,8 +218,8 @@ const CommunityGuidelinesScreen = (_props: CommunityGuidelinesScreenProps) => {
   const subtextColor = isDarkMode ? ProfessionalColors.gray400 : ProfessionalColors.gray600;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }}>
-      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: bgColor }} edges={['left', 'right', 'bottom']}>
+      <StatusBar style="light" backgroundColor="#000A60" />
       <ScrollView
         ref={scrollRef}
         onScroll={onScroll}

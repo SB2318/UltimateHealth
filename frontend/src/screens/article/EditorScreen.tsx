@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 
-
 import React, {useEffect, useRef, useState} from 'react';
-import { StyleSheet,
+import {
+  StyleSheet,
   Text,
-   ScrollView ,
+  ScrollView,
   Alert,
   TouchableOpacity,
   View,
- } from 'react-native';
+} from 'react-native';
+import {File} from 'expo-file-system';
+import RNFS from 'react-native-fs';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -22,10 +24,17 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 import {createHTMLStructure} from '../../lib/utils/Utils';
-import { useAppDispatch } from '@/src/store/hooks';
+import {useAppDispatch} from '@/src/store/hooks';
 
-// Feature:
-// If you want to discard your post, in that case no post will upload into storage,
+const extractHtmlBody = (rawHtml: string) => {
+  const withoutScripts = rawHtml.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    '',
+  );
+  const bodyMatch = withoutScripts.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  return bodyMatch ? bodyMatch[1].trim() : withoutScripts.trim();
+};
+
 const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const insets = useSafeAreaInsets();
   const {
@@ -50,21 +59,43 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
   const dispatch = useAppDispatch();
 
+  const navigateToPreviewScreen = (htmlToPreview?: string) => {
+    const content = (htmlToPreview ?? article ?? '').trim();
+    const plainTextLength = content.replace(/<[^>]*>/g, '').trim().length;
+    if (plainTextLength <= 20) {
+      Alert.alert('Error', 'Please enter at least 20 characters');
+      return;
+    }
+
+    dispatch(setSuggestion({suggestion: ''}));
+    dispatch(setSuggestionAccepted({selection: false}));
+
+    navigation.navigate('PreviewScreen', {
+      article: content,
+      title,
+      authorName,
+      language,
+      description,
+      image: imageUtils,
+      selectedGenres,
+      localImages,
+      htmlImages,
+      articleData,
+      requestId,
+      pb_record_id,
+      translationSource,
+    });
+  };
+
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
           style={styles.preview_button}
-          onPress={() => {
-            if (article.length > 20) {
-              setActiveTab('preview');
-            } else {
-              Alert.alert('Error', 'Please enter at least 20 characters');
-            }
-          }}
+          onPress={() => navigateToPreviewScreen()}
           accessibilityRole="button"
           accessibilityLabel="Preview article"
-          accessibilityHint="Opens the article preview if the article has enough content">
+          accessibilityHint="Opens the article preview screen if the article has enough content">
           <Fontisto name="preview" size={26} color="white" />
         </TouchableOpacity>
       ),
@@ -72,75 +103,119 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   }, [
     navigation,
     article,
+    title,
+    description,
+    selectedGenres,
+    authorName,
+    imageUtils,
+    localImages,
+    htmlImages,
+    articleData,
+    requestId,
+    pb_record_id,
+    translationSource,
+    language,
   ]);
 
   useEffect(() => {
-    /*
-    const loadArticle = async () => {
-      if (!articleData) {
-        return;
-      }
-      try {
-        if (articleData.content.endsWith('.html')) {
-          await getContent(articleData.content);
-
-          setEditorReady(true);
-        } else {
-          setArticle(articleData.content);
-          setEditorReady(true);
-        }
-      } catch (err) {
-        console.error('Failed to load article:', err);
-      }
-    };
-    */
-
     if (htmlContent) {
       setArticle(htmlContent);
       setEditorReady(true);
     }
-
-    // loadArticle();
   }, [htmlContent]);
 
   React.useEffect(() => {
     if (imageUtils) {
-      setLocalImages(prevImages => [imageUtils, ...prevImages]); // Add imageUtils at the start
+      setLocalImages(prevImages =>
+        prevImages.includes(imageUtils)
+          ? prevImages
+          : [imageUtils, ...prevImages],
+      );
     }
   }, [imageUtils]);
 
   useEffect(() => {
     if (editorReady && article && RichText.current) {
       RichText.current?.setContentHTML(article);
-      //RichText.current?.focusContentEditor(); 
     }
-  }, [ editorReady]);
+  }, [editorReady]);
 
-  // this function will be called when the editor has been initialized
   function editorInitializedCallback() {
     RichText.current?.registerToolbar(function (_items) {
       setEditorReady(true);
     });
   }
 
-  /*
+  function handleHeightChange(_height: number) {
+    // editor height change
+  }
 
-  const getContent = async content => {
+  const handleUploadHtmlFile = async () => {
     try {
-      const response = await fetch(`${GET_STORAGE_DATA}/${content}`);
-      const text = await response.text();
-      setArticle(text);
-    } catch (error) {
-      // console.error('Error fetching URI:', error);
-      setArticle(content);
+      const picked = await File.pickFileAsync({
+        mimeTypes: ['text/html', 'application/xhtml+xml', 'text/plain'],
+      });
+      if (!picked || ('canceled' in picked && picked.canceled)) {
+        return;
+      }
+
+      const fileObj: any =
+        'result' in picked
+          ? Array.isArray(picked.result)
+            ? picked.result[0]
+            : picked.result
+          : Array.isArray(picked)
+            ? picked[0]
+            : picked;
+
+      if (!fileObj) return;
+
+      let rawText = '';
+      if (typeof fileObj.text === 'function') {
+        rawText = await fileObj.text();
+      } else if (typeof fileObj.textSync === 'function') {
+        rawText = fileObj.textSync();
+      } else if (fileObj.uri) {
+        rawText = await RNFS.readFile(fileObj.uri, 'utf8');
+      }
+
+      const bodyHtml = extractHtmlBody(rawText || '');
+      if (bodyHtml.replace(/<[^>]*>/g, '').trim().length <= 20) {
+        Alert.alert(
+          'Invalid HTML File',
+          'The selected HTML file must contain at least 20 characters of text.',
+        );
+        return;
+      }
+
+      setArticle(bodyHtml);
+      RichText.current?.setContentHTML(bodyHtml);
+
+      Alert.alert(
+        'HTML File Loaded',
+        'Would you like to go directly to Preview & Submit, or continue editing here?',
+        [
+          {
+            text: 'Edit Here',
+            style: 'cancel',
+          },
+          {
+            text: 'Go to Preview & Submit',
+            onPress: () => navigateToPreviewScreen(bodyHtml),
+          },
+        ],
+      );
+    } catch (error: any) {
+      const msg = String(error?.message || '');
+      if (
+        msg.toLowerCase().includes('cancel') ||
+        msg.toLowerCase().includes('aborted')
+      ) {
+        return;
+      }
+      Alert.alert('Upload Failed', 'Could not read the selected HTML file.');
     }
   };
-  */
-
-  // Callback after height change
-  function handleHeightChange(_height: number) {
-    // console.log("editor height change:", height);
-  }
 
   async function onPressAddImage() {
     const result = await launchImageLibrary({
@@ -157,85 +232,34 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       const width = 1000;
       const height = 1000;
 
-      // imageHTML must be declared before it is referenced in setHtmlImages
       const imageHTML = `<img src="${str}" style="width: ${width}px; height: ${height}px;" />`;
 
       setLocalImages(prev => [...prev, str]);
       setHtmlImages(prev => [...prev, imageHTML]);
 
       await RichText.current?.insertHTML(imageHTML);
-
-      //await RichText.current?.insertImage(str);
-    } else {
-      //console.log('No image selected');
     }
   }
 
-  // async function insertVideo() {
-  //   const result = await ImagePicker.launchImageLibrary({
-  //     mediaType: 'video',
-  //     presentationStyle: 'popover',
-  //   });
-
-  //   if (result.assets && result.assets.length > 0) {
-  //     const fileUri = result.assets[0].uri;
-  //     console.log('Image URI:', fileUri);
-  //     setvideoData(`${fileUri}`);
-  //     // Convert the video URI to a Blob
-  //     // await RichText.current?.insertVideo(blobUrl);
-  //     // Insert video through local file url
-  //     RichText.current?.insertVideo(fileUri);
-  //   } else {
-  //     console.log('No image selected');
-  //   }
-  // }
-  /*
-  const onPressAddImage =  () => {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: true,
-    };
-
-    launchImageLibrary(options, async response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.assets) {
-        const {uri, fileSize} = response.assets[0];
-
-        // Check file size (1 MB limit)
-        if (fileSize && fileSize > 1024 * 1024) {
-          Alert.alert('Error', 'File size exceeds 1 MB.');
-          return;
-        }
-
-        // Check dimensions
-        ImageResizer.createResizedImage(uri, 2000, 2000, 'JPEG', 100)
-          .then(async resizedImageUri => {
-            // If the image is resized successfully, upload it
-          })
-          .catch(err => {
-            console.log(err);
-            Alert.alert('Error', 'Could not resize the image.');
-          });
-
-        // setImageUtils(uri ? uri : '');
-        await RichText.current?.insertImage(uri ? uri : '');
-      }
-    });
-  };
-*/
   const EditorScene = () => (
     <ScrollView
       style={[styles.container, {paddingBottom: insets.bottom}]}
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled">
-
-      {/* Writing Helper Text */}
-      <Text style={styles.helperText}>
-        Compose your article with rich formatting tools below
-      </Text>
+      {/* Writing Helper Text & HTML Upload Shortcut */}
+      <View style={styles.helperBar}>
+        <Text style={styles.helperText}>
+          Compose your article or upload an .html file
+        </Text>
+        <TouchableOpacity
+          style={styles.uploadHtmlChip}
+          onPress={handleUploadHtmlFile}
+          accessibilityRole="button"
+          accessibilityLabel="Upload HTML file">
+          <IonIcon name="code-slash-outline" size={16} color="#FFFFFF" />
+          <Text style={styles.uploadHtmlChipText}>Upload HTML</Text>
+        </TouchableOpacity>
+      </View>
 
       <RichToolbar
         style={styles.richBar}
@@ -247,37 +271,25 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         onPressAddImage={onPressAddImage}
         iconSize={28}
         actions={[
-          // Text Formatting Actions
           actions.setBold,
           actions.setItalic,
           actions.setUnderline,
           actions.setStrikethrough,
-
-          // Heading Actions
           actions.heading1,
           actions.heading2,
           actions.heading3,
-
-          // Alignment Actions
           actions.alignLeft,
           actions.alignCenter,
           actions.alignRight,
-
-          // List Actions
           actions.insertBulletsList,
           actions.insertOrderedList,
-
-          // Insert Actions
           actions.insertLink,
           actions.insertImage,
           actions.blockquote,
-
-          // Undo/Redo Actions
           actions.undo,
           actions.redo,
         ]}
         iconMap={{
-          // Custom Icons for Text Formatting Actions
           [actions.setStrikethrough]: ({tintColor}: {tintColor: string}) => (
             <FontAwesome name="strikethrough" color={tintColor} size={24} />
           ),
@@ -293,7 +305,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
           [actions.undo]: ({tintColor}: {tintColor: string}) => (
             <IonIcon name="arrow-undo" color={tintColor} size={28} />
           ),
-          [actions.redo]: ({tintColor}: {tintColor}) => (
+          [actions.redo]: ({tintColor}: {tintColor: any}) => (
             <IonIcon name="arrow-redo" color={tintColor} size={28} />
           ),
           [actions.heading1]: ({tintColor}: {tintColor: string}) => (
@@ -336,6 +348,17 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       <Text style={styles.characterCount}>
         {article.replace(/<[^>]*>/g, '').length} characters
       </Text>
+
+      <TouchableOpacity
+        style={styles.proceedButton}
+        onPress={() => navigateToPreviewScreen()}
+        accessibilityRole="button"
+        accessibilityLabel="Continue to Preview and Submit">
+        <Text style={styles.proceedButtonText}>
+          Continue to Preview & Submit
+        </Text>
+        <IonIcon name="arrow-forward" size={18} color="#FFFFFF" />
+      </TouchableOpacity>
     </ScrollView>
   );
 
@@ -348,13 +371,28 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         {article ? (
           <AutoHeightWebView
             style={styles.webView}
-            source={{html: createHTMLStructure(title || '', article, [], '', '')}}
+            source={{
+              html: createHTMLStructure(title || '', article, [], '', ''),
+            }}
             scrollEnabled={true}
             showsVerticalScrollIndicator={false}
           />
         ) : (
-          <Text style={styles.emptyPreview}>Start typing to see preview...</Text>
+          <Text style={styles.emptyPreview}>
+            Start typing to see preview...
+          </Text>
         )}
+
+        <TouchableOpacity
+          style={styles.proceedButton}
+          onPress={() => navigateToPreviewScreen()}
+          accessibilityRole="button"
+          accessibilityLabel="Continue to Preview and Submit">
+          <Text style={styles.proceedButtonText}>
+            Continue to Preview & Submit
+          </Text>
+          <IonIcon name="arrow-forward" size={18} color="#FFFFFF" />
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -407,8 +445,6 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 export default EditorScreen;
 
 const styles = StyleSheet.create({
-  /********************************/
-  /* styles for html tags */
   a: {
     fontWeight: 'bold',
     color: PRIMARY_COLOR,
@@ -420,20 +456,40 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
   },
-  /*******************************/
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
   },
-  helperText: {
-    fontSize: 15,
-    color: '#6B7280',
+  helperBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 10,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+  },
+  helperText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#6B7280',
     fontWeight: '500',
+    marginRight: 8,
+  },
+  uploadHtmlChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#000A60',
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 8,
+  },
+  uploadHtmlChipText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '700',
   },
   editor: {
     backgroundColor: '#FFFFFF',
@@ -487,6 +543,23 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#E5E7EB',
+  },
+  proceedButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#000A60',
+    marginHorizontal: 12,
+    marginTop: 12,
+    marginBottom: 24,
+    paddingVertical: 14,
+    borderRadius: 12,
+  },
+  proceedButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
   },
   preview_button: {
     marginRight: 15,

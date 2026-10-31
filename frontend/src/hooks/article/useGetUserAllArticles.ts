@@ -27,42 +27,51 @@ export const useGetAllArticlesForUser = ({
   setProgressLabel,
   setDiscardLabel,
 }: Props) => {
-  const isGuest = useAppSelector((state: any) => state.user.isGuest);
+  const { isGuest, user_token } = useAppSelector((state: any) => state.user);
 
   return useQuery({
     queryKey: ['get-all-articles-for-user', page, selectedStatus],
     queryFn: async () => {
       const response = await axios.get(
-        `${GET_ALL_ARTICLES_FOR_USER}?page=${page}&status=${selectedStatus}`
+        `${GET_ALL_ARTICLES_FOR_USER}?page=${page}&status=${selectedStatus}&visit=${visit}`
       );
 
       const data = response.data;
+      const incomingArticles: ArticleData[] = Array.isArray(data?.articles)
+        ? data.articles
+        : [];
 
-      if (Number(page) === 1 && data.totalPages) {
-        setTotalPages(data.totalPages);
-        setArticleData(data.articles);
-      } else if (Array.isArray(data.articles)) {
-        setArticleData(prev => [...prev, ...data.articles]);
+      if (Number(page) === 1) {
+        setTotalPages(typeof data?.totalPages === 'number' ? data.totalPages : 0);
+        setArticleData(incomingArticles);
+      } else if (incomingArticles.length > 0) {
+        setArticleData(prev => {
+          const existingIds = new Set(prev.map(item => String(item._id)));
+          const uniqueIncoming = incomingArticles.filter(
+            item => !existingIds.has(String(item._id)),
+          );
+          return [...prev, ...uniqueIncoming];
+        });
       }
 
       if (Number(visit) === 1) {
-        if (data.publishedCount) {
+        if (typeof data?.publishedCount === 'number') {
           setPublishedLabel(`Published(${data.publishedCount})`);
         }
 
-        if (data.progressCount) {
+        if (typeof data?.progressCount === 'number') {
           setProgressLabel(`Progress(${data.progressCount})`);
         }
 
-        if (data.discardCount) {
+        if (typeof data?.discardCount === 'number') {
           setDiscardLabel(`Discarded(${data.discardCount})`);
         }
 
         setVisit(0);
       }
 
-      return data.articles as ArticleData[];
+      return incomingArticles;
     },
-    enabled: !!page && !isGuest,
+    enabled: !!page && !isGuest && Boolean(user_token),
   });
 };

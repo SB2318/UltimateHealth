@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
- 
+
 // @ts-nocheck
 import {
   StyleSheet,
@@ -14,8 +14,8 @@ import {useEffect, useRef, useState} from 'react';
 import AccessibleTouchable from '../common/AccessibleTouchable';
 import {fp} from '../../lib/ui/Metric';
 import {ArticleCardProps, ArticleData} from '../../schemas/type';
-import { formatDateShort } from '../../lib/utils/dateUtils';
-import { getReadTime, calculateReadTime } from '../../lib/utils/readTime';
+import {formatDateShort} from '../../lib/utils/dateUtils';
+import {getReadTime} from '../../lib/utils/readTime';
 import {useAppSelector} from '../../store/hooks';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import IonIcons from '@expo/vector-icons/Ionicons';
@@ -38,7 +38,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import ArticleFloatingMenu from './ArticleFloatingMenu';
 
-import { generateArticleShareUrl, copyArticleShareLink } from '../../lib/utils/shareUtils';
+import {
+  generateArticleShareUrl,
+  copyArticleShareLink,
+} from '../../lib/utils/shareUtils';
 import Entypo from '@expo/vector-icons/Entypo';
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
@@ -53,10 +56,10 @@ import {useLikeArticle} from '../../hooks/article/useLikeArticle';
 import {useSaveArticle} from '../../hooks/article/useSaveArticle';
 import {useLazyGetArticleContent} from '../../hooks/article/useLazyGetArticleContent';
 import {useRepostArticle} from '../../hooks/article/useArticleRepost';
-import { ReadingDifficulty, getArticleDifficulty } from './ReadingDifficulty';
+import {ReadingDifficulty, getArticleDifficulty} from './ReadingDifficulty';
 import {useDoubleTap} from '../../hooks/common/useDoubleTap';
 import {useIsArticleCached} from '../../hooks/article/useIsArticleCached';
-import { ImageFallback } from '../common/ImageFallback';
+import {ImageFallback} from '../common/ImageFallback';
 
 const ArticleCard = ({
   item,
@@ -66,7 +69,9 @@ const ArticleCard = ({
   handleEditRequestAction,
   source,
 }: ArticleCardProps) => {
-  const {user_id, user_handle, isGuest} = useAppSelector((state: any) => state.user || {});
+  const {user_id, user_handle, isGuest} = useAppSelector(
+    (state: any) => state.user || {},
+  );
   const {isConnected} = useAppSelector((state: any) => state.network || {});
   const isDarkMode = useColorScheme() === 'dark';
   const themeColors = {
@@ -78,28 +83,37 @@ const ArticleCard = ({
     icon: isDarkMode ? '#D1D5DB' : '#414A4C',
   };
   const socket = useSocket();
-  // Whether this article was read through and kept for offline reading.
   const isAvailableOffline = useIsArticleCached(Number(item?._id));
   const width = useSharedValue(0);
   const yValue = useSharedValue(60);
   const [requestModalVisible, setRequestModalVisible] =
     useState<boolean>(false);
   const [menuVisible, setMenuVisible] = useState(false);
-  const menuTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {data: user} = useGetProfile();
 
   const [isLiked, setIsLiked] = useState(
-     item.likedUsers ? item.likedUsers.some(
-      it =>
-        (it._id && it._id.toString() === user_id) || it.toString() === user_id,
-    ): false,
+    item.likedUsers
+      ? item.likedUsers.some(
+          it =>
+            (it._id && it._id.toString() === user_id) ||
+            it.toString() === user_id,
+        )
+      : false,
   );
-  const [likeCount, setLikeCount] = useState(item.likedUsers ? item.likedUsers.length : 0);
-  const [repostCount, setRepostCount] = useState(item.repostUsers ? item.repostUsers.length : 0);
+  const [likeCount, setLikeCount] = useState(
+    item.likedUsers ? item.likedUsers.length : 0,
+  );
+  const [repostCount, setRepostCount] = useState(
+    item.repostUsers ? item.repostUsers.length : 0,
+  );
 
-  const [saved, setSaved] = useState(item.savedUsers && item.savedUsers.includes(user_id));
+  const [saved, setSaved] = useState(
+    item.savedUsers && item.savedUsers.includes(user_id),
+  );
   const [reposted, setReposted] = useState(
-    item.repostUsers ? item.repostUsers.some(user => user.toString() === user_id) : false
+    item.repostUsers
+      ? item.repostUsers.some(user => user.toString() === user_id)
+      : false,
   );
 
   const {mutate: likeMutation, isPending: likeMutationPending} = useLikeArticle(
@@ -111,22 +125,21 @@ const ArticleCard = ({
 
   const {mutate: repost, isPending: repostPending} = useRepostArticle();
 
-   
-  const {mutate: getArticleContent, isPending: getArticleContentPending} =
-    useLazyGetArticleContent();
+  const {mutate: getArticleContent} = useLazyGetArticleContent();
 
-  // TEMP MOCK DATA — to be replaced by real /content-intel/readability/analyze response
-  // Shape mirrors the VeriWise-Content-Check API: { score, level, approved }
   const mockReadability = {
     score: 78,
-    level: 'Beginner Friendly' as 'Beginner Friendly' | 'Intermediate' | 'Advanced',
+    level: 'Beginner Friendly' as
+      | 'Beginner Friendly'
+      | 'Intermediate'
+      | 'Advanced',
     approved: true,
   };
   const heartScale = useSharedValue(0);
 
   const heartStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ scale: heartScale.value }],
+      transform: [{scale: heartScale.value}],
       opacity: heartScale.value,
     };
   });
@@ -145,9 +158,9 @@ const ArticleCard = ({
       if (isLiked) return;
 
       heartScale.value = withSequence(
-        withSpring(1.2, { damping: 10, stiffness: 100 }),
-        withTiming(1, { duration: 100 }),
-        withDelay(500, withSpring(0, { damping: 12, stiffness: 100 }))
+        withSpring(1.2, {damping: 10, stiffness: 100}),
+        withTiming(1, {duration: 100}),
+        withDelay(500, withSpring(0, {damping: 12, stiffness: 100})),
       );
     }
 
@@ -157,17 +170,18 @@ const ArticleCard = ({
 
       setIsLiked(isDoubleTap ? true : !isLiked);
       setLikeCount(prev =>
-        (isDoubleTap ? true : !isLiked) ? prev + 1 : (prev - 1 > 0 ? prev - 1 : 0)
+        (isDoubleTap ? true : !isLiked)
+          ? prev + 1
+          : prev - 1 > 0
+            ? prev - 1
+            : 0,
       );
 
       likeMutation(undefined, {
-        onSuccess: (data: {
-          article: ArticleData;
-          likeStatus: boolean;
-        }) => {
-   if (__DEV__) {
-  console.log("Article like success", data.likeStatus);
-}
+        onSuccess: (data: {article: ArticleData; likeStatus: boolean}) => {
+          if (__DEV__) {
+            console.log('Article like success', data.likeStatus);
+          }
 
           setIsLiked(data?.likeStatus);
 
@@ -228,7 +242,11 @@ const ArticleCard = ({
     }
   };
 
-  const handleImagePressRaw = useDoubleTap(handleCardPress, () => handleLikeAction(true), 300);
+  const handleImagePressRaw = useDoubleTap(
+    handleCardPress,
+    () => handleLikeAction(true),
+    300,
+  );
 
   const handleImagePress = (e: any) => {
     e?.stopPropagation?.();
@@ -236,25 +254,35 @@ const ArticleCard = ({
   };
 
   const handleShare = async () => {
+    setMenuVisible(false);
     try {
       const resolvedAuthorId = (item.authorId as any)?._id || item.authorId;
-      const url = generateArticleShareUrl(item._id, resolvedAuthorId, item.pb_recordId);
+      const url = generateArticleShareUrl(
+        item._id,
+        resolvedAuthorId,
+        item.pb_recordId,
+      );
 
-      const result = await Share.open({
+      await Share.open({
         title: item.title,
-        message: `${item.title} : Check out this awesome post on UltimateHealth app!`,
-        // Most Recent APK: 0.7.4
+        message: `${item.title} : Check out this awesome post on UltimateHealth app!\n${url}`,
         url: url,
         subject: 'Article Post',
       });
-      setMenuVisible(false);
-    } catch (error) {
+    } catch (error: any) {
+      const msg = String(error?.message || '');
+      if (
+        msg.toLowerCase().includes('user did not share') ||
+        msg.toLowerCase().includes('cancel')
+      ) {
+        return;
+      }
       Alert.alert('Error', 'Something went wrong while sharing.');
-      setMenuVisible(false);
     }
   };
 
   const handleCopyLink = async () => {
+    setMenuVisible(false);
     try {
       const resolvedAuthorId = (item.authorId as any)?._id || item.authorId;
       copyArticleShareLink(item._id, resolvedAuthorId, item.pb_recordId);
@@ -271,12 +299,10 @@ const ArticleCard = ({
     }
   };
 
-
   useEffect(() => {
     if (!socket) return;
 
-    const handleConnect = () => {
-    };
+    const handleConnect = () => {};
 
     socket.on('connect', handleConnect);
 
@@ -285,28 +311,20 @@ const ArticleCard = ({
     };
   }, [socket]);
 
-  // Cleanup timer and close menu when card unmounts (FlatList recycling)
+  // Close menu when card unmounts or recycles for another item
   useEffect(() => {
+    setMenuVisible(false);
     return () => {
-      if (menuTimerRef.current) clearTimeout(menuTimerRef.current);
       setMenuVisible(false);
     };
-  }, []);
+  }, [item?._id]);
 
-  const onChange = () => {
-    // Force a false → true transition so the child Sheet's useEffect
-    // always sees a value change, even if menuVisible was already true.
-    if (menuVisible) {
-      setMenuVisible(false);
-      menuTimerRef.current = setTimeout(() => {
-        setMenuVisible(true);
-      }, 50);
-    } else {
-      setMenuVisible(true);
-    }
+  const toggleMenu = () => {
+    setMenuVisible(prev => !prev);
   };
 
   const generatePDFFromUrl = async (recordId: string, title: string) => {
+    setMenuVisible(false);
     try {
       const storageGranted = await requestStoragePermissions();
       if (!storageGranted) {
@@ -324,7 +342,6 @@ const ArticleCard = ({
         onSuccess: async (htmlContent: string) => {
           if (htmlContent) {
             await generatePDFData(title, htmlContent);
-            setMenuVisible(false);
           }
         },
         onError: error => {
@@ -375,6 +392,7 @@ const ArticleCard = ({
   };
 
   const repostAction = () => {
+    setMenuVisible(false);
     if (isGuest) {
       (navigation as any).navigate('GuestPlaceholderScreen', {
         title: 'Sign In Required',
@@ -387,7 +405,6 @@ const ArticleCard = ({
       repost(Number(item._id), {
         onSuccess: data => {
           if (reposted === false) {
-
             setReposted(true);
             const body = {
               type: 'repost',
@@ -430,40 +447,41 @@ const ArticleCard = ({
       });
     }
   };
-  return (
-  <Pressable
-    accessibilityRole="button"
-    accessibilityLabel={`Open article ${item?.title}`}
-    accessibilityHint="Opens full article"
-    onPress={handleCardPress}>
-      <View style={[styles.cardContainer, {backgroundColor: themeColors.surface}]}>
-        {/* Image Section */}
-<Pressable
-  onPress={handleImagePress}
-  style={styles.imageWrapper}
-  accessibilityRole="button"
-  accessibilityLabel={`Open article image for ${item?.title}`}
-  accessibilityHint="Double tap to open the article or like it">
-  <ImageFallback
-    source={{
-      uri: item?.imageUtils && item.imageUtils.length > 0
-        ? item.imageUtils[0].startsWith('http')
-          ? item.imageUtils[0]
-          : `${GET_IMAGE}/${item.imageUtils[0]}`
-        : undefined,
-    }}
-    fallbackSource={require('../../assets/images/article_default.jpg')}
-    style={styles.coverImage}
-  />
 
-  <Animated.View style={[styles.heartOverlay, heartStyle]}>
-    <AntDesign name="heart" size={80} color="white" />
-  </Animated.View>
-</Pressable>
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Open article ${item?.title}`}
+      accessibilityHint="Opens full article"
+      onPress={handleCardPress}>
+      <View
+        style={[styles.cardContainer, {backgroundColor: themeColors.surface}]}>
+        {/* Image Section */}
+        <Pressable
+          onPress={handleImagePress}
+          style={styles.imageWrapper}
+          accessibilityRole="button"
+          accessibilityLabel={`Open article image for ${item?.title}`}
+          accessibilityHint="Double tap to open the article or like it">
+          <ImageFallback
+            source={{
+              uri:
+                item?.imageUtils && item.imageUtils.length > 0
+                  ? item.imageUtils[0].startsWith('http')
+                    ? item.imageUtils[0]
+                    : `${GET_IMAGE}/${item.imageUtils[0]}`
+                  : undefined,
+            }}
+            fallbackSource={require('../../assets/images/article_default.jpg')}
+            style={styles.coverImage}
+          />
+
+          <Animated.View style={[styles.heartOverlay, heartStyle]}>
+            <AntDesign name="heart" size={80} color="white" />
+          </Animated.View>
+        </Pressable>
 
         <View style={styles.contentContainer}>
-          {/* Share Icon */}
-
           {source === 'home' && item.status === StatusEnum.PUBLISHED && (
             <ArticleFloatingMenu
               items={[
@@ -472,7 +490,6 @@ const ArticleCard = ({
                   name: 'Share this post',
                   action: () => {
                     handleShare();
-                    //handleAnimation();
                   },
                   icon: 'share-alt',
                 },
@@ -481,8 +498,6 @@ const ArticleCard = ({
                   name: 'Repost in your feed',
                   action: () => {
                     repostAction();
-                    //handleAnimation();
-                    setMenuVisible(false);
                   },
                   icon: 'fork',
                 },
@@ -490,8 +505,6 @@ const ArticleCard = ({
                   articleId: item._id,
                   name: 'Download as pdf',
                   action: () => {
-                    //handleAnimation();
-
                     generatePDFFromUrl(item?.pb_recordId, item?.title);
                   },
                   icon: 'download',
@@ -509,17 +522,14 @@ const ArticleCard = ({
                     }
                     setMenuVisible(false);
                     setRequestModalVisible(true);
-                    // handleAnimation();
                   },
                   icon: 'edit',
                 },
-                
                 {
                   articleId: item._id,
                   name: 'Copy Link',
                   action: () => {
                     handleCopyLink();
-                    setMenuVisible(false);
                   },
                   icon: 'link',
                 },
@@ -529,7 +539,6 @@ const ArticleCard = ({
                   action: () => {
                     setMenuVisible(false);
                     handleReportAction(item);
-                    // handleAnimation();
                   },
                   icon: 'aim',
                 },
@@ -550,86 +559,137 @@ const ArticleCard = ({
             )}
             <ReadingDifficulty difficulty={getArticleDifficulty(item)} />
           </View>
-          <Text style={[styles.title, {color: themeColors.text}]} numberOfLines={2} ellipsizeMode="tail">{item?.title}</Text>
+          <Text
+            style={[styles.title, {color: themeColors.text}]}
+            numberOfLines={2}
+            ellipsizeMode="tail">
+            {item?.title}
+          </Text>
 
-
-          {/* Readability & Accessibility indicators (mock data, issue #845) */}
+          {/* Readability & Accessibility indicators */}
           <View style={styles.readabilityRow}>
-            <View style={[styles.readabilityBadge, {backgroundColor: isDarkMode ? '#14532D' : '#E8F5E9'}]}>
-              <Text style={[styles.readabilityBadgeText, {color: isDarkMode ? '#BBF7D0' : '#2E7D32'}]}>
+            <View
+              style={[
+                styles.readabilityBadge,
+                {backgroundColor: isDarkMode ? '#14532D' : '#E8F5E9'},
+              ]}>
+              <Text
+                style={[
+                  styles.readabilityBadgeText,
+                  {color: isDarkMode ? '#BBF7D0' : '#2E7D32'},
+                ]}>
                 {mockReadability.level}
               </Text>
             </View>
-            <View style={[styles.scoreBadge, {backgroundColor: isDarkMode ? '#1E3A5F' : '#E3F2FD'}]}>
-              <Text style={[styles.scoreBadgeText, {color: isDarkMode ? '#BFDBFE' : '#1565C0'}]}>
+            <View
+              style={[
+                styles.scoreBadge,
+                {backgroundColor: isDarkMode ? '#1E3A5F' : '#E3F2FD'},
+              ]}>
+              <Text
+                style={[
+                  styles.scoreBadgeText,
+                  {color: isDarkMode ? '#BFDBFE' : '#1565C0'},
+                ]}>
                 Score: {mockReadability.score}
               </Text>
             </View>
             <View
               style={[
                 styles.statusChip,
-                {backgroundColor: isDarkMode
-                  ? (mockReadability.approved ? '#14532D' : '#78350F')
-                  : (mockReadability.approved ? '#E8F5E9' : '#FFF3E0')},
+                {
+                  backgroundColor: isDarkMode
+                    ? mockReadability.approved
+                      ? '#14532D'
+                      : '#78350F'
+                    : mockReadability.approved
+                      ? '#E8F5E9'
+                      : '#FFF3E0',
+                },
               ]}>
-              <Text style={[styles.statusChipText, {color: isDarkMode ? '#E5E7EB' : '#424242'}]}>
+              <Text
+                style={[
+                  styles.statusChipText,
+                  {color: isDarkMode ? '#E5E7EB' : '#424242'},
+                ]}>
                 {mockReadability.approved ? 'Approved' : 'Needs Improvement'}
               </Text>
             </View>
           </View>
 
           <View style={styles.metaRow}>
-  <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>{item?.authorName}</Text>
-  <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
-  <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
-    {formatCount(item?.viewCount || 0)} views
-  </Text>
-  <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
-  <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
-    {formatDateShort(item?.lastUpdated)}
-  </Text>
-  <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
-  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-    <IonIcons name="time-outline" size={13} color={themeColors.secondaryText} style={{marginRight: 4}} />
-    <Text style={[styles.footerText1, {color: themeColors.secondaryText, marginBottom: 0}]}>
-      {getReadTime(item?.content || item?.body || item?.description || item?.title || '')}
-    </Text>
-  </View>
-  {(item?.trustUsers?.length ?? 0) > 0 && (
-    <>
-      <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
-      <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
-        🛡️ Trusted by {formatCount(item?.trustUsers?.length ?? 0)}
-      </Text>
-    </>
-  )}
-  {isAvailableOffline && (
-    <>
-      <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
-      <View
-        accessibilityLabel="Available Offline"
-        style={{flexDirection: 'row', alignItems: 'center'}}>
-        <IonIcons
-          name="cloud-done-outline"
-          size={13}
-          color={themeColors.secondaryText}
-          style={{marginRight: 4}}
-        />
-        <Text
-          style={[
-            styles.footerText1,
-            {color: themeColors.secondaryText, marginBottom: 0},
-          ]}>
-          Available Offline
-        </Text>
-      </View>
-    </>
-  )}
-</View>
+            <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
+              {item?.authorName}
+            </Text>
+            <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
+            <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
+              {formatCount(item?.viewCount || 0)} views
+            </Text>
+            <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
+            <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
+              {formatDateShort(item?.lastUpdated)}
+            </Text>
+            <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <IonIcons
+                name="time-outline"
+                size={13}
+                color={themeColors.secondaryText}
+                style={{marginRight: 4}}
+              />
+              <Text
+                style={[
+                  styles.footerText1,
+                  {color: themeColors.secondaryText, marginBottom: 0},
+                ]}>
+                {getReadTime(
+                  item?.content ||
+                    item?.body ||
+                    item?.description ||
+                    item?.title ||
+                    '',
+                )}
+              </Text>
+            </View>
+            {(item?.trustUsers?.length ?? 0) > 0 && (
+              <>
+                <Text style={[styles.dot, {color: themeColors.mutedText}]}>
+                  •
+                </Text>
+                <Text
+                  style={[styles.footerText1, {color: themeColors.secondaryText}]}>
+                  🛡️ Trusted by {formatCount(item?.trustUsers?.length ?? 0)}
+                </Text>
+              </>
+            )}
+            {isAvailableOffline && (
+              <>
+                <Text style={[styles.dot, {color: themeColors.mutedText}]}>
+                  •
+                </Text>
+                <View
+                  accessibilityLabel="Available Offline"
+                  style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <IonIcons
+                    name="cloud-done-outline"
+                    size={13}
+                    color={themeColors.secondaryText}
+                    style={{marginRight: 4}}
+                  />
+                  <Text
+                    style={[
+                      styles.footerText1,
+                      {color: themeColors.secondaryText, marginBottom: 0},
+                    ]}>
+                    Available Offline
+                  </Text>
+                </View>
+              </>
+            )}
+          </View>
           <EditRequestModal
             visible={requestModalVisible}
             callback={(reason: string) => {
-              //onclick(item, 1, reason);
               handleEditRequestAction(item, 1, reason);
               setRequestModalVisible(false);
             }}
@@ -639,7 +699,11 @@ const ArticleCard = ({
           />
 
           {/* Like, Save, and Comment Actions */}
-          <View style={[styles.likeSaveContainer, {borderTopColor: themeColors.border}]}>
+          <View
+            style={[
+              styles.likeSaveContainer,
+              {borderTopColor: themeColors.border},
+            ]}>
             {likeMutationPending ? (
               <LoadingSpinner size="small" />
             ) : (
@@ -651,7 +715,8 @@ const ArticleCard = ({
                   if (isGuest) {
                     (navigation as any).navigate('GuestPlaceholderScreen', {
                       title: 'Sign In Required',
-                      description: 'Please sign in or sign up to like this article.',
+                      description:
+                        'Please sign in or sign up to like this article.',
                       iconName: 'heart',
                     });
                     return;
@@ -660,7 +725,6 @@ const ArticleCard = ({
                     const previousIsLiked = isLiked;
                     const previousLikeCount = likeCount;
 
-                    // Optimistic update
                     setIsLiked(!isLiked);
                     setLikeCount(prev =>
                       isLiked ? (prev - 1 > 0 ? prev - 1 : 0) : prev + 1,
@@ -690,7 +754,6 @@ const ArticleCard = ({
                         }
                       },
                       onError: (err: any) => {
-                        // Rollback optimistic update
                         setIsLiked(previousIsLiked);
                         setLikeCount(previousLikeCount);
                         Snackbar.show({
@@ -710,7 +773,11 @@ const ArticleCard = ({
                 {isLiked ? (
                   <AntDesign name="heart" size={24} color={PRIMARY_COLOR} />
                 ) : (
-                  <FontAwesome name="heart-o" size={24} color={themeColors.icon} />
+                  <FontAwesome
+                    name="heart-o"
+                    size={24}
+                    color={themeColors.icon}
+                  />
                 )}
                 <Text
                   style={{
@@ -732,7 +799,8 @@ const ArticleCard = ({
                 if (isGuest) {
                   (navigation as any).navigate('GuestPlaceholderScreen', {
                     title: 'Sign In Required',
-                    description: 'Please sign in or sign up to view or post comments.',
+                    description:
+                      'Please sign in or sign up to view or post comments.',
                     iconName: 'comment',
                   });
                   return;
@@ -746,7 +814,11 @@ const ArticleCard = ({
                 });
               }}
               style={styles.likeSaveChildContainer}>
-              <FontAwesome name="commenting" size={27} color={themeColors.icon} />
+              <FontAwesome
+                name="commenting"
+                size={27}
+                color={themeColors.icon}
+              />
             </AccessibleTouchable>
 
             {source === 'home' && (
@@ -790,7 +862,11 @@ const ArticleCard = ({
                   handleShare();
                 }}
                 style={styles.likeSaveChildContainer}>
-                <FontAwesome name="share-alt" size={24} color={themeColors.icon} />
+                <FontAwesome
+                  name="share-alt"
+                  size={24}
+                  color={themeColors.icon}
+                />
               </AccessibleTouchable>
             )}
 
@@ -805,7 +881,8 @@ const ArticleCard = ({
                   if (isGuest) {
                     (navigation as any).navigate('GuestPlaceholderScreen', {
                       title: 'Sign In Required',
-                      description: 'Please sign in or sign up to save this article.',
+                      description:
+                        'Please sign in or sign up to save this article.',
                       iconName: 'bookmark',
                     });
                     return;
@@ -859,12 +936,13 @@ const ArticleCard = ({
                   if (isGuest) {
                     (navigation as any).navigate('GuestPlaceholderScreen', {
                       title: 'Sign In Required',
-                      description: 'Please sign in or sign up for more actions.',
+                      description:
+                        'Please sign in or sign up for more actions.',
                       iconName: 'ellipsis-v',
                     });
                     return;
                   }
-                  onChange();
+                  toggleMenu();
                 }}>
                 <Entypo
                   name="dots-three-vertical"
@@ -881,67 +959,6 @@ const ArticleCard = ({
 };
 
 export default ArticleCard;
-
-// const styles = StyleSheet.create({
-//   cardContainer: {
-//     width: '100%',
-//     backgroundColor: '#ffffff',
-//     flexDirection: 'row',
-//     marginVertical: 10,
-//     borderRadius: 12,
-//     overflow: 'hidden',
-//     elevation: 2,
-//     borderWidth: 1,
-//     borderColor: '#E0E0E0',
-//   },
-//   image: {
-//     flex: 0.4,
-//     height: '100%',
-//     resizeMode: 'cover',
-//   },
-//   textContainer: {
-//     flex: 0.6,
-//     backgroundColor: 'white',
-//     paddingHorizontal: 12,
-//     paddingVertical: 12,
-//     justifyContent: 'space-between',
-//   },
-
-//   title: {
-//     fontSize: fp(5.5),
-//     fontWeight: '700',
-//     color: '#191C1B',
-//     marginBottom: 4,
-//   },
-//   footerText: {
-//     fontSize: fp(3.5),
-//     fontWeight: '600',
-//     color: PRIMARY_COLOR,
-//     marginBottom: 3,
-//   },
-//   footerText1: {
-//     fontSize: fp(3.5),
-//     fontWeight: '400',
-//     color: '#778599',
-//     marginBottom: 2,
-//   },
-//   likeSaveContainer: {
-//     flexDirection: 'row',
-//     width: '100%',
-//     marginTop: 10,
-//     justifyContent: 'space-between',
-//   },
-//   likeSaveChildContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   shareIconContainer: {
-//     position: 'absolute',
-//     top: 5,
-//     right: 5,
-//     zIndex: 1,
-//   },
-// });
 
 const styles = StyleSheet.create({
   cardContainer: {
@@ -971,7 +988,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
@@ -1100,92 +1117,7 @@ const styles = StyleSheet.create({
   },
   readTime: {
     fontSize: 12,
-    color: "#6B7280", // Gray text
+    color: '#6B7280',
     marginTop: 4,
   },
 });
-
-/*
-const styles = StyleSheet.create({
-  cardContainer: {
-    flex: 0,
-    width: '100%',
-    maxHeight: 390,
-    backgroundColor: '#ffffff',
-    flexDirection: 'row',
-    marginVertical: 14,
-    overflow: 'hidden',
-    elevation: 4,
-
-    borderRadius: 12,
-  },
-  image: {
-    flex: 0.8,
-    resizeMode: 'cover',
-  },
-
-  likeSaveContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    marginTop: 6,
-    justifyContent: 'space-between',
-  },
-
-  likeSaveChildContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginHorizontal: hp(0),
-    marginVertical: hp(1),
-  },
-  textContainer: {
-    flex: 1,
-    backgroundColor: 'white',
-    paddingHorizontal: 10,
-    paddingVertical: 13,
-  },
-  title: {
-    fontSize: fp(5.5),
-    fontWeight: 'bold',
-    color: '#121a26',
-    marginBottom: 4,
-    fontFamily: 'Lobster-Regular',
-  },
-  description: {
-    fontSize: fp(3),
-    fontWeight: '500',
-    lineHeight: 18,
-    color: '#778599',
-    marginBottom: 10,
-    fontFamily: 'monospace',
-  },
-  footerText: {
-    fontSize: fp(3.9),
-    fontWeight: '700',
-    color: BUTTON_COLOR,
-    marginBottom: 3,
-  },
-
-  footerText1: {
-    fontSize: fp(3.5),
-    fontWeight: '600',
-    color: '#121a26',
-    marginBottom: 3,
-  },
-
-  footerContainer: {
-    flex: 0,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  shareIconContainer: {
-    position: 'absolute',
-    top: 2,
-    right: 1,
-    zIndex: 1,
-  },
-
-});
-*/

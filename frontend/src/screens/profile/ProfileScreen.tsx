@@ -43,8 +43,6 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     }, [refetch]),
   );
 
-
-
   const onFollowerClick = () => {
     if (isConnected) {
       if (user && (user.followers?.length ?? 0) > 0) {
@@ -122,14 +120,16 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     );
   };
 
+  const statusBarBg = isDarkMode ? '#0B1425' : '#000A60';
+
   if (isLoading) {
     return (
       <SafeAreaView
         style={[
           styles.loadingContainer,
-          {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')},
+          {backgroundColor: statusBarBg},
         ]}>
-        <StatusBar style={isDarkMode ? 'light' : 'dark'} />
+        <StatusBar style="light" backgroundColor={statusBarBg} />
         <Loader />
       </SafeAreaView>
     );
@@ -143,9 +143,9 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
     <SafeAreaView
       style={[
         styles.container,
-        {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#000A60' : PRIMARY_COLOR)},
+        {backgroundColor: statusBarBg},
       ]}>
-      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
+      <StatusBar style="light" backgroundColor={statusBarBg} />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, backgroundColor: themeColors.background, paddingBottom: hp(4) }}
         refreshControl={
@@ -153,8 +153,8 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         }
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ backgroundColor: isDarkMode ? '#000A60' : PRIMARY_COLOR }}>
-            {renderHeader()}
+        <View style={{ backgroundColor: statusBarBg }}>
+          {renderHeader()}
         </View>
 
         <View style={styles.content}>
@@ -181,7 +181,7 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0CAFFF',
+    backgroundColor: '#000A60',
   },
   loadingContainer: {
     flex: 1,

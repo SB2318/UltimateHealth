@@ -1,4 +1,3 @@
- 
 import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import TabNavigation from './TabNavigation';
@@ -67,9 +66,7 @@ import EventDetailsScreen from '../screens/settings/EventDetailsScreen';
 import HealthTermComparisonScreen from '../screens/HealthTermComparisonScreen';
 import MedicalGlossaryScreen from '../screens/MedicalGlossaryScreen';
 
-
 const Stack = createStackNavigator<RootStackParamList>();
-
 
 const ROOT_SCREENS: string[] = [
   'TabNavigation',
@@ -127,7 +124,14 @@ const StackNavigation = () => {
     return () => backHandler.remove();
   }, [navigation, nav]);
   return (
-    <Stack.Navigator id={undefined as never}>
+    <Stack.Navigator
+      id={undefined as never}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#000A60',
+        },
+        headerTintColor: '#ffffff',
+      }}>
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
@@ -147,6 +151,10 @@ const StackNavigation = () => {
           headerShown: true,
           headerBackTitleVisible: false,
           headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: '#000A60',
+          },
+          headerTintColor: 'white',
           headerLeft: () => (
             <TouchableOpacity
               style={{
@@ -156,10 +164,9 @@ const StackNavigation = () => {
                 borderRadius: 50,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: 'white',
               }}
               onPress={() => navigation.goBack()}>
-              <FontAwesome6 size={20} name="arrow-left" color="black" />
+              <FontAwesome6 size={20} name="arrow-left" color="white" />
             </TouchableOpacity>
           ),
         })}
@@ -198,7 +205,6 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -218,13 +224,11 @@ const StackNavigation = () => {
           headerShown: true,
           headerTitle: 'Start Writing',
           headerBackTitleVisible: false,
-
           headerTintColor: 'white',
           headerTransparent: false,
           headerStyle: {
             backgroundColor: '#000A60',
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -232,7 +236,6 @@ const StackNavigation = () => {
                 navigation.goBack();
               }}>
               <Ionicon name="arrow-back" size={36} color={'white'} />
-              {/* <FontAwesome6 size={25} name="arrow-left" color="black" /> */}
             </TouchableOpacity>
           ),
         })}
@@ -256,7 +259,6 @@ const StackNavigation = () => {
                 navigation.goBack();
               }}>
               <Ionicon name="arrow-back" size={36} color={'#ffffff'} />
-              {/* <FontAwesome6 size={25} name="arrow-left" color="black" /> */}
             </TouchableOpacity>
           ),
         })}
@@ -272,7 +274,6 @@ const StackNavigation = () => {
             backgroundColor: '#000A60',
           },
           headerTitleStyle: {color: 'white'},
-
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -280,7 +281,6 @@ const StackNavigation = () => {
                 navigation.goBack();
               }}>
               <Ionicon name="arrow-back" size={36} color={'white'} />
-              {/* <FontAwesome6 size={25} name="arrow-left" color="black" /> */}
             </TouchableOpacity>
           ),
         }}
@@ -298,7 +298,6 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -323,7 +322,6 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -344,7 +342,6 @@ const StackNavigation = () => {
           headerTitle: '',
           headerBackTitleVisible: false,
           headerTransparent: true,
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -369,7 +366,6 @@ const StackNavigation = () => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -390,7 +386,6 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -411,7 +406,6 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -432,7 +426,6 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -451,13 +444,13 @@ const StackNavigation = () => {
         options={{headerShown: false}}
       />
 
-        <Stack.Screen
+      <Stack.Screen
         name="ContributorPage"
         component={ContributorPage}
         options={{headerShown: false}}
       />
 
-        <Stack.Screen
+      <Stack.Screen
         name="OpenSourcePage"
         component={OpenSourcePage}
         options={{headerShown: false}}
@@ -471,7 +464,6 @@ const StackNavigation = () => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -496,7 +488,6 @@ const StackNavigation = () => {
             backgroundColor: '#000A60',
           },
           headerBackTitleVisible: false,
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -544,7 +535,7 @@ const StackNavigation = () => {
           headerTintColor: 'white',
           headerTransparent: false,
           headerStyle: {
-            backgroundColor: PRIMARY_COLOR,
+            backgroundColor: '#000A60',
           },
           headerBackTitleVisible: false,
           headerLeft: () => (
@@ -566,22 +557,18 @@ const StackNavigation = () => {
         options={({navigation}) => ({
           headerShown: true,
           headerTitle: 'Notifications',
-          //headerTransparent: true,
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
           headerTintColor: 'white',
           headerTransparent: false,
-
           headerStyle: {
             elevation: 4,
-
             backgroundColor: '#000A60',
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 2},
             shadowOpacity: 0.25,
             shadowRadius: 3.5,
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -626,22 +613,18 @@ const StackNavigation = () => {
         options={({navigation}) => ({
           headerShown: true,
           headerTitle: 'Terms and Conditions',
-          //headerTransparent: true,
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
           headerTintColor: 'white',
           headerTransparent: false,
-
           headerStyle: {
             elevation: 4,
-
             backgroundColor: '#000A60',
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 2},
             shadowOpacity: 0.25,
             shadowRadius: 3.5,
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -663,7 +646,6 @@ const StackNavigation = () => {
           headerBackTitleVisible: false,
           headerTintColor: 'white',
           headerTransparent: false,
-
           headerStyle: {
             elevation: 4,
             backgroundColor: '#000A60',
@@ -689,25 +671,24 @@ const StackNavigation = () => {
         options={({navigation}) => ({
           headerShown: true,
           headerTitle: 'Report',
-          //headerTransparent: true,
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
+          headerTintColor: 'white',
           headerStyle: {
-            elevation: 4, // Elevation for Android
-            // backgroundColor:'red',
-            shadowColor: '#000', // Shadow color for iOS
-            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
-            shadowOpacity: 0.25, // Shadow opacity for iOS
-            shadowRadius: 3.5, // Shadow radius for iOS
+            elevation: 4,
+            backgroundColor: '#000A60',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
               onPress={() => {
                 navigation.goBack();
               }}>
-              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
+              <FontAwesome6 size={25} name="arrow-left" color="white" />
             </TouchableOpacity>
           ),
         })}
@@ -719,18 +700,17 @@ const StackNavigation = () => {
         options={({navigation}) => ({
           headerShown: true,
           headerTitle: 'Confirmation',
-          //headerTransparent: true,
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
+          headerTintColor: 'white',
           headerStyle: {
-            elevation: 4, // Elevation for Android
-            // backgroundColor:'red',
-            shadowColor: '#000', // Shadow color for iOS
-            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
-            shadowOpacity: 0.25, // Shadow opacity for iOS
-            shadowRadius: 3.5, // Shadow radius for iOS
+            elevation: 4,
+            backgroundColor: '#000A60',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
           },
-           
           headerLeft: () => (
             <Pressable
               style={styles.headerLeftButtonCommentScreen}
@@ -756,63 +736,51 @@ const StackNavigation = () => {
         options={({navigation}) => ({
           headerShown: false,
           headerTitle: 'Overview',
-          //headerTransparent: true,
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
           headerStyle: {
-            elevation: 4, // Elevation for Android
-            // backgroundColor:'red',
-            shadowColor: '#000', // Shadow color for iOS
-            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
-            shadowOpacity: 0.25, // Shadow opacity for iOS
-            shadowRadius: 3.5, // Shadow radius for iOS
+            elevation: 4,
+            backgroundColor: '#000A60',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
               onPress={() => {
                 navigation.goBack();
               }}>
-              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
+              <FontAwesome6 size={25} name="arrow-left" color="white" />
             </TouchableOpacity>
           ),
         })}
       />
-
-      {/* <Stack.Screen
-        name="ConversationScreen"
-        component={ConversationScreen}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
 
       <Stack.Screen
         name="SocialScreen"
         component={SocialScreen}
         options={({navigation}) => ({
           headerShown: true,
-          // headerTitle: 'Followers',
-          //headerTransparent: true,
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
+          headerTintColor: 'white',
           headerStyle: {
-            elevation: 4, // Elevation for Android
-            // backgroundColor:'red',
-            shadowColor: '#000', // Shadow color for iOS
-            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
-            shadowOpacity: 0.25, // Shadow opacity for iOS
-            shadowRadius: 3.5, // Shadow radius for iOS
+            elevation: 4,
+            backgroundColor: '#000A60',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
               onPress={() => {
                 navigation.goBack();
               }}>
-              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
+              <FontAwesome6 size={25} name="arrow-left" color="white" />
             </TouchableOpacity>
           ),
         })}
@@ -825,9 +793,9 @@ const StackNavigation = () => {
           headerShown: true,
           title: 'Edit Profile',
           headerBackTitleVisible: false,
-        //  headerTitleAlign:"center",
-          headerBackgroundContainerStyle: {
-            backgroundColor: ON_PRIMARY_COLOR
+          headerTintColor: 'white',
+          headerStyle: {
+            backgroundColor: '#000A60',
           },
           headerShadowVisible: false,
           headerLeft: () => (
@@ -836,7 +804,7 @@ const StackNavigation = () => {
               onPress={() => {
                 navigation.goBack();
               }}>
-              <FontAwesome6 size={25} name="arrow-left" color="black" />
+              <FontAwesome6 size={25} name="arrow-left" color="white" />
             </TouchableOpacity>
           ),
         })}
@@ -917,7 +885,7 @@ const StackNavigation = () => {
       <Stack.Screen
         name="RespectGiverScreen"
         component={RespectGiverScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="ContentListScreen"
@@ -926,7 +894,7 @@ const StackNavigation = () => {
           headerShown: true,
           headerTitle: 'My Content',
           headerTitleAlign: 'center',
-          headerStyle: { backgroundColor: '#000A60' },
+          headerStyle: {backgroundColor: '#000A60'},
           headerTintColor: '#fff',
         }}
       />
@@ -944,6 +912,8 @@ const StackNavigation = () => {
           headerShown: true,
           title: route?.params?.title || 'Sign In Required',
           headerBackTitleVisible: false,
+          headerStyle: {backgroundColor: '#000A60'},
+          headerTintColor: 'white',
         })}
       />
 
@@ -953,9 +923,8 @@ const StackNavigation = () => {
         options={{
           headerShown: true,
           title: 'Playlist',
-         // headerBackTitleVisible: false,
           headerStyle: {
-            backgroundColor: BUTTON_COLOR,
+            backgroundColor: '#000A60',
           },
           headerTintColor: 'white',
         }}
@@ -963,25 +932,27 @@ const StackNavigation = () => {
       <Stack.Screen
         name="PodcastEpisodesScreen"
         component={PodcastEpisodesScreen}
-        options={{
-          headerShown: true,
-          title: 'Podcast Episodes',
-          headerStyle: {
-            backgroundColor: PRIMARY_COLOR,
-          },
-          headerTintColor: 'white',
-          headerBackTitleVisible: false,
-        } as any}
+        options={
+          {
+            headerShown: true,
+            title: 'Podcast Episodes',
+            headerStyle: {
+              backgroundColor: '#000A60',
+            },
+            headerTintColor: 'white',
+            headerBackTitleVisible: false,
+          } as any
+        }
       />
       <Stack.Screen
         name="HealthTermComparison"
         component={HealthTermComparisonScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="MedicalGlossaryScreen"
         component={MedicalGlossaryScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
@@ -1002,7 +973,6 @@ const styles = StyleSheet.create({
 
   headerLeftButtonCommentScreen: {
     marginStart: 15,
-    //backgroundColor: '#ffffff',
     paddingHorizontal: 10,
     paddingVertical: 4,
     marginTop: 0,
@@ -1015,8 +985,6 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 40,
-    // borderColor: '#0CAFFF',
-    // borderWidth: 1,
     borderRadius: 100,
     paddingHorizontal: 17,
     marginBottom: 20,

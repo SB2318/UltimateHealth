@@ -59,15 +59,16 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }: Sock
         const handleAppClose = () => {
             disconnectSocket();
         };
-        // `window` only exists on web; guard so RN doesn't throw at runtime or typecheck time.
+        // In React Native, `window` is defined (polyfilled to `global`), but DOM methods
+        // like `window.addEventListener` do not exist. Guard both `w` and the method.
         const w = typeof window !== 'undefined' ? (window as Window & typeof globalThis) : null;
-        if (w) {
+        if (w && typeof w.addEventListener === 'function') {
             w.addEventListener('beforeunload', handleAppClose);
         }
         return () => {
             socketInstance.off('connect', onConnect);
             socketInstance.off('disconnect', onDisconnect);
-            if (w) {
+            if (w && typeof w.removeEventListener === 'function') {
                 w.removeEventListener('beforeunload', handleAppClose);
             }
             setIsConnected(false);

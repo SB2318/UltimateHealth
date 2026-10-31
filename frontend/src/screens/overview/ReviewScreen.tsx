@@ -113,6 +113,7 @@ const ReviewScreen = ({navigation, route}: ReviewScreenProp) => {
 
   return (
     <View style={styles.container}>
+      <View style={{height: insets.top, backgroundColor: '#000A60'}} />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContent}>

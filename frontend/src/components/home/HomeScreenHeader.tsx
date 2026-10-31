@@ -1,6 +1,6 @@
- 
 import React from 'react';
 import { useColorScheme } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input, XStack, YStack, Button, Text } from "tamagui";
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -17,18 +17,26 @@ const HomeScreenHeader = ({
   searchText,
 }: HomeScreenHeaderProps) => {
   const isDarkMode = useColorScheme() === 'dark';
+  const insets = useSafeAreaInsets();
   const headerBackground = isDarkMode ? '#0B1425' : '#000A60';
   const surface = isDarkMode ? '#1F2937' : '#FFFFFF';
   const text = isDarkMode ? '#F9FAFB' : '#333333';
   const mutedText = isDarkMode ? '#D1D5DB' : '#778599';
 
   return (
-    <YStack backgroundColor={headerBackground} width="100%" paddingHorizontal="$2" paddingVertical="$2" elevation={1}>
+    <YStack
+      backgroundColor={headerBackground}
+      width="100%"
+      paddingHorizontal="$2"
+      paddingBottom="$2"
+      style={{ paddingTop: insets.top + 8 }}
+      elevation={1}
+    >
       <XStack alignItems="center" justifyContent="space-between" gap="$1.5" height={50}>
         
         {/* Left Side Menu Button - Restored! */}
         <Button chromeless onPress={handlePresentModalPress} padding="$0" width={40} height={40} justifyContent="center" alignItems="center">
-          <AntDesign name="menu-fold" size={24} color={text} />
+          <AntDesign name="menu-fold" size={24} color="#FFFFFF" />
         </Button>
 
         {/* Center search bar wrapper */}
@@ -68,7 +76,7 @@ const HomeScreenHeader = ({
 
         {/* Right Side Notification Bell with Unread Badge - Restored! */}
         <Button chromeless onPress={onNotificationClick} padding="$0" width={40} height={40} justifyContent="center" alignItems="center" position="relative">
-          <Ionicons name="notifications-outline" size={24} color={text} />
+          <Ionicons name="notifications-outline" size={24} color="#FFFFFF" />
           {unreadCount > 0 && (
             <XStack 
               position="absolute" 
@@ -81,7 +89,7 @@ const HomeScreenHeader = ({
               alignItems="center" 
               justifyContent="center"
             >
-              <Text color={text} fontSize={10} fontWeight="bold">
+              <Text color="#FFFFFF" fontSize={10} fontWeight="bold">
                 {unreadCount}
               </Text>
             </XStack>

@@ -1,6 +1,6 @@
- 
 import React from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
+import {StatusBar} from 'expo-status-bar';
 import {MaterialTabBar, Tabs} from 'react-native-collapsible-tab-view';
 import {
   PRIMARY_COLOR,
@@ -50,15 +50,14 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
     }
   };
 
-  const handlePodcastClick = (item: PodcastData) =>{
-
-    if(item?.status === StatusEnum.DISCARDED) {
+  const handlePodcastClick = (item: PodcastData) => {
+    if (item?.status === StatusEnum.DISCARDED) {
       Alert.alert('Your podcast is not approved');
       return;
     } else {
       navigation.navigate('PodcastDetail', {
         trackId: item._id,
-        audioUrl: item.audio_url
+        audioUrl: item.audio_url,
       });
     }
   };
@@ -92,7 +91,9 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
   };
   return (
     <View style={styles.container}>
-      <View style={[styles.innerContainer, {paddingTop: insets.top}]}>
+      <StatusBar style="light" backgroundColor="#000A60" />
+      <View style={{height: insets.top, backgroundColor: '#000A60'}} />
+      <View style={styles.innerContainer}>
         <Tabs.Container
           //renderHeader={renderHeader}
           renderTabBar={renderTabBar}
@@ -114,7 +115,7 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
           <Tabs.Tab name="Podcasts">
             <PodcastWorkSpace
               handleClickAction={(item: PodcastData) => {
-                   handlePodcastClick(item);
+                handlePodcastClick(item);
               }}
             />
           </Tabs.Tab>
@@ -123,7 +124,7 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
       <FAB
         style={styles.fab}
         small
-        icon={({size, color}:{size: number, color: string}) => (
+        icon={({size, color}: {size: number; color: string}) => (
           <Ionicons name="arrow-back" size={size} color={'white'} />
         )}
         onPress={() => {
@@ -137,8 +138,7 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0CAFFF',
-    // marginTop: hp(5)
+    backgroundColor: '#000A60',
   },
   innerContainer: {
     flex: 1,
@@ -165,8 +165,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   indicatorStyle: {
-    backgroundColor: 'white',
-    //minHeight: 50,
+    backgroundColor: '#000A60',
   },
   tabBarStyle: {
     backgroundColor: 'white',
