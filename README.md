@@ -366,13 +366,13 @@ UltimateHealth is designed to support both development and end-user deployment a
 ---
 ## 🗺️ Project Roadmap & Release Pipeline
 
-Following our **October 2026 Core Release (v2.3.0)**, the next product releases follow a milestone-driven pipeline to systematically activate, polish, and deploy all currently hidden and newly integrated modules.
+Following our **October 2026 Core Release (v3.2.0)**, the next product releases follow a milestone-driven pipeline to systematically activate, polish, and deploy all currently hidden and newly integrated modules.
 
 ### 📅 Release Pipeline & Deadlines
 
 | Phase & Milestone | Target Version | Deadline | Key Features & Deliverables | Status |
 |:---|:---:|:---:|:---|:---:|
-| **October Foundation Release** | `v2.3.0` | **Oct 31, 2026** | • System-wide Dark Mode sync with Tamagui bundle deduplication<br>• 2-Step Frictionless Onboarding (Role picker & 1-click Google auth)<br>• Protected Guest Browsing Mode with contextual placeholders<br>• Article DetailsScreen dark WebView content rendering<br>• Podcast listing screen dark theme sync & skeleton loading<br>• Resilient offline reading & wellness no-internet fallbacks | ✅ **Shipped** |
+| **October Foundation Release** | `v3.2.0` | **Oct 31, 2026** | • System-wide Dark Mode sync with Tamagui bundle deduplication<br>• 2-Step Frictionless Onboarding (Role picker & 1-click Google auth)<br>• Protected Guest Browsing Mode with contextual placeholders<br>• Article DetailsScreen dark WebView content rendering<br>• Podcast listing screen dark theme sync & skeleton loading<br>• Resilient offline reading & wellness no-internet fallbacks | ✅ **Shipped** |
 | **Phase 1: Health Intelligence Sprint** | `v2.4.0` | **Nov 15, 2026** | • **Medical Glossary (`MedicalGlossaryScreen`)**: Unhide and link in Settings & Global Search with A-Z category chips & medical pronunciation<br>• **Health Term Comparison (`HealthTermComparisonScreen`)**: Interactive side-by-side comparison tables<br>• **AI Suggestion Acceptance (`RenderSuggestion`)**: Integrated diff preview and accept/reject actions for AI article improvements in Editor<br>• **Social Circle (`SocialScreen`)**: Real-time socket-based follower & following lists accessible from profiles | 🚀 **In Active Development** |
 | **Phase 2: Community & Local Health** | `v2.5.0` | **Dec 15, 2026** | • **Nearby Health Events (`NearbyHealthEventsScreen`, `EventDetailsScreen`)**: Live backend API integration for blood donation drives, health camps, and vaccine drives with GPS distance sorting<br>• **Verified Medical Contributor Directory**: Dedicated doctor & medical contributor showcase with specialty filters<br>• **Multi-Language Translation Module**: Real-time article and interface localization across regional languages | 📋 **Scheduled** |
 | **Phase 3: Healthcare Academy Major** | `v3.0.0` | **Jan 30, 2027** | • **Healthcare Learning Academy (`AcademyStackNavigation`)**: Full activation of all 9 academy modules<br>• **Interactive Courses & Lessons (`CourseListingScreen`, `CourseDetailScreen`, `LessonReaderScreen`)**<br>• **Patient Journeys & Clinical Workflows (`PatientJourneyScreen`, `WorkflowScreen`)**<br>• **Hospital Map & Navigator (`HospitalMapScreen`)**<br>• **Medical Quizzes & Certification (`QuizScreen`, `AcademyProfileScreen`)** | 📋 **Planned** |
@@ -383,8 +383,8 @@ Following our **October 2026 Core Release (v2.3.0)**, the next product releases 
 
 | Feature / Screen | Primary Technology / Route | Implementation State | Current UI Visibility | Target Activation |
 |:---|:---|:---:|:---:|:---:|
-| **Dark Theme Sync** | React Native `useColorScheme` + Tamagui | Completed | Active App-Wide | ✅ Released (`v2.3.0`) |
-| **Guest Mode & Onboarding** | Redux `isGuest` + `OnboardingModal` | Completed | Active App-Wide | ✅ Released (`v2.3.0`) |
+| **Dark Theme Sync** | React Native `useColorScheme` + Tamagui | Completed | Active App-Wide | ✅ Released (`v3.2.0`) |
+| **Guest Mode & Onboarding** | Redux `isGuest` + `OnboardingModal` | Completed | Active App-Wide | ✅ Released (`v3.2.0`) |
 | **Medical Glossary & Term Dictionary** | `MedicalGlossaryScreen.tsx` | Completed | 🔒 Hidden (Unlinked) | **`v2.4.0` (Nov 15, 2026)** |
 | **Health Term Comparison Tool** | `HealthTermComparisonScreen.tsx` | Completed | 🔒 Hidden (Unlinked) | **`v2.4.0` (Nov 15, 2026)** |
 | **AI Editor Suggestion Diff** | `RenderSuggestion.tsx` | Completed | 🔒 Hidden (Trigger Unlinked) | **`v2.4.0` (Nov 15, 2026)** |
