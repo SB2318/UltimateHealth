@@ -2,10 +2,10 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 import { useColorScheme, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { PaperProvider } from 'react-native-paper';
+import { PaperProvider, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { TamaguiProvider, useTheme } from 'tamagui';
-import { NavigationContainer, type NavigationContainerRef } from '@react-navigation/native';
+import { TamaguiProvider, Theme, useTheme } from 'tamagui';
+import { NavigationContainer, DarkTheme, DefaultTheme, type NavigationContainerRef } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 import messaging from '@react-native-firebase/messaging';
 import { addEventListener } from '@react-native-community/netinfo';
@@ -41,12 +41,39 @@ import UpdateModal from '../auth/UpdateModal';
 import { NetworkBanner } from './NetworkBanner';
 import OnboardingModal from './OnboardingModal';
 
+const appDarkTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: '#0A0F1D',
+    card: '#0F172A',
+    text: '#F8FAFC',
+    border: '#1E293B',
+    primary: '#0F52BA',
+    notification: '#3B82F6',
+  },
+};
+
+const appLightTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#F0F8FF',
+    card: '#FFFFFF',
+    text: '#0F172A',
+    border: '#E2E8F0',
+    primary: '#0F52BA',
+    notification: '#0F52BA',
+  },
+};
+
 export default function AppContent() {
   const navigationRef = useRef<NavigationContainerRef<any> | null>(null);
    
   const pendingDeepLinkRef = useRef<string | null>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
+  const paperTheme = isDarkMode ? MD3DarkTheme : MD3LightTheme;
   const { visible, storeUrl } = useVersionCheck();
   const dispatch = useAppDispatch();
 
@@ -189,26 +216,35 @@ export default function AppContent() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="light" backgroundColor="#000A60" />
+      <StatusBar
+        style={isDarkMode ? 'light' : 'dark'}
+        backgroundColor={isDarkMode ? '#0A0F1D' : '#000A60'}
+      />
       <TamaguiProvider
         config={config}
         defaultTheme={isDarkMode ? 'dark' : 'light'}>
-        <PaperProvider>
-          <FirebaseProvider>
-            <PreferencesProvider>
-              <SocketProvider>
-                <View style={{ flex: 1 }}>
-                  <NetworkBanner />
-                  <AppInner
-                    navigationRef={navigationRef}
-                    visible={visible}
-                    storeUrl={storeUrl}
-                  />
-                </View>
-              </SocketProvider>
-            </PreferencesProvider>
-          </FirebaseProvider>
-        </PaperProvider>
+        <Theme name={isDarkMode ? 'dark' : 'light'}>
+          <PaperProvider theme={paperTheme}>
+            <FirebaseProvider>
+              <PreferencesProvider>
+                <SocketProvider>
+                  <View
+                    style={{
+                      flex: 1,
+                      backgroundColor: isDarkMode ? '#0A0F1D' : '#F0F8FF',
+                    }}>
+                    <NetworkBanner />
+                    <AppInner
+                      navigationRef={navigationRef}
+                      visible={visible}
+                      storeUrl={storeUrl}
+                    />
+                  </View>
+                </SocketProvider>
+              </PreferencesProvider>
+            </FirebaseProvider>
+          </PaperProvider>
+        </Theme>
       </TamaguiProvider>
     </SafeAreaProvider>
   );
@@ -225,6 +261,7 @@ function AppInner({
 }) {
   const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
+  const navigationTheme = isDarkMode ? appDarkTheme : appLightTheme;
   const { user_token, isGuest } = useAppSelector((state: RootState) => state.user);
 
   // Show onboarding until the user authenticates or explicitly picks guest mode.
@@ -238,8 +275,13 @@ function AppInner({
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme?.background?.get() ?? (isDarkMode ? '#121212' : '#ffffff') }}>
-      <NavigationContainer ref={navigationRef}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor:
+          theme?.background?.get() ?? (isDarkMode ? '#0A0F1D' : '#F0F8FF'),
+      }}>
+      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
         <StackNavigation />
       </NavigationContainer>
       <CustomAlertDialog key={'alert'} />

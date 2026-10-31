@@ -1,7 +1,6 @@
 import { createTamagui, createTokens, TamaguiConfig } from 'tamagui';
 import { themes as defaultThemes } from '@tamagui/themes/v5';
-import { createAnimations } from '@tamagui/animations-react-native'
-
+import { createAnimations } from '@tamagui/animations-react-native';
 
 const animations = createAnimations({
   bouncy: {
@@ -18,7 +17,6 @@ const animations = createAnimations({
     duration: 600,
   },
 });
-
 
 const tokens = createTokens({
   color: {
@@ -37,18 +35,17 @@ const tokens = createTokens({
     gray700: '#616161',
     gray800: '#424242',
     gray900: '#212121',
-    primary: '#4F46E5',
-    primaryHover: '#4338CA',
+    primary: '#0F52BA',
+    primaryHover: '#000A60',
     error: '#EF4444',
     success: '#10B981',
     red1: '#FEE2E2',
     red8: '#DC2626',
     red10: '#991B1B',
-    blue10: '#007AFF',
+    blue10: '#0F52BA',
     gray3: '#F5F5F5',
-    borderColor: '#99CCFF',
+    borderColor: '#E2E8F0',
     background: '#FFFFFF',
- 
   },
 
   space: {
@@ -68,7 +65,7 @@ const tokens = createTokens({
     13: 80,
     14: 88,
     15: 96,
-    true: 16, // Optional but unconventional
+    true: 16,
   },
 
   size: {
@@ -88,7 +85,7 @@ const tokens = createTokens({
     13: 104,
     14: 112,
     15: 120,
-    true: 16, // Same here
+    true: 16,
     full: '100%',
   },
 
@@ -116,7 +113,7 @@ const tokens = createTokens({
     20: 20,
     100: 100,
   },
-})
+});
 
 const shorthands = {
   p: 'padding',
@@ -143,7 +140,7 @@ const shorthands = {
   pl: 'paddingLeft',
   pr: 'paddingRight',
   als: 'alignSelf',
-} as const
+} as const;
 
 const config = createTamagui({
   defaultTheme: 'light',
@@ -154,15 +151,27 @@ const config = createTamagui({
     ...defaultThemes,
     light: {
       ...defaultThemes.light,
-      // Custom brand overrides (these extend, not replace, the full token set)
-      primary: '#4F46E5',
+      primary: '#0F52BA',
+      background: '#FFFFFF',
       backgroundLight: '#F5F5F5',
+      color: '#0F172A',
+      color12: '#0F172A',
+      color11: '#334155',
+      color10: '#64748B',
+      color9: '#0F52BA',
+      borderColor: '#E2E8F0',
     },
     dark: {
       ...defaultThemes.dark,
-      // Custom brand overrides
-      primary: '#4F46E5',
-      backgroundLight: '#616161',
+      primary: '#0F52BA',
+      background: '#0A0F1D',
+      backgroundLight: '#1E293B',
+      color: '#F8FAFC',
+      color12: '#F8FAFC',
+      color11: '#E2E8F0',
+      color10: '#94A3B8',
+      color9: '#0F52BA',
+      borderColor: '#1E293B',
     },
   },
   fonts: {
@@ -226,8 +235,8 @@ const config = createTamagui({
     md: { maxWidth: 1020 },
     lg: { maxWidth: 1280 },
   },
-})
+});
 
-export type AppConfig = typeof config
+export type AppConfig = typeof config;
 
 export default config;

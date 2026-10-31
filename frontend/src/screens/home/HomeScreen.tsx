@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
+  useColorScheme,
 } from 'react-native';
 import {FlashList} from '@shopify/flash-list';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -108,6 +109,15 @@ const SavedArticleEmptyState = () => (
 
 // Here The purpose of using Redux is to maintain filter state throughout the app session. globally
 const HomeScreen = ({navigation}: HomeScreenProps) => {
+  const colorScheme = useColorScheme();
+  const isDarkMode = colorScheme === 'dark';
+  const homeBg = isDarkMode ? '#0A0F1D' : '#F0F8FF';
+  const statusBarBg = isDarkMode ? '#0B1425' : '#000A60';
+  const chipActiveBg = '#0F52BA';
+  const chipInactiveBg = isDarkMode ? '#1E293B' : '#FFFFFF';
+  const chipInactiveBorder = isDarkMode ? '#334155' : '#D1D5DB';
+  const chipInactiveText = isDarkMode ? '#CBD5E1' : '#4B5563';
+
   const dispatch = useAppDispatch();
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
@@ -911,8 +921,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={['left', 'right']}>
-      <StatusBar style="light" backgroundColor="#000A60" />
+    <SafeAreaView style={[styles.container, {backgroundColor: homeBg}]} edges={['left', 'right']}>
+      <StatusBar style="light" backgroundColor={statusBarBg} />
       <HomeScreenHeader showSearchBar={showSearchBar}
         handlePresentModalPress={handlePresentModalPress}
         onTextInputChange={(text: string) => {
@@ -949,7 +959,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         accessibilityHint="Opens homepage customization settings">
         <Text
           style={{
-            color: '#000A60',
+            color: isDarkMode ? '#60A5FA' : '#000A60',
             fontWeight: 'bold',
             fontSize: 16,
           }}>
@@ -980,11 +990,11 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                 style={{
                   ...styles.button,
                   backgroundColor: showSavedOnly
-                    ? SAVED_CHIP_ACTIVE_BG
-                    : SAVED_CHIP_INACTIVE_BG,
+                    ? chipActiveBg
+                    : chipInactiveBg,
                   borderColor: showSavedOnly
-                    ? SAVED_CHIP_ACTIVE_BG
-                    : SAVED_CHIP_INACTIVE_BORDER,
+                    ? chipActiveBg
+                    : chipInactiveBorder,
                 }}
                 onPress={handleToggleSavedOnly}
                 accessibilityRole="button"
@@ -1000,7 +1010,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                 <Text
                   style={{
                     ...styles.labelStyle,
-                    color: showSavedOnly ? 'white' : '#4B5563',
+                    color: showSavedOnly ? 'white' : chipInactiveText,
                   }}>
                   Saved
                 </Text>
@@ -1023,8 +1033,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                     key={item._id}
                     style={{
                       ...styles.button,
-                      backgroundColor: isActive ? '#000A60' : 'white',
-                      borderColor: isActive ? '#000A60' : '#D1D5DB',
+                      backgroundColor: isActive ? chipActiveBg : chipInactiveBg,
+                      borderColor: isActive ? chipActiveBg : chipInactiveBorder,
                     }}
                     onPress={() => handleCategoryClick(item)}
                     accessibilityRole="button"
@@ -1034,7 +1044,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
                     <Text
                       style={{
                         ...styles.labelStyle,
-                        color: isActive ? 'white' : '#4B5563',
+                        color: isActive ? 'white' : chipInactiveText,
                       }}>
                       {item.name}
                     </Text>
@@ -1044,7 +1054,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           </ScrollView>
         </View>
       )}
-      <View style={styles.articleContainer}>
+      <View style={[styles.articleContainer, {backgroundColor: homeBg}]}>
         <FlashList
           data={listData}
           estimatedItemSize={380}

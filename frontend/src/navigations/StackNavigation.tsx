@@ -17,6 +17,7 @@ import {
   Alert,
   BackHandler,
   Pressable,
+  useColorScheme,
 } from 'react-native';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicon from '@expo/vector-icons/Ionicons';
@@ -123,12 +124,14 @@ const StackNavigation = () => {
 
     return () => backHandler.remove();
   }, [navigation, nav]);
+  const isDarkMode = useColorScheme() === 'dark';
+
   return (
     <Stack.Navigator
       id={undefined as never}
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#000A60',
+          backgroundColor: isDarkMode ? '#0F172A' : '#000A60',
         },
         headerTintColor: '#ffffff',
       }}>

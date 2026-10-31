@@ -18,6 +18,7 @@ import {
   TouchableOpacity,
   Modal,
   Keyboard,
+  useColorScheme,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Tts from 'react-native-tts';
@@ -57,6 +58,14 @@ const useSafeTopInset = () => {
 };
 
 const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
+  const isDarkMode = useColorScheme() === 'dark';
+  const chatBg = isDarkMode ? '#0A0F1D' : '#f9fafb';
+  const headerBg = isDarkMode ? '#0F172A' : BUTTON_COLOR;
+  const leftBubbleBg = isDarkMode ? '#1E293B' : '#ffffff';
+  const leftTextColor = isDarkMode ? '#F8FAFC' : '#1e293b';
+  const inputToolbarBg = isDarkMode ? '#1E293B' : '#ffffff';
+  const modalBg = isDarkMode ? '#1E293B' : '#ffffff';
+  const modalTextColor = isDarkMode ? '#F8FAFC' : '#111827';
   const topInset = useSafeTopInset();
   // When rendered inside the AI tab, keep the composer above the floating tab bar
   const tabBarHeight = React.useContext(BottomTabBarHeightContext) ?? 0;
@@ -377,7 +386,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
           paddingTop: topInset + 12,
           paddingBottom: 16,
           zIndex: 1,
-          backgroundColor: BUTTON_COLOR,
+          backgroundColor: headerBg,
           flexDirection: 'row',
           alignItems: 'center',
           gap: 16,
@@ -443,7 +452,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
-        <View style={{flex: 1, backgroundColor: '#f9fafb', paddingBottom: bottomSpacing}}>
+        <View style={{flex: 1, backgroundColor: chatBg, paddingBottom: bottomSpacing}}>
           <GiftedChat
             messages={messages}
             onSend={onSend}
@@ -543,7 +552,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                     {...props}
                     wrapperStyle={{
                       left: {
-                        backgroundColor: '#ffffff',
+                        backgroundColor: leftBubbleBg,
                         borderBottomLeftRadius: 4,
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
@@ -568,7 +577,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                       },
                     }}
                     textStyle={{
-                      left: { color: '#1e293b', fontSize: 16, lineHeight: 24 },
+                      left: { color: leftTextColor, fontSize: 16, lineHeight: 24 },
                       right: { color: '#ffffff', fontSize: 16, lineHeight: 24 },
                     }}
                   />
@@ -598,7 +607,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               <InputToolbar
                 {...props}
                 containerStyle={{
-                  backgroundColor: '#ffffff',
+                  backgroundColor: inputToolbarBg,
                   borderTopWidth: 0,
                   paddingHorizontal: 8,
                   paddingVertical: 8,
@@ -635,10 +644,10 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
 
       <Modal visible={showQuotaModal} transparent animationType="slide">
         <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' }}>
-          <View style={{ backgroundColor: 'white', borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, alignItems: 'center' }}>
+          <View style={{ backgroundColor: modalBg, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 24, alignItems: 'center' }}>
             <View style={{ width: 48, height: 4, backgroundColor: '#e5e7eb', borderRadius: 2, marginBottom: 24 }} />
             <Ionicons name="time-outline" size={48} color="#f59e0b" style={{ marginBottom: 16 }} />
-            <Text style={{ fontSize: 20, fontWeight: '700', color: '#111827', marginBottom: 8, textAlign: 'center' }}>
+            <Text style={{ fontSize: 20, fontWeight: '700', color: modalTextColor, marginBottom: 8, textAlign: 'center' }}>
               Daily Limit Reached
             </Text>
             <Text style={{ fontSize: 16, color: '#4b5563', textAlign: 'center', marginBottom: 24, lineHeight: 24 }}>
