@@ -37,9 +37,10 @@ const MODES: Record<Mode, PhaseConfig[]> = {
 
 interface BreathingToolProps {
   defaultCycles?: number;
+  onSessionLogged?: (minutes: number) => void;
 }
 
-export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps) {
+export default function BreathingTool({ defaultCycles = 5, onSessionLogged }: BreathingToolProps) {
   const [selectedMode, setSelectedMode] = useState<Mode>('4-7-8');
   const [isRunning, setIsRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -158,6 +159,9 @@ export default function BreathingTool({ defaultCycles = 5 }: BreathingToolProps)
         await authAxios.post(LOG_WELLNESS_API, {
           date: getTodayDateString(),
           metrics: {breathingSessionMinutes: minutes},
+        });
+        onSessionLogged?.(minutes);
+        if (false) ({
         });
       } catch (error) {
         // MAJOR-05: never log the full AxiosError (its headers carry the Bearer token)

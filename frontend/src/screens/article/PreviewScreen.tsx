@@ -236,7 +236,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       const confirmation = await showConfirmationAlert();
       if (!confirmation) {
         Alert.alert('Post discarded');
-        AsyncStorage.removeItem('@article_description_draft').catch(() => {});
+        AsyncStorage.multiRemove([
+          '@article_description_draft',
+          '@article_editor_body_draft',
+        ]).catch(() => {});
         navigation.navigate('TabNavigation');
         return;
       }
@@ -317,9 +320,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                         duration: Snackbar.LENGTH_SHORT,
                       });
 
-                      AsyncStorage.removeItem(
+                      AsyncStorage.multiRemove([
                         '@article_description_draft',
-                      ).catch(() => {});
+                        '@article_editor_body_draft',
+                      ]).catch(() => {});
                       navigation.navigate('TabNavigation');
                     },
                     onError: error => {
@@ -390,9 +394,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                           duration: Snackbar.LENGTH_SHORT,
                         });
 
-                        AsyncStorage.removeItem(
+                        AsyncStorage.multiRemove([
                           '@article_description_draft',
-                        ).catch(() => {});
+                          '@article_editor_body_draft',
+                        ]).catch(() => {});
                         navigation.navigate('TabNavigation');
                       },
                       onError: error => {
@@ -448,9 +453,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
                           duration: Snackbar.LENGTH_SHORT,
                         });
 
-                        AsyncStorage.removeItem(
+                        AsyncStorage.multiRemove([
                           '@article_description_draft',
-                        ).catch(() => {});
+                          '@article_editor_body_draft',
+                        ]).catch(() => {});
                         navigation.navigate('TabNavigation');
                       },
 

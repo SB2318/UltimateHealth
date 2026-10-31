@@ -7,56 +7,87 @@ import {
   ActivityIndicator,
   Platform,
 } from 'react-native';
+import authAxios from '../../lib/api/authAxios';
+import {GET_WELLNESS_WEEKLY_API} from '../../lib/api/APIUtils';
+import {WeeklyWellnessResponse, WellnessLog} from '../../schemas/type';
+import {getTodayLog} from '../../lib/utils/wellnessUtils';
 
-export default function WearableSyncCard() {
+interface WearableSyncCardProps {
+  todayLog?: WellnessLog | null;
+  onSynced?: (logs: WellnessLog[]) => void;
+}
+
+export default function WearableSyncCard({
+  todayLog: propTodayLog,
+  onSynced,
+}: WearableSyncCardProps) {
   const [syncing, setSyncing] = useState(false);
-  const [data, setData] = useState<{
-    steps: number;
-    heartRate: number;
-    sleep: number;
-  } | null>(null);
+  const [syncedLog, setSyncedLog] = useState<WellnessLog | null>(null);
+  const [syncError, setSyncError] = useState<string>('');
+
+  const activeLog = syncedLog ?? propTodayLog ?? null;
+  const metrics = activeLog?.metrics;
 
   async function handleSync() {
     setSyncing(true);
-    // Dummy data for now — real API baad mein connect karenge
-    await new Promise<void>(res => setTimeout(() => res(), 1500));
-    setData({steps: 7842, heartRate: 72, sleep: 6.5});
-    setSyncing(false);
+    setSyncError('');
+    try {
+      const response = await authAxios.get(GET_WELLNESS_WEEKLY_API);
+      const body = response.data as WeeklyWellnessResponse;
+      const logs = Array.isArray(body?.data) ? body.data : [];
+      const latestToday = getTodayLog(logs) ?? logs[0] ?? null;
+      setSyncedLog(latestToday);
+      onSynced?.(logs);
+    } catch {
+      setSyncError('Could not sync wellness data. Check your connection.');
+    } finally {
+      setSyncing(false);
+    }
   }
 
   return (
     <View style={styles.card}>
       <Text style={styles.title}>
-        {Platform.OS === 'ios' ? '🍎 Apple HealthKit' : '🏃 Google Fit'} Sync
+        {Platform.OS === 'ios' ? '🍎 Apple HealthKit' : '🏃 Google Fit'} & Cloud
+        Sync
       </Text>
 
-      {data ? (
+      {metrics &&
+      (metrics.steps !== undefined ||
+        metrics.sleepHours !== undefined ||
+        metrics.activeMinutes !== undefined) ? (
         <View style={styles.statsRow}>
           <View style={styles.stat}>
-            <Text style={styles.statValue}>{data.steps.toLocaleString()}</Text>
+            <Text style={styles.statValue}>
+              {(metrics.steps ?? 0).toLocaleString('en-US')}
+            </Text>
             <Text style={styles.statLabel}>Steps</Text>
           </View>
           <View style={styles.stat}>
-            <Text style={styles.statValue}>{data.heartRate} bpm</Text>
-            <Text style={styles.statLabel}>Heart Rate</Text>
+            <Text style={styles.statValue}>{metrics.activeMinutes ?? 0} min</Text>
+            <Text style={styles.statLabel}>Active</Text>
           </View>
           <View style={styles.stat}>
-            <Text style={styles.statValue}>{data.sleep}h</Text>
+            <Text style={styles.statValue}>{metrics.sleepHours ?? 0}h</Text>
             <Text style={styles.statLabel}>Sleep</Text>
           </View>
         </View>
       ) : (
         <Text style={styles.hint}>
-          Sync karo apna wearable data dekhne ke liye
+          Sync to fetch your latest logged wellness activity from the server
         </Text>
       )}
+
+      {syncError ? <Text style={styles.errorText}>{syncError}</Text> : null}
 
       <TouchableOpacity
         style={[styles.button, syncing && styles.buttonDisabled]}
         onPress={handleSync}
         disabled={syncing}
         accessibilityRole="button"
-        accessibilityLabel={syncing ? 'Syncing wearable data' : 'Sync wearable data'}
+        accessibilityLabel={
+          syncing ? 'Syncing wearable data' : 'Sync wearable data'
+        }
         accessibilityHint={
           syncing
             ? 'Please wait while your wearable data is being synchronized'
@@ -93,6 +124,11 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#999',
     marginBottom: 12,
+  },
+  errorText: {
+    fontSize: 12,
+    color: '#D32F2F',
+    marginBottom: 8,
   },
   statsRow: {
     flexDirection: 'row',

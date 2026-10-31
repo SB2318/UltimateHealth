@@ -25,7 +25,7 @@ import {
   EMPTY_STATE_TEXT_PRIMARY,
   EMPTY_STATE_TEXT_SECONDARY,
 } from '../../lib/ui/Theme';
-import {PROD_URL} from '../../lib/api/APIUtils';
+import {PROD_URL, SEARCH_ARTICLES} from '../../lib/api/APIUtils';
 import AddIcon from '../../components/common/AddIcon';
 import ArticleCard from '../../components/article/ArticleCard';
 
@@ -36,7 +36,7 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {useAppSelector, useAppDispatch} from '../../store/hooks';
 import Loader from '../../components/common/Loader';
 import {usePreferences} from '../../contexts/PreferencesContext';
-import CustomizeHomepageModal from '../../components/home/CustomizeHomepageModal';
+import CustomizeHomepageModal, {ArticleDisplayMode} from '../../components/home/CustomizeHomepageModal';
 
 import {
   setFilteredArticles,
@@ -125,7 +125,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [filterLoading, setFilterLoading] = useState<boolean>(false);
   const [customizeVisible, setCustomizeVisible] = useState(false);
 
-  const [showAcademyCard, setShowAcademyCard] = useState(true);
+  const [showSearchBar, setShowSearchBar] = useState(true);
+  const [articleDisplayMode, setArticleDisplayMode] = useState<ArticleDisplayMode>('category');
   const [showCategoryFilters, setShowCategoryFilters] = useState(true);
   const [showSavedFilter, setShowSavedFilter] = useState(true);
   useEffect(() => {
@@ -136,7 +137,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         if (saved) {
           const settings = JSON.parse(saved);
 
-          setShowAcademyCard(settings.showAcademyCard ?? true);
+          setShowSearchBar(settings.showSearchBar ?? true);
+          setArticleDisplayMode(settings.articleDisplayMode ?? 'category');
           setShowCategoryFilters(settings.showCategoryFilters ?? true);
           setShowSavedFilter(settings.showSavedFilter ?? true);
         }
@@ -590,13 +592,25 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       if (isConnected !== false) {
         const requestId = ++searchRequestIdRef.current;
         try {
-          const response = await axios.get(`${PROD_URL}/articles/search`, {
-            params: {
-              q: sanitizedInput,
-              page: 1,
-              limit: 50,
+          const effectiveLanguages =
+            sessionSelectedLanguages.length > 0
+              ? sessionSelectedLanguages
+              : preferredLanguages;
+          const singleLanguage =
+            effectiveLanguages && effectiveLanguages.length === 1
+              ? effectiveLanguages[0]
+              : undefined;
+          const response = await axios.get(
+            SEARCH_ARTICLES || `${PROD_URL}/articles/search`,
+            {
+              params: {
+                q: sanitizedInput,
+                page: 1,
+                limit: 50,
+                ...(singleLanguage ? {language: singleLanguage} : {}),
+              },
             },
-          });
+          );
           if (requestId !== searchRequestIdRef.current) return;
 
           const backendArticles: ArticleData[] = Array.isArray(
@@ -624,7 +638,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         }
       }
     },
-    [dispatch, isConnected],
+    [dispatch, isConnected, preferredLanguages, sessionSelectedLanguages],
   );
 
   useEffect(() => {
@@ -646,6 +660,16 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
 
     if (!selectedCategory) {
       return filteredArticles;
+    }
+
+    // When user chooses 'All (Random)' display mode in Customize Homepage
+    if (articleDisplayMode === 'random') {
+      const copy = [...filteredArticles];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.abs(Math.sin(i + 1) * 10000) % 1 * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
     }
 
     const filtered = filteredArticles.filter(
@@ -674,6 +698,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     filteredArticles,
     selectedCategory,
     userSelectedCategory,
+    articleDisplayMode,
     user,
   ]);
 
@@ -698,7 +723,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     return (
       <SafeAreaView style={styles.container} edges={['left', 'right']}>
         <StatusBar style="light" backgroundColor="#000A60" />
-        <HomeScreenHeader
+        <HomeScreenHeader showSearchBar={showSearchBar}
           handlePresentModalPress={handlePresentModalPress}
           onTextInputChange={(text: string) => setSearchText(text)}
           onNotificationClick={() => {
@@ -727,7 +752,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     return (
       <SafeAreaView style={styles.container} edges={['left', 'right']}>
         <StatusBar style="light" backgroundColor="#000A60" />
-        <HomeScreenHeader
+        <HomeScreenHeader showSearchBar={showSearchBar}
           handlePresentModalPress={handlePresentModalPress}
           onTextInputChange={(text: string) => setSearchText(text)}
           onNotificationClick={() => {
@@ -756,7 +781,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     return (
       <SafeAreaView style={styles.container} edges={['left', 'right']}>
         <StatusBar style="light" backgroundColor="#000A60" />
-        <HomeScreenHeader
+        <HomeScreenHeader showSearchBar={showSearchBar}
           handlePresentModalPress={handlePresentModalPress}
           onTextInputChange={(text: string) => setSearchText(text)}
           onNotificationClick={() => {
@@ -788,7 +813,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     return (
       <SafeAreaView style={styles.container} edges={['left', 'right']}>
         <StatusBar style="light" backgroundColor="#000A60" />
-        <HomeScreenHeader
+        <HomeScreenHeader showSearchBar={showSearchBar}
           handlePresentModalPress={handlePresentModalPress}
           onTextInputChange={(text: string) => setSearchText(text)}
           onNotificationClick={() => {
@@ -817,7 +842,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     return (
       <SafeAreaView style={styles.blockContainer} edges={['left', 'right']}>
         <StatusBar style="light" backgroundColor="#000A60" />
-        <HomeScreenHeader
+        <HomeScreenHeader showSearchBar={showSearchBar}
           handlePresentModalPress={handlePresentModalPress}
           onTextInputChange={(text: string) => setSearchText(text)}
           onNotificationClick={() => {
@@ -888,7 +913,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   return (
     <SafeAreaView style={styles.container} edges={['left', 'right']}>
       <StatusBar style="light" backgroundColor="#000A60" />
-      <HomeScreenHeader
+      <HomeScreenHeader showSearchBar={showSearchBar}
         handlePresentModalPress={handlePresentModalPress}
         onTextInputChange={(text: string) => {
           setSearchText(text);
@@ -944,36 +969,6 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         setSelectedLanguages={setSessionSelectedLanguages}
       />
 
-      {/* Academy Featured Card */}
-      {showAcademyCard && (
-        <View style={styles.academyCardContainer}>
-          <TouchableOpacity
-            style={styles.academyCard}
-            onPress={() => navigation.navigate('Academy')}
-            accessibilityRole="button"
-            accessibilityLabel="Hospital Learning Academy"
-            accessibilityHint="Opens the Hospital Learning Academy">
-            <View style={{flex: 1}}>
-              <Text style={styles.academyCardTitle}>
-                Hospital Learning Academy
-              </Text>
-              <Text style={styles.academyCardSubtitle}>
-                Learn how hospitals work
-              </Text>
-              <View style={styles.academyProgressRow}>
-                <View style={styles.academyProgressBg}>
-                  <View style={styles.academyProgressFill} />
-                </View>
-                <Text style={styles.academyProgressText}>45%</Text>
-              </View>
-            </View>
-
-            <View style={styles.academyCardButton}>
-              <Text style={styles.academyCardButtonText}>Continue</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      )}
       {showCategoryFilters && (
         <View style={styles.buttonContainer}>
           <ScrollView
@@ -1090,7 +1085,8 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           await AsyncStorage.setItem(
             HOMEPAGE_SETTINGS_KEY,
             JSON.stringify({
-              showAcademyCard,
+              showSearchBar,
+              articleDisplayMode,
               showCategoryFilters,
               showSavedFilter,
             }),
@@ -1098,21 +1094,25 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           setCustomizeVisible(false);
         }}
         onReset={async () => {
-          setShowAcademyCard(true);
+          setShowSearchBar(true);
+          setArticleDisplayMode('category');
           setShowCategoryFilters(true);
           setShowSavedFilter(true);
 
           await AsyncStorage.setItem(
             HOMEPAGE_SETTINGS_KEY,
             JSON.stringify({
-              showAcademyCard: true,
+              showSearchBar: true,
+              articleDisplayMode: 'category',
               showCategoryFilters: true,
               showSavedFilter: true,
             }),
           );
         }}
-        showAcademyCard={showAcademyCard}
-        setShowAcademyCard={setShowAcademyCard}
+        showSearchBar={showSearchBar}
+        setShowSearchBar={setShowSearchBar}
+        articleDisplayMode={articleDisplayMode}
+        setArticleDisplayMode={setArticleDisplayMode}
         showCategoryFilters={showCategoryFilters}
         setShowCategoryFilters={setShowCategoryFilters}
         showSavedFilter={showSavedFilter}

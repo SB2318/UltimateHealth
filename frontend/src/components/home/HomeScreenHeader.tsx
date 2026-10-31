@@ -15,6 +15,7 @@ const HomeScreenHeader = ({
   hasActiveFilters = false,
   onFilterReset,
   searchText,
+  showSearchBar = true,
 }: HomeScreenHeaderProps) => {
   const isDarkMode = useColorScheme() === 'dark';
   const insets = useSafeAreaInsets();
@@ -34,47 +35,70 @@ const HomeScreenHeader = ({
     >
       <XStack alignItems="center" justifyContent="space-between" gap="$1.5" height={50}>
         
-        {/* Left Side Menu Button - Restored! */}
+        {/* Left Side Menu Button */}
         <Button chromeless onPress={handlePresentModalPress} padding="$0" width={40} height={40} justifyContent="center" alignItems="center">
           <AntDesign name="menu-fold" size={24} color="#FFFFFF" />
         </Button>
 
-        {/* Center search bar wrapper */}
-        <XStack
-          flex={1}
-          minWidth={0}
-          height={42}
-          alignItems="center"
-          backgroundColor={surface}
-          borderWidth={1.5}
-          borderColor="#4D6360"
-          borderRadius={10}
-          paddingHorizontal="$2"
-        >
-          <Feather
-            name="search"
-            size={18}
-            color={mutedText}
-            style={{ marginRight: 8 }}
-          />
-
-          <Input
-            unstyled
+        {/* Center search bar wrapper (or title if search bar hidden) */}
+        {showSearchBar ? (
+          <XStack
             flex={1}
             minWidth={0}
-            paddingHorizontal={0}
-            paddingVertical={4}
-            placeholder="Search articles..."
-            placeholderTextColor={mutedText}
-            color={text}
-            fontSize={16}
-            value={searchText}
-            onChangeText={onTextInputChange}
-            accessibilityLabel="Search articles"
-          />
-        </XStack>
+            height={42}
+            alignItems="center"
+            backgroundColor={surface}
+            borderWidth={1.5}
+            borderColor="#4D6360"
+            borderRadius={10}
+            paddingHorizontal="$2"
+          >
+            <Feather
+              name="search"
+              size={18}
+              color={mutedText}
+              style={{ marginRight: 8 }}
+            />
 
-        {/* Right Side Notification Bell with Unread Badge - Restored! */}
+            <Input
+              unstyled
+              flex={1}
+              minWidth={0}
+              paddingHorizontal={0}
+              paddingVertical={4}
+              placeholder="Search articles..."
+              placeholderTextColor={mutedText}
+              color={text}
+              fontSize={16}
+              value={searchText}
+              onChangeText={onTextInputChange}
+              accessibilityLabel="Search articles"
+            />
+
+            {Boolean(searchText && searchText.trim().length > 0) && (
+              <Button
+                chromeless
+                onPress={() => onTextInputChange('')}
+                padding="$0"
+                width={26}
+                height={26}
+                justifyContent="center"
+                alignItems="center"
+                accessibilityLabel="Clear search"
+              >
+                <Ionicons name="close-circle" size={18} color={mutedText} />
+              </Button>
+            )}
+          </XStack>
+        ) : (
+          <XStack flex={1} alignItems="center" justifyContent="center">
+            <Text color="#FFFFFF" fontSize={18} fontWeight="700">
+              Ultimate Health
+            </Text>
+          </XStack>
+        )}
+
+        {/* Right Side Notification Bell with Unread Badge */}
         <Button chromeless onPress={onNotificationClick} padding="$0" width={40} height={40} justifyContent="center" alignItems="center" position="relative">
           <Ionicons name="notifications-outline" size={24} color="#FFFFFF" />
           {unreadCount > 0 && (

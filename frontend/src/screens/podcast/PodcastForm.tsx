@@ -27,6 +27,9 @@ import {hp} from '../../lib/ui/Metric';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import { ttsLanguageList } from '../../lib/utils/Utils';
+import TagSelectorSection, {
+  isSameCategory,
+} from '../../components/common/TagSelectorSection';
 
 
 const PodcastForm = ({navigation, route}: PodcastFormProp) => {
@@ -51,16 +54,29 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
   const [imageError, setImageError] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
+  const isSelected = (genre: Category) =>
+    selectedGenres.some(item => isSameCategory(item, genre));
+
   const handleGenrePress = (genre: Category) => {
+    let nextSelected = selectedGenres;
     if (isSelected(genre)) {
-      setSelectedGenres(selectedGenres.filter(item => item.id !== genre.id));
+      nextSelected = selectedGenres.filter(
+        item => !isSameCategory(item, genre),
+      );
+      setSelectedGenres(nextSelected);
     } else if (selectedGenres.length < 5) {
-     
-      setSelectedGenres([...selectedGenres, genre]); 
+      nextSelected = [...selectedGenres, genre];
+      setSelectedGenres(nextSelected);
+    }
+
+    if (submitted) {
+      setGenresError(
+        nextSelected.length === 0
+          ? 'Please select at least one tag for your podcast.'
+          : '',
+      );
     }
   };
-
-  const isSelected = (genre: Category) => selectedGenres.includes(genre);
 
   const validateForm = () => {
     let isValid = true;
@@ -311,7 +327,7 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
       <KeyboardAwareScrollView
         style={{width: '100%', flex: 1}}
         bottomOffset={50}
@@ -494,61 +510,22 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
           </View>
 
           {/* Tags Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
-              <Ionicon name="pricetag-outline" size={18} color="#222" /> Tags
-            </Text>
-            <Text style={styles.sectionSubtitle}>
-              Select up to 5 tags to help people discover your podcast
-            </Text>
-
-            {selectedGenres.length > 0 && (
-              <View style={styles.selectedGenresWrapper}>
-                {selectedGenres.map((genre, index) => (
-                  <View key={index} style={styles.selectedGenreChip}>
-                    <Text style={styles.selectedGenreChipText}>#{genre.name}</Text>
-                    <TouchableOpacity onPress={() => handleGenrePress(genre)}>
-                      <Ionicon name="close-circle" size={18} color={PRIMARY_COLOR} />
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
-            )}
-
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.genreContainer}>
-              {categories.map((genre: Category, index: number) => (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.genreButton,
-                    isSelected(genre) && styles.selectedGenreButton,
-                  ]}
-                  onPress={() => {
-                    handleGenrePress(genre);
-                    if (submitted) {
-                      const newSelected = isSelected(genre)
-                        ? selectedGenres.filter(item => item.id !== genre.id)
-                        : [...selectedGenres, genre];
-                      setGenresError(newSelected.length === 0 ? 'Please select at least one tag for your podcast.' : '');
-                    }
-                  }}>
-                  <Text
-                    style={[
-                      styles.genreButtonText,
-                      isSelected(genre) && styles.selectedGenreButtonText,
-                    ]}>
-                    #{genre.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-            {submitted && genresError ? (
-              <Text style={styles.errorText}>{genresError}</Text>
-            ) : null}
-          </View>
+          <TagSelectorSection
+            categories={categories || []}
+            selectedGenres={selectedGenres}
+            onToggleGenre={handleGenrePress}
+            onClearAll={() => {
+              setSelectedGenres([]);
+              if (submitted) {
+                setGenresError(
+                  'Please select at least one tag for your podcast.',
+                );
+              }
+            }}
+            maxSelection={5}
+            subtitle="Select up to 5 tags to help people discover your podcast"
+            errorText={submitted && genresError ? genresError : undefined}
+          />
 
           {/* Submit Button */}
           <TouchableOpacity

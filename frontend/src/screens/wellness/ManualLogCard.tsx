@@ -1,85 +1,135 @@
-import React, { useState } from 'react';
-import {
-  View, Text, TouchableOpacity, StyleSheet
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import authAxios from '../../lib/api/authAxios';
+import {LOG_WELLNESS_API} from '../../lib/api/APIUtils';
+import {getTodayDateString} from '../../lib/utils/wellnessUtils';
+import {WellnessMetrics} from '../../schemas/type';
 
+interface ManualLogCardProps {
+  initialMetrics?: WellnessMetrics;
+  waterGoal?: number;
+  calGoal?: number;
+  onLogged?: () => void;
+}
 
-export default function ManualLogCard() {
-  const [water, setWater] = useState(0);
-  const [calories, setCalories] = useState(0);
+export default function ManualLogCard({
+  initialMetrics,
+  waterGoal = 2500,
+  calGoal = 2000,
+  onLogged,
+}: ManualLogCardProps) {
+  const [water, setWater] = useState(initialMetrics?.waterMl ?? 0);
+  const [calories, setCalories] = useState(initialMetrics?.caloriesBurned ?? 0);
   const [mood, setMood] = useState('');
 
+  useEffect(() => {
+    if (initialMetrics?.waterMl !== undefined) {
+      setWater(initialMetrics.waterMl);
+    }
+    if (initialMetrics?.caloriesBurned !== undefined) {
+      setCalories(initialMetrics.caloriesBurned);
+    }
+  }, [initialMetrics?.waterMl, initialMetrics?.caloriesBurned]);
 
   const moods = ['😔', '😐', '🙂', '😄', '🤩'];
-  const waterGoal = 2500;
-  const calGoal = 2000;
 
+  const persistMetricUpdate = async (partialMetrics: Partial<WellnessMetrics>) => {
+    try {
+      await authAxios.post(LOG_WELLNESS_API, {
+        date: getTodayDateString(),
+        metrics: partialMetrics,
+      });
+      onLogged?.();
+    } catch {
+      // Keep optimistic UI state even if offline
+    }
+  };
+
+  const handleAddWater = () => {
+    const nextWater = Math.min(water + 250, waterGoal);
+    setWater(nextWater);
+    persistMetricUpdate({waterMl: nextWater});
+  };
+
+  const handleAddCalories = () => {
+    const nextCalories = Math.min(calories + 300, calGoal);
+    setCalories(nextCalories);
+    persistMetricUpdate({caloriesBurned: nextCalories});
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>Today&apos;s Log</Text>
 
-
       {/* Water */}
       <View style={styles.card}>
         <Text style={styles.label}>💧 Water Intake</Text>
-        <Text style={styles.value}>{water} / {waterGoal} ml</Text>
+        <Text style={styles.value}>
+          {water} / {waterGoal} ml
+        </Text>
         <View style={styles.progressOuter}>
-          <View style={[styles.progressInner, {
-            width: `${Math.min((water / waterGoal) * 100, 100)}%`,
-            backgroundColor: '#378ADD'
-          }]} />
+          <View
+            style={[
+              styles.progressInner,
+              {
+                width: `${Math.min((water / waterGoal) * 100, 100)}%`,
+                backgroundColor: '#378ADD',
+              },
+            ]}
+          />
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setWater(w => Math.min(w + 250, waterGoal))}
+          onPress={handleAddWater}
           accessibilityRole="button"
           accessibilityLabel="Add 250 milliliters of water"
-          accessibilityHint="Adds 250 milliliters to your water intake"
-        >
+          accessibilityHint="Adds 250 milliliters to your water intake">
           <Text style={styles.buttonText}>+ Add 250 ml</Text>
         </TouchableOpacity>
       </View>
 
-
       {/* Calories */}
       <View style={styles.card}>
         <Text style={styles.label}>🔥 Calories</Text>
-        <Text style={styles.value}>{calories} / {calGoal} kcal</Text>
+        <Text style={styles.value}>
+          {calories} / {calGoal} kcal
+        </Text>
         <View style={styles.progressOuter}>
-          <View style={[styles.progressInner, {
-            width: `${Math.min((calories / calGoal) * 100, 100)}%`,
-            backgroundColor: '#BA7517'
-          }]} />
+          <View
+            style={[
+              styles.progressInner,
+              {
+                width: `${Math.min((calories / calGoal) * 100, 100)}%`,
+                backgroundColor: '#BA7517',
+              },
+            ]}
+          />
         </View>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setCalories(c => Math.min(c + 300, calGoal))}
+          onPress={handleAddCalories}
           accessibilityRole="button"
           accessibilityLabel="Log meal"
-          accessibilityHint="Adds 300 calories to your calorie intake"
-        >
+          accessibilityHint="Adds 300 calories to your calorie intake">
           <Text style={styles.buttonText}>+ Log Meal (300 kcal)</Text>
         </TouchableOpacity>
       </View>
-
 
       {/* Mood */}
       <View style={styles.card}>
         <Text style={styles.label}>😊 Mood</Text>
         <View style={styles.moodRow}>
-          {moods.map((m) => (
+          {moods.map(m => (
             <TouchableOpacity
               key={m}
               onPress={() => setMood(m)}
               accessibilityRole="button"
               accessibilityLabel={`Select mood ${m}`}
-              accessibilityState={{ selected: mood === m }}
-            >
-              <Text style={[
-                styles.moodEmoji,
-                mood === m && styles.moodSelected
-              ]}>{m}</Text>
+              accessibilityState={{selected: mood === m}}>
+              <Text
+                style={[styles.moodEmoji, mood === m && styles.moodSelected]}>
+                {m}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -89,10 +139,14 @@ export default function ManualLogCard() {
   );
 }
 
-
 const styles = StyleSheet.create({
-  container: { padding: 16 },
-  sectionTitle: { fontSize: 16, fontWeight: '600', marginBottom: 12, color: '#111' },
+  container: {padding: 16},
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 12,
+    color: '#111',
+  },
   card: {
     backgroundColor: '#fff',
     borderRadius: 12,
@@ -101,20 +155,26 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#ddd',
   },
-  label: { fontSize: 13, color: '#666', marginBottom: 4 },
-  value: { fontSize: 20, fontWeight: '500', color: '#111', marginBottom: 8 },
+  label: {fontSize: 13, color: '#666', marginBottom: 4},
+  value: {fontSize: 20, fontWeight: '500', color: '#111', marginBottom: 8},
   progressOuter: {
-    height: 6, backgroundColor: '#eee',
-    borderRadius: 99, overflow: 'hidden', marginBottom: 12
+    height: 6,
+    backgroundColor: '#eee',
+    borderRadius: 99,
+    overflow: 'hidden',
+    marginBottom: 12,
   },
-  progressInner: { height: 6, borderRadius: 99 },
+  progressInner: {height: 6, borderRadius: 99},
   button: {
-    borderWidth: 0.5, borderColor: '#ccc',
-    borderRadius: 8, padding: 10, alignItems: 'center'
+    borderWidth: 0.5,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 10,
+    alignItems: 'center',
   },
-  buttonText: { fontSize: 13, color: '#333' },
-  moodRow: { flexDirection: 'row', gap: 12, marginVertical: 8 },
-  moodEmoji: { fontSize: 28, opacity: 0.4 },
-  moodSelected: { opacity: 1, transform: [{ scale: 1.2 }] },
-  moodText: { fontSize: 13, color: '#666', marginTop: 4 },
+  buttonText: {fontSize: 13, color: '#333'},
+  moodRow: {flexDirection: 'row', gap: 12, marginVertical: 8},
+  moodEmoji: {fontSize: 28, opacity: 0.4},
+  moodSelected: {opacity: 1, transform: [{scale: 1.2}]},
+  moodText: {fontSize: 13, color: '#666', marginTop: 4},
 });

@@ -13,7 +13,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import {BUTTON_COLOR} from '../lib/ui/Theme';
 import HeaderRightMenu from '../components/common/HeaderRightMenu';
 import PersonaLobbyScreen from '../screens/ai/PersonaLobbyScreen';
-import AcademyStackNavigation from './AcademyStackNavigation';
+import WellnessDashboardScreen from '../screens/wellness/WellnessDashboardScreen';
 import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
 import { useAppSelector } from '../store/hooks';
 import DoctorProfileBanner from '../components/auth/DoctorProfileBanner';
@@ -115,8 +115,8 @@ const TabNavigation = () => {
         />
 
         <Tab.Screen
-          name="Academy"
-          component={AcademyStackNavigation}
+          name="Wellness"
+          component={WellnessDashboardScreen}
           options={{
             headerShown: false,
           }}

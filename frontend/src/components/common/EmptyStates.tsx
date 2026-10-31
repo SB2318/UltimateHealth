@@ -23,6 +23,7 @@ interface BaseEmptyStateProps {
   actionText?: string;
   onAction?: () => void;
   loading?: boolean;
+  noShadow?: boolean;
 }
 
 export const BaseEmptyState: React.FC<BaseEmptyStateProps> = ({
@@ -34,6 +35,7 @@ export const BaseEmptyState: React.FC<BaseEmptyStateProps> = ({
   actionText,
   onAction,
   loading = false,
+  noShadow = false,
 }) => {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
@@ -105,7 +107,7 @@ export const BaseEmptyState: React.FC<BaseEmptyStateProps> = ({
 
   return (
     <Animated.View style={[styles.stateContainer, { backgroundColor: containerBg, opacity: fadeAnim }]}>
-      <View style={[styles.innerCard, { backgroundColor: cardBg, borderColor }]}>
+      <View style={[styles.innerCard, { backgroundColor: cardBg, borderColor }, noShadow && { shadowOpacity: 0, elevation: 0, shadowRadius: 0, shadowOffset: { width: 0, height: 0 }, borderWidth: 1 }]}>
         <Animated.View style={[styles.iconCircle, { backgroundColor: circleBg }, animatedStyle, scaleStyle]}>
           {iconComponent ? (
             iconComponent
@@ -243,6 +245,7 @@ export const NoNotificationState = ({ onRefresh }: { onRefresh?: () => void }) =
       description="You're all caught up. New notifications will appear here when available."
       actionText={onRefresh ? "Refresh" : undefined}
       onAction={onRefresh}
+      noShadow={true}
     />
   );
 };

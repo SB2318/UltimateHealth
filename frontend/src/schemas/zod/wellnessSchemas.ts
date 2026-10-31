@@ -14,4 +14,28 @@ export const wellnessLogPayloadSchema = z.object({
   metrics: wellnessMetricsSchema.optional(),
 });
 
+export const wellnessPlanGoalsSchema = z.object({
+  dailySteps: z.number().min(0).optional(),
+  dailyActiveMinutes: z.number().min(0).optional(),
+  dailyCaloriesBurned: z.number().min(0).optional(),
+  dailySleepHours: z.number().min(0).max(24).optional(),
+  dailyBreathingMinutes: z.number().min(0).optional(),
+  dailyWaterMl: z.number().min(0).optional(),
+});
+
+export const wellnessPlanSchema = z.object({
+  _id: z.string().optional(),
+  userId: z.string(),
+  isActive: z.boolean(),
+  goals: wellnessPlanGoalsSchema,
+  dailyTasks: z.array(z.string()),
+  focusAreas: z.array(z.string()).optional(),
+  weeklyInsight: z.string().optional(),
+  warnings: z.array(z.string()).optional(),
+  basedOnLogs: z.array(z.string()).optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+});
+
 export type WellnessLogPayloadSchema = z.infer<typeof wellnessLogPayloadSchema>;
+export type WellnessPlanSchema = z.infer<typeof wellnessPlanSchema>;

@@ -38,6 +38,9 @@ import {
   saveProgress,
   getProgress,
 } from '../../lib/services/ReadingProgressService';
+import TagSelectorSection, {
+  isSameCategory,
+} from '../../components/common/TagSelectorSection';
 
 const ARTICLE_TITLE_MAX_LENGTH = 150;
 const ARTICLE_DESCRIPTION_MAX_LENGTH = 500;
@@ -77,7 +80,8 @@ const ArticleDescriptionScreen = ({
 }: ArticleDescriptionProp) => {
   const {article, htmlContent, translationSource} = route.params || {};
   const isTranslation = Boolean(translationSource);
-  const dispatch = useAppDispatch();
+  const dispatch =
+    typeof useAppDispatch === 'function' ? useAppDispatch() : undefined;
 
   const [title, setTitle] = useState('');
   const [authorName, setAuthorName] = useState('');
@@ -227,18 +231,7 @@ const ArticleDescriptionScreen = ({
   const handleGenrePress = (genre: Category) => {
     if (isSelected(genre)) {
       setSelectedGenres(
-        selectedGenres.filter(item => {
-          const matchId = genre.id !== undefined && item.id === genre.id;
-
-          const matchDbId = genre._id !== undefined && item._id === genre._id;
-
-          const matchName =
-            genre.id === undefined &&
-            genre._id === undefined &&
-            item.name === genre.name;
-
-          return !(matchId || matchDbId || matchName);
-        }),
+        selectedGenres.filter(item => !isSameCategory(item, genre)),
       );
     } else if (selectedGenres.length < 5) {
       setSelectedGenres([...selectedGenres, genre]);
@@ -246,7 +239,7 @@ const ArticleDescriptionScreen = ({
   };
 
   const isSelected = (genre: Category) =>
-    selectedGenres.some(item => item.id === genre.id || item._id === genre._id);
+    selectedGenres.some(item => isSameCategory(item, genre));
 
   const validateFields = () => {
     if (title.trim() === '') {
@@ -365,8 +358,8 @@ const ArticleDescriptionScreen = ({
       return;
     }
 
-    dispatch(setSuggestion({suggestion: ''}));
-    dispatch(setSuggestionAccepted({selection: false}));
+    dispatch?.(setSuggestion({suggestion: ''}));
+    dispatch?.(setSuggestionAccepted({selection: false}));
 
     navigation.navigate('PreviewScreen', {
       article: effectiveHtml,
@@ -917,83 +910,14 @@ const ArticleDescriptionScreen = ({
           </View>
 
           {/* Tags Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
-              <Ionicon
-                name="pricetag-outline"
-                size={18}
-                color="#222"
-                accessible={false}
-              />{' '}
-              Tags
-            </Text>
-
-            <Text style={styles.sectionSubtitle}>
-              Select up to 5 tags to help people discover your article
-            </Text>
-
-            {selectedGenres.length > 0 && (
-              <View style={styles.selectedGenresWrapper}>
-                {selectedGenres.map((genre, index) => (
-                  <View key={index} style={styles.selectedGenreChip}>
-                    <Text style={styles.selectedGenreChipText}>
-                      #{genre.name}
-                    </Text>
-
-                    <TouchableOpacity
-                      onPress={() => handleGenrePress(genre)}
-                      accessibilityRole="button"
-                      accessibilityLabel={`Remove tag ${genre.name}`}
-                      accessibilityHint={`Removes ${genre.name} from selected tags`}>
-                      <Ionicon
-                        name="close-circle"
-                        size={18}
-                        color={PRIMARY_COLOR}
-                        accessible={false}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </View>
-            )}
-
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.genreContainer}>
-              {categories.map((genre: Category, index: number) => {
-                const selected = isSelected(genre);
-
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    style={[
-                      styles.genreButton,
-                      selected && styles.selectedGenreButton,
-                    ]}
-                    onPress={() => handleGenrePress(genre)}
-                    accessibilityRole="checkbox"
-                    accessibilityLabel={`Tag ${genre.name}`}
-                    accessibilityHint={
-                      selected
-                        ? `Removes ${genre.name} from selected tags`
-                        : `Adds ${genre.name} to selected tags`
-                    }
-                    accessibilityState={{
-                      checked: selected,
-                    }}>
-                    <Text
-                      style={[
-                        styles.genreButtonText,
-                        selected && styles.selectedGenreButtonText,
-                      ]}>
-                      #{genre.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
+          <TagSelectorSection
+            categories={categories || []}
+            selectedGenres={selectedGenres}
+            onToggleGenre={handleGenrePress}
+            onClearAll={() => setSelectedGenres([])}
+            maxSelection={5}
+            subtitle="Select up to 5 tags to help people discover your article"
+          />
 
           {/* Direct Preview & Submit Button when HTML file is uploaded */}
           {Boolean(uploadedHtmlContent) && (

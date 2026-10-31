@@ -425,6 +425,7 @@ export type HomeScreenHeaderProps = {
   hasActiveFilters?: boolean;
   onFilterReset?: () => void;
   searchText?: string;
+  showSearchBar?: boolean;
 };
 
 export type ContentListScreenProp = StackScreenProps<
@@ -957,4 +958,44 @@ export type WellnessLogResponse = {
 export type WeeklyWellnessResponse = {
   success: boolean;
   data: WellnessLog[];
+};
+
+export type WellnessPlanGoals = {
+  dailySteps?: number;
+  dailyActiveMinutes?: number;
+  dailyCaloriesBurned?: number;
+  dailySleepHours?: number;
+  dailyBreathingMinutes?: number;
+  dailyWaterMl?: number;
+};
+
+export type WellnessPlan = {
+  _id?: string;
+  userId: string;
+  isActive: boolean;
+  goals: WellnessPlanGoals;
+  dailyTasks: string[];
+  focusAreas?: string[];
+  weeklyInsight?: string;
+  warnings?: string[];
+  basedOnLogs?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type WellnessPlanResponse = {
+  success: boolean;
+  message?: string;
+  data?: WellnessPlan | null;
+};
+
+export type WellnessPlanHistoryResponse = {
+  success: boolean;
+  data: WellnessPlan[];
+  pagination?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 };

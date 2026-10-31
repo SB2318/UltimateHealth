@@ -21,7 +21,7 @@ const TAB_CONFIG: Record<
   Home: {active: 'home', inactive: 'home-outline', label: 'Home'},
   Podcasts: {active: 'headphones', inactive: 'headphones', label: 'Podcasts'},
   Chatbot: {active: 'robot', inactive: 'robot-outline', label: 'AI'},
-  Academy: {active: 'school', inactive: 'school-outline', label: 'Academy'},
+  Wellness: {active: 'heart-pulse', inactive: 'heart-pulse', label: 'Wellness'},
   Settings: {active: 'cog', inactive: 'cog-outline', label: 'Settings'},
 };
 

@@ -15,6 +15,7 @@ import {Notification, NotificationType} from '../../schemas/type';
 import { useDeleteNotification } from '../../hooks/notification/useDeleteNotification';
 import { useGetAllNotifications } from '../../hooks/notification/useGetAllNotifications';
 import { useMarkNotificationAsRead } from '../../hooks/notification/useMarkNoticationAsRead';
+import { useQueryClient } from '@tanstack/react-query';
 import {mergeNotificationsById} from '../../lib/platform/notificationUtils';
 
 type PendingDelete = {
@@ -38,6 +39,7 @@ const NotificationScreen = ({navigation}: any) => {
   const pendingDeletesRef = useRef<Map<string, PendingDelete>>(new Map());
   const isMountedRef = useRef(true);
 
+  const queryClient = useQueryClient();
   const {mutate: markNotification} = useMarkNotificationAsRead();
   const {mutate: deleteNotification} = useDeleteNotification();
 
@@ -86,6 +88,7 @@ const NotificationScreen = ({navigation}: any) => {
         {},
         {
           onSuccess: async () => {
+            queryClient.setQueryData(['get-unread-notifications-count'], 0);
             Snackbar.show({
               text: 'All notifications marked as read',
               duration: Snackbar.LENGTH_SHORT,

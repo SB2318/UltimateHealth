@@ -38,6 +38,7 @@ const LIKE_ARTICLE = `${PROD_URL}/articles/likeArticle`;
 const TRUST_ARTICLE = `${PROD_URL}/articles/trust`;
 const GET_TRUSTED_USERS = `${PROD_URL}/articles/trusted-users`;
 const POST_ARTICLE = `${PROD_URL}/articles`;
+const SEARCH_ARTICLES = `${PROD_URL}/articles/search`;
 const GET_ARTICLE_BY_ID = `${PROD_URL}/articles`;
 const GET_ARTICLE_TRANSLATIONS = (articleId: string | number) =>
   `${GET_ARTICLE_BY_ID}/${articleId}/translations`;
@@ -129,6 +130,9 @@ const REGISTER_PUSH_TOKEN = `${PROD_URL}/user/register-device-token`;
 /** Wellness */
 const LOG_WELLNESS_API = `${PROD_URL}/wellness/log`;
 const GET_WELLNESS_WEEKLY_API = `${PROD_URL}/wellness/weekly`;
+const GET_WELLNESS_PLAN_API = `${PROD_URL}/wellness/plan`;
+const GENERATE_WELLNESS_PLAN_API = `${PROD_URL}/wellness/plan/generate`;
+const GET_WELLNESS_PLAN_HISTORY_API = `${PROD_URL}/wellness/plan/history`;
 
 /** Nearby Health Events */
 const NEARBY_EVENTS_API = `${PROD_URL}/events/nearby`;
@@ -154,6 +158,7 @@ export {
   TRUST_ARTICLE,
   GET_TRUSTED_USERS,
   POST_ARTICLE,
+  SEARCH_ARTICLES,
   GET_ARTICLE_BY_ID,
   GET_ARTICLE_TRANSLATIONS,
   GET_USER_DETAILS_API,
@@ -235,6 +240,9 @@ export {
   SHARE_BASE_URL,
   LOG_WELLNESS_API,
   GET_WELLNESS_WEEKLY_API,
+  GET_WELLNESS_PLAN_API,
+  GENERATE_WELLNESS_PLAN_API,
+  GET_WELLNESS_PLAN_HISTORY_API,
   NEARBY_EVENTS_API,
   GOOGLE_AUTH_API,
 };
