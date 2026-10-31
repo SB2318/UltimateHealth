@@ -148,7 +148,7 @@ The badges displayed at the top of this README provide a quick overview of the r
 - [📱 Platform Support](#-platform-support)
 - [📊 Code Quality](#code-quality)
 - [🚀 Latest Releases](#-latest-releases)
-- [🗺️ Project Roadmap](#️-project-roadmap)
+- [🗺️ Project Roadmap & Release Pipeline](#️-project-roadmap--release-pipeline)
 - [⚙️ Getting Started](#%EF%B8%8F-getting-started)
 - [🔧 Environment Setup](#%EF%B8%8F-environment-setup)
 - [🧩 Version Compatibility Matrix](#-version-compatibility-matrix)
@@ -364,22 +364,35 @@ UltimateHealth is designed to support both development and end-user deployment a
 </table>
 
 ---
-## 🗺️ Project Roadmap
+## 🗺️ Project Roadmap & Release Pipeline
 
-The following table outlines planned improvements based on active issues and community feedback. Priorities may evolve as the project grows.
+Following our **October 2026 Core Release (v2.3.0)**, the next product releases follow a milestone-driven pipeline to systematically activate, polish, and deploy all currently hidden and newly integrated modules.
 
-| Area | Planned Improvements | Status |
-|------|----------------------|--------|
-| 📱 **Mobile UI** | Full dark mode support with Tamagui ([#713](https://github.com/SB2318/UltimateHealth/issues/713)), consolidated loading components ([#676](https://github.com/SB2318/UltimateHealth/issues/676)), improved ProfileHeader ([#677](https://github.com/SB2318/UltimateHealth/issues/677)), general UI polish ([#678](https://github.com/SB2318/UltimateHealth/issues/678)) | 🔜 In Progress |
-| 🔐 **Guest / Auth Experience** | Read-only unauthenticated mode before login ([#681](https://github.com/SB2318/UltimateHealth/issues/681)) | 🔜 In Progress |
-| 🌐 **Translation & i18n** | Multi-language translation module for frontend and backend ([#644](https://github.com/SB2318/UltimateHealth/issues/644)) | 📋 Planned |
-| 🤖 **AI & Content Intelligence** | Trending/popular article ranking algorithm ([#550](https://github.com/SB2318/UltimateHealth/issues/550)), community tag suggestion with moderation ([#670](https://github.com/SB2318/UltimateHealth/issues/670)) | 📋 Planned |
-| 🧪 **Testing** | Setup Jest + React Native Testing Library ([#672](https://github.com/SB2318/UltimateHealth/issues/672)), unit tests for key Redux slices ([#673](https://github.com/SB2318/UltimateHealth/issues/673)) | ✅ Done |
-| ⚙️ **CI/CD & DevOps** | Enhanced GitHub Actions workflows and automated contributor updates ([#679](https://github.com/SB2318/UltimateHealth/issues/679), [#680](https://github.com/SB2318/UltimateHealth/issues/680)) | 📋 Planned |
-| 🛡️ **Code Quality** | Shared Zod validation schemas and TypeScript types across frontend/backend ([#658](https://github.com/SB2318/UltimateHealth/issues/658)) | 📋 Planned |
-| ✅ **Completed** | Android App on Play Store, AI chat assistant, podcast support, article management system, automated bot pipeline | ✅ Done |
+### 📅 Release Pipeline & Deadlines
 
-> **Note:** Roadmap priorities may evolve based on project requirements and community feedback. Check the [Issues](https://github.com/SB2318/UltimateHealth/issues) tab for the latest status.
+| Phase & Milestone | Target Version | Deadline | Key Features & Deliverables | Status |
+|:---|:---:|:---:|:---|:---:|
+| **October Foundation Release** | `v2.3.0` | **Oct 31, 2026** | • System-wide Dark Mode sync with Tamagui bundle deduplication<br>• 2-Step Frictionless Onboarding (Role picker & 1-click Google auth)<br>• Protected Guest Browsing Mode with contextual placeholders<br>• Article DetailsScreen dark WebView content rendering<br>• Podcast listing screen dark theme sync & skeleton loading<br>• Resilient offline reading & wellness no-internet fallbacks | ✅ **Shipped** |
+| **Phase 1: Health Intelligence Sprint** | `v2.4.0` | **Nov 15, 2026** | • **Medical Glossary (`MedicalGlossaryScreen`)**: Unhide and link in Settings & Global Search with A-Z category chips & medical pronunciation<br>• **Health Term Comparison (`HealthTermComparisonScreen`)**: Interactive side-by-side comparison tables<br>• **AI Suggestion Acceptance (`RenderSuggestion`)**: Integrated diff preview and accept/reject actions for AI article improvements in Editor<br>• **Social Circle (`SocialScreen`)**: Real-time socket-based follower & following lists accessible from profiles | 🚀 **In Active Development** |
+| **Phase 2: Community & Local Health** | `v2.5.0` | **Dec 15, 2026** | • **Nearby Health Events (`NearbyHealthEventsScreen`, `EventDetailsScreen`)**: Live backend API integration for blood donation drives, health camps, and vaccine drives with GPS distance sorting<br>• **Verified Medical Contributor Directory**: Dedicated doctor & medical contributor showcase with specialty filters<br>• **Multi-Language Translation Module**: Real-time article and interface localization across regional languages | 📋 **Scheduled** |
+| **Phase 3: Healthcare Academy Major** | `v3.0.0` | **Jan 30, 2027** | • **Healthcare Learning Academy (`AcademyStackNavigation`)**: Full activation of all 9 academy modules<br>• **Interactive Courses & Lessons (`CourseListingScreen`, `CourseDetailScreen`, `LessonReaderScreen`)**<br>• **Patient Journeys & Clinical Workflows (`PatientJourneyScreen`, `WorkflowScreen`)**<br>• **Hospital Map & Navigator (`HospitalMapScreen`)**<br>• **Medical Quizzes & Certification (`QuizScreen`, `AcademyProfileScreen`)** | 📋 **Planned** |
+
+---
+
+### 📋 Feature Implementation & Visibility Status
+
+| Feature / Screen | Primary Technology / Route | Implementation State | Current UI Visibility | Target Activation |
+|:---|:---|:---:|:---:|:---:|
+| **Dark Theme Sync** | React Native `useColorScheme` + Tamagui | Completed | Active App-Wide | ✅ Released (`v2.3.0`) |
+| **Guest Mode & Onboarding** | Redux `isGuest` + `OnboardingModal` | Completed | Active App-Wide | ✅ Released (`v2.3.0`) |
+| **Medical Glossary & Term Dictionary** | `MedicalGlossaryScreen.tsx` | Completed | 🔒 Hidden (Unlinked) | **`v2.4.0` (Nov 15, 2026)** |
+| **Health Term Comparison Tool** | `HealthTermComparisonScreen.tsx` | Completed | 🔒 Hidden (Unlinked) | **`v2.4.0` (Nov 15, 2026)** |
+| **AI Editor Suggestion Diff** | `RenderSuggestion.tsx` | Completed | 🔒 Hidden (Trigger Unlinked) | **`v2.4.0` (Nov 15, 2026)** |
+| **Social Follower Circle** | `SocialScreen.tsx` | Completed | 🔒 Hidden (Nav Unlinked) | **`v2.4.0` (Nov 15, 2026)** |
+| **Nearby Health Events & Camps** | `NearbyHealthEventsScreen.tsx` | UI Mockup | ⚠️ Settings ("Coming Soon") | **`v2.5.0` (Dec 15, 2026)** |
+| **Healthcare Learning Academy** | 9 screens in `src/screens/academy/` | Completed | 🔒 Hidden (Stack Unmounted) | **`v3.0.0` (Jan 30, 2027)** |
+
+> **Note:** Roadmap priorities and release pipelines are tracked via GitHub Projects and automated Milestone bots. Check the [Issues](https://github.com/SB2318/UltimateHealth/issues) and [Milestones](https://github.com/SB2318/UltimateHealth/milestones) tabs for sprint boards.
 
 ## Getting Started
 

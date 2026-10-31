@@ -2,8 +2,8 @@
  
 // PodcastSkeletonCard.tsx
 import React, {useEffect, useRef} from 'react';
-import {StyleSheet, View, Animated, useWindowDimensions} from 'react-native';
-import {useTheme, YStack, XStack} from 'tamagui';
+import {StyleSheet, View, Animated, useWindowDimensions, useColorScheme} from 'react-native';
+import {YStack, XStack} from 'tamagui';
 import {PODCAST_CARD} from '@/src/constants/podcastCard';
 
 type AnimatedInterpolation = ReturnType<InstanceType<typeof Animated.Value>['interpolate']>;

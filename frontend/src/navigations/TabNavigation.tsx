@@ -1,11 +1,8 @@
- 
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/home/HomeScreen';
 import PodcastsScreen from '../screens/podcast/PodcastsScreen';
 import SettingsScreen from '../screens/settings/SettingsScreen';
-// import {KeyboardAvoidingView, StyleSheet} from 'react-native';
-// import {Colors} from 'react-native/Libraries/NewAppScreen';
 import TabBar from './TabBar';
 import {TouchableOpacity} from 'react-native';
 import {TabParamList} from '../schemas/type';
@@ -18,12 +15,11 @@ import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
 import { useAppSelector } from '../store/hooks';
 import DoctorProfileBanner from '../components/auth/DoctorProfileBanner';
 
-
-
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const ChatbotGuestScreen = () => <GuestPlaceholderScreen title="AI Chatbot" description="Sign in or sign up to get instant health advice and personalized answers from our AI assistant." />;
 const SettingsGuestScreen = () => <GuestPlaceholderScreen title="Settings" description="Create an account to access settings and manage your preferences." />;
+const WellnessGuestScreen = () => <GuestPlaceholderScreen title="Wellness Dashboard" description="Track your daily vitals, sleep, hydration, and receive personalized AI wellness plans by signing in." />;
 
 const TabNavigation = () => {
   const isGuest = useAppSelector((state: any) => state.user.isGuest);
@@ -108,13 +104,13 @@ const TabNavigation = () => {
         />
         <Tab.Screen
           name="Wellness"
-          component={WellnessDashboardScreen}
+          component={isGuest ? WellnessGuestScreen : WellnessDashboardScreen}
           options={{
             headerShown: false,
           }}
         />
 
-<Tab.Screen
+        <Tab.Screen
           name="Settings"
           component={isGuest ? SettingsGuestScreen : SettingsScreen}
           options={{
@@ -127,4 +123,3 @@ const TabNavigation = () => {
   );
 };
 export default TabNavigation;
-

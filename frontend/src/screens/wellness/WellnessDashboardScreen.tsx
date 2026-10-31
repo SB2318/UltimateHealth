@@ -439,32 +439,42 @@ const WellnessDashboardScreen = () => {
       ) : isError ? (
         <View style={styles.centerContainer}>
           <Card
-            padding={20}
-            borderRadius={16}
-            backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
+            padding={24}
+            borderRadius={20}
+            backgroundColor={isDarkMode ? '#1E293B' : '#FFFFFF'}
             bordered
-            borderWidth={0.6}
-            borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
+            borderWidth={1}
+            borderColor={isDarkMode ? '#334155' : '#E5E7EB'}
             alignItems="center"
-            width="100%">
-            <Ionicons name="alert-circle-outline" size={44} color="#EF4444" style={{marginBottom: 12}} />
+            width="100%"
+            style={styles.errorCard}>
+            <View style={styles.errorIconCircle}>
+              <Ionicons
+                name="alert-circle-outline"
+                size={34}
+                color="#EF4444"
+              />
+            </View>
             <Text
               fontSize={18}
               fontWeight="700"
               color={isDarkMode ? '#FFFFFF' : '#111827'}
+              marginTop="$3"
               textAlign="center">
               Unable to load wellness data
             </Text>
             <Text
               fontSize={14}
-              color={isDarkMode ? '#B0C4DE' : '#6B7280'}
+              color={isDarkMode ? '#94A3B8' : '#6B7280'}
               marginTop="$1.5"
+              marginBottom="$3"
               textAlign="center">
               Check your connection and try again.
             </Text>
             <TouchableOpacity
               onPress={() => refetch()}
-              style={styles.primaryButton}
+              style={styles.errorRetryButton}
+              activeOpacity={0.85}
               accessibilityRole="button"
               accessibilityLabel="Retry">
               <Ionicons name="refresh" size={18} color="#FFFFFF" />
@@ -1399,6 +1409,44 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 8,
+  },
+  errorCard: {
+    maxWidth: 400,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  errorIconCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(239, 68, 68, 0.12)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorRetryButton: {
+    backgroundColor: BUTTON_COLOR,
+    height: 46,
+    width: '100%',
+    borderRadius: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: BUTTON_COLOR,
+        shadowOffset: {width: 0, height: 3},
+        shadowOpacity: 0.25,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
 });
 

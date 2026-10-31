@@ -4,7 +4,7 @@ import { useColorScheme, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { TamaguiProvider, Theme, useTheme } from 'tamagui';
+import { TamaguiProvider } from 'tamagui';
 import { NavigationContainer, DarkTheme, DefaultTheme, type NavigationContainerRef } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 import messaging from '@react-native-firebase/messaging';
@@ -223,28 +223,26 @@ export default function AppContent() {
       <TamaguiProvider
         config={config}
         defaultTheme={isDarkMode ? 'dark' : 'light'}>
-        <Theme name={isDarkMode ? 'dark' : 'light'}>
-          <PaperProvider theme={paperTheme}>
-            <FirebaseProvider>
-              <PreferencesProvider>
-                <SocketProvider>
-                  <View
-                    style={{
-                      flex: 1,
-                      backgroundColor: isDarkMode ? '#0A0F1D' : '#F0F8FF',
-                    }}>
-                    <NetworkBanner />
-                    <AppInner
-                      navigationRef={navigationRef}
-                      visible={visible}
-                      storeUrl={storeUrl}
-                    />
-                  </View>
-                </SocketProvider>
-              </PreferencesProvider>
-            </FirebaseProvider>
-          </PaperProvider>
-        </Theme>
+        <PaperProvider theme={paperTheme}>
+          <FirebaseProvider>
+            <PreferencesProvider>
+              <SocketProvider>
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: isDarkMode ? '#0A0F1D' : '#F0F8FF',
+                  }}>
+                  <NetworkBanner />
+                  <AppInner
+                    navigationRef={navigationRef}
+                    visible={visible}
+                    storeUrl={storeUrl}
+                  />
+                </View>
+              </SocketProvider>
+            </PreferencesProvider>
+          </FirebaseProvider>
+        </PaperProvider>
       </TamaguiProvider>
     </SafeAreaProvider>
   );
@@ -259,7 +257,6 @@ function AppInner({
   visible: boolean;
   storeUrl: string;
 }) {
-  const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
   const navigationTheme = isDarkMode ? appDarkTheme : appLightTheme;
   const { user_token, isGuest } = useAppSelector((state: RootState) => state.user);
@@ -278,8 +275,7 @@ function AppInner({
     <View
       style={{
         flex: 1,
-        backgroundColor:
-          theme?.background?.get() ?? (isDarkMode ? '#0A0F1D' : '#F0F8FF'),
+        backgroundColor: isDarkMode ? '#0A0F1D' : '#F0F8FF',
       }}>
       <NavigationContainer ref={navigationRef} theme={navigationTheme}>
         <StackNavigation />

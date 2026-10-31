@@ -6,8 +6,10 @@ export const generateArticleStyles = (
   isDarkMode: boolean,
   articleFontSize: number,
 ) => {
-  const backgroundColor = isDarkMode ? '#2D2D2D' : '#FDF4E3';
-  const textColor = isDarkMode ? '#E0E0E0' : '#1A1A1A';
+  const backgroundColor = isDarkMode ? '#121212' : (isDyslexiaMode ? '#FDF4E3' : '#FFFFFF');
+  const textColor = isDarkMode ? '#F8FAFC' : '#1A1A1A';
+  const headingColor = isDarkMode ? '#FFFFFF' : '#0F172A';
+  const linkColor = isDarkMode ? '#60A5FA' : '#0F52BA';
 
   return `
     @font-face {
@@ -16,25 +18,39 @@ export const generateArticleStyles = (
       font-weight: normal;
       font-style: normal;
     }
-    body { 
+    * {
+      box-sizing: border-box;
+    }
+    html, body { 
+      background-color: ${backgroundColor} !important; 
+      color: ${textColor} !important;
       font-family: ${isDyslexiaMode ? DYSLEXIA_FONT_FAMILY : DEFAULT_FONT_FAMILY} !important; 
       font-size: ${articleFontSize}px !important; 
       line-height: ${isDyslexiaMode ? 2.0 : 1.6} !important;
+      margin: 0;
+      padding: 0;
       ${isDyslexiaMode ? `
         letter-spacing: 0.15em !important;
         word-spacing: 0.35em !important;
-        background-color: ${backgroundColor} !important; 
-        color: ${textColor} !important; 
       ` : ''}
     }
-    p, li, ul, ol, blockquote, h1, h2, h3, h4, h5, h6, span, div, a { 
+    p, li, ul, ol, blockquote, span, div { 
+      font-family: ${isDyslexiaMode ? DYSLEXIA_FONT_FAMILY : DEFAULT_FONT_FAMILY} !important;
+      color: ${textColor} !important;
+      background-color: transparent !important;
       ${isDyslexiaMode ? `
-        font-family: ${DYSLEXIA_FONT_FAMILY} !important;
-        color: ${textColor} !important;
         line-height: 2.0 !important;
         letter-spacing: 0.15em !important;
         word-spacing: 0.35em !important;
       ` : ''}
+    }
+    h1, h2, h3, h4, h5, h6 {
+      color: ${headingColor} !important;
+      background-color: transparent !important;
+      font-family: ${isDyslexiaMode ? DYSLEXIA_FONT_FAMILY : DEFAULT_FONT_FAMILY} !important;
+    }
+    a {
+      color: ${linkColor} !important;
     }
     p, li, ul, ol, blockquote { 
       font-size: ${articleFontSize}px !important; 

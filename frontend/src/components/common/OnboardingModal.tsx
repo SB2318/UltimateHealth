@@ -49,12 +49,12 @@ const ONBOARDING_SLIDES = [
     id: '2',
     badge: 'RESPECT GIVER • MOUMITA DEBNATH',
     badgeIcon: 'shield-star',
-    title: 'Justice & Hope in Action',
+    title: 'Hope in Action',
     subtitle:
       'Inspired by Moumita Debnath’s vision of unwavering dignity, compassion, and equality.',
     quote:
       'Justice is not a destination — it is a direction. If we can restore dignity to even one soul, we plant a seed that outlives us all.',
-    pillars: ['Empathy', 'Justice', 'Hope', 'Dignity'],
+    pillars: ['Empathy', 'Mind', 'Hope', 'Dignity'],
     hasProfileImage: true,
   },
   {

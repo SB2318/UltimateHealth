@@ -78,7 +78,7 @@ import Animated, {
   Extrapolate,
   runOnJS,
 } from 'react-native-reanimated';
-import { useTheme } from 'tamagui';
+
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
@@ -117,7 +117,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   };
   const {user_id, isGuest} = useAppSelector((state: any) => state.user);
   const isDarkMode = useColorScheme() === 'dark';
-  const theme = useTheme();
+
 
   const themeColors = {
     background: isDarkMode ? '#121212' : '#ffffff',
@@ -1460,7 +1460,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
                   />
                 ) : (
                   <AutoHeightWebView
-                    style={styles.webView}
+                    style={[styles.webView, {backgroundColor: themeColors.background}]}
                     customStyle={articleCustomStyle}
                     files={[
                       {

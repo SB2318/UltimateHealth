@@ -4,6 +4,14 @@ const path = require('path');
 /** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(__dirname);
 
+// Deduplicate Tamagui singletons so nested dependencies never create duplicate React contexts
+config.resolver.extraNodeModules = {
+  ...config.resolver.extraNodeModules,
+  '@tamagui/web': path.resolve(__dirname, 'node_modules/@tamagui/web'),
+  '@tamagui/core': path.resolve(__dirname, 'node_modules/@tamagui/core'),
+  tamagui: path.resolve(__dirname, 'node_modules/tamagui'),
+};
+
 // Alias react-native-pager-view to a mock for web
 const originalResolveRequest = config.resolver.resolveRequest;
 

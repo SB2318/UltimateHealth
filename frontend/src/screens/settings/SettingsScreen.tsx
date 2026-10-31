@@ -337,7 +337,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             icon="shield-star-outline"
             iconColor="#C084FC"
             label="Moumita Debnath"
-            sublabel="Justice · Dignity · Hope"
+            sublabel="Mind · Dignity · Hope"
             onPress={() => go('RespectGiverScreen')}
             isDark={isDark}
           />

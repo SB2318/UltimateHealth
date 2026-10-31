@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {TouchableOpacity, Alert, StyleSheet, View} from 'react-native';
+import {TouchableOpacity, Alert, StyleSheet, View, useColorScheme} from 'react-native';
 import {YStack, XStack, Image, Text} from 'tamagui';
 import {Entypo, Ionicons} from '@expo/vector-icons';
 import {formatCount} from '../../lib/utils/Utils';
@@ -33,6 +33,8 @@ interface PodcastProps {
 }
 
 const PodcastCard = ({
+  // Dark mode sync
+
   id,
   title,
   host,
@@ -48,6 +50,7 @@ const PodcastCard = ({
   display,
   playlistAct,
 }: PodcastProps) => {
+  const isDarkMode = useColorScheme() === 'dark';
   const sheetRef = useRef<BottomSheetModal>(null);
   const {isGuest} = useAppSelector((state: any) => state.user);
   const navigation = useNavigation<any>();
@@ -111,7 +114,17 @@ const PodcastCard = ({
       accessibilityLabel={`Open podcast: ${title}`}
       accessibilityHint={`Opens the podcast by ${host}`}
     >
-      <View style={[GlassStyles.glassCardElevated, styles.cardContainer]}>
+      <View
+        style={[
+          GlassStyles.glassCardElevated,
+          styles.cardContainer,
+          {
+            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+            borderColor: isDarkMode ? '#334155' : '#E2E8F0',
+            borderWidth: 1,
+            borderRadius: 20,
+          },
+        ]}>
         <View style={styles.imageContainer}>
           <Image
             source={{uri}}
@@ -141,7 +154,7 @@ const PodcastCard = ({
           <Text
             fontSize={17}
             fontWeight="700"
-            color={ProfessionalColors.gray900}
+            color={isDarkMode ? '#F8FAFC' : ProfessionalColors.gray900}
             numberOfLines={2}
             ellipsizeMode="tail">
             {title}
@@ -151,20 +164,32 @@ const PodcastCard = ({
             <Ionicons
               name="person-circle-outline"
               size={18}
-              color={ProfessionalColors.gray600}
+              color={isDarkMode ? '#94A3B8' : ProfessionalColors.gray600}
             />
             <Text
               fontSize={14}
               fontWeight="500"
-              color={ProfessionalColors.gray700}>
+              color={isDarkMode ? '#CBD5E1' : ProfessionalColors.gray700}>
               {host}
             </Text>
           </XStack>
 
           <XStack flexWrap="wrap" gap="$1.5" marginTop="$1">
             {tags?.slice(0, 3).map((tag, i) => (
-              <View key={i} style={styles.tag}>
-                <Text style={styles.tagText}>#{tag.name}</Text>
+              <View
+                key={i}
+                style={[
+                  styles.tag,
+                  {
+                    backgroundColor: isDarkMode
+                      ? 'rgba(15, 82, 186, 0.25)'
+                      : ProfessionalColors.primaryGlass,
+                    borderColor: isDarkMode
+                      ? '#1E3A8A'
+                      : ProfessionalColors.primary + '30',
+                  },
+                ]}>
+                <Text style={[styles.tagText, { color: isDarkMode ? '#60A5FA' : ProfessionalColors.primary }]}>#{tag.name}</Text>
               </View>
             ))}
           </XStack>
@@ -177,12 +202,12 @@ const PodcastCard = ({
               <Ionicons
                 name="eye-outline"
                 size={16}
-                color={ProfessionalColors.gray600}
+                color={isDarkMode ? '#94A3B8' : ProfessionalColors.gray600}
               />
               <Text
                 fontSize={13}
                 fontWeight="500"
-                color={ProfessionalColors.gray600}>
+                color={isDarkMode ? '#94A3B8' : ProfessionalColors.gray600}>
                 {views <= 1 ? `${views} view` : `${formatCount(views)} views`}
               </Text>
             </XStack>
@@ -191,12 +216,12 @@ const PodcastCard = ({
               <Ionicons
                 name="time-outline"
                 size={16}
-                color={ProfessionalColors.gray600}
+                color={isDarkMode ? '#94A3B8' : ProfessionalColors.gray600}
               />
               <Text
                 fontSize={13}
                 fontWeight="500"
-                color={ProfessionalColors.gray600}>
+                color={isDarkMode ? '#94A3B8' : ProfessionalColors.gray600}>
                 {duration}
               </Text>
             </XStack>
@@ -205,7 +230,7 @@ const PodcastCard = ({
 
         {display && !isGuest && (
           <TouchableOpacity
-            style={[styles.menuButton, GlassStyles.glassContainer]}
+            style={[styles.menuButton, GlassStyles.glassContainer, isDarkMode ? { backgroundColor: 'rgba(30, 41, 59, 0.8)' } : null]}
             onPress={handleOpenSheet}
             activeOpacity={0.7}
             accessibilityRole="button"
@@ -214,7 +239,7 @@ const PodcastCard = ({
             <Entypo
               name="dots-three-vertical"
               size={18}
-              color={ProfessionalColors.gray800}
+              color={isDarkMode ? '#F8FAFC' : ProfessionalColors.gray800}
             />
           </TouchableOpacity>
         )}

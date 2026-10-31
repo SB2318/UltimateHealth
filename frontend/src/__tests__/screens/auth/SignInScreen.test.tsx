@@ -73,26 +73,25 @@ const mockProps: any = {
   },
 };
 
-describe('SignInScreen - Smooth Onboarding Flow', () => {
+describe('SignInScreen - Two-Step Onboarding Flow', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders smoothly with branding, role selector, and 1-click actions', () => {
+  it('renders Step 1 with Join UltimateHealth branding, role options, and Continue button', () => {
     const { getByText } = render(<SignInScreen {...mockProps} />);
 
-    expect(getByText('UltimateHealth')).toBeTruthy();
-    expect(getByText('Empowering wellness through knowledge')).toBeTruthy();
-    expect(getByText('Patient / User')).toBeTruthy();
-    expect(getByText('Medical Doctor')).toBeTruthy();
-    expect(getByText('Continue with Google')).toBeTruthy();
-    expect(getByText('Browse as Guest')).toBeTruthy();
+    expect(getByText('Join UltimateHealth')).toBeTruthy();
+    expect(getByText('General User')).toBeTruthy();
+    expect(getByText('Doctor')).toBeTruthy();
+    expect(getByText('Continue')).toBeTruthy();
+    expect(getByText("I'll just browse as a Guest")).toBeTruthy();
   });
 
-  it('allows 1-click guest access without account friction', () => {
+  it('allows 1-click guest access from Step 1 without account friction', () => {
     const { getByText } = render(<SignInScreen {...mockProps} />);
 
-    const guestBtn = getByText('Browse as Guest');
+    const guestBtn = getByText("I'll just browse as a Guest");
     fireEvent.press(guestBtn);
 
     expect(mockDispatch).toHaveBeenCalledWith(
@@ -107,21 +106,23 @@ describe('SignInScreen - Smooth Onboarding Flow', () => {
     });
   });
 
-  it('allows seamless role toggle between Patient and Medical Doctor', () => {
+  it('allows role selection and proceeds to Step 2 with Google Sign-In', () => {
     const { getByText } = render(<SignInScreen {...mockProps} />);
 
-    const doctorOption = getByText('Medical Doctor');
-    fireEvent.press(doctorOption);
+    // Select Doctor role
+    const doctorCard = getByText('Doctor');
+    fireEvent.press(doctorCard);
 
-    expect(getByText('One click to sign up or sign in as Doctor')).toBeTruthy();
+    // Press Continue to go to Step 2
+    const continueBtn = getByText('Continue');
+    fireEvent.press(continueBtn);
 
-    const patientOption = getByText('Patient / User');
-    fireEvent.press(patientOption);
-
-    expect(getByText('One click to sign up or sign in as Patient')).toBeTruthy();
+    // Verify Step 2 content
+    expect(getByText('Sign in as Doctor')).toBeTruthy();
+    expect(getByText('Continue with Google')).toBeTruthy();
   });
 
-  it('handles Google Sign-In with 1-click authentication and navigates to TabNavigation', async () => {
+  it('handles Google Sign-In in Step 2 and navigates to TabNavigation', async () => {
     (GoogleSignin.signIn as jest.Mock).mockResolvedValueOnce({
       data: {
         idToken: 'mock-google-id-token',
@@ -162,14 +163,5 @@ describe('SignInScreen - Smooth Onboarding Flow', () => {
         payload: 'refresh-token-456',
       }),
     );
-  });
-
-  it('navigates to CommunityGuidelinesScreen on guidelines link press', () => {
-    const { getByText } = render(<SignInScreen {...mockProps} />);
-
-    const guidelinesLink = getByText('Terms & Community Guidelines');
-    fireEvent.press(guidelinesLink);
-
-    expect(mockNavigate).toHaveBeenCalledWith('CommunityGuidelinesScreen');
   });
 });

@@ -1,4 +1,4 @@
-import { createTamagui, createTokens, TamaguiConfig } from 'tamagui';
+import { createTamagui, createTokens } from 'tamagui';
 import { themes as defaultThemes } from '@tamagui/themes/v5';
 import { createAnimations } from '@tamagui/animations-react-native';
 
