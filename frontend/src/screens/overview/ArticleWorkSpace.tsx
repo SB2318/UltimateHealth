@@ -8,7 +8,7 @@ import { View,
 import {ArticleData} from '../../schemas/type';
 import {useAppSelector} from '../../store/hooks';
 import ReviewCard from '../../components/article/ReviewCard';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR, BUTTON_COLOR} from '../../lib/ui/Theme';
 import {hp, wp} from '../../lib/ui/Metric';
 import Loader from '../../components/common/Loader';
 import {useGetAllArticlesForUser} from '@/src/hooks/article/useGetUserAllArticles';

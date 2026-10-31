@@ -13,7 +13,7 @@ import {EditRequest} from '../../schemas/type';
 import {useAppSelector} from '../../store/hooks';
 import Loader from '../../components/common/Loader';
 import ImprovementCard from '../../components/article/ImprovementCard';
-import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {PRIMARY_COLOR, BUTTON_COLOR} from '../../lib/ui/Theme';
 import {hp, wp} from '../../lib/ui/Metric';
 import {useGetAllImprovementsForReview} from '@/src/hooks/improvement/useGetUserAllImprovements';
 import {ProfessionalColors} from '../../styles/GlassStyles';

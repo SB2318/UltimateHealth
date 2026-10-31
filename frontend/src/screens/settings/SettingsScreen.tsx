@@ -240,37 +240,8 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             icon="file-document-outline"
             iconColor="#3B82F6"
             label="My Posts"
-            sublabel="Articles you have written"
+            sublabel="Articles, reposts and saved reading list"
             onPress={() => go('ContentListScreen', { type: 'articles' })}
-            isDark={isDark}
-          />
-          <View
-            style={[
-              styles.divider,
-              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
-            ]}
-            accessible={false}
-          />
-          <SettingsRow
-            icon="repeat-variant"
-            iconColor="#F59E0B"
-            label="Reposted Articles"
-            onPress={() => go('ContentListScreen', { type: 'reposts' })}
-            isDark={isDark}
-          />
-          <View
-            style={[
-              styles.divider,
-              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
-            ]}
-            accessible={false}
-          />
-          <SettingsRow
-            icon="bookmark-outline"
-            iconColor="#3B82F6"
-            label="Saved Articles"
-            sublabel="Your personal reading list"
-            onPress={() => go('ContentListScreen', { type: 'saved' })}
             isDark={isDark}
           />
           <View
@@ -284,22 +255,8 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             icon="history"
             iconColor="#6366F1"
             label="Reading History"
+            sublabel="Articles you recently read"
             onPress={() => go('ReadingHistoryScreen')}
-            isDark={isDark}
-          />
-          <View
-            style={[
-              styles.divider,
-              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
-            ]}
-            accessible={false}
-          />
-          <SettingsRow
-            icon="heart-pulse"
-            iconColor="#EF4444"
-            label="Wellness Dashboard"
-            sublabel="Track your health goals"
-            onPress={() => go('WellnessDashboardScreen')}
             isDark={isDark}
           />
           <View
@@ -313,7 +270,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             icon="map-marker-radius-outline"
             iconColor="#10B981"
             label="Nearby Health Events"
-            sublabel="Blood drives, health camps, meetups"
+            sublabel="Blood drives, health camps (Coming Soon)"
             onPress={() => go('NearbyHealthEventsScreen')}
             isDark={isDark}
           />
@@ -395,7 +352,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             icon="shield-star-outline"
             iconColor="#C084FC"
             label="Moumita Debnath"
-            sublabel="Justice · Dignity · Hope — Story coming soon"
+            sublabel="Justice · Dignity · Hope"
             onPress={() => go('RespectGiverScreen')}
             isDark={isDark}
           />

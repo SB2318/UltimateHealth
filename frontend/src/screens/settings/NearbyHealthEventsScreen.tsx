@@ -278,7 +278,38 @@ const NearbyHealthEventsScreen = ({ navigation }: NearbyHealthEventsScreenProps)
           <FontAwesome6 name="arrow-left" size={18} color={textColor} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: textColor }]}>Nearby Health Events</Text>
-        <View style={{ width: wp(10) }} />
+        <View style={styles.comingSoonBadge}>
+          <Text style={styles.comingSoonBadgeText}>COMING SOON</Text>
+        </View>
+      </View>
+
+      {/* Coming Soon Feature Wrap Banner */}
+      <View style={[styles.comingSoonWrapper, { backgroundColor: cardBg, borderColor: cardBorder }]}>
+        <View style={styles.comingSoonHeaderRow}>
+          <View style={styles.comingSoonIconCircle}>
+            <MaterialCommunityIcons name="rocket-launch-outline" size={20} color="#10B981" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.comingSoonTitle, { color: textColor }]}>
+              Local Health Events (Coming Soon)
+            </Text>
+            <Text style={[styles.comingSoonSubtitle, { color: subtextColor }]}>
+              We are connecting with verified health camps, blood banks, and wellness organizers in your city.
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.previewTagRow}>
+          <View style={[styles.previewTag, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]}>
+            <Text style={[styles.previewTagText, { color: '#EF4444' }]}>🩸 Blood Drives</Text>
+          </View>
+          <View style={[styles.previewTag, { backgroundColor: 'rgba(59, 130, 246, 0.1)' }]}>
+            <Text style={[styles.previewTagText, { color: '#3B82F6' }]}>🏥 Health Camps</Text>
+          </View>
+          <View style={[styles.previewTag, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
+            <Text style={[styles.previewTagText, { color: '#10B981' }]}>🧘 Yoga Meetups</Text>
+          </View>
+        </View>
       </View>
 
       {/* Radius Selector */}
@@ -344,8 +375,68 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: {
-    fontSize: fp(5.2),
+    fontSize: fp(4.8),
     fontWeight: '700',
+  },
+  comingSoonBadge: {
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+  },
+  comingSoonBadgeText: {
+    color: '#10B981',
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  comingSoonWrapper: {
+    marginHorizontal: wp(4),
+    marginTop: hp(1.5),
+    marginBottom: hp(0.5),
+    borderRadius: 14,
+    borderWidth: 1,
+    padding: wp(3.5),
+  },
+  comingSoonHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 8,
+  },
+  comingSoonIconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  comingSoonTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 2,
+  },
+  comingSoonSubtitle: {
+    fontSize: 11.5,
+    lineHeight: 16,
+  },
+  previewTagRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 4,
+  },
+  previewTag: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  previewTagText: {
+    fontSize: 11,
+    fontWeight: '600',
   },
   selectorWrapper: {
     paddingHorizontal: wp(4),

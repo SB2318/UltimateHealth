@@ -498,28 +498,9 @@ const StackNavigation = () => {
       <Stack.Screen
         name="ReadingHistoryScreen"
         component={ReadingHistoryScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: 'Reading History',
-          headerTitleAlign: 'center',
-          headerBackTitleVisible: false,
-          headerTintColor: 'white',
-          headerStyle: {
-            elevation: 4,
-            backgroundColor: '#000A60',
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 2},
-            shadowOpacity: 0.25,
-            shadowRadius: 3.5,
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonCommentScreen}
-              onPress={() => navigation.goBack()}>
-              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
 
       <Stack.Screen
@@ -554,31 +535,9 @@ const StackNavigation = () => {
       <Stack.Screen
         name="CommunityGuidelines"
         component={CommunityGuidelinesScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: 'Community Guidelines',
-          headerTitleAlign: 'center',
-          headerBackTitleVisible: false,
-          headerTintColor: 'white',
-          headerTransparent: false,
-          headerStyle: {
-            elevation: 4,
-            backgroundColor: '#000A60',
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 2},
-            shadowOpacity: 0.25,
-            shadowRadius: 3.5,
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonCommentScreen}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="ReportScreen"
@@ -790,11 +749,7 @@ const StackNavigation = () => {
         name="ContentListScreen"
         component={ContentListScreen}
         options={{
-          headerShown: true,
-          headerTitle: 'My Content',
-          headerTitleAlign: 'center',
-          headerStyle: {backgroundColor: '#000A60'},
-          headerTintColor: '#fff',
+          headerShown: false,
         }}
       />
       <Stack.Screen

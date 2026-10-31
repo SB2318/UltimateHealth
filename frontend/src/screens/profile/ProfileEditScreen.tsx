@@ -13,10 +13,9 @@ import {
 import React, { useEffect, useState } from 'react';
 import { BUTTON_COLOR } from '../../lib/ui/Theme';
 import GeneralTab from '../../components/profile/GeneralTab';
-import { GeneralFormData, ContactFormData, ProfFormData, PasswordFormData } from '../../schemas/zod/profileSchemas';
+import { GeneralFormData, ContactFormData, ProfFormData } from '../../schemas/zod/profileSchemas';
 import ContactTab from '../../components/profile/ContactTab';
 import ProfessionalTab from '../../components/profile/ProfessionalTab';
-import PasswordTab from '../../components/profile/PasswordTab';
 import LanguagePreferenceSelector from '../../components/profile/LanguagePreferenceSelector';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
@@ -33,7 +32,6 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import useUploadImage from '../../hooks/media/useUploadImage';
 import Snackbar from 'react-native-snackbar';
 import { useGetUserDetails } from '../../hooks/profile/useGetUserDetails';
-import { useUpdatePassword } from '../../hooks/auth/useUpdatePassword';
 import { useUpdateProfileImage } from '../../hooks/profile/useUpdateProfileImage';
 import { useUpdateUserContactDetail } from '../../hooks/profile/useUpdateUserContactDetail';
 import { useUpdateUserGeneralDetails } from '../../hooks/profile/useUpdateUserGeneralDetails';
@@ -41,7 +39,8 @@ import { useUpdateUserProfDetails } from '../../hooks/profile/useUpdateUserProfD
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-const TABS = ['General', 'Professional', 'Contact', 'Password', 'Language'];
+// Password tab removed since accounts authenticate via Google Sign-In
+const TABS = ['General', 'Professional', 'Contact', 'Language'];
 
 const ProfileEditScreen = ({ navigation }: ProfileEditScreenProp) => {
   const { uploadImage, loading } = useUploadImage();
@@ -51,14 +50,12 @@ const ProfileEditScreen = ({ navigation }: ProfileEditScreenProp) => {
 
   const [currentTab, setCurrentTab] = useState<string>(TABS[0]);
 
-  const { mutate: updatePassword, isPending: passwordMutationPending } = useUpdatePassword();
   const { mutate: updateProfileImage, isPending: profileImagePending } = useUpdateProfileImage();
   const { mutate: updateContactDetails, isPending: contactDetailsPending } = useUpdateUserContactDetail();
   const { mutate: updateGeneralDetails, isPending: generalDetailsPending } = useUpdateUserGeneralDetails();
   const { mutate: updateProfessionalDetails, isPending: professionalDetailPending } = useUpdateUserProfDetails();
 
   const [user_profile_image, setUserProfileImage] = useState('');
-  const { user_token } = useAppSelector((state: any) => state.user);
   const { isConnected } = useAppSelector((state: any) => state.network);
   const { data: user } = useGetUserDetails(isConnected);
 
@@ -121,28 +118,6 @@ const ProfileEditScreen = ({ navigation }: ProfileEditScreenProp) => {
     );
   };
 
-  const handleSubmitPassword = (data: PasswordFormData) => {
-    if (!isConnected) {
-      Snackbar.show({ text: 'Please check your internet connection!', duration: Snackbar.LENGTH_SHORT });
-      return;
-    }
-    updatePassword(
-      { old_password: data.old_password, new_password: data.new_password },
-      {
-        onSuccess: _data => {
-          Snackbar.show({ text: 'Password updated successfully', duration: Snackbar.LENGTH_SHORT });
-        },
-        onError: (err: any) => {
-          if (err.response?.status === 401) {
-            Alert.alert('Password Update Failed', 'Old password is incorrect.');
-          } else {
-            handleApiError(err, 'Password Update Failed');
-          }
-        },
-      },
-    );
-  };
-
   const handleApiError = (err: any, title: string) => {
     if (err.response) {
       const msg = (err?.response?.data as any)?.error || 'Something went wrong. Please try again.';
@@ -194,7 +169,7 @@ const ProfileEditScreen = ({ navigation }: ProfileEditScreenProp) => {
 
   const isLoading =
     loading || generalDetailsPending || contactDetailsPending ||
-    professionalDetailPending || profileImagePending || passwordMutationPending;
+    professionalDetailPending || profileImagePending;
 
   const visibleTabs = TABS.filter(tab => isDoctor || tab !== 'Professional');
 
@@ -292,9 +267,6 @@ const ProfileEditScreen = ({ navigation }: ProfileEditScreenProp) => {
             user={user}
             handleSubmitContactDetails={handleSubmitContactDetails}
           />
-        )}
-        {currentTab === 'Password' && (
-          <PasswordTab handleSubmitPassword={handleSubmitPassword} />
         )}
         {currentTab === 'Language' && (
           <LanguagePreferenceSelector
