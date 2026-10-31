@@ -608,4 +608,69 @@ export const glossaryTerms: GlossaryTerm[] = [
     category: 'Blood Health',
     relatedTerms: ['Immune System', 'Infection', 'Leukemia'],
   },
+  {
+    term: 'Chronic Kidney Disease (CKD)',
+    definition:
+      'A long-term condition where the kidneys gradually lose their ability to filter waste products and excess fluid from the blood.',
+    category: 'Renal Health',
+    relatedTerms: ['Kidney Failure', 'Dialysis', 'Glomerular Filtration Rate'],
+    symptoms: 'Fatigue, swollen ankles, decreased urine output, persistent nausea.',
+    causes: 'Prolonged high blood pressure, diabetes, glomerulonephritis.',
+    riskFactors: 'Hypertension, diabetes mellitus, family history, cardiovascular disease.',
+    diagnosis: 'eGFR blood test, urine albumin-to-creatinine ratio (uACR), kidney ultrasound.',
+    treatment: 'Blood pressure control, ACE inhibitors, low-sodium diet, dialysis or transplant in advanced stages.',
+    prevention: 'Maintain healthy blood pressure, manage blood sugar, stay hydrated, avoid overuse of NSAIDs.'
+  },
+  {
+    term: 'Gastroesophageal Reflux Disease (GERD)',
+    definition:
+      'A chronic digestive disease where stomach acid or bile irritates the food pipe lining, leading to frequent heartburn and regurgitation.',
+    category: 'Digestive Health',
+    relatedTerms: ['Heartburn', 'Acid Reflux', 'Esophagus', 'Hiatal Hernia'],
+    symptoms: 'Burning sensation in the chest, acid regurgitation, difficulty swallowing, chronic dry cough.',
+    causes: 'Weakened or abnormally relaxed lower esophageal sphincter (LES).',
+    riskFactors: 'Obesity, pregnancy, smoking, hiatal hernia, eating large meals late at night.',
+    diagnosis: 'Upper endoscopy (EGD), esophageal pH monitoring, clinical symptoms evaluation.',
+    treatment: 'Antacids, H2 blockers, proton pump inhibitors (PPIs), lifestyle modifications.',
+    prevention: 'Avoid trigger foods (caffeine, citrus, fatty foods), elevate head during sleep, eat smaller meals.'
+  },
+  {
+    term: 'Hypothyroidism',
+    definition:
+      'An endocrine disorder where the thyroid gland does not produce enough thyroid hormones, slowing down the body metabolism.',
+    category: 'Endocrine Health',
+    relatedTerms: ['Thyroid', 'Hashimoto Thyroiditis', 'Metabolism', 'TSH'],
+    symptoms: 'Fatigue, unexplained weight gain, cold intolerance, dry skin, muscle weakness.',
+    causes: 'Hashimoto autoimmune thyroiditis, iodine deficiency, radiation therapy, thyroidectomy.',
+    riskFactors: 'Female sex, age over 60, family history of thyroid disorders, autoimmune conditions.',
+    diagnosis: 'Serum TSH (Thyroid Stimulating Hormone) and free T4 blood tests.',
+    treatment: 'Daily oral synthetic thyroid hormone replacement (Levothyroxine).',
+    prevention: 'Adequate dietary iodine intake; regular monitoring for those with autoimmune risk.'
+  },
+  {
+    term: 'Osteoporosis',
+    definition:
+      'A systemic skeletal disorder characterized by low bone mass and microarchitectural deterioration of bone tissue, leading to bone fragility.',
+    category: 'Musculoskeletal Health',
+    relatedTerms: ['Bone Density', 'Fracture', 'Calcium', 'DEXA Scan'],
+    symptoms: 'Often asymptomatic until a fracture occurs; loss of height over time, stooped posture, back pain.',
+    causes: 'Imbalance between bone resorption and new bone formation, accelerated by estrogen loss post-menopause.',
+    riskFactors: 'Aging, post-menopausal status, low calcium/vitamin D intake, sedentary lifestyle, corticosteroid use.',
+    diagnosis: 'Dual-energy X-ray absorptiometry (DEXA scan) measuring T-score of bone mineral density.',
+    treatment: 'Bisphosphonates, calcium and vitamin D supplementation, weight-bearing exercise.',
+    prevention: 'Adequate calcium and vitamin D intake, regular strength and weight-bearing training, smoking cessation.'
+  },
+  {
+    term: 'Migraine',
+    definition:
+      'A neurological disorder characterized by recurrent episodes of moderate to severe throbbing headache, typically unilateral and accompanied by sensory sensitivity.',
+    category: 'Neurological Health',
+    relatedTerms: ['Aura', 'Photophobia', 'Headache', 'Triptans'],
+    symptoms: 'Throbbing headache, sensory aura (flashing lights), nausea, sensitivity to light (photophobia) and sound.',
+    causes: 'Neurovascular dysfunction involving trigeminal nerve activation and calcitonin gene-related peptide (CGRP) release.',
+    riskFactors: 'Genetic predisposition, hormonal fluctuations, stress, sleep disruptions, weather changes.',
+    diagnosis: 'Clinical assessment following International Classification of Headache Disorders (ICHD) criteria.',
+    treatment: 'Acute therapy (triptans, NSAIDs), preventive therapies (beta-blockers, CGRP antagonists).',
+    prevention: 'Identify and track dietary triggers, maintain regular sleep schedules, stay hydrated, manage stress.'
+  }
 ];
