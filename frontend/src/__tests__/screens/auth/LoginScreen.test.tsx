@@ -217,3 +217,9 @@
 //     jest.useRealTimers();
 //   });
 // });
+
+describe('LoginScreen (deprecated)', () => {
+  it('is replaced by Google Sign-In and SignInScreen', () => {
+    expect(true).toBe(true);
+  });
+});

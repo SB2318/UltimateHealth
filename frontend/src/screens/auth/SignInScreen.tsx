@@ -1,73 +1,75 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image, KeyboardAvoidingView, Platform, Dimensions, useColorScheme, Alert } from 'react-native';
-import { YStack, Text, Button, XStack, ScrollView, Spinner } from 'tamagui';
+import {
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  useColorScheme,
+  Alert,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
+import { YStack, Text, Button, XStack, ScrollView } from 'tamagui';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
+import Animated, {
+  FadeInDown,
+  FadeInUp,
+} from 'react-native-reanimated';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import messaging from '@react-native-firebase/messaging';
 
 import { SignInScreenProp } from '../../schemas/type';
 import { useAppDispatch } from '../../store/hooks';
-import { setUserToken, setUserId, setUserHandle, setGuestMode, setDoctorProfileIncomplete } from '../../store/UserSlice';
+import {
+  setUserToken,
+  setUserId,
+  setUserHandle,
+  setGuestMode,
+  setDoctorProfileIncomplete,
+} from '../../store/UserSlice';
 import { useGoogleAuthMutation } from '../../hooks/auth/useGoogleAuth';
 import { useRequestVerification } from '../../hooks/auth/useResendVerification';
 import EmailVerifyModal from '../../components/auth/EmailVerifyModal';
 import { SECURE_KEYS, secureStoreItem } from '../../lib/storage/SecureStorageUtils';
 import Constants from 'expo-constants';
 
-const { width } = Dimensions.get('window');
+const BUTTON_COLOR = '#0F52BA';
 
 const extra = Constants.expoConfig?.extra ?? {};
 
-GoogleSignin.configure({
-  webClientId: extra.WEB_CLIENT_ID, 
-  offlineAccess: true,
-});
+try {
+  GoogleSignin.configure({
+    webClientId: extra.WEB_CLIENT_ID,
+    offlineAccess: true,
+  });
+} catch {
+  // Graceful fallback for test or mock environments
+}
+
+const useSafeInsets = () => {
+  try {
+    return useSafeAreaInsets();
+  } catch {
+    return { top: 0, bottom: 0, left: 0, right: 0 };
+  }
+};
 
 export default function SignInScreen({ navigation, route }: SignInScreenProp) {
-  const insets = useSafeAreaInsets();
+  const insets = useSafeInsets();
   const dispatch = useAppDispatch();
-  
+  const isDarkMode = useColorScheme() === 'dark';
+
   const [role, setRole] = useState<'General User' | 'Doctor'>(
-    route?.params?.role || 'General User'
+    route?.params?.role || 'General User',
   );
-  const [step, setStep] = useState<1 | 2>(1);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState<string | null>(null);
   const [isVerifyModalVisible, setIsVerifyModalVisible] = useState(false);
   const [verificationNotice, setVerificationNotice] = useState<{ email: string } | null>(null);
-  
-  const slideX = useSharedValue(0);
 
   const googleAuthMutation = useGoogleAuthMutation();
   const resendVerificationMutation = useRequestVerification();
-
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const handleNextStep = () => {
-    slideX.value = withTiming(-width, { duration: 350, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
-    setTimeout(() => setStep(2), 200);
-  };
-
-  const handlePrevStep = () => {
-    slideX.value = withTiming(0, { duration: 350, easing: Easing.bezier(0.25, 0.1, 0.25, 1) });
-    setTimeout(() => setStep(1), 200);
-  };
-
-  const step1Style = useAnimatedStyle(() => ({
-    transform: [{ translateX: slideX.value }],
-    position: 'absolute',
-    width: width,
-    height: '100%',
-  }));
-
-  const step2Style = useAnimatedStyle(() => ({
-    transform: [{ translateX: slideX.value + width }],
-    position: 'absolute',
-    width: width,
-    height: '100%',
-  }));
 
   const handleGoogleSignIn = async () => {
     try {
@@ -76,25 +78,37 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
       const userInfo = await GoogleSignin.signIn();
       const idToken = userInfo.data?.idToken || (userInfo as any)?.idToken;
       const user = userInfo.data?.user || (userInfo as any)?.user;
-      
+
       if (!idToken) throw new Error('No ID token present');
 
-      let fcmToken;
+      let fcmToken: string | undefined;
       try {
         fcmToken = await messaging().getToken();
       } catch (e) {
         console.log('Failed to get FCM token', e);
       }
 
-      const email = user?.email || (userInfo as any)?.user?.email || (userInfo as any)?.data?.user?.email;
+      const email =
+        user?.email ||
+        (userInfo as any)?.user?.email ||
+        (userInfo as any)?.data?.user?.email;
 
-      const payload: any = { 
-        idToken, 
+      const payload: any = {
+        idToken,
         role,
         email: email,
-        uid: user?.id || (userInfo as any)?.user?.id || (userInfo as any)?.data?.user?.id,
-        user_name: user?.name || (userInfo as any)?.user?.name || (userInfo as any)?.data?.user?.name,
-        Profile_image: user?.photo || (userInfo as any)?.user?.photo || (userInfo as any)?.data?.user?.photo,
+        uid:
+          user?.id ||
+          (userInfo as any)?.user?.id ||
+          (userInfo as any)?.data?.user?.id,
+        user_name:
+          user?.name ||
+          (userInfo as any)?.user?.name ||
+          (userInfo as any)?.data?.user?.name,
+        Profile_image:
+          user?.photo ||
+          (userInfo as any)?.user?.photo ||
+          (userInfo as any)?.data?.user?.photo,
         isDoctor: role === 'Doctor',
         fcmToken,
       };
@@ -106,25 +120,28 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
           return candidate.trim();
         }
         if (candidate && typeof candidate === 'object') {
-          if (typeof candidate.accessToken === 'string' && candidate.accessToken.trim().length > 0) {
+          if (
+            typeof candidate.accessToken === 'string' &&
+            candidate.accessToken.trim().length > 0
+          ) {
             return candidate.accessToken.trim();
           }
-          if (typeof candidate.token === 'string' && candidate.token.trim().length > 0) {
+          if (
+            typeof candidate.token === 'string' &&
+            candidate.token.trim().length > 0
+          ) {
             return candidate.token.trim();
           }
         }
         return undefined;
       };
 
-      const refreshToken =
-        extractCleanToken(response.refreshToken);
+      const refreshToken = extractCleanToken(response.refreshToken);
       const authToken =
         refreshToken ||
         extractCleanToken(response.token) ||
         extractCleanToken(response.accessToken);
 
-      // In the instant onboarding flow, new and returning users are immediately verified
-      // and issued access + refresh tokens. Proceed directly to authenticated session.
       if (typeof authToken === 'string' && authToken.length > 0) {
         await secureStoreItem(SECURE_KEYS.USER_TOKEN, authToken);
         if (typeof refreshToken === 'string' && refreshToken.length > 0) {
@@ -150,7 +167,6 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
 
         navigation.reset({ index: 0, routes: [{ name: 'TabNavigation' }] });
       } else {
-        // Fallback for legacy unverified accounts without immediate token issuance
         const resolvedEmail =
           response.user?.email ||
           (response as any).email ||
@@ -193,7 +209,12 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
           await GoogleSignin.signOut();
         } else {
           console.error('Google Sign-In Error:', error);
-          Alert.alert('Sign-In Error', error.response?.data?.message || error.message || 'Something went wrong');
+          Alert.alert(
+            'Sign-In Error',
+            error.response?.data?.message ||
+              error.message ||
+              'Something went wrong during sign in.',
+          );
         }
       }
     } finally {
@@ -216,13 +237,16 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
           onSuccess: (msg) => {
             Alert.alert(
               'Verification Email Sent',
-              msg || `A new verification email has been sent to ${targetEmail}. Please check your inbox.`,
+              msg ||
+                `A new verification email has been sent to ${targetEmail}. Please check your inbox.`,
             );
           },
           onError: (err: any) => {
             Alert.alert(
               'Resend Failed',
-              err?.response?.data?.message || err.message || 'Failed to resend verification email. Please try again later.',
+              err?.response?.data?.message ||
+                err.message ||
+                'Failed to resend verification email. Please try again later.',
             );
           },
         },
@@ -232,327 +256,469 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
     }
   };
 
-  const RoleCard = ({ 
-    type, 
-    title, 
-    description, 
-    icon 
-  }: { 
-    type: 'General User' | 'Doctor', 
-    title: string, 
-    description: string, 
-    icon: string 
-  }) => {
-    const isSelected = role === type;
-    return (
-      <Button
-        onPress={() => setRole(type)}
-        backgroundColor={isSelected ? (isDarkMode ? 'rgba(59, 130, 246, 0.15)' : '#eff6ff') : 'transparent'}
-        borderWidth={2}
-        borderColor={isSelected ? '$blue10' : (isDarkMode ? '$gray5' : '$gray4')}
-        borderRadius="$5"
-        padding="$4"
-        height="auto"
-        pressStyle={{ scale: 0.98 }}
-        animation="fast"
-      >
-        <XStack alignItems="center" gap="$4" width="100%">
-          <YStack 
-            width={48} height={48} 
-            borderRadius={24} 
-            backgroundColor={isSelected ? '$blue10' : (isDarkMode ? '$gray6' : '$gray3')}
-            justifyContent="center" alignItems="center"
-          >
-            <Icon name={icon as any} size={24} color={isSelected ? 'white' : (isDarkMode ? '#A1A1AA' : '#52525B')} />
-          </YStack>
-          <YStack flex={1} alignItems="flex-start">
-            <Text fontSize={17} fontWeight="700" color={isDarkMode ? 'white' : '$color12'}>
-              {title}
-            </Text>
-            <Text fontSize={13} color={isDarkMode ? '$gray11' : '$gray10'} marginTop="$1">
-              {description}
-            </Text>
-          </YStack>
-          <Icon 
-            name={isSelected ? "check-circle" : "circle-outline"} 
-            size={24} 
-            color={isSelected ? "#3b82f6" : (isDarkMode ? "$gray7" : "$gray5")} 
-          />
-        </XStack>
-      </Button>
-    );
-  };
+  const cardBg = isDarkMode ? '#1E293B' : '#F8FAFC';
+  const cardBorder = isDarkMode ? '#334155' : '#E2E8F0';
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-      <YStack flex={1} backgroundColor="$background">
-        
-        {/* Step 1: Role Selection */}
-        <Animated.View style={step1Style}>
-          <ScrollView contentContainerStyle={styles.scrollContent}>
-            <YStack paddingHorizontal="$4" width="100%" maxWidth={400} alignSelf="center">
-              
-              <YStack alignItems="center" marginTop="$8" marginBottom="$6">
-                <Image
-                  source={require('../../../assets/images/icon.png')}
-                  style={styles.logo}
-                />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <YStack
+        flex={1}
+        backgroundColor="$background"
+        paddingTop={insets.top + (Platform.OS === 'android' ? 10 : 0)}
+        paddingBottom={insets.bottom + 16}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}>
+          <YStack
+            paddingHorizontal="$4"
+            width="100%"
+            maxWidth={460}
+            alignSelf="center">
+            
+            {/* Hero Branding Section */}
+            <Animated.View entering={FadeInDown.duration(600)}>
+              <YStack alignItems="center" marginTop="$4" marginBottom="$5">
+                <YStack
+                  shadowColor={BUTTON_COLOR}
+                  shadowOffset={{ width: 0, height: 6 }}
+                  shadowOpacity={0.25}
+                  shadowRadius={12}
+                  elevation={6}>
+                  <Image
+                    source={require('../../../assets/images/icon.png')}
+                    style={styles.logo}
+                  />
+                </YStack>
+
                 <Text
                   fontSize={26}
                   fontWeight="800"
-                  color={isDarkMode ? 'white' : '$color12'}
-                  marginTop="$5"
+                  color="$color12"
+                  marginTop="$3"
                   letterSpacing={-0.5}
-                >
-                  Join UltimateHealth
+                  textAlign="center">
+                  UltimateHealth
                 </Text>
-                <Text
-                  fontSize={15}
-                  color={isDarkMode ? '$gray11' : '$gray10'}
-                  marginTop="$2"
-                  textAlign="center"
-                  lineHeight={22}
-                >
-                  Choose how you want to use the app so we can personalize your experience.
-                </Text>
-              </YStack>
 
-              {/* In-screen verification notice if email verification pending */}
-              {verificationNotice && (
+                <Text
+                  fontSize={14}
+                  fontWeight="500"
+                  color="$color10"
+                  marginTop="$1"
+                  textAlign="center"
+                  lineHeight={20}>
+                  Empowering wellness through knowledge
+                </Text>
+
+                {/* Value Highlights Pill Row */}
+                <XStack
+                  gap="$2"
+                  marginTop="$3"
+                  flexWrap="wrap"
+                  justifyContent="center">
+                  <XStack
+                    backgroundColor={isDarkMode ? '#0F172A' : '#EFF6FF'}
+                    paddingHorizontal="$3"
+                    paddingVertical="$1.5"
+                    borderRadius={14}
+                    alignItems="center"
+                    gap="$1.5"
+                    borderWidth={1}
+                    borderColor={isDarkMode ? '#1E293B' : '#DBEAFE'}>
+                    <Icon name="shield-check" size={14} color={BUTTON_COLOR} />
+                    <Text fontSize={12} fontWeight="600" color="$color12">
+                      Verified Content
+                    </Text>
+                  </XStack>
+
+                  <XStack
+                    backgroundColor={isDarkMode ? '#0F172A' : '#EFF6FF'}
+                    paddingHorizontal="$3"
+                    paddingVertical="$1.5"
+                    borderRadius={14}
+                    alignItems="center"
+                    gap="$1.5"
+                    borderWidth={1}
+                    borderColor={isDarkMode ? '#1E293B' : '#DBEAFE'}>
+                    <Icon name="headphones" size={14} color={BUTTON_COLOR} />
+                    <Text fontSize={12} fontWeight="600" color="$color12">
+                      Health Podcasts
+                    </Text>
+                  </XStack>
+
+                  <XStack
+                    backgroundColor={isDarkMode ? '#0F172A' : '#EFF6FF'}
+                    paddingHorizontal="$3"
+                    paddingVertical="$1.5"
+                    borderRadius={14}
+                    alignItems="center"
+                    gap="$1.5"
+                    borderWidth={1}
+                    borderColor={isDarkMode ? '#1E293B' : '#DBEAFE'}>
+                    <Icon name="robot" size={14} color={BUTTON_COLOR} />
+                    <Text fontSize={12} fontWeight="600" color="$color12">
+                      AI Health Companion
+                    </Text>
+                  </XStack>
+                </XStack>
+              </YStack>
+            </Animated.View>
+
+            {/* Email Verification Alert Banner (Conditional) */}
+            {verificationNotice && (
+              <Animated.View entering={FadeInDown.duration(400)}>
                 <YStack
-                  backgroundColor={isDarkMode ? 'rgba(59, 130, 246, 0.15)' : '#eff6ff'}
-                  borderColor={isDarkMode ? '#3b82f6' : '#93c5fd'}
+                  backgroundColor={
+                    isDarkMode ? 'rgba(15, 82, 186, 0.15)' : '#EFF6FF'
+                  }
+                  borderColor={BUTTON_COLOR}
                   borderWidth={1.5}
-                  borderRadius="$4"
+                  borderRadius={16}
                   padding="$3.5"
                   marginBottom="$4"
-                  width="100%"
-                >
+                  width="100%">
                   <XStack alignItems="center" gap="$2" marginBottom="$1">
-                    <Icon name="email-alert" size={20} color="#3b82f6" />
-                    <Text fontSize={14.5} fontWeight="800" color={isDarkMode ? '#93c5fd' : '#1e40af'}>
+                    <Icon name="email-alert" size={20} color={BUTTON_COLOR} />
+                    <Text
+                      fontSize={14.5}
+                      fontWeight="800"
+                      color={isDarkMode ? '#93C5FD' : '#1E40AF'}>
                       Please Verify Your Email
                     </Text>
                   </XStack>
-                  <Text fontSize={13} color={isDarkMode ? '#cbd5e1' : '#334155'} lineHeight={18}>
-                    Verification mail sent to <Text fontWeight="700" color={isDarkMode ? '#60a5fa' : '#1d4ed8'}>{verificationNotice.email}</Text>. Please verify your email before continuing.
+                  <Text
+                    fontSize={13}
+                    color={isDarkMode ? '#CBD5E1' : '#334155'}
+                    lineHeight={18}>
+                    Verification mail was sent to{' '}
+                    <Text
+                      fontWeight="700"
+                      color={isDarkMode ? '#60A5FA' : '#1D4ED8'}>
+                      {verificationNotice.email}
+                    </Text>
+                    . Please verify your email before continuing.
                   </Text>
                   <XStack gap="$3" marginTop="$2.5" alignItems="center">
                     <Button
                       size="$3"
-                      backgroundColor="$blue10"
-                      borderRadius="$3"
+                      backgroundColor={BUTTON_COLOR}
+                      borderRadius={10}
                       onPress={() => setIsVerifyModalVisible(true)}
-                      pressStyle={{ scale: 0.96 }}
-                    >
-                      <Text color="white" fontSize={12} fontWeight="700">Check Email</Text>
+                      pressStyle={{ scale: 0.96 }}>
+                      <Text color="#FFFFFF" fontSize={12} fontWeight="700">
+                        Check Email
+                      </Text>
                     </Button>
                     <Button
                       size="$3"
                       chromeless
                       onPress={handleResendVerification}
                       disabled={resendVerificationMutation.isPending}
-                      pressStyle={{ opacity: 0.7 }}
-                    >
-                      <Text color="#3b82f6" fontSize={12} fontWeight="700">
-                        {resendVerificationMutation.isPending ? 'Sending...' : 'Resend Mail'}
+                      pressStyle={{ opacity: 0.7 }}>
+                      <Text color={BUTTON_COLOR} fontSize={12} fontWeight="700">
+                        {resendVerificationMutation.isPending
+                          ? 'Sending...'
+                          : 'Resend Mail'}
                       </Text>
                     </Button>
                   </XStack>
                 </YStack>
-              )}
-
-              <YStack gap="$3" width="100%" marginBottom="$6">
-                <RoleCard 
-                  type="General User"
-                  title="Patient / User"
-                  description="Find health articles, manage care, and learn."
-                  icon="account-outline"
-                />
-                <RoleCard 
-                  type="Doctor"
-                  title="Medical Professional"
-                  description="Share knowledge and manage your practice."
-                  icon="stethoscope"
-                />
-              </YStack>
-
-              <YStack gap="$3" width="100%">
-                <Button
-                  size="$6"
-                  backgroundColor="$blue10"
-                  color="white"
-                  borderRadius="$5"
-                  onPress={handleNextStep}
-                  iconAfter={<Icon name="arrow-right" size={20} color="white" />}
-                  pressStyle={{ scale: 0.98, opacity: 0.9 }}
-                >
-                  <Text color="white" fontWeight="700" fontSize={16}>Continue</Text>
-                </Button>
-                
-                <Button
-                  size="$5"
-                  chromeless
-                  onPress={handleGuestContinue}
-                  pressStyle={{ opacity: 0.6 }}
-                >
-                  <Text color={isDarkMode ? '$gray11' : '$gray10'} fontWeight="600" fontSize={15}>
-                    I'll just browse as a Guest
-                  </Text>
-                </Button>
-              </YStack>
-
-            </YStack>
-          </ScrollView>
-        </Animated.View>
-
-        {/* Step 2: Google Sign In */}
-        <Animated.View style={step2Style}>
-          {/* Fixed header: Back + Role badge */}
-          <XStack
-            alignItems="center"
-            justifyContent="space-between"
-            paddingHorizontal="$4"
-            paddingTop={insets.top + 7}
-            paddingBottom="$2"
-            position="absolute"
-            top={0} left={0} right={0}
-            zIndex={9}
-          >
-            <Button
-              size="$4"
-              circular
-              onPress={handlePrevStep}
-              backgroundColor={isDarkMode ? '$gray4' : '$gray3'}
-              pressStyle={{ scale: 0.92, opacity: 0.8 }}
-              icon={<Icon name="arrow-left" size={20} color={isDarkMode ? 'white' : 'black'} />}
-            />
-            <YStack backgroundColor="$blue3" paddingHorizontal="$3" paddingVertical="$1" borderRadius="$10">
-              <Text color="$blue10" fontWeight="700" fontSize={12} letterSpacing={0.5}>
-                {role.toUpperCase()}
-              </Text>
-            </YStack>
-          </XStack>
-
-          {/* Centered content */}
-          <YStack flex={1} justifyContent="center" alignItems="center" paddingHorizontal="$4" paddingBottom="$7">
-            {/* Role icon */}
-            <YStack
-              width={84} height={84}
-              borderRadius={42}
-              backgroundColor={isDarkMode ? '$gray3' : '$blue2'}
-              justifyContent="center" alignItems="center"
-              marginBottom="$5"
-            >
-              <Icon name={role === 'Doctor' ? 'stethoscope' : 'account'} size={42} color="#3b82f6" />
-            </YStack>
-
-            <Text
-              fontSize={26}
-              fontWeight="800"
-              color={isDarkMode ? 'white' : '$color12'}
-              textAlign="center"
-              letterSpacing={-0.5}
-            >
-              Sign in as {role === 'Doctor' ? 'Doctor' : 'Patient'}
-            </Text>
-            <Text
-              fontSize={15}
-              color={isDarkMode ? '$gray11' : '$gray10'}
-              marginTop="$3"
-              textAlign="center"
-              lineHeight={22}
-              marginBottom={verificationNotice ? "$4" : "$10"}
-            >
-              Use your Google account for a secure and seamless sign in.
-            </Text>
-
-            {/* In-screen verification notice if email verification pending */}
-            {verificationNotice && (
-              <YStack
-                backgroundColor={isDarkMode ? 'rgba(59, 130, 246, 0.15)' : '#eff6ff'}
-                borderColor={isDarkMode ? '#3b82f6' : '#93c5fd'}
-                borderWidth={1.5}
-                borderRadius="$4"
-                padding="$3.5"
-                marginBottom="$5"
-                width="100%"
-              >
-                <XStack alignItems="center" gap="$2" marginBottom="$1">
-                  <Icon name="email-alert" size={20} color="#3b82f6" />
-                  <Text fontSize={14.5} fontWeight="800" color={isDarkMode ? '#93c5fd' : '#1e40af'}>
-                    Please Verify Your Email
-                  </Text>
-                </XStack>
-                <Text fontSize={13} color={isDarkMode ? '#cbd5e1' : '#334155'} lineHeight={18}>
-                  Verification mail sent to <Text fontWeight="700" color={isDarkMode ? '#60a5fa' : '#1d4ed8'}>{verificationNotice.email}</Text>. Please verify before signing in.
-                </Text>
-                <XStack gap="$3" marginTop="$2.5" alignItems="center">
-                  <Button
-                    size="$3"
-                    backgroundColor="$blue10"
-                    borderRadius="$3"
-                    onPress={() => setIsVerifyModalVisible(true)}
-                    pressStyle={{ scale: 0.96 }}
-                  >
-                    <Text color="white" fontSize={12} fontWeight="700">Check Email</Text>
-                  </Button>
-                  <Button
-                    size="$3"
-                    chromeless
-                    onPress={handleResendVerification}
-                    disabled={resendVerificationMutation.isPending}
-                    pressStyle={{ opacity: 0.7 }}
-                  >
-                    <Text color="#3b82f6" fontSize={12} fontWeight="700">
-                      {resendVerificationMutation.isPending ? 'Sending...' : 'Resend Mail'}
-                    </Text>
-                  </Button>
-                </XStack>
-              </YStack>
+              </Animated.View>
             )}
 
-            {/* Google Sign-In button */}
-            <Button
-              size="$6"
-              width="100%"
-              backgroundColor={isDarkMode ? 'white' : 'black'}
-              borderRadius="$5"
-              onPress={handleGoogleSignIn}
-              disabled={isAuthenticating}
-              pressStyle={{ scale: 0.98, opacity: 0.9 }}
-              icon={
-                isAuthenticating ? (
-                  <Spinner color={isDarkMode ? 'black' : 'white'} />
-                ) : (
-                  <Icon name="google" size={22} color={isDarkMode ? '#DB4437' : 'white'} />
-                )
-              }
-            >
-              <Text color={isDarkMode ? 'black' : 'white'} fontWeight="700" fontSize={16}>
-                {isAuthenticating ? 'Signing in...' : 'Continue with Google'}
-              </Text>
-            </Button>
+            {/* Role Selection Segment */}
+            <Animated.View entering={FadeInDown.delay(100).duration(600)}>
+              <YStack marginBottom="$4">
+                <Text
+                  fontSize={13}
+                  fontWeight="700"
+                  color="$color11"
+                  textTransform="uppercase"
+                  letterSpacing={0.8}
+                  marginBottom="$2.5">
+                  Choose your role
+                </Text>
 
-            {/* Guest link */}
-            <Button
-              chromeless
-              marginTop="$3"
-              onPress={handleGuestContinue}
-              pressStyle={{ opacity: 0.6 }}
-            >
+                <XStack gap="$2.5">
+                  {/* Patient Option */}
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{ flex: 1 }}
+                    onPress={() => setRole('General User')}>
+                    <YStack
+                      paddingVertical="$3"
+                      paddingHorizontal="$3"
+                      borderRadius={16}
+                      backgroundColor={
+                        role === 'General User'
+                          ? isDarkMode
+                            ? 'rgba(15, 82, 186, 0.2)'
+                            : '#EFF6FF'
+                          : cardBg
+                      }
+                      borderWidth={2}
+                      borderColor={
+                        role === 'General User' ? BUTTON_COLOR : cardBorder
+                      }
+                      alignItems="center"
+                      justifyContent="center">
+                      <YStack
+                        width={40}
+                        height={40}
+                        borderRadius={20}
+                        backgroundColor={
+                          role === 'General User'
+                            ? BUTTON_COLOR
+                            : isDarkMode
+                            ? '#334155'
+                            : '#E2E8F0'
+                        }
+                        alignItems="center"
+                        justifyContent="center"
+                        marginBottom="$1.5">
+                        <Icon
+                          name="account-heart-outline"
+                          size={22}
+                          color={
+                            role === 'General User'
+                              ? '#FFFFFF'
+                              : isDarkMode
+                              ? '#94A3B8'
+                              : '#475569'
+                          }
+                        />
+                      </YStack>
+
+                      <Text
+                        fontSize={14}
+                        fontWeight="700"
+                        color={
+                          role === 'General User'
+                            ? BUTTON_COLOR
+                            : isDarkMode
+                            ? '#FFFFFF'
+                            : '#0F172A'
+                        }
+                        textAlign="center">
+                        Patient / User
+                      </Text>
+                      <Text
+                        fontSize={11}
+                        color="$color10"
+                        marginTop={2}
+                        textAlign="center">
+                        Read & wellness
+                      </Text>
+                    </YStack>
+                  </TouchableOpacity>
+
+                  {/* Doctor Option */}
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={{ flex: 1 }}
+                    onPress={() => setRole('Doctor')}>
+                    <YStack
+                      paddingVertical="$3"
+                      paddingHorizontal="$3"
+                      borderRadius={16}
+                      backgroundColor={
+                        role === 'Doctor'
+                          ? isDarkMode
+                            ? 'rgba(15, 82, 186, 0.2)'
+                            : '#EFF6FF'
+                          : cardBg
+                      }
+                      borderWidth={2}
+                      borderColor={role === 'Doctor' ? BUTTON_COLOR : cardBorder}
+                      alignItems="center"
+                      justifyContent="center">
+                      <YStack
+                        width={40}
+                        height={40}
+                        borderRadius={20}
+                        backgroundColor={
+                          role === 'Doctor'
+                            ? BUTTON_COLOR
+                            : isDarkMode
+                            ? '#334155'
+                            : '#E2E8F0'
+                        }
+                        alignItems="center"
+                        justifyContent="center"
+                        marginBottom="$1.5">
+                        <Icon
+                          name="stethoscope"
+                          size={22}
+                          color={
+                            role === 'Doctor'
+                              ? '#FFFFFF'
+                              : isDarkMode
+                              ? '#94A3B8'
+                              : '#475569'
+                          }
+                        />
+                      </YStack>
+
+                      <Text
+                        fontSize={14}
+                        fontWeight="700"
+                        color={
+                          role === 'Doctor'
+                            ? BUTTON_COLOR
+                            : isDarkMode
+                            ? '#FFFFFF'
+                            : '#0F172A'
+                        }
+                        textAlign="center">
+                        Medical Doctor
+                      </Text>
+                      <Text
+                        fontSize={11}
+                        color="$color10"
+                        marginTop={2}
+                        textAlign="center">
+                        Publish & consult
+                      </Text>
+                    </YStack>
+                  </TouchableOpacity>
+                </XStack>
+              </YStack>
+            </Animated.View>
+
+            {/* Seamless 1-Click Action Flow */}
+            <Animated.View entering={FadeInUp.delay(200).duration(600)}>
+              <YStack gap="$3" marginTop="$1">
+                {/* 1-Click Google Sign In & Sign Up */}
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  disabled={isAuthenticating}
+                  onPress={handleGoogleSignIn}
+                  style={[
+                    styles.primaryButton,
+                    {
+                      backgroundColor: isDarkMode ? '#FFFFFF' : '#0F172A',
+                      shadowColor: isDarkMode ? '#000000' : BUTTON_COLOR,
+                    },
+                  ]}>
+                  <XStack
+                    alignItems="center"
+                    justifyContent="center"
+                    gap="$3"
+                    width="100%">
+                    {isAuthenticating ? (
+                      <ActivityIndicator
+                        size="small"
+                        color={isDarkMode ? '#000000' : '#FFFFFF'}
+                      />
+                    ) : (
+                      <Icon
+                        name="google"
+                        size={22}
+                        color={isDarkMode ? '#EA4335' : '#FFFFFF'}
+                      />
+                    )}
+
+                    <YStack alignItems="flex-start">
+                      <Text
+                        fontSize={16}
+                        fontWeight="700"
+                        color={isDarkMode ? '#000000' : '#FFFFFF'}>
+                        {isAuthenticating
+                          ? 'Connecting Google...'
+                          : 'Continue with Google'}
+                      </Text>
+                    </YStack>
+                  </XStack>
+                </TouchableOpacity>
+
+                <Text
+                  fontSize={12}
+                  color="$color10"
+                  textAlign="center"
+                  marginTop={-4}>
+                  One click to sign up or sign in as {role === 'Doctor' ? 'Doctor' : 'Patient'}
+                </Text>
+
+                {/* Subtle Divider */}
+                <XStack
+                  alignItems="center"
+                  gap="$3"
+                  marginVertical="$1.5">
+                  <YStack flex={1} height={1} backgroundColor={cardBorder} />
+                  <Text
+                    fontSize={12}
+                    fontWeight="600"
+                    color="$color10"
+                    textTransform="uppercase">
+                    Or explore first
+                  </Text>
+                  <YStack flex={1} height={1} backgroundColor={cardBorder} />
+                </XStack>
+
+                {/* 1-Click Browse as Guest */}
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={handleGuestContinue}
+                  style={[
+                    styles.guestButton,
+                    {
+                      backgroundColor: cardBg,
+                      borderColor: cardBorder,
+                    },
+                  ]}>
+                  <XStack
+                    alignItems="center"
+                    justifyContent="center"
+                    gap="$2.5">
+                    <Icon
+                      name="compass-outline"
+                      size={22}
+                      color={BUTTON_COLOR}
+                    />
+                    <YStack>
+                      <Text
+                        fontSize={15}
+                        fontWeight="700"
+                        color="$color12"
+                        textAlign="center">
+                        Browse as Guest
+                      </Text>
+                      <Text
+                        fontSize={11.5}
+                        color="$color10"
+                        textAlign="center">
+                        Instant access • No account required
+                      </Text>
+                    </YStack>
+                  </XStack>
+                </TouchableOpacity>
+              </YStack>
+            </Animated.View>
+
+            {/* Footer Terms & Privacy */}
+            <YStack marginTop="$6" alignItems="center">
               <Text
-                color={isDarkMode ? '$gray11' : '$gray10'}
-                fontWeight="600"
-                fontSize={13}
+                fontSize={11.5}
+                color="$color10"
                 textAlign="center"
-              >
-                Continue as Guest instead
+                lineHeight={17}
+                paddingHorizontal="$2">
+                By continuing, you agree to UltimateHealth’s{' '}
+                <Text
+                  fontSize={11.5}
+                  fontWeight="600"
+                  color={BUTTON_COLOR}
+                  onPress={() => navigation.navigate('CommunityGuidelinesScreen')}>
+                  Terms & Community Guidelines
+                </Text>
+                .
               </Text>
-            </Button>
-          </YStack>
-        </Animated.View>
+            </YStack>
 
+          </YStack>
+        </ScrollView>
       </YStack>
 
       <EmailVerifyModal
@@ -570,12 +736,32 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
-    paddingBottom: 40,
+    paddingVertical: 16,
   },
   logo: {
-    width: 90,
-    height: 90,
-    borderRadius: 25,
+    width: 82,
+    height: 82,
+    borderRadius: 22,
     resizeMode: 'contain',
-  }
+    alignSelf: 'center',
+  },
+  primaryButton: {
+    height: 54,
+    borderRadius: 27,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  guestButton: {
+    height: 52,
+    borderRadius: 26,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    borderWidth: 1.5,
+  },
 });

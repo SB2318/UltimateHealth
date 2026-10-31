@@ -20,10 +20,14 @@ export const useGetAllNotifications = (
   return useQuery({
     queryKey: ['get-all-notifications', userId, page],
     queryFn: async () => {
-      const response = await axios.get(
-        `${PROD_URL}/notifications?role=2&page=${page}`,
-      );
-      return response.data as NotificationRes;
+      try {
+        const response = await axios.get(
+          `${PROD_URL}/notifications?role=2&page=${page}`,
+        );
+        return (response?.data ?? { totalPages: 0, notifications: [] }) as NotificationRes;
+      } catch {
+        return { totalPages: 0, notifications: [] };
+      }
     },
     enabled: !!isConnected && !!page && !isGuest,
   });

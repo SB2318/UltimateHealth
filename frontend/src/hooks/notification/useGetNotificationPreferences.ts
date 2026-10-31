@@ -8,7 +8,7 @@ type AxiosError = any;
 
 const fetchNotificationPreferences = async (): Promise<NotificationPreferencesResponse> => {
   const {data} = await axios.get(GET_NOTIFICATION_PREFERENCES);
-  return data as NotificationPreferencesResponse;
+  return (data ?? { success: false, preferences: [] }) as NotificationPreferencesResponse;
 };
 
 export const useGetNotificationPreferences = (
@@ -21,6 +21,6 @@ export const useGetNotificationPreferences = (
   return useQuery({
     queryKey: ['notification-preferences', userId],
     queryFn: fetchNotificationPreferences,
-    enabled: isConnected && !isGuest && Boolean(user_token),
+    enabled: isConnected && !isGuest && user_token !== '' && user_token !== null,
   });
 };

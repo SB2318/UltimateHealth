@@ -32,46 +32,50 @@ export const useGetAllArticlesForUser = ({
   return useQuery({
     queryKey: ['get-all-articles-for-user', page, selectedStatus],
     queryFn: async () => {
-      const response = await axios.get(
-        `${GET_ALL_ARTICLES_FOR_USER}?page=${page}&status=${selectedStatus}&visit=${visit}`
-      );
+      try {
+        const response = await axios.get(
+          `${GET_ALL_ARTICLES_FOR_USER}?page=${page}&status=${selectedStatus}&visit=${visit}`
+        );
 
-      const data = response.data;
-      const incomingArticles: ArticleData[] = Array.isArray(data?.articles)
-        ? data.articles
-        : [];
+        const data = response?.data;
+        const incomingArticles: ArticleData[] = Array.isArray(data?.articles)
+          ? data.articles
+          : [];
 
-      if (Number(page) === 1) {
-        setTotalPages(typeof data?.totalPages === 'number' ? data.totalPages : 0);
-        setArticleData(incomingArticles);
-      } else if (incomingArticles.length > 0) {
-        setArticleData(prev => {
-          const existingIds = new Set(prev.map(item => String(item._id)));
-          const uniqueIncoming = incomingArticles.filter(
-            item => !existingIds.has(String(item._id)),
-          );
-          return [...prev, ...uniqueIncoming];
-        });
+        if (Number(page) === 1) {
+          setTotalPages(typeof data?.totalPages === 'number' ? data.totalPages : 0);
+          setArticleData(incomingArticles);
+        } else if (incomingArticles.length > 0) {
+          setArticleData(prev => {
+            const existingIds = new Set(prev.map(item => String(item._id)));
+            const uniqueIncoming = incomingArticles.filter(
+              item => !existingIds.has(String(item._id)),
+            );
+            return [...prev, ...uniqueIncoming];
+          });
+        }
+
+        if (Number(visit) === 1) {
+          if (typeof data?.publishedCount === 'number') {
+            setPublishedLabel(`Published(${data.publishedCount})`);
+          }
+
+          if (typeof data?.progressCount === 'number') {
+            setProgressLabel(`Progress(${data.progressCount})`);
+          }
+
+          if (typeof data?.discardCount === 'number') {
+            setDiscardLabel(`Discarded(${data.discardCount})`);
+          }
+
+          setVisit(0);
+        }
+
+        return incomingArticles;
+      } catch (err) {
+        return [];
       }
-
-      if (Number(visit) === 1) {
-        if (typeof data?.publishedCount === 'number') {
-          setPublishedLabel(`Published(${data.publishedCount})`);
-        }
-
-        if (typeof data?.progressCount === 'number') {
-          setProgressLabel(`Progress(${data.progressCount})`);
-        }
-
-        if (typeof data?.discardCount === 'number') {
-          setDiscardLabel(`Discarded(${data.discardCount})`);
-        }
-
-        setVisit(0);
-      }
-
-      return incomingArticles;
     },
-    enabled: !!page && !isGuest && Boolean(user_token),
+    enabled: !!page && !isGuest && user_token !== '' && user_token !== null,
   });
 };

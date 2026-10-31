@@ -14,10 +14,21 @@ export const useGetProfile = (): UseQueryResult<User, AxiosError> => {
   return useQuery({
     queryKey: ['get-my-profile', userId],
     queryFn: async () => {
-      const response = await axios.get(`${GET_PROFILE_API}`);
-      const data = response.data.data;
-      return data as User;
+      try {
+        const response = await axios.get(`${GET_PROFILE_API}`);
+        const data =
+          response?.data?.data ??
+          response?.data?.profile ??
+          response?.data ??
+          null;
+        return (data ?? null) as User;
+      } catch (error) {
+        if (__DEV__) {
+          console.warn('[useGetProfile] Network/query fetch error:', error);
+        }
+        return null as unknown as User;
+      }
     },
-    enabled: !isGuest && Boolean(user_token),
+    enabled: !isGuest && user_token !== '' && user_token !== null,
   });
 };

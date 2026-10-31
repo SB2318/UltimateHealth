@@ -1,10 +1,18 @@
- 
- 
-// @ts-nocheck
-import React, { useEffect, useState } from 'react';
-import { YStack, XStack, Text, Button, Circle, ScrollView as TamaguiScrollView, useTheme } from 'tamagui';
-import { Sheet } from '@tamagui/sheet';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React from 'react';
+import {
+  Modal,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  useColorScheme,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { BUTTON_COLOR } from '../../lib/ui/Theme';
 
 interface BenefitsModalProps {
   visible: boolean;
@@ -15,153 +23,274 @@ interface BenefitsModalProps {
 const benefits = [
   {
     title: 'Engage with Articles',
-    description: 'Post, Like & Comment on Articles',
-    icon: 'edit-3',
+    description: 'Post, Like & Comment on health articles',
+    icon: 'edit-3' as const,
   },
   {
     title: 'Podcast Community',
-    description: 'Join Exclusive Podcast Discussions',
-    icon: 'headphones',
+    description: 'Join exclusive medical & wellness podcast discussions',
+    icon: 'headphones' as const,
   },
   {
-    title: 'Offline Reading',
-    description: 'Save Favorites for Offline Reading',
-    icon: 'bookmark',
+    title: 'Personalized Library',
+    description: 'Save bookmarks & track your reading history',
+    icon: 'bookmark' as const,
   },
   {
-    title: 'Achievements',
-    description: 'Earn Contribution Badges & Streaks',
-    icon: 'award',
+    title: 'Doctor Network & Streaks',
+    description: 'Connect with verified physicians & health specialists',
+    icon: 'award' as const,
   },
 ];
 
-export default function BenefitsModal({ visible, onDismiss, onSignUp }: BenefitsModalProps) {
-  const [open, setOpen] = useState(visible);
-  const theme = useTheme();
-  
-  // Use Tamagui theme values for vector icons
-  const primaryColor = theme.primary?.val || '#3b82f6';
+export default function BenefitsModal({
+  visible,
+  onDismiss,
+  onSignUp,
+}: BenefitsModalProps) {
+  const isDark = useColorScheme() === 'dark';
 
-  useEffect(() => {
-    setOpen(visible);
-  }, [visible]);
-
-  const handleOpenChange = (isOpen: boolean) => {
-    setOpen(isOpen);
-    if (!isOpen) {
-      onDismiss();
-    }
+  const colors = {
+    modalBg: isDark ? '#1E293B' : '#FFFFFF',
+    overlayBg: 'rgba(0, 0, 0, 0.55)',
+    cardBg: isDark ? '#111827' : '#F8FAFC',
+    border: isDark ? '#334155' : '#E2E8F0',
+    textPrimary: isDark ? '#F8FAFC' : '#0F172A',
+    textSecondary: isDark ? '#94A3B8' : '#64748B',
+    starCircleBg: isDark ? '#111827' : '#EFF6FF',
+    handle: isDark ? '#4B5563' : '#CBD5E1',
   };
 
   return (
-    <Sheet
-      modal
-      open={open}
-      onOpenChange={handleOpenChange}
-      dismissOnSnapToBottom
-      snapPoints={[75, 50]}
-      zIndex={100000}
-      animation="bouncy"
-    >
-      <Sheet.Overlay
-        animation="fast"
-        enterStyle={{ opacity: 0 }}
-        exitStyle={{ opacity: 0 }}
-        backgroundColor="rgba(0, 0, 0, 0.6)"
-      />
-      <Sheet.Handle backgroundColor="$color5" />
-      <Sheet.Frame 
-        padding="$5" 
-        backgroundColor="$background" 
-        borderTopLeftRadius="$6" 
-        borderTopRightRadius="$6" 
-        zIndex={100001}
-      >
-        <TamaguiScrollView 
-          showsVerticalScrollIndicator={false} 
-          contentContainerStyle={{ paddingBottom: 40 }}
-        >
-          <YStack gap="$4" alignItems="center" paddingTop="$2">
-            
-            <Circle size={64} backgroundColor="$backgroundLight" marginBottom="$2">
-              <Feather name="star" size={32} color={primaryColor as string} />
-            </Circle>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="slide"
+      onRequestClose={onDismiss}>
+      <TouchableWithoutFeedback onPress={onDismiss}>
+        <View style={[styles.overlay, { backgroundColor: colors.overlayBg }]}>
+          <TouchableWithoutFeedback>
+            <View
+              style={[
+                styles.sheetFrame,
+                {
+                  backgroundColor: colors.modalBg,
+                  borderColor: colors.border,
+                },
+              ]}>
+              {/* Handle */}
+              <View style={[styles.handle, { backgroundColor: colors.handle }]} />
 
-            <Text fontSize={24} fontWeight="800" color="$color" textAlign="center">
-              Why Join Us?
-            </Text>
-            
-            <Text 
-              fontSize={15} 
-              color="$color10" 
-              textAlign="center" 
-              lineHeight={22} 
-              paddingHorizontal="$2" 
-              marginBottom="$4"
-            >
-              Create an account to unlock the full potential of your health journey and interact with our community.
-            </Text>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.contentContainer}>
+                {/* Header Star Icon */}
+                <View
+                  style={[
+                    styles.iconCircle,
+                    { backgroundColor: colors.starCircleBg },
+                  ]}>
+                  <Feather name="star" size={28} color={BUTTON_COLOR} />
+                </View>
 
-            <YStack width="100%" gap="$3" marginBottom="$6">
-              {benefits.map((item, index) => (
-                <XStack 
-                  key={index} 
-                  gap="$4" 
-                  alignItems="center" 
-                  backgroundColor="$backgroundLight" 
-                  padding="$4" 
-                  borderRadius="$4"
-                >
-                  <Circle size={48} backgroundColor="$background">
-                    <Feather name={item.icon as any} size={22} color={primaryColor as string} />
-                  </Circle>
-                  <YStack flex={1}>
-                    <Text fontSize={16} fontWeight="700" color="$color">{item.title}</Text>
-                    <Text fontSize={14} color="$color10" marginTop="$1">{item.description}</Text>
-                  </YStack>
-                </XStack>
-              ))}
-            </YStack>
+                <Text style={[styles.title, { color: colors.textPrimary }]}>
+                  Why Join UltimateHealth?
+                </Text>
 
-            <Button
-              size="$6"
-              width="100%"
-              backgroundColor="$primary"
-              borderRadius="$4"
-              pressStyle={{ scale: 0.97 }}
-              animation="fast"
-              onPress={() => {
-                setOpen(false);
-                onDismiss();
-                onSignUp();
-              }}
-            >
-              <Text fontSize={18} fontWeight="700" color="$white">
-                Sign Up Now
-              </Text>
-            </Button>
-            
-            <Button
-              size="$5"
-              width="100%"
-              backgroundColor="transparent"
-              borderWidth={0}
-              marginTop="$2"
-              pressStyle={{ scale: 0.97, opacity: 0.7 }}
-              animation="fast"
-              onPress={() => {
-                setOpen(false);
-                onDismiss();
-              }}
-            >
-              <Text fontSize={16} fontWeight="600" color="$color10">
-                Maybe Later
-              </Text>
-            </Button>
-          </YStack>
-        </TamaguiScrollView>
-      </Sheet.Frame>
-    </Sheet>
+                <Text
+                  style={[styles.subtitle, { color: colors.textSecondary }]}>
+                  Create a free account to unlock personalized wellness insights,
+                  participate in discussions, and connect with healthcare leaders.
+                </Text>
+
+                {/* Benefits List */}
+                <View style={styles.benefitsList}>
+                  {benefits.map((item, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        styles.benefitCard,
+                        {
+                          backgroundColor: colors.cardBg,
+                          borderColor: colors.border,
+                        },
+                      ]}>
+                      <View
+                        style={[
+                          styles.benefitIconBox,
+                          { backgroundColor: colors.starCircleBg },
+                        ]}>
+                        <Feather
+                          name={item.icon}
+                          size={20}
+                          color={BUTTON_COLOR}
+                        />
+                      </View>
+                      <View style={styles.benefitTextGroup}>
+                        <Text
+                          style={[
+                            styles.benefitTitle,
+                            { color: colors.textPrimary },
+                          ]}>
+                          {item.title}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.benefitDescription,
+                            { color: colors.textSecondary },
+                          ]}>
+                          {item.description}
+                        </Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+
+                {/* Primary CTA */}
+                <TouchableOpacity
+                  style={styles.signUpButton}
+                  onPress={onSignUp}
+                  activeOpacity={0.85}
+                  accessibilityRole="button"
+                  accessibilityLabel="Create Account with Google">
+                  <Text style={styles.signUpButtonText}>
+                    Continue with Google
+                  </Text>
+                </TouchableOpacity>
+
+                {/* Close Button */}
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={onDismiss}
+                  activeOpacity={0.7}
+                  accessibilityRole="button"
+                  accessibilityLabel="Close">
+                  <Text
+                    style={[
+                      styles.closeButtonText,
+                      { color: colors.textSecondary },
+                    ]}>
+                    Not Now
+                  </Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
+          </TouchableWithoutFeedback>
+        </View>
+      </TouchableWithoutFeedback>
+    </Modal>
   );
 }
 
+const styles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  sheetFrame: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    borderTopWidth: 1,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 32,
+    maxHeight: '85%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  handle: {
+    width: 44,
+    height: 4,
+    borderRadius: 2,
+    alignSelf: 'center',
+    marginBottom: 16,
+  },
+  contentContainer: {
+    alignItems: 'center',
+    paddingBottom: 10,
+  },
+  iconCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  title: {
+    fontSize: 21,
+    fontWeight: '800',
+    textAlign: 'center',
+    marginBottom: 8,
+    letterSpacing: -0.3,
+  },
+  subtitle: {
+    fontSize: 13.5,
+    lineHeight: 20,
+    textAlign: 'center',
+    paddingHorizontal: 12,
+    marginBottom: 20,
+  },
+  benefitsList: {
+    width: '100%',
+    gap: 10,
+    marginBottom: 22,
+  },
+  benefitCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 14,
+    borderWidth: 1,
+    padding: 12,
+    gap: 12,
+  },
+  benefitIconBox: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  benefitTextGroup: {
+    flex: 1,
+  },
+  benefitTitle: {
+    fontSize: 14.5,
+    fontWeight: '700',
+    marginBottom: 2,
+  },
+  benefitDescription: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  signUpButton: {
+    width: '100%',
+    backgroundColor: BUTTON_COLOR,
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: BUTTON_COLOR,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 3,
+    marginBottom: 10,
+  },
+  signUpButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  closeButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  closeButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+});

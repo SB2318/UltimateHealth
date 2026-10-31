@@ -54,6 +54,6 @@ export const useCheckTokenStatus = () => {
     },
     staleTime: 1000 * 60 * 5,
     retry: false,
-    enabled: !isGuest && Boolean(userToken),
+    enabled: !isGuest && userToken !== '' && userToken !== null,
   });
 };

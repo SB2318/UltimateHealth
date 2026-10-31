@@ -16,8 +16,13 @@ AxiosError
     queryKey: ['get-all-podcasts', page],
     queryFn: async () => {
       const response = await axios.get(`${GET_ALL_PODCASTS}?page=${page}`);
-      return response.data as PodcastResponse;
+      return (
+        response?.data ?? {
+          totalPages: 1,
+          allPodcasts: [],
+        }
+      ) as PodcastResponse;
     },
-    enabled: isConnected  && !!page,
+    enabled: isConnected && !!page,
   });
-}
+};

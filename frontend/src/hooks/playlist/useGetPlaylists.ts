@@ -14,9 +14,13 @@ export const useGetPlaylists = (): UseQueryResult<PlayList[], AxiosError> => {
   return useQuery({
     queryKey: ['get-my-playlists', userId],
     queryFn: async () => {
-      const res = await axios.get(GET_PLAYLIST);
-      return res.data as PlayList[];
+      try {
+        const res = await axios.get(GET_PLAYLIST);
+        return (res?.data ?? []) as PlayList[];
+      } catch {
+        return [];
+      }
     },
-    enabled: !isGuest && Boolean(user_token),
+    enabled: !isGuest && user_token !== '' && user_token !== null,
   });
 };

@@ -15,10 +15,22 @@ AxiosError
     return useQuery({
     queryKey: ['get-user-details-by-id'],
     queryFn: async () => {
-      const response = await axios.get(`${GET_USER_DETAILS_API}`);
-      const profile = response?.data?.data ?? response?.data?.profile ?? response?.data ?? null;
-      return (profile ?? null) as User | null;
+      try {
+        const response = await axios.get(`${GET_USER_DETAILS_API}`);
+        const profile =
+          response?.data?.data ??
+          response?.data?.profile ??
+          response?.data ??
+          null;
+        return (profile ?? null) as User | null;
+      } catch (error) {
+        if (__DEV__) {
+          console.warn('[useGetUserDetails] Failed to fetch user details:', error);
+        }
+        return null;
+      }
     },
-    enabled: !!isConnected && !isGuest && Boolean(user_token),
+    enabled:
+      !!isConnected && !isGuest && user_token !== '' && user_token !== null,
   });
 };

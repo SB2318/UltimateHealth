@@ -315,21 +315,6 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             onPress={() => go('OpenSourcePage')}
             isDark={isDark}
           />
-          <View
-            style={[
-              styles.divider,
-              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
-            ]}
-            accessible={false}
-          />
-          <SettingsRow
-            icon="account-group-outline"
-            iconColor="#F59E0B"
-            label="Contributors"
-            sublabel="The people who built this"
-            onPress={() => go('ContributorPage')}
-            isDark={isDark}
-          />
         </View>
 
         {/* ── ABOUT ── */}

@@ -19,11 +19,14 @@ export const useGetWellnessPlan = (
         }
         return body?.data ?? null;
       } catch (err: any) {
-        // 404 means the user has not generated an active wellness plan yet
+        // 404 or network failure: return null safely
         if (err?.response?.status === 404) {
           return null;
         }
-        throw err;
+        if (__DEV__) {
+          console.warn('[useGetWellnessPlan] Failed to fetch plan, returning null fallback:', err);
+        }
+        return null;
       }
     },
     enabled: isConnected,

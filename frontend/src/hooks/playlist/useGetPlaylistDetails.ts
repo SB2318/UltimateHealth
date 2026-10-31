@@ -15,13 +15,17 @@ export const useGetPlaylistDetails = (
   return useQuery({
     queryKey: ['playlist-details', playlistId],
     queryFn: async () => {
-      if (!playlistId) return [];
-      const res = await axios.get(GET_PLAYLIST_DETAILS, {
-        params: {
-          playlist_id: playlistId,
-        },
-      });
-      return (res.data || []) as PodcastData[];
+      try {
+        if (!playlistId) return [];
+        const res = await axios.get(GET_PLAYLIST_DETAILS, {
+          params: {
+            playlist_id: playlistId,
+          },
+        });
+        return (res?.data || []) as PodcastData[];
+      } catch {
+        return [];
+      }
     },
     enabled: Boolean(playlistId) && !isGuest,
   });

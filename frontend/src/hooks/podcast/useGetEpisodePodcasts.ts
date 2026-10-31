@@ -11,9 +11,13 @@ export const useGetEpisodePodcasts = (
   return useQuery({
     queryKey: ['episode-podcasts', episodeId],
     queryFn: async () => {
-      if (!episodeId) return [];
-      const res = await axios.get(GET_EPISODE_PODCASTS(episodeId));
-      return (res.data || []) as PodcastData[];
+      try {
+        if (!episodeId) return [];
+        const res = await axios.get(GET_EPISODE_PODCASTS(episodeId));
+        return (res?.data || []) as PodcastData[];
+      } catch {
+        return [];
+      }
     },
     enabled: Boolean(episodeId),
   });

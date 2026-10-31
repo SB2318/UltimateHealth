@@ -216,14 +216,6 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
                 />
 
                 <MenuButton
-                  icon="people-outline"
-                  title="Contributors"
-                  iconColor="#a855f7"
-                  onPress={() => navigation.navigate('ContributorPage')}
-                  isDarkMode={isDarkMode}
-                />
-
-                <MenuButton
                   icon="logo-github"
                   title="Open Source Programs"
                   iconColor="#06402B"
