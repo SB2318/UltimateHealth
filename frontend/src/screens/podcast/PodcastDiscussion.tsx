@@ -58,7 +58,7 @@ const PodcastDiscussion = ({
 }: PodcastDiscussionProp) => {
   const socket = useSocket();
   const dispatch = useAppDispatch();
-  const {podcastId, mentionedUsers} = route.params;
+  const {podcastId, mentionedUsers = []} = route.params || {};
 
   // Auto-join podcast room
   const inputRef = useRef<TextInput>(null);
@@ -163,7 +163,7 @@ const PodcastDiscussion = ({
               {one.Profile_image ? (
                 <Image
                   source={{
-                    uri: one.Profile_image.startsWith('https')
+                    uri: one.Profile_image && one.Profile_image.startsWith('https')
                       ? one.Profile_image
                       : `${GET_STORAGE_DATA}/${one.Profile_image}`,
                   }}

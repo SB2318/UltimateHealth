@@ -60,9 +60,11 @@ const PodcastPlayer = ({navigation, route}: PodcastPlayerScreenProps) => {
   const {mutate: uploadPodcast, isPending: uploadPodcastPending} =
     useUploadPodcast();
 
-  const player = useAudioPlayer(
-    filePath ? `file://${filePath}` : null,
-  );
+  const audioUri = filePath
+    ? (filePath.startsWith('file://') ? filePath : `file://${filePath}`)
+    : null;
+
+  const player = useAudioPlayer(audioUri);
 
   const formatPlaybackSpeed = (playbackSpeed: number) => `${playbackSpeed}x`;
 

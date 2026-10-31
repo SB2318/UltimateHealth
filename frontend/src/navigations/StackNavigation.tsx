@@ -313,45 +313,13 @@ const StackNavigation = () => {
       <Stack.Screen
         name="OfflinePodcastList"
         component={OfflinePodcastList}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: 'Downloaded Podcasts',
-          headerTintColor: '#ffffff',
-          headerBackTitleVisible: false,
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonEditorScreen}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color={'#ffffff'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="OfflinePodcastDetail"
         component={OfflinePodcastDetail}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: '',
-          headerBackTitleVisible: false,
-          headerTransparent: true,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonEditorScreen}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{headerShown: false}}
       />
 
       <Stack.Screen

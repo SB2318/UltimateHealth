@@ -1,10 +1,14 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
   FlatList,
-  Pressable,
   View,
   StyleSheet,
+  TouchableOpacity,
+  Text,
+  Platform,
 } from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import {useFocusEffect} from '@react-navigation/native';
 import {
   OfflinePodcastListProp,
@@ -16,8 +20,7 @@ import {
   readDownloadedPodcasts,
 } from '../../lib/utils/Utils';
 import PodcastCard from '../../components/podcast/PodcastCard';
-import {hp} from '../../lib/ui/Metric';
-import {ON_PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import Snackbar from 'react-native-snackbar';
 import {
   useAppDispatch,
@@ -39,20 +42,20 @@ export default function OfflinePodcastList({
   const [podcasts, setPodcasts] = useState<PodcastData[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
   const {user_id} = useAppSelector((state: any) => state.user);
-  const [playlistModalOpen, setPlaylistModalOpen] =
-    useState<boolean>(false);
-  //const [playlistIds, setPlaylistIds] = useState<string[]>([]);
+  const [playlistModalOpen, setPlaylistModalOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  let insets = {top: 0, bottom: 0, left: 0, right: 0};
+  try {
+    insets = useSafeAreaInsets();
+  } catch (_e) {}
 
   const openPlaylist = (id: string) => {
-    //setPlaylistIds([id]);
     setPlaylistModalOpen(true);
     dispatch(setaddedPodcastId(id));
   };
 
   const closePlaylist = () => {
     setPlaylistModalOpen(false);
-    // setPlaylistIds([]);
     dispatch(setRemovePlaylistId(''));
   };
 
@@ -98,29 +101,19 @@ export default function OfflinePodcastList({
   };
 
   const renderItem = ({item}: {item: PodcastData}) => (
-    <Pressable
-      onPress={() => {
-        //playPodcast(item);
-        navigateToDetail(item);
-      }}
-      accessibilityRole="button"
-      accessibilityLabel={`Open offline podcast ${item?.title || ''}`}
-      accessibilityHint="Opens the podcast details"
-    >
+    <View style={styles.cardItemWrapper}>
       <PodcastCard
         id={item._id}
         title={item.title}
         audioUrl={item.audio_url}
-        host={item.user_id.user_name}
-        views={item.viewUsers.length}
+        host={item.user_id?.user_name || 'Host'}
+        views={item.viewUsers?.length || 0}
         duration={`${msToTime(item.duration)}`}
-        tags={item.tags}
+        tags={item.tags || []}
         downloaded={true}
         display={true}
         downLoadAudio={async () => {
-          // delete from downloads
           const res = await deleteFromDownloads(item);
-
           if (res) {
             await loadPodcasts();
             Snackbar.show({
@@ -129,7 +122,7 @@ export default function OfflinePodcastList({
             });
           } else {
             Snackbar.show({
-              text: 'Failed to removed podcast from offline',
+              text: 'Failed to remove podcast from offline',
               duration: Snackbar.LENGTH_SHORT,
             });
           }
@@ -137,26 +130,47 @@ export default function OfflinePodcastList({
         handleClick={() => {
           navigateToDetail(item);
         }}
-        imageUri={''}
+        imageUri={item.cover_image || ''}
         handleReport={() => {
           navigateToReport(item._id);
         }}
         playlistAct={openPlaylist}
       />
-    </Pressable>
+    </View>
   );
 
+  const topInset = insets?.top ? insets.top : Platform.OS === 'android' ? 12 : 8;
+  const bottomInset = insets?.bottom || 16;
+
   return (
-    <View
-      style={styles.container}
-      accessible={false}
-    >
+    <View style={styles.container} accessible={false}>
+      {/* Top Header Bar */}
+      <View style={[styles.topBar, {paddingTop: Math.max(topInset, 12)}]}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          style={styles.backButton}>
+          <Ionicons name="arrow-back" size={22} color="#0F172A" />
+        </TouchableOpacity>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>Downloaded Podcasts</Text>
+          <Text style={styles.headerSubtitle}>
+            {podcasts.length} {podcasts.length === 1 ? 'episode' : 'episodes'} available offline
+          </Text>
+        </View>
+        <View style={styles.headerRightPlaceholder} />
+      </View>
+
       <FlatList
         data={podcasts}
-        keyExtractor={(item: PodcastData) =>
-          item._id.toString()
-        }
+        keyExtractor={(item: PodcastData) => item._id.toString()}
         renderItem={renderItem}
+        contentContainerStyle={[
+          styles.listContent,
+          {paddingBottom: bottomInset + 24},
+        ]}
+        ItemSeparatorComponent={() => <View style={styles.itemSeparator} />}
         accessibilityLabel="Offline podcasts list"
         ListEmptyComponent={
           loadError ? (
@@ -165,9 +179,7 @@ export default function OfflinePodcastList({
               onRetry={loadPodcasts}
             />
           ) : (
-            <NoOfflinePodcastsState
-              onBrowse={() => navigation.goBack()}
-            />
+            <NoOfflinePodcastsState onBrowse={() => navigation.goBack()} />
           )
         }
       />
@@ -183,28 +195,52 @@ export default function OfflinePodcastList({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: hp(5),
-    paddingTop: hp(10),
-    paddingHorizontal: hp(3),
-    backgroundColor: ON_PRIMARY_COLOR,
-    // backgroundColor:'#ffffff'
+    backgroundColor: '#F8FAFC',
   },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 12,
-  },
-  item: {
-    paddingVertical: 12,
-    borderBottomColor: '#ccc',
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
+    borderBottomColor: '#E2E8F0',
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#F1F5F9',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  artist: {
-    fontSize: 14,
-    color: '#666',
+  headerTitleContainer: {
+    flex: 1,
+    alignItems: 'center',
+    marginHorizontal: 8,
+  },
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#0F172A',
+  },
+  headerSubtitle: {
+    fontSize: 12,
+    color: '#64748B',
+    marginTop: 2,
+  },
+  headerRightPlaceholder: {
+    width: 40,
+  },
+  listContent: {
+    paddingHorizontal: 16,
+    paddingTop: 14,
+  },
+  cardItemWrapper: {
+    width: '100%',
+  },
+  itemSeparator: {
+    height: 12,
   },
 });

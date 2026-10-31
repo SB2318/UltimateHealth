@@ -31,6 +31,8 @@ import { ttsLanguageList } from '../../lib/utils/Utils';
 import TagSelectorSection, {
   isSameCategory,
 } from '../../components/common/TagSelectorSection';
+import * as DocumentPicker from 'expo-document-picker';
+import Snackbar from 'react-native-snackbar';
 
 
 const PodcastForm = ({navigation, route}: PodcastFormProp) => {
@@ -137,6 +139,52 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
       imageUtils: imageUtils,
       episodeId: selectedEpisodeId || null,
     });
+  };
+
+  const handlePickAudio = async () => {
+    setSubmitted(true);
+    if (!validateForm()) {
+      Snackbar.show({
+        text: 'Please complete all required fields above first',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+      return;
+    }
+
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: ['audio/*'],
+        copyToCacheDirectory: true,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const pickedAsset = result.assets[0];
+        if (pickedAsset.size && pickedAsset.size > 50 * 1024 * 1024) {
+          Alert.alert('File Too Large', 'Audio file must be under 50 MB.');
+          return;
+        }
+
+        Snackbar.show({
+          text: `Selected: ${pickedAsset.name || 'Audio file'}`,
+          duration: Snackbar.LENGTH_SHORT,
+        });
+
+        navigation.navigate('PodcastPlayer', {
+          title: title,
+          description: description,
+          selectedGenres: selectedGenres,
+          imageUtils: imageUtils,
+          filePath: pickedAsset.uri,
+          episodeId: selectedEpisodeId || null,
+        });
+      }
+    } catch (err) {
+      console.warn('Error picking audio file:', err);
+      Alert.alert(
+        'Error',
+        'Could not access the selected audio file. Please try again.',
+      );
+    }
   };
 
   const selectImage = () => {
@@ -636,13 +684,29 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
             errorText={submitted && genresError ? genresError : undefined}
           />
 
-          {/* Submit Button */}
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={handleCreatePost}>
-            <Text style={styles.submitButtonText}>Continue to Recording</Text>
-            <Ionicon name="arrow-forward" size={20} color="#fff" />
-          </TouchableOpacity>
+          {/* Action Buttons: Live Recording or Upload Pre-recorded Audio */}
+          <View style={styles.actionButtonsContainer}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleCreatePost}>
+              <Ionicon name="mic-outline" size={20} color="#fff" />
+              <Text style={styles.submitButtonText}>Continue to Recording</Text>
+              <Ionicon name="arrow-forward" size={18} color="#fff" />
+            </TouchableOpacity>
+
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>OR</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <TouchableOpacity
+              style={styles.uploadAudioButton}
+              onPress={handlePickAudio}>
+              <Ionicon name="cloud-upload-outline" size={21} color={PRIMARY_COLOR} />
+              <Text style={styles.uploadAudioButtonText}>Upload Audio from Device</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
@@ -818,6 +882,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#222',
   },
+  actionButtonsContainer: {
+    marginTop: 8,
+    marginBottom: hp(4),
+    gap: 6,
+  },
   submitButton: {
     backgroundColor: PRIMARY_COLOR,
     flexDirection: 'row',
@@ -826,8 +895,6 @@ const styles = StyleSheet.create({
     gap: 8,
     padding: 16,
     borderRadius: 12,
-    marginTop: 8,
-    marginBottom: hp(4),
     shadowColor: PRIMARY_COLOR,
     shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.3,
@@ -836,6 +903,44 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 4,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#CBD5E1',
+  },
+  dividerText: {
+    paddingHorizontal: 12,
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#94A3B8',
+  },
+  uploadAudioButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: PRIMARY_COLOR,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    gap: 8,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  uploadAudioButtonText: {
+    color: PRIMARY_COLOR,
     fontSize: 16,
     fontWeight: '700',
   },

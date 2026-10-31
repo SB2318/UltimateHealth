@@ -104,6 +104,10 @@ jest.mock('../../../hooks/podcast/useGetSinglePodcastDetails', () => ({
   useGetSinglePodcastDetails: jest.fn(),
 }));
 
+jest.mock('../../../hooks/podcast/useGetEpisodePodcasts', () => ({
+  useGetEpisodePodcasts: jest.fn(() => ({data: [], isLoading: false})),
+}));
+
 jest.mock('../../../hooks/podcast/useLikePodcast', () => ({
   useLikePodcast: jest.fn(),
 }));

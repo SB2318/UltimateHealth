@@ -56,6 +56,7 @@
     "expo-constants": "~57.0.13",
     "expo-dev-client": "~57.0.14",
     "expo-device": "~57.0.0",
+    "expo-document-picker": "57.0.3",
     "expo-font": "~57.0.0",
     "expo-haptics": "~57.0.0",
     "expo-image": "~57.0.3",
