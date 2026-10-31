@@ -1042,6 +1042,28 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     };
   });
 
+  // Floating back button (replaces the old stack header)
+  const backButton = (
+    <TouchableOpacity
+      onPress={() => navigation.goBack()}
+      style={{
+        position: 'absolute',
+        top: insets.top + 10,
+        left: 14,
+        zIndex: 20,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(0,0,0,0.45)',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      accessibilityRole="button"
+      accessibilityLabel="Go back">
+      <Ionicons name="arrow-back" size={22} color="#ffffff" />
+    </TouchableOpacity>
+  );
+
   if (articleLoading) {
     return (
       <SafeAreaView
@@ -1049,6 +1071,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         style={[styles.container, {backgroundColor: themeColors.background}]}>
         <StatusBar style="light" backgroundColor="#000A60" />
         <View style={{height: insets.top, backgroundColor: '#000A60'}} />
+        {backButton}
         <BaseEmptyState
           iconEmoji="📄"
           title="Loading Article"
@@ -1066,6 +1089,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         style={[styles.container, {backgroundColor: themeColors.background}]}>
         <StatusBar style="light" backgroundColor="#000A60" />
         <View style={{height: insets.top, backgroundColor: '#000A60'}} />
+        {backButton}
         <NoArticleState onRefresh={refetch} />
       </SafeAreaView>
     );
@@ -1092,6 +1116,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
           style={[styles.container, {backgroundColor: themeColors.background}]}>
           <StatusBar style="light" backgroundColor="#000A60" />
           <View style={{height: insets.top, backgroundColor: '#000A60'}} />
+        {backButton}
           <NoArticleState onRefresh={() => refetch()} />
         </SafeAreaView>
       }>
@@ -1100,6 +1125,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       style={[styles.container, {backgroundColor: themeColors.background}]}>
       <StatusBar style="light" backgroundColor="#000A60" />
       <View style={{height: insets.top, backgroundColor: '#000A60'}} />
+        {backButton}
       {/* Reading Progress Bar */}
       <Animated.View style={[styles.progressBar, {top: insets.top}, progressStyle]} />
 

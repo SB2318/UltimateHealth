@@ -145,31 +145,8 @@ const StackNavigation = () => {
       <Stack.Screen
         name="ChatbotScreen"
         component={ChatbotScreen}
-        options={({navigation}) => ({
-          headerTitleAlign: 'center',
-          title: 'Chatbot',
-          headerShown: true,
-          headerBackTitleVisible: false,
-          headerShadowVisible: false,
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerTintColor: 'white',
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{
-                marginLeft: 15,
-                height: 40,
-                width: 40,
-                borderRadius: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              onPress={() => navigation.goBack()}>
-              <FontAwesome6 size={20} name="arrow-left" color="white" />
-            </TouchableOpacity>
-          ),
-        })}
+        // ChatbotScreen renders its own branded header; no stack header.
+        options={{headerShown: false}}
       />
 
       <Stack.Screen
@@ -349,21 +326,8 @@ const StackNavigation = () => {
       <Stack.Screen
         name="ArticleScreen"
         component={ArticleScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: '',
-          headerTransparent: true,
-          headerBackTitleVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButton}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color="white" />
-            </TouchableOpacity>
-          ),
-        })}
+        // ArticleScreen renders its own floating back button; no stack header.
+        options={{headerShown: false}}
       />
 
       <Stack.Screen

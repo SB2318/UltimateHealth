@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState, useContext} from 'react';
+import {BottomTabBarHeightCallbackContext} from '@react-navigation/bottom-tabs';
 import {
   View,
   Pressable,
@@ -8,6 +9,7 @@ import {
   Animated,
   useColorScheme,
   Platform,
+  Keyboard,
 } from 'react-native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {PRIMARY_COLOR} from '../lib/ui/Theme';
@@ -118,15 +120,32 @@ const TabBar = ({state, descriptors, navigation}: any) => {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
-  const hideTabBarScreens = ['Chatbot'];
-  const currentRouteName = state.routes[state.index]?.name;
-  if (hideTabBarScreens.includes(currentRouteName)) return null;
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  // Report real (custom) tab bar height so screens can use useBottomTabBarHeight
+  const reportTabBarHeight = useContext(BottomTabBarHeightCallbackContext);
+
+  useEffect(() => {
+    const showEvt = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvt = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+    const showSub = Keyboard.addListener(showEvt, () => setKeyboardVisible(true));
+    const hideSub = Keyboard.addListener(hideEvt, () => setKeyboardVisible(false));
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
+
+  // Keep AI inside tab navigation: only hide while typing (tabBarHideOnKeyboard)
+  const focusedRoute = state.routes[state.index];
+  const focusedOptions = focusedRoute ? descriptors[focusedRoute.key]?.options : undefined;
+  if (keyboardVisible && focusedOptions?.tabBarHideOnKeyboard) return null;
 
   const bgColor = isDark ? '#1a1a2e' : '#ffffff';
   const borderColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
 
   return (
     <View
+      onLayout={e => reportTabBarHeight?.(e.nativeEvent.layout.height)}
       style={[
         styles.container,
         {

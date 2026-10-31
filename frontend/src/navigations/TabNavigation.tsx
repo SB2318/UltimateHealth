@@ -12,7 +12,7 @@ import {TabParamList} from '../schemas/type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import {BUTTON_COLOR} from '../lib/ui/Theme';
 import HeaderRightMenu from '../components/common/HeaderRightMenu';
-import PersonaLobbyScreen from '../screens/ai/PersonaLobbyScreen';
+import AIStackNavigation from './AIStackNavigation';
 import WellnessDashboardScreen from '../screens/wellness/WellnessDashboardScreen';
 import GuestPlaceholderScreen from '../components/auth/GuestPlaceholderScreen';
 import { useAppSelector } from '../store/hooks';
@@ -75,7 +75,7 @@ const TabNavigation = () => {
 
         <Tab.Screen
           name="Chatbot"
-          component={isGuest ? ChatbotGuestScreen : PersonaLobbyScreen}
+          component={isGuest ? ChatbotGuestScreen : AIStackNavigation}
           options={({navigation}) => ({
             headerTitleAlign: 'center',
             title: 'Chatbot',

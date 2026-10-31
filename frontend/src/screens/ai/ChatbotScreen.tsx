@@ -7,7 +7,7 @@ import {
   InputToolbar,
   Send,
 } from 'react-native-gifted-chat';
-import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {BUTTON_COLOR} from '../../lib/ui/Theme';
 import {useAppSelector} from '../../store/hooks';
 import {
   View,
@@ -17,13 +17,15 @@ import {
   Text,
   TouchableOpacity,
   Modal,
+  Keyboard,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Tts from 'react-native-tts';
 import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
 import {ChatBotScreenProps, Message} from '../../schemas/type';
 import {hp} from '../../lib/ui/Metric';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {BottomTabBarHeightContext} from '@react-navigation/bottom-tabs';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import {useSendMessageToGemini} from '../../hooks/ai/useSendMessageToGemini';
 import {useLoadAIConversations} from '../../hooks/ai/useLoadAIChats';
@@ -46,7 +48,30 @@ import {verifyChatbotResponse} from '../../../plugins/api/chatbot-response-verif
 
 const ASSISTANT_USER_ID = 2;
 
+const useSafeTopInset = () => {
+  try {
+    return useSafeAreaInsets().top;
+  } catch {
+    return 0;
+  }
+};
+
 const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
+  const topInset = useSafeTopInset();
+  // When rendered inside the AI tab, keep the composer above the floating tab bar
+  const tabBarHeight = React.useContext(BottomTabBarHeightContext) ?? 0;
+  const [keyboardOpen, setKeyboardOpen] = React.useState(false);
+  React.useEffect(() => {
+    const showEvt = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvt = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+    const s = Keyboard.addListener(showEvt, () => setKeyboardOpen(true));
+    const h = Keyboard.addListener(hideEvt, () => setKeyboardOpen(false));
+    return () => {
+      s.remove();
+      h.remove();
+    };
+  }, []);
+  const bottomSpacing = keyboardOpen ? 0 : tabBarHeight;
   const {isConnected} = useAppSelector((state: any) => state.network);
   
   const { characterId, characterName, characterAvatar } = route.params || {};
@@ -345,12 +370,14 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   }, [isPending, isConnected, safeSetMessages, performSendMessage]);
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}} edges={['top']}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#f9fafb'}} edges={[]}>
       <View
         style={{
           paddingHorizontal: 20,
-          paddingVertical: 16,
-          backgroundColor: PRIMARY_COLOR,
+          paddingTop: topInset + 12,
+          paddingBottom: 16,
+          zIndex: 1,
+          backgroundColor: BUTTON_COLOR,
           flexDirection: 'row',
           alignItems: 'center',
           gap: 16,
@@ -416,7 +443,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}>
-        <View style={{flex: 1, backgroundColor: '#f9fafb'}}>
+        <View style={{flex: 1, backgroundColor: '#f9fafb', paddingBottom: bottomSpacing}}>
           <GiftedChat
             messages={messages}
             onSend={onSend}
@@ -528,7 +555,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                         }),
                       },
                       right: {
-                        backgroundColor: PRIMARY_COLOR,
+                        backgroundColor: BUTTON_COLOR,
                         borderBottomRightRadius: 4,
                         borderTopLeftRadius: 20,
                         borderTopRightRadius: 20,
@@ -560,7 +587,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                       <Ionicons
                         name={isSpeaking ? 'stop-circle' : 'volume-medium'}
                         size={24}
-                        color={isSpeaking ? PRIMARY_COLOR : '#6b7280'}
+                        color={isSpeaking ? BUTTON_COLOR : '#6b7280'}
                       />
                     </TouchableOpacity>
                   )}
@@ -595,7 +622,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                     size={26}
                     color={
                       props.text?.trim().length && !isPending
-                        ? PRIMARY_COLOR
+                        ? BUTTON_COLOR
                         : '#9ca3af'
                     }
                   />
@@ -619,7 +646,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
             </Text>
             <TouchableOpacity
               onPress={() => setShowQuotaModal(false)}
-              style={{ backgroundColor: PRIMARY_COLOR, paddingVertical: 14, width: '100%', borderRadius: 12, alignItems: 'center' }}
+              style={{ backgroundColor: BUTTON_COLOR, paddingVertical: 14, width: '100%', borderRadius: 12, alignItems: 'center' }}
             >
               <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>Got it</Text>
             </TouchableOpacity>

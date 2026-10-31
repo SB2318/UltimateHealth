@@ -462,7 +462,7 @@ const WellnessDashboardScreen = () => {
               marginBottom={16}
               alignItems="center">
               <Ionicons
-                name="Pulse-outline"
+                name="pulse-outline"
                 size={32}
                 color={PRIMARY_COLOR}
               />
