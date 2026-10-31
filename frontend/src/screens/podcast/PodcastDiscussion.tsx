@@ -4,10 +4,13 @@ import React, {FC, useEffect, useMemo, useRef, useState} from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
   FlatList,
   Alert,
   Pressable,
   TextInput,
+  Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {
   PodcastDiscussionProp,
@@ -74,9 +77,21 @@ const PodcastDiscussion = ({
   );
   const [commentLoading, setCommentLoading] =
     useState<boolean>(false);
+  const [fetchingComments, setFetchingComments] =
+    useState<boolean>(true);
+  const [isSubmitting, setIsSubmitting] =
+    useState<boolean>(false);
   const [commentLikeLoading, setCommentLikeLoading] =
     useState<boolean>(false);
   const [mentions, setMentions] = useState<User[]>([]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFetchingComments(false);
+      setCommentLoading(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const {data: podcast, refetch} =
     useGetSinglePodcastDetails(podcastId);
@@ -209,18 +224,30 @@ const PodcastDiscussion = ({
   );
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket) {
+      setFetchingComments(false);
+      setCommentLoading(false);
+      return;
+    }
 
+    setFetchingComments(true);
     socket.emit('fetch-comments', {
       podcastId: route.params.podcastId,
     });
 
     socket.on('connect', () => {
       console.log('connection established');
+      socket.emit('fetch-comments', {
+        podcastId: route.params.podcastId,
+      });
+    });
+
+    socket.on('fetch-comment-processing', (data: boolean) => {
+      setFetchingComments(data);
     });
 
     socket.on('comment-processing', (data: boolean) => {
-      setCommentLoading(data);
+      setIsSubmitting(data);
     });
 
     socket.on('like-comment-processing', (data: boolean) => {
@@ -229,12 +256,16 @@ const PodcastDiscussion = ({
 
     socket.on('error', data => {
       console.log('connection error', data);
+      setFetchingComments(false);
+      setCommentLoading(false);
     });
 
     socket.on('fetch-comments', data => {
       console.log('comment loaded');
-      if (data.podcastId === route.params.podcastId) {
-        setComments(data.comments);
+      if (String(data.podcastId) === String(route.params.podcastId)) {
+        setComments(Array.isArray(data.comments) ? data.comments : []);
+        setFetchingComments(false);
+        setCommentLoading(false);
       }
     });
 
@@ -438,235 +469,214 @@ const PodcastDiscussion = ({
     });
   };
 
-  if (commentLoading) {
-    return <Loader />;
-  }
+  // Screen layout remains interactive while discussions load inline
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <KeyboardAwareScrollView
-        style={styles.scrollView}
-        bottomOffset={50}
-        showsVerticalScrollIndicator={false}
-        extraKeyboardSpace={20}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={styles.scrollContent}
-        accessible={false}
-      >
-        <YStack gap="$3">
-          {/* Podcast Title Card */}
-          <View style={styles.podcastTitleCard}>
-            <H3
-              fontSize={20}
-              color="#1F2937"
-              fontWeight={'700'}
-              accessibilityRole="header"
-              accessibilityLabel={podcast?.title || 'Podcast title'}
-            >
-              {podcast?.title}
-            </H3>
-          </View>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.select({
+          ios: 0,
+          android: 20,
+        })}>
+        <FlatList
+          ref={flatListRef}
+          data={comments}
+          keyExtractor={(item: Comment) => item._id}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          accessibilityLabel="Podcast discussion comments"
+          ListHeaderComponent={
+            <YStack gap="$3" marginBottom="$3">
+              {/* Podcast Title Card */}
+              <View style={styles.podcastTitleCard}>
+                <H3
+                  fontSize={20}
+                  color="#1F2937"
+                  fontWeight={'700'}
+                  accessibilityRole="header"
+                  accessibilityLabel={podcast?.title || 'Podcast title'}>
+                  {podcast?.title}
+                </H3>
+              </View>
 
-          {/* Podcast Image */}
-          <View style={styles.imageContainer}>
-            <Image
-              source={{
-                uri: podcast?.cover_image.startsWith('http')
-                  ? podcast?.cover_image
-                  : `${GET_IMAGE}/${podcast?.cover_image}`,
-              }}
-              style={styles.podcastImage}
-              accessible={true}
-              accessibilityRole="image"
-              accessibilityLabel={`Cover image for ${podcast?.title || 'podcast'}`}
-            />
-          </View>
+              {/* Podcast Image */}
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{
+                    uri: podcast?.cover_image.startsWith('http')
+                      ? podcast?.cover_image
+                      : `${GET_IMAGE}/${podcast?.cover_image}`,
+                  }}
+                  style={styles.podcastImage}
+                  accessible={true}
+                  accessibilityRole="image"
+                  accessibilityLabel={`Cover image for ${podcast?.title || 'podcast'}`}
+                />
+              </View>
 
-          {/* View Podcast Button */}
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('PodcastDetail', {
-                trackId: podcastId,
-                audioUrl: podcast?.audio_url ?? '',
-              })
-            }
-            style={styles.viewPodcastButton}
-            activeOpacity={0.8}
-            accessibilityRole="button"
-            accessibilityLabel="Listen Now"
-            accessibilityHint="Opens the podcast player"
-          >
-            <Text style={styles.viewPodcastText}>
-              🎧 Listen Now
-            </Text>
-          </TouchableOpacity>
-
-          {/* Podcast Description */}
-          <View style={styles.descriptionCard}>
-            <Paragraph
-              color="#4B5563"
-              fontSize={15}
-              lineHeight={22}
-            >
-              {podcast?.description}
-            </Paragraph>
-          </View>
-
-          {/* Mention Suggestions */}
-          <Suggestions
-            suggestions={filteredUsers}
-            {...triggers.mention}
-          />
-
-          {/* Comment Input */}
-          <TextInput
-            ref={inputRef}
-            {...textInputProps}
-            style={styles.textInput}
-            placeholder="Add a comment..."
-            placeholderTextColor="#9CA3AF"
-            multiline
-            accessibilityRole="text"
-            accessibilityLabel={
-              editMode
-                ? 'Edit comment'
-                : 'Add a comment'
-            }
-            accessibilityHint={
-              editMode
-                ? 'Enter changes to your comment'
-                : 'Enter your comment. You can mention users with the at symbol'
-            }
-          />
-
-          {/* Submit Button */}
-          {newComment.length > 0 && (
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={handleCommentSubmit}
-              activeOpacity={0.8}
-              accessibilityRole="button"
-              accessibilityLabel={
-                editMode
-                  ? 'Update Comment'
-                  : 'Submit Comment'
-              }
-              accessibilityHint={
-                editMode
-                  ? 'Updates your existing comment'
-                  : 'Posts your comment to the discussion'
-              }
-            >
-              <Text style={styles.submitButtonText}>
-                {editMode
-                  ? 'Update Comment'
-                  : 'Submit Comment'}
-              </Text>
-            </TouchableOpacity>
-          )}
-
-          {/* Comments Section Header */}
-          <View
-            style={styles.commentsHeader}
-            accessible={true}
-            accessibilityRole="header"
-            accessibilityLabel={`${comments.length} ${
-              comments.length === 1
-                ? 'Comment'
-                : 'Comments'
-            }`}
-          >
-            <Text style={styles.commentsHeaderText}>
-              {comments.length}{' '}
-              {comments.length === 1
-                ? 'Comment'
-                : 'Comments'}
-            </Text>
-          </View>
-
-          {/* Empty Comments State */}
-          {comments.length === 0 && (
-            <View style={styles.emptyContainer}>
-              <Text
-                style={styles.emptyIcon}
-                accessible={false}
-              >
-                🎙️
-              </Text>
-
-              <Text style={styles.emptyTitle}>
-                No discussions yet!
-              </Text>
-
-              <Text style={styles.emptySubtitle}>
-                Be the first to start the conversation
-              </Text>
-
+              {/* View Podcast Button */}
               <TouchableOpacity
-                style={styles.emptyButton}
                 onPress={() =>
-                  inputRef.current?.focus()
+                  navigation.navigate('PodcastDetail', {
+                    trackId: podcastId,
+                    audioUrl: podcast?.audio_url ?? '',
+                  })
                 }
+                style={styles.viewPodcastButton}
+                activeOpacity={0.8}
                 accessibilityRole="button"
-                accessibilityLabel="Start Discussion"
-                accessibilityHint="Focuses the comment input so you can start a discussion"
-              >
-                <Text style={styles.emptyButtonText}>
-                  Start Discussion
+                accessibilityLabel="Listen Now"
+                accessibilityHint="Opens the podcast player">
+                <Text style={styles.viewPodcastText}>
+                  🎧 Listen Now
                 </Text>
               </TouchableOpacity>
-            </View>
-          )}
 
-          {/* Comments List */}
-          <FlatList
-            ref={flatListRef}
-            data={comments}
-            keyExtractor={(item: Comment) => item._id}
-            contentContainerStyle={{
-              marginTop: 8,
-              rowGap: 12,
-            }}
-            keyboardShouldPersistTaps="handled"
-            accessibilityLabel="Podcast discussion comments"
-            renderItem={({
-              item,
-            }: {
-              item: Comment;
-            }) => (
-              <CommentItem
-                item={item}
-                isSelected={
-                  selectedCommentId === item._id
-                }
-                userId={user_id}
-                setSelectedCommentId={
-                  setSelectedCommentId
-                }
-                handleEditAction={handleEditAction}
-                deleteAction={handleDeleteAction}
-                handleLikeAction={handleLikeAction}
-                commentLikeLoading={
-                  commentLikeLoading
-                }
-                handleMentionClick={user_handle => {
-                  navigation.navigate(
-                    'UserProfileScreen',
-                    {
-                      author_handle: user_handle,
-                      userHandle: user_handle,
-                    },
-                  );
-                }}
-                handleReportAction={
-                  handleReportAction
-                }
-                isFromArticle={false}
+              {/* Podcast Description */}
+              <View style={styles.descriptionCard}>
+                <Paragraph
+                  color="#4B5563"
+                  fontSize={15}
+                  lineHeight={22}>
+                  {podcast?.description}
+                </Paragraph>
+              </View>
+
+              {/* Mention Suggestions */}
+              <Suggestions
+                suggestions={filteredUsers}
+                {...triggers.mention}
               />
-            )}
-          />
-        </YStack>
-      </KeyboardAwareScrollView>
+
+              {/* Comment Input */}
+              <TextInput
+                ref={inputRef}
+                {...textInputProps}
+                style={styles.textInput}
+                placeholder="Add a comment..."
+                placeholderTextColor="#9CA3AF"
+                multiline
+                accessibilityRole="text"
+                accessibilityLabel={
+                  editMode
+                    ? 'Edit comment'
+                    : 'Add a comment'
+                }
+                accessibilityHint={
+                  editMode
+                    ? 'Enter changes to your comment'
+                    : 'Enter your comment. You can mention users with the at symbol'
+                }
+              />
+
+              {/* Submit Button */}
+              {newComment.length > 0 && (
+                <TouchableOpacity
+                  style={styles.submitButton}
+                  onPress={handleCommentSubmit}
+                  activeOpacity={0.8}
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    editMode
+                      ? 'Update Comment'
+                      : 'Submit Comment'
+                  }
+                  accessibilityHint={
+                    editMode
+                      ? 'Submits edits to your comment'
+                      : 'Posts your comment to this discussion'
+                  }>
+                  <Text style={styles.submitButtonText}>
+                    {commentLoading
+                      ? 'Posting...'
+                      : editMode
+                      ? 'Update Comment'
+                      : 'Submit Comment'}
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {/* Comments Section Header */}
+              <View
+                style={styles.commentsHeader}
+                accessible={true}
+                accessibilityRole="header"
+                accessibilityLabel={`${comments.length} ${
+                  comments.length === 1
+                    ? 'Comment'
+                    : 'Comments'
+                }`}>
+                <Text style={styles.commentsHeaderText}>
+                  {comments.length}{' '}
+                  {comments.length === 1
+                    ? 'Comment'
+                    : 'Comments'}
+                </Text>
+              </View>
+
+              {/* Comments Loading or Empty State */}
+              {fetchingComments ? (
+                <View style={{ paddingVertical: 40, alignItems: 'center', justifyContent: 'center' }}>
+                  <ActivityIndicator size="large" color={PRIMARY_COLOR} />
+                  <Text style={{ marginTop: 12, color: '#64748B', fontSize: 14 }}>Loading discussions...</Text>
+                </View>
+              ) : comments.length === 0 ? (
+                <View style={styles.emptyContainer}>
+                  <Text
+                    style={styles.emptyIcon}
+                    accessible={false}>
+                    🎙️
+                  </Text>
+                  <Text style={styles.emptyTitle}>
+                    No discussions yet!
+                  </Text>
+                  <Text style={styles.emptySubtitle}>
+                    Be the first to start the conversation
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.emptyButton}
+                    onPress={() =>
+                      inputRef.current?.focus()
+                    }
+                    accessibilityRole="button"
+                    accessibilityLabel="Start Discussion"
+                    accessibilityHint="Focuses the comment input so you can start a discussion">
+                    <Text style={styles.emptyButtonText}>
+                      Start Discussion
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ) : null}
+            </YStack>
+          }
+          renderItem={({item}: {item: Comment}) => (
+            <CommentItem
+              item={item}
+              isSelected={selectedCommentId === item._id}
+              userId={user_id}
+              setSelectedCommentId={setSelectedCommentId}
+              handleEditAction={handleEditAction}
+              deleteAction={handleDeleteAction}
+              handleLikeAction={handleLikeAction}
+              commentLikeLoading={commentLikeLoading}
+              handleMentionClick={user_handle => {
+                navigation.navigate(
+                  'UserProfileScreen',
+                  {
+                    author_handle: user_handle,
+                    userHandle: user_handle,
+                  },
+                );
+              }}
+              handleReportAction={handleReportAction}
+              isFromArticle={false}
+            />
+          )}
+          ItemSeparatorComponent={() => <View style={{height: 12}} />}
+        />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };

@@ -107,16 +107,16 @@ const TabNavigation = () => {
           })}
         />
         <Tab.Screen
-          name="Settings"
-          component={isGuest ? SettingsGuestScreen : SettingsScreen}
+          name="Wellness"
+          component={WellnessDashboardScreen}
           options={{
             headerShown: false,
           }}
         />
 
-        <Tab.Screen
-          name="Wellness"
-          component={WellnessDashboardScreen}
+<Tab.Screen
+          name="Settings"
+          component={isGuest ? SettingsGuestScreen : SettingsScreen}
           options={{
             headerShown: false,
           }}
@@ -127,3 +127,4 @@ const TabNavigation = () => {
   );
 };
 export default TabNavigation;
+

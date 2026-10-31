@@ -15,6 +15,7 @@ import { View,
 import {useAppSelector} from '../../store/hooks';
 import {PodcastFormProp, Category, PodcastEpisode} from '../../schemas/type';
 import {useGetPodcastEpisodes} from '../../hooks/podcast/useGetPodcastEpisodes';
+import {useCreatePodcastEpisode} from '../../hooks/podcast/useCreatePodcastEpisode';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {
@@ -44,6 +45,11 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
     initialEpisodeId || null,
   );
   const [episodeModalVisible, setEpisodeModalVisible] = useState(false);
+  const {mutate: createEpisode, isPending: isCreatingEpisode} = useCreatePodcastEpisode();
+  const [showNewSeriesForm, setShowNewSeriesForm] = useState(false);
+  const [newSeriesName, setNewSeriesName] = useState('');
+  const [newSeriesDesc, setNewSeriesDesc] = useState('');
+  const [seriesCreateError, setSeriesCreateError] = useState('');
   const {categories} = useAppSelector((state: any) => state.data);
   const [imageUtils, setImageUtils] = useState('');
 
@@ -251,75 +257,178 @@ const PodcastForm = ({navigation, route}: PodcastFormProp) => {
         animationType="slide"
         transparent={true}
         visible={episodeModalVisible}
-        onRequestClose={() => setEpisodeModalVisible(false)}>
+        onRequestClose={() => {
+          setEpisodeModalVisible(false);
+          setShowNewSeriesForm(false);
+        }}>
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPress={() => setEpisodeModalVisible(false)}>
-          <View style={styles.modalContent}>
+          onPress={() => {
+            setEpisodeModalVisible(false);
+            setShowNewSeriesForm(false);
+          }}>
+          <View style={styles.modalContent} onStartShouldSetResponder={() => true}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Select Episode Series</Text>
-              <TouchableOpacity onPress={() => setEpisodeModalVisible(false)}>
+              <Text style={styles.modalTitle}>
+                {showNewSeriesForm ? 'New Episode Series' : 'Select Episode Series'}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setEpisodeModalVisible(false);
+                  setShowNewSeriesForm(false);
+                }}>
                 <Ionicon name="close" size={24} color="#222" />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={[
-                styles.languageItem,
-                !selectedEpisodeId && styles.selectedLanguageItem,
-              ]}
-              onPress={() => {
-                setSelectedEpisodeId(null);
-                setEpisodeModalVisible(false);
-              }}>
-              <Text
-                style={[
-                  styles.languageItemText,
-                  !selectedEpisodeId && styles.selectedLanguageItemText,
-                ]}>
-                None (Standalone Podcast)
-              </Text>
-              {!selectedEpisodeId && (
-                <Ionicon name="checkmark" size={20} color={PRIMARY_COLOR} />
-              )}
-            </TouchableOpacity>
-            <FlatList
-              data={episodes}
-              keyExtractor={(item: PodcastEpisode) => item._id || item.id || ''}
-              renderItem={({item}: {item: PodcastEpisode}) => {
-                const epId = item._id || item.id;
-                const isItemSel = selectedEpisodeId === epId;
-                return (
+
+            {showNewSeriesForm ? (
+              <View style={styles.createSeriesContainer}>
+                <Text style={styles.createSeriesSubtitle}>
+                  Group multiple episodes under a single show or topic for listeners.
+                </Text>
+                <TextInput
+                  placeholder="Series Title (e.g. Daily Health Talks)"
+                  placeholderTextColor="#9ca3af"
+                  style={styles.seriesInput}
+                  value={newSeriesName}
+                  onChangeText={text => {
+                    setNewSeriesName(text);
+                    if (seriesCreateError) setSeriesCreateError('');
+                  }}
+                  autoFocus
+                />
+                <TextInput
+                  placeholder="Short Description (Optional)"
+                  placeholderTextColor="#9ca3af"
+                  style={[styles.seriesInput, {height: 60, textAlignVertical: 'top'}]}
+                  multiline
+                  numberOfLines={2}
+                  value={newSeriesDesc}
+                  onChangeText={setNewSeriesDesc}
+                />
+                {seriesCreateError ? (
+                  <Text style={styles.errorText}>{seriesCreateError}</Text>
+                ) : null}
+
+                <View style={styles.createSeriesActions}>
                   <TouchableOpacity
-                    style={[
-                      styles.languageItem,
-                      isItemSel && styles.selectedLanguageItem,
-                    ]}
+                    style={styles.cancelSeriesButton}
                     onPress={() => {
-                      setSelectedEpisodeId(epId || null);
-                      setEpisodeModalVisible(false);
+                      setShowNewSeriesForm(false);
+                      setNewSeriesName('');
+                      setNewSeriesDesc('');
+                      setSeriesCreateError('');
                     }}>
-                    <View style={{flex: 1}}>
-                      <Text
-                        style={[
-                          styles.languageItemText,
-                          isItemSel && styles.selectedLanguageItemText,
-                        ]}>
-                        {item.name}
-                      </Text>
-                      {item.description ? (
-                        <Text style={{fontSize: 12, color: '#6b7280'}} numberOfLines={1}>
-                          {item.description}
-                        </Text>
-                      ) : null}
-                    </View>
-                    {isItemSel && (
-                      <Ionicon name="checkmark" size={20} color={PRIMARY_COLOR} />
-                    )}
+                    <Text style={styles.cancelSeriesText}>Back to List</Text>
                   </TouchableOpacity>
-                );
-              }}
-            />
+                  <TouchableOpacity
+                    style={[styles.saveSeriesButton, isCreatingEpisode && {opacity: 0.7}]}
+                    disabled={isCreatingEpisode}
+                    onPress={() => {
+                      if (!newSeriesName.trim()) {
+                        setSeriesCreateError('Series title is required');
+                        return;
+                      }
+                      createEpisode(
+                        {name: newSeriesName.trim(), description: newSeriesDesc.trim()},
+                        {
+                          onSuccess: (created: any) => {
+                            setSelectedEpisodeId(created._id || created.id);
+                            setShowNewSeriesForm(false);
+                            setNewSeriesName('');
+                            setNewSeriesDesc('');
+                            setEpisodeModalVisible(false);
+                          },
+                          onError: () => {
+                            setSeriesCreateError('Failed to create episode series. Try again.');
+                          },
+                        },
+                      );
+                    }}>
+                    <Text style={styles.saveSeriesText}>
+                      {isCreatingEpisode ? 'Creating...' : 'Create & Select'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <>
+                <TouchableOpacity
+                  style={styles.addSeriesButton}
+                  onPress={() => setShowNewSeriesForm(true)}>
+                  <Ionicon name="add-circle" size={20} color="#2563EB" />
+                  <Text style={styles.addSeriesButtonText}>+ Create New Episode Series</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[
+                    styles.languageItem,
+                    !selectedEpisodeId && styles.selectedLanguageItem,
+                  ]}
+                  onPress={() => {
+                    setSelectedEpisodeId(null);
+                    setEpisodeModalVisible(false);
+                  }}>
+                  <Text
+                    style={[
+                      styles.languageItemText,
+                      !selectedEpisodeId && styles.selectedLanguageItemText,
+                    ]}>
+                    None (Standalone Podcast)
+                  </Text>
+                  {!selectedEpisodeId && (
+                    <Ionicon name="checkmark" size={20} color="#2563EB" />
+                  )}
+                </TouchableOpacity>
+
+                {episodes.length === 0 ? (
+                  <View style={styles.emptySeriesPrompt}>
+                    <Text style={styles.emptySeriesPromptText}>
+                      You don't have any series yet. Tap "+ Create New Episode Series" above to organize your podcasts into shows.
+                    </Text>
+                  </View>
+                ) : (
+                  <FlatList
+                    data={episodes}
+                    keyExtractor={(item: PodcastEpisode) => item._id || item.id || ''}
+                    renderItem={({item}: {item: PodcastEpisode}) => {
+                      const epId = item._id || item.id;
+                      const isItemSel = selectedEpisodeId === epId;
+                      return (
+                        <TouchableOpacity
+                          style={[
+                            styles.languageItem,
+                            isItemSel && styles.selectedLanguageItem,
+                          ]}
+                          onPress={() => {
+                            setSelectedEpisodeId(epId || null);
+                            setEpisodeModalVisible(false);
+                          }}>
+                          <View style={{flex: 1}}>
+                            <Text
+                              style={[
+                                styles.languageItemText,
+                                isItemSel && styles.selectedLanguageItemText,
+                              ]}>
+                              {item.name}
+                            </Text>
+                            {item.description ? (
+                              <Text style={{fontSize: 12, color: '#6b7280'}} numberOfLines={1}>
+                                {item.description}
+                              </Text>
+                            ) : null}
+                          </View>
+                          {isItemSel && (
+                            <Ionicon name="checkmark" size={20} color="#2563EB" />
+                          )}
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                )}
+              </>
+            )}
           </View>
         </TouchableOpacity>
       </Modal>
@@ -865,6 +974,79 @@ const styles = StyleSheet.create({
   uploadContainerError: {
     borderColor: '#ef4444',
     backgroundColor: 'rgba(239, 68, 68, 0.05)',
+  },
+  addSeriesButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    backgroundColor: '#EFF6FF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#DBEAFE',
+    gap: 8,
+  },
+  addSeriesButtonText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#2563EB',
+  },
+  emptySeriesPrompt: {
+    padding: 24,
+    alignItems: 'center',
+  },
+  emptySeriesPromptText: {
+    fontSize: 13,
+    color: '#6B7280',
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  createSeriesContainer: {
+    padding: 20,
+  },
+  createSeriesSubtitle: {
+    fontSize: 13,
+    color: '#6B7280',
+    marginBottom: 16,
+    lineHeight: 18,
+  },
+  seriesInput: {
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    fontSize: 15,
+    color: '#111827',
+    marginBottom: 12,
+  },
+  createSeriesActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 12,
+    marginTop: 8,
+  },
+  cancelSeriesButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    backgroundColor: '#F3F4F6',
+  },
+  cancelSeriesText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#4B5563',
+  },
+  saveSeriesButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 8,
+    backgroundColor: '#2563EB',
+  },
+  saveSeriesText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 });
 

@@ -9,6 +9,9 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
+  useColorScheme,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {useAppSelector} from '../../store/hooks';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
@@ -30,6 +33,7 @@ interface Props {
 }
 
 export default function CreatePlaylist({visible, dismiss}: Props) {
+  const isDark = useColorScheme() === 'dark';
   const {user_token} = useAppSelector((state: any) => state.user);
   // const [selectedPlaylistId, setSelectedPlaylistId] = useState<string>('');
   const [inputValue, setInputValue] = useState<string>('');
@@ -200,33 +204,48 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
 
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
-      style={styles.modal}
       visible={visible}
+      onRequestClose={() => {
+        clear();
+        dismiss();
+      }}
       onDismiss={() => {
         clear();
         dismiss();
       }}>
-      <View style={styles.overlay} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.modalOverlayWrapper}>
+        <TouchableOpacity
+          style={StyleSheet.absoluteFill}
+          activeOpacity={1}
+          onPress={() => {
+            clear();
+            dismiss();
+          }}
+        />
 
-      {isConnected ? (
-        <View style={styles.modalContent}>
-          <View style={styles.header}>
-            <Text style={styles.headerSubTitle}>Save to Playlist</Text>
+        {isConnected ? (
+          <View style={[styles.modalContent, { backgroundColor: isDark ? '#1E293B' : '#FFFFFF' }]}>
+            <View style={styles.header}>
+              <Text style={[styles.headerSubTitle, { color: isDark ? '#F1F5F9' : '#0F172A' }]}>
+                Save to Playlist
+              </Text>
 
-            <TouchableOpacity
-              onPress={() => {
-                clear();
-                dismiss();
-              }}
-              accessibilityRole="button"
-              accessibilityLabel="Close save to playlist"
-              accessibilityHint="Closes the playlist dialog"
-            >
-              <Feather name="x" size={24} color="#6b7280" />
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                onPress={() => {
+                  clear();
+                  dismiss();
+                }}
+                accessibilityRole="button"
+                accessibilityLabel="Close save to playlist"
+                accessibilityHint="Closes the playlist dialog"
+              >
+                <Feather name="x" size={24} color={isDark ? '#94A3B8' : '#64748B'} />
+              </TouchableOpacity>
+            </View>
 
           {playlists && playlists.length > 0 ? (
             <>
@@ -361,6 +380,7 @@ export default function CreatePlaylist({visible, dismiss}: Props) {
           />
         </View>
       )}
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
@@ -376,28 +396,24 @@ const styles = StyleSheet.create({
     padding: 5,
   },
 
-  overlay: {
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
+  modalOverlayWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 16,
   },
 
   modalContent: {
-    flex: 1,
-    width: '92%',
-    maxHeight: '70%',
-    alignSelf: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    position: 'absolute',
-    top: Dimensions.get('window').height / 4,
+    width: '94%',
+    maxHeight: '80%',
+    borderRadius: 20,
     padding: 20,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    elevation: 8,
+    shadowOffset: {width: 0, height: 6},
+    shadowOpacity: 0.25,
+    shadowRadius: 16,
+    elevation: 10,
   },
 
   header: {

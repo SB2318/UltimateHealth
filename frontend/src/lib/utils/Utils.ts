@@ -2,7 +2,7 @@ import NetInfo from '@react-native-community/netinfo';
 import {Category, CategoryType, PodcastData} from '../../schemas/type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GET_STORAGE_DATA} from '../api/APIUtils';
-import {Alert, Linking, Platform, PermissionsAndroid} from 'react-native';
+import {Alert, Linking, Platform, PermissionsAndroid, DeviceEventEmitter} from 'react-native';
 import {sanitizeHtml} from './htmlSanitizer';
 
 import {secureClearAllItems} from '../storage/SecureStorageUtils';
@@ -90,16 +90,18 @@ export const handleExternalClick = (request: any) => {
 // Re-exported so existing imports stay valid.
 export {sanitizeHtml};
 
-export function msToTime(ms: number): string {
-  let totalSeconds = Math.floor(ms / 1000);
+export function msToTime(val: number): string {
+  if (!val || isNaN(val) || val <= 0) return '00:00';
+  // If val is > 10000, it's in milliseconds; otherwise it's already in seconds
+  let totalSeconds = val > 10000 ? Math.floor(val / 1000) : Math.floor(val);
   const hours = Math.floor(totalSeconds / 3600);
   totalSeconds %= 3600;
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   const pad = (num: number): string => num.toString().padStart(2, '0');
   return hours >= 1
-    ? `${pad(hours)}h:${pad(minutes)}m`
-    : `${pad(minutes)}m:${pad(seconds)}s`;
+    ? `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+    : `${pad(minutes)}:${pad(seconds)}`;
 }
 
 export const retrieveItem = async (key: string) => {
@@ -229,24 +231,68 @@ export const requestStoragePermissions = async () => {
   }
 };
 
-export const downloadAudio = async (_podcast: PodcastData) => {
-  const storageGranted = await requestStoragePermissions();
-  if (!storageGranted) return;
+export type DownloadProgressEvent = {
+  podcastId: string;
+  progress: number;
+  status: 'starting' | 'downloading' | 'completed' | 'error';
+  message?: string;
+};
+
+export const downloadAudio = async (
+  _podcast: PodcastData,
+  onProgress?: (progress: number) => void,
+) => {
+  if (!_podcast || !_podcast.audio_url) {
+    return {message: 'Audio URL is not available for this podcast', success: false};
+  }
+
+  // Non-blocking permission check — if denied, falls back to DocumentDirectoryPath
+  try {
+    await requestStoragePermissions();
+  } catch (_e) {
+    // Ignore and proceed with internal storage
+  }
+
+  DeviceEventEmitter.emit('podcast-download-progress', {
+    podcastId: _podcast._id,
+    progress: 0,
+    status: 'starting',
+  });
 
   const existingPodcasts = await readDownloadedPodcasts();
   try {
     let _existingPodcasts = Array.isArray(existingPodcasts) ? existingPodcasts : [];
 
     if (_existingPodcasts.length >= 5) {
+      DeviceEventEmitter.emit('podcast-download-progress', {
+        podcastId: _podcast._id,
+        progress: 0,
+        status: 'error',
+        message: "You can't keep more than 5 audio",
+      });
       return {message: "You can't keep more than 5 audio", success: false};
     }
 
     const isPodcastFound = _existingPodcasts.some((d: any) => d._id === _podcast._id);
     if (isPodcastFound) {
+      DeviceEventEmitter.emit('podcast-download-progress', {
+        podcastId: _podcast._id,
+        progress: 1,
+        status: 'completed',
+        message: 'File already saved',
+      });
       return {message: 'File already saved', success: true};
     }
 
-    const path = await downloadFile(_podcast.audio_url, _podcast.title);
+    const path = await downloadFile(_podcast.audio_url, _podcast.title, (ratio) => {
+      onProgress?.(ratio);
+      DeviceEventEmitter.emit('podcast-download-progress', {
+        podcastId: _podcast._id,
+        progress: ratio,
+        status: 'downloading',
+      });
+    });
+
     if (path) {
       if (!Array.isArray(_existingPodcasts)) _existingPodcasts = [];
       const newPodcast: PodcastDownloadRecord = {
@@ -256,37 +302,112 @@ export const downloadAudio = async (_podcast: PodcastData) => {
       };
       _existingPodcasts.push(newPodcast);
       await writeDownloadedPodcasts(_existingPodcasts);
+
+      DeviceEventEmitter.emit('podcast-download-progress', {
+        podcastId: _podcast._id,
+        progress: 1,
+        status: 'completed',
+        message: 'File saved successfully',
+      });
+
       return {message: 'File saved successfully', success: true};
     } else {
-      return {message: 'Something went wrong, try again after sometime', success: false};
+      DeviceEventEmitter.emit('podcast-download-progress', {
+        podcastId: _podcast._id,
+        progress: 0,
+        status: 'error',
+        message: 'Download failed. Please check internet connection.',
+      });
+      return {message: 'Download failed. Please check internet connection.', success: false};
     }
   } catch (err) {
     debugLog(err);
+    DeviceEventEmitter.emit('podcast-download-progress', {
+      podcastId: _podcast._id,
+      progress: 0,
+      status: 'error',
+      message: 'Something went wrong, try again after sometime',
+    });
     return {message: 'Something went wrong, try again after sometime', success: false};
   }
 };
 
-const downloadFile = async (key: string, title: string) => {
-  const safeTitle = title.substring(0, 15).replace(/[^a-zA-Z0-9]/g, '_');
-  const fileName = `${safeTitle}_${Date.now()}.mp3`;
-  const downloadUrl = `${GET_STORAGE_DATA}/${key}`;
+const downloadFile = async (
+  key: string,
+  title: string,
+  onProgress?: (ratio: number) => void,
+) => {
+  if (!key) {
+    console.error('downloadFile called without audio url/key');
+    return null;
+  }
 
-  const customDirectory =
-    Platform.OS === 'android'
-      ? RNFS.ExternalDirectoryPath
-      : RNFS.DocumentDirectoryPath;
+  const safeTitle = (title || 'podcast')
+    .substring(0, 30)
+    .trim()
+    .replace(/[^a-zA-Z0-9\s-_]/g, '')
+    .replace(/\s+/g, '_');
+  const fileName = `${safeTitle || 'podcast'}_${Date.now()}.mp3`;
+
+  // Support full HTTP/HTTPS URLs (e.g. Cloudinary, S3) and relative storage keys
+  let downloadUrl = key.trim();
+  if (!downloadUrl.startsWith('http://') && !downloadUrl.startsWith('https://')) {
+    downloadUrl = `${GET_STORAGE_DATA}/${downloadUrl}`;
+  }
+
+  // Determine target directory: prefer public Downloads on Android if writable, fallback to DocumentDirectoryPath
+  let customDirectory = `${RNFS.DocumentDirectoryPath}/Podcasts`;
+
+  if (Platform.OS === 'android') {
+    try {
+      const publicPodcastsDir = `${RNFS.DownloadDirectoryPath}/UltimateHealth/Podcasts`;
+      const exists = await RNFS.exists(publicPodcastsDir);
+      if (!exists) {
+        await RNFS.mkdir(publicPodcastsDir);
+      }
+      customDirectory = publicPodcastsDir;
+    } catch (_e) {
+      customDirectory = `${RNFS.DocumentDirectoryPath}/Podcasts`;
+    }
+  }
+
+  try {
+    const directoryExists = await RNFS.exists(customDirectory);
+    if (!directoryExists) await RNFS.mkdir(customDirectory);
+  } catch (_e) {
+    customDirectory = RNFS.DocumentDirectoryPath;
+  }
 
   const filePath = `${customDirectory}/${fileName}`;
-  const directoryExists = await RNFS.exists(customDirectory);
-  if (!directoryExists) await RNFS.mkdir(customDirectory);
 
-  const result = await RNFS.downloadFile({fromUrl: downloadUrl, toFile: filePath}).promise;
+  try {
+    const result = await RNFS.downloadFile({
+      fromUrl: downloadUrl,
+      toFile: filePath,
+      progressDivider: 2,
+      progress: (res: any) => {
+        if (res.contentLength > 0) {
+          const ratio = Math.min(1, Math.max(0, res.bytesWritten / res.contentLength));
+          onProgress?.(ratio);
+        }
+      },
+    }).promise;
 
-  if (result.statusCode === 200) {
-    debugLog('Audio downloaded to:', filePath);
-    return filePath;
-  } else {
-    console.error('Download failed:', result.statusCode);
+    if (result.statusCode === 200) {
+      debugLog('Audio downloaded to:', filePath);
+      return filePath;
+    } else {
+      console.error('Download failed with status code:', result.statusCode);
+      if (await RNFS.exists(filePath)) {
+        await RNFS.unlink(filePath).catch(() => {});
+      }
+      return null;
+    }
+  } catch (err) {
+    console.error('Download file error:', err);
+    if (await RNFS.exists(filePath)) {
+      await RNFS.unlink(filePath).catch(() => {});
+    }
     return null;
   }
 };

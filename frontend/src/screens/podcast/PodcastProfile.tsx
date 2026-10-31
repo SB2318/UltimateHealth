@@ -1,20 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
  
 import React, {useCallback, useEffect, useState} from 'react';
-import { View,
+import {
+  View,
   Text,
   StyleSheet,
-   ScrollView ,
+  ScrollView,
   TouchableOpacity,
   Image,
-   FlatList ,
+  FlatList,
   RefreshControl,
   Dimensions,
-  } from 'react-native';
+  useColorScheme,
+} from 'react-native';
 import {PodcastProfileProp, PodcastData, PlayList, PodcastEpisode} from '../../schemas/type';
 import {useGetPodcastEpisodes} from '../../hooks/podcast/useGetPodcastEpisodes';
 import {MaterialCommunityIcons, Feather, Ionicons} from '@expo/vector-icons';
-import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {useAppSelector} from '../../store/hooks';
 import {useFocusEffect} from '@react-navigation/native';
 import {useGetPlaylists} from '../../hooks/playlist/useGetPlaylists';
@@ -27,11 +28,30 @@ import {NoPodcastState} from '../../components/common/EmptyStates';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import {downloadAudio, msToTime} from '../../lib/utils/Utils';
 import Snackbar from 'react-native-snackbar';
+import {useQueryClient} from '@tanstack/react-query';
 
 const {width} = Dimensions.get('window');
 
+const ACCENT_PRIMARY = '#2563EB';
+
 export default function PodcastProfile({navigation}: PodcastProfileProp) {
-  const insets = useSafeAreaInsets();
+  let insets = {top: 0, bottom: 0, left: 0, right: 0};
+  try {
+    insets = useSafeAreaInsets();
+  } catch {
+    // fallback for testing or non-provider contexts
+  }
+
+  const queryClient = useQueryClient();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
+  const bgColor = isDark ? '#0B1425' : '#F8FAFC';
+  const cardBg = isDark ? '#111C38' : '#FFFFFF';
+  const textColor = isDark ? '#F1F5F9' : '#0F172A';
+  const subTextColor = isDark ? '#94A3B8' : '#64748B';
+  const borderColor = isDark ? 'rgba(255, 255, 255, 0.08)' : '#E2E8F0';
+
   const [selectedTab, setSelectedTab] = useState<'podcasts' | 'playlists' | 'episodes'>(
     'podcasts',
   );
@@ -105,7 +125,7 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
 
   const renderEpisodeItem = ({item}: {item: PodcastEpisode}) => (
     <TouchableOpacity
-      style={styles.playlistCard}
+      style={[styles.playlistCard, {backgroundColor: cardBg, borderColor}]}
       activeOpacity={0.7}
       accessibilityRole="button"
       accessibilityLabel={`Open episode series ${item.name}`}
@@ -116,25 +136,25 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
           title: item.name,
         });
       }}>
-      <View style={styles.playlistIconContainer}>
+      <View style={[styles.playlistIconContainer, {backgroundColor: isDark ? 'rgba(37,99,235,0.15)' : '#EFF6FF'}]}>
         <MaterialCommunityIcons
           name="filmstrip"
-          size={32}
-          color={PRIMARY_COLOR}
+          size={28}
+          color={ACCENT_PRIMARY}
         />
       </View>
       <View style={styles.playlistInfo}>
-        <Text style={styles.playlistTitle} numberOfLines={1}>
+        <Text style={[styles.playlistTitle, {color: textColor}]} numberOfLines={1}>
           {item.name}
         </Text>
-        <Text style={styles.playlistCount}>
+        <Text style={[styles.playlistCount, {color: subTextColor}]}>
           {item.podcasts_count ?? item.podcastsCount ?? 0} podcasts
         </Text>
       </View>
       <Feather
         name="chevron-right"
         size={20}
-        color="#9ca3af"
+        color={subTextColor}
         accessible={false}
       />
     </TouchableOpacity>
@@ -142,7 +162,7 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
 
   const renderPlaylistItem = ({item}: {item: PlayList}) => (
     <TouchableOpacity
-      style={styles.playlistCard}
+      style={[styles.playlistCard, {backgroundColor: cardBg, borderColor}]}
       activeOpacity={0.7}
       accessibilityRole="button"
       accessibilityLabel={`Open playlist ${item.title}`}
@@ -152,25 +172,25 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
           playlist: item,
         });
       }}>
-      <View style={styles.playlistIconContainer}>
+      <View style={[styles.playlistIconContainer, {backgroundColor: isDark ? 'rgba(37,99,235,0.15)' : '#EFF6FF'}]}>
         <MaterialCommunityIcons
           name="playlist-music"
-          size={32}
-          color={PRIMARY_COLOR}
+          size={28}
+          color={ACCENT_PRIMARY}
         />
       </View>
       <View style={styles.playlistInfo}>
-        <Text style={styles.playlistTitle} numberOfLines={1}>
+        <Text style={[styles.playlistTitle, {color: textColor}]} numberOfLines={1}>
           {item.title}
         </Text>
-        <Text style={styles.playlistCount}>
+        <Text style={[styles.playlistCount, {color: subTextColor}]}>
           {Array.isArray(item.podcasts) ? item.podcasts.length : 0} podcasts
         </Text>
       </View>
       <Feather
         name="chevron-right"
         size={20}
-        color="#9ca3af"
+        color={subTextColor}
         accessible={false}
       />
     </TouchableOpacity>
@@ -190,7 +210,17 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
         display={true}
         downLoadAudio={async () => {
           if (isConnected) {
-            await downloadAudio(item);
+            Snackbar.show({
+              text: 'Starting download in background...',
+              duration: Snackbar.LENGTH_SHORT,
+            });
+            const res = await downloadAudio(item);
+            if (res?.message) {
+              Snackbar.show({
+                text: res.message,
+                duration: Snackbar.LENGTH_SHORT,
+              });
+            }
           } else {
             Snackbar.show({
               text: 'Internet connection required',
@@ -218,18 +248,42 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {backgroundColor: bgColor}]}>
+      {/* Top Header Bar */}
+      <View
+        style={[
+          styles.topHeader,
+          {
+            paddingTop: Math.max(insets.top, 10),
+            backgroundColor: cardBg,
+            borderBottomColor: borderColor,
+          },
+        ]}>
+        <TouchableOpacity
+          style={styles.headerBackButton}
+          onPress={() => {
+            queryClient.invalidateQueries({queryKey: ['get-my-playlists']});
+            navigation.goBack();
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Go back">
+          <Ionicons name="arrow-back" size={22} color={textColor} />
+        </TouchableOpacity>
+        <Text style={[styles.topHeaderTitle, {color: textColor}]}>Podcast Studio</Text>
+        <View style={styles.headerRightPlaceholder} />
+      </View>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={ACCENT_PRIMARY} />
         }
         contentContainerStyle={[
           styles.scrollContent,
-          {paddingBottom: insets.bottom + 20},
+          {paddingBottom: insets.bottom + 28},
         ]}>
-        {/* Profile Header */}
-        <View style={styles.profileHeader}>
+        {/* Profile Card Header */}
+        <View style={[styles.profileHeader, {backgroundColor: cardBg, borderColor}]}>
           <View style={styles.profileImageContainer}>
             {Profile_image ? (
               <Image
@@ -238,80 +292,94 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
                     ? user?.Profile_image
                     : `${GET_STORAGE_DATA}/${user?.Profile_image}`,
                 }}
-                style={styles.profileImage}
+                style={[styles.profileImage, {borderColor: ACCENT_PRIMARY}]}
                 accessible={true}
                 accessibilityLabel={`${user?.user_name || 'User'} profile picture`}
               />
             ) : (
               <View
-                style={[styles.profileImage, styles.profileImagePlaceholder]}
+                style={[styles.profileImage, styles.profileImagePlaceholder, {borderColor: ACCENT_PRIMARY}]}
                 accessible={true}
                 accessibilityLabel="Default user profile picture">
                 <MaterialCommunityIcons
                   name="account"
-                  size={60}
-                  color="#9ca3af"
+                  size={56}
+                  color={subTextColor}
                   accessible={false}
                 />
               </View>
             )}
           </View>
-          <Text style={styles.profileName}>{user?.user_name || 'User'}</Text>
-          <Text style={styles.profileHandle}>
+          <Text style={[styles.profileName, {color: textColor}]}>{user?.user_name || 'User'}</Text>
+          <Text style={[styles.profileHandle, {color: subTextColor}]}>
             @{user?.user_handle || 'user'}
           </Text>
 
           {/* Stats */}
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{podcasts?.length || 0}</Text>
-              <Text style={styles.statLabel}>Podcasts</Text>
+              <Text style={[styles.statValue, {color: ACCENT_PRIMARY}]}>{podcasts?.length || 0}</Text>
+              <Text style={[styles.statLabel, {color: subTextColor}]}>Podcasts</Text>
             </View>
-            <View style={styles.statDivider} />
+            <View style={[styles.statDivider, {backgroundColor: borderColor}]} />
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{totalPlaylists}</Text>
-              <Text style={styles.statLabel}>Playlists</Text>
+              <Text style={[styles.statValue, {color: ACCENT_PRIMARY}]}>{totalPlaylists}</Text>
+              <Text style={[styles.statLabel, {color: subTextColor}]}>Playlists</Text>
             </View>
-            <View style={styles.statDivider} />
+            <View style={[styles.statDivider, {backgroundColor: borderColor}]} />
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{totalEpisodes}</Text>
-              <Text style={styles.statLabel}>Series</Text>
+              <Text style={[styles.statValue, {color: ACCENT_PRIMARY}]}>{totalEpisodes}</Text>
+              <Text style={[styles.statLabel, {color: subTextColor}]}>Series</Text>
             </View>
           </View>
 
-          <TouchableOpacity
-            style={{...styles.createButton,  marginVertical: 4}}
-            activeOpacity={0.8}
-            accessibilityRole="button"
-            accessibilityLabel="Visit Workspace"
-            accessibilityHint="Opens your podcast workspace"
-            onPress={() => navigation.navigate('OverviewScreen')}>
-            
-            <Text style={styles.createButtonText}>Visit Workspace</Text>
-          </TouchableOpacity>
+          {/* Action Buttons */}
+          <View style={styles.actionButtonsRow}>
+            <TouchableOpacity
+              style={[
+                styles.workspaceButton,
+                {
+                  backgroundColor: isDark ? 'rgba(37,99,235,0.12)' : '#EFF6FF',
+                  borderColor: ACCENT_PRIMARY,
+                },
+              ]}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel="Visit Workspace"
+              accessibilityHint="Opens your podcast workspace"
+              onPress={() => navigation.navigate('OverviewScreen')}>
+              <Ionicons name="grid-outline" size={17} color={ACCENT_PRIMARY} />
+              <Text style={[styles.workspaceButtonText, {color: ACCENT_PRIMARY}]}>Workspace</Text>
+            </TouchableOpacity>
 
-          {/* Create Podcast Button */}
-          <TouchableOpacity
-            style={styles.createButton}
-            activeOpacity={0.8}
-            accessibilityRole="button"
-            accessibilityLabel="Create Podcast"
-            accessibilityHint="Opens the podcast creation form"
-            onPress={() => navigation.navigate('PodcastForm')}>
-            <Ionicons
-              name="mic"
-              size={20}
-              color="#ffffff"
-              accessible={false}
-            />
-            <Text style={styles.createButtonText}>Create Podcast</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.createPodcastButton, {backgroundColor: ACCENT_PRIMARY}]}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel="Create Podcast"
+              accessibilityHint="Opens the podcast creation form"
+              onPress={() => navigation.navigate('PodcastForm')}>
+              <Ionicons
+                name="mic"
+                size={17}
+                color="#ffffff"
+                accessible={false}
+              />
+              <Text style={styles.createPodcastButtonText}>Create Podcast</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Tab Selector */}
-        <View style={styles.tabContainer}>
+        <View style={[styles.tabContainer, {backgroundColor: cardBg, borderColor}]}>
           <TouchableOpacity
-            style={[styles.tab, selectedTab === 'podcasts' && styles.activeTab]}
+            style={[
+              styles.tab,
+              selectedTab === 'podcasts' && [
+                styles.activeTab,
+                {backgroundColor: isDark ? 'rgba(37,99,235,0.2)' : 'rgba(37,99,235,0.1)'},
+              ],
+            ]}
             onPress={() => setSelectedTab('podcasts')}
             activeOpacity={0.7}
             accessibilityRole="tab"
@@ -319,14 +387,15 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
             accessibilityState={{selected: selectedTab === 'podcasts'}}>
             <MaterialCommunityIcons
               name="microphone"
-              size={20}
-              color={selectedTab === 'podcasts' ? PRIMARY_COLOR : '#6b7280'}
+              size={18}
+              color={selectedTab === 'podcasts' ? ACCENT_PRIMARY : subTextColor}
               accessible={false}
             />
             <Text
               style={[
                 styles.tabText,
-                selectedTab === 'podcasts' && styles.activeTabText,
+                {color: subTextColor},
+                selectedTab === 'podcasts' && [styles.activeTabText, {color: ACCENT_PRIMARY}],
               ]}>
               Podcasts
             </Text>
@@ -335,7 +404,10 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
           <TouchableOpacity
             style={[
               styles.tab,
-              selectedTab === 'playlists' && styles.activeTab,
+              selectedTab === 'playlists' && [
+                styles.activeTab,
+                {backgroundColor: isDark ? 'rgba(37,99,235,0.2)' : 'rgba(37,99,235,0.1)'},
+              ],
             ]}
             onPress={() => setSelectedTab('playlists')}
             activeOpacity={0.7}
@@ -344,14 +416,15 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
             accessibilityState={{selected: selectedTab === 'playlists'}}>
             <MaterialCommunityIcons
               name="playlist-music"
-              size={20}
-              color={selectedTab === 'playlists' ? PRIMARY_COLOR : '#6b7280'}
+              size={18}
+              color={selectedTab === 'playlists' ? ACCENT_PRIMARY : subTextColor}
               accessible={false}
             />
             <Text
               style={[
                 styles.tabText,
-                selectedTab === 'playlists' && styles.activeTabText,
+                {color: subTextColor},
+                selectedTab === 'playlists' && [styles.activeTabText, {color: ACCENT_PRIMARY}],
               ]}>
               Playlists
             </Text>
@@ -360,7 +433,10 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
           <TouchableOpacity
             style={[
               styles.tab,
-              selectedTab === 'episodes' && styles.activeTab,
+              selectedTab === 'episodes' && [
+                styles.activeTab,
+                {backgroundColor: isDark ? 'rgba(37,99,235,0.2)' : 'rgba(37,99,235,0.1)'},
+              ],
             ]}
             onPress={() => setSelectedTab('episodes')}
             activeOpacity={0.7}
@@ -369,14 +445,15 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
             accessibilityState={{selected: selectedTab === 'episodes'}}>
             <MaterialCommunityIcons
               name="filmstrip"
-              size={20}
-              color={selectedTab === 'episodes' ? PRIMARY_COLOR : '#6b7280'}
+              size={18}
+              color={selectedTab === 'episodes' ? ACCENT_PRIMARY : subTextColor}
               accessible={false}
             />
             <Text
               style={[
                 styles.tabText,
-                selectedTab === 'episodes' && styles.activeTabText,
+                {color: subTextColor},
+                selectedTab === 'episodes' && [styles.activeTabText, {color: ACCENT_PRIMARY}],
               ]}>
               Series
             </Text>
@@ -387,36 +464,27 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
         <View style={styles.contentContainer}>
           {selectedTab === 'podcasts' ? (
             podcasts && podcasts.length > 0 ? (
-              <FlatList
-                data={podcasts ?? []}
-                renderItem={renderPodcastItem}
-                keyExtractor={(item: PodcastData, index: number) => `podcast-${item._id}-${index}`}
-                scrollEnabled={false}
-                showsVerticalScrollIndicator={false}
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                ListEmptyComponent={<NoPodcastState onRefresh={onRefresh} />}
-                onEndReached={() => {
-                  if (publishedPage < totalPublishPages) {
-                    setPublishedPage(prev => prev + 1);
-                  }
-                }}
-                onEndReachedThreshold={0.5}
-              />
+              <View>
+                {podcasts.map((item: PodcastData, index: number) => (
+                  <View key={`podcast-${item._id}-${index}`}>
+                    {renderPodcastItem({item})}
+                  </View>
+                ))}
+              </View>
             ) : (
-              <View style={styles.emptyState}>
+              <View style={[styles.emptyState, {backgroundColor: cardBg, borderColor}]}>
                 <MaterialCommunityIcons
                   name="microphone-off"
-                  size={64}
-                  color="#d1d5db"
+                  size={52}
+                  color={subTextColor}
                   accessible={false}
                 />
-                <Text style={styles.emptyText}>No podcasts yet</Text>
-                <Text style={styles.emptySubText}>
-                  Create your first podcast to share with the world
+                <Text style={[styles.emptyText, {color: textColor}]}>No podcasts yet</Text>
+                <Text style={[styles.emptySubText, {color: subTextColor}]}>
+                  Create your first podcast to share your voice with the community
                 </Text>
                 <TouchableOpacity
-                  style={styles.emptyButton}
+                  style={[styles.emptyButton, {backgroundColor: ACCENT_PRIMARY}]}
                   accessibilityRole="button"
                   accessibilityLabel="Create Podcast"
                   accessibilityHint="Opens the podcast creation form"
@@ -427,61 +495,59 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
             )
           ) : selectedTab === 'playlists' ? (
             playlists.length > 0 ? (
-              <FlatList
-                data={playlists}
-                renderItem={renderPlaylistItem}
-                keyExtractor={(item: any, index: number) => `playlist-${item._id}-${index}`}
-                scrollEnabled={false}
-                showsVerticalScrollIndicator={false}
-              />
+              <View>
+                {playlists.map((item: any, index: number) => (
+                  <View key={`playlist-${item._id}-${index}`}>
+                    {renderPlaylistItem({item})}
+                  </View>
+                ))}
+              </View>
             ) : (
-              <View style={styles.emptyState}>
+              <View style={[styles.emptyState, {backgroundColor: cardBg, borderColor}]}>
                 <MaterialCommunityIcons
                   name="playlist-music-outline"
-                  size={64}
-                  color="#d1d5db"
+                  size={52}
+                  color={subTextColor}
                   accessible={false}
                 />
-                <Text style={styles.emptyText}>No playlists yet</Text>
-                <Text style={styles.emptySubText}>
-                  Save podcasts to create your first playlist
+                <Text style={[styles.emptyText, {color: textColor}]}>No playlists yet</Text>
+                <Text style={[styles.emptySubText, {color: subTextColor}]}>
+                  Save podcasts to create your first organized playlist
                 </Text>
               </View>
             )
           ) : (
             episodes.length > 0 ? (
               <View>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12, paddingHorizontal: 4}}>
-                  <Text style={{fontSize: 14, fontWeight: '600', color: '#374151'}}>Series & Episodes</Text>
+                <View style={styles.seriesHeaderRow}>
+                  <Text style={[styles.seriesSectionTitle, {color: textColor}]}>Series & Episodes</Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('PodcastEpisodesScreen')}
                     accessibilityRole="button"
                     accessibilityLabel="Manage Episodes">
-                    <Text style={{fontSize: 13, fontWeight: '600', color: PRIMARY_COLOR}}>Manage All</Text>
+                    <Text style={[styles.manageAllText, {color: ACCENT_PRIMARY}]}>Manage All</Text>
                   </TouchableOpacity>
                 </View>
-                <FlatList
-                  data={episodes}
-                  renderItem={renderEpisodeItem}
-                  keyExtractor={(item: any, index: number) => `episode-${item._id || item.id || index}`}
-                  scrollEnabled={false}
-                  showsVerticalScrollIndicator={false}
-                />
+                {episodes.map((item: any, index: number) => (
+                  <View key={`episode-${item._id || item.id || index}`}>
+                    {renderEpisodeItem({item})}
+                  </View>
+                ))}
               </View>
             ) : (
-              <View style={styles.emptyState}>
+              <View style={[styles.emptyState, {backgroundColor: cardBg, borderColor}]}>
                 <MaterialCommunityIcons
                   name="filmstrip-off"
-                  size={64}
-                  color="#d1d5db"
+                  size={52}
+                  color={subTextColor}
                   accessible={false}
                 />
-                <Text style={styles.emptyText}>No series or episodes yet</Text>
-                <Text style={styles.emptySubText}>
-                  Group your podcasts into episodic series and shows
+                <Text style={[styles.emptyText, {color: textColor}]}>No series or episodes yet</Text>
+                <Text style={[styles.emptySubText, {color: subTextColor}]}>
+                  Group your podcasts into episodic shows to build recurring listeners
                 </Text>
                 <TouchableOpacity
-                  style={styles.emptyButton}
+                  style={[styles.emptyButton, {backgroundColor: ACCENT_PRIMARY}]}
                   accessibilityRole="button"
                   accessibilityLabel="Manage Episodes"
                   onPress={() => navigation.navigate('PodcastEpisodesScreen')}>
@@ -499,108 +565,150 @@ export default function PodcastProfile({navigation}: PodcastProfileProp) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+  },
+  topHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+  },
+  headerBackButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  topHeaderTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    letterSpacing: 0.3,
+  },
+  headerRightPlaceholder: {
+    width: 38,
   },
   scrollContent: {
     flexGrow: 1,
   },
   profileHeader: {
-    backgroundColor: '#ffffff',
-    paddingTop: 32,
-    paddingBottom: 24,
+    marginHorizontal: 16,
+    marginTop: 14,
+    paddingVertical: 24,
     paddingHorizontal: 20,
     alignItems: 'center',
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    borderRadius: 20,
+    borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.06,
     shadowRadius: 8,
-    elevation: 4,
+    elevation: 3,
   },
   profileImageContainer: {
-    marginBottom: 16,
+    marginBottom: 12,
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    borderWidth: 4,
-    borderColor: PRIMARY_COLOR,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    borderWidth: 3,
   },
   profileImagePlaceholder: {
-    backgroundColor: '#e5e7eb',
+    backgroundColor: 'rgba(100, 116, 139, 0.15)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   profileName: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
-    color: '#1a1a1a',
-    marginBottom: 4,
+    marginBottom: 2,
   },
   profileHandle: {
-    fontSize: 15,
-    color: '#6b7280',
-    marginBottom: 20,
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 18,
   },
   statsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
-    paddingHorizontal: 40,
+    width: '100%',
+    paddingHorizontal: 10,
   },
   statItem: {
+    flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 24,
   },
   statValue: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: PRIMARY_COLOR,
-    marginBottom: 4,
+    fontSize: 20,
+    fontWeight: '800',
+    marginBottom: 2,
   },
   statLabel: {
-    fontSize: 13,
-    color: '#6b7280',
-    fontWeight: '500',
+    fontSize: 12,
+    fontWeight: '600',
   },
   statDivider: {
     width: 1,
-    height: 40,
-    backgroundColor: '#e5e7eb',
+    height: 32,
   },
-  createButton: {
+  actionButtonsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: PRIMARY_COLOR,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 24,
-    shadowColor: PRIMARY_COLOR,
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-    gap: 8,
+    justifyContent: 'center',
+    gap: 12,
+    width: '100%',
+    marginTop: 4,
   },
-  createButtonText: {
+  workspaceButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 11,
+    paddingHorizontal: 14,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    gap: 6,
+  },
+  workspaceButtonText: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  createPodcastButton: {
+    flex: 1.2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 11,
+    paddingHorizontal: 14,
+    borderRadius: 14,
+    gap: 6,
+    shadowColor: ACCENT_PRIMARY,
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 3,
+  },
+  createPodcastButtonText: {
     color: '#ffffff',
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '700',
   },
   tabContainer: {
     flexDirection: 'row',
     marginHorizontal: 16,
-    marginTop: 20,
-    marginBottom: 16,
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
+    marginTop: 16,
+    marginBottom: 14,
+    borderRadius: 14,
+    borderWidth: 1,
     padding: 4,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.05,
+    shadowOpacity: 0.04,
     shadowRadius: 4,
     elevation: 2,
   },
@@ -609,21 +717,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
     borderRadius: 10,
-    gap: 8,
+    gap: 6,
   },
-  activeTab: {
-    backgroundColor: `${PRIMARY_COLOR}15`,
-  },
+  activeTab: {},
   tabText: {
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: '600',
-    color: '#6b7280',
   },
   activeTabText: {
-    color: PRIMARY_COLOR,
+    fontWeight: '700',
   },
   contentContainer: {
     paddingHorizontal: 16,
@@ -631,73 +736,85 @@ const styles = StyleSheet.create({
   playlistCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
     borderRadius: 16,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: PRIMARY_COLOR,
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 4,
+    padding: 14,
+    marginBottom: 12,
     borderWidth: 1,
-    borderColor: `${PRIMARY_COLOR}20`,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.04,
+    shadowRadius: 5,
+    elevation: 2,
   },
   playlistIconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 16,
-    backgroundColor: `${PRIMARY_COLOR}15`,
+    width: 50,
+    height: 50,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: 14,
   },
   playlistInfo: {
     flex: 1,
     marginRight: 8,
   },
   playlistTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   playlistCount: {
-    fontSize: 13,
-    color: '#6b7280',
+    fontSize: 12,
+    fontWeight: '500',
   },
   podcastCardWrapper: {
     marginBottom: 12,
   },
+  seriesHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+    paddingHorizontal: 4,
+  },
+  seriesSectionTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+  },
+  manageAllText: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
   emptyState: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 60,
-    paddingHorizontal: 32,
+    paddingVertical: 40,
+    paddingHorizontal: 24,
+    borderRadius: 18,
+    borderWidth: 1,
+    marginTop: 8,
   },
   emptyText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#374151',
-    marginTop: 16,
-    marginBottom: 8,
+    fontSize: 17,
+    fontWeight: '700',
+    marginTop: 14,
+    marginBottom: 6,
   },
   emptySubText: {
-    fontSize: 14,
-    color: '#6b7280',
+    fontSize: 13,
     textAlign: 'center',
-    lineHeight: 20,
-    marginBottom: 24,
+    lineHeight: 19,
+    marginBottom: 20,
+    maxWidth: 280,
   },
   emptyButton: {
-    backgroundColor: PRIMARY_COLOR,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 22,
+    borderRadius: 12,
   },
   emptyButtonText: {
     color: '#ffffff',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });

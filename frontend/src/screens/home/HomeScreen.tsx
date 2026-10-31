@@ -1048,9 +1048,10 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         <FlashList
           data={listData}
           estimatedItemSize={380}
-          drawDistance={300}
+          drawDistance={500}
+          extraData={selectedCardId}
           renderItem={renderItem}
-          keyExtractor={(item: any) => item._id.toString()}
+          keyExtractor={(item: any, index: number) => item?._id ? String(item._id) : String(index)}
           contentContainerStyle={styles.flatListContentContainer}
           refreshing={refreshing}
           onRefresh={onRefresh}

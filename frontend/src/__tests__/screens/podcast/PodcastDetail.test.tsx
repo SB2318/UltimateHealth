@@ -512,5 +512,24 @@ describe('PodcastDetail', () => {
     expect(getByText('1x')).toBeTruthy();
     expect(mockPlayer.setRateAsync).toHaveBeenCalledWith(1.0, true, 'high');
   });
+
+  it('pauses playback and switches button back to play when pause is pressed', async () => {
+    const {getByLabelText, queryByLabelText} = renderScreen();
+
+    await act(async () => {
+      fireEvent.press(getByLabelText('Play podcast'));
+    });
+
+    expect(mockPlayer.play).toHaveBeenCalled();
+    expect(getByLabelText('Pause podcast')).toBeTruthy();
+
+    await act(async () => {
+      fireEvent.press(getByLabelText('Pause podcast'));
+    });
+
+    expect(mockPlayer.pause).toHaveBeenCalled();
+    expect(getByLabelText('Play podcast')).toBeTruthy();
+    expect(queryByLabelText('Pause podcast')).toBeNull();
+  });
 });
 

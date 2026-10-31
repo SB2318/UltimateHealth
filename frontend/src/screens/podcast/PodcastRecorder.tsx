@@ -2,7 +2,9 @@
  
  
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, Alert, AppState, AppStateStatus} from 'react-native';
+import {StyleSheet, Alert, AppState, AppStateStatus, useColorScheme, TouchableOpacity, Platform} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Ionicons} from '@expo/vector-icons';
 
 import {PodcastRecorderScreenProps} from '../../schemas/type';
 import RNFS from 'react-native-fs';
@@ -32,6 +34,20 @@ import {requestStoragePermissions} from '../../lib/utils/Utils';
 //const AudioModule = requireNativeModule('AudioModule');
 
 const PodcastRecorder = ({navigation, route}: PodcastRecorderScreenProps) => {
+  let insets = {top: 0, bottom: 0, left: 0, right: 0};
+  try {
+    insets = useSafeAreaInsets();
+  } catch {}
+
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+  const bgColor = isDark ? '#0F172A' : '#F8FAFC';
+  const cardBg = isDark ? '#1E293B' : '#FFFFFF';
+  const textColor = isDark ? '#F1F5F9' : '#0F172A';
+  const subTextColor = isDark ? '#94A3B8' : '#64748B';
+  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : '#E2E8F0';
+  const accentBlue = isDark ? '#60A5FA' : '#2563EB';
+
   const [recording, setRecording] = useState(false);
   // const dispatch = useAppDispatch();
 
@@ -325,197 +341,259 @@ const stopRecording = async () => {
 
 
   return (
-    <Theme name="dark">
-      <YStack flex={1} bg="#0F172A" ai="center" jc="center" px="$4" space="$4">
-        {/* Header Section */}
-        <YStack ai="center" space="$2" mb="$4">
-          <Text
-            color="#F1F5F9"
-            fontSize={32}
-            fontWeight="800"
-            letterSpacing={1}>
+    <Theme name={isDark ? 'dark' : 'light'}>
+      <YStack flex={1} bg={bgColor}>
+        {/* Top Header Bar with Back Button */}
+        <XStack
+          width="100%"
+          alignItems="center"
+          justifyContent="space-between"
+          paddingHorizontal="$4"
+          paddingTop={Platform.OS === 'android' ? Math.max(insets.top, 12) : insets.top || 12}
+          paddingBottom="$2"
+          borderBottomWidth={1}
+          borderBottomColor={borderColor}>
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 19,
+              backgroundColor: isDark ? 'rgba(255,255,255,0.08)' : '#F1F5F9',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={() => {
+              if (recording) {
+                Alert.alert('Recording in Progress', 'Do you want to discard this recording and leave?', [
+                  {text: 'Cancel', style: 'cancel'},
+                  {
+                    text: 'Discard & Leave',
+                    style: 'destructive',
+                    onPress: async () => {
+                      await resetRecording();
+                      navigation.goBack();
+                    },
+                  },
+                ]);
+              } else {
+                navigation.goBack();
+              }
+            }}>
+            <Ionicons name="arrow-back" size={22} color={textColor} />
+          </TouchableOpacity>
+          <Text color={textColor} fontSize={17} fontWeight="700">
             Podcast Studio
           </Text>
-          <Text color="#94A3B8" fontSize={15} fontWeight="500">
-            Record your voice with studio quality
-          </Text>
-        </YStack>
+          <YStack width={38} />
+        </XStack>
 
-        {/* Microphone Icon with Animation */}
-        <YStack ai="center" jc="center" space="$3" my="$4">
-          <YStack
-            w={140}
-            h={140}
-            bg={recording ? '#3B82F6' : '#1E293B'}
-            ai="center"
-            jc="center"
-            borderRadius={70}
-            borderWidth={recording ? 4 : 0}
-            borderColor={recording ? '#60A5FA' : 'transparent'}
-            shadowColor="#3B82F6"
-            shadowOffset={{width: 0, height: recording ? 8 : 4}}
-            shadowOpacity={recording ? 0.4 : 0.2}
-            shadowRadius={recording ? 20 : 10}
-            elevation={recording ? 8 : 4}>
-            <Icon
-              name="microphone"
-              size={60}
-              color={recording ? '#FFFFFF' : '#60A5FA'}
-            />
-          </YStack>
-        </YStack>
-
-        {/* Timer Display */}
-        <YStack
-          alignItems="center"
-          bg="#1E293B"
-          px="$6"
-          py="$4"
-          borderRadius={16}
-          mb="$2">
-          <Text
-            fontSize={50}
-            color="#60A5FA"
-            fontWeight="800"
-            letterSpacing={4}
-            fontFamily={'monospace' as any}>
-            {recordTime}
-          </Text>
-          <Text color="#94A3B8" fontSize={13} fontWeight="600" mt="$1">
-            {uiState === 'recording'
-              ? 'RECORDING IN PROGRESS'
-              : uiState === 'review'
-                ? 'RECORDING COMPLETE'
-                : 'READY TO RECORD'}
-          </Text>
-        </YStack>
-
-        {/* Waveform Animation */}
-        {recording && (
-          <YStack ai="center" my="$3">
-            <LottieView
-              source={require('../../assets/LottieAnimation/sound-voice-waves.json')}
-              autoPlay
-              loop
-              style={{
-                width: 200,
-                height: 100,
-              }}
-            />
-          </YStack>
-        )}
-
-        {/* Action Controls */}
-        <XStack jc="center" ai="center" space="$6" mt="$6">
-          {/* Play Preview Button */}
-          {uiState === 'review' && (
-            <YStack ai="center" space="$2">
-              <Circle
-                size={70}
-                bg="#1E293B"
-                ai="center"
-                jc="center"
-                borderWidth={2}
-                borderColor="#3B82F6"
-                pressStyle={{scale: 0.95, bg: '#334155'}}
-                onPress={() =>
-                  navigation.navigate('PodcastPlayer', {
-                    title,
-                    description,
-                    imageUtils,
-                    selectedGenres,
-                    filePath: audioRecorder.uri || '',
-                    episodeId: episodeId || null,
-                  })
-                }>
-                <Icon name="play" size={36} color="#60A5FA" />
-              </Circle>
-              <Text color="#94A3B8" fontSize={12} fontWeight="600">
-                PLAY
-              </Text>
-            </YStack>
-          )}
-
-          {/* Main Record/Stop Button */}
-          <YStack ai="center" space="$2">
-            <Circle
-              size={120}
-              ai="center"
-              jc="center"
-              bg="transparent"
-              borderWidth={5}
-              borderColor={uiState === 'recording' ? '#EF4444' : '#3B82F6'}
-              pressStyle={{scale: 0.95}}
-              shadowColor={uiState === 'recording' ? '#EF4444' : '#3B82F6'}
-              shadowOffset={{width: 0, height: 4}}
-              shadowOpacity={0.5}
-              shadowRadius={12}
-              elevation={6}
-              onPress={
-                uiState === 'idle' || uiState === 'review'
-                  ? handleStartRecording
-                  : handleStopRecording
-              }>
-              <Circle
-                size={85}
-                bg={uiState === 'recording' ? '#EF4444' : '#3B82F6'}
-                ai="center"
-                jc="center">
-                <Icon
-                  name={uiState === 'recording' ? 'stop' : 'record-circle'}
-                  size={48}
-                  color="white"
-                />
-              </Circle>
-            </Circle>
-            <Text color="#94A3B8" fontSize={12} fontWeight="600">
-              {uiState === 'recording' ? 'STOP' : 'RECORD'}
+        <YStack flex={1} ai="center" jc="center" px="$4" space="$3">
+          {/* Header Section */}
+          <YStack ai="center" space="$1.5" mb="$3">
+            <Text
+              color={textColor}
+              fontSize={28}
+              fontWeight="800"
+              letterSpacing={0.5}>
+              Record Audio
+            </Text>
+            <Text color={subTextColor} fontSize={14} fontWeight="500">
+              Record your voice with studio quality
             </Text>
           </YStack>
 
-          {/* Re-record Button */}
-          {uiState === 'review' && (
-            <YStack ai="center" space="$2">
-              <Circle
-                size={70}
-                bg="#1E293B"
-                ai="center"
-                jc="center"
-                borderWidth={2}
-                borderColor="#F59E0B"
-                pressStyle={{scale: 0.95, bg: '#334155'}}
-                onPress={handleReRecord}>
-                <Icon name="refresh" size={36} color="#FBBF24" />
-              </Circle>
-              <Text color="#94A3B8" fontSize={12} fontWeight="600">
-                RETRY
-              </Text>
+          {/* Microphone Icon with Animation */}
+          <YStack ai="center" jc="center" space="$3" my="$3">
+            <YStack
+              w={130}
+              h={130}
+              bg={recording ? (isDark ? '#3B82F6' : '#2563EB') : cardBg}
+              ai="center"
+              jc="center"
+              borderRadius={65}
+              borderWidth={recording ? 4 : 1.5}
+              borderColor={recording ? '#60A5FA' : borderColor}
+              shadowColor={recording ? '#3B82F6' : '#000'}
+              shadowOffset={{width: 0, height: recording ? 8 : 2}}
+              shadowOpacity={recording ? 0.4 : 0.08}
+              shadowRadius={recording ? 20 : 6}
+              elevation={recording ? 8 : 3}>
+              <Icon
+                name="microphone"
+                size={54}
+                color={recording ? '#FFFFFF' : accentBlue}
+              />
+            </YStack>
+          </YStack>
+
+          {/* Timer Display */}
+          <YStack
+            alignItems="center"
+            bg={cardBg}
+            borderWidth={1}
+            borderColor={borderColor}
+            px="$6"
+            py="$3.5"
+            borderRadius={16}
+            shadowColor="#000"
+            shadowOffset={{width: 0, height: 2}}
+            shadowOpacity={0.05}
+            shadowRadius={6}
+            elevation={2}
+            mb="$1">
+            <Text
+              fontSize={44}
+              color={recording ? '#EF4444' : accentBlue}
+              fontWeight="800"
+              letterSpacing={3}
+              fontFamily={'monospace' as any}>
+              {recordTime}
+            </Text>
+            <Text color={subTextColor} fontSize={12} fontWeight="600" mt="$1">
+              {uiState === 'recording'
+                ? 'RECORDING IN PROGRESS'
+                : uiState === 'review'
+                  ? 'RECORDING COMPLETE'
+                  : 'READY TO RECORD'}
+            </Text>
+          </YStack>
+
+          {/* Waveform Animation */}
+          {recording && (
+            <YStack ai="center" my="$2">
+              <LottieView
+                source={require('../../assets/LottieAnimation/sound-voice-waves.json')}
+                autoPlay
+                loop
+                style={{
+                  width: 180,
+                  height: 80,
+                }}
+              />
             </YStack>
           )}
-        </XStack>
 
-        {/* Article Title Display */}
-        <YStack
-          ai="center"
-          mt="$6"
-          px="$4"
-          py="$3"
-          bg="#1E293B"
-          borderRadius={12}
-          maxWidth="90%">
-          <Text color="#64748B" fontSize={12} fontWeight="600" mb="$1">
-            PODCAST TITLE
-          </Text>
-          <Text
-            color="#E2E8F0"
-            fontSize={17}
-            fontWeight="700"
-            textAlign="center"
-            flexWrap="wrap"
-            flexShrink={1}
-            allowFontScaling>
-            {title}
-          </Text>
+          {/* Action Controls */}
+          <XStack jc="center" ai="center" space="$5" mt="$4">
+            {/* Play Preview Button */}
+            {uiState === 'review' && (
+              <YStack ai="center" space="$2">
+                <Circle
+                  size={64}
+                  bg={cardBg}
+                  ai="center"
+                  jc="center"
+                  borderWidth={2}
+                  borderColor={accentBlue}
+                  pressStyle={{scale: 0.95}}
+                  onPress={() =>
+                    navigation.navigate('PodcastPlayer', {
+                      title,
+                      description,
+                      imageUtils,
+                      selectedGenres,
+                      filePath: audioRecorder.uri || '',
+                      episodeId: episodeId || null,
+                    })
+                  }>
+                  <Icon name="play" size={32} color={accentBlue} />
+                </Circle>
+                <Text color={subTextColor} fontSize={12} fontWeight="600">
+                  PLAY
+                </Text>
+              </YStack>
+            )}
+
+            {/* Main Record/Stop Button */}
+            <YStack ai="center" space="$2">
+              <Circle
+                size={110}
+                ai="center"
+                jc="center"
+                bg="transparent"
+                borderWidth={5}
+                borderColor={uiState === 'recording' ? '#EF4444' : (isDark ? '#3B82F6' : '#2563EB')}
+                pressStyle={{scale: 0.95}}
+                shadowColor={uiState === 'recording' ? '#EF4444' : '#2563EB'}
+                shadowOffset={{width: 0, height: 4}}
+                shadowOpacity={0.4}
+                shadowRadius={10}
+                elevation={6}
+                onPress={
+                  uiState === 'idle' || uiState === 'review'
+                    ? handleStartRecording
+                    : handleStopRecording
+                }>
+                <Circle
+                  size={80}
+                  bg={uiState === 'recording' ? '#EF4444' : (isDark ? '#3B82F6' : '#2563EB')}
+                  ai="center"
+                  jc="center">
+                  <Icon
+                    name={uiState === 'recording' ? 'stop' : 'record-circle'}
+                    size={44}
+                    color="white"
+                  />
+                </Circle>
+              </Circle>
+              <Text color={subTextColor} fontSize={12} fontWeight="600">
+                {uiState === 'recording' ? 'STOP' : 'RECORD'}
+              </Text>
+            </YStack>
+
+            {/* Re-record Button */}
+            {uiState === 'review' && (
+              <YStack ai="center" space="$2">
+                <Circle
+                  size={64}
+                  bg={cardBg}
+                  ai="center"
+                  jc="center"
+                  borderWidth={2}
+                  borderColor="#F59E0B"
+                  pressStyle={{scale: 0.95}}
+                  onPress={handleReRecord}>
+                  <Icon name="refresh" size={32} color="#F59E0B" />
+                </Circle>
+                <Text color={subTextColor} fontSize={12} fontWeight="600">
+                  RETRY
+                </Text>
+              </YStack>
+            )}
+          </XStack>
+
+          {/* Podcast Title Display */}
+          <YStack
+            ai="center"
+            mt="$5"
+            px="$4"
+            py="$3"
+            bg={cardBg}
+            borderWidth={1}
+            borderColor={borderColor}
+            borderRadius={12}
+            maxWidth="92%"
+            shadowColor="#000"
+            shadowOffset={{width: 0, height: 1}}
+            shadowOpacity={0.04}
+            shadowRadius={4}
+            elevation={1}>
+            <Text color={subTextColor} fontSize={11} fontWeight="700" mb="$1" letterSpacing={0.8}>
+              PODCAST TITLE
+            </Text>
+            <Text
+              color={textColor}
+              fontSize={15}
+              fontWeight="700"
+              textAlign="center"
+              flexWrap="wrap"
+              flexShrink={1}
+              allowFontScaling>
+              {title}
+            </Text>
+          </YStack>
         </YStack>
       </YStack>
     </Theme>

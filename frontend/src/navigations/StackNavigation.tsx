@@ -95,7 +95,7 @@ const StackNavigation = () => {
         currTab === 'Home' ||
         currTab === 'Podcasts' ||
         currTab === 'Settings' ||
-        currTab === 'Academy';
+        currTab === 'Wellness' || currTab === 'Settings';
 
       if (isRootScreen || isRootTab) {
         Alert.alert('Warning', 'Do you want to exit?', [
@@ -529,26 +529,9 @@ const StackNavigation = () => {
       <Stack.Screen
         name="PodcastProfile"
         component={PodcastProfile}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: 'My Podcasts',
-          headerTintColor: 'white',
-          headerTransparent: false,
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-          headerBackTitleVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonCommentScreen}
-              onPress={() => {
-                queryClient.invalidateQueries({queryKey: ['get-my-playlists']});
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
 
       <Stack.Screen

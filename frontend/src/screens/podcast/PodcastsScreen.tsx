@@ -138,7 +138,17 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
       display={true}
       downLoadAudio={async () => {
         if (isConnected) {
-          await downloadAudio(item);
+          Snackbar.show({
+            text: 'Starting download in background...',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+          const res = await downloadAudio(item);
+          if (res?.message) {
+            Snackbar.show({
+              text: res.message,
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          }
         } else {
           Snackbar.show({
             text: 'Internet connection required',

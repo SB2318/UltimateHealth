@@ -3,6 +3,7 @@
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   Keyboard,
@@ -125,6 +126,13 @@ const CommentScreen = ({
     setCommentLikeLoading,
   ] = useState<boolean>(false);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setCommentLoading(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const [mentions, setMentions] = useState<
     User[]
   >([]);
@@ -193,8 +201,12 @@ const CommentScreen = ({
 
     fetchComments();
 
-    socket.on('comment-processing', (data: boolean) => {
+    socket.on('fetch-comment-processing', (data: boolean) => {
       setCommentLoading(data);
+    });
+
+    socket.on('comment-processing', (data: boolean) => {
+      setIsSubmitting(data);
     });
 
     socket.on(
@@ -205,8 +217,8 @@ const CommentScreen = ({
 
     socket.on('fetch-comments', data => {
       if (
-        data.articleId ===
-        route.params.articleId
+        String(data.articleId) ===
+        String(route.params.articleId)
       ) {
         setComments(
           Array.isArray(data.comments) ? data.comments : [],
@@ -525,11 +537,18 @@ const CommentScreen = ({
     [mentionedUsers, usedUserIds],
   );
 
-  if (commentLoading) {
-    return <Loader />;
-  }
+  // Screen layout remains interactive while comments load inline
 
   const renderCommentsEmpty = () => {
+    if (commentLoading) {
+      return (
+        <View style={{ paddingVertical: 40, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color={PRIMARY_COLOR} />
+          <Text style={{ marginTop: 12, color: '#64748B', fontSize: 14 }}>Loading comments...</Text>
+        </View>
+      );
+    }
+
     if (commentsError) {
       return (
         <BaseEmptyState
