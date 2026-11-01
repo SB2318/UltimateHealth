@@ -91,7 +91,7 @@ export default function OverviewScreen({navigation}: OverviewScreenProps) {
   };
   return (
     <View style={styles.container}>
-      <StatusBar style="light" backgroundColor="#000A60" />
+      <StatusBar style="light" />
       <View style={{height: insets.top, backgroundColor: '#000A60'}} />
       <View style={styles.innerContainer}>
         <Tabs.Container

@@ -71,7 +71,7 @@ const ONBOARDING_SLIDES = [
   {
     id: '4',
     badge: 'YOUR WELLNESS JOURNEY',
-    badgeIcon: 'rocket-launch',
+    badgeIcon: 'compass-outline',
     title: 'Ready to Transform Your Life?',
     subtitle:
       '',
@@ -116,6 +116,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 
   // Sign In as Patient / General User
   const handleUserSignIn = () => {
+    onClose && onClose();
     if (onSignInUser) onSignInUser();
   };
 
@@ -237,7 +238,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
               accessibilityRole="button"
               accessibilityLabel="Continue as guest">
               <Text style={[styles.skipText, {color: theme.skipText}]}>
-                Guest
+                Start Browsing
               </Text>
             </TouchableOpacity>
           </View>
@@ -377,33 +378,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
             <View style={styles.actionRow}>
               {currentSlide.isFinal ? (
                 <View style={styles.finalActionStack}>
-                  {/* Sign in as Patient / User */}
-                  <TouchableOpacity
-                    onPress={handleUserSignIn}
-                    style={styles.roleSignInBtn}
-                    activeOpacity={0.85}>
-                    <LinearGradient
-                      colors={
-                        isDarkMode
-                          ? ['#7C3AED', '#C084FC']
-                          : ['#6D28D9', '#2563EB']
-                      }
-                      start={{x: 0, y: 0}}
-                      end={{x: 1, y: 0}}
-                      style={styles.gradientBtnInner}>
-                      <MaterialCommunityIcon
-                        name="account-heart-outline"
-                        size={20}
-                        color="#FFF"
-                      />
-                      <Text style={styles.roleBtnText}>
-                        Sign In as Patient / User
-                      </Text>
-                      <Ionicons name="arrow-forward" size={18} color="#FFF" />
-                    </LinearGradient>
-                  </TouchableOpacity>
-
-                  {/* Sign in as Doctor */}
+                  {/* Primary CTA: Start Browsing */}
                   <TouchableOpacity
                     onPress={handleGuestContinue}
                     style={styles.roleSignInBtn}
@@ -417,15 +392,35 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                       start={{x: 0, y: 0}}
                       end={{x: 1, y: 0}}
                       style={styles.gradientBtnInner}>
-                      <FontAwesome6 name="user-doctor" size={17} color="#FFF" />
+                      <MaterialCommunityIcon name="compass-outline" size={20} color="#FFF" />
                       <Text style={styles.roleBtnText}>Start Browsing</Text>
                       <Ionicons name="arrow-forward" size={18} color="#FFF" />
                     </LinearGradient>
                   </TouchableOpacity>
+
+                  {/* Secondary Option: Sign In / Register */}
+                  <TouchableOpacity
+                    onPress={handleUserSignIn}
+                    style={[
+                      styles.continueOutlineBtn,
+                      {
+                        backgroundColor: isDarkMode ? 'rgba(124, 58, 237, 0.15)' : 'rgba(109, 40, 217, 0.08)',
+                        borderColor: isDarkMode ? '#8B5CF6' : '#6D28D9',
+                      },
+                    ]}
+                    activeOpacity={0.8}>
+                    <Text
+                      style={[
+                        styles.continueOutlineText,
+                        {color: isDarkMode ? '#C4B5FD' : '#6D28D9', fontWeight: '700'},
+                      ]}>
+                      Sign In / Register
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               ) : (
                 <View style={styles.stepActionRow}>
-                  {/* Guest shortcut on intermediate slides */}
+                  {/* Skip to Browsing shortcut on intermediate slides */}
                   <TouchableOpacity
                     onPress={handleGuestContinue}
                     style={[
@@ -441,7 +436,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                         styles.secondaryJoinText,
                         {color: theme.secondaryBtnText},
                       ]}>
-                      Guest
+                      Start Browsing
                     </Text>
                   </TouchableOpacity>
 

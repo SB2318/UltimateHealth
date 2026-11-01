@@ -164,7 +164,7 @@ const ContentListScreen = ({ navigation, route }: Props) => {
     if (selectedTab === 'articles') {
       navigation.navigate('EditorScreen');
     } else {
-      navigation.navigate('Home');
+      (navigation as any).navigate('Home');
     }
   }, [selectedTab, navigation]);
 

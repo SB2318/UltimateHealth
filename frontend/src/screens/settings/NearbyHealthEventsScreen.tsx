@@ -287,7 +287,7 @@ const NearbyHealthEventsScreen = ({ navigation }: NearbyHealthEventsScreenProps)
       <View style={[styles.comingSoonWrapper, { backgroundColor: cardBg, borderColor: cardBorder }]}>
         <View style={styles.comingSoonHeaderRow}>
           <View style={styles.comingSoonIconCircle}>
-            <MaterialCommunityIcons name="rocket-launch-outline" size={20} color="#10B981" />
+            <MaterialCommunityIcons name="calendar-clock-outline" size={20} color="#10B981" />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={[styles.comingSoonTitle, { color: textColor }]}>

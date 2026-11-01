@@ -57,7 +57,6 @@ describe('DeepLinkService', () => {
           authorId: undefined,
           recordId: 'pb_rec_abc123',
         },
-        requiresAuth: false,
       });
     });
   });

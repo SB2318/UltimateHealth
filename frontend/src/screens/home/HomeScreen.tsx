@@ -48,6 +48,9 @@ import {
   setTags,
 } from '../../store/dataSlice';
 import Snackbar from 'react-native-snackbar';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import {setGuestMode, setUserToken} from '../../store/UserSlice';
+import {useTranslation} from '../../localization';
 import {useFocusEffect} from '@react-navigation/native';
 import InactiveUserModal from '../../components/auth/InactiveUserModal';
 import {StatusBar} from 'expo-status-bar';
@@ -119,6 +122,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const chipInactiveText = isDarkMode ? '#CBD5E1' : '#4B5563';
 
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const [articleCategories, setArticleCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,
@@ -276,6 +280,25 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       article: null,
       htmlContent: undefined,
     });
+  };
+
+  const handleExitGuest = () => {
+    Alert.alert(
+      t('common.exitGuestConfirmTitle'),
+      t('common.exitGuestConfirmMsg'),
+      [
+        {text: t('common.cancel'), style: 'cancel'},
+        {
+          text: t('common.exitToSignIn'),
+          style: 'destructive',
+          onPress: () => {
+            dispatch(setGuestMode(false));
+            dispatch(setUserToken(''));
+            (navigation as any).navigate('SignInScreen', { role: 'General User' });
+          },
+        },
+      ],
+    );
   };
 
   /**
@@ -946,26 +969,58 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         onFilterReset={handleClearAllFilters}
         searchText={searchText}
       />
-      <TouchableOpacity
-        onPress={() => setCustomizeVisible(true)}
+      <View
         style={{
-          alignSelf: 'flex-end',
-          marginRight: 16,
+          flexDirection: 'row',
+          justifyContent: isGuest ? 'space-between' : 'flex-end',
+          alignItems: 'center',
+          paddingHorizontal: 16,
           marginTop: 10,
           marginBottom: 10,
-        }}
-        accessibilityRole="button"
-        accessibilityLabel="Customize Homepage"
-        accessibilityHint="Opens homepage customization settings">
-        <Text
-          style={{
-            color: isDarkMode ? '#60A5FA' : '#000A60',
-            fontWeight: 'bold',
-            fontSize: 16,
-          }}>
-          ⚙ Customize Homepage
-        </Text>
-      </TouchableOpacity>
+        }}>
+        {isGuest && (
+          <TouchableOpacity
+            onPress={handleExitGuest}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.15)' : 'rgba(239, 68, 68, 0.08)',
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              borderRadius: 20,
+              borderWidth: 1,
+              borderColor: isDarkMode ? 'rgba(239, 68, 68, 0.4)' : '#FCA5A5',
+              gap: 5,
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Exit Guest Mode"
+            accessibilityHint="Leaves guest mode and prompts to sign in">
+            <Ionicons name="log-out-outline" size={15} color={isDarkMode ? '#F87171' : '#DC2626'} />
+            <Text
+              style={{
+                color: isDarkMode ? '#F87171' : '#DC2626',
+                fontWeight: '700',
+                fontSize: 13,
+              }}>
+              {t('common.exitGuest')}
+            </Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity
+          onPress={() => setCustomizeVisible(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Customize Homepage"
+          accessibilityHint="Opens homepage customization settings">
+          <Text
+            style={{
+              color: isDarkMode ? '#60A5FA' : '#000A60',
+              fontWeight: 'bold',
+              fontSize: 15,
+            }}>
+            {t('home.customizeHomepage')}
+          </Text>
+        </TouchableOpacity>
+      </View>
       <FilterModal
         bottomSheetModalRef={bottomSheetModalRef}
         categories={articleCategories}

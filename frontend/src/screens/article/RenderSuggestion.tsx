@@ -47,7 +47,7 @@ export default function RenderSuggestion({
 
   return (
     <View style={styles.container}>
-      <StatusBar style="light" backgroundColor="#000A60" />
+      <StatusBar style="light" />
 
       {isFallback && (
         <View style={styles.fallbackBanner}>

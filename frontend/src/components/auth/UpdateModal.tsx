@@ -28,7 +28,7 @@ export default function UpdateModal({visible, storeUrl}: any) {
             alignItems: 'center',
           }}>
           <Text style={{fontSize: 18, fontWeight: '600'}}>
-            Update Available 🚀
+            Update Available 📲
           </Text>
 
           <Text style={{marginVertical: 12, textAlign: 'center'}}>

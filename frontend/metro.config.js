@@ -9,6 +9,7 @@ config.resolver.extraNodeModules = {
   ...config.resolver.extraNodeModules,
   '@tamagui/web': path.resolve(__dirname, 'node_modules/@tamagui/web'),
   '@tamagui/core': path.resolve(__dirname, 'node_modules/@tamagui/core'),
+  '@tamagui/constants': path.resolve(__dirname, 'node_modules/@tamagui/constants'),
   tamagui: path.resolve(__dirname, 'node_modules/tamagui'),
 };
 
@@ -21,6 +22,22 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
       filePath: path.resolve(__dirname, 'mocks/react-native-pager-view.js'),
       type: 'sourceFile',
     };
+  }
+  // Enforce root node_modules for Tamagui core packages across all imports
+  if (
+    moduleName === '@tamagui/web' ||
+    moduleName === '@tamagui/core' ||
+    moduleName === 'tamagui' ||
+    moduleName === '@tamagui/constants'
+  ) {
+    return context.resolveRequest(
+      {
+        ...context,
+        originModulePath: path.resolve(__dirname, 'package.json'),
+      },
+      moduleName,
+      platform
+    );
   }
   if (originalResolveRequest) {
     return originalResolveRequest(context, moduleName, platform);

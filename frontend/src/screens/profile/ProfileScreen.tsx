@@ -129,7 +129,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
           styles.loadingContainer,
           {backgroundColor: statusBarBg},
         ]}>
-        <StatusBar style="light" backgroundColor={statusBarBg} />
+        <StatusBar style="light" />
         <Loader />
       </SafeAreaView>
     );
@@ -145,7 +145,7 @@ const ProfileScreen = ({navigation}: ProfileScreenProps) => {
         styles.container,
         {backgroundColor: statusBarBg},
       ]}>
-      <StatusBar style="light" backgroundColor={statusBarBg} />
+      <StatusBar style="light" />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, backgroundColor: themeColors.background, paddingBottom: hp(4) }}
         refreshControl={

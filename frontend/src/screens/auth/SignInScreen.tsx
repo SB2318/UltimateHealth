@@ -410,7 +410,7 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
                   pressStyle={{ opacity: 0.6 }}
                 >
                   <Text color={isDarkMode ? '#94A3B8' : '#64748B'} fontWeight="600" fontSize={15}>
-                    I&apos;ll just browse as a Guest
+                    Start Browsing as Guest
                   </Text>
                 </Button>
               </YStack>

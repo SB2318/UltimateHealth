@@ -260,16 +260,23 @@ function AppInner({
   const isDarkMode = useColorScheme() === 'dark';
   const navigationTheme = isDarkMode ? appDarkTheme : appLightTheme;
   const { user_token, isGuest } = useAppSelector((state: RootState) => state.user);
+  const [onboardingDismissed, setOnboardingDismissed] = useState(false);
 
-  // Show onboarding until the user authenticates or explicitly picks guest mode.
-  const showOnboarding = !user_token && !isGuest;
+  // Show onboarding until the user authenticates, explicitly picks guest mode, or dismisses modal to sign in.
+  const showOnboarding = !user_token && !isGuest && !onboardingDismissed;
+
+  const handleCloseModal = () => {
+    setOnboardingDismissed(true);
+  };
 
   const handleSignInUser = () => {
+    setOnboardingDismissed(true);
     navigationRef.current?.navigate('SignInScreen', { role: 'General User' });
   };
-  const handleGuest = ()=>{
-   navigationRef.current?.reset({index: 0, routes: [{name: 'TabNavigation'}]});
-  }
+  const handleGuest = () => {
+    setOnboardingDismissed(true);
+    navigationRef.current?.reset({index: 0, routes: [{name: 'TabNavigation'}]});
+  };
 
   return (
     <View
@@ -286,10 +293,10 @@ function AppInner({
       {/* Onboarding — shown until user signs in or continues as guest */}
       <OnboardingModal
         visible={showOnboarding}
-        onClose={handleSignInUser}
+        onClose={handleCloseModal}
         onSignInUser={handleSignInUser}
         onSignInDoctor={handleSignInUser}
-        onContinue={()=>{}}
+        onContinue={() => {}}
         onGuestContinue={handleGuest}
       />
     </View>

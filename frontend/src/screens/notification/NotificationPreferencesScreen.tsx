@@ -149,7 +149,7 @@ const NotificationPreferencesScreen = ({
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['bottom']}>
-      <StatusBar style="light" backgroundColor="#000A60" />
+      <StatusBar style="light" />
       {/* Header banner */}
       <View
         style={[styles.headerBanner, {paddingTop: Math.max(topInset, 14) + 10}]}

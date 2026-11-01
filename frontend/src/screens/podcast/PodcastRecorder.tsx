@@ -372,7 +372,7 @@ const stopRecording = async () => {
                     text: 'Discard & Leave',
                     style: 'destructive',
                     onPress: async () => {
-                      await resetRecording();
+                      await resetRecording({deleteFile: true});
                       navigation.goBack();
                     },
                   },

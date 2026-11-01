@@ -96,7 +96,7 @@ const StackNavigation = () => {
         currTab === 'Home' ||
         currTab === 'Podcasts' ||
         currTab === 'Settings' ||
-        currTab === 'Wellness' || currTab === 'Settings';
+        currTab === 'Wellness';
 
       if (isRootScreen || isRootTab) {
         Alert.alert('Warning', 'Do you want to exit?', [

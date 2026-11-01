@@ -401,7 +401,7 @@ const WellnessDashboardScreen = () => {
         styles.container,
         {backgroundColor: isDarkMode ? '#000A60' : '#F5F7FB'},
       ]}>
-      <StatusBar style="light" backgroundColor="#000A60" />
+      <StatusBar style="light" />
 
       {/* Top Header Bar — eliminates white status bar and unifies design */}
       <View

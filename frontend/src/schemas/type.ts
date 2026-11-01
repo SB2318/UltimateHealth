@@ -196,6 +196,7 @@ export type UserDetail = {
 export type TabParamList = {
   Home: undefined;
   Podcasts: undefined;
+  Wellness: undefined;
   Settings: undefined;
   Chatbot: undefined;
   Academy: undefined;

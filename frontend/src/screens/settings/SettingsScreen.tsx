@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   useColorScheme,
   Alert,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
@@ -16,6 +17,7 @@ import { PRIMARY_COLOR } from '../../lib/ui/Theme';
 import { wp, hp, fp } from '../../lib/ui/Metric';
 import { useAppSelector } from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
+import { useTranslation } from '../../localization';
 type SettingsScreenProps = { navigation: any };
 
 // ─── Section Header ───────────────────────────────────────────────────────────
@@ -112,6 +114,12 @@ const SettingsRow = ({
 const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   const isDark = useColorScheme() === 'dark';
   const { isConnected } = useAppSelector((state: any) => state.network);
+  const { currentLanguage, setLanguage, supportedLanguages, t } = useTranslation();
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+
+  const currentLangInfo = supportedLanguages.find(
+    (l) => l.code === currentLanguage || l.bcp47 === currentLanguage,
+  );
 
   const bg = isDark ? '#111827' : '#F9FAFB';
   const headerBg = isDark ? '#1F2937' : '#FFFFFF';
@@ -214,6 +222,19 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             label="Your Workspace"
             sublabel="Contributor & Admin Interaction"
             onPress={() => go('OverviewScreen')}
+            isDark={isDark}
+          />
+        </View>
+
+        {/* ── PREFERENCES ── */}
+        <SectionLabel label="PREFERENCES" isDark={isDark} />
+        <View style={styles.group}>
+          <SettingsRow
+            icon="translate"
+            iconColor="#3B82F6"
+            label="App Language"
+            sublabel={currentLangInfo ? `${currentLangInfo.nativeName} (${currentLangInfo.name})` : 'English'}
+            onPress={() => setLanguageModalVisible(true)}
             isDark={isDark}
           />
         </View>
@@ -366,6 +387,118 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           UltimateHealth · Built with ❤️ for better health
         </Text>
       </ScrollView>
+
+      <Modal
+        visible={languageModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setLanguageModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View
+            style={[
+              styles.modalSheet,
+              { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' },
+            ]}
+          >
+            <View
+              style={[
+                styles.modalHeader,
+                { borderBottomColor: isDark ? '#374151' : '#E5E7EB' },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.modalTitle,
+                  { color: isDark ? '#F9FAFB' : '#111827' },
+                ]}
+              >
+                Select App Language
+              </Text>
+              <TouchableOpacity
+                onPress={() => setLanguageModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="Close language selector"
+              >
+                <MaterialIcons
+                  name="close"
+                  size={24}
+                  color={isDark ? '#9CA3AF' : '#6B7280'}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView
+              style={{ maxHeight: hp(50) }}
+              showsVerticalScrollIndicator={false}
+            >
+              {supportedLanguages.map((lang) => {
+                const isSelected =
+                  currentLanguage === lang.code || currentLanguage === lang.bcp47;
+                return (
+                  <TouchableOpacity
+                    key={lang.code}
+                    onPress={async () => {
+                      await setLanguage(lang.code);
+                      setLanguageModalVisible(false);
+                      Snackbar.show({
+                        text: `Language switched to ${lang.nativeName}`,
+                        duration: Snackbar.LENGTH_SHORT,
+                      });
+                    }}
+                    style={[
+                      styles.languageItem,
+                      {
+                        backgroundColor: isSelected
+                          ? isDark
+                            ? 'rgba(59, 130, 246, 0.2)'
+                            : '#EFF6FF'
+                          : 'transparent',
+                        borderBottomColor: isDark ? '#374151' : '#F3F4F6',
+                      },
+                    ]}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Choose ${lang.nativeName} (${lang.name})`}
+                  >
+                    <View style={styles.langNameWrap}>
+                      <Text
+                        style={[
+                          styles.langNative,
+                          {
+                            color: isSelected
+                              ? PRIMARY_COLOR
+                              : isDark
+                              ? '#F9FAFB'
+                              : '#111827',
+                            fontWeight: isSelected ? '700' : '500',
+                          },
+                        ]}
+                      >
+                        {lang.nativeName}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.langEn,
+                          { color: isDark ? '#9CA3AF' : '#6B7280' },
+                        ]}
+                      >
+                        {lang.name}
+                      </Text>
+                    </View>
+                    {isSelected && (
+                      <MaterialIcons
+                        name="check-circle"
+                        size={22}
+                        color={PRIMARY_COLOR}
+                      />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -448,5 +581,49 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: fp(3),
     marginTop: hp(2),
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalSheet: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingTop: 16,
+    paddingBottom: hp(4),
+    paddingHorizontal: wp(5),
+    maxHeight: hp(70),
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+  },
+  modalTitle: {
+    fontSize: fp(4.5),
+    fontWeight: '700',
+  },
+  languageItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    borderBottomWidth: 1,
+    marginTop: 4,
+  },
+  langNameWrap: {
+    flexDirection: 'column',
+  },
+  langNative: {
+    fontSize: fp(4),
+  },
+  langEn: {
+    fontSize: fp(3.2),
+    marginTop: 2,
   },
 });

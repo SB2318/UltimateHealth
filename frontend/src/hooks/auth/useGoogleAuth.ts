@@ -36,7 +36,7 @@ const googleAuthFunc = async (req: GoogleAuthReq): Promise<GoogleAuthResponse> =
   const { idToken, role, ...bodyData } = req;
 
   console.log('\n======================================================');
-  console.log('🚀 [GOOGLE AUTH API] Mutating /user/google-auth');
+  console.log('✨ [GOOGLE AUTH API] Mutating /user/google-auth');
   console.log('📍 Endpoint Path: /user/google-auth');
   console.log('🔑 Authorization Header: Bearer ' + (idToken ? idToken.substring(0, 20) + '...' : 'MISSING'));
   console.log('📱 Header x-client-type: mobile');

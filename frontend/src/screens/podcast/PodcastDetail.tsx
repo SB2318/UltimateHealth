@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import {PodcastDetailScreenProp} from '../../schemas/type';
+import {PodcastDetailScreenProp, PodcastData} from '../../schemas/type';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import Slider from '../../components/podcast/SliderCompat';
 import {GlassStyles} from '../../styles/GlassStyles';

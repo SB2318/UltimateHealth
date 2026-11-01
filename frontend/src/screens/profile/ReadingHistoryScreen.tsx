@@ -254,7 +254,7 @@ const ReadingHistoryScreen = ({ navigation }: Props) => {
 
         <TouchableOpacity
           style={styles.exploreButton}
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => (navigation as any).navigate('Home')}
           activeOpacity={0.8}
           accessibilityRole="button"
           accessibilityLabel="Explore Articles">

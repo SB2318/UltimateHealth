@@ -488,7 +488,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
   return (
     <View style={styles.tabContainer}>
-      <StatusBar style="light" backgroundColor="#000A60" />
+      <StatusBar style="light" />
 
       {/* 3-Mode Studio Tab Bar: Editor | HTML Source | Live Preview */}
       <View style={styles.tabBar}>

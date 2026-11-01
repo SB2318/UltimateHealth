@@ -619,7 +619,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
   }
   return (
     <View style={styles.container}>
-      <StatusBar style="light" backgroundColor="#000A60" />
+      <StatusBar style="light" />
       {/* AI Content Checker & Grammar Suggestions Card with Built-In Fallback */}
       <View style={styles.aiReviewCard}>
         <View style={styles.iconContainer}>

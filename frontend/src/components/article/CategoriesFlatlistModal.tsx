@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
-import { StyleSheet, Text, View,  TextInput  } from 'react-native';
+import { StyleSheet, Text, View,  TextInput, useColorScheme } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import AccessibleTouchable from '../common/AccessibleTouchable';
 import {
@@ -14,6 +14,7 @@ import {HomeScreenCategoriesFlatlistProps, Category} from '../../schemas/type';
 
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {hp} from '../../lib/ui/Metric';
+import {useTranslation} from '../../localization';
 
 
 const CategoriesFlatlistModal = ({
@@ -22,6 +23,18 @@ const CategoriesFlatlistModal = ({
   handleCategorySelection,
   selectCategoryList,
 }: HomeScreenCategoriesFlatlistProps) => {
+  const isDarkMode = useColorScheme() === 'dark';
+  const themeColors = useMemo(() => ({
+    bg: isDarkMode ? '#0F172A' : '#FFFFFF',
+    cardBg: isDarkMode ? '#1E293B' : '#F9FAFB',
+    textPrimary: isDarkMode ? '#F8FAFC' : '#111827',
+    textSecondary: isDarkMode ? '#94A3B8' : '#6B7280',
+    border: isDarkMode ? '#334155' : '#E5E7EB',
+    inputBg: isDarkMode ? '#1E293B' : '#FFFFFF',
+    itemSelectedBg: isDarkMode ? 'rgba(99, 102, 241, 0.25)' : '#EEF2FF',
+    handleColor: isDarkMode ? '#64748B' : '#CBD5E1',
+  }), [isDarkMode]);
+  const { t } = useTranslation();
   const SEARCH_DEBOUNCE_DELAY = 300; // ms
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
@@ -98,8 +111,9 @@ const CategoriesFlatlistModal = ({
           accessibilityHint="Selects this category"
           style={[
             styles.item,
+            {backgroundColor: themeColors.cardBg, borderColor: themeColors.border},
             isSelected && {
-              backgroundColor: '#EEF2FF',
+              backgroundColor: themeColors.itemSelectedBg,
               borderColor: PRIMARY_COLOR,
             },
           ]}
@@ -109,6 +123,7 @@ const CategoriesFlatlistModal = ({
           <Text
             style={[
               styles.itemText,
+              {color: themeColors.textPrimary},
               isSelected && {
                 color: PRIMARY_COLOR,
                 fontWeight: '600',
@@ -137,8 +152,10 @@ const CategoriesFlatlistModal = ({
       index={1}
       backdropComponent={renderBackdrop}
       enablePanDownToClose={true}
-      style={{backgroundColor: 'white'}}>
-      <View style={styles.header}>
+      backgroundStyle={{backgroundColor: themeColors.bg}}
+      handleIndicatorStyle={{backgroundColor: themeColors.handleColor}}
+      style={{backgroundColor: themeColors.bg}}>
+      <View style={[styles.header, {backgroundColor: themeColors.bg, borderBottomColor: themeColors.border}]}>
         <AccessibleTouchable
           accessibilityLabel="Close categories"
           accessibilityHint="Closes category selection modal"
@@ -146,16 +163,16 @@ const CategoriesFlatlistModal = ({
           onPress={handleDismissModalPress}>
           <MaterialIcons name="arrow-back" size={24} color={PRIMARY_COLOR} />
         </AccessibleTouchable>
-        <Text style={styles.title}>All Categories</Text>
+        <Text style={[styles.title, {color: themeColors.textPrimary}]}>{t('home.allCategories')}</Text>
         <View style={{width: 24}} />
       </View>
 
-      <View style={styles.searchContainer}>
+      <View style={[styles.searchContainer, {backgroundColor: themeColors.inputBg, borderColor: themeColors.border}]}>
         <MaterialIcons name="search" size={20} color="#9ca3af" style={styles.searchIcon} />
         <TextInput
-          style={styles.searchInput}
-          placeholder="Search categories..."
-          placeholderTextColor="#9ca3af"
+          style={[styles.searchInput, {color: themeColors.textPrimary}]}
+          placeholder={t('home.searchCategoriesPlaceholder')}
+          placeholderTextColor={themeColors.textSecondary}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -172,8 +189,8 @@ const CategoriesFlatlistModal = ({
       {filteredCategories.length === 0 ? (
         <View style={styles.noResults}>
           <MaterialIcons name="search-off" size={48} color="#9ca3af" />
-          <Text style={styles.noResultsText}>No categories found</Text>
-          <Text style={styles.noResultsSubText}>Try a different search term</Text>
+          <Text style={[styles.noResultsText, {color: themeColors.textSecondary}]}>{t('home.noCategoriesFound')}</Text>
+          <Text style={[styles.noResultsSubText, {color: themeColors.textSecondary}]}>{t('home.tryDifferentSearch')}</Text>
         </View>
       ) : (
         <BottomSheetFlatList

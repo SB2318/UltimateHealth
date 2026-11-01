@@ -1069,7 +1069,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
         style={[styles.container, {backgroundColor: themeColors.background}]}>
-        <StatusBar style="light" backgroundColor="#000A60" />
+        <StatusBar style="light" />
         <View style={{height: insets.top, backgroundColor: '#000A60'}} />
         {backButton}
         <BaseEmptyState
@@ -1087,7 +1087,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       <SafeAreaView
         edges={['bottom', 'left', 'right']}
         style={[styles.container, {backgroundColor: themeColors.background}]}>
-        <StatusBar style="light" backgroundColor="#000A60" />
+        <StatusBar style="light" />
         <View style={{height: insets.top, backgroundColor: '#000A60'}} />
         {backButton}
         <NoArticleState onRefresh={refetch} />
@@ -1114,7 +1114,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         <SafeAreaView
           edges={['bottom', 'left', 'right']}
           style={[styles.container, {backgroundColor: themeColors.background}]}>
-          <StatusBar style="light" backgroundColor="#000A60" />
+          <StatusBar style="light" />
           <View style={{height: insets.top, backgroundColor: '#000A60'}} />
         {backButton}
           <NoArticleState onRefresh={() => refetch()} />
@@ -1123,7 +1123,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     <SafeAreaView
       edges={['bottom', 'left', 'right']}
       style={[styles.container, {backgroundColor: themeColors.background}]}>
-      <StatusBar style="light" backgroundColor="#000A60" />
+      <StatusBar style="light" />
       <View style={{height: insets.top, backgroundColor: '#000A60'}} />
         {backButton}
       {/* Reading Progress Bar */}
