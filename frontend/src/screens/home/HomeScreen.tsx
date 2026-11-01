@@ -29,6 +29,7 @@ import {
 import {PROD_URL, SEARCH_ARTICLES} from '../../lib/api/APIUtils';
 import AddIcon from '../../components/common/AddIcon';
 import ArticleCard from '../../components/article/ArticleCard';
+import ArtcleSkeleton from '../../components/article/ArticleSkeletonCard';
 
 import HomeScreenHeader from '../../components/home/HomeScreenHeader';
 import {ArticleData, Category, HomeScreenProps} from '../../schemas/type';
@@ -69,20 +70,23 @@ import {useDebounce} from '../../hooks/useDebounce';
 import {
   OfflineArticleState,
   NoArticleState,
-  BaseEmptyState,
 } from '../../components/common/EmptyStates';
 
 const HOMEPAGE_SETTINGS_KEY = 'homepage_customization';
 
 // Loading State Component with Animation
+
+const ARTICLE_SKELETON_PLACEHOLDERS = [1 , 2 ,3];
+
 const LoadingState = () => {
   return (
-    <BaseEmptyState
-      iconEmoji="📚"
-      title="Loading Articles"
-      description="Gathering the latest health insights for you..."
-      loading={true}
-    />
+    <View
+      style={styles.articleSkeletonContainer}
+      accessibilityLabel="Loading articles">
+      {ARTICLE_SKELETON_PLACEHOLDERS.map(i => (
+        <ArticleSkeletonCard key={`article-skeleton-${i}`} />
+      ))}
+    </View>
   );
 };
 
@@ -109,6 +113,97 @@ const SavedArticleEmptyState = () => (
     </Text>
   </View>
 );
+
+export const WebDemoHome = ({navigation}: {navigation: any}) => {
+  const [articleQuery, setArticleQuery] = useState('');
+  const normalizedQuery = articleQuery.trim().toLowerCase();
+  const visibleArticles = demoArticles.filter(article =>
+    `${article.title} ${article.description} ${article.tags.map(tag => tag.name).join(' ')}`
+      .toLowerCase()
+      .includes(normalizedQuery),
+  );
+
+  return (
+  <SafeAreaView style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.webDemoContainer}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator
+    >
+      <Text style={styles.webDemoEyebrow}>WEB DEMO MODE</Text>
+      <Text style={styles.webDemoTitle}>UltimateHealth content showcase</Text>
+      <Text style={styles.webDemoIntro}>
+        Local sample content is shown in the browser because the production API
+        does not allow localhost requests. The native app still uses the live API.
+      </Text>
+      <Pressable
+        style={styles.webDemoPlanCard}
+        onPress={() => {
+          const stackNav = navigation.getParent?.() ?? navigation;
+          if (Platform.OS === 'web') {
+            stackNav.replace('WellnessDashboardScreen');
+          } else {
+            stackNav.navigate('WellnessDashboardScreen');
+          }
+        }}
+        accessibilityRole="button"
+        accessibilityLabel="Open your wellness plan">
+        <Text style={styles.webDemoPlanEyebrow}>NEW · OFFLINE-FIRST FEATURE</Text>
+        <Text style={styles.webDemoPlanTitle}>Track your 7-day wellness plan</Text>
+        <Text style={styles.webDemoPlanBody}>
+          Log sleep, hydration, movement, and breathing. Your demo progress is
+          saved in this browser and works without an account.
+        </Text>
+        <Text style={styles.webDemoPlanAction}>Open wellness dashboard →</Text>
+      </Pressable>
+      <Text style={styles.webDemoSection}>Find an article</Text>
+      <View style={styles.webDemoSearch}>
+        <TextInput
+          value={articleQuery}
+          onChangeText={setArticleQuery}
+          placeholder="Search running, sleep, nutrition..."
+          placeholderTextColor="#64748B"
+          style={styles.webDemoSearchInput}
+          accessibilityLabel="Search articles"
+          returnKeyType="search"
+        />
+        {articleQuery ? (
+          <Pressable onPress={() => setArticleQuery('')} accessibilityLabel="Clear article search">
+            <Text style={styles.webDemoSearchClear}>×</Text>
+          </Pressable>
+        ) : null}
+      </View>
+      <Text style={styles.webDemoSection}>
+        {normalizedQuery ? `${visibleArticles.length} matching articles` : 'Featured articles'}
+      </Text>
+      {visibleArticles.map(article => (
+        <Pressable
+          key={article._id}
+          style={styles.webDemoCard}
+          onPress={() =>
+            navigation.navigate('ArticleScreen', {
+              articleId: Number(article._id.replace(/\D/g, '')) || 1,
+              authorId: article.authorId,
+              recordId: article.pb_recordId,
+            })
+          }>
+          <Text style={styles.webDemoTag}>{article.tags[0].name}</Text>
+          <Text style={styles.webDemoCardTitle}>{article.title}</Text>
+          <Text style={styles.webDemoCardBody}>{article.description}</Text>
+          <Text style={styles.webDemoMeta}>Estimated reading time: 1 min</Text>
+        </Pressable>
+      ))}
+      <Text style={styles.webDemoSection}>Podcast preview</Text>
+      <View style={styles.webDemoCard}>
+        <Text style={styles.webDemoTag}>PODCAST</Text>
+        <Text style={styles.webDemoCardTitle}>{demoPodcasts[0].title}</Text>
+        <Text style={styles.webDemoCardBody}>{demoPodcasts[0].description}</Text>
+        <Text style={styles.webDemoMeta}>5 min episode · Demo audio available</Text>
+      </View>
+    </ScrollView>
+  </SafeAreaView>
+  );
+};
 
 // Here The purpose of using Redux is to maintain filter state throughout the app session. globally
 const HomeScreen = ({navigation}: HomeScreenProps) => {
@@ -468,12 +563,24 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   };
 
   const {
-    data: articleData,
+    data: remoteArticleData,
     isLoading,
     isFetching,
     isError,
     refetch,
   } = useGetPaginatedArticle(isConnected, page);
+  const articleData =
+    Platform.OS === 'web'
+      ? {articles: demoArticles, totalPages: 1}
+      : remoteArticleData;
+
+  useEffect(() => {
+    if (Platform.OS === 'web') {
+      dispatch(setSelectedTags({selectedTags: []}));
+      dispatch(setFilteredArticles(demoArticles));
+      dispatch(setTags({tags: demoCategories}));
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (articleData) {
@@ -1233,6 +1340,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginTop: 10,
     paddingBottom: 120,
+  },
+  articleSkeletonContainer:{
+    flex: 1,
+    width : '100%',
+    paddingHorizontal: 16,
+    marginTop : 10,
   },
   homePlusIconview: {
     bottom: 100,

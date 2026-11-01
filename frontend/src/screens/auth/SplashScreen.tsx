@@ -9,8 +9,9 @@ import Animated, {
 } from 'react-native-reanimated';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import {SplashScreenProp} from '../../schemas/type';
-import {useAppSelector} from '../../store/hooks';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {RootState} from '../../store/ReduxStore';
+import {setGuestMode} from '../../store/UserSlice';
 
 const BUTTON_COLOR = '#0F52BA';
 
@@ -23,6 +24,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
   // `user_token` is hydrated from secure storage by AppContent on mount.
   // We wait briefly to allow hydration to complete before deciding where to navigate.
   const user_token = useAppSelector((state: RootState) => state.user.user_token);
+  const dispatch = useAppDispatch();
 
   // Brief hydration delay so AppContent can populate Redux before we navigate
   const [hydrated, setHydrated] = useState(false);
@@ -33,6 +35,14 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
   }, []);
 
   const navigateBasedOnAuth = useCallback(() => {
+    if (Platform.OS === 'web') {
+      dispatch(setGuestMode(true));
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'TabNavigation'}],
+      });
+      return;
+    }
     if (user_token) {
       navigation.reset({
         index: 0,
@@ -44,7 +54,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
         routes: [{name: 'SignInScreen'}],
       });
     }
-  }, [navigation, user_token]);
+  }, [dispatch, navigation, user_token]);
 
   useEffect(() => {
     if (hydrated) {

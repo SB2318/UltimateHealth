@@ -2,6 +2,8 @@ import { PROD_URL } from '@/src/lib/api/APIUtils';
 import { ArticleData } from '@/src/schemas/type';
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import axios from 'axios';
+import {Platform} from 'react-native';
+import {demoArticles} from '../../lib/demo/demoContent';
 
 type AxiosError = any;
 
@@ -19,6 +21,9 @@ export const useGetPaginatedArticle = (
   return useQuery({
     queryKey: ['get-all-articles', page],
     queryFn: async () => {
+      if (Platform.OS === 'web') {
+        return {articles: demoArticles, totalPages: 1};
+      }
       try {
         const response = await axios.get(`${PROD_URL}/articles?page=${page}`);
         const data = response?.data;

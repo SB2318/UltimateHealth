@@ -7,7 +7,7 @@
 //   PROD_URL=http://10.0.2.2:3000/api        # Android emulator
 //   PROD_URL=http://localhost:3000/api        # iOS simulator
 //   SOCKET_PROD=http://10.0.2.2:3000
-//   CONTENT_CHECKER_PROD=http://10.0.2.2:3000/content-intel
+//   CONTENT_CHECKER_PROD=http://10.0.2.2:3000/veriwise
 //
 // Production fallbacks are defined in app.config.js and used when the
 // corresponding env var is not set.

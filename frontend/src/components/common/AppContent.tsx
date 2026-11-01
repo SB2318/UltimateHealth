@@ -34,8 +34,10 @@ import { setConnected } from '../../store/NetworkSlice';
 import { clearSessionArticles } from '../../store/offlineSlice';
 import { pruneArticleCache } from '../../lib/storage/ArticleCacheUtils';
 import { RootState } from '../../store/ReduxStore';
+import type { RootStackParamList } from '../../schemas/type';
 
 import StackNavigation from '../../navigations/StackNavigation';
+import WebDemoShell from '../../screens/web/WebDemoShell';
 import { CustomAlertDialog } from './CustomAlert';
 import UpdateModal from '../auth/UpdateModal';
 import { NetworkBanner } from './NetworkBanner';
@@ -82,6 +84,10 @@ export default function AppContent() {
   );
 
   const { data: tokenRes } = useCheckTokenStatus();
+  // The browser build is a public showcase because the production API
+  // requires authentication and is not reachable from localhost. Native
+  // builds keep the regular auth flow.
+  const isWebDemo = Platform.OS === 'web';
 
   useNotificationListeners();
 
@@ -140,6 +146,9 @@ export default function AppContent() {
   }, []);
 
   useEffect(() => {
+    if (Platform.OS === 'web') {
+      return;
+    }
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       if (__DEV__) {
         console.log('Foreground notification received:', remoteMessage);
@@ -188,6 +197,9 @@ export default function AppContent() {
   }, [tokenRes, user_token, isGuest]);
 
   useEffect(() => {
+    if (Platform.OS === 'web') {
+      return;
+    }
     const handleNotificationResponse = async (
       response: Notifications.NotificationResponse,
     ) => {
@@ -210,6 +222,9 @@ export default function AppContent() {
   }, [user_token, isGuest]);
 
   useEffect(() => {
+    if (Platform.OS === 'web') {
+      return;
+    }
     firebaseInit();
     cleanUpDownloads();
   }, []);
@@ -252,10 +267,12 @@ function AppInner({
   navigationRef,
   visible,
   storeUrl,
+  initialRouteName,
 }: {
   navigationRef: React.RefObject<NavigationContainerRef<any> | null>;
   visible: boolean;
   storeUrl: string;
+  initialRouteName?: keyof RootStackParamList;
 }) {
   const isDarkMode = useColorScheme() === 'dark';
   const navigationTheme = isDarkMode ? appDarkTheme : appLightTheme;

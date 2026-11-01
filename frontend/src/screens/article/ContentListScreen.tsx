@@ -75,7 +75,7 @@ const ContentListScreen = ({ navigation, route }: Props) => {
 
   const { data: user, refetch, isLoading } = useGetProfile();
 
-  const onRefresh = useCallback(() => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     refetch().finally(() => setRefreshing(false));
   }, [refetch]);
@@ -408,8 +408,8 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal : wp(4),
+    paddingTop : hp(2),
   },
   headerBar: {
     flexDirection: 'row',

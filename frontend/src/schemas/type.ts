@@ -107,6 +107,7 @@ export type RootStackParamList = {
   RepostsScreen: undefined;
   SavedArticlesScreen: undefined;
   WellnessDashboardScreen: undefined;
+  WellnessPreviewScreen: undefined;
   LogoutScreen: {profile_image: string; username: string};
   RenderSuggestion: {
     htmlContent: string;

@@ -165,6 +165,29 @@ try {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
+    const configureBackgroundPlayback = async () => {
+      try {
+        await setAudioModeAsync({
+          playsInSilentMode: true,
+          shouldPlayInBackground: true,
+        });
+      } catch (error) {
+        if (isMounted) {
+          console.warn('Failed to enable background podcast playback:', error);
+        }
+      }
+    };
+
+    void configureBackgroundPlayback();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     if (podcast?.audio_url) {
       const secureSource = getFormattedSource(podcast.audio_url);
       if (secureSource && secureSource !== loadedSource) {

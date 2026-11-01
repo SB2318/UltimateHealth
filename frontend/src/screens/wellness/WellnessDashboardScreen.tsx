@@ -61,7 +61,7 @@ const useSafeTopInset = (): number => {
   }
 };
 
-const WellnessDashboardScreen = () => {
+const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => void; reset?: (state: {index: number; routes: {name: string}[]}) => void}}) => {
   const isDarkMode = useColorScheme() === 'dark';
   const bottomBarHeight = useSafeBottomTabBarHeight();
   const topInset = useSafeTopInset();
@@ -328,7 +328,7 @@ const WellnessDashboardScreen = () => {
     },
   ];
 
-  const weeklyChart = buildChartData(weeklyLogs);
+  const weeklyChart = buildChartData(logs);
   const chartData = {
     labels: weeklyChart.labels,
     datasets: [
@@ -340,6 +340,8 @@ const WellnessDashboardScreen = () => {
     ],
     legend: ['Wellness Trend'],
   };
+  const trendValues = weeklyChart.datasets[0].data;
+  const trendMax = Math.max(...trendValues, 1);
 
   const recommendations = (() => {
     const m = todayLog?.metrics;
@@ -484,6 +486,8 @@ const WellnessDashboardScreen = () => {
         </View>
       ) : (
         <ScrollView
+          style={styles.scrollView}
+          nestedScrollEnabled
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingTop: 16,
@@ -1280,6 +1284,9 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.82)',
     marginTop: 2,
   },
+  scrollView: {
+    flex: 1,
+  },
   centerContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -1307,6 +1314,17 @@ const styles = StyleSheet.create({
   progressBarFill: {
     height: '100%',
     borderRadius: 3,
+  },
+  webTrend: {
+    width: '100%',
+    minHeight: 190,
+    paddingHorizontal: 8,
+    paddingTop: 8,
+  },
+  webTrendBar: {
+    width: '58%',
+    minHeight: 12,
+    borderRadius: 6,
   },
   logInput: {
     flex: 1,

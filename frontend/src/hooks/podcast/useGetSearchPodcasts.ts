@@ -17,6 +17,17 @@ AxiosError
   return useQuery({
     queryKey: ['search-podcasts', page, q],
     queryFn: async () => {
+      if (Platform.OS === 'web') {
+        const normalized = q.toLowerCase();
+        return {
+          totalPages: 1,
+          matchPodcasts: demoPodcasts.filter(podcast =>
+            `${podcast.title} ${podcast.description} ${podcast.tags.map(tag => tag.name).join(' ')}`
+              .toLowerCase()
+              .includes(normalized),
+          ),
+        };
+      }
       const regexEscapedQuery = escapeRegexSpecialChars(q);
       const urlEncodedQuery = encodeURIComponent(regexEscapedQuery);
       const res = await axios.get(SEARCH_PODCAST, {
@@ -27,6 +38,6 @@ AxiosError
       });
       return (res?.data ?? { totalPages: 0, matchPodcasts: [] }) as SearchResponse;
     },
-    enabled: isConnected && !!q && !!page,
+    enabled: (Platform.OS === 'web' || isConnected) && !!q && !!page,
   });
 };

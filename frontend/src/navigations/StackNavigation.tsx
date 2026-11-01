@@ -1,4 +1,12 @@
 import React, {useEffect} from 'react';
+import {
+  Platform,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+  BackHandler,
+  Pressable,
+} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import TabNavigation from './TabNavigation';
 import SplashScreen from '../screens/auth/SplashScreen';
@@ -54,6 +62,7 @@ import InsightScreen from '../screens/profile/InsightScreen';
 import RepostsScreen from '../screens/profile/RepostsScreen';
 import SavedArticlesScreen from '../screens/profile/SavedArticlesScreen';
 import WellnessDashboardScreen from '../screens/wellness/WellnessDashboardScreen';
+import WellnessPreviewScreen from '../screens/wellness/WellnessPreviewScreen';
 import AboutScreen from '../screens/legal/AboutPage';
 import SettingsScreen from '../screens/settings/SettingsScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
@@ -76,7 +85,11 @@ const ROOT_SCREENS: string[] = [
   'GuestPlaceholderScreen',
 ];
 
-const StackNavigation = () => {
+type StackNavigationProps = {
+  initialRouteName?: keyof RootStackParamList;
+};
+
+const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const nav = useNavigation<NavigationProp<TabParamList>>();
   const queryClient = useQueryClient();
@@ -725,6 +738,11 @@ const StackNavigation = () => {
         options={{
           headerShown: false,
         }}
+      />
+      <Stack.Screen
+        name="WellnessPreviewScreen"
+        component={WellnessPreviewScreen}
+        options={{title: 'Wellness Preview'}}
       />
       <Stack.Screen
         name="AboutScreen"

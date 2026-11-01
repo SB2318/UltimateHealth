@@ -18,7 +18,6 @@ import {formatDateShort} from '../../lib/utils/dateUtils';
 import {getReadTime} from '../../lib/utils/readTime';
 import {useAppSelector} from '../../store/hooks';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import IonIcons from '@expo/vector-icons/Ionicons';
 import {GET_IMAGE} from '../../lib/api/APIUtils';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';
@@ -43,14 +42,10 @@ import {
   copyArticleShareLink,
 } from '../../lib/utils/shareUtils';
 import Entypo from '@expo/vector-icons/Entypo';
-import Share from 'react-native-share';
-import RNFS from 'react-native-fs';
-import {generatePDF} from 'react-native-html-to-pdf';
 import {useSocket} from '../../contexts/SocketContext';
 import EditRequestModal from './EditRequestModal';
 import {FontAwesome, FontAwesome6} from '@expo/vector-icons';
 import LoadingSpinner from '../common/LoadingSpinner';
-import Snackbar from 'react-native-snackbar';
 import {useGetProfile} from '../../hooks/profile/useGetProfile';
 import {useLikeArticle} from '../../hooks/article/useLikeArticle';
 import {useSaveArticle} from '../../hooks/article/useSaveArticle';
@@ -60,6 +55,15 @@ import {ReadingDifficulty, getArticleDifficulty} from './ReadingDifficulty';
 import {useDoubleTap} from '../../hooks/common/useDoubleTap';
 import {useIsArticleCached} from '../../hooks/article/useIsArticleCached';
 import {ImageFallback} from '../common/ImageFallback';
+
+const Snackbar =
+  Platform.OS === 'web'
+    ? {
+        LENGTH_SHORT: 2000,
+        LENGTH_LONG: 3500,
+        show: ({text}: {text: string}) => Alert.alert('', text),
+      }
+    : require('react-native-snackbar').default;
 
 const ArticleCard = ({
   item,
@@ -357,6 +361,13 @@ const ArticleCard = ({
 
   const generatePDFData = async (title: string, htmlContent: string) => {
     try {
+      if (Platform.OS === 'web') {
+        Alert.alert('PDF download', 'PDF export is available in the mobile development build.');
+        return;
+      }
+
+      const RNFS = require('react-native-fs').default;
+      const {generatePDF} = require('react-native-html-to-pdf');
       const safeTitle = title.substring(0, 15).replace(/[^a-zA-Z0-9]/g, '_');
       const fileName = `${safeTitle}.pdf`;
 

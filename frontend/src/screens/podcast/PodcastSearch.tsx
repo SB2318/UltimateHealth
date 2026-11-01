@@ -1,6 +1,6 @@
 // PodcastSearch.tsx
 import React, {useEffect, useState, useCallback} from 'react';
-import {Pressable, FlatList, AccessibilityInfo} from 'react-native';
+import {Pressable, FlatList, AccessibilityInfo, Platform} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {PodcastData, PodcastSearchProp} from '../../schemas/type';
 
@@ -9,7 +9,7 @@ import PodcastCard from '../../components/podcast/PodcastCard';
 import PodcastSkeletonCard from '../../components/podcast/PodcastSkeletonCard';
 import {msToTime} from '../../lib/utils/Utils';
 import Snackbar from 'react-native-snackbar';
-import NoResults from '../../components/common/NoResult';
+import {NoSearchResultsState} from '../../components/common/EmptyStates';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {XStack, YStack, Input, Separator, Text, useTheme} from 'tamagui';
 import {Feather} from '@expo/vector-icons';
@@ -21,6 +21,7 @@ import {
 } from '../../lib/utils/SearchUtils';
 import {useDebounce} from '../../hooks/useDebounce';
 import {useColorScheme} from 'react-native-gifted-chat/lib/hooks/useColorScheme';
+import {Ionicons} from '@expo/vector-icons';
 
 const SKELETON_COUNT = 5;
 const SEARCH_DEBOUNCE_MS = 350;
@@ -55,7 +56,9 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
     setDebouncedQuery(isValidSearchInput(sanitizedQuery) ? sanitizedQuery : '');
     setPage(1);
     setTotalPages(0);
-    setSearchData([]);
+    if (!isValidSearchInput(sanitizedQuery)) {
+      setSearchData([]);
+    }
   }, [debouncedRawQuery]);
 
   const {mutate: updateViewCount} = useUpdatePodcastViewcount();
@@ -161,6 +164,14 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
       }
       paddingTop="$2"
       justifyContent="flex-start">
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Back to podcasts"
+        onPress={() => navigation.goBack()}
+        style={{paddingHorizontal: 16, paddingVertical: 10, flexDirection: 'row', alignItems: 'center', gap: 6}}>
+        <Ionicons name="arrow-back" size={22} color={PRIMARY_COLOR} />
+        <Text color={PRIMARY_COLOR} fontWeight="700">Back to Podcasts</Text>
+      </Pressable>
 
       {/* Header */}
       <YStack
@@ -288,7 +299,7 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
 
       {/* Results / Skeleton Section */}
       <YStack paddingHorizontal="$3" flex={1}>
-        {isLoading && debouncedQuery !== '' ? (
+        {isLoading && debouncedQuery !== '' && Platform.OS !== 'web' ? (
           <FlatList
             data={Array.from({length: SKELETON_COUNT}, (_, i) => i)}
             keyExtractor={(_: number, index: number) =>
@@ -359,7 +370,10 @@ export default function PodcastSearch({navigation}: PodcastSearchProp) {
                   alignItems="center"
                   justifyContent="center"
                   paddingVertical="$8">
-                  <NoResults />
+                  <NoSearchResultsState
+                    contentType="podcasts"
+                    onClear={() => setQuery('')}
+                  />
                 </YStack>
               )
             }

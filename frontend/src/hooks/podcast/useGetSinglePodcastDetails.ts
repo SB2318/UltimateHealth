@@ -2,6 +2,8 @@ import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { PodcastData } from "../../schemas/type";
 import axios from "axios";
 import { GET_PODCAST_DETAILS } from "../../lib/api/APIUtils";
+import {Platform} from 'react-native';
+import {demoPodcasts} from '../../lib/demo/demoContent';
 type AxiosError = any;
 
 export const useGetSinglePodcastDetails = (trackId: string): UseQueryResult<

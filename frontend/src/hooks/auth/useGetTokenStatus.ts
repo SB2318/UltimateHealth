@@ -8,6 +8,7 @@ import {useQuery} from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppSelector } from '../../store/hooks';
 import { RootState } from '../../store/ReduxStore';
+import {Platform} from 'react-native';
 
  const checkTokenStatusApi = async (
   token: string,

@@ -56,6 +56,8 @@ export const generateArticleStyles = (
       font-size: ${articleFontSize}px !important; 
       ${isDyslexiaMode ? 'margin-bottom: 1.5em !important;' : ''}
     }
-    img, video, iframe { max-width: 100%; height: auto; }
+    img, video, iframe, svg { max-width: 100% !important; height: auto; }
+    table { display: block !important; max-width: 100% !important; overflow-x: auto !important; }
+    pre, code { max-width: 100% !important; white-space: pre-wrap !important; overflow-wrap: anywhere !important; }
   `;
 };

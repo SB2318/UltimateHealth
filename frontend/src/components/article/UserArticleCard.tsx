@@ -11,9 +11,8 @@ import {
 } from 'react-native';
 import {ArticleCardProps, ArticleData} from '../../schemas/type';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
-import {getReadTime} from '../../lib/utils/readTime';
+import ReadingTimeBadge from './ReadingTimeBadge';
 
 const {width} = Dimensions.get('window');
 
@@ -106,37 +105,15 @@ const UserArticleCard = ({
                 {' '}
                 •{' '}
               </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginTop: 2,
-                }}>
-                <Ionicons
-                  name="time-outline"
-                  size={12}
-                  color={isDarkMode ? '#9CA3AF' : '#6B7280'}
-                  style={{marginRight: 4}}
-                  accessibilityElementsHidden={true}
-                  importantForAccessibility="no"
-                />
-                <Text
-                  style={[
-                    styles.metaText,
-                    {
-                      color: isDarkMode ? '#9CA3AF' : '#6B7280',
-                      marginTop: 0,
-                    },
-                  ]}>
-                  {getReadTime(
-                    item.content ||
-                      item.body ||
-                      item.description ||
-                      item.title ||
-                      '',
-                  )}
-                </Text>
-              </View>
+              <ReadingTimeBadge
+                content={
+                  item.content ||
+                  item.body ||
+                  item.description ||
+                  item.title ||
+                  ''
+                }
+              />
             </View>
           </View>
         </View>

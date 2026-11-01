@@ -1,10 +1,14 @@
 // @ts-nocheck
 import { useEffect } from 'react';
+import {Platform} from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { logger } from '../../lib/services/monitoring/logger';
 
 export function useNotificationListeners() {
   useEffect(() => {
+    if (Platform.OS === 'web') {
+      return;
+    }
     // When notification arrives (foreground)
     const receivedSub =
       Notifications.addNotificationReceivedListener(notification => {

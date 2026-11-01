@@ -105,6 +105,15 @@
 </div>
 
 
+## APP and WEB UPDATE:
+
+1. **GSSOC CONTRIBUTOR'S TASK LIVE with new authentication system (UPCOMING, NEXT WEEK)**
+2. **New Article Publish**
+
+> UltimateHealth has now moved to a new domain! 🚀
+
+Some broken links may still exist on the server due to references to our old URL. We’re already working on it, and everything will be resolved in the next update.
+
 ---
 
 ## 📛 Repository Badges Explained
@@ -299,12 +308,12 @@ The following table explains which technologies power different features of Ulti
 </details>
 
 <details>
-<summary><b>Web Frontend (React)</b></summary>
+<summary><b>Web Frontend (Next.js)</b></summary>
 <br/>
 
 | Layer | Technology |
 |---|---|
-| Framework | React |
+| Framework | Next.js / React |
 | Branch | `web` branch |
 | Live URL | [ultimatehealth.blog/frontend/v2](https://ultimatehealth.blog/frontend/v2) |
 
@@ -1241,7 +1250,9 @@ We welcome contributions from everyone — developers, designers, writers, and t
 
    <tr>
     <td align="center"><a href="https://github.com/rish0000-dot"><img src="https://avatars.githubusercontent.com/u/189544159?v=4" width="120px;" alt=""/><br/><sub><b>Rishabh Sharma</b></sub></a></td>
-   </tr>
+       <td align="center"><a href="https://github.com/Omkar482185"><img src="https://avatars.githubusercontent.com/u/215218105?v=4" width="120px;" alt=""/><br/><sub><b>OMKAR SALUNKHE</b></sub></a></td>
+     <td align="center"><a href="https://github.com/nitikagotra75-crypto"><img src="https://avatars.githubusercontent.com/u/261795953?v=4" width="120px;" alt=""/><br/><sub><b>Nitika Gotra</b></sub></a></td>
+ </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
 
