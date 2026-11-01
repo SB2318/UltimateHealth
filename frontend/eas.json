@@ -6,13 +6,16 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "corepack": true
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "corepack": true
     },
     "production": {
       "autoIncrement": true,
+      "corepack": true,
       "env": {
         "SECRET_TOKEN": "$SECRET_TOKEN",
         "SENTRY_AUTH_TOKEN": "$SENTRY_AUTH_TOKEN"
