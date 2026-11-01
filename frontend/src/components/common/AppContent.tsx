@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, {useState, useEffect, useRef, useCallback } from 'react';
 import { useColorScheme, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';

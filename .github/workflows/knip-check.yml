@@ -41,6 +41,7 @@ jobs:
         working-directory: ./frontend
     env:
       CI: true
+      YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
 
     steps:
       - name: Checkout repository
@@ -59,18 +60,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock', 'frontend/package.json') }}
 
       - name: Install dependencies
         if: steps.node-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: yarn install --no-immutable
 
       - name: Validate cache
         run: |
           if ! yarn list > /dev/null 2>&1; then
             echo "Cache corrupted, reinstalling..."
             rm -rf node_modules
-            yarn install --frozen-lockfile --network-timeout 600000
+            yarn install --no-immutable --network-timeout 600000
           fi
 
       - name: Run Knip analyses
