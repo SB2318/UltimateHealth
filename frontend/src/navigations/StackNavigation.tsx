@@ -209,7 +209,7 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
         component={ArticleDescriptionScreen}
         options={({navigation}) => ({
           headerShown: true,
-          headerTitle: 'Start Writing',
+          headerTitle: 'Article Details',
           headerBackTitleVisible: false,
           headerTintColor: 'white',
           headerTransparent: false,

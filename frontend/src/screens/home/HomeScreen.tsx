@@ -374,10 +374,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
       });
       return;
     }
-    navigation.navigate('ArticleDescriptionScreen', {
-      article: null,
-      htmlContent: undefined,
-    });
+    navigation.navigate('EditorScreen', {});
   };
 
   const handleExitGuest = () => {

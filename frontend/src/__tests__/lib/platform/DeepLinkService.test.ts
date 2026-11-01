@@ -29,12 +29,8 @@ describe('DeepLinkService', () => {
       const result = resolveDeepLinkTarget(url);
 
       expect(result).toEqual({
-        name: 'ArticleDescriptionScreen',
-        params: {
-          article: undefined,
-          htmlContent: undefined,
-          translationSource: undefined,
-        },
+        name: 'EditorScreen',
+        params: {},
         requiresAuth: true,
       });
     });

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 
 // @ts-nocheck
-import React, {useEffect, useRef, useState, useCallback} from 'react';
+import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
   View,
   Text,
@@ -78,24 +78,55 @@ const ArticleDescriptionScreen = ({
   navigation,
   route,
 }: ArticleDescriptionProp) => {
-  const {article, htmlContent, translationSource} = route.params || {};
+  const {
+    article,
+    htmlContent,
+    translationSource,
+    title: paramTitle,
+    description: paramDescription,
+    authorName: paramAuthorName,
+    selectedGenres: paramSelectedGenres,
+    imageUtils: paramImageUtils,
+    language: paramLanguage,
+    localImages: paramLocalImages,
+    htmlImages: paramHtmlImages,
+    articleData,
+    requestId,
+    pb_record_id,
+  } = (route.params || {}) as any;
   const isTranslation = Boolean(translationSource);
   const dispatch =
     typeof useAppDispatch === 'function' ? useAppDispatch() : undefined;
 
-  const [title, setTitle] = useState('');
-  const [authorName, setAuthorName] = useState('');
-  const [description, setDescription] = useState('');
-  const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
-  const [language, setLanguage] = useState('en-IN');
+  const {categories, user} = useAppSelector((state: any) => state.data);
+
+  const [title, setTitle] = useState(paramTitle || '');
+  const [authorName, setAuthorName] = useState(
+    paramAuthorName || user?.user_name || user?.user_handle || '',
+  );
+  const [description, setDescription] = useState(paramDescription || '');
+  const [selectedGenres, setSelectedGenres] = useState<Category[]>(
+    paramSelectedGenres || [],
+  );
+  const [language, setLanguage] = useState(paramLanguage || 'en-IN');
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
-  const {categories} = useAppSelector((state: any) => state.data);
-  const [imageUtils, setImageUtils] = useState('');
+  const [imageUtils, setImageUtils] = useState(paramImageUtils || '');
   const [uploadedHtmlContent, setUploadedHtmlContent] = useState<string>(
     htmlContent || '',
   );
   const [uploadedHtmlFileName, setUploadedHtmlFileName] = useState<string>('');
   const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const effectiveHtml = (uploadedHtmlContent || htmlContent || '').trim();
+  const effectiveWordCount = useMemo(() => {
+    if (!effectiveHtml) return 0;
+    const plain = effectiveHtml
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return plain ? plain.split(/\s+/).filter(Boolean).length : 0;
+  }, [effectiveHtml]);
 
   const scrollYRef = useRef(new Animated.Value(0));
   const scrollY = scrollYRef.current;
@@ -137,9 +168,30 @@ const ArticleDescriptionScreen = ({
     }
   }, [article]);
 
+  /** Sync params if passed from EditorScreen */
+  useEffect(() => {
+    if (paramTitle && !title) setTitle(paramTitle);
+    if (paramDescription && !description) setDescription(paramDescription);
+    if (paramAuthorName && !authorName) setAuthorName(paramAuthorName);
+    if (paramSelectedGenres && paramSelectedGenres.length > 0 && selectedGenres.length === 0) {
+      setSelectedGenres(paramSelectedGenres);
+    }
+    if (paramImageUtils && !imageUtils) setImageUtils(paramImageUtils);
+    if (paramLanguage) setLanguage(paramLanguage);
+    if (htmlContent) setUploadedHtmlContent(htmlContent);
+  }, [
+    paramTitle,
+    paramDescription,
+    paramAuthorName,
+    paramSelectedGenres,
+    paramImageUtils,
+    paramLanguage,
+    htmlContent,
+  ]);
+
   /** Restore draft from AsyncStorage if this is a new article */
   useEffect(() => {
-    if (!article && !isTranslation) {
+    if (!article && !isTranslation && !paramTitle && !htmlContent) {
       AsyncStorage.getItem(ARTICLE_DRAFT_KEY).then(raw => {
         if (!raw) return;
 
@@ -344,41 +396,46 @@ const ArticleDescriptionScreen = ({
     }
   };
 
-  const handleDirectPreviewWithHtml = () => {
-    const effectiveHtml = (uploadedHtmlContent || htmlContent || '').trim();
-    if (!effectiveHtml || effectiveHtml.replace(/<[^>]*>/g, '').trim().length < 20) {
-      Alert.alert(
-        'HTML Content Required',
-        'Please upload a valid HTML file with at least 20 characters of content.',
-      );
-      return;
-    }
-
-    if (!validateFields()) {
-      return;
-    }
-
-    dispatch?.(setSuggestion({suggestion: ''}));
-    dispatch?.(setSuggestionAccepted({selection: false}));
-
-    navigation.navigate('PreviewScreen', {
-      article: effectiveHtml,
-      title,
-      authorName,
-      language,
-      description,
-      image: imageUtils,
-      selectedGenres,
-      localImages: imageUtils ? [imageUtils] : [],
-      htmlImages: [],
-      articleData: isTranslation ? undefined : article,
-      requestId: undefined,
-      pb_record_id: undefined,
-      translationSource,
-    });
-  };
-
   const handleCreatePost = () => {
+    const trimmedHtml = (uploadedHtmlContent || htmlContent || '').trim();
+    const hasEnoughContent =
+      trimmedHtml.replace(/<[^>]*>/g, '').trim().length >= 20;
+
+    // Normal swapped flow: Body already written in EditorScreen (or imported HTML), proceed to Preview & Publish
+    if (hasEnoughContent) {
+      if (!validateFields()) {
+        return;
+      }
+
+      dispatch?.(setSuggestion({suggestion: ''}));
+      dispatch?.(setSuggestionAccepted({selection: false}));
+
+      const resolvedImages =
+        paramLocalImages && paramLocalImages.length > 0
+          ? paramLocalImages
+          : imageUtils
+            ? [imageUtils]
+            : [];
+
+      navigation.navigate('PreviewScreen', {
+        article: trimmedHtml,
+        title,
+        authorName,
+        language,
+        description,
+        image: imageUtils,
+        selectedGenres,
+        localImages: resolvedImages,
+        htmlImages: paramHtmlImages || [],
+        articleData: isTranslation ? undefined : (article || articleData),
+        requestId,
+        pb_record_id,
+        translationSource,
+      });
+      return;
+    }
+
+    // Fallback: If user arrived without drafting content in editor, forward to EditorScreen
     if (!validateFields()) {
       return;
     }
@@ -389,13 +446,17 @@ const ArticleDescriptionScreen = ({
       description,
       selectedGenres,
       imageUtils,
-      htmlContent: uploadedHtmlContent || htmlContent,
+      htmlContent: trimmedHtml || undefined,
       language,
-      requestId: undefined,
-      pb_record_id: undefined,
-      articleData: isTranslation ? undefined : article,
+      requestId,
+      pb_record_id,
+      articleData: isTranslation ? undefined : (article || articleData),
       translationSource,
     });
+  };
+
+  const handleDirectPreviewWithHtml = () => {
+    handleCreatePost();
   };
 
   const selectImage = () => {
@@ -589,9 +650,47 @@ const ArticleDescriptionScreen = ({
             <Text style={styles.sectionSubtitle}>
               {isTranslation
                 ? `Create a translated version of "${translationSource?.sourceTitle}"`
-                : 'Fill in the information below to create your article'}
+                : 'Fill in the details below to finalize and publish your article'}
             </Text>
           </View>
+
+          {effectiveHtml ? (
+            <View style={styles.draftCard}>
+              <View style={styles.draftCardLeft}>
+                <View style={styles.draftCardIconBadge}>
+                  <Ionicon name="document-text" size={20} color="#000A60" />
+                </View>
+                <View style={{flex: 1, marginLeft: 10}}>
+                  <Text style={styles.draftCardTitle}>Article Body Ready</Text>
+                  <Text style={styles.draftCardSubtitle}>
+                    {effectiveWordCount} words &bull; Content attached from editor
+                  </Text>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.editDraftBtn}
+                onPress={() => {
+                  navigation.navigate('EditorScreen', {
+                    title,
+                    authorName,
+                    description,
+                    selectedGenres,
+                    imageUtils,
+                    htmlContent: effectiveHtml,
+                    language,
+                    requestId,
+                    pb_record_id,
+                    articleData: isTranslation ? undefined : (article || articleData),
+                    translationSource,
+                  });
+                }}
+                accessibilityRole="button"
+                accessibilityLabel="Edit article body in editor">
+                <Ionicon name="create-outline" size={15} color="#000A60" />
+                <Text style={styles.editDraftBtnText}>Edit Body</Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
 
           {isTranslation && (
             <View style={styles.translationNotice}>
@@ -919,39 +1018,23 @@ const ArticleDescriptionScreen = ({
             subtitle="Select up to 5 tags to help people discover your article"
           />
 
-          {/* Direct Preview & Submit Button when HTML file is uploaded */}
-          {Boolean(uploadedHtmlContent) && (
-            <TouchableOpacity
-              style={styles.directPreviewButton}
-              onPress={handleDirectPreviewWithHtml}
-              accessibilityRole="button"
-              accessibilityLabel="Preview and submit uploaded HTML"
-              accessibilityHint="Skips the editor and opens Preview screen directly with your uploaded HTML file">
-              <Ionicon
-                name="eye-outline"
-                size={20}
-                color="#fff"
-                accessible={false}
-              />
-              <Text style={styles.submitButtonText}>
-                Preview & Submit HTML Directly
-              </Text>
-            </TouchableOpacity>
-          )}
-
           {/* Submit Button */}
           <TouchableOpacity
             style={styles.submitButton}
             onPress={handleCreatePost}
             accessibilityRole="button"
-            accessibilityLabel="Continue to editor"
-            accessibilityHint="Validates the article details and continues to the editor">
+            accessibilityLabel={
+              effectiveHtml
+                ? 'Preview and publish article'
+                : 'Continue to editor'
+            }
+            accessibilityHint="Validates the article details and continues to the next step">
             <Text style={styles.submitButtonText}>
-              {uploadedHtmlContent ? 'Edit Uploaded HTML in Editor' : 'Continue to Editor'}
+              {effectiveHtml ? 'Preview & Publish' : 'Continue to Editor'}
             </Text>
 
             <Ionicon
-              name="arrow-forward"
+              name={effectiveHtml ? 'eye-outline' : 'arrow-forward'}
               size={20}
               color="#fff"
               accessible={false}
@@ -976,6 +1059,57 @@ const styles = StyleSheet.create({
   headerSection: {
     marginBottom: 24,
     paddingVertical: 16,
+  },
+  draftCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#EFF6FF',
+    borderWidth: 1,
+    borderColor: '#BFDBFE',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 16,
+  },
+  draftCardLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 8,
+  },
+  draftCardIconBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#DBEAFE',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  draftCardTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1E3A8A',
+  },
+  draftCardSubtitle: {
+    fontSize: 12,
+    color: '#3B82F6',
+    marginTop: 2,
+  },
+  editDraftBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#93C5FD',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  editDraftBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#000A60',
   },
   section: {
     backgroundColor: '#fff',

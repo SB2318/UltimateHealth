@@ -184,12 +184,8 @@ const resolveDeepLinkTarget = (url: string): DeepLinkTarget | null => {
 
   if (firstSegment === 'create-post') {
     return {
-      name: 'ArticleDescriptionScreen',
-      params: {
-        article: undefined,
-        htmlContent: undefined,
-        translationSource: undefined,
-      },
+      name: 'EditorScreen',
+      params: {},
       requiresAuth: true,
     };
   }

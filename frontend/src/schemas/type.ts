@@ -11,24 +11,39 @@ export type RootStackParamList = {
     role?: 'General User' | 'Doctor';
   };
   TabNavigation: undefined;
-  EditorScreen: {
-    title: string;
-    authorName: string;
-    description: string;
-    language: string;
-    selectedGenres: Category[];
-    imageUtils: string;
-    articleData: ArticleData | null | undefined;
-    requestId: string | undefined;
-    htmlContent: string | undefined;
-    pb_record_id: string | undefined;
-    translationSource?: ArticleTranslationSource;
-  };
-  ArticleDescriptionScreen: {
-    article: ArticleData | null | undefined;
-    htmlContent: string | undefined;
-    translationSource?: ArticleTranslationSource;
-  };
+  EditorScreen:
+    | {
+        title?: string;
+        authorName?: string;
+        description?: string;
+        language?: string;
+        selectedGenres?: Category[];
+        imageUtils?: string;
+        articleData?: ArticleData | null | undefined;
+        requestId?: string | undefined;
+        htmlContent?: string | undefined;
+        pb_record_id?: string | undefined;
+        translationSource?: ArticleTranslationSource;
+      }
+    | undefined;
+  ArticleDescriptionScreen:
+    | {
+        article?: ArticleData | null | undefined;
+        htmlContent?: string | undefined;
+        translationSource?: ArticleTranslationSource;
+        title?: string;
+        description?: string;
+        authorName?: string;
+        selectedGenres?: Category[];
+        imageUtils?: string;
+        language?: string;
+        localImages?: string[];
+        htmlImages?: string[];
+        articleData?: ArticleData | null | undefined;
+        requestId?: string | undefined;
+        pb_record_id?: string | undefined;
+      }
+    | undefined;
   PreviewScreen: {
     article: string;
     title: string;

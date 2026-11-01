@@ -162,7 +162,7 @@ const ContentListScreen = ({ navigation, route }: Props) => {
 
   const handleEmptyAction = useCallback(() => {
     if (selectedTab === 'articles') {
-      navigation.navigate('EditorScreen');
+      navigation.navigate('EditorScreen', {});
     } else {
       (navigation as any).navigate('Home');
     }
@@ -357,13 +357,27 @@ const ContentListScreen = ({ navigation, route }: Props) => {
         </View>
 
         <View style={styles.headerRightSpacer}>
-          <View
-            style={[
-              styles.iconPill,
-              { backgroundColor: isDarkMode ? '#1E293B' : '#EFF6FF' },
-            ]}>
-            <Ionicons name="library-outline" size={18} color={BUTTON_COLOR} />
-          </View>
+          {selectedTab === 'articles' ? (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('EditorScreen', {})}
+              style={[
+                styles.iconPill,
+                { backgroundColor: isDarkMode ? '#1E293B' : '#EFF6FF' },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Write an Article"
+              accessibilityHint="Navigates to write article screen">
+              <Ionicons name="create-outline" size={18} color={BUTTON_COLOR} />
+            </TouchableOpacity>
+          ) : (
+            <View
+              style={[
+                styles.iconPill,
+                { backgroundColor: isDarkMode ? '#1E293B' : '#EFF6FF' },
+              ]}>
+              <Ionicons name="library-outline" size={18} color={BUTTON_COLOR} />
+            </View>
+          )}
         </View>
       </View>
 

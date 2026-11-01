@@ -153,44 +153,62 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
     RichText.current?.setContentHTML(newHtml);
   };
 
-  const navigateToPreviewScreen = (htmlToPreview?: string) => {
-    const content = (htmlToPreview ?? article ?? '').trim();
+  const navigateToDetailsScreen = (htmlToPass?: string) => {
+    const content = (htmlToPass ?? article ?? '').trim();
     const plainTextLength = content.replace(/<[^>]*>/g, '').trim().length;
     if (plainTextLength <= 20) {
-      Alert.alert('Error', 'Please enter at least 20 characters');
+      Alert.alert('Content Too Short', 'Please enter at least 20 characters before continuing to article details.');
       return;
     }
 
-    dispatch(setSuggestion({suggestion: ''}));
-    dispatch(setSuggestionAccepted({selection: false}));
+    // Auto-extract suggested title from first heading if title is not yet set
+    let suggestedTitle = title || '';
+    if (!suggestedTitle) {
+      const headingMatch = content.match(/<h[12][^>]*>(.*?)<\/h[12]>/i);
+      if (headingMatch && headingMatch[1]) {
+        suggestedTitle = headingMatch[1].replace(/<[^>]*>/g, '').trim();
+      }
+    }
 
-    navigation.navigate('PreviewScreen', {
-      article: content,
-      title,
-      authorName,
-      language,
-      description,
-      image: imageUtils,
-      selectedGenres,
+    // Auto-extract suggested description from first paragraph if not yet set
+    let suggestedDescription = description || '';
+    if (!suggestedDescription) {
+      const pMatch = content.match(/<p[^>]*>(.*?)<\/p>/i);
+      if (pMatch && pMatch[1]) {
+        suggestedDescription = pMatch[1].replace(/<[^>]*>/g, '').trim().slice(0, 300);
+      }
+    }
+
+    navigation.navigate('ArticleDescriptionScreen', {
+      htmlContent: content,
+      title: suggestedTitle,
+      authorName: authorName || '',
+      description: suggestedDescription,
+      selectedGenres: selectedGenres || [],
+      imageUtils: imageUtils || '',
+      language: language || 'en-IN',
       localImages,
       htmlImages,
-      articleData,
+      article: articleData || null,
       requestId,
       pb_record_id,
       translationSource,
     });
   };
 
+  const navigateToPreviewScreen = navigateToDetailsScreen;
+
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
-          style={styles.preview_button}
-          onPress={() => navigateToPreviewScreen()}
+          style={styles.next_header_button}
+          onPress={() => navigateToDetailsScreen()}
           accessibilityRole="button"
-          accessibilityLabel="Preview article"
-          accessibilityHint="Opens the article preview screen if the article has enough content">
-          <Fontisto name="preview" size={26} color="white" />
+          accessibilityLabel="Next: Article Details"
+          accessibilityHint="Proceeds to enter article title, category, and cover image">
+          <Text style={styles.next_header_text}>Next</Text>
+          <IonIcon name="arrow-forward" size={16} color="white" />
         </TouchableOpacity>
       ),
     });
@@ -441,15 +459,15 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
       Alert.alert(
         'HTML File Loaded',
-        'Would you like to go directly to Preview & Submit, or continue editing here?',
+        'Would you like to proceed to Article Details, or continue editing here?',
         [
           {
             text: 'Edit Here',
             style: 'cancel',
           },
           {
-            text: 'Go to Preview & Submit',
-            onPress: () => navigateToPreviewScreen(bodyHtml),
+            text: 'Next: Details',
+            onPress: () => navigateToDetailsScreen(bodyHtml),
           },
         ],
       );
@@ -776,7 +794,7 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
                 {color: writingStats.isReady ? '#059669' : '#D97706'},
               ]}>
               {writingStats.isReady
-                ? 'Ready for Preview & Grammar Check'
+                ? 'Ready for Article Details'
                 : `${Math.max(0, 21 - writingStats.charCount)} more characters needed`}
             </Text>
           </View>
@@ -787,11 +805,11 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
         <TouchableOpacity
           style={styles.proceedButton}
-          onPress={() => navigateToPreviewScreen()}
+          onPress={() => navigateToDetailsScreen()}
           accessibilityRole="button"
-          accessibilityLabel="Continue to Preview and Submit">
+          accessibilityLabel="Next: Article Details">
           <Text style={styles.proceedButtonText}>
-            Continue to Preview & Submit
+            Next: Article Details
           </Text>
           <IonIcon name="arrow-forward" size={18} color="#FFFFFF" />
         </TouchableOpacity>
@@ -836,11 +854,11 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
           <TouchableOpacity
             style={styles.proceedButton}
-            onPress={() => navigateToPreviewScreen()}
+            onPress={() => navigateToDetailsScreen()}
             accessibilityRole="button"
-            accessibilityLabel="Continue to Preview and Submit">
+            accessibilityLabel="Next: Article Details">
             <Text style={styles.proceedButtonText}>
-              Continue to Preview & Submit
+              Next: Article Details
             </Text>
             <IonIcon name="arrow-forward" size={18} color="#FFFFFF" />
           </TouchableOpacity>
@@ -877,11 +895,11 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
             <TouchableOpacity
               style={styles.proceedButton}
-              onPress={() => navigateToPreviewScreen()}
+              onPress={() => navigateToDetailsScreen()}
               accessibilityRole="button"
-              accessibilityLabel="Continue to Preview and Submit">
+              accessibilityLabel="Next: Article Details">
               <Text style={styles.proceedButtonText}>
-                Continue to Preview & Submit
+                Next: Article Details
               </Text>
               <IonIcon name="arrow-forward" size={18} color="#FFFFFF" />
             </TouchableOpacity>
@@ -1226,6 +1244,21 @@ const styles = StyleSheet.create({
     marginRight: 15,
     paddingHorizontal: 8,
     paddingVertical: 6,
+  },
+  next_header_button: {
+    marginRight: 15,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#1E40AF',
+    borderRadius: 8,
+  },
+  next_header_text: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
   },
   tabContainer: {
     flex: 1,
