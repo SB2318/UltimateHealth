@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+import { demoPodcasts } from '../../lib/demo/demoContent';
 import axios from "axios";
 import { PodcastData } from "../../schemas/type";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";

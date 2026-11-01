@@ -85,13 +85,13 @@ describe('SignInScreen - Two-Step Onboarding Flow', () => {
     expect(getByText('General User')).toBeTruthy();
     expect(getByText('Doctor')).toBeTruthy();
     expect(getByText('Continue')).toBeTruthy();
-    expect(getByText("I'll just browse as a Guest")).toBeTruthy();
+    expect(getByText('Start Browsing as Guest')).toBeTruthy();
   });
 
   it('allows 1-click guest access from Step 1 without account friction', () => {
     const { getByText } = render(<SignInScreen {...mockProps} />);
 
-    const guestBtn = getByText("I'll just browse as a Guest");
+    const guestBtn = getByText('Start Browsing as Guest');
     fireEvent.press(guestBtn);
 
     expect(mockDispatch).toHaveBeenCalledWith(

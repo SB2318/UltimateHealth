@@ -328,7 +328,7 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
     },
   ];
 
-  const weeklyChart = buildChartData(logs);
+  const weeklyChart = buildChartData(weeklyLogs);
   const chartData = {
     labels: weeklyChart.labels,
     datasets: [

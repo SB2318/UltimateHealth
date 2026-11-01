@@ -129,3 +129,57 @@ export const getTodayLog = (
   const todayStr = getTodayDateString(today);
   return logs.find(l => l.date === todayStr) ?? null;
 };
+
+export interface WellnessInsights {
+  daysLogged: number;
+  goalDays: number;
+  completionRate: number;
+  currentStreak: number;
+}
+
+export const calculateWellnessInsights = (
+  logs: WellnessLog[],
+  today = new Date(),
+  planGoals?: WellnessPlanGoals | null,
+): WellnessInsights => {
+  if (!logs || logs.length === 0) {
+    return {
+      daysLogged: 0,
+      goalDays: 0,
+      completionRate: 0,
+      currentStreak: 0,
+    };
+  }
+
+  const daysLogged = logs.length;
+  const goalDays = logs.filter(log => {
+    const m = log.metrics || {};
+    return Object.entries(m).some(([key, val]) => {
+      const target = resolveGoalForMetric(key, planGoals);
+      return val !== undefined && val >= target;
+    });
+  }).length;
+
+  const completionRate = daysLogged > 0 ? Math.round((goalDays / daysLogged) * 100) : 0;
+
+  const logDates = new Set(logs.map(l => l.date));
+  let currentStreak = 0;
+  const cursor = new Date(today);
+
+  for (let i = 0; i < 365; i++) {
+    const dStr = getTodayDateString(cursor);
+    if (logDates.has(dStr)) {
+      currentStreak++;
+      cursor.setDate(cursor.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  return {
+    daysLogged,
+    goalDays,
+    completionRate,
+    currentStreak,
+  };
+};

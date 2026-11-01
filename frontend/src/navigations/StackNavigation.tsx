@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {
   Platform,
+  useColorScheme,
   TouchableOpacity,
   StyleSheet,
   Alert,
@@ -19,14 +20,7 @@ import EditorScreen from '../screens/article/EditorScreen';
 import PreviewScreen from '../screens/article/PreviewScreen';
 import ArticleScreen from '../screens/article/ArticleScreen';
 import ReadingHistoryScreen from '../screens/profile/ReadingHistoryScreen';
-import {
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  BackHandler,
-  Pressable,
-  useColorScheme,
-} from 'react-native';
+
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScreen';

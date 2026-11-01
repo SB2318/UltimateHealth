@@ -189,9 +189,7 @@ export default function AppContent() {
         target,
         isAuthenticated,
       );
-    } else if (!isAuthenticated) {
-      navigationRef.current.navigate('SignInScreen');
-    }
+    } 
 
     pendingDeepLinkRef.current = null;
   }, [tokenRes, user_token, isGuest]);

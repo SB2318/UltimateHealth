@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Image, StyleSheet, ActivityIndicator, useColorScheme} from 'react-native';
+import {Image, StyleSheet, ActivityIndicator, useColorScheme, Platform} from 'react-native';
 import {YStack, Text, Button, XStack} from 'tamagui';
 import Animated, {
   useSharedValue,
