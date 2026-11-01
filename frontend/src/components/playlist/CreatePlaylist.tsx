@@ -12,6 +12,7 @@ import {
   useColorScheme,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import {useAppSelector} from '../../store/hooks';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';

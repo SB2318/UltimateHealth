@@ -20,6 +20,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import { BUTTON_COLOR } from '../../lib/ui/Theme';
 import BenefitsModal from '../article/BenefitsModal';
+import { useTranslation } from '../../localization';
 
 interface GuestPlaceholderScreenProps {
   title?: string;
@@ -67,6 +68,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
   const insets = useSafeInsets();
   const navigation = useNavigation<any>();
   const isDark = useColorScheme() === 'dark';
+  const { t } = useTranslation();
   const [isBenefitsModalVisible, setIsBenefitsModalVisible] = useState(false);
 
   // Smooth native hardware-accelerated animations
@@ -222,11 +224,32 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
             ]}>
             <Text
               style={[styles.featuresCardHeader, { color: colors.textSecondary }]}>
-              WHAT YOU UNLOCK AS A MEMBER
+              {t('guest.whatYouUnlock')}
             </Text>
 
             <View style={styles.featuresList}>
-              {BENEFIT_ITEMS.map((item, index) => (
+              {[
+                {
+                  icon: 'chatbubble-ellipses-outline' as const,
+                  title: t('guest.engageDiscuss'),
+                  subtitle: t('guest.engageDiscussSub'),
+                },
+                {
+                  icon: 'bookmark-outline' as const,
+                  title: t('guest.personalizedLibrary'),
+                  subtitle: t('guest.personalizedLibrarySub'),
+                },
+                {
+                  icon: 'sparkles-outline' as const,
+                  title: t('guest.aiAssistant'),
+                  subtitle: t('guest.aiAssistantSub'),
+                },
+                {
+                  icon: 'medkit-outline' as const,
+                  title: t('guest.doctorNetwork'),
+                  subtitle: t('guest.doctorNetworkSub'),
+                },
+              ].map((item, index) => (
                 <View key={index} style={styles.featureItem}>
                   <View
                     style={[
@@ -271,7 +294,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
               <View style={styles.googleIconCircle}>
                 <FontAwesome name="google" size={18} color="#EA4335" />
               </View>
-              <Text style={styles.googleButtonText}>Continue with Google</Text>
+              <Text style={styles.googleButtonText}>{t('guest.continueWithGoogle')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -281,7 +304,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
               accessibilityRole="button"
               accessibilityLabel="Learn why you should create an account">
               <Text style={[styles.whyJoinText, { color: colors.textSecondary }]}>
-                Learn more about membership benefits
+                {t('guest.learnMore')}
               </Text>
             </TouchableOpacity>
           </View>

@@ -17,6 +17,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import {useAppDispatch} from '../../store/hooks';
 import {setGuestMode, setUserToken} from '../../store/UserSlice';
+import {useTranslation} from '../../localization';
 
 const {width: SCREEN_W, height: SCREEN_H} = Dimensions.get('window');
 
@@ -92,6 +93,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
 }) => {
   const colorScheme = useColorScheme();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const isDarkMode = colorScheme === 'dark';
 
   const [activeSlideIndex, setActiveSlideIndex] = useState(0);
@@ -238,7 +240,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
               accessibilityRole="button"
               accessibilityLabel="Continue as guest">
               <Text style={[styles.skipText, {color: theme.skipText}]}>
-                Start Browsing
+                {t('onboarding.startBrowsing')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -393,7 +395,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                       end={{x: 1, y: 0}}
                       style={styles.gradientBtnInner}>
                       <MaterialCommunityIcon name="compass-outline" size={20} color="#FFF" />
-                      <Text style={styles.roleBtnText}>Start Browsing</Text>
+                      <Text style={styles.roleBtnText}>{t('onboarding.startBrowsing')}</Text>
                       <Ionicons name="arrow-forward" size={18} color="#FFF" />
                     </LinearGradient>
                   </TouchableOpacity>
@@ -414,7 +416,7 @@ export const OnboardingModal: React.FC<OnboardingModalProps> = ({
                         styles.continueOutlineText,
                         {color: isDarkMode ? '#C4B5FD' : '#6D28D9', fontWeight: '700'},
                       ]}>
-                      Sign In / Register
+                      {t('onboarding.signInRegister')}
                     </Text>
                   </TouchableOpacity>
                 </View>

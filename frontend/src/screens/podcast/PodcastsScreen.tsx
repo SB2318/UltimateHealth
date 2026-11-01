@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
  
 import {useEffect, useState, useMemo} from 'react';
-import {Platform} from 'react-native';
-import { StyleSheet,
+import {
+  Platform,
+  StyleSheet,
   TouchableOpacity,
- // NativeModules,
   Text,
-   FlatList, useColorScheme,
- } from 'react-native';
+  FlatList,
+  useColorScheme,
+} from 'react-native';
 
 import {YStack, View, XStack} from 'tamagui';
 import PodcastCard from '../../components/podcast/PodcastCard';

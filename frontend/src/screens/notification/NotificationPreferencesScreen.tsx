@@ -8,7 +8,7 @@ import { View,
    TextInput ,
   } from 'react-native';
 import {useQueryClient} from '@tanstack/react-query';
-import {SafeAreaView} from 'react-native-safe-area-context';
+
 import Snackbar from 'react-native-snackbar';
 import {useAppSelector} from '../../store/hooks';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -20,7 +20,7 @@ import {useGetNotificationPreferences} from '../../hooks/notification/useGetNoti
 import {useUpdateNotificationPreferences} from '../../hooks/notification/useUpdateNotificationPreferences';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import {StatusBar} from 'expo-status-bar';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const useSafeTopInset = (): number => {
   try {

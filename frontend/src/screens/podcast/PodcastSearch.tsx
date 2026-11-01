@@ -12,7 +12,7 @@ import Snackbar from 'react-native-snackbar';
 import {NoSearchResultsState} from '../../components/common/EmptyStates';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {XStack, YStack, Input, Separator, Text, useTheme} from 'tamagui';
-import {Feather} from '@expo/vector-icons';
+
 import {useUpdatePodcastViewcount} from '../../hooks/podcast/useUpdatePodcastViewcount';
 import {useGetSearchPodcasts} from '../../hooks/podcast/useGetSearchPodcasts';
 import {
@@ -21,7 +21,7 @@ import {
 } from '../../lib/utils/SearchUtils';
 import {useDebounce} from '../../hooks/useDebounce';
 import {useColorScheme} from 'react-native-gifted-chat/lib/hooks/useColorScheme';
-import {Ionicons} from '@expo/vector-icons';
+import {Feather, Ionicons} from '@expo/vector-icons';
 
 const SKELETON_COUNT = 5;
 const SEARCH_DEBOUNCE_MS = 350;

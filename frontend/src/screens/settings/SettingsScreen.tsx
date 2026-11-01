@@ -129,7 +129,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   const go = (screen: any, params?: any) => {
     if (!isConnected) {
       Snackbar.show({
-        text: 'Please check your internet connection!',
+        text: t('settings.checkConnection'),
         duration: Snackbar.LENGTH_SHORT,
       });
       return;
@@ -141,10 +141,10 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   };
 
   const handleLogout = () => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('settings.signOut'), t('settings.signOutConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Sign Out',
+        text: t('settings.signOut'),
         style: 'destructive',
         onPress: () => {
           const stackNav = navigation.getParent() ?? navigation;
@@ -175,7 +175,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           style={[styles.headerTitle, { color: headerText }]}
           accessibilityRole="header"
         >
-          Settings
+          {t('settings.title')}
         </Text>
       </View>
 
@@ -184,13 +184,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
         showsVerticalScrollIndicator={false}
       >
         {/* ── ACCOUNT ── */}
-        <SectionLabel label="ACCOUNT" isDark={isDark} />
+        <SectionLabel label={t('settings.account')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="account-edit-outline"
             iconColor={PRIMARY_COLOR}
-            label="View / Edit Profile"
-            sublabel="Update your name, avatar, bio"
+            label={t('settings.profile')}
+            sublabel={t('settings.profileSub')}
             onPress={() => go('ProfileEditScreen')}
             isDark={isDark}
           />
@@ -204,8 +204,8 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="bell-outline"
             iconColor="#8B5CF6"
-            label="Notification Preferences"
-            sublabel="Push, email, and digest settings"
+            label={t('settings.notifications')}
+            sublabel={t('settings.notificationsSub')}
             onPress={() => go('NotificationPreferencesScreen')}
             isDark={isDark}
           />
@@ -219,20 +219,20 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="view-dashboard"
             iconColor={PRIMARY_COLOR}
-            label="Your Workspace"
-            sublabel="Contributor & Admin Interaction"
+            label={t('settings.workspace')}
+            sublabel={t('settings.workspaceSub')}
             onPress={() => go('OverviewScreen')}
             isDark={isDark}
           />
         </View>
 
         {/* ── PREFERENCES ── */}
-        <SectionLabel label="PREFERENCES" isDark={isDark} />
+        <SectionLabel label={t('settings.preferences')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="translate"
             iconColor="#3B82F6"
-            label="App Language"
+            label={t('settings.appLanguage')}
             sublabel={currentLangInfo ? `${currentLangInfo.nativeName} (${currentLangInfo.name})` : 'English'}
             onPress={() => setLanguageModalVisible(true)}
             isDark={isDark}
@@ -240,13 +240,13 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
         </View>
 
         {/* ── CONTENT ── */}
-        <SectionLabel label="CONTENT & ACTIVITY" isDark={isDark} />
+        <SectionLabel label={t('settings.content')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="chart-line"
             iconColor="#10B981"
-            label="Activity Insight"
-            sublabel="Your writing and reading analytics"
+            label={t('settings.activityInsight')}
+            sublabel={t('settings.activityInsightSub')}
             onPress={() => go('InsightScreen')}
             isDark={isDark}
           />
@@ -260,8 +260,8 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="file-document-outline"
             iconColor="#3B82F6"
-            label="My Posts"
-            sublabel="Articles, reposts and saved reading list"
+            label={t('settings.myPosts')}
+            sublabel={t('settings.myPostsSub')}
             onPress={() => go('ContentListScreen', { type: 'articles' })}
             isDark={isDark}
           />
@@ -275,8 +275,8 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="history"
             iconColor="#6366F1"
-            label="Reading History"
-            sublabel="Articles you recently read"
+            label={t('settings.readingHistory')}
+            sublabel={t('settings.readingHistorySub')}
             onPress={() => go('ReadingHistoryScreen')}
             isDark={isDark}
           />
@@ -290,21 +290,21 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="map-marker-radius-outline"
             iconColor="#10B981"
-            label="Nearby Health Events"
-            sublabel="Blood drives, health camps (Coming Soon)"
+            label={t('settings.nearbyEvents')}
+            sublabel={t('settings.nearbyEventsSub')}
             onPress={() => go('NearbyHealthEventsScreen')}
             isDark={isDark}
           />
         </View>
 
         {/* ── LEGAL & PRIVACY ── */}
-        <SectionLabel label="LEGAL & PRIVACY" isDark={isDark} />
+        <SectionLabel label={t('settings.legal')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="shield-check-outline"
             iconColor="#10B981"
-            label="Privacy Policy"
-            sublabel="Terms & conditions"
+            label={t('settings.privacyPolicy')}
+            sublabel={t('settings.privacyPolicySub')}
             onPress={() => go('Privacy')}
             isDark={isDark}
           />
@@ -318,7 +318,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="book-open-outline"
             iconColor="#3B82F6"
-            label="Community Guidelines"
+            label={t('settings.communityGuidelines')}
             onPress={() => go('CommunityGuidelines')}
             isDark={isDark}
           />
@@ -332,45 +332,45 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="source-branch"
             iconColor="#6366F1"
-            label="Open Source Licences"
+            label={t('settings.openSource')}
             onPress={() => go('OpenSourcePage')}
             isDark={isDark}
           />
         </View>
 
         {/* ── ABOUT ── */}
-        <SectionLabel label="ABOUT" isDark={isDark} />
+        <SectionLabel label={t('settings.about')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="hospital-box-outline"
             iconColor={PRIMARY_COLOR}
-            label="About UltimateHealth"
-            sublabel="Version, team, & mission"
+            label={t('settings.aboutApp')}
+            sublabel={t('settings.aboutAppSub')}
             onPress={() => go('AboutScreen')}
             isDark={isDark}
           />
         </View>
 
         {/* ── RESPECT GIVER ── */}
-        <SectionLabel label="RESPECT GIVER" isDark={isDark} />
+        <SectionLabel label={t('settings.respectGiver')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="shield-star-outline"
             iconColor="#C084FC"
-            label="Moumita Debnath"
-            sublabel="Mind · Dignity · Hope"
+            label={t('settings.moumitaDebnath')}
+            sublabel={t('settings.moumitaSub')}
             onPress={() => go('RespectGiverScreen')}
             isDark={isDark}
           />
         </View>
 
         {/* ── DANGER ZONE ── */}
-        <SectionLabel label="SESSION" isDark={isDark} />
+        <SectionLabel label={t('settings.session')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="logout-variant"
             iconColor="#EF4444"
-            label="Sign Out"
+            label={t('settings.signOut')}
             onPress={handleLogout}
             isDark={isDark}
             destructive
@@ -384,7 +384,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             { color: isDark ? '#4B5563' : '#9CA3AF' },
           ]}
         >
-          UltimateHealth · Built with ❤️ for better health
+          {t('settings.footer')}
         </Text>
       </ScrollView>
 
@@ -413,7 +413,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
                   { color: isDark ? '#F9FAFB' : '#111827' },
                 ]}
               >
-                Select App Language
+                {t('settings.selectLanguage')}
               </Text>
               <TouchableOpacity
                 onPress={() => setLanguageModalVisible(false)}

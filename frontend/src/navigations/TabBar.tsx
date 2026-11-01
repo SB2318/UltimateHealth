@@ -14,6 +14,7 @@ import {
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {PRIMARY_COLOR} from '../lib/ui/Theme';
 import {hp, wp, fp} from '../lib/ui/Metric';
+import {useTranslation} from '../localization';
 
 // Icon map per tab label
 const TAB_CONFIG: Record<
@@ -29,12 +30,13 @@ const TAB_CONFIG: Record<
 
 interface AnimatedTabItemProps {
   label: string;
+  displayLabel?: string;
   isFocused: boolean;
   onPress: () => void;
   isDark: boolean;
 }
 
-const AnimatedTabItem = ({label, isFocused, onPress, isDark}: AnimatedTabItemProps) => {
+const AnimatedTabItem = ({label, displayLabel, isFocused, onPress, isDark}: AnimatedTabItemProps) => {
   const [scaleAnim] = useState(() => new Animated.Value(1));
   const [pillWidthAnim] = useState(() => new Animated.Value(isFocused ? 1 : 0));
 
@@ -70,6 +72,7 @@ const AnimatedTabItem = ({label, isFocused, onPress, isDark}: AnimatedTabItemPro
     inactive: 'circle-outline',
     label: label,
   };
+  const title = displayLabel || config.label;
 
   const iconName = isFocused ? config.active : config.inactive;
   const activeColor = PRIMARY_COLOR;
@@ -86,7 +89,7 @@ const AnimatedTabItem = ({label, isFocused, onPress, isDark}: AnimatedTabItemPro
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       accessibilityRole="button"
-      accessibilityLabel={`${config.label} tab`}
+      accessibilityLabel={`${title} tab`}
       accessibilityState={{selected: isFocused}}
       style={styles.tabItem}>
       <Animated.View style={{transform: [{scale: scaleAnim}]}}>
@@ -109,15 +112,24 @@ const AnimatedTabItem = ({label, isFocused, onPress, isDark}: AnimatedTabItemPro
             isFocused && styles.tabLabelActive,
           ]}
           numberOfLines={1}>
-          {config.label}
+          {title}
         </Text>
       </Animated.View>
     </Pressable>
   );
 };
 
+const TAB_KEY_MAP: Record<string, string> = {
+  Home: 'tabs.home',
+  Podcasts: 'tabs.podcasts',
+  Chatbot: 'tabs.chatbot',
+  Wellness: 'tabs.wellness',
+  Settings: 'tabs.settings',
+};
+
 const TabBar = ({state, descriptors, navigation}: any) => {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
   const isDark = colorScheme === 'dark';
 
   const [keyboardVisible, setKeyboardVisible] = useState(false);
@@ -174,10 +186,12 @@ const TabBar = ({state, descriptors, navigation}: any) => {
           }
         };
 
+        const displayLabel = TAB_KEY_MAP[label] ? t(TAB_KEY_MAP[label]) : label;
         return (
           <AnimatedTabItem
             key={index}
             label={label}
+            displayLabel={displayLabel}
             isFocused={isFocused}
             onPress={onPress}
             isDark={isDark}

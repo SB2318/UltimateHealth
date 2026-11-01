@@ -50,18 +50,78 @@ export const en = {
     allCategories: 'All Categories',
     tryDifferentSearch: 'Try a different search term',
   },
+  settings: {
+    title: 'Settings',
+    account: 'ACCOUNT',
+    profile: 'View / Edit Profile',
+    profileSub: 'Update your name, avatar, bio',
+    notifications: 'Notification Preferences',
+    notificationsSub: 'Push, email, and digest settings',
+    workspace: 'Your Workspace',
+    workspaceSub: 'Contributor & Admin Interaction',
+    preferences: 'PREFERENCES',
+    appLanguage: 'App Language',
+    selectLanguage: 'Select App Language',
+    content: 'CONTENT & ACTIVITY',
+    activityInsight: 'Activity Insight',
+    activityInsightSub: 'Your writing and reading analytics',
+    myPosts: 'My Posts',
+    myPostsSub: 'Articles, reposts and saved reading list',
+    readingHistory: 'Reading History',
+    readingHistorySub: 'Articles you recently read',
+    nearbyEvents: 'Nearby Health Events',
+    nearbyEventsSub: 'Blood drives, health camps (Coming Soon)',
+    legal: 'LEGAL & PRIVACY',
+    privacyPolicy: 'Privacy Policy',
+    privacyPolicySub: 'Terms & conditions',
+    communityGuidelines: 'Community Guidelines',
+    openSource: 'Open Source Licences',
+    about: 'ABOUT',
+    aboutApp: 'About UltimateHealth',
+    aboutAppSub: 'Version, team, & mission',
+    respectGiver: 'RESPECT GIVER',
+    moumitaDebnath: 'Moumita Debnath',
+    moumitaSub: 'Mind · Dignity · Hope',
+    session: 'SESSION',
+    signOut: 'Sign Out',
+    signOutConfirm: 'Are you sure you want to sign out?',
+    footer: 'UltimateHealth · Built with ❤️ for better health',
+    checkConnection: 'Please check your internet connection!',
+  },
   onboarding: {
     welcome: 'WELCOME TO ULTIMATEHEALTH',
     startBrowsing: 'Start Browsing',
     signInPatient: 'Sign In as Patient / User',
     signInDoctor: 'Sign In as Doctor',
     continueAsGuest: 'Continue as Guest',
+    signInRegister: 'Sign In / Register',
+    next: 'Next',
   },
   guest: {
     accessTitle: 'Guest Access',
     signInRequired: 'Sign In Required',
     signInPrompt: 'Sign in or create an account to unlock all features, save your progress, and interact with the medical community.',
+    whatYouUnlock: 'WHAT YOU UNLOCK AS A MEMBER',
+    continueWithGoogle: 'Continue with Google',
+    learnMore: 'Learn more about membership benefits',
+    engageDiscuss: 'Engage & Discuss',
+    engageDiscussSub: 'Comment, like & review health articles',
+    personalizedLibrary: 'Personalized Library',
+    personalizedLibrarySub: 'Save bookmarks & track your reading history',
+    aiAssistant: 'AI Health Assistant',
+    aiAssistantSub: '24/7 instant medical answers & summaries',
+    doctorNetwork: 'Doctor Network',
+    doctorNetworkSub: 'Follow verified physicians & health specialists',
   },
 };
 
-export type TranslationKeys = typeof en;
+type RecursivePartial<T> = {
+  [P in keyof T]?: T[P] extends (infer U)[]
+    ? RecursivePartial<U>[]
+    : T[P] extends object | undefined
+    ? RecursivePartial<T[P]>
+    : T[P];
+};
+
+export type TranslationSchema = typeof en;
+export type TranslationKeys = RecursivePartial<TranslationSchema>;
