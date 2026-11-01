@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, {useState, useEffect, useRef, useCallback } from 'react';
-import { useColorScheme, View } from 'react-native';
+import { useColorScheme, View, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

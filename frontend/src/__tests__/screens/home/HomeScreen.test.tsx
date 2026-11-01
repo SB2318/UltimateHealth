@@ -174,10 +174,11 @@ describe('HomeScreen - Early Return and State Rendering Tests', () => {
     // article list is empty/null which previously would trigger empty return early
     mockArticlesQuery.data = { articles: [], totalPages: 1 };
 
-    const {getByText} = renderScreen();
+    const {getByLabelText, getAllByTestId} = renderScreen();
 
     // Verify it returns LoadingState first instead of falling through to empty state
-    expect(getByText('LoadingState')).toBeTruthy();
+    expect(getByLabelText('Loading articles')).toBeTruthy();
+    expect(getAllByTestId('article-skeleton-card', {includeHiddenElements: true})).toHaveLength(3);
   });
 
   it('renders EmptyArticleState (NoArticleState) when loading has completed and no articles exist', () => {
