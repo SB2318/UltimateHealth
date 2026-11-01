@@ -3396,10 +3396,6 @@ async-generator-function@^1.0.0:
 asynckit@^0.4.0:
   version "0.4.0"
 
-"audio-module@file:C:\\Resolution\\UltimateHealth\\frontend\\modules\\audio-module":
-  version "1.0.0"
-  resolved "file:modules/audio-module"
-
 available-typed-arrays@^1.0.7:
   version "1.0.7"
   dependencies:

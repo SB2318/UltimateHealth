@@ -17,8 +17,7 @@
     "knip:fix": "knip --fix",
     "knip:check": "knip --no-progress",
     "quality": "pnpm run type-check && pnpm run lint && pnpm run knip",
-    "postinstall": "patch-package",
-    "eas-build-pre-install": "corepack enable"
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@bam.tech/react-native-image-resizer": "^3.0.11",
@@ -182,5 +181,5 @@
       "@lottiefiles/dotlottie-react": "$@lottiefiles/dotlottie-react"
     }
   },
-  "packageManager": "yarn@4.18.0"
+  "packageManager": "yarn@1.22.22"
 }
