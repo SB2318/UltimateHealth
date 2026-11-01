@@ -7,6 +7,7 @@ import {
   Alert,
   Text,
   TouchableOpacity,
+  Platform,
   Pressable,
   TextInput,
   FlatList,
