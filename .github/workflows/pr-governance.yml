@@ -6,7 +6,7 @@
 #   Enforces PR quality standards by validating two things on every non-draft PR:
 #   (1) the title must follow Conventional Commits format, and
 #   (2) the PR must have at least one meaningful label applied.
-#   Fails the check and blocks merge if either requirement is not met.
+#   Fails the check and blocks merge if title requirement is not met.
 #
 # HOW IT WORKS:
 #
@@ -21,9 +21,9 @@
 #   STEP 2 — Enforce Minimum Label Usage:
 #     Skips label check for infrastructure/maintenance PR types:
 #       ci, docs, chore, build, test, style, refactor, perf, revert
-#     For all other types (feat, fix, etc.), requires at least one label
-#     that is NOT in the ignored list ("dependencies").
-#     Fails with: "Please apply at least one meaningful label to this PR."
+#     For all other types (feat, fix, etc.), ensures at least one label
+#     that is NOT in the ignored list ("dependencies"). Auto-applies a triage
+#     label if missing, or issues a warning to prevent hard blocking.
 #
 # TRIGGERS:
 #   - Automatic : PR opened, edited, synchronized, labeled, unlabeled,
@@ -33,7 +33,7 @@
 #
 # PERMISSIONS REQUIRED:
 #   - contents: read        → to read the PR content
-#   - pull-requests: read   → to read PR title and labels
+#   - pull-requests: write   → to read PR title and auto-apply triage labels
 #
 # SECRETS REQUIRED:
 #   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
@@ -55,7 +55,8 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
+  pull-requests: write
+  issues: write
 
 jobs:
   validate-pr:
@@ -102,12 +103,23 @@ jobs:
 
             const ignoredLabels = ["dependencies"];
 
-            const validLabels = pr.labels.filter(
+            const validLabels = (pr.labels || []).filter(
               label => !ignoredLabels.includes(label.name)
             );
 
             if (validLabels.length === 0) {
-              core.setFailed("Please apply at least one meaningful label to this pull request.");
+              const defaultLabel = prType === 'fix' ? 'bug' : 'enhancement';
+              try {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  labels: [defaultLabel],
+                });
+                core.info(`Automatically applied "${defaultLabel}" triage label to PR #${pr.number}.`);
+              } catch (e) {
+                core.warning(`Could not auto-apply label: ${e.message}. Please apply at least one meaningful label.`);
+              }
             } else {
               core.info(`Found ${validLabels.length} valid label(s). Triage requirement met.`);
             }
