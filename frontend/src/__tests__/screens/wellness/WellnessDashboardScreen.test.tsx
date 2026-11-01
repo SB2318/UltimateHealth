@@ -77,8 +77,8 @@ describe('WellnessDashboardScreen - State Rendering Tests', () => {
 
     const { getByText } = render(<WellnessDashboardScreen />);
 
-    expect(getByText('Weekly Insights')).toBeTruthy();
-    expect(getByText('Log your first metrics below to start building your weekly insights.')).toBeTruthy();
+    expect(getByText('No wellness data yet')).toBeTruthy();
+    expect(getByText("Log today's metrics to see your dashboard.")).toBeTruthy();
     expect(getByText('Log Today')).toBeTruthy();
   });
 
