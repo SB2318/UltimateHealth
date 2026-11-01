@@ -18,6 +18,7 @@ import {formatDateShort} from '../../lib/utils/dateUtils';
 import {getReadTime} from '../../lib/utils/readTime';
 import {useAppSelector} from '../../store/hooks';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import IonIcons from '@expo/vector-icons/Ionicons';
 import {GET_IMAGE} from '../../lib/api/APIUtils';
 import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import GlobalStyles from '../../styles/GlobalStyle';

@@ -7,6 +7,8 @@ import {
   Alert,
   Text,
   TouchableOpacity,
+  Pressable,
+  TextInput,
   FlatList,
   ScrollView,
   useColorScheme,
@@ -29,7 +31,7 @@ import {
 import {PROD_URL, SEARCH_ARTICLES} from '../../lib/api/APIUtils';
 import AddIcon from '../../components/common/AddIcon';
 import ArticleCard from '../../components/article/ArticleCard';
-import ArtcleSkeleton from '../../components/article/ArticleSkeletonCard';
+import ArticleSkeletonCard from '../../components/article/ArticleSkeletonCard';
 
 import HomeScreenHeader from '../../components/home/HomeScreenHeader';
 import {ArticleData, Category, HomeScreenProps} from '../../schemas/type';
