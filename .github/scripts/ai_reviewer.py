@@ -88,9 +88,51 @@ def fetch_pr_diff(repo, pr_number, github_token):
     try:
         with urllib.request.urlopen(request) as response:
             return response.read().decode("utf-8")
+    except urllib.error.HTTPError as e:
+        print(f"Failed to fetch monolithic PR diff (HTTP {e.code}): {e}")
+        if e.code in (406, 422):
+            print("Diff exceeded GitHub line limit. Falling back to paginated files endpoint...")
+            return fetch_pr_diff_from_files(repo, pr_number, github_token)
+        return ""
     except urllib.error.URLError as e:
         print(f"Failed to fetch PR diff: {e}")
         return ""
+
+def fetch_pr_diff_from_files(repo, pr_number, github_token):
+    diff_parts = []
+    page = 1
+    total_chars = 0
+    while True:
+        url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/files?per_page=100&page={page}"
+        request = urllib.request.Request(url)
+        request.add_header("Authorization", f"token {github_token}")
+        request.add_header("Accept", "application/vnd.github.v3+json")
+        try:
+            with urllib.request.urlopen(request) as response:
+                files = json.loads(response.read().decode("utf-8"))
+                if not files:
+                    break
+                for f in files:
+                    filename = f.get("filename", "")
+                    if any(ignored in filename for ignored in IGNORED_PATTERNS):
+                        continue
+                    patch = f.get("patch", "")
+                    if patch:
+                        header = f"diff --git a/{filename} b/{filename}
+"
+                        diff_parts.append(header + patch)
+                        total_chars += len(patch)
+                        if total_chars > MAX_DIFF_SIZE * 2:
+                            break
+                if len(files) < 100 or total_chars > MAX_DIFF_SIZE * 2:
+                    break
+                page += 1
+        except Exception as err:
+            print(f"Failed fetching files page {page}: {err}")
+            break
+    return "
+
+".join(diff_parts)
 
 def filter_diff(diff_text):
     filtered_lines = []

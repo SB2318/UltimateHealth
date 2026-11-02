@@ -83,7 +83,7 @@ describe('LogoutScreen local logout behavior', () => {
       });
       expect(mockReset).toHaveBeenCalledWith({
         index: 0,
-        routes: [{name: 'LoginScreen'}],
+        routes: [{name: 'SignInScreen'}],
       });
     });
   };

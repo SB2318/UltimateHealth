@@ -37,7 +37,7 @@ export const useGetAuthorProfile = (
             profile.Profile_image.length > 0,
         );
       }
-      return response.data.data as User;
+      return (response?.data?.data ?? response?.data?.profile ?? response?.data ?? null) as User;
     },
     enabled: !!isConnected
   });

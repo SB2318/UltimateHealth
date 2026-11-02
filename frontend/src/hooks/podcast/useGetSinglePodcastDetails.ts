@@ -7,23 +7,18 @@ import {demoPodcasts} from '../../lib/demo/demoContent';
 type AxiosError = any;
 
 export const useGetSinglePodcastDetails = (trackId: string): UseQueryResult<
-PodcastData,
-AxiosError
->=>{
+  PodcastData | null,
+  AxiosError
+> => {
   return useQuery({
     queryKey: ['get-podcast-details', trackId],
     queryFn: async () => {
-      if (Platform.OS === 'web') {
-        const demoPodcast = demoPodcasts.find(item => item._id === trackId);
-        if (demoPodcast) {
-          return demoPodcast;
-        }
-      }
+      if (!trackId) return null;
       const response = await axios.get(
         `${GET_PODCAST_DETAILS}?podcast_id=${trackId}`
       );
-      return response.data as PodcastData;
+      return (response?.data ?? null) as PodcastData | null;
     },
-    enabled: Platform.OS !== 'web' || trackId.startsWith('demo-'),
-  });
-}
+    enabled: Boolean(trackId),
+  });  
+};

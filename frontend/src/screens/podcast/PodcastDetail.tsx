@@ -10,25 +10,24 @@ import {
   View,
   Image,
   useWindowDimensions,
+  useColorScheme,
+  DeviceEventEmitter,
 } from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import {PodcastDetailScreenProp} from '../../schemas/type';
+import {PodcastDetailScreenProp, PodcastData} from '../../schemas/type';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import Slider from '../../components/podcast/SliderCompat';
 import {GlassStyles} from '../../styles/GlassStyles';
 
-import {
-  setAudioModeAsync,
-  useAudioPlayer,
-  type AudioPlayer,
-} from 'expo-audio';
+import {useAudioPlayer, type AudioPlayer, setAudioModeAsync} from 'expo-audio';
 
 // GET_IMAGE is defined as `${PROD_URL}/getfile` (resolves to absolute URL: https://ultimatehealth.blog/api/getfile).
 // This absolute, securely-configured endpoint ensures that relative resource paths cannot access local device files via traversal.
 import {GET_IMAGE} from '../../lib/api/APIUtils';
 import {useAppSelector} from '../../store/hooks';
 
-import {downloadAudio, formatCount, StatusEnum} from '../../lib/utils/Utils';
+import {downloadAudio, formatCount, msToTime, StatusEnum} from '../../lib/utils/Utils';
 import {generatePodcastShareUrl} from '../../lib/utils/shareUtils';
 import Snackbar from 'react-native-snackbar';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -44,6 +43,9 @@ import LottieView from 'lottie-react-native';
 import AudioWaveform from '../../components/podcast/AudioWaveform';
 import {useGetSinglePodcastDetails} from '../../hooks/podcast/useGetSinglePodcastDetails';
 import {useLikePodcast} from '../../hooks/podcast/useLikePodcast';
+import {useGetEpisodePodcasts} from '../../hooks/podcast/useGetEpisodePodcasts';
+import {useGetAllPodcasts} from '../../hooks/podcast/useGetAllPodcasts';
+import StructuredPodcastCard from '../../components/podcast/StructuredPodcastCard';
 import {getPlaybackPosition, savePlaybackPosition} from '../../lib/platform/PlaybackManager';
 
 const isAllowedUrl = (urlStr?: string | null): boolean => {
@@ -70,8 +72,11 @@ const isAllowedUrl = (urlStr?: string | null): boolean => {
 const PLAYBACK_SPEEDS = [1.0, 1.25, 1.5, 2.0];
 
 const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
-  //const [progress, setProgress] = useState(10);
-  // const insets = useSafeAreaInsets();
+  let insets = {top: 0, bottom: 0, left: 0, right: 0};
+try {
+  insets = useSafeAreaInsets();
+} catch (_e) {}
+  const isDark = useColorScheme() === 'dark';
   const {trackId, audioUrl} = route.params;
  
   const {width, height} = useWindowDimensions();
@@ -87,7 +92,27 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
     (state: any) => state.user,
   );
   const {isConnected} = useAppSelector((state: any) => state.network);
-  const [isLoading, setLoading] = useState<boolean>(false);
+  const [downloadLoading, setDownloadLoading] = useState<boolean>(false);
+  const [downloadProgress, setDownloadProgress] = useState<number | null>(null);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const sub = DeviceEventEmitter.addListener(
+      'podcast-download-progress',
+      (event: any) => {
+        if (event && event.podcastId === trackId) {
+          if (event.status === 'starting' || event.status === 'downloading') {
+            setIsDownloading(true);
+            setDownloadProgress(typeof event.progress === 'number' ? event.progress : 0);
+          } else {
+            setIsDownloading(false);
+            setDownloadProgress(null);
+          }
+        }
+      },
+    );
+    return () => sub.remove();
+  }, [trackId]);
   const [duration, setDuration] = useState(0);
   const [position, setPosition] = useState(0);
   const [networkPaused, setNetworkPaused] = useState(false);
@@ -98,9 +123,24 @@ const PodcastDetail = ({navigation, route}: PodcastDetailScreenProp) => {
   const [isLike, setLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [speed, setSpeed] = useState(1.0);
+  const cardStyle = isDark ? GlassStyles.glassContainerDark : styles.cardLight;
+  const bgColor = isDark ? '#0B1425' : '#F8FAFC';
+  const actionIconColor = isDark ? '#FFFFFF' : '#334155';
 
   const {data: podcast, refetch, isLoading: isPodcastLoading, isError: isPodcastError, error: podcastError} = useGetSinglePodcastDetails(trackId);
   const {mutate: likePodcast, isPending: likePodcastPending} = useLikePodcast();
+
+  const episodeId = podcast?.episode_id
+    ? (typeof podcast.episode_id === 'string'
+        ? podcast.episode_id
+        : (podcast.episode_id as any)?._id || (podcast.episode_id as any)?.id)
+    : (podcast as any)?.episodeId;
+
+  const {data: episodePodcasts = []} = useGetEpisodePodcasts(episodeId || undefined);
+
+  const relatedSeriesEpisodes = (episodePodcasts || []).filter(
+    (ep: PodcastData) => ep._id !== trackId && ep._id !== podcast?._id
+  );
 
   const defaultFallback = require('../../../assets/sounds/funny-cartoon-sound-397415.mp3');
 
@@ -257,6 +297,44 @@ useEffect(() => {
   isWaitingForNetwork,
 ]);
 
+// Listen to native player status updates if available
+useEffect(() => {
+  if (!player || typeof (player as any).addListener !== 'function') return;
+
+  let subscription: any;
+  try {
+    subscription = (player as any).addListener('playbackStatusUpdate', (status: any) => {
+      if (!status) return;
+
+      if (typeof status.currentTime === 'number') {
+        setPosition(status.currentTime);
+      }
+      if (typeof status.duration === 'number' && status.duration > 0) {
+        setDuration(status.duration);
+      }
+
+      const isFinished =
+        status.didJustFinish === true ||
+        (status.duration > 1 && status.currentTime >= status.duration - 0.3);
+
+      if (isFinished) {
+        setIsPlaying(false);
+        savePlaybackPosition(trackId, 0, status.duration || 1);
+      } else if (typeof status.playing === 'boolean') {
+        setIsPlaying(status.playing);
+      }
+    });
+  } catch (err) {
+    console.warn('Failed to add playbackStatusUpdate listener:', err);
+  }
+
+  return () => {
+    if (subscription && typeof subscription.remove === 'function') {
+      subscription.remove();
+    }
+  };
+}, [player, trackId]);
+
 useEffect(() => {
   let lastSaveTime = 0;
 
@@ -264,28 +342,43 @@ useEffect(() => {
     if (!player) return;
 
     const status = player.currentStatus;
+    const currentPos = player.currentTime ?? status?.currentTime;
+    const totalDur = player.duration ?? status?.duration;
 
-    if (status?.isLoaded) {
-      const currentPos = status.currentTime || 0;
-      const totalDur = status.duration || 0;
-
-      setPosition(currentPos);
+    if (typeof totalDur === 'number' && totalDur > 0) {
       setDuration(totalDur);
+    }
+    if (typeof currentPos === 'number') {
+      setPosition(currentPos);
+    }
 
-      // Save playback position every 5 seconds
-      if (player.playing) {
-        const now = Date.now();
+    // Check if podcast playback finished / is over
+    const isFinished =
+      status?.didJustFinish === true ||
+      (typeof totalDur === 'number' &&
+        typeof currentPos === 'number' &&
+        totalDur > 1 &&
+        currentPos >= totalDur - 0.3);
 
-        if (now - lastSaveTime > 5000) {
-          savePlaybackPosition(trackId, currentPos, totalDur);
-          lastSaveTime = now;
-        }
+    if (isFinished) {
+      setIsPlaying(false);
+      savePlaybackPosition(trackId, 0, totalDur || 1);
+      return;
+    }
+
+    // Save playback position every 5 seconds while playing
+    if (playing || player.playing || status?.playing) {
+      const now = Date.now();
+
+      if (now - lastSaveTime > 5000 && typeof currentPos === 'number') {
+        savePlaybackPosition(trackId, currentPos, totalDur || 0);
+        lastSaveTime = now;
       }
     }
-  }, 500);
+  }, 250);
 
   return () => clearInterval(interval);
-}, [player, trackId]);
+}, [player, trackId, playing]);
 
 // Check for saved position on mount
 useEffect(() => {
@@ -443,6 +536,13 @@ useEffect(() => {
     }
 
     try {
+      const current = player.currentTime ?? player.currentStatus?.currentTime ?? position;
+      const total = player.duration ?? player.currentStatus?.duration ?? duration;
+      if (total > 1 && current >= total - 0.5) {
+        await player.seekTo(0);
+        setPosition(0);
+      }
+
       await player.play();
       setIsPlaying(true);
       setNetworkPaused(false);
@@ -475,17 +575,32 @@ useEffect(() => {
   resumeAttemptedRef.current = false;
 };
   
- if (isPodcastLoading || isLoading) {
+ if (isPodcastLoading) {
     return <Loader />;
   }
 
   if (isPodcastError || !podcast) {
     return (
-      <View testID="podcast-detail-error" style={styles.errorContainer}>
-        <Text color="#F1F5F9" fontSize={18} fontWeight="700">
+      <View
+        testID="podcast-detail-error"
+        style={[styles.errorContainer, { backgroundColor: isDark ? '#0B1425' : '#F8FAFC' }]}>
+        <TouchableOpacity
+          testID="podcast-screen-back-button"
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Navigates back to the previous screen"
+          onPress={() => navigation.goBack()}
+          style={[
+            styles.screenBackButton,
+            isDark ? styles.screenBackButtonDark : styles.screenBackButtonLight,
+            { alignSelf: 'flex-start', marginBottom: 20 },
+          ]}>
+          <Ionicons name="arrow-back" size={22} color={isDark ? '#F1F5F9' : '#0F172A'} />
+        </TouchableOpacity>
+        <Text color={isDark ? '#F1F5F9' : '#0F172A'} fontSize={18} fontWeight="700">
           Unable to load podcast details.
         </Text>
-        <Text color="#94A3B8" fontSize={14} marginTop="$2">
+        <Text color={isDark ? '#94A3B8' : '#64748B'} fontSize={14} marginTop="$2">
           {podcastError instanceof Error ? podcastError.message : 'Please try again later.'}
         </Text>
 
@@ -519,11 +634,48 @@ useEffect(() => {
     />
   );
 
+  const topBarEl = (
+    <XStack
+      alignItems="center"
+      justifyContent="space-between"
+      paddingHorizontal="$2"
+      paddingBottom="$2"
+      width="100%">
+      <TouchableOpacity
+        testID="podcast-screen-back-button"
+        accessibilityRole="button"
+        accessibilityLabel="Go back"
+        accessibilityHint="Navigates back to the previous screen"
+        onPress={() => navigation.goBack()}
+        style={[
+          styles.screenBackButton,
+          isDark ? styles.screenBackButtonDark : styles.screenBackButtonLight,
+        ]}>
+        <Ionicons name="arrow-back" size={22} color={isDark ? '#F1F5F9' : '#0F172A'} />
+      </TouchableOpacity>
+
+      <Text
+        color={isDark ? '#F1F5F9' : '#0F172A'}
+        fontSize={16}
+        fontWeight="700"
+        numberOfLines={1}
+        flex={1}
+        textAlign="center"
+        marginHorizontal="$3">
+        Podcast Details
+      </Text>
+
+      <View style={{ width: 40 }} />
+    </XStack>
+  );
+
   const titleEl = (
     <Text
-      color="#F1F5F9"
-      fontSize={28}
-      fontWeight="800">
+      color={isDark ? '#F1F5F9' : '#0F172A'}
+      fontSize={isTablet ? 26 : 22}
+      lineHeight={isTablet ? 32 : 28}
+      fontWeight="800"
+      style={{ flexShrink: 1 }}>
       {podcast?.title}
     </Text>
   );
@@ -537,9 +689,11 @@ useEffect(() => {
   const descriptionEl = (
     <YStack>
       <Text
-        color="#94A3B8"
-        fontSize={16}
-        marginTop="$3">
+        color={isDark ? '#CBD5E1' : '#475569'}
+        fontSize={isTablet ? 15 : 14}
+        lineHeight={20}
+        marginTop="$2"
+        style={{ flexShrink: 1 }}>
         {displayDescription}
       </Text>
       {shouldTruncate && (
@@ -568,7 +722,7 @@ useEffect(() => {
         accessibilityHint={playing ? "Currently animating, audio is playing" : "Currently paused"}
         style={[
           styles.visualizerContainer,
-          GlassStyles.glassContainerDark,
+          cardStyle,
         ]}>
         <AudioWaveform isPlaying={playing} accentColor="#4F46E5" />
       </View>
@@ -599,7 +753,7 @@ useEffect(() => {
 
   const sliderEl = (
     <View
-      style={[styles.sliderContainer, GlassStyles.glassContainerDark]}>
+      style={[styles.sliderContainer, cardStyle]}>
       <Slider
         testID="podcast-progress-slider"
         accessibilityLabel="Podcast playback progress"
@@ -609,7 +763,7 @@ useEffect(() => {
         maximumValue={duration}
         value={position}
         minimumTrackTintColor={PRIMARY_COLOR}
-        maximumTrackTintColor="#ccc"
+        maximumTrackTintColor={isDark ? '#475569' : '#CBD5E1'}
         thumbTintColor={PRIMARY_COLOR}
         onSlidingComplete={async v => {
           if (player) {
@@ -621,12 +775,12 @@ useEffect(() => {
 
       <XStack
         justifyContent="space-between"
-        marginTop="$2"
+        marginTop="$1.5"
         paddingHorizontal="$2">
-        <Text color="#C0C9DA" fontSize={14} fontWeight="600">
+        <Text color={isDark ? '#C0C9DA' : '#64748B'} fontSize={13} fontWeight="600">
           {formatSecTime(position)}
         </Text>
-        <Text color="#C0C9DA" fontSize={14} fontWeight="600">
+        <Text color={isDark ? '#C0C9DA' : '#64748B'} fontSize={13} fontWeight="600">
           {formatSecTime(duration)}
         </Text>
       </XStack>
@@ -635,8 +789,8 @@ useEffect(() => {
 
   const controlsEl = (
     <View
-      style={[styles.controlsContainer, GlassStyles.glassContainerDark]}>
-      <XStack justifyContent="space-around" alignItems="center">
+      style={[styles.controlsContainer, cardStyle]}>
+      <XStack justifyContent="space-around" alignItems="center" width="100%">
         <TouchableOpacity
           testID="podcast-back-button"
           accessibilityLabel="Rewind 5 seconds"
@@ -644,8 +798,8 @@ useEffect(() => {
           accessibilityHint="Moves playback backward by 5 seconds"
           disabled={!isConnected}
           onPress={handleBackward}
-          style={styles.controlButton}>
-          <Ionicons name="play-back" size={32} color="#9BB3C8" />
+          style={[styles.controlButton, { backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : '#F1F5F9' }]}>
+          <Ionicons name="play-back" size={isTablet ? 30 : 24} color={isDark ? '#9BB3C8' : '#475569'} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -655,14 +809,12 @@ useEffect(() => {
           accessibilityHint={playing ? "Pauses the podcast" : "Starts playing the podcast"}
           accessibilityState={{disabled: !isConnected}}
           disabled={!isConnected}
-          onPress={() =>
-            player.currentStatus.playing ? handlePause() : handlePlay()
-          }
-          style={styles.mainPlayButton}>
+          onPress={() => (playing ? handlePause() : handlePlay())}
+          style={[styles.mainPlayButton, !isConnected && { opacity: 0.6 }]}>
           {playing ? (
-            <Ionicons name="pause" size={40} color="white" />
+            <Ionicons name="pause" size={isTablet ? 36 : 30} color="white" />
           ) : (
-            <Ionicons name="play" size={40} color="white" />
+            <Ionicons name="play" size={isTablet ? 36 : 30} color="white" style={{ marginLeft: 3 }} />
           )}
         </TouchableOpacity>
 
@@ -673,8 +825,8 @@ useEffect(() => {
           accessibilityHint="Moves playback forward by 5 seconds"
           disabled={!isConnected}
           onPress={handleForward}
-          style={styles.controlButton}>
-          <Ionicons name="play-forward" size={32} color="#9BB3C8" />
+          style={[styles.controlButton, { backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : '#F1F5F9' }]}>
+          <Ionicons name="play-forward" size={isTablet ? 30 : 24} color={isDark ? '#9BB3C8' : '#475569'} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -683,15 +835,15 @@ useEffect(() => {
           accessibilityRole="button"
           accessibilityHint="Changes the podcast playback speed"
           onPress={handleSpeedChange}
-          style={{ marginLeft: 10 }}>
+          style={{ marginLeft: 4 }}>
           <XStack
-            backgroundColor="$backgroundFocus"
-            paddingHorizontal="$3"
-            paddingVertical="$2"
+            backgroundColor={isDark ? 'rgba(255,255,255,0.1)' : '#E2E8F0'}
+            paddingHorizontal="$2.5"
+            paddingVertical="$1.5"
             borderRadius="$4"
             alignItems="center"
             justifyContent="center">
-            <Text color="$color" fontSize={14} fontWeight="800">
+            <Text color={isDark ? '#F1F5F9' : '#0F172A'} fontSize={13} fontWeight="800">
               {speed}x
             </Text>
           </XStack>
@@ -700,10 +852,44 @@ useEffect(() => {
     </View>
   );
 
+  const downloadProgressBarEl = isDownloading && downloadProgress !== null ? (
+    <View
+      style={[
+        styles.downloadCard,
+        {
+          backgroundColor: isDark ? '#111C38' : '#EFF6FF',
+          borderColor: isDark ? 'rgba(255,255,255,0.08)' : '#BFDBFE',
+        },
+      ]}>
+      <XStack justifyContent="space-between" alignItems="center" marginBottom="$2">
+        <XStack alignItems="center" gap="$2">
+          <Ionicons name="cloud-download-outline" size={18} color={PRIMARY_COLOR} />
+          <Text color={isDark ? '#F1F5F9' : '#1E40AF'} fontSize={13} fontWeight="700">
+            Downloading for offline listening...
+          </Text>
+        </XStack>
+        <Text color={isDark ? '#60A5FA' : '#2563EB'} fontSize={13} fontWeight="800">
+          {`${Math.round(downloadProgress * 100)}%`}
+        </Text>
+      </XStack>
+      <View style={styles.downloadTrack}>
+        <View
+          style={[
+            styles.downloadFill,
+            {
+              width: `${Math.max(5, Math.round(downloadProgress * 100))}%`,
+              backgroundColor: PRIMARY_COLOR,
+            },
+          ]}
+        />
+      </View>
+    </View>
+  ) : null;
+
   const actionsEl = podcast && podcast.status === StatusEnum.PUBLISHED ? (
     <View
-      style={[styles.actionsContainer, GlassStyles.glassContainerDark]}>
-      <XStack alignItems="center" justifyContent="space-evenly">
+      style={[styles.actionsContainer, cardStyle]}>
+      <XStack alignItems="center" justifyContent="space-around" width="100%">
         {/* LIKE */}
         {likePodcastPending ? (
           <LoadingSpinner size="small" />
@@ -750,18 +936,18 @@ useEffect(() => {
               });
             }}>
             {isLike ? (
-              <AntDesign name="heart" size={26} color={PRIMARY_COLOR} />
+              <AntDesign name="heart" size={24} color={PRIMARY_COLOR} />
             ) : (
-              <Feather name="heart" size={26} color="white" />
+              <Feather name="heart" size={24} color={actionIconColor} />
             )}
-            <Text style={styles.actionText}>
+            <Text style={[styles.actionText, { color: actionIconColor }]}>
               {likeCount > 0 ? formatCount(likeCount) : ''}
             </Text>
           </TouchableOpacity>
         )}
 
         {/* DOWNLOAD */}
-        {isLoading ? (
+        {downloadLoading || isDownloading ? (
           <LoadingSpinner size="small" />
         ) : (
           <TouchableOpacity
@@ -786,16 +972,16 @@ useEffect(() => {
                 return;
               }
 
-              setLoading(true);
+              setDownloadLoading(true);
               const res = await downloadAudio(podcast);
-              setLoading(false);
+              setDownloadLoading(false);
 
               Snackbar.show({
                 text: res?.message ?? 'Audio downloaded successfully!',
                 duration: Snackbar.LENGTH_SHORT,
               });
             }}>
-            <Ionicons name="download-outline" size={26} color="white" />
+            <Ionicons name="download-outline" size={24} color={actionIconColor} />
           </TouchableOpacity>
         )}
 
@@ -825,12 +1011,12 @@ useEffect(() => {
             if (podcast) {
               navigation.navigate('PodcastDiscussion', {
                 podcastId: podcast._id,
-                mentionedUsers: podcast.mentionedUsers,
+                mentionedUsers: podcast.mentionedUsers || [],
               });
             }
           }}>
-          <Ionicons name="chatbubble-outline" size={26} color="white" />
-          <Text style={styles.actionText}>
+          <Ionicons name="chatbubble-outline" size={24} color={actionIconColor} />
+          <Text style={[styles.actionText, { color: actionIconColor }]}>
             {podcast?.commentCount
               ? formatCount(podcast.commentCount)
               : 0}
@@ -844,7 +1030,7 @@ useEffect(() => {
           accessibilityLabel="Share podcast"
           accessibilityHint="Opens sharing options for this podcast"
           onPress={handleShare}>
-          <Ionicons name="share-outline" size={26} color="white" />
+          <Ionicons name="share-outline" size={24} color={actionIconColor} />
         </TouchableOpacity>
       </XStack>
     </View>
@@ -852,26 +1038,87 @@ useEffect(() => {
     <XStack></XStack>
   );
 
+  const seriesName = podcast?.episode_id && typeof podcast.episode_id === 'object'
+    ? (podcast.episode_id as any)?.name
+    : null;
+
+  const relatedEpisodesEl = relatedSeriesEpisodes.length > 0 ? (
+    <YStack marginTop="$4" marginBottom="$4">
+      <XStack justifyContent="space-between" alignItems="center" marginBottom="$2.5" paddingHorizontal="$1">
+        <Text color={isDark ? '#F1F5F9' : '#0F172A'} fontSize={16} fontWeight="700">
+          {seriesName ? `More from ${seriesName}` : 'Episodes in this Series'}
+        </Text>
+        <Text color={PRIMARY_COLOR} fontSize={13} fontWeight="600">
+          {relatedSeriesEpisodes.length} more
+        </Text>
+      </XStack>
+
+      <YStack gap="$2">
+        {relatedSeriesEpisodes.map((ep: PodcastData) => (
+          <TouchableOpacity
+            key={ep._id}
+            onPress={() => {
+              navigation.replace('PodcastDetail', {
+                trackId: ep._id,
+                audioUrl: ep.audio_url,
+              });
+            }}
+            style={[
+              styles.relatedEpisodeCard,
+              cardStyle,
+            ]}>
+            <XStack alignItems="center" gap="$3">
+              <Image
+                source={{
+                  uri: ep.cover_image
+                    ? (ep.cover_image.startsWith('http') ? ep.cover_image : `${GET_IMAGE}/${ep.cover_image}`)
+                    : 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                }}
+                style={styles.relatedEpisodeThumb}
+              />
+              <YStack flex={1}>
+                {ep.episode_number ? (
+                  <Text color={PRIMARY_COLOR} fontSize={11} fontWeight="700">
+                    EPISODE {ep.episode_number}
+                  </Text>
+                ) : null}
+                <Text color={isDark ? '#F1F5F9' : '#0F172A'} fontSize={14} fontWeight="700" numberOfLines={1}>
+                  {ep.title}
+                </Text>
+                <Text color={isDark ? '#94A3B8' : '#64748B'} fontSize={12} numberOfLines={1}>
+                  {ep.duration ? msToTime(ep.duration) : 'Audio'} • {ep.user_id?.user_name || 'Host'}
+                </Text>
+              </YStack>
+              <View style={styles.relatedPlayIcon}>
+                <Ionicons name="play" size={14} color="white" style={{marginLeft: 2}} />
+              </View>
+            </XStack>
+          </TouchableOpacity>
+        ))}
+      </YStack>
+    </YStack>
+  ) : null;
+
   const content = useSplitLayout ? (
     <XStack gap="$4" flex={1} paddingHorizontal="$2">
       {/* Left Column: Artwork Image and Visualizer */}
       <YStack width={isTablet ? 340 : '42%'} gap="$4">
-        <View style={[styles.titleContainer, GlassStyles.glassContainerDark]}>
+        <View style={[styles.titleContainer, cardStyle]}>
           {coverImageEl}
         </View>
         {visualizerEl}
       </YStack>
 
       {/* Right Column: Text Information, Slider, Controls, Actions */}
-      <YStack flex={1} gap="$4">
-        <View style={[styles.titleContainer, GlassStyles.glassContainerDark]}>
+      <YStack flex={1} gap="$3">
+        <View style={[styles.titleContainer, cardStyle]}>
           <YStack>
             <Text
-              color="#94A3B8"
-              fontSize={13}
-              fontWeight="600"
-              marginBottom="$2"
-              letterSpacing={1}>
+              color={isDark ? '#94A3B8' : '#64748B'}
+              fontSize={12}
+              fontWeight="700"
+              marginBottom="$1.5"
+              letterSpacing={1.2}>
               NOW PLAYING
             </Text>
             {titleEl}
@@ -879,28 +1126,24 @@ useEffect(() => {
           </YStack>
         </View>
         {offlineBannerEl}
-        {offlineBannerEl}
         {sliderEl}
-        <View style={{ marginTop: -15 }}>
-          {controlsEl}
-        </View>
-        <View style={{ marginTop: -15 }}>
-          {actionsEl}
-        </View>
+        {controlsEl}
+        {actionsEl}
+        {relatedEpisodesEl}
       </YStack>
     </XStack>
   ) : (
-    <YStack flexGrow={1} gap="$4">
-      {/* TITLE with Glass Effect */}
-      <View style={[styles.titleContainer, GlassStyles.glassContainerDark]}>
+    <YStack flexGrow={1} gap="$3">
+      {/* TITLE with Glass / Card Effect */}
+      <View style={[styles.titleContainer, cardStyle]}>
         {coverImageEl}
         <YStack>
           <Text
-            color="#94A3B8"
-            fontSize={13}
-            fontWeight="600"
-            marginBottom="$2"
-            letterSpacing={1}>
+            color={isDark ? '#94A3B8' : '#64748B'}
+            fontSize={12}
+            fontWeight="700"
+            marginBottom="$1.5"
+            letterSpacing={1.2}>
             NOW PLAYING
           </Text>
           {titleEl}
@@ -909,6 +1152,8 @@ useEffect(() => {
       </View>
 
       {visualizerEl}
+
+      {offlineBannerEl}
 
       {/* SLIDER + TIME */}
       <YStack>
@@ -920,33 +1165,41 @@ useEffect(() => {
 
       {/* FOOTER OPTIONS */}
       {actionsEl}
+
+      {/* RELATED EPISODES IN SERIES */}
+      {relatedEpisodesEl}
     </YStack>
   );
 
   return (
   <ErrorBoundary onRetry={() => refetch()}>
     <ScrollView
-      backgroundColor="#0B1425"
+      backgroundColor={bgColor}
       contentContainerStyle={{ flexGrow: 1 } as any}
+      showsVerticalScrollIndicator={false}
     >
-      <Theme name="dark">
+      <Theme name={isDark ? 'dark' : 'light'}>
         <YStack
           flexGrow={1}
-          backgroundColor="#0B1425"
-          padding="$3"
-          paddingTop="$10"
-          justifyContent="space-between">
+          backgroundColor={bgColor}
+          paddingHorizontal="$3"
+          paddingTop={Platform.OS === 'android' ? Math.max(insets.top, 10) : insets.top || 10}
+          paddingBottom={Math.max(insets.bottom, 24)}
+          gap="$2.5">
+          {topBarEl}
           {isWaitingForNetwork && (
             <YStack
-              backgroundColor="#1F2937"
-              borderRadius="$8"
+              backgroundColor={isDark ? '#1F2937' : '#FEF3C7'}
+              borderColor={isDark ? '#374151' : '#FDE68A'}
+              borderWidth={1}
+              borderRadius="$6"
               padding="$3"
-              marginBottom="$3"
+              marginBottom="$2"
               gap="$1">
-              <Text color="#FBBF24" fontWeight="700">
+              <Text color={isDark ? '#FBBF24' : '#D97706'} fontWeight="700">
                 Waiting for network connection
               </Text>
-              <Text color="#CBD5E1" fontSize={13}>
+              <Text color={isDark ? '#CBD5E1' : '#92400E'} fontSize={13}>
                 Playback was paused because connectivity was lost. It will resume as soon as the network returns.
               </Text>
             </YStack>
@@ -962,9 +1215,30 @@ useEffect(() => {
 export default PodcastDetail;
 
 const styles = StyleSheet.create({
+  downloadCard: {
+    width: '100%',
+    borderRadius: 14,
+    borderWidth: 1,
+    padding: 14,
+    marginTop: 6,
+  },
+  downloadTrack: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(0,0,0,0.08)',
+    overflow: 'hidden',
+    width: '100%',
+  },
+  downloadFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
   titleContainer: {
-    padding: 20,
+    padding: 16,
     borderRadius: 20,
+    width: '100%',
+    maxWidth: '100%',
+    overflow: 'hidden',
   },
   waveContainer: {
     width: '100%',
@@ -973,60 +1247,97 @@ const styles = StyleSheet.create({
   },
   visualizerContainer: {
     width: '100%',
+    maxWidth: '100%',
     borderRadius: 20,
     padding: 10,
     overflow: 'hidden',
   },
   sliderContainer: {
-    padding: 20,
+    padding: 16,
     borderRadius: 20,
+    width: '100%',
+    maxWidth: '100%',
+    overflow: 'hidden',
   },
   controlsContainer: {
-    padding: 20,
-    borderRadius: 30,
-    marginTop: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 16,
+    borderRadius: 24,
+    width: '100%',
+    maxWidth: '100%',
+    overflow: 'hidden',
   },
   controlButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
   mainPlayButton: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: 68,
+    height: 68,
+    borderRadius: 34,
     backgroundColor: '#4ACDFF',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#4ACDFF',
-    shadowOffset: {width: 0, height: 0},
-    shadowOpacity: 0.6,
-    shadowRadius: 20,
-    elevation: 10,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
   },
   actionsContainer: {
-    padding: 20,
-    borderRadius: 25,
-    marginTop: 5,
-    marginBottom: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    borderRadius: 20,
+    width: '100%',
+    maxWidth: '100%',
+    overflow: 'hidden',
   },
   actionButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
+    padding: 6,
     flexDirection: 'row',
   },
   actionText: {
-    //marginTop: 6,
-    fontSize: fp(4),
-    marginStart: 5,
+    fontSize: 13,
+    marginStart: 4,
     fontWeight: '600',
-    color: '#fff',
+  },
+  cardLight: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  screenBackButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  screenBackButtonDark: {
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  screenBackButtonLight: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 2,
   },
   container: {
-    backgroundColor: '#0B1425',
     paddingHorizontal: 12,
     paddingTop: Platform.OS === 'android' ? 12 : 0,
   },
@@ -1042,7 +1353,6 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     flex: 1,
-    backgroundColor: '#0B1425',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,
@@ -1061,13 +1371,13 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderRadius: 16,
   },
-
   offlineBanner: {
     backgroundColor: '#7F1D1D',
     padding: 12,
     borderRadius: 12,
     marginBottom: 12,
     alignItems: 'center',
+    width: '100%',
   },
   retryAudioButton: {
     marginTop: 10,
@@ -1076,7 +1386,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: PRIMARY_COLOR,
   },
-
   readMoreButton: {
     marginTop: 8,
     paddingVertical: 10,
@@ -1086,5 +1395,24 @@ const styles = StyleSheet.create({
     minHeight: 44,
     justifyContent: 'center',
   },
-
+  relatedEpisodeCard: {
+    padding: 12,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  relatedEpisodeThumb: {
+    width: 48,
+    height: 48,
+    borderRadius: 8,
+    backgroundColor: '#E2E8F0',
+  },
+  relatedPlayIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: PRIMARY_COLOR,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

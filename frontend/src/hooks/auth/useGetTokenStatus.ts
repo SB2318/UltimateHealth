@@ -20,9 +20,6 @@ import {Platform} from 'react-native';
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        // Use a custom validateStatus so 401 does NOT throw and
-        // does NOT trigger the global interceptor's session-clear logic.
-        //validateStatus: status => status < 500,
       },
     );
     if (res.status === 401 || res.status === 403) {
@@ -43,6 +40,7 @@ import {Platform} from 'react-native';
 export const useCheckTokenStatus = () => {
   const isGuest = useAppSelector((state: RootState) => state.user.isGuest);
   const userId = useAppSelector((state: RootState) => state.user.user_id);
+  const userToken = useAppSelector((state: RootState) => state.user.user_token);
 
   return useQuery<TokenStatus>({
     queryKey: ['token-status', userId],
@@ -57,6 +55,6 @@ export const useCheckTokenStatus = () => {
     },
     staleTime: 1000 * 60 * 5,
     retry: false,
-    enabled: Platform.OS !== 'web' && !isGuest,
+    enabled: !isGuest && userToken !== '' && userToken !== null,
   });
 };

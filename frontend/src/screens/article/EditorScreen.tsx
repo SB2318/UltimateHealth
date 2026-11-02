@@ -1,14 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 
-
-import React, {useEffect, useRef, useState} from 'react';
-import { StyleSheet,
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {
+  StyleSheet,
   Text,
-   ScrollView ,
+  ScrollView,
   Alert,
   TouchableOpacity,
   View,
- } from 'react-native';
+  Modal,
+  TextInput,
+  useColorScheme,
+} from 'react-native';
+import {StatusBar} from 'expo-status-bar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {File} from 'expo-file-system';
+import RNFS from 'react-native-fs';
 import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
 import Feather from '@expo/vector-icons/Feather';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -16,16 +23,72 @@ import IonIcon from '@expo/vector-icons/Ionicons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {EDITOR_TYPOGRAPHY} from '../../lib/ui/Typography';
 import {EditorScreenProp} from '../../schemas/type';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
 import {createHTMLStructure} from '../../lib/utils/Utils';
-import { useAppDispatch } from '@/src/store/hooks';
+import {useAppDispatch} from '@/src/store/hooks';
 
-// Feature:
-// If you want to discard your post, in that case no post will upload into storage,
+export const EDITOR_BODY_DRAFT_KEY = '@article_editor_body_draft';
+
+const extractHtmlBody = (rawHtml: string) => {
+  const withoutScripts = rawHtml.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    '',
+  );
+  const bodyMatch = withoutScripts.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  return bodyMatch ? bodyMatch[1].trim() : withoutScripts.trim();
+};
+
+const QUICK_SNIPPETS: Array<{
+  id: string;
+  label: string;
+  icon: string;
+  html: string;
+  isFullTemplate?: boolean;
+}> = [
+  {
+    id: 'template',
+    label: 'Article Outline',
+    icon: 'document-text-outline',
+    isFullTemplate: true,
+    html: `<h2>Introduction</h2><p>Provide a clear overview of the health topic and why it matters to readers.</p><h2>Key Causes &amp; Symptoms</h2><ul><li><strong>Primary factor:</strong> Explain the main symptom or cause.</li><li><strong>Secondary factor:</strong> Add supporting clinical context.</li></ul><div style="background-color:#EFF6FF;border-left:4px solid #000A60;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>ðŸ’¡ Key Takeaway:</strong> Summarize the most important actionable insight for patients or readers here.</div><h2>Evidence-Based Recommendations</h2><ol><li>First practical step or lifestyle modification.</li><li>Second clinical or preventive recommendation.</li></ol><h2>Conclusion</h2><p>Wrap up with final thoughts and when to consult a healthcare professional.</p><p><br/></p>`,
+  },
+  {
+    id: 'takeaway',
+    label: 'Key Takeaway',
+    icon: 'bulb-outline',
+    html: `<div style="background-color:#EFF6FF;border-left:4px solid #000A60;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>ðŸ’¡ Key Takeaway:</strong> Write your key takeaway point here...</div><p><br/></p>`,
+  },
+  {
+    id: 'clinical_note',
+    label: 'Clinical Note',
+    icon: 'medkit-outline',
+    html: `<div style="background-color:#FEF3C7;border-left:4px solid #D97706;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>âš•ï¸ Clinical Note:</strong> Always consult a qualified healthcare professional for personalized medical diagnosis and treatment.</div><p><br/></p>`,
+  },
+  {
+    id: 'table',
+    label: '2Ã—2 Table',
+    icon: 'grid-outline',
+    html: `<table style="width:100%;border-collapse:collapse;margin:12px 0;border:1px solid #D1D5DB;"><thead><tr style="background-color:#F3F4F6;"><th style="border:1px solid #D1D5DB;padding:8px;text-align:left;">Aspect / Symptom</th><th style="border:1px solid #D1D5DB;padding:8px;text-align:left;">Clinical Guidance</th></tr></thead><tbody><tr><td style="border:1px solid #D1D5DB;padding:8px;">Point 1</td><td style="border:1px solid #D1D5DB;padding:8px;">Details here</td></tr><tr><td style="border:1px solid #D1D5DB;padding:8px;">Point 2</td><td style="border:1px solid #D1D5DB;padding:8px;">Details here</td></tr></tbody></table><p><br/></p>`,
+  },
+  {
+    id: 'citation',
+    label: 'Citation',
+    icon: 'bookmark-outline',
+    html: `<p style="font-size:14px;color:#4B5563;border-left:3px solid #9CA3AF;padding-left:10px;margin:8px 0;"><em>[Reference] Author et al., &ldquo;Study or Guideline Title,&rdquo; Journal / Medical Source, Year.</em></p><p><br/></p>`,
+  },
+  {
+    id: 'divider',
+    label: 'Divider',
+    icon: 'remove-outline',
+    html: `<hr style="border:none;border-top:1px solid #E5E7EB;margin:16px 0;" /><p><br/></p>`,
+  },
+];
+
 const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const insets = useSafeAreaInsets();
   const {
@@ -47,100 +110,506 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const [localImages, setLocalImages] = useState<string[]>([]);
   const [htmlImages, setHtmlImages] = useState<string[]>([]);
   const [editorReady, setEditorReady] = useState(false);
-  const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor');
+  const [activeTab, setActiveTab] = useState<'editor' | 'html' | 'preview'>(
+    'editor',
+  );
+  const [focusMode, setFocusMode] = useState(false);
+  const [draftStatus, setDraftStatus] = useState<string>('');
+
+  // Link Modal state
+  const [linkModalVisible, setLinkModalVisible] = useState(false);
+  const [linkTitle, setLinkTitle] = useState('');
+  const [linkUrl, setLinkUrl] = useState('');
+
+  // Find & Replace Modal state
+  const [findModalVisible, setFindModalVisible] = useState(false);
+  const [findText, setFindText] = useState('');
+  const [replaceText, setReplaceText] = useState('');
+
+  // Citation Reference Modal state
+  const [citationModalVisible, setCitationModalVisible] = useState(false);
+  const [citationTitle, setCitationTitle] = useState('');
+  const [citationAuthor, setCitationAuthor] = useState('');
+  const [citationJournal, setCitationJournal] = useState('');
+  const [citationYear, setCitationYear] = useState('');
+  const [citationUrl, setCitationUrl] = useState('');
+
+  // Key Takeaway Modal state
+  const [takeawayModalVisible, setTakeawayModalVisible] = useState(false);
+  const [takeawayText, setTakeawayText] = useState('');
+
   const dispatch = useAppDispatch();
+  const isNewArticleDraft = !articleData && !requestId && !htmlContent;
+  const isDark = useColorScheme() === 'dark';
+
+  const themeColors = useMemo(
+    () => ({
+      screenBg: isDark ? '#0F172A' : '#F9FAFB',
+      cardBg: isDark ? '#1E293B' : '#FFFFFF',
+      cardBorder: isDark ? '#334155' : '#E5E7EB',
+      textPrimary: isDark ? '#F8FAFC' : '#111827',
+      textSecondary: isDark ? '#94A3B8' : '#4B5563',
+      textMuted: isDark ? '#64748B' : '#9CA3AF',
+      inputBg: isDark ? '#0F172A' : '#F9FAFB',
+      inputBorder: isDark ? '#475569' : '#D1D5DB',
+      inputText: isDark ? '#F8FAFC' : '#111827',
+      tabBarBg: isDark ? '#0F172A' : '#FFFFFF',
+      tabBarBorder: isDark ? '#1E293B' : '#E5E7EB',
+      tabInactiveText: isDark ? '#94A3B8' : '#6B7280',
+      metricsBg: isDark ? '#1E293B' : '#F9FAFB',
+      metricsBorder: isDark ? '#334155' : '#E5E7EB',
+      metricPillBg: isDark ? '#0F172A' : '#EFF6FF',
+      metricValueText: isDark ? '#38BDF8' : '#000A60',
+      metricLabelText: isDark ? '#94A3B8' : '#2563EB',
+      metricSubtext: isDark ? '#94A3B8' : '#6B7280',
+      utilityBtnBg: isDark ? '#0F172A' : '#FFFFFF',
+      utilityBtnBorder: isDark ? '#334155' : '#E5E7EB',
+      utilityIcon: isDark ? '#CBD5E1' : '#374151',
+      utilityBtnActiveBg: isDark ? '#1E3A8A' : '#E0E7FF',
+      utilityBtnActiveBorder: isDark ? '#3B82F6' : '#C7D2FE',
+      snippetSectionBg: isDark ? '#0F172A' : '#FFFFFF',
+      snippetSectionBorder: isDark ? '#1E293B' : '#E5E7EB',
+      helperBarBg: isDark ? '#1E293B' : '#FFFFFF',
+      helperBarBorder: isDark ? '#334155' : '#E5E7EB',
+      helperText: isDark ? '#F1F5F9' : '#374151',
+      editorBg: isDark ? '#1E293B' : '#FFFFFF',
+      editorBorder: isDark ? '#334155' : '#E5E7EB',
+      footerCardBg: isDark ? '#1E293B' : '#FFFFFF',
+      footerCardBorder: isDark ? '#334155' : '#E5E7EB',
+      characterCount: isDark ? '#94A3B8' : '#4B5563',
+      htmlSourceHeaderBg: isDark ? '#1E293B' : '#FFFFFF',
+      htmlSourceHeaderBorder: isDark ? '#334155' : '#E5E7EB',
+      htmlSourceTitle: isDark ? '#F8FAFC' : '#111827',
+      htmlSourceSubtitle: isDark ? '#94A3B8' : '#4B5563',
+      previewContainerBg: isDark ? '#0F172A' : '#F9FAFB',
+      previewTitle: isDark ? '#F8FAFC' : '#111827',
+      previewDesc: isDark ? '#CBD5E1' : '#4B5563',
+      previewDescBorder: isDark ? '#334155' : '#E5E7EB',
+      modalBackdrop: isDark ? 'rgba(0, 0, 0, 0.78)' : 'rgba(17, 24, 39, 0.55)',
+      modalCardBg: isDark ? '#1E293B' : '#FFFFFF',
+      modalTitle: isDark ? '#F8FAFC' : '#111827',
+      modalSubtitle: isDark ? '#94A3B8' : '#4B5563',
+      modalFieldLabel: isDark ? '#CBD5E1' : '#374151',
+      modalInputBg: isDark ? '#0F172A' : '#F9FAFB',
+      modalInputBorder: isDark ? '#475569' : '#D1D5DB',
+      modalInputText: isDark ? '#F8FAFC' : '#111827',
+      modalCancelBtnBg: isDark ? '#334155' : '#F3F4F6',
+      modalCancelText: isDark ? '#E2E8F0' : '#4B5563',
+      modalSecondaryBtnBg: isDark ? '#1E3A8A' : '#EEF2FF',
+      modalSecondaryBtnBorder: isDark ? '#3B82F6' : '#C7D2FE',
+      modalSecondaryBtnText: isDark ? '#93C5FD' : '#4338CA',
+      modalConfirmBtnBg: isDark ? '#2563EB' : '#000A60',
+      proceedButtonBg: isDark ? '#2563EB' : '#000A60',
+    }),
+    [isDark],
+  );
+
+  // Live writing stats (plain text characters, words, paragraphs, reading time)
+  const writingStats = useMemo(() => {
+    const plainText = (article || '')
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    const charCount = (article || '').replace(/<[^>]*>/g, '').trim().length;
+    const words = plainText ? plainText.split(/\s+/).filter(Boolean) : [];
+    const wordCount = words.length;
+    const readingTimeMin = Math.max(1, Math.ceil(wordCount / 200));
+    const isReady = charCount > 20;
+    return {
+      charCount,
+      wordCount,
+      readingTimeMin: wordCount > 0 ? readingTimeMin : 0,
+      isReady,
+    };
+  }, [article]);
+
+  const syncContentToEditor = (newHtml: string) => {
+    setArticle(newHtml);
+    RichText.current?.setContentHTML(newHtml);
+  };
+
+  const navigateToDetailsScreen = (htmlToPass?: string) => {
+    const content = (htmlToPass ?? article ?? '').trim();
+    const plainTextLength = content.replace(/<[^>]*>/g, '').trim().length;
+    if (plainTextLength <= 20) {
+      Alert.alert('Content Too Short', 'Please enter at least 20 characters before continuing to article details.');
+      return;
+    }
+
+    // Auto-extract suggested title from first heading if title is not yet set
+    let suggestedTitle = title || '';
+    if (!suggestedTitle) {
+      const headingMatch = content.match(/<h[12][^>]*>(.*?)<\/h[12]>/i);
+      if (headingMatch && headingMatch[1]) {
+        suggestedTitle = headingMatch[1].replace(/<[^>]*>/g, '').trim();
+      }
+    }
+
+    // Auto-extract suggested description from first paragraph if not yet set
+    let suggestedDescription = description || '';
+    if (!suggestedDescription) {
+      const pMatch = content.match(/<p[^>]*>(.*?)<\/p>/i);
+      if (pMatch && pMatch[1]) {
+        suggestedDescription = pMatch[1].replace(/<[^>]*>/g, '').trim().slice(0, 300);
+      }
+    }
+
+    navigation.navigate('ArticleDescriptionScreen', {
+      htmlContent: content,
+      title: suggestedTitle,
+      authorName: authorName || '',
+      description: suggestedDescription,
+      selectedGenres: selectedGenres || [],
+      imageUtils: imageUtils || '',
+      language: language || 'en-IN',
+      localImages,
+      htmlImages,
+      article: articleData || null,
+      requestId,
+      pb_record_id,
+      translationSource,
+    });
+  };
+
+  const navigateToPreviewScreen = navigateToDetailsScreen;
 
   React.useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
-          style={styles.preview_button}
-          onPress={() => {
-            if (article.length > 20) {
-              setActiveTab('preview');
-            } else {
-              Alert.alert('Error', 'Please enter at least 20 characters');
-            }
-          }}
+          style={styles.next_header_button}
+          onPress={() => navigateToDetailsScreen()}
           accessibilityRole="button"
-          accessibilityLabel="Preview article"
-          accessibilityHint="Opens the article preview if the article has enough content">
-          <Fontisto name="preview" size={26} color="white" />
+          accessibilityLabel="Next: Article Details"
+          accessibilityHint="Proceeds to enter article title, category, and cover image">
+          <Text style={styles.next_header_text}>Next</Text>
+          <IonIcon name="arrow-forward" size={16} color="white" />
         </TouchableOpacity>
       ),
     });
   }, [
     navigation,
     article,
+    title,
+    description,
+    selectedGenres,
+    authorName,
+    imageUtils,
+    localImages,
+    htmlImages,
+    articleData,
+    requestId,
+    pb_record_id,
+    translationSource,
+    language,
   ]);
 
+  // Load initial HTML content or saved draft for new articles
   useEffect(() => {
-    /*
-    const loadArticle = async () => {
-      if (!articleData) {
-        return;
-      }
-      try {
-        if (articleData.content.endsWith('.html')) {
-          await getContent(articleData.content);
-
-          setEditorReady(true);
-        } else {
-          setArticle(articleData.content);
-          setEditorReady(true);
-        }
-      } catch (err) {
-        console.error('Failed to load article:', err);
-      }
-    };
-    */
-
     if (htmlContent) {
       setArticle(htmlContent);
       setEditorReady(true);
+      return;
     }
 
-    // loadArticle();
+    if (isNewArticleDraft) {
+      AsyncStorage.getItem(EDITOR_BODY_DRAFT_KEY)
+        .then(savedDraft => {
+          if (savedDraft && savedDraft.trim().length > 0) {
+            setArticle(savedDraft);
+            setDraftStatus('Draft restored');
+            RichText.current?.setContentHTML(savedDraft);
+          }
+        })
+        .catch(() => {});
+    }
   }, [htmlContent]);
+
+  // Auto-save body draft when writing a new article
+  useEffect(() => {
+    if (!isNewArticleDraft) return;
+    const trimmed = (article || '').trim();
+    if (!trimmed) return;
+
+    const timer = setTimeout(() => {
+      AsyncStorage.setItem(EDITOR_BODY_DRAFT_KEY, article)
+        .then(() => {
+          setDraftStatus('Saved');
+        })
+        .catch(() => {});
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [article, isNewArticleDraft]);
 
   React.useEffect(() => {
     if (imageUtils) {
-      setLocalImages(prevImages => [imageUtils, ...prevImages]); // Add imageUtils at the start
+      setLocalImages(prevImages =>
+        prevImages.includes(imageUtils)
+          ? prevImages
+          : [imageUtils, ...prevImages],
+      );
     }
   }, [imageUtils]);
 
   useEffect(() => {
     if (editorReady && article && RichText.current) {
       RichText.current?.setContentHTML(article);
-      //RichText.current?.focusContentEditor(); 
     }
-  }, [ editorReady]);
+  }, [editorReady]);
 
-  // this function will be called when the editor has been initialized
   function editorInitializedCallback() {
     RichText.current?.registerToolbar(function (_items) {
       setEditorReady(true);
     });
   }
 
-  /*
+  function handleHeightChange(_height: number) {
+    // editor height change
+  }
 
-  const getContent = async content => {
-    try {
-      const response = await fetch(`${GET_STORAGE_DATA}/${content}`);
-      const text = await response.text();
-      setArticle(text);
-    } catch (error) {
-      // console.error('Error fetching URI:', error);
-      setArticle(content);
+  const handleTabSwitch = (nextTab: 'editor' | 'html' | 'preview') => {
+    if (activeTab === 'html' && nextTab === 'editor') {
+      RichText.current?.setContentHTML(article);
+    }
+    setActiveTab(nextTab);
+  };
+
+  const insertHtmlBlock = (htmlToInsert: string) => {
+    if (activeTab === 'html') {
+      setArticle(prev => `${prev}\n${htmlToInsert}`);
+    } else if (RichText.current && editorReady) {
+      RichText.current.insertHTML(htmlToInsert);
+      setArticle(prev =>
+        prev ? `${prev}${htmlToInsert}` : htmlToInsert,
+      );
+    } else {
+      syncContentToEditor(`${article}${htmlToInsert}`);
     }
   };
-  */
 
-  // Callback after height change
-  function handleHeightChange(_height: number) {
-    // console.log("editor height change:", height);
-  }
+  const handleInsertSnippet = (snippet: (typeof QUICK_SNIPPETS)[number]) => {
+    if (snippet.id === 'citation') {
+      setCitationTitle('');
+      setCitationAuthor('');
+      setCitationJournal('');
+      setCitationYear('');
+      setCitationUrl('');
+      setCitationModalVisible(true);
+      return;
+    }
+
+    if (snippet.id === 'takeaway') {
+      setTakeawayText('');
+      setTakeawayModalVisible(true);
+      return;
+    }
+
+    if (snippet.isFullTemplate && writingStats.charCount > 20) {
+      Alert.alert(
+        'Insert Article Outline',
+        'Do you want to append this outline to your current text or replace the editor content?',
+        [
+          {text: 'Cancel', style: 'cancel'},
+          {
+            text: 'Append',
+            onPress: () => {
+              const combined = `${article}<br/>${snippet.html}`;
+              syncContentToEditor(combined);
+            },
+          },
+          {
+            text: 'Replace',
+            style: 'destructive',
+            onPress: () => {
+              syncContentToEditor(snippet.html);
+            },
+          },
+        ],
+      );
+      return;
+    }
+
+    insertHtmlBlock(snippet.html);
+  };
+
+  const handleConfirmInsertCitation = (useTemplateOnly: boolean = false) => {
+    let citationHtml = '';
+    if (useTemplateOnly || (!citationTitle.trim() && !citationAuthor.trim() && !citationJournal.trim())) {
+      citationHtml = `<p style="font-size:14px;color:#4B5563;border-left:3px solid #6366F1;padding-left:10px;margin:8px 0;"><em>[Reference] Author et al., &ldquo;Study or Guideline Title,&rdquo; Journal / Medical Source, Year.</em></p><p><br/></p>`;
+    } else {
+      const parts: string[] = [];
+      if (citationAuthor.trim()) parts.push(citationAuthor.trim());
+      if (citationTitle.trim()) parts.push(`&ldquo;${citationTitle.trim()}&rdquo;`);
+      if (citationJournal.trim()) parts.push(citationJournal.trim());
+      if (citationYear.trim()) parts.push(`(${citationYear.trim()})`);
+
+      const mainText = parts.join(', ');
+      const linkPart = citationUrl.trim()
+        ? ` <a href="${citationUrl.trim().startsWith('http') ? citationUrl.trim() : `https://${citationUrl.trim()}`}">[Source Link]</a>`
+        : '';
+      citationHtml = `<p style="font-size:14px;color:#4B5563;border-left:3px solid #6366F1;padding-left:10px;margin:8px 0;"><em>[Reference] ${mainText}.${linkPart}</em></p><p><br/></p>`;
+    }
+
+    insertHtmlBlock(citationHtml);
+    setCitationModalVisible(false);
+  };
+
+  const handleConfirmInsertTakeaway = (useTemplateOnly: boolean = false) => {
+    const text = useTemplateOnly || !takeawayText.trim()
+      ? 'Write your key actionable insight for patients or readers here...'
+      : takeawayText.trim();
+    const takeawayHtml = `<div style="background-color:#EFF6FF;border-left:4px solid #000A60;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>💡 Key Takeaway:</strong> ${text}</div><p><br/></p>`;
+
+    insertHtmlBlock(takeawayHtml);
+    setTakeawayModalVisible(false);
+  };
+
+  const handleOpenLinkModal = () => {
+    setLinkTitle('');
+    setLinkUrl('');
+    setLinkModalVisible(true);
+  };
+
+  const handleConfirmInsertLink = () => {
+    const trimmedUrl = linkUrl.trim();
+    if (!trimmedUrl) {
+      Alert.alert('Missing URL', 'Please enter a valid web link (URL).');
+      return;
+    }
+    const normalizedUrl = /^https?:\/\//i.test(trimmedUrl)
+      ? trimmedUrl
+      : `https://${trimmedUrl}`;
+    const displayTitle = linkTitle.trim() || normalizedUrl;
+    const anchorHtml = `<a href="${normalizedUrl}">${displayTitle}</a>&nbsp;`;
+
+    if (activeTab === 'html') {
+      setArticle(prev => `${prev}${anchorHtml}`);
+    } else if (RichText.current && editorReady) {
+      RichText.current.insertLink(displayTitle, normalizedUrl);
+      setArticle(prev =>
+        prev.includes(normalizedUrl) ? prev : `${prev}${anchorHtml}`,
+      );
+    } else {
+      syncContentToEditor(`${article}${anchorHtml}`);
+    }
+    setLinkModalVisible(false);
+  };
+
+  const handleConfirmFindReplace = () => {
+    if (!findText.trim()) {
+      Alert.alert('Find & Replace', 'Please enter text to find.');
+      return;
+    }
+    const escaped = findText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(escaped, 'g');
+
+    // Only replace inside text nodes (not inside HTML tag attributes)
+    const updatedHtml = (article || '')
+      .split(/(<[^>]+>)/g)
+      .map(segment => {
+        if (segment.startsWith('<') && segment.endsWith('>')) {
+          return segment;
+        }
+        return segment.replace(regex, replaceText);
+      })
+      .join('');
+
+    if (updatedHtml === article) {
+      Alert.alert('No Matches', `Could not find "${findText}" in the article.`);
+      return;
+    }
+
+    syncContentToEditor(updatedHtml);
+    setFindModalVisible(false);
+  };
+
+  const handleClearEditor = () => {
+    if (!article.trim()) return;
+    Alert.alert(
+      'Clear Editor',
+      'Are you sure you want to clear all text in the editor?',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Clear All',
+          style: 'destructive',
+          onPress: () => {
+            syncContentToEditor('');
+            AsyncStorage.removeItem(EDITOR_BODY_DRAFT_KEY).catch(() => {});
+            setDraftStatus('');
+          },
+        },
+      ],
+    );
+  };
+
+  const handleUploadHtmlFile = async () => {
+    try {
+      const picked = await File.pickFileAsync({
+        mimeTypes: ['text/html', 'application/xhtml+xml', 'text/plain'],
+      });
+      if (!picked || ('canceled' in picked && picked.canceled)) {
+        return;
+      }
+
+      const fileObj: any =
+        'result' in picked
+          ? Array.isArray(picked.result)
+            ? picked.result[0]
+            : picked.result
+          : Array.isArray(picked)
+            ? picked[0]
+            : picked;
+
+      if (!fileObj) return;
+
+      let rawText = '';
+      if (typeof fileObj.text === 'function') {
+        rawText = await fileObj.text();
+      } else if (typeof fileObj.textSync === 'function') {
+        rawText = fileObj.textSync();
+      } else if (fileObj.uri) {
+        rawText = await RNFS.readFile(fileObj.uri, 'utf8');
+      }
+
+      const bodyHtml = extractHtmlBody(rawText || '');
+      if (bodyHtml.replace(/<[^>]*>/g, '').trim().length <= 20) {
+        Alert.alert(
+          'Invalid HTML File',
+          'The selected HTML file must contain at least 20 characters of text.',
+        );
+        return;
+      }
+
+      syncContentToEditor(bodyHtml);
+
+      Alert.alert(
+        'HTML File Loaded',
+        'Would you like to proceed to Article Details, or continue editing here?',
+        [
+          {
+            text: 'Edit Here',
+            style: 'cancel',
+          },
+          {
+            text: 'Next: Details',
+            onPress: () => navigateToDetailsScreen(bodyHtml),
+          },
+        ],
+      );
+    } catch (error: any) {
+      const msg = String(error?.message || '');
+      if (
+        msg.toLowerCase().includes('cancel') ||
+        msg.toLowerCase().includes('aborted')
+      ) {
+        return;
+      }
+      Alert.alert('Upload Failed', 'Could not read the selected HTML file.');
+    }
+  };
 
   async function onPressAddImage() {
     const result = await launchImageLibrary({
@@ -154,226 +623,50 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       const base64String = result.assets[0].base64;
       const str = `data:${type};base64,${base64String}`;
 
-      const width = 1000;
-      const height = 1000;
-
-      // imageHTML must be declared before it is referenced in setHtmlImages
-      const imageHTML = `<img src="${str}" style="width: ${width}px; height: ${height}px;" />`;
+      const imageHTML = `<img src="${str}" style="max-width: 100%; height: auto; border-radius: 8px; margin: 12px 0; display: block;" />`;
 
       setLocalImages(prev => [...prev, str]);
       setHtmlImages(prev => [...prev, imageHTML]);
 
       await RichText.current?.insertHTML(imageHTML);
-
-      //await RichText.current?.insertImage(str);
-    } else {
-      //console.log('No image selected');
     }
   }
 
-  // async function insertVideo() {
-  //   const result = await ImagePicker.launchImageLibrary({
-  //     mediaType: 'video',
-  //     presentationStyle: 'popover',
-  //   });
-
-  //   if (result.assets && result.assets.length > 0) {
-  //     const fileUri = result.assets[0].uri;
-  //     console.log('Image URI:', fileUri);
-  //     setvideoData(`${fileUri}`);
-  //     // Convert the video URI to a Blob
-  //     // await RichText.current?.insertVideo(blobUrl);
-  //     // Insert video through local file url
-  //     RichText.current?.insertVideo(fileUri);
-  //   } else {
-  //     console.log('No image selected');
-  //   }
-  // }
-  /*
-  const onPressAddImage =  () => {
-    const options = {
-      mediaType: 'photo',
-      includeBase64: true,
-    };
-
-    launchImageLibrary(options, async response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.assets) {
-        const {uri, fileSize} = response.assets[0];
-
-        // Check file size (1 MB limit)
-        if (fileSize && fileSize > 1024 * 1024) {
-          Alert.alert('Error', 'File size exceeds 1 MB.');
-          return;
-        }
-
-        // Check dimensions
-        ImageResizer.createResizedImage(uri, 2000, 2000, 'JPEG', 100)
-          .then(async resizedImageUri => {
-            // If the image is resized successfully, upload it
-          })
-          .catch(err => {
-            console.log(err);
-            Alert.alert('Error', 'Could not resize the image.');
-          });
-
-        // setImageUtils(uri ? uri : '');
-        await RichText.current?.insertImage(uri ? uri : '');
-      }
-    });
-  };
-*/
-  const EditorScene = () => (
-    <ScrollView
-      style={[styles.container, {paddingBottom: insets.bottom}]}
-      showsVerticalScrollIndicator={false}
-      keyboardShouldPersistTaps="handled">
-
-      {/* Writing Helper Text */}
-      <Text style={styles.helperText}>
-        Compose your article with rich formatting tools below
-      </Text>
-
-      <RichToolbar
-        style={styles.richBar}
-        editor={RichText}
-        disabled={false}
-        iconTint={'#FFFFFF'}
-        selectedIconTint={'#FCD34D'}
-        disabledIconTint={'#9CA3AF'}
-        onPressAddImage={onPressAddImage}
-        iconSize={28}
-        actions={[
-          // Text Formatting Actions
-          actions.setBold,
-          actions.setItalic,
-          actions.setUnderline,
-          actions.setStrikethrough,
-
-          // Heading Actions
-          actions.heading1,
-          actions.heading2,
-          actions.heading3,
-
-          // Alignment Actions
-          actions.alignLeft,
-          actions.alignCenter,
-          actions.alignRight,
-
-          // List Actions
-          actions.insertBulletsList,
-          actions.insertOrderedList,
-
-          // Insert Actions
-          actions.insertLink,
-          actions.insertImage,
-          actions.blockquote,
-
-          // Undo/Redo Actions
-          actions.undo,
-          actions.redo,
-        ]}
-        iconMap={{
-          // Custom Icons for Text Formatting Actions
-          [actions.setStrikethrough]: ({tintColor}: {tintColor: string}) => (
-            <FontAwesome name="strikethrough" color={tintColor} size={24} />
-          ),
-          [actions.alignLeft]: ({tintColor}: {tintColor: string}) => (
-            <Feather name="align-left" color={tintColor} size={28} />
-          ),
-          [actions.alignCenter]: ({tintColor}: {tintColor: string}) => (
-            <Feather name="align-center" color={tintColor} size={28} />
-          ),
-          [actions.alignRight]: ({tintColor}: {tintColor: string}) => (
-            <Feather name="align-right" color={tintColor} size={28} />
-          ),
-          [actions.undo]: ({tintColor}: {tintColor: string}) => (
-            <IonIcon name="arrow-undo" color={tintColor} size={28} />
-          ),
-          [actions.redo]: ({tintColor}: {tintColor}) => (
-            <IonIcon name="arrow-redo" color={tintColor} size={28} />
-          ),
-          [actions.heading1]: ({tintColor}: {tintColor: string}) => (
-            <Text style={[styles.headingIcon, {color: tintColor}]}>H1</Text>
-          ),
-          [actions.heading2]: ({tintColor}: {tintColor: string}) => (
-            <Text style={[styles.headingIcon, {color: tintColor}]}>H2</Text>
-          ),
-          [actions.heading3]: ({tintColor}: {tintColor: string}) => (
-            <Text style={[styles.headingIcon, {color: tintColor}]}>H3</Text>
-          ),
-          [actions.insertImage]: ({tintColor}: {tintColor: string}) => (
-            <Entypo name="image" color={tintColor} size={26} />
-          ),
-          [actions.blockquote]: ({tintColor}: {tintColor: string}) => (
-            <Entypo name="quote" color={tintColor} size={28} />
-          ),
-        }}
-        insertImage={onPressAddImage}
-      />
-
-      <RichEditor
-        disabled={false}
-        containerStyle={styles.editor}
-        ref={RichText}
-        style={styles.rich}
-        placeholder={'Start writing your article here...'}
-        initialContentHTML={article}
-        onChange={text => setArticle(text)}
-        editorInitializedCallback={editorInitializedCallback}
-        onHeightChange={handleHeightChange}
-        initialHeight={650}
-        useContainer={true}
-        pasteAsPlainText={false}
-        accessibilityLabel="Article editor"
-        accessibilityHint="Enter and edit the content of your article"
-      />
-
-      {/* Character Count Helper */}
-      <Text style={styles.characterCount}>
-        {article.replace(/<[^>]*>/g, '').length} characters
-      </Text>
-    </ScrollView>
-  );
-
-  const PreviewScene = () => (
-    <ScrollView
-      style={styles.previewContainer}
-      showsVerticalScrollIndicator={true}>
-      <View style={styles.previewContent}>
-        <Text style={styles.previewTitle}>{title || 'Article Preview'}</Text>
-        {article ? (
-          <AutoHeightWebView
-            style={styles.webView}
-            source={{html: createHTMLStructure(title || '', article, [], '', '')}}
-            scrollEnabled={true}
-            showsVerticalScrollIndicator={false}
-          />
-        ) : (
-          <Text style={styles.emptyPreview}>Start typing to see preview...</Text>
-        )}
-      </View>
-    </ScrollView>
-  );
-
   return (
-    <View style={styles.tabContainer}>
-      <View style={styles.tabBar}>
+    <View style={[styles.tabContainer, {backgroundColor: themeColors.screenBg}]}>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+
+      {/* 3-Mode Studio Tab Bar: Editor | HTML Source | Live Preview */}
+      <View
+        style={[
+          styles.tabBar,
+          {
+            backgroundColor: themeColors.tabBarBg,
+            borderBottomColor: themeColors.tabBarBorder,
+          },
+        ]}>
         <TouchableOpacity
           style={[
             styles.tabButton,
             activeTab === 'editor' && styles.tabButtonActive,
           ]}
-          onPress={() => setActiveTab('editor')}
+          onPress={() => handleTabSwitch('editor')}
           accessibilityRole="tab"
           accessibilityLabel="Editor"
           accessibilityState={{selected: activeTab === 'editor'}}>
+          <IonIcon
+            name="create-outline"
+            size={16}
+            color={
+              activeTab === 'editor'
+                ? PRIMARY_COLOR
+                : themeColors.tabInactiveText
+            }
+          />
           <Text
             style={[
               styles.tabLabel,
+              {color: themeColors.tabInactiveText},
               activeTab === 'editor' && styles.tabLabelActive,
             ]}>
             Editor
@@ -383,15 +676,53 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         <TouchableOpacity
           style={[
             styles.tabButton,
-            activeTab === 'preview' && styles.tabButtonActive,
+            activeTab === 'html' && styles.tabButtonActive,
           ]}
-          onPress={() => setActiveTab('preview')}
+          onPress={() => handleTabSwitch('html')}
           accessibilityRole="tab"
-          accessibilityLabel="Preview"
-          accessibilityState={{selected: activeTab === 'preview'}}>
+          accessibilityLabel="HTML Source"
+          accessibilityState={{selected: activeTab === 'html'}}>
+          <IonIcon
+            name="code-slash-outline"
+            size={16}
+            color={
+              activeTab === 'html'
+                ? PRIMARY_COLOR
+                : themeColors.tabInactiveText
+            }
+          />
           <Text
             style={[
               styles.tabLabel,
+              {color: themeColors.tabInactiveText},
+              activeTab === 'html' && styles.tabLabelActive,
+            ]}>
+            HTML Source
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === 'preview' && styles.tabButtonActive,
+          ]}
+          onPress={() => handleTabSwitch('preview')}
+          accessibilityRole="tab"
+          accessibilityLabel="Preview"
+          accessibilityState={{selected: activeTab === 'preview'}}>
+          <IonIcon
+            name="eye-outline"
+            size={16}
+            color={
+              activeTab === 'preview'
+                ? PRIMARY_COLOR
+                : themeColors.tabInactiveText
+            }
+          />
+          <Text
+            style={[
+              styles.tabLabel,
+              {color: themeColors.tabInactiveText},
               activeTab === 'preview' && styles.tabLabelActive,
             ]}>
             Preview
@@ -399,7 +730,812 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         </TouchableOpacity>
       </View>
 
-      {activeTab === 'editor' ? <EditorScene /> : <PreviewScene />}
+      {/* Live Writing Metrics & Utility Strip */}
+      <View
+        style={[
+          styles.metricsStrip,
+          {
+            backgroundColor: themeColors.metricsBg,
+            borderBottomColor: themeColors.metricsBorder,
+          },
+        ]}>
+        <View style={styles.metricsLeft}>
+          <View
+            style={[
+              styles.metricPill,
+              {backgroundColor: themeColors.metricPillBg},
+            ]}>
+            <Text
+              style={[
+                styles.metricValue,
+                {color: themeColors.metricValueText},
+              ]}>
+              {writingStats.wordCount}
+            </Text>
+            <Text
+              style={[
+                styles.metricLabel,
+                {color: themeColors.metricLabelText},
+              ]}>
+              words
+            </Text>
+          </View>
+          <Text
+            style={[styles.metricDot, {color: themeColors.metricSubtext}]}>
+            •
+          </Text>
+          <Text
+            style={[styles.metricSubtext, {color: themeColors.metricSubtext}]}>
+            {writingStats.readingTimeMin > 0
+              ? `~${writingStats.readingTimeMin} min read`
+              : '0 min read'}
+          </Text>
+          {draftStatus ? (
+            <>
+              <Text
+                style={[styles.metricDot, {color: themeColors.metricSubtext}]}>
+                •
+              </Text>
+              <Text style={styles.draftBadgeText}>{draftStatus}</Text>
+            </>
+          ) : null}
+        </View>
+
+        <View style={styles.metricsRight}>
+          <TouchableOpacity
+            style={[
+              styles.utilityIconBtn,
+              {
+                backgroundColor: themeColors.utilityBtnBg,
+                borderColor: themeColors.utilityBtnBorder,
+              },
+            ]}
+            onPress={() => setFindModalVisible(true)}
+            accessibilityRole="button"
+            accessibilityLabel="Find and replace">
+            <IonIcon
+              name="search-outline"
+              size={17}
+              color={themeColors.utilityIcon}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.utilityIconBtn,
+              {
+                backgroundColor: themeColors.utilityBtnBg,
+                borderColor: themeColors.utilityBtnBorder,
+              },
+              focusMode && {
+                backgroundColor: themeColors.utilityBtnActiveBg,
+                borderColor: themeColors.utilityBtnActiveBorder,
+              },
+            ]}
+            onPress={() => setFocusMode(prev => !prev)}
+            accessibilityRole="button"
+            accessibilityLabel="Toggle focus mode">
+            <IonIcon
+              name={focusMode ? 'contract-outline' : 'expand-outline'}
+              size={17}
+              color={
+                focusMode
+                  ? isDark
+                    ? '#93C5FD'
+                    : '#000A60'
+                  : themeColors.utilityIcon
+              }
+            />
+          </TouchableOpacity>
+
+          {article.trim().length > 0 && (
+            <TouchableOpacity
+              style={[
+                styles.utilityIconBtn,
+                {
+                  backgroundColor: themeColors.utilityBtnBg,
+                  borderColor: themeColors.utilityBtnBorder,
+                },
+              ]}
+              onPress={handleClearEditor}
+              accessibilityRole="button"
+              accessibilityLabel="Clear editor">
+              <IonIcon name="trash-outline" size={17} color="#DC2626" />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+
+      {/* 3. Sticky Quick-Insert Formatting & Medical Blocks Bar (Key Takeaways, Citations, Outlines) */}
+      {!focusMode && activeTab !== 'preview' && (
+        <View
+          style={[
+            styles.snippetSection,
+            {
+              backgroundColor: themeColors.snippetSectionBg,
+              borderBottomColor: themeColors.snippetSectionBorder,
+            },
+          ]}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.snippetScrollContent}
+            keyboardShouldPersistTaps="handled">
+            {QUICK_SNIPPETS.map(snippet => {
+              const isTakeaway = snippet.id === 'takeaway';
+              const isCitation = snippet.id === 'citation';
+              const isClinical = snippet.id === 'clinical_note';
+
+              const chipBg = isDark
+                ? isTakeaway
+                  ? 'rgba(217, 119, 6, 0.22)'
+                  : isCitation
+                  ? 'rgba(99, 102, 241, 0.22)'
+                  : isClinical
+                  ? 'rgba(16, 185, 129, 0.22)'
+                  : '#1E293B'
+                : isTakeaway
+                ? '#FEF3C7'
+                : isCitation
+                ? '#EEF2FF'
+                : isClinical
+                ? '#ECFDF5'
+                : '#EFF6FF';
+
+              const chipBorder = isDark
+                ? isTakeaway
+                  ? '#D97706'
+                  : isCitation
+                  ? '#6366F1'
+                  : isClinical
+                  ? '#10B981'
+                  : '#334155'
+                : isTakeaway
+                ? '#FCD34D'
+                : isCitation
+                ? '#C7D2FE'
+                : isClinical
+                ? '#A7F3D0'
+                : '#BFDBFE';
+
+              const iconColor = isDark
+                ? isTakeaway
+                  ? '#FBBF24'
+                  : isCitation
+                  ? '#A5B4FC'
+                  : isClinical
+                  ? '#6EE7B7'
+                  : '#38BDF8'
+                : isTakeaway
+                ? '#B45309'
+                : isCitation
+                ? '#4338CA'
+                : isClinical
+                ? '#047857'
+                : '#000A60';
+
+              const textColor = isDark
+                ? isTakeaway
+                  ? '#FDE68A'
+                  : isCitation
+                  ? '#C7D2FE'
+                  : isClinical
+                  ? '#A7F3D0'
+                  : '#F8FAFC'
+                : isTakeaway
+                ? '#92400E'
+                : isCitation
+                ? '#4338CA'
+                : isClinical
+                ? '#065F46'
+                : '#000A60';
+
+              return (
+                <TouchableOpacity
+                  key={snippet.id}
+                  style={[
+                    styles.snippetChip,
+                    {backgroundColor: chipBg, borderColor: chipBorder},
+                  ]}
+                  onPress={() => handleInsertSnippet(snippet)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Insert ${snippet.label}`}>
+                  <IonIcon
+                    name={snippet.icon as any}
+                    size={15}
+                    color={iconColor}
+                  />
+                  <Text
+                    style={[
+                      styles.snippetChipText,
+                      {color: textColor},
+                    ]}>
+                    {snippet.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+      )}
+
+      {/* VISUAL EDITOR VIEW (Kept mounted to preserve cursor and WebView state) */}
+      <ScrollView
+        style={[
+          styles.container,
+          {paddingBottom: insets.bottom},
+          activeTab !== 'editor' && styles.hiddenScene,
+        ]}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
+        {!focusMode && (
+          <View style={styles.helperBar}>
+            <Text style={styles.helperText} numberOfLines={1}>
+              {title ? `Writing: ${title}` : 'Compose or upload .html'}
+            </Text>
+            <TouchableOpacity
+              style={styles.uploadHtmlChip}
+              onPress={handleUploadHtmlFile}
+              accessibilityRole="button"
+              accessibilityLabel="Upload HTML file">
+              <IonIcon name="code-slash-outline" size={15} color="#FFFFFF" />
+              <Text style={styles.uploadHtmlChipText}>Upload HTML</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        <RichToolbar
+          style={styles.richBar}
+          editor={RichText}
+          disabled={false}
+          iconTint={'#FFFFFF'}
+          selectedIconTint={'#FCD34D'}
+          disabledIconTint={'#9CA3AF'}
+          onPressAddImage={onPressAddImage}
+          onInsertLink={handleOpenLinkModal}
+          iconSize={26}
+          actions={[
+            actions.undo,
+            actions.redo,
+            actions.setBold,
+            actions.setItalic,
+            actions.setUnderline,
+            actions.setStrikethrough,
+            actions.heading1,
+            actions.heading2,
+            actions.heading3,
+            'insertKeyTakeaway',
+            'insertCitation',
+            'insertClinicalNote',
+            actions.insertBulletsList,
+            actions.insertOrderedList,
+            actions.blockquote,
+            actions.alignLeft,
+            actions.alignCenter,
+            actions.alignRight,
+            actions.insertLink,
+            actions.insertImage,
+          ]}
+          iconMap={{
+            insertKeyTakeaway: () => (
+              <View style={styles.toolbarCustomBadge}>
+                <IonIcon name="bulb" color="#FCD34D" size={20} />
+              </View>
+            ),
+            insertCitation: () => (
+              <View style={styles.toolbarCustomBadge}>
+                <IonIcon name="bookmark" color="#A5B4FC" size={20} />
+              </View>
+            ),
+            insertClinicalNote: () => (
+              <View style={styles.toolbarCustomBadge}>
+                <IonIcon name="medkit" color="#6EE7B7" size={20} />
+              </View>
+            ),
+            [actions.setStrikethrough]: ({tintColor}: {tintColor: string}) => (
+              <FontAwesome name="strikethrough" color={tintColor} size={22} />
+            ),
+            [actions.alignLeft]: ({tintColor}: {tintColor: string}) => (
+              <Feather name="align-left" color={tintColor} size={24} />
+            ),
+            [actions.alignCenter]: ({tintColor}: {tintColor: string}) => (
+              <Feather name="align-center" color={tintColor} size={24} />
+            ),
+            [actions.alignRight]: ({tintColor}: {tintColor: string}) => (
+              <Feather name="align-right" color={tintColor} size={24} />
+            ),
+            [actions.undo]: ({tintColor}: {tintColor: string}) => (
+              <IonIcon name="arrow-undo" color={tintColor} size={24} />
+            ),
+            [actions.redo]: ({tintColor}: {tintColor: any}) => (
+              <IonIcon name="arrow-redo" color={tintColor} size={24} />
+            ),
+            [actions.heading1]: ({tintColor}: {tintColor: string}) => (
+              <Text style={[styles.headingIcon, {color: tintColor}]}>H1</Text>
+            ),
+            [actions.heading2]: ({tintColor}: {tintColor: string}) => (
+              <Text style={[styles.headingIcon, {color: tintColor}]}>H2</Text>
+            ),
+            [actions.heading3]: ({tintColor}: {tintColor: string}) => (
+              <Text style={[styles.headingIcon, {color: tintColor}]}>H3</Text>
+            ),
+            [actions.insertImage]: ({tintColor}: {tintColor: string}) => (
+              <Entypo name="image" color={tintColor} size={24} />
+            ),
+            [actions.blockquote]: ({tintColor}: {tintColor: string}) => (
+              <Entypo name="quote" color={tintColor} size={24} />
+            ),
+          }}
+          insertKeyTakeaway={() => {
+            const snippet = QUICK_SNIPPETS.find(s => s.id === 'takeaway');
+            if (snippet) handleInsertSnippet(snippet);
+          }}
+          insertCitation={() => {
+            const snippet = QUICK_SNIPPETS.find(s => s.id === 'citation');
+            if (snippet) handleInsertSnippet(snippet);
+          }}
+          insertClinicalNote={() => {
+            const snippet = QUICK_SNIPPETS.find(s => s.id === 'clinical_note');
+            if (snippet) handleInsertSnippet(snippet);
+          }}
+          insertImage={onPressAddImage}
+        />
+
+        <RichEditor
+          disabled={false}
+          containerStyle={[
+            styles.editor,
+            {
+              backgroundColor: themeColors.editorBg,
+              borderColor: themeColors.editorBorder,
+            },
+          ]}
+          ref={RichText}
+          style={[styles.rich, {backgroundColor: themeColors.editorBg}]}
+          editorStyle={{
+            backgroundColor: themeColors.editorBg,
+            color: themeColors.textPrimary,
+            placeholderColor: themeColors.textMuted,
+            contentCSSText: isDark
+              ? 'body { color: #F8FAFC; background-color: #1E293B; font-family: -apple-system, Roboto, sans-serif; }'
+              : 'body { color: #111827; background-color: #FFFFFF; font-family: -apple-system, Roboto, sans-serif; }',
+          }}
+          placeholder={
+            'Start writing your article here, or tap "Article Outline" above for a structured template...'
+          }
+          initialContentHTML={article}
+          onChange={text => setArticle(text)}
+          editorInitializedCallback={editorInitializedCallback}
+          onHeightChange={handleHeightChange}
+          initialHeight={650}
+          useContainer={true}
+          pasteAsPlainText={false}
+          accessibilityLabel="Article editor"
+          accessibilityHint="Enter and edit the content of your article"
+        />
+
+        {/* Character Count & Readiness Status */}
+        <View
+          style={[
+            styles.statusFooterCard,
+            {
+              backgroundColor: themeColors.footerCardBg,
+              borderColor: themeColors.footerCardBorder,
+            },
+          ]}>
+          <View style={styles.readinessBadge}>
+            <IonIcon
+              name={
+                writingStats.isReady
+                  ? 'checkmark-circle'
+                  : 'information-circle-outline'
+              }
+              size={16}
+              color={writingStats.isReady ? '#059669' : '#D97706'}
+            />
+            <Text
+              style={[
+                styles.readinessText,
+                {color: writingStats.isReady ? '#059669' : '#D97706'},
+              ]}>
+              {writingStats.isReady
+                ? 'Ready for Article Details'
+                : `${Math.max(0, 21 - writingStats.charCount)} more characters needed`}
+            </Text>
+          </View>
+          <Text
+            style={[
+              styles.characterCount,
+              {color: themeColors.characterCount},
+            ]}>
+            {writingStats.charCount} characters
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          style={[
+            styles.proceedButton,
+            {backgroundColor: themeColors.proceedButtonBg},
+          ]}
+          onPress={() => navigateToDetailsScreen()}
+          accessibilityRole="button"
+          accessibilityLabel="Next: Article Details">
+          <Text style={styles.proceedButtonText}>
+            Next: Article Details
+          </Text>
+          <IonIcon name="arrow-forward" size={18} color="#FFFFFF" />
+        </TouchableOpacity>
+      </ScrollView>
+
+      {/* RAW HTML SOURCE EDITOR TAB */}
+      {activeTab === 'html' && (
+        <ScrollView
+          style={[styles.container, {paddingBottom: insets.bottom}]}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled">
+          <View
+            style={[
+              styles.htmlSourceHeader,
+              {
+                backgroundColor: themeColors.htmlSourceHeaderBg,
+                borderBottomColor: themeColors.htmlSourceHeaderBorder,
+              },
+            ]}>
+            <View style={{flex: 1}}>
+              <Text
+                style={[
+                  styles.htmlSourceTitle,
+                  {color: themeColors.htmlSourceTitle},
+                ]}>
+                HTML Source Editor
+              </Text>
+              <Text
+                style={[
+                  styles.htmlSourceSubtitle,
+                  {color: themeColors.htmlSourceSubtitle},
+                ]}>
+                Edit raw HTML tags directly. Changes sync automatically with the
+                Visual Editor.
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.uploadHtmlChip}
+              onPress={handleUploadHtmlFile}
+              accessibilityRole="button"
+              accessibilityLabel="Import HTML file">
+              <IonIcon name="folder-open-outline" size={15} color="#FFFFFF" />
+              <Text style={styles.uploadHtmlChipText}>Import .html</Text>
+            </TouchableOpacity>
+          </View>
+
+          <TextInput
+            style={styles.htmlCodeInput}
+            multiline
+            value={article}
+            onChangeText={setArticle}
+            placeholder="<h2>Your HTML Heading</h2><p>Write or paste raw HTML here...</p>"
+            placeholderTextColor="#9CA3AF"
+            textAlignVertical="top"
+            autoCapitalize="none"
+            autoCorrect={false}
+            accessibilityLabel="HTML Source Code Input"
+          />
+
+          <TouchableOpacity
+            style={[
+              styles.proceedButton,
+              {backgroundColor: themeColors.proceedButtonBg},
+            ]}
+            onPress={() => navigateToDetailsScreen()}
+            accessibilityRole="button"
+            accessibilityLabel="Next: Article Details">
+            <Text style={styles.proceedButtonText}>
+              Next: Article Details
+            </Text>
+            <IonIcon name="arrow-forward" size={18} color="#FFFFFF" />
+          </TouchableOpacity>
+        </ScrollView>
+      )}
+
+      {/* LIVE PREVIEW TAB */}
+      {activeTab === 'preview' && (
+        <ScrollView
+          style={[
+            styles.previewContainer,
+            {backgroundColor: themeColors.previewContainerBg},
+          ]}
+          showsVerticalScrollIndicator={true}>
+          <View style={styles.previewContent}>
+            <Text
+              style={[
+                styles.previewTitle,
+                {color: themeColors.previewTitle},
+              ]}>
+              {title || 'Article Preview'}
+            </Text>
+            {description ? (
+              <Text
+                style={[
+                  styles.previewDescription,
+                  {
+                    color: themeColors.previewDesc,
+                    borderBottomColor: themeColors.previewDescBorder,
+                  },
+                ]}>
+                {description}
+              </Text>
+            ) : null}
+
+            {article ? (
+              <AutoHeightWebView
+                style={styles.webView}
+                source={{
+                  html: createHTMLStructure(title || '', article, [], '', ''),
+                }}
+                scrollEnabled={true}
+                showsVerticalScrollIndicator={false}
+              />
+            ) : (
+              <Text style={styles.emptyPreview}>
+                Start typing to see preview...
+              </Text>
+            )}
+
+            <TouchableOpacity
+              style={[
+                styles.proceedButton,
+                {backgroundColor: themeColors.proceedButtonBg},
+              ]}
+              onPress={() => navigateToDetailsScreen()}
+              accessibilityRole="button"
+              accessibilityLabel="Next: Article Details">
+              <Text style={styles.proceedButtonText}>
+                Next: Article Details
+              </Text>
+              <IonIcon name="arrow-forward" size={18} color="#FFFFFF" />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      )}
+
+      {/* INSERT HYPERLINK MODAL */}
+      <Modal
+        visible={linkModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setLinkModalVisible(false)}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Insert Hyperlink</Text>
+            <Text style={styles.modalSubtitle}>
+              Add a reference or external clinical source link.
+            </Text>
+
+            <Text style={styles.modalFieldLabel}>Link Text</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="e.g. WHO Clinical Guidelines"
+              placeholderTextColor="#9CA3AF"
+              value={linkTitle}
+              onChangeText={setLinkTitle}
+            />
+
+            <Text style={styles.modalFieldLabel}>URL</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="https://www.who.int/..."
+              placeholderTextColor="#9CA3AF"
+              value={linkUrl}
+              onChangeText={setLinkUrl}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="url"
+            />
+
+            <View style={styles.modalButtonRow}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={() => setLinkModalVisible(false)}>
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalConfirmBtn}
+                onPress={handleConfirmInsertLink}>
+                <Text style={styles.modalConfirmText}>Insert Link</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* FIND & REPLACE MODAL */}
+      <Modal
+        visible={findModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setFindModalVisible(false)}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Find & Replace</Text>
+            <Text style={styles.modalSubtitle}>
+              Quickly replace words or phrases across your article.
+            </Text>
+
+            <Text style={styles.modalFieldLabel}>Find word or phrase</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Text to find..."
+              placeholderTextColor="#9CA3AF"
+              value={findText}
+              onChangeText={setFindText}
+            />
+
+            <Text style={styles.modalFieldLabel}>Replace with</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Replacement text..."
+              placeholderTextColor="#9CA3AF"
+              value={replaceText}
+              onChangeText={setReplaceText}
+            />
+
+            <View style={styles.modalButtonRow}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={() => setFindModalVisible(false)}>
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalConfirmBtn}
+                onPress={handleConfirmFindReplace}>
+                <Text style={styles.modalConfirmText}>Replace All</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* CITATION / REFERENCE MODAL */}
+      <Modal
+        visible={citationModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setCitationModalVisible(false)}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <View style={styles.modalHeaderRow}>
+              <Text style={styles.modalTitle}>Insert Citation / Reference</Text>
+              <TouchableOpacity
+                style={styles.modalCloseIconBtn}
+                onPress={() => setCitationModalVisible(false)}
+                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                accessibilityRole="button"
+                accessibilityLabel="Close">
+                <Feather name="x" size={22} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.modalSubtitle}>
+              Cite clinical guidelines, peer-reviewed studies, or medical sources.
+            </Text>
+
+            <Text style={styles.modalFieldLabel}>Study or Guideline Title</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="e.g. WHO Guidelines on Physical Activity and Sedentary Behaviour"
+              placeholderTextColor="#9CA3AF"
+              value={citationTitle}
+              onChangeText={setCitationTitle}
+            />
+
+            <Text style={styles.modalFieldLabel}>Author(s) or Organization</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="e.g. Bull FC, Al-Ansari SS, Biddle S, et al."
+              placeholderTextColor="#9CA3AF"
+              value={citationAuthor}
+              onChangeText={setCitationAuthor}
+            />
+
+            <View style={{flexDirection: 'row', gap: 10}}>
+              <View style={{flex: 2}}>
+                <Text style={styles.modalFieldLabel}>Journal / Source</Text>
+                <TextInput
+                  style={styles.modalInput}
+                  placeholder="e.g. Br J Sports Med"
+                  placeholderTextColor="#9CA3AF"
+                  value={citationJournal}
+                  onChangeText={setCitationJournal}
+                />
+              </View>
+              <View style={{flex: 1}}>
+                <Text style={styles.modalFieldLabel}>Year</Text>
+                <TextInput
+                  style={styles.modalInput}
+                  placeholder="2020"
+                  placeholderTextColor="#9CA3AF"
+                  value={citationYear}
+                  onChangeText={setCitationYear}
+                  keyboardType="numeric"
+                />
+              </View>
+            </View>
+
+            <Text style={styles.modalFieldLabel}>Source URL (Optional)</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="https://doi.org/10.1136/..."
+              placeholderTextColor="#9CA3AF"
+              value={citationUrl}
+              onChangeText={setCitationUrl}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="url"
+            />
+
+            <View style={styles.modalButtonRow}>
+              <TouchableOpacity
+                style={[styles.modalSecondaryBtn, {marginRight: 6}]}
+                onPress={() => handleConfirmInsertCitation(true)}>
+                <Text style={styles.modalSecondaryBtnText}>Use Template</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalConfirmBtn}
+                onPress={() => handleConfirmInsertCitation(false)}>
+                <Text style={styles.modalConfirmText}>Insert Citation</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* KEY TAKEAWAY MODAL */}
+      <Modal
+        visible={takeawayModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setTakeawayModalVisible(false)}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <View style={styles.modalHeaderRow}>
+              <Text style={styles.modalTitle}>💡 Insert Key Takeaway</Text>
+              <TouchableOpacity
+                style={styles.modalCloseIconBtn}
+                onPress={() => setTakeawayModalVisible(false)}
+                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                accessibilityRole="button"
+                accessibilityLabel="Close">
+                <Feather name="x" size={22} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.modalSubtitle}>
+              Summarize the most important clinical or actionable insight for your readers.
+            </Text>
+
+            <Text style={styles.modalFieldLabel}>Key Takeaway Message</Text>
+            <TextInput
+              style={[styles.modalInput, {minHeight: 80, textAlignVertical: 'top'}]}
+              placeholder="e.g. Prioritize 150 minutes of moderate aerobic exercise weekly to reduce cardiovascular risk."
+              placeholderTextColor="#9CA3AF"
+              value={takeawayText}
+              onChangeText={setTakeawayText}
+              multiline
+            />
+
+            <View style={styles.modalButtonRow}>
+              <TouchableOpacity
+                style={[styles.modalSecondaryBtn, {marginRight: 6}]}
+                onPress={() => handleConfirmInsertTakeaway(true)}>
+                <Text style={styles.modalSecondaryBtnText}>Use Template</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalConfirmBtn}
+                onPress={() => handleConfirmInsertTakeaway(false)}>
+                <Text style={styles.modalConfirmText}>Insert Box</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -407,8 +1543,6 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 export default EditorScreen;
 
 const styles = StyleSheet.create({
-  /********************************/
-  /* styles for html tags */
   a: {
     fontWeight: 'bold',
     color: PRIMARY_COLOR,
@@ -420,26 +1554,175 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
   },
-  /*******************************/
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
   },
-  helperText: {
-    fontSize: 15,
-    color: '#6B7280',
+  hiddenScene: {
+    display: 'none',
+  },
+  metricsStrip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    backgroundColor: '#F3F4F6',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  metricsLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  metricPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 9,
+    paddingVertical: 4,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  metricValue: {
+    fontSize: EDITOR_TYPOGRAPHY.badge.fontSize + 1, // 13px
+    fontWeight: EDITOR_TYPOGRAPHY.badge.fontWeight,
+    color: '#000A60',
+  },
+  metricLabel: {
+    fontSize: EDITOR_TYPOGRAPHY.caption.fontSize, // 13px
+    color: '#4B5563',
+  },
+  metricDot: {
+    fontSize: 13,
+    color: '#9CA3AF',
+  },
+  metricSubtext: {
+    fontSize: EDITOR_TYPOGRAPHY.caption.fontSize, // 13px
+    fontWeight: '600',
+    color: '#374151',
+  },
+  draftBadgeText: {
+    fontSize: EDITOR_TYPOGRAPHY.badge.fontSize, // 12px
+    fontWeight: EDITOR_TYPOGRAPHY.badge.fontWeight,
+    color: '#059669',
+    backgroundColor: '#D1FAE5',
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  metricsRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  utilityIconBtn: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+  },
+  utilityIconBtnActive: {
+    backgroundColor: '#DBEAFE',
+    borderColor: '#000A60',
+  },
+  helperBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
-    fontWeight: '500',
+  },
+  helperText: {
+    flex: 1,
+    fontSize: EDITOR_TYPOGRAPHY.sectionSubtitle.fontSize + 1, // 15px
+    lineHeight: EDITOR_TYPOGRAPHY.sectionSubtitle.lineHeight + 1,
+    color: '#374151',
+    fontWeight: '600',
+    marginRight: 8,
+  },
+  uploadHtmlChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#000A60',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  uploadHtmlChipText: {
+    color: '#FFFFFF',
+    fontSize: EDITOR_TYPOGRAPHY.buttonSmall.fontSize, // 13px
+    fontWeight: EDITOR_TYPOGRAPHY.buttonSmall.fontWeight,
+  },
+  snippetSection: {
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 9,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  snippetScrollContent: {
+    paddingHorizontal: 12,
+    gap: 8,
+  },
+  snippetChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#EFF6FF',
+    borderWidth: 1,
+    borderColor: '#BFDBFE',
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 999,
+  },
+  snippetChipTakeaway: {
+    backgroundColor: '#FEF3C7',
+    borderColor: '#FCD34D',
+  },
+  snippetChipCitation: {
+    backgroundColor: '#EEF2FF',
+    borderColor: '#C7D2FE',
+  },
+  snippetChipClinical: {
+    backgroundColor: '#ECFDF5',
+    borderColor: '#A7F3D0',
+  },
+  snippetChipText: {
+    fontSize: EDITOR_TYPOGRAPHY.caption.fontSize, // 13px
+    fontWeight: '600',
+    color: '#000A60',
+  },
+  snippetChipTextTakeaway: {
+    color: '#92400E',
+    fontWeight: '700',
+  },
+  snippetChipTextCitation: {
+    color: '#4338CA',
+    fontWeight: '700',
+  },
+  snippetChipTextClinical: {
+    color: '#065F46',
+    fontWeight: '700',
+  },
+  toolbarCustomBadge: {
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   editor: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    marginHorizontal: 5,
-    marginTop: 8,
+    marginHorizontal: 8,
+    marginTop: 6,
     borderWidth: 1,
     borderColor: '#E5E7EB',
     shadowColor: '#000',
@@ -453,17 +1736,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    fontSize: 16,
-    lineHeight: 24,
+    paddingVertical: 14,
+    fontSize: EDITOR_TYPOGRAPHY.bodyLarge.fontSize, // 17px
+    lineHeight: EDITOR_TYPOGRAPHY.bodyLarge.lineHeight, // 26px
   },
   richBar: {
-    height: 56,
+    height: 52,
     backgroundColor: PRIMARY_COLOR,
     borderRadius: 12,
-    marginHorizontal: 12,
+    marginHorizontal: 8,
     marginTop: 8,
-    marginBottom: 8,
+    marginBottom: 4,
     shadowColor: PRIMARY_COLOR,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
@@ -472,26 +1755,72 @@ const styles = StyleSheet.create({
   },
   headingIcon: {
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
   },
-  characterCount: {
-    fontSize: 13,
-    color: '#9CA3AF',
-    paddingHorizontal: 16,
+  statusFooterCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 14,
     paddingVertical: 12,
-    textAlign: 'right',
     backgroundColor: '#FFFFFF',
-    marginTop: 4,
-    marginHorizontal: 12,
+    marginTop: 8,
+    marginHorizontal: 8,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#E5E7EB',
+  },
+  readinessBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  readinessText: {
+    fontSize: EDITOR_TYPOGRAPHY.caption.fontSize + 0.5, // ~13.5px
+    fontWeight: '600',
+  },
+  characterCount: {
+    fontSize: EDITOR_TYPOGRAPHY.caption.fontSize + 0.5, // ~13.5px
+    color: '#4B5563',
+    fontWeight: '600',
+  },
+  proceedButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#000A60',
+    marginHorizontal: 12,
+    marginTop: 14,
+    marginBottom: 26,
+    paddingVertical: 15,
+    borderRadius: 12,
+  },
+  proceedButtonText: {
+    color: '#FFFFFF',
+    fontSize: EDITOR_TYPOGRAPHY.button.fontSize, // 17px
+    fontWeight: EDITOR_TYPOGRAPHY.button.fontWeight,
   },
   preview_button: {
     marginRight: 15,
     paddingHorizontal: 8,
     paddingVertical: 6,
+  },
+  next_header_button: {
+    marginRight: 15,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#1E40AF',
+    borderRadius: 8,
+  },
+  next_header_text: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
   },
   tabContainer: {
     flex: 1,
@@ -506,8 +1835,10 @@ const styles = StyleSheet.create({
   },
   tabButton: {
     flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    flexDirection: 'row',
+    gap: 6,
+    paddingVertical: 13,
+    paddingHorizontal: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
     justifyContent: 'center',
@@ -517,12 +1848,49 @@ const styles = StyleSheet.create({
     borderBottomColor: PRIMARY_COLOR,
   },
   tabLabel: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: EDITOR_TYPOGRAPHY.tabLabel.fontSize, // 15px
+    fontWeight: EDITOR_TYPOGRAPHY.tabLabel.fontWeight,
     color: '#6B7280',
   },
   tabLabelActive: {
     color: PRIMARY_COLOR,
+    fontWeight: '700',
+  },
+  htmlSourceHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+    gap: 12,
+  },
+  htmlSourceTitle: {
+    fontSize: EDITOR_TYPOGRAPHY.sectionTitle.fontSize, // 17px
+    fontWeight: EDITOR_TYPOGRAPHY.sectionTitle.fontWeight,
+    color: '#111827',
+  },
+  htmlSourceSubtitle: {
+    fontSize: EDITOR_TYPOGRAPHY.sectionSubtitle.fontSize, // 14px
+    lineHeight: EDITOR_TYPOGRAPHY.sectionSubtitle.lineHeight,
+    color: '#4B5563',
+    marginTop: 3,
+  },
+  htmlCodeInput: {
+    minHeight: 520,
+    backgroundColor: '#111827',
+    color: '#F9FAFB',
+    fontFamily: 'monospace',
+    fontSize: EDITOR_TYPOGRAPHY.code.fontSize, // 14px
+    lineHeight: EDITOR_TYPOGRAPHY.code.lineHeight, // 22px
+    padding: 16,
+    marginHorizontal: 10,
+    marginTop: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#374151',
   },
   previewContainer: {
     flex: 1,
@@ -533,10 +1901,17 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   previewTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#1F2937',
-    marginBottom: 16,
+    fontSize: EDITOR_TYPOGRAPHY.screenTitle.fontSize + 2, // 24px
+    lineHeight: 32,
+    fontWeight: EDITOR_TYPOGRAPHY.screenTitle.fontWeight,
+    color: '#111827',
+    marginBottom: 8,
+  },
+  previewDescription: {
+    fontSize: EDITOR_TYPOGRAPHY.body.fontSize, // 16px
+    lineHeight: EDITOR_TYPOGRAPHY.body.lineHeight, // 26px
+    color: '#4B5563',
+    marginBottom: 14,
     paddingBottom: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
@@ -545,9 +1920,110 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   emptyPreview: {
-    fontSize: 16,
+    fontSize: EDITOR_TYPOGRAPHY.bodyLarge.fontSize, // 17px
     color: '#9CA3AF',
     textAlign: 'center',
     paddingVertical: 32,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(17, 24, 39, 0.55)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 440,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 6},
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  modalHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  modalCloseIconBtn: {
+    padding: 6,
+    borderRadius: 20,
+    backgroundColor: '#F3F4F6',
+  },
+  modalTitle: {
+    fontSize: EDITOR_TYPOGRAPHY.h3.fontSize + 1, // 19px
+    fontWeight: '700',
+    color: '#111827',
+  },
+  modalSubtitle: {
+    fontSize: EDITOR_TYPOGRAPHY.sectionSubtitle.fontSize, // 14px
+    lineHeight: 20,
+    color: '#4B5563',
+    marginTop: 4,
+    marginBottom: 14,
+  },
+  modalFieldLabel: {
+    fontSize: EDITOR_TYPOGRAPHY.sectionSubtitle.fontSize, // 14px
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 6,
+    marginTop: 10,
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 10,
+    paddingHorizontal: 13,
+    paddingVertical: 11,
+    fontSize: EDITOR_TYPOGRAPHY.input.fontSize, // 15px
+    lineHeight: 22,
+    color: '#111827',
+    backgroundColor: '#F9FAFB',
+  },
+  modalButtonRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 10,
+    marginTop: 20,
+  },
+  modalCancelBtn: {
+    paddingHorizontal: 16,
+    paddingVertical: 11,
+    borderRadius: 8,
+    backgroundColor: '#F3F4F6',
+  },
+  modalCancelText: {
+    fontSize: EDITOR_TYPOGRAPHY.input.fontSize, // 15px
+    fontWeight: '600',
+    color: '#4B5563',
+  },
+  modalSecondaryBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 11,
+    borderRadius: 8,
+    backgroundColor: '#EEF2FF',
+    borderWidth: 1,
+    borderColor: '#C7D2FE',
+  },
+  modalSecondaryBtnText: {
+    fontSize: EDITOR_TYPOGRAPHY.input.fontSize, // 15px
+    fontWeight: '600',
+    color: '#4338CA',
+  },
+  modalConfirmBtn: {
+    paddingHorizontal: 18,
+    paddingVertical: 11,
+    borderRadius: 8,
+    backgroundColor: '#000A60',
+  },
+  modalConfirmText: {
+    fontSize: EDITOR_TYPOGRAPHY.input.fontSize, // 15px
+    fontWeight: '700',
+    color: '#FFFFFF',
   },
 });

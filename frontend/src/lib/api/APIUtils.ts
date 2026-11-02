@@ -3,7 +3,7 @@
 // Values are injected at build time from environment variables via app.config.js.
 // To override for local development, set the following in your .env file
 // (see .env.example for the full list):
-//
+
 //   PROD_URL=http://10.0.2.2:3000/api        # Android emulator
 //   PROD_URL=http://localhost:3000/api        # iOS simulator
 //   SOCKET_PROD=http://10.0.2.2:3000
@@ -38,13 +38,14 @@ const LIKE_ARTICLE = `${PROD_URL}/articles/likeArticle`;
 const TRUST_ARTICLE = `${PROD_URL}/articles/trust`;
 const GET_TRUSTED_USERS = `${PROD_URL}/articles/trusted-users`;
 const POST_ARTICLE = `${PROD_URL}/articles`;
+const SEARCH_ARTICLES = `${PROD_URL}/articles/search`;
 const GET_ARTICLE_BY_ID = `${PROD_URL}/articles`;
 const GET_ARTICLE_TRANSLATIONS = (articleId: string | number) =>
   `${GET_ARTICLE_BY_ID}/${articleId}/translations`;
 const GET_USER_DETAILS_API = `${PROD_URL}/user/getdetails`;
 const UPDATE_USER_GENERAL_DETAILS = `${PROD_URL}/user/update-general-details`;
 const UPDATE_READ_EVENT = `${PROD_URL}/article/readEvent`;
-const GET_READ_HISTORY = `${PROD_URL}/article/read-history`;
+const GET_READ_HISTORY = `${PROD_URL}/articles/read-history`;
 const UPDATE_USER_PASSWORD = `${PROD_URL}/user/update-password`;
 const UPDATE_USER_CONTACT_DETAILS = `${PROD_URL}/user/update-contact-details`;
 const UPDATE_USER_PROFESSIONAL_DETAILS = `${PROD_URL}/user/update-professional-details`;
@@ -98,6 +99,15 @@ const UPLOAD_PODCAST = `${PROD_URL}/podcast/create`;
 const GET_PLAYLIST = `${PROD_URL}/podcast/get-my-playlists`;
 const CREATE_PLAYLIST = `${PROD_URL}/podcast/create-playlist`;
 const ADD_TO_PLAYLIST = `${PROD_URL}/podcast/add-podcast-to-playlist`;
+const REMOVE_PODCAST_FROM_PLAYLIST = `${PROD_URL}/podcast/remove-podcast-to-playlist`;
+const GET_PLAYLIST_DETAILS = `${PROD_URL}/podcast/playlist-details`;
+const DELETE_PLAYLIST = `${PROD_URL}/podcast/delete-playlist`;
+const GET_PODCAST_EPISODES = `${PROD_URL}/podcast-episodes`;
+const CREATE_PODCAST_EPISODE = `${PROD_URL}/podcast-episodes`;
+const GET_PODCAST_EPISODE_BY_ID = (episodeId: string) => `${PROD_URL}/podcast-episodes/${episodeId}`;
+const UPDATE_PODCAST_EPISODE = (episodeId: string) => `${PROD_URL}/podcast-episodes/${episodeId}`;
+const DELETE_PODCAST_EPISODE = (episodeId: string) => `${PROD_URL}/podcast-episodes/${episodeId}`;
+const GET_EPISODE_PODCASTS = (episodeId: string) => `${PROD_URL}/episodes/${episodeId}/podcasts`;
 const UPDATE_PODCAST_PLAYLIST = `${PROD_URL}/podcast/update-playlist`;
 
 const DISCARDED_PODCASTS = `${PROD_URL}/podcast/discarded`;
@@ -120,9 +130,15 @@ const REGISTER_PUSH_TOKEN = `${PROD_URL}/user/register-device-token`;
 /** Wellness */
 const LOG_WELLNESS_API = `${PROD_URL}/wellness/log`;
 const GET_WELLNESS_WEEKLY_API = `${PROD_URL}/wellness/weekly`;
+const GET_WELLNESS_PLAN_API = `${PROD_URL}/wellness/plan`;
+const GENERATE_WELLNESS_PLAN_API = `${PROD_URL}/wellness/plan/generate`;
+const GET_WELLNESS_PLAN_HISTORY_API = `${PROD_URL}/wellness/plan/history`;
 
 /** Nearby Health Events */
 const NEARBY_EVENTS_API = `${PROD_URL}/events/nearby`;
+
+/** Google Auth */
+const GOOGLE_AUTH_API = `${PROD_URL}/user/google-auth`;
 
 export {
   LOGIN_API,
@@ -142,6 +158,7 @@ export {
   TRUST_ARTICLE,
   GET_TRUSTED_USERS,
   POST_ARTICLE,
+  SEARCH_ARTICLES,
   GET_ARTICLE_BY_ID,
   GET_ARTICLE_TRANSLATIONS,
   GET_USER_DETAILS_API,
@@ -197,6 +214,15 @@ export {
   GET_PLAYLIST,
   CREATE_PLAYLIST,
   ADD_TO_PLAYLIST,
+  REMOVE_PODCAST_FROM_PLAYLIST,
+  GET_PLAYLIST_DETAILS,
+  DELETE_PLAYLIST,
+  GET_PODCAST_EPISODES,
+  CREATE_PODCAST_EPISODE,
+  GET_PODCAST_EPISODE_BY_ID,
+  UPDATE_PODCAST_EPISODE,
+  DELETE_PODCAST_EPISODE,
+  GET_EPISODE_PODCASTS,
   UPDATE_PODCAST_PLAYLIST,
   UPLOAD_PODCAST,
   DISCARDED_PODCASTS,
@@ -214,5 +240,9 @@ export {
   SHARE_BASE_URL,
   LOG_WELLNESS_API,
   GET_WELLNESS_WEEKLY_API,
+  GET_WELLNESS_PLAN_API,
+  GENERATE_WELLNESS_PLAN_API,
+  GET_WELLNESS_PLAN_HISTORY_API,
   NEARBY_EVENTS_API,
+  GOOGLE_AUTH_API,
 };

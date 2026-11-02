@@ -13,13 +13,12 @@ export const useGetDiscardedPodcasts = (discardedPage: number, isConnected: bool
 DiscardResponse,
 AxiosError
 >=>{
-
     return useQuery({
     queryKey: ['get-discarded-podcasts-for-user', discardedPage],
     queryFn: async () => {
       const res = await axios.get(`${DISCARDED_PODCASTS}?page=${discardedPage}`);
-      return res.data as DiscardResponse;
+      return (res?.data ?? { totalPages: 0, discardedPodcasts: [] }) as DiscardResponse;
     },
     enabled: !!discardedPage && !!isConnected,
   });
-}
+};

@@ -4,118 +4,118 @@ import {
   View,
   Alert,
   TouchableOpacity,
+  Text,
   useColorScheme,
 } from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {StatusBar} from 'expo-status-bar';
-import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { BUTTON_COLOR } from '../../lib/ui/Theme';
 import ActivityOverview from '../../components/profile/ActivityOverview';
-import {Tabs, MaterialTabBar} from 'react-native-collapsible-tab-view';
-import ArticleCard from '../../components/article/ArticleCard';
+import { Tabs, MaterialTabBar } from 'react-native-collapsible-tab-view';
 import UserArticleCard from '../../components/article/UserArticleCard';
-import { useTheme } from 'tamagui';
-import {useAppSelector} from '../../store/hooks';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { useAppSelector } from '../../store/hooks';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileHeader from '../../components/profile/ProfileHeader';
-import {ArticleData, UserProfileScreenProp} from '../../schemas/type';
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { ArticleData, UserProfileScreenProp } from '../../schemas/type';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import Loader from '../../components/common/Loader';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Snackbar from 'react-native-snackbar';
-import {useSocket} from '../../contexts/SocketContext';
-import {useRequestArticleEdit} from '../../hooks/article/useRequestArticleEdit';
-import {useUpdateFollowStatus} from '../../hooks/social/useUpdateFollowStatus';
-import {useUpdateViewCount} from '../../hooks/article/useUpdateViewCount';
+import { useSocket } from '../../contexts/SocketContext';
+import { useRequestArticleEdit } from '../../hooks/article/useRequestArticleEdit';
+import { useUpdateFollowStatus } from '../../hooks/social/useUpdateFollowStatus';
+import { useUpdateViewCount } from '../../hooks/article/useUpdateViewCount';
 import { useGetAuthorProfile } from '../../hooks/profile/useGetAuthorProfile';
-import {useGetTotalLikeViewStatus} from '../../hooks/analytics/useGetTotalLikeViewStatus';
+import { useGetTotalLikeViewStatus } from '../../hooks/analytics/useGetTotalLikeViewStatus';
 import { NoArticleState } from '../../components/common/EmptyStates';
 
 const TabsFlatList = Tabs.FlatList as any;
 
-const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
-  const theme = useTheme();
+const UserProfileScreen = ({ navigation, route }: UserProfileScreenProp) => {
   const isDarkMode = useColorScheme() === 'dark';
-  const {authorId, userId, author_handle} = (route?.params || {}) as any;
-  const {userId: routeUserId, userHandle: routeUserHandle} = (route?.params || {}) as any; 
-  const {user_id, user_handle} = useAppSelector(
-    (state: any) => state.user || {},
-  );
-  const {isConnected} = useAppSelector((state: any) => state.network || {});
+  const { authorId, userId, author_handle } = (route?.params || {}) as any;
+  const { userId: routeUserId, userHandle: routeUserHandle } = (route?.params || {}) as any;
+  const { user_id, user_handle } = useAppSelector((state: any) => state.user || {});
+  const { isConnected } = useAppSelector((state: any) => state.network || {});
   const [refreshing, setRefreshing] = useState<boolean>(false);
- 
 
   const [articleId, setArticleId] = useState<number>();
   const [recordId, setRecordId] = useState<string>('');
   const [selectedCardId, setSelectedCardId] = useState<string>('');
 
-  //const [authorId, setAuthorId] = useState<string>('');
   const socket = useSocket();
-  const {mutate: requestEdit, isPending: requestEditPending} =
-    useRequestArticleEdit();
+  const { mutate: requestEdit, isPending: requestEditPending } = useRequestArticleEdit();
+  const { mutate: followMutate } = useUpdateFollowStatus();
+  const { mutate: updateViewCount } = useUpdateViewCount(articleId ?? 0);
 
-  const {mutate: followMutate} = useUpdateFollowStatus();
+  // Normalize authorId & handle
+  const actualAuthorId =
+    (typeof authorId === 'string' ? authorId : authorId?._id) ||
+    routeUserId ||
+    userId;
 
-  const {mutate: updateViewCount} = useUpdateViewCount(articleId ?? 0);
+  const actualHandle = author_handle || routeUserHandle;
 
-  // Get the actual authorId string
-  const actualAuthorId = (typeof authorId === 'string' ? authorId : authorId?._id) || routeUserId || userId || user_id; // Prioritize authorId, fallback to current user_id
+  const isOwnProfile = !actualAuthorId || String(actualAuthorId) === String(user_id);
+
   const {
     data: user,
     refetch,
     isLoading,
-  } = useGetAuthorProfile(actualAuthorId, routeUserHandle, user_id, isConnected);
+  } = useGetAuthorProfile(
+    actualAuthorId,
+    actualHandle,
+    user_id,
+    isConnected,
+  );
 
   const isDoctor = user !== undefined ? user.isDoctor : false;
-  //const bottomBarHeight = useBottomTabBarHeight();
 
   const [localIsFollowing, setLocalIsFollowing] = useState<boolean | null>(null);
   const [localFollowerCount, setLocalFollowerCount] = useState<number | null>(null);
 
   useEffect(() => {
     if (user && user.followers) {
-      const isFollow = user.followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id);
-       
+      const isFollow = user.followers.some(
+        (u: any) =>
+          (u?._id && String(u._id) === String(user_id)) ||
+          String(u) === String(user_id),
+      );
       setLocalIsFollowing(isFollow);
-       
       setLocalFollowerCount(user.followers.length);
     }
   }, [user, user_id]);
 
-  // Fetch statistics data for the user being viewed
-  const {data: statsData} = useGetTotalLikeViewStatus({
+  const { data: statsData } = useGetTotalLikeViewStatus({
     user_id: user_id,
-    userId: actualAuthorId,
+    userId: actualAuthorId || user_id,
     others: true,
     isConnected: isConnected,
   });
 
- // console.log('UserProfileScreen - articles:', user?.articles);
- //  console.log('UserProfileScreen - reposts:', user?.repostArticles);
- const articlePosted = user?.articles ? user.articles.length : 0;
- console.log("User profile article posted", articlePosted);
+  const articlePosted = user?.articles ? user.articles.length : 0;
 
   const onArticleViewed = ({
-    articleId,
+    articleId: vArticleId,
     authorId: viewedAuthorId,
-    recordId,
+    recordId: vRecordId,
   }: {
     articleId: number;
     authorId: string;
     recordId: string;
   }) => {
     if (isConnected) {
-      setArticleId(articleId);
-      setRecordId(recordId);
+      setArticleId(vArticleId);
+      setRecordId(vRecordId);
 
       updateViewCount(undefined, {
         onSuccess: async () => {
           navigation.navigate('ArticleScreen', {
-            articleId: Number(articleId),
+            articleId: Number(vArticleId),
             authorId: viewedAuthorId,
-            recordId: recordId,
+            recordId: vRecordId,
           });
         },
-
         onError: error => {
           console.log('Update View Count Error', error);
           Alert.alert('Internal server error, try again!');
@@ -131,7 +131,6 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-
     try {
       await refetch();
     } finally {
@@ -141,18 +140,18 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('Current authorId:', authorId); // Check if authorId changes
       refetch();
-    }, [refetch, authorId]), // Ensure authorId is a stable value
+    }, [refetch, actualAuthorId]),
   );
 
   const handleReportAction = useCallback(
     (item: ArticleData) => {
       navigation.navigate('ReportScreen', {
         articleId: String(item._id),
-        authorId: typeof item.authorId === 'object' && item.authorId !== null 
-          ? String((item.authorId as any)._id) 
-          : String(item.authorId),
+        authorId:
+          typeof item.authorId === 'object' && item.authorId !== null
+            ? String((item.authorId as any)._id)
+            : String(item.authorId),
         commentId: null,
         podcastId: null,
       });
@@ -161,7 +160,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   );
 
   const renderItem = useCallback(
-    ({item}: {item: ArticleData}) => {
+    ({ item }: { item: ArticleData }) => {
       return (
         <UserArticleCard
           item={item}
@@ -169,29 +168,22 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
           success={onRefresh}
           isSelected={String(selectedCardId) === String(item?._id)}
           setSelectedCardId={setSelectedCardId}
-          handleRepostAction={()=>{}}
+          handleRepostAction={() => {}}
           handleReportAction={handleReportAction}
-          handleEditRequestAction={(item, index, reason) => {
+          handleEditRequestAction={(it, _index, reason) => {
             if (isConnected) {
               requestEdit(
                 {
-                  articleId: String(item._id),
+                  articleId: String(it._id),
                   reason: reason,
-                  articleRecordId: item.pb_recordId || '',
+                  articleRecordId: it.pb_recordId || '',
                 },
                 {
                   onSuccess: data => {
-                    Snackbar.show({
-                      text: data,
-                      duration: Snackbar.LENGTH_SHORT,
-                    });
+                    Snackbar.show({ text: data, duration: Snackbar.LENGTH_SHORT });
                   },
-                  onError: err => {
-                    console.log(err);
-                    Snackbar.show({
-                      text: 'Try again!',
-                      duration: Snackbar.LENGTH_LONG,
-                    });
+                  onError: () => {
+                    Snackbar.show({ text: 'Try again!', duration: Snackbar.LENGTH_LONG });
                   },
                 },
               );
@@ -206,19 +198,11 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         />
       );
     },
-    [
-      handleReportAction,
-      isConnected,
-      navigation,
-      onRefresh,
-      selectedCardId,
-      requestEdit,
-    ],
+    [handleReportAction, isConnected, navigation, onRefresh, selectedCardId, requestEdit],
   );
 
   const onFollowerClick = () => {
-    if (user && user.followers.length > 0) {
-      // dispatch(setSocialUserId(user._id));
+    if (user && user.followers?.length > 0) {
       navigation.navigate('SocialScreen', {
         type: 1,
         articleId: undefined,
@@ -229,8 +213,7 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
 
   const onFollowingClick = () => {
     if (isConnected) {
-      if (user && user.followings.length > 0) {
-        // dispatch(setSocialUserId(user._id));
+      if (user && user.followings?.length > 0) {
         navigation.navigate('SocialScreen', {
           type: 2,
           articleId: undefined,
@@ -246,44 +229,34 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   };
 
   const handleFollow = () => {
-    if (isConnected) {
-      if (actualAuthorId) {
-        followMutate(actualAuthorId, {
-          onSuccess: data => {
-            if (data !== undefined) {
-              if (localIsFollowing === false && data === true) {
-                setLocalFollowerCount(prev => (prev !== null ? prev + 1 : prev));
-              } else if (localIsFollowing === true && data === false) {
-                setLocalFollowerCount(prev => (prev !== null ? prev - 1 : prev));
-              }
-              setLocalIsFollowing(data);
+    if (isConnected && actualAuthorId) {
+      followMutate(actualAuthorId, {
+        onSuccess: data => {
+          if (data !== undefined) {
+            if (localIsFollowing === false && data === true) {
+              setLocalFollowerCount(prev => (prev !== null ? prev + 1 : prev));
+            } else if (localIsFollowing === true && data === false) {
+              setLocalFollowerCount(prev => (prev !== null ? Math.max(0, prev - 1) : prev));
             }
-            if (data) {
-              if (socket) {
-                socket.emit('notification', {
-                  type: 'userFollow',
-                  userId: actualAuthorId,
-                  message: {
-                    title: `${user_handle ? user_handle : 'Someone'} has followed you`,
-                    body: '',
-                  },
-                });
-              }
-            }
-
-            onRefresh();
-          },
-
-          onError: err => {
-            console.log('Update Follow mutation error', err);
-            Snackbar.show({
-              text: 'Try again!',
-              duration: Snackbar.LENGTH_SHORT,
+            setLocalIsFollowing(data);
+          }
+          if (data && socket) {
+            socket.emit('notification', {
+              type: 'userFollow',
+              userId: actualAuthorId,
+              message: {
+                title: `${user_handle || 'Someone'} has followed you`,
+                body: '',
+              },
             });
-          },
-        });
-      }
-    } else {
+          }
+          onRefresh();
+        },
+        onError: () => {
+          Snackbar.show({ text: 'Try again!', duration: Snackbar.LENGTH_SHORT });
+        },
+      });
+    } else if (!isConnected) {
       Snackbar.show({
         text: 'Please check your internet connection!',
         duration: Snackbar.LENGTH_SHORT,
@@ -292,24 +265,23 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
   };
 
   const renderHeader = () => {
-    if (user === undefined) {
+    if (!user) {
       return <View />;
-    } // Safeguard to prevent rendering if user is undefined
+    }
 
-    const authorUser = typeof authorId === 'string' ? user : authorId;
+    const authorUser = typeof authorId === 'object' && authorId !== null ? authorId : null;
+    const displayName = user.user_name || authorUser?.user_name || 'Anonymous User';
+    const displayHandle = user.user_handle || authorUser?.user_handle || '';
+    const displayImg = user.Profile_image || authorUser?.Profile_image || '';
     const articlesPostedCount = user.articles ? user.articles.length : 0;
-
-    //console.log('UserProfileScreen - articles:', articlesPostedCount);
 
     return (
       <ProfileHeader
         isDoctor={isDoctor}
-        username={authorUser?.user_name || user?.user_name || ''}
-        userhandle={authorUser?.user_handle || user?.user_handle || ''}
-        profileImg={
-          authorUser?.Profile_image || user?.Profile_image ||
-          'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-        }
+        username={displayName}
+        userhandle={displayHandle}
+        profileImg={displayImg}
+        about={user.about}
         articlesPosted={articlesPostedCount}
         articlesSaved={user.savedArticles ? user.savedArticles.length : 0}
         userPhoneNumber={isDoctor ? user.contact_detail?.phone_no || '' : ''}
@@ -318,12 +290,22 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
         experience={user.Years_of_experience || 0}
         qualification={user.qualification || ''}
         navigation={navigation}
-        other={false}
-        followers={user ? user.followers.length : 0}
-        followings={user ? user.followings.length : 0}
+        other={isOwnProfile}
+        followers={localFollowerCount !== null ? localFollowerCount : (user.followers?.length || 0)}
+        followings={user.followings?.length || 0}
         onFollowerPress={onFollowerClick}
         onFollowingPress={onFollowingClick}
-        isFollowing={user && user.followers ? user.followers.some((u: any) => (u?._id && u._id.toString() === user_id) || u.toString() === user_id) : false}
+        isFollowing={
+          localIsFollowing !== null
+            ? localIsFollowing
+            : Boolean(
+                user.followers?.some(
+                  (u: any) =>
+                    (u?._id && String(u._id) === String(user_id)) ||
+                    String(u) === String(user_id),
+                ),
+              )
+        }
         onFollowClick={handleFollow}
         onOverviewClick={() => {}}
       />
@@ -334,48 +316,62 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
     return (
       <MaterialTabBar
         {...props}
-        indicatorStyle={[styles.indicatorStyle, { backgroundColor: PRIMARY_COLOR }]}
-        style={[styles.tabBarStyle, { backgroundColor: isDarkMode ? '#1f2937' : '#ffffff', borderBottomWidth: 1, borderBottomColor: isDarkMode ? '#374151' : '#f1f5f9' }]}
-        activeColor={PRIMARY_COLOR}
-        inactiveColor={isDarkMode ? '#6b7280' : '#9098A3'}
+        indicatorStyle={[styles.indicatorStyle, { backgroundColor: BUTTON_COLOR }]}
+        style={[
+          styles.tabBarStyle,
+          {
+            backgroundColor: isDarkMode ? '#1F2937' : '#FFFFFF',
+            borderBottomWidth: 1,
+            borderBottomColor: isDarkMode ? '#374151' : '#E5E7EB',
+          },
+        ]}
+        activeColor={BUTTON_COLOR}
+        inactiveColor={isDarkMode ? '#9CA3AF' : '#6B7280'}
         labelStyle={styles.labelStyle}
         contentContainerStyle={styles.contentContainerStyle}
       />
     );
   };
 
+  const colors = {
+    topBg: isDarkMode ? '#1E293B' : '#000A60',
+    contentBg: isDarkMode ? '#111827' : '#FFFFFF',
+  };
+
   if (isLoading || requestEditPending) {
     return (
-      <SafeAreaView
-        style={[
-          styles.loadingContainer,
-          {backgroundColor: theme?.background?.val ?? (isDarkMode ? '#121212' : '#ffffff')},
-        ]}>
-        <StatusBar
-          style={isDarkMode ? 'light' : 'dark'}
-        />
+      <SafeAreaView style={[styles.loadingContainer, { backgroundColor: colors.topBg }]}>
+        <StatusBar style="light" />
         <Loader />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme?.background?.val ?? (isDarkMode ? '#0a0f1e' : '#0F52BA') }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.topBg }]} edges={['top']}>
       <StatusBar style="light" />
 
-      {/* Floating back button over the blue top area */}
-      <TouchableOpacity
-        style={styles.headerLeftButtonEditorScreen}
-        onPress={() => navigation.goBack()}
-        accessibilityLabel="Go back">
-        <FontAwesome6 size={20} name="arrow-left" color="white" />
-      </TouchableOpacity>
-      <View style={[styles.innerContainer, { backgroundColor: isDarkMode ? '#111827' : '#ffffff' }]}>
+      {/* ── Professional Top Navigation Bar ── */}
+      <View style={[styles.topBar, { backgroundColor: colors.topBg }]}>
+        <TouchableOpacity
+          style={styles.backBtn}
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back">
+          <Ionicons name="arrow-back" size={22} color="#FFFFFF" />
+        </TouchableOpacity>
+        <Text style={styles.topBarTitle} numberOfLines={1}>
+          {user?.user_name ? `${user.user_name}` : 'Profile'}
+        </Text>
+        <View style={styles.topBarSpacer} />
+      </View>
+
+      <View style={[styles.innerContainer, { backgroundColor: colors.contentBg }]}>
         <Tabs.Container
           renderHeader={renderHeader}
           renderTabBar={renderTabBar}
-          containerStyle={[styles.tabsContainer, { backgroundColor: isDarkMode ? '#111827' : '#ffffff' }]}>
-          {/* Tab 1 */}
+          containerStyle={[styles.tabsContainer, { backgroundColor: colors.contentBg }]}>
+          {/* Tab 1: Insight */}
           <Tabs.Tab name="Insight">
             <Tabs.ScrollView
               automaticallyAdjustContentInsets={true}
@@ -384,32 +380,44 @@ const UserProfileScreen = ({navigation, route}: UserProfileScreenProp) => {
               <ActivityOverview
                 onArticleViewed={onArticleViewed}
                 others={true}
-                userId={actualAuthorId || user?._id}
+                userId={actualAuthorId || user?._id || user_id}
                 user_handle={user?.user_handle || ''}
                 articlePosted={articlePosted}
               />
             </Tabs.ScrollView>
           </Tabs.Tab>
-          {/* Tab 2 */}
+
+          {/* Tab 2: Articles */}
           <Tabs.Tab name="Articles">
             <TabsFlatList
               data={user?.articles || []}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={[styles.flatListContentContainer, { paddingBottom: 15 }]}
-              keyExtractor={(item: ArticleData, index: number) => item?._id?.toString() || index.toString()}
+              contentContainerStyle={[
+                styles.flatListContentContainer,
+                { paddingBottom: 25 },
+              ]}
+              keyExtractor={(item: ArticleData, index: number) =>
+                item?._id?.toString() || index.toString()
+              }
               refreshing={refreshing}
               ListEmptyComponent={<NoArticleState />}
             />
           </Tabs.Tab>
 
+          {/* Tab 3: Reposts */}
           <Tabs.Tab name="Reposts">
             <TabsFlatList
               data={user?.repostArticles || []}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={[styles.flatListContentContainer, { paddingBottom: 15 }]}
-              keyExtractor={(item: ArticleData, index: number) => item?._id?.toString() || index.toString()}
+              contentContainerStyle={[
+                styles.flatListContentContainer,
+                { paddingBottom: 25 },
+              ]}
+              keyExtractor={(item: ArticleData, index: number) =>
+                item?._id?.toString() || index.toString()
+              }
               refreshing={refreshing}
               ListEmptyComponent={<NoArticleState />}
             />
@@ -426,31 +434,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerTitle: {
-    color: '#ffffff',
-    fontWeight: '700',
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  backBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  topBarTitle: {
     fontSize: 17,
+    fontWeight: '700',
+    color: '#FFFFFF',
     letterSpacing: 0.3,
+  },
+  topBarSpacer: {
+    width: 38,
+    height: 38,
   },
   innerContainer: {
     flex: 1,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
     overflow: 'hidden',
   },
   tabsContainer: {
     overflow: 'hidden',
   },
   scrollViewContentContainer: {
-    paddingHorizontal: 6,
-    marginTop: 16,
+    paddingHorizontal: 8,
+    marginTop: 12,
     flexGrow: 1,
   },
   flatListContentContainer: {
     paddingHorizontal: 10,
+    paddingTop: 8,
   },
   indicatorStyle: {
-    backgroundColor: PRIMARY_COLOR,
     height: 3,
     borderRadius: 3,
   },
@@ -460,7 +485,7 @@ const styles = StyleSheet.create({
   },
   labelStyle: {
     fontWeight: '700',
-    fontSize: 13,
+    fontSize: 14,
     textTransform: 'capitalize',
     letterSpacing: 0.2,
   },
@@ -473,31 +498,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     shadowColor: 'transparent',
   },
-  message: {
-    fontSize: 16,
-    color: '#555',
-    textAlign: 'center',
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
   loadingContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  headerLeftButtonEditorScreen: {
-    position: 'absolute',
-    top: 12,
-    left: 16,
-    zIndex: 100,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
   },

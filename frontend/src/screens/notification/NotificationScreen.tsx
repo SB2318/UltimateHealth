@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
  
 
-import { AppState,  FlatList , StyleSheet, View } from 'react-native';
+import { AppState, FlatList, StyleSheet, View, Text, TouchableOpacity, useColorScheme, StatusBar } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Snackbar from 'react-native-snackbar';
@@ -15,6 +16,7 @@ import {Notification, NotificationType} from '../../schemas/type';
 import { useDeleteNotification } from '../../hooks/notification/useDeleteNotification';
 import { useGetAllNotifications } from '../../hooks/notification/useGetAllNotifications';
 import { useMarkNotificationAsRead } from '../../hooks/notification/useMarkNoticationAsRead';
+import { useQueryClient } from '@tanstack/react-query';
 import {mergeNotificationsById} from '../../lib/platform/notificationUtils';
 
 type PendingDelete = {
@@ -38,6 +40,7 @@ const NotificationScreen = ({navigation}: any) => {
   const pendingDeletesRef = useRef<Map<string, PendingDelete>>(new Map());
   const isMountedRef = useRef(true);
 
+  const queryClient = useQueryClient();
   const {mutate: markNotification} = useMarkNotificationAsRead();
   const {mutate: deleteNotification} = useDeleteNotification();
 
@@ -86,6 +89,7 @@ const NotificationScreen = ({navigation}: any) => {
         {},
         {
           onSuccess: async () => {
+            queryClient.setQueryData(['get-unread-notifications-count'], 0);
             Snackbar.show({
               text: 'All notifications marked as read',
               duration: Snackbar.LENGTH_SHORT,
@@ -346,12 +350,82 @@ const NotificationScreen = ({navigation}: any) => {
     );
   };
 
+    const isDarkMode = useColorScheme() === 'dark';
+  const colors = {
+    bg: isDarkMode ? '#111827' : '#F9FAFB',
+    headerBg: isDarkMode ? '#1F2937' : '#FFFFFF',
+    border: isDarkMode ? '#374151' : '#E5E7EB',
+    title: isDarkMode ? '#F9FAFB' : '#111827',
+    subtitle: isDarkMode ? '#9CA3AF' : '#6B7280',
+    backBtnBg: isDarkMode ? '#374151' : '#F3F4F6',
+    backBtnIcon: isDarkMode ? '#F9FAFB' : '#111827',
+    badgeBg: isDarkMode ? '#1E3A8A' : '#EFF6FF',
+    badgeText: isDarkMode ? '#93C5FD' : '#1D4ED8',
+  };
+
   if (isLoading && notificationsData.length === 0) {
-    return <Loader />;
+    return (
+      <SafeAreaView style={[styles.container, { backgroundColor: colors.bg }]} edges={['top']}>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={colors.headerBg} />
+        <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+          <TouchableOpacity
+            style={[styles.backButton, { backgroundColor: colors.backBtnBg }]}
+            onPress={() => navigation.goBack()}
+            accessibilityRole="button"
+            accessibilityLabel="Go back"
+            accessibilityHint="Returns to previous screen">
+            <Ionicons name="arrow-back" size={20} color={colors.backBtnIcon} />
+          </TouchableOpacity>
+          <View style={styles.headerTitleContainer}>
+            <Text style={[styles.headerTitle, { color: colors.title }]} accessibilityRole="header">
+              Notifications
+            </Text>
+          </View>
+          <View style={styles.headerRightSpacer} />
+        </View>
+        <Loader />
+      </SafeAreaView>
+    );
   }
 
   return (
-    <SafeAreaView style={StyleSheet.flatten(styles.container)}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.bg }]} edges={['top']}>
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor={colors.headerBg} />
+
+      {/* ── Modern Professional Header ── */}
+      <View style={[styles.header, { backgroundColor: colors.headerBg, borderBottomColor: colors.border }]}>
+        <TouchableOpacity
+          style={[styles.backButton, { backgroundColor: colors.backBtnBg }]}
+          onPress={() => navigation.goBack()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          accessibilityHint="Returns to previous screen">
+          <Ionicons name="arrow-back" size={20} color={colors.backBtnIcon} />
+        </TouchableOpacity>
+
+        <View style={styles.headerTitleContainer}>
+          <Text style={[styles.headerTitle, { color: colors.title }]} accessibilityRole="header">
+            Notifications
+          </Text>
+          {notificationsData && notificationsData.length > 0 && (
+            <View style={[styles.countBadge, { backgroundColor: colors.badgeBg }]}>
+              <Text style={[styles.countBadgeText, { color: colors.badgeText }]}>
+                {notificationsData.length}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        <TouchableOpacity
+          style={[styles.headerActionButton, { backgroundColor: colors.backBtnBg }]}
+          onPress={() => navigation.navigate('NotificationPreferencesScreen')}
+          accessibilityRole="button"
+          accessibilityLabel="Notification settings"
+          accessibilityHint="Opens notification preferences">
+          <Ionicons name="options-outline" size={20} color={colors.backBtnIcon} />
+        </TouchableOpacity>
+      </View>
+
       <FlatList
         data={notificationsData}
         renderItem={renderItem}
@@ -382,38 +456,57 @@ export default NotificationScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: ON_PRIMARY_COLOR,
-    justifyContent: 'center',
   },
   header: {
-    backgroundColor: PRIMARY_COLOR,
-    paddingHorizontal: 16,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-  },
-  content: {
-    marginTop: hp(3),
-    paddingHorizontal: 16,
-  },
-  recentPodcastsHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
   },
-  recentPodcastsTitle: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: 'white',
-    alignSelf: 'center',
+  backButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
   },
-  seeMoreText: {
-    fontSize: 16,
-    fontWeight: '600',
+  headerTitleContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    letterSpacing: -0.3,
+  },
+  countBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 12,
+  },
+  countBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  headerActionButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 8,
+  },
+  headerRightSpacer: {
+    width: 38,
+    marginLeft: 8,
   },
   flatListContentContainer: {
     paddingHorizontal: 16,
-    marginTop: 4,
+    paddingTop: 12,
     paddingBottom: 120,
   },
 });

@@ -56,7 +56,7 @@ describe('ContentListScreen', () => {
   it('renders tabs correctly', () => {
     const mockRoute = { params: { type: 'articles' } };
     const { getByText } = render(<ContentListScreen navigation={{} as any} route={mockRoute as any} />);
-    expect(getByText('Posts')).toBeTruthy();
+    expect(getByText('Own')).toBeTruthy();
     expect(getByText('Reposts')).toBeTruthy();
     expect(getByText('Saved')).toBeTruthy();
   });

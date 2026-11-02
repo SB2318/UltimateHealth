@@ -1,6 +1,6 @@
 import React from 'react';
 import {render} from '@testing-library/react-native';
-import ArticleSkeletonCard from '../../../components/article/ArticleSkeletonCard';
+import ArticleSkeletonCard from './ArticleSkeletonCard';
 
 describe('ArticleSkeletonCard', () => {
   it('renders without crashing and is hidden from assistive tech', () => {

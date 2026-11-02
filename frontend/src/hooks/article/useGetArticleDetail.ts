@@ -12,11 +12,35 @@ import axios from 'axios';
 type AxiosError = any;
 
 export const useGetArticleDetails = (
-  articleId: number,
+  articleId: number | string | undefined,
+  recordId?: string,
 ): UseQueryResult<ArticleData, AxiosError> => {
   const dispatch = useAppDispatch();
+  const lookupKey =
+    articleId !== undefined &&
+    articleId !== null &&
+    articleId !== '' &&
+    articleId !== 0 &&
+    !Number.isNaN(articleId)
+      ? articleId
+      : recordId;
+
+  const numericArticleId =
+    typeof lookupKey === 'number'
+      ? lookupKey
+      : !Number.isNaN(Number(lookupKey))
+        ? Number(lookupKey)
+        : undefined;
+
   const sessionArticle = useAppSelector(state =>
-    state.offline.articles.find(entry => entry.articleId === articleId),
+    state.offline.articles.find(
+      entry =>
+        (numericArticleId !== undefined &&
+          entry.articleId === numericArticleId) ||
+        (recordId && entry.article?.pb_recordId === recordId) ||
+        (typeof lookupKey === 'string' &&
+          entry.article?.pb_recordId === lookupKey),
+    ),
   );
 
   // The query function outlives the render that created it, so the session
@@ -25,15 +49,19 @@ export const useGetArticleDetails = (
   sessionArticleRef.current = sessionArticle;
 
   return useQuery({
-    queryKey: ['get-article-by-id', articleId],
+    queryKey: ['get-article-by-id', lookupKey],
+    enabled: Boolean(lookupKey),
     queryFn: async () => {
       try {
-        const response = await axios.get(`${GET_ARTICLE_BY_ID}/${articleId}`);
+        const response = await axios.get(`${GET_ARTICLE_BY_ID}/${lookupKey}`);
         const article = response.data.article as ArticleData;
 
         // Session copy only — opening an article writes nothing to the device.
         // It is persisted when the reader finishes it, from the detail screen.
-        dispatch(cacheSessionArticle({articleId, article}));
+        const resolvedId = Number(article?._id ?? numericArticleId ?? 0);
+        if (resolvedId) {
+          dispatch(cacheSessionArticle({articleId: resolvedId, article}));
+        }
 
         return article;
       } catch (error) {
@@ -45,9 +73,11 @@ export const useGetArticleDetails = (
             return session.article;
           }
 
-          const cached = await getCachedArticle(articleId);
-          if (cached) {
-            return cached.article;
+          if (numericArticleId !== undefined) {
+            const cached = await getCachedArticle(numericArticleId);
+            if (cached) {
+              return cached.article;
+            }
           }
         }
         throw error;

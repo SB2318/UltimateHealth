@@ -49,6 +49,10 @@ const Bar = ({ isPlaying, accentColor, targetHeight, animationDuration }: BarPro
        
       height.value = withTiming(MIN_HEIGHT, { duration: 200 });
     }
+
+    return () => {
+      cancelAnimation(height);
+    };
   }, [isPlaying, targetHeight, animationDuration]);
 
   const animatedStyle = useAnimatedStyle(() => ({

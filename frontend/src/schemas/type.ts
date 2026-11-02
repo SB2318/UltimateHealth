@@ -6,32 +6,44 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 
 export type RootStackParamList = {
   SplashScreen: undefined;
-  LoginScreen: {
+  SignInScreen: {
     redirectTo?: RedirectTo;
+    role?: 'General User' | 'Doctor';
   };
   TabNavigation: undefined;
-  SignUpScreenFirst: undefined;
-  SignUpScreenSecond: {user: UserDetail};
-  OtpScreen: {email: string};
-  NewPasswordScreen: {email: string; resetToken?: string};
-  EditorScreen: {
-    title: string;
-    authorName: string;
-    description: string;
-    language: string;
-    selectedGenres: Category[];
-    imageUtils: string;
-    articleData: ArticleData | null | undefined;
-    requestId: string | undefined;
-    htmlContent: string | undefined;
-    pb_record_id: string | undefined;
-    translationSource?: ArticleTranslationSource;
-  };
-  ArticleDescriptionScreen: {
-    article: ArticleData | null | undefined;
-    htmlContent: string | undefined;
-    translationSource?: ArticleTranslationSource;
-  };
+  EditorScreen:
+    | {
+        title?: string;
+        authorName?: string;
+        description?: string;
+        language?: string;
+        selectedGenres?: Category[];
+        imageUtils?: string;
+        articleData?: ArticleData | null | undefined;
+        requestId?: string | undefined;
+        htmlContent?: string | undefined;
+        pb_record_id?: string | undefined;
+        translationSource?: ArticleTranslationSource;
+      }
+    | undefined;
+  ArticleDescriptionScreen:
+    | {
+        article?: ArticleData | null | undefined;
+        htmlContent?: string | undefined;
+        translationSource?: ArticleTranslationSource;
+        title?: string;
+        description?: string;
+        authorName?: string;
+        selectedGenres?: Category[];
+        imageUtils?: string;
+        language?: string;
+        localImages?: string[];
+        htmlImages?: string[];
+        articleData?: ArticleData | null | undefined;
+        requestId?: string | undefined;
+        pb_record_id?: string | undefined;
+      }
+    | undefined;
   PreviewScreen: {
     article: string;
     title: string;
@@ -48,12 +60,17 @@ export type RootStackParamList = {
     translationSource?: ArticleTranslationSource;
   };
   ArticleScreen: {
-    articleId: number;
+    articleId?: number | string;
     authorId?: string;
     recordId?: string;
   };
   PodcastProfile: undefined;
-  PlaylistDetailScreen: { playlist: PlayList };
+  PlaylistDetailScreen: {
+    playlist?: PlayList;
+    playlistId?: string;
+    episodeId?: string;
+    title?: string;
+  };
   ReviewScreen: {
     articleId: number;
     authorId: string;
@@ -111,6 +128,7 @@ export type RootStackParamList = {
     htmlContent: string;
     readability_score?: number;
     reading_time?: string;
+    isFallback?: boolean;
   };
   PodcastDetail: {
     trackId: string;
@@ -121,12 +139,17 @@ export type RootStackParamList = {
     podcast: PodcastData;
   };
   PodcastSearch: undefined;
-  PodcastForm: undefined;
+  PodcastForm:
+    | {
+        episodeId?: string;
+      }
+    | undefined;
   PodcastRecorder: {
     title: string;
     description: string;
     selectedGenres: Category[];
     imageUtils: string;
+    episodeId?: string | null;
   };
   PodcastPlayer: {
     filePath: string;
@@ -134,6 +157,7 @@ export type RootStackParamList = {
     description: string;
     selectedGenres: Category[];
     imageUtils: string;
+    episodeId?: string | null;
   };
   Privacy: undefined;
   CommunityGuidelines: undefined;
@@ -150,6 +174,7 @@ export type RootStackParamList = {
   NearbyHealthEventsScreen: undefined;
   EventDetailsScreen: { event: HealthEvent; distance?: number };
   HealthTermComparison: undefined;
+  MedicalGlossaryScreen: undefined;
 };
 
 export type RedirectTo = {
@@ -187,6 +212,7 @@ export type UserDetail = {
 export type TabParamList = {
   Home: undefined;
   Podcasts: undefined;
+  Wellness: undefined;
   Settings: undefined;
   Chatbot: undefined;
   Academy: undefined;
@@ -194,12 +220,13 @@ export type TabParamList = {
 
 export type SplashScreenProp =
   | StackScreenProps<RootStackParamList, 'SplashScreen'>
-  | StackScreenProps<RootStackParamList, 'LoginScreen'>;
+  | StackScreenProps<RootStackParamList, 'SignInScreen'>;
 
-export type NewPasswordScreenProp = StackScreenProps<
+export type SignInScreenProp = StackScreenProps<
   RootStackParamList,
-  'NewPasswordScreen'
+  'SignInScreen'
 >;
+
 
 export type UserProfileScreenProp = StackScreenProps<
   RootStackParamList,
@@ -225,19 +252,6 @@ export type WellnessDashboardScreenProp = StackScreenProps<
   RootStackParamList,
   'WellnessDashboardScreen'
 >;
-
-export type OtpScreenProp = StackScreenProps<RootStackParamList, 'OtpScreen'>;
-
-export type SignUpScreenFirstProp = StackScreenProps<
-  RootStackParamList,
-  'SignUpScreenFirst'
->;
-
-export type SignUpScreenSecondProp = StackScreenProps<
-  RootStackParamList,
-  'SignUpScreenSecond'
->;
-
 export type PodcastProfileProp = StackScreenProps<
   RootStackParamList,
   'PodcastProfile'
@@ -258,10 +272,6 @@ export type PodcastFormProp = StackScreenProps<
   'PodcastForm'
 >;
 
-export type LoginScreenProp = StackScreenProps<
-  RootStackParamList,
-  'LoginScreen'
->;
 
 export type LogoutScreenProp = StackScreenProps<
   RootStackParamList,
@@ -281,6 +291,11 @@ export type PodcastDetailScreenProp = StackScreenProps<
 export type ReviewScreenProp = StackScreenProps<
   RootStackParamList,
   'ReviewScreen'
+>;
+
+export type MedicalGlossaryScreenProp = StackScreenProps<
+  RootStackParamList,
+  'MedicalGlossaryScreen'
 >;
 
 export type PodcastSearchProp = StackScreenProps<
@@ -427,6 +442,7 @@ export type HomeScreenHeaderProps = {
   hasActiveFilters?: boolean;
   onFilterReset?: () => void;
   searchText?: string;
+  showSearchBar?: boolean;
 };
 
 export type ContentListScreenProp = StackScreenProps<
@@ -706,6 +722,22 @@ export type PodcastData = {
   downloadAt: Date | null;
   commentCount: number | 0;
   language?: string;
+  episode_id?: string | PodcastEpisode | null;
+  episode_number?: number;
+};
+
+export type PodcastEpisode = {
+  _id: string;
+  id?: string;
+  user_id?: string;
+  name: string;
+  description: string;
+  podcasts_count: number;
+  podcastsCount?: number;
+  created_at: string;
+  createdAt?: string;
+  updated_at: string;
+  updatedAt?: string;
 };
 
 export type UserStatus = {
@@ -943,4 +975,44 @@ export type WellnessLogResponse = {
 export type WeeklyWellnessResponse = {
   success: boolean;
   data: WellnessLog[];
+};
+
+export type WellnessPlanGoals = {
+  dailySteps?: number;
+  dailyActiveMinutes?: number;
+  dailyCaloriesBurned?: number;
+  dailySleepHours?: number;
+  dailyBreathingMinutes?: number;
+  dailyWaterMl?: number;
+};
+
+export type WellnessPlan = {
+  _id?: string;
+  userId: string;
+  isActive: boolean;
+  goals: WellnessPlanGoals;
+  dailyTasks: string[];
+  focusAreas?: string[];
+  weeklyInsight?: string;
+  warnings?: string[];
+  basedOnLogs?: string[];
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type WellnessPlanResponse = {
+  success: boolean;
+  message?: string;
+  data?: WellnessPlan | null;
+};
+
+export type WellnessPlanHistoryResponse = {
+  success: boolean;
+  data: WellnessPlan[];
+  pagination?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
 };

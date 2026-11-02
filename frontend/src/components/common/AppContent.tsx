@@ -1,11 +1,11 @@
- 
 // @ts-nocheck
-import React, { useEffect, useRef, useCallback } from 'react';
-import { Platform, useColorScheme, View } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
+import React, {useState, useEffect, useRef, useCallback } from 'react';
+import { useColorScheme, View, Platform } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { PaperProvider, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { TamaguiProvider, useTheme } from 'tamagui';
-import { NavigationContainer, type NavigationContainerRef } from '@react-navigation/native';
+import { TamaguiProvider } from 'tamagui';
+import { NavigationContainer, DarkTheme, DefaultTheme, type NavigationContainerRef } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 import messaging from '@react-native-firebase/messaging';
 import { addEventListener } from '@react-native-community/netinfo';
@@ -41,6 +41,33 @@ import WebDemoShell from '../../screens/web/WebDemoShell';
 import { CustomAlertDialog } from './CustomAlert';
 import UpdateModal from '../auth/UpdateModal';
 import { NetworkBanner } from './NetworkBanner';
+import OnboardingModal from './OnboardingModal';
+
+const appDarkTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: '#0A0F1D',
+    card: '#0F172A',
+    text: '#F8FAFC',
+    border: '#1E293B',
+    primary: '#0F52BA',
+    notification: '#3B82F6',
+  },
+};
+
+const appLightTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: '#F0F8FF',
+    card: '#FFFFFF',
+    text: '#0F172A',
+    border: '#E2E8F0',
+    primary: '#0F52BA',
+    notification: '#0F52BA',
+  },
+};
 
 export default function AppContent() {
   const navigationRef = useRef<NavigationContainerRef<any> | null>(null);
@@ -48,6 +75,7 @@ export default function AppContent() {
   const pendingDeepLinkRef = useRef<string | null>(null);
 
   const isDarkMode = useColorScheme() === 'dark';
+  const paperTheme = isDarkMode ? MD3DarkTheme : MD3LightTheme;
   const { visible, storeUrl } = useVersionCheck();
   const dispatch = useAppDispatch();
 
@@ -121,11 +149,20 @@ export default function AppContent() {
     if (Platform.OS === 'web') {
       return;
     }
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      if (__DEV__) {
-        console.log('Foreground notification received:', remoteMessage);
-      }
-    });
+    let unsubscribe = () => {};
+    let onOpenApp = () => {};
+    try {
+      unsubscribe = messaging().onMessage(async remoteMessage => {
+        if (__DEV__) {
+          console.log('Foreground notification received:', remoteMessage);
+        }
+      });
+      onOpenApp = messaging().onNotificationOpenedApp(remoteMessage => {
+        if (__DEV__) {
+          console.log('Notification caused app to open:', remoteMessage);
+        }
+      });
+    } catch (_) {}
 
     const unsubscribe1 = addEventListener(state => {
       if (__DEV__) {
@@ -135,20 +172,12 @@ export default function AppContent() {
       dispatch(setConnected(state.isConnected));
     });
 
-    const onOpenApp = messaging().onNotificationOpenedApp(remoteMessage => {
-      if (__DEV__) {
-        console.log('Notification caused app to open:', remoteMessage);
-      }
-    });
-
     return () => {
       unsubscribe();
       unsubscribe1();
       onOpenApp();
     };
   }, [dispatch]);
-
-
 
   useEffect(() => {
     if (!navigationRef.current || !pendingDeepLinkRef.current) return;
@@ -163,9 +192,7 @@ export default function AppContent() {
         target,
         isAuthenticated,
       );
-    } else if (!isAuthenticated) {
-      navigationRef.current.navigate('LoginScreen');
-    }
+    } 
 
     pendingDeepLinkRef.current = null;
   }, [tokenRes, user_token, isGuest]);
@@ -205,26 +232,28 @@ export default function AppContent() {
 
   return (
     <SafeAreaProvider>
+      <StatusBar
+        style={isDarkMode ? 'light' : 'dark'}
+        backgroundColor={isDarkMode ? '#0A0F1D' : '#000A60'}
+      />
       <TamaguiProvider
         config={config}
         defaultTheme={isDarkMode ? 'dark' : 'light'}>
-        <PaperProvider>
+        <PaperProvider theme={paperTheme}>
           <FirebaseProvider>
             <PreferencesProvider>
               <SocketProvider>
-                <View style={{ flex: 1 }}>
-                  {isWebDemo ? (
-                    <WebDemoShell />
-                  ) : (
-                    <>
-                      <NetworkBanner />
-                      <AppInner
-                        navigationRef={navigationRef}
-                        visible={visible}
-                        storeUrl={storeUrl}
-                      />
-                    </>
-                  )}
+                <View
+                  style={{
+                    flex: 1,
+                    backgroundColor: isDarkMode ? '#0A0F1D' : '#F0F8FF',
+                  }}>
+                  <NetworkBanner />
+                  <AppInner
+                    navigationRef={navigationRef}
+                    visible={visible}
+                    storeUrl={storeUrl}
+                  />
                 </View>
               </SocketProvider>
             </PreferencesProvider>
@@ -246,16 +275,48 @@ function AppInner({
   storeUrl: string;
   initialRouteName?: keyof RootStackParamList;
 }) {
-  const theme = useTheme();
   const isDarkMode = useColorScheme() === 'dark';
+  const navigationTheme = isDarkMode ? appDarkTheme : appLightTheme;
+  const { user_token, isGuest } = useAppSelector((state: RootState) => state.user);
+  const [onboardingDismissed, setOnboardingDismissed] = useState(false);
+
+  // Show onboarding until the user authenticates, explicitly picks guest mode, or dismisses modal to sign in.
+  const showOnboarding = !user_token && !isGuest && !onboardingDismissed;
+
+  const handleCloseModal = () => {
+    setOnboardingDismissed(true);
+  };
+
+  const handleSignInUser = () => {
+    setOnboardingDismissed(true);
+    navigationRef.current?.navigate('SignInScreen', { role: 'General User' });
+  };
+  const handleGuest = () => {
+    setOnboardingDismissed(true);
+    navigationRef.current?.reset({index: 0, routes: [{name: 'TabNavigation'}]});
+  };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme?.background?.get() ?? (isDarkMode ? '#121212' : '#ffffff') }}>
-      <NavigationContainer ref={navigationRef}>
-        <StackNavigation initialRouteName={initialRouteName} />
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? '#0A0F1D' : '#F0F8FF',
+      }}>
+      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
+        <StackNavigation />
       </NavigationContainer>
       <CustomAlertDialog key={'alert'} />
       <UpdateModal visible={visible} storeUrl={storeUrl} />
+
+      {/* Onboarding — shown until user signs in or continues as guest */}
+      <OnboardingModal
+        visible={showOnboarding}
+        onClose={handleCloseModal}
+        onSignInUser={handleSignInUser}
+        onSignInDoctor={handleSignInUser}
+        onContinue={() => {}}
+        onGuestContinue={handleGuest}
+      />
     </View>
   );
 }

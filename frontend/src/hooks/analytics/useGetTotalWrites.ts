@@ -1,38 +1,37 @@
-
 import { GET_TOTAL_WRITES } from "@/src/lib/api/APIUtils";
 import { WriteStatus } from "@/src/schemas/type";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import axios from "axios";
-
 import { useAppSelector } from "../../store/hooks";
 
-export const useGetTotalWrites = (
- {
- user_id,
- userId,
- others,
- isConnected
- }:{
+export const useGetTotalWrites = ({
+  user_id,
+  userId,
+  others,
+  isConnected,
+}: {
   user_id: string;
   userId?: string;
   others?: boolean;
-  isConnected?: boolean
- }
-): UseQueryResult<WriteStatus> => {
+  isConnected?: boolean;
+}): UseQueryResult<WriteStatus> => {
   const isGuest = useAppSelector(state => state.user.isGuest);
 
   return useQuery<WriteStatus>({
     queryKey: ["get-total-writes", user_id, userId, others],
 
     queryFn: async () => {
-   
-      const url = others
-        ? `${GET_TOTAL_WRITES}${userId}`
-        : `${GET_TOTAL_WRITES}${user_id}`;
+      try {
+        const url = others
+          ? `${GET_TOTAL_WRITES}${userId}`
+          : `${GET_TOTAL_WRITES}${user_id}`;
 
-      const response = await axios.get(url);
+        const response = await axios.get(url);
 
-      return response.data as WriteStatus;
+        return (response?.data ?? { totalWrites: 0, progress: 0 }) as WriteStatus;
+      } catch {
+        return { totalWrites: 0, progress: 0 };
+      }
     },
 
     enabled: !!isConnected && (others ? !!userId : (!isGuest && !!user_id)),

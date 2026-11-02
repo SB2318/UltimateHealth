@@ -324,4 +324,35 @@ describe('ChatbotScreen', () => {
       expect.any(Object),
     );
   });
+  it('filters out previous days conversation logs and retains only today messages', () => {
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const today = new Date().toISOString();
+
+    mockUseLoadAIConversations.mockReturnValue({
+      data: [
+        {
+          _id: 101,
+          text: 'Yesterday old conversation',
+          role: 'user',
+          timestamp: yesterday,
+        },
+        {
+          _id: 102,
+          text: 'Today active conversation',
+          role: 'user',
+          timestamp: today,
+        },
+      ],
+      isLoading: false,
+    });
+
+    const { getByText, queryByText } = renderScreen();
+
+    // Default welcome message must be present
+    expect(getByText("Hello! 👋 I'm here to assist you. How can I help you today?")).toBeTruthy();
+    // Today's conversation must be present
+    expect(getByText('Today active conversation')).toBeTruthy();
+    // Yesterday's conversation must have been cleared / filtered out
+    expect(queryByText('Yesterday old conversation')).toBeNull();
+  });
 });

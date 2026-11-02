@@ -11,11 +11,14 @@ export const useGetTrustedUsers = (
   return useQuery({
     queryKey: ['get-trusted-users', articleId],
     queryFn: async () => {
-      const response = await axios.get(GET_TRUSTED_USERS, {
-        params: {article_id: articleId},
-      });
-
-      return response.data.trustUsers as TrustedUser[];
+      try {
+        const response = await axios.get(GET_TRUSTED_USERS, {
+          params: {article_id: articleId},
+        });
+        return (response?.data?.trustUsers ?? []) as TrustedUser[];
+      } catch {
+        return [];
+      }
     },
     enabled: enabled && !!articleId,
   });

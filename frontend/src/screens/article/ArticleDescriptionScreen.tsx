@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
 
 // @ts-nocheck
-import React, {useEffect, useRef, useState, useCallback} from 'react';
+import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,10 @@ import {
   FlatList,
   Animated,
 } from 'react-native';
-import {useAppSelector} from '../../store/hooks';
+import {File} from 'expo-file-system';
+import RNFS from 'react-native-fs';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {setSuggestion, setSuggestionAccepted} from '../../store/dataSlice';
 import {ArticleDescriptionProp, Category} from '../../schemas/type';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
@@ -28,36 +31,102 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import {hp} from '../../lib/ui/Metric';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {StatusBar} from 'expo-status-bar';
 import {ttsLanguageList} from '@/src/lib/utils/Utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   saveProgress,
   getProgress,
 } from '../../lib/services/ReadingProgressService';
+import TagSelectorSection, {
+  isSameCategory,
+} from '../../components/common/TagSelectorSection';
 
 const ARTICLE_TITLE_MAX_LENGTH = 150;
 const ARTICLE_DESCRIPTION_MAX_LENGTH = 500;
 const COUNTER_WARNING_THRESHOLD = 0.9;
 const ARTICLE_DRAFT_KEY = '@article_description_draft';
 
+const extractHtmlBodyAndMeta = (rawHtml: string) => {
+  const withoutScripts = rawHtml.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    '',
+  );
+  const titleMatch =
+    withoutScripts.match(/<title[^>]*>([\s\S]*?)<\/title>/i) ||
+    withoutScripts.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+  const extractedTitle = titleMatch
+    ? titleMatch[1].replace(/<[^>]+>/g, '').trim()
+    : '';
+
+  const pMatch = withoutScripts.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+  const extractedDescription = pMatch
+    ? pMatch[1].replace(/<[^>]+>/g, '').trim()
+    : '';
+
+  const bodyMatch = withoutScripts.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  const bodyHtml = bodyMatch ? bodyMatch[1].trim() : withoutScripts.trim();
+
+  return {
+    bodyHtml,
+    extractedTitle,
+    extractedDescription,
+  };
+};
+
 const ArticleDescriptionScreen = ({
   navigation,
   route,
 }: ArticleDescriptionProp) => {
-  const {article, htmlContent, translationSource} = route.params || {};
+  const {
+    article,
+    htmlContent,
+    translationSource,
+    title: paramTitle,
+    description: paramDescription,
+    authorName: paramAuthorName,
+    selectedGenres: paramSelectedGenres,
+    imageUtils: paramImageUtils,
+    language: paramLanguage,
+    localImages: paramLocalImages,
+    htmlImages: paramHtmlImages,
+    articleData,
+    requestId,
+    pb_record_id,
+  } = (route.params || {}) as any;
   const isTranslation = Boolean(translationSource);
+  const dispatch =
+    typeof useAppDispatch === 'function' ? useAppDispatch() : undefined;
 
-  const [title, setTitle] = useState('');
-  const [authorName, setAuthorName] = useState('');
-  const [description, setDescription] = useState('');
-  const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
-  const [language, setLanguage] = useState('en-IN');
-  const [languageModalVisible, setLanguageModalVisible] = useState(false);
-  const {categories} = useAppSelector((state: any) => state.data);
-  const [imageUtils, setImageUtils] = useState('');
-  const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
+  const {categories, user} = useAppSelector((state: any) => state.data);
+
+  const [title, setTitle] = useState(paramTitle || '');
+  const [authorName, setAuthorName] = useState(
+    paramAuthorName || user?.user_name || user?.user_handle || '',
   );
+  const [description, setDescription] = useState(paramDescription || '');
+  const [selectedGenres, setSelectedGenres] = useState<Category[]>(
+    paramSelectedGenres || [],
+  );
+  const [language, setLanguage] = useState(paramLanguage || 'en-IN');
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [imageUtils, setImageUtils] = useState(paramImageUtils || '');
+  const [uploadedHtmlContent, setUploadedHtmlContent] = useState<string>(
+    htmlContent || '',
+  );
+  const [uploadedHtmlFileName, setUploadedHtmlFileName] = useState<string>('');
+  const draftSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const effectiveHtml = (uploadedHtmlContent || htmlContent || '').trim();
+  const effectiveWordCount = useMemo(() => {
+    if (!effectiveHtml) return 0;
+    const plain = effectiveHtml
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return plain ? plain.split(/\s+/).filter(Boolean).length : 0;
+  }, [effectiveHtml]);
 
   const scrollYRef = useRef(new Animated.Value(0));
   const scrollY = scrollYRef.current;
@@ -78,10 +147,7 @@ const ArticleDescriptionScreen = ({
 
     const pct =
       contentHeight > viewHeight
-        ? Math.min(
-            currentY / (contentHeight - viewHeight),
-            1,
-          )
+        ? Math.min(currentY / (contentHeight - viewHeight), 1)
         : 0;
 
     if (article._id || article.id) {
@@ -97,26 +163,42 @@ const ArticleDescriptionScreen = ({
       getProgress((article._id || article.id) as string).then(p => {
         if (p && p.scrollPosition > 0.05) {
           // Optionally show a "Resume from XX%" toast
-          // Scroll to the saved position
         }
       });
     }
   }, [article]);
 
+  /** Sync params if passed from EditorScreen */
+  useEffect(() => {
+    if (paramTitle && !title) setTitle(paramTitle);
+    if (paramDescription && !description) setDescription(paramDescription);
+    if (paramAuthorName && !authorName) setAuthorName(paramAuthorName);
+    if (paramSelectedGenres && paramSelectedGenres.length > 0 && selectedGenres.length === 0) {
+      setSelectedGenres(paramSelectedGenres);
+    }
+    if (paramImageUtils && !imageUtils) setImageUtils(paramImageUtils);
+    if (paramLanguage) setLanguage(paramLanguage);
+    if (htmlContent) setUploadedHtmlContent(htmlContent);
+  }, [
+    paramTitle,
+    paramDescription,
+    paramAuthorName,
+    paramSelectedGenres,
+    paramImageUtils,
+    paramLanguage,
+    htmlContent,
+  ]);
+
   /** Restore draft from AsyncStorage if this is a new article */
   useEffect(() => {
-    if (!article && !isTranslation) {
+    if (!article && !isTranslation && !paramTitle && !htmlContent) {
       AsyncStorage.getItem(ARTICLE_DRAFT_KEY).then(raw => {
         if (!raw) return;
 
         try {
           const draft = JSON.parse(raw);
 
-          if (
-            draft.title ||
-            draft.authorName ||
-            draft.description
-          ) {
+          if (draft.title || draft.authorName || draft.description) {
             Alert.alert(
               'Restore Draft',
               'You have an unsaved draft. Would you like to continue where you left off?',
@@ -124,23 +206,18 @@ const ArticleDescriptionScreen = ({
                 {
                   text: 'Discard',
                   style: 'destructive',
-                  onPress: () =>
-                    AsyncStorage.removeItem(ARTICLE_DRAFT_KEY),
+                  onPress: () => AsyncStorage.removeItem(ARTICLE_DRAFT_KEY),
                 },
                 {
                   text: 'Restore',
                   onPress: () => {
                     if (draft.title) setTitle(draft.title);
-                    if (draft.authorName)
-                      setAuthorName(draft.authorName);
-                    if (draft.description)
-                      setDescription(draft.description);
+                    if (draft.authorName) setAuthorName(draft.authorName);
+                    if (draft.description) setDescription(draft.description);
                     if (draft.selectedGenres)
                       setSelectedGenres(draft.selectedGenres);
-                    if (draft.language)
-                      setLanguage(draft.language);
-                    if (draft.imageUtils)
-                      setImageUtils(draft.imageUtils);
+                    if (draft.language) setLanguage(draft.language);
+                    if (draft.imageUtils) setImageUtils(draft.imageUtils);
                   },
                 },
               ],
@@ -171,10 +248,9 @@ const ArticleDescriptionScreen = ({
         imageUtils,
       };
 
-      AsyncStorage.setItem(
-        ARTICLE_DRAFT_KEY,
-        JSON.stringify(draft),
-      ).catch(() => {});
+      AsyncStorage.setItem(ARTICLE_DRAFT_KEY, JSON.stringify(draft)).catch(
+        () => {},
+      );
     }, 800);
 
     return () => {
@@ -182,14 +258,7 @@ const ArticleDescriptionScreen = ({
         clearTimeout(draftSaveTimerRef.current);
       }
     };
-  }, [
-    title,
-    authorName,
-    description,
-    selectedGenres,
-    language,
-    imageUtils,
-  ]);
+  }, [title, authorName, description, selectedGenres, language, imageUtils]);
 
   /** Set Initial Value for edits/translations */
   useEffect(() => {
@@ -204,8 +273,7 @@ const ArticleDescriptionScreen = ({
       }
 
       setImageUtils(
-        article.imageUtils &&
-          article.imageUtils.length > 0
+        article.imageUtils && article.imageUtils.length > 0
           ? article.imageUtils[0]
           : '',
       );
@@ -215,21 +283,7 @@ const ArticleDescriptionScreen = ({
   const handleGenrePress = (genre: Category) => {
     if (isSelected(genre)) {
       setSelectedGenres(
-        selectedGenres.filter(item => {
-          const matchId =
-            genre.id !== undefined && item.id === genre.id;
-
-          const matchDbId =
-            genre._id !== undefined &&
-            item._id === genre._id;
-
-          const matchName =
-            genre.id === undefined &&
-            genre._id === undefined &&
-            item.name === genre.name;
-
-          return !(matchId || matchDbId || matchName);
-        }),
+        selectedGenres.filter(item => !isSameCategory(item, genre)),
       );
     } else if (selectedGenres.length < 5) {
       setSelectedGenres([...selectedGenres, genre]);
@@ -237,32 +291,26 @@ const ArticleDescriptionScreen = ({
   };
 
   const isSelected = (genre: Category) =>
-    selectedGenres.some(
-      item =>
-        item.id === genre.id ||
-        item._id === genre._id,
-    );
+    selectedGenres.some(item => isSameCategory(item, genre));
 
-  const handleCreatePost = () => {
-    if (title === '') {
+  const validateFields = () => {
+    if (title.trim() === '') {
       Alert.alert('Title section is required');
-      return;
-    } else if (authorName === '') {
+      return false;
+    } else if (authorName.trim() === '') {
       Alert.alert('Author name is required');
-      return;
-    } else if (description === '') {
+      return false;
+    } else if (description.trim() === '') {
       Alert.alert('Please give proper description');
-      return;
+      return false;
     } else if (selectedGenres.length === 0) {
       Alert.alert(
         'Please select at least one suitable tags for your article.',
       );
-      return;
+      return false;
     } else if (isTranslation && !language) {
-      Alert.alert(
-        'Please select a target language for the translation.',
-      );
-      return;
+      Alert.alert('Please select a target language for the translation.');
+      return false;
     } else if (
       isTranslation &&
       language === translationSource?.sourceLanguage
@@ -270,11 +318,125 @@ const ArticleDescriptionScreen = ({
       Alert.alert(
         'Please choose a language different from the source article.',
       );
-      return;
+      return false;
     } else if (imageUtils.length === 0) {
-      Alert.alert(
-        'Please upload one image for your article.',
+      Alert.alert('Please upload one image for your article.');
+      return false;
+    }
+    return true;
+  };
+
+  const handleUploadHtmlFile = async () => {
+    try {
+      const picked = await File.pickFileAsync({
+        mimeTypes: ['text/html', 'application/xhtml+xml', 'text/plain'],
+      });
+      if (!picked || ('canceled' in picked && picked.canceled)) {
+        return;
+      }
+
+      const fileObj: any =
+        'result' in picked
+          ? Array.isArray(picked.result)
+            ? picked.result[0]
+            : picked.result
+          : Array.isArray(picked)
+            ? picked[0]
+            : picked;
+
+      if (!fileObj) return;
+
+      let rawText = '';
+      if (typeof fileObj.text === 'function') {
+        rawText = await fileObj.text();
+      } else if (typeof fileObj.textSync === 'function') {
+        rawText = fileObj.textSync();
+      } else if (fileObj.uri) {
+        rawText = await RNFS.readFile(fileObj.uri, 'utf8');
+      }
+
+      if (!rawText || rawText.trim().length < 20) {
+        Alert.alert(
+          'Invalid HTML File',
+          'The selected HTML file appears to be empty or has fewer than 20 characters.',
+        );
+        return;
+      }
+
+      const {bodyHtml, extractedTitle, extractedDescription} =
+        extractHtmlBodyAndMeta(rawText);
+
+      setUploadedHtmlContent(bodyHtml);
+      setUploadedHtmlFileName(
+        fileObj.name ||
+          (fileObj.uri ? fileObj.uri.split('/').pop() : 'article.html') ||
+          'article.html',
       );
+
+      if (!title.trim() && extractedTitle) {
+        setTitle(extractedTitle.slice(0, ARTICLE_TITLE_MAX_LENGTH));
+      }
+      if (!description.trim() && extractedDescription) {
+        setDescription(
+          extractedDescription.slice(0, ARTICLE_DESCRIPTION_MAX_LENGTH),
+        );
+      }
+    } catch (error: any) {
+      const msg = String(error?.message || '');
+      if (
+        msg.toLowerCase().includes('cancel') ||
+        msg.toLowerCase().includes('aborted')
+      ) {
+        return;
+      }
+      Alert.alert(
+        'Upload Failed',
+        'Could not read the selected HTML file. Please try again.',
+      );
+    }
+  };
+
+  const handleCreatePost = () => {
+    const trimmedHtml = (uploadedHtmlContent || htmlContent || '').trim();
+    const hasEnoughContent =
+      trimmedHtml.replace(/<[^>]*>/g, '').trim().length >= 20;
+
+    // Normal swapped flow: Body already written in EditorScreen (or imported HTML), proceed to Preview & Publish
+    if (hasEnoughContent) {
+      if (!validateFields()) {
+        return;
+      }
+
+      dispatch?.(setSuggestion({suggestion: ''}));
+      dispatch?.(setSuggestionAccepted({selection: false}));
+
+      const resolvedImages =
+        paramLocalImages && paramLocalImages.length > 0
+          ? paramLocalImages
+          : imageUtils
+            ? [imageUtils]
+            : [];
+
+      navigation.navigate('PreviewScreen', {
+        article: trimmedHtml,
+        title,
+        authorName,
+        language,
+        description,
+        image: imageUtils,
+        selectedGenres,
+        localImages: resolvedImages,
+        htmlImages: paramHtmlImages || [],
+        articleData: isTranslation ? undefined : (article || articleData),
+        requestId,
+        pb_record_id,
+        translationSource,
+      });
+      return;
+    }
+
+    // Fallback: If user arrived without drafting content in editor, forward to EditorScreen
+    if (!validateFields()) {
       return;
     }
 
@@ -284,13 +446,17 @@ const ArticleDescriptionScreen = ({
       description,
       selectedGenres,
       imageUtils,
-      htmlContent,
+      htmlContent: trimmedHtml || undefined,
       language,
-      requestId: undefined,
-      pb_record_id: undefined,
-      articleData: isTranslation ? undefined : article,
+      requestId,
+      pb_record_id,
+      articleData: isTranslation ? undefined : (article || articleData),
       translationSource,
     });
+  };
+
+  const handleDirectPreviewWithHtml = () => {
+    handleCreatePost();
   };
 
   const selectImage = () => {
@@ -299,89 +465,59 @@ const ArticleDescriptionScreen = ({
       includeBase64: true,
     };
 
-    launchImageLibrary(
-      options,
-      (response: ImagePickerResponse) => {
-        if (response.didCancel) {
-          // User cancelled image picker
-        } else if (response.errorMessage) {
-          if (__DEV__) {
-            console.log(
-              'ImagePicker Error:',
-              response.errorMessage,
-            );
-          }
-        } else if (response.assets) {
-          const {uri, fileSize} = response.assets[0];
-
-          if (
-            fileSize &&
-            fileSize > 1024 * 1024
-          ) {
-            Alert.alert(
-              'Error',
-              'File size exceeds 1 MB.',
-            );
-            return;
-          }
-
-          if (uri) {
-            ImageResizer.createResizedImage(
-              uri,
-              1000,
-              1000,
-              'JPEG',
-              80,
-            )
-              .then(resizedImage => {
-                setImageUtils(resizedImage.uri);
-              })
-              .catch(err => {
-                if (__DEV__) {
-                  console.log(
-                    'Image resize failed, using original:',
-                    err,
-                  );
-                }
-
-                setImageUtils(uri);
-              });
-          }
+    launchImageLibrary(options, (response: ImagePickerResponse) => {
+      if (response.didCancel) {
+        // User cancelled image picker
+      } else if (response.errorMessage) {
+        if (__DEV__) {
+          console.log('ImagePicker Error:', response.errorMessage);
         }
-      },
-    );
+      } else if (response.assets) {
+        const {uri, fileSize} = response.assets[0];
+
+        if (fileSize && fileSize > 1024 * 1024) {
+          Alert.alert('Error', 'File size exceeds 1 MB.');
+          return;
+        }
+
+        if (uri) {
+          ImageResizer.createResizedImage(uri, 1000, 1000, 'JPEG', 80)
+            .then(resizedImage => {
+              setImageUtils(resizedImage.uri);
+            })
+            .catch(err => {
+              if (__DEV__) {
+                console.log('Image resize failed, using original:', err);
+              }
+
+              setImageUtils(uri);
+            });
+        }
+      }
+    });
   };
 
   const availableLanguages = isTranslation
     ? ttsLanguageList.filter(
-        lang =>
-          lang.code !==
-          translationSource?.sourceLanguage,
+        lang => lang.code !== translationSource?.sourceLanguage,
       )
     : ttsLanguageList;
 
-  const isNearLimit = (
-    value: string,
-    limit: number,
-  ) => value.length >= limit * COUNTER_WARNING_THRESHOLD;
+  const isNearLimit = (value: string, limit: number) =>
+    value.length >= limit * COUNTER_WARNING_THRESHOLD;
 
   const handleTitleChange = (text: string) => {
-    setTitle(
-      text.slice(0, ARTICLE_TITLE_MAX_LENGTH),
-    );
+    setTitle(text.slice(0, ARTICLE_TITLE_MAX_LENGTH));
   };
 
   const handleDescriptionChange = (text: string) => {
-    setDescription(
-      text.slice(0, ARTICLE_DESCRIPTION_MAX_LENGTH),
-    );
+    setDescription(text.slice(0, ARTICLE_DESCRIPTION_MAX_LENGTH));
   };
 
   const getLanguageLabel = (value: string) => {
     return (
-      ttsLanguageList.find(
-        lang => lang.code === value,
-      )?.name || 'Select language'
+      ttsLanguageList.find(lang => lang.code === value)?.name ||
+      'Select language'
     );
   };
 
@@ -391,37 +527,24 @@ const ArticleDescriptionScreen = ({
         animationType="slide"
         transparent={true}
         visible={languageModalVisible}
-        onRequestClose={() =>
-          setLanguageModalVisible(false)
-        }>
+        onRequestClose={() => setLanguageModalVisible(false)}>
         <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
-          onPress={() =>
-            setLanguageModalVisible(false)
-          }
+          onPress={() => setLanguageModalVisible(false)}
           accessibilityRole="button"
           accessibilityLabel="Close language selection"
           accessibilityHint="Closes the language selection menu">
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>
-                Select Language
-              </Text>
+              <Text style={styles.modalTitle}>Select Language</Text>
 
               <TouchableOpacity
-                onPress={() =>
-                  setLanguageModalVisible(false)
-                }
+                onPress={() => setLanguageModalVisible(false)}
                 accessibilityRole="button"
                 accessibilityLabel="Close language selection"
                 accessibilityHint="Closes the language selection menu">
-                <Ionicon
-                  name="close"
-                  size={24}
-                  color="#222"
-                  accessible={false}
-                />
+                <Ionicon name="close" size={24} color="#222" accessible={false} />
               </TouchableOpacity>
             </View>
 
@@ -432,8 +555,7 @@ const ArticleDescriptionScreen = ({
                 <TouchableOpacity
                   style={[
                     styles.languageItem,
-                    language === item.code &&
-                      styles.selectedLanguageItem,
+                    language === item.code && styles.selectedLanguageItem,
                   ]}
                   onPress={() => {
                     setLanguage(item.code);
@@ -442,14 +564,12 @@ const ArticleDescriptionScreen = ({
                   accessibilityRole="radio"
                   accessibilityLabel={`Language: ${item.name}`}
                   accessibilityState={{
-                    selected:
-                      language === item.code,
+                    selected: language === item.code,
                   }}>
                   <Text
                     style={[
                       styles.languageItemText,
-                      language === item.code &&
-                        styles.selectedLanguageItemText,
+                      language === item.code && styles.selectedLanguageItemText,
                     ]}>
                     {item.name}
                   </Text>
@@ -472,7 +592,8 @@ const ArticleDescriptionScreen = ({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['left', 'right', 'bottom']}>
+      <StatusBar style="light" backgroundColor="#000A60" />
       <Animated.View
         style={{
           position: 'absolute',
@@ -510,14 +631,8 @@ const ArticleDescriptionScreen = ({
           ],
           {useNativeDriver: false},
         )}
-        onContentSizeChange={(_w, h) =>
-          setContentHeight(h)
-        }
-        onLayout={e =>
-          setViewHeight(
-            e.nativeEvent.layout.height,
-          )
-        }
+        onContentSizeChange={(_w, h) => setContentHeight(h)}
+        onLayout={e => setViewHeight(e.nativeEvent.layout.height)}
         onMomentumScrollEnd={onScrollEnd}
         onScrollEndDrag={onScrollEnd}
         contentContainerStyle={{
@@ -530,16 +645,52 @@ const ArticleDescriptionScreen = ({
 
           {/* Header Section */}
           <View style={styles.headerSection}>
-            <Text style={styles.sectionTitle}>
-              Article Details
-            </Text>
+            <Text style={styles.sectionTitle}>Article Details</Text>
 
             <Text style={styles.sectionSubtitle}>
               {isTranslation
                 ? `Create a translated version of "${translationSource?.sourceTitle}"`
-                : 'Fill in the information below to create your article'}
+                : 'Fill in the details below to finalize and publish your article'}
             </Text>
           </View>
+
+          {effectiveHtml ? (
+            <View style={styles.draftCard}>
+              <View style={styles.draftCardLeft}>
+                <View style={styles.draftCardIconBadge}>
+                  <Ionicon name="document-text" size={20} color="#000A60" />
+                </View>
+                <View style={{flex: 1, marginLeft: 10}}>
+                  <Text style={styles.draftCardTitle}>Article Body Ready</Text>
+                  <Text style={styles.draftCardSubtitle}>
+                    {effectiveWordCount} words &bull; Content attached from editor
+                  </Text>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.editDraftBtn}
+                onPress={() => {
+                  navigation.navigate('EditorScreen', {
+                    title,
+                    authorName,
+                    description,
+                    selectedGenres,
+                    imageUtils,
+                    htmlContent: effectiveHtml,
+                    language,
+                    requestId,
+                    pb_record_id,
+                    articleData: isTranslation ? undefined : (article || articleData),
+                    translationSource,
+                  });
+                }}
+                accessibilityRole="button"
+                accessibilityLabel="Edit article body in editor">
+                <Ionicon name="create-outline" size={15} color="#000A60" />
+                <Text style={styles.editDraftBtnText}>Edit Body</Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
 
           {isTranslation && (
             <View style={styles.translationNotice}>
@@ -550,26 +701,14 @@ const ArticleDescriptionScreen = ({
                 accessible={false}
               />
 
-              <View
-                style={
-                  styles.translationNoticeTextWrapper
-                }>
-                <Text
-                  style={
-                    styles.translationNoticeTitle
-                  }>
+              <View style={styles.translationNoticeTextWrapper}>
+                <Text style={styles.translationNoticeTitle}>
                   Translation article
                 </Text>
 
-                <Text
-                  style={
-                    styles.translationNoticeText
-                  }>
+                <Text style={styles.translationNoticeText}>
                   Source language:{' '}
-                  {getLanguageLabel(
-                    translationSource?.sourceLanguage ??
-                      '',
-                  )}
+                  {getLanguageLabel(translationSource?.sourceLanguage ?? '')}
                 </Text>
               </View>
             </View>
@@ -595,8 +734,7 @@ const ArticleDescriptionScreen = ({
                   accessibilityLabel="Article cover image"
                 />
 
-                <View
-                  style={styles.imageOverlay}>
+                <View style={styles.imageOverlay}>
                   <TouchableOpacity
                     style={styles.changeButton}
                     onPress={selectImage}
@@ -610,19 +748,12 @@ const ArticleDescriptionScreen = ({
                       accessible={false}
                     />
 
-                    <Text
-                      style={
-                        styles.changeButtonText
-                      }>
-                      Change
-                    </Text>
+                    <Text style={styles.changeButtonText}>Change</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={styles.deleteButton}
-                    onPress={() =>
-                      setImageUtils('')
-                    }
+                    onPress={() => setImageUtils('')}
                     accessibilityRole="button"
                     accessibilityLabel="Delete cover image"
                     accessibilityHint="Removes the current article cover image">
@@ -633,12 +764,7 @@ const ArticleDescriptionScreen = ({
                       accessible={false}
                     />
 
-                    <Text
-                      style={
-                        styles.deleteButtonText
-                      }>
-                      Delete
-                    </Text>
+                    <Text style={styles.deleteButtonText}>Delete</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -656,14 +782,86 @@ const ArticleDescriptionScreen = ({
                   accessible={false}
                 />
 
-                <Text
-                  style={styles.uploadText}>
-                  Upload Cover Image
-                </Text>
+                <Text style={styles.uploadText}>Upload Cover Image</Text>
 
-                <Text
-                  style={styles.uploadHint}>
+                <Text style={styles.uploadHint}>
                   Maximum file size: 1MB • JPG, PNG
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* HTML File Upload Section (Direct to Preview & Submit) */}
+          <View style={styles.section}>
+            <Text style={styles.inputLabel}>
+              <Ionicon
+                name="code-slash-outline"
+                size={18}
+                color="#222"
+                accessible={false}
+              />{' '}
+              Upload HTML Article (Optional)
+            </Text>
+            <Text style={styles.sectionSubtitle}>
+              Have a ready-made HTML file? Upload it to jump directly to Preview
+              & Submit.
+            </Text>
+
+            {uploadedHtmlContent ? (
+              <View style={styles.htmlUploadedCard}>
+                <View style={styles.htmlUploadedRow}>
+                  <Ionicon
+                    name="document-attach"
+                    size={24}
+                    color={PRIMARY_COLOR}
+                  />
+                  <View style={{flex: 1, marginLeft: 10}}>
+                    <Text style={styles.htmlFileName} numberOfLines={1}>
+                      {uploadedHtmlFileName || 'Uploaded HTML Content'}
+                    </Text>
+                    <Text style={styles.htmlFileMeta}>
+                      {uploadedHtmlContent.replace(/<[^>]*>/g, '').trim().length}{' '}
+                      characters loaded
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.htmlActionRow}>
+                  <TouchableOpacity
+                    style={styles.htmlSecondaryBtn}
+                    onPress={handleUploadHtmlFile}
+                    accessibilityRole="button"
+                    accessibilityLabel="Replace HTML file">
+                    <Ionicon name="refresh" size={16} color={PRIMARY_COLOR} />
+                    <Text style={styles.htmlSecondaryBtnText}>Replace</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={styles.htmlRemoveBtn}
+                    onPress={() => {
+                      setUploadedHtmlContent('');
+                      setUploadedHtmlFileName('');
+                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel="Remove HTML file">
+                    <Ionicon name="trash-outline" size={16} color="#EF4444" />
+                    <Text style={styles.htmlRemoveBtnText}>Remove</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={styles.htmlUploadButton}
+                onPress={handleUploadHtmlFile}
+                accessibilityRole="button"
+                accessibilityLabel="Upload HTML file"
+                accessibilityHint="Pick an HTML file from your device">
+                <Ionicon
+                  name="document-text-outline"
+                  size={22}
+                  color={PRIMARY_COLOR}
+                />
+                <Text style={styles.htmlUploadButtonText}>
+                  Select .html File from Device
                 </Text>
               </TouchableOpacity>
             )}
@@ -671,9 +869,7 @@ const ArticleDescriptionScreen = ({
 
           {/* Basic Information Section */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
-              Basic Information
-            </Text>
+            <Text style={styles.sectionTitle}>Basic Information</Text>
 
             {/* Title */}
             <View style={styles.input}>
@@ -704,14 +900,10 @@ const ArticleDescriptionScreen = ({
               <Text
                 style={[
                   styles.charCounter,
-                  isNearLimit(
-                    title,
-                    ARTICLE_TITLE_MAX_LENGTH,
-                  ) &&
+                  isNearLimit(title, ARTICLE_TITLE_MAX_LENGTH) &&
                     styles.charCounterWarning,
                 ]}>
-                {title.length} /{' '}
-                {ARTICLE_TITLE_MAX_LENGTH}
+                {title.length} / {ARTICLE_TITLE_MAX_LENGTH}
               </Text>
             </View>
 
@@ -755,9 +947,7 @@ const ArticleDescriptionScreen = ({
 
               <TouchableOpacity
                 style={styles.languageSelector}
-                onPress={() =>
-                  setLanguageModalVisible(true)
-                }
+                onPress={() => setLanguageModalVisible(true)}
                 accessibilityRole="button"
                 accessibilityLabel={`Language: ${
                   language
@@ -765,10 +955,7 @@ const ArticleDescriptionScreen = ({
                     : 'Select target language'
                 }`}
                 accessibilityHint="Opens the language selection menu">
-                <Text
-                  style={
-                    styles.languageSelectorText
-                  }>
+                <Text style={styles.languageSelectorText}>
                   {language
                     ? getLanguageLabel(language)
                     : 'Select target language'}
@@ -804,12 +991,8 @@ const ArticleDescriptionScreen = ({
                 numberOfLines={4}
                 autoCapitalize="sentences"
                 value={description}
-                onChangeText={
-                  handleDescriptionChange
-                }
-                maxLength={
-                  ARTICLE_DESCRIPTION_MAX_LENGTH
-                }
+                onChangeText={handleDescriptionChange}
+                maxLength={ARTICLE_DESCRIPTION_MAX_LENGTH}
                 accessibilityLabel="Article description"
                 accessibilityHint="Enter a brief overview of your article"
               />
@@ -817,137 +1000,41 @@ const ArticleDescriptionScreen = ({
               <Text
                 style={[
                   styles.charCounter,
-                  isNearLimit(
-                    description,
-                    ARTICLE_DESCRIPTION_MAX_LENGTH,
-                  ) &&
+                  isNearLimit(description, ARTICLE_DESCRIPTION_MAX_LENGTH) &&
                     styles.charCounterWarning,
                 ]}>
-                {description.length} /{' '}
-                {ARTICLE_DESCRIPTION_MAX_LENGTH}
+                {description.length} / {ARTICLE_DESCRIPTION_MAX_LENGTH}
               </Text>
             </View>
           </View>
 
           {/* Tags Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>
-              <Ionicon
-                name="pricetag-outline"
-                size={18}
-                color="#222"
-                accessible={false}
-              />{' '}
-              Tags
-            </Text>
-
-            <Text style={styles.sectionSubtitle}>
-              Select up to 5 tags to help people discover your article
-            </Text>
-
-            {selectedGenres.length > 0 && (
-              <View
-                style={
-                  styles.selectedGenresWrapper
-                }>
-                {selectedGenres.map(
-                  (genre, index) => (
-                    <View
-                      key={index}
-                      style={
-                        styles.selectedGenreChip
-                      }>
-                      <Text
-                        style={
-                          styles.selectedGenreChipText
-                        }>
-                        #{genre.name}
-                      </Text>
-
-                      <TouchableOpacity
-                        onPress={() =>
-                          handleGenrePress(genre)
-                        }
-                        accessibilityRole="button"
-                        accessibilityLabel={`Remove tag ${genre.name}`}
-                        accessibilityHint={`Removes ${genre.name} from selected tags`}>
-                        <Ionicon
-                          name="close-circle"
-                          size={18}
-                          color={PRIMARY_COLOR}
-                          accessible={false}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  ),
-                )}
-              </View>
-            )}
-
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={
-                styles.genreContainer
-              }>
-              {categories.map(
-                (
-                  genre: Category,
-                  index: number,
-                ) => {
-                  const selected =
-                    isSelected(genre);
-
-                  return (
-                    <TouchableOpacity
-                      key={index}
-                      style={[
-                        styles.genreButton,
-                        selected &&
-                          styles.selectedGenreButton,
-                      ]}
-                      onPress={() =>
-                        handleGenrePress(genre)
-                      }
-                      accessibilityRole="checkbox"
-                      accessibilityLabel={`Tag ${genre.name}`}
-                      accessibilityHint={
-                        selected
-                          ? `Removes ${genre.name} from selected tags`
-                          : `Adds ${genre.name} to selected tags`
-                      }
-                      accessibilityState={{
-                        checked: selected,
-                      }}>
-                      <Text
-                        style={[
-                          styles.genreButtonText,
-                          selected &&
-                            styles.selectedGenreButtonText,
-                        ]}>
-                        #{genre.name}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                },
-              )}
-            </ScrollView>
-          </View>
+          <TagSelectorSection
+            categories={categories || []}
+            selectedGenres={selectedGenres}
+            onToggleGenre={handleGenrePress}
+            onClearAll={() => setSelectedGenres([])}
+            maxSelection={5}
+            subtitle="Select up to 5 tags to help people discover your article"
+          />
 
           {/* Submit Button */}
           <TouchableOpacity
             style={styles.submitButton}
             onPress={handleCreatePost}
             accessibilityRole="button"
-            accessibilityLabel="Continue to editor"
-            accessibilityHint="Validates the article details and continues to the editor">
-            <Text
-              style={styles.submitButtonText}>
-              Continue to Editor
+            accessibilityLabel={
+              effectiveHtml
+                ? 'Preview and publish article'
+                : 'Continue to editor'
+            }
+            accessibilityHint="Validates the article details and continues to the next step">
+            <Text style={styles.submitButtonText}>
+              {effectiveHtml ? 'Preview & Publish' : 'Continue to Editor'}
             </Text>
 
             <Ionicon
-              name="arrow-forward"
+              name={effectiveHtml ? 'eye-outline' : 'arrow-forward'}
               size={20}
               color="#fff"
               accessible={false}
@@ -972,6 +1059,57 @@ const styles = StyleSheet.create({
   headerSection: {
     marginBottom: 24,
     paddingVertical: 16,
+  },
+  draftCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#EFF6FF',
+    borderWidth: 1,
+    borderColor: '#BFDBFE',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 16,
+  },
+  draftCardLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 8,
+  },
+  draftCardIconBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#DBEAFE',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  draftCardTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1E3A8A',
+  },
+  draftCardSubtitle: {
+    fontSize: 12,
+    color: '#3B82F6',
+    marginTop: 2,
+  },
+  editDraftBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#93C5FD',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  editDraftBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#000A60',
   },
   section: {
     backgroundColor: '#fff',
@@ -1140,6 +1278,85 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 4,
   },
+  htmlUploadButton: {
+    marginTop: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: PRIMARY_COLOR,
+    backgroundColor: 'rgba(0, 191, 255, 0.06)',
+  },
+  htmlUploadButtonText: {
+    color: '#000A60',
+    fontWeight: '700',
+    fontSize: 15,
+  },
+  htmlUploadedCard: {
+    marginTop: 12,
+    padding: 14,
+    borderRadius: 12,
+    backgroundColor: '#F0F9FF',
+    borderWidth: 1,
+    borderColor: '#BAE6FD',
+  },
+  htmlUploadedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  htmlFileName: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#0F172A',
+  },
+  htmlFileMeta: {
+    fontSize: 13,
+    color: '#475569',
+    marginTop: 2,
+  },
+  htmlActionRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 10,
+    marginTop: 12,
+  },
+  htmlSecondaryBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+  },
+  htmlSecondaryBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#0F172A',
+  },
+  htmlRemoveBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: '#FEF2F2',
+    borderWidth: 1,
+    borderColor: '#FECACA',
+  },
+  htmlRemoveBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#EF4444',
+  },
   languageSelector: {
     height: 50,
     backgroundColor: '#fff',
@@ -1155,6 +1372,22 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
     color: '#222',
+  },
+  directPreviewButton: {
+    backgroundColor: '#000A60',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 8,
+    marginBottom: 8,
+    shadowColor: '#000A60',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
   },
   submitButton: {
     backgroundColor: PRIMARY_COLOR,

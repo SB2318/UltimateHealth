@@ -2,8 +2,8 @@
  
 // PodcastSkeletonCard.tsx
 import React, {useEffect, useRef} from 'react';
-import {StyleSheet, View, Animated, useWindowDimensions} from 'react-native';
-import {useTheme, YStack, XStack} from 'tamagui';
+import {StyleSheet, View, Animated, useWindowDimensions, useColorScheme} from 'react-native';
+import {YStack, XStack} from 'tamagui';
 import {PODCAST_CARD} from '@/src/constants/podcastCard';
 
 type AnimatedInterpolation = ReturnType<InstanceType<typeof Animated.Value>['interpolate']>;
@@ -37,12 +37,12 @@ const ShimmerBox: React.FC<ShimmerBoxProps> = ({
 );
 
 const PodcastSkeletonCard: React.FC = () => {
-  const theme = useTheme();
+  const isDarkMode = useColorScheme() === 'dark';
   const {width} = useWindowDimensions();
 
-  const baseColor = (theme.gray200?.val ?? '#E5E7EB') as string;
-  const highlightColor = (theme.gray100?.val ?? '#F9FAFB') as string;
-  const cardBackground = (theme.background?.val ?? '#FFFFFF') as string;
+  const baseColor = isDarkMode ? '#334155' : '#E5E7EB';
+  const highlightColor = isDarkMode ? '#475569' : '#F9FAFB';
+  const cardBackground = isDarkMode ? '#1E293B' : '#FFFFFF';
 
   const shimmerProgress = useRef(new Animated.Value(0)).current;
 

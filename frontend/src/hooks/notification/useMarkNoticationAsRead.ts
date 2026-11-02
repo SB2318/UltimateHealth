@@ -1,12 +1,13 @@
 import axios from 'axios';
 import {PROD_URL} from '../../lib/api/APIUtils';
-import {useMutation, UseMutationResult} from '@tanstack/react-query';
+import {useMutation, useQueryClient, UseMutationResult} from '@tanstack/react-query';
 type AxiosError = any;
 
 export const useMarkNotificationAsRead = (): UseMutationResult<
   any,
   AxiosError
 > => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['mark-notification-as-read'],
     mutationFn: async () => {
@@ -18,6 +19,10 @@ export const useMarkNotificationAsRead = (): UseMutationResult<
       );
 
       return res.data as any;
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(['get-unread-notifications-count'], 0);
+      queryClient.invalidateQueries({queryKey: ['get-unread-notifications-count']});
     },
   });
 };

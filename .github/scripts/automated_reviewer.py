@@ -189,7 +189,39 @@ def fetch_pr_diff(repo, pr_number, github_token):
     url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}"
     headers = {"Authorization": f"token {github_token}", "Accept": "application/vnd.github.v3.diff"}
     diff = make_github_request(url, headers, is_json=False)
+    if not diff:
+        print("Monolithic diff unavailable (e.g. exceeded 20,000 lines). Falling back to paginated files API...")
+        diff = fetch_pr_diff_from_files(repo, pr_number, github_token)
     return diff if diff else ""
+
+def fetch_pr_diff_from_files(repo, pr_number, github_token):
+    diff_parts = []
+    page = 1
+    total_chars = 0
+    while True:
+        url = f"https://api.github.com/repos/{repo}/pulls/{pr_number}/files?per_page=100&page={page}"
+        headers = {"Authorization": f"token {github_token}", "Accept": "application/vnd.github.v3+json"}
+        files = make_github_request(url, headers, is_json=True)
+        if not files:
+            break
+        for f in files:
+            filename = f.get("filename", "")
+            if any(ignored in filename for ignored in IGNORED_PATTERNS):
+                continue
+            patch = f.get("patch", "")
+            if patch:
+                header = f"diff --git a/{filename} b/{filename}
+"
+                diff_parts.append(header + patch)
+                total_chars += len(patch)
+                if total_chars > MAX_DIFF_SIZE * 2:
+                    break
+        if len(files) < 100 or total_chars > MAX_DIFF_SIZE * 2:
+            break
+        page += 1
+    return "
+
+".join(diff_parts)
 
 def filter_diff(diff_text):
     filtered_lines = []

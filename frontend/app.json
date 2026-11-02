@@ -3,7 +3,7 @@
     "name": "UltimateHealth",
     "slug": "UltimateHealth",
 
-    "version": "3.0.0",
+    "version": "3.2.0",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -52,6 +52,26 @@
           "autoVerify": true,
           "category": ["BROWSABLE", "DEFAULT"],
           "data": [
+            {
+              "scheme": "https",
+              "host": "ultimatehealth.blog",
+              "pathPrefix": "/web/en/articles"
+            },
+            {
+              "scheme": "https",
+              "host": "ultimatehealth.blog",
+              "pathPrefix": "/web"
+            },
+            {
+              "scheme": "https",
+              "host": "ultimatehealth.blog",
+              "pathPrefix": "/articles"
+            },
+            {
+              "scheme": "https",
+              "host": "ultimatehealth.blog",
+              "pathPrefix": "/article"
+            },
             {
               "scheme": "https",
               "host": "ultimatehealth.blog",
@@ -120,7 +140,8 @@
           "organization": "ultimatehealth",
           "project": "ultimatehealth"
         }
-      ]
+      ],
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "reactCompiler": true

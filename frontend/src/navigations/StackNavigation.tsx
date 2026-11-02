@@ -1,7 +1,7 @@
- 
 import React, {useEffect} from 'react';
 import {
   Platform,
+  useColorScheme,
   TouchableOpacity,
   StyleSheet,
   Alert,
@@ -11,11 +11,7 @@ import {
 import {createStackNavigator} from '@react-navigation/stack';
 import TabNavigation from './TabNavigation';
 import SplashScreen from '../screens/auth/SplashScreen';
-import LoginScreen from '../screens/auth/LoginScreen';
-import SignUpScreenFirst from '../screens/auth/SignUpScreenFirst';
-import SignUpScreenSecond from '../screens/auth/SignUpScreenSecond';
-import OtpScreen from '../screens/auth/OtpScreen';
-import NewPasswordScreen from '../screens/auth/NewPasswordScreen';
+import SignInScreen from '../screens/auth/SignInScreen';
 import CommentScreen from '../screens/article/CommentScreen';
 import ReportScreen from '../screens/report/ReportScreen';
 import ReportConfirmationScreen from '../screens/report/ReportConfirmationScreen';
@@ -24,6 +20,7 @@ import EditorScreen from '../screens/article/EditorScreen';
 import PreviewScreen from '../screens/article/PreviewScreen';
 import ArticleScreen from '../screens/article/ArticleScreen';
 import ReadingHistoryScreen from '../screens/profile/ReadingHistoryScreen';
+
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicon from '@expo/vector-icons/Ionicons';
 import ArticleDescriptionScreen from '../screens/article/ArticleDescriptionScreen';
@@ -71,14 +68,13 @@ import ChatbotScreen from '../screens/ai/ChatbotScreen';
 import NearbyHealthEventsScreen from '../screens/settings/NearbyHealthEventsScreen';
 import EventDetailsScreen from '../screens/settings/EventDetailsScreen';
 import HealthTermComparisonScreen from '../screens/HealthTermComparisonScreen';
-
+import MedicalGlossaryScreen from '../screens/MedicalGlossaryScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-
 const ROOT_SCREENS: string[] = [
   'TabNavigation',
-  'LoginScreen',
+  'SignInScreen',
   'LogoutScreen',
   'GuestPlaceholderScreen',
 ];
@@ -107,7 +103,7 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
         currTab === 'Home' ||
         currTab === 'Podcasts' ||
         currTab === 'Settings' ||
-        currTab === 'Academy';
+        currTab === 'Wellness';
 
       if (isRootScreen || isRootTab) {
         Alert.alert('Warning', 'Do you want to exit?', [
@@ -135,16 +131,17 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
 
     return () => backHandler.remove();
   }, [navigation, nav]);
+  const isDarkMode = useColorScheme() === 'dark';
+
   return (
     <Stack.Navigator
       id={undefined as never}
       screenOptions={{
-        animation: Platform.OS === 'web' ? 'none' : undefined,
-        gestureEnabled: Platform.OS !== 'web',
-        freezeOnBlur: false,
-      }}
-      detachInactiveScreens={Platform.OS !== 'web'}
-      initialRouteName={initialRouteName || (Platform.OS === 'web' ? 'SplashScreen' : undefined)}>
+        headerStyle: {
+          backgroundColor: isDarkMode ? '#0F172A' : '#000A60',
+        },
+        headerTintColor: '#ffffff',
+      }}>
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
@@ -158,37 +155,18 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
       <Stack.Screen
         name="ChatbotScreen"
         component={ChatbotScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SignUpScreenFirst"
-        component={SignUpScreenFirst}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SignUpScreenSecond"
-        component={SignUpScreenSecond}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="OtpScreen"
-        component={OtpScreen}
+        // ChatbotScreen renders its own branded header; no stack header.
         options={{headerShown: false}}
       />
 
       <Stack.Screen
-        name="PodcastPlayer"
-        component={PodcastPlayer}
+        name="SignInScreen"
+        component={SignInScreen}
         options={{headerShown: false}}
       />
       <Stack.Screen
-        name="NewPasswordScreen"
-        component={NewPasswordScreen}
+        name="PodcastPlayer"
+        component={PodcastPlayer}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -214,7 +192,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -232,15 +209,13 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
         component={ArticleDescriptionScreen}
         options={({navigation}) => ({
           headerShown: true,
-          headerTitle: 'Start Writing',
+          headerTitle: 'Article Details',
           headerBackTitleVisible: false,
-
           headerTintColor: 'white',
           headerTransparent: false,
           headerStyle: {
             backgroundColor: '#000A60',
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -248,7 +223,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
                 navigation.goBack();
               }}>
               <Ionicon name="arrow-back" size={36} color={'white'} />
-              {/* <FontAwesome6 size={25} name="arrow-left" color="black" /> */}
             </TouchableOpacity>
           ),
         })}
@@ -272,7 +246,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
                 navigation.goBack();
               }}>
               <Ionicon name="arrow-back" size={36} color={'#ffffff'} />
-              {/* <FontAwesome6 size={25} name="arrow-left" color="black" /> */}
             </TouchableOpacity>
           ),
         })}
@@ -288,7 +261,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
             backgroundColor: '#000A60',
           },
           headerTitleStyle: {color: 'white'},
-
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -296,7 +268,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
                 navigation.goBack();
               }}>
               <Ionicon name="arrow-back" size={36} color={'white'} />
-              {/* <FontAwesome6 size={25} name="arrow-left" color="black" /> */}
             </TouchableOpacity>
           ),
         }}
@@ -314,7 +285,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -330,47 +300,13 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
       <Stack.Screen
         name="OfflinePodcastList"
         component={OfflinePodcastList}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: 'Downloaded Podcasts',
-          headerTintColor: '#ffffff',
-          headerBackTitleVisible: false,
-          headerTransparent: true,
-          headerStyle: {
-            backgroundColor: '#000A60',
-          },
-           
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonEditorScreen}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color={'#ffffff'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{headerShown: false}}
       />
 
       <Stack.Screen
         name="OfflinePodcastDetail"
         component={OfflinePodcastDetail}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: '',
-          headerBackTitleVisible: false,
-          headerTransparent: true,
-           
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonEditorScreen}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{headerShown: false}}
       />
 
       <Stack.Screen
@@ -385,7 +321,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
           headerStyle: {
             backgroundColor: '#000A60',
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonEditorScreen}
@@ -401,22 +336,8 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
       <Stack.Screen
         name="ArticleScreen"
         component={ArticleScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: '',
-          headerTransparent: true,
-          headerBackTitleVisible: false,
-           
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButton}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color="white" />
-            </TouchableOpacity>
-          ),
-        })}
+        // ArticleScreen renders its own floating back button; no stack header.
+        options={{headerShown: false}}
       />
 
       <Stack.Screen
@@ -427,7 +348,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -448,7 +368,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -467,13 +386,13 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
         options={{headerShown: false}}
       />
 
-        <Stack.Screen
+      <Stack.Screen
         name="ContributorPage"
         component={ContributorPage}
         options={{headerShown: false}}
       />
 
-        <Stack.Screen
+      <Stack.Screen
         name="OpenSourcePage"
         component={OpenSourcePage}
         options={{headerShown: false}}
@@ -487,7 +406,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
           headerTitle: '',
           headerTransparent: true,
           headerBackTitleVisible: false,
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButton}
@@ -512,7 +430,6 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
             backgroundColor: '#000A60',
           },
           headerBackTitleVisible: false,
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -554,86 +471,24 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
       <Stack.Screen
         name="PodcastProfile"
         component={PodcastProfile}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: 'My Podcasts',
-          headerTintColor: 'white',
-          headerTransparent: false,
-          headerStyle: {
-            backgroundColor: PRIMARY_COLOR,
-          },
-          headerBackTitleVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonCommentScreen}
-              onPress={() => {
-                queryClient.invalidateQueries({queryKey: ['get-my-playlists']});
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
 
       <Stack.Screen
         name="NotificationScreen"
         component={NotificationScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: 'Notifications',
-          //headerTransparent: true,
-          headerTitleAlign: 'center',
-          headerBackTitleVisible: false,
-          headerTintColor: 'white',
-          headerTransparent: false,
-
-          headerStyle: {
-            elevation: 4,
-
-            backgroundColor: '#000A60',
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 2},
-            shadowOpacity: 0.25,
-            shadowRadius: 3.5,
-          },
-           
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonCommentScreen}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="ReadingHistoryScreen"
         component={ReadingHistoryScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: 'Reading History',
-          headerTitleAlign: 'center',
-          headerBackTitleVisible: false,
-          headerTintColor: 'white',
-          headerStyle: {
-            elevation: 4,
-            backgroundColor: '#000A60',
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 2},
-            shadowOpacity: 0.25,
-            shadowRadius: 3.5,
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonCommentScreen}
-              onPress={() => navigation.goBack()}>
-              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
 
       <Stack.Screen
@@ -642,22 +497,18 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
         options={({navigation}) => ({
           headerShown: true,
           headerTitle: 'Terms and Conditions',
-          //headerTransparent: true,
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
           headerTintColor: 'white',
           headerTransparent: false,
-
           headerStyle: {
             elevation: 4,
-
             backgroundColor: '#000A60',
             shadowColor: '#000',
             shadowOffset: {width: 0, height: 2},
             shadowOpacity: 0.25,
             shadowRadius: 3.5,
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
@@ -672,14 +523,19 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
       <Stack.Screen
         name="CommunityGuidelines"
         component={CommunityGuidelinesScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ReportScreen"
+        component={ReportScreen}
         options={({navigation}) => ({
           headerShown: true,
-          headerTitle: 'Community Guidelines',
+          headerTitle: 'Report',
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
           headerTintColor: 'white',
-          headerTransparent: false,
-
           headerStyle: {
             elevation: 4,
             backgroundColor: '#000A60',
@@ -694,36 +550,7 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
               onPress={() => {
                 navigation.goBack();
               }}>
-              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
-            </TouchableOpacity>
-          ),
-        })}
-      />
-      <Stack.Screen
-        name="ReportScreen"
-        component={ReportScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: 'Report',
-          //headerTransparent: true,
-          headerTitleAlign: 'center',
-          headerBackTitleVisible: false,
-          headerStyle: {
-            elevation: 4, // Elevation for Android
-            // backgroundColor:'red',
-            shadowColor: '#000', // Shadow color for iOS
-            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
-            shadowOpacity: 0.25, // Shadow opacity for iOS
-            shadowRadius: 3.5, // Shadow radius for iOS
-          },
-           
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonCommentScreen}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
+              <FontAwesome6 size={25} name="arrow-left" color="white" />
             </TouchableOpacity>
           ),
         })}
@@ -735,18 +562,17 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
         options={({navigation}) => ({
           headerShown: true,
           headerTitle: 'Confirmation',
-          //headerTransparent: true,
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
+          headerTintColor: 'white',
           headerStyle: {
-            elevation: 4, // Elevation for Android
-            // backgroundColor:'red',
-            shadowColor: '#000', // Shadow color for iOS
-            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
-            shadowOpacity: 0.25, // Shadow opacity for iOS
-            shadowRadius: 3.5, // Shadow radius for iOS
+            elevation: 4,
+            backgroundColor: '#000A60',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
           },
-           
           headerLeft: () => (
             <Pressable
               style={styles.headerLeftButtonCommentScreen}
@@ -772,63 +598,51 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
         options={({navigation}) => ({
           headerShown: false,
           headerTitle: 'Overview',
-          //headerTransparent: true,
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
           headerStyle: {
-            elevation: 4, // Elevation for Android
-            // backgroundColor:'red',
-            shadowColor: '#000', // Shadow color for iOS
-            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
-            shadowOpacity: 0.25, // Shadow opacity for iOS
-            shadowRadius: 3.5, // Shadow radius for iOS
+            elevation: 4,
+            backgroundColor: '#000A60',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
               onPress={() => {
                 navigation.goBack();
               }}>
-              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
+              <FontAwesome6 size={25} name="arrow-left" color="white" />
             </TouchableOpacity>
           ),
         })}
       />
-
-      {/* <Stack.Screen
-        name="ConversationScreen"
-        component={ConversationScreen}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
 
       <Stack.Screen
         name="SocialScreen"
         component={SocialScreen}
         options={({navigation}) => ({
           headerShown: true,
-          // headerTitle: 'Followers',
-          //headerTransparent: true,
           headerTitleAlign: 'center',
           headerBackTitleVisible: false,
+          headerTintColor: 'white',
           headerStyle: {
-            elevation: 4, // Elevation for Android
-            // backgroundColor:'red',
-            shadowColor: '#000', // Shadow color for iOS
-            shadowOffset: {width: 0, height: 2}, // Shadow offset for iOS
-            shadowOpacity: 0.25, // Shadow opacity for iOS
-            shadowRadius: 3.5, // Shadow radius for iOS
+            elevation: 4,
+            backgroundColor: '#000A60',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 3.5,
           },
-           
           headerLeft: () => (
             <TouchableOpacity
               style={styles.headerLeftButtonCommentScreen}
               onPress={() => {
                 navigation.goBack();
               }}>
-              <FontAwesome6 size={25} name="arrow-left" color={PRIMARY_COLOR} />
+              <FontAwesome6 size={25} name="arrow-left" color="white" />
             </TouchableOpacity>
           ),
         })}
@@ -837,25 +651,9 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
       <Stack.Screen
         name="ProfileEditScreen"
         component={ProfileEditScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          title: 'Edit Profile',
-          headerBackTitleVisible: false,
-        //  headerTitleAlign:"center",
-          headerBackgroundContainerStyle: {
-            backgroundColor: ON_PRIMARY_COLOR
-          },
-          headerShadowVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.profileScreenHeaderLeftButton}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color="black" />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="NotificationPreferencesScreen"
@@ -938,17 +736,13 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
       <Stack.Screen
         name="RespectGiverScreen"
         component={RespectGiverScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
       />
       <Stack.Screen
         name="ContentListScreen"
         component={ContentListScreen}
         options={{
-          headerShown: true,
-          headerTitle: 'My Content',
-          headerTitleAlign: 'center',
-          headerStyle: { backgroundColor: '#000A60' },
-          headerTintColor: '#fff',
+          headerShown: false,
         }}
       />
       <Stack.Screen
@@ -965,45 +759,19 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
           headerShown: true,
           title: route?.params?.title || 'Sign In Required',
           headerBackTitleVisible: false,
+          headerStyle: {backgroundColor: '#000A60'},
+          headerTintColor: 'white',
         })}
       />
-      {/* <Stack.Screen
-        name="ChatbotScreen"
-        component={ChatbotScreen}
-        options={({navigation}) => ({
-          headerTitleAlign: 'center',
-          title: 'Chatbot',
-          headerShown: true,
-          headerBackTitleVisible: false,
-          headerShadowVisible: false,
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{
-                marginLeft: 15,
-                height: 40,
-                width: 40,
-                borderRadius: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'white',
-              }}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={20} name="arrow-left" color="black" />
-            </TouchableOpacity>
-          ),
-        })}
-      /> */}
+
       <Stack.Screen
         name="PlaylistDetailScreen"
         component={PlaylistDetailScreen}
         options={{
           headerShown: true,
           title: 'Playlist',
-         // headerBackTitleVisible: false,
           headerStyle: {
-            backgroundColor: BUTTON_COLOR,
+            backgroundColor: '#000A60',
           },
           headerTintColor: 'white',
         }}
@@ -1011,20 +779,27 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
       <Stack.Screen
         name="PodcastEpisodesScreen"
         component={PodcastEpisodesScreen}
-        options={{
-          headerShown: true,
-          title: 'Podcast Episodes',
-          headerStyle: {
-            backgroundColor: PRIMARY_COLOR,
-          },
-          headerTintColor: 'white',
-          headerBackTitleVisible: false,
-        } as any}
+        options={
+          {
+            headerShown: true,
+            title: 'Podcast Episodes',
+            headerStyle: {
+              backgroundColor: '#000A60',
+            },
+            headerTintColor: 'white',
+            headerBackTitleVisible: false,
+          } as any
+        }
       />
       <Stack.Screen
         name="HealthTermComparison"
         component={HealthTermComparisonScreen}
-        options={{ headerShown: false }}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MedicalGlossaryScreen"
+        component={MedicalGlossaryScreen}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );
@@ -1045,7 +820,6 @@ const styles = StyleSheet.create({
 
   headerLeftButtonCommentScreen: {
     marginStart: 15,
-    //backgroundColor: '#ffffff',
     paddingHorizontal: 10,
     paddingVertical: 4,
     marginTop: 0,
@@ -1058,8 +832,6 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     height: 40,
-    // borderColor: '#0CAFFF',
-    // borderWidth: 1,
     borderRadius: 100,
     paddingHorizontal: 17,
     marginBottom: 20,

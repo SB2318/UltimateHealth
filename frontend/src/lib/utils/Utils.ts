@@ -2,7 +2,7 @@ import NetInfo from '@react-native-community/netinfo';
 import {Category, CategoryType, PodcastData} from '../../schemas/type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GET_STORAGE_DATA} from '../api/APIUtils';
-import {Alert, Linking, Platform, PermissionsAndroid} from 'react-native';
+import {Alert, Linking, Platform, PermissionsAndroid, DeviceEventEmitter} from 'react-native';
 import {sanitizeHtml} from './htmlSanitizer';
 
 import {secureClearAllItems} from '../storage/SecureStorageUtils';
@@ -90,16 +90,18 @@ export const handleExternalClick = (request: any) => {
 // Re-exported so existing imports stay valid.
 export {sanitizeHtml};
 
-export function msToTime(ms: number): string {
-  let totalSeconds = Math.floor(ms / 1000);
+export function msToTime(val: number): string {
+  if (!val || isNaN(val) || val <= 0) return '00:00';
+  // If val is > 10000, it's in milliseconds; otherwise it's already in seconds
+  let totalSeconds = val > 10000 ? Math.floor(val / 1000) : Math.floor(val);
   const hours = Math.floor(totalSeconds / 3600);
   totalSeconds %= 3600;
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
   const pad = (num: number): string => num.toString().padStart(2, '0');
   return hours >= 1
-    ? `${pad(hours)}h:${pad(minutes)}m`
-    : `${pad(minutes)}m:${pad(seconds)}s`;
+    ? `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+    : `${pad(minutes)}:${pad(seconds)}`;
 }
 
 export const retrieveItem = async (key: string) => {
@@ -167,37 +169,74 @@ export const createHTMLStructure = (
 ) => {
   const safeTitle = sanitizeHtml(title);
   const safeBody = sanitizeHtml(body);
-  const safeAuthor = sanitizeHtml(author);
   const safeTags = (tags || []).map(tag => ({
     ...tag,
     name: sanitizeHtml(tag?.name ?? ''),
   }));
+  const tagsHtml =
+    safeTags.length > 0
+      ? `<div class="tag-container"><ul class="tag-list">${safeTags
+          .map(tag => `<li><span class="tag">#${tag.name}</span></li>`)
+          .join('')}</ul></div>`
+      : '';
+
   return `<!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>${safeTitle}</title>
 <style>
-body { font-family: Arial, sans-serif; font-size: 18px; line-height: 1.6; color: #333; }
-h1 { color: #00698f; } h2 { color: #008000; } h3 { color: #660066; }
-h4 { color: #0099CC; } h5 { color: #FF9900; } h6 { color: #663300; }
-ul { list-style-type: disc; } li { margin-bottom: 10px; }
-article { width: 95%; margin: 20px auto; }
-table { border-collapse: collapse; width: 100%; }
-th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-th { background-color: #f0f0f0; }
-.tag-list { list-style-type: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; }
-.tag-list li { margin-right: 10px; }
-.tag { color: blue; text-decoration: none; }
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #1E293B;
+  background-color: transparent;
+  padding: 4px 6px;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #0F172A;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-top: 1.3em;
+  margin-bottom: 0.5em;
+  letter-spacing: -0.01em;
+}
+h1 { font-size: 24px; color: #000A60; }
+h2 { font-size: 20px; border-bottom: 1px solid #E2E8F0; padding-bottom: 6px; }
+h3 { font-size: 18px; }
+h4 { font-size: 16px; }
+p { margin-top: 0; margin-bottom: 1em; color: #334155; }
+ul, ol { padding-left: 22px; margin-top: 0; margin-bottom: 1em; }
+li { margin-bottom: 6px; color: #334155; }
+strong { color: #0F172A; font-weight: 700; }
+table { border-collapse: collapse; width: 100%; margin: 16px 0; border-radius: 8px; overflow: hidden; }
+th, td { border: 1px solid #E2E8F0; padding: 10px 12px; text-align: left; font-size: 14px; }
+th { background-color: #F8FAFC; font-weight: 600; color: #0F172A; }
+blockquote { border-left: 4px solid #000A60; padding-left: 14px; margin: 16px 0; color: #475569; font-style: italic; }
+img { max-width: 100%; height: auto; border-radius: 8px; margin: 12px 0; }
+.tag-container { margin-top: 24px; padding-top: 16px; border-top: 1px solid #E2E8F0; }
+.tag-list { list-style-type: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-list li { margin: 0; }
+.tag {
+  display: inline-block;
+  background-color: #EFF6FF;
+  color: #1E40AF;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
 </style>
 </head>
 <body>
 ${safeBody}
-<hr>
-<ul class="tag-list">
-  ${safeTags.map(tag => `<li><a class="tag" href="#">#${tag.name}</a></li>`).join('')}
-</ul>
-<h3>Author</h3>
-<h4>${safeAuthor}</h4>
+${tagsHtml}
 </body>
 </html>`;
 };
@@ -229,24 +268,68 @@ export const requestStoragePermissions = async () => {
   }
 };
 
-export const downloadAudio = async (_podcast: PodcastData) => {
-  const storageGranted = await requestStoragePermissions();
-  if (!storageGranted) return;
+export type DownloadProgressEvent = {
+  podcastId: string;
+  progress: number;
+  status: 'starting' | 'downloading' | 'completed' | 'error';
+  message?: string;
+};
+
+export const downloadAudio = async (
+  _podcast: PodcastData,
+  onProgress?: (progress: number) => void,
+) => {
+  if (!_podcast || !_podcast.audio_url) {
+    return {message: 'Audio URL is not available for this podcast', success: false};
+  }
+
+  // Non-blocking permission check — if denied, falls back to DocumentDirectoryPath
+  try {
+    await requestStoragePermissions();
+  } catch (_e) {
+    // Ignore and proceed with internal storage
+  }
+
+  DeviceEventEmitter.emit('podcast-download-progress', {
+    podcastId: _podcast._id,
+    progress: 0,
+    status: 'starting',
+  });
 
   const existingPodcasts = await readDownloadedPodcasts();
   try {
     let _existingPodcasts = Array.isArray(existingPodcasts) ? existingPodcasts : [];
 
     if (_existingPodcasts.length >= 5) {
+      DeviceEventEmitter.emit('podcast-download-progress', {
+        podcastId: _podcast._id,
+        progress: 0,
+        status: 'error',
+        message: "You can't keep more than 5 audio",
+      });
       return {message: "You can't keep more than 5 audio", success: false};
     }
 
     const isPodcastFound = _existingPodcasts.some((d: any) => d._id === _podcast._id);
     if (isPodcastFound) {
+      DeviceEventEmitter.emit('podcast-download-progress', {
+        podcastId: _podcast._id,
+        progress: 1,
+        status: 'completed',
+        message: 'File already saved',
+      });
       return {message: 'File already saved', success: true};
     }
 
-    const path = await downloadFile(_podcast.audio_url, _podcast.title);
+    const path = await downloadFile(_podcast.audio_url, _podcast.title, (ratio) => {
+      onProgress?.(ratio);
+      DeviceEventEmitter.emit('podcast-download-progress', {
+        podcastId: _podcast._id,
+        progress: ratio,
+        status: 'downloading',
+      });
+    });
+
     if (path) {
       if (!Array.isArray(_existingPodcasts)) _existingPodcasts = [];
       const newPodcast: PodcastDownloadRecord = {
@@ -256,37 +339,112 @@ export const downloadAudio = async (_podcast: PodcastData) => {
       };
       _existingPodcasts.push(newPodcast);
       await writeDownloadedPodcasts(_existingPodcasts);
+
+      DeviceEventEmitter.emit('podcast-download-progress', {
+        podcastId: _podcast._id,
+        progress: 1,
+        status: 'completed',
+        message: 'File saved successfully',
+      });
+
       return {message: 'File saved successfully', success: true};
     } else {
-      return {message: 'Something went wrong, try again after sometime', success: false};
+      DeviceEventEmitter.emit('podcast-download-progress', {
+        podcastId: _podcast._id,
+        progress: 0,
+        status: 'error',
+        message: 'Download failed. Please check internet connection.',
+      });
+      return {message: 'Download failed. Please check internet connection.', success: false};
     }
   } catch (err) {
     debugLog(err);
+    DeviceEventEmitter.emit('podcast-download-progress', {
+      podcastId: _podcast._id,
+      progress: 0,
+      status: 'error',
+      message: 'Something went wrong, try again after sometime',
+    });
     return {message: 'Something went wrong, try again after sometime', success: false};
   }
 };
 
-const downloadFile = async (key: string, title: string) => {
-  const safeTitle = title.substring(0, 15).replace(/[^a-zA-Z0-9]/g, '_');
-  const fileName = `${safeTitle}_${Date.now()}.mp3`;
-  const downloadUrl = `${GET_STORAGE_DATA}/${key}`;
+const downloadFile = async (
+  key: string,
+  title: string,
+  onProgress?: (ratio: number) => void,
+) => {
+  if (!key) {
+    console.error('downloadFile called without audio url/key');
+    return null;
+  }
 
-  const customDirectory =
-    Platform.OS === 'android'
-      ? RNFS.ExternalDirectoryPath
-      : RNFS.DocumentDirectoryPath;
+  const safeTitle = (title || 'podcast')
+    .substring(0, 30)
+    .trim()
+    .replace(/[^a-zA-Z0-9\s-_]/g, '')
+    .replace(/\s+/g, '_');
+  const fileName = `${safeTitle || 'podcast'}_${Date.now()}.mp3`;
+
+  // Support full HTTP/HTTPS URLs (e.g. Cloudinary, S3) and relative storage keys
+  let downloadUrl = key.trim();
+  if (!downloadUrl.startsWith('http://') && !downloadUrl.startsWith('https://')) {
+    downloadUrl = `${GET_STORAGE_DATA}/${downloadUrl}`;
+  }
+
+  // Determine target directory: prefer public Downloads on Android if writable, fallback to DocumentDirectoryPath
+  let customDirectory = `${RNFS.DocumentDirectoryPath}/Podcasts`;
+
+  if (Platform.OS === 'android') {
+    try {
+      const publicPodcastsDir = `${RNFS.DownloadDirectoryPath}/UltimateHealth/Podcasts`;
+      const exists = await RNFS.exists(publicPodcastsDir);
+      if (!exists) {
+        await RNFS.mkdir(publicPodcastsDir);
+      }
+      customDirectory = publicPodcastsDir;
+    } catch (_e) {
+      customDirectory = `${RNFS.DocumentDirectoryPath}/Podcasts`;
+    }
+  }
+
+  try {
+    const directoryExists = await RNFS.exists(customDirectory);
+    if (!directoryExists) await RNFS.mkdir(customDirectory);
+  } catch (_e) {
+    customDirectory = RNFS.DocumentDirectoryPath;
+  }
 
   const filePath = `${customDirectory}/${fileName}`;
-  const directoryExists = await RNFS.exists(customDirectory);
-  if (!directoryExists) await RNFS.mkdir(customDirectory);
 
-  const result = await RNFS.downloadFile({fromUrl: downloadUrl, toFile: filePath}).promise;
+  try {
+    const result = await RNFS.downloadFile({
+      fromUrl: downloadUrl,
+      toFile: filePath,
+      progressDivider: 2,
+      progress: (res: any) => {
+        if (res.contentLength > 0) {
+          const ratio = Math.min(1, Math.max(0, res.bytesWritten / res.contentLength));
+          onProgress?.(ratio);
+        }
+      },
+    }).promise;
 
-  if (result.statusCode === 200) {
-    debugLog('Audio downloaded to:', filePath);
-    return filePath;
-  } else {
-    console.error('Download failed:', result.statusCode);
+    if (result.statusCode === 200) {
+      debugLog('Audio downloaded to:', filePath);
+      return filePath;
+    } else {
+      console.error('Download failed with status code:', result.statusCode);
+      if (await RNFS.exists(filePath)) {
+        await RNFS.unlink(filePath).catch(() => {});
+      }
+      return null;
+    }
+  } catch (err) {
+    console.error('Download file error:', err);
+    if (await RNFS.exists(filePath)) {
+      await RNFS.unlink(filePath).catch(() => {});
+    }
     return null;
   }
 };

@@ -13,15 +13,14 @@ export const useGetPendingPodcasts = (pendingPage: number, isConnected: boolean)
 PendingRes,
 AxiosError
 >=>{
-  
-    return  useQuery({
+    return useQuery({
       queryKey: ['get-pending-podcasts-for-user', pendingPage],
       queryFn: async () => {
         const response = await axios.get(
           `${PENDING_PODCASTS}?page=${pendingPage}`
         );
-        return response.data as PendingRes;
+        return (response?.data ?? { totalPages: 0, pendingPodcasts: [] }) as PendingRes;
       },
-      enabled: !!pendingPage && !!isConnected
+      enabled: !!pendingPage && !!isConnected,
     });
-}
+};

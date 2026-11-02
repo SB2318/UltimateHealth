@@ -21,14 +21,29 @@ export const useGetTotalLikeViewStatus = ({
     queryKey: ['get-like-view-status', user_id, userId, others],
 
     queryFn: async () => {
-      const url = others
-        ? `${GET_TOTAL_LIKES_VIEWS}${userId}`
-        : `${GET_TOTAL_LIKES_VIEWS}${user_id}`;
+      try {
+        const url = others
+          ? `${GET_TOTAL_LIKES_VIEWS}${userId}`
+          : `${GET_TOTAL_LIKES_VIEWS}${user_id}`;
 
-       
-      const response = await axios.get(url);
-    
-      return response.data as UserStatus;
+        const response = await axios.get(url);
+
+        return (
+          response?.data ?? {
+            totalLikes: 0,
+            totalViews: 0,
+            likeProgress: 0,
+            viewProgress: 0,
+          }
+        ) as UserStatus;
+      } catch {
+        return {
+          totalLikes: 0,
+          totalViews: 0,
+          likeProgress: 0,
+          viewProgress: 0,
+        };
+      }
     },
 
     enabled: !!isConnected && (others ? !!userId : (!isGuest && !!user_id)),

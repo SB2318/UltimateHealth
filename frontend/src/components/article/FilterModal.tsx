@@ -2,7 +2,7 @@
  
 // @ts-nocheck
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import { Text, StyleSheet, View,  ScrollView ,  TextInput , TouchableOpacity  } from 'react-native';
+import { Text, StyleSheet, View,  ScrollView ,  TextInput , TouchableOpacity, useColorScheme } from 'react-native';
 import {
   BottomSheetModal,
   BottomSheetView,
@@ -15,6 +15,7 @@ import CategoriesFlatlistModal from './CategoriesFlatlistModal';
 import {PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {HomeScreenFilterModalProps} from '../../schemas/type';
 import {INDIAN_LANGUAGES} from '../../constants/languages';
+import {useTranslation} from '../../localization';
 
 // Helper function to format date as DD/MM/YYY
 
@@ -33,6 +34,7 @@ const FilterModal = ({
 }: HomeScreenFilterModalProps) => {
   // Ref for second bottom sheet modal (category selection)
   const bottomSheetModalRef2 = useRef<BottomSheetModal>(null);
+  const { t } = useTranslation();
 
   const sortBy = ['recent', 'popular', 'oldest'];
   const [selectedCategory, setSelectedCategory] = useState(sortingType || '');
@@ -54,6 +56,26 @@ const FilterModal = ({
 
   // Get safe area insets for top margin adjustment
   const insets = useSafeAreaInsets();
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const themeColors = useMemo(() => ({
+    bg: isDarkMode ? '#0F172A' : '#F9FAFB',
+    cardBg: isDarkMode ? '#1E293B' : '#FFFFFF',
+    headerBg: isDarkMode ? '#0F172A' : '#FFFFFF',
+    textPrimary: isDarkMode ? '#F8FAFC' : '#111827',
+    textSecondary: isDarkMode ? '#94A3B8' : '#374151',
+    textMuted: isDarkMode ? '#94A3B8' : '#6B7280',
+    border: isDarkMode ? '#334155' : '#E5E7EB',
+    chipBg: isDarkMode ? '#1E293B' : '#FFFFFF',
+    chipBorder: isDarkMode ? '#334155' : '#E5E7EB',
+    inputBg: isDarkMode ? '#1E293B' : '#FFFFFF',
+    inputBorder: isDarkMode ? '#334155' : '#E5E7EB',
+    footerBg: isDarkMode ? '#0F172A' : '#FFFFFF',
+    footerBorder: isDarkMode ? '#1E293B' : '#E5E7EB',
+    selectedCountBg: isDarkMode ? 'rgba(99, 102, 241, 0.2)' : '#EEF2FF',
+    categorySelectedBg: isDarkMode ? 'rgba(99, 102, 241, 0.25)' : '#EEF2FF',
+    handleColor: isDarkMode ? '#64748B' : '#CBD5E1',
+  }), [isDarkMode]);
 
   // Define snap points for the bottom sheet
   const snapPoints = useMemo(() => ['20%', '65%', '95%'], []);
@@ -129,21 +151,23 @@ const FilterModal = ({
       backdropComponent={renderBackdrop}
       snapPoints={snapPoints}
       stackBehavior="push"
+      backgroundStyle={{backgroundColor: themeColors.bg}}
+      handleIndicatorStyle={{backgroundColor: themeColors.handleColor}}
       style={{
-        zIndex: -1,
+        zIndex: 10,
         marginTop: insets.top,
         marginBottom: insets.bottom,
-        backgroundColor: '#ffffff',
+        backgroundColor: themeColors.bg,
       }}>
-      <BottomSheetView style={styles.contentContainer}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Filters & Search</Text>
+      <BottomSheetView style={[styles.contentContainer, {backgroundColor: themeColors.bg}]}>
+        <View style={[styles.header, {backgroundColor: themeColors.headerBg, borderBottomColor: themeColors.border}]}>
+          <Text style={[styles.title, {color: themeColors.textPrimary}]}>{t('home.filtersAndSearch')}</Text>
           <TouchableOpacity
             style={styles.closeButton}
             onPress={handleDismissModalPress}
             accessibilityRole="button"
             accessibilityLabel="Close filters">
-            <MaterialIcons name="close" size={24} color={'#6b7280'} />
+            <MaterialIcons name="close" size={24} color={themeColors.textMuted} />
           </TouchableOpacity>
         </View>
 
@@ -155,14 +179,14 @@ const FilterModal = ({
             {/* Search Input */}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>
-                <MaterialIcons name="search" size={18} color="#222" /> Search Categories
+                <MaterialIcons name="search" size={18} color={themeColors.textSecondary} /> {t('home.searchCategories')}
               </Text>
-              <View style={styles.searchContainer}>
+              <View style={[styles.searchContainer, {backgroundColor: themeColors.inputBg, borderColor: themeColors.inputBorder}]}>
                 <MaterialIcons name="search" size={20} color="#9ca3af" style={styles.searchIcon} />
                 <TextInput
-                  style={styles.searchInput}
-                  placeholder="Search categories..."
-                  placeholderTextColor="#9ca3af"
+                  style={[styles.searchInput, {color: themeColors.textPrimary}]}
+                  placeholder={t('home.searchCategoriesPlaceholder')}
+                  placeholderTextColor={themeColors.textMuted}
                   value={searchQuery}
                   onChangeText={setSearchQuery}
                 />
@@ -171,7 +195,7 @@ const FilterModal = ({
                   onPress={() => setSearchQuery('')}
                   accessibilityRole="button"
                   accessibilityLabel="Clear search">
-                  <MaterialIcons name="close" size={20} color="#9ca3af" />
+                  <MaterialIcons name="close" size={20} color={themeColors.textMuted} />
                  </TouchableOpacity>
                )}
               </View>
@@ -179,7 +203,7 @@ const FilterModal = ({
             {/* Sort By */}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>
-                <MaterialIcons name="sort" size={18} color="#222" /> Sort By
+                <MaterialIcons name="sort" size={18} color={themeColors.textSecondary} /> {t('home.sortBy')}
               </Text>
               <View style={styles.chipContainer}>
                 {sortBy.map((item, index) => (
@@ -187,6 +211,7 @@ const FilterModal = ({
                     key={index}
                     style={[
                       styles.chip,
+                      {backgroundColor: themeColors.chipBg, borderColor: themeColors.chipBorder},
                       selectedCategory === item && styles.chipSelected,
                     ]}
                     onPress={() => {
@@ -198,6 +223,7 @@ const FilterModal = ({
                     <Text
                       style={[
                         styles.chipText,
+                        {color: themeColors.textMuted},
                         selectedCategory === item && styles.chipTextSelected,
                       ]}>
                       {item.charAt(0).toUpperCase() + item.slice(1)}
@@ -213,7 +239,7 @@ const FilterModal = ({
             {/* Language Filter */}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>
-                <MaterialIcons name="language" size={18} color="#222" /> Language
+                <MaterialIcons name="language" size={18} color={themeColors.textSecondary} /> {t('home.language')}
               </Text>
               <View style={styles.chipContainer}>
                 {INDIAN_LANGUAGES.map((lang, index) => (
@@ -221,6 +247,7 @@ const FilterModal = ({
                     key={index}
                     style={[
                       styles.chip,
+                      {backgroundColor: themeColors.chipBg, borderColor: themeColors.chipBorder},
                       selectedLanguages.includes(lang.code) && styles.chipSelected,
                     ]}
                     onPress={() => toggleLanguage(lang.code)}
@@ -229,6 +256,7 @@ const FilterModal = ({
                     <Text
                       style={[
                         styles.chipText,
+                        {color: themeColors.textMuted},
                         selectedLanguages.includes(lang.code) && styles.chipTextSelected,
                       ]}>
                       {lang.name}
@@ -240,9 +268,9 @@ const FilterModal = ({
                 ))}
               </View>
               {selectedLanguages.length > 0 && (
-                <View style={styles.selectedCount}>
+                <View style={[styles.selectedCount, {backgroundColor: themeColors.selectedCountBg}]}>
                   <Text style={styles.selectedCountText}>
-                    {selectedLanguages.length} language{selectedLanguages.length > 1 ? 's' : ''} selected
+                    {t('home.languagesSelected', { count: selectedLanguages.length })}
                   </Text>
                 </View>
               )}
@@ -252,21 +280,21 @@ const FilterModal = ({
             <View style={styles.section}>
               <View style={styles.categoryHeader}>
                 <Text style={styles.sectionLabel}>
-                  <MaterialIcons name="category" size={18} color="#222" /> Categories
+                  <MaterialIcons name="category" size={18} color={themeColors.textSecondary} /> {t('home.categories')}
                 </Text>
                 <TouchableOpacity
                   style={styles.seeAllButton}
                   onPress={handlePresentModalPress}
                   accessibilityRole="button"
                   accessibilityLabel="See all categories">
-                  <Text style={styles.seeAllText}>See all</Text>
+                  <Text style={styles.seeAllText}>{t('common.seeAll')}</Text>
                   <MaterialIcons name="chevron-right" color={PRIMARY_COLOR} size={20} />
                 </TouchableOpacity>
               </View>
 
               {selectCategoryList.length > 0 && (
                 <View style={styles.selectedCategoriesContainer}>
-                  <Text style={styles.selectedCategoriesLabel}>Selected:</Text>
+                  <Text style={[styles.selectedCategoriesLabel, {color: themeColors.textMuted}]}>{t('home.selected')}</Text>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     <View style={styles.selectedCategoriesChips}>
                       {selectCategoryList.map((item) => (
@@ -299,7 +327,8 @@ const FilterModal = ({
                       key={item._id}
                       style={[
                         styles.categoryCard,
-                        isSelected && styles.categoryCardSelected,
+                        {backgroundColor: themeColors.cardBg, borderColor: themeColors.border},
+                        isSelected && {backgroundColor: themeColors.categorySelectedBg, borderColor: PRIMARY_COLOR},
                       ]}
                       onPress={() => handleCategorySelection(item)}
                       accessibilityRole="button"
@@ -311,6 +340,7 @@ const FilterModal = ({
                       <Text
                         style={[
                           styles.categoryCardText,
+                          {color: themeColors.textPrimary},
                           isSelected && styles.categoryCardTextSelected,
                         ]}>
                         {item?.name}
@@ -328,7 +358,7 @@ const FilterModal = ({
               {searchQuery && filteredCategories.length === 0 && (
                 <View style={styles.noResults}>
                   <MaterialIcons name="search-off" size={32} color="#9ca3af" />
-                  <Text style={styles.noResultsText}>No categories found</Text>
+                  <Text style={[styles.noResultsText, {color: themeColors.textMuted}]}>{t('home.noCategoriesFound')}</Text>
                 </View>
               )}
             </View>
@@ -336,14 +366,14 @@ const FilterModal = ({
         </ScrollView>
 
         {/* Footer Buttons - Fixed at bottom */}
-        <View style={[styles.footer, { paddingBottom: insets.bottom }]}>
+        <View style={[styles.footer, { paddingBottom: insets.bottom, backgroundColor: themeColors.footerBg, borderTopColor: themeColors.footerBorder }]}>
           <TouchableOpacity
-            style={styles.resetButton}
+            style={[styles.resetButton, {backgroundColor: themeColors.cardBg, borderColor: PRIMARY_COLOR}]}
             onPress={handleReset}
             accessibilityRole="button"
             accessibilityLabel="Reset filters">
             <MaterialIcons name="refresh" size={20} color={PRIMARY_COLOR} />
-            <Text style={styles.resetButtonText}>Reset</Text>
+            <Text style={styles.resetButtonText}>{t('common.reset')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.applyButton}
@@ -354,7 +384,7 @@ const FilterModal = ({
             accessibilityRole="button"
             accessibilityLabel="Apply filters">
             <MaterialIcons name="check" size={20} color="white" />
-            <Text style={styles.applyButtonText}>Apply Filters</Text>
+            <Text style={styles.applyButtonText}>{t('common.applyFilters')}</Text>
           </TouchableOpacity>
         </View>
 

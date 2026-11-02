@@ -33,37 +33,42 @@ export const useGetAllImprovementsForReview = ({
   return useQuery({
     queryKey: ['get-all-improvements-for-review', page, selectedStatus],
     queryFn: async () => {
-      const response = await axios.get(
-        `${GET_ALL_IMPROVEMENTS_FOR_USER}?page=${page}&status=${selectedStatus}`
-      );
+      try {
+        const response = await axios.get(
+          `${GET_ALL_IMPROVEMENTS_FOR_USER}?page=${page}&status=${selectedStatus}`
+        );
 
-      const data = response.data;
+        const data = response?.data;
+        const articles = Array.isArray(data?.articles) ? data.articles : [];
 
-      if (Number(page) === 1 && data.totalPages) {
-        setTotalPages(data.totalPages);
-        setImprovementData(data.articles);
-      } else if (data.articles) {
-        setImprovementData(prev => [...prev, ...data.articles]);
+        if (Number(page) === 1 && data?.totalPages) {
+          setTotalPages(data.totalPages);
+          setImprovementData(articles);
+        } else if (articles.length > 0) {
+          setImprovementData(prev => [...prev, ...articles]);
+        }
+
+        if (Number(visit) === 1) {
+          if (data?.publishedCount) {
+            setPublishedLabel(`Published(${data.publishedCount})`);
+          }
+
+          if (data?.progressCount) {
+            setProgressLabel(`Progress(${data.progressCount})`);
+          }
+
+          if (data?.discardCount) {
+            setDiscardLabel(`Discarded(${data.discardCount})`);
+          }
+
+          setVisit(0);
+        }
+
+        return articles as EditRequest[];
+      } catch {
+        return [] as EditRequest[];
       }
-
-      if (Number(visit) === 1) {
-        if (data.publishedCount) {
-          setPublishedLabel(`Published(${data.publishedCount})`);
-        }
-
-        if (data.progressCount) {
-          setProgressLabel(`Progress(${data.progressCount})`);
-        }
-
-        if (data.discardCount) {
-          setDiscardLabel(`Discarded(${data.discardCount})`);
-        }
-
-        setVisit(0);
-      }
-
-      return data.articles as EditRequest[];
     },
-    enabled:  !!page && !isGuest,
+    enabled: !!page && !isGuest,
   });
 };

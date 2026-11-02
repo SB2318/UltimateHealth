@@ -22,13 +22,17 @@ export const useGetTotalReads = ({
     queryKey: ['get-total-reads', user_id, userId, others],
 
     queryFn: async () => {
-      const url = others
-        ? `${GET_TOTAL_READS}${userId}`
-        : `${GET_TOTAL_READS}${user_id}`;
+      try {
+        const url = others
+          ? `${GET_TOTAL_READS}${userId}`
+          : `${GET_TOTAL_READS}${user_id}`;
 
-      const response = await axios.get(url);
+        const response = await axios.get(url);
 
-      return response.data as ReadStatus;
+        return (response?.data ?? { totalReads: 0, progress: 0 }) as ReadStatus;
+      } catch {
+        return { totalReads: 0, progress: 0 };
+      }
     },
 
     enabled: !!isConnected && (others ? !!userId : (!isGuest && !!user_id)),

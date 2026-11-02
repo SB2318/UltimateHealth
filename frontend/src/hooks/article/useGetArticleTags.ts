@@ -7,7 +7,7 @@ type AxiosError = any;
 
 const categoryFunc = async () => {
   const {data: categoryData} = await axios.get(ARTICLE_TAGS_API);
-  return categoryData as Category[];
+  return (categoryData ?? []) as Category[];
 };
 
 export const useGetCategories = (isConnected: boolean): UseQueryResult<
@@ -17,6 +17,6 @@ export const useGetCategories = (isConnected: boolean): UseQueryResult<
   return useQuery({
     queryKey: ['get-categories'],
     queryFn: categoryFunc,
-    enabled: isConnected
+    enabled: isConnected,
   });
 };

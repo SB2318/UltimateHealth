@@ -1,17 +1,17 @@
-import axios from "axios"
-import { PodcastData } from "../../schemas/type"
-import { useQuery, UseQueryResult } from "@tanstack/react-query"
-import { SEARCH_PODCAST } from "../../lib/api/APIUtils"
-import { escapeRegexSpecialChars } from "../../lib/utils/SearchUtils"
-import {Platform} from 'react-native';
-import {demoPodcasts} from '../../lib/demo/demoContent';
+import { Platform } from 'react-native';
+import { demoPodcasts } from '../../lib/demo/demoContent';
+import axios from "axios";
+import { PodcastData } from "../../schemas/type";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { SEARCH_PODCAST } from "../../lib/api/APIUtils";
+import { escapeRegexSpecialChars } from "../../lib/utils/SearchUtils";
 type AxiosError = any;
 
-
 type SearchResponse = {
-    totalPages: number,
-    matchPodcasts: PodcastData[]
-}
+    totalPages: number;
+    matchPodcasts: PodcastData[];
+};
+
 export const useGetSearchPodcasts = (isConnected: boolean, page: number, q: string): UseQueryResult<
 SearchResponse,
 AxiosError
@@ -32,15 +32,14 @@ AxiosError
       }
       const regexEscapedQuery = escapeRegexSpecialChars(q);
       const urlEncodedQuery = encodeURIComponent(regexEscapedQuery);
-      const res = await axios.get(SEARCH_PODCAST,{
-        params:{
+      const res = await axios.get(SEARCH_PODCAST, {
+        params: {
           q: urlEncodedQuery,
           page,
         },
       });
-
-      return res.data as SearchResponse;
+      return (res?.data ?? { totalPages: 0, matchPodcasts: [] }) as SearchResponse;
     },
     enabled: (Platform.OS === 'web' || isConnected) && !!q && !!page,
   });
-}
+};

@@ -4,7 +4,6 @@ import axios from "axios";
 import { USER_PUBLISHED_PODCASTS } from "../../lib/api/APIUtils";
 type AxiosError = any;
 
-
 type PublishRes = {
     totalPages: number;
     publishedPodcasts: PodcastData[];
@@ -13,15 +12,14 @@ export const useGetUserPublishedPodcasts = (publishedPage: number, isConnected: 
 PublishRes,
 AxiosError
 >=>{
-
     return useQuery({
     queryKey: ['get-published-podcasts-for-user', publishedPage],
     queryFn: async () => {
       const response = await axios.get(
         `${USER_PUBLISHED_PODCASTS}?page=${publishedPage}`
       );
-      return response.data as PublishRes;
+      return (response?.data ?? { totalPages: 0, publishedPodcasts: [] }) as PublishRes;
     },
-    enabled:  !!publishedPage && !!isConnected,
+    enabled: !!publishedPage && !!isConnected,
   });
-}
+};

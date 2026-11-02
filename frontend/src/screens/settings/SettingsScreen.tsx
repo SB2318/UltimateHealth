@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   useColorScheme,
   Alert,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MaterialCommunityIcon from '@expo/vector-icons/MaterialCommunityIcons';
@@ -16,6 +17,7 @@ import { PRIMARY_COLOR } from '../../lib/ui/Theme';
 import { wp, hp, fp } from '../../lib/ui/Metric';
 import { useAppSelector } from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
+import { useTranslation } from '../../localization';
 type SettingsScreenProps = { navigation: any };
 
 // ─── Section Header ───────────────────────────────────────────────────────────
@@ -112,6 +114,12 @@ const SettingsRow = ({
 const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   const isDark = useColorScheme() === 'dark';
   const { isConnected } = useAppSelector((state: any) => state.network);
+  const { currentLanguage, setLanguage, supportedLanguages, t } = useTranslation();
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+
+  const currentLangInfo = supportedLanguages.find(
+    (l) => l.code === currentLanguage || l.bcp47 === currentLanguage,
+  );
 
   const bg = isDark ? '#111827' : '#F9FAFB';
   const headerBg = isDark ? '#1F2937' : '#FFFFFF';
@@ -121,7 +129,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   const go = (screen: any, params?: any) => {
     if (!isConnected) {
       Snackbar.show({
-        text: 'Please check your internet connection!',
+        text: t('settings.checkConnection'),
         duration: Snackbar.LENGTH_SHORT,
       });
       return;
@@ -133,10 +141,10 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   };
 
   const handleLogout = () => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('settings.signOut'), t('settings.signOutConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Sign Out',
+        text: t('settings.signOut'),
         style: 'destructive',
         onPress: () => {
           const stackNav = navigation.getParent() ?? navigation;
@@ -167,7 +175,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           style={[styles.headerTitle, { color: headerText }]}
           accessibilityRole="header"
         >
-          Settings
+          {t('settings.title')}
         </Text>
       </View>
 
@@ -176,14 +184,14 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
         showsVerticalScrollIndicator={false}
       >
         {/* ── ACCOUNT ── */}
-        <SectionLabel label="ACCOUNT" isDark={isDark} />
+        <SectionLabel label={t('settings.account')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="account-edit-outline"
             iconColor={PRIMARY_COLOR}
-            label="View / Edit Profile"
-            sublabel="Update your name, avatar, bio"
-            onPress={() => go('ProfileScreen')}
+            label={t('settings.profile')}
+            sublabel={t('settings.profileSub')}
+            onPress={() => go('ProfileEditScreen')}
             isDark={isDark}
           />
           <View
@@ -196,8 +204,8 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="bell-outline"
             iconColor="#8B5CF6"
-            label="Notification Preferences"
-            sublabel="Push, email, and digest settings"
+            label={t('settings.notifications')}
+            sublabel={t('settings.notificationsSub')}
             onPress={() => go('NotificationPreferencesScreen')}
             isDark={isDark}
           />
@@ -211,21 +219,34 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="view-dashboard"
             iconColor={PRIMARY_COLOR}
-            label="Your Workspace"
-            sublabel="Contributor & Admin Interaction"
+            label={t('settings.workspace')}
+            sublabel={t('settings.workspaceSub')}
             onPress={() => go('OverviewScreen')}
             isDark={isDark}
           />
         </View>
 
+        {/* ── PREFERENCES ── */}
+        <SectionLabel label={t('settings.preferences')} isDark={isDark} />
+        <View style={styles.group}>
+          <SettingsRow
+            icon="translate"
+            iconColor="#3B82F6"
+            label={t('settings.appLanguage')}
+            sublabel={currentLangInfo ? `${currentLangInfo.nativeName} (${currentLangInfo.name})` : 'English'}
+            onPress={() => setLanguageModalVisible(true)}
+            isDark={isDark}
+          />
+        </View>
+
         {/* ── CONTENT ── */}
-        <SectionLabel label="CONTENT & ACTIVITY" isDark={isDark} />
+        <SectionLabel label={t('settings.content')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="chart-line"
             iconColor="#10B981"
-            label="Activity Insight"
-            sublabel="Your writing and reading analytics"
+            label={t('settings.activityInsight')}
+            sublabel={t('settings.activityInsightSub')}
             onPress={() => go('InsightScreen')}
             isDark={isDark}
           />
@@ -239,38 +260,9 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="file-document-outline"
             iconColor="#3B82F6"
-            label="My Posts"
-            sublabel="Articles you have written"
+            label={t('settings.myPosts')}
+            sublabel={t('settings.myPostsSub')}
             onPress={() => go('ContentListScreen', { type: 'articles' })}
-            isDark={isDark}
-          />
-          <View
-            style={[
-              styles.divider,
-              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
-            ]}
-            accessible={false}
-          />
-          <SettingsRow
-            icon="repeat-variant"
-            iconColor="#F59E0B"
-            label="Reposted Articles"
-            onPress={() => go('ContentListScreen', { type: 'reposts' })}
-            isDark={isDark}
-          />
-          <View
-            style={[
-              styles.divider,
-              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
-            ]}
-            accessible={false}
-          />
-          <SettingsRow
-            icon="bookmark-outline"
-            iconColor="#3B82F6"
-            label="Saved Articles"
-            sublabel="Your personal reading list"
-            onPress={() => go('ContentListScreen', { type: 'saved' })}
             isDark={isDark}
           />
           <View
@@ -283,23 +275,9 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="history"
             iconColor="#6366F1"
-            label="Reading History"
+            label={t('settings.readingHistory')}
+            sublabel={t('settings.readingHistorySub')}
             onPress={() => go('ReadingHistoryScreen')}
-            isDark={isDark}
-          />
-          <View
-            style={[
-              styles.divider,
-              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
-            ]}
-            accessible={false}
-          />
-          <SettingsRow
-            icon="heart-pulse"
-            iconColor="#EF4444"
-            label="Wellness Dashboard"
-            sublabel="Track your health goals"
-            onPress={() => go('WellnessDashboardScreen')}
             isDark={isDark}
           />
           <View
@@ -312,21 +290,21 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="map-marker-radius-outline"
             iconColor="#10B981"
-            label="Nearby Health Events"
-            sublabel="Blood drives, health camps, meetups"
+            label={t('settings.nearbyEvents')}
+            sublabel={t('settings.nearbyEventsSub')}
             onPress={() => go('NearbyHealthEventsScreen')}
             isDark={isDark}
           />
         </View>
 
         {/* ── LEGAL & PRIVACY ── */}
-        <SectionLabel label="LEGAL & PRIVACY" isDark={isDark} />
+        <SectionLabel label={t('settings.legal')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="shield-check-outline"
             iconColor="#10B981"
-            label="Privacy Policy"
-            sublabel="Terms & conditions"
+            label={t('settings.privacyPolicy')}
+            sublabel={t('settings.privacyPolicySub')}
             onPress={() => go('Privacy')}
             isDark={isDark}
           />
@@ -340,7 +318,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="book-open-outline"
             iconColor="#3B82F6"
-            label="Community Guidelines"
+            label={t('settings.communityGuidelines')}
             onPress={() => go('CommunityGuidelines')}
             isDark={isDark}
           />
@@ -354,64 +332,82 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           <SettingsRow
             icon="source-branch"
             iconColor="#6366F1"
-            label="Open Source Licences"
+            label={t('settings.openSource')}
             onPress={() => go('OpenSourcePage')}
-            isDark={isDark}
-          />
-          <View
-            style={[
-              styles.divider,
-              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
-            ]}
-            accessible={false}
-          />
-          <SettingsRow
-            icon="account-group-outline"
-            iconColor="#F59E0B"
-            label="Contributors"
-            sublabel="The people who built this"
-            onPress={() => go('ContributorPage')}
             isDark={isDark}
           />
         </View>
 
         {/* ── ABOUT ── */}
-        <SectionLabel label="ABOUT" isDark={isDark} />
+        <SectionLabel label={t('settings.about')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="hospital-box-outline"
             iconColor={PRIMARY_COLOR}
-            label="About UltimateHealth"
-            sublabel="Version, team, & mission"
+            label={t('settings.aboutApp')}
+            sublabel={t('settings.aboutAppSub')}
             onPress={() => go('AboutScreen')}
             isDark={isDark}
           />
         </View>
 
         {/* ── RESPECT GIVER ── */}
-        <SectionLabel label="RESPECT GIVER" isDark={isDark} />
+        <SectionLabel label={t('settings.respectGiver')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="shield-star-outline"
             iconColor="#C084FC"
-            label="Moumita Debnath"
-            sublabel="Justice · Dignity · Hope — Story coming soon"
+            label={t('settings.moumitaDebnath')}
+            sublabel={t('settings.moumitaSub')}
             onPress={() => go('RespectGiverScreen')}
             isDark={isDark}
           />
         </View>
 
         {/* ── DANGER ZONE ── */}
-        <SectionLabel label="SESSION" isDark={isDark} />
+        <SectionLabel label={t('settings.session')} isDark={isDark} />
         <View style={styles.group}>
           <SettingsRow
             icon="logout-variant"
             iconColor="#EF4444"
-            label="Sign Out"
+            label={t('settings.signOut')}
             onPress={handleLogout}
             isDark={isDark}
             destructive
           />
+        </View>
+
+        {/* ── Privacy Pledge Card ── */}
+        <View
+          style={{
+            marginHorizontal: 16,
+            marginTop: 20,
+            padding: 14,
+            borderRadius: 14,
+            borderWidth: 1,
+            backgroundColor: isDark ? '#1E293B' : '#F0FDF4',
+            borderColor: isDark ? '#334155' : '#BBF7D0',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: 12,
+              fontWeight: '700',
+              color: isDark ? '#34D399' : '#059669',
+              marginBottom: 4,
+              letterSpacing: 0.5,
+            }}>
+            OUR PRIVACY PLEDGE
+          </Text>
+          <Text
+            style={{
+              fontSize: 12,
+              lineHeight: 18,
+              textAlign: 'center',
+              color: isDark ? '#94A3B8' : '#374151',
+            }}>
+            Privacy First: Zero Trackers · No Ads · 100% Offline-Ready · We never profile or sell your health data.
+          </Text>
         </View>
 
         {/* ── Footer note ── */}
@@ -421,9 +417,121 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             { color: isDark ? '#4B5563' : '#9CA3AF' },
           ]}
         >
-          UltimateHealth · Built with ❤️ for better health
+          {t('settings.footer')}
         </Text>
       </ScrollView>
+
+      <Modal
+        visible={languageModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setLanguageModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View
+            style={[
+              styles.modalSheet,
+              { backgroundColor: isDark ? '#1F2937' : '#FFFFFF' },
+            ]}
+          >
+            <View
+              style={[
+                styles.modalHeader,
+                { borderBottomColor: isDark ? '#374151' : '#E5E7EB' },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.modalTitle,
+                  { color: isDark ? '#F9FAFB' : '#111827' },
+                ]}
+              >
+                {t('settings.selectLanguage')}
+              </Text>
+              <TouchableOpacity
+                onPress={() => setLanguageModalVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="Close language selector"
+              >
+                <MaterialIcons
+                  name="close"
+                  size={24}
+                  color={isDark ? '#9CA3AF' : '#6B7280'}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <ScrollView
+              style={{ maxHeight: hp(50) }}
+              showsVerticalScrollIndicator={false}
+            >
+              {supportedLanguages.map((lang) => {
+                const isSelected =
+                  currentLanguage === lang.code || currentLanguage === lang.bcp47;
+                return (
+                  <TouchableOpacity
+                    key={lang.code}
+                    onPress={async () => {
+                      await setLanguage(lang.code);
+                      setLanguageModalVisible(false);
+                      Snackbar.show({
+                        text: `Language switched to ${lang.nativeName}`,
+                        duration: Snackbar.LENGTH_SHORT,
+                      });
+                    }}
+                    style={[
+                      styles.languageItem,
+                      {
+                        backgroundColor: isSelected
+                          ? isDark
+                            ? 'rgba(59, 130, 246, 0.2)'
+                            : '#EFF6FF'
+                          : 'transparent',
+                        borderBottomColor: isDark ? '#374151' : '#F3F4F6',
+                      },
+                    ]}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Choose ${lang.nativeName} (${lang.name})`}
+                  >
+                    <View style={styles.langNameWrap}>
+                      <Text
+                        style={[
+                          styles.langNative,
+                          {
+                            color: isSelected
+                              ? PRIMARY_COLOR
+                              : isDark
+                              ? '#F9FAFB'
+                              : '#111827',
+                            fontWeight: isSelected ? '700' : '500',
+                          },
+                        ]}
+                      >
+                        {lang.nativeName}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.langEn,
+                          { color: isDark ? '#9CA3AF' : '#6B7280' },
+                        ]}
+                      >
+                        {lang.name}
+                      </Text>
+                    </View>
+                    {isSelected && (
+                      <MaterialIcons
+                        name="check-circle"
+                        size={22}
+                        color={PRIMARY_COLOR}
+                      />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -506,5 +614,49 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: fp(3),
     marginTop: hp(2),
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalSheet: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingTop: 16,
+    paddingBottom: hp(4),
+    paddingHorizontal: wp(5),
+    maxHeight: hp(70),
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+  },
+  modalTitle: {
+    fontSize: fp(4.5),
+    fontWeight: '700',
+  },
+  languageItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    borderBottomWidth: 1,
+    marginTop: 4,
+  },
+  langNameWrap: {
+    flexDirection: 'column',
+  },
+  langNative: {
+    fontSize: fp(4),
+  },
+  langEn: {
+    fontSize: fp(3.2),
+    marginTop: 2,
   },
 });

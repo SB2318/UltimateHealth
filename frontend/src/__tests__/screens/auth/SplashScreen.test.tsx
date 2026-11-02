@@ -100,7 +100,7 @@ describe('SplashScreen - Offline Session and Auto-Login Tests', () => {
 
     expect(mockReset).toHaveBeenCalledWith({
       index: 0,
-      routes: [{name: 'LoginScreen'}],
+      routes: [{name: 'SignInScreen'}],
     });
   });
 });

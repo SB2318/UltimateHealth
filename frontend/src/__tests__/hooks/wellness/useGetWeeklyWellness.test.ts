@@ -66,4 +66,15 @@ describe('useGetWeeklyWellness', () => {
 
     expect(result.current.fetchStatus).toBe('idle');
   });
+
+  it('does not fetch if options.enabled is false (e.g. guest mode)', async () => {
+    const {result} = renderHook(
+      () => useGetWeeklyWellness(true, {enabled: false}),
+      {
+        wrapper: makeWrapper(),
+      },
+    );
+
+    expect(result.current.fetchStatus).toBe('idle');
+  });
 });

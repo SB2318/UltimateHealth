@@ -34,6 +34,7 @@ jobs:
         working-directory: ./frontend
     env:
       CI: true
+      YARN_ENABLE_IMMUTABLE_INSTALLS: "false"
 
     steps:
       - name: Checkout repository
@@ -53,7 +54,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
-          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock') }}
+          key: node-modules-${{ runner.os }}-${{ hashFiles('frontend/yarn.lock', 'frontend/package.json') }}
 
       - name: Cache Gradle Wrapper
         uses: actions/cache@v4
@@ -76,7 +77,7 @@ jobs:
           java-version: '17'
 
       - name: Install JS Dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --no-immutable
 
       - name: Grant Gradle Execute Permission
         working-directory: ./frontend/android
@@ -92,8 +93,8 @@ jobs:
             if (!content || content.trim().length === 0) {
               console.warn('GOOGLE_SERVICES_JSON secret not found (fork PR). Creating fallback google-services.json for build validation.');
               const fallback = {
-                project_info: { project_number: "123456789", project_id: "dummy-project", storage_bucket: "dummy.appspot.com" },
-                client: [{ client_info: { mobilesdk_app_id: "1:123456789:android:123456789", android_client_info: { package_name: "com.ultimatehealth.app" } }, api_key: [{ current_key: "dummy-api-key" }] }]
+                project_info: { project_number: '123456789', project_id: 'dummy-project', storage_bucket: 'dummy.appspot.com' },
+                client: [{ client_info: { mobilesdk_app_id: '1:123456789:android:123456789', android_client_info: { package_name: 'com.ultimatehealth.app' } }, api_key: [{ current_key: 'dummy-api-key' }] }]
               };
               fs.writeFileSync('android/app/google-services.json', JSON.stringify(fallback, null, 2));
               process.exit(0);

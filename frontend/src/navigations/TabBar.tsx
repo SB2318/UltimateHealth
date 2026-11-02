@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars */
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState, useContext} from 'react';
+import {BottomTabBarHeightCallbackContext} from '@react-navigation/bottom-tabs';
 import {
   View,
   Pressable,
@@ -8,10 +9,12 @@ import {
   Animated,
   useColorScheme,
   Platform,
+  Keyboard,
 } from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import {PRIMARY_COLOR} from '../lib/ui/Theme';
-import {hp, wp, fp} from '../lib/ui/Metric';
+import {PRIMARY_COLOR, BUTTON_COLOR} from '../lib/ui/Theme';
+import {useTranslation} from '../localization';
 
 // Icon map per tab label
 const TAB_CONFIG: Record<
@@ -21,33 +24,30 @@ const TAB_CONFIG: Record<
   Home: {active: 'home', inactive: 'home-outline', label: 'Home'},
   Podcasts: {active: 'headphones', inactive: 'headphones', label: 'Podcasts'},
   Chatbot: {active: 'robot', inactive: 'robot-outline', label: 'AI'},
-  Academy: {active: 'school', inactive: 'school-outline', label: 'Academy'},
+  Wellness: {active: 'heart-pulse', inactive: 'heart-pulse', label: 'Wellness'},
   Settings: {active: 'cog', inactive: 'cog-outline', label: 'Settings'},
 };
 
 interface AnimatedTabItemProps {
   label: string;
+  displayLabel?: string;
   isFocused: boolean;
   onPress: () => void;
   isDark: boolean;
 }
 
-const AnimatedTabItem = ({label, isFocused, onPress, isDark}: AnimatedTabItemProps) => {
+const AnimatedTabItem = ({
+  label,
+  displayLabel,
+  isFocused,
+  onPress,
+  isDark,
+}: AnimatedTabItemProps) => {
   const [scaleAnim] = useState(() => new Animated.Value(1));
-  const [pillWidthAnim] = useState(() => new Animated.Value(isFocused ? 1 : 0));
-
-  useEffect(() => {
-    Animated.spring(pillWidthAnim, {
-      toValue: isFocused ? 1 : 0,
-      useNativeDriver: false,
-      tension: 80,
-      friction: 10,
-    }).start();
-  }, [isFocused]);
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.88,
+      toValue: 0.9,
       useNativeDriver: true,
       tension: 200,
       friction: 10,
@@ -68,15 +68,11 @@ const AnimatedTabItem = ({label, isFocused, onPress, isDark}: AnimatedTabItemPro
     inactive: 'circle-outline',
     label: label,
   };
+  const title = displayLabel || config.label;
 
   const iconName = isFocused ? config.active : config.inactive;
-  const activeColor = PRIMARY_COLOR;
-  const inactiveColor = isDark ? '#6b7280' : '#9ca3af';
-
-  const pillBg = pillWidthAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['rgba(0,191,255,0)', 'rgba(0,191,255,0.12)'],
-  });
+  const activeColor = isDark ? '#38BDF8' : BUTTON_COLOR;
+  const inactiveColor = isDark ? '#94A3B8' : '#64748B';
 
   return (
     <Pressable
@@ -84,54 +80,88 @@ const AnimatedTabItem = ({label, isFocused, onPress, isDark}: AnimatedTabItemPro
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       accessibilityRole="button"
-      accessibilityLabel={`${config.label} tab`}
+      accessibilityLabel={`${title} tab`}
       accessibilityState={{selected: isFocused}}
       style={styles.tabItem}>
-      <Animated.View style={{transform: [{scale: scaleAnim}]}}>
-        <Animated.View
-          style={[
-            styles.iconPill,
-            {backgroundColor: pillBg as any},
-          ]}>
+      <Animated.View style={[styles.tabItemInner, {transform: [{scale: scaleAnim}]}]}>
+        <View style={styles.iconBox}>
           <MaterialCommunityIcons
             name={iconName as any}
             size={24}
             color={isFocused ? activeColor : inactiveColor}
           />
-          {isFocused && <View style={styles.activeDot} />}
-        </Animated.View>
+        </View>
         <Text
           style={[
             styles.tabLabel,
-            {color: isFocused ? activeColor : inactiveColor},
-            isFocused && styles.tabLabelActive,
+            {
+              color: isFocused ? activeColor : inactiveColor,
+              fontWeight: isFocused ? '700' : '500',
+            },
           ]}
           numberOfLines={1}>
-          {config.label}
+          {title}
         </Text>
       </Animated.View>
     </Pressable>
   );
 };
 
+const TAB_KEY_MAP: Record<string, string> = {
+  Home: 'tabs.home',
+  Podcasts: 'tabs.podcasts',
+  Chatbot: 'tabs.chatbot',
+  Wellness: 'tabs.wellness',
+  Settings: 'tabs.settings',
+};
+
+const useSafeInsets = () => {
+  try {
+    return useSafeAreaInsets();
+  } catch {
+    return { top: 0, bottom: 0, left: 0, right: 0 };
+  }
+};
+
 const TabBar = ({state, descriptors, navigation}: any) => {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
   const isDark = colorScheme === 'dark';
+  const insets = useSafeInsets();
 
-  const hideTabBarScreens = ['Chatbot'];
-  const currentRouteName = state.routes[state.index]?.name;
-  if (hideTabBarScreens.includes(currentRouteName)) return null;
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  // Report real (custom) tab bar height so screens can use useBottomTabBarHeight
+  const reportTabBarHeight = useContext(BottomTabBarHeightCallbackContext);
 
-  const bgColor = isDark ? '#1a1a2e' : '#ffffff';
-  const borderColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+  useEffect(() => {
+    const showEvt = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvt = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+    const showSub = Keyboard.addListener(showEvt, () => setKeyboardVisible(true));
+    const hideSub = Keyboard.addListener(hideEvt, () => setKeyboardVisible(false));
+    return () => {
+      showSub.remove();
+      hideSub.remove();
+    };
+  }, []);
+
+  // Keep AI inside tab navigation: only hide while typing (tabBarHideOnKeyboard)
+  const focusedRoute = state.routes[state.index];
+  const focusedOptions = focusedRoute ? descriptors[focusedRoute.key]?.options : undefined;
+  if (keyboardVisible && focusedOptions?.tabBarHideOnKeyboard) return null;
+
+  const bgColor = isDark ? '#0F172A' : '#FFFFFF';
+  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const bottomPadding = insets.bottom > 0 ? insets.bottom + 4 : (Platform.OS === 'web' ? 8 : 12);
 
   return (
     <View
+      onLayout={e => reportTabBarHeight?.(e.nativeEvent.layout.height)}
       style={[
         styles.container,
         {
           backgroundColor: bgColor,
           borderTopColor: borderColor,
+          paddingBottom: bottomPadding,
         },
       ]}>
       {state.routes.map((route: any, index: number) => {
@@ -155,10 +185,12 @@ const TabBar = ({state, descriptors, navigation}: any) => {
           }
         };
 
+        const displayLabel = TAB_KEY_MAP[label] ? t(TAB_KEY_MAP[label]) : label;
         return (
           <AnimatedTabItem
             key={index}
             label={label}
+            displayLabel={displayLabel}
             isFocused={isFocused}
             onPress={onPress}
             isDark={isDark}
@@ -176,19 +208,23 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    paddingBottom: Platform.OS === 'web' ? 8 : hp(4),
-    paddingTop: Platform.OS === 'web' ? 6 : hp(1),
-    paddingHorizontal: Platform.OS === 'web' ? 8 : wp(2),
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingTop: 8,
+    paddingHorizontal: 8,
     borderTopWidth: 1,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: -4},
+        shadowOffset: {width: 0, height: -3},
         shadowOpacity: 0.08,
-        shadowRadius: 12,
+        shadowRadius: 10,
       },
       android: {
-        elevation: 16,
+        elevation: 14,
+      },
+      web: {
+        boxShadow: '0 -2px 10px rgba(0,0,0,0.06)',
       },
     }),
   },
@@ -197,30 +233,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconPill: {
+  tabItemInner: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 14,
-    width: Platform.OS === 'web' ? 42 : wp(12),
-    height: Platform.OS === 'web' ? 38 : wp(12),
-    position: 'relative',
   },
-  activeDot: {
-    position: 'absolute',
-    bottom: Platform.OS === 'web' ? 1 : 4,
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: PRIMARY_COLOR,
+  iconBox: {
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 2,
   },
   tabLabel: {
-    fontSize: Platform.OS === 'web' ? 13 : fp(2.8),
-    fontWeight: '500',
-    marginTop: Platform.OS === 'web' ? 0 : 2,
+    fontSize: 11,
     textAlign: 'center',
-  },
-  tabLabelActive: {
-    fontWeight: '700',
+    marginTop: 1,
   },
 });
 

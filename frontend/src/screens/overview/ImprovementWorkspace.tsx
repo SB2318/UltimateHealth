@@ -13,7 +13,7 @@ import {EditRequest} from '../../schemas/type';
 import {useAppSelector} from '../../store/hooks';
 import Loader from '../../components/common/Loader';
 import ImprovementCard from '../../components/article/ImprovementCard';
-import {PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {PRIMARY_COLOR, BUTTON_COLOR} from '../../lib/ui/Theme';
 import {hp, wp} from '../../lib/ui/Metric';
 import {useGetAllImprovementsForReview} from '@/src/hooks/improvement/useGetUserAllImprovements';
 import {ProfessionalColors} from '../../styles/GlassStyles';
@@ -107,9 +107,9 @@ export default function ImprovementWorkspace({
                 backgroundColor:
                   selectedStatus !== item.status
                     ? (isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.9)')
-                    : PRIMARY_COLOR,
+                    : BUTTON_COLOR,
                 borderColor:
-                  selectedStatus !== item.status ? (isDarkMode ? 'rgba(0, 191, 255, 0.5)' : PRIMARY_COLOR) : PRIMARY_COLOR,
+                  selectedStatus !== item.status ? (isDarkMode ? '#4B5563' : '#D1D5DB') : BUTTON_COLOR,
                 borderWidth: 1.5,
               }}
               onPress={() => {

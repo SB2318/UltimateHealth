@@ -33,15 +33,19 @@ jobs:
           elif [ -f "pnpm-lock.yaml" ]; then
             echo "Using pnpm"
             npm install -g pnpm
-            pnpm install --frozen-lockfile
+            pnpm install --no-frozen-lockfile
           elif [ -f "yarn.lock" ]; then
             echo "Using Yarn"
             corepack enable
             corepack prepare yarn@4.18.0 --activate
-            yarn install --frozen-lockfile
+            yarn install --no-immutable
           else
             echo "Using npm"
-            npm ci --legacy-peer-deps
+            if [ -f "package-lock.json" ]; then
+              npm ci --legacy-peer-deps
+            else
+              npm install --legacy-peer-deps
+            fi
           fi
           
       -  name: Setup Firebase iOS Config

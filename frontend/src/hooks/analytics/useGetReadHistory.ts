@@ -4,7 +4,6 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import axios from 'axios';
 import { useAppSelector } from '../../store/hooks';
 
-
 export type ReadHistoryArticle = ArticleData & {
   dateRead: string;
 };
@@ -22,10 +21,22 @@ export const useGetReadHistory = (
   return useQuery({
     queryKey: ['get-read-history', user_id, page],
     queryFn: async () => {
-      const response = await axios.get(`${GET_READ_HISTORY}/${user_id}`, {
-        params: { page },
-      });
-      return response.data as ReadHistoryResponse;
+      try {
+        const response = await axios.get(`${GET_READ_HISTORY}/${user_id}`, {
+          params: { page },
+        });
+        return (
+          response?.data ?? {
+            articles: [],
+            totalPages: 1,
+          }
+        ) as ReadHistoryResponse;
+      } catch {
+        return {
+          articles: [],
+          totalPages: 1,
+        };
+      }
     },
     enabled: !!user_id && !isGuest,
   });

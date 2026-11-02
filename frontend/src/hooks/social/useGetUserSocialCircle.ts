@@ -31,9 +31,12 @@ export const useGetUserSocials = ({
 
       console.log('Request Url', url);
 
-      const response = await axios.get(url);
-
-      return response.data.followers as User[];
+      try {
+        const response = await axios.get(url);
+        return (response?.data?.followers ?? []) as User[];
+      } catch {
+        return [];
+      }
     },
     enabled:  !!type && !isGuest,
   });

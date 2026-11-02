@@ -51,6 +51,7 @@ const clearExpiredSession = async (): Promise<void> => {
   try {
     await Promise.all([
       secureRemoveItem(SECURE_KEYS.USER_TOKEN),
+      secureRemoveItem(SECURE_KEYS.REFRESH_TOKEN),
       removeItem(KEYS.USER_TOKEN_EXPIRY_DATE),
       removeItem(KEYS.USER_ID),
       removeItem(KEYS.USER_HANDLE),

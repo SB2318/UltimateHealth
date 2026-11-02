@@ -6,13 +6,13 @@
 const defaultStaticConfig = {
   name: "UltimateHealth",
   slug: "UltimateHealth",
-  version: "3.0.0",
+  version: "3.2.0",
   orientation: "portrait",
   icon: "./assets/images/ic_ultimatehealth_appicon.png",
   scheme: "ultimatehealth",
   userInterfaceStyle: "automatic",
   androidStatusBar: {
-    backgroundColor: "#00BFFF",
+    backgroundColor: "#000A60",
     barStyle: "light-content"
   },
   ios: {
@@ -50,6 +50,26 @@ const defaultStaticConfig = {
         autoVerify: true,
         category: ["BROWSABLE", "DEFAULT"],
         data: [
+          {
+            scheme: "https",
+            host: "ultimatehealth.blog",
+            pathPrefix: "/web/en/articles"
+          },
+          {
+            scheme: "https",
+            host: "ultimatehealth.blog",
+            pathPrefix: "/web"
+          },
+          {
+            scheme: "https",
+            host: "ultimatehealth.blog",
+            pathPrefix: "/articles"
+          },
+          {
+            scheme: "https",
+            host: "ultimatehealth.blog",
+            pathPrefix: "/article"
+          },
           {
             scheme: "https",
             host: "ultimatehealth.blog",
@@ -112,7 +132,7 @@ const defaultStaticConfig = {
     "./plugins/withWebViewDebug.js"
   ],
   
- experiments: {
+  experiments: {
     reactCompiler: true
   }
 };
@@ -151,7 +171,7 @@ module.exports = ({ config }) => {
       SOCKET_PROD:
         process.env.SOCKET_PROD ?? "https://ultimatehealth.blog",
       CONTENT_CHECKER_PROD:
-        process.env.CONTENT_CHECKER_PROD ?? "https://ultimatehealth.blog/veriwise",
+        process.env.CONTENT_CHECKER_PROD ?? "https://ultimatehealth.blog/content-intel",
       FIREBASE_API_KEY_ANDROID: process.env.FIREBASE_API_KEY_ANDROID,
       FIREBASE_API_KEY_IOS: process.env.FIREBASE_API_KEY_IOS,
       FIREBASE_APP_ID_ANDROID: process.env.FIREBASE_APP_ID_ANDROID,
@@ -162,6 +182,8 @@ module.exports = ({ config }) => {
       FIREBASE_SENDER_ID: process.env.FIREBASE_SENDER_ID,
       FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
       FIREBASE_DATABASE_URL: process.env.FIREBASE_DATABASE_URL,
+      WEB_CLIENT_ID: process.env.WEB_CLIENT_ID,
+      EXPO_PUBLIC_USE_RN_FETCH: "true",
     }
   };
 };

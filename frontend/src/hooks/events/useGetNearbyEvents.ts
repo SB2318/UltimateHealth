@@ -11,14 +11,18 @@ export const useGetNearbyEvents = (
   return useQuery({
     queryKey: ['get-nearby-events', latitude, longitude, radius],
     queryFn: async () => {
-      const response = await axios.get<NearbyEventsResponse>(NEARBY_EVENTS_API, {
-        params: {
-          latitude,
-          longitude,
-          radius,
-        },
-      });
-      return response.data.data;
+      try {
+        const response = await axios.get<NearbyEventsResponse>(NEARBY_EVENTS_API, {
+          params: {
+            latitude,
+            longitude,
+            radius,
+          },
+        });
+        return response?.data?.data ?? [];
+      } catch (err) {
+        return [];
+      }
     },
     enabled: latitude !== null && longitude !== null,
     staleTime: 1000 * 60 * 5, // 5 minutes

@@ -21,8 +21,13 @@ AxiosError
         return {allPodcasts: demoPodcasts, totalPages: 1};
       }
       const response = await axios.get(`${GET_ALL_PODCASTS}?page=${page}`);
-      return response.data as PodcastResponse;
+      return (
+        response?.data ?? {
+          totalPages: 1,
+          allPodcasts: [],
+        }
+      ) as PodcastResponse;
     },
-    enabled: (Platform.OS === 'web' || isConnected) && !!page,
+    enabled: isConnected && !!page,
   });
-}
+};

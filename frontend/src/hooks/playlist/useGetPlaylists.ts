@@ -9,13 +9,18 @@ type AxiosError = any;
 export const useGetPlaylists = (): UseQueryResult<PlayList[], AxiosError> => {
   const isGuest = useAppSelector((state: RootState) => state.user.isGuest);
   const userId = useAppSelector((state: RootState) => state.user.user_id);
+  const user_token = useAppSelector((state: RootState) => state.user.user_token);
 
   return useQuery({
     queryKey: ['get-my-playlists', userId],
     queryFn: async () => {
-      const res = await axios.get(GET_PLAYLIST);
-      return res.data as PlayList[];
+      try {
+        const res = await axios.get(GET_PLAYLIST);
+        return (res?.data ?? []) as PlayList[];
+      } catch {
+        return [];
+      }
     },
-    enabled: !isGuest,
+    enabled: !isGuest && user_token !== '' && user_token !== null,
   });
 };

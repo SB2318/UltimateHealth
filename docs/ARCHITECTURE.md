@@ -11,7 +11,7 @@ UltimateHealth is split across four repositories:
 | Repository | What it is |
 |---|---|
 | `SB2318/UltimateHealth` (main branch) | React Native + Expo mobile app (Android + iOS) |
-| `SB2318/UltimateHealth` (web branch) | Next.js web app — live at ultimatehealth.blog/web/ |
+| `SB2318/UltimateHealth` (web branch) | React web app — live at ultimatehealth.blog/frontend/v2 |
 | `SB2318/ultimatehealth-backend` | Node.js + Express REST API + MongoDB |
 | `SB2318/ultimatehealth-admin` | Admin panel (moderation, analytics, user management) |
 | `content-checker` | VeriWise — plagiarism detection, grammar, originality scoring |
@@ -23,7 +23,7 @@ UltimateHealth is split across four repositories:
 ```mermaid
 flowchart TD
     A([Mobile User\nAndroid / iOS]) -->|REST API calls| E
-    B([Web User\nultimatehealth.blog/web/]) -->|REST API calls| E
+    B([Web User\nultimatehealth.blog/frontend/v2]) -->|REST API calls| E
     C([Admin\nAdmin Panel]) -->|Admin REST APIs| E
 
     E[Node.js + Express Backend\nultimatehealth.blog/docs]
@@ -31,7 +31,7 @@ flowchart TD
     E -->|JWT Auth| F[Auth Middleware\nsrc/middleware/]
     E -->|CRUD| G[Controllers\nsrc/controllers/]
     G -->|Mongoose queries| H[(MongoDB\nArticles · Podcasts\nUsers · Reports)]
-    G -->|Content submission| I[Content Checker / VeriWise\nultimatehealth.blog/veriwise/docs]
+    G -->|Content submission| I[Content Checker / VeriWise\nultimatehealth.blog/content-intel/docs]
     G -->|Push notifications| J[Firebase Cloud Messaging]
     G -->|File storage| K[Vultr Object Storage\nS3-compatible]
 
@@ -88,7 +88,7 @@ React Native app built with Expo, using **file-based routing** via Expo Router. 
 Key folders: `app/` (screens + routing), `components/`, `store/` (Redux), `services/` (API layer).
 
 ### 2. Web App — `SB2318/UltimateHealth` (web branch)
-Next.js web app served at `ultimatehealth.blog/web/`. Lives in the `web` branch of the repo. Shares the same backend API as the mobile app. Contribute here if you're working on the web experience rather than the mobile app.
+React web app served at `ultimatehealth.blog/frontend/v2`. Lives in the `frontend/` folder of the main repo. Shares the same backend API as the mobile app. Contribute here if you're working on the web experience rather than the mobile app.
 
 ### 3. Backend — `SB2318/ultimatehealth-backend`
 Node.js + Express REST API. Handles all business logic: article and podcast CRUD, collaborative review workflow, JWT authentication (access + refresh + verification tokens), content moderation (strikes, bans, flagging), admin analytics, and email notifications. Swagger UI is available at `ultimatehealth.blog/docs`. File uploads go to Vultr Object Storage (S3-compatible).
@@ -99,7 +99,7 @@ Key folders: `src/controllers/`, `src/models/`, `src/routes/`, `src/middleware/`
 Dedicated dashboard for moderators and admins. Provides UI for content moderation, user management, strike/ban management, and platform analytics. Calls the same backend API as the mobile and web apps but uses admin-scoped JWT tokens and protected routes.
 
 ### 5. Content Checker / VeriWise
-Separate microservice available at `ultimatehealth.blog/veriwise/docs`. Runs plagiarism detection, grammar checking, and originality scoring on submitted articles before they enter the review queue. Called by the backend during content submission — contributors don't interact with it directly.
+Separate microservice available at `ultimatehealth.blog/content-intel/docs`. Runs plagiarism detection, grammar checking, and originality scoring on submitted articles before they enter the review queue. Called by the backend during content submission — contributors don't interact with it directly.
 
 ### 6. Auth — JWT (Three-Token System)
 The backend issues three separate JWT types:

@@ -10,7 +10,7 @@ import { View,
 import {PodcastData} from '../../schemas/type';
 import {useAppSelector} from '../../store/hooks';
 import PodcastReviewCard from '../../components/podcast/PodcastReviewCard';
-import {ON_PRIMARY_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
+import {ON_PRIMARY_COLOR, PRIMARY_COLOR, BUTTON_COLOR} from '../../lib/ui/Theme';
 import {hp, wp} from '../../lib/ui/Metric';
 import PodcastSkeletonCard from '../../components/podcast/PodcastSkeletonCard';
 import {useGetPendingPodcasts} from '@/src/hooks/podcast/useGetPendingPodcasts';
@@ -175,8 +175,8 @@ export default function PodcastWorkSpace({
               style={{
                 ...styles.button,
                 backgroundColor:
-                  selectedStatus !== item ? 'white' : PRIMARY_COLOR,
-                borderColor: selectedStatus !== item ? PRIMARY_COLOR : 'white',
+                  selectedStatus !== item ? 'white' : BUTTON_COLOR,
+                borderColor: selectedStatus !== item ? '#D1D5DB' : BUTTON_COLOR,
               }}
               onPress={() => {
                 setSelectedStatus(item);

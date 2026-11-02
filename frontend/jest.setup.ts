@@ -153,6 +153,8 @@ jest.mock('react-native-tts', () => ({
   setDefaultPitch: jest.fn(),
   speak: jest.fn(() => Promise.resolve()),
   stop: jest.fn(() => Promise.resolve()),
+  // voices() is called in ChatbotScreen, PodcastPlayer, ArticleScreen, MultiLanguageService
+  voices: jest.fn(() => Promise.resolve([])),
   addEventListener: jest.fn(),
   removeEventListener: jest.fn(),
 }));
@@ -164,3 +166,20 @@ jest.mock('@react-native-community/netinfo', () => {
     useNetInfo: jest.fn(() => ({ isConnected: true, isInternetReachable: true })),
   };
 });
+
+
+jest.mock('expo-document-picker', () => ({
+  getDocumentAsync: jest.fn(() =>
+    Promise.resolve({
+      canceled: false,
+      assets: [
+        {
+          uri: 'file:///mock/audio.mp3',
+          name: 'audio.mp3',
+          size: 1024,
+          mimeType: 'audio/mpeg',
+        },
+      ],
+    }),
+  ),
+}));

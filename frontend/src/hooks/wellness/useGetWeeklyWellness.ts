@@ -39,7 +39,9 @@ export const getDemoLogs = async (): Promise<WellnessLog[]> => {
 
 export const useGetWeeklyWellness = (
   isConnected: boolean,
+  options?: { enabled?: boolean },
 ): UseQueryResult<WellnessLog[], AxiosError> => {
+  const isQueryEnabled = Boolean(isConnected) && (options?.enabled ?? true);
   return useQuery({
     queryKey: ['get-weekly-wellness'],
     queryFn: async () => {
@@ -52,12 +54,6 @@ export const useGetWeeklyWellness = (
       if (body?.success === false) throw new Error('Failed to load wellness data');
       return Array.isArray(body?.data) ? body.data : [];
     },
-    enabled: Platform.OS === 'web' || isConnected,
-    staleTime: Platform.OS === 'web' ? Infinity : 1000 * 60,
-    gcTime: 1000 * 60 * 30,
-    refetchOnMount: Platform.OS !== 'web',
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: false,
+    enabled: isQueryEnabled,
   });
 };

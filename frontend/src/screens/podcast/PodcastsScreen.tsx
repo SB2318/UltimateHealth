@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
  
 import {useEffect, useState, useMemo} from 'react';
-import {Platform} from 'react-native';
-import { StyleSheet,
+import {
+  Platform,
+  StyleSheet,
   TouchableOpacity,
- // NativeModules,
   Text,
-   FlatList ,
- } from 'react-native';
+  FlatList,
+  useColorScheme,
+} from 'react-native';
 
 import {YStack, View, XStack} from 'tamagui';
 import PodcastCard from '../../components/podcast/PodcastCard';
@@ -36,6 +37,7 @@ import {demoPodcasts} from '../../lib/demo/demoContent';
 //const recorderEvents = new NativeEventEmitter(WavAudioRecorder);
 
 const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
+  const isDarkMode = useColorScheme() === 'dark';
   const dispatch = useAppDispatch();
   const {user_id, isGuest} = useAppSelector((state: any) => state.user);
   // const {selectedTags, sortType} = useAppSelector((state: any) => state.data);
@@ -144,7 +146,17 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
       display={true}
       downLoadAudio={async () => {
         if (isConnected) {
-          await downloadAudio(item);
+          Snackbar.show({
+            text: 'Starting download in background...',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+          const res = await downloadAudio(item);
+          if (res?.message) {
+            Snackbar.show({
+              text: res.message,
+              duration: Snackbar.LENGTH_SHORT,
+            });
+          }
         } else {
           Snackbar.show({
             text: 'Internet connection required',
@@ -189,22 +201,33 @@ const PodcastsScreen = ({navigation}: PodcastScreenProps) => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
+    <SafeAreaView style={[styles.container, {backgroundColor: isDarkMode ? '#0A0F1D' : ProfessionalColors.gray50}]}>
+      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
 
       {/* Header Section */}
-      <View style={[GlassStyles.glassCard, styles.header]}>
+      <View
+        style={[
+          GlassStyles.glassCard,
+          styles.header,
+          {
+            backgroundColor: isDarkMode ? '#1E293B' : 'rgba(255, 255, 255, 0.85)',
+            borderColor: isDarkMode ? '#334155' : 'rgba(0, 0, 0, 0.08)',
+            borderWidth: 1,
+          },
+        ]}>
         <XStack alignItems="center" justifyContent="space-between">
           <XStack alignItems="center" gap="$3">
             <Ionicons
               name="headset"
               size={28}
-              color={ProfessionalColors.primary}
+              color={isDarkMode ? '#60A5FA' : ProfessionalColors.primary}
               accessible={false}
             />
             <YStack>
-              <Text style={styles.headerTitle}>Podcasts</Text>
-              <Text style={styles.headerSubtitle}>
+              <Text style={[styles.headerTitle, {color: isDarkMode ? '#F8FAFC' : ProfessionalColors.gray900}]}>
+                Podcasts
+              </Text>
+              <Text style={[styles.headerSubtitle, {color: isDarkMode ? '#94A3B8' : ProfessionalColors.gray600}]}>
                 {filteredPodcasts?.length || 0} episodes available
               </Text>
             </YStack>
