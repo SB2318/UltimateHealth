@@ -50,7 +50,6 @@ import SpeedSelector from '../../components/podcast/FloatingSpeedSelector';
 
 import {setUserHandle} from '../../store/UserSlice';
 import AutoHeightWebView from '@brown-bear/react-native-autoheight-webview';
-import LottieView from 'lottie-react-native';
 
 import {useGetArticleDetails} from '@/src/hooks/article/useGetArticleDetail';
 import {useGetArticleContent} from '@/src/hooks/article/useGetArticleContent';
@@ -173,6 +172,43 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
   const [speechRate, setSpeechRate] = useState(0.5);
   const [isSpeedSelectorVisible, setIsSpeedSelectorVisible] = useState(false);
   const [playerVisible, setPlayerVisible] = useState(false);
+  const [listenProgress, setListenProgress] = useState(0);
+  const [totalWordsCount, setTotalWordsCount] = useState(0);
+
+  const totalListenSeconds = useMemo(() => {
+    if (!totalWordsCount) return 0;
+    const rateFactor = Math.max(0.5, speechRate) / 0.5;
+    return Math.max(1, Math.round(totalWordsCount / (2.5 * rateFactor)));
+  }, [speechRate, totalWordsCount]);
+
+  const currentListenSeconds = useMemo(() => {
+    return Math.min(totalListenSeconds, Math.round(listenProgress * totalListenSeconds));
+  }, [listenProgress, totalListenSeconds]);
+
+  const formatListenTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
+  useEffect(() => {
+    if (!isPlaying || isPaused || wordsRef.current.length === 0) return;
+
+    const totalWords = wordsRef.current.length;
+    const rateFactor = Math.max(0.5, speechRate) / 0.5;
+    const wordsPerSec = 2.5 * rateFactor;
+
+    const interval = setInterval(() => {
+      setListenProgress(prev => {
+        const chunkTarget = Math.min(1, chunkIndexRef.current / Math.max(1, totalWords));
+        const increment = (wordsPerSec * 0.5) / totalWords;
+        const next = prev + increment;
+        return next >= chunkTarget ? chunkTarget : next;
+      });
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, isPaused, speechRate]);
   const [summary, setSummary] = useState<ArticleSummary | null>(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [shareModalVisible, setShareModalVisible] = useState(false);
@@ -404,6 +440,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       setIsPlaying(false);
       setIsPaused(false);
       setPlayerVisible(false);
+      setListenProgress(0);
+      setTotalWordsCount(0);
       Tts.stop();
       clearArticleTtsSubscriptions();
     };
@@ -737,16 +775,60 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     });
   };
 
+  /**
+   * Preprocesses and sanitizes article text for natural, pleasant speech.
+   * Filters harsh URLs, technical symbols, abrasive punctuation, and shouting ALL-CAPS words.
+   */
   async function convertHtmlToPlainText(html: string) {
-    let modifiedHtml = html.replace(/ style="[^"]*"/g, '');
+    let text = html;
 
-    modifiedHtml = modifiedHtml.replace(/<style[^>]*>[\s\S]*?<\/style>/g, '');
+    // 1. Strip script and style blocks
+    text = text.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '');
+    text = text.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
 
-    modifiedHtml = modifiedHtml.replace(/&nbsp;/g, ' ');
+    // 2. Replace HTML line breaks and paragraph ends with soft pauses
+    text = text.replace(/<\/(p|h[1-6]|li|tr|div)>/gi, '. ');
+    text = text.replace(/<br\s*\/?>/gi, ', ');
 
-    let plainText = modifiedHtml.replace(/<[^>]*>/g, '');
+    // 3. Strip remaining HTML tags
+    text = text.replace(/<[^>]*>/g, ' ');
 
-    return plainText;
+    // 4. Decode common HTML entities to natural words or characters
+    text = text
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/gi, ' and ')
+      .replace(/&quot;/gi, '"')
+      .replace(/&#39;|&apos;/gi, "'")
+      .replace(/&lt;/gi, ' less than ')
+      .replace(/&gt;/gi, ' greater than ');
+
+    // 5. Filter out raw URLs and email addresses that sound abrasive when spelled aloud
+    text = text.replace(/https?:\/\/\S+/gi, '');
+    text = text.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '');
+
+    // 6. Smooth out harsh technical symbols and repeated punctuation
+    text = text.replace(/[#*_~\|`\[\]{}()\^<>]/g, ' ');
+    text = text.replace(/!+/g, '.');
+    text = text.replace(/\?+/g, '?');
+    text = text.replace(/\.{2,}/g, '. ');
+    text = text.replace(/\/+/g, ' ');
+    text = text.replace(/--+/g, ', ');
+
+    // 7. Expand common jarring abbreviations into natural spoken phrases
+    text = text
+      .replace(/\bw\/o\b/gi, 'without')
+      .replace(/\bw\/\b/gi, 'with')
+      .replace(/\be\.g\.\b/gi, 'for example')
+      .replace(/\bi\.e\.\b/gi, 'that is')
+      .replace(/\betc\.\b/gi, 'et cetera');
+
+    // 8. Soften long ALL-CAPS words so the TTS engine doesn't shout or spell them letter-by-letter
+    text = text.replace(/\b[A-Z]{3,}\b/g, match => {
+      return match.charAt(0) + match.slice(1).toLowerCase();
+    });
+
+    // 9. Clean up multiple spaces and empty lines
+    return text.replace(/\s+/g, ' ').trim();
   }
 
   const ensureLanguageInstalled = async (lang: string) => {
@@ -775,6 +857,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
     setIsPlaying(false);
     setIsPaused(false);
     setPlayerVisible(false);
+    setListenProgress(0);
   }, []);
 
   const speakNextChunk = useCallback(() => {
@@ -785,9 +868,12 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       setIsPlaying(false);
       setIsPaused(false);
       setPlayerVisible(false);
+      setListenProgress(1);
       clearArticleTtsSubscriptions();
       return;
     }
+    const currentRatio = words.length > 0 ? Math.min(1, chunkIndex / words.length) : 0;
+    setListenProgress(currentRatio);
     const chunk = words.slice(chunkIndex, chunkIndex + CHUNK_SIZE).join(' ');
     chunkIndexRef.current = chunkIndex + CHUNK_SIZE;
     Tts.speak(chunk);
@@ -820,7 +906,7 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       if (!ready) return;
 
       await Tts.setDefaultLanguage(_language);
-      Tts.setDefaultPitch(1.0);
+      Tts.setDefaultPitch(0.92); // Softer, natural human warmth without metallic shrill
       Tts.setDefaultRate(speechRate);
 
       const plainText = await convertHtmlToPlainText(content);
@@ -829,6 +915,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       const words = plainText.trim().split(/\s+/);
       wordsRef.current = words;
       chunkIndexRef.current = 0;
+      setTotalWordsCount(words.length);
+      setListenProgress(0);
 
       Tts.addEventListener('tts-finish', speakNextChunk);
       Tts.addEventListener('tts-error', e => {
@@ -866,6 +954,9 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
         setIsPaused(false);
         // Step back one chunk to resume from the interrupted chunk
         chunkIndexRef.current = Math.max(0, chunkIndexRef.current - CHUNK_SIZE);
+        if (wordsRef.current.length > 0) {
+          setListenProgress(Math.min(1, chunkIndexRef.current / wordsRef.current.length));
+        }
 
         // Re-attach listeners
         Tts.addEventListener('tts-finish', speakNextChunk);
@@ -896,6 +987,8 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
       clearArticleTtsSubscriptions();
       wordsRef.current = [];
       chunkIndexRef.current = 0;
+      setTotalWordsCount(0);
+      setListenProgress(0);
       setIsPlaying(false);
       setIsPaused(false);
       setPlayerVisible(false);
@@ -1190,18 +1283,139 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
             />
           </TouchableOpacity>
 
-          {isPlaying && (
-            <View style={styles.botContainer}>
-              <LottieView
-                source={require('../../assets/LottieAnimation/TalkBotAnimation.json')}
-                autoPlay
-                loop={isPlaying}
-                style={{width: 200, height: 200}}
+          {/* Audio progress line across bottom of hero image */}
+          {playerVisible && (
+            <View style={styles.imageBottomProgressTrack}>
+              <View
+                style={[
+                  styles.imageBottomProgressFill,
+                  {
+                    width: `${Math.min(100, Math.max(0, Math.round(listenProgress * 100)))}%`,
+                  },
+                ]}
               />
             </View>
           )}
         </View>
         <View style={styles.contentContainer}>
+          {/* Web-style Listen Progress Card */}
+          {playerVisible && (
+            <View
+              style={[
+                styles.webListenCard,
+                {
+                  backgroundColor: themeColors.card,
+                  borderColor: isDarkMode ? '#334155' : '#E2E8F0',
+                },
+              ]}>
+              {/* Header row: Status badge on left, Speed & Close on right */}
+              <View style={styles.webListenHeaderRow}>
+                <View style={styles.webListenBadge}>
+                  <View style={[styles.webListenIconBubble, { backgroundColor: isDarkMode ? '#1E3A8A' : '#EFF6FF' }]}>
+                    <Ionicons
+                      name={isPaused ? 'pause' : 'volume-high'}
+                      size={14}
+                      color={PRIMARY_COLOR}
+                    />
+                  </View>
+                  <Text
+                    style={[
+                      styles.webListenBadgeText,
+                      {color: themeColors.text},
+                    ]}>
+                    {isPaused ? 'Audio Paused' : 'Listening to Article'}
+                  </Text>
+                </View>
+
+                <View style={styles.webListenActionsRow}>
+                  {/* Speed Pill */}
+                  <TouchableOpacity
+                    style={[styles.webListenSpeedPill, { backgroundColor: isDarkMode ? '#334155' : '#F1F5F9' }]}
+                    onPress={() => setIsSpeedSelectorVisible(true)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Playback speed ${speechRate} times`}
+                    accessibilityHint="Opens playback speed options">
+                    <Ionicons name="speedometer-outline" size={13} color={themeColors.textSecondary} />
+                    <Text style={[styles.webListenSpeedText, { color: themeColors.text }]}>
+                      {`${speechRate}x`}
+                    </Text>
+                  </TouchableOpacity>
+
+                  {/* Close / Stop Button */}
+                  <TouchableOpacity
+                    onPress={handleTtsStop}
+                    style={[styles.webListenCloseButton, { backgroundColor: isDarkMode ? '#334155' : '#F1F5F9' }]}
+                    accessibilityRole="button"
+                    accessibilityLabel="Stop and close audio">
+                    <Ionicons
+                      name="close"
+                      size={16}
+                      color={themeColors.textSecondary}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Player Body: Play button on left, full progress track + time on right */}
+              <View style={styles.webListenBodyRow}>
+                <TouchableOpacity
+                  onPress={handleTtsPause}
+                  style={styles.webListenPlayButton}
+                  accessibilityRole="button"
+                  accessibilityLabel={isPaused ? 'Resume listening' : 'Pause listening'}>
+                  <Ionicons
+                    name={isPaused ? 'play' : 'pause'}
+                    size={20}
+                    color="#ffffff"
+                  />
+                </TouchableOpacity>
+
+                <View style={styles.webListenProgressCol}>
+                  {/* Progress Track */}
+                  <View
+                    style={[
+                      styles.webListenTrack,
+                      {backgroundColor: isDarkMode ? '#334155' : '#E2E8F0'},
+                    ]}>
+                    <View
+                      style={[
+                        styles.webListenTrackFill,
+                        {
+                          width: `${Math.min(100, Math.max(0, Math.round(listenProgress * 100)))}%`,
+                          backgroundColor: PRIMARY_COLOR,
+                        },
+                      ]}
+                    />
+                  </View>
+
+                  {/* Time metadata row */}
+                  <View style={styles.webListenTimeRow}>
+                    <Text
+                      style={[
+                        styles.webListenTimeText,
+                        {color: themeColors.textSecondary},
+                      ]}>
+                      {formatListenTime(currentListenSeconds)}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.webListenPercentText,
+                        {color: PRIMARY_COLOR},
+                      ]}>
+                      {`${Math.round(listenProgress * 100)}%`}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.webListenTimeText,
+                        {color: themeColors.textSecondary},
+                      ]}>
+                      {formatListenTime(totalListenSeconds)}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          )}
           {article && (
             <Text
               style={[
@@ -1902,10 +2116,28 @@ const ArticleScreen = ({navigation, route}: ArticleScreenProp) => {
               <Ionicons name="stop" size={18} color={themeColors.ttsStopColor} />
             </TouchableOpacity>
 
-            {/* Status label */}
-            <Text style={[styles.ttsStatusText, {color: themeColors.ttsText}]}>
-              {isPaused ? 'Paused' : isPlaying ? 'Playing...' : 'Stopped'}
-            </Text>
+            {/* Listen Progress & Status in Floating Player */}
+            <View style={styles.ttsProgressSection}>
+              <View style={styles.ttsProgressLabelRow}>
+                <Text style={[styles.ttsStatusText, {color: themeColors.ttsText}]}>
+                  {isPaused ? 'Paused' : 'Listening'}
+                </Text>
+                <Text style={[styles.ttsPercentText, {color: themeColors.textSecondary}]}>
+                  {`${Math.round(listenProgress * 100)}%`}
+                </Text>
+              </View>
+              <View style={[styles.ttsProgressTrack, {backgroundColor: isDarkMode ? '#334155' : '#E2E8F0'}]}>
+                <View
+                  style={[
+                    styles.ttsProgressFill,
+                    {
+                      width: `${Math.min(100, Math.max(0, Math.round(listenProgress * 100)))}%`,
+                      backgroundColor: PRIMARY_COLOR,
+                    },
+                  ]}
+                />
+              </View>
+            </View>
           </View>
         </View>
       )}
@@ -2265,11 +2497,149 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  botContainer: {
+  imageBottomProgressTrack: {
     position: 'absolute',
-    bottom: 60,
-    right: 20,
-    zIndex: 100,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    zIndex: 10,
+  },
+  imageBottomProgressFill: {
+    height: '100%',
+    backgroundColor: PRIMARY_COLOR,
+  },
+  webListenCard: {
+    borderWidth: 1,
+    borderRadius: 18,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 14,
+    marginBottom: 18,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  webListenHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  webListenBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+  },
+  webListenIconBubble: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  webListenBadgeText: {
+    fontSize: 14,
+    fontWeight: '700',
+    letterSpacing: -0.2,
+  },
+  webListenActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  webListenSpeedPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+  },
+  webListenSpeedText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  webListenCloseButton: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  webListenBodyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  webListenPlayButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: PRIMARY_COLOR,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: PRIMARY_COLOR,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  webListenProgressCol: {
+    flex: 1,
+    justifyContent: 'center',
+    gap: 6,
+  },
+  webListenTrack: {
+    height: 6,
+    borderRadius: 3,
+    overflow: 'hidden',
+    width: '100%',
+  },
+  webListenTrackFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  webListenTimeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  webListenTimeText: {
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  webListenPercentText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  ttsProgressSection: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  ttsProgressLabelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  ttsPercentText: {
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  ttsProgressTrack: {
+    height: 4,
+    borderRadius: 2,
+    overflow: 'hidden',
+    width: '100%',
+  },
+  ttsProgressFill: {
+    height: '100%',
+    borderRadius: 2,
   },
   ttsPlayerContainer: {
     position: 'absolute',

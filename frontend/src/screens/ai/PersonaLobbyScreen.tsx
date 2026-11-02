@@ -17,6 +17,11 @@ import { PersonaLobbyScreenProps, Character } from '../../schemas/type';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { BottomTabBarHeightContext } from '@react-navigation/bottom-tabs';
+import { useFocusEffect } from '@react-navigation/native';
+import {
+  getAllCharactersRemaining,
+  MAX_DAILY_MESSAGES_PER_CHARACTER,
+} from '../../lib/storage/aiUsageStorage';
 
 
 
@@ -25,8 +30,23 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
   const { isConnected } = useAppSelector((state: any) => state.network);
   const { data: characters, isLoading, error } = useGetCharacters(isConnected);
   const [activeTab, setActiveTab] = useState<'AI' | 'Experts'>('AI');
+  const [remainingMap, setRemainingMap] = useState<Record<string, number>>({});
   // Floating tab bar overlays content; reserve space so last cards stay visible
   const tabBarHeight = React.useContext(BottomTabBarHeightContext) ?? 0;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isMounted = true;
+      getAllCharactersRemaining().then(map => {
+        if (isMounted) {
+          setRemainingMap(map);
+        }
+      });
+      return () => {
+        isMounted = false;
+      };
+    }, []),
+  );
 
 
   const handleCharacterSelect = (character: Character) => {
@@ -39,6 +59,9 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
 
 
   const renderCharacterCard = ({ item }: { item: Character }) => {
+    const remaining = remainingMap[String(item.id)] ?? MAX_DAILY_MESSAGES_PER_CHARACTER;
+    const isExhausted = remaining <= 0;
+
     return (
       <TouchableOpacity
         activeOpacity={0.8}
@@ -51,15 +74,34 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
           <Image source={{ uri: item.avatarUrl }} style={styles.avatar} />
           <View style={styles.onlineBadge} />
         </View>
+
+        {/* Daily limit counter badge */}
+        <View style={[styles.counterBadge, isExhausted && styles.counterBadgeExhausted]}>
+          <Ionicons
+            name={isExhausted ? 'lock-closed' : 'chatbubble-ellipses'}
+            size={11}
+            color={isExhausted ? '#DC2626' : '#2563EB'}
+          />
+          <Text style={[styles.counterBadgeText, isExhausted && styles.counterBadgeTextExhausted]}>
+            {remaining}/{MAX_DAILY_MESSAGES_PER_CHARACTER} left today
+          </Text>
+        </View>
+
         <Text style={styles.characterName} numberOfLines={1}>
           {item.name}
         </Text>
         <Text style={styles.characterTagline} numberOfLines={2}>
           {item.tagline}
         </Text>
-        <View style={styles.actionButton}>
-          <Text style={styles.actionButtonText}>Chat Now</Text>
-          <Ionicons name="chatbubble-ellipses" size={14} color={BUTTON_COLOR} />
+        <View style={[styles.actionButton, isExhausted && styles.actionButtonDisabled]}>
+          <Text style={[styles.actionButtonText, isExhausted && styles.actionButtonTextDisabled]}>
+            {isExhausted ? 'Limit Reached' : 'Chat Now'}
+          </Text>
+          <Ionicons
+            name={isExhausted ? 'time-outline' : 'chatbubble-ellipses'}
+            size={14}
+            color={isExhausted ? '#64748B' : BUTTON_COLOR}
+          />
         </View>
       </TouchableOpacity>
     );
@@ -158,6 +200,15 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
             contentContainerStyle={styles.flatListContent}
             ListHeaderComponent={
               <Text style={styles.sectionLabel}>Choose an assistant to start chatting</Text>
+            }
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <Ionicons name="chatbubbles-outline" size={44} color="#94A3B8" style={{ marginBottom: 12 }} />
+                <Text style={styles.emptyTitle}>No Assistants Available</Text>
+                <Text style={styles.emptySubtitle}>
+                  Health assistants are temporarily unavailable. Please check back shortly.
+                </Text>
+              </View>
             }
             showsVerticalScrollIndicator={false}
           />
@@ -347,6 +398,33 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: BUTTON_COLOR,
   },
+  actionButtonDisabled: {
+    backgroundColor: '#F1F5F9',
+  },
+  actionButtonTextDisabled: {
+    color: '#94A3B8',
+  },
+  counterBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#EFF6FF',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  counterBadgeExhausted: {
+    backgroundColor: '#FEF2F2',
+  },
+  counterBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#2563EB',
+  },
+  counterBadgeTextExhausted: {
+    color: '#DC2626',
+  },
   errorText: {
     fontSize: 16,
     color: '#64748b',
@@ -393,6 +471,23 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontSize: 14,
     letterSpacing: 0.5,
+  },
+  emptyContainer: {
+    padding: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#334155',
+    marginBottom: 6,
+  },
+  emptySubtitle: {
+    fontSize: 14,
+    color: '#64748B',
+    textAlign: 'center',
+    lineHeight: 20,
   },
 });
 

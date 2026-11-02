@@ -1403,7 +1403,17 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         onRequestClose={() => setCitationModalVisible(false)}>
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>Insert Citation / Reference</Text>
+            <View style={styles.modalHeaderRow}>
+              <Text style={styles.modalTitle}>Insert Citation / Reference</Text>
+              <TouchableOpacity
+                style={styles.modalCloseIconBtn}
+                onPress={() => setCitationModalVisible(false)}
+                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                accessibilityRole="button"
+                accessibilityLabel="Close">
+                <Feather name="x" size={22} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
             <Text style={styles.modalSubtitle}>
               Cite clinical guidelines, peer-reviewed studies, or medical sources.
             </Text>
@@ -1464,11 +1474,6 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
             <View style={styles.modalButtonRow}>
               <TouchableOpacity
-                style={styles.modalCancelBtn}
-                onPress={() => setCitationModalVisible(false)}>
-                <Text style={styles.modalCancelText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
                 style={[styles.modalSecondaryBtn, {marginRight: 6}]}
                 onPress={() => handleConfirmInsertCitation(true)}>
                 <Text style={styles.modalSecondaryBtnText}>Use Template</Text>
@@ -1491,7 +1496,17 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         onRequestClose={() => setTakeawayModalVisible(false)}>
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
-            <Text style={styles.modalTitle}>💡 Insert Key Takeaway</Text>
+            <View style={styles.modalHeaderRow}>
+              <Text style={styles.modalTitle}>💡 Insert Key Takeaway</Text>
+              <TouchableOpacity
+                style={styles.modalCloseIconBtn}
+                onPress={() => setTakeawayModalVisible(false)}
+                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                accessibilityRole="button"
+                accessibilityLabel="Close">
+                <Feather name="x" size={22} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
             <Text style={styles.modalSubtitle}>
               Summarize the most important clinical or actionable insight for your readers.
             </Text>
@@ -1507,11 +1522,6 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
             />
 
             <View style={styles.modalButtonRow}>
-              <TouchableOpacity
-                style={styles.modalCancelBtn}
-                onPress={() => setTakeawayModalVisible(false)}>
-                <Text style={styles.modalCancelText}>Cancel</Text>
-              </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalSecondaryBtn, {marginRight: 6}]}
                 onPress={() => handleConfirmInsertTakeaway(true)}>
@@ -1924,6 +1934,7 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     width: '100%',
+    maxWidth: 440,
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
@@ -1932,6 +1943,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 12,
     elevation: 6,
+  },
+  modalHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  modalCloseIconBtn: {
+    padding: 6,
+    borderRadius: 20,
+    backgroundColor: '#F3F4F6',
   },
   modalTitle: {
     fontSize: EDITOR_TYPOGRAPHY.h3.fontSize + 1, // 19px

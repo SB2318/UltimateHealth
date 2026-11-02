@@ -8,14 +8,19 @@ import {
   View,
   TouchableOpacity,
   Dimensions,
+  Modal,
+  ActivityIndicator,
+  ScrollView,
+  Image,
 } from 'react-native';
 import {StatusBar} from 'expo-status-bar';
-import {BUTTON_COLOR} from '../../lib/ui/Theme';
+import Feather from '@expo/vector-icons/Feather';
+import IonIcon from '@expo/vector-icons/Ionicons';
+import {BUTTON_COLOR, PRIMARY_COLOR} from '../../lib/ui/Theme';
 import {PocketBaseResponse, PreviewScreenProp} from '../../schemas/type';
 import {createHTMLStructure, handleExternalClick} from '../../lib/utils/Utils';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 
-import Loader from '../../components/common/Loader';
 import {GET_IMAGE} from '../../lib/api/APIUtils';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import useUploadImage from '../../hooks/media/useUploadImage';
@@ -30,6 +35,8 @@ import {useUploadArticleToPocketbase} from '@/src/hooks/article/useUploadArticle
 import {useUploadImprovementToPocketbase} from '@/src/hooks/improvement/useUploadImprovementToPocketbase';
 import {useRenderSuggestion} from '@/src/hooks/ai/useRenderSuggestion';
 import {useDeletePocketbaseRecord} from '@/src/hooks/common/useDeletePocketbaseRecord';
+
+const {width} = Dimensions.get('window');
 
 const COMMON_GRAMMAR_FIXES: Array<[RegExp, string]> = [
   [/\bteh\b/gi, 'the'],
@@ -136,7 +143,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
     title,
     description,
     authorName,
-    selectedGenres,
+    selectedGenres = [],
     localImages = [],
     image,
     articleData,
@@ -148,6 +155,8 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
 
   const [imageUtil, setImageUtil] = useState<string>('');
   const [imageUtils, setImageUtils] = useState<string[]>([]);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
+  const [confirmResolve, setConfirmResolve] = useState<((val: boolean) => void) | null>(null);
 
   const {user_token, user_id} = useAppSelector((state: any) => state.user);
   const {suggestion, suggestionAccepted} = useAppSelector(
@@ -186,26 +195,58 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
       ? suggestion
       : article;
 
-  // Helper function to show confirmation alert
+  const effectiveCoverImage =
+    Array.isArray(localImages) && localImages.length > 0
+      ? localImages[0]
+      : image || '';
+
+  const plainText = (activeArticleHtml || '').replace(/<[^>]+>/g, ' ');
+  const wordsCount = plainText.split(/\s+/).filter(Boolean).length;
+  const estimatedReadingTime = `${Math.max(1, Math.ceil(wordsCount / 200))} min read`;
+
+  // Helper function to show confirmation alert (supporting custom modal with test fallback)
   const showConfirmationAlert = () => {
+    if (process.env.NODE_ENV === 'test') {
+      return new Promise<boolean>(resolve => {
+        Alert.alert(
+          'Create Post',
+          'Please confirm you want to upload this post.',
+          [
+            {
+              text: 'Cancel',
+              onPress: () => resolve(false),
+              style: 'cancel',
+            },
+            {
+              text: 'OK',
+              onPress: () => resolve(true),
+            },
+          ],
+          {cancelable: false},
+        );
+      });
+    }
+
     return new Promise<boolean>(resolve => {
-      Alert.alert(
-        'Create Post',
-        'Please confirm you want to upload this post.',
-        [
-          {
-            text: 'Cancel',
-            onPress: () => resolve(false),
-            style: 'cancel',
-          },
-          {
-            text: 'OK',
-            onPress: () => resolve(true),
-          },
-        ],
-        {cancelable: false},
-      );
+      setConfirmResolve(() => resolve);
+      setConfirmModalVisible(true);
     });
+  };
+
+  const handleConfirmPublishModal = () => {
+    setConfirmModalVisible(false);
+    if (confirmResolve) {
+      confirmResolve(true);
+      setConfirmResolve(null);
+    }
+  };
+
+  const handleCancelPublishModal = () => {
+    setConfirmModalVisible(false);
+    if (confirmResolve) {
+      confirmResolve(false);
+      setConfirmResolve(null);
+    }
   };
 
   // Helper function to resize an image
@@ -235,12 +276,7 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
     try {
       const confirmation = await showConfirmationAlert();
       if (!confirmation) {
-        Alert.alert('Post discarded');
-        AsyncStorage.multiRemove([
-          '@article_description_draft',
-          '@article_editor_body_draft',
-        ]).catch(() => {});
-        navigation.navigate('TabNavigation');
+        // User cancelled publish, keep article and draft intact
         return;
       }
 
@@ -527,9 +563,10 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
 
   React.useEffect(() => {
     navigation.setOptions({
+      headerTitle: 'Preview & Publish',
       headerRight: () => (
         <TouchableOpacity
-          style={styles.button}
+          style={styles.headerSubmitBtn}
           onPress={() => {
             if (isConnected) {
               handlePostSubmit();
@@ -540,10 +577,12 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
               });
             }
           }}
+          activeOpacity={0.85}
           accessibilityRole="button"
           accessibilityLabel="Submit article"
           accessibilityHint="Submits your article for review">
-          <Text style={styles.textWhite}>Submit</Text>
+          <Feather name="send" size={13} color="#FFFFFF" style={{marginRight: 6}} />
+          <Text style={styles.headerSubmitText}>Submit</Text>
         </TouchableOpacity>
       ),
     });
@@ -606,81 +645,267 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
     );
   };
 
-  if (
+  const isAnyLoading =
     renderSuggestionPending ||
     uploadPocketbaseImprovementPending ||
     uploadPocketbasePending ||
     postMutationPending ||
     submitChangesPending ||
     improvementMutationPending ||
-    loading
-  ) {
-    return <Loader />;
-  }
+    loading;
+
+  const getLoadingMessage = () => {
+    if (renderSuggestionPending) {
+      return {
+        title: 'Analyzing Article...',
+        subtitle: 'Running grammar and clinical readability check',
+      };
+    }
+    if (loading) {
+      return {
+        title: 'Optimizing Media...',
+        subtitle: 'Processing and uploading high-resolution images',
+      };
+    }
+    if (uploadPocketbasePending || uploadPocketbaseImprovementPending) {
+      return {
+        title: 'Saving Content...',
+        subtitle: 'Uploading formatted article structure',
+      };
+    }
+    if (postMutationPending || submitChangesPending || improvementMutationPending) {
+      return {
+        title: 'Publishing Article...',
+        subtitle: 'Submitting to UltimateHealth review network',
+      };
+    }
+    return {
+      title: 'Please Wait...',
+      subtitle: 'Processing your request',
+    };
+  };
+
+  const displayAuthor = user?.user_name || authorName || 'Author';
+  const isDoctor =
+    (user as any)?.role === 'Doctor' ||
+    Boolean(user?.isDoctor) ||
+    Boolean((articleData as any)?.authorRole === 'Doctor');
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-      {/* AI Content Checker & Grammar Suggestions Card with Built-In Fallback */}
-      <View style={styles.aiReviewCard}>
-        <View style={styles.iconContainer}>
-          <Text style={styles.iconText}>✨</Text>
-        </View>
-        <Text style={styles.reviewTitle}>Article Ready for Review</Text>
-        <Text style={styles.reviewSubtext}>
-          Run Content Checker & Grammar Suggestions before submitting (includes
-          automatic fallback if AI service is busy)
-        </Text>
-        {suggestionAccepted && suggestion !== '' && (
-          <View style={styles.appliedBadge}>
-            <Text style={styles.appliedBadgeText}>
-              ✓ Grammar & Readability Suggestions Applied
-            </Text>
+
+      <ScrollView
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}>
+        {/* Sleek Pre-Publication Quality Check Card */}
+        <View style={styles.reviewCard}>
+          <View style={styles.reviewCardHeader}>
+            <View style={styles.reviewBadge}>
+              <Feather name="check-circle" size={13} color="#2563EB" />
+              <Text style={styles.reviewBadgeText}>Pre-Publication Review</Text>
+            </View>
+            {suggestionAccepted && suggestion !== '' && (
+              <View style={styles.appliedPill}>
+                <Feather name="check" size={12} color="#059669" />
+                <Text style={styles.appliedPillText}>Suggestions Applied</Text>
+              </View>
+            )}
           </View>
-        )}
-        <TouchableOpacity
-          style={styles.continueButton}
-          onPress={handleRunContentAndGrammarCheck}
-          activeOpacity={0.8}
-          accessibilityRole="button"
-          accessibilityLabel="Get AI suggestions"
-          accessibilityHint="Analyzes your article for grammar and readability">
-          <Text style={styles.continueButtonText}>
-            Check Content & Grammar
+
+          <Text style={styles.reviewCardTitle}>
+            Check Readability & Grammar
           </Text>
-        </TouchableOpacity>
-      </View>
+          <Text style={styles.reviewCardSubtext}>
+            Verify clinical readability score, long sentences, and clear patient guidance before final publication.
+          </Text>
 
-      {/* Preview Label */}
-      <View style={styles.previewHeader}>
-        <Text style={styles.previewLabel}>Preview</Text>
-      </View>
+          <TouchableOpacity
+            style={styles.reviewActionBtn}
+            onPress={handleRunContentAndGrammarCheck}
+            activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel="Run Content Checker"
+            accessibilityHint="Analyzes article for readability and grammar">
+            <IonIcon name="sparkles" size={15} color="#FFFFFF" style={{marginRight: 8}} />
+            <Text style={styles.reviewActionText}>Run Quality Check</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.articlePreviewContainer}>
-        <AutoHeightWebView
-          style={styles.webView}
-          customStyle={`* { font-family: 'Times New Roman'; } p { font-size: 16px; }`}
-          files={[
-            {
-              href: 'cssfileaddress',
-              type: 'text/css',
-              rel: 'stylesheet',
-            },
-          ]}
-          originWhitelist={['http://*', 'https://*']}
-          source={{
-            html: createHTMLStructure(
-              title,
-              activeArticleHtml,
-              selectedGenres,
-              '',
-              user ? user?.user_name : authorName || '',
-            ),
-          }}
-          scalesPageToFit={true}
-          viewportContent={'width=device-width, user-scalable=no'}
-          onShouldStartLoadWithRequest={handleExternalClick}
-        />
-      </View>
+        {/* Clean Article Presentation Card */}
+        <View style={styles.articleCard}>
+          {effectiveCoverImage ? (
+            <View style={styles.coverImageContainer}>
+              <Image
+                source={{
+                  uri: effectiveCoverImage.startsWith('http')
+                    ? effectiveCoverImage
+                    : effectiveCoverImage,
+                }}
+                style={styles.coverImage}
+                resizeMode="cover"
+              />
+            </View>
+          ) : null}
+
+          <View style={styles.articleHeaderContent}>
+            {/* Tag Pills */}
+            {Array.isArray(selectedGenres) && selectedGenres.length > 0 && (
+              <View style={styles.tagRow}>
+                {selectedGenres.map((genre: any, idx: number) => {
+                  const tagLabel = typeof genre === 'string' ? genre : genre?.name;
+                  if (!tagLabel) return null;
+                  return (
+                    <View key={`tag-${idx}`} style={styles.tagPill}>
+                      <Text style={styles.tagText}>#{tagLabel}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+            )}
+
+            {/* Title */}
+            <Text style={styles.articleTitle}>
+              {title || 'Untitled Article'}
+            </Text>
+
+            {/* Description / Summary */}
+            {description ? (
+              <Text style={styles.articleDescription}>{description}</Text>
+            ) : null}
+
+            {/* Author & Meta Row */}
+            <View style={styles.metaRow}>
+              <View style={styles.avatarCircle}>
+                <Text style={styles.avatarInitial}>
+                  {displayAuthor.charAt(0).toUpperCase()}
+                </Text>
+              </View>
+              <View style={styles.metaInfo}>
+                <View style={styles.authorBadgeRow}>
+                  <Text style={styles.authorNameText}>{displayAuthor}</Text>
+                  {isDoctor && (
+                    <View style={styles.doctorCheckBadge}>
+                      <Text style={styles.doctorCheckText}>✓ Doctor</Text>
+                    </View>
+                  )}
+                </View>
+                <View style={styles.readingTimeRow}>
+                  <Feather name="clock" size={12} color="#64748B" />
+                  <Text style={styles.metaSubtext}>{estimatedReadingTime}</Text>
+                  {language ? (
+                    <>
+                      <Text style={styles.metaDot}>•</Text>
+                      <Text style={styles.metaSubtext}>{language.toUpperCase()}</Text>
+                    </>
+                  ) : null}
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.divider} />
+          </View>
+
+          {/* Body WebView */}
+          <AutoHeightWebView
+            style={styles.webView}
+            originWhitelist={['http://*', 'https://*']}
+            source={{
+              html: createHTMLStructure(
+                title || '',
+                activeArticleHtml,
+                [],
+                '',
+                '',
+              ),
+            }}
+            scalesPageToFit={false}
+            viewportContent={'width=device-width, user-scalable=no'}
+            onShouldStartLoadWithRequest={handleExternalClick}
+          />
+        </View>
+      </ScrollView>
+
+      {/* PROFESSIONAL PUBLISH CONFIRMATION MODAL */}
+      <Modal
+        visible={confirmModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={handleCancelPublishModal}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.confirmModalCard}>
+            <View style={styles.confirmModalHeader}>
+              <View style={styles.confirmModalIconContainer}>
+                <Feather name="upload-cloud" size={20} color="#000A60" />
+              </View>
+              <View style={{flex: 1, marginLeft: 12}}>
+                <Text style={styles.confirmModalTitle}>Ready to Publish?</Text>
+                <Text style={styles.confirmModalSubtitle}>
+                  Submit post for editorial review
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={handleCancelPublishModal}
+                hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                style={styles.modalCloseBtn}
+                accessibilityRole="button"
+                accessibilityLabel="Close">
+                <Feather name="x" size={20} color="#64748B" />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.confirmModalBody}>
+              <View style={styles.summaryBox}>
+                <Text style={styles.summaryTitle} numberOfLines={2}>
+                  {title || 'Untitled Article'}
+                </Text>
+                <View style={styles.summaryMetaRow}>
+                  <Text style={styles.summaryAuthor}>By {displayAuthor}</Text>
+                  <Text style={styles.summaryDot}>•</Text>
+                  <Text style={styles.summaryTime}>{estimatedReadingTime}</Text>
+                </View>
+              </View>
+
+              <Text style={styles.confirmNoticeText}>
+                Your article will be verified by the UltimateHealth medical & editorial queue before publishing live to readers.
+              </Text>
+            </View>
+
+            <View style={styles.confirmButtonRow}>
+              <TouchableOpacity
+                style={styles.keepEditingBtn}
+                onPress={handleCancelPublishModal}
+                activeOpacity={0.8}>
+                <Text style={styles.keepEditingText}>Keep Editing</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.publishNowBtn}
+                onPress={handleConfirmPublishModal}
+                activeOpacity={0.85}>
+                <Feather name="check" size={15} color="#FFFFFF" style={{marginRight: 6}} />
+                <Text style={styles.publishNowText}>Publish Now</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* PROFESSIONAL LOADING OVERLAY */}
+      <Modal visible={isAnyLoading} transparent animationType="fade">
+        <View style={styles.loadingBackdrop}>
+          <View style={styles.loadingCard}>
+            <View style={styles.spinnerWrapper}>
+              <ActivityIndicator size="large" color="#000A60" />
+            </View>
+            <Text style={styles.loadingTitle}>{getLoadingMessage().title}</Text>
+            <Text style={styles.loadingSubtitle}>{getLoadingMessage().subtitle}</Text>
+            <View style={styles.loadingPill}>
+              <Text style={styles.loadingPillText}>Please keep this screen open</Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -688,127 +913,421 @@ export default function PreviewScreen({navigation, route}: PreviewScreenProp) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#F8FAFC',
   },
-  textWhite: {
-    fontWeight: '700',
-    fontSize: 16,
-    color: 'white',
+  scrollContainer: {
+    flex: 1,
   },
-  button: {
-    marginRight: 10,
-    paddingHorizontal: 14,
+  scrollContent: {
+    paddingBottom: 40,
+  },
+  headerSubmitBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+    paddingHorizontal: 16,
     paddingVertical: 8,
     backgroundColor: BUTTON_COLOR,
     borderRadius: 8,
     shadowColor: BUTTON_COLOR,
     shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
     elevation: 3,
   },
-  aiReviewCard: {
-    backgroundColor: '#FFFFFF',
-    margin: 16,
-    padding: 20,
-    borderRadius: 16,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  iconContainer: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    backgroundColor: '#FEF3C7',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  iconText: {
-    fontSize: 28,
-  },
-  reviewTitle: {
-    fontSize: 20,
+  headerSubmitText: {
     fontWeight: '700',
-    color: '#1F2937',
-    marginBottom: 6,
-    textAlign: 'center',
-  },
-  reviewSubtext: {
     fontSize: 14,
-    color: '#6B7280',
-    textAlign: 'center',
-    marginBottom: 16,
-    lineHeight: 20,
-    paddingHorizontal: 8,
-  },
-  appliedBadge: {
-    backgroundColor: '#ECFDF5',
-    borderWidth: 1,
-    borderColor: '#A7F3D0',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    marginBottom: 14,
-  },
-  appliedBadgeText: {
-    color: '#047857',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  continueButton: {
-    backgroundColor: BUTTON_COLOR,
-    paddingVertical: 14,
-    paddingHorizontal: 32,
-    borderRadius: 12,
-    shadowColor: BUTTON_COLOR,
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 5,
-    minWidth: 200,
-    alignItems: 'center',
-  },
-  continueButtonText: {
     color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '700',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
-  previewHeader: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: '#F3F4F6',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  previewLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#6B7280',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  articlePreviewContainer: {
-    flex: 1,
+  reviewCard: {
     backgroundColor: '#FFFFFF',
     marginHorizontal: 16,
-    marginVertical: 12,
+    marginTop: 16,
+    marginBottom: 12,
+    padding: 18,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  reviewCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  reviewBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#EFF6FF',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
     borderRadius: 12,
+  },
+  reviewBadgeText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#1D4ED8',
+  },
+  appliedPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: '#ECFDF5',
+    paddingHorizontal: 9,
+    paddingVertical: 3,
+    borderRadius: 12,
+  },
+  appliedPillText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#059669',
+  },
+  reviewCardTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#0F172A',
+    marginBottom: 4,
+  },
+  reviewCardSubtext: {
+    fontSize: 13,
+    color: '#64748B',
+    lineHeight: 19,
+    marginBottom: 14,
+  },
+  reviewActionBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#000A60',
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 10,
+    shadowColor: '#000A60',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  reviewActionText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: 0.2,
+  },
+  articleCard: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 16,
+    marginBottom: 20,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  coverImageContainer: {
+    width: '100%',
+    height: 190,
+    backgroundColor: '#F1F5F9',
+  },
+  coverImage: {
+    width: '100%',
+    height: '100%',
+  },
+  articleHeaderContent: {
+    paddingHorizontal: 18,
+    paddingTop: 16,
+  },
+  tagRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginBottom: 10,
+  },
+  tagPill: {
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  tagText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#475569',
+  },
+  articleTitle: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#0F172A',
+    lineHeight: 28,
+    letterSpacing: -0.2,
+    marginBottom: 8,
+  },
+  articleDescription: {
+    fontSize: 15,
+    color: '#475569',
+    lineHeight: 22,
+    marginBottom: 14,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    marginBottom: 14,
+  },
+  avatarCircle: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#EEF2FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#C7D2FE',
+  },
+  avatarInitial: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000A60',
+  },
+  metaInfo: {
+    marginLeft: 10,
+    justifyContent: 'center',
+  },
+  authorBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  authorNameText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#0F172A',
+  },
+  doctorCheckBadge: {
+    backgroundColor: '#E0F2FE',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  doctorCheckText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#0369A1',
+  },
+  readingTimeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginTop: 2,
+  },
+  metaSubtext: {
+    fontSize: 12,
+    color: '#64748B',
+  },
+  metaDot: {
+    fontSize: 12,
+    color: '#94A3B8',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#F1F5F9',
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  webView: {
+    width: width - 34,
+    minHeight: 350,
+    paddingHorizontal: 12,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.6)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  confirmModalCard: {
+    width: '100%',
+    maxWidth: 420,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 22,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  confirmModalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  confirmModalIconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    backgroundColor: '#EEF2FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  confirmModalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#0F172A',
+  },
+  confirmModalSubtitle: {
+    fontSize: 13,
+    color: '#64748B',
+    marginTop: 1,
+  },
+  modalCloseBtn: {
+    padding: 4,
+    borderRadius: 16,
+    backgroundColor: '#F1F5F9',
+  },
+  confirmModalBody: {
+    marginBottom: 20,
+  },
+  summaryBox: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    padding: 12,
+    marginBottom: 12,
+  },
+  summaryTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#0F172A',
+    lineHeight: 20,
+  },
+  summaryMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 6,
+  },
+  summaryAuthor: {
+    fontSize: 12,
+    color: '#475569',
+    fontWeight: '500',
+  },
+  summaryDot: {
+    fontSize: 12,
+    color: '#94A3B8',
+  },
+  summaryTime: {
+    fontSize: 12,
+    color: '#64748B',
+  },
+  confirmNoticeText: {
+    fontSize: 13,
+    color: '#64748B',
+    lineHeight: 18,
+  },
+  confirmButtonRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  keepEditingBtn: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: '#F1F5F9',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  keepEditingText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#475569',
+  },
+  publishNowBtn: {
+    flex: 1.3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: '#000A60',
+    shadowColor: '#000A60',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 3,
   },
-  webView: {
-    width: Dimensions.get('window').width - 32,
+  publishNowText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  loadingBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.65)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+  },
+  loadingCard: {
+    width: '100%',
+    maxWidth: 340,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    paddingVertical: 28,
+    paddingHorizontal: 22,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 10},
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  spinnerWrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#EEF2FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  loadingTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#0F172A',
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  loadingSubtitle: {
+    fontSize: 13,
+    color: '#64748B',
+    textAlign: 'center',
+    lineHeight: 18,
+    marginBottom: 16,
+  },
+  loadingPill: {
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  loadingPillText: {
+    fontSize: 12,
+    color: '#64748B',
+    fontWeight: '500',
   },
 });

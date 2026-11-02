@@ -32,6 +32,15 @@ import {useSendMessageToGemini} from '../../hooks/ai/useSendMessageToGemini';
 import {useLoadAIConversations} from '../../hooks/ai/useLoadAIChats';
 import Snackbar from 'react-native-snackbar';
 import {verifyChatbotResponse} from '../../../plugins/api/chatbot-response-verification';
+import {
+  getCharacterDailyUsage,
+  incrementCharacterDailyUsage,
+  MAX_DAILY_MESSAGES_PER_CHARACTER,
+  checkAndResetDailyChatSession,
+  isMessageFromToday,
+  FALLBACK_WELCOME_MESSAGE,
+  getFallbackQuotaExceededMessage,
+} from '../../lib/storage/aiUsageStorage';
 
 // interface ChatbotResponse {
 //   id: string;
@@ -90,7 +99,54 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isQuotaExceeded, setIsQuotaExceeded] = useState<boolean>(false);
   const [showQuotaModal, setShowQuotaModal] = useState<boolean>(false);
+  const [remainingMessages, setRemainingMessages] = useState<number>(MAX_DAILY_MESSAGES_PER_CHARACTER);
   const isMountedRef = useRef(true);
+
+  const safeSetMessages = useCallback(
+    (updater: React.SetStateAction<IMessage[]>) => {
+      if (isMountedRef.current) {
+        setMessages(updater);
+      }
+    },
+    [],
+  );
+
+
+
+  useEffect(() => {
+    let isMounted = true;
+    checkAndResetDailyChatSession();
+    getCharacterDailyUsage(characterId).then(usage => {
+      if (isMounted) {
+        setRemainingMessages(usage.remaining);
+        if (usage.remaining <= 0) {
+          setIsQuotaExceeded(true);
+          safeSetMessages(prev => {
+            const hasQuotaMsg = prev.some(
+              m => typeof m._id === 'string' && m._id.startsWith('quota-fallback'),
+            );
+            if (hasQuotaMsg) return prev;
+            return GiftedChat.append(prev, [
+              {
+                _id: `quota-fallback-${Date.now()}`,
+                text: getFallbackQuotaExceededMessage(characterName),
+                createdAt: new Date(),
+                user: {
+                  _id: ASSISTANT_USER_ID,
+                  avatar:
+                    characterAvatar ||
+                    'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+                },
+              },
+            ]);
+          });
+        }
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [characterId, characterAvatar, characterName, safeSetMessages]);
   const {data: user} = useGetProfile();
 
   const [activeSpeakingId, setActiveSpeakingId] = useState<string | number | null>(null);
@@ -172,14 +228,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     };
   }, []);
 
-  const safeSetMessages = useCallback(
-    (updater: React.SetStateAction<IMessage[]>) => {
-      if (isMountedRef.current) {
-        setMessages(updater);
-      }
-    },
-    [],
-  );
+
 
   const safeSetIsTyping = useCallback((typing: boolean) => {
     if (isMountedRef.current) {
@@ -205,15 +254,19 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
 
   useEffect(() => {
     if (conversations) {
-      const refined = convertToGiftedFormat(conversations);
+      // Clear past days' logs: keep only messages sent today
+      const todayConversations = conversations.filter(m => isMessageFromToday(m.timestamp));
+      const refined = convertToGiftedFormat(todayConversations);
       safeSetMessages([
         {
           _id: refined.length + 1,
-          text: "Hello! 👋 I'm here to assist you. How can I help you today?",
+          text: FALLBACK_WELCOME_MESSAGE,
           createdAt: new Date(),
           user: {
             _id: ASSISTANT_USER_ID,
-            avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+            avatar:
+              characterAvatar ||
+              'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
           },
         },
         ...refined.reverse(),
@@ -221,7 +274,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
 
       safeSetIsTyping(false);
     }
-  }, [conversations, safeSetIsTyping, safeSetMessages, convertToGiftedFormat]);
+  }, [conversations, safeSetIsTyping, safeSetMessages, convertToGiftedFormat, characterAvatar]);
 
 
   const performSendMessage = useCallback((prompt: string) => {
@@ -296,21 +349,9 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
             case 500:
               errorMsg = 'An internal server error occurred. Please try again later.';
               break;
-              case 503:
-  safeSetMessages(previousMessages =>
-    GiftedChat.append(previousMessages, [
-      {
-        _id: Date.now(),
-        text: "⚠️ AI service is temporarily unavailable. Please try again later.",
-        createdAt: new Date(),
-        user: {
-          _id: ASSISTANT_USER_ID,
-          avatar: characterAvatar || 'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
-        },
-      },
-    ]),
-  );
-  break;
+            case 503:
+              errorMsg = '⚠️ AI service is temporarily unavailable. Please try again later.';
+              break;
               
 
             default:
@@ -349,14 +390,49 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     if (isPending) {
       return;
     }
+    if (remainingMessages <= 0) {
+      setIsQuotaExceeded(true);
+      setShowQuotaModal(true);
+      Snackbar.show({
+        text: `Daily limit reached for ${characterName || 'this character'} (5/5 messages).`,
+        duration: Snackbar.LENGTH_SHORT,
+      });
+      return;
+    }
     const prompt = newMessages[0]?.text ?? 'AI in health within 100 words';
     
+    // Decrement local counter and save usage
+    incrementCharacterDailyUsage(characterId).then(usage => {
+      if (isMountedRef.current) {
+        setRemainingMessages(usage.remaining);
+        if (usage.remaining <= 0) {
+          setIsQuotaExceeded(true);
+          setShowQuotaModal(true);
+          safeSetMessages(prev =>
+            GiftedChat.append(prev, [
+              {
+                _id: `quota-fallback-${Date.now()}`,
+                text: getFallbackQuotaExceededMessage(characterName),
+                createdAt: new Date(),
+                user: {
+                  _id: ASSISTANT_USER_ID,
+                  avatar:
+                    characterAvatar ||
+                    'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+                },
+              },
+            ]),
+          );
+        }
+      }
+    });
+
     safeSetMessages(previousMessages =>
       GiftedChat.append(previousMessages, newMessages),
     );
 
     performSendMessage(prompt);
-  }, [isPending, safeSetMessages, performSendMessage]);
+  }, [isPending, remainingMessages, characterId, characterName, safeSetMessages, performSendMessage]);
 
   const handleRetry = useCallback((failedMessage: any) => {
     if (isPending) {
@@ -438,11 +514,35 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
         </View>
 
         <View style={{flex: 1}}>
-          <Text style={{fontSize: 20, fontWeight: '700', color: '#ffffff'}}>
-            {characterName || 'Care Companion AI'}
-          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 6}}>
+            <Text style={{fontSize: 18, fontWeight: '700', color: '#ffffff', flex: 1}} numberOfLines={1}>
+              {characterName || 'Care Companion AI'}
+            </Text>
+            {/* Daily Usage Counter Badge */}
+            <View
+              style={{
+                backgroundColor: remainingMessages > 0 ? 'rgba(255,255,255,0.22)' : 'rgba(239,68,68,0.3)',
+                paddingHorizontal: 8,
+                paddingVertical: 3,
+                borderRadius: 12,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 4,
+                borderWidth: 1,
+                borderColor: remainingMessages > 0 ? 'rgba(255,255,255,0.35)' : 'rgba(239,68,68,0.5)',
+              }}>
+              <Ionicons
+                name={remainingMessages > 0 ? 'chatbubble-ellipses' : 'lock-closed'}
+                size={11}
+                color="#ffffff"
+              />
+              <Text style={{color: '#ffffff', fontSize: 11, fontWeight: '700'}}>
+                {remainingMessages}/{MAX_DAILY_MESSAGES_PER_CHARACTER} left
+              </Text>
+            </View>
+          </View>
 
-          <Text style={{fontSize: 13, color: 'rgba(255,255,255,0.8)', marginTop: 2}}>
+          <Text style={{fontSize: 12, color: 'rgba(255,255,255,0.85)', marginTop: 2}}>
             {isPending ? 'Generating response...' : isTyping ? 'Typing...' : 'Online'}
           </Text>
         </View>
@@ -475,8 +575,11 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               paddingBottom: 20,
             }}
             textInputProps={{
-              editable: !isPending && !isQuotaExceeded,
-              placeholder: isQuotaExceeded ? 'Come back tomorrow for more advice!' : `Ask ${characterName || 'the AI'} a question...`,
+              editable: !isPending && !isQuotaExceeded && remainingMessages > 0,
+              placeholder:
+                remainingMessages > 0 && !isQuotaExceeded
+                  ? `Ask ${characterName || 'the AI'} a question... (${remainingMessages}/${MAX_DAILY_MESSAGES_PER_CHARACTER} left today)`
+                  : `Daily limit reached (${MAX_DAILY_MESSAGES_PER_CHARACTER}/${MAX_DAILY_MESSAGES_PER_CHARACTER}). Resets tomorrow.`,
             }}
             renderBubble={props => {
               const currentMessage = props.currentMessage as any;
@@ -627,10 +730,10 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               >
                 <View style={{marginRight: 12, marginBottom: 8}}>
                   <Ionicons
-                    name="send"
-                    size={26}
+                    name={remainingMessages <= 0 ? 'lock-closed' : 'send'}
+                    size={remainingMessages <= 0 ? 20 : 26}
                     color={
-                      props.text?.trim().length && !isPending
+                      props.text?.trim().length && !isPending && remainingMessages > 0
                         ? BUTTON_COLOR
                         : '#9ca3af'
                     }
@@ -648,10 +751,10 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
             <View style={{ width: 48, height: 4, backgroundColor: '#e5e7eb', borderRadius: 2, marginBottom: 24 }} />
             <Ionicons name="time-outline" size={48} color="#f59e0b" style={{ marginBottom: 16 }} />
             <Text style={{ fontSize: 20, fontWeight: '700', color: modalTextColor, marginBottom: 8, textAlign: 'center' }}>
-              Daily Limit Reached
+              Daily Limit Reached (5/5)
             </Text>
-            <Text style={{ fontSize: 16, color: '#4b5563', textAlign: 'center', marginBottom: 24, lineHeight: 24 }}>
-              {"You've"} used all your messages for {characterName || 'this character'} today. Please come back tomorrow for more advice!
+            <Text style={{ fontSize: 15, color: isDarkMode ? '#94A3B8' : '#4b5563', textAlign: 'center', marginBottom: 24, lineHeight: 22 }}>
+              {"You've"} used all 5 messages for {characterName || 'this character'} today. Your limit resets automatically at midnight. Please come back tomorrow for more advice!
             </Text>
             <TouchableOpacity
               onPress={() => setShowQuotaModal(false)}

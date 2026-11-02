@@ -479,31 +479,9 @@ const StackNavigation = ({initialRouteName}: StackNavigationProps) => {
       <Stack.Screen
         name="NotificationScreen"
         component={NotificationScreen}
-        options={({navigation}) => ({
-          headerShown: true,
-          headerTitle: 'Notifications',
-          headerTitleAlign: 'center',
-          headerBackTitleVisible: false,
-          headerTintColor: 'white',
-          headerTransparent: false,
-          headerStyle: {
-            elevation: 4,
-            backgroundColor: '#000A60',
-            shadowColor: '#000',
-            shadowOffset: {width: 0, height: 2},
-            shadowOpacity: 0.25,
-            shadowRadius: 3.5,
-          },
-          headerLeft: () => (
-            <TouchableOpacity
-              style={styles.headerLeftButtonCommentScreen}
-              onPress={() => {
-                navigation.goBack();
-              }}>
-              <FontAwesome6 size={25} name="arrow-left" color={'white'} />
-            </TouchableOpacity>
-          ),
-        })}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="ReadingHistoryScreen"

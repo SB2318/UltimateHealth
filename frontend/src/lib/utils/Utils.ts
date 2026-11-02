@@ -169,37 +169,74 @@ export const createHTMLStructure = (
 ) => {
   const safeTitle = sanitizeHtml(title);
   const safeBody = sanitizeHtml(body);
-  const safeAuthor = sanitizeHtml(author);
   const safeTags = (tags || []).map(tag => ({
     ...tag,
     name: sanitizeHtml(tag?.name ?? ''),
   }));
+  const tagsHtml =
+    safeTags.length > 0
+      ? `<div class="tag-container"><ul class="tag-list">${safeTags
+          .map(tag => `<li><span class="tag">#${tag.name}</span></li>`)
+          .join('')}</ul></div>`
+      : '';
+
   return `<!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>${safeTitle}</title>
 <style>
-body { font-family: Arial, sans-serif; font-size: 18px; line-height: 1.6; color: #333; }
-h1 { color: #00698f; } h2 { color: #008000; } h3 { color: #660066; }
-h4 { color: #0099CC; } h5 { color: #FF9900; } h6 { color: #663300; }
-ul { list-style-type: disc; } li { margin-bottom: 10px; }
-article { width: 95%; margin: 20px auto; }
-table { border-collapse: collapse; width: 100%; }
-th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-th { background-color: #f0f0f0; }
-.tag-list { list-style-type: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; }
-.tag-list li { margin-right: 10px; }
-.tag { color: blue; text-decoration: none; }
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #1E293B;
+  background-color: transparent;
+  padding: 4px 6px;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #0F172A;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-top: 1.3em;
+  margin-bottom: 0.5em;
+  letter-spacing: -0.01em;
+}
+h1 { font-size: 24px; color: #000A60; }
+h2 { font-size: 20px; border-bottom: 1px solid #E2E8F0; padding-bottom: 6px; }
+h3 { font-size: 18px; }
+h4 { font-size: 16px; }
+p { margin-top: 0; margin-bottom: 1em; color: #334155; }
+ul, ol { padding-left: 22px; margin-top: 0; margin-bottom: 1em; }
+li { margin-bottom: 6px; color: #334155; }
+strong { color: #0F172A; font-weight: 700; }
+table { border-collapse: collapse; width: 100%; margin: 16px 0; border-radius: 8px; overflow: hidden; }
+th, td { border: 1px solid #E2E8F0; padding: 10px 12px; text-align: left; font-size: 14px; }
+th { background-color: #F8FAFC; font-weight: 600; color: #0F172A; }
+blockquote { border-left: 4px solid #000A60; padding-left: 14px; margin: 16px 0; color: #475569; font-style: italic; }
+img { max-width: 100%; height: auto; border-radius: 8px; margin: 12px 0; }
+.tag-container { margin-top: 24px; padding-top: 16px; border-top: 1px solid #E2E8F0; }
+.tag-list { list-style-type: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.tag-list li { margin: 0; }
+.tag {
+  display: inline-block;
+  background-color: #EFF6FF;
+  color: #1E40AF;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
 </style>
 </head>
 <body>
 ${safeBody}
-<hr>
-<ul class="tag-list">
-  ${safeTags.map(tag => `<li><a class="tag" href="#">#${tag.name}</a></li>`).join('')}
-</ul>
-<h3>Author</h3>
-<h4>${safeAuthor}</h4>
+${tagsHtml}
 </body>
 </html>`;
 };

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import {PRIMARY_COLOR} from '../lib/ui/Theme';
+import {PRIMARY_COLOR, BUTTON_COLOR} from '../lib/ui/Theme';
 import {useTranslation} from '../localization';
 
 // Icon map per tab label
@@ -71,7 +71,7 @@ const AnimatedTabItem = ({
   const title = displayLabel || config.label;
 
   const iconName = isFocused ? config.active : config.inactive;
-  const activeColor = '#FFFFFF';
+  const activeColor = isDark ? '#38BDF8' : BUTTON_COLOR;
   const inactiveColor = isDark ? '#94A3B8' : '#64748B';
 
   return (
@@ -84,16 +84,10 @@ const AnimatedTabItem = ({
       accessibilityState={{selected: isFocused}}
       style={styles.tabItem}>
       <Animated.View style={[styles.tabItemInner, {transform: [{scale: scaleAnim}]}]}>
-        <View
-          style={[
-            styles.iconBox,
-            {
-              backgroundColor: isFocused ? PRIMARY_COLOR : 'transparent',
-            },
-          ]}>
+        <View style={styles.iconBox}>
           <MaterialCommunityIcons
             name={iconName as any}
-            size={21}
+            size={24}
             color={isFocused ? activeColor : inactiveColor}
           />
         </View>
@@ -101,11 +95,7 @@ const AnimatedTabItem = ({
           style={[
             styles.tabLabel,
             {
-              color: isFocused
-                ? isDark
-                  ? '#38BDF8'
-                  : PRIMARY_COLOR
-                : inactiveColor,
+              color: isFocused ? activeColor : inactiveColor,
               fontWeight: isFocused ? '700' : '500',
             },
           ]}
@@ -248,12 +238,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iconBox: {
-    width: 44,
-    height: 34,
-    borderRadius: 10,
+    height: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 3,
+    marginBottom: 2,
   },
   tabLabel: {
     fontSize: 11,

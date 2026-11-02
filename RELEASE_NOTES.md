@@ -1,3 +1,41 @@
+# Release Notes — UltimateHealth v3.2.1
+
+> **Release Version:** `v3.2.1`  
+> **Release Date:** November 2026  
+> **Release Focus:** Web-Style Audio Player, Notification Modernization, AI Usage Guards & UI Stabilization  
+
+---
+
+## 🌟 What's New & Polished in v3.2.1
+
+### 1. 🎧 Web-Style Article Listen Progress Card
+- **Modern Audio Experience:** Completely removed legacy Lottie talking robot overlay in favor of a sleek, web-style audio reader card directly inside article details (`ArticleScreen.tsx`).
+- **Interactive Controls:** Integrated prominent Play/Pause toggle, speed selector pill (`0.5x` to `2.0x`), and quick stop/close button.
+- **Accurate Timeline & Progress Track:** Real-time elapsed time (`mm:ss`), center percentage badge, and total estimated reading duration accompanied by smooth horizontal progress fill.
+- **Synchronized Hero Cover Indicator:** Subtle audio progress track placed along the bottom edge of the article hero image.
+- **Speech Audio Softening:** Enhanced text-to-speech preprocessing to filter jarring symbols, raw URLs, and all-caps shouting, combined with a warmer, soothing speech pitch (`0.92`).
+
+### 2. 🔔 Notification Screen Modernization
+- **Edge-to-Edge Custom Navigation Header:** Replaced the legacy React Navigation stack header with a clean, branded in-screen header with accessible circular back button and dark/light mode alignment.
+- **Dynamic Unread Count Badge:** Visual badge indicating the count of active notifications.
+- **Notification Preferences Shortcut:** Direct header action to manage content cluster notification categories (`NotificationPreferencesScreen.tsx`).
+- **Typography & Card Polish:** Eliminated non-standard decorative fonts (`Lobster-Regular`, `monospace`) from notification items in favor of crisp system typography, dark theme support, and subtle unread status dots.
+
+### 3. 📊 Activity Insights Selection Alignment
+- **High-Contrast Filter Selection:** Updated Monthly and Yearly dropdown filters in `ActivityOverview.tsx` to render high-contrast white text (`#FFFFFF`) and icons when selected over blue indicator backgrounds.
+- **Clean List Options:** Ensured clear item styling inside dropdown selection menus.
+
+### 4. 🤖 AI Chatbot Daily Quota & Roll-Over Engine
+- **Client-Side Daily Usage Tracking:** Restricts AI interactions to 5 messages per persona per day (`aiUsageStorage.ts`).
+- **Automatic Day Rollover:** Automatically clears yesterday's conversation logs on initial app open each morning.
+- **Proactive Warning Banners & Fallbacks:** Informative quota-exceeded alerts and offline fallbacks across `ChatbotScreen.tsx` and `PersonaLobbyScreen.tsx`.
+
+### 5. 🛠️ Navigation & Dashboard Glitch Fixes
+- **Tab Bar Active Square Fixed:** Removed awkward background box on active tab bar navigation icons for fluid tab switching.
+- **Wellness Plan Refresh Cooldown:** Resolved runtime reference error on `lastPlanRefreshedTimestamp` in `WellnessDashboardScreen.tsx` with persistent cooldown tracking.
+
+---
+
 # Release Notes — UltimateHealth v3.2.0
 
 > **Release Version:** `v3.2.0`  

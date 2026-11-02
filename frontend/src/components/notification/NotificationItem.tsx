@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  useColorScheme,
 } from 'react-native';
 import {Notification} from '../../schemas/type';
 import {fp, wp} from '../../lib/ui/Metric';
@@ -127,6 +128,13 @@ export default function NotificationItem({
     [cardWidth, closeItem, fullSwipeDistance, handleDeleteAction, isOpen, item, onOpenSwipe, openItem, revealWidth, translateX],
   );
 
+    const isDarkMode = useColorScheme() === 'dark';
+  const cardBg = isDarkMode ? '#1E293B' : '#FFFFFF';
+  const titleColor = isDarkMode ? '#F8FAFC' : '#0F172A';
+  const descColor = isDarkMode ? '#CBD5E1' : '#475569';
+  const timeColor = isDarkMode ? '#94A3B8' : '#64748B';
+  const borderColor = isDarkMode ? '#334155' : '#F1F5F9';
+
   return (
     <View
       style={styles.wrapper}
@@ -145,7 +153,7 @@ export default function NotificationItem({
         </Pressable>
       </View>
 
-      <Animated.View style={[styles.cardShell, animatedCardStyle]} {...panResponder.panHandlers}>
+      <Animated.View style={[styles.cardShell, { backgroundColor: cardBg }, animatedCardStyle]} {...panResponder.panHandlers}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`Open notification ${item?.title ?? ''}`}
@@ -158,14 +166,19 @@ export default function NotificationItem({
 
             handleClick(item);
           }}
-          style={styles.cardContainer}>
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>{item?.title}</Text>
+          style={[styles.cardContainer, { backgroundColor: cardBg, borderColor, borderWidth: 1 }]}>
+          <View style={[styles.textContainer, { backgroundColor: cardBg }]}>
+            <View style={styles.titleRow}>
+              <Text style={[styles.title, { color: titleColor }]} numberOfLines={1}>
+                {item?.title}
+              </Text>
+              {!item?.read && <View style={styles.unreadDot} />}
+            </View>
 
-            <Text style={styles.description}>
-              {item?.message} {' '}
+            <Text style={[styles.description, { color: descColor }]} numberOfLines={3}>
+              {item?.message}
             </Text>
-            <Text style={styles.footerText}>
+            <Text style={[styles.footerText, { color: timeColor }]}>
               {formatRelativeTime(item?.timestamp)}
             </Text>
           </View>
@@ -185,46 +198,54 @@ const styles = StyleSheet.create({
   },
   cardShell: {
     width: '100%',
-    backgroundColor: 'white',
     borderRadius: 12,
   },
   cardContainer: {
     width: '100%',
-    minHeight: 92,
+    minHeight: 88,
     maxHeight: 360,
-    backgroundColor: 'white',
     flexDirection: 'row',
     overflow: 'hidden',
-    elevation: 4,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
     padding: wp(2.5),
     borderRadius: 12,
   },
   textContainer: {
     flex: 1,
-    backgroundColor: 'white',
-    paddingHorizontal: 14,
-    paddingVertical: 13,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+    gap: 8,
+  },
+  unreadDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#0F52BA',
   },
   title: {
-    fontSize: fp(4.5),
-    fontWeight: 'bold',
-    color: '#121a26',
-    marginBottom: 4,
-    fontFamily: 'Lobster-Regular',
+    fontSize: 15,
+    fontWeight: '700',
+    flex: 1,
   },
   description: {
-    fontSize: fp(4),
-    fontWeight: '500',
+    fontSize: 13,
+    fontWeight: '400',
     lineHeight: 18,
-    color: '#121a26',
-    marginBottom: 10,
-    fontFamily: 'monospace',
+    marginBottom: 6,
   },
   footerText: {
-    fontSize: fp(3.3),
-    fontWeight: '600',
-    color: '#778599',
-    marginBottom: 3,
+    fontSize: 12,
+    fontWeight: '500',
   },
   deleteActionContainer: {
     position: 'absolute',

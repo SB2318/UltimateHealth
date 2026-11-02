@@ -596,6 +596,16 @@ const ActivityOverview = ({
                 labelField="label"
                 valueField="value"
                 value={selectedMonth}
+                placeholderStyle={[
+                  styles.dropdownText,
+                  {color: selectedMonth === -1 ? '#4B5563' : '#FFFFFF'},
+                ]}
+                selectedTextStyle={[
+                  styles.dropdownText,
+                  {color: selectedMonth === -1 ? '#4B5563' : '#FFFFFF'},
+                ]}
+                iconColor={selectedMonth === -1 ? '#4B5563' : '#FFFFFF'}
+                itemTextStyle={styles.dropdownItemText}
                 onChange={item => {
                   setSelectedMonth(item.value);
                   setSelectedYear(-1);
@@ -622,6 +632,16 @@ const ActivityOverview = ({
                 labelField="label"
                 valueField="value"
                 value={selectedYear}
+                placeholderStyle={[
+                  styles.dropdownText,
+                  {color: selectedYear === -1 ? '#4B5563' : '#FFFFFF'},
+                ]}
+                selectedTextStyle={[
+                  styles.dropdownText,
+                  {color: selectedYear === -1 ? '#4B5563' : '#FFFFFF'},
+                ]}
+                iconColor={selectedYear === -1 ? '#4B5563' : '#FFFFFF'}
+                itemTextStyle={styles.dropdownItemText}
                 onChange={item => {
                   setSelectedYear(item.value);
                   setSelectedMonth(-1);
@@ -743,6 +763,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#c1c1c1',
+  },
+  dropdownText: {
+    fontSize: 14,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  dropdownItemText: {
+    fontSize: 14,
+    color: '#1F2937',
   },
 
   dropdown: {

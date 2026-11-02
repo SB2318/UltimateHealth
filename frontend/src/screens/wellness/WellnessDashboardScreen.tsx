@@ -33,6 +33,8 @@ import {
   getTodayLog,
 } from '../../lib/utils/wellnessUtils';
 import authAxios from '../../lib/api/authAxios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Snackbar from 'react-native-snackbar';
 import {
   GET_WELLNESS_PLAN_API,
   GENERATE_WELLNESS_PLAN_API,
@@ -44,6 +46,9 @@ import {
   WellnessPlanResponse,
 } from '../../schemas/type';
 import BreathingTool from '../../components/common/BreathingTool';
+
+export const PLAN_REFRESH_COOLDOWN_MS = 2 * 24 * 60 * 60 * 1000; // 48 hours (2 days)
+export const PLAN_LAST_REFRESHED_STORAGE_KEY = '@wellness_plan_last_refreshed_ts';
 
 const useSafeBottomTabBarHeight = (): number => {
   try {
@@ -93,6 +98,20 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
   const [planStatusMessage, setPlanStatusMessage] = useState('');
   const [showBreathingTool, setShowBreathingTool] = useState(false);
+  const [lastPlanRefreshedTimestamp, setLastPlanRefreshedTimestamp] = useState<number | null>(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem(PLAN_LAST_REFRESHED_STORAGE_KEY)
+      .then(val => {
+        if (val) {
+          const num = Number(val);
+          if (!isNaN(num)) {
+            setLastPlanRefreshedTimestamp(num);
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const fetchActivePlan = useCallback(async () => {
     if (
@@ -137,20 +156,74 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
     fetchActivePlan();
   }, [fetchActivePlan]);
 
+  const getEffectiveLastRefreshTime = (): number | null => {
+    if (lastPlanRefreshedTimestamp) return lastPlanRefreshedTimestamp;
+    if (activePlan?.updatedAt) {
+      const t = new Date(activePlan.updatedAt).getTime();
+      if (!isNaN(t)) return t;
+    }
+    if (activePlan?.createdAt) {
+      const t = new Date(activePlan.createdAt).getTime();
+      if (!isNaN(t)) return t;
+    }
+    return null;
+  };
+
+  const getRemainingCooldownMs = (): number => {
+    if (!activePlan) return 0;
+    const lastTime = getEffectiveLastRefreshTime();
+    if (!lastTime) return 0;
+    const elapsed = Date.now() - lastTime;
+    return Math.max(0, PLAN_REFRESH_COOLDOWN_MS - elapsed);
+  };
+
+  const remainingCooldownMs = getRemainingCooldownMs();
+  const isRefreshOnCooldown = Boolean(activePlan && remainingCooldownMs > 0);
+
+  const formatCooldownTime = (ms: number): string => {
+    const totalHours = Math.ceil(ms / (1000 * 60 * 60));
+    if (totalHours > 24) {
+      const days = Math.floor(totalHours / 24);
+      const remainingHours = totalHours % 24;
+      return remainingHours > 0 ? `${days}d ${remainingHours}h` : `${days}d`;
+    }
+    return `${totalHours}h`;
+  };
+
   const handleGeneratePlan = async () => {
-    if (!isConnected || typeof authAxios?.post !== 'function') return;
+    if (!isConnected) {
+      setPlanStatusMessage('⚠️ You are offline. Please check your internet connection to refresh your AI plan.');
+      Snackbar.show({
+        text: 'You are offline. Please reconnect to refresh your wellness plan.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+      return;
+    }
+    if (typeof authAxios?.post !== 'function') return;
+
+    if (activePlan && isRefreshOnCooldown) {
+      Snackbar.show({
+        text: `You can refresh your AI plan once every 2 days. Available in ${formatCooldownTime(remainingCooldownMs)}.`,
+        duration: Snackbar.LENGTH_LONG,
+      });
+      return;
+    }
+
     setIsGeneratingPlan(true);
     setPlanStatusMessage('');
     try {
       const res = await authAxios.post(GENERATE_WELLNESS_PLAN_API);
       const body = res?.data as WellnessPlanResponse;
       if (body?.data) {
+        const now = Date.now();
         setActivePlan(body.data);
+        setLastPlanRefreshedTimestamp(now);
+        AsyncStorage.setItem(PLAN_LAST_REFRESHED_STORAGE_KEY, now.toString()).catch(() => {});
         setPlanStatusMessage('Personalized 7-day AI plan updated!');
         fetchPlanHistory();
       }
     } catch {
-      setPlanStatusMessage('Could not generate AI plan right now. Try again shortly.');
+      setPlanStatusMessage('⚠️ Could not generate AI plan right now. Please try again shortly.');
     } finally {
       setIsGeneratingPlan(false);
     }
@@ -1125,19 +1198,27 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
                     </YStack>
                   )}
 
-                {/* Redesigned Plan Refresh Button */}
+                {/* Redesigned Plan Refresh Button with 2-day cooldown */}
                 <TouchableOpacity
                   testID="generate-wellness-plan-btn"
                   onPress={handleGeneratePlan}
-                  disabled={isGeneratingPlan}
+                  disabled={isGeneratingPlan || isRefreshOnCooldown}
                   style={[
                     styles.primaryButton,
-                    isGeneratingPlan && styles.buttonDisabled,
+                    (isGeneratingPlan || isRefreshOnCooldown) && styles.buttonDisabled,
+                    isRefreshOnCooldown && styles.buttonCooldown,
                   ]}
                   accessibilityRole="button"
                   accessibilityLabel="Refresh AI Plan">
                   {isGeneratingPlan ? (
                     <ActivityIndicator size="small" color="#FFFFFF" />
+                  ) : isRefreshOnCooldown ? (
+                    <>
+                      <Ionicons name="time-outline" size={18} color="#64748B" />
+                      <Text style={styles.buttonCooldownText}>
+                        Refreshes in {formatCooldownTime(remainingCooldownMs)}
+                      </Text>
+                    </>
                   ) : (
                     <>
                       <Ionicons name="sparkles" size={18} color="#FFFFFF" />
@@ -1147,6 +1228,30 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
                     </>
                   )}
                 </TouchableOpacity>
+
+                {isRefreshOnCooldown ? (
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      textAlign: 'center',
+                      marginTop: 4,
+                      lineHeight: 16,
+                    }}>
+                    💡 AI plans require 2 days of lifestyle and wellness logs to recalibrate. Next refresh available in {formatCooldownTime(remainingCooldownMs)}.
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: isDarkMode ? '#94A3B8' : '#64748B',
+                      textAlign: 'center',
+                      marginTop: 4,
+                      lineHeight: 16,
+                    }}>
+                    ✨ Ready to refresh. Generates new personalized goals from your logged activity.
+                  </Text>
+                )}
               </YStack>
             ) : (
               <YStack gap="$2.5">
@@ -1186,7 +1291,7 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
                 fontSize={13.5}
                 fontWeight="500"
                 color={
-                  planStatusMessage.includes('Could not')
+                  planStatusMessage.includes('Could not') || planStatusMessage.includes('offline')
                     ? '#DC2626'
                     : '#16A34A'
                 }
@@ -1465,6 +1570,16 @@ const styles = StyleSheet.create({
         elevation: 3,
       },
     }),
+  },
+  buttonCooldown: {
+    backgroundColor: '#F1F5F9',
+    borderColor: '#CBD5E1',
+    borderWidth: 1,
+  },
+  buttonCooldownText: {
+    color: '#64748B',
+    fontSize: 14.5,
+    fontWeight: '600',
   },
 });
 
