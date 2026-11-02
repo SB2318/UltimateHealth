@@ -65,7 +65,7 @@ const StructuredPodcastCard: React.FC<StructuredPodcastCardProps> = ({
   return (
     <View style={[styles.card, { backgroundColor: cardBg, borderColor }]}> 
       <Text style={[styles.headerTitle, { color: accentColor }]}>🎙️ Related Podcast Episodes</Text>
-      <Text style={[styles.subtitle, { color: textColor }]}>Deepen your understanding with expert audio</Text>
+      <Text style={[styles.subtitle, { color: textColor }]}>Deepen your understanding with audio discussions</Text>
 
       {relatedEpisodes.map((episode: PodcastEpisode) => (
         <TouchableOpacity

@@ -377,6 +377,39 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           />
         </View>
 
+        {/* ── Privacy Pledge Card ── */}
+        <View
+          style={{
+            marginHorizontal: 16,
+            marginTop: 20,
+            padding: 14,
+            borderRadius: 14,
+            borderWidth: 1,
+            backgroundColor: isDark ? '#1E293B' : '#F0FDF4',
+            borderColor: isDark ? '#334155' : '#BBF7D0',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              fontSize: 12,
+              fontWeight: '700',
+              color: isDark ? '#34D399' : '#059669',
+              marginBottom: 4,
+              letterSpacing: 0.5,
+            }}>
+            OUR PRIVACY PLEDGE
+          </Text>
+          <Text
+            style={{
+              fontSize: 12,
+              lineHeight: 18,
+              textAlign: 'center',
+              color: isDark ? '#94A3B8' : '#374151',
+            }}>
+            Privacy First: Zero Trackers · No Ads · 100% Offline-Ready · We never profile or sell your health data.
+          </Text>
+        </View>
+
         {/* ── Footer note ── */}
         <Text
           style={[

@@ -35,9 +35,20 @@ const HomeScreenHeader = ({
     >
       <XStack alignItems="center" justifyContent="space-between" gap="$1.5" height={50}>
         
-        {/* Left Side Menu Button */}
-        <Button chromeless onPress={handlePresentModalPress} padding="$0" width={40} height={40} justifyContent="center" alignItems="center">
-          <AntDesign name="menu-fold" size={24} color="#FFFFFF" />
+        {/* Left Side Hamburger Menu Button */}
+        <Button
+          chromeless
+          onPress={handlePresentModalPress}
+          padding="$0"
+          width={40}
+          height={40}
+          justifyContent="center"
+          alignItems="center"
+          position="relative"
+          accessibilityLabel="Open navigation menu"
+          accessibilityHint="Opens navigation drawer with wellness tools, settings and resources"
+        >
+          <Feather name="menu" size={26} color="#FFFFFF" />
         </Button>
 
         {/* Center search bar wrapper (or title if search bar hidden) */}

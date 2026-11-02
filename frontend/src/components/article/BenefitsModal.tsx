@@ -13,6 +13,7 @@ import {
 import Feather from '@expo/vector-icons/Feather';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BUTTON_COLOR } from '../../lib/ui/Theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface BenefitsModalProps {
   visible: boolean;
@@ -28,7 +29,7 @@ const benefits = [
   },
   {
     title: 'Podcast Community',
-    description: 'Join exclusive medical & wellness podcast discussions',
+    description: 'Listen and take part in community wellness audio talks',
     icon: 'headphones' as const,
   },
   {
@@ -37,11 +38,19 @@ const benefits = [
     icon: 'bookmark' as const,
   },
   {
-    title: 'Doctor Network & Streaks',
-    description: 'Connect with verified physicians & health specialists',
+    title: 'Doctor Network & Habits',
+    description: 'Connect with verified doctors & health creators',
     icon: 'award' as const,
   },
 ];
+
+const useSafeInsets = () => {
+  try {
+    return useSafeAreaInsets();
+  } catch {
+    return { top: 0, bottom: 0, left: 0, right: 0 };
+  }
+};
 
 export default function BenefitsModal({
   visible,
@@ -49,6 +58,7 @@ export default function BenefitsModal({
   onSignUp,
 }: BenefitsModalProps) {
   const isDark = useColorScheme() === 'dark';
+  const insets = useSafeInsets();
 
   const colors = {
     modalBg: isDark ? '#1E293B' : '#FFFFFF',
@@ -76,6 +86,7 @@ export default function BenefitsModal({
                 {
                   backgroundColor: colors.modalBg,
                   borderColor: colors.border,
+                  paddingBottom: Math.max(insets.bottom, 16) + 16,
                 },
               ]}>
               {/* Handle */}
@@ -99,8 +110,8 @@ export default function BenefitsModal({
 
                 <Text
                   style={[styles.subtitle, { color: colors.textSecondary }]}>
-                  Create a free account to unlock personalized wellness insights,
-                  participate in discussions, and connect with healthcare leaders.
+                  Create an account to save your favorite reads, take part in
+                  conversations, and stay connected with community doctors.
                 </Text>
 
                 {/* Benefits List */}

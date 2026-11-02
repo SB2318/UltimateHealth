@@ -1,55 +1,39 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {useState} from 'react';
-import { showAlert } from '@/src/store/alertSlice';
-import { Alert } from 'react-native';
-import { UPLOAD_STORAGE } from '../../lib/api/APIUtils';
-import { fetchWithTimeout } from '../../lib/api/ApiTimeout';
-import { useAppDispatch } from '@/src/store/hooks';
+import {Alert} from 'react-native';
+import {UPLOAD_STORAGE} from '../../lib/api/APIUtils';
+import {uploadMediaFile} from '../../lib/api/uploadMediaHelper';
 
 const useUploadImage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
 
   const uploadImage = async (uri: string) => {
-
     try {
       setLoading(true);
       // Extract filename and type
       let filename: string = uri.split('/').pop() || `image_${Date.now()}`;
       let match = /\.(\w+)$/.exec(filename);
-      let type = match ? `image/${match[1]}` : 'image';
+      let ext = match ? match[1].toLowerCase() : 'jpeg';
+      let type = ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : `image/${ext}`;
 
+      if (__DEV__) console.log('Uploading image:', filename, type);
 
-      const formData = new FormData();
-      formData.append('file', {uri, name: filename, type} as any);
-      if (__DEV__) console.log('Type:', type);
-
-      //formData.append('file', uri);
-
-      const response = await fetchWithTimeout(UPLOAD_STORAGE, {
-        method: 'POST',
-        
-        body: formData,
+      const data = await uploadMediaFile(UPLOAD_STORAGE, {
+        uri,
+        filename,
+        type,
+        fieldName: 'file',
       });
 
-      if (!response.ok) {
-        const errorBody = await response.text();
-        if (__DEV__) console.log('Image upload failed with status', response.status, errorBody);
-        throw new Error('Image upload failed');
-      }
-
-      const data = await response.json();
-      if (__DEV__) console.log('Image upload res', data);
+      if (__DEV__) console.log('Image upload response:', data);
       setError(false);
-      return data.key as string;
-    } catch (err) {
+      return (data.key || data.url || data) as string;
+    } catch (err: any) {
       if (__DEV__) console.log('Image upload failed', err);
-      Alert.alert('Low network connection, failed to upload image');
-    //  dispatch(showAlert({
-    //        title: "Upload falied",
-    //        message: 'Unable to upload image. Please check your connection.'
-    //       }));
+      Alert.alert(
+        'Upload Failed',
+        err?.message || 'Failed to upload image. Please check your connection.',
+      );
       setError(true);
       throw err;
     } finally {

@@ -110,7 +110,7 @@ export default function SplashScreen({navigation}: SplashScreenProp) {
           color="$color10"
           textAlign="center"
           paddingHorizontal="$4">
-          Empowering wellness through knowledge
+          Better health, made simple
         </Text>
       </Animated.View>
 

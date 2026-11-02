@@ -632,6 +632,10 @@ const ArticleCard = ({
           <View style={styles.metaRow}>
             <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>
               {item?.authorName}
+              {(item?.authorRole === 'Doctor' ||
+                item?.isDoctor ||
+                (item?.authorId as any)?.role === 'Doctor' ||
+                item?.authorName?.startsWith('Dr')) && ' ✓'}
             </Text>
             <Text style={[styles.dot, {color: themeColors.mutedText}]}>•</Text>
             <Text style={[styles.footerText1, {color: themeColors.secondaryText}]}>

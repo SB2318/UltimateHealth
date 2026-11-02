@@ -10,6 +10,7 @@ import {
   View,
   Modal,
   TextInput,
+  useColorScheme,
 } from 'react-native';
 import {StatusBar} from 'expo-status-bar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -54,23 +55,23 @@ const QUICK_SNIPPETS: Array<{
     label: 'Article Outline',
     icon: 'document-text-outline',
     isFullTemplate: true,
-    html: `<h2>Introduction</h2><p>Provide a clear overview of the health topic and why it matters to readers.</p><h2>Key Causes &amp; Symptoms</h2><ul><li><strong>Primary factor:</strong> Explain the main symptom or cause.</li><li><strong>Secondary factor:</strong> Add supporting clinical context.</li></ul><div style="background-color:#EFF6FF;border-left:4px solid #000A60;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>💡 Key Takeaway:</strong> Summarize the most important actionable insight for patients or readers here.</div><h2>Evidence-Based Recommendations</h2><ol><li>First practical step or lifestyle modification.</li><li>Second clinical or preventive recommendation.</li></ol><h2>Conclusion</h2><p>Wrap up with final thoughts and when to consult a healthcare professional.</p><p><br/></p>`,
+    html: `<h2>Introduction</h2><p>Provide a clear overview of the health topic and why it matters to readers.</p><h2>Key Causes &amp; Symptoms</h2><ul><li><strong>Primary factor:</strong> Explain the main symptom or cause.</li><li><strong>Secondary factor:</strong> Add supporting clinical context.</li></ul><div style="background-color:#EFF6FF;border-left:4px solid #000A60;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>ðŸ’¡ Key Takeaway:</strong> Summarize the most important actionable insight for patients or readers here.</div><h2>Evidence-Based Recommendations</h2><ol><li>First practical step or lifestyle modification.</li><li>Second clinical or preventive recommendation.</li></ol><h2>Conclusion</h2><p>Wrap up with final thoughts and when to consult a healthcare professional.</p><p><br/></p>`,
   },
   {
     id: 'takeaway',
     label: 'Key Takeaway',
     icon: 'bulb-outline',
-    html: `<div style="background-color:#EFF6FF;border-left:4px solid #000A60;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>💡 Key Takeaway:</strong> Write your key takeaway point here...</div><p><br/></p>`,
+    html: `<div style="background-color:#EFF6FF;border-left:4px solid #000A60;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>ðŸ’¡ Key Takeaway:</strong> Write your key takeaway point here...</div><p><br/></p>`,
   },
   {
     id: 'clinical_note',
     label: 'Clinical Note',
     icon: 'medkit-outline',
-    html: `<div style="background-color:#FEF3C7;border-left:4px solid #D97706;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>⚕️ Clinical Note:</strong> Always consult a qualified healthcare professional for personalized medical diagnosis and treatment.</div><p><br/></p>`,
+    html: `<div style="background-color:#FEF3C7;border-left:4px solid #D97706;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>âš•ï¸ Clinical Note:</strong> Always consult a qualified healthcare professional for personalized medical diagnosis and treatment.</div><p><br/></p>`,
   },
   {
     id: 'table',
-    label: '2×2 Table',
+    label: '2Ã—2 Table',
     icon: 'grid-outline',
     html: `<table style="width:100%;border-collapse:collapse;margin:12px 0;border:1px solid #D1D5DB;"><thead><tr style="background-color:#F3F4F6;"><th style="border:1px solid #D1D5DB;padding:8px;text-align:left;">Aspect / Symptom</th><th style="border:1px solid #D1D5DB;padding:8px;text-align:left;">Clinical Guidance</th></tr></thead><tbody><tr><td style="border:1px solid #D1D5DB;padding:8px;">Point 1</td><td style="border:1px solid #D1D5DB;padding:8px;">Details here</td></tr><tr><td style="border:1px solid #D1D5DB;padding:8px;">Point 2</td><td style="border:1px solid #D1D5DB;padding:8px;">Details here</td></tr></tbody></table><p><br/></p>`,
   },
@@ -125,8 +126,83 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   const [findText, setFindText] = useState('');
   const [replaceText, setReplaceText] = useState('');
 
+  // Citation Reference Modal state
+  const [citationModalVisible, setCitationModalVisible] = useState(false);
+  const [citationTitle, setCitationTitle] = useState('');
+  const [citationAuthor, setCitationAuthor] = useState('');
+  const [citationJournal, setCitationJournal] = useState('');
+  const [citationYear, setCitationYear] = useState('');
+  const [citationUrl, setCitationUrl] = useState('');
+
+  // Key Takeaway Modal state
+  const [takeawayModalVisible, setTakeawayModalVisible] = useState(false);
+  const [takeawayText, setTakeawayText] = useState('');
+
   const dispatch = useAppDispatch();
   const isNewArticleDraft = !articleData && !requestId && !htmlContent;
+  const isDark = useColorScheme() === 'dark';
+
+  const themeColors = useMemo(
+    () => ({
+      screenBg: isDark ? '#0F172A' : '#F9FAFB',
+      cardBg: isDark ? '#1E293B' : '#FFFFFF',
+      cardBorder: isDark ? '#334155' : '#E5E7EB',
+      textPrimary: isDark ? '#F8FAFC' : '#111827',
+      textSecondary: isDark ? '#94A3B8' : '#4B5563',
+      textMuted: isDark ? '#64748B' : '#9CA3AF',
+      inputBg: isDark ? '#0F172A' : '#F9FAFB',
+      inputBorder: isDark ? '#475569' : '#D1D5DB',
+      inputText: isDark ? '#F8FAFC' : '#111827',
+      tabBarBg: isDark ? '#0F172A' : '#FFFFFF',
+      tabBarBorder: isDark ? '#1E293B' : '#E5E7EB',
+      tabInactiveText: isDark ? '#94A3B8' : '#6B7280',
+      metricsBg: isDark ? '#1E293B' : '#F9FAFB',
+      metricsBorder: isDark ? '#334155' : '#E5E7EB',
+      metricPillBg: isDark ? '#0F172A' : '#EFF6FF',
+      metricValueText: isDark ? '#38BDF8' : '#000A60',
+      metricLabelText: isDark ? '#94A3B8' : '#2563EB',
+      metricSubtext: isDark ? '#94A3B8' : '#6B7280',
+      utilityBtnBg: isDark ? '#0F172A' : '#FFFFFF',
+      utilityBtnBorder: isDark ? '#334155' : '#E5E7EB',
+      utilityIcon: isDark ? '#CBD5E1' : '#374151',
+      utilityBtnActiveBg: isDark ? '#1E3A8A' : '#E0E7FF',
+      utilityBtnActiveBorder: isDark ? '#3B82F6' : '#C7D2FE',
+      snippetSectionBg: isDark ? '#0F172A' : '#FFFFFF',
+      snippetSectionBorder: isDark ? '#1E293B' : '#E5E7EB',
+      helperBarBg: isDark ? '#1E293B' : '#FFFFFF',
+      helperBarBorder: isDark ? '#334155' : '#E5E7EB',
+      helperText: isDark ? '#F1F5F9' : '#374151',
+      editorBg: isDark ? '#1E293B' : '#FFFFFF',
+      editorBorder: isDark ? '#334155' : '#E5E7EB',
+      footerCardBg: isDark ? '#1E293B' : '#FFFFFF',
+      footerCardBorder: isDark ? '#334155' : '#E5E7EB',
+      characterCount: isDark ? '#94A3B8' : '#4B5563',
+      htmlSourceHeaderBg: isDark ? '#1E293B' : '#FFFFFF',
+      htmlSourceHeaderBorder: isDark ? '#334155' : '#E5E7EB',
+      htmlSourceTitle: isDark ? '#F8FAFC' : '#111827',
+      htmlSourceSubtitle: isDark ? '#94A3B8' : '#4B5563',
+      previewContainerBg: isDark ? '#0F172A' : '#F9FAFB',
+      previewTitle: isDark ? '#F8FAFC' : '#111827',
+      previewDesc: isDark ? '#CBD5E1' : '#4B5563',
+      previewDescBorder: isDark ? '#334155' : '#E5E7EB',
+      modalBackdrop: isDark ? 'rgba(0, 0, 0, 0.78)' : 'rgba(17, 24, 39, 0.55)',
+      modalCardBg: isDark ? '#1E293B' : '#FFFFFF',
+      modalTitle: isDark ? '#F8FAFC' : '#111827',
+      modalSubtitle: isDark ? '#94A3B8' : '#4B5563',
+      modalFieldLabel: isDark ? '#CBD5E1' : '#374151',
+      modalInputBg: isDark ? '#0F172A' : '#F9FAFB',
+      modalInputBorder: isDark ? '#475569' : '#D1D5DB',
+      modalInputText: isDark ? '#F8FAFC' : '#111827',
+      modalCancelBtnBg: isDark ? '#334155' : '#F3F4F6',
+      modalCancelText: isDark ? '#E2E8F0' : '#4B5563',
+      modalSecondaryBtnBg: isDark ? '#1E3A8A' : '#EEF2FF',
+      modalSecondaryBtnBorder: isDark ? '#3B82F6' : '#C7D2FE',
+      modalSecondaryBtnText: isDark ? '#93C5FD' : '#4338CA',
+      modalConfirmBtnBg: isDark ? '#2563EB' : '#000A60',
+      proceedButtonBg: isDark ? '#2563EB' : '#000A60',
+    }),
+    [isDark],
+  );
 
   // Live writing stats (plain text characters, words, paragraphs, reading time)
   const writingStats = useMemo(() => {
@@ -300,7 +376,36 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
     setActiveTab(nextTab);
   };
 
+  const insertHtmlBlock = (htmlToInsert: string) => {
+    if (activeTab === 'html') {
+      setArticle(prev => `${prev}\n${htmlToInsert}`);
+    } else if (RichText.current && editorReady) {
+      RichText.current.insertHTML(htmlToInsert);
+      setArticle(prev =>
+        prev ? `${prev}${htmlToInsert}` : htmlToInsert,
+      );
+    } else {
+      syncContentToEditor(`${article}${htmlToInsert}`);
+    }
+  };
+
   const handleInsertSnippet = (snippet: (typeof QUICK_SNIPPETS)[number]) => {
+    if (snippet.id === 'citation') {
+      setCitationTitle('');
+      setCitationAuthor('');
+      setCitationJournal('');
+      setCitationYear('');
+      setCitationUrl('');
+      setCitationModalVisible(true);
+      return;
+    }
+
+    if (snippet.id === 'takeaway') {
+      setTakeawayText('');
+      setTakeawayModalVisible(true);
+      return;
+    }
+
     if (snippet.isFullTemplate && writingStats.charCount > 20) {
       Alert.alert(
         'Insert Article Outline',
@@ -326,16 +431,39 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       return;
     }
 
-    if (activeTab === 'html') {
-      setArticle(prev => `${prev}\n${snippet.html}`);
-    } else if (RichText.current && editorReady) {
-      RichText.current.insertHTML(snippet.html);
-      setArticle(prev =>
-        prev ? `${prev}${snippet.html}` : snippet.html,
-      );
+    insertHtmlBlock(snippet.html);
+  };
+
+  const handleConfirmInsertCitation = (useTemplateOnly: boolean = false) => {
+    let citationHtml = '';
+    if (useTemplateOnly || (!citationTitle.trim() && !citationAuthor.trim() && !citationJournal.trim())) {
+      citationHtml = `<p style="font-size:14px;color:#4B5563;border-left:3px solid #6366F1;padding-left:10px;margin:8px 0;"><em>[Reference] Author et al., &ldquo;Study or Guideline Title,&rdquo; Journal / Medical Source, Year.</em></p><p><br/></p>`;
     } else {
-      syncContentToEditor(`${article}${snippet.html}`);
+      const parts: string[] = [];
+      if (citationAuthor.trim()) parts.push(citationAuthor.trim());
+      if (citationTitle.trim()) parts.push(`&ldquo;${citationTitle.trim()}&rdquo;`);
+      if (citationJournal.trim()) parts.push(citationJournal.trim());
+      if (citationYear.trim()) parts.push(`(${citationYear.trim()})`);
+
+      const mainText = parts.join(', ');
+      const linkPart = citationUrl.trim()
+        ? ` <a href="${citationUrl.trim().startsWith('http') ? citationUrl.trim() : `https://${citationUrl.trim()}`}">[Source Link]</a>`
+        : '';
+      citationHtml = `<p style="font-size:14px;color:#4B5563;border-left:3px solid #6366F1;padding-left:10px;margin:8px 0;"><em>[Reference] ${mainText}.${linkPart}</em></p><p><br/></p>`;
     }
+
+    insertHtmlBlock(citationHtml);
+    setCitationModalVisible(false);
+  };
+
+  const handleConfirmInsertTakeaway = (useTemplateOnly: boolean = false) => {
+    const text = useTemplateOnly || !takeawayText.trim()
+      ? 'Write your key actionable insight for patients or readers here...'
+      : takeawayText.trim();
+    const takeawayHtml = `<div style="background-color:#EFF6FF;border-left:4px solid #000A60;padding:12px 16px;border-radius:8px;margin:12px 0;"><strong>💡 Key Takeaway:</strong> ${text}</div><p><br/></p>`;
+
+    insertHtmlBlock(takeawayHtml);
+    setTakeawayModalVisible(false);
   };
 
   const handleOpenLinkModal = () => {
@@ -505,11 +633,18 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
   }
 
   return (
-    <View style={styles.tabContainer}>
-      <StatusBar style="light" />
+    <View style={[styles.tabContainer, {backgroundColor: themeColors.screenBg}]}>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
 
       {/* 3-Mode Studio Tab Bar: Editor | HTML Source | Live Preview */}
-      <View style={styles.tabBar}>
+      <View
+        style={[
+          styles.tabBar,
+          {
+            backgroundColor: themeColors.tabBarBg,
+            borderBottomColor: themeColors.tabBarBorder,
+          },
+        ]}>
         <TouchableOpacity
           style={[
             styles.tabButton,
@@ -522,11 +657,16 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
           <IonIcon
             name="create-outline"
             size={16}
-            color={activeTab === 'editor' ? PRIMARY_COLOR : '#6B7280'}
+            color={
+              activeTab === 'editor'
+                ? PRIMARY_COLOR
+                : themeColors.tabInactiveText
+            }
           />
           <Text
             style={[
               styles.tabLabel,
+              {color: themeColors.tabInactiveText},
               activeTab === 'editor' && styles.tabLabelActive,
             ]}>
             Editor
@@ -545,11 +685,16 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
           <IonIcon
             name="code-slash-outline"
             size={16}
-            color={activeTab === 'html' ? PRIMARY_COLOR : '#6B7280'}
+            color={
+              activeTab === 'html'
+                ? PRIMARY_COLOR
+                : themeColors.tabInactiveText
+            }
           />
           <Text
             style={[
               styles.tabLabel,
+              {color: themeColors.tabInactiveText},
               activeTab === 'html' && styles.tabLabelActive,
             ]}>
             HTML Source
@@ -568,11 +713,16 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
           <IonIcon
             name="eye-outline"
             size={16}
-            color={activeTab === 'preview' ? PRIMARY_COLOR : '#6B7280'}
+            color={
+              activeTab === 'preview'
+                ? PRIMARY_COLOR
+                : themeColors.tabInactiveText
+            }
           />
           <Text
             style={[
               styles.tabLabel,
+              {color: themeColors.tabInactiveText},
               activeTab === 'preview' && styles.tabLabelActive,
             ]}>
             Preview
@@ -581,21 +731,51 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       </View>
 
       {/* Live Writing Metrics & Utility Strip */}
-      <View style={styles.metricsStrip}>
+      <View
+        style={[
+          styles.metricsStrip,
+          {
+            backgroundColor: themeColors.metricsBg,
+            borderBottomColor: themeColors.metricsBorder,
+          },
+        ]}>
         <View style={styles.metricsLeft}>
-          <View style={styles.metricPill}>
-            <Text style={styles.metricValue}>{writingStats.wordCount}</Text>
-            <Text style={styles.metricLabel}>words</Text>
+          <View
+            style={[
+              styles.metricPill,
+              {backgroundColor: themeColors.metricPillBg},
+            ]}>
+            <Text
+              style={[
+                styles.metricValue,
+                {color: themeColors.metricValueText},
+              ]}>
+              {writingStats.wordCount}
+            </Text>
+            <Text
+              style={[
+                styles.metricLabel,
+                {color: themeColors.metricLabelText},
+              ]}>
+              words
+            </Text>
           </View>
-          <Text style={styles.metricDot}>•</Text>
-          <Text style={styles.metricSubtext}>
+          <Text
+            style={[styles.metricDot, {color: themeColors.metricSubtext}]}>
+            •
+          </Text>
+          <Text
+            style={[styles.metricSubtext, {color: themeColors.metricSubtext}]}>
             {writingStats.readingTimeMin > 0
               ? `~${writingStats.readingTimeMin} min read`
               : '0 min read'}
           </Text>
           {draftStatus ? (
             <>
-              <Text style={styles.metricDot}>•</Text>
+              <Text
+                style={[styles.metricDot, {color: themeColors.metricSubtext}]}>
+                •
+              </Text>
               <Text style={styles.draftBadgeText}>{draftStatus}</Text>
             </>
           ) : null}
@@ -603,17 +783,34 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
 
         <View style={styles.metricsRight}>
           <TouchableOpacity
-            style={styles.utilityIconBtn}
+            style={[
+              styles.utilityIconBtn,
+              {
+                backgroundColor: themeColors.utilityBtnBg,
+                borderColor: themeColors.utilityBtnBorder,
+              },
+            ]}
             onPress={() => setFindModalVisible(true)}
             accessibilityRole="button"
             accessibilityLabel="Find and replace">
-            <IonIcon name="search-outline" size={17} color="#374151" />
+            <IonIcon
+              name="search-outline"
+              size={17}
+              color={themeColors.utilityIcon}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[
               styles.utilityIconBtn,
-              focusMode && styles.utilityIconBtnActive,
+              {
+                backgroundColor: themeColors.utilityBtnBg,
+                borderColor: themeColors.utilityBtnBorder,
+              },
+              focusMode && {
+                backgroundColor: themeColors.utilityBtnActiveBg,
+                borderColor: themeColors.utilityBtnActiveBorder,
+              },
             ]}
             onPress={() => setFocusMode(prev => !prev)}
             accessibilityRole="button"
@@ -621,13 +818,25 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
             <IonIcon
               name={focusMode ? 'contract-outline' : 'expand-outline'}
               size={17}
-              color={focusMode ? '#000A60' : '#374151'}
+              color={
+                focusMode
+                  ? isDark
+                    ? '#93C5FD'
+                    : '#000A60'
+                  : themeColors.utilityIcon
+              }
             />
           </TouchableOpacity>
 
           {article.trim().length > 0 && (
             <TouchableOpacity
-              style={styles.utilityIconBtn}
+              style={[
+                styles.utilityIconBtn,
+                {
+                  backgroundColor: themeColors.utilityBtnBg,
+                  borderColor: themeColors.utilityBtnBorder,
+                },
+              ]}
               onPress={handleClearEditor}
               accessibilityRole="button"
               accessibilityLabel="Clear editor">
@@ -636,6 +845,119 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
           )}
         </View>
       </View>
+
+      {/* 3. Sticky Quick-Insert Formatting & Medical Blocks Bar (Key Takeaways, Citations, Outlines) */}
+      {!focusMode && activeTab !== 'preview' && (
+        <View
+          style={[
+            styles.snippetSection,
+            {
+              backgroundColor: themeColors.snippetSectionBg,
+              borderBottomColor: themeColors.snippetSectionBorder,
+            },
+          ]}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.snippetScrollContent}
+            keyboardShouldPersistTaps="handled">
+            {QUICK_SNIPPETS.map(snippet => {
+              const isTakeaway = snippet.id === 'takeaway';
+              const isCitation = snippet.id === 'citation';
+              const isClinical = snippet.id === 'clinical_note';
+
+              const chipBg = isDark
+                ? isTakeaway
+                  ? 'rgba(217, 119, 6, 0.22)'
+                  : isCitation
+                  ? 'rgba(99, 102, 241, 0.22)'
+                  : isClinical
+                  ? 'rgba(16, 185, 129, 0.22)'
+                  : '#1E293B'
+                : isTakeaway
+                ? '#FEF3C7'
+                : isCitation
+                ? '#EEF2FF'
+                : isClinical
+                ? '#ECFDF5'
+                : '#EFF6FF';
+
+              const chipBorder = isDark
+                ? isTakeaway
+                  ? '#D97706'
+                  : isCitation
+                  ? '#6366F1'
+                  : isClinical
+                  ? '#10B981'
+                  : '#334155'
+                : isTakeaway
+                ? '#FCD34D'
+                : isCitation
+                ? '#C7D2FE'
+                : isClinical
+                ? '#A7F3D0'
+                : '#BFDBFE';
+
+              const iconColor = isDark
+                ? isTakeaway
+                  ? '#FBBF24'
+                  : isCitation
+                  ? '#A5B4FC'
+                  : isClinical
+                  ? '#6EE7B7'
+                  : '#38BDF8'
+                : isTakeaway
+                ? '#B45309'
+                : isCitation
+                ? '#4338CA'
+                : isClinical
+                ? '#047857'
+                : '#000A60';
+
+              const textColor = isDark
+                ? isTakeaway
+                  ? '#FDE68A'
+                  : isCitation
+                  ? '#C7D2FE'
+                  : isClinical
+                  ? '#A7F3D0'
+                  : '#F8FAFC'
+                : isTakeaway
+                ? '#92400E'
+                : isCitation
+                ? '#4338CA'
+                : isClinical
+                ? '#065F46'
+                : '#000A60';
+
+              return (
+                <TouchableOpacity
+                  key={snippet.id}
+                  style={[
+                    styles.snippetChip,
+                    {backgroundColor: chipBg, borderColor: chipBorder},
+                  ]}
+                  onPress={() => handleInsertSnippet(snippet)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Insert ${snippet.label}`}>
+                  <IonIcon
+                    name={snippet.icon as any}
+                    size={15}
+                    color={iconColor}
+                  />
+                  <Text
+                    style={[
+                      styles.snippetChipText,
+                      {color: textColor},
+                    ]}>
+                    {snippet.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+      )}
 
       {/* VISUAL EDITOR VIEW (Kept mounted to preserve cursor and WebView state) */}
       <ScrollView
@@ -647,47 +969,19 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         {!focusMode && (
-          <>
-            {/* Writing Helper Text & HTML Upload Shortcut */}
-            <View style={styles.helperBar}>
-              <Text style={styles.helperText} numberOfLines={1}>
-                {title ? `Writing: ${title}` : 'Compose or upload .html'}
-              </Text>
-              <TouchableOpacity
-                style={styles.uploadHtmlChip}
-                onPress={handleUploadHtmlFile}
-                accessibilityRole="button"
-                accessibilityLabel="Upload HTML file">
-                <IonIcon name="code-slash-outline" size={15} color="#FFFFFF" />
-                <Text style={styles.uploadHtmlChipText}>Upload HTML</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Quick-Insert Medical & Formatting Blocks Bar */}
-            <View style={styles.snippetSection}>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.snippetScrollContent}
-                keyboardShouldPersistTaps="handled">
-                {QUICK_SNIPPETS.map(snippet => (
-                  <TouchableOpacity
-                    key={snippet.id}
-                    style={styles.snippetChip}
-                    onPress={() => handleInsertSnippet(snippet)}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Insert ${snippet.label}`}>
-                    <IonIcon
-                      name={snippet.icon as any}
-                      size={14}
-                      color="#000A60"
-                    />
-                    <Text style={styles.snippetChipText}>{snippet.label}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-          </>
+          <View style={styles.helperBar}>
+            <Text style={styles.helperText} numberOfLines={1}>
+              {title ? `Writing: ${title}` : 'Compose or upload .html'}
+            </Text>
+            <TouchableOpacity
+              style={styles.uploadHtmlChip}
+              onPress={handleUploadHtmlFile}
+              accessibilityRole="button"
+              accessibilityLabel="Upload HTML file">
+              <IonIcon name="code-slash-outline" size={15} color="#FFFFFF" />
+              <Text style={styles.uploadHtmlChipText}>Upload HTML</Text>
+            </TouchableOpacity>
+          </View>
         )}
 
         <RichToolbar
@@ -710,6 +1004,9 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
             actions.heading1,
             actions.heading2,
             actions.heading3,
+            'insertKeyTakeaway',
+            'insertCitation',
+            'insertClinicalNote',
             actions.insertBulletsList,
             actions.insertOrderedList,
             actions.blockquote,
@@ -720,6 +1017,21 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
             actions.insertImage,
           ]}
           iconMap={{
+            insertKeyTakeaway: () => (
+              <View style={styles.toolbarCustomBadge}>
+                <IonIcon name="bulb" color="#FCD34D" size={20} />
+              </View>
+            ),
+            insertCitation: () => (
+              <View style={styles.toolbarCustomBadge}>
+                <IonIcon name="bookmark" color="#A5B4FC" size={20} />
+              </View>
+            ),
+            insertClinicalNote: () => (
+              <View style={styles.toolbarCustomBadge}>
+                <IonIcon name="medkit" color="#6EE7B7" size={20} />
+              </View>
+            ),
             [actions.setStrikethrough]: ({tintColor}: {tintColor: string}) => (
               <FontAwesome name="strikethrough" color={tintColor} size={22} />
             ),
@@ -754,14 +1066,40 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
               <Entypo name="quote" color={tintColor} size={24} />
             ),
           }}
+          insertKeyTakeaway={() => {
+            const snippet = QUICK_SNIPPETS.find(s => s.id === 'takeaway');
+            if (snippet) handleInsertSnippet(snippet);
+          }}
+          insertCitation={() => {
+            const snippet = QUICK_SNIPPETS.find(s => s.id === 'citation');
+            if (snippet) handleInsertSnippet(snippet);
+          }}
+          insertClinicalNote={() => {
+            const snippet = QUICK_SNIPPETS.find(s => s.id === 'clinical_note');
+            if (snippet) handleInsertSnippet(snippet);
+          }}
           insertImage={onPressAddImage}
         />
 
         <RichEditor
           disabled={false}
-          containerStyle={styles.editor}
+          containerStyle={[
+            styles.editor,
+            {
+              backgroundColor: themeColors.editorBg,
+              borderColor: themeColors.editorBorder,
+            },
+          ]}
           ref={RichText}
-          style={styles.rich}
+          style={[styles.rich, {backgroundColor: themeColors.editorBg}]}
+          editorStyle={{
+            backgroundColor: themeColors.editorBg,
+            color: themeColors.textPrimary,
+            placeholderColor: themeColors.textMuted,
+            contentCSSText: isDark
+              ? 'body { color: #F8FAFC; background-color: #1E293B; font-family: -apple-system, Roboto, sans-serif; }'
+              : 'body { color: #111827; background-color: #FFFFFF; font-family: -apple-system, Roboto, sans-serif; }',
+          }}
           placeholder={
             'Start writing your article here, or tap "Article Outline" above for a structured template...'
           }
@@ -777,7 +1115,14 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
         />
 
         {/* Character Count & Readiness Status */}
-        <View style={styles.statusFooterCard}>
+        <View
+          style={[
+            styles.statusFooterCard,
+            {
+              backgroundColor: themeColors.footerCardBg,
+              borderColor: themeColors.footerCardBorder,
+            },
+          ]}>
           <View style={styles.readinessBadge}>
             <IonIcon
               name={
@@ -798,13 +1143,20 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
                 : `${Math.max(0, 21 - writingStats.charCount)} more characters needed`}
             </Text>
           </View>
-          <Text style={styles.characterCount}>
+          <Text
+            style={[
+              styles.characterCount,
+              {color: themeColors.characterCount},
+            ]}>
             {writingStats.charCount} characters
           </Text>
         </View>
 
         <TouchableOpacity
-          style={styles.proceedButton}
+          style={[
+            styles.proceedButton,
+            {backgroundColor: themeColors.proceedButtonBg},
+          ]}
           onPress={() => navigateToDetailsScreen()}
           accessibilityRole="button"
           accessibilityLabel="Next: Article Details">
@@ -821,10 +1173,27 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
           style={[styles.container, {paddingBottom: insets.bottom}]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled">
-          <View style={styles.htmlSourceHeader}>
+          <View
+            style={[
+              styles.htmlSourceHeader,
+              {
+                backgroundColor: themeColors.htmlSourceHeaderBg,
+                borderBottomColor: themeColors.htmlSourceHeaderBorder,
+              },
+            ]}>
             <View style={{flex: 1}}>
-              <Text style={styles.htmlSourceTitle}>HTML Source Editor</Text>
-              <Text style={styles.htmlSourceSubtitle}>
+              <Text
+                style={[
+                  styles.htmlSourceTitle,
+                  {color: themeColors.htmlSourceTitle},
+                ]}>
+                HTML Source Editor
+              </Text>
+              <Text
+                style={[
+                  styles.htmlSourceSubtitle,
+                  {color: themeColors.htmlSourceSubtitle},
+                ]}>
                 Edit raw HTML tags directly. Changes sync automatically with the
                 Visual Editor.
               </Text>
@@ -853,7 +1222,10 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
           />
 
           <TouchableOpacity
-            style={styles.proceedButton}
+            style={[
+              styles.proceedButton,
+              {backgroundColor: themeColors.proceedButtonBg},
+            ]}
             onPress={() => navigateToDetailsScreen()}
             accessibilityRole="button"
             accessibilityLabel="Next: Article Details">
@@ -868,14 +1240,30 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
       {/* LIVE PREVIEW TAB */}
       {activeTab === 'preview' && (
         <ScrollView
-          style={styles.previewContainer}
+          style={[
+            styles.previewContainer,
+            {backgroundColor: themeColors.previewContainerBg},
+          ]}
           showsVerticalScrollIndicator={true}>
           <View style={styles.previewContent}>
-            <Text style={styles.previewTitle}>
+            <Text
+              style={[
+                styles.previewTitle,
+                {color: themeColors.previewTitle},
+              ]}>
               {title || 'Article Preview'}
             </Text>
             {description ? (
-              <Text style={styles.previewDescription}>{description}</Text>
+              <Text
+                style={[
+                  styles.previewDescription,
+                  {
+                    color: themeColors.previewDesc,
+                    borderBottomColor: themeColors.previewDescBorder,
+                  },
+                ]}>
+                {description}
+              </Text>
             ) : null}
 
             {article ? (
@@ -894,7 +1282,10 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
             )}
 
             <TouchableOpacity
-              style={styles.proceedButton}
+              style={[
+                styles.proceedButton,
+                {backgroundColor: themeColors.proceedButtonBg},
+              ]}
               onPress={() => navigateToDetailsScreen()}
               accessibilityRole="button"
               accessibilityLabel="Next: Article Details">
@@ -998,6 +1389,138 @@ const EditorScreen = ({navigation, route}: EditorScreenProp) => {
                 style={styles.modalConfirmBtn}
                 onPress={handleConfirmFindReplace}>
                 <Text style={styles.modalConfirmText}>Replace All</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* CITATION / REFERENCE MODAL */}
+      <Modal
+        visible={citationModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setCitationModalVisible(false)}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>Insert Citation / Reference</Text>
+            <Text style={styles.modalSubtitle}>
+              Cite clinical guidelines, peer-reviewed studies, or medical sources.
+            </Text>
+
+            <Text style={styles.modalFieldLabel}>Study or Guideline Title</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="e.g. WHO Guidelines on Physical Activity and Sedentary Behaviour"
+              placeholderTextColor="#9CA3AF"
+              value={citationTitle}
+              onChangeText={setCitationTitle}
+            />
+
+            <Text style={styles.modalFieldLabel}>Author(s) or Organization</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="e.g. Bull FC, Al-Ansari SS, Biddle S, et al."
+              placeholderTextColor="#9CA3AF"
+              value={citationAuthor}
+              onChangeText={setCitationAuthor}
+            />
+
+            <View style={{flexDirection: 'row', gap: 10}}>
+              <View style={{flex: 2}}>
+                <Text style={styles.modalFieldLabel}>Journal / Source</Text>
+                <TextInput
+                  style={styles.modalInput}
+                  placeholder="e.g. Br J Sports Med"
+                  placeholderTextColor="#9CA3AF"
+                  value={citationJournal}
+                  onChangeText={setCitationJournal}
+                />
+              </View>
+              <View style={{flex: 1}}>
+                <Text style={styles.modalFieldLabel}>Year</Text>
+                <TextInput
+                  style={styles.modalInput}
+                  placeholder="2020"
+                  placeholderTextColor="#9CA3AF"
+                  value={citationYear}
+                  onChangeText={setCitationYear}
+                  keyboardType="numeric"
+                />
+              </View>
+            </View>
+
+            <Text style={styles.modalFieldLabel}>Source URL (Optional)</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="https://doi.org/10.1136/..."
+              placeholderTextColor="#9CA3AF"
+              value={citationUrl}
+              onChangeText={setCitationUrl}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="url"
+            />
+
+            <View style={styles.modalButtonRow}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={() => setCitationModalVisible(false)}>
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalSecondaryBtn, {marginRight: 6}]}
+                onPress={() => handleConfirmInsertCitation(true)}>
+                <Text style={styles.modalSecondaryBtnText}>Use Template</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalConfirmBtn}
+                onPress={() => handleConfirmInsertCitation(false)}>
+                <Text style={styles.modalConfirmText}>Insert Citation</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* KEY TAKEAWAY MODAL */}
+      <Modal
+        visible={takeawayModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setTakeawayModalVisible(false)}>
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Text style={styles.modalTitle}>💡 Insert Key Takeaway</Text>
+            <Text style={styles.modalSubtitle}>
+              Summarize the most important clinical or actionable insight for your readers.
+            </Text>
+
+            <Text style={styles.modalFieldLabel}>Key Takeaway Message</Text>
+            <TextInput
+              style={[styles.modalInput, {minHeight: 80, textAlignVertical: 'top'}]}
+              placeholder="e.g. Prioritize 150 minutes of moderate aerobic exercise weekly to reduce cardiovascular risk."
+              placeholderTextColor="#9CA3AF"
+              value={takeawayText}
+              onChangeText={setTakeawayText}
+              multiline
+            />
+
+            <View style={styles.modalButtonRow}>
+              <TouchableOpacity
+                style={styles.modalCancelBtn}
+                onPress={() => setTakeawayModalVisible(false)}>
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalSecondaryBtn, {marginRight: 6}]}
+                onPress={() => handleConfirmInsertTakeaway(true)}>
+                <Text style={styles.modalSecondaryBtnText}>Use Template</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalConfirmBtn}
+                onPress={() => handleConfirmInsertTakeaway(false)}>
+                <Text style={styles.modalConfirmText}>Insert Box</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -1151,10 +1674,39 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 999,
   },
+  snippetChipTakeaway: {
+    backgroundColor: '#FEF3C7',
+    borderColor: '#FCD34D',
+  },
+  snippetChipCitation: {
+    backgroundColor: '#EEF2FF',
+    borderColor: '#C7D2FE',
+  },
+  snippetChipClinical: {
+    backgroundColor: '#ECFDF5',
+    borderColor: '#A7F3D0',
+  },
   snippetChipText: {
     fontSize: EDITOR_TYPOGRAPHY.caption.fontSize, // 13px
     fontWeight: '600',
     color: '#000A60',
+  },
+  snippetChipTextTakeaway: {
+    color: '#92400E',
+    fontWeight: '700',
+  },
+  snippetChipTextCitation: {
+    color: '#4338CA',
+    fontWeight: '700',
+  },
+  snippetChipTextClinical: {
+    color: '#065F46',
+    fontWeight: '700',
+  },
+  toolbarCustomBadge: {
+    padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   editor: {
     backgroundColor: '#FFFFFF',
@@ -1427,6 +1979,19 @@ const styles = StyleSheet.create({
     fontSize: EDITOR_TYPOGRAPHY.input.fontSize, // 15px
     fontWeight: '600',
     color: '#4B5563',
+  },
+  modalSecondaryBtn: {
+    paddingHorizontal: 14,
+    paddingVertical: 11,
+    borderRadius: 8,
+    backgroundColor: '#EEF2FF',
+    borderWidth: 1,
+    borderColor: '#C7D2FE',
+  },
+  modalSecondaryBtnText: {
+    fontSize: EDITOR_TYPOGRAPHY.input.fontSize, // 15px
+    fontWeight: '600',
+    color: '#4338CA',
   },
   modalConfirmBtn: {
     paddingHorizontal: 18,

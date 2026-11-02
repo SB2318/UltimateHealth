@@ -73,7 +73,7 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
       </View>
       <Text style={styles.comingSoonTitle}>Real Doctors, Real Care</Text>
       <Text style={styles.comingSoonText}>
-        Soon you will be able to consult with certified medical experts directly from here. We are onboarding top specialists to provide you with the best care.
+        Soon you will be able to connect with verified doctors directly from here. We are onboarding dedicated professionals to support your care.
       </Text>
       <View style={styles.comingSoonBadge}>
         <Text style={styles.comingSoonBadgeText}>Coming Soon</Text>
@@ -92,7 +92,7 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
           <Text style={styles.headerTitle}>Your Care Team</Text>
         </View>
         <Text style={styles.headerSubtitle}>
-          Expert advice and personalized health insights, whenever you need them.
+          Helpful guidance and personalized wellness insights, whenever you need them.
         </Text>
         
         <View style={styles.tabContainer}>

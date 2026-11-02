@@ -127,7 +127,7 @@ const ArticleShareCard: React.FC<ArticleShareCardProps> = ({
         <View style={styles.brandFooter}>
           <View style={styles.brandDot} />
           <Text style={styles.brandText}>UltimateHealth</Text>
-          <Text style={styles.brandTagline}> · Trusted Wellness Content</Text>
+          <Text style={styles.brandTagline}> · Health Made Simple</Text>
         </View>
       </View>
     </View>

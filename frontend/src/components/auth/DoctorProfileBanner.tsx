@@ -45,7 +45,7 @@ export default function DoctorProfileBanner({ onCompletePress }: DoctorProfileBa
             Complete your doctor profile
           </Text>
           <Text color="rgba(255,255,255,0.8)" fontSize={12} marginTop={2}>
-            Unlock all features by finishing setup
+            Finish setup to start publishing articles
           </Text>
         </YStack>
 

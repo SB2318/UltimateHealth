@@ -33,6 +33,8 @@ import {PROD_URL, SEARCH_ARTICLES} from '../../lib/api/APIUtils';
 import AddIcon from '../../components/common/AddIcon';
 import ArticleCard from '../../components/article/ArticleCard';
 import ArticleSkeletonCard from '../../components/article/ArticleSkeletonCard';
+import {HomeWellnessHub, HomeWellnessHubRef} from '../../components/home/HomeWellnessHub';
+import {HomeDrawerModal} from '../../components/home/HomeDrawerModal';
 
 import HomeScreenHeader from '../../components/home/HomeScreenHeader';
 import {ArticleData, Category, HomeScreenProps} from '../../schemas/type';
@@ -151,13 +153,13 @@ export const WebDemoHome = ({navigation}: {navigation: any}) => {
         }}
         accessibilityRole="button"
         accessibilityLabel="Open your wellness plan">
-        <Text style={styles.webDemoPlanEyebrow}>NEW · OFFLINE-FIRST FEATURE</Text>
+        <Text style={styles.webDemoPlanEyebrow}>NEW Â· OFFLINE-FIRST FEATURE</Text>
         <Text style={styles.webDemoPlanTitle}>Track your 7-day wellness plan</Text>
         <Text style={styles.webDemoPlanBody}>
           Log sleep, hydration, movement, and breathing. Your demo progress is
           saved in this browser and works without an account.
         </Text>
-        <Text style={styles.webDemoPlanAction}>Open wellness dashboard →</Text>
+        <Text style={styles.webDemoPlanAction}>Open wellness dashboard â†’</Text>
       </Pressable>
       <Text style={styles.webDemoSection}>Find an article</Text>
       <View style={styles.webDemoSearch}>
@@ -172,7 +174,7 @@ export const WebDemoHome = ({navigation}: {navigation: any}) => {
         />
         {articleQuery ? (
           <Pressable onPress={() => setArticleQuery('')} accessibilityLabel="Clear article search">
-            <Text style={styles.webDemoSearchClear}>×</Text>
+            <Text style={styles.webDemoSearchClear}>Ã—</Text>
           </Pressable>
         ) : null}
       </View>
@@ -201,7 +203,7 @@ export const WebDemoHome = ({navigation}: {navigation: any}) => {
         <Text style={styles.webDemoTag}>PODCAST</Text>
         <Text style={styles.webDemoCardTitle}>{demoPodcasts[0].title}</Text>
         <Text style={styles.webDemoCardBody}>{demoPodcasts[0].description}</Text>
-        <Text style={styles.webDemoMeta}>5 min episode · Demo audio available</Text>
+        <Text style={styles.webDemoMeta}>5 min episode Â· Demo audio available</Text>
       </View>
     </ScrollView>
   </SafeAreaView>
@@ -241,6 +243,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   const [articleDisplayMode, setArticleDisplayMode] = useState<ArticleDisplayMode>('category');
   const [showCategoryFilters, setShowCategoryFilters] = useState(true);
   const [showSavedFilter, setShowSavedFilter] = useState(true);
+  const [showDailyThought, setShowDailyThought] = useState(true);
+  const [showBreathingTool, setShowBreathingTool] = useState(true);
+  const [showQuickCareGuide, setShowQuickCareGuide] = useState(true);
   useEffect(() => {
     const loadSettings = async () => {
       try {
@@ -253,6 +258,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           setArticleDisplayMode(settings.articleDisplayMode ?? 'category');
           setShowCategoryFilters(settings.showCategoryFilters ?? true);
           setShowSavedFilter(settings.showSavedFilter ?? true);
+          setShowDailyThought(settings.showDailyThought ?? true);
+          setShowBreathingTool(settings.showBreathingTool ?? true);
+          setShowQuickCareGuide(settings.showQuickCareGuide ?? true);
         }
       } catch (error) {
         console.log('Failed to load homepage settings', error);
@@ -342,9 +350,74 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
   };
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const wellnessHubRef = useRef<HomeWellnessHubRef>(null);
+
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+    setDrawerVisible(true);
   }, []);
+
+  const handleOpenThoughtFromDrawer = useCallback(async () => {
+    if (!showDailyThought) {
+      setShowDailyThought(true);
+      try {
+        const saved = await AsyncStorage.getItem(HOMEPAGE_SETTINGS_KEY);
+        const parsed = saved ? JSON.parse(saved) : {};
+        await AsyncStorage.setItem(
+          HOMEPAGE_SETTINGS_KEY,
+          JSON.stringify({
+            ...parsed,
+            showDailyThought: true,
+          }),
+        );
+      } catch (e) {
+        console.log('Failed to persist thought setting', e);
+      }
+    }
+    setTimeout(() => {
+      wellnessHubRef.current?.shuffleThought();
+    }, 100);
+  }, [showDailyThought]);
+
+  const handleOpenBreathingFromDrawer = useCallback(async () => {
+    if (!showBreathingTool) {
+      setShowBreathingTool(true);
+      try {
+        const saved = await AsyncStorage.getItem(HOMEPAGE_SETTINGS_KEY);
+        const parsed = saved ? JSON.parse(saved) : {};
+        await AsyncStorage.setItem(
+          HOMEPAGE_SETTINGS_KEY,
+          JSON.stringify({
+            ...parsed,
+            showBreathingTool: true,
+          }),
+        );
+      } catch (e) {
+        console.log('Failed to persist breathing setting', e);
+      }
+    }
+    wellnessHubRef.current?.openBreathing();
+  }, [showBreathingTool]);
+
+  const handleOpenQuickCareFromDrawer = useCallback(async () => {
+    if (!showQuickCareGuide) {
+      setShowQuickCareGuide(true);
+      try {
+        const saved = await AsyncStorage.getItem(HOMEPAGE_SETTINGS_KEY);
+        const parsed = saved ? JSON.parse(saved) : {};
+        await AsyncStorage.setItem(
+          HOMEPAGE_SETTINGS_KEY,
+          JSON.stringify({
+            ...parsed,
+            showQuickCareGuide: true,
+          }),
+        );
+      } catch (e) {
+        console.log('Failed to persist quick care setting', e);
+      }
+    }
+    wellnessHubRef.current?.openQuickCare();
+  }, [showQuickCareGuide]);
 
   const {data: unreadCount, refetch: refetchUnreadCount} =
     useGetUnreadNotificationCount(isConnected);
@@ -358,7 +431,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         }
       } else {
         Alert.alert(
-          'No Internet 😶‍🌫️',
+          'No Internet ðŸ˜¶â€ðŸŒ«ï¸',
           'Offline mode will be available in the next update.',
         );
       }
@@ -639,7 +712,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
     );
 
     // If we have fewer than 5 articles for the active category,
-    // fetch the next page in the background to try and find more matches —
+    // fetch the next page in the background to try and find more matches â€”
     // but only if the last fetch actually added new articles for this category.
     // This prevents infinite fetching when a category is genuinely sparse.
     if (
@@ -1076,16 +1149,16 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         onFilterReset={handleClearAllFilters}
         searchText={searchText}
       />
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: isGuest ? 'space-between' : 'flex-end',
-          alignItems: 'center',
-          paddingHorizontal: 16,
-          marginTop: 10,
-          marginBottom: 10,
-        }}>
-        {isGuest && (
+      {isGuest && (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+            marginTop: 8,
+            marginBottom: 6,
+          }}>
           <TouchableOpacity
             onPress={handleExitGuest}
             style={{
@@ -1107,27 +1180,23 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
               style={{
                 color: isDarkMode ? '#F87171' : '#DC2626',
                 fontWeight: '700',
-                fontSize: 13,
+                fontSize: 12.5,
               }}>
               {t('common.exitGuest')}
             </Text>
           </TouchableOpacity>
-        )}
-        <TouchableOpacity
-          onPress={() => setCustomizeVisible(true)}
-          accessibilityRole="button"
-          accessibilityLabel="Customize Homepage"
-          accessibilityHint="Opens homepage customization settings">
-          <Text
-            style={{
-              color: isDarkMode ? '#60A5FA' : '#000A60',
-              fontWeight: 'bold',
-              fontSize: 15,
-            }}>
-            {t('home.customizeHomepage')}
-          </Text>
-        </TouchableOpacity>
-      </View>
+        </View>
+      )}
+
+      {!searchMode && !showSavedOnly && (
+        <HomeWellnessHub
+          ref={wellnessHubRef}
+          showDailyThought={showDailyThought}
+          showBreathingTool={showBreathingTool}
+          showQuickCareGuide={showQuickCareGuide}
+          onOpenCustomize={() => setCustomizeVisible(true)}
+        />
+      )}
       <FilterModal
         bottomSheetModalRef={bottomSheetModalRef}
         categories={articleCategories}
@@ -1182,7 +1251,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
               selectedTags.length > 0 &&
               !searchMode &&
               selectedTags.map((item: Category) => {
-                // Category chips visually appear inactive when Saved filter is on —
+                // Category chips visually appear inactive when Saved filter is on â€”
                 // they are still clickable to switch away from Saved mode.
                 const isActive =
                   !showSavedOnly &&
@@ -1231,7 +1300,7 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
             showSavedOnly ? <SavedArticleEmptyState /> : <EmptyArticleState />
           }
           onEndReached={() => {
-            // Only paginate the main feed — saved articles are a
+            // Only paginate the main feed â€” saved articles are a
             // finite local list and do not use server-side pagination.
             if (
               !showSavedOnly &&
@@ -1262,6 +1331,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
               articleDisplayMode,
               showCategoryFilters,
               showSavedFilter,
+              showDailyThought,
+              showBreathingTool,
+              showQuickCareGuide,
             }),
           );
           setCustomizeVisible(false);
@@ -1271,6 +1343,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
           setArticleDisplayMode('category');
           setShowCategoryFilters(true);
           setShowSavedFilter(true);
+          setShowDailyThought(true);
+          setShowBreathingTool(true);
+          setShowQuickCareGuide(true);
 
           await AsyncStorage.setItem(
             HOMEPAGE_SETTINGS_KEY,
@@ -1279,6 +1354,9 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
               articleDisplayMode: 'category',
               showCategoryFilters: true,
               showSavedFilter: true,
+              showDailyThought: true,
+              showBreathingTool: true,
+              showQuickCareGuide: true,
             }),
           );
         }}
@@ -1290,6 +1368,22 @@ const HomeScreen = ({navigation}: HomeScreenProps) => {
         setShowCategoryFilters={setShowCategoryFilters}
         showSavedFilter={showSavedFilter}
         setShowSavedFilter={setShowSavedFilter}
+        showDailyThought={showDailyThought}
+        setShowDailyThought={setShowDailyThought}
+        showBreathingTool={showBreathingTool}
+        setShowBreathingTool={setShowBreathingTool}
+        showQuickCareGuide={showQuickCareGuide}
+        setShowQuickCareGuide={setShowQuickCareGuide}
+      />
+
+      <HomeDrawerModal
+        visible={drawerVisible}
+        onClose={() => setDrawerVisible(false)}
+        onOpenThought={handleOpenThoughtFromDrawer}
+        onOpenBreathing={handleOpenBreathingFromDrawer}
+        onOpenQuickCare={handleOpenQuickCareFromDrawer}
+        onOpenCustomize={() => setCustomizeVisible(true)}
+        navigation={navigation}
       />
     </SafeAreaView>
   );

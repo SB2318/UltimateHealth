@@ -46,6 +46,10 @@
       </intent-filter>
       <intent-filter android:autoVerify="true" data-generated="true">
         <action android:name="android.intent.action.VIEW"/>
+        <data android:scheme="https" android:host="ultimatehealth.blog" android:pathPrefix="/web/en/articles"/>
+        <data android:scheme="https" android:host="ultimatehealth.blog" android:pathPrefix="/web"/>
+        <data android:scheme="https" android:host="ultimatehealth.blog" android:pathPrefix="/articles"/>
+        <data android:scheme="https" android:host="ultimatehealth.blog" android:pathPrefix="/article"/>
         <data android:scheme="https" android:host="ultimatehealth.blog" android:pathPrefix="/api/share/article"/>
         <data android:scheme="https" android:host="ultimatehealth.blog" android:pathPrefix="/api/share/podcast"/>
         <category android:name="android.intent.category.BROWSABLE"/>

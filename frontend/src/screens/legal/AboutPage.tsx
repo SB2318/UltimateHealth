@@ -134,10 +134,75 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
                     lineHeight: 24,
                   },
                 ]}>
-                UltimateHealth is an innovative open-source platform that brings
-                trusted health resources and reliable articles together in one
-                place. It serves as a single repository for verified health
-                insights and dependable information.
+                UltimateHealth is a welcoming wellness space that brings clear health articles, podcasts, and daily well-being tips together in one simple place. We believe good health should be approachable, helpful, and positive for everyone.
+              </Text>
+            </GlassContainer>
+
+            <XStack
+              marginTop="$2"
+              justifyContent="center"
+              alignItems="center"
+              gap="$2"
+              flexWrap="wrap">
+              <View
+                backgroundColor={ProfessionalColors.primaryGlass}
+                paddingHorizontal="$3"
+                paddingVertical="$1"
+                borderRadius={12}
+                borderWidth={1}
+                borderColor={ProfessionalColors.primary}>
+                <Text
+                  style={{
+                    color: isDarkMode ? '#93C5FD' : ProfessionalColors.primary,
+                    fontSize: 11,
+                    fontWeight: '700',
+                  }}>
+                  NON-PROFIT INITIATIVE
+                </Text>
+              </View>
+              <View
+                backgroundColor={ProfessionalColors.successGlass}
+                paddingHorizontal="$3"
+                paddingVertical="$1"
+                borderRadius={12}
+                borderWidth={1}
+                borderColor={ProfessionalColors.success}>
+                <Text
+                  style={{
+                    color: ProfessionalColors.success,
+                    fontSize: 11,
+                    fontWeight: '700',
+                  }}>
+                  100% FREE & OPEN SOURCE
+                </Text>
+              </View>
+            </XStack>
+
+            <GlassContainer variant="card" style={{ marginTop: Spacing.sm }}>
+              <XStack alignItems="center" justifyContent="center" gap="$2" marginBottom="$1">
+                <Ionicons name="shield-checkmark" size={16} color={ProfessionalColors.success} />
+                <Text
+                  style={{
+                    color: isDarkMode ? '#A7F3D0' : '#065F46',
+                    fontSize: 11,
+                    fontWeight: '700',
+                    letterSpacing: 0.5,
+                  }}>
+                  OUR PRIVACY PLEDGE
+                </Text>
+              </XStack>
+              <Text
+                style={[
+                  Typography.bodySmall,
+                  {
+                    color: isDarkMode
+                      ? ProfessionalColors.gray300
+                      : ProfessionalColors.gray700,
+                    textAlign: 'center',
+                    lineHeight: 18,
+                  },
+                ]}>
+                Privacy First: Zero Trackers · No Ads · 100% Offline-Ready · We never profile or sell your health data.
               </Text>
             </GlassContainer>
           </YStack>
@@ -232,6 +297,34 @@ const AboutScreen = ({ navigation }: AboutScreenProps) => {
                       'https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth',
                     )
                   }
+                  isDarkMode={isDarkMode}
+                />
+              </YStack>
+            </GlassContainer>
+          </YStack>
+
+          {/* Dedication Section */}
+          <YStack marginTop="$4" gap="$3">
+            <Text
+              style={[
+                Typography.h6,
+                {
+                  color: isDarkMode
+                    ? ProfessionalColors.gray400
+                    : ProfessionalColors.gray600,
+                  marginLeft: Spacing.xs,
+                },
+              ]}>
+              DEDICATION
+            </Text>
+
+            <GlassContainer variant="card">
+              <YStack gap="$2">
+                <MenuButton
+                  icon="heart"
+                  title="Honoring Healers (Dr. Moumita Debnath Tribute)"
+                  iconColor="#EC4899"
+                  onPress={() => navigation.navigate('RespectGiverScreen')}
                   isDarkMode={isDarkMode}
                 />
               </YStack>

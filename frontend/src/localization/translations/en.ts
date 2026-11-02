@@ -100,18 +100,18 @@ export const en = {
   guest: {
     accessTitle: 'Guest Access',
     signInRequired: 'Sign In Required',
-    signInPrompt: 'Sign in or create an account to unlock all features, save your progress, and interact with the medical community.',
-    whatYouUnlock: 'WHAT YOU UNLOCK AS A MEMBER',
+    signInPrompt: 'Sign in to save your bookmarks, follow wellness discussions, and participate in the community.',
+    whatYouUnlock: 'COMMUNITY FEATURES YOU CAN ENJOY',
     continueWithGoogle: 'Continue with Google',
-    learnMore: 'Learn more about membership benefits',
+    learnMore: 'Learn more about community features',
     engageDiscuss: 'Engage & Discuss',
     engageDiscussSub: 'Comment, like & review health articles',
     personalizedLibrary: 'Personalized Library',
     personalizedLibrarySub: 'Save bookmarks & track your reading history',
     aiAssistant: 'AI Health Assistant',
-    aiAssistantSub: '24/7 instant medical answers & summaries',
+    aiAssistantSub: '24/7 wellness insights & article summaries',
     doctorNetwork: 'Doctor Network',
-    doctorNetworkSub: 'Follow verified physicians & health specialists',
+    doctorNetworkSub: 'Follow verified doctors & health creators',
   },
 };
 

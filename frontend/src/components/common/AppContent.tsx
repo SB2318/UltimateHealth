@@ -149,11 +149,20 @@ export default function AppContent() {
     if (Platform.OS === 'web') {
       return;
     }
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      if (__DEV__) {
-        console.log('Foreground notification received:', remoteMessage);
-      }
-    });
+    let unsubscribe = () => {};
+    let onOpenApp = () => {};
+    try {
+      unsubscribe = messaging().onMessage(async remoteMessage => {
+        if (__DEV__) {
+          console.log('Foreground notification received:', remoteMessage);
+        }
+      });
+      onOpenApp = messaging().onNotificationOpenedApp(remoteMessage => {
+        if (__DEV__) {
+          console.log('Notification caused app to open:', remoteMessage);
+        }
+      });
+    } catch (_) {}
 
     const unsubscribe1 = addEventListener(state => {
       if (__DEV__) {
@@ -161,12 +170,6 @@ export default function AppContent() {
         console.log('Is connected?', state.isConnected);
       }
       dispatch(setConnected(state.isConnected));
-    });
-
-    const onOpenApp = messaging().onNotificationOpenedApp(remoteMessage => {
-      if (__DEV__) {
-        console.log('Notification caused app to open:', remoteMessage);
-      }
     });
 
     return () => {

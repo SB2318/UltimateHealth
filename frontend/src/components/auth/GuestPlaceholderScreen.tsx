@@ -43,12 +43,12 @@ const BENEFIT_ITEMS = [
   {
     icon: 'sparkles-outline' as const,
     title: 'AI Health Assistant',
-    subtitle: '24/7 instant medical answers & summaries',
+    subtitle: '24/7 wellness insights & article summaries',
   },
   {
     icon: 'medkit-outline' as const,
     title: 'Doctor Network',
-    subtitle: 'Follow verified physicians & health specialists',
+    subtitle: 'Follow verified doctors & healthcare creators',
   },
 ];
 
@@ -105,7 +105,7 @@ const GuestPlaceholderScreen: React.FC<GuestPlaceholderScreenProps> = ({
   const displayDescription =
     route?.params?.description ||
     propDescription ||
-    'Join our verified healthcare community to unlock personalized health tracking, AI answers, and discussions.';
+    'Join our community to save your favorite reads, keep track of daily habits, and participate in discussions.';
 
   const colors = {
     bg: isDark ? '#0B0F19' : '#F8FAFC',

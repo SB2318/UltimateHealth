@@ -63,6 +63,16 @@ const defaultStaticConfig = {
           {
             scheme: "https",
             host: "ultimatehealth.blog",
+            pathPrefix: "/articles"
+          },
+          {
+            scheme: "https",
+            host: "ultimatehealth.blog",
+            pathPrefix: "/article"
+          },
+          {
+            scheme: "https",
+            host: "ultimatehealth.blog",
             pathPrefix: "/api/share/article"
           },
           {
@@ -173,6 +183,7 @@ module.exports = ({ config }) => {
       FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
       FIREBASE_DATABASE_URL: process.env.FIREBASE_DATABASE_URL,
       WEB_CLIENT_ID: process.env.WEB_CLIENT_ID,
+      EXPO_PUBLIC_USE_RN_FETCH: "true",
     }
   };
 };

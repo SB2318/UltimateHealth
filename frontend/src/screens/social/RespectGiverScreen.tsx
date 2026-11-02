@@ -10,6 +10,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Easing,
+  useColorScheme,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
@@ -82,7 +83,15 @@ const FloatingDot = ({
 };
 
 // ─── Quote card ───────────────────────────────────────────────────────────────
-const QuoteCard = ({ text, delay }: { text: string; delay: number }) => {
+const QuoteCard = ({
+  text,
+  delay,
+  isDark,
+}: {
+  text: string;
+  delay: number;
+  isDark: boolean;
+}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
 
@@ -109,15 +118,22 @@ const QuoteCard = ({ text, delay }: { text: string; delay: number }) => {
     <Animated.View
       style={[
         styles.quoteCard,
-        { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
+        {
+          backgroundColor: isDark ? '#1E293B' : '#FFFFFF',
+          borderColor: isDark ? 'rgba(192, 132, 252, 0.25)' : 'rgba(139, 92, 246, 0.15)',
+          opacity: fadeAnim,
+          transform: [{ translateY: slideAnim }],
+        },
       ]}>
       <MaterialCommunityIcon
         name="format-quote-open"
         size={22}
-        color="#7C3AED"
+        color={isDark ? '#C084FC' : '#7C3AED'}
         style={{ marginBottom: 4 }}
       />
-      <Text style={styles.quoteText}>{text}</Text>
+      <Text style={[styles.quoteText, { color: isDark ? '#E2E8F0' : '#1E293B' }]}>
+        {text}
+      </Text>
     </Animated.View>
   );
 };
@@ -127,10 +143,12 @@ const InsightPill = ({
   icon,
   label,
   delay,
+  isDark,
 }: {
   icon: keyof typeof MaterialCommunityIcon.glyphMap;
   label: string;
   delay: number;
+  isDark: boolean;
 }) => {
   const scale = useRef(new Animated.Value(0.6)).current;
   const fade = useRef(new Animated.Value(0)).current;
@@ -155,15 +173,28 @@ const InsightPill = ({
 
   return (
     <Animated.View
-      style={[styles.pill, { opacity: fade, transform: [{ scale }] }]}>
-      <MaterialCommunityIcon name={icon} size={16} color="#7C3AED" />
-      <Text style={styles.pillLabel}>{label}</Text>
+      style={[
+        styles.pill,
+        {
+          backgroundColor: isDark ? 'rgba(124, 58, 237, 0.22)' : 'rgba(124, 58, 237, 0.08)',
+          borderColor: isDark ? 'rgba(192, 132, 252, 0.35)' : 'rgba(124, 58, 237, 0.2)',
+          opacity: fade,
+          transform: [{ scale }],
+        },
+      ]}>
+      <MaterialCommunityIcon name={icon} size={16} color={isDark ? '#C084FC' : '#7C3AED'} />
+      <Text style={[styles.pillLabel, { color: isDark ? '#E9D5FF' : '#6B21A8' }]}>
+        {label}
+      </Text>
     </Animated.View>
   );
 };
 
 // ─── Main Screen ──────────────────────────────────────────────────────────────
 const RespectGiverScreen = ({ navigation }: { navigation: any }) => {
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   const heroFade = useRef(new Animated.Value(0)).current;
   const heroScale = useRef(new Animated.Value(0.85)).current;
   const ringAnim = useRef(new Animated.Value(0)).current;
@@ -235,20 +266,34 @@ const RespectGiverScreen = ({ navigation }: { navigation: any }) => {
   ];
 
   return (
-    <SafeAreaView style={styles.root}>
-      <StatusBar style="dark" />
+    <SafeAreaView style={[styles.root, { backgroundColor: isDark ? '#0B0F19' : '#FAFAFE' }]}>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
 
       {/* Navigation header */}
-      <View style={styles.navHeader}>
+      <View
+        style={[
+          styles.navHeader,
+          {
+            backgroundColor: isDark ? '#0F172A' : '#FFFFFF',
+            borderBottomColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(139, 92, 246, 0.12)',
+          },
+        ]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={styles.backBtn}
+          style={[
+            styles.backBtn,
+            {
+              backgroundColor: isDark ? 'rgba(192, 132, 252, 0.15)' : 'rgba(139, 92, 246, 0.1)',
+            },
+          ]}
           accessibilityRole="button"
           accessibilityLabel="Go back"
           accessibilityHint="Returns to the previous screen">
-          <MaterialIcons name="arrow-back-ios" size={18} color="#4C1D95" />
+          <MaterialIcons name="arrow-back-ios" size={18} color={isDark ? '#C084FC' : '#4C1D95'} />
         </TouchableOpacity>
-        <Text style={styles.navTitle}>Respect Giver</Text>
+        <Text style={[styles.navTitle, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
+          Respect Giver
+        </Text>
         <View style={{ width: 36 }} />
       </View>
 
@@ -256,7 +301,13 @@ const RespectGiverScreen = ({ navigation }: { navigation: any }) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}>
         {/* ── HERO SECTION ──────────────────────────────────────────────── */}
-        <View style={styles.heroSection}>
+        <View
+          style={[
+            styles.heroSection,
+            {
+              backgroundColor: isDark ? '#1E1235' : '#F3E8FF',
+            },
+          ]}>
           {dots.map((d, i) => (
             <FloatingDot key={i} {...d} />
           ))}
@@ -280,7 +331,7 @@ const RespectGiverScreen = ({ navigation }: { navigation: any }) => {
             ]}>
             <Image source={pdmImage} style={styles.heroImage} />
             <LinearGradient
-              colors={['transparent', 'rgba(124, 58, 237, 0.2)']}
+              colors={['transparent', isDark ? 'rgba(15, 23, 42, 0.4)' : 'rgba(124, 58, 237, 0.2)']}
               style={styles.imageOverlay}
             />
           </Animated.View>
@@ -295,105 +346,126 @@ const RespectGiverScreen = ({ navigation }: { navigation: any }) => {
           </Animated.View>
 
           <Animated.View style={[styles.heroMeta, { opacity: heroFade }]}>
-            <Text style={styles.heroName}>Moumita Debnath</Text>
-            <Text style={styles.heroTagline}>
-              Justice is not a destination — it is a direction.
+            <Text style={[styles.heroName, { color: isDark ? '#F8FAFC' : '#1E1B4B' }]}>
+              Dr. Moumita Debnath
+            </Text>
+            <Text style={[styles.heroTagline, { color: isDark ? '#C084FC' : '#6B21A8' }]}>
+              Honoring dedication, compassion, and the healers who care for us all.
             </Text>
           </Animated.View>
         </View>
 
         {/* ── PILLS ─────────────────────────────────────────────────────── */}
         <View style={styles.pillRow}>
-          <InsightPill icon="hand-heart" label="Empathy" delay={200} />
-          <InsightPill icon="scale-balance" label="Justice" delay={400} />
-          <InsightPill icon="lightbulb-on" label="Hope" delay={600} />
-          <InsightPill icon="account-heart" label="Dignity" delay={800} />
+          <InsightPill icon="hand-heart" label="Empathy" delay={200} isDark={isDark} />
+          <InsightPill icon="heart-pulse" label="Healing" delay={400} isDark={isDark} />
+          <InsightPill icon="lightbulb-on" label="Hope" delay={600} isDark={isDark} />
+          <InsightPill icon="account-heart" label="Care" delay={800} isDark={isDark} />
         </View>
 
-        {/* ── CHAIN REACTION ────────────────────────────────────────────── */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>The Chain Reaction</Text>
-          <Text style={styles.sectionBody}>
-            Justice and injustice are not isolated events.{'\n\n'}
-            They move through people like water through earth — quietly,
-            invisibly, unstoppably.{'\n\n'}
-            When one person is treated with dignity, they carry it forward. They
-            raise their children with it. They protect strangers with it. They
-            build communities shaped by it.{'\n\n'}
-            The same is true of its opposite.{'\n\n'}
-            Which chain are we choosing to continue?
+        {/* ── CIRCLE OF CARE ────────────────────────────────────────────── */}
+        <View
+          style={[
+            styles.section,
+            { borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(139, 92, 246, 0.1)' },
+          ]}>
+          <Text style={[styles.sectionTitle, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
+            A Circle of Care
+          </Text>
+          <Text style={[styles.sectionBody, { color: isDark ? '#CBD5E1' : '#334155' }]}>
+            Compassion and care move quietly through our daily lives.{'\n\n'}
+            Healthcare workers dedicate their days and nights to easing the pain
+            of others. When caregivers are supported, respected, and kept safe,
+            they bring that same warmth and healing to every patient they touch.
+            {'\n\n'}
+            Every thoughtful gesture creates a gentle ripple of reassurance across
+            our communities.{'\n\n'}
+            Let us build a culture where those who heal are always treated with
+            gratitude and care.
           </Text>
         </View>
 
         {/* ── QUOTES ────────────────────────────────────────────────────── */}
         <View style={styles.quotesSection}>
           <QuoteCard
-            text="If we can restore dignity to even one soul, we plant a seed that outlives us all."
+            text="When we care for each other with genuine kindness, we bring comfort and hope to everyday lives."
             delay={100}
+            isDark={isDark}
           />
           <QuoteCard
-            text="No one is truly selfish at their core. People who have been seen — truly seen — know how to see others."
+            text="Every healthcare giver deserves to feel safe, valued, and deeply appreciated."
             delay={250}
+            isDark={isDark}
           />
           <QuoteCard
-            text="Hope is not naïve. Hope is what happens when someone refuses to let the chain of injustice end with them."
+            text="Gentle care and mutual understanding have the quiet power to bring healing to everyone."
             delay={400}
+            isDark={isDark}
           />
         </View>
 
         {/* ── RESPECT POINT OF VIEW ─────────────────────────────────────── */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>On Respect & Why It Matters</Text>
+        <View
+          style={[
+            styles.section,
+            { borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(139, 92, 246, 0.1)' },
+          ]}>
+          <Text style={[styles.sectionTitle, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
+            Honoring Those Who Care
+          </Text>
 
           <LinearGradient
-            colors={['rgba(139, 92, 246, 0.08)', 'rgba(236, 72, 153, 0.04)']}
-            style={styles.highlightBox}>
+            colors={
+              isDark
+                ? ['rgba(139, 92, 246, 0.18)', 'rgba(236, 72, 153, 0.08)']
+                : ['rgba(139, 92, 246, 0.08)', 'rgba(236, 72, 153, 0.04)']
+            }
+            style={[
+              styles.highlightBox,
+              {
+                borderColor: isDark ? 'rgba(192, 132, 252, 0.3)' : 'rgba(124, 58, 237, 0.2)',
+              },
+            ]}>
             <MaterialCommunityIcon
-              name="alert-circle-outline"
+              name="heart-outline"
               size={20}
-              color="#7C3AED"
+              color={isDark ? '#C084FC' : '#7C3AED'}
               style={{ marginBottom: 8 }}
             />
-            <Text style={styles.highlightText}>
-              Every act of violation — every attempt to destroy someone's
-              dignity — begins with a single belief:{' '}
+            <Text style={[styles.highlightText, { color: isDark ? '#F1F5F9' : '#1E1B4B' }]}>
+              Healthcare is built on empathy, dedication, and service to others:{' '}
               <Text style={styles.highlightEmphasis}>
-                that this person does not deserve respect.
+                every caregiver deserves our respect and safe keeping.
               </Text>
             </Text>
           </LinearGradient>
 
-          <Text style={styles.sectionBody}>
-            When we glorify power over people, when we celebrate silence over
-            truth, when we let cruelty pass quietly — we feed that belief.
-            {'\n\n'}
-            But here's what we know:{' '}
-            <Text style={styles.bodyEmphasis}>
-              a person who is truly respected rarely needs to take it from
-              another.
-            </Text>
-            {'\n\n'}
-            The antidote is not anger. It is not shame. It is something far more
-            powerful — it is the act of seeing someone as fully human, fully
-            worthy, before they have to earn it.{'\n\n'}
-            That is what Respect Givers do.{'\n\n'}
-            They break the chain — not with force, but with recognition.
+          <Text style={[styles.sectionBody, { color: isDark ? '#CBD5E1' : '#334155' }]}>
+            Doctors, nurses, and medical staff work selflessly so that others can
+            recover and thrive.{'\n\n'}
+            Honoring their dedication means creating safe environments, listening
+            with open hearts, and valuing their commitment to healing.{'\n\n'}
+            When we uplift the people who care for our health, we build a
+            healthier and more supportive world for all of us.
           </Text>
         </View>
 
         {/* ── CLOSING ───────────────────────────────────────────────────── */}
-        <View style={styles.closingSection}>
+        <View
+          style={[
+            styles.closingSection,
+            { borderTopColor: isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(139, 92, 246, 0.1)' },
+          ]}>
           <MaterialCommunityIcon
             name="hand-heart-outline"
             size={32}
-            color="#7C3AED"
+            color={isDark ? '#C084FC' : '#7C3AED'}
           />
-          <Text style={styles.closingText}>
-            UltimateHealth stands for health in its fullest sense — body, mind,
-            and dignity.
+          <Text style={[styles.closingText, { color: isDark ? '#D8B4FE' : '#581C87' }]}>
+            UltimateHealth is dedicated to healthy bodies, calm minds, and mutual care.
           </Text>
-          <Text style={styles.closingSubText}>
-            Because you cannot heal a person you do not respect.
+          <Text style={[styles.closingSubText, { color: isDark ? '#94A3B8' : '#64748B' }]}>
+            Because true healing begins when we value and protect every caregiver.
           </Text>
         </View>
       </ScrollView>

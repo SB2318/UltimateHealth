@@ -11,9 +11,9 @@ import {
   Platform,
   Keyboard,
 } from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {PRIMARY_COLOR} from '../lib/ui/Theme';
-import {hp, wp, fp} from '../lib/ui/Metric';
 import {useTranslation} from '../localization';
 
 // Icon map per tab label
@@ -36,22 +36,18 @@ interface AnimatedTabItemProps {
   isDark: boolean;
 }
 
-const AnimatedTabItem = ({label, displayLabel, isFocused, onPress, isDark}: AnimatedTabItemProps) => {
+const AnimatedTabItem = ({
+  label,
+  displayLabel,
+  isFocused,
+  onPress,
+  isDark,
+}: AnimatedTabItemProps) => {
   const [scaleAnim] = useState(() => new Animated.Value(1));
-  const [pillWidthAnim] = useState(() => new Animated.Value(isFocused ? 1 : 0));
-
-  useEffect(() => {
-    Animated.spring(pillWidthAnim, {
-      toValue: isFocused ? 1 : 0,
-      useNativeDriver: false,
-      tension: 80,
-      friction: 10,
-    }).start();
-  }, [isFocused]);
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.88,
+      toValue: 0.9,
       useNativeDriver: true,
       tension: 200,
       friction: 10,
@@ -75,13 +71,8 @@ const AnimatedTabItem = ({label, displayLabel, isFocused, onPress, isDark}: Anim
   const title = displayLabel || config.label;
 
   const iconName = isFocused ? config.active : config.inactive;
-  const activeColor = PRIMARY_COLOR;
-  const inactiveColor = isDark ? '#6b7280' : '#9ca3af';
-
-  const pillBg = pillWidthAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['rgba(0,191,255,0)', 'rgba(0,191,255,0.12)'],
-  });
+  const activeColor = '#FFFFFF';
+  const inactiveColor = isDark ? '#94A3B8' : '#64748B';
 
   return (
     <Pressable
@@ -92,24 +83,31 @@ const AnimatedTabItem = ({label, displayLabel, isFocused, onPress, isDark}: Anim
       accessibilityLabel={`${title} tab`}
       accessibilityState={{selected: isFocused}}
       style={styles.tabItem}>
-      <Animated.View style={{transform: [{scale: scaleAnim}]}}>
-        <Animated.View
+      <Animated.View style={[styles.tabItemInner, {transform: [{scale: scaleAnim}]}]}>
+        <View
           style={[
-            styles.iconPill,
-            {backgroundColor: pillBg as any},
+            styles.iconBox,
+            {
+              backgroundColor: isFocused ? PRIMARY_COLOR : 'transparent',
+            },
           ]}>
           <MaterialCommunityIcons
             name={iconName as any}
-            size={24}
+            size={21}
             color={isFocused ? activeColor : inactiveColor}
           />
-          {isFocused && <View style={styles.activeDot} />}
-        </Animated.View>
+        </View>
         <Text
           style={[
             styles.tabLabel,
-            {color: isFocused ? activeColor : inactiveColor},
-            isFocused && styles.tabLabelActive,
+            {
+              color: isFocused
+                ? isDark
+                  ? '#38BDF8'
+                  : PRIMARY_COLOR
+                : inactiveColor,
+              fontWeight: isFocused ? '700' : '500',
+            },
           ]}
           numberOfLines={1}>
           {title}
@@ -127,10 +125,19 @@ const TAB_KEY_MAP: Record<string, string> = {
   Settings: 'tabs.settings',
 };
 
+const useSafeInsets = () => {
+  try {
+    return useSafeAreaInsets();
+  } catch {
+    return { top: 0, bottom: 0, left: 0, right: 0 };
+  }
+};
+
 const TabBar = ({state, descriptors, navigation}: any) => {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
   const isDark = colorScheme === 'dark';
+  const insets = useSafeInsets();
 
   const [keyboardVisible, setKeyboardVisible] = useState(false);
   // Report real (custom) tab bar height so screens can use useBottomTabBarHeight
@@ -152,8 +159,9 @@ const TabBar = ({state, descriptors, navigation}: any) => {
   const focusedOptions = focusedRoute ? descriptors[focusedRoute.key]?.options : undefined;
   if (keyboardVisible && focusedOptions?.tabBarHideOnKeyboard) return null;
 
-  const bgColor = isDark ? '#1a1a2e' : '#ffffff';
-  const borderColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+  const bgColor = isDark ? '#0F172A' : '#FFFFFF';
+  const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+  const bottomPadding = insets.bottom > 0 ? insets.bottom + 4 : (Platform.OS === 'web' ? 8 : 12);
 
   return (
     <View
@@ -163,6 +171,7 @@ const TabBar = ({state, descriptors, navigation}: any) => {
         {
           backgroundColor: bgColor,
           borderTopColor: borderColor,
+          paddingBottom: bottomPadding,
         },
       ]}>
       {state.routes.map((route: any, index: number) => {
@@ -209,19 +218,23 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    paddingBottom: Platform.OS === 'web' ? 8 : hp(4),
-    paddingTop: Platform.OS === 'web' ? 6 : hp(1),
-    paddingHorizontal: Platform.OS === 'web' ? 8 : wp(2),
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingTop: 8,
+    paddingHorizontal: 8,
     borderTopWidth: 1,
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: {width: 0, height: -4},
+        shadowOffset: {width: 0, height: -3},
         shadowOpacity: 0.08,
-        shadowRadius: 12,
+        shadowRadius: 10,
       },
       android: {
-        elevation: 16,
+        elevation: 14,
+      },
+      web: {
+        boxShadow: '0 -2px 10px rgba(0,0,0,0.06)',
       },
     }),
   },
@@ -230,30 +243,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconPill: {
+  tabItemInner: {
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 14,
-    width: Platform.OS === 'web' ? 42 : wp(12),
-    height: Platform.OS === 'web' ? 38 : wp(12),
-    position: 'relative',
   },
-  activeDot: {
-    position: 'absolute',
-    bottom: Platform.OS === 'web' ? 1 : 4,
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: PRIMARY_COLOR,
+  iconBox: {
+    width: 44,
+    height: 34,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 3,
   },
   tabLabel: {
-    fontSize: Platform.OS === 'web' ? 13 : fp(2.8),
-    fontWeight: '500',
-    marginTop: Platform.OS === 'web' ? 0 : 2,
+    fontSize: 11,
     textAlign: 'center',
-  },
-  tabLabelActive: {
-    fontWeight: '700',
+    marginTop: 1,
   },
 });
 

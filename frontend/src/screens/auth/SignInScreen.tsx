@@ -326,7 +326,7 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
                   textAlign="center"
                   lineHeight={22}
                 >
-                  Choose how you want to use the app so we can personalize your experience.
+                  Tell us what brings you here so we can personalize your experience.
                 </Text>
               </YStack>
 
@@ -410,7 +410,7 @@ export default function SignInScreen({ navigation, route }: SignInScreenProp) {
                   pressStyle={{ opacity: 0.6 }}
                 >
                   <Text color={isDarkMode ? '#94A3B8' : '#64748B'} fontWeight="600" fontSize={15}>
-                    Start Browsing as Guest
+                    Explore as Guest
                   </Text>
                 </Button>
               </YStack>

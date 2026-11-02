@@ -17,9 +17,9 @@ import DoctorProfileBanner from '../components/auth/DoctorProfileBanner';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
-const ChatbotGuestScreen = () => <GuestPlaceholderScreen title="AI Chatbot" description="Sign in or sign up to get instant health advice and personalized answers from our AI assistant." />;
+const ChatbotGuestScreen = () => <GuestPlaceholderScreen title="AI Chatbot" description="Sign in to explore wellness topics, ask everyday health questions, and learn with our AI wellness guide." />;
 const SettingsGuestScreen = () => <GuestPlaceholderScreen title="Settings" description="Create an account to access settings and manage your preferences." />;
-const WellnessGuestScreen = () => <GuestPlaceholderScreen title="Wellness Dashboard" description="Track your daily vitals, sleep, hydration, and receive personalized AI wellness plans by signing in." />;
+const WellnessGuestScreen = () => <GuestPlaceholderScreen title="Wellness Dashboard" description="Track your daily habits, sleep, and hydration, and follow gentle daily wellness routines by signing in." />;
 
 const TabNavigation = () => {
   const isGuest = useAppSelector((state: any) => state.user.isGuest);

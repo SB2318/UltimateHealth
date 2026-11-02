@@ -39,46 +39,45 @@ const ONBOARDING_SLIDES = [
     id: '1',
     badge: 'WELCOME TO ULTIMATEHEALTH',
     badgeIcon: 'heart-pulse',
-    title: 'Health in Body, Mind & Dignity',
+    title: 'Better Health, Made Simple',
     subtitle:
-      'Your single repository for verified health insights, compassionate care, and holistic wellness.',
+      'Clear insights, practical guidance, and daily wellness tips in one friendly place.',
     quote:
-      'UltimateHealth stands for health in its fullest sense — body, mind, and dignity. Because you cannot heal a person you do not respect.',
-    pillars: ['Verified Insights', 'Open-Source', 'Holistic Care'],
+      'Healthy living should not feel complicated. We are here to support your daily wellness journey with ease.',
+    pillars: ['Simple Insights', 'Healthy Habits', 'Daily Wellness'],
   },
   {
     id: '2',
-    badge: 'RESPECT GIVER • MOUMITA DEBNATH',
+    badge: 'DEDICATED TO HEALTHCARE HEROES',
     badgeIcon: 'shield-star',
-    title: 'Hope in Action',
+    title: 'Care with Compassion',
     subtitle:
-      'Inspired by Moumita Debnath’s vision of unwavering dignity, compassion, and equality.',
+      'Honoring frontline healthcare workers and caregivers worldwide who dedicate their lives to healing others.',
     quote:
-      'Justice is not a destination — it is a direction. If we can restore dignity to even one soul, we plant a seed that outlives us all.',
-    pillars: ['Empathy', 'Mind', 'Hope', 'Dignity'],
-    hasProfileImage: true,
+      'True healing begins with empathy. Every act of dedicated care brings hope, health, and warmth to people in need.',
+    pillars: ['Empathy', 'Kindness', 'Healing', 'Care'],
   },
   {
     id: '3',
-    badge: 'THE CHAIN REACTION',
+    badge: 'COMMUNITY & WELLNESS',
     badgeIcon: 'link-variant',
-    title: 'Break the Chain with Recognition',
+    title: 'Supporting Each Other',
     subtitle:
-      'Every act of respect creates ripples that transform lives and build stronger communities.',
+      'When we care for each other with understanding and warmth, everyone feels supported.',
     quote:
-      'A person who is truly respected rarely needs to take it from another. When one person is treated with dignity, they carry it forward.',
-    pillars: ['Empowerment', 'Community', 'Light'],
+      'A supportive community makes wellness approachable for everyone. Kindness always creates a positive difference.',
+    pillars: ['Support', 'Community', 'Balance'],
   },
   {
     id: '4',
     badge: 'YOUR WELLNESS JOURNEY',
     badgeIcon: 'compass-outline',
-    title: 'Ready to Transform Your Life?',
+    title: 'Ready to Explore?',
     subtitle:
-      '',
+      'Discover what helps you feel your best every day.',
     quote:
-      'Step into a world where your health matters, your voice is heard, and respect is standard.',
-    pillars: ['Health Articles', 'Contribution Dashboard', 'AI Guidance', 'Guest Mode'],
+      'Explore trusted articles, listen to health podcasts, and build easy habits that fit your life.',
+    pillars: ['Health Articles', 'Audio Podcasts', 'AI Assistant', 'Guest Mode'],
     isFinal: true,
   },
 ];

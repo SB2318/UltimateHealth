@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   Dimensions,
   SafeAreaView,
+  useColorScheme,
 } from 'react-native';
 import ArticleShareCard, {ArticleShareCardProps} from './ArticleShareCard';
 import {useArticleShare} from '../../hooks/article/useArticleShare';
@@ -42,6 +43,11 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
   shareUrl,
 }) => {
   const {cardRef, isCapturing, shareArticleCard} = useArticleShare();
+  const isDark = useColorScheme() === 'dark';
+  const sheetBg = isDark ? '#1E293B' : '#FFFFFF';
+  const textDark = isDark ? '#F8FAFC' : '#1A2E2B';
+  const textMid = isDark ? '#94A3B8' : '#5A7370';
+  const handleColor = isDark ? '#475569' : '#CBD5D3';
 
   const [slideAnim] = useState(() => new Animated.Value(MODAL_HEIGHT));
 
@@ -83,12 +89,12 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
       />
 
       <Animated.View
-        style={[styles.sheet, {transform: [{translateY: slideAnim}]}]}>
+        style={[styles.sheet, {backgroundColor: sheetBg, transform: [{translateY: slideAnim}]}]}>
         <SafeAreaView style={styles.safeArea}>
-          <View style={styles.handle} />
+          <View style={[styles.handle, {backgroundColor: handleColor}]} />
 
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Share Article</Text>
+            <Text style={[styles.headerTitle, {color: textDark}]}>Share Article</Text>
             <TouchableOpacity
               onPress={onClose}
               style={styles.closeBtn}
@@ -101,7 +107,7 @@ const ArticleShareModal: React.FC<ArticleShareModalProps> = ({
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.subheading}>
+          <Text style={[styles.subheading, {color: textMid}]}>
             Preview your shareable card below.
           </Text>
 

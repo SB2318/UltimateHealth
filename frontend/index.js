@@ -9,7 +9,7 @@ import {StyleSheet, Platform} from 'react-native';
 
 import { logger } from './src/lib/services/monitoring/logger';
 
-if (Platform.OS === 'web') {
+if (Platform.OS === 'web' && typeof document !== 'undefined') {
   const style = document.createElement('style');
   style.textContent = `
     html, body, #root {
@@ -19,18 +19,18 @@ if (Platform.OS === 'web') {
     }
   `;
   document.head.appendChild(style);
-}// Firebase background handler must be registered at the app root (run once,
+}
+
+// Firebase background handler must be registered at the app root (run once,
 // before any component mounts). FCM requires this to be at module scope.
-// NOTE: initMonitoring() is intentionally NOT called here — it has been moved
-// to AppContent.tsx's first useEffect so that expo-application metadata
-// (nativeApplicationVersion, nativeBuildVersion) is fully available before
-// Sentry initialises.
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  // Only log notification payloads in development to avoid leaking user data
-  // or FCM tokens in production log aggregators.
-  
+try {
+  messaging().setBackgroundMessageHandler(async remoteMessage => {
     logger.log('Background notification received:', remoteMessage);
-});
+  });
+} catch (error) {
+  // Gracefully avoid crashing the runtime if Firebase native module is not yet ready or running in Expo Go/dev
+  logger.warn('[Firebase] Background handler initialization skipped:', error);
+}
 
 const AppWrapper = () => {
   return (
