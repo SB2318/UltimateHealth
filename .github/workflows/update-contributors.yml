@@ -5,19 +5,14 @@
 # DESCRIPTION:
 #   Automatically adds a merged PR author to the contributors section of the
 #   README.md file after their PR is merged into main or web. This ensures
-#   every contributor is publicly acknowledged in the project documentation.
+#   every contributor is publicly acknowledged across both branches.
 #
 # HOW IT WORKS:
-#   1. Triggers when a PR is closed (merged) on the main or web branches.
+#   1. Triggers when a PR is closed (merged) on main or web branches.
 #   2. Skips if the PR was closed without merging, or if the author is a Bot.
-#   3. Checks out the target branch (main or web) with full git history.
-#   4. Runs update_contributors.py with the PR author's GitHub username:
-#        - The script locates the contributors section in README.md.
-#        - Adds the new contributor's avatar and profile link if not present.
-#   5. Stages README.md and checks for changes:
-#        - If the contributor is already listed → skips the commit.
-#        - If new → commits with message: "docs: add @<username> to contributors list"
-#        - Pushes the commit directly to the target branch.
+#   3. Checks out the full repository history.
+#   4. Always updates the central contributors table on `main` branch.
+#   5. If the PR was targeting `web`, also synchronizes the contributor into `web`.
 #   6. Uses concurrency group to prevent simultaneous runs from corrupting README.
 #
 # TRIGGERS:
@@ -51,18 +46,15 @@ on:
 
 jobs:
   update-readme:
-    # Ensure this only runs if the PR was actually merged, not just closed without merging
     if: github.event.pull_request.merged == true && github.event.pull_request.user.type != 'Bot'
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Required to allow GitHub Actions to push commits
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Checkout the target branch (main or web) so contributors are added to the right README
-          ref: ${{ github.event.pull_request.base.ref }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -70,29 +62,40 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Update Contributors in README
+      - name: Update Contributors in main branch
         env:
           PR_AUTHOR: ${{ github.event.pull_request.user.login }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Processing contributor: $PR_AUTHOR"
-          python .github/scripts/update_contributors.py "$PR_AUTHOR"
-
-      - name: Commit and push if changed
-        env:
-          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
-          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
-        run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
+          git checkout main
+          python .github/scripts/update_contributors.py "$PR_AUTHOR"
           git add README.md
           
-          # Check if there are staged changes
           if git diff --staged --quiet; then
-            echo "User $PR_AUTHOR is already in the README or no changes were made."
+            echo "User $PR_AUTHOR is already present in main README.md."
           else
             git commit -m "docs: add @$PR_AUTHOR to contributors list"
-            git push origin "$BASE_BRANCH"
-            echo "Successfully committed and pushed new contributor."
+            git push origin main
+            echo "Successfully committed and pushed contributor to main."
+          fi
+
+      - name: Update Contributors in web branch (if PR targeted web)
+        if: github.event.pull_request.base.ref == 'web'
+        env:
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git checkout web
+          python .github/scripts/update_contributors.py "$PR_AUTHOR"
+          git add README.md
+          
+          if git diff --staged --quiet; then
+            echo "User $PR_AUTHOR is already present in web README.md."
+          else
+            git commit -m "docs: add @$PR_AUTHOR to contributors list"
+            git push origin web
+            echo "Successfully committed and pushed contributor to web."
           fi

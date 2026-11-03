@@ -10,7 +10,7 @@
 # HOW IT WORKS:
 #
 #   JOB 1 — issue-automation (fires on: issues opened):
-#     1. Checks if the issue creator is in the MENTORS list (Gooichand, nitinog10).
+#     1. Checks if the issue creator is in the MENTORS / LEADS list (SB2318).
 #     2. If yes, adds label: "mentor:<username>" to the issue.
 #     3. This marks the issue for downstream review assignment by Job 2.
 #
@@ -29,7 +29,7 @@
 #   - Automatic : PR opened, edited, reopened, or synchronized on main/web branch (Job 2).
 #
 # MENTOR / LEAD LIST:
-#   - Gooichand, nitinog10
+#   - SB2318
 # ──────────────────────────────────────────────────────────────────────────────
 
 name: Mentors & Reviewers Automation
@@ -55,7 +55,7 @@ jobs:
         with:
           script: |
             // ADD ALL MENTOR / LEAD GITHUB USERNAMES HERE
-            const MENTORS = ['Gooichand', 'nitinog10']; 
+            const MENTORS = ['SB2318']; 
             
             const creator = context.payload.issue.user.login;
             

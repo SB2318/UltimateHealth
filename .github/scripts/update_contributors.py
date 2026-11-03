@@ -1,3 +1,9 @@
+import sys
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
 import os
 import sys
 import re
@@ -60,8 +66,10 @@ def update_readme(username):
     end_idx = content.find(end_marker)
 
     if start_idx == -1 or end_idx == -1:
-        print("Warning: Could not find the contributors table markers. Skipping.")
-        sys.exit(0)
+        print("Contributors table markers not found. Initializing contributors section.")
+        content = content.rstrip() + "\n\n---\n\n## Contributors\n\n<!-- CONTRIBUTORS-TABLE-START -->\n<table>\n</table>\n<!-- CONTRIBUTORS-TABLE-END -->\n"
+        start_idx = content.find(start_marker)
+        end_idx = content.find(end_marker)
 
     table_start = start_idx + len(start_marker)
     table_end = end_idx
