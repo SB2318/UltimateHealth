@@ -403,9 +403,7 @@ Following our **October 2026 Core Release (v3.2.0)**, the next product releases 
 | **Nearby Health Events & Camps** | `NearbyHealthEventsScreen.tsx` | UI Mockup | ⚠️ Settings ("Coming Soon") | **`v3.4.0` (Aug 31, 2027)** |
 | **Healthcare Learning Academy** | 9 screens in `src/screens/academy/` | Completed | 🔒 Hidden (Stack Unmounted) | **`v3.5.0` (Dec 31, 2027)** |
 
-> **Maintainer Career & Sabbatical Notice:** Deadlines and target milestone dates have been extended to 2027 to accommodate lead maintainer professional transitions and job placement focus. Community contributions, automated issue triage, and PR reviews remain active.
->
-> **Note:** Roadmap priorities and release pipelines are tracked via GitHub Projects and automated Milestone bots. Check the [Issues](https://github.com/SB2318/UltimateHealth/issues) and [Milestones](https://github.com/SB2318/UltimateHealth/milestones) tabs for sprint boards.
+
 
 ## Getting Started
 
