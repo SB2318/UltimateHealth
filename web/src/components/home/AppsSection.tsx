@@ -738,7 +738,16 @@ export default function AppsSection() {
         {/* ======================================================== */}
         <div style={{ paddingTop: '20px', borderTop: '1px dashed var(--explorer-border, #e2e8f0)' }}>
           {/* Section Header */}
-          <div style={{ maxWidth: '780px', marginTop: '40px', marginBottom: '48px' }}>
+          <div
+            style={{
+              maxWidth: '820px',
+              margin: '40px auto 48px auto',
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
             <div
               style={{
                 display: 'inline-flex',
@@ -774,6 +783,7 @@ export default function AppsSection() {
                 margin: '0 0 16px 0',
                 fontWeight: 800,
                 lineHeight: 1.2,
+                textAlign: 'center',
               }}
             >
               {t('title')}
@@ -784,7 +794,9 @@ export default function AppsSection() {
                 fontSize: '1.0625rem',
                 lineHeight: 1.65,
                 color: 'var(--vice-muted, #475569)',
-                margin: '0 0 16px 0',
+                margin: '0 auto 16px auto',
+                maxWidth: '680px',
+                textAlign: 'center',
               }}
             >
               {t('subtitle')}
@@ -797,6 +809,7 @@ export default function AppsSection() {
                 color: '#0d9488',
                 fontWeight: 600,
                 letterSpacing: '0.02em',
+                textAlign: 'center',
               }}
             >
               {t('introPill')}
