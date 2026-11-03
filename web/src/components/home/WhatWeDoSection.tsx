@@ -68,6 +68,7 @@ export default function WhatWeDoSection() {
               fontSize: 'clamp(1.875rem, 4.5vw, 2.75rem)',
               color: 'var(--site-heading, #0f172a)',
               margin: '0 0 16px 0',
+              textAlign: 'left',
             }}
           >
             {t('title')}

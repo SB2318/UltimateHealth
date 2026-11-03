@@ -273,6 +273,7 @@ export default async function HomeArticlesPreview() {
                 color: "var(--site-heading, #0f172a)",
                 margin: "0 0 10px 0",
                 letterSpacing: "-0.025em",
+                textAlign: "left",
               }}
             >
               Latest Articles

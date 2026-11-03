@@ -405,7 +405,7 @@ export default function AppsPageClient() {
                     margin: '4px 0 0 0',
                   }}
                 >
-                  {t('userApp.tagline')} · Package: <code>com.anonymous.UltimateHealth</code>
+                  {t('userApp.tagline')}
                 </p>
               </div>
             </div>
@@ -728,7 +728,7 @@ export default function AppsPageClient() {
                     margin: '4px 0 0 0',
                   }}
                 >
-                  {t('adminApp.tagline')} · Package: <code>com.ultimatehealth.admin</code>
+                  {t('adminApp.tagline')}
                 </p>
               </div>
             </div>
