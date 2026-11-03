@@ -229,7 +229,9 @@
       "desc": "An accessible, open-source mobile companion for exploring evidence-based health guides, audio wellness podcasts, and plain-language medical terms without paywalls or ads.",
       "feat1": "Evidence-based health guides and symptom explainers formatted for comfortable mobile reading.",
       "feat2": "Multilingual audio narration and community health podcasts for hands-free listening.",
-      "feat3": "Interactive medical glossary clarifying clinical terminology into plain everyday language."
+      "feat3": "Interactive medical glossary clarifying clinical terminology into plain everyday language.",
+      "ctaPlayStore": "View on Google Play",
+      "ctaExplore": "Explore App Details"
     },
     "adminApp": {
       "name": "UltimateHealth Admin",
@@ -238,7 +240,10 @@
       "desc": "A dedicated review workstation for certified medical moderators, resident doctors, and editorial volunteers to audit health content, verify citations, and protect clinical dignity before public indexing.",
       "feat1": "Editorial review queue ensuring medical accuracy and non-commercial integrity.",
       "feat2": "Terminology governance standardizing bilingual medical definitions and pronunciations.",
-      "feat3": "Clinical moderator agreement workflow adhering to patient dignity protocols."
+      "feat3": "Clinical moderator agreement workflow adhering to patient dignity protocols.",
+      "ctaPlayStore": "View on Google Play",
+      "ctaAgreement": "Clinical Agreement",
+      "ctaExplore": "Explore App Details"
     },
     "webApp": {
       "name": "UltimateHealth Web Platform",
@@ -248,6 +253,17 @@
       "feat1": "Zero installation required — lightweight, fast, and optimized for low-bandwidth connections.",
       "feat2": "Complete reciprocal translation across 9 languages with native accessibility.",
       "feat3": "In-browser Web Speech audio narration and dark/light reading modes."
+    },
+    "viewAgreement": "Clinical Agreement",
+    "readArticles": "Read Articles",
+    "common": {
+      "openSourceBadge": "Source Code"
+    },
+    "webPlatform": {
+      "title": "UltimateHealth Web Platform",
+      "desc": "Access the complete medical library, clinical series, and interactive glossary directly from any web browser across 9 languages.",
+      "readArticles": "Read Articles",
+      "fullGuide": "Explore All Ecosystem Apps"
     }
   }
 }

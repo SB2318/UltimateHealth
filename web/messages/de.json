@@ -229,7 +229,9 @@
       "desc": "Ein barrierefreier, quelloffener mobiler Begleiter für evidenzbasierte Gesundheitsleitfäden, Audiopodcasts und verständliche medizinische Begriffe ohne Werbung.",
       "feat1": "Evidenzbasierte Leitfäden, optimiert für komfortables Lesen auf Mobilgeräten.",
       "feat2": "Mehrsprachige Audiowiedergabe und Gesundheitspodcasts für unterwegs.",
-      "feat3": "Interaktives Glossar zur Übersetzung klinischer Fachbegriffe in verständliche Sprache."
+      "feat3": "Interaktives Glossar zur Übersetzung klinischer Fachbegriffe in verständliche Sprache.",
+      "ctaPlayStore": "Auf Google Play ansehen",
+      "ctaExplore": "App-Details anzeigen"
     },
     "adminApp": {
       "name": "UltimateHealth Admin",
@@ -238,7 +240,10 @@
       "desc": "Ein Arbeitsbereich für geprüfte Moderatoren und Ärzte zur Überprüfung medizinischer Inhalte vor der Veröffentlichung.",
       "feat1": "Redaktionelle Prüfwarteschlange zur Sicherung medizinischer Richtigkeit.",
       "feat2": "Terminologieverwaltung zur Vereinheitlichung zweisprachiger Definitionen.",
-      "feat3": "Prüfprotokolle zum Schutz der Patientenwürde."
+      "feat3": "Prüfprotokolle zum Schutz der Patientenwürde.",
+      "ctaPlayStore": "Auf Google Play ansehen",
+      "ctaAgreement": "Klinische Vereinbarung",
+      "ctaExplore": "App-Details anzeigen"
     },
     "webApp": {
       "name": "UltimateHealth Web-Plattform",
@@ -248,6 +253,17 @@
       "feat1": "Keine Installation nötig — schnell, schlank und bandbreitenschonend.",
       "feat2": "Vollständige Übersetzung in 9 Sprachen mit nativer Barrierefreiheit.",
       "feat3": "Integrierte Sprachausgabe und Hell-/Dunkelmodus."
+    },
+    "viewAgreement": "Klinische Vereinbarung",
+    "readArticles": "Artikel lesen",
+    "common": {
+      "openSourceBadge": "Quellcode"
+    },
+    "webPlatform": {
+      "title": "UltimateHealth Web-Plattform",
+      "desc": "Zugriff auf die medizinische Bibliothek und das Glossar direkt im Browser in 9 Sprachen.",
+      "readArticles": "Artikel lesen",
+      "fullGuide": "Alle Ökosystem-Apps anzeigen"
     }
   }
 }

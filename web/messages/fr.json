@@ -229,7 +229,9 @@
       "desc": "Un compagnon mobile accessible et open source pour explorer des guides médicaux validés, des podcasts audio et un glossaire sans publicité ni abonnement.",
       "feat1": "Guides de santé fondés sur des preuves, conçus pour une lecture mobile confortable.",
       "feat2": "Narration audio multilingue et podcasts de santé communautaires à écouter en déplacement.",
-      "feat3": "Glossaire médical interactif traduisant la terminologie clinique en langage simple."
+      "feat3": "Glossaire médical interactif traduisant la terminologie clinique en langage simple.",
+      "ctaPlayStore": "Voir sur Google Play",
+      "ctaExplore": "Détails de l’application"
     },
     "adminApp": {
       "name": "UltimateHealth Admin",
@@ -238,7 +240,10 @@
       "desc": "Un espace de travail pour les modérateurs et médecins certifiés afin de vérifier l’exactitude médicale avant publication.",
       "feat1": "File d’attente éditoriale garantissant l’exactitude médicale et l’éthique.",
       "feat2": "Gouvernance terminologique pour standardiser les définitions bilingues.",
-      "feat3": "Flux d’accords de modérateurs respectant la dignité des patients."
+      "feat3": "Flux d’accords de modérateurs respectant la dignité des patients.",
+      "ctaPlayStore": "Voir sur Google Play",
+      "ctaAgreement": "Accord Clinique",
+      "ctaExplore": "Détails de l’application"
     },
     "webApp": {
       "name": "Plateforme Web UltimateHealth",
@@ -248,6 +253,17 @@
       "feat1": "Aucune installation requise — rapide, léger et économe en bande passante.",
       "feat2": "Traduction réciproque intégrale en 9 langues avec accessibilité native.",
       "feat3": "Narration vocale intégrée et modes de lecture sombre / clair."
+    },
+    "viewAgreement": "Accord Clinique",
+    "readArticles": "Lire les articles",
+    "common": {
+      "openSourceBadge": "Code Source"
+    },
+    "webPlatform": {
+      "title": "Plateforme Web UltimateHealth",
+      "desc": "Accédez à la bibliothèque médicale complète et au glossaire directement depuis votre navigateur en 9 langues.",
+      "readArticles": "Lire les articles",
+      "fullGuide": "Explorer toutes les applications"
     }
   }
 }

@@ -229,7 +229,9 @@
       "desc": "Un compañero móvil accesible y de código abierto para explorar guías de salud basadas en evidencia, podcasts y términos médicos sin anuncios ni suscripciones.",
       "feat1": "Guías de salud basadas en evidencia formateadas para lectura cómoda en dispositivos móviles.",
       "feat2": "Narración de audio multilingüe y podcasts de salud para escuchar en cualquier lugar.",
-      "feat3": "Glosario médico interactivo que traduce terminología clínica al lenguaje cotidiano."
+      "feat3": "Glosario médico interactivo que traduce terminología clínica al lenguaje cotidiano.",
+      "ctaPlayStore": "Ver en Google Play",
+      "ctaExplore": "Explorar detalles de la app"
     },
     "adminApp": {
       "name": "UltimateHealth Admin",
@@ -238,7 +240,10 @@
       "desc": "Una estación de trabajo para moderadores y médicos certificados para auditar la precisión clínica antes de su publicación.",
       "feat1": "Cola de revisión editorial que garantiza rigor médico e integridad no comercial.",
       "feat2": "Gobernanza terminológica para estandarizar definiciones médicas bilingües.",
-      "feat3": "Protocolos de acuerdo de moderadores enfocados en la dignidad del paciente."
+      "feat3": "Protocolos de acuerdo de moderadores enfocados en la dignidad del paciente.",
+      "ctaPlayStore": "Ver en Google Play",
+      "ctaAgreement": "Acuerdo Clínico",
+      "ctaExplore": "Explorar detalles de la app"
     },
     "webApp": {
       "name": "Plataforma Web UltimateHealth",
@@ -248,6 +253,17 @@
       "feat1": "Sin instalación requerida: ligera, rápida y optimizada para conexiones lentas.",
       "feat2": "Traducción recíproca completa en 9 idiomas con accesibilidad nativa.",
       "feat3": "Narración de audio en el navegador y modos de lectura claro y oscuro."
+    },
+    "viewAgreement": "Acuerdo Clínico",
+    "readArticles": "Leer artículos",
+    "common": {
+      "openSourceBadge": "Código Fuente"
+    },
+    "webPlatform": {
+      "title": "Plataforma Web UltimateHealth",
+      "desc": "Accede a la biblioteca médica completa y al glosario interactivo desde cualquier navegador en 9 idiomas.",
+      "readArticles": "Leer artículos",
+      "fullGuide": "Explorar todas las aplicaciones"
     }
   }
 }

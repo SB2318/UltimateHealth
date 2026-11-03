@@ -229,7 +229,9 @@
       "desc": "Pristupačan mobilni suputnik otvorenog koda za istraživanje zdravstvenih vodiča, audio podcasta i medicinskih pojmova bez reklama i pretplata.",
       "feat1": "Vodiči temeljeni na dokazima, prilagođeni ugodnom čitanju na mobilnim uređajima.",
       "feat2": "Višejezična audio naracija i zdravstveni podcasti za slušanje u pokretu.",
-      "feat3": "Interaktivni medicinski rječnik koji objašnjava kliničke pojmove jednostavnim jezikom."
+      "feat3": "Interaktivni medicinski rječnik koji objašnjava kliničke pojmove jednostavnim jezikom.",
+      "ctaPlayStore": "Pogledajte na Google Playu",
+      "ctaExplore": "Pojedinosti o aplikaciji"
     },
     "adminApp": {
       "name": "UltimateHealth Admin",
@@ -238,7 +240,10 @@
       "desc": "Radna stanica za ovlaštene moderatore i liječnike za provjeru točnosti i etičnosti sadržaja prije objavljivanja.",
       "feat1": "Urednički red čekanja koji osigurava medicinsku točnost i integritet.",
       "feat2": "Upravljanje terminologijom za usklađivanje dvojezičnih definicija.",
-      "feat3": "Protokol sporazuma o moderiranju usklađen s dostojanstvom pacijenata."
+      "feat3": "Protokol sporazuma o moderiranju usklađen s dostojanstvom pacijenata.",
+      "ctaPlayStore": "Pogledajte na Google Playu",
+      "ctaAgreement": "Klinički sporazum",
+      "ctaExplore": "Pojedinosti o aplikaciji"
     },
     "webApp": {
       "name": "UltimateHealth Web Platforma",
@@ -248,6 +253,17 @@
       "feat1": "Instalacija nije potrebna — lagano, brzo i optimizirano za sporije mreže.",
       "feat2": "Potpuni prijevod na 9 jezika s izvornom pristupačnošću.",
       "feat3": "Govorna naracija u pregledniku i tamni/svijetli način rada."
+    },
+    "viewAgreement": "Klinički sporazum",
+    "readArticles": "Pročitajte članke",
+    "common": {
+      "openSourceBadge": "Izvorni kod"
+    },
+    "webPlatform": {
+      "title": "UltimateHealth Web Platforma",
+      "desc": "Pristupite cjelokupnoj medicinskoj knjižnici i rječniku izravno iz bilo kojeg web preglednika na 9 jezika.",
+      "readArticles": "Pročitajte članke",
+      "fullGuide": "Pregledajte sve aplikacije"
     }
   }
 }

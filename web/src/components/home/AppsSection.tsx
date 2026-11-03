@@ -590,7 +590,7 @@ export default function AppsSection() {
                   }}
                   className="hover:bg-teal-700"
                 >
-                  <span>{t('userApp.ctaPlayStore')}</span>
+                  <span>{t('viewPlayStore')}</span>
                   <ExternalLink size={14} aria-hidden="true" />
                 </a>
 
@@ -612,7 +612,7 @@ export default function AppsSection() {
                   }}
                   className="hover:border-[#0d9488] hover:text-[#0d9488]"
                 >
-                  <span>{t('userApp.ctaExplore')}</span>
+                  <span>{t('learnMore')}</span>
                   <ArrowRight size={14} aria-hidden="true" />
                 </Link>
 
@@ -631,7 +631,7 @@ export default function AppsSection() {
                   }}
                   className="hover:text-teal-600 hover:underline"
                 >
-                  <span>{t('common.openSourceBadge')}</span>
+                  <span>{t('viewSource')}</span>
                   <ExternalLink size={12} aria-hidden="true" />
                 </a>
               </div>
@@ -952,7 +952,7 @@ export default function AppsSection() {
                   }}
                   className="hover:bg-teal-800"
                 >
-                  <span>{t('adminApp.ctaPlayStore')}</span>
+                  <span>{t('viewPlayStore')}</span>
                   <ExternalLink size={14} aria-hidden="true" />
                 </a>
 
@@ -974,7 +974,7 @@ export default function AppsSection() {
                   }}
                   className="hover:border-[#0f766e] hover:text-[#0f766e]"
                 >
-                  <span>{t('adminApp.ctaAgreement')}</span>
+                  <span>{t('viewAgreement')}</span>
                   <ArrowRight size={14} aria-hidden="true" />
                 </Link>
 
@@ -991,7 +991,7 @@ export default function AppsSection() {
                   }}
                   className="hover:text-teal-700 hover:underline"
                 >
-                  <span>{t('adminApp.ctaExplore')}</span>
+                  <span>{t('learnMore')}</span>
                   <ArrowRight size={12} aria-hidden="true" />
                 </Link>
               </div>
@@ -1039,7 +1039,7 @@ export default function AppsSection() {
                   margin: '0 0 4px 0',
                 }}
               >
-                {t('webPlatform.title')}
+                {t('webApp.name')}
               </h4>
               <p
                 style={{
@@ -1049,7 +1049,7 @@ export default function AppsSection() {
                   lineHeight: 1.5,
                 }}
               >
-                {t('webPlatform.desc')}
+                {t('webApp.desc')}
               </p>
             </div>
           </div>
@@ -1072,7 +1072,7 @@ export default function AppsSection() {
               }}
               className="hover:border-[#0d9488] hover:text-[#0d9488]"
             >
-              <span>{t('webPlatform.readArticles')}</span>
+              <span>{t('readArticles')}</span>
               <ArrowRight size={14} aria-hidden="true" />
             </Link>
             <Link
@@ -1091,7 +1091,7 @@ export default function AppsSection() {
               }}
               className="hover:bg-teal-700"
             >
-              <span>{t('webPlatform.fullGuide')}</span>
+              <span>{t('exploreAllApps')}</span>
               <ArrowRight size={14} aria-hidden="true" />
             </Link>
           </div>
