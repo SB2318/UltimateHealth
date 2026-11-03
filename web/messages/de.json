@@ -272,11 +272,11 @@
       "aiDoctor": {
         "badge": "5 kostenlose Fragen / Tag",
         "title": "UltimateHealth Care Team",
-        "subtitle": "Fachärztliche KI-Beratung",
-        "desc": "Jede Person kann jedem KI-Facharzt täglich bis zu 5 kostenlose Fragen stellen – zur verständlichen Klärung von Symptomen und Befunden.",
-        "highlight": "Täglich 5 kostenlose Fragen pro Facharzt",
+        "subtitle": "Spezialisierte KI-Gesundheitsberatung",
+        "desc": "Jede Person kann jeder spezialisierten KI täglich bis zu 5 kostenlose Fragen stellen – zur verständlichen Klärung von Symptomen und Begriffen.",
+        "highlight": "Täglich 5 kostenlose Fragen pro spezialisierter KI",
         "tag1": "Keine Abos oder versteckten Kosten",
-        "tag2": "Mehrere medizinische Fachgebiete",
+        "tag2": "Themenspezifische KI-Modelle",
         "tag3": "Würdevolle und verständliche Antworten"
       },
       "wellness": {

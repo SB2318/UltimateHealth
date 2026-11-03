@@ -326,7 +326,7 @@ export default function AppsSection() {
                         flexShrink: 0,
                       }}
                     >
-                      <Stethoscope size={26} aria-hidden="true" />
+                      <Bot size={26} aria-hidden="true" />
                     </div>
                     <div>
                       <h3
@@ -471,7 +471,7 @@ export default function AppsSection() {
                   }}
                   className="hover:bg-teal-700"
                 >
-                  <span>Ask in Community App</span>
+                  <span>Ask AI in App</span>
                   <ExternalLink size={13} aria-hidden="true" />
                 </a>
                 <Link

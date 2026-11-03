@@ -272,11 +272,11 @@
       "aiDoctor": {
         "badge": "5 besplatnih pitanja / dan",
         "title": "UltimateHealth Tim za Skrb",
-        "subtitle": "Specijalističko AI medicinsko vodstvo",
-        "desc": "Za svaku osobu, možete postaviti do 5 besplatnih pitanja dnevno svakom AI specijalistu radi pojašnjenja simptoma s empatijom.",
-        "highlight": "5 besplatnih pitanja dnevno po specijalistu",
+        "subtitle": "Zdravstveno vodstvo specijalizirane AI",
+        "desc": "Za svaku osobu, možete postaviti do 5 besplatnih pitanja dnevno svakoj specijaliziranoj AI radi pojašnjenja zdravstvenih pojmova.",
+        "highlight": "5 besplatnih pitanja dnevno po specijaliziranoj AI",
         "tag1": "Bez pretplata i skrivenih troškova",
-        "tag2": "Više medicinskih specijalnosti",
+        "tag2": "Tematski usmjerena AI",
         "tag3": "Usmjereno na dostojanstvo pacijenta"
       },
       "wellness": {

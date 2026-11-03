@@ -272,11 +272,11 @@
       "aiDoctor": {
         "badge": "5 questions gratuites / jour",
         "title": "Équipe de Soins UltimateHealth",
-        "subtitle": "Orientation médicale par IA spécialisée",
-        "desc": "Chaque personne peut poser jusqu’à 5 questions gratuites par jour à chaque médecin IA spécialiste pour clarifier ses symptômes avec empathie.",
-        "highlight": "5 questions gratuites par jour et par spécialiste",
+        "subtitle": "Orientation santé par IA spécialisée",
+        "desc": "Chaque personne peut poser jusqu’à 5 questions gratuites par jour à chaque IA spécialisée pour clarifier ses questions de bien-être.",
+        "highlight": "5 questions gratuites par jour et par IA spécialisée",
         "tag1": "Aucun abonnement ni frais cachés",
-        "tag2": "Plusieurs spécialités médicales",
+        "tag2": "IA thématiques dédiées",
         "tag3": "Dédié à la dignité du patient"
       },
       "wellness": {
