@@ -68,6 +68,7 @@ export default function SiteFooter({ locale = "en" }: { locale?: string }) {
           <a href={contactUrl}>Contact</a>
           <Link href={articlesUrl}>Health Articles</Link>
           <Link href={glossaryUrl}>Medical Glossary</Link>
+          <Link href={appsUrl}>Ecosystem Apps</Link>
           <Link href={contributeUrl}>Join Us &amp; Contribute</Link>
         </div>
 

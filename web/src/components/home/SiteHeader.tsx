@@ -14,6 +14,7 @@ const SECTION_IDS = [
   "purpose",
   "what-we-do",
   "storyboard",
+  "apps",
   "screenshots",
   "programs",
   "portals",
@@ -32,15 +33,17 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
   const podcastsHref = `/${locale}/podcasts`;
   const glossaryHref = `/${locale}/medical-glossary`;
   const contributeHref = `/${locale}/contribute`;
+  const appsHref = `/${locale}/apps`;
 
   const isArticles = pathname.includes("/articles");
   const isPodcasts = pathname.includes("/podcasts");
   const isGlossary = pathname.includes("/medical-glossary");
+  const isApps = pathname.includes("/apps");
   const isContribute =
     pathname.includes("/contribute") ||
     pathname.includes("/our-contributors") ||
     pathname.includes("/contributors");
-  const isHome = !isArticles && !isPodcasts && !isGlossary && !isContribute;
+  const isHome = !isArticles && !isPodcasts && !isGlossary && !isContribute && !isApps;
 
   // ── Scroll listener ──
   useEffect(() => {
@@ -169,6 +172,16 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           </li>
           <li>
             <Link
+              href={appsHref}
+              className={`nav-link-item${isApps ? " active" : ""}`}
+              aria-current={isApps ? "page" : undefined}
+            >
+              <i className="fas fa-mobile-screen-button nav-item-icon" aria-hidden="true" />
+              <span className="nav-item-text">{tNav("apps")}</span>
+            </Link>
+          </li>
+          <li>
+            <Link
               href={contributeHref}
               className={`nav-link-item${isContribute ? " active" : ""}`}
               aria-current={isContribute ? "page" : undefined}
@@ -283,6 +296,9 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           onClick={() => setMobileMenuOpen(false)}
         >
           {tNav("glossary")}
+        </Link>
+        <Link href={appsHref} onClick={() => setMobileMenuOpen(false)}>
+          {tNav("apps")}
         </Link>
         <Link href={contributeHref} onClick={() => setMobileMenuOpen(false)}>
           {tNav("joinUs")}

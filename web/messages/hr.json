@@ -44,7 +44,8 @@
     "glossary": "Rječnik",
     "joinUs": "Pridruži se",
     "startTour": "Istražite platformu",
-    "podcasts": "Podcasti"
+    "podcasts": "Podcasti",
+    "apps": "Aplikacije"
   },
   "hero": {
     "badge": "Otvoreni Kod · Vođeno Zajednicom · Uvijek Besplatno",
@@ -209,5 +210,44 @@
     "feature2Desc": "Episodes shared by medical trainees, patients, and health advocates.",
     "feature3Title": "Multilingual Audio",
     "feature3Desc": "Planned audio releases in English, Hindi, Bengali, and Indian regional languages."
+  },
+  "apps": {
+    "sectionBadge": "Aplikacije Ekosustava",
+    "title": "Istražite UltimateHealth ekosustav",
+    "subtitle": "Različiti alati, jedna zajednička svrha: učiniti zdravstvene informacije lakše dostupnima, razumljivijima i boljima za sve.",
+    "introPill": "Otvoreni kod · Nekomercijalno · Vođeno zajednicom",
+    "learnMore": "Pojedinosti o aplikaciji",
+    "viewPlayStore": "Pogledajte na Google Playu",
+    "viewSource": "Izvorni kod",
+    "viewWeb": "Čitajte na webu",
+    "disclaimer": "UltimateHealth aplikacije su obrazovni resursi otvorenog koda. Ne pružaju kliničku dijagnozu niti zamjenjuju stručne medicinske konzultacije.",
+    "exploreAllApps": "Pregledajte sve aplikacije",
+    "userApp": {
+      "name": "UltimateHealth Aplikacija za Zajednicu",
+      "tagline": "Za čitatelje, pacijente i sve koji uče o zdravlju",
+      "badge": "Javno izdanje · Android",
+      "desc": "Pristupačan mobilni suputnik otvorenog koda za istraživanje zdravstvenih vodiča, audio podcasta i medicinskih pojmova bez reklama i pretplata.",
+      "feat1": "Vodiči temeljeni na dokazima, prilagođeni ugodnom čitanju na mobilnim uređajima.",
+      "feat2": "Višejezična audio naracija i zdravstveni podcasti za slušanje u pokretu.",
+      "feat3": "Interaktivni medicinski rječnik koji objašnjava kliničke pojmove jednostavnim jezikom."
+    },
+    "adminApp": {
+      "name": "UltimateHealth Admin",
+      "tagline": "Za liječnike, kliničke recenzente i urednike",
+      "badge": "Kliničko upravljanje · Android",
+      "desc": "Radna stanica za ovlaštene moderatore i liječnike za provjeru točnosti i etičnosti sadržaja prije objavljivanja.",
+      "feat1": "Urednički red čekanja koji osigurava medicinsku točnost i integritet.",
+      "feat2": "Upravljanje terminologijom za usklađivanje dvojezičnih definicija.",
+      "feat3": "Protokol sporazuma o moderiranju usklađen s dostojanstvom pacijenata."
+    },
+    "webApp": {
+      "name": "UltimateHealth Web Platforma",
+      "tagline": "Univerzalno dostupna publikacija u pregledniku",
+      "badge": "Univerzalno · Bez instalacije",
+      "desc": "Pristupite cjelokupnoj medicinskoj knjižnici i rječniku izravno iz bilo kojeg web preglednika na 9 jezika.",
+      "feat1": "Instalacija nije potrebna — lagano, brzo i optimizirano za sporije mreže.",
+      "feat2": "Potpuni prijevod na 9 jezika s izvornom pristupačnošću.",
+      "feat3": "Govorna naracija u pregledniku i tamni/svijetli način rada."
+    }
   }
 }

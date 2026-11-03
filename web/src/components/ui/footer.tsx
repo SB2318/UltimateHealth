@@ -30,6 +30,7 @@ export const Footer = () => {
   const contactUrl = `/${currentLocale}#contact`
   const articlesUrl = `/${currentLocale}/articles`
   const glossaryUrl = `/${currentLocale}/medical-glossary`
+  const appsUrl = `/${currentLocale}/apps`
   const contributeUrl = `/${currentLocale}/contribute`
   const accessControlUrl = `/${currentLocale}/access-control`
   // ── Newsletter state ──
@@ -221,6 +222,7 @@ export const Footer = () => {
           <a href={contactUrl}>Contact</a>
           <Link href={articlesUrl}>Health Articles</Link>
           <Link href={glossaryUrl}>Medical Glossary</Link>
+          <Link href={appsUrl}>Ecosystem Apps</Link>
           <Link href={contributeUrl}>Join Us &amp; Contribute</Link>
         </div>
 

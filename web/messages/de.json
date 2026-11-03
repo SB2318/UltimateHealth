@@ -44,7 +44,8 @@
     "glossary": "Glossar",
     "joinUs": "Mitmachen",
     "startTour": "Plattform Erkunden",
-    "podcasts": "Podcasts"
+    "podcasts": "Podcasts",
+    "apps": "Apps"
   },
   "hero": {
     "badge": "Open Source · Community-Getrieben · Dauerhaft Kostenlos",
@@ -209,5 +210,44 @@
     "feature2Desc": "Episoden von Ärzten in Weiterbildung und Patienten.",
     "feature3Title": "Mehrsprachiges Audio",
     "feature3Desc": "Geplante Veröffentlichungen in mehreren Sprachen."
+  },
+  "apps": {
+    "sectionBadge": "Ökosystem-Anwendungen",
+    "title": "Das UltimateHealth-Ökosystem entdecken",
+    "subtitle": "Verschiedene Werkzeuge, ein gemeinsames Ziel: Gesundheitsinformationen leichter zugänglich, verständlich und gemeinsam besser zu machen.",
+    "introPill": "Open Source · Nicht-kommerziell · Community-basiert",
+    "learnMore": "App-Details anzeigen",
+    "viewPlayStore": "Auf Google Play ansehen",
+    "viewSource": "Quellcode",
+    "viewWeb": "Online lesen",
+    "disclaimer": "UltimateHealth-Anwendungen sind quelloffene Bildungsressourcen. Sie stellen keine medizinische Diagnose dar und ersetzen keine professionelle ärztliche Beratung.",
+    "exploreAllApps": "Alle Ökosystem-Apps anzeigen",
+    "userApp": {
+      "name": "UltimateHealth Community-App",
+      "tagline": "Für Leser, Patienten & Gesundheitsinteressierte",
+      "badge": "Öffentliche Version · Android",
+      "desc": "Ein barrierefreier, quelloffener mobiler Begleiter für evidenzbasierte Gesundheitsleitfäden, Audiopodcasts und verständliche medizinische Begriffe ohne Werbung.",
+      "feat1": "Evidenzbasierte Leitfäden, optimiert für komfortables Lesen auf Mobilgeräten.",
+      "feat2": "Mehrsprachige Audiowiedergabe und Gesundheitspodcasts für unterwegs.",
+      "feat3": "Interaktives Glossar zur Übersetzung klinischer Fachbegriffe in verständliche Sprache."
+    },
+    "adminApp": {
+      "name": "UltimateHealth Admin",
+      "tagline": "Für Ärzte, medizinische Gutachter & Redakteure",
+      "badge": "Klinische Moderation · Android",
+      "desc": "Ein Arbeitsbereich für geprüfte Moderatoren und Ärzte zur Überprüfung medizinischer Inhalte vor der Veröffentlichung.",
+      "feat1": "Redaktionelle Prüfwarteschlange zur Sicherung medizinischer Richtigkeit.",
+      "feat2": "Terminologieverwaltung zur Vereinheitlichung zweisprachiger Definitionen.",
+      "feat3": "Prüfprotokolle zum Schutz der Patientenwürde."
+    },
+    "webApp": {
+      "name": "UltimateHealth Web-Plattform",
+      "tagline": "Universell zugängliche Browser-Publikation",
+      "badge": "Universell · Keine Installation nötig",
+      "desc": "Zugriff auf die medizinische Bibliothek und das Glossar direkt im Browser in 9 Sprachen.",
+      "feat1": "Keine Installation nötig — schnell, schlank und bandbreitenschonend.",
+      "feat2": "Vollständige Übersetzung in 9 Sprachen mit nativer Barrierefreiheit.",
+      "feat3": "Integrierte Sprachausgabe und Hell-/Dunkelmodus."
+    }
   }
 }

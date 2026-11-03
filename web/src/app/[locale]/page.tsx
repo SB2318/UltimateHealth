@@ -14,6 +14,7 @@ import PurposeSection from "@/components/home/PurposeSection";
 import WhatWeDoSection from "@/components/home/WhatWeDoSection";
 import PortalSwitcherCTA from "@/components/home/PortalSwitcherCTA";
 import HomeArticlesPreview from "@/components/home/HomeArticlesPreview";
+import AppsSection from "@/components/home/AppsSection";
 import {
   BRAND_NAME,
   BRAND_MOTTO,
@@ -88,6 +89,7 @@ export default async function Home({
         <PurposeSection />
         <WhatWeDoSection />
         <HomeArticlesPreview />
+        <AppsSection />
         <PortalSwitcherCTA />
         <ScreenshotGallery />
         <ProgramsSection />

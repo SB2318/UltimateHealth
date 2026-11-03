@@ -44,7 +44,8 @@
     "glossary": "Glosario",
     "joinUs": "Únete",
     "startTour": "Explorar Plataforma",
-    "podcasts": "Pódcasts"
+    "podcasts": "Pódcasts",
+    "apps": "Aplicaciones"
   },
   "hero": {
     "badge": "Código Abierto · Impulsado por la Comunidad · Gratis Siempre",
@@ -209,5 +210,44 @@
     "feature2Desc": "Episodios compartidos por médicos en formación y pacientes.",
     "feature3Title": "Audio Multilingüe",
     "feature3Desc": "Lanzamientos de audio planificados en varios idiomas."
+  },
+  "apps": {
+    "sectionBadge": "Aplicaciones del Ecosistema",
+    "title": "Explora el ecosistema de UltimateHealth",
+    "subtitle": "Diferentes herramientas, un propósito compartido: hacer que la información de salud sea más accesible, comprensible y colaborativa.",
+    "introPill": "Código Abierto · No Comercial · Impulsado por la Comunidad",
+    "learnMore": "Explorar detalles de la app",
+    "viewPlayStore": "Ver en Google Play",
+    "viewSource": "Código Fuente",
+    "viewWeb": "Leer en línea",
+    "disclaimer": "Las aplicaciones de UltimateHealth son recursos educativos de código abierto. No proporcionan diagnósticos clínicos ni reemplazan la consulta médica profesional.",
+    "exploreAllApps": "Explorar todas las aplicaciones",
+    "userApp": {
+      "name": "Aplicación Comunitaria UltimateHealth",
+      "tagline": "Para lectores, pacientes y personas interesadas en su bienestar",
+      "badge": "Versión Pública · Android",
+      "desc": "Un compañero móvil accesible y de código abierto para explorar guías de salud basadas en evidencia, podcasts y términos médicos sin anuncios ni suscripciones.",
+      "feat1": "Guías de salud basadas en evidencia formateadas para lectura cómoda en dispositivos móviles.",
+      "feat2": "Narración de audio multilingüe y podcasts de salud para escuchar en cualquier lugar.",
+      "feat3": "Glosario médico interactivo que traduce terminología clínica al lenguaje cotidiano."
+    },
+    "adminApp": {
+      "name": "UltimateHealth Admin",
+      "tagline": "Para médicos, revisores clínicos y editores",
+      "badge": "Gobernanza Clínica · Android",
+      "desc": "Una estación de trabajo para moderadores y médicos certificados para auditar la precisión clínica antes de su publicación.",
+      "feat1": "Cola de revisión editorial que garantiza rigor médico e integridad no comercial.",
+      "feat2": "Gobernanza terminológica para estandarizar definiciones médicas bilingües.",
+      "feat3": "Protocolos de acuerdo de moderadores enfocados en la dignidad del paciente."
+    },
+    "webApp": {
+      "name": "Plataforma Web UltimateHealth",
+      "tagline": "Publicación web accesible desde cualquier navegador",
+      "badge": "Universal · Sin necesidad de instalación",
+      "desc": "Accede a la biblioteca médica completa y al glosario interactivo desde cualquier navegador en 9 idiomas.",
+      "feat1": "Sin instalación requerida: ligera, rápida y optimizada para conexiones lentas.",
+      "feat2": "Traducción recíproca completa en 9 idiomas con accesibilidad nativa.",
+      "feat3": "Narración de audio en el navegador y modos de lectura claro y oscuro."
+    }
   }
 }

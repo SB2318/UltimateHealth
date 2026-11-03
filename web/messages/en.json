@@ -44,7 +44,8 @@
     "glossary": "Glossary",
     "joinUs": "Join Us",
     "startTour": "Explore Platform",
-    "podcasts": "Podcasts"
+    "podcasts": "Podcasts",
+    "apps": "Apps"
   },
   "hero": {
     "badge": "Open Source · Community-Driven · Free Forever",
@@ -209,5 +210,44 @@
     "feature2Desc": "Episodes shared by medical trainees, patients, and health advocates.",
     "feature3Title": "Multilingual Audio",
     "feature3Desc": "Planned audio releases in English, Hindi, Bengali, and Indian regional languages."
+  },
+  "apps": {
+    "sectionBadge": "Ecosystem Applications",
+    "title": "Explore the UltimateHealth Ecosystem",
+    "subtitle": "Different tools, one shared purpose: making health information easier to access, understand, and improve together.",
+    "introPill": "Open Source · Non-Commercial · Community-Driven",
+    "learnMore": "Explore App Details",
+    "viewPlayStore": "View on Google Play",
+    "viewSource": "Source Code",
+    "viewWeb": "Browse Online",
+    "disclaimer": "UltimateHealth applications are open-source educational resources. They do not provide clinical diagnosis or replace qualified professional healthcare consultations.",
+    "exploreAllApps": "Explore All Ecosystem Apps",
+    "userApp": {
+      "name": "UltimateHealth Community App",
+      "tagline": "For Readers, Patients & Wellness Learners",
+      "badge": "Public Release · Android",
+      "desc": "An accessible, open-source mobile companion for exploring evidence-based health guides, audio wellness podcasts, and plain-language medical terms without paywalls or ads.",
+      "feat1": "Evidence-based health guides and symptom explainers formatted for comfortable mobile reading.",
+      "feat2": "Multilingual audio narration and community health podcasts for hands-free listening.",
+      "feat3": "Interactive medical glossary clarifying clinical terminology into plain everyday language."
+    },
+    "adminApp": {
+      "name": "UltimateHealth Admin",
+      "tagline": "For Doctors, Clinical Reviewers & Editors",
+      "badge": "Clinical Governance · Android",
+      "desc": "A dedicated review workstation for certified medical moderators, resident doctors, and editorial volunteers to audit health content, verify citations, and protect clinical dignity before public indexing.",
+      "feat1": "Editorial review queue ensuring medical accuracy and non-commercial integrity.",
+      "feat2": "Terminology governance standardizing bilingual medical definitions and pronunciations.",
+      "feat3": "Clinical moderator agreement workflow adhering to patient dignity protocols."
+    },
+    "webApp": {
+      "name": "UltimateHealth Web Platform",
+      "tagline": "Universally Accessible Browser Publication",
+      "badge": "Universal · No Install Needed",
+      "desc": "Access the complete medical library, clinical series, and interactive glossary directly from any web browser across 9 languages.",
+      "feat1": "Zero installation required — lightweight, fast, and optimized for low-bandwidth connections.",
+      "feat2": "Complete reciprocal translation across 9 languages with native accessibility.",
+      "feat3": "In-browser Web Speech audio narration and dark/light reading modes."
+    }
   }
 }
