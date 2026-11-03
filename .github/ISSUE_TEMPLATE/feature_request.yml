@@ -1,5 +1,5 @@
 name: 💡Feature Request
-description: Suggest a feature
+description: Suggest a feature or proposal
 title: "💡[Feature]: "
 labels: "enhancement"
 body:
@@ -15,7 +15,7 @@ body:
     id: feature-description
     attributes:
       label: Feature Description
-      description: Please provide a detailed description of the feature you are requesting.
+      description: Please provide a detailed description of the feature or proposal you are requesting.
       placeholder: Describe the new feature or enhancement you'd like to see.
     validations:
       required: true
@@ -28,6 +28,12 @@ body:
     validations:
       required: true
   - type: textarea
+    id: proposed-scope
+    attributes:
+      label: Proposed Implementation / Scope Breakdown (Optional)
+      description: If you have an MVP plan or proposal breakdown, share it here. The AI triage bot will review the scope and suggest milestones.
+      placeholder: E.g., Phase 1: MVP UI screens and state; Phase 2: Backend integration and unit tests.
+  - type: textarea
     id: benefits
     attributes:
       label: Benefits
@@ -36,7 +42,7 @@ body:
   - type: textarea
     id: screenShots
     attributes:
-      label: Add ScreenShots
+      label: Add ScreenShots / Mockups
       description: If any...
   - type: dropdown
     id: priority
@@ -57,11 +63,9 @@ body:
       options:
         - label: "I have read the Contributing Guidelines"
           required: true
-        - label: "I'm a GSSOC'24 contributor"
+        - label: "I am an open-source community contributor"
           required: false
-        - label: "I'm a GSSOC'26 contributor"
-          required: false
-        - label: "I'm a IEEE IGDTUW contributor"
+        - label: "I'm an IEEE IGDTUW contributor"
           required: false 
         - label: "I want to work on this issue"
           required: false

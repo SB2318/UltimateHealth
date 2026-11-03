@@ -1,45 +1,38 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# 🧑‍🏫 Mentors Automation Bot (GSSoC)
+# 🧑‍🏫 Mentors & Reviewers Automation Bot
 # ──────────────────────────────────────────────────────────────────────────────
 #
 # DESCRIPTION:
-#   Manages mentor involvement across issues and PRs for the GSSoC program.
-#   It has two jobs: one that tags issues created by mentors, and another that
-#   automatically assigns the right mentor to review PRs linked to their issues.
+#   Manages reviewer and maintainer involvement across issues and PRs.
+#   It has two jobs: one that tags issues created by mentors/leads, and another
+#   that automatically assigns the right reviewer to PRs linked to those issues.
 #
 # HOW IT WORKS:
 #
 #   JOB 1 — issue-automation (fires on: issues opened):
 #     1. Checks if the issue creator is in the MENTORS list (Gooichand, nitinog10).
-#     2. If yes, adds labels: "gssoc26" and "mentor:<username>" to the issue.
-#     3. This marks the issue as mentor-created for downstream use by Job 2.
+#     2. If yes, adds label: "mentor:<username>" to the issue.
+#     3. This marks the issue for downstream review assignment by Job 2.
 #
-#   JOB 2 — pr-automation (fires on: pull_request_target to the web branch):
+#   JOB 2 — pr-automation (fires on: pull_request_target to main or web):
 #     1. Scans the PR body for issue-closing keywords (fixes/closes/resolves #N).
 #     2. For each linked issue, reads its labels to find "mentor:<username>" tags.
-#     3. For each matched mentor:
-#          a. Assigns the mentor as a PR assignee.
-#          b. Requests the mentor as a PR reviewer.
+#     3. For each matched mentor/lead:
+#          a. Assigns them as a PR assignee.
+#          b. Requests them as a PR reviewer.
 #          c. Adds "mentor:<username>" label to the PR.
-#          d. Posts a comment mentioning the mentor(s) and listing a pre-review
+#          d. Posts a comment mentioning the reviewer(s) and listing a pre-review
 #             checklist for the contributor (linting, types, design, testing).
 #
 # TRIGGERS:
 #   - Automatic : Issue opened (Job 1).
-#   - Automatic : PR opened, edited, reopened, or synchronized on web branch (Job 2).
+#   - Automatic : PR opened, edited, reopened, or synchronized on main/web branch (Job 2).
 #
-# MENTOR LIST (update in the workflow script):
+# MENTOR / LEAD LIST:
 #   - Gooichand, nitinog10
-#
-# PERMISSIONS REQUIRED:
-#   - issues: write         → to add labels and post comments
-#   - pull-requests: write  → to assign reviewers and add labels to PRs
-#
-# SECRETS REQUIRED:
-#   - GITHUB_TOKEN  → provided automatically by GitHub, no setup needed
 # ──────────────────────────────────────────────────────────────────────────────
 
-name: Mentors Automation
+name: Mentors & Reviewers Automation
 
 on:
   issues:
@@ -47,6 +40,7 @@ on:
   pull_request_target:
     types: [opened, edited, reopened, synchronize]
     branches:
+      - main
       - web
 
 jobs:
@@ -60,7 +54,7 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            // ADD ALL MENTOR GITHUB USERNAMES HERE
+            // ADD ALL MENTOR / LEAD GITHUB USERNAMES HERE
             const MENTORS = ['Gooichand', 'nitinog10']; 
             
             const creator = context.payload.issue.user.login;
@@ -70,7 +64,7 @@ jobs:
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                labels: ['gssoc26', `mentor:${creator}`]
+                labels: [`mentor:${creator}`]
               });
             }
 
@@ -141,7 +135,7 @@ jobs:
               
               const mentorsMentions = mentorsArray.map(m => `@${m}`).join(', ');
               
-              const commentBody = `Hello @${context.payload.pull_request.user.login} 👋! Thanks for your contribution to the Web Branch for GSSoC.\n\nYour mentor(s) **${mentorsMentions}** have been automatically assigned to review your PR. While you wait, please go through these **initial review points** to speed up the process:\n\n- [ ] **Clean Code & Linting**: Have you run \`yarn lint\` and resolved all errors?\n- [ ] **Type Safety**: Have you run \`yarn typecheck\` to ensure there are no TypeScript errors and avoided \`any\` types where possible?\n- [ ] **Design Alignment**: Does your implementation follow the UltimateHealth design system without hardcoding pure black/white hex values?\n- [ ] **Testing**: Have you tested your changes thoroughly on desktop and mobile web browsers to ensure responsiveness?\n\n${mentorsMentions} will get back to you with a detailed review soon!`;
+              const commentBody = `Hello @${context.payload.pull_request.user.login} 👋! Thanks for your contribution to UltimateHealth.\n\nYour reviewer(s) **${mentorsMentions}** have been automatically assigned to review your PR. While you wait, please go through these **initial review points** to speed up the process:\n\n- [ ] **Clean Code & Linting**: Have you run \`yarn lint\` and resolved all errors?\n- [ ] **Type Safety**: Have you run \`yarn typecheck\` to ensure there are no TypeScript errors and avoided \`any\` types where possible?\n- [ ] **Design Alignment**: Does your implementation follow the UltimateHealth design system without hardcoding pure black/white hex values?\n- [ ] **Testing**: Have you tested your changes thoroughly on desktop and mobile web browsers to ensure responsiveness?\n\n${mentorsMentions} will get back to you with a detailed review soon!`;
               
               await github.rest.issues.createComment({
                 owner: context.repo.owner,

@@ -87,3 +87,5 @@ yarn-error.log
 test.js
 GoogleService-Info.plist
 plan.md
+__pycache__/
+*.py[cod]

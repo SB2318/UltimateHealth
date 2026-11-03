@@ -2,35 +2,50 @@
 
 This report outlines all active automation bots in the repository, detailing their core responsibilities, triggers, and the specific GitHub API endpoints they consume.
 
-## 1. AI Issue Triage & Assignment Bot (`ai_issue_triage.py`)
-**Primary Role:** Handles the complete lifecycle of issue assignment, triage, and contributor PR validation.
-* **Tasks:**
-  * **AI Triage:** Evaluates newly opened issues using Gemini AI to determine if they are suitable for frontend community contribution.
-  * **Auto-Assignment:** Automatically assigns the issue author if they have no other active assignments.
-  * **Comment Processing:** Safely handles `/assign`, `/claim`, and `/unassign` commands from users.
-  * **Contributor Validation:** Verifies that a user does not have other active assignments, and ensures their past assignments successfully resulted in a linked PR.
-  * **State Management:** Unassigns users if an issue is manually labeled `duplicate`/`invalid` or closed without a PR.
-* **GitHub API Usage:**
-  * `GET /repos/{owner}/{repo}/issues/{issue_number}` — Fetch issue data
-  * `GET /search/issues` — Query active assignments and past issue history
-  * `GET /repos/{owner}/{repo}/commits` — Check commits for PR references
-  * `GET /repos/{owner}/{repo}/issues/{issue_number}/timeline` — Fetch event timeline
-  * `POST /repos/{owner}/{repo}/issues/{issue_number}/comments` — Post AI decisions and instructions
-  * `POST /repos/{owner}/{repo}/issues/{issue_number}/assignees` — Assign a user
-  * `DELETE /repos/{owner}/{repo}/issues/{issue_number}/assignees` — Unassign a user
+---
 
-## 2. Inactive Assignment Cleanup Bot (`remove_old_assignment.py`)
-**Primary Role:** Enforces the 7-day completion rule for assigned issues to keep the project moving.
+## 1. AI Issue Triage & Contributor Scope Bot (`ai_issue_triage.py`)
+**Primary Role:** Handles the complete lifecycle of issue assignment, triage, proposal scoping, roadmap milestone prediction, and contributor interactions.
 * **Tasks:**
-  * **Scheduled Scan:** Runs daily (`0 0 * * *`) to scan all open, assigned issues. (It paginates automatically, reliably fetching 200+ issues if present).
-  * **5-Day Warning:** Posts a reminder comment to assignees when they hit 5 days without linking a PR.
-  * **7-Day Unassignment:** Safely removes the assignee if 7 days have passed without a linked PR.
-  * **Queue Pinging:** When unassigning, it pings other users who previously commented on the issue to let them know it's available.
+  * **AI Triage & Validation:** Evaluates newly opened issues using Gemini AI for clarity, validity, and scope alignment.
+  * **Roadmap Milestone Prediction:** Predicts and auto-links issues to active roadmap milestones (`v1.0 Release Hardening`, `Content & Admin Operations`, `ML & Recommendation Pipeline`, `Future Ecosystem`).
+  * **Proposal Scope Advisor:** Generates phased MVP breakdowns (Phase 1 vs Phase 2) and architecture guidelines for feature requests.
+  * **Interactive Commands:** Processes `/assign`, `/claim`, `/unassign`, `/scope` (or `/refine-scope`), and `/milestone` directly from issue comments.
+  * **Contributor Validation:** Enforces single-active-assignment limits and verifies linked PRs for prior completed assignments.
+  * **State Management:** Unassigns users when issues are labeled `duplicate`/`invalid` or closed without a PR, respecting `preserve-assignment`.
 * **GitHub API Usage:**
-  * `GET /repos/{owner}/{repo}/issues?state=open` — Fetch all open issues
-  * `GET /repos/{owner}/{repo}/issues/{issue_number}/timeline` — Paginated fetch (up to 500 events) to find the exact timestamp of the user's assignment event.
-  * `POST /repos/{owner}/{repo}/issues/{issue_number}/comments` — Post warnings and unassignment notifications
-  * `DELETE /repos/{owner}/{repo}/issues/{issue_number}/assignees` — Remove the assignee
+  * `GET /repos/{owner}/{repo}/issues/{issue_number}` — Fetch issue metadata
+  * `GET /repos/{owner}/{repo}/milestones?state=open` — Fetch active milestones
+  * `PATCH /repos/{owner}/{repo}/issues/{issue_number}` — Update issue state or milestone
+  * `GET /search/issues` — Query active assignments and duplicate candidate history
+  * `GET /repos/{owner}/{repo}/commits` — Check commits for recent project context
+  * `GET /repos/{owner}/{repo}/issues/{issue_number}/timeline` — Fetch event timeline
+  * `POST /repos/{owner}/{repo}/issues/{issue_number}/comments` — Post triage decisions, guidance, and command responses
+  * `POST /repos/{owner}/{repo}/issues/{issue_number}/assignees` — Assign a contributor
+  * `DELETE /repos/{owner}/{repo}/issues/{issue_number}/assignees` — Unassign a contributor
+
+---
+
+## 2. Repository & Issue Hygiene Bot (`remove_old_assignment.py` / `remove_old_assignment.yml`)
+**Primary Role:** Daily repository grooming, commit resolution detection, inactive assignment cleanup, and closed-issue audit.
+* **Tasks:**
+  * **Scheduled Scan:** Runs daily at `02:00 UTC` and via `workflow_dispatch`.
+  * **Commit Resolution Scanning:** Scans the last 100 commits on `main` for closing keywords (`Fixes #N`, `Closes #N`) and automatically closes corresponding open issues.
+  * **Stale Needs-Information Check:** Auto-closes open issues labeled `needs-information` that have been inactive for over 14 days.
+  * **PR Merge Close:** Detects merged linked PRs and automatically closes the issue with completion notes.
+  * **5-Day Warning & 7-Day Unassignment:** Sends reminders at 5 days of assignment inactivity and safely unassigns at 7 days without a linked PR.
+  * **Open-Call Pinging:** Notifies previous commenters when an issue becomes available.
+  * **Closed Issues Audit:** Wipes lingering assignees from closed issues so contributor quotas remain accurate.
+* **GitHub API Usage:**
+  * `GET /repos/{owner}/{repo}/issues?state=open` — Fetch all open issues (paginated)
+  * `GET /repos/{owner}/{repo}/issues?state=closed` — Fetch recently closed issues for assignee cleanup
+  * `GET /repos/{owner}/{repo}/commits` — Fetch default branch commits
+  * `GET /repos/{owner}/{repo}/issues/{issue_number}/timeline` — Paginated fetch (up to 500 events) for assignment and cross-reference events
+  * `POST /repos/{owner}/{repo}/issues/{issue_number}/comments` — Post warnings, resolution comments, and unassignment notifications
+  * `PATCH /repos/{owner}/{repo}/issues/{issue_number}` — Close resolved issues
+  * `DELETE /repos/{owner}/{repo}/issues/{issue_number}/assignees` — Remove assignees
+
+---
 
 ## 3. PR Assignment Security Check (`pr_assignment_check.py`)
 **Primary Role:** Prevents "PR Sniping" (users submitting PRs for issues assigned to someone else).
@@ -43,34 +58,28 @@ This report outlines all active automation bots in the repository, detailing the
   * `POST /repos/{owner}/{repo}/issues/{pr_number}/comments` — Warn the unauthorized contributor
   * `PATCH /repos/{owner}/{repo}/pulls/{pr_number}` — Close the unauthorized PR
 
-## 4. Issue Resolution Bot (`issue-resolution-bot.yml`)
-**Primary Role:** Automatically closes issues when a resolving commit is merged.
-* **Tasks:**
-  * Runs on a schedule to scan the default branch's recent commits.
-  * Looks for closure keywords in commit messages, supporting many variations like `fixes #123`, `Closes#123`, `#closes #123`, or even just `#123`.
-  * Posts a resolution comment and closes the issue.
-* **GitHub API Usage (via `github.rest` JS):**
-  * `github.rest.issues.listForRepo` — Fetch issues
-  * `github.rest.repos.listCommits` — Fetch main branch commits
-  * `github.rest.issues.createComment` — Post resolution message
-  * `github.rest.issues.update` — Change issue state to `closed`
+---
 
-## 5. Gemini AI PR Reviewers (`ai_reviewer.py` & `automated_reviewer.py`)
-**Primary Role:** Provides code reviews using the Gemini AI API.
+## 4. Gemini AI PR Reviewers (`ai_reviewer.py` & `automated_reviewer.py`)
+**Primary Role:** Provides automated and on-demand code reviews using the Gemini AI API.
 * **Tasks:**
+  * **Automated (`automated_reviewer`):** Runs on PR creation/update to validate PR linkages and analyze code diffs with severity grouping (Critical, Important, Suggestions). Marks reviewed PRs with `ai-reviewed`.
   * **Manual (`ai_reviewer`):** Triggered by maintainers typing `/review` on a PR comment.
-  * **Automated (`automated_reviewer`):** Runs on PR creation/update to automatically check code diffs.
 * **GitHub API Usage:**
   * `GET /repos/{owner}/{repo}/pulls/{pr_number}` — Fetch PR details and diff URLs
   * `GET /repos/{owner}/{repo}/pulls/{pr_number}/commits` — Analyze PR commits
   * `POST /repos/{owner}/{repo}/issues/{pr_number}/comments` — Post detailed AI code review
+  * `POST /repos/{owner}/{repo}/issues/{pr_number}/labels` — Apply classification and status labels
 
-## 6. Mentor / Community bots (`mentor.yml` & `autocomment-iss-close.yml`)
-**Primary Role:** Community management and reviewer assignment.
+---
+
+## 5. Reviewers & Maintainers Automation (`mentor.yml`)
+**Primary Role:** Routes pull requests to team leads and maintainers.
 * **Tasks:**
-  * **Mentor:** Assigns specific reviewers and labels to PRs based on the file paths modified.
-  * **Auto-Close:** Thanks contributors automatically when an issue is closed.
+  * When team mentors or leads open issues, tags them with `mentor:<username>`.
+  * When contributors open PRs targeting `main` or `web` referencing those issues, automatically assigns the mentor as assignee and requested reviewer.
+  * Posts a friendly pre-review checklist (linting, type safety, design alignment, responsive testing).
 * **GitHub API Usage (via `github.rest` JS):**
   * `github.rest.pulls.requestReviewers` — Request maintainer reviews
   * `github.rest.issues.addLabels` / `addAssignees` — Categorize and assign
-  * `github.rest.issues.createComment` — Post thank you messages
+  * `github.rest.issues.createComment` — Post checklist comment

@@ -1,48 +1,64 @@
-# AI Issue Triage Bot Workflow
+# AI Issue Triage & Contributor Scope Bot Workflow
 
-This repository uses an AI Issue Triage Bot powered by Google Gemini and GitHub Actions to streamline the issue triage process, ensure issues are appropriately categorized, and handle the assignment of contributors.
+This repository uses an AI Issue Triage Bot powered by Google Gemini and GitHub Actions to streamline the issue triage process, ensure issues are appropriately categorized, guide community contributors with scope advice, match proposals to project roadmap milestones, and manage contributor assignments.
 
-## Triggers
+---
 
-The bot is triggered by several events on issues:
-* `opened` - when a new issue is submitted.
-* `comment_created` - when a contributor comments on an issue.
-* `labeled` - when a label is added to the issue.
-* `closed` - when an issue is closed.
+## 1. Triggers
 
-## Triage Process
+The bot is triggered by several events on issues and pull requests:
+* `issues: [opened]` — when a new issue or proposal is submitted.
+* `issue_comment: [created]` — when a contributor comments on an issue (e.g., `/assign`, `/claim`, `/unassign`, `/scope`, `/milestone`).
+* `issues: [labeled]` — when a label is added to the issue (e.g. `duplicate`, `not planned`).
+* `issues: [closed]` — when an issue is closed.
+* `workflow_dispatch` — manual execution targeting a specific issue number.
 
-When a new issue is opened, the bot will:
-1. Validate the issue to ensure it has enough information (e.g., clear problem statement, reproduction steps).
-2. Check if the issue is in scope for the project.
-3. Automatically classify the issue (e.g., frontend, backend) and assign a difficulty level (beginner, intermediate, advanced, critical).
-4. Perform duplicate detection against all existing repository issues.
-5. If the issue is a frontend issue, it will be opened up for community contribution.
+---
 
-## Contributor Assignment
+## 2. Triage & Proposal Analysis Process
 
-Contributors can request assignment to open frontend issues by commenting on the issue.
-The bot will check the following:
-* The contributor must not have any other active assigned issues in the repository.
-* If they have previously been assigned issues, they must have submitted a Pull Request that references the assigned issue before they can be assigned a new one.
+When a new issue is opened, the bot performs:
+1. **Validation:** Checks if the issue contains sufficient information (problem statement, expected behavior, logs/screenshots). If incomplete, it labels the issue `needs-information`.
+2. **Duplicate Detection:** Extracts keywords and queries the GitHub Search API across the entire repository history, performing semantic comparison against candidate issues to prevent duplicates.
+3. **Scope & Domain Check:** Verifies alignment with UltimateHealth's core scope (health articles, daily wellness logging, podcasts, AI health assistant, analytics).
+   * *Doctor & clinical workflows* (consultations, appointments, hospital administration) are deferred to the Future Ecosystem Roadmap.
+4. **Classification & Difficulty:** Classifies into `frontend-web`, `frontend-mobile`, `backend`, or `docs`, and assigns difficulty levels (`level:beginner`, `level:intermediate`, `level:advanced`, `level:critical`).
+5. **Roadmap Milestone Prediction:**
+   Evaluates where the issue fits in the UltimateHealth 2026–2027 roadmap:
+   * **`v1.0 Release Hardening`** (Current Phase: Nov 2026 — Production bug fixes, cross-platform UI polish, mobile/web responsiveness, auth stability, performance).
+   * **`Content & Admin Operations`** (Phase: Dec 2026 — Article CMS workflows, admin dashboards, article moderation, content discovery).
+   * **`ML & Recommendation Pipeline`** (Phase: Early 2027 — Machine learning recommendation algorithms, personalization, health scoring).
+   * **`Future Ecosystem / Clinical Workflows`** (Deferred Backlog — Doctor/hospital workflows).
+   If matching open GitHub milestones exist, the bot automatically assigns the issue to the milestone.
+6. **Proposal & Scope Advisor:**
+   For feature requests and proposals, Gemini analyzes feasibility, breaks down large requests into a pragmatic **Phase 1 MVP vs Phase 2**, and highlights architectural guidelines (Tamagui design tokens, QueryClient hooks, TypeScript, test coverage).
 
-## Unassignment Functionality
+---
 
-To keep issue assignments accurate and unblock potential contributors, the bot includes automatic unassignment functionality in the following scenarios:
+## 3. Contributor Commands
 
-### Issue Labeled
+Contributors can interact with the bot directly via issue comments:
 
-If an issue is given a label indicating that it will not be completed or is invalid, the bot will automatically unassign the current assignee(s) so they are freed up to take on other issues. This triggers on any of the following labels:
-* `not planned`
-* `duplicate`
-* `invalid`
-* `won't fix`
-* `wontfix`
+| Command | Action |
+| :--- | :--- |
+| `/assign` or `/claim` | Evaluates contributor eligibility and assigns the issue. |
+| `/unassign` | Unassigns the user and opens the issue back up to the community. |
+| `/scope` or `/refine-scope` | Asks the AI bot to analyze the proposal and generate an MVP scope breakdown and file pointers. |
+| `/milestone` | Requests an explanation of roadmap placement and auto-links the target milestone if available. |
 
-### Issue Closed
+---
 
-If an issue is closed, the bot will check if the assignee(s) have a linked Pull Request associated with the issue. If no Pull Request is found, it is assumed the work was not completed or the issue was closed before work began, and the contributor will be unassigned.
+## 4. Contributor Assignment Rules
 
-### Maintainer Override (Preserve Assignment)
+To keep contributions organized and fair:
+* **No Concurrent Active Assignments:** A contributor cannot claim an issue if they already have an active assigned issue.
+* **Prior Issue PR Verification:** If a contributor was previously assigned an issue that is now closed, they must have submitted a PR referencing that issue before claiming another.
+* **Auto-Assignment on Open:** When an eligible contributor opens a valid frontend or docs issue, the bot automatically assigns it to them.
 
-To prevent the bot from automatically unassigning contributors in cases where a maintainer wants to lock or preserve the assignment, a maintainer can apply the **`preserve-assignment`** label to the issue. If this label is present, the bot will ignore all unassignment triggers for that issue.
+---
+
+## 5. Unassignment & Issue Lifecycle
+
+* **Issue Labeled (`not planned`, `duplicate`, `invalid`, `won't fix`):** Assignees are automatically unassigned so their assignment quota is freed.
+* **Issue Closed Without PR:** If an issue is closed without a linked PR, the assignee is removed.
+* **Maintainer Override:** Applying the **`preserve-assignment`** label prevents the bot from unassigning the contributor.

@@ -1,8 +1,16 @@
 import os
+import sys
 import json
 import urllib.request
 import urllib.error
-from datetime import datetime, timezone
+import re
+from datetime import datetime, timezone, timedelta
+
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
 
 # ---------------------------------------------------------------------------
 # GitHub API helper
@@ -12,7 +20,7 @@ def api_request(url, token, method="GET", data=None):
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "Unassignbot"
+        "User-Agent": "RepoIssueGroomerBot"
     }
 
     if data is not None:
@@ -21,32 +29,42 @@ def api_request(url, token, method="GET", data=None):
 
     req = urllib.request.Request(url, data=data, headers=headers, method=method)
     try:
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, timeout=30) as response:
             if response.status in [204]:
                 return None
-            return json.loads(response.read().decode("utf-8"))
+            body = response.read().decode("utf-8")
+            return json.loads(body) if body else {}
     except urllib.error.URLError as e:
         print(f"  ⚠️  API Request failed for {url}: {e}")
         if hasattr(e, "read"):
-            print(e.read().decode("utf-8"))
+            try:
+                print(e.read().decode("utf-8"))
+            except Exception:
+                pass
         return None
 
+# ---------------------------------------------------------------------------
+# Step Summary Helper
+# ---------------------------------------------------------------------------
+
+def _write_step_summary(lines):
+    summary_file = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_file: return
+    try:
+        with open(summary_file, "a", encoding="utf-8") as f:
+            f.write("\n".join(lines) + "\n")
+    except Exception as e:
+        print(f"[WARN] Could not write step summary: {e}")
 
 # ---------------------------------------------------------------------------
 # Pagination helpers
 # ---------------------------------------------------------------------------
 
 def get_all_open_issues(repo, token):
-    """Paginate through ALL open issues (and PRs), then filter out PRs.
-
-    Key fix: distinguish between:
-      - None  → API error (skip page but keep going, don't abort early)
-      - []    → no more results (stop pagination)
-    """
     issues = []
     page = 1
     consecutive_errors = 0
-    MAX_ERRORS = 3  # abort only after 3 consecutive failures
+    MAX_ERRORS = 3
 
     print(f"  📥 Fetching all open issues (paginated)...")
     while True:
@@ -55,7 +73,6 @@ def get_all_open_issues(repo, token):
 
         if batch is None:
             consecutive_errors += 1
-            print(f"     ⚠️  Page {page}: API error ({consecutive_errors}/{MAX_ERRORS} consecutive)")
             if consecutive_errors >= MAX_ERRORS:
                 print(f"     ❌ Too many consecutive errors, stopping pagination at page {page}")
                 break
@@ -63,27 +80,29 @@ def get_all_open_issues(repo, token):
             continue
 
         consecutive_errors = 0
-
         if len(batch) == 0:
-            print(f"     ✅ Page {page}: empty — pagination complete")
             break
 
         issues.extend(batch)
-        prs_in_batch    = sum(1 for i in batch if "pull_request" in i)
-        issues_in_batch = len(batch) - prs_in_batch
-        print(f"     📄 Page {page}: {len(batch)} items fetched ({issues_in_batch} issues, {prs_in_batch} PRs)")
-
         if len(batch) < 100:
             break
         page += 1
 
     real_issues = [i for i in issues if "pull_request" not in i]
-    print(f"  ✅ Total raw items : {len(issues)} | After filtering PRs : {len(real_issues)} open issues\n")
+    print(f"  ✅ Open issues fetched: {len(real_issues)}\n")
     return real_issues
 
+def get_recently_closed_issues(repo, token, max_pages=2):
+    issues = []
+    for page in range(1, max_pages + 1):
+        url = f"https://api.github.com/repos/{repo}/issues?state=closed&per_page=100&page={page}"
+        batch = api_request(url, token)
+        if not batch: break
+        issues.extend([i for i in batch if "pull_request" not in i])
+        if len(batch) < 100: break
+    return issues
 
 def get_issue_timeline(repo, issue_number, token):
-    """Fetch full timeline for an issue (up to 500 events)."""
     timeline = []
     page = 1
     while page <= 5:
@@ -97,9 +116,7 @@ def get_issue_timeline(repo, issue_number, token):
         page += 1
     return timeline
 
-
 def get_issue_comments(repo, issue_number, token):
-    """Fetch all comments on an issue."""
     comments = []
     page = 1
     while True:
@@ -113,13 +130,66 @@ def get_issue_comments(repo, issue_number, token):
         page += 1
     return comments
 
+def get_repo_milestones(repo, token):
+    url = f"https://api.github.com/repos/{repo}/milestones?state=open"
+    return api_request(url, token) or []
+
+# ---------------------------------------------------------------------------
+# Commit Matching & Auto-closing
+# ---------------------------------------------------------------------------
+
+def scan_commits_and_resolve_issues(repo, token, open_issues_dict):
+    """
+    Scans the last 100 commits on main. If a commit message contains Fixes #N,
+    Closes #N, or Resolves #N for an open issue, post comment and close it.
+    """
+    print(f"\n🔍 Scanning recent commits on main for issue resolution keywords...")
+    url = f"https://api.github.com/repos/{repo}/commits?per_page=100"
+    commits = api_request(url, token)
+    if not commits or not isinstance(commits, list):
+        print("  ⚠️ Could not fetch commits or empty response.")
+        return 0
+
+    resolved_count = 0
+    keyword_regex = re.compile(
+        r'(?:close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+#(\d+)',
+        re.IGNORECASE
+    )
+
+    for c in commits:
+        commit_info = c.get("commit", {})
+        message = commit_info.get("message", "")
+        sha = c.get("sha", "")[:7]
+        author = commit_info.get("author", {}).get("name", "Maintainer")
+
+        matches = keyword_regex.findall(message)
+        for num_str in matches:
+            issue_num = int(num_str)
+            if issue_num in open_issues_dict:
+                # Issue is currently open and resolved by this commit!
+                issue_data = open_issues_dict[issue_num]
+                issue_title = issue_data.get("title", "")
+                print(f"  🎯 Found match: Commit {sha} resolves open issue #{issue_num} (\"{issue_title[:40]}\")")
+                
+                body = (
+                    f"🎉 **Resolved by commit [{sha}](https://github.com/{repo}/commit/{sha})** by {author}.\n\n"
+                    f"> *Commit message:* `{message.splitlines()[0]}`\n\n"
+                    f"Closing this issue as completed. Thank you!"
+                )
+                api_request(f"https://api.github.com/repos/{repo}/issues/{issue_num}/comments", token, method="POST", data={"body": body})
+                api_request(f"https://api.github.com/repos/{repo}/issues/{issue_num}", token, method="PATCH", data={"state": "closed", "state_reason": "completed"})
+                
+                resolved_count += 1
+                del open_issues_dict[issue_num]
+
+    print(f"  ✅ Auto-resolved {resolved_count} issue(s) via commit history.\n")
+    return resolved_count
 
 # ---------------------------------------------------------------------------
 # PR merge check
 # ---------------------------------------------------------------------------
 
 def get_linked_prs(repo, token, timeline):
-    """Return list of (pr_number, pr_url) tuples linked via cross-reference events."""
     prs = []
     seen = set()
     for event in timeline:
@@ -134,31 +204,22 @@ def get_linked_prs(repo, token, timeline):
                     prs.append((pr_number, pr_url))
     return prs
 
-
 def check_pr_merged(repo, token, pr_number):
-    """
-    Return (is_merged, merged_into_repo).
-    Checks the PR's merge_commit_sha and base repo to confirm it merged
-    into OUR repository (not a fork).
-    """
     url  = f"https://api.github.com/repos/{repo}/pulls/{pr_number}"
     data = api_request(url, token)
     if not data:
         return False, False
 
-    merged    = data.get("merged", False)
+    merged = data.get("merged", False)
     base_repo = data.get("base", {}).get("repo", {}).get("full_name", "")
     merged_into_ours = (base_repo == repo)
-
     return merged, (merged and merged_into_ours)
-
 
 # ---------------------------------------------------------------------------
 # Commenter helpers
 # ---------------------------------------------------------------------------
 
 def get_commenters(timeline, repo_owner, exclude_logins=None):
-    """Return list of commenter logins, filtered to humans (no bots, no owner)."""
     exclude = set(exclude_logins or [])
     exclude.add(repo_owner)
     exclude.add("SB2318")
@@ -173,32 +234,77 @@ def get_commenters(timeline, repo_owner, exclude_logins=None):
                 commenters.append(actor)
     return commenters
 
-
 def already_posted_open_call(comments):
-    """Check if we already posted an open-call comment to avoid spam."""
     marker = "<!-- unassignbot-open-call -->"
     return any(marker in c.get("body", "") for c in comments)
 
-
 def already_posted_close_notice(comments):
-    """Check if we already posted a merge-close notice."""
     marker = "<!-- unassignbot-pr-merged-close -->"
     return any(marker in c.get("body", "") for c in comments)
 
+# ---------------------------------------------------------------------------
+# Closed Issues Audit
+# ---------------------------------------------------------------------------
+
+def audit_closed_issues(repo, token):
+    """
+    Cleans up assignees on closed issues so contributor quotas aren't artificially blocked.
+    """
+    print(f"\n🧹 Auditing closed issues for dangling assignments...")
+    closed_issues = get_recently_closed_issues(repo, token, max_pages=2)
+    cleaned_count = 0
+
+    for issue in closed_issues:
+        assignees = issue.get("assignees", [])
+        if not assignees:
+            continue
+            
+        labels = [l.get("name", "").lower() for l in issue.get("labels", [])]
+        if "preserve-assignment" in labels:
+            continue
+            
+        issue_number = issue["number"]
+        assignee_logins = [a["login"] for a in assignees]
+        
+        # Remove assignees from closed issue
+        api_request(
+            f"https://api.github.com/repos/{repo}/issues/{issue_number}/assignees",
+            token, method="DELETE", data={"assignees": assignee_logins}
+        )
+        print(f"  🔓 Removed dangling assignees ({', '.join(assignee_logins)}) from closed issue #{issue_number}")
+        cleaned_count += len(assignee_logins)
+
+    print(f"  ✅ Closed issues audit complete: {cleaned_count} dangling assignments cleared.\n")
+    return cleaned_count
 
 # ---------------------------------------------------------------------------
 # Main schedule handler
 # ---------------------------------------------------------------------------
 
 def handle_schedule(repo, token):
-    issues  = get_all_open_issues(repo, token)
-    now     = datetime.now(timezone.utc)
-    owner   = repo.split("/")[0]
+    raw_issues = get_all_open_issues(repo, token)
+    open_issues_dict = {i["number"]: i for i in raw_issues}
+    now = datetime.now(timezone.utc)
+    owner = repo.split("/")[0]
 
     print(f"\n{'='*60}")
-    print(f"  📋 Total open issues fetched : {len(issues)}")
+    print(f"  📋 Total open issues fetched : {len(open_issues_dict)}")
     print(f"  🕐 Current UTC time          : {now.strftime('%Y-%m-%d %H:%M:%S')} UTC")
     print(f"{'='*60}\n")
+
+    # Step 1: Commit Resolution Scanning
+    cnt_commit_resolved = scan_commits_and_resolve_issues(repo, token, open_issues_dict)
+
+    # Step 2: Milestone Fetching for Auto-attachment
+    milestones = get_repo_milestones(repo, token)
+    default_milestone_id = None
+    for m in milestones:
+        m_title = m.get("title", "").lower()
+        if "v1.0" in m_title or "release" in m_title:
+            default_milestone_id = m.get("number")
+            break
+    if not default_milestone_id and milestones:
+        default_milestone_id = milestones[0].get("number")
 
     # Counters
     cnt_no_assignee     = 0
@@ -208,24 +314,43 @@ def handle_schedule(repo, token):
     cnt_owner_skip      = 0
     cnt_reminded        = 0
     cnt_unassigned      = 0
+    cnt_stale_closed    = 0
     cnt_ok              = 0
 
-    for issue in issues:
-        assignees    = issue.get("assignees", [])
-        issue_number = issue["number"]
-        issue_title  = issue.get("title", "(no title)")
+    # Process remaining open issues
+    for issue_number, issue in list(open_issues_dict.items()):
+        assignees   = issue.get("assignees", [])
+        issue_title = issue.get("title", "(no title)")
+        labels      = [l.get("name", "").lower() for l in issue.get("labels", [])]
 
         print(f"\n  🔍 #{issue_number:>5}  \"{issue_title[:60]}\"")
 
-        # ── Fetch timeline ──────────────────────────────────────────────────
+        # ── Check needs-information staleness (> 14 days) ───────────────────
+        if "needs-information" in labels:
+            updated_at_str = issue.get("updated_at")
+            if updated_at_str:
+                updated_at = datetime.strptime(updated_at_str, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+                if (now - updated_at).days >= 14:
+                    print(f"           🕒 Stale 'needs-information' (> 14 days) → auto-closing")
+                    body = (
+                        "<!-- groomer-stale-close -->\n"
+                        "This issue was marked as `needs-information` and has had no activity for over 14 days.\n\n"
+                        "To keep the issue backlog clean and actionable, this issue is now automatically closed.\n"
+                        "Feel free to provide the requested details and ask a maintainer to reopen anytime!"
+                    )
+                    api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": body})
+                    api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}", token, method="PATCH", data={"state": "closed", "state_reason": "not_planned"})
+                    cnt_stale_closed += 1
+                    continue
+
+        # ── Timeline Fetch ──────────────────────────────────────────────────
         timeline = get_issue_timeline(repo, issue_number, token)
         if not timeline:
             print(f"           → SKIP: could not fetch timeline")
             continue
 
-        # ── Collect commenters ──────────────────────────────────────────────
         assignee_logins = [a["login"] for a in assignees]
-        commenters      = get_commenters(timeline, owner, exclude_logins=assignee_logins)
+        commenters = get_commenters(timeline, owner, exclude_logins=assignee_logins)
 
         # ── CASE 1: No assignee — ping all commenters ───────────────────────
         if not assignees:
@@ -233,48 +358,36 @@ def handle_schedule(repo, token):
             print(f"           ⬜ No assignees")
 
             if commenters:
-                # Check we haven't already posted the open-call comment
                 existing_comments = get_issue_comments(repo, issue_number, token)
                 if not already_posted_open_call(existing_comments):
-                    ping_str  = " ".join(f"@{u}" for u in commenters)
+                    ping_str = " ".join(f"@{u}" for u in commenters)
                     body = (
                         "<!-- unassignbot-open-call -->\n"
                         f"👋 This issue currently has **no assignee**. "
                         f"Is anyone interested in working on it?\n\n"
                         f"{ping_str} — if you'd like to take this, "
-                        f"please reply with `/assign` or `/claim` to get assigned! 🙌"
+                        f"please reply with `/assign` or `/claim` to get assigned! 🙌\n"
+                        f"*Tip: You can also comment `/scope` for suggested MVP breakdown.*"
                     )
-                    api_request(
-                        f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments",
-                        token, method="POST", data={"body": body}
-                    )
+                    api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": body})
                     cnt_open_call += 1
                     print(f"           📢 OPEN-CALL posted → pinged: {', '.join(commenters)}")
-                else:
-                    print(f"           📢 Open-call already posted, skipping")
-            else:
-                print(f"           → No commenters to ping")
             continue
 
         # ── CASE 2: Has assignee(s) — check for linked PRs ─────────────────
         print(f"           Assignee(s): {', '.join(assignee_logins)}")
-
         linked_prs = get_linked_prs(repo, token, timeline)
 
         if linked_prs:
             print(f"           🔗 Linked PR(s): {[n for n, _ in linked_prs]}")
-
-            # Check if ANY linked PR is merged into our repo
             merged_pr = None
             for pr_number, pr_url in linked_prs:
                 is_merged, merged_into_ours = check_pr_merged(repo, token, pr_number)
-                print(f"              PR #{pr_number}: merged={is_merged}, into_our_repo={merged_into_ours}")
                 if merged_into_ours:
                     merged_pr = pr_number
                     break
 
             if merged_pr:
-                # Close the issue
                 existing_comments = get_issue_comments(repo, issue_number, token)
                 if not already_posted_close_notice(existing_comments):
                     body = (
@@ -284,21 +397,11 @@ def handle_schedule(repo, token):
                         f"Great work {' '.join(f'@{a}' for a in assignee_logins)}! 🎉\n\n"
                         f"*If this was closed by mistake, please reopen.*"
                     )
-                    api_request(
-                        f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments",
-                        token, method="POST", data={"body": body}
-                    )
-                    api_request(
-                        f"https://api.github.com/repos/{repo}/issues/{issue_number}",
-                        token, method="PATCH",
-                        data={"state": "closed", "state_reason": "completed"}
-                    )
+                    api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": body})
+                    api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}", token, method="PATCH", data={"state": "closed", "state_reason": "completed"})
                     cnt_pr_merged_close += 1
                     print(f"           ✅ CLOSED — PR #{merged_pr} merged into {repo}")
-                else:
-                    print(f"           ✅ Already closed via merged PR, skipping")
             else:
-                # PR linked but not merged — don't unassign
                 cnt_pr_linked_skip += 1
                 print(f"           → SKIP unassign: PR linked but not yet merged")
             continue
@@ -313,7 +416,6 @@ def handle_schedule(repo, token):
                 print(f"           → SKIP assignee @{login}: owner, never unassigned")
                 continue
 
-            # Find latest assignment event
             assigned_at_str = None
             for event in reversed(timeline):
                 if event.get("event") == "assigned" and event.get("assignee", {}).get("login") == login:
@@ -322,10 +424,9 @@ def handle_schedule(repo, token):
 
             if not assigned_at_str:
                 assigned_at_str = issue.get("created_at")
-                print(f"           ℹ️  @{login}: no assignment event found, using issue creation date")
 
             if assigned_at_str:
-                assigned_at   = datetime.strptime(assigned_at_str, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+                assigned_at = datetime.strptime(assigned_at_str, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
                 days_assigned = (now - assigned_at).days
                 print(f"           👤 @{login}: assigned {days_assigned} day(s) ago ({assigned_at_str})")
 
@@ -334,7 +435,7 @@ def handle_schedule(repo, token):
                     print(f"              🔴 QUEUED FOR UNASSIGN (>= 7 days, no PR)")
                 elif days_assigned == 5:
                     existing_comments = get_issue_comments(repo, issue_number, token)
-                    already_reminded  = any(
+                    already_reminded = any(
                         f"@{login}" in c.get("body", "") and
                         "you have been assigned to this issue for 5 days" in c.get("body", "")
                         for c in existing_comments
@@ -342,20 +443,14 @@ def handle_schedule(repo, token):
                     if not already_reminded:
                         body = (
                             f"Just a friendly reminder @{login}: you have been assigned to this issue for 5 days. "
-                            f"Please submit a PR and mention this issue soon, or you will be unassigned in 2 days."
+                            f"Please submit a PR and mention this issue soon, or you will be unassigned in 2 days.\n"
+                            f"*Need help refining the scope? Feel free to comment `/scope`!*"
                         )
-                        api_request(
-                            f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments",
-                            token, method="POST", data={"body": body}
-                        )
+                        api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": body})
                         cnt_reminded += 1
                         print(f"              🟡 REMINDER POSTED (day 5 warning)")
-                    else:
-                        print(f"              🟡 Day 5 — reminder already posted, skipping")
                 else:
                     cnt_ok += 1
-                    days_left = 7 - days_assigned
-                    print(f"              🟢 OK — {days_left} day(s) remaining before unassign")
 
         if assignees_to_remove:
             api_request(
@@ -364,7 +459,6 @@ def handle_schedule(repo, token):
             )
             cnt_unassigned += len(assignees_to_remove)
 
-            # Ping commenters as next-in-queue
             ping_list = [f"@{u}" for u in commenters if u not in assignees_to_remove]
             ping_msg  = f" Pinging next in queue: {', '.join(ping_list)}." if ping_list else ""
 
@@ -373,31 +467,37 @@ def handle_schedule(repo, token):
                 f"due to 7 days of inactivity (no PR submitted).{ping_msg} "
                 f"If you are still interested, please reply with `/assign` or `/claim` to claim it."
             )
-            api_request(
-                f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments",
-                token, method="POST", data={"body": body}
-            )
+            api_request(f"https://api.github.com/repos/{repo}/issues/{issue_number}/comments", token, method="POST", data={"body": body})
             print(f"           ✅ UNASSIGNED: {', '.join(assignees_to_remove)}")
 
-    # ── Final summary ───────────────────────────────────────────────────────
+    # Step 3: Audit closed issues
+    cnt_dangling_cleared = audit_closed_issues(repo, token)
+
+    # Step 4: Summary output & GitHub Step Summary
     print(f"\n{'='*60}")
-    print(f"  📊 RUN SUMMARY")
+    print(f"  📊 REPO HYGIENE & ISSUE GROOMING SUMMARY")
     print(f"{'='*60}")
-    print(f"  Total issues scanned       : {len(issues)}")
-    print(f"  ⬜ No assignee             : {cnt_no_assignee}")
-    print(f"  📢 Open-call comments sent : {cnt_open_call}")
-    print(f"  ✅ Closed (PR merged)      : {cnt_pr_merged_close}")
-    print(f"  🔗 PR linked, not merged   : {cnt_pr_linked_skip}")
-    print(f"  👑 Owner skipped           : {cnt_owner_skip}")
-    print(f"  🟢 Active (within 7d)      : {cnt_ok}")
-    print(f"  🟡 Reminders sent          : {cnt_reminded}")
-    print(f"  🔴 Unassigned              : {cnt_unassigned}")
+    print(f"  Total open issues scanned   : {len(raw_issues)}")
+    print(f"  🎯 Auto-resolved by commits : {cnt_commit_resolved}")
+    print(f"  ✅ Closed (PR merged)       : {cnt_pr_merged_close}")
+    print(f"  🕒 Stale needs-info closed  : {cnt_stale_closed}")
+    print(f"  📢 Open-call pings sent     : {cnt_open_call}")
+    print(f"  🟡 Day 5 reminders sent     : {cnt_reminded}")
+    print(f"  🔴 7-Day unassignments      : {cnt_unassigned}")
+    print(f"  🔓 Dangling assignees wiped : {cnt_dangling_cleared}")
     print(f"{'='*60}\n")
 
-
-# ---------------------------------------------------------------------------
-# Entry point
-# ---------------------------------------------------------------------------
+    _write_step_summary([
+        "## 🧹 Repository Hygiene & Issue Grooming Report",
+        f"- **Scanned Open Issues:** {len(raw_issues)}",
+        f"- **Auto-Resolved by Commit:** {cnt_commit_resolved}",
+        f"- **Closed via Merged PR:** {cnt_pr_merged_close}",
+        f"- **Closed Stale Needs-Info:** {cnt_stale_closed}",
+        f"- **Open-Call Pings Sent:** {cnt_open_call}",
+        f"- **5-Day Reminders Sent:** {cnt_reminded}",
+        f"- **7-Day Inactive Unassigned:** {cnt_unassigned}",
+        f"- **Cleared Dangling Assignees on Closed Issues:** {cnt_dangling_cleared}"
+    ])
 
 def main():
     token      = os.environ.get("GITHUB_TOKEN")
@@ -409,10 +509,11 @@ def main():
         return
 
     if event_name in ["schedule", "workflow_dispatch"]:
-        print("🤖 Running scheduled unassign checks...")
+        print("🤖 Running scheduled repository & issue hygiene checks...")
         handle_schedule(repo, token)
     else:
-        print(f"Unsupported event: {event_name}")
+        print(f"Running groomer for event: {event_name}")
+        handle_schedule(repo, token)
 
 if __name__ == "__main__":
     main()

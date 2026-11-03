@@ -393,22 +393,22 @@ def run_review_for_pr(repo, pr_number, github_token, api_keys, is_scheduled=Fals
         return "skipped", f"PR authored by {pr_author}"
 
     # 1. Skip review entirely if the PR currently contains the label: gssoc:invalid
-    if "gssoc:invalid" in pr_labels:
+    if "invalid-pr" in pr_labels or "gssoc:invalid" in pr_labels:
         msg = "Skipped: PR has 'gssoc:invalid' label."
         print(msg)
         return "skipped", msg
 
-    # 2. Check Author Authorization (GSSoC logic)
+    # 2. Check Author Authorization (contributor workflow)
     maintainers = ["SB2318", "rushiii3"]
     if pr_author not in maintainers:
         is_authorized, auth_reason = check_author_authorization(repo, pr_body, pr_author, github_token)
         if not is_authorized:
             msg = f"Skipped: {auth_reason}"
             print(msg)
-            add_pr_labels(repo, pr_number, github_token, ["gssoc:invalid"])
+            add_pr_labels(repo, pr_number, github_token, ["invalid-pr"])
             comment = (
                 "### ❌ PR Validation Failed\n\n"
-                f"This PR was marked as `gssoc:invalid` because: **{auth_reason}**\n\n"
+                f"This PR was marked as `invalid-pr` because: **{auth_reason}**\n\n"
                 "To resolve this, please ensure your PR description links an issue (e.g., `Fixes #123`) and that you are either the **creator** or an **assignee** of that issue.\n\n"
                 "<!-- automated-ai-reviewer-bot-v2 -->"
             )
@@ -562,9 +562,9 @@ def run_review_for_pr(repo, pr_number, github_token, api_keys, is_scheduled=Fals
     print("Posting review comment to GitHub...")
     post_review(repo, pr_number, github_token, review_text)
 
-    # Always ensure gssoc is appended to mark that it was reviewed by the bot
-    if "gssoc" not in [l.lower() for l in selected_labels]:
-        selected_labels.append("gssoc")
+    # Always ensure ai-reviewed is appended to mark that it was reviewed by the bot
+    if "ai-reviewed" not in [l.lower() for l in selected_labels]:
+        selected_labels.append("ai-reviewed")
 
     if selected_labels:
         print(f"Adding labels to PR: {selected_labels}")
@@ -575,11 +575,11 @@ def run_review_for_pr(repo, pr_number, github_token, api_keys, is_scheduled=Fals
 def _get_filtered_labels(repo, github_token):
     """Fetch all repo labels once and filter to the relevant subset."""
     available_labels = fetch_repo_labels(repo, github_token)
-    relevant_prefixes = ("type:", "quality:", "level:", "gssoc")
+    relevant_prefixes = ("type:", "quality:", "level:", "community")
     result = []
     for label in available_labels:
         lower = label.lower()
-        if any(lower.startswith(p) for p in relevant_prefixes) or lower == "in-progress" or "gssoc" in lower:
+        if any(lower.startswith(p) for p in relevant_prefixes) or lower in ["in-progress", "ai-reviewed", "community"]:
             result.append(label)
     print(f"Relevant labels fetched once: {result}")
     return result
@@ -666,7 +666,7 @@ def main():
                     continue
                     
                 pr_labels = [l.get("name", "").lower() for l in pr.get("labels", [])]
-                if "gssoc" in pr_labels:
+                if "ai-reviewed" in pr_labels or "gssoc" in pr_labels:
                     continue
 
                 print(f"\n--- [{processed + 1}/{min(total, MAX_BATCH_PER_RUN)}] Reviewing PR #{num} ---")
