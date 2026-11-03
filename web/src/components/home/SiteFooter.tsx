@@ -21,6 +21,7 @@ export default function SiteFooter({ locale = "en" }: { locale?: string }) {
   const contactUrl = "#contact";
   const articlesUrl = `/${locale}/articles`;
   const glossaryUrl = `/${locale}/medical-glossary`;
+  const appsUrl = `/${locale}/apps`;
   const contributeUrl = `/${locale}/contribute`;
 
   return (
