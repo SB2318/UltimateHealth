@@ -42,25 +42,26 @@ export default function PurposeSection() {
       }}
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        {/* Section label */}
-        <p
-          className="scroll-reveal uh-section-label"
-          style={{
-            color: '#0d9488',
-            marginBottom: '16px',
-          }}
-        >
-          {t('sectionBadge')}
-        </p>
-
         {/* Section Header */}
         <div className="scroll-reveal" style={{ maxWidth: '680px', marginBottom: '40px' }}>
+          {/* Section label */}
+          <p
+            className="uh-section-label"
+            style={{
+              color: '#0d9488',
+              marginBottom: '16px',
+            }}
+          >
+            {t('sectionBadge')}
+          </p>
+
           <h2
             className="uh-display"
             style={{
               fontSize: 'clamp(1.875rem, 4.5vw, 2.75rem)',
               color: 'var(--site-heading, #0f172a)',
               margin: '0 0 16px 0',
+              textAlign: 'left',
             }}
           >
             {t('title')}
