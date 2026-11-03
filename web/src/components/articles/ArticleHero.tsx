@@ -85,7 +85,7 @@ export default function ArticleHero({
           <img
             src={article.imageUrl}
             alt={article.imageAlt}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-[55%_center]"
             onError={(e) => {
               e.currentTarget.src =
                 "https://raw.githubusercontent.com/SB2318/UltimateHealth-DataSources/refs/heads/main/assets/356561546-ddbcd3a4-8c14-449f-8fd8-c9eb63b65908.png";

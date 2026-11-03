@@ -194,10 +194,10 @@ export default function AppsSection() {
     <section
       id="apps"
       aria-labelledby="apps-heading"
-      className="uh-section-deep"
+      className="uh-section-deep w-full overflow-hidden"
       style={{
         borderTop: '1px solid var(--explorer-border, #e2e8f0)',
-        padding: '96px 24px',
+        padding: 'clamp(48px, 6vw, 96px) 0',
         background: 'var(--vice-dark, #ffffff)',
         position: 'relative',
       }}
@@ -205,7 +205,7 @@ export default function AppsSection() {
       {/* Anchor for any old #screenshots links to land here cleanly */}
       <div id="screenshots" style={{ position: 'absolute', top: '-80px', left: 0 }} aria-hidden="true" />
 
-      <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ======================================================== */}
         {/* TIER 1: WHAT YOU CAN USE TODAY (AI CARE TEAM & WELLNESS) */}
         {/* ======================================================== */}
@@ -264,17 +264,11 @@ export default function AppsSection() {
           </div>
 
           {/* Two Prominent Feature Highlight Cards */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 520px), 1fr))',
-              gap: '24px',
-            }}
-          >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
             {/* Feature Card A: UltimateHealth Care Team (AI Doctors) */}
             <div
               style={{
-                padding: '32px',
+                padding: 'clamp(20px, 3.5vw, 32px)',
                 borderRadius: '24px',
                 backgroundColor: 'var(--explorer-surface, #ffffff)',
                 border: '1px solid var(--explorer-border, #e2e8f0)',
@@ -284,8 +278,10 @@ export default function AppsSection() {
                 justifyContent: 'space-between',
                 position: 'relative',
                 overflow: 'hidden',
+                minWidth: 0,
+                maxWidth: '100%',
               }}
-              className="hover:border-teal-500 transition-colors"
+              className="hover:border-teal-500 transition-colors min-w-0 w-full"
             >
               {/* Subtle decorative gradient pill at corner */}
               <div
@@ -496,7 +492,7 @@ export default function AppsSection() {
             {/* Feature Card B: Wellness Routine & 48h Plan Refresh */}
             <div
               style={{
-                padding: '32px',
+                padding: 'clamp(20px, 3.5vw, 32px)',
                 borderRadius: '24px',
                 backgroundColor: 'var(--explorer-surface, #ffffff)',
                 border: '1px solid var(--explorer-border, #e2e8f0)',
@@ -506,8 +502,10 @@ export default function AppsSection() {
                 justifyContent: 'space-between',
                 position: 'relative',
                 overflow: 'hidden',
+                minWidth: 0,
+                maxWidth: '100%',
               }}
-              className="hover:border-teal-500 transition-colors"
+              className="hover:border-teal-500 transition-colors min-w-0 w-full"
             >
               {/* Subtle decorative gradient pill at corner */}
               <div
@@ -795,14 +793,7 @@ export default function AppsSection() {
           </div>
 
           {/* Two-Column Apps Grid */}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 520px), 1fr))',
-              gap: '32px',
-              marginBottom: '48px',
-            }}
-          >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full mb-12">
             {/* Card 1: UltimateHealth User / Community App */}
             <article
               id="user-app"
@@ -811,14 +802,16 @@ export default function AppsSection() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                padding: '36px 32px',
+                padding: 'clamp(20px, 3.5vw, 36px) clamp(16px, 3vw, 32px)',
                 backgroundColor: 'var(--explorer-surface, #ffffff)',
                 border: '1px solid var(--explorer-border, #e2e8f0)',
                 borderRadius: '24px',
                 boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                minWidth: 0,
+                maxWidth: '100%',
               }}
-              className="hover:shadow-lg transition-shadow"
+              className="hover:shadow-lg transition-shadow min-w-0 w-full"
             >
               <div>
                 {/* Header with App Icon and Badges */}
@@ -1023,6 +1016,9 @@ export default function AppsSection() {
                       scrollSnapType: 'x mandatory',
                       paddingBottom: '8px',
                       scrollbarWidth: 'thin',
+                      minWidth: 0,
+                      maxWidth: '100%',
+                      width: '100%',
                     }}
                   >
                     {userScreenshots.map((item, i) => (
@@ -1174,14 +1170,16 @@ export default function AppsSection() {
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                padding: '36px 32px',
+                padding: 'clamp(20px, 3.5vw, 36px) clamp(16px, 3vw, 32px)',
                 backgroundColor: 'var(--explorer-surface, #ffffff)',
                 border: '1px solid var(--explorer-border, #e2e8f0)',
                 borderRadius: '24px',
                 boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
                 transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                minWidth: 0,
+                maxWidth: '100%',
               }}
-              className="hover:shadow-lg transition-shadow"
+              className="hover:shadow-lg transition-shadow min-w-0 w-full"
             >
               <div>
                 {/* Header with App Icon and Badges */}
@@ -1386,6 +1384,9 @@ export default function AppsSection() {
                       scrollSnapType: 'x mandatory',
                       paddingBottom: '8px',
                       scrollbarWidth: 'thin',
+                      minWidth: 0,
+                      maxWidth: '100%',
+                      width: '100%',
                     }}
                   >
                     {adminScreenshots.map((item, i) => (
@@ -1531,7 +1532,7 @@ export default function AppsSection() {
           {/* Universal Web Platform Banner */}
           <div
             style={{
-              padding: '28px 32px',
+              padding: 'clamp(20px, 3vw, 28px) clamp(16px, 3vw, 32px)',
               backgroundColor: 'var(--explorer-surface, #ffffff)',
               border: '1px solid var(--explorer-border, #e2e8f0)',
               borderRadius: '20px',
@@ -1541,7 +1542,10 @@ export default function AppsSection() {
               gap: '24px',
               flexWrap: 'wrap',
               marginBottom: '32px',
+              minWidth: 0,
+              maxWidth: '100%',
             }}
+            className="min-w-0 w-full"
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '680px' }}>
               <div

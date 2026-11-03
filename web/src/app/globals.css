@@ -185,6 +185,36 @@ html { scroll-behavior: smooth; }
   animation: shimmer 3s linear infinite;
 }
 
+/* Global Shimmer Sweep for Skeletons */
+.uh-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.7) 0%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(226, 232, 240, 0.7) 100%
+  );
+  background-size: 200% 100%;
+  animation: uh-shimmer-sweep 1.8s infinite ease-in-out;
+}
+html.dark .uh-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 30, 48, 0.7) 0%,
+    rgba(50, 50, 75, 0.95) 50%,
+    rgba(30, 30, 48, 0.7) 100%
+  );
+  background-size: 200% 100%;
+  animation: uh-shimmer-sweep 1.8s infinite ease-in-out;
+}
+@keyframes uh-shimmer-sweep {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
 /* =============================================================
    LANDING PAGE SCOPED STYLES
    ============================================================= */

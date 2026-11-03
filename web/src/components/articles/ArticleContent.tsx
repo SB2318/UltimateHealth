@@ -142,9 +142,18 @@ export default function ArticleContent({ content }: ArticleContentProps) {
 
   if (!content.blocks.length) {
     return (
-      <p className="text-[#718096] italic text-center py-12">
-        Article content is loading…
-      </p>
+      <div className="w-full max-w-[680px] mx-auto py-12 flex flex-col items-center justify-center text-center space-y-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div
+            key={i}
+            className="h-4 rounded-full uh-shimmer mx-auto self-center"
+            style={{
+              width: i % 4 === 0 ? "100%" : i % 4 === 1 ? "82%" : i % 4 === 2 ? "90%" : "65%",
+              margin: "0 auto",
+            }}
+          />
+        ))}
+      </div>
     );
   }
 
