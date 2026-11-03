@@ -24,6 +24,7 @@ import {
   Layers,
   Calendar,
   MessageSquare,
+  Stethoscope,
 } from 'lucide-react';
 
 const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
