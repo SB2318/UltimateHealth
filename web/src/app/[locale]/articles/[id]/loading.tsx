@@ -12,7 +12,7 @@ export default function ArticleDetailLoading() {
         <div className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
           {/* Back button skeleton (with matching ArrowArticle width & +10 height) */}
           <div className="flex-shrink-0 flex items-center ml-1 sm:ml-3">
-            <div className="w-[124px] sm:w-[140px] h-[46px] rounded-xl uh-shimmer" />
+            <div className="w-[138px] sm:w-[152px] h-[46px] rounded-xl uh-shimmer" />
           </div>
           {/* Right controls skeleton */}
           <div className="flex items-center gap-2 mr-1 sm:mr-3">

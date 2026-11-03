@@ -229,11 +229,11 @@ export default function ArticlePageClient({
         {/* ── Sticky top navigation bar ── */}
         <header className="sticky top-0 z-50 w-full bg-white dark:bg-[#0c0c14] border-b border-slate-200 dark:border-[#252538] print:hidden shadow-xs dark:shadow-md transition-colors">
           <div className="w-full max-w-[860px] mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
-            {/* Left: Back to articles button (ArrowArticle btn with generous width & +10 height) */}
+            {/* Left: Back to articles button (ArrowArticle btn with generous width, breathing room & +10 height) */}
             <div className="flex-shrink-0 flex items-center ml-1 sm:ml-3">
               <Link
                 href={articlesUrl}
-                className="inline-flex items-center justify-center gap-2.5 min-w-[124px] sm:min-w-[140px] h-[46px] px-4 sm:px-5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#141424] hover:bg-slate-200 dark:hover:bg-[#1e1e36] border border-slate-200 dark:border-[#2a2a44] hover:border-slate-300 dark:hover:border-[#3e3e62] transition-all duration-150 group shadow-2xs select-none"
+                className="inline-flex items-center justify-center gap-2 sm:gap-2.5 min-w-[138px] sm:min-w-[152px] h-[46px] pl-4 sm:pl-5 pr-5 sm:pr-6 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#141424] hover:bg-slate-200 dark:hover:bg-[#1e1e36] border border-slate-200 dark:border-[#2a2a44] hover:border-slate-300 dark:hover:border-[#3e3e62] transition-all duration-150 group shadow-2xs select-none"
                 aria-label="Back to all articles"
               >
                 <ArrowLeft
@@ -242,7 +242,7 @@ export default function ArticlePageClient({
                   className="text-[#0d9488] dark:text-[#2dd4bf] transition-transform duration-150 group-hover:-translate-x-1 shrink-0"
                   aria-hidden="true"
                 />
-                <span className="tracking-wide font-medium">Articles</span>
+                <span className="tracking-wide font-medium whitespace-nowrap">Articles</span>
               </Link>
             </div>
 

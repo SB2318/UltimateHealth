@@ -564,14 +564,14 @@ html.dark .logo:hover .logo-icon {
 .nav-links {
   display: flex;
   list-style: none;
-  gap: 24px;
+  gap: clamp(8px, 1.2vw, 22px);
   align-items: center;
 }
 .nav-links a {
   text-decoration: none;
   color: #475569 !important;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: clamp(0.78rem, 0.82vw, 0.95rem);
   position: relative;
   transition: var(--transition);
 }
@@ -594,9 +594,9 @@ html.dark .nav-links a.active {
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 4px;
-  min-width: 90px;
-  padding: 4px 0;
+  gap: 3px;
+  min-width: clamp(56px, 5.2vw, 84px);
+  padding: 4px 2px;
 }
 
 .nav-item-icon {
@@ -668,19 +668,20 @@ html.dark .nav-item-icon {
 
 @media (max-width: 1200px) {
   .nav-links {
-    gap: 12px;
+    gap: clamp(6px, 1vw, 12px);
   }
 
   .nav-link-item {
-    min-width: 88px;
+    min-width: clamp(52px, 4.8vw, 74px);
+    padding: 3px 1px;
   }
 
   .nav-links a {
-    font-size: 0.9rem;
+    font-size: 0.8125rem;
   }
 
   .nav-btn-sm {
-    padding: 9px 16px;
+    padding: 8px 14px;
   }
 }
 
@@ -2227,14 +2228,17 @@ span.rounded-md:not([class*="w-"]):not([class*="h-"]),
 .close-modal-btn:hover { color: var(--text-dark); }
 
 /* ==================== RESPONSIVE ==================== */
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   .nav-links {
-    display: none;
+    display: none !important;
   }
 
   .mobile-menu-toggle {
-    display: block;
+    display: block !important;
   }
+}
+
+@media (max-width: 768px) {
 
   .hero h1 {
     font-size: 2.5rem;

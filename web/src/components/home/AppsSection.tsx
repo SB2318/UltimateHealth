@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
+import { withBasePath } from '@/lib/basePath';
 import {
   Smartphone,
   BookOpen,
@@ -138,6 +139,16 @@ const adminScreenshots: ScreenshotItem[] = [
     alt: 'Bilingual medical dictionary curation and definition review',
   },
 ];
+
+const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  const target = e.currentTarget;
+  const currentSrc = target.getAttribute('src') || '';
+  if (currentSrc.startsWith('/web/')) {
+    target.src = currentSrc.replace(/^\/web/, '');
+  } else if (!currentSrc.startsWith('/web/') && !currentSrc.startsWith('http')) {
+    target.src = `/web${currentSrc.startsWith('/') ? '' : '/'}${currentSrc}`;
+  }
+};
 
 export default function AppsSection() {
   const t = useTranslations('apps');
@@ -840,12 +851,14 @@ export default function AppsSection() {
                       }}
                     >
                       <Image
-                        src="/ap-asset/user-app-icon.png"
+                        src={withBasePath("/ap-asset/user-app-icon.png")}
                         alt="UltimateHealth Community App Icon"
                         fill
                         sizes="64px"
                         style={{ objectFit: 'cover' }}
                         priority
+                        unoptimized
+                        onError={handleImageError}
                       />
                     </div>
                     <div>
@@ -1053,12 +1066,14 @@ export default function AppsSection() {
                           }}
                         >
                           <Image
-                            src={item.src}
+                            src={withBasePath(item.src)}
                             alt={item.alt}
                             fill
                             sizes="110px"
                             style={{ objectFit: 'cover' }}
                             loading="lazy"
+                            unoptimized
+                            onError={handleImageError}
                           />
                         </div>
                         <div
@@ -1208,12 +1223,14 @@ export default function AppsSection() {
                       }}
                     >
                       <Image
-                        src="/admin-asset/admin-icon.png"
+                        src={withBasePath("/admin-asset/admin-icon.png")}
                         alt="UltimateHealth Admin & Moderation App Icon"
                         fill
                         sizes="64px"
                         style={{ objectFit: 'cover' }}
                         priority
+                        unoptimized
+                        onError={handleImageError}
                       />
                     </div>
                     <div>
@@ -1421,12 +1438,14 @@ export default function AppsSection() {
                           }}
                         >
                           <Image
-                            src={item.src}
+                            src={withBasePath(item.src)}
                             alt={item.alt}
                             fill
                             sizes="110px"
                             style={{ objectFit: 'cover' }}
                             loading="lazy"
+                            unoptimized
+                            onError={handleImageError}
                           />
                         </div>
                         <div
@@ -1743,12 +1762,14 @@ export default function AppsSection() {
               }}
             >
               <Image
-                src={currentModalImage.src}
+                src={withBasePath(currentModalImage.src)}
                 alt={currentModalImage.alt}
                 fill
                 sizes="(max-width: 640px) 95vw, 420px"
                 style={{ objectFit: 'contain' }}
                 priority
+                unoptimized
+                onError={handleImageError}
               />
 
               {/* Prev / Next Floating Arrows */}

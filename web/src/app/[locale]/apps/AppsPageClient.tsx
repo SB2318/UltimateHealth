@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
+import { withBasePath } from '@/lib/basePath';
 import {
   Smartphone,
   BookOpen,
@@ -167,6 +168,16 @@ const adminScreenshotsList: ScreenshotDetail[] = [
     app: 'admin',
   },
 ];
+
+const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+  const target = e.currentTarget;
+  const currentSrc = target.getAttribute('src') || '';
+  if (currentSrc.startsWith('/web/')) {
+    target.src = currentSrc.replace(/^\/web/, '');
+  } else if (!currentSrc.startsWith('/web/') && !currentSrc.startsWith('http')) {
+    target.src = `/web${currentSrc.startsWith('/') ? '' : '/'}${currentSrc}`;
+  }
+};
 
 export default function AppsPageClient() {
   const t = useTranslations('apps');
@@ -351,12 +362,14 @@ export default function AppsPageClient() {
                 }}
               >
                 <Image
-                  src="/ap-asset/user-app-icon.png"
+                  src={withBasePath("/ap-asset/user-app-icon.png")}
                   alt="UltimateHealth Community App Icon"
                   width={80}
                   height={80}
                   style={{ objectFit: 'cover' }}
                   priority
+                  unoptimized
+                  onError={handleImageError}
                 />
               </div>
 
@@ -583,12 +596,14 @@ export default function AppsPageClient() {
                     }}
                   >
                     <Image
-                      src={screen.src}
+                      src={withBasePath(screen.src)}
                       alt={screen.title}
                       fill
                       sizes="(max-width: 640px) 45vw, 180px"
                       style={{ objectFit: 'cover' }}
                       loading="lazy"
+                      unoptimized
+                      onError={handleImageError}
                     />
                   </div>
                   <div
@@ -670,12 +685,14 @@ export default function AppsPageClient() {
                 }}
               >
                 <Image
-                  src="/admin-asset/admin-icon.png"
+                  src={withBasePath("/admin-asset/admin-icon.png")}
                   alt="UltimateHealth Admin App Icon"
                   width={80}
                   height={80}
                   style={{ objectFit: 'cover' }}
                   loading="lazy"
+                  unoptimized
+                  onError={handleImageError}
                 />
               </div>
 
@@ -907,12 +924,14 @@ export default function AppsPageClient() {
                     }}
                   >
                     <Image
-                      src={screen.src}
+                      src={withBasePath(screen.src)}
                       alt={screen.title}
                       fill
                       sizes="(max-width: 640px) 45vw, 180px"
                       style={{ objectFit: 'cover' }}
                       loading="lazy"
+                      unoptimized
+                      onError={handleImageError}
                     />
                   </div>
                   <div
@@ -1241,12 +1260,14 @@ export default function AppsPageClient() {
               }}
             >
               <Image
-                src={selectedScreenshot.src}
+                src={withBasePath(selectedScreenshot.src)}
                 alt={selectedScreenshot.title}
                 fill
                 sizes="(max-width: 640px) 90vw, 420px"
                 style={{ objectFit: 'contain' }}
                 priority
+                unoptimized
+                onError={handleImageError}
               />
             </div>
           </div>
