@@ -26,7 +26,6 @@ export const Footer = () => {
   const homeUrl = `/${currentLocale}`
   const featuresUrl = `/${currentLocale}#features`
   const programsUrl = `/${currentLocale}#programs`
-  const screenshotsUrl = `/${currentLocale}#screenshots`
   const contactUrl = `/${currentLocale}#contact`
   const articlesUrl = `/${currentLocale}/articles`
   const glossaryUrl = `/${currentLocale}/medical-glossary`
@@ -218,7 +217,6 @@ export const Footer = () => {
           <Link href={homeUrl}>Home</Link>
           <a href={featuresUrl}>Features</a>
           <a href={programsUrl}>Programs</a>
-          <a href={screenshotsUrl}>Screenshots</a>
           <a href={contactUrl}>Contact</a>
           <Link href={articlesUrl}>Health Articles</Link>
           <Link href={glossaryUrl}>Medical Glossary</Link>

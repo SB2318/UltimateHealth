@@ -6,7 +6,6 @@ import ContactSection from "@/components/home/ContactSection";
 import DnaCursor from "@/components/home/DnaCursor";
 import ProgramsSection from "@/components/home/ProgramsSection";
 import FaqSection from "@/components/home/FaqSection";
-import ScreenshotGallery from "@/components/home/ScreenshotGallery";
 import ScrollReveal from "@/components/home/ScrollReveal";
 import SiteFooter from "@/components/home/SiteFooter";
 import SiteHeader from "@/components/home/SiteHeader";
@@ -91,7 +90,6 @@ export default async function Home({
         <HomeArticlesPreview />
         <AppsSection />
         <PortalSwitcherCTA />
-        <ScreenshotGallery />
         <ProgramsSection />
         <FaqSection />
         <ContactSection />

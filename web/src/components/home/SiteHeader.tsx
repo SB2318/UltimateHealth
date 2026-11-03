@@ -15,7 +15,6 @@ const SECTION_IDS = [
   "what-we-do",
   "storyboard",
   "apps",
-  "screenshots",
   "programs",
   "portals",
   "contact",

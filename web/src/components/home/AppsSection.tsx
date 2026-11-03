@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
@@ -17,6 +17,9 @@ import {
   Globe2,
   X,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
 } from 'lucide-react';
 
 interface ScreenshotItem {
@@ -28,49 +31,159 @@ interface ScreenshotItem {
 const userScreenshots: ScreenshotItem[] = [
   {
     src: '/ap-asset/page-1.jpg',
-    caption: 'Welcome & Patient Dignity Ethos',
-    alt: 'UltimateHealth mobile app welcome screen showing clinical mission and introductory topics',
+    caption: 'Welcome & Dignity Protocol',
+    alt: 'UltimateHealth mobile app welcome screen showing clinical mission and patient-first care',
   },
   {
     src: '/ap-asset/page-2.jpg',
-    caption: 'Curated Health Articles Directory',
-    alt: 'Community health articles directory listing verified clinical guides with tags and search',
+    caption: 'Community Health Articles',
+    alt: 'Curated health articles directory with verified clinical guides, categories, and search',
+  },
+  {
+    src: '/ap-asset/page-3.jpg',
+    caption: 'Comfortable Reading View',
+    alt: 'Detailed article reader with clean typography, sources, and dark/light readability',
   },
   {
     src: '/ap-asset/page-4.jpg',
-    caption: 'Audio Podcasts & Voice Narration',
+    caption: 'Audio Podcasts & Narration',
     alt: 'Health podcast playback screen with player controls, timestamps, and episode notes',
+  },
+  {
+    src: '/ap-asset/page-5.jpg',
+    caption: 'Medical Glossary Explorer',
+    alt: 'Plain-language medical dictionary explaining clinical terminology with analogies',
+  },
+  {
+    src: '/ap-asset/page-6.jpg',
+    caption: 'Personal Health Dashboard',
+    alt: 'User profile and saved wellness topics without tracking or telemetry',
+  },
+  {
+    src: '/ap-asset/wellness-dashboard.jpeg',
+    caption: 'Wellness & Daily Health Tracker',
+    alt: 'Wellness dashboard showing routine indicators and health literacy guides',
+  },
+  {
+    src: '/ap-asset/quick-care-and-relief.jpeg',
+    caption: 'Quick Relief & First-Aid Guides',
+    alt: 'Immediate care reference guides with clear warning signs and triage tips',
+  },
+  {
+    src: '/ap-asset/podcast-list.jpeg',
+    caption: 'Multilingual Audio Episodes',
+    alt: 'Browse through translated audio explainers across 9 languages',
+  },
+  {
+    src: '/ap-asset/care-team-ultimatehealth.jpeg',
+    caption: 'Verified Care Team Directory',
+    alt: 'Doctor directory and clinical advisory contributor overview',
+  },
+  {
+    src: '/ap-asset/customize-homepage.jpeg',
+    caption: 'Customizable Health Feed',
+    alt: 'Topic preference settings to tailor health literacy feeds',
+  },
+  {
+    src: '/ap-asset/open-source-licenses.jpeg',
+    caption: 'Open Source Transparency',
+    alt: 'Audit trail and open-source licensing ensuring zero hidden telemetry',
   },
 ];
 
 const adminScreenshots: ScreenshotItem[] = [
   {
     src: '/admin-asset/page-1.jpg',
-    caption: 'Clinical Overview & Review Queue',
-    alt: 'UltimateHealth Admin dashboard with pending health articles and reviewer assignments',
+    caption: 'Clinical Overview & Queue',
+    alt: 'UltimateHealth Admin dashboard with pending articles and review status',
   },
   {
     src: '/admin-asset/page-2.jpg',
-    caption: 'Doctor Content Moderation Workflow',
-    alt: 'Article evaluation interface showing clinical peer-review criteria and feedback fields',
+    caption: 'Doctor Moderation Workflow',
+    alt: 'Article evaluation interface showing clinical peer-review criteria',
   },
   {
     src: '/admin-asset/page-3.jpg',
     caption: 'Article Fact-Check & Verification',
-    alt: 'Evidence verification screen highlighting source citations and non-promotional standards',
+    alt: 'Evidence verification screen highlighting source citations',
+  },
+  {
+    src: '/admin-asset/page-4.jpg',
+    caption: 'Community Health Metrics',
+    alt: 'Anonymized readership statistics across supported languages',
+  },
+  {
+    src: '/admin-asset/page-5.jpg',
+    caption: 'Moderator Agreement Protocol',
+    alt: 'Ethics and clinical pledge required for verified healthcare contributors',
+  },
+  {
+    src: '/admin-asset/page-6.jpg',
+    caption: 'Editorial Review Pipeline',
+    alt: 'Multi-stage editorial pipeline for medical peer review',
+  },
+  {
+    src: '/admin-asset/page-7.jpg',
+    caption: 'Article Improvement Verification',
+    alt: 'Verification of clinical edits and references before publication',
+  },
+  {
+    src: '/admin-asset/page-8.jpg',
+    caption: 'Medical Glossary Management',
+    alt: 'Bilingual medical dictionary curation and definition review',
   },
 ];
 
 export default function AppsSection() {
   const t = useTranslations('apps');
   const locale = useLocale();
-  const [activeModalImage, setActiveModalImage] = useState<ScreenshotItem | null>(null);
+
+  const [activeModalGroup, setActiveModalGroup] = useState<'user' | 'admin' | null>(null);
+  const [activeModalIndex, setActiveModalIndex] = useState<number>(0);
+
+  const userTrayRef = useRef<HTMLDivElement | null>(null);
+  const adminTrayRef = useRef<HTMLDivElement | null>(null);
 
   const USER_APP_STORE_URL =
     'https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth';
   const ADMIN_APP_STORE_URL =
     'https://play.google.com/store/apps/details?id=com.ultimatehealth.admin';
   const GITHUB_REPO_URL = 'https://github.com/SB2318/UltimateHealth';
+
+  const activeList =
+    activeModalGroup === 'user'
+      ? userScreenshots
+      : activeModalGroup === 'admin'
+      ? adminScreenshots
+      : [];
+  const currentModalImage = activeList[activeModalIndex] ?? null;
+
+  const handleNextModal = useCallback(() => {
+    if (activeList.length === 0) return;
+    setActiveModalIndex((prev) => (prev + 1) % activeList.length);
+  }, [activeList.length]);
+
+  const handlePrevModal = useCallback(() => {
+    if (activeList.length === 0) return;
+    setActiveModalIndex((prev) => (prev - 1 + activeList.length) % activeList.length);
+  }, [activeList.length]);
+
+  useEffect(() => {
+    if (!currentModalImage) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveModalGroup(null);
+      if (e.key === 'ArrowRight') handleNextModal();
+      if (e.key === 'ArrowLeft') handlePrevModal();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentModalImage, handleNextModal, handlePrevModal]);
+
+  const scrollTray = (ref: React.RefObject<HTMLDivElement | null>, direction: 'left' | 'right') => {
+    if (!ref.current) return;
+    const amount = direction === 'left' ? -260 : 260;
+    ref.current.scrollBy({ left: amount, behavior: 'smooth' });
+  };
 
   return (
     <section
@@ -81,8 +194,12 @@ export default function AppsSection() {
         borderTop: '1px solid var(--explorer-border, #e2e8f0)',
         padding: '96px 24px',
         background: 'var(--vice-dark, #ffffff)',
+        position: 'relative',
       }}
     >
+      {/* Anchor for any old #screenshots links to land here cleanly */}
+      <div id="screenshots" style={{ position: 'absolute', top: '-80px', left: 0 }} aria-hidden="true" />
+
       <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
         {/* Section Header */}
         <div style={{ maxWidth: '720px', marginBottom: '56px' }}>
@@ -150,7 +267,7 @@ export default function AppsSection() {
           </span>
         </div>
 
-        {/* 2 Main App Cards Grid */}
+        {/* Two-Column Apps Grid */}
         <div
           style={{
             display: 'grid',
@@ -159,24 +276,24 @@ export default function AppsSection() {
             marginBottom: '48px',
           }}
         >
-          {/* Card 1: Community App */}
+          {/* Card 1: UltimateHealth User / Community App */}
           <article
             aria-labelledby="user-app-title"
             style={{
-              background: 'var(--explorer-surface, #ffffff)',
-              border: '1px solid var(--explorer-border, #e2e8f0)',
-              borderRadius: '24px',
-              padding: '36px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              boxShadow: 'var(--explorer-card-shadow, 0 4px 20px rgba(0,0,0,0.04))',
-              transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+              padding: '36px 32px',
+              backgroundColor: 'var(--explorer-surface, #ffffff)',
+              border: '1px solid var(--explorer-border, #e2e8f0)',
+              borderRadius: '24px',
+              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             }}
-            className="group hover:border-[#0d9488] hover:shadow-[0_12px_36px_rgba(13,148,136,0.12)]"
+            className="hover:shadow-lg transition-shadow"
           >
             <div>
-              {/* Header with authentic icon and badges */}
+              {/* Header with App Icon and Badges */}
               <div
                 style={{
                   display: 'flex',
@@ -184,39 +301,40 @@ export default function AppsSection() {
                   justifyContent: 'space-between',
                   gap: '16px',
                   marginBottom: '20px',
+                  flexWrap: 'wrap',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <div
                     style={{
+                      position: 'relative',
                       width: '64px',
                       height: '64px',
                       borderRadius: '16px',
                       overflow: 'hidden',
                       border: '1px solid var(--explorer-border, #e2e8f0)',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                      backgroundColor: '#0f172a',
                       flexShrink: 0,
-                      position: 'relative',
-                      backgroundColor: '#f8fafc',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                     }}
                   >
                     <Image
                       src="/ap-asset/user-app-icon.png"
-                      alt="UltimateHealth Community App icon"
-                      width={64}
-                      height={64}
+                      alt="UltimateHealth Community App Icon"
+                      fill
+                      sizes="64px"
                       style={{ objectFit: 'cover' }}
-                      loading="lazy"
+                      priority
                     />
                   </div>
                   <div>
                     <span
                       style={{
                         display: 'inline-block',
-                        fontSize: '0.75rem',
+                        fontSize: '0.6875rem',
                         fontWeight: 700,
                         textTransform: 'uppercase',
-                        letterSpacing: '0.04em',
+                        letterSpacing: '0.05em',
                         color: '#0d9488',
                         marginBottom: '4px',
                       }}
@@ -288,33 +406,108 @@ export default function AppsSection() {
                 </div>
               </div>
 
-              {/* Real Screenshot Preview Gallery (Proportions Preserved) */}
+              {/* Real Screenshot Preview Carousel */}
               <div style={{ marginBottom: '28px' }}>
-                <p
+                <div
                   style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    color: 'var(--vice-muted, #64748b)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
                     marginBottom: '10px',
                   }}
                 >
-                  Authentic App Screens (Click to inspect)
-                </p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        color: 'var(--vice-muted, #64748b)',
+                        margin: 0,
+                      }}
+                    >
+                      App Screenshots ({userScreenshots.length} Screens)
+                    </p>
+                    <span
+                      style={{
+                        fontSize: '0.6875rem',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        background: 'rgba(13, 148, 136, 0.1)',
+                        color: '#0d9488',
+                        fontWeight: 600,
+                      }}
+                    >
+                      Click to inspect
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button
+                      type="button"
+                      onClick={() => scrollTray(userTrayRef, 'left')}
+                      aria-label="Scroll user app screenshots left"
+                      style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        border: '1px solid var(--explorer-border, #e2e8f0)',
+                        background: 'var(--explorer-surface, #ffffff)',
+                        color: 'var(--vice-text, #334155)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                      }}
+                      className="hover:border-[#0d9488] hover:text-[#0d9488]"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollTray(userTrayRef, 'right')}
+                      aria-label="Scroll user app screenshots right"
+                      style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        border: '1px solid var(--explorer-border, #e2e8f0)',
+                        background: 'var(--explorer-surface, #ffffff)',
+                        color: 'var(--vice-text, #334155)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                      }}
+                      className="hover:border-[#0d9488] hover:text-[#0d9488]"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+
                 <div
+                  ref={userTrayRef}
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    display: 'flex',
                     gap: '12px',
+                    overflowX: 'auto',
+                    scrollSnapType: 'x mandatory',
+                    paddingBottom: '8px',
+                    scrollbarWidth: 'thin',
                   }}
                 >
                   {userScreenshots.map((item, i) => (
                     <button
                       key={i}
                       type="button"
-                      onClick={() => setActiveModalImage(item)}
+                      onClick={() => {
+                        setActiveModalGroup('user');
+                        setActiveModalIndex(i);
+                      }}
                       style={{
+                        flex: '0 0 110px',
+                        scrollSnapAlign: 'start',
                         padding: 0,
                         background: 'transparent',
                         border: '1px solid var(--explorer-border, #e2e8f0)',
@@ -324,7 +517,7 @@ export default function AppsSection() {
                         textAlign: 'left',
                         transition: 'transform 0.15s ease, border-color 0.15s ease',
                       }}
-                      className="hover:scale-[1.02] hover:border-[#0d9488] focus-visible:outline-2 focus-visible:outline-[#0d9488]"
+                      className="hover:scale-[1.03] hover:border-[#0d9488] focus-visible:outline-2 focus-visible:outline-[#0d9488]"
                       aria-label={`Inspect screenshot: ${item.caption}`}
                     >
                       <div
@@ -339,7 +532,7 @@ export default function AppsSection() {
                           src={item.src}
                           alt={item.alt}
                           fill
-                          sizes="(max-width: 640px) 30vw, 160px"
+                          sizes="110px"
                           style={{ objectFit: 'cover' }}
                           loading="lazy"
                         />
@@ -367,96 +560,102 @@ export default function AppsSection() {
             </div>
 
             {/* CTAs */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                gap: '12px',
-                paddingTop: '20px',
-                borderTop: '1px solid var(--explorer-border, #e2e8f0)',
-              }}
-            >
-              <a
-                href={USER_APP_STORE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+            <div>
+              <div
                 style={{
-                  display: 'inline-flex',
+                  display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  backgroundColor: '#0d9488',
-                  color: '#ffffff',
-                  padding: '10px 18px',
-                  borderRadius: '12px',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  transition: 'background-color 0.15s ease',
+                  gap: '12px',
+                  flexWrap: 'wrap',
+                  paddingTop: '20px',
+                  borderTop: '1px solid var(--explorer-border, #f1f5f9)',
                 }}
-                className="hover:bg-[#0f766e] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0d9488]"
               >
-                <span>{t('viewPlayStore')}</span>
-                <ExternalLink size={14} aria-hidden="true" />
-              </a>
+                <a
+                  href={USER_APP_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 18px',
+                    backgroundColor: '#0d9488',
+                    color: '#ffffff',
+                    borderRadius: '12px',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    transition: 'background-color 0.15s ease',
+                  }}
+                  className="hover:bg-teal-700"
+                >
+                  <span>{t('userApp.ctaPlayStore')}</span>
+                  <ExternalLink size={14} aria-hidden="true" />
+                </a>
 
-              <Link
-                href={`/${locale}/apps#user-app`}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  backgroundColor: 'transparent',
-                  color: 'var(--vice-text, #1e293b)',
-                  border: '1px solid var(--explorer-border, #cbd5e1)',
-                  padding: '10px 16px',
-                  borderRadius: '12px',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  transition: 'background-color 0.15s ease, border-color 0.15s ease',
-                }}
-                className="hover:border-[#0d9488] hover:text-[#0d9488] focus-visible:outline-2 focus-visible:outline-[#0d9488]"
-              >
-                <span>{t('learnMore')}</span>
-                <ArrowRight size={14} aria-hidden="true" />
-              </Link>
+                <Link
+                  href={`/${locale}/apps#user-app`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '10px 16px',
+                    backgroundColor: 'transparent',
+                    border: '1px solid var(--explorer-border, #cbd5e1)',
+                    color: 'var(--site-heading, #0f172a)',
+                    borderRadius: '12px',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    transition: 'border-color 0.15s ease, background-color 0.15s ease',
+                  }}
+                  className="hover:border-[#0d9488] hover:text-[#0d9488]"
+                >
+                  <span>{t('userApp.ctaExplore')}</span>
+                  <ArrowRight size={14} aria-hidden="true" />
+                </Link>
 
-              <a
-                href={GITHUB_REPO_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: '0.8125rem',
-                  color: 'var(--vice-muted, #64748b)',
-                  textDecoration: 'none',
-                  marginLeft: 'auto',
-                }}
-                className="hover:text-[#0d9488] hover:underline"
-              >
-                {t('viewSource')}
-              </a>
+                <a
+                  href={GITHUB_REPO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '0.8125rem',
+                    color: 'var(--vice-muted, #64748b)',
+                    textDecoration: 'none',
+                    marginLeft: 'auto',
+                  }}
+                  className="hover:text-teal-600 hover:underline"
+                >
+                  <span>{t('common.openSourceBadge')}</span>
+                  <ExternalLink size={12} aria-hidden="true" />
+                </a>
+              </div>
             </div>
           </article>
 
-          {/* Card 2: Admin App */}
+          {/* Card 2: Clinical & Moderation Admin App */}
           <article
             aria-labelledby="admin-app-title"
             style={{
-              background: 'var(--explorer-surface, #ffffff)',
-              border: '1px solid var(--explorer-border, #e2e8f0)',
-              borderRadius: '24px',
-              padding: '36px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              boxShadow: 'var(--explorer-card-shadow, 0 4px 20px rgba(0,0,0,0.04))',
-              transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+              padding: '36px 32px',
+              backgroundColor: 'var(--explorer-surface, #ffffff)',
+              border: '1px solid var(--explorer-border, #e2e8f0)',
+              borderRadius: '24px',
+              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
             }}
-            className="group hover:border-[#0d9488] hover:shadow-[0_12px_36px_rgba(13,148,136,0.12)]"
+            className="hover:shadow-lg transition-shadow"
           >
             <div>
-              {/* Header with authentic icon and badges */}
+              {/* Header with App Icon and Badges */}
               <div
                 style={{
                   display: 'flex',
@@ -464,40 +663,41 @@ export default function AppsSection() {
                   justifyContent: 'space-between',
                   gap: '16px',
                   marginBottom: '20px',
+                  flexWrap: 'wrap',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <div
                     style={{
+                      position: 'relative',
                       width: '64px',
                       height: '64px',
                       borderRadius: '16px',
                       overflow: 'hidden',
                       border: '1px solid var(--explorer-border, #e2e8f0)',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                      backgroundColor: '#042f2e',
                       flexShrink: 0,
-                      position: 'relative',
-                      backgroundColor: '#e6f4fe',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                     }}
                   >
                     <Image
                       src="/admin-asset/admin-icon.png"
-                      alt="UltimateHealth Admin App icon"
-                      width={64}
-                      height={64}
+                      alt="UltimateHealth Admin & Moderation App Icon"
+                      fill
+                      sizes="64px"
                       style={{ objectFit: 'cover' }}
-                      loading="lazy"
+                      priority
                     />
                   </div>
                   <div>
                     <span
                       style={{
                         display: 'inline-block',
-                        fontSize: '0.75rem',
+                        fontSize: '0.6875rem',
                         fontWeight: 700,
                         textTransform: 'uppercase',
-                        letterSpacing: '0.04em',
-                        color: '#2563eb',
+                        letterSpacing: '0.05em',
+                        color: '#0f766e',
                         marginBottom: '4px',
                       }}
                     >
@@ -549,52 +749,127 @@ export default function AppsSection() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <ShieldCheck size={18} style={{ color: '#2563eb', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+                  <ShieldCheck size={18} style={{ color: '#0f766e', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
                   <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
                     {t('adminApp.feat1')}
                   </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <Layers size={18} style={{ color: '#2563eb', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+                  <Layers size={18} style={{ color: '#0f766e', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
                   <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
                     {t('adminApp.feat2')}
                   </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <HeartHandshake size={18} style={{ color: '#2563eb', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+                  <HeartHandshake size={18} style={{ color: '#0f766e', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
                   <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
                     {t('adminApp.feat3')}
                   </span>
                 </div>
               </div>
 
-              {/* Real Screenshot Preview Gallery */}
+              {/* Real Admin Screenshot Preview Carousel */}
               <div style={{ marginBottom: '28px' }}>
-                <p
+                <div
                   style={{
-                    fontSize: '0.75rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    color: 'var(--vice-muted, #64748b)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
                     marginBottom: '10px',
                   }}
                 >
-                  Clinical Review Screens (Click to inspect)
-                </p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em',
+                        color: 'var(--vice-muted, #64748b)',
+                        margin: 0,
+                      }}
+                    >
+                      Admin Screenshots ({adminScreenshots.length} Screens)
+                    </p>
+                    <span
+                      style={{
+                        fontSize: '0.6875rem',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        background: 'rgba(15, 118, 110, 0.1)',
+                        color: '#0f766e',
+                        fontWeight: 600,
+                      }}
+                    >
+                      Click to inspect
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    <button
+                      type="button"
+                      onClick={() => scrollTray(adminTrayRef, 'left')}
+                      aria-label="Scroll admin app screenshots left"
+                      style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        border: '1px solid var(--explorer-border, #e2e8f0)',
+                        background: 'var(--explorer-surface, #ffffff)',
+                        color: 'var(--vice-text, #334155)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                      }}
+                      className="hover:border-[#0f766e] hover:text-[#0f766e]"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollTray(adminTrayRef, 'right')}
+                      aria-label="Scroll admin app screenshots right"
+                      style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        border: '1px solid var(--explorer-border, #e2e8f0)',
+                        background: 'var(--explorer-surface, #ffffff)',
+                        color: 'var(--vice-text, #334155)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                      }}
+                      className="hover:border-[#0f766e] hover:text-[#0f766e]"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                </div>
+
                 <div
+                  ref={adminTrayRef}
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    display: 'flex',
                     gap: '12px',
+                    overflowX: 'auto',
+                    scrollSnapType: 'x mandatory',
+                    paddingBottom: '8px',
+                    scrollbarWidth: 'thin',
                   }}
                 >
                   {adminScreenshots.map((item, i) => (
                     <button
                       key={i}
                       type="button"
-                      onClick={() => setActiveModalImage(item)}
+                      onClick={() => {
+                        setActiveModalGroup('admin');
+                        setActiveModalIndex(i);
+                      }}
                       style={{
+                        flex: '0 0 110px',
+                        scrollSnapAlign: 'start',
                         padding: 0,
                         background: 'transparent',
                         border: '1px solid var(--explorer-border, #e2e8f0)',
@@ -604,7 +879,7 @@ export default function AppsSection() {
                         textAlign: 'left',
                         transition: 'transform 0.15s ease, border-color 0.15s ease',
                       }}
-                      className="hover:scale-[1.02] hover:border-[#2563eb] focus-visible:outline-2 focus-visible:outline-[#2563eb]"
+                      className="hover:scale-[1.03] hover:border-[#0f766e] focus-visible:outline-2 focus-visible:outline-[#0f766e]"
                       aria-label={`Inspect screenshot: ${item.caption}`}
                     >
                       <div
@@ -619,7 +894,7 @@ export default function AppsSection() {
                           src={item.src}
                           alt={item.alt}
                           fill
-                          sizes="(max-width: 640px) 30vw, 160px"
+                          sizes="110px"
                           style={{ objectFit: 'cover' }}
                           loading="lazy"
                         />
@@ -647,99 +922,105 @@ export default function AppsSection() {
             </div>
 
             {/* CTAs */}
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                gap: '12px',
-                paddingTop: '20px',
-                borderTop: '1px solid var(--explorer-border, #e2e8f0)',
-              }}
-            >
-              <a
-                href={ADMIN_APP_STORE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
+            <div>
+              <div
                 style={{
-                  display: 'inline-flex',
+                  display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  backgroundColor: '#2563eb',
-                  color: '#ffffff',
-                  padding: '10px 18px',
-                  borderRadius: '12px',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  transition: 'background-color 0.15s ease',
+                  gap: '12px',
+                  flexWrap: 'wrap',
+                  paddingTop: '20px',
+                  borderTop: '1px solid var(--explorer-border, #f1f5f9)',
                 }}
-                className="hover:bg-[#1d4ed8] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563eb]"
               >
-                <span>{t('viewPlayStore')}</span>
-                <ExternalLink size={14} aria-hidden="true" />
-              </a>
+                <a
+                  href={ADMIN_APP_STORE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 18px',
+                    backgroundColor: '#0f766e',
+                    color: '#ffffff',
+                    borderRadius: '12px',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    transition: 'background-color 0.15s ease',
+                  }}
+                  className="hover:bg-teal-800"
+                >
+                  <span>{t('adminApp.ctaPlayStore')}</span>
+                  <ExternalLink size={14} aria-hidden="true" />
+                </a>
 
-              <Link
-                href={`/${locale}/admin-agreement`}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  backgroundColor: 'transparent',
-                  color: 'var(--vice-text, #1e293b)',
-                  border: '1px solid var(--explorer-border, #cbd5e1)',
-                  padding: '10px 16px',
-                  borderRadius: '12px',
-                  fontSize: '0.875rem',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  transition: 'background-color 0.15s ease, border-color 0.15s ease',
-                }}
-                className="hover:border-[#2563eb] hover:text-[#2563eb] focus-visible:outline-2 focus-visible:outline-[#2563eb]"
-              >
-                <span>Reviewer Agreement</span>
-                <ArrowRight size={14} aria-hidden="true" />
-              </Link>
+                <Link
+                  href={`/${locale}/admin-agreement`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '10px 16px',
+                    backgroundColor: 'transparent',
+                    border: '1px solid var(--explorer-border, #cbd5e1)',
+                    color: 'var(--site-heading, #0f172a)',
+                    borderRadius: '12px',
+                    fontSize: '0.875rem',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    transition: 'border-color 0.15s ease, background-color 0.15s ease',
+                  }}
+                  className="hover:border-[#0f766e] hover:text-[#0f766e]"
+                >
+                  <span>{t('adminApp.ctaAgreement')}</span>
+                  <ArrowRight size={14} aria-hidden="true" />
+                </Link>
 
-              <Link
-                href={`/${locale}/apps#admin-app`}
-                style={{
-                  fontSize: '0.8125rem',
-                  color: 'var(--vice-muted, #64748b)',
-                  textDecoration: 'none',
-                  marginLeft: 'auto',
-                }}
-                className="hover:text-[#2563eb] hover:underline"
-              >
-                {t('learnMore')}
-              </Link>
+                <Link
+                  href={`/${locale}/apps#admin-app`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '0.8125rem',
+                    color: 'var(--vice-muted, #64748b)',
+                    textDecoration: 'none',
+                    marginLeft: 'auto',
+                  }}
+                  className="hover:text-teal-700 hover:underline"
+                >
+                  <span>{t('adminApp.ctaExplore')}</span>
+                  <ArrowRight size={12} aria-hidden="true" />
+                </Link>
+              </div>
             </div>
           </article>
         </div>
 
-        {/* Web Platform Banner & Exploration Link */}
+        {/* Universal Web Platform Banner */}
         <div
           style={{
-            background: 'rgba(13, 148, 136, 0.04)',
-            border: '1px solid rgba(13, 148, 136, 0.15)',
-            borderRadius: '20px',
             padding: '28px 32px',
+            backgroundColor: 'var(--explorer-surface, #ffffff)',
+            border: '1px solid var(--explorer-border, #e2e8f0)',
+            borderRadius: '20px',
             display: 'flex',
-            flexWrap: 'wrap',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: '20px',
-            marginBottom: '40px',
+            gap: '24px',
+            flexWrap: 'wrap',
+            marginBottom: '32px',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '640px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '680px' }}>
             <div
               style={{
-                width: '44px',
-                height: '44px',
+                width: '48px',
+                height: '48px',
                 borderRadius: '12px',
-                backgroundColor: 'rgba(13, 148, 136, 0.12)',
+                backgroundColor: 'rgba(13, 148, 136, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -747,7 +1028,7 @@ export default function AppsSection() {
                 flexShrink: 0,
               }}
             >
-              <Globe2 size={22} aria-hidden="true" />
+              <Globe2 size={24} aria-hidden="true" />
             </div>
             <div>
               <h4
@@ -758,71 +1039,71 @@ export default function AppsSection() {
                   margin: '0 0 4px 0',
                 }}
               >
-                {t('webApp.name')} · {t('webApp.badge')}
+                {t('webPlatform.title')}
               </h4>
               <p
                 style={{
                   fontSize: '0.875rem',
-                  lineHeight: 1.5,
-                  color: 'var(--vice-muted, #475569)',
+                  color: 'var(--vice-muted, #64748b)',
                   margin: 0,
+                  lineHeight: 1.5,
                 }}
               >
-                {t('webApp.desc')}
+                {t('webPlatform.desc')}
               </p>
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
             <Link
               href={`/${locale}/articles`}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                backgroundColor: '#0d9488',
-                color: '#ffffff',
-                padding: '10px 20px',
+                padding: '10px 18px',
+                backgroundColor: 'var(--vice-surface, #f8fafc)',
+                border: '1px solid var(--explorer-border, #cbd5e1)',
+                color: 'var(--site-heading, #0f172a)',
                 borderRadius: '12px',
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 textDecoration: 'none',
               }}
-              className="hover:bg-[#0f766e] focus-visible:outline-2 focus-visible:outline-[#0d9488]"
+              className="hover:border-[#0d9488] hover:text-[#0d9488]"
             >
-              <span>{t('viewWeb')}</span>
+              <span>{t('webPlatform.readArticles')}</span>
               <ArrowRight size={14} aria-hidden="true" />
             </Link>
-
             <Link
               href={`/${locale}/apps`}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                backgroundColor: 'transparent',
-                color: 'var(--site-heading, #0f172a)',
-                border: '1px solid var(--explorer-border, #cbd5e1)',
                 padding: '10px 18px',
+                backgroundColor: '#0d9488',
+                color: '#ffffff',
                 borderRadius: '12px',
                 fontSize: '0.875rem',
                 fontWeight: 600,
                 textDecoration: 'none',
               }}
-              className="hover:border-[#0d9488] hover:text-[#0d9488] focus-visible:outline-2 focus-visible:outline-[#0d9488]"
+              className="hover:bg-teal-700"
             >
-              <span>{t('exploreAllApps')}</span>
+              <span>{t('webPlatform.fullGuide')}</span>
+              <ArrowRight size={14} aria-hidden="true" />
             </Link>
           </div>
         </div>
 
-        {/* Nonprofit & Medical Educational Disclaimer */}
+        {/* Ethical Medical Disclaimer */}
         <div
           style={{
             padding: '16px 20px',
-            borderRadius: '14px',
-            backgroundColor: 'var(--explorer-surface, #ffffff)',
-            border: '1px solid var(--explorer-border, #e2e8f0)',
+            borderRadius: '12px',
+            backgroundColor: 'rgba(148, 163, 184, 0.08)',
+            border: '1px solid rgba(148, 163, 184, 0.2)',
             fontSize: '0.8125rem',
             lineHeight: 1.6,
             color: 'var(--vice-muted, #64748b)',
@@ -836,96 +1117,208 @@ export default function AppsSection() {
         </div>
       </div>
 
-      {/* Accessible Screenshot Lightbox Modal */}
-      {activeModalImage && (
+      {/* Accessible Screenshot Lightbox Modal with Next / Prev */}
+      {currentModalImage && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-label={activeModalImage.caption}
+          aria-label={currentModalImage.caption}
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(15, 23, 42, 0.75)',
-            backdropFilter: 'blur(4px)',
+            backgroundColor: 'rgba(15, 23, 42, 0.85)',
+            backdropFilter: 'blur(6px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 9999,
-            padding: '24px',
+            padding: '20px',
           }}
-          onClick={() => setActiveModalImage(null)}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') setActiveModalImage(null);
-          }}
+          onClick={() => setActiveModalGroup(null)}
         >
           <div
             style={{
               position: 'relative',
-              maxWidth: '380px',
+              maxWidth: '420px',
               width: '100%',
               backgroundColor: 'var(--explorer-surface, #ffffff)',
               borderRadius: '24px',
               overflow: 'hidden',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
             }}
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Modal Header */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '16px 20px',
+                padding: '14px 18px',
                 borderBottom: '1px solid var(--explorer-border, #e2e8f0)',
               }}
             >
-              <h4
-                style={{
-                  fontSize: '0.9375rem',
-                  fontWeight: 700,
-                  color: 'var(--site-heading, #0f172a)',
-                  margin: 0,
-                }}
-              >
-                {activeModalImage.caption}
-              </h4>
+              <div>
+                <h4
+                  style={{
+                    fontSize: '0.9375rem',
+                    fontWeight: 700,
+                    color: 'var(--site-heading, #0f172a)',
+                    margin: 0,
+                  }}
+                >
+                  {currentModalImage.caption}
+                </h4>
+                <span
+                  style={{
+                    fontSize: '0.6875rem',
+                    color: 'var(--vice-muted, #64748b)',
+                  }}
+                >
+                  {activeModalGroup === 'user' ? 'User Community App' : 'Admin Moderation App'} • Screen {activeModalIndex + 1} of {activeList.length}
+                </span>
+              </div>
               <button
                 type="button"
-                onClick={() => setActiveModalImage(null)}
+                onClick={() => setActiveModalGroup(null)}
                 style={{
                   background: 'transparent',
                   border: 'none',
                   cursor: 'pointer',
                   color: 'var(--vice-muted, #64748b)',
-                  padding: '4px',
-                  borderRadius: '6px',
+                  padding: '6px',
+                  borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
-                className="hover:text-slate-900 dark:hover:text-white"
+                className="hover:text-slate-900 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800"
                 aria-label="Close screenshot preview"
               >
                 <X size={20} />
               </button>
             </div>
 
+            {/* Modal Image Display */}
             <div
               style={{
                 position: 'relative',
                 width: '100%',
                 aspectRatio: '9 / 18',
-                backgroundColor: '#0f172a',
+                backgroundColor: '#020617',
               }}
             >
               <Image
-                src={activeModalImage.src}
-                alt={activeModalImage.alt}
+                src={currentModalImage.src}
+                alt={currentModalImage.alt}
                 fill
-                sizes="(max-width: 640px) 90vw, 380px"
+                sizes="(max-width: 640px) 95vw, 420px"
                 style={{ objectFit: 'contain' }}
                 priority
               />
+
+              {/* Prev / Next Floating Arrows */}
+              <button
+                type="button"
+                onClick={handlePrevModal}
+                aria-label="Previous screenshot"
+                style={{
+                  position: 'absolute',
+                  left: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.15s ease',
+                }}
+                className="hover:bg-teal-600"
+              >
+                <ChevronLeft size={20} />
+              </button>
+
+              <button
+                type="button"
+                onClick={handleNextModal}
+                aria-label="Next screenshot"
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.15s ease',
+                }}
+                className="hover:bg-teal-600"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+
+            {/* Modal Footer */}
+            <div
+              style={{
+                padding: '12px 18px',
+                backgroundColor: 'var(--explorer-surface, #ffffff)',
+                borderTop: '1px solid var(--explorer-border, #e2e8f0)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <span style={{ fontSize: '0.75rem', color: 'var(--vice-muted, #64748b)' }}>
+                Use Left / Right arrow keys to navigate • Esc to close
+              </span>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                  type="button"
+                  onClick={handlePrevModal}
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    borderRadius: '6px',
+                    border: '1px solid var(--explorer-border, #e2e8f0)',
+                    background: 'transparent',
+                    cursor: 'pointer',
+                  }}
+                  className="hover:border-[#0d9488]"
+                >
+                  Prev
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNextModal}
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    borderRadius: '6px',
+                    border: '1px solid #0d9488',
+                    background: '#0d9488',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>

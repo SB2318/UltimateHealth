@@ -79,6 +79,48 @@ const userScreenshotsList: ScreenshotDetail[] = [
     desc: 'Saved bookmarks, reading history, and quick access to topic guides without tracking.',
     app: 'user',
   },
+  {
+    id: 'u7',
+    src: '/ap-asset/wellness-dashboard.jpeg',
+    title: 'Wellness & Routine Tracker',
+    desc: 'Daily health indicators, symptom reflection, and preventive care tracking.',
+    app: 'user',
+  },
+  {
+    id: 'u8',
+    src: '/ap-asset/quick-care-and-relief.jpeg',
+    title: 'Quick Relief & First-Aid Guides',
+    desc: 'Immediate reference guides with warning signs and triage tips for common acute concerns.',
+    app: 'user',
+  },
+  {
+    id: 'u9',
+    src: '/ap-asset/podcast-list.jpeg',
+    title: 'Multilingual Audio Episodes',
+    desc: 'Bilingual audio explainers narrating essential health articles across 9 languages.',
+    app: 'user',
+  },
+  {
+    id: 'u10',
+    src: '/ap-asset/care-team-ultimatehealth.jpeg',
+    title: 'Verified Care Team Directory',
+    desc: 'Community medical advisory network and peer-reviewed doctor profiles.',
+    app: 'user',
+  },
+  {
+    id: 'u11',
+    src: '/ap-asset/customize-homepage.jpeg',
+    title: 'Customizable Health Feed',
+    desc: 'Personalized preference settings to prioritize topics most relevant to your family.',
+    app: 'user',
+  },
+  {
+    id: 'u12',
+    src: '/ap-asset/open-source-licenses.jpeg',
+    title: 'Open Source Transparency',
+    desc: 'Complete open-source licensing audit trail verifying zero commercial ad tracking.',
+    app: 'user',
+  },
 ];
 
 const adminScreenshotsList: ScreenshotDetail[] = [
