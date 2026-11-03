@@ -264,6 +264,31 @@
       "desc": "Zugriff auf die medizinische Bibliothek und das Glossar direkt im Browser in 9 Sprachen.",
       "readArticles": "Artikel lesen",
       "fullGuide": "Alle Ökosystem-Apps anzeigen"
+    },
+    "today": {
+      "badge": "Was Sie heute nutzen können",
+      "heading": "Praktische Gesundheitsfunktionen für Ihren Alltag",
+      "subheading": "Transparente, empathische Werkzeuge, die Ihre tägliche Gesundheit ab sofort unterstützen.",
+      "aiDoctor": {
+        "badge": "5 kostenlose Fragen / Tag",
+        "title": "UltimateHealth Care Team",
+        "subtitle": "Fachärztliche KI-Beratung",
+        "desc": "Jede Person kann jedem KI-Facharzt täglich bis zu 5 kostenlose Fragen stellen – zur verständlichen Klärung von Symptomen und Befunden.",
+        "highlight": "Täglich 5 kostenlose Fragen pro Facharzt",
+        "tag1": "Keine Abos oder versteckten Kosten",
+        "tag2": "Mehrere medizinische Fachgebiete",
+        "tag3": "Würdevolle und verständliche Antworten"
+      },
+      "wellness": {
+        "badge": "In der App verfügbar",
+        "title": "Personalisierter Wellness-Plan",
+        "subtitle": "Gesundheitsprotokoll & 48h-Plan-Aktualisierung",
+        "desc": "Führen Sie Ihr persönliches Gesundheitstagebuch und erhalten Sie Ihren individuellen Wellness-Plan, der in der App alle 2 Tage aktualisiert wird.",
+        "highlight": "Aktualisiert den Plan alle 2 Tage in der App",
+        "tag1": "Vertrauliche Gesundheitsprotokolle",
+        "tag2": "Adaptive 48-Stunden-Aktualisierung",
+        "tag3": "Kein Werbetracking oder Datenverkauf"
+      }
     }
   }
 }

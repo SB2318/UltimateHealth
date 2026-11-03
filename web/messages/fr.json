@@ -264,6 +264,31 @@
       "desc": "Accédez à la bibliothèque médicale complète et au glossaire directement depuis votre navigateur en 9 langues.",
       "readArticles": "Lire les articles",
       "fullGuide": "Explorer toutes les applications"
+    },
+    "today": {
+      "badge": "Ce que vous pouvez utiliser aujourd’hui",
+      "heading": "Des fonctionnalités concrètes pour votre santé au quotidien",
+      "subheading": "Des outils transparents et bienveillants prêts à vous accompagner dès maintenant.",
+      "aiDoctor": {
+        "badge": "5 questions gratuites / jour",
+        "title": "Équipe de Soins UltimateHealth",
+        "subtitle": "Orientation médicale par IA spécialisée",
+        "desc": "Chaque personne peut poser jusqu’à 5 questions gratuites par jour à chaque médecin IA spécialiste pour clarifier ses symptômes avec empathie.",
+        "highlight": "5 questions gratuites par jour et par spécialiste",
+        "tag1": "Aucun abonnement ni frais cachés",
+        "tag2": "Plusieurs spécialités médicales",
+        "tag3": "Dédié à la dignité du patient"
+      },
+      "wellness": {
+        "badge": "Disponible dans l’application",
+        "title": "Programme de bien-être personnalisé",
+        "subtitle": "Journal de santé & actualisation toutes les 48 h",
+        "desc": "Enregistrez votre journal de santé et créez votre plan de bien-être. L’application mobile actualise votre routine tous les 2 jours.",
+        "highlight": "Plan actualisé tous les 2 jours dans l’app",
+        "tag1": "Journaux de santé confidentiels",
+        "tag2": "Actualisation adaptative toutes les 48 h",
+        "tag3": "Zéro pistage publicitaire ou vente de données"
+      }
     }
   }
 }

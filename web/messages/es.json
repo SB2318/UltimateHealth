@@ -264,6 +264,31 @@
       "desc": "Accede a la biblioteca médica completa y al glosario interactivo desde cualquier navegador en 9 idiomas.",
       "readArticles": "Leer artículos",
       "fullGuide": "Explorar todas las aplicaciones"
+    },
+    "today": {
+      "badge": "Lo que puedes usar hoy",
+      "heading": "Herramientas prácticas para tu salud diaria",
+      "subheading": "Herramientas transparentes y centradas en el paciente listas para ayudarte hoy mismo.",
+      "aiDoctor": {
+        "badge": "5 preguntas gratis al día",
+        "title": "Equipo de Atención UltimateHealth",
+        "subtitle": "Orientación médica con IA especialista",
+        "desc": "Cada persona puede hacer hasta 5 preguntas gratuitas al día a cada médico especialista con IA para aclarar síntomas y dudas con empatía clínica.",
+        "highlight": "5 preguntas gratis al día por cada especialista",
+        "tag1": "Sin suscripciones ni muros de pago",
+        "tag2": "Múltiples especialidades clínicas",
+        "tag3": "Enfoque centrado en la dignidad del paciente"
+      },
+      "wellness": {
+        "badge": "Disponible en la app",
+        "title": "Plan de bienestar personalizado",
+        "subtitle": "Registro de salud y actualización cada 48 horas",
+        "desc": "Guarda tu diario de salud y genera tu plan de bienestar. La app móvil actualiza tu rutina cada 2 días según tu evolución.",
+        "highlight": "Actualización del plan cada 2 días en la app",
+        "tag1": "Registros de salud privados",
+        "tag2": "Actualización adaptativa cada 48 horas",
+        "tag3": "Sin rastreo publicitario ni venta de datos"
+      }
     }
   }
 }

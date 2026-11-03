@@ -264,6 +264,31 @@
       "desc": "Access the complete medical library, clinical series, and interactive glossary directly from any web browser across 9 languages.",
       "readArticles": "Read Articles",
       "fullGuide": "Explore All Ecosystem Apps"
+    },
+    "today": {
+      "badge": "What You Can Use Today",
+      "heading": "Practical Healthcare Capabilities at Your Fingertips",
+      "subheading": "Transparent, supportive tools built to assist your daily wellness journey right now.",
+      "aiDoctor": {
+        "badge": "5 Free Questions / Day",
+        "title": "UltimateHealth Care Team",
+        "subtitle": "Specialist AI Medical Guidance",
+        "desc": "For each person, you can ask up to 5 free questions every day to each AI specialist doctor—clarifying symptoms, lab terminology, and everyday wellness questions with clinical empathy.",
+        "highlight": "5 Free Questions Daily per Specialist Doctor",
+        "tag1": "No Paywalls or Subscriptions",
+        "tag2": "Multiple Clinical Specialties",
+        "tag3": "Dignity & Empathy Focused"
+      },
+      "wellness": {
+        "badge": "Available in App",
+        "title": "Personalized Wellness Routine",
+        "subtitle": "Health Logging & Adaptive Roadmaps",
+        "desc": "Store your personal health log, track daily symptoms, and generate a personalized wellness plan. The mobile app refreshes your routine every 2 days to match your pace.",
+        "highlight": "Plan Refreshes Every 2 Days in App",
+        "tag1": "Private Health Logs",
+        "tag2": "Adaptive 48-Hour Refresh",
+        "tag3": "Zero Data Resale or Ad Tracking"
+      }
     }
   }
 }

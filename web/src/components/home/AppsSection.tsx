@@ -19,7 +19,12 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Eye,
+  Stethoscope,
+  Activity,
+  Calendar,
+  MessageSquare,
+  Bot,
+  Zap,
 } from 'lucide-react';
 
 interface ScreenshotItem {
@@ -201,376 +206,253 @@ export default function AppsSection() {
       <div id="screenshots" style={{ position: 'absolute', top: '-80px', left: 0 }} aria-hidden="true" />
 
       <div style={{ maxWidth: '1180px', margin: '0 auto' }}>
-        {/* Section Header */}
-        <div style={{ maxWidth: '720px', marginBottom: '56px' }}>
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '6px 14px',
-              borderRadius: '9999px',
-              backgroundColor: 'rgba(13, 148, 136, 0.08)',
-              border: '1px solid rgba(13, 148, 136, 0.2)',
-              marginBottom: '16px',
-            }}
-          >
-            <Smartphone size={14} style={{ color: '#0d9488' }} aria-hidden="true" />
-            <span
+        {/* ======================================================== */}
+        {/* TIER 1: WHAT YOU CAN USE TODAY (AI CARE TEAM & WELLNESS) */}
+        {/* ======================================================== */}
+        <div style={{ marginBottom: '64px' }}>
+          <div style={{ maxWidth: '780px', marginBottom: '36px' }}>
+            <div
               style={{
-                fontSize: '0.8125rem',
-                fontWeight: 700,
-                color: '#0d9488',
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '6px 14px',
+                borderRadius: '9999px',
+                backgroundColor: 'rgba(13, 148, 136, 0.08)',
+                border: '1px solid rgba(13, 148, 136, 0.2)',
+                marginBottom: '16px',
               }}
             >
-              {t('sectionBadge')}
-            </span>
+              <Sparkles size={14} style={{ color: '#0d9488' }} aria-hidden="true" />
+              <span
+                style={{
+                  fontSize: '0.8125rem',
+                  fontWeight: 700,
+                  color: '#0d9488',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {t('today.badge')}
+              </span>
+            </div>
+
+            <h2
+              id="today-heading"
+              className="uh-display"
+              style={{
+                fontSize: 'clamp(2rem, 3.8vw, 2.75rem)',
+                color: 'var(--site-heading, #0f172a)',
+                margin: '0 0 16px 0',
+                fontWeight: 800,
+                lineHeight: 1.2,
+              }}
+            >
+              {t('today.heading')}
+            </h2>
+
+            <p
+              style={{
+                fontSize: '1.0625rem',
+                lineHeight: 1.65,
+                color: 'var(--vice-muted, #475569)',
+                margin: 0,
+              }}
+            >
+              {t('today.subheading')}
+            </p>
           </div>
 
-          <h2
-            id="apps-heading"
-            className="uh-display"
+          {/* Two Prominent Feature Highlight Cards */}
+          <div
             style={{
-              fontSize: 'clamp(2rem, 4vw, 2.75rem)',
-              color: 'var(--site-heading, #0f172a)',
-              margin: '0 0 16px 0',
-              fontWeight: 800,
-              lineHeight: 1.2,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 520px), 1fr))',
+              gap: '24px',
             }}
           >
-            {t('title')}
-          </h2>
-
-          <p
-            style={{
-              fontSize: '1.0625rem',
-              lineHeight: 1.65,
-              color: 'var(--vice-muted, #475569)',
-              margin: '0 0 16px 0',
-            }}
-          >
-            {t('subtitle')}
-          </p>
-
-          <span
-            style={{
-              display: 'inline-block',
-              fontSize: '0.8125rem',
-              color: '#0d9488',
-              fontWeight: 600,
-              letterSpacing: '0.02em',
-            }}
-          >
-            {t('introPill')}
-          </span>
-        </div>
-
-        {/* Two-Column Apps Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 520px), 1fr))',
-            gap: '32px',
-            marginBottom: '48px',
-          }}
-        >
-          {/* Card 1: UltimateHealth User / Community App */}
-          <article
-            aria-labelledby="user-app-title"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              padding: '36px 32px',
-              backgroundColor: 'var(--explorer-surface, #ffffff)',
-              border: '1px solid var(--explorer-border, #e2e8f0)',
-              borderRadius: '24px',
-              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            }}
-            className="hover:shadow-lg transition-shadow"
-          >
-            <div>
-              {/* Header with App Icon and Badges */}
+            {/* Feature Card A: UltimateHealth Care Team (AI Doctors) */}
+            <div
+              style={{
+                padding: '32px',
+                borderRadius: '24px',
+                backgroundColor: 'var(--explorer-surface, #ffffff)',
+                border: '1px solid var(--explorer-border, #e2e8f0)',
+                boxShadow: '0 4px 20px -2px rgba(13, 148, 136, 0.08)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+              className="hover:border-teal-500 transition-colors"
+            >
+              {/* Subtle decorative gradient pill at corner */}
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  justifyContent: 'space-between',
-                  gap: '16px',
-                  marginBottom: '20px',
-                  flexWrap: 'wrap',
+                  position: 'absolute',
+                  top: '-40px',
+                  right: '-40px',
+                  width: '120px',
+                  height: '120px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(13, 148, 136, 0.15) 0%, transparent 70%)',
+                  pointerEvents: 'none',
                 }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div
-                    style={{
-                      position: 'relative',
-                      width: '64px',
-                      height: '64px',
-                      borderRadius: '16px',
-                      overflow: 'hidden',
-                      border: '1px solid var(--explorer-border, #e2e8f0)',
-                      backgroundColor: '#0f172a',
-                      flexShrink: 0,
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                    }}
-                  >
-                    <Image
-                      src="/ap-asset/user-app-icon.png"
-                      alt="UltimateHealth Community App Icon"
-                      fill
-                      sizes="64px"
-                      style={{ objectFit: 'cover' }}
-                      priority
-                    />
-                  </div>
-                  <div>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        fontSize: '0.6875rem',
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        color: '#0d9488',
-                        marginBottom: '4px',
-                      }}
-                    >
-                      {t('userApp.badge')}
-                    </span>
-                    <h3
-                      id="user-app-title"
-                      style={{
-                        fontSize: '1.375rem',
-                        fontWeight: 700,
-                        color: 'var(--site-heading, #0f172a)',
-                        margin: 0,
-                      }}
-                    >
-                      {t('userApp.name')}
-                    </h3>
-                    <p
-                      style={{
-                        fontSize: '0.875rem',
-                        color: 'var(--vice-muted, #64748b)',
-                        margin: '2px 0 0 0',
-                      }}
-                    >
-                      {t('userApp.tagline')}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              />
 
-              {/* Factual Description */}
-              <p
-                style={{
-                  fontSize: '0.9375rem',
-                  lineHeight: 1.6,
-                  color: 'var(--vice-muted, #475569)',
-                  marginBottom: '24px',
-                }}
-              >
-                {t('userApp.desc')}
-              </p>
-
-              {/* Verified Feature Bullets */}
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                  marginBottom: '28px',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <BookOpen size={18} style={{ color: '#0d9488', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
-                  <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
-                    {t('userApp.feat1')}
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <Headphones size={18} style={{ color: '#0d9488', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
-                  <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
-                    {t('userApp.feat2')}
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <Sparkles size={18} style={{ color: '#0d9488', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
-                  <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
-                    {t('userApp.feat3')}
-                  </span>
-                </div>
-              </div>
-
-              {/* Real Screenshot Preview Carousel */}
-              <div style={{ marginBottom: '28px' }}>
+              <div>
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    marginBottom: '10px',
+                    marginBottom: '20px',
+                    gap: '12px',
+                    flexWrap: 'wrap',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <p
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div
                       style={{
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        color: 'var(--vice-muted, #64748b)',
-                        margin: 0,
-                      }}
-                    >
-                      App Screenshots ({userScreenshots.length} Screens)
-                    </p>
-                    <span
-                      style={{
-                        fontSize: '0.6875rem',
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        background: 'rgba(13, 148, 136, 0.1)',
+                        width: '52px',
+                        height: '52px',
+                        borderRadius: '16px',
+                        backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         color: '#0d9488',
-                        fontWeight: 600,
+                        flexShrink: 0,
                       }}
                     >
-                      Click to inspect
-                    </span>
+                      <Stethoscope size={26} aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3
+                        style={{
+                          fontSize: '1.25rem',
+                          fontWeight: 700,
+                          color: 'var(--site-heading, #0f172a)',
+                          margin: 0,
+                        }}
+                      >
+                        {t('today.aiDoctor.title')}
+                      </h3>
+                      <p
+                        style={{
+                          fontSize: '0.8125rem',
+                          color: 'var(--vice-muted, #64748b)',
+                          margin: '2px 0 0 0',
+                          fontWeight: 500,
+                        }}
+                      >
+                        {t('today.aiDoctor.subtitle')}
+                      </p>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <button
-                      type="button"
-                      onClick={() => scrollTray(userTrayRef, 'left')}
-                      aria-label="Scroll user app screenshots left"
-                      style={{
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '50%',
-                        border: '1px solid var(--explorer-border, #e2e8f0)',
-                        background: 'var(--explorer-surface, #ffffff)',
-                        color: 'var(--vice-text, #334155)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                      }}
-                      className="hover:border-[#0d9488] hover:text-[#0d9488]"
-                    >
-                      <ChevronLeft size={16} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => scrollTray(userTrayRef, 'right')}
-                      aria-label="Scroll user app screenshots right"
-                      style={{
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '50%',
-                        border: '1px solid var(--explorer-border, #e2e8f0)',
-                        background: 'var(--explorer-surface, #ffffff)',
-                        color: 'var(--vice-text, #334155)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                      }}
-                      className="hover:border-[#0d9488] hover:text-[#0d9488]"
-                    >
-                      <ChevronRight size={16} />
-                    </button>
-                  </div>
+
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '4px 10px',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(13, 148, 136, 0.12)',
+                      color: '#0d9488',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    <Bot size={13} aria-hidden="true" />
+                    {t('today.aiDoctor.badge')}
+                  </span>
                 </div>
 
+                {/* Main Feature Statement */}
                 <div
-                  ref={userTrayRef}
                   style={{
+                    padding: '14px 16px',
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(13, 148, 136, 0.05)',
+                    border: '1px solid rgba(13, 148, 136, 0.15)',
+                    marginBottom: '16px',
                     display: 'flex',
-                    gap: '12px',
-                    overflowX: 'auto',
-                    scrollSnapType: 'x mandatory',
-                    paddingBottom: '8px',
-                    scrollbarWidth: 'thin',
+                    alignItems: 'center',
+                    gap: '10px',
                   }}
                 >
-                  {userScreenshots.map((item, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => {
-                        setActiveModalGroup('user');
-                        setActiveModalIndex(i);
-                      }}
-                      style={{
-                        flex: '0 0 110px',
-                        scrollSnapAlign: 'start',
-                        padding: 0,
-                        background: 'transparent',
-                        border: '1px solid var(--explorer-border, #e2e8f0)',
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                        transition: 'transform 0.15s ease, border-color 0.15s ease',
-                      }}
-                      className="hover:scale-[1.03] hover:border-[#0d9488] focus-visible:outline-2 focus-visible:outline-[#0d9488]"
-                      aria-label={`Inspect screenshot: ${item.caption}`}
-                    >
-                      <div
-                        style={{
-                          position: 'relative',
-                          width: '100%',
-                          aspectRatio: '9 / 18',
-                          backgroundColor: '#0f172a',
-                        }}
-                      >
-                        <Image
-                          src={item.src}
-                          alt={item.alt}
-                          fill
-                          sizes="110px"
-                          style={{ objectFit: 'cover' }}
-                          loading="lazy"
-                        />
-                      </div>
-                      <div
-                        style={{
-                          padding: '6px 8px',
-                          fontSize: '0.6875rem',
-                          fontWeight: 600,
-                          color: 'var(--vice-muted, #475569)',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          backgroundColor: 'var(--explorer-surface, #ffffff)',
-                          borderTop: '1px solid var(--explorer-border, #e2e8f0)',
-                        }}
-                        title={item.caption}
-                      >
-                        {item.caption}
-                      </div>
-                    </button>
-                  ))}
+                  <MessageSquare size={18} style={{ color: '#0d9488', flexShrink: 0 }} aria-hidden="true" />
+                  <span
+                    style={{
+                      fontSize: '0.875rem',
+                      fontWeight: 700,
+                      color: '#0f766e',
+                    }}
+                  >
+                    {t('today.aiDoctor.highlight')}
+                  </span>
+                </div>
+
+                <p
+                  style={{
+                    fontSize: '0.9375rem',
+                    lineHeight: 1.6,
+                    color: 'var(--vice-muted, #475569)',
+                    marginBottom: '20px',
+                  }}
+                >
+                  {t('today.aiDoctor.desc')}
+                </p>
+
+                {/* Value Tags */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      padding: '4px 10px',
+                      borderRadius: '8px',
+                      backgroundColor: 'var(--vice-surface, #f8fafc)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
+                      color: 'var(--vice-text, #334155)',
+                    }}
+                  >
+                    ✓ {t('today.aiDoctor.tag1')}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      padding: '4px 10px',
+                      borderRadius: '8px',
+                      backgroundColor: 'var(--vice-surface, #f8fafc)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
+                      color: 'var(--vice-text, #334155)',
+                    }}
+                  >
+                    ✓ {t('today.aiDoctor.tag2')}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      padding: '4px 10px',
+                      borderRadius: '8px',
+                      backgroundColor: 'var(--vice-surface, #f8fafc)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
+                      color: 'var(--vice-text, #334155)',
+                    }}
+                  >
+                    ✓ {t('today.aiDoctor.tag3')}
+                  </span>
                 </div>
               </div>
-            </div>
 
-            {/* CTAs */}
-            <div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  flexWrap: 'wrap',
-                  paddingTop: '20px',
-                  borderTop: '1px solid var(--explorer-border, #f1f5f9)',
-                }}
-              >
+              {/* Action */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                 <a
                   href={USER_APP_STORE_URL}
                   target="_blank"
@@ -579,541 +461,1189 @@ export default function AppsSection() {
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
-                    padding: '10px 18px',
+                    padding: '8px 16px',
                     backgroundColor: '#0d9488',
                     color: '#ffffff',
-                    borderRadius: '12px',
-                    fontSize: '0.875rem',
+                    borderRadius: '10px',
+                    fontSize: '0.8125rem',
                     fontWeight: 600,
                     textDecoration: 'none',
-                    transition: 'background-color 0.15s ease',
                   }}
                   className="hover:bg-teal-700"
                 >
-                  <span>{t('viewPlayStore')}</span>
-                  <ExternalLink size={14} aria-hidden="true" />
+                  <span>Ask in Community App</span>
+                  <ExternalLink size={13} aria-hidden="true" />
                 </a>
-
                 <Link
                   href={`/${locale}/apps#user-app`}
                   style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '10px 16px',
-                    backgroundColor: 'transparent',
-                    border: '1px solid var(--explorer-border, #cbd5e1)',
-                    color: 'var(--site-heading, #0f172a)',
-                    borderRadius: '12px',
-                    fontSize: '0.875rem',
+                    fontSize: '0.8125rem',
+                    color: '#0d9488',
                     fontWeight: 600,
                     textDecoration: 'none',
-                    transition: 'border-color 0.15s ease, background-color 0.15s ease',
-                  }}
-                  className="hover:border-[#0d9488] hover:text-[#0d9488]"
-                >
-                  <span>{t('learnMore')}</span>
-                  <ArrowRight size={14} aria-hidden="true" />
-                </Link>
-
-                <a
-                  href={GITHUB_REPO_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '0.8125rem',
-                    color: 'var(--vice-muted, #64748b)',
-                    textDecoration: 'none',
-                    marginLeft: 'auto',
+                    gap: '4px',
                   }}
-                  className="hover:text-teal-600 hover:underline"
+                  className="hover:underline"
                 >
-                  <span>{t('viewSource')}</span>
-                  <ExternalLink size={12} aria-hidden="true" />
-                </a>
+                  <span>Learn how it works</span>
+                  <ArrowRight size={13} aria-hidden="true" />
+                </Link>
               </div>
             </div>
-          </article>
 
-          {/* Card 2: Clinical & Moderation Admin App */}
-          <article
-            aria-labelledby="admin-app-title"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              padding: '36px 32px',
-              backgroundColor: 'var(--explorer-surface, #ffffff)',
-              border: '1px solid var(--explorer-border, #e2e8f0)',
-              borderRadius: '24px',
-              boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            }}
-            className="hover:shadow-lg transition-shadow"
-          >
-            <div>
-              {/* Header with App Icon and Badges */}
+            {/* Feature Card B: Wellness Routine & 48h Plan Refresh */}
+            <div
+              style={{
+                padding: '32px',
+                borderRadius: '24px',
+                backgroundColor: 'var(--explorer-surface, #ffffff)',
+                border: '1px solid var(--explorer-border, #e2e8f0)',
+                boxShadow: '0 4px 20px -2px rgba(13, 148, 136, 0.08)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+              className="hover:border-teal-500 transition-colors"
+            >
+              {/* Subtle decorative gradient pill at corner */}
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  justifyContent: 'space-between',
-                  gap: '16px',
-                  marginBottom: '20px',
-                  flexWrap: 'wrap',
+                  position: 'absolute',
+                  top: '-40px',
+                  right: '-40px',
+                  width: '120px',
+                  height: '120px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)',
+                  pointerEvents: 'none',
                 }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div
-                    style={{
-                      position: 'relative',
-                      width: '64px',
-                      height: '64px',
-                      borderRadius: '16px',
-                      overflow: 'hidden',
-                      border: '1px solid var(--explorer-border, #e2e8f0)',
-                      backgroundColor: '#042f2e',
-                      flexShrink: 0,
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                    }}
-                  >
-                    <Image
-                      src="/admin-asset/admin-icon.png"
-                      alt="UltimateHealth Admin & Moderation App Icon"
-                      fill
-                      sizes="64px"
-                      style={{ objectFit: 'cover' }}
-                      priority
-                    />
-                  </div>
-                  <div>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        fontSize: '0.6875rem',
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        color: '#0f766e',
-                        marginBottom: '4px',
-                      }}
-                    >
-                      {t('adminApp.badge')}
-                    </span>
-                    <h3
-                      id="admin-app-title"
-                      style={{
-                        fontSize: '1.375rem',
-                        fontWeight: 700,
-                        color: 'var(--site-heading, #0f172a)',
-                        margin: 0,
-                      }}
-                    >
-                      {t('adminApp.name')}
-                    </h3>
-                    <p
-                      style={{
-                        fontSize: '0.875rem',
-                        color: 'var(--vice-muted, #64748b)',
-                        margin: '2px 0 0 0',
-                      }}
-                    >
-                      {t('adminApp.tagline')}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              />
 
-              {/* Factual Description */}
-              <p
-                style={{
-                  fontSize: '0.9375rem',
-                  lineHeight: 1.6,
-                  color: 'var(--vice-muted, #475569)',
-                  marginBottom: '24px',
-                }}
-              >
-                {t('adminApp.desc')}
-              </p>
-
-              {/* Verified Feature Bullets */}
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                  marginBottom: '28px',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <ShieldCheck size={18} style={{ color: '#0f766e', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
-                  <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
-                    {t('adminApp.feat1')}
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <Layers size={18} style={{ color: '#0f766e', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
-                  <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
-                    {t('adminApp.feat2')}
-                  </span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <HeartHandshake size={18} style={{ color: '#0f766e', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
-                  <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
-                    {t('adminApp.feat3')}
-                  </span>
-                </div>
-              </div>
-
-              {/* Real Admin Screenshot Preview Carousel */}
-              <div style={{ marginBottom: '28px' }}>
+              <div>
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    marginBottom: '10px',
+                    marginBottom: '20px',
+                    gap: '12px',
+                    flexWrap: 'wrap',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <p
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div
                       style={{
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.05em',
-                        color: 'var(--vice-muted, #64748b)',
-                        margin: 0,
-                      }}
-                    >
-                      Admin Screenshots ({adminScreenshots.length} Screens)
-                    </p>
-                    <span
-                      style={{
-                        fontSize: '0.6875rem',
-                        padding: '2px 6px',
-                        borderRadius: '4px',
-                        background: 'rgba(15, 118, 110, 0.1)',
-                        color: '#0f766e',
-                        fontWeight: 600,
-                      }}
-                    >
-                      Click to inspect
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <button
-                      type="button"
-                      onClick={() => scrollTray(adminTrayRef, 'left')}
-                      aria-label="Scroll admin app screenshots left"
-                      style={{
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '50%',
-                        border: '1px solid var(--explorer-border, #e2e8f0)',
-                        background: 'var(--explorer-surface, #ffffff)',
-                        color: 'var(--vice-text, #334155)',
+                        width: '52px',
+                        height: '52px',
+                        borderRadius: '16px',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        cursor: 'pointer',
+                        color: '#059669',
+                        flexShrink: 0,
                       }}
-                      className="hover:border-[#0f766e] hover:text-[#0f766e]"
                     >
-                      <ChevronLeft size={16} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => scrollTray(adminTrayRef, 'right')}
-                      aria-label="Scroll admin app screenshots right"
-                      style={{
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '50%',
-                        border: '1px solid var(--explorer-border, #e2e8f0)',
-                        background: 'var(--explorer-surface, #ffffff)',
-                        color: 'var(--vice-text, #334155)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        cursor: 'pointer',
-                      }}
-                      className="hover:border-[#0f766e] hover:text-[#0f766e]"
-                    >
-                      <ChevronRight size={16} />
-                    </button>
+                      <Activity size={26} aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h3
+                        style={{
+                          fontSize: '1.25rem',
+                          fontWeight: 700,
+                          color: 'var(--site-heading, #0f172a)',
+                          margin: 0,
+                        }}
+                      >
+                        {t('today.wellness.title')}
+                      </h3>
+                      <p
+                        style={{
+                          fontSize: '0.8125rem',
+                          color: 'var(--vice-muted, #64748b)',
+                          margin: '2px 0 0 0',
+                          fontWeight: 500,
+                        }}
+                      >
+                        {t('today.wellness.subtitle')}
+                      </p>
+                    </div>
                   </div>
+
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '4px 10px',
+                      borderRadius: '9999px',
+                      backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                      color: '#059669',
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    <Calendar size={13} aria-hidden="true" />
+                    {t('today.wellness.badge')}
+                  </span>
                 </div>
 
+                {/* Main Feature Statement */}
                 <div
-                  ref={adminTrayRef}
                   style={{
+                    padding: '14px 16px',
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                    border: '1px solid rgba(16, 185, 129, 0.15)',
+                    marginBottom: '16px',
                     display: 'flex',
-                    gap: '12px',
-                    overflowX: 'auto',
-                    scrollSnapType: 'x mandatory',
-                    paddingBottom: '8px',
-                    scrollbarWidth: 'thin',
+                    alignItems: 'center',
+                    gap: '10px',
                   }}
                 >
-                  {adminScreenshots.map((item, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => {
-                        setActiveModalGroup('admin');
-                        setActiveModalIndex(i);
-                      }}
-                      style={{
-                        flex: '0 0 110px',
-                        scrollSnapAlign: 'start',
-                        padding: 0,
-                        background: 'transparent',
-                        border: '1px solid var(--explorer-border, #e2e8f0)',
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                        cursor: 'pointer',
-                        textAlign: 'left',
-                        transition: 'transform 0.15s ease, border-color 0.15s ease',
-                      }}
-                      className="hover:scale-[1.03] hover:border-[#0f766e] focus-visible:outline-2 focus-visible:outline-[#0f766e]"
-                      aria-label={`Inspect screenshot: ${item.caption}`}
-                    >
-                      <div
-                        style={{
-                          position: 'relative',
-                          width: '100%',
-                          aspectRatio: '9 / 18',
-                          backgroundColor: '#0f172a',
-                        }}
-                      >
-                        <Image
-                          src={item.src}
-                          alt={item.alt}
-                          fill
-                          sizes="110px"
-                          style={{ objectFit: 'cover' }}
-                          loading="lazy"
-                        />
-                      </div>
-                      <div
-                        style={{
-                          padding: '6px 8px',
-                          fontSize: '0.6875rem',
-                          fontWeight: 600,
-                          color: 'var(--vice-muted, #475569)',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          backgroundColor: 'var(--explorer-surface, #ffffff)',
-                          borderTop: '1px solid var(--explorer-border, #e2e8f0)',
-                        }}
-                        title={item.caption}
-                      >
-                        {item.caption}
-                      </div>
-                    </button>
-                  ))}
+                  <Zap size={18} style={{ color: '#059669', flexShrink: 0 }} aria-hidden="true" />
+                  <span
+                    style={{
+                      fontSize: '0.875rem',
+                      fontWeight: 700,
+                      color: '#047857',
+                    }}
+                  >
+                    {t('today.wellness.highlight')}
+                  </span>
+                </div>
+
+                <p
+                  style={{
+                    fontSize: '0.9375rem',
+                    lineHeight: 1.6,
+                    color: 'var(--vice-muted, #475569)',
+                    marginBottom: '20px',
+                  }}
+                >
+                  {t('today.wellness.desc')}
+                </p>
+
+                {/* Value Tags */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      padding: '4px 10px',
+                      borderRadius: '8px',
+                      backgroundColor: 'var(--vice-surface, #f8fafc)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
+                      color: 'var(--vice-text, #334155)',
+                    }}
+                  >
+                    ✓ {t('today.wellness.tag1')}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      padding: '4px 10px',
+                      borderRadius: '8px',
+                      backgroundColor: 'var(--vice-surface, #f8fafc)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
+                      color: 'var(--vice-text, #334155)',
+                    }}
+                  >
+                    ✓ {t('today.wellness.tag2')}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      padding: '4px 10px',
+                      borderRadius: '8px',
+                      backgroundColor: 'var(--vice-surface, #f8fafc)',
+                      border: '1px solid var(--explorer-border, #e2e8f0)',
+                      color: 'var(--vice-text, #334155)',
+                    }}
+                  >
+                    ✓ {t('today.wellness.tag3')}
+                  </span>
                 </div>
               </div>
-            </div>
 
-            {/* CTAs */}
-            <div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  flexWrap: 'wrap',
-                  paddingTop: '20px',
-                  borderTop: '1px solid var(--explorer-border, #f1f5f9)',
-                }}
-              >
+              {/* Action */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
                 <a
-                  href={ADMIN_APP_STORE_URL}
+                  href={USER_APP_STORE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '8px',
-                    padding: '10px 18px',
-                    backgroundColor: '#0f766e',
+                    padding: '8px 16px',
+                    backgroundColor: '#059669',
                     color: '#ffffff',
-                    borderRadius: '12px',
-                    fontSize: '0.875rem',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    transition: 'background-color 0.15s ease',
-                  }}
-                  className="hover:bg-teal-800"
-                >
-                  <span>{t('viewPlayStore')}</span>
-                  <ExternalLink size={14} aria-hidden="true" />
-                </a>
-
-                <Link
-                  href={`/${locale}/admin-agreement`}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '10px 16px',
-                    backgroundColor: 'transparent',
-                    border: '1px solid var(--explorer-border, #cbd5e1)',
-                    color: 'var(--site-heading, #0f172a)',
-                    borderRadius: '12px',
-                    fontSize: '0.875rem',
-                    fontWeight: 600,
-                    textDecoration: 'none',
-                    transition: 'border-color 0.15s ease, background-color 0.15s ease',
-                  }}
-                  className="hover:border-[#0f766e] hover:text-[#0f766e]"
-                >
-                  <span>{t('viewAgreement')}</span>
-                  <ArrowRight size={14} aria-hidden="true" />
-                </Link>
-
-                <Link
-                  href={`/${locale}/apps#admin-app`}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
+                    borderRadius: '10px',
                     fontSize: '0.8125rem',
-                    color: 'var(--vice-muted, #64748b)',
+                    fontWeight: 600,
                     textDecoration: 'none',
-                    marginLeft: 'auto',
                   }}
-                  className="hover:text-teal-700 hover:underline"
+                  className="hover:bg-emerald-700"
                 >
-                  <span>{t('learnMore')}</span>
-                  <ArrowRight size={12} aria-hidden="true" />
-                </Link>
+                  <span>Start Wellness Log</span>
+                  <ExternalLink size={13} aria-hidden="true" />
+                </a>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveModalGroup('user');
+                    setActiveModalIndex(6); // index 6 is wellness-dashboard
+                  }}
+                  style={{
+                    fontSize: '0.8125rem',
+                    color: '#059669',
+                    fontWeight: 600,
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: 0,
+                  }}
+                  className="hover:underline"
+                >
+                  <span>Inspect Wellness Screen</span>
+                  <ArrowRight size={13} aria-hidden="true" />
+                </button>
               </div>
             </div>
-          </article>
+          </div>
         </div>
 
-        {/* Universal Web Platform Banner */}
-        <div
-          style={{
-            padding: '28px 32px',
-            backgroundColor: 'var(--explorer-surface, #ffffff)',
-            border: '1px solid var(--explorer-border, #e2e8f0)',
-            borderRadius: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '24px',
-            flexWrap: 'wrap',
-            marginBottom: '32px',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '680px' }}>
+        {/* ======================================================== */}
+        {/* TIER 2: ULTIMATEHEALTH ECOSYSTEM (COMMUNITY, ADMIN, WEB) */}
+        {/* ======================================================== */}
+        <div style={{ paddingTop: '20px', borderTop: '1px dashed var(--explorer-border, #e2e8f0)' }}>
+          {/* Section Header */}
+          <div style={{ maxWidth: '780px', marginTop: '40px', marginBottom: '48px' }}>
             <div
               style={{
-                width: '48px',
-                height: '48px',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(13, 148, 136, 0.1)',
-                display: 'flex',
+                display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'center',
-                color: '#0d9488',
-                flexShrink: 0,
+                gap: '8px',
+                padding: '6px 14px',
+                borderRadius: '9999px',
+                backgroundColor: 'rgba(13, 148, 136, 0.08)',
+                border: '1px solid rgba(13, 148, 136, 0.2)',
+                marginBottom: '16px',
               }}
             >
-              <Globe2 size={24} aria-hidden="true" />
-            </div>
-            <div>
-              <h4
+              <Smartphone size={14} style={{ color: '#0d9488' }} aria-hidden="true" />
+              <span
                 style={{
-                  fontSize: '1.0625rem',
+                  fontSize: '0.8125rem',
                   fontWeight: 700,
-                  color: 'var(--site-heading, #0f172a)',
-                  margin: '0 0 4px 0',
+                  color: '#0d9488',
+                  letterSpacing: '0.04em',
+                  textTransform: 'uppercase',
                 }}
               >
-                {t('webApp.name')}
-              </h4>
-              <p
+                {t('sectionBadge')}
+              </span>
+            </div>
+
+            <h2
+              id="apps-heading"
+              className="uh-display"
+              style={{
+                fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+                color: 'var(--site-heading, #0f172a)',
+                margin: '0 0 16px 0',
+                fontWeight: 800,
+                lineHeight: 1.2,
+              }}
+            >
+              {t('title')}
+            </h2>
+
+            <p
+              style={{
+                fontSize: '1.0625rem',
+                lineHeight: 1.65,
+                color: 'var(--vice-muted, #475569)',
+                margin: '0 0 16px 0',
+              }}
+            >
+              {t('subtitle')}
+            </p>
+
+            <span
+              style={{
+                display: 'inline-block',
+                fontSize: '0.8125rem',
+                color: '#0d9488',
+                fontWeight: 600,
+                letterSpacing: '0.02em',
+              }}
+            >
+              {t('introPill')}
+            </span>
+          </div>
+
+          {/* Two-Column Apps Grid */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 520px), 1fr))',
+              gap: '32px',
+              marginBottom: '48px',
+            }}
+          >
+            {/* Card 1: UltimateHealth User / Community App */}
+            <article
+              id="user-app"
+              aria-labelledby="user-app-title"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                padding: '36px 32px',
+                backgroundColor: 'var(--explorer-surface, #ffffff)',
+                border: '1px solid var(--explorer-border, #e2e8f0)',
+                borderRadius: '24px',
+                boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+              className="hover:shadow-lg transition-shadow"
+            >
+              <div>
+                {/* Header with App Icon and Badges */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-between',
+                    gap: '16px',
+                    marginBottom: '20px',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '64px',
+                        height: '64px',
+                        borderRadius: '16px',
+                        overflow: 'hidden',
+                        border: '1px solid var(--explorer-border, #e2e8f0)',
+                        backgroundColor: '#0f172a',
+                        flexShrink: 0,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                      }}
+                    >
+                      <Image
+                        src="/ap-asset/user-app-icon.png"
+                        alt="UltimateHealth Community App Icon"
+                        fill
+                        sizes="64px"
+                        style={{ objectFit: 'cover' }}
+                        priority
+                      />
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          fontSize: '0.6875rem',
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          color: '#0d9488',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        {t('userApp.badge')}
+                      </span>
+                      <h3
+                        id="user-app-title"
+                        style={{
+                          fontSize: '1.375rem',
+                          fontWeight: 700,
+                          color: 'var(--site-heading, #0f172a)',
+                          margin: 0,
+                        }}
+                      >
+                        {t('userApp.name')}
+                      </h3>
+                      <p
+                        style={{
+                          fontSize: '0.875rem',
+                          color: 'var(--vice-muted, #64748b)',
+                          margin: '2px 0 0 0',
+                        }}
+                      >
+                        {t('userApp.tagline')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Factual Description */}
+                <p
+                  style={{
+                    fontSize: '0.9375rem',
+                    lineHeight: 1.6,
+                    color: 'var(--vice-muted, #475569)',
+                    marginBottom: '24px',
+                  }}
+                >
+                  {t('userApp.desc')}
+                </p>
+
+                {/* Verified Feature Bullets */}
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    marginBottom: '28px',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                    <BookOpen size={18} style={{ color: '#0d9488', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+                    <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
+                      {t('userApp.feat1')}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                    <Headphones size={18} style={{ color: '#0d9488', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+                    <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
+                      {t('userApp.feat2')}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                    <Sparkles size={18} style={{ color: '#0d9488', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+                    <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
+                      {t('userApp.feat3')}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Real Screenshot Preview Carousel */}
+                <div style={{ marginBottom: '28px' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <p
+                        style={{
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          color: 'var(--vice-muted, #64748b)',
+                          margin: 0,
+                        }}
+                      >
+                        App Screenshots ({userScreenshots.length} Screens)
+                      </p>
+                      <span
+                        style={{
+                          fontSize: '0.6875rem',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          background: 'rgba(13, 148, 136, 0.1)',
+                          color: '#0d9488',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Click to inspect
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <button
+                        type="button"
+                        onClick={() => scrollTray(userTrayRef, 'left')}
+                        aria-label="Scroll user app screenshots left"
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          border: '1px solid var(--explorer-border, #e2e8f0)',
+                          background: 'var(--explorer-surface, #ffffff)',
+                          color: 'var(--vice-text, #334155)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                        }}
+                        className="hover:border-[#0d9488] hover:text-[#0d9488]"
+                      >
+                        <ChevronLeft size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => scrollTray(userTrayRef, 'right')}
+                        aria-label="Scroll user app screenshots right"
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          border: '1px solid var(--explorer-border, #e2e8f0)',
+                          background: 'var(--explorer-surface, #ffffff)',
+                          color: 'var(--vice-text, #334155)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                        }}
+                        className="hover:border-[#0d9488] hover:text-[#0d9488]"
+                      >
+                        <ChevronRight size={16} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div
+                    ref={userTrayRef}
+                    style={{
+                      display: 'flex',
+                      gap: '12px',
+                      overflowX: 'auto',
+                      scrollSnapType: 'x mandatory',
+                      paddingBottom: '8px',
+                      scrollbarWidth: 'thin',
+                    }}
+                  >
+                    {userScreenshots.map((item, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => {
+                          setActiveModalGroup('user');
+                          setActiveModalIndex(i);
+                        }}
+                        style={{
+                          flex: '0 0 110px',
+                          scrollSnapAlign: 'start',
+                          padding: 0,
+                          background: 'transparent',
+                          border: '1px solid var(--explorer-border, #e2e8f0)',
+                          borderRadius: '12px',
+                          overflow: 'hidden',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                          transition: 'transform 0.15s ease, border-color 0.15s ease',
+                        }}
+                        className="hover:scale-[1.03] hover:border-[#0d9488] focus-visible:outline-2 focus-visible:outline-[#0d9488]"
+                        aria-label={`Inspect screenshot: ${item.caption}`}
+                      >
+                        <div
+                          style={{
+                            position: 'relative',
+                            width: '100%',
+                            aspectRatio: '9 / 18',
+                            backgroundColor: '#0f172a',
+                          }}
+                        >
+                          <Image
+                            src={item.src}
+                            alt={item.alt}
+                            fill
+                            sizes="110px"
+                            style={{ objectFit: 'cover' }}
+                            loading="lazy"
+                          />
+                        </div>
+                        <div
+                          style={{
+                            padding: '6px 8px',
+                            fontSize: '0.6875rem',
+                            fontWeight: 600,
+                            color: 'var(--vice-muted, #475569)',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            backgroundColor: 'var(--explorer-surface, #ffffff)',
+                            borderTop: '1px solid var(--explorer-border, #e2e8f0)',
+                          }}
+                          title={item.caption}
+                        >
+                          {item.caption}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* CTAs */}
+              <div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    flexWrap: 'wrap',
+                    paddingTop: '20px',
+                    borderTop: '1px solid var(--explorer-border, #f1f5f9)',
+                  }}
+                >
+                  <a
+                    href={USER_APP_STORE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '10px 18px',
+                      backgroundColor: '#0d9488',
+                      color: '#ffffff',
+                      borderRadius: '12px',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'background-color 0.15s ease',
+                    }}
+                    className="hover:bg-teal-700"
+                  >
+                    <span>{t('viewPlayStore')}</span>
+                    <ExternalLink size={14} aria-hidden="true" />
+                  </a>
+
+                  <Link
+                    href={`/${locale}/apps#user-app`}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '10px 16px',
+                      backgroundColor: 'transparent',
+                      border: '1px solid var(--explorer-border, #cbd5e1)',
+                      color: 'var(--site-heading, #0f172a)',
+                      borderRadius: '12px',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'border-color 0.15s ease, background-color 0.15s ease',
+                    }}
+                    className="hover:border-[#0d9488] hover:text-[#0d9488]"
+                  >
+                    <span>{t('learnMore')}</span>
+                    <ArrowRight size={14} aria-hidden="true" />
+                  </Link>
+
+                  <a
+                    href={GITHUB_REPO_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '0.8125rem',
+                      color: 'var(--vice-muted, #64748b)',
+                      textDecoration: 'none',
+                      marginLeft: 'auto',
+                    }}
+                    className="hover:text-teal-600 hover:underline"
+                  >
+                    <span>{t('viewSource')}</span>
+                    <ExternalLink size={12} aria-hidden="true" />
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            {/* Card 2: Clinical & Moderation Admin App */}
+            <article
+              id="admin-app"
+              aria-labelledby="admin-app-title"
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                padding: '36px 32px',
+                backgroundColor: 'var(--explorer-surface, #ffffff)',
+                border: '1px solid var(--explorer-border, #e2e8f0)',
+                borderRadius: '24px',
+                boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              }}
+              className="hover:shadow-lg transition-shadow"
+            >
+              <div>
+                {/* Header with App Icon and Badges */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-between',
+                    gap: '16px',
+                    marginBottom: '20px',
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <div
+                      style={{
+                        position: 'relative',
+                        width: '64px',
+                        height: '64px',
+                        borderRadius: '16px',
+                        overflow: 'hidden',
+                        border: '1px solid var(--explorer-border, #e2e8f0)',
+                        backgroundColor: '#042f2e',
+                        flexShrink: 0,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                      }}
+                    >
+                      <Image
+                        src="/admin-asset/admin-icon.png"
+                        alt="UltimateHealth Admin & Moderation App Icon"
+                        fill
+                        sizes="64px"
+                        style={{ objectFit: 'cover' }}
+                        priority
+                      />
+                    </div>
+                    <div>
+                      <span
+                        style={{
+                          display: 'inline-block',
+                          fontSize: '0.6875rem',
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          color: '#0f766e',
+                          marginBottom: '4px',
+                        }}
+                      >
+                        {t('adminApp.badge')}
+                      </span>
+                      <h3
+                        id="admin-app-title"
+                        style={{
+                          fontSize: '1.375rem',
+                          fontWeight: 700,
+                          color: 'var(--site-heading, #0f172a)',
+                          margin: 0,
+                        }}
+                      >
+                        {t('adminApp.name')}
+                      </h3>
+                      <p
+                        style={{
+                          fontSize: '0.875rem',
+                          color: 'var(--vice-muted, #64748b)',
+                          margin: '2px 0 0 0',
+                        }}
+                      >
+                        {t('adminApp.tagline')}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Factual Description */}
+                <p
+                  style={{
+                    fontSize: '0.9375rem',
+                    lineHeight: 1.6,
+                    color: 'var(--vice-muted, #475569)',
+                    marginBottom: '24px',
+                  }}
+                >
+                  {t('adminApp.desc')}
+                </p>
+
+                {/* Verified Feature Bullets */}
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    marginBottom: '28px',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                    <ShieldCheck size={18} style={{ color: '#0f766e', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+                    <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
+                      {t('adminApp.feat1')}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                    <Layers size={18} style={{ color: '#0f766e', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+                    <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
+                      {t('adminApp.feat2')}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                    <HeartHandshake size={18} style={{ color: '#0f766e', flexShrink: 0, marginTop: '2px' }} aria-hidden="true" />
+                    <span style={{ fontSize: '0.875rem', color: 'var(--vice-text, #1e293b)', lineHeight: 1.5 }}>
+                      {t('adminApp.feat3')}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Real Admin Screenshot Preview Carousel */}
+                <div style={{ marginBottom: '28px' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: '10px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <p
+                        style={{
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em',
+                          color: 'var(--vice-muted, #64748b)',
+                          margin: 0,
+                        }}
+                      >
+                        Admin Screenshots ({adminScreenshots.length} Screens)
+                      </p>
+                      <span
+                        style={{
+                          fontSize: '0.6875rem',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          background: 'rgba(15, 118, 110, 0.1)',
+                          color: '#0f766e',
+                          fontWeight: 600,
+                        }}
+                      >
+                        Click to inspect
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      <button
+                        type="button"
+                        onClick={() => scrollTray(adminTrayRef, 'left')}
+                        aria-label="Scroll admin app screenshots left"
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          border: '1px solid var(--explorer-border, #e2e8f0)',
+                          background: 'var(--explorer-surface, #ffffff)',
+                          color: 'var(--vice-text, #334155)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                        }}
+                        className="hover:border-[#0f766e] hover:text-[#0f766e]"
+                      >
+                        <ChevronLeft size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => scrollTray(adminTrayRef, 'right')}
+                        aria-label="Scroll admin app screenshots right"
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          border: '1px solid var(--explorer-border, #e2e8f0)',
+                          background: 'var(--explorer-surface, #ffffff)',
+                          color: 'var(--vice-text, #334155)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                        }}
+                        className="hover:border-[#0f766e] hover:text-[#0f766e]"
+                      >
+                        <ChevronRight size={16} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div
+                    ref={adminTrayRef}
+                    style={{
+                      display: 'flex',
+                      gap: '12px',
+                      overflowX: 'auto',
+                      scrollSnapType: 'x mandatory',
+                      paddingBottom: '8px',
+                      scrollbarWidth: 'thin',
+                    }}
+                  >
+                    {adminScreenshots.map((item, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => {
+                          setActiveModalGroup('admin');
+                          setActiveModalIndex(i);
+                        }}
+                        style={{
+                          flex: '0 0 110px',
+                          scrollSnapAlign: 'start',
+                          padding: 0,
+                          background: 'transparent',
+                          border: '1px solid var(--explorer-border, #e2e8f0)',
+                          borderRadius: '12px',
+                          overflow: 'hidden',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                          transition: 'transform 0.15s ease, border-color 0.15s ease',
+                        }}
+                        className="hover:scale-[1.03] hover:border-[#0f766e] focus-visible:outline-2 focus-visible:outline-[#0f766e]"
+                        aria-label={`Inspect screenshot: ${item.caption}`}
+                      >
+                        <div
+                          style={{
+                            position: 'relative',
+                            width: '100%',
+                            aspectRatio: '9 / 18',
+                            backgroundColor: '#0f172a',
+                          }}
+                        >
+                          <Image
+                            src={item.src}
+                            alt={item.alt}
+                            fill
+                            sizes="110px"
+                            style={{ objectFit: 'cover' }}
+                            loading="lazy"
+                          />
+                        </div>
+                        <div
+                          style={{
+                            padding: '6px 8px',
+                            fontSize: '0.6875rem',
+                            fontWeight: 600,
+                            color: 'var(--vice-muted, #475569)',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            backgroundColor: 'var(--explorer-surface, #ffffff)',
+                            borderTop: '1px solid var(--explorer-border, #e2e8f0)',
+                          }}
+                          title={item.caption}
+                        >
+                          {item.caption}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* CTAs */}
+              <div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    flexWrap: 'wrap',
+                    paddingTop: '20px',
+                    borderTop: '1px solid var(--explorer-border, #f1f5f9)',
+                  }}
+                >
+                  <a
+                    href={ADMIN_APP_STORE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      padding: '10px 18px',
+                      backgroundColor: '#0f766e',
+                      color: '#ffffff',
+                      borderRadius: '12px',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'background-color 0.15s ease',
+                    }}
+                    className="hover:bg-teal-800"
+                  >
+                    <span>{t('viewPlayStore')}</span>
+                    <ExternalLink size={14} aria-hidden="true" />
+                  </a>
+
+                  <Link
+                    href={`/${locale}/admin-agreement`}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '10px 16px',
+                      backgroundColor: 'transparent',
+                      border: '1px solid var(--explorer-border, #cbd5e1)',
+                      color: 'var(--site-heading, #0f172a)',
+                      borderRadius: '12px',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'border-color 0.15s ease, background-color 0.15s ease',
+                    }}
+                    className="hover:border-[#0f766e] hover:text-[#0f766e]"
+                  >
+                    <span>{t('viewAgreement')}</span>
+                    <ArrowRight size={14} aria-hidden="true" />
+                  </Link>
+
+                  <Link
+                    href={`/${locale}/apps#admin-app`}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontSize: '0.8125rem',
+                      color: 'var(--vice-muted, #64748b)',
+                      textDecoration: 'none',
+                      marginLeft: 'auto',
+                    }}
+                    className="hover:text-teal-700 hover:underline"
+                  >
+                    <span>{t('learnMore')}</span>
+                    <ArrowRight size={12} aria-hidden="true" />
+                  </Link>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          {/* Universal Web Platform Banner */}
+          <div
+            style={{
+              padding: '28px 32px',
+              backgroundColor: 'var(--explorer-surface, #ffffff)',
+              border: '1px solid var(--explorer-border, #e2e8f0)',
+              borderRadius: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '24px',
+              flexWrap: 'wrap',
+              marginBottom: '32px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', maxWidth: '680px' }}>
+              <div
                 style={{
-                  fontSize: '0.875rem',
-                  color: 'var(--vice-muted, #64748b)',
-                  margin: 0,
-                  lineHeight: 1.5,
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#0d9488',
+                  flexShrink: 0,
                 }}
               >
-                {t('webApp.desc')}
-              </p>
+                <Globe2 size={24} aria-hidden="true" />
+              </div>
+              <div>
+                <h4
+                  style={{
+                    fontSize: '1.0625rem',
+                    fontWeight: 700,
+                    color: 'var(--site-heading, #0f172a)',
+                    margin: '0 0 4px 0',
+                  }}
+                >
+                  {t('webApp.name')}
+                </h4>
+                <p
+                  style={{
+                    fontSize: '0.875rem',
+                    color: 'var(--vice-muted, #64748b)',
+                    margin: 0,
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {t('webApp.desc')}
+                </p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+              <Link
+                href={`/${locale}/articles`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '10px 18px',
+                  backgroundColor: 'var(--vice-surface, #f8fafc)',
+                  border: '1px solid var(--explorer-border, #cbd5e1)',
+                  color: 'var(--site-heading, #0f172a)',
+                  borderRadius: '12px',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                }}
+                className="hover:border-[#0d9488] hover:text-[#0d9488]"
+              >
+                <span>{t('readArticles')}</span>
+                <ArrowRight size={14} aria-hidden="true" />
+              </Link>
+              <Link
+                href={`/${locale}/apps`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '10px 18px',
+                  backgroundColor: '#0d9488',
+                  color: '#ffffff',
+                  borderRadius: '12px',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                }}
+                className="hover:bg-teal-700"
+              >
+                <span>{t('exploreAllApps')}</span>
+                <ArrowRight size={14} aria-hidden="true" />
+              </Link>
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            <Link
-              href={`/${locale}/articles`}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '10px 18px',
-                backgroundColor: 'var(--vice-surface, #f8fafc)',
-                border: '1px solid var(--explorer-border, #cbd5e1)',
-                color: 'var(--site-heading, #0f172a)',
-                borderRadius: '12px',
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                textDecoration: 'none',
-              }}
-              className="hover:border-[#0d9488] hover:text-[#0d9488]"
-            >
-              <span>{t('readArticles')}</span>
-              <ArrowRight size={14} aria-hidden="true" />
-            </Link>
-            <Link
-              href={`/${locale}/apps`}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '10px 18px',
-                backgroundColor: '#0d9488',
-                color: '#ffffff',
-                borderRadius: '12px',
-                fontSize: '0.875rem',
-                fontWeight: 600,
-                textDecoration: 'none',
-              }}
-              className="hover:bg-teal-700"
-            >
-              <span>{t('exploreAllApps')}</span>
-              <ArrowRight size={14} aria-hidden="true" />
-            </Link>
+          {/* Ethical Medical Disclaimer */}
+          <div
+            style={{
+              padding: '16px 20px',
+              borderRadius: '12px',
+              backgroundColor: 'rgba(148, 163, 184, 0.08)',
+              border: '1px solid rgba(148, 163, 184, 0.2)',
+              fontSize: '0.8125rem',
+              lineHeight: 1.6,
+              color: 'var(--vice-muted, #64748b)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px',
+            }}
+          >
+            <CheckCircle2 size={16} style={{ color: '#0d9488', flexShrink: 0 }} aria-hidden="true" />
+            <span>{t('disclaimer')}</span>
           </div>
-        </div>
-
-        {/* Ethical Medical Disclaimer */}
-        <div
-          style={{
-            padding: '16px 20px',
-            borderRadius: '12px',
-            backgroundColor: 'rgba(148, 163, 184, 0.08)',
-            border: '1px solid rgba(148, 163, 184, 0.2)',
-            fontSize: '0.8125rem',
-            lineHeight: 1.6,
-            color: 'var(--vice-muted, #64748b)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-          }}
-        >
-          <CheckCircle2 size={16} style={{ color: '#0d9488', flexShrink: 0 }} aria-hidden="true" />
-          <span>{t('disclaimer')}</span>
         </div>
       </div>
 

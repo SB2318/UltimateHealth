@@ -264,6 +264,31 @@
       "desc": "Pristupite cjelokupnoj medicinskoj knjižnici i rječniku izravno iz bilo kojeg web preglednika na 9 jezika.",
       "readArticles": "Pročitajte članke",
       "fullGuide": "Pregledajte sve aplikacije"
+    },
+    "today": {
+      "badge": "Što možete koristiti danas",
+      "heading": "Praktični zdravstveni alati na dohvat ruke",
+      "subheading": "Transparentni alati usmjereni na dobrobit pacijenata spremni za korištenje.",
+      "aiDoctor": {
+        "badge": "5 besplatnih pitanja / dan",
+        "title": "UltimateHealth Tim za Skrb",
+        "subtitle": "Specijalističko AI medicinsko vodstvo",
+        "desc": "Za svaku osobu, možete postaviti do 5 besplatnih pitanja dnevno svakom AI specijalistu radi pojašnjenja simptoma s empatijom.",
+        "highlight": "5 besplatnih pitanja dnevno po specijalistu",
+        "tag1": "Bez pretplata i skrivenih troškova",
+        "tag2": "Više medicinskih specijalnosti",
+        "tag3": "Usmjereno na dostojanstvo pacijenta"
+      },
+      "wellness": {
+        "badge": "Dostupno u aplikaciji",
+        "title": "Personalizirani plan dobrobiti",
+        "subtitle": "Dnevnik zdravlja i osvježavanje svakih 48 sati",
+        "desc": "Vodite svoj zdravstveni dnevnik i kreirajte prilagođeni plan. Mobilna aplikacija osvježava vašu rutinu svaka 2 dana.",
+        "highlight": "Plan se osvježava svaka 2 dana u aplikaciji",
+        "tag1": "Privatni zdravstveni zapisi",
+        "tag2": "Prilagodljivo osvježavanje svakih 48 sati",
+        "tag3": "Bez praćenja i prodaje podataka"
+      }
     }
   }
 }
