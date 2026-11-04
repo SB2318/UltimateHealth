@@ -1,3 +1,46 @@
+# Release Notes — UltimateHealth v3.3.0
+
+> **Release Version:** `v3.3.0`  
+> **Release Date:** November 2026  
+> **Release Focus:** HIPAA Security & Privacy Compliance, Mobile ePHI Safeguards, Safe Harbor AI Chatbot Controls & Health Data Export  
+
+---
+
+## 🌟 What's New in v3.3.0
+
+### 1. 🛡️ HIPAA Compliance & Federal Patient Safeguards (45 CFR Parts 160 & 164)
+- **Safe Harbor De-Identification Engine (§ 164.514):** Automated pattern-matching engine that scrubs all 18 Protected Health Information (PHI) identifiers—including patient names, SSNs, Medical Record Numbers (MRN), phone numbers, email addresses, precise dates of birth, and network IP addresses—before conversational prompts reach AI models (Gemini / Perplexity).
+- **Technical Safeguards & Cryptography (§ 164.312):** Enforces in-transit TLS 1.3 cryptographic protocols and AES-256 database volume encryption for all wellness telemetry and patient interactions.
+- **Clinical Non-Diagnostic Mandate:** Prominent disclaimers reinforcing that AI companions provide educational lifestyle guidance and are not substitutes for clinical diagnosis, with direct 911 emergency and 988 Suicide & Crisis Lifeline escalation banners.
+
+### 2. 🤖 Mobile Chatbot HIPAA Tasks & Privacy Controls (`ChatbotScreen.tsx`)
+- **HIPAA Header Shield Pill:** Instant visual indicator in the chat header providing one-tap access to full patient privacy rights and technical safeguard disclosures.
+- **Export Chat Transcript (HIPAA Right of Access - 45 CFR § 164.524):** Patients can export their full conversational transcripts formatted with clinical notices, timestamps, and role-separated dialogues via native device sharing (`Share.share`).
+- **Clear Conversation (HIPAA Right to Amend & Clear - 45 CFR § 164.526):** One-tap action with confirmation dialog calling `DELETE /api/gemini/messages?character=...` to permanently purge conversational records on the server and reset local message history.
+- **Sub-Header Advisory Banner:** Persistent Safe Harbor notice reminding users that health queries are de-identified before processing and emergency medical situations require immediate 911 contact.
+
+### 3. 🌿 Wellness Dashboard ePHI Privacy & Data Rights (`WellnessDashboardScreen.tsx`)
+- **ePHI Protected Status Indicator:** Pinned header badge and banner confirming active encryption for biometric and lifestyle metrics (steps, sleep, hydration, breathing, active minutes).
+- **HIPAA Privacy & Data Rights Card:** Dedicated dashboard module empowering patients with complete ownership over their health telemetry:
+  - **Export Complete Health Records (45 CFR § 164.524):** Fetches verified health records from `/api/wellness/export` (wellness logs, personalized AI plans, care team assignments, clinical interactions) and shares or copies the machine-readable summary.
+  - **Accounting of Disclosures (45 CFR § 164.528):** Fetches audit history from `/api/care-team/audit-disclosures` to inspect access events, timestamps, actor IDs, and disclosure purposes.
+  - **Review Patient Rights:** Opens the comprehensive HIPAA modal detailing administrative, physical, and technical safeguards.
+
+### 4. 👥 Care Persona Lobby HIPAA Certification (`PersonaLobbyScreen.tsx`)
+- **Lobby Compliance Banner:** Pinned *"HIPAA Safe Harbor Protected • Patient Rights"* banner beneath the header.
+- **Persona Cards:** Every care persona now features an official `HIPAA` certification badge alongside the daily quota tracker to reinforce educational and clinical boundaries.
+
+### 5. ⚙️ Settings & Legal Privacy Integration (`SettingsScreen.tsx` & `PrivacyPolicy.tsx`)
+- **Settings Hub Entry:** Added a dedicated row under **LEGAL & PRIVACY** for *"HIPAA Compliance & Health Privacy"*, giving users direct access to their patient rights, technical safeguards, and data export from anywhere in the app.
+- **Privacy Policy Expansion:** Added **Section 10: HIPAA Compliance & Protected Health Information (ePHI)** formalizing federal compliance standards, Safe Harbor de-identification rules, and patient legal recourse.
+
+### 6. 🧩 Reusable Compliance Components & Full Test Coverage
+- **`HipaaComplianceModal.tsx`:** Accessible bottom-sheet modal detailing Safe Harbor (§ 164.514), Technical Safeguards (§ 164.312), Federal Patient Rights (§ 164.524, § 164.526, § 164.528), and emergency medical disclaimers.
+- **`HipaaBadge.tsx`:** Reusable shield badge with compact, standard, and pill variants.
+- **100% Test Pass Rate:** Verified with comprehensive unit test suites covering `HipaaComponents.test.tsx`, `ChatbotScreen.test.tsx`, `WellnessDashboardScreen.test.tsx`, and `SettingsScreen.test.tsx` (24/24 tests passing).
+
+---
+
 # Release Notes — UltimateHealth v3.2.1
 
 > **Release Version:** `v3.2.1`  
