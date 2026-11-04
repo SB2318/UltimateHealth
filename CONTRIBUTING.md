@@ -9,6 +9,22 @@ We welcome contributions from everyone — whether you're a first-time contribut
 
 Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md). We expect all participants to maintain a respectful and inclusive environment.
 
+## Pull Request Process & Branch Naming Conventions
+
+To keep contributions organized and make code reviews seamless, please follow these branch naming conventions:
+
+- `feat/<short-description>`: Adding new features or utility functions (e.g. `feat/hydration-calculator`)
+- `fix/<short-description>`: Bug fixes or patches (e.g. `fix/podcast-audio-stall`)
+- `docs/<short-description>`: Documentation improvements (e.g. `docs/setup-guide`)
+- `refactor/<short-description>`: Code restructuring without feature change
+- `test/<short-description>`: Adding or modifying unit tests
+
+### Pull Request Checklist
+1. Create your branch off the latest `main`.
+2. Keep commits atomic and descriptive following conventional commit style (`feat:`, `fix:`, `docs:`).
+3. Verify that linting and build checks pass locally (`yarn lint` and `yarn test`).
+4. Submit the PR with a clear summary of changes and reference any related issues.
+
 ## Ways to Contribute
 
 You can contribute in many ways:
