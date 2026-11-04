@@ -460,8 +460,7 @@ TERMS ACCEPTED:
                 style={{ width: 20, height: 20, cursor: locked ? "default" : "pointer", accentColor: "#667eea", marginTop: 2, flexShrink: 0 }}
               />
               <span style={{ fontSize: 14, color: "#2d3748", lineHeight: 1.6, cursor: locked ? "default" : "pointer" }}>
-                I have read and agree to the terms and conditions outlined in the Admin &amp; Moderator Agreement.
-                I understand my responsibilities and commit to upholding the standards of the UltimateHealth platform.
+                I have read and agree to the terms and conditions outlined in the Admin &amp; Moderator Agreement, including the HIPAA Compliance &amp; ePHI Obligations. I understand my responsibilities to safeguard patient health logs and Care Team confidentiality, and commit to upholding the standards of the UltimateHealth platform.
                 I confirm that the information and signature provided above are accurate and legally binding.
               </span>
             </label>

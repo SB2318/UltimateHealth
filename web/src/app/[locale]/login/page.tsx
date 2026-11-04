@@ -5,6 +5,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { ShieldCheck } from "lucide-react";
 import AuthShell, {
   authFieldClass,
   authLabelClass,
@@ -170,6 +171,17 @@ export default function UserLoginPage() {
           {loading && <Spinner size="sm" className="mr-2" />}
           {loading ? t("submitButtonLoading") : t("submitButton")}
         </Button>
+
+        {/* HIPAA Security & Privacy Notice */}
+        <div className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-emerald-200/70 bg-emerald-50/60 p-3 text-center text-[0.76rem] text-emerald-800 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200">
+          <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+          <span>
+            HIPAA-Secured Session • Your personal health logs &amp; Care Team consultations are encrypted.{" "}
+            <Link href="/hipaa" className="font-semibold underline hover:text-emerald-950 dark:hover:text-emerald-100">
+              Privacy Notice
+            </Link>
+          </span>
+        </div>
       </form>
     </AuthShell>
   );

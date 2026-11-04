@@ -129,13 +129,19 @@ export default function AgreementTermsContent() {
         Abuse of moderation powers, biased decisions, or failure to follow guidelines may result in removal from the moderation team.
       </div>
 
-      <h2 style={css.h2}>Data Privacy &amp; Compliance</h2>
+      <h2 style={css.h2}>Data Privacy, HIPAA Compliance &amp; ePHI Obligations</h2>
+      <p style={css.p}>
+        UltimateHealth provides personal health tracking and a Care Team module connecting patients with licensed physicians.
+        As an administrative team member or clinical reviewer, you may have access to Electronic Protected Health Information (ePHI)
+        governed by the Health Insurance Portability and Accountability Act (HIPAA, 45 CFR Parts 160 &amp; 164).
+      </p>
       <ul style={css.ul}>
         {[
-          "User data must be handled in accordance with privacy regulations",
-          "Personal information should not be shared outside the platform",
-          "Review decisions must be documented and justified",
-          "Maintain transparency in all moderation actions",
+          "Strict Confidentiality: Never copy, distribute, export, or disclose patient personal health logs, symptom records, or Care Team communications outside authorized platform workflows.",
+          "Minimum Necessary Standard: Access patient logs and care team discussions solely to the minimum extent required for clinical verification, user safety, or dispute resolution.",
+          "Immutable Audit Tracking: Every administrative view, query, or moderation action on patient records is permanently logged with your ID and timestamp.",
+          "Incident Escalation: Immediately notify the Privacy Officer (privacy@ultimatehealth.blog) of any suspected credential compromise or unauthorized PHI disclosure within 24 hours.",
+          "Zero External Retention: Never download or retain patient health data on unencrypted or personal local storage devices.",
         ].map((item, i) => <li key={i} style={css.li}>{item}</li>)}
       </ul>
 

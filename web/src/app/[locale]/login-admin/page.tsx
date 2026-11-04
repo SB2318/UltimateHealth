@@ -3,6 +3,7 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ShieldAlert, ShieldCheck } from "lucide-react";
 import { PageWrapper, Section } from "@/components/layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -38,7 +39,7 @@ export default function AdminLoginPage() {
         description: "Email and password are required.",
         variant: "destructive",
       });
-      return; // This stops the code from proceeding to the API call
+      return;
     }
     setMessage({ title: "Processing", description: "Signing you in." });
     setLoading(true);
@@ -94,12 +95,20 @@ export default function AdminLoginPage() {
               <h1>Admin Login Required</h1>
             </CardTitle>
             <CardDescription>
-              Please log in to continue to account deletion.
+              Please log in to continue to account deletion and administration.
             </CardDescription>
           </CardHeader>
 
           <form id="loginForm" onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
+              {/* HIPAA Security Warning Banner */}
+              <div className="flex items-start gap-2.5 rounded-lg border border-amber-200 bg-amber-50/80 p-3 text-left text-[0.76rem] text-amber-900">
+                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                <div className="leading-relaxed">
+                  <strong>HIPAA Security Notice (45 CFR § 164.312):</strong> Privileged administrative access. All actions affecting patient personal health logs, Care Team clinical records, and accounts are monitored and logged to an immutable audit trail.
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -132,11 +141,15 @@ export default function AdminLoginPage() {
               )}
             </CardContent>
 
-            <CardFooter className="justify-end">
-              <Button type="submit" id="login-btn" disabled={loading}>
+            <CardFooter className="flex flex-col gap-3">
+              <Button type="submit" id="login-btn" disabled={loading} className="w-full">
                 {loading && <Spinner size="sm" className="mr-1" />}
                 {loading ? "Logging in..." : "Login"}
               </Button>
+              <div className="flex items-center justify-center gap-1.5 text-center text-[0.72rem] text-muted-foreground">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                <span>Single-Device Authenticated &amp; HIPAA-Compliant Administration</span>
+              </div>
             </CardFooter>
           </form>
         </Card>

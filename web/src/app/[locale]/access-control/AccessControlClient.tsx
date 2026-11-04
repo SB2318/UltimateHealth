@@ -881,6 +881,35 @@ export default function AccessControlClient() {
                   Super Admin accounts cannot be blocked or deleted via the system, and administrators cannot block or delete their own accounts.
                 </p>
               </div>
+
+              <div
+                style={{
+                  background: 'var(--explorer-surface, #ffffff)',
+                  border: '1px solid var(--explorer-border, #e2e8f0)',
+                  borderRadius: '12px',
+                  padding: '18px',
+                }}
+              >
+                <h4 style={{ fontSize: '0.94rem', fontWeight: 800, margin: '0 0 6px', color: '#059669' }}>
+                  HIPAA ePHI &amp; Care Team Guardrails
+                </h4>
+                <p style={{ fontSize: '0.84rem', color: '#64748b', lineHeight: 1.5, margin: '0 0 8px' }}>
+                  Personal health logs and Care Team clinical interactions are strictly segregated. Clinicians may access records solely for assigned patients with active consent. All views produce immutable audit trails.
+                </p>
+                <Link
+                  href={`/${locale}/hipaa`}
+                  style={{
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    color: '#059669',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                  }}
+                >
+                  View HIPAA Notice of Privacy Practices →
+                </Link>
+              </div>
             </div>
           </div>
         </div>

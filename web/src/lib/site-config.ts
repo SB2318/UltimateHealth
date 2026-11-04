@@ -14,6 +14,8 @@ export const PRIVACY_POLICY_URL =
 export const TERMS_OF_USE_URL =
   process.env.NEXT_PUBLIC_TERMS_OF_USE_URL ||
   "https://ultimatehealth.blog/terms";
+export const HIPAA_NOTICE_URL =
+  process.env.NEXT_PUBLIC_HIPAA_NOTICE_URL || "/hipaa";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

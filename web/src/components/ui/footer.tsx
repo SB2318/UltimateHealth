@@ -32,6 +32,7 @@ export const Footer = () => {
   const appsUrl = `/${currentLocale}/apps`
   const contributeUrl = `/${currentLocale}/contribute`
   const accessControlUrl = `/${currentLocale}/access-control`
+  const hipaaUrl = `/${currentLocale}/hipaa`
   // ── Newsletter state ──
   const [newsletterEmail, setNewsletterEmail] = useState('')
   const [newsletterStatus, setNewsletterStatus] = useState<
@@ -242,6 +243,7 @@ export const Footer = () => {
             API Docs
           </a>
           <Link href={accessControlUrl}>Security &amp; RBAC</Link>
+          <Link href={hipaaUrl}>HIPAA Compliance</Link>
         </div>
       </PageWrapper>
 
@@ -255,6 +257,9 @@ export const Footer = () => {
             <a href={PRIVACY_POLICY_URL} target="_blank" rel="noopener noreferrer">
               Privacy Policy
             </a>
+            <Link href={hipaaUrl}>
+              HIPAA Notice
+            </Link>
             <a href={TERMS_OF_USE_URL} target="_blank" rel="noopener noreferrer">
               Terms of Use
             </a>
