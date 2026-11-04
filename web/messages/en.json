@@ -1,7 +1,8 @@
 {
   "cookie": {
-    "message": "We use cookies to improve your browsing experience, analyze site traffic, and personalize content.",
-    "accept": "Accept All",
+    "title": "Privacy-First Health Experience",
+    "message": "We only use essential, functional cookies to remember your preferred language and sidebar display settings. We do not collect personal health data, track your browsing activity, or use advertising cookies.",
+    "accept": "Accept Essential",
     "decline": "Decline",
     "learnMore": "Learn More"
   },

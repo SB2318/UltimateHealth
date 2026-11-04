@@ -11,6 +11,7 @@ import { GlossaryProvider } from "./GlossaryProvider";
 import ReadingProgressBar from "./ReadingProgressBar";
 import ArticleHero from "./ArticleHero";
 import ArticleContent from "./ArticleContent";
+import ClinicalMedicalDisclaimer from "./ClinicalMedicalDisclaimer";
 import RelatedArticles from "./RelatedArticles";
 import { type FontSize } from "./AccessibilityControls";
 import TableOfContents from "./TableOfContents";
@@ -370,6 +371,9 @@ export default function ArticlePageClient({
               ) : (
                 <ArticleContent content={article.content} />
               )}
+
+              {/* ── Standardized In-Article Clinical Medical Disclaimer (YMYL Quality Compliance) ── */}
+              <ClinicalMedicalDisclaimer />
             </article>
 
             {/* ── Article footer: author card + back link ── */}

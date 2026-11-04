@@ -66,17 +66,21 @@ if (!visible) return null;
 
       <div>
 
-        <p
+        <h3
           id="cookie-title"
-          className="text-base leading-7 text-foreground"
+          className="text-base font-semibold leading-6 text-foreground"
         >
+          {t("title")}
+        </h3>
+
+        <p className="text-sm leading-6 text-muted-foreground mt-1">
           {t("message")}
         </p>
 
         {PRIVACY_POLICY_URL && (
           <Link
             href={PRIVACY_POLICY_URL}
-            className="mt-3 inline-flex text-base font-medium text-primary hover:underline"
+            className="mt-2 inline-flex text-sm font-medium text-primary hover:underline"
           >
             {t("learnMore")}
           </Link>
