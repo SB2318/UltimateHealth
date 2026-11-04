@@ -181,12 +181,14 @@ export default async function RootLayout({
             disableTransitionOnChange
             nonce={nonce}
           >
-            <TooltipProvider>
-              {children}
-              <ScrollToHash />
-              <CookieConsent />
-              <ExplorePlatformModal />
-            </TooltipProvider>
+            <AuthProvider>
+              <TooltipProvider>
+                {children}
+                <ScrollToHash />
+                <CookieConsent />
+                <ExplorePlatformModal />
+              </TooltipProvider>
+            </AuthProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

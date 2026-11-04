@@ -92,14 +92,6 @@ export default function UserLoginPage() {
     <AuthShell
       title={t("heading")}
       description={t("description")}
-      footer={
-        <>
-          New to UltimateHealth?{" "}
-          <Link href="/register" className={authLinkClass}>
-            Create an account
-          </Link>
-        </>
-      }
     >
       <form id="loginForm" onSubmit={handleSubmit} className="space-y-5!">
         <div className="space-y-2!">

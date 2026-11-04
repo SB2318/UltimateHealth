@@ -125,9 +125,9 @@ export default function Navbar() {
   <ModeToggle />
 </li>
 <li style={{ display: "flex", alignItems: "center" }}>
-  <a href="#downloads" className="nav-btn-sm">
+  <Link href="/login" className="nav-btn-sm">
     <i className="fas fa-user" aria-hidden="true"></i>
-    <span>Login / Register</span>
+    <span>Login</span>
   </a>
 </li>
         </ul>
@@ -144,7 +144,7 @@ export default function Navbar() {
         <Link href="/articles" onClick={() => setMobileMenuOpen(false)}>Read Articles</Link>
         <Link href="/medical-glossary" onClick={() => setMobileMenuOpen(false)}>Medical Glossary</Link>
         <Link href="/contribute" onClick={() => setMobileMenuOpen(false)}>Join Us to Contribute</Link>
-        <a href="#downloads" onClick={() => setMobileMenuOpen(false)}>Login / Register</a>
+        <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
         <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
           <ModeToggle />
         </div>
