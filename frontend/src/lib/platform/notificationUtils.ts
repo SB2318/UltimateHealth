@@ -1,6 +1,6 @@
-?import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 import * as Notifications from 'expo-notifications';
-import type { Notification } from '../../schemas/type';
+import type {Notification} from '../../schemas/type';
 
 export const mergeNotificationsById = (
   current: Notification[],
@@ -56,4 +56,3 @@ export const decrementAppBadgeCount = async (amount: number = 1): Promise<void> 
     }
   }
 };
-
