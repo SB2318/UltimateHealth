@@ -79,6 +79,19 @@ jest.mock('expo-constants', () => ({
   },
 }));
 
+jest.mock('expo-notifications', () => ({
+  setBadgeCountAsync: jest.fn(() => Promise.resolve(true)),
+  getBadgeCountAsync: jest.fn(() => Promise.resolve(0)),
+  setNotificationHandler: jest.fn(),
+  addNotificationReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
+  addNotificationResponseReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
+  getLastNotificationResponseAsync: jest.fn(() => Promise.resolve(null)),
+  getPermissionsAsync: jest.fn(() => Promise.resolve({ status: 'granted' })),
+  requestPermissionsAsync: jest.fn(() => Promise.resolve({ status: 'granted' })),
+  setNotificationChannelAsync: jest.fn(() => Promise.resolve()),
+  getExpoPushTokenAsync: jest.fn(() => Promise.resolve({ data: 'mock-expo-push-token' })),
+}));
+
 jest.mock('expo-secure-store', () => ({
   getItemAsync: jest.fn(),
   setItemAsync: jest.fn(),

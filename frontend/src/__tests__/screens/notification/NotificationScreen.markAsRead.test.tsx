@@ -1,8 +1,11 @@
  
 
 
-describe('NotificationScreen – mark-as-read guard', () => {
-  function makeMarkAsReadHandler(markNotification: jest.Mock) {
+describe('NotificationScreen – mark-as-read guard and badge reset', () => {
+  function makeMarkAsReadHandler(
+    markNotification: jest.Mock,
+    resetBadge: jest.Mock = jest.fn(),
+  ) {
     const handleMarkAsRead = (
       notifications: {read: boolean}[],
       isConnected: boolean,
@@ -13,28 +16,36 @@ describe('NotificationScreen – mark-as-read guard', () => {
         markNotification(
           {},
           {
-            onSuccess: () => {},
+            onSuccess: () => {
+              resetBadge();
+            },
             onError: () => {},
           },
         );
+      } else if (isConnected && (notifications.length === 0 || !hasUnread)) {
+        resetBadge();
       }
     };
 
     return {handleMarkAsRead};
   }
 
-  it('does not call markNotification when notification list is empty', () => {
+  it('resets badge when all notifications are already read', () => {
     const markNotification = jest.fn();
-    const {handleMarkAsRead} = makeMarkAsReadHandler(markNotification);
-    handleMarkAsRead([], true);
-    expect(markNotification).toHaveBeenCalledTimes(0);
-  });
-
-  it('does not call markNotification when all notifications are already read', () => {
-    const markNotification = jest.fn();
-    const {handleMarkAsRead} = makeMarkAsReadHandler(markNotification);
+    const resetBadge = jest.fn();
+    const {handleMarkAsRead} = makeMarkAsReadHandler(markNotification, resetBadge);
     handleMarkAsRead([{read: true}, {read: true}], true);
     expect(markNotification).toHaveBeenCalledTimes(0);
+    expect(resetBadge).toHaveBeenCalledTimes(1);
+  });
+
+  it('resets badge when notification list is empty', () => {
+    const markNotification = jest.fn();
+    const resetBadge = jest.fn();
+    const {handleMarkAsRead} = makeMarkAsReadHandler(markNotification, resetBadge);
+    handleMarkAsRead([], true);
+    expect(markNotification).toHaveBeenCalledTimes(0);
+    expect(resetBadge).toHaveBeenCalledTimes(1);
   });
 
   it('calls markNotification when unread notifications exist', () => {

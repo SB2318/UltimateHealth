@@ -26,6 +26,7 @@ const TAB_CONFIG: Record<
   Chatbot: {active: 'robot', inactive: 'robot-outline', label: 'AI'},
   Wellness: {active: 'heart-pulse', inactive: 'heart-pulse', label: 'Wellness'},
   Settings: {active: 'cog', inactive: 'cog-outline', label: 'Settings'},
+  Notifications: {active: 'bell', inactive: 'bell-outline', label: 'Notifications'},
 };
 
 interface AnimatedTabItemProps {
@@ -34,6 +35,7 @@ interface AnimatedTabItemProps {
   isFocused: boolean;
   onPress: () => void;
   isDark: boolean;
+  badge?: string | number;
 }
 
 const AnimatedTabItem = ({
@@ -42,6 +44,7 @@ const AnimatedTabItem = ({
   isFocused,
   onPress,
   isDark,
+  badge,
 }: AnimatedTabItemProps) => {
   const [scaleAnim] = useState(() => new Animated.Value(1));
 
@@ -90,6 +93,13 @@ const AnimatedTabItem = ({
             size={24}
             color={isFocused ? activeColor : inactiveColor}
           />
+          {badge !== undefined && badge !== null && badge !== 0 && badge !== '0' ? (
+            <View style={styles.badgeContainer}>
+              <Text style={styles.badgeText}>
+                {typeof badge === 'number' && badge > 99 ? '99+' : badge}
+              </Text>
+            </View>
+          ) : null}
         </View>
         <Text
           style={[
@@ -113,6 +123,7 @@ const TAB_KEY_MAP: Record<string, string> = {
   Chatbot: 'tabs.chatbot',
   Wellness: 'tabs.wellness',
   Settings: 'tabs.settings',
+  Notifications: 'tabs.notifications',
 };
 
 const useSafeInsets = () => {
@@ -174,6 +185,7 @@ const TabBar = ({state, descriptors, navigation}: any) => {
             : route.name;
 
         const isFocused = state.index === index;
+        const badge = options.tabBarBadge;
 
         const onPress = () => {
           const event = navigation.emit({
@@ -194,6 +206,7 @@ const TabBar = ({state, descriptors, navigation}: any) => {
             isFocused={isFocused}
             onPress={onPress}
             isDark={isDark}
+            badge={badge}
           />
         );
       })}
@@ -242,6 +255,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 2,
+    position: 'relative',
+  },
+  badgeContainer: {
+    position: 'absolute',
+    top: -4,
+    right: -10,
+    backgroundColor: '#EF4444',
+    borderRadius: 10,
+    minWidth: 18,
+    height: 18,
+    paddingHorizontal: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontWeight: '700',
+    textAlign: 'center',
   },
   tabLabel: {
     fontSize: 11,
