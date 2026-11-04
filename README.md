@@ -1252,6 +1252,7 @@ We welcome contributions from everyone — developers, designers, writers, and t
     <td align="center"><a href="https://github.com/rish0000-dot"><img src="https://avatars.githubusercontent.com/u/189544159?v=4" width="120px;" alt=""/><br/><sub><b>Rishabh Sharma</b></sub></a></td>
        <td align="center"><a href="https://github.com/Omkar482185"><img src="https://avatars.githubusercontent.com/u/215218105?v=4" width="120px;" alt=""/><br/><sub><b>OMKAR SALUNKHE</b></sub></a></td>
      <td align="center"><a href="https://github.com/nitikagotra75-crypto"><img src="https://avatars.githubusercontent.com/u/261795953?v=4" width="120px;" alt=""/><br/><sub><b>Nitika Gotra</b></sub></a></td>
+     <td align="center"><a href="https://github.com/TusarGoswami"><img src="https://avatars.githubusercontent.com/u/149251950?v=4" width="120px;" alt=""/><br/><sub><b>Tusar Goswami</b></sub></a></td>
  </tr>
 </table>
 <!-- CONTRIBUTORS-TABLE-END -->
