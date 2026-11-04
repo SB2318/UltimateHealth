@@ -18,6 +18,7 @@ import { wp, hp, fp } from '../../lib/ui/Metric';
 import { useAppSelector } from '../../store/hooks';
 import Snackbar from 'react-native-snackbar';
 import { useTranslation } from '../../localization';
+import HipaaComplianceModal from '../../components/common/HipaaComplianceModal';
 type SettingsScreenProps = { navigation: any };
 
 // ─── Section Header ───────────────────────────────────────────────────────────
@@ -116,6 +117,7 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
   const { isConnected } = useAppSelector((state: any) => state.network);
   const { currentLanguage, setLanguage, supportedLanguages, t } = useTranslation();
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [showHipaaModal, setShowHipaaModal] = useState(false);
 
   const currentLangInfo = supportedLanguages.find(
     (l) => l.code === currentLanguage || l.bcp47 === currentLanguage,
@@ -306,6 +308,21 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
             label={t('settings.privacyPolicy')}
             sublabel={t('settings.privacyPolicySub')}
             onPress={() => go('Privacy')}
+            isDark={isDark}
+          />
+          <View
+            style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#374151' : '#F3F4F6' },
+            ]}
+            accessible={false}
+          />
+          <SettingsRow
+            icon="shield-account"
+            iconColor="#10B981"
+            label="HIPAA Compliance & Health Privacy"
+            sublabel="ePHI protection, Safe Harbor, and data export"
+            onPress={() => setShowHipaaModal(true)}
             isDark={isDark}
           />
           <View
@@ -532,6 +549,11 @@ const SettingsScreen = ({ navigation }: SettingsScreenProps) => {
           </View>
         </View>
       </Modal>
+
+      <HipaaComplianceModal
+        visible={showHipaaModal}
+        onClose={() => setShowHipaaModal(false)}
+      />
     </SafeAreaView>
   );
 };

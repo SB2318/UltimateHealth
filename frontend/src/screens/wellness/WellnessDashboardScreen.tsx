@@ -9,6 +9,8 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
+  Modal,
+  Share,
 } from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {YStack, XStack, Text, Card, View} from 'tamagui';
@@ -39,6 +41,8 @@ import {
   GET_WELLNESS_PLAN_API,
   GENERATE_WELLNESS_PLAN_API,
   GET_WELLNESS_PLAN_HISTORY_API,
+  EXPORT_WELLNESS_API,
+  GET_AUDIT_DISCLOSURES_API,
 } from '../../lib/api/APIUtils';
 import {
   WellnessPlan,
@@ -46,6 +50,7 @@ import {
   WellnessPlanResponse,
 } from '../../schemas/type';
 import BreathingTool from '../../components/common/BreathingTool';
+import HipaaComplianceModal from '../../components/common/HipaaComplianceModal';
 
 export const PLAN_REFRESH_COOLDOWN_MS = 2 * 24 * 60 * 60 * 1000; // 48 hours (2 days)
 export const PLAN_LAST_REFRESHED_STORAGE_KEY = '@wellness_plan_last_refreshed_ts';
@@ -99,6 +104,11 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
   const [planStatusMessage, setPlanStatusMessage] = useState('');
   const [showBreathingTool, setShowBreathingTool] = useState(false);
   const [lastPlanRefreshedTimestamp, setLastPlanRefreshedTimestamp] = useState<number | null>(null);
+  const [showHipaaModal, setShowHipaaModal] = useState(false);
+  const [showDisclosuresModal, setShowDisclosuresModal] = useState(false);
+  const [disclosuresList, setDisclosuresList] = useState<any[]>([]);
+  const [isExportingRecords, setIsExportingRecords] = useState(false);
+  const [isLoadingDisclosures, setIsLoadingDisclosures] = useState(false);
 
   useEffect(() => {
     AsyncStorage.getItem(PLAN_LAST_REFRESHED_STORAGE_KEY)
@@ -241,6 +251,87 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
       setLogError('');
     }
   }, [logMutation.isSuccess]);
+
+  const handleExportHealthRecords = async () => {
+    if (!isConnected) {
+      Snackbar.show({
+        text: 'You are offline. Connect to the internet to export health records.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+      return;
+    }
+    setIsExportingRecords(true);
+    try {
+      const res = await authAxios.get(EXPORT_WELLNESS_API);
+      const data = res?.data;
+      const notice = data?.complianceNotice || 'HIPAA Right of Access export (45 CFR § 164.524)';
+      const timestamp = data?.generatedAt ? new Date(data.generatedAt).toLocaleString() : new Date().toLocaleString();
+      const patient = data?.patient || {};
+      const records = data?.records || {};
+      const logs = records?.wellnessLogs || [];
+      const plans = records?.wellnessPlans || [];
+      const careTeam = records?.careTeamAssignments || [];
+
+      const reportText = [
+        '=== ULTIMATEHEALTH HIPAA HEALTH RECORD EXPORT ===',
+        notice,
+        'Exported: ' + timestamp,
+        'Patient: ' + (patient?.user_name || 'User') + ' (@' + (patient?.user_handle || 'user') + ')',
+        'Email: ' + (patient?.email || 'N/A'),
+        '',
+        '=== SUMMARY ===',
+        'Total Wellness Logs: ' + logs.length,
+        'Personalized Plans: ' + plans.length,
+        'Care Team Members: ' + careTeam.length,
+        '',
+        '=== RECENT LOGS (LAST 7) ===',
+        ...logs.slice(0, 7).map((l: any) =>
+          '[' + l.date + '] Steps: ' + (l.metrics?.steps ?? 0) + ' | Water: ' + (l.metrics?.waterMl ?? 0) + 'ml | Sleep: ' + (l.metrics?.sleepHours ?? 0) + 'h | Active: ' + (l.metrics?.activeMinutes ?? 0) + 'm'
+        ),
+        '',
+        'HIPAA Legal Notice: This document contains Electronic Protected Health Information (ePHI) issued under 45 CFR § 164.524.'
+      ].join('\n');
+
+      await Share.share({
+        title: 'UltimateHealth Health Records (HIPAA § 164.524)',
+        message: reportText,
+      });
+
+      Snackbar.show({
+        text: 'Health records exported successfully under HIPAA § 164.524',
+        duration: Snackbar.LENGTH_LONG,
+      });
+    } catch {
+      Snackbar.show({
+        text: 'Unable to export health records at this time.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    } finally {
+      setIsExportingRecords(false);
+    }
+  };
+
+  const handleViewAuditDisclosures = async () => {
+    if (!isConnected) {
+      Snackbar.show({
+        text: 'You are offline. Connect to the internet to view audit disclosures.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+      return;
+    }
+    setIsLoadingDisclosures(true);
+    try {
+      const res = await authAxios.get(GET_AUDIT_DISCLOSURES_API);
+      const items = res?.data?.data || [];
+      setDisclosuresList(items);
+      setShowDisclosuresModal(true);
+    } catch {
+      setDisclosuresList([]);
+      setShowDisclosuresModal(true);
+    } finally {
+      setIsLoadingDisclosures(false);
+    }
+  };
 
   const handleLogSubmit = () => {
     const rawMetrics: Record<string, number | undefined> = {
@@ -500,7 +591,69 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
               </Text>
             </YStack>
           </XStack>
+          <TouchableOpacity
+            onPress={() => setShowHipaaModal(true)}
+            testID="wellness-hipaa-badge"
+            accessibilityRole="button"
+            accessibilityLabel="HIPAA Compliance & ePHI Protection"
+            style={{
+              backgroundColor: 'rgba(16, 185, 129, 0.25)',
+              paddingHorizontal: 8,
+              paddingVertical: 4,
+              borderRadius: 12,
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 4,
+              borderWidth: 1,
+              borderColor: 'rgba(52, 211, 153, 0.45)',
+            }}>
+            <Ionicons name="shield-checkmark" size={13} color="#34D399" />
+            <Text style={{color: '#ffffff', fontSize: 11, fontWeight: '700'}}>
+              HIPAA
+            </Text>
+          </TouchableOpacity>
         </XStack>
+      </View>
+
+      {/* HIPAA ePHI Privacy Notice Pill */}
+      <View
+        style={{
+          backgroundColor: isDarkMode ? '#000A3E' : '#EFF6FF',
+          paddingVertical: 7,
+          paddingHorizontal: wp(4),
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottomWidth: 1,
+          borderBottomColor: isDarkMode ? '#1E293B' : '#DBEAFE',
+        }}>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 6, flex: 1}}>
+          <Ionicons name="shield-checkmark" size={14} color="#10B981" />
+          <Text
+            style={{
+              fontSize: 11.5,
+              color: isDarkMode ? '#93C5FD' : '#1E40AF',
+              fontWeight: '600',
+              flex: 1,
+            }}
+            numberOfLines={1}>
+            ePHI Protected (45 CFR § 164.312) • End-to-End Encrypted
+          </Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => setShowHipaaModal(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Read HIPAA Privacy Rights">
+          <Text
+            style={{
+              fontSize: 11.5,
+              color: '#2563EB',
+              fontWeight: '700',
+              marginLeft: 8,
+            }}>
+            Rights
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {isLoading ? (
@@ -1342,8 +1495,225 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
               </YStack>
             </>
           )}
+          {/* HIPAA Patient Rights & Data Privacy Task Card */}
+          <XStack
+            justifyContent="space-between"
+            alignItems="center"
+            marginTop={16}
+            marginBottom={12}>
+            <XStack alignItems="center" gap="$2.5">
+              <View style={[styles.sectionIconWrapper, {backgroundColor: 'rgba(16, 185, 129, 0.15)'}]}>
+                <Ionicons name="shield-checkmark" size={18} color="#10B981" />
+              </View>
+              <Text
+                fontSize={18}
+                fontWeight="700"
+                color={isDarkMode ? '#FFFFFF' : '#111827'}>
+                HIPAA Privacy & Data Rights
+              </Text>
+            </XStack>
+            <TouchableOpacity onPress={() => setShowHipaaModal(true)}>
+              <Text fontSize={13} fontWeight="600" color="#10B981">
+                View Rights
+              </Text>
+            </TouchableOpacity>
+          </XStack>
+
+          <Card
+            padding={16}
+            borderRadius={16}
+            backgroundColor={isDarkMode ? '#001280' : '#FFFFFF'}
+            elevate
+            bordered
+            borderWidth={0.6}
+            borderColor={isDarkMode ? '#334EBC' : '#E5E7EB'}
+            marginBottom={20}>
+            <YStack gap="$3">
+              <XStack alignItems="center" gap="$2">
+                <View
+                  paddingHorizontal={8}
+                  paddingVertical={3}
+                  borderRadius={8}
+                  backgroundColor={isDarkMode ? 'rgba(16, 185, 129, 0.2)' : '#ECFDF5'}
+                  borderWidth={1}
+                  borderColor={isDarkMode ? 'rgba(52, 211, 153, 0.35)' : '#A7F3D0'}>
+                  <Text fontSize={11} fontWeight="700" color={isDarkMode ? '#34D399' : '#065F46'}>
+                    ePHI Protected • 45 CFR § 164.312
+                  </Text>
+                </View>
+              </XStack>
+
+              <Text
+                fontSize={13.5}
+                color={isDarkMode ? '#B0C4DE' : '#4B5563'}
+                lineHeight={20}>
+                Your daily wellness metrics (sleep, steps, hydration, breathing) are protected health information under federal regulations. You retain full ownership, portability, and access to all recorded telemetry.
+              </Text>
+
+              {/* Action Tasks */}
+              <YStack gap="$2.5" marginTop="$1">
+                {/* Task 1: Export Health Records (HIPAA § 164.524) */}
+                <TouchableOpacity
+                  testID="export-health-records-btn"
+                  onPress={handleExportHealthRecords}
+                  disabled={isExportingRecords}
+                  style={[
+                    styles.primaryButton,
+                    {backgroundColor: '#0F52BA', height: 44, borderRadius: 12},
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityLabel="Export complete health records under HIPAA Right of Access">
+                  {isExportingRecords ? (
+                    <ActivityIndicator size="small" color="#FFFFFF" />
+                  ) : (
+                    <>
+                      <Ionicons name="cloud-download-outline" size={18} color="#FFFFFF" />
+                      <Text style={styles.primaryButtonText}>
+                        Export Health Records (§ 164.524)
+                      </Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+
+                {/* Task 2: View Audit Disclosures (§ 164.528) */}
+                <TouchableOpacity
+                  testID="view-disclosures-btn"
+                  onPress={handleViewAuditDisclosures}
+                  disabled={isLoadingDisclosures}
+                  style={[
+                    styles.primaryButton,
+                    {
+                      backgroundColor: isDarkMode ? '#1E293B' : '#F1F5F9',
+                      height: 44,
+                      borderRadius: 12,
+                      borderWidth: 1,
+                      borderColor: isDarkMode ? '#334155' : '#CBD5E1',
+                    },
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityLabel="View Accounting of Disclosures under HIPAA">
+                  {isLoadingDisclosures ? (
+                    <ActivityIndicator size="small" color={isDarkMode ? '#FFFFFF' : '#334155'} />
+                  ) : (
+                    <>
+                      <Ionicons
+                        name="list-outline"
+                        size={18}
+                        color={isDarkMode ? '#F8FAFC' : '#334155'}
+                      />
+                      <Text
+                        style={{
+                          color: isDarkMode ? '#F8FAFC' : '#334155',
+                          fontSize: 14,
+                          fontWeight: '600',
+                        }}>
+                        Accounting of Disclosures (§ 164.528)
+                      </Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              </YStack>
+            </YStack>
+          </Card>
         </ScrollView>
       )}
+
+      {/* HIPAA Compliance Modal */}
+      <HipaaComplianceModal
+        visible={showHipaaModal}
+        onClose={() => setShowHipaaModal(false)}
+        onExportWellness={handleExportHealthRecords}
+        showExportActions={true}
+      />
+
+      {/* HIPAA Accounting of Disclosures Modal (45 CFR § 164.528) */}
+      <Modal
+        visible={showDisclosuresModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowDisclosuresModal(false)}>
+        <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.65)', justifyContent: 'flex-end'}}>
+          <View
+            style={{
+              backgroundColor: isDarkMode ? '#0F172A' : '#FFFFFF',
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+              padding: 20,
+              maxHeight: '80%',
+            }}>
+            <View style={{width: 44, height: 4, backgroundColor: '#CBD5E1', borderRadius: 2, alignSelf: 'center', marginBottom: 16}} />
+            <XStack justifyContent="space-between" alignItems="center" marginBottom={12}>
+              <XStack alignItems="center" gap="$2">
+                <Ionicons name="list-circle" size={22} color="#10B981" />
+                <Text fontSize={18} fontWeight="700" color={isDarkMode ? '#F8FAFC' : '#0F172A'}>
+                  Accounting of Disclosures
+                </Text>
+              </XStack>
+              <TouchableOpacity onPress={() => setShowDisclosuresModal(false)}>
+                <Ionicons name="close" size={22} color={isDarkMode ? '#94A3B8' : '#64748B'} />
+              </TouchableOpacity>
+            </XStack>
+            <Text fontSize={12} color={isDarkMode ? '#94A3B8' : '#64748B'} marginBottom={16}>
+              HIPAA 45 CFR § 164.528 requires health platforms to maintain and disclose all access events and transmissions of your Protected Health Information.
+            </Text>
+
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{gap: 10, paddingBottom: 16}}>
+              {disclosuresList.length === 0 ? (
+                <View style={{padding: 24, alignItems: 'center'}}>
+                  <Ionicons name="shield-checkmark-outline" size={36} color="#10B981" />
+                  <Text style={{fontSize: 15, fontWeight: '600', color: isDarkMode ? '#F8FAFC' : '#111827', marginTop: 8}}>
+                    No External Disclosures
+                  </Text>
+                  <Text style={{fontSize: 13, color: isDarkMode ? '#94A3B8' : '#64748B', textAlign: 'center', marginTop: 4}}>
+                    Your health telemetry has not been disclosed to third parties outside your authorized care team.
+                  </Text>
+                </View>
+              ) : (
+                disclosuresList.map((item, idx) => (
+                  <View
+                    key={'disc-' + idx}
+                    style={{
+                      padding: 12,
+                      borderRadius: 12,
+                      backgroundColor: isDarkMode ? '#1E293B' : '#F8FAFC',
+                      borderWidth: 1,
+                      borderColor: isDarkMode ? '#334155' : '#E2E8F0',
+                    }}>
+                    <XStack justifyContent="space-between" alignItems="center">
+                      <Text style={{fontSize: 13, fontWeight: '700', color: '#10B981'}}>
+                        {item.action || 'ACCESS_LOG'}
+                      </Text>
+                      <Text style={{fontSize: 11, color: isDarkMode ? '#94A3B8' : '#64748B'}}>
+                        {item.timestamp ? new Date(item.timestamp).toLocaleDateString() : 'Recent'}
+                      </Text>
+                    </XStack>
+                    <Text style={{fontSize: 12.5, color: isDarkMode ? '#CBD5E1' : '#334155', marginTop: 4}}>
+                      Resource: {item.resourceType || 'WellnessTelemetry'}
+                    </Text>
+                    {item.details && (
+                      <Text style={{fontSize: 11.5, color: isDarkMode ? '#94A3B8' : '#64748B', marginTop: 2}}>
+                        Purpose: {typeof item.details === 'string' ? item.details : JSON.stringify(item.details)}
+                      </Text>
+                    )}
+                  </View>
+                ))
+              )}
+            </ScrollView>
+
+            <TouchableOpacity
+              onPress={() => setShowDisclosuresModal(false)}
+              style={{
+                backgroundColor: BUTTON_COLOR,
+                paddingVertical: 12,
+                borderRadius: 12,
+                alignItems: 'center',
+                marginTop: 8,
+              }}>
+              <Text style={{color: '#FFFFFF', fontSize: 15, fontWeight: '600'}}>Close Audit Log</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };

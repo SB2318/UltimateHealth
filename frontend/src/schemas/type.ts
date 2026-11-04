@@ -192,6 +192,9 @@ export type Message = {
   timestamp: string;
   userHandle: string | null;
   profileImage: string | null;
+  phiSanitized?: boolean;
+  complianceNotice?: string;
+  disclaimer?: string;
 };
 
 export interface Character {
@@ -199,6 +202,8 @@ export interface Character {
   name: string;
   tagline: string;
   avatarUrl: string;
+  hipaaCompliant?: boolean;
+  clinicalRole?: string;
 }
 
 export type UserDetail = {

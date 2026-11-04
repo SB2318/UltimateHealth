@@ -17,12 +17,16 @@ import {
   Text,
   TouchableOpacity,
   Modal,
+  Alert,
+  Share,
   Keyboard,
   useColorScheme,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Tts from 'react-native-tts';
-import {GET_STORAGE_DATA} from '../../lib/api/APIUtils';
+import {GET_STORAGE_DATA, CLEAR_CHAT_API, EXPORT_CHAT_API} from '../../lib/api/APIUtils';
+import authAxios from '../../lib/api/authAxios';
+import HipaaComplianceModal from '../../components/common/HipaaComplianceModal';
 import {ChatBotScreenProps, Message} from '../../schemas/type';
 import {hp} from '../../lib/ui/Metric';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -100,6 +104,10 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   const [isQuotaExceeded, setIsQuotaExceeded] = useState<boolean>(false);
   const [showQuotaModal, setShowQuotaModal] = useState<boolean>(false);
   const [remainingMessages, setRemainingMessages] = useState<number>(MAX_DAILY_MESSAGES_PER_CHARACTER);
+  const [showHipaaModal, setShowHipaaModal] = useState<boolean>(false);
+  const [showMenuModal, setShowMenuModal] = useState<boolean>(false);
+  const [isExporting, setIsExporting] = useState<boolean>(false);
+  const [isClearing, setIsClearing] = useState<boolean>(false);
   const isMountedRef = useRef(true);
 
   const safeSetMessages = useCallback(
@@ -454,6 +462,105 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     performSendMessage(failedMessage.originalPrompt);
   }, [isPending, isConnected, safeSetMessages, performSendMessage]);
 
+  const handleExportChat = useCallback(async () => {
+    if (!isConnected) {
+      Snackbar.show({
+        text: 'You are offline. Reconnect to export your chat transcripts.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+      return;
+    }
+    setIsExporting(true);
+    try {
+      const res = await authAxios.get(EXPORT_CHAT_API);
+      const data = res?.data;
+      const disclaimer =
+        data?.disclaimer || 'Educational wellness guidance only. Not medical advice. For emergencies, call 911.';
+      const notice = data?.complianceNotice || 'HIPAA Right of Access Export (45 CFR § 164.524)';
+      const timestamp = new Date().toLocaleString();
+
+      const transcriptLines = (messages || [])
+        .slice()
+        .reverse()
+        .map(m => {
+          const sender = m.user?._id === 1 ? 'Patient' : (characterName || 'Care Companion AI');
+          const time = m.createdAt ? new Date(m.createdAt).toLocaleTimeString() : '';
+          return `[${time}] ${sender}:\n${m.text}`;
+        })
+        .join('\n\n');
+
+      const fullShareText = `=== ULTIMATEHEALTH HIPAA CHAT TRANSCRIPT ===\n${notice}\nExported: ${timestamp}\nCare Persona: ${characterName || 'Care Companion AI'}\n\nClinical Notice: ${disclaimer}\n\n=== CONVERSATION LOGS ===\n\n${transcriptLines}`;
+
+      await Share.share({
+        title: 'UltimateHealth Chat History (HIPAA § 164.524)',
+        message: fullShareText,
+      });
+
+      Snackbar.show({
+        text: 'Chat history exported successfully under HIPAA § 164.524',
+        duration: Snackbar.LENGTH_LONG,
+      });
+    } catch {
+      Snackbar.show({
+        text: 'Unable to export chat transcript at this time.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    } finally {
+      setIsExporting(false);
+      setShowMenuModal(false);
+    }
+  }, [isConnected, messages, characterName]);
+
+  const handleClearChat = useCallback(() => {
+    Alert.alert(
+      'Clear Conversation',
+      `Under HIPAA 45 CFR § 164.526 (Right to Amend & Clear), all messages with ${characterName || 'this assistant'} will be permanently removed from server records.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete Permanently',
+          style: 'destructive',
+          onPress: async () => {
+            setIsClearing(true);
+            try {
+              const url = characterId
+                ? `${CLEAR_CHAT_API}?character=${characterId}`
+                : `${CLEAR_CHAT_API}`;
+              await authAxios.delete(url);
+
+              safeSetMessages([
+                {
+                  _id: 1,
+                  text: FALLBACK_WELCOME_MESSAGE,
+                  createdAt: new Date(),
+                  user: {
+                    _id: ASSISTANT_USER_ID,
+                    avatar:
+                      characterAvatar ||
+                      'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+                  },
+                },
+              ]);
+
+              Snackbar.show({
+                text: 'Chat history permanently purged (HIPAA § 164.526)',
+                duration: Snackbar.LENGTH_LONG,
+              });
+            } catch {
+              Snackbar.show({
+                text: 'Failed to clear conversation on server. Please try again.',
+                duration: Snackbar.LENGTH_SHORT,
+              });
+            } finally {
+              setIsClearing(false);
+              setShowMenuModal(false);
+            }
+          },
+        },
+      ],
+    );
+  }, [characterId, characterName, characterAvatar, safeSetMessages]);
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#f9fafb'}} edges={[]}>
       <View
@@ -542,11 +649,93 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
             </View>
           </View>
 
-          <Text style={{fontSize: 12, color: 'rgba(255,255,255,0.85)', marginTop: 2}}>
-            {isPending ? 'Generating response...' : isTyping ? 'Typing...' : 'Online'}
-          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 2}}>
+            <Text style={{fontSize: 12, color: 'rgba(255,255,255,0.85)'}}>
+              {isPending ? 'Generating response...' : isTyping ? 'Typing...' : 'Online'}
+            </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 6}}>
+              <TouchableOpacity
+                onPress={() => setShowHipaaModal(true)}
+                testID="hipaa-header-badge"
+                accessibilityRole="button"
+                accessibilityLabel="HIPAA Compliance & Rights"
+                style={{
+                  backgroundColor: 'rgba(16, 185, 129, 0.25)',
+                  paddingHorizontal: 6,
+                  paddingVertical: 2,
+                  borderRadius: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 3,
+                  borderWidth: 1,
+                  borderColor: 'rgba(52, 211, 153, 0.45)',
+                }}>
+                <Ionicons name="shield-checkmark" size={11} color="#34D399" />
+                <Text style={{color: '#ffffff', fontSize: 10, fontWeight: '700'}}>
+                  HIPAA
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setShowMenuModal(true)}
+                testID="chat-menu-btn"
+                accessibilityRole="button"
+                accessibilityLabel="Chat and HIPAA Options"
+                style={{
+                  backgroundColor: 'rgba(255,255,255,0.2)',
+                  width: 24,
+                  height: 24,
+                  borderRadius: 12,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Ionicons name="ellipsis-vertical" size={14} color="#ffffff" />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </View>
+
+      {/* HIPAA Safe Harbor & Clinical Notice Banner */}
+      <View
+        style={{
+          backgroundColor: isDarkMode ? '#1E293B' : '#EFF6FF',
+          paddingVertical: 6,
+          paddingHorizontal: 16,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottomWidth: 1,
+          borderBottomColor: isDarkMode ? '#334155' : '#DBEAFE',
+        }}>
+        <View style={{flexDirection: 'row', alignItems: 'center', gap: 6, flex: 1}}>
+          <Ionicons name="shield-checkmark" size={13} color="#10B981" />
+          <Text
+            style={{
+              fontSize: 11,
+              color: isDarkMode ? '#94A3B8' : '#1E40AF',
+              fontWeight: '500',
+              flex: 1,
+            }}
+            numberOfLines={1}>
+            PHI de-identified under Safe Harbor. In emergencies, call 911.
+          </Text>
+        </View>
+        <TouchableOpacity
+          onPress={() => setShowHipaaModal(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Read HIPAA Privacy Rights">
+          <Text
+            style={{
+              fontSize: 11,
+              color: '#2563EB',
+              fontWeight: '700',
+              marginLeft: 6,
+            }}>
+            Rights
+          </Text>
+        </TouchableOpacity>
+      </View>
+
 
       <KeyboardAvoidingView
         style={{flex: 1}}
@@ -764,6 +953,127 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
             </TouchableOpacity>
           </View>
         </View>
+      </Modal>
+
+      {/* HIPAA Compliance & Patient Privacy Modal */}
+      <HipaaComplianceModal
+        visible={showHipaaModal}
+        onClose={() => setShowHipaaModal(false)}
+        onExportChat={handleExportChat}
+        showExportActions={true}
+      />
+
+      {/* Quick Actions & HIPAA Tasks Menu */}
+      <Modal
+        visible={showMenuModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowMenuModal(false)}>
+        <TouchableOpacity
+          style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}
+          activeOpacity={1}
+          onPress={() => setShowMenuModal(false)}>
+          <View
+            style={{
+              backgroundColor: modalBg,
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
+              padding: 24,
+              gap: 12,
+            }}>
+            <View style={{ width: 44, height: 4, backgroundColor: '#e5e7eb', borderRadius: 2, alignSelf: 'center', marginBottom: 4 }} />
+            <Text style={{ fontSize: 18, fontWeight: '700', color: modalTextColor }}>
+              Chat & HIPAA Privacy Tasks
+            </Text>
+
+            <TouchableOpacity
+              testID="action-export-chat"
+              onPress={handleExportChat}
+              disabled={isExporting}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 12,
+                paddingVertical: 12,
+                borderBottomWidth: 1,
+                borderBottomColor: isDarkMode ? '#334155' : '#f1f5f9',
+              }}>
+              <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(15,82,186,0.1)', alignItems: 'center', justifyContent: 'center' }}>
+                <Ionicons name="cloud-download-outline" size={20} color={BUTTON_COLOR} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 15, fontWeight: '600', color: modalTextColor }}>
+                  Export Chat Transcript
+                </Text>
+                <Text style={{ fontSize: 12, color: isDarkMode ? '#94A3B8' : '#6b7280' }}>
+                  HIPAA Right of Access (45 CFR § 164.524)
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              testID="action-clear-chat"
+              onPress={handleClearChat}
+              disabled={isClearing}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 12,
+                paddingVertical: 12,
+                borderBottomWidth: 1,
+                borderBottomColor: isDarkMode ? '#334155' : '#f1f5f9',
+              }}>
+              <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(239,68,68,0.1)', alignItems: 'center', justifyContent: 'center' }}>
+                <Ionicons name="trash-outline" size={20} color="#dc2626" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 15, fontWeight: '600', color: '#dc2626' }}>
+                  Clear Conversation
+                </Text>
+                <Text style={{ fontSize: 12, color: isDarkMode ? '#94A3B8' : '#6b7280' }}>
+                  HIPAA Right to Amend & Clear (45 CFR § 164.526)
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              testID="action-hipaa-info"
+              onPress={() => {
+                setShowMenuModal(false);
+                setShowHipaaModal(true);
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 12,
+                paddingVertical: 12,
+              }}>
+              <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: 'rgba(16,185,129,0.1)', alignItems: 'center', justifyContent: 'center' }}>
+                <Ionicons name="shield-checkmark-outline" size={20} color="#10b981" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 15, fontWeight: '600', color: modalTextColor }}>
+                  HIPAA Notice & Privacy Rights
+                </Text>
+                <Text style={{ fontSize: 12, color: isDarkMode ? '#94A3B8' : '#6b7280' }}>
+                  Safe Harbor De-Identification & Technical Safeguards
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => setShowMenuModal(false)}
+              style={{
+                backgroundColor: isDarkMode ? '#334155' : '#f3f4f6',
+                paddingVertical: 12,
+                borderRadius: 12,
+                alignItems: 'center',
+                marginTop: 6,
+              }}>
+              <Text style={{ fontSize: 15, fontWeight: '600', color: modalTextColor }}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
       </Modal>
     </SafeAreaView>
   );

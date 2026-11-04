@@ -355,4 +355,26 @@ describe('ChatbotScreen', () => {
     // Yesterday's conversation must have been cleared / filtered out
     expect(queryByText('Yesterday old conversation')).toBeNull();
   });
+
+  it('renders the HIPAA compliance badge and Safe Harbor advisory banner', () => {
+    const {getByText, getByTestId} = renderScreen();
+    expect(getByTestId('hipaa-header-badge')).toBeTruthy();
+    expect(getByText('HIPAA')).toBeTruthy();
+    expect(getByText('PHI de-identified under Safe Harbor. In emergencies, call 911.')).toBeTruthy();
+  });
+
+  it('opens HIPAA privacy modal when HIPAA badge is pressed', () => {
+    const {getByTestId, getByText} = renderScreen();
+    fireEvent.press(getByTestId('hipaa-header-badge'));
+    expect(getByText('HIPAA Privacy & Safeguards')).toBeTruthy();
+    expect(getByText('Safe Harbor De-Identification (§ 164.514)')).toBeTruthy();
+  });
+
+  it('opens chat actions menu when menu button is pressed', () => {
+    const {getByTestId, getByText} = renderScreen();
+    fireEvent.press(getByTestId('chat-menu-btn'));
+    expect(getByText('Chat & HIPAA Privacy Tasks')).toBeTruthy();
+    expect(getByTestId('action-export-chat')).toBeTruthy();
+    expect(getByTestId('action-clear-chat')).toBeTruthy();
+  });
 });

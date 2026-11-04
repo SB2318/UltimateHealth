@@ -20,6 +20,7 @@ describe('SettingsScreen', () => {
     const { getByText } = render(<SettingsScreen navigation={{ getParent: jest.fn() }} />);
     expect(getByText('Settings')).toBeTruthy();
     expect(getByText('View / Edit Profile')).toBeTruthy();
+    expect(getByText('HIPAA Compliance & Health Privacy')).toBeTruthy();
     expect(getByText('Sign Out')).toBeTruthy();
   });
 });

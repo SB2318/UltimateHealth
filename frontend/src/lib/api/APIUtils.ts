@@ -121,6 +121,10 @@ const GET_TOKEN_STATUS = `${PROD_URL}/tokenstatus`;
 const CHAT_URL = `${PROD_URL}/gemini/messages`;
 const SEND_MESSAGE_TO_GEMINI = `${PROD_URL}/gemini/send`;
 const GET_CHARACTERS_API = `${PROD_URL}/gemini/characters`;
+const CLEAR_CHAT_API = `${PROD_URL}/gemini/messages`;
+const EXPORT_CHAT_API = `${PROD_URL}/gemini/export`;
+const EXPORT_WELLNESS_API = `${PROD_URL}/wellness/export`;
+const GET_AUDIT_DISCLOSURES_API = `${PROD_URL}/care-team/audit-disclosures`;
 
 /** Notification Preferences */
 const GET_NOTIFICATION_PREFERENCES = `${PROD_URL}/user/notification-preferences`;
@@ -245,4 +249,8 @@ export {
   GET_WELLNESS_PLAN_HISTORY_API,
   NEARBY_EVENTS_API,
   GOOGLE_AUTH_API,
+  CLEAR_CHAT_API,
+  EXPORT_CHAT_API,
+  EXPORT_WELLNESS_API,
+  GET_AUDIT_DISCLOSURES_API,
 };

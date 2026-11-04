@@ -16,6 +16,7 @@ import { BUTTON_COLOR } from '../../lib/ui/Theme';
 import { PersonaLobbyScreenProps, Character } from '../../schemas/type';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import HipaaComplianceModal from '../../components/common/HipaaComplianceModal';
 import { BottomTabBarHeightContext } from '@react-navigation/bottom-tabs';
 import { useFocusEffect } from '@react-navigation/native';
 import {
@@ -30,6 +31,7 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
   const { isConnected } = useAppSelector((state: any) => state.network);
   const { data: characters, isLoading, error } = useGetCharacters(isConnected);
   const [activeTab, setActiveTab] = useState<'AI' | 'Experts'>('AI');
+  const [showHipaaModal, setShowHipaaModal] = useState<boolean>(false);
   const [remainingMap, setRemainingMap] = useState<Record<string, number>>({});
   // Floating tab bar overlays content; reserve space so last cards stay visible
   const tabBarHeight = React.useContext(BottomTabBarHeightContext) ?? 0;
@@ -75,16 +77,22 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
           <View style={styles.onlineBadge} />
         </View>
 
-        {/* Daily limit counter badge */}
-        <View style={[styles.counterBadge, isExhausted && styles.counterBadgeExhausted]}>
-          <Ionicons
-            name={isExhausted ? 'lock-closed' : 'chatbubble-ellipses'}
-            size={11}
-            color={isExhausted ? '#DC2626' : '#2563EB'}
-          />
-          <Text style={[styles.counterBadgeText, isExhausted && styles.counterBadgeTextExhausted]}>
-            {remaining}/{MAX_DAILY_MESSAGES_PER_CHARACTER} left today
-          </Text>
+        {/* Daily limit counter & HIPAA Badge */}
+        <View style={styles.badgeRow}>
+          <View style={[styles.counterBadge, isExhausted && styles.counterBadgeExhausted]}>
+            <Ionicons
+              name={isExhausted ? 'lock-closed' : 'chatbubble-ellipses'}
+              size={11}
+              color={isExhausted ? '#DC2626' : '#2563EB'}
+            />
+            <Text style={[styles.counterBadgeText, isExhausted && styles.counterBadgeTextExhausted]}>
+              {remaining}/{MAX_DAILY_MESSAGES_PER_CHARACTER} left
+            </Text>
+          </View>
+          <View style={styles.hipaaCardChip}>
+            <Ionicons name="shield-checkmark" size={10} color="#10B981" />
+            <Text style={styles.hipaaCardChipText}>HIPAA</Text>
+          </View>
         </View>
 
         <Text style={styles.characterName} numberOfLines={1}>
@@ -136,6 +144,19 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
         <Text style={styles.headerSubtitle}>
           Helpful guidance and personalized wellness insights, whenever you need them.
         </Text>
+
+        {/* HIPAA Compliance Banner in Persona Lobby */}
+        <TouchableOpacity
+          onPress={() => setShowHipaaModal(true)}
+          style={styles.hipaaLobbyBanner}
+          accessibilityRole="button"
+          accessibilityLabel="HIPAA Safe Harbor Protected. Tap for details">
+          <Ionicons name="shield-checkmark" size={13} color="#34D399" />
+          <Text style={styles.hipaaLobbyBannerText}>
+            HIPAA Safe Harbor Protected • Patient Rights
+          </Text>
+          <Ionicons name="information-circle-outline" size={13} color="#34D399" />
+        </TouchableOpacity>
         
         <View style={styles.tabContainer}>
           <TouchableOpacity
@@ -214,6 +235,10 @@ const PersonaLobbyScreen = ({ navigation }: PersonaLobbyScreenProps) => {
           />
         )}
       </View>
+      <HipaaComplianceModal
+        visible={showHipaaModal}
+        onClose={() => setShowHipaaModal(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -488,6 +513,46 @@ const styles = StyleSheet.create({
     color: '#64748B',
     textAlign: 'center',
     lineHeight: 20,
+  },
+  hipaaLobbyBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+    borderColor: 'rgba(52, 211, 153, 0.4)',
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    marginTop: 10,
+    alignSelf: 'flex-start',
+  },
+  hipaaLobbyBannerText: {
+    color: '#ffffff',
+    fontSize: 11.5,
+    fontWeight: '600',
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 10,
+  },
+  hipaaCardChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: '#ECFDF5',
+    borderColor: '#A7F3D0',
+    borderWidth: 1,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  hipaaCardChipText: {
+    color: '#065F46',
+    fontSize: 10,
+    fontWeight: '700',
   },
 });
 

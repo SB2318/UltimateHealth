@@ -93,4 +93,26 @@ describe('WellnessDashboardScreen - State Rendering Tests', () => {
     expect(getByText('Active Minutes')).toBeTruthy();
     expect(getByText('Weekly Trend')).toBeTruthy();
   });
+
+  it('renders HIPAA Privacy & Data Rights section and export tasks', () => {
+    useGetWeeklyWellness.mockReturnValue({ data: [mockLog], isLoading: false, isError: false, refetch: jest.fn() });
+
+    const { getByText, getByTestId } = render(<WellnessDashboardScreen />);
+
+    expect(getByText('HIPAA Privacy & Data Rights')).toBeTruthy();
+    expect(getByText('ePHI Protected • 45 CFR § 164.312')).toBeTruthy();
+    expect(getByTestId('export-health-records-btn')).toBeTruthy();
+    expect(getByTestId('view-disclosures-btn')).toBeTruthy();
+    expect(getByTestId('wellness-hipaa-badge')).toBeTruthy();
+  });
+
+  it('opens HIPAA patient rights modal when badge is pressed', () => {
+    useGetWeeklyWellness.mockReturnValue({ data: [mockLog], isLoading: false, isError: false, refetch: jest.fn() });
+
+    const { getByTestId, getByText } = render(<WellnessDashboardScreen />);
+
+    fireEvent.press(getByTestId('wellness-hipaa-badge'));
+    expect(getByText('HIPAA Privacy & Safeguards')).toBeTruthy();
+    expect(getByText('Technical Safeguards (§ 164.312)')).toBeTruthy();
+  });
 });

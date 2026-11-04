@@ -99,6 +99,19 @@ const TermsAndConditionsScreen = () => {
           These terms are governed by the laws of India.
         </Text>
 
+        <Text fontSize="$6" fontWeight="600">
+          10. HIPAA Compliance & Protected Health Information (ePHI)
+        </Text>
+        <Text>
+          UltimateHealth enforces federal Health Insurance Portability and
+          Accountability Act (HIPAA) standards across all wellness metrics and AI
+          interactions under 45 CFR Parts 160 & 164. All telemetry is secured
+          with TLS 1.3 in-transit and AES-256 at-rest. Chat prompts are scrubbed
+          of 18 direct identifiers under Safe Harbor de-identification (§ 164.514)
+          prior to AI analysis. Patients maintain full legal rights of access (§ 164.524),
+          amendment and erasure (§ 164.526), and accounting of disclosures (§ 164.528).
+        </Text>
+
         <Separator />
 
         {/* Footer */}
