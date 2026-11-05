@@ -803,11 +803,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
           <GiftedChat
             messages={messages}
             onSend={onSend}
-            onLongPress={(context, message) => {
-              if (message?.text) {
-                copyToClipboard(message.text, message._id);
-              }
-            }}
+            
             user={{
               _id: 1,
               avatar:
@@ -925,7 +921,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                   )}
                   <Bubble
                     {...props}
-                    onLongPress={() => copyToClipboard(currentMessage.text, currentMessage._id)}
+                    touchableProps={{ onLongPress: () => copyToClipboard(currentMessage.text, currentMessage._id) }}
                     wrapperStyle={{
                       left: {
                         backgroundColor: leftBubbleBg,
@@ -1016,7 +1012,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
             renderSend={props => (
               <Send
                 {...props}
-                disabled={!props.text?.trim().length || isPending || isSendingRef.current || remainingMessages <= 0}
+                sendButtonProps={{ enabled: Boolean(props.text?.trim().length && !isPending && !isSendingRef.current && remainingMessages > 0) }}
                 containerStyle={{justifyContent: 'center'}}
               >
                 <View style={{marginRight: 12, marginBottom: 8}}>

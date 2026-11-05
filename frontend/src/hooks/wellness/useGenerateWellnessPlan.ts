@@ -18,7 +18,7 @@ export const useGenerateWellnessPlan = (): UseMutationResult<
   return useMutation({
     mutationKey: ['generate-wellness-plan'],
     mutationFn: async () => {
-      const response = await authAxios.post(GENERATE_WELLNESS_PLAN_API);
+      const response = await authAxios.post(GENERATE_WELLNESS_PLAN_API, {}, { timeout: 60000 });
       return response.data as WellnessPlanResponse;
     },
     onSuccess: () => {
