@@ -45,6 +45,9 @@ import {
   isMessageFromToday,
   FALLBACK_WELCOME_MESSAGE,
   getFallbackQuotaExceededMessage,
+  getCharacterChatMessages,
+  saveCharacterChatMessages,
+  clearCharacterChatMessages,
 } from '../../lib/storage/aiUsageStorage';
 
 // interface ChatbotResponse {
@@ -290,6 +293,19 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
 
 
 
+
+
+  useEffect(() => {
+    let isMounted = true;
+    getCharacterChatMessages(characterId).then(cached => {
+      if (isMounted && cached && cached.length > 0) {
+        safeSetMessages(cached);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [characterId, safeSetMessages]);
   const safeSetIsTyping = useCallback((typing: boolean) => {
     if (isMountedRef.current) {
       setIsTyping(typing);
@@ -313,14 +329,17 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   }, [characterAvatar]);
 
   useEffect(() => {
-    if (conversations) {
+    if (conversations && conversations.length > 0) {
       // Retain and load all previous conversations from the server history
       const refined = convertToGiftedFormat(conversations);
-      safeSetMessages([
+      // Sort newest first so GiftedChat (inverted) shows oldest at top
+      refined.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      const merged = [
+        ...refined,
         {
           _id: 'welcome-msg',
           text: FALLBACK_WELCOME_MESSAGE,
-          createdAt: new Date(),
+          createdAt: new Date(0),
           user: {
             _id: ASSISTANT_USER_ID,
             avatar:
@@ -328,12 +347,15 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
           },
         },
-        ...refined.reverse(),
-      ]);
-
+      ];
+      safeSetMessages(merged);
+      // Persist server messages locally for offline-first restore
+      saveCharacterChatMessages(characterId, merged);
+    }
+    if (conversations) {
       safeSetIsTyping(false);
     }
-  }, [conversations, safeSetIsTyping, safeSetMessages, convertToGiftedFormat, characterAvatar]);
+  }, [conversations, safeSetIsTyping, safeSetMessages, convertToGiftedFormat, characterAvatar, characterId]);
 
 
   const performSendMessage = useCallback((prompt: string) => {
@@ -372,8 +394,8 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
         isSendingRef.current = false;
         setIsLoading(false);
         const verification = verifyChatbotResponse(responseData.text);
-        safeSetMessages(previousMessages =>
-          GiftedChat.append(previousMessages, [
+        safeSetMessages(previousMessages => {
+          const updated = GiftedChat.append(previousMessages, [
             {
               _id: responseData._id,
               text: responseData.text,
@@ -387,8 +409,35 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                 confidence: verification.confidence,
               },
             } as any,
-          ]),
-        );
+          ]);
+          saveCharacterChatMessages(characterId, updated);
+          return updated;
+        });
+
+        // Increment usage count only when AI response is received
+        incrementCharacterDailyUsage(characterId).then(usage => {
+          if (isMountedRef.current) {
+            setRemainingMessages(usage.remaining);
+            if (usage.remaining <= 0) {
+              setIsQuotaExceeded(true);
+              safeSetMessages(prev =>
+                GiftedChat.append(prev, [
+                  {
+                    _id: `quota-fallback-${Date.now()}`,
+                    text: getFallbackQuotaExceededMessage(characterName),
+                    createdAt: new Date(),
+                    user: {
+                      _id: ASSISTANT_USER_ID,
+                      avatar:
+                        characterAvatar ||
+                        'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
+                    },
+                  },
+                ]),
+              );
+            }
+          }
+        });
       },
       onError: (error: any) => {
         isSendingRef.current = false;
@@ -467,35 +516,12 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     }
     const prompt = newMessages[0]?.text ?? 'AI in health within 100 words';
     
-    // Decrement local counter and save usage
-    incrementCharacterDailyUsage(characterId).then(usage => {
-      if (isMountedRef.current) {
-        setRemainingMessages(usage.remaining);
-        if (usage.remaining <= 0) {
-          setIsQuotaExceeded(true);
-          setShowQuotaModal(true);
-          safeSetMessages(prev =>
-            GiftedChat.append(prev, [
-              {
-                _id: `quota-fallback-${Date.now()}`,
-                text: getFallbackQuotaExceededMessage(characterName),
-                createdAt: new Date(),
-                user: {
-                  _id: ASSISTANT_USER_ID,
-                  avatar:
-                    characterAvatar ||
-                    'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
-                },
-              },
-            ]),
-          );
-        }
-      }
+    safeSetMessages(previousMessages => {
+      const updated = GiftedChat.append(previousMessages, newMessages);
+      // Persist user message immediately so it survives unmount/reload
+      saveCharacterChatMessages(characterId, updated);
+      return updated;
     });
-
-    safeSetMessages(previousMessages =>
-      GiftedChat.append(previousMessages, newMessages),
-    );
 
     performSendMessage(prompt);
   }, [isPending, remainingMessages, characterId, characterName, safeSetMessages, performSendMessage]);
@@ -586,19 +612,20 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                 : `${CLEAR_CHAT_API}`;
               await authAxios.delete(url);
 
-              safeSetMessages([
-                {
-                  _id: 1,
-                  text: FALLBACK_WELCOME_MESSAGE,
-                  createdAt: new Date(),
-                  user: {
-                    _id: ASSISTANT_USER_ID,
-                    avatar:
-                      characterAvatar ||
-                      'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
-                  },
+              const welcomeMsg = {
+                _id: 'welcome-msg',
+                text: FALLBACK_WELCOME_MESSAGE,
+                createdAt: new Date(),
+                user: {
+                  _id: ASSISTANT_USER_ID,
+                  avatar:
+                    characterAvatar ||
+                    'https://static.vecteezy.com/system/resources/previews/026/309/247/non_2x/robot-chat-or-chat-bot-logo-modern-conversation-automatic-technology-logo-design-template-vector.jpg',
                 },
-              ]);
+              };
+              safeSetMessages([welcomeMsg]);
+              // Also wipe the local AsyncStorage cache
+              clearCharacterChatMessages(characterId);
 
               Snackbar.show({
                 text: 'Chat history permanently purged (HIPAA § 164.526)',

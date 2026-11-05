@@ -153,3 +153,58 @@ export const isMessageFromToday = (
     return true;
   }
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Chat message persistence (offline-first local cache per character)
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const AI_CHAT_MESSAGES_KEY_PREFIX = '@ai_chat_messages_';
+
+/**
+ * Load cached chat messages for a specific character from AsyncStorage.
+ * Returns null if no cached messages exist.
+ */
+export const getCharacterChatMessages = async (
+  characterId: string | number | undefined,
+): Promise<any[] | null> => {
+  const key = `${AI_CHAT_MESSAGES_KEY_PREFIX}${characterId ?? 'default'}`;
+  try {
+    const raw = await AsyncStorage.getItem(key);
+    if (!raw) return null;
+    return JSON.parse(raw) as any[];
+  } catch (error) {
+    console.warn('Failed to read cached chat messages', error);
+    return null;
+  }
+};
+
+/**
+ * Save chat messages for a specific character to AsyncStorage so they
+ * survive unmount, navigation, and app restarts without a network call.
+ */
+export const saveCharacterChatMessages = async (
+  characterId: string | number | undefined,
+  messages: any[],
+): Promise<void> => {
+  const key = `${AI_CHAT_MESSAGES_KEY_PREFIX}${characterId ?? 'default'}`;
+  try {
+    await AsyncStorage.setItem(key, JSON.stringify(messages));
+  } catch (error) {
+    console.warn('Failed to save chat messages to AsyncStorage', error);
+  }
+};
+
+/**
+ * Remove cached chat messages for a specific character from AsyncStorage.
+ * Called when the user clears their conversation history.
+ */
+export const clearCharacterChatMessages = async (
+  characterId: string | number | undefined,
+): Promise<void> => {
+  const key = `${AI_CHAT_MESSAGES_KEY_PREFIX}${characterId ?? 'default'}`;
+  try {
+    await AsyncStorage.removeItem(key);
+  } catch (error) {
+    console.warn('Failed to clear cached chat messages', error);
+  }
+};
