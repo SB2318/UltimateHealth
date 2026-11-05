@@ -21,6 +21,7 @@ import {
   Share,
   Keyboard,
   useColorScheme,
+  Clipboard,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Tts from 'react-native-tts';
@@ -109,6 +110,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [isClearing, setIsClearing] = useState<boolean>(false);
   const isMountedRef = useRef(true);
+  const isSendingRef = useRef(false);
 
   const safeSetMessages = useCallback(
     (updater: React.SetStateAction<IMessage[]>) => {
@@ -158,19 +160,57 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   const {data: user} = useGetProfile();
 
   const [activeSpeakingId, setActiveSpeakingId] = useState<string | number | null>(null);
+  const [copiedMessageId, setCopiedMessageId] = useState<string | number | null>(null);
+  const availableVoicesRef = useRef<any[]>([]);
+
+  const detectLanguageScript = (text: string): string => {
+    if (/[\u0900-\u097F]/.test(text)) return 'hi'; // Hindi, Marathi, Sanskrit, Nepali
+    if (/[\u0980-\u09FF]/.test(text)) return 'bn'; // Bengali / Assamese
+    if (/[\u0B80-\u0BFF]/.test(text)) return 'ta'; // Tamil
+    if (/[\u0C00-\u0C7F]/.test(text)) return 'te'; // Telugu
+    if (/[\u0A80-\u0AFF]/.test(text)) return 'gu'; // Gujarati
+    if (/[\u0C80-\u0CFF]/.test(text)) return 'kn'; // Kannada
+    if (/[\u0D00-\u0D7F]/.test(text)) return 'ml'; // Malayalam
+    if (/[\u0600-\u06FF]/.test(text)) return 'ar'; // Arabic / Urdu
+    if (/[\u0400-\u04FF]/.test(text)) return 'ru'; // Russian / Cyrillic
+    if (/[\u4E00-\u9FFF]/.test(text)) return 'zh'; // Chinese
+    if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) return 'ja'; // Japanese
+    if (/[\uAC00-\uD7AF]/.test(text)) return 'ko'; // Korean
+    if (/[\u00C0-\u00FF]/.test(text)) return 'es'; // Spanish / European accents
+    return 'en';
+  };
+
+  const copyToClipboard = useCallback((text: string, id: string | number) => {
+    if (!text) return;
+    try {
+      Clipboard.setString(text);
+      setCopiedMessageId(id);
+      Snackbar.show({
+        text: 'Message copied to clipboard',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+      setTimeout(() => {
+        if (isMountedRef.current) {
+          setCopiedMessageId(prev => (prev === id ? null : prev));
+        }
+      }, 2000);
+    } catch (e) {
+      console.warn('Failed to copy to clipboard', e);
+    }
+  }, []);
 
   const initTts = async () => {
     try {
       await Tts.getInitStatus();
       const voices = await Tts.voices();
-      const availableVoices = voices.filter(
-        (v: any) =>
-          !v.networkConnectionRequired &&
-          !v.notInstalled &&
-          (v.language === 'en-IN' || v.language === 'en-US' || v.language.startsWith('en')),
+      const availableVoices = (voices || []).filter(
+        (v: any) => !v.networkConnectionRequired && !v.notInstalled,
       );
+      availableVoicesRef.current = availableVoices;
       if (availableVoices && availableVoices.length > 0) {
-        const defaultVoice = availableVoices[0];
+        const defaultVoice =
+          availableVoices.find((v: any) => v.language?.startsWith('en')) ||
+          availableVoices[0];
         if (defaultVoice) {
           try {
             await Tts.setDefaultLanguage(defaultVoice.language);
@@ -209,7 +249,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     };
   }, []);
 
-  const toggleSpeech = useCallback((message: IMessage) => {
+  const toggleSpeech = useCallback(async (message: IMessage) => {
     if (activeSpeakingId === message._id) {
       Tts.stop();
       setActiveSpeakingId(null);
@@ -217,6 +257,18 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
       Tts.stop();
       if (message.text) {
         setActiveSpeakingId(message._id);
+        const langCode = detectLanguageScript(message.text);
+        const matchingVoice = availableVoicesRef.current.find((v: any) =>
+          v.language?.toLowerCase().startsWith(langCode.toLowerCase()),
+        );
+        if (matchingVoice) {
+          try {
+            await Tts.setDefaultLanguage(matchingVoice.language);
+            await Tts.setDefaultVoice(matchingVoice.id);
+          } catch (err) {
+            console.warn(`Failed to switch TTS voice for language ${langCode}`, err);
+          }
+        }
         Tts.speak(message.text);
       }
     }
@@ -228,7 +280,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     useSendMessageToGemini();
   const isPending = messageProcessPending || isLoading;
   const {data: conversations, isLoading: _conversationLoading} =
-    useLoadAIConversations(isConnected, characterId);
+    useLoadAIConversations(characterId);
 
   useEffect(() => {
     return () => {
@@ -262,12 +314,11 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
 
   useEffect(() => {
     if (conversations) {
-      // Clear past days' logs: keep only messages sent today
-      const todayConversations = conversations.filter(m => isMessageFromToday(m.timestamp));
-      const refined = convertToGiftedFormat(todayConversations);
+      // Retain and load all previous conversations from the server history
+      const refined = convertToGiftedFormat(conversations);
       safeSetMessages([
         {
-          _id: refined.length + 1,
+          _id: 'welcome-msg',
           text: FALLBACK_WELCOME_MESSAGE,
           createdAt: new Date(),
           user: {
@@ -286,6 +337,9 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
 
 
   const performSendMessage = useCallback((prompt: string) => {
+    if (isSendingRef.current) {
+      return;
+    }
     if (!isConnected) {
       const errorId = `error-${Date.now()}`;
       safeSetMessages(previousMessages =>
@@ -309,10 +363,13 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
       });
       return;
     }
+    isSendingRef.current = true;
     setIsLoading(true);
 
-    sendMessageToAI({ text: prompt, character: characterId }, {
+    const detectedLang = detectLanguageScript(prompt);
+    sendMessageToAI({ text: prompt, character: characterId, language: detectedLang }, {
       onSuccess: (responseData: Message) => {
+        isSendingRef.current = false;
         setIsLoading(false);
         const verification = verifyChatbotResponse(responseData.text);
         safeSetMessages(previousMessages =>
@@ -334,6 +391,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
         );
       },
       onError: (error: any) => {
+        isSendingRef.current = false;
         setIsLoading(false);
         if (!isMountedRef.current) {
           return;
@@ -392,17 +450,17 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
 
   // A failed message can only be resent once the device is back online and no
   // other request is in flight; until then the retry control stays inert.
-  const canRetry = isConnected && !isPending;
+  const canRetry = isConnected && !isPending && !isSendingRef.current;
 
   const onSend = useCallback((newMessages: IMessage[] = []) => {
-    if (isPending) {
+    if (isPending || isSendingRef.current) {
       return;
     }
     if (remainingMessages <= 0) {
       setIsQuotaExceeded(true);
       setShowQuotaModal(true);
       Snackbar.show({
-        text: `Daily limit reached for ${characterName || 'this character'} (5/5 messages).`,
+        text: `Daily limit reached for ${characterName || 'this character'} (${MAX_DAILY_MESSAGES_PER_CHARACTER}/${MAX_DAILY_MESSAGES_PER_CHARACTER} messages).`,
         duration: Snackbar.LENGTH_SHORT,
       });
       return;
@@ -443,7 +501,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   }, [isPending, remainingMessages, characterId, characterName, safeSetMessages, performSendMessage]);
 
   const handleRetry = useCallback((failedMessage: any) => {
-    if (isPending) {
+    if (isPending || isSendingRef.current) {
       return;
     }
     // Retrying while still offline would only swap the failure card for an
@@ -745,6 +803,11 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
           <GiftedChat
             messages={messages}
             onSend={onSend}
+            onLongPress={(context, message) => {
+              if (message?.text) {
+                copyToClipboard(message.text, message._id);
+              }
+            }}
             user={{
               _id: 1,
               avatar:
@@ -767,7 +830,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               editable: !isPending && !isQuotaExceeded && remainingMessages > 0,
               placeholder:
                 remainingMessages > 0 && !isQuotaExceeded
-                  ? `Ask ${characterName || 'the AI'} a question... (${remainingMessages}/${MAX_DAILY_MESSAGES_PER_CHARACTER} left today)`
+                  ? `Ask ${characterName || 'the AI'} in any language... (${remainingMessages}/${MAX_DAILY_MESSAGES_PER_CHARACTER} left today)`
                   : `Daily limit reached (${MAX_DAILY_MESSAGES_PER_CHARACTER}/${MAX_DAILY_MESSAGES_PER_CHARACTER}). Resets tomorrow.`,
             }}
             renderBubble={props => {
@@ -838,10 +901,31 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
               }
               const isAssistant = currentMessage.user?._id === ASSISTANT_USER_ID;
               const isSpeaking = activeSpeakingId === currentMessage._id;
+              const isCopied = copiedMessageId === currentMessage._id;
               return (
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  {!isAssistant && (
+                    <TouchableOpacity
+                      onPress={() => copyToClipboard(currentMessage.text, currentMessage._id)}
+                      style={{
+                        padding: 6,
+                        marginRight: 4,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                      activeOpacity={0.7}
+                      accessibilityLabel={isCopied ? 'Copied' : 'Copy message to clipboard'}
+                    >
+                      <Ionicons
+                        name={isCopied ? 'checkmark-circle' : 'copy-outline'}
+                        size={18}
+                        color={isCopied ? '#10b981' : isDarkMode ? '#94A3B8' : '#6b7280'}
+                      />
+                    </TouchableOpacity>
+                  )}
                   <Bubble
                     {...props}
+                    onLongPress={() => copyToClipboard(currentMessage.text, currentMessage._id)}
                     wrapperStyle={{
                       left: {
                         backgroundColor: leftBubbleBg,
@@ -874,23 +958,40 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
                     }}
                   />
                   {isAssistant && (
-                    <TouchableOpacity
-                      onPress={() => toggleSpeech(currentMessage)}
-                      style={{
-                        padding: 8,
-                        marginLeft: 4,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}
-                      activeOpacity={0.7}
-                      accessibilityLabel={isSpeaking ? 'Stop speaking message' : 'Listen to message'}
-                    >
-                      <Ionicons
-                        name={isSpeaking ? 'stop-circle' : 'volume-medium'}
-                        size={24}
-                        color={isSpeaking ? BUTTON_COLOR : '#6b7280'}
-                      />
-                    </TouchableOpacity>
+                    <View style={{flexDirection: 'row', alignItems: 'center', marginLeft: 4}}>
+                      <TouchableOpacity
+                        onPress={() => toggleSpeech(currentMessage)}
+                        style={{
+                          padding: 6,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                        activeOpacity={0.7}
+                        accessibilityLabel={isSpeaking ? 'Stop speaking message' : 'Listen to message'}
+                      >
+                        <Ionicons
+                          name={isSpeaking ? 'stop-circle' : 'volume-medium'}
+                          size={22}
+                          color={isSpeaking ? BUTTON_COLOR : isDarkMode ? '#94A3B8' : '#6b7280'}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => copyToClipboard(currentMessage.text, currentMessage._id)}
+                        style={{
+                          padding: 6,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                        activeOpacity={0.7}
+                        accessibilityLabel={isCopied ? 'Copied' : 'Copy message to clipboard'}
+                      >
+                        <Ionicons
+                          name={isCopied ? 'checkmark-circle' : 'copy-outline'}
+                          size={18}
+                          color={isCopied ? '#10b981' : isDarkMode ? '#94A3B8' : '#6b7280'}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   )}
                 </View>
               );
@@ -915,6 +1016,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
             renderSend={props => (
               <Send
                 {...props}
+                disabled={!props.text?.trim().length || isPending || isSendingRef.current || remainingMessages <= 0}
                 containerStyle={{justifyContent: 'center'}}
               >
                 <View style={{marginRight: 12, marginBottom: 8}}>
@@ -940,10 +1042,10 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
             <View style={{ width: 48, height: 4, backgroundColor: '#e5e7eb', borderRadius: 2, marginBottom: 24 }} />
             <Ionicons name="time-outline" size={48} color="#f59e0b" style={{ marginBottom: 16 }} />
             <Text style={{ fontSize: 20, fontWeight: '700', color: modalTextColor, marginBottom: 8, textAlign: 'center' }}>
-              Daily Limit Reached (5/5)
+              Daily Limit Reached
             </Text>
             <Text style={{ fontSize: 15, color: isDarkMode ? '#94A3B8' : '#4b5563', textAlign: 'center', marginBottom: 24, lineHeight: 22 }}>
-              {"You've"} used all 5 messages for {characterName || 'this character'} today. Your limit resets automatically at midnight. Please come back tomorrow for more advice!
+              {"You've"} used your daily messages for {characterName || 'this character'} today. Your limit resets automatically at midnight. Please come back tomorrow for more advice!
             </Text>
             <TouchableOpacity
               onPress={() => setShowQuotaModal(false)}
