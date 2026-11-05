@@ -110,6 +110,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   const [isExporting, setIsExporting] = useState<boolean>(false);
   const [isClearing, setIsClearing] = useState<boolean>(false);
   const isMountedRef = useRef(true);
+  const isSendingRef = useRef(false);
 
   const safeSetMessages = useCallback(
     (updater: React.SetStateAction<IMessage[]>) => {
@@ -279,7 +280,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
     useSendMessageToGemini();
   const isPending = messageProcessPending || isLoading;
   const {data: conversations, isLoading: _conversationLoading} =
-    useLoadAIConversations(isConnected, characterId);
+    useLoadAIConversations(characterId);
 
   useEffect(() => {
     return () => {
@@ -336,6 +337,9 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
 
 
   const performSendMessage = useCallback((prompt: string) => {
+    if (isSendingRef.current) {
+      return;
+    }
     if (!isConnected) {
       const errorId = `error-${Date.now()}`;
       safeSetMessages(previousMessages =>
@@ -359,11 +363,13 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
       });
       return;
     }
+    isSendingRef.current = true;
     setIsLoading(true);
 
     const detectedLang = detectLanguageScript(prompt);
     sendMessageToAI({ text: prompt, character: characterId, language: detectedLang }, {
       onSuccess: (responseData: Message) => {
+        isSendingRef.current = false;
         setIsLoading(false);
         const verification = verifyChatbotResponse(responseData.text);
         safeSetMessages(previousMessages =>
@@ -385,6 +391,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
         );
       },
       onError: (error: any) => {
+        isSendingRef.current = false;
         setIsLoading(false);
         if (!isMountedRef.current) {
           return;
@@ -443,10 +450,10 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
 
   // A failed message can only be resent once the device is back online and no
   // other request is in flight; until then the retry control stays inert.
-  const canRetry = isConnected && !isPending;
+  const canRetry = isConnected && !isPending && !isSendingRef.current;
 
   const onSend = useCallback((newMessages: IMessage[] = []) => {
-    if (isPending) {
+    if (isPending || isSendingRef.current) {
       return;
     }
     if (remainingMessages <= 0) {
@@ -494,7 +501,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
   }, [isPending, remainingMessages, characterId, characterName, safeSetMessages, performSendMessage]);
 
   const handleRetry = useCallback((failedMessage: any) => {
-    if (isPending) {
+    if (isPending || isSendingRef.current) {
       return;
     }
     // Retrying while still offline would only swap the failure card for an
@@ -1009,6 +1016,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
             renderSend={props => (
               <Send
                 {...props}
+                disabled={!props.text?.trim().length || isPending || isSendingRef.current || remainingMessages <= 0}
                 containerStyle={{justifyContent: 'center'}}
               >
                 <View style={{marginRight: 12, marginBottom: 8}}>

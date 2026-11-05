@@ -24,7 +24,9 @@ export const useSendMessageToGemini = (): UseMutationResult<
       const payload: Record<string, any> = { text };
       if (character) payload.character = character;
       if (language) payload.language = language;
-      const response = await axios.post(`${SEND_MESSAGE_TO_GEMINI}`, payload);
+      const response = await axios.post(`${SEND_MESSAGE_TO_GEMINI}`, payload, {
+        timeout: 60000, // 60s timeout for LLM inference to prevent false network timeout errors
+      });
       return response.data.message as Message;
     },
   });

@@ -8,10 +8,11 @@ import axios from "axios";
 type AxiosError = any;
 
 export const useLoadAIConversations = (
-  isConnected: boolean,
   characterId?: string,
 ): UseQueryResult<Message[], AxiosError> => {
   const userId = useAppSelector((state: RootState) => state.user.user_id);
+  const isConnected = useAppSelector((state: RootState) => state.network.isConnected);
+
   return useQuery({
     queryKey: ['load-user-conversations', userId, characterId],
     queryFn: async () => {
@@ -19,12 +20,12 @@ export const useLoadAIConversations = (
         const url = characterId
           ? `${CHAT_URL}?character=${characterId}`
           : `${CHAT_URL}`;
-        const response = await axios.get(url);
+        const response = await axios.get(url, { timeout: 15000 });
         return (response?.data?.messages ?? []) as Message[];
       } catch {
         return [];
       }
     },
-    enabled: !!isConnected,
+    enabled: Boolean(isConnected !== false && userId),
   });
 };
