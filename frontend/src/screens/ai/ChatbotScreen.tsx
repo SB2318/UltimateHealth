@@ -453,7 +453,7 @@ const ChatbotScreen = ({navigation, route}: ChatBotScreenProps) => {
       setIsQuotaExceeded(true);
       setShowQuotaModal(true);
       Snackbar.show({
-        text: `Daily limit reached for ${characterName || 'this character'} (/ messages).`,
+        text: `Daily limit reached for ${characterName || 'this character'} (${MAX_DAILY_MESSAGES_PER_CHARACTER}/${MAX_DAILY_MESSAGES_PER_CHARACTER} messages).`,
         duration: Snackbar.LENGTH_SHORT,
       });
       return;
