@@ -91,7 +91,7 @@ const defaultStaticConfig = {
     },
     predictiveBackGestureEnabled: false,
     package: "com.anonymous.UltimateHealth",
-    versionCode: 21
+    versionCode: 59
   },
   web: {
     output: "single",
