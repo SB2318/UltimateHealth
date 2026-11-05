@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const MAX_DAILY_MESSAGES_PER_CHARACTER = 50;
+export const MAX_DAILY_MESSAGES_PER_CHARACTER = 5;
 export const AI_USAGE_STORAGE_KEY = '@ai_character_daily_usage';
 export const AI_CHAT_LAST_ACTIVE_DATE_KEY = '@ai_chat_last_active_date';
 
