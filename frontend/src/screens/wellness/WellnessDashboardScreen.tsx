@@ -222,7 +222,7 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
     setIsGeneratingPlan(true);
     setPlanStatusMessage('');
     try {
-      const res = await authAxios.post(GENERATE_WELLNESS_PLAN_API);
+      const res = await authAxios.post(GENERATE_WELLNESS_PLAN_API, {}, { timeout: 60000 });
       const body = res?.data as WellnessPlanResponse;
       if (body?.data) {
         const now = Date.now();
@@ -232,8 +232,9 @@ const WellnessDashboardScreen = ({navigation}: {navigation?: {goBack?: () => voi
         setPlanStatusMessage('Personalized 7-day AI plan updated!');
         fetchPlanHistory();
       }
-    } catch {
-      setPlanStatusMessage('⚠️ Could not generate AI plan right now. Please try again shortly.');
+    } catch (err: any) {
+      const serverMsg = err?.response?.data?.error?.message || err?.response?.data?.message;
+      setPlanStatusMessage(serverMsg || '⚠️ Could not generate AI plan right now. Please try again shortly.');
     } finally {
       setIsGeneratingPlan(false);
     }
