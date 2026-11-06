@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { X, ExternalLink, Shield, BookOpen, Heart, CheckCircle2, Award, Landmark, User, Clock } from "lucide-react";
 import { TributeProfile } from "@/types/tribute";
+import { withBasePath } from "@/lib/basePath";
 
 interface ProfileDetailModalProps {
   profile: TributeProfile | null;
@@ -20,6 +22,7 @@ export default function ProfileDetailModal({
   onSelectNext,
   onSelectPrev,
 }: ProfileDetailModalProps) {
+  const t = useTranslations("tribute");
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Close on ESC
@@ -160,7 +163,7 @@ export default function ProfileDetailModal({
             >
               {profile.avatarUrl ? (
                 <Image
-                  src={profile.avatarUrl}
+                  src={withBasePath(profile.avatarUrl)}
                   alt={profile.name}
                   fill
                   unoptimized
@@ -223,19 +226,44 @@ export default function ProfileDetailModal({
                 {profile.roleAndField}
               </p>
 
+              {/* Verified Historical Quote if Authenticated */}
+              {profile.verifiedQuote && (
+                <div
+                  style={{
+                    background: "rgba(13, 148, 136, 0.08)",
+                    borderLeft: "3px solid #0d9488",
+                    padding: "10px 14px",
+                    borderRadius: "0 8px 8px 0",
+                    marginBottom: "10px",
+                  }}
+                >
+                  <div style={{ fontSize: "0.68rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#0d9488", marginBottom: "4px" }}>
+                    {t("verifiedQuoteLabel")}
+                  </div>
+                  <div style={{ fontSize: "0.86rem", fontStyle: "italic", lineHeight: 1.5, color: "var(--explorer-text-secondary, #1e293b)", marginBottom: "4px" }}>
+                    &ldquo;{profile.verifiedQuote.quote}&rdquo;
+                  </div>
+                  <div style={{ fontSize: "0.72rem", color: "#64748b" }}>
+                    — Source: {profile.verifiedQuote.source}
+                  </div>
+                </div>
+              )}
+
+              {/* UltimateHealth Editorial Reflection */}
               <div
                 style={{
-                  background: "rgba(244, 63, 94, 0.08)",
+                  background: "rgba(244, 63, 94, 0.06)",
                   borderLeft: "3px solid #e11d48",
                   padding: "10px 14px",
                   borderRadius: "0 8px 8px 0",
-                  fontSize: "0.85rem",
-                  fontStyle: "italic",
-                  lineHeight: 1.5,
-                  color: "var(--explorer-text-secondary, #334155)",
                 }}
               >
-                &ldquo;{profile.coreMessage}&rdquo;
+                <div style={{ fontSize: "0.68rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#e11d48", marginBottom: "4px" }}>
+                  {t("editorialLessonLabel")}
+                </div>
+                <div style={{ fontSize: "0.84rem", lineHeight: 1.5, color: "var(--explorer-text-secondary, #334155)" }}>
+                  {profile.coreMessage}
+                </div>
               </div>
             </div>
           </div>

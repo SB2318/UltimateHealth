@@ -31,11 +31,11 @@ export const MOUMITA_MEMORIAL_INFO = {
   name: "Dr. Moumita Debnath",
   role: "Postgraduate Resident Doctor",
   department: "Department of Pulmonary & Chest Medicine",
-  quote:
-    "Healthcare begins with seeing the whole human being — body, mind, and dignity. Dedicated to uncompromised medical care and genuine respect.",
+  editorialDedication:
+    "Honouring her memory and lost career through responsible healthcare education, patient dignity, and awareness of workplace safety for medical professionals.",
   protocol: "Respect Giver Protocol",
   seriesAnnouncement:
-    "Dedicated 30-article clinical research and respiratory guide series planned across 9 languages in honor of her clinical dedication.",
+    "Dedicated 30-article clinical respiratory health education series planned across 9 languages in honor of healthcare worker safety and patient dignity.",
   contactEmail: "ultimate.health25@gmail.com",
 };
 

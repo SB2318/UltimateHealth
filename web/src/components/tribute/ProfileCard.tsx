@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { User, ArrowRight, Heart, BookOpen, Clock } from "lucide-react";
 import { TributeProfile } from "@/types/tribute";
+import { withBasePath } from "@/lib/basePath";
 
 interface ProfileCardProps {
   profile: TributeProfile;
@@ -10,6 +12,7 @@ interface ProfileCardProps {
 }
 
 export default function ProfileCard({ profile, onOpenModal }: ProfileCardProps) {
+  const t = useTranslations("tribute");
   return (
     <div
       onClick={() => onOpenModal(profile)}
@@ -77,7 +80,7 @@ export default function ProfileCard({ profile, onOpenModal }: ProfileCardProps) 
           >
             {profile.avatarUrl ? (
               <Image
-                src={profile.avatarUrl}
+                src={withBasePath(profile.avatarUrl)}
                 alt={profile.name}
                 fill
                 unoptimized
@@ -141,7 +144,7 @@ export default function ProfileCard({ profile, onOpenModal }: ProfileCardProps) 
             }}
           >
             <Heart size={12} style={{ fill: "#0d9488" }} />
-            Contribution to Remember:
+            {t("contributionLabel")}
           </div>
           <p
             style={{
@@ -159,22 +162,33 @@ export default function ProfileCard({ profile, onOpenModal }: ProfileCardProps) 
           </p>
         </div>
 
-        {/* Core Message Quote */}
+        {/* UltimateHealth Editorial Reflection */}
         <div
           style={{
-            background: "rgba(244, 63, 94, 0.06)",
-            borderLeft: "3px solid #f43f5e",
+            background: "rgba(244, 63, 94, 0.05)",
+            borderLeft: "3px solid #e11d48",
             borderRadius: "0 8px 8px 0",
-            padding: "10px 12px",
+            padding: "9px 12px",
             marginBottom: "18px",
           }}
         >
+          <div
+            style={{
+              fontSize: "0.68rem",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              color: "#e11d48",
+              marginBottom: "4px",
+            }}
+          >
+            {t("editorialLessonLabel")}
+          </div>
           <p
             style={{
               fontSize: "0.8rem",
               lineHeight: 1.5,
               color: "var(--explorer-text-secondary, #475569)",
-              fontStyle: "italic",
               margin: 0,
               display: "-webkit-box",
               WebkitLineClamp: 2,
@@ -182,7 +196,7 @@ export default function ProfileCard({ profile, onOpenModal }: ProfileCardProps) 
               overflow: "hidden",
             }}
           >
-            &ldquo;{profile.coreMessage}&rdquo;
+            {profile.coreMessage}
           </p>
         </div>
       </div>
@@ -232,7 +246,7 @@ export default function ProfileCard({ profile, onOpenModal }: ProfileCardProps) 
             padding: 0,
           }}
         >
-          <span>Read Story</span>
+          <span>{t("readStory")}</span>
           <ArrowRight size={13} />
         </button>
       </div>

@@ -100,12 +100,30 @@ export default function EditorialCharter() {
             fontSize: "0.82rem",
             lineHeight: 1.6,
             color: "var(--explorer-text-secondary, #475569)",
+            marginBottom: "16px",
           }}
         >
           <strong style={{ color: "#d97706", display: "block", marginBottom: "4px" }}>
-            Research-Quality Note & Legal Attribution:
+            Research-Quality Sourcing & Legal Attribution:
           </strong>
-          This is a curated first edition grounded in primary evidence: Supreme Court of India judicial records (RG Kar suo motu orders), court proceedings, recognized human-rights monitoring bodies (Amnesty, CPJ, Front Line Defenders, HRW, Goldman Foundation), Nobel records, and verified journalistic archives. Allegations are never presented as convictions, and living survivor profiles are explicitly preserved as active global leaders.
+          Biographical entries are grounded in primary evidence: Supreme Court judicial records, gazette notifications, university records, recognized human rights monitoring bodies (Amnesty, CPJ, Front Line Defenders, Goldman Foundation), Nobel Foundation records, and reputable journalistic archives. Allegations are never presented as convictions, and quotations are only attributed when verifiable primary sources exist.
+        </div>
+
+        <div
+          style={{
+            background: "rgba(13, 148, 136, 0.08)",
+            border: "1px solid rgba(13, 148, 136, 0.25)",
+            borderRadius: "14px",
+            padding: "14px 16px",
+            fontSize: "0.82rem",
+            lineHeight: 1.6,
+            color: "var(--explorer-text-secondary, #334155)",
+          }}
+        >
+          <strong style={{ color: "#0d9488", display: "block", marginBottom: "4px" }}>
+            Editorial Corrections Policy & Public Feedback:
+          </strong>
+          We adhere to the non-negotiable principle: <em>&ldquo;Never make an individual&apos;s life more inspirational by making their biography less factual.&rdquo;</em> If you identify a factual error, misattribution, or have documented primary records to contribute, please report it to our editorial desk at <a href="mailto:ultimate.health25@gmail.com" style={{ color: "#0d9488", fontWeight: 700, textDecoration: "underline" }}>ultimate.health25@gmail.com</a> or via GitHub Issues. Verified corrections are updated promptly.
         </div>
       </div>
 

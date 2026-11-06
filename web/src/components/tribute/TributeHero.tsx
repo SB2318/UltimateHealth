@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Heart, Globe2, Shield, BookOpen, ArrowDown } from "lucide-react";
 
 interface TributeHeroProps {
@@ -9,6 +10,7 @@ interface TributeHeroProps {
 }
 
 export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: TributeHeroProps) {
+  const t = useTranslations("tribute");
   return (
     <section
       style={{
@@ -58,7 +60,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
             }}
           >
             <Heart size={14} style={{ fill: "#e11d48", color: "#e11d48" }} />
-            An International Human-Stories Tribute
+            {t("badgeTribute")}
           </span>
 
           <span
@@ -76,7 +78,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
             }}
           >
             <Globe2 size={14} style={{ color: "#0d9488" }} />
-            30 Documented Lives · 18 Nations
+            {t("badgeNations")}
           </span>
 
           <span
@@ -94,12 +96,38 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
             }}
           >
             <Shield size={14} />
-            Living Memorial Curriculum
+            {t("badgeCurriculum")}
           </span>
         </div>
 
         {/* Headline & Philosophy */}
         <div style={{ textAlign: "center", maxWidth: "860px", margin: "0 auto 40px" }}>
+          {/* Four Pillars Motto */}
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "5px 16px",
+              borderRadius: "50px",
+              background: "rgba(15, 23, 42, 0.04)",
+              border: "1px solid var(--explorer-border, #cbd5e1)",
+              marginBottom: "16px",
+              fontSize: "0.82rem",
+              fontWeight: 800,
+              letterSpacing: "0.06em",
+              textTransform: "uppercase",
+            }}
+          >
+            <span style={{ color: "#e11d48" }}>{t("pillarRemember")}</span>
+            <span style={{ color: "#94a3b8" }}>·</span>
+            <span style={{ color: "#0d9488" }}>{t("pillarListen")}</span>
+            <span style={{ color: "#94a3b8" }}>·</span>
+            <span style={{ color: "#2563eb" }}>{t("pillarRecognise")}</span>
+            <span style={{ color: "#94a3b8" }}>·</span>
+            <span style={{ color: "#d97706" }}>{t("pillarLearn")}</span>
+          </div>
+
           <h1
             style={{
               fontSize: "clamp(2.4rem, 5vw, 3.8rem)",
@@ -110,7 +138,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
               margin: "0 0 18px",
             }}
           >
-            Lives Beyond <br />
+            {t("heroTitlePrefix")} <br />
             <span
               style={{
                 backgroundImage: "linear-gradient(90deg, #e11d48, #f43f5e, #d97706)",
@@ -118,7 +146,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
                 WebkitTextFillColor: "transparent",
               }}
             >
-              the Headlines
+              {t("heroTitleHighlight")}
             </span>
           </h1>
 
@@ -133,7 +161,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
               textAlign: "center",
             }}
           >
-            A person&apos;s life must be remembered for what they contributed to the world, not only for the tragedy that ended or changed their life.
+            {t("heroCoreMessage")}
           </p>
 
           <p
@@ -146,7 +174,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
               textAlign: "center",
             }}
           >
-            This is not a political campaign or a collection of incidents. It is a human-centred project about dreams, contributions, courage, lost possibilities, and what society must learn and build today.
+            {t("heroSubtitle")}
           </p>
         </div>
 
@@ -209,7 +237,7 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
                   borderRadius: "6px",
                 }}
               >
-                The Starting Point of Our Tribute
+                {t("startingPointBadge")}
               </span>
               <span style={{ fontSize: "0.78rem", color: "var(--explorer-text-secondary, #64748b)" }}>
                 Kolkata · 2024 · Pulmonary & Chest Medicine
@@ -229,25 +257,36 @@ export default function TributeHero({ onExploreClick, onMemorialSeriesClick }: T
 
             <p
               style={{
-                fontSize: "0.98rem",
-                lineHeight: 1.6,
-                color: "var(--explorer-text-secondary, #475569)",
+                fontSize: "0.91rem",
+                lineHeight: 1.65,
+                color: "var(--explorer-text-secondary, #334155)",
                 margin: "0 0 10px",
-                fontStyle: "italic",
               }}
             >
-              &ldquo;Healthcare begins with seeing the whole human being — body, mind, and dignity.&rdquo;
+              {t("startingPointMoumita1")}
             </p>
 
             <p
               style={{
-                fontSize: "0.875rem",
+                fontSize: "0.865rem",
                 lineHeight: 1.65,
                 color: "var(--explorer-text-secondary, #64748b)",
-                margin: "0 0 20px",
+                margin: "0 0 12px",
               }}
             >
-              A postgraduate resident in chest medicine whose clinical dedication and tragic loss galvanized India&apos;s medical community. UltimateHealth was founded upon her ethos of patient dignity and workplace safety, establishing her vision as our core inspiration—with a dedicated 30-article clinical respiratory education series upcoming across 9 languages (Coming Soon in our Article Library).
+              {t("startingPointMoumita2")}
+            </p>
+
+            <p
+              style={{
+                fontSize: "0.825rem",
+                lineHeight: 1.6,
+                color: "#be123c",
+                fontWeight: 600,
+                margin: "0 0 18px",
+              }}
+            >
+              {t("startingPointCommitment")}
             </p>
 
             {/* Buttons Row */}

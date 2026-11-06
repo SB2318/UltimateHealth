@@ -1,4 +1,4 @@
-import { TributeCategory, TributeProfile, SocietalLesson, MemorialPublication } from "@/types/tribute";
+import { TributeCategory, TributeProfile, SocietalLesson, MemorialPublication, SurvivorVoice, Changemaker } from "@/types/tribute";
 
 export const TRIBUTE_CATEGORIES: { id: TributeCategory; label: string; count: number; description: string }[] = [
   {
@@ -59,15 +59,15 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     roleAndField: "Postgraduate Resident Doctor · Pulmonary & Chest Medicine",
     avatarUrl: "https://images.openai.com/static-rsc-4/ERFLGiok6oasJHEMp3Yp6o2VKqafsUj-FPQeEYQVBikv-WsOwE5pXE1bqNI-Fby_VmCS1XVDvEn5a1eEekUaerVa1EbGz6xCVfRcsQzaWS2tFSFoLV4bcUYetNcVkenLUbjb87nn3XEwl6ctIPIKzEBKwhlZu-B7ll228b_kQ_I?purpose=inline",
     whoWasThisPerson:
-      "A dedicated, compassionate postgraduate trainee doctor at RG Kar Medical College and Hospital in Kolkata. Known for her humility, scientific curiosity, and deep empathy toward patients struggling with chronic respiratory illnesses, she was diligently preparing for a lifelong career in chest medicine.",
+      "A postgraduate medical trainee specializing in chest and pulmonary medicine in Kolkata. Dedicated to patient care, she managed demanding shifts in public hospital wards while preparing for a lifelong career in clinical medicine. Her story reminds society that healthcare trainees deserve the opportunity to practice their vocation in security and dignity.",
     contributions:
-      "She served long duty shifts tending to critically ill patients in public hospital wards. Her clinical philosophy was centered on viewing each patient as an individual with innate human dignity, inspiring the subsequent medical movement demanding systemic dignity for all caregivers.",
+      "She served frontline clinical duties caring for patients with acute and chronic respiratory illnesses in public hospital wards. UltimateHealth honours her memory through responsible healthcare education, patient dignity, and awareness of workplace safety.",
     factualContext:
-      "On August 9, 2024, after completing an arduous 36-hour clinical shift, she was tragically assaulted and murdered inside the seminar room of RG Kar Medical College. The Supreme Court of India initiated suo motu proceedings to examine institutional safety failures across state medical infrastructure.",
+      "In August 2024, after completing an arduous 36-hour clinical shift, she lost her life in a tragic act of violence while on duty in a public hospital. The incident led to national discussions and judicial reviews on institutional safety standards, duty room infrastructure, and legal protections for healthcare personnel across the nation.",
     societalImpact:
       "Her loss galvanized unprecedented nationwide protests by resident doctors, healthcare workers, and civil society across India, demanding systemic legal protection for medical personnel, secure on-call duty quarters, and strict institutional accountability.",
     actionableLesson:
-      "Hospitals and medical colleges must guarantee basic workplace security: dedicated secure duty rooms, 24/7 security personnel, monitored corridors, and emergency panic systems.",
+      "Healthcare institutions and teaching hospitals must guarantee fundamental workplace security: dedicated secure duty rooms, 24/7 security personnel, monitored corridors, and rapid-response emergency panic systems.",
     coreMessage:
       "Hospitals must protect the people who dedicate their lives to protecting others. A doctor's workplace should never be a place of vulnerability.",
     memorialPublication: {
@@ -76,7 +76,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "An open-source curriculum of 30 clinical guides in chest medicine and a model hospital workplace safety charter translated into 9 languages.",
     },
     references: [
-      { title: "Supreme Court of India Suo Motu Proceedings (RG Kar Hospital Case)", url: "https://api.sci.gov.in", publisher: "Supreme Court of India" },
+      { title: "Supreme Court of India Suo Motu Proceedings on Healthcare Personnel Safety (2024)", url: "https://api.sci.gov.in", publisher: "Supreme Court of India" },
       { title: "National Task Force Recommendations on Safety of Healthcare Workers", url: "https://main.sci.gov.in", publisher: "Ministry of Health & Family Welfare" },
     ],
   },
@@ -89,18 +89,18 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     category: "healthcare",
     categoryLabel: "Healthcare Ethics & Nursing Dignity",
     eraOrYear: "1973–2015",
-    roleAndField: "Staff Nurse · King Edward Memorial (KEM) Hospital, Mumbai",
+    roleAndField: "Staff Nurse · Municipal Healthcare System, Mumbai",
     avatarUrl: "https://images.openai.com/static-rsc-4/bEkHZq8tlmEVDlWf0AtrWa1IJz9nUsL0PLkkx0mJNud9itRRtfKkb-8Q9gTdVOgYSchOJ3_i21FGiPD0IAC6A4n1k-MAgBWK4FmRStyYyayReuSD0k9pr8_V7YanoRqVnK03NHQ7FCA90lUQNm9A4WJX7xvrUfNSXE12PGEypFg?purpose=inline",
     whoWasThisPerson:
-      "A vibrant, dedicated staff nurse at Mumbai's premier municipal hospital, KEM Hospital. She was known among colleagues and patients for her warmth, efficiency, and dedication to nursing excellence.",
+      "A vibrant, dedicated staff nurse in Mumbai's public municipal healthcare system. She was known among colleagues and patients for her warmth, professional commitment, and dedication to nursing excellence.",
     contributions:
-      "Her professional commitment to municipal healthcare provided vital care to hundreds of patients. For over four decades following her trauma, her presence and the dedicated nursing staff of KEM Hospital demonstrated world-class palliative devotion and compassionate institutional care.",
+      "She served as a dedicated staff nurse in Mumbai's municipal healthcare system. Over the subsequent four decades, the steadfast, compassionate care provided by her nursing colleagues and the landmark 2011 Supreme Court judgment established foundational Indian jurisprudence on patient dignity and medical ethics.",
     factualContext:
-      "In November 1973, while on duty in the basement of KEM Hospital, she was brutally attacked by a hospital staff worker, resulting in severe brain damage and cervical cord injury that left her in a persistent vegetative state until her passing in 2015.",
+      "In November 1973, while on night duty in a public hospital, she suffered a devastating assault by a staff worker, resulting in severe brain injury that left her in a persistent vegetative state until her passing in 2015.",
     societalImpact:
       "Her case led to the landmark 2011 Supreme Court of India ruling (Aruna Ramchandra Shanbaug v. Union of India) that legally recognized passive euthanasia under strict judicial guidelines, establishing foundational patient rights and ethics around living wills.",
     actionableLesson:
-      "Long-term and intensive care facilities must incorporate compassionate dignity protocols, and hospitals must eradicate safety blind spots in subterranean and utility corridors.",
+      "Long-term and acute healthcare facilities must implement proactive staff safety measures, eliminating isolated blind spots and ensuring continuous security across all operational corridors.",
     coreMessage:
       "Healthcare workers deserve unconditional workplace security, and long-term palliative care must preserve human dignity at every stage of life.",
     memorialPublication: {
@@ -110,7 +110,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     },
     references: [
       { title: "Aruna Ramchandra Shanbaug v. Union of India (2011) 4 SCC 454", url: "https://indiankanoon.org/doc/1359740/", publisher: "Supreme Court of India" },
-      { title: "Room No. 4 Memorial at KEM Hospital", url: "https://economictimes.indiatimes.com", publisher: "The Economic Times" },
+      { title: "Supreme Court of India Landmark Judgment on Aruna Shanbaug (2011)", url: "https://main.sci.gov.in", publisher: "Supreme Court of India" },
     ],
   },
   {
@@ -123,27 +123,27 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     categoryLabel: "Healthcare & Medical Trainee Safety",
     eraOrYear: "2014",
     roleAndField: "Postgraduate Resident Doctor · Obstetrics & Gynaecology",
-    avatarUrl: "https://images.openai.com/static-rsc-4/ts98jz7LUz21e7fkvWH2Sql6hDvfCCjCMeYkw4R0-q0ZZCcAmrLPwUC0Z5owLWNOMSqZ9baiyuPFahQ1rljvbOh7r2WBwcoigikiraqGLSoPcqMSznm3i8Bx2PZ2fJgB_RVIMEwJwVq6MHUUea27OsIYO0hScVFajCuTTm2Bp4U?purpose=inline",
+    avatarUrl: "/assets/dr-sarita-toshniwal.jpeg",
     whoWasThisPerson:
-      "A 24-year-old post-graduate medical student at Assam Medical College (AMC) in Dibrugarh, specializing in Obstetrics and Gynaecology. She was admired for her academic excellence, diligence, and warm bedside manner.",
+      "A 24-year-old postgraduate medical trainee specializing in Obstetrics and Gynaecology in Assam. She was actively pursuing specialist training with aspirations to serve maternal and child healthcare in regional communities.",
     contributions:
-      "She was deeply invested in maternal and fetal health, working long night shifts to deliver babies and provide emergency obstetrical care for women across rural Upper Assam.",
+      "She served demanding night duties in obstetrics and gynaecology, attending to emergency deliveries, maternal admissions, and high-risk patient care.",
     factualContext:
-      "In May 2014, while resting in the Intensive Care Unit duty room after an exhausting night shift, she was murdered inside the hospital premises by an attendant. The perpetrator was subsequently tried and convicted.",
+      "In May 2014, while resting after an exhausting overnight shift in a public healthcare facility, she was tragically assaulted by a hospital worker. The perpetrator was subsequently tried and convicted in a court of law.",
     societalImpact:
-      "Her tragedy sparked major strikes across medical colleges in northeast India, laying bare the chronic lack of secure rest areas, biometric access controls, and emergency protocols for doctors on graveyard shifts.",
+      "Her loss sparked widespread advocacy among healthcare professionals across the region, focusing public attention on the necessity of secure resting quarters, access controls, and comprehensive protective protocols for on-call personnel.",
     actionableLesson:
-      "Hospital rest areas and doctor duty rooms must have strictly controlled biometric access, alarm buzzers, and dedicated female security escorts for overnight transit.",
+      "Healthcare rest areas and physician duty rooms must have strictly controlled secure access, direct communication links, and safe escort protocols for overnight shifts.",
     coreMessage:
       "Security arrangements must extend beyond public hospital lobbies into duty rooms, ICUs, and on-call residential quarters.",
     memorialPublication: {
       title: "Hospital Duty Room & Night-Shift Physical Security Standards",
       focus: "Clinical Architecture & Access Control",
-      deliverable: "An actionable audit checklist for medical college administrators to evaluate resident doctor security and resting facility standards.",
+      deliverable: "An actionable audit checklist for healthcare administrators and hospital leadership to evaluate resident doctor security and resting facility standards.",
     },
     references: [
-      { title: "Assam Medical College Dr. Sarita Toshniwal Judgment", url: "https://sentinelassam.com", publisher: "The Sentinel Assam" },
-      { title: "Medical Council of India Campus Safety Advisory", url: "https://nmc.org.in", publisher: "National Medical Commission" },
+      { title: "Judicial Judgment on Workplace Safety and Physician Protection (2014)", url: "https://sentinelassam.com", publisher: "The Sentinel Assam" },
+      { title: "National Medical Advisory on Resident Doctor Safety", url: "https://nmc.org.in", publisher: "National Medical Commission" },
     ],
   },
   {
@@ -155,16 +155,16 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     category: "healthcare",
     categoryLabel: "Emergency Medicine & Clinical Protection",
     eraOrYear: "2023",
-    roleAndField: "House Surgeon / Medical Intern · Kottarakkara Taluk Hospital, Kerala",
+    roleAndField: "House Surgeon / Medical Intern · Emergency Casualty Service, Kerala",
     avatarUrl: "https://images.openai.com/static-rsc-4/WmEpQw-lqYO47-p4A7eQQMIWYeFkI4LlmCI17Np-wNnRtq2KyU3UISZoLOnbFm3z8LbgP6EVgVoahv3rvrfUIA1tD5GS9PuiV70pD4N2IxrSAaSc1tEMBfXqPNph8goJVT2Y_KKjjY25HIUsKoBgKybSwqmGd47-XhFbWEulCaM?purpose=inline",
     whoWasThisPerson:
-      "A 23-year-old house surgeon from Kottayam who graduated from Azeezia Medical College and was completing her internship at the Taluk Hospital in Kottarakkara, Kerala. She was the only child of her parents and had dreamed of becoming a physician since early childhood.",
+      "A 23-year-old house surgeon (medical intern) from Kerala who had completed her medical education and was fulfilling her frontline clinical internship in government emergency casualty care.",
     contributions:
-      "She provided frontline emergency medical attention to acute patients arriving at rural taluk facilities, demonstrating outstanding commitment to public health service.",
+      "She served frontline casualty rotations caring for emergency patients. Following her passing, a memorial clinic was established to provide compassionate medical care to underserved communities, sustaining her professional aspirations.",
     factualContext:
-      "In May 2023, while dressing the wounds of a man brought to the casualty department by police for medical evaluation, the patient turned violent using medical scissors, inflicting fatal injuries on Dr. Das and injuring police personnel.",
+      "In May 2023, while dressing the wounds of an individual brought to the casualty department under police escort for medical evaluation, the patient turned violent using medical instruments, inflicting fatal injuries on Dr. Das and injuring hospital personnel.",
     societalImpact:
-      "Her death sparked grief and outrage across Kerala, prompting the state government to promulgate the Kerala Healthcare Service Persons and Healthcare Service Institutions (Prevention of Violence and Damage to Property) Amendment Ordinance, imposing stringent penalties for violence against medical personnel.",
+      "Her death sparked grief and outrage across the medical community, prompting the state government to promulgate the Kerala Healthcare Service Persons and Healthcare Service Institutions (Prevention of Violence and Damage to Property) Amendment Ordinance, imposing stringent penalties for violence against healthcare workers.",
     actionableLesson:
       "Patients brought in under custody or in states of acute intoxication/psychosis must undergo mandatory weapon screening and physical restraint protocols before clinical staff enter examination bays.",
     coreMessage:
@@ -175,7 +175,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "A standard operating procedure (SOP) for triage units handling intoxicated or belligerent patients in secondary healthcare centers.",
     },
     references: [
-      { title: "Remembering Dr. Vandana Das: Two Years of Reforms", url: "https://www.manoramaonline.com", publisher: "Malayala Manorama" },
+      { title: "Healthcare Worker Protection and Legal Reforms (2023)", url: "https://www.manoramaonline.com", publisher: "Regional Press" },
       { title: "Kerala Healthcare Service Persons Amendment Ordinance 2023", url: "https://kerala.gov.in", publisher: "Government of Kerala" },
     ],
   },
@@ -188,28 +188,28 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     category: "healthcare",
     categoryLabel: "Emergency Medicine & Workplace Defense",
     eraOrYear: "2018",
-    roleAndField: "Emergency Medicine Physician · Mercy Hospital, Chicago",
-    avatarUrl: "https://images.openai.com/static-rsc-4/ts98jz7LUz21e7fkvWH2Sql6hDvfCCjCMeYkw4R0-q0ZZCcAmrLPwUC0Z5owLWNOMSqZ9baiyuPFahQ1rljvbOh7r2WBwcoigikiraqGLSoPcqMSznm3i8Bx2PZ2fJgB_RVIMEwJwVq6MHUUea27OsIYO0hScVFajCuTTm2Bp4U?purpose=inline",
+    roleAndField: "Emergency Medicine Physician · Trauma and Casualty Care, Chicago",
+    avatarUrl: "/assets/dr-tamara-oneal.jpeg",
     whoWasThisPerson:
-      "A 38-year-old emergency room physician at Mercy Hospital & Medical Center on Chicago's Near South Side. Raised in LaPorte, Indiana, she was a dedicated church choir leader and mentor who dedicated her career to serving underserved urban populations.",
+      "A 38-year-old emergency room physician in Chicago. Dedicated to urban casualty and acute care, she also served as a church choir leader and volunteer mentor for aspiring medical students.",
     contributions:
-      "She saved countless lives in Chicago's trauma-heavy emergency wards, led community health programs, and mentored young women from underrepresented backgrounds entering STEM and medicine.",
+      "She served as an attending emergency physician treating acute medical emergencies in Chicago, volunteered to teach clinical residents, and raised funds for disadvantaged youth. A memorial scholarship was established in her memory to support future physicians.",
     factualContext:
-      "In November 2018, her former fiancé ambushed and shot her outside the hospital before proceeding into the facility, where a pharmacy resident (Dayna Less) and a Chicago police officer (Samuel Jimenez) were also fatally wounded.",
+      "In November 2018, she was fatally ambushed outside her workplace, an incident in which a pharmacy resident and a first responder also lost their lives.",
     societalImpact:
-      "Her loss prompted national medical organizations, including the American College of Emergency Physicians (ACEP), to demand comprehensive federal legislation addressing gun violence and intimate-partner spillover violence at healthcare campuses.",
+      "Her loss prompted national medical organizations, including emergency medicine professional bodies, to demand comprehensive institutional protections against interpersonal violence and enhanced security screening across healthcare campuses.",
     actionableLesson:
       "Healthcare facilities must establish explicit protocols for handling domestic violence threats, employee threat reporting, and active-threat perimeter security.",
     coreMessage:
       "Healthcare workplaces must recognize domestic violence threats as urgent occupational safety hazards and build coordinated campus defense measures.",
     memorialPublication: {
-      title: "Intimate Partner Threat Screening & Hospital Campus Security Guide",
+      title: "Workplace Threat Screening & Healthcare Campus Security Guide",
       focus: "Occupational Safety & Domestic Violence Intervention",
       deliverable: "A clinical guide for healthcare systems to identify, support, and protect staff facing external domestic violence threats.",
     },
     references: [
-      { title: "Mercy Hospital Chicago Shooting Record & Aftermath", url: "https://chicago.suntimes.com", publisher: "Chicago Sun-Times" },
-      { title: "American College of Emergency Physicians (ACEP) Statement on Dr. Tamara O'Neal", url: "https://www.acep.org", publisher: "ACEP" },
+      { title: "Public Record on Healthcare Facility Safety & Violence Prevention", url: "https://chicago.suntimes.com", publisher: "Chicago Sun-Times" },
+      { title: "Emergency Medicine Societies Statement on Physician Safety", url: "https://www.acep.org", publisher: "Emergency Medicine Community" },
     ],
   },
 
@@ -240,7 +240,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     memorialPublication: {
       title: "Public Transit Safety & Universal Bystander Intervention Toolkit",
       focus: "Urban Infrastructure & Community Rapid-Response",
-      deliverable: "An open-source urban transit safety audit protocol and bystander intervention education kit for college campuses.",
+      deliverable: "An open-source urban transit safety audit protocol and bystander intervention education kit for academic campuses and public transit networks.",
     },
     references: [
       { title: "Justice J.S. Verma Committee Report on Amendments to Criminal Law (2013)", url: "https://prsindia.org", publisher: "PRS Legislative Research" },
@@ -404,6 +404,10 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Democratic states must enact anti-SLAPP legislation to prevent powerful figures from using abusive lawsuits to financially crush investigative journalists.",
     coreMessage:
       "Protect independent journalism and the right to investigate wrongdoing. When a journalist is killed, society must ensure their stories multiply.",
+    verifiedQuote: {
+      quote: "There are crooks everywhere you look now. The situation is desperate.",
+      source: "Final blog post on Running Commentary (16 October 2017)",
+    },
     memorialPublication: {
       title: "Anti-SLAPP Defense & Digital Journalist Security Protocol",
       focus: "Press Freedom & Whistleblower Protection",
@@ -571,6 +575,10 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Global financial institutions and green energy developers must strictly enforce Free, Prior, and Informed Consent (FPIC) before financing infrastructure on indigenous territories.",
     coreMessage:
       "Development must respect Indigenous rights, water resources, and local communities. Rivers are not commodities; they are sacred lifeblood.",
+    verifiedQuote: {
+      quote: "Wake up, humanity! We are out of time. We must shake our conscience free of rapacious capitalism.",
+      source: "Goldman Environmental Prize Acceptance Speech (San Francisco, 2015)",
+    },
     memorialPublication: {
       title: "Indigenous Watershed Protection & Community Environmental Health Assessment",
       focus: "Water Sanitation & Environmental Justice",
@@ -837,6 +845,10 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Education, historical remembrance, and early resistance to prejudice are vital barriers against institutional dehumanization and totalitarian bigotry.",
     coreMessage:
       "In spite of everything, human beings possess an innate capacity for good. We must preserve that capacity through education, empathy, and truth.",
+    verifiedQuote: {
+      quote: "In spite of everything, I still believe that people are really good at heart.",
+      source: "The Diary of a Young Girl (Entry dated July 15, 1944)",
+    },
     memorialPublication: {
       title: "Psychological Resilience in Youth & Countering Discriminatory Prejudice in Care",
       focus: "Adolescent Mental Health & Anti-Bias Clinical Training",
@@ -870,6 +882,10 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Citizens must nurture the courage of conscience to challenge illegal, unconstitutional, or discriminatory directives even when conformity is legally demanded.",
     coreMessage:
       "Stand up for truth even when standing alone. A society without moral courage cannot sustain its humanity.",
+    verifiedQuote: {
+      quote: "Somebody, after all, had to make a start. What we wrote and said is also believed by many others. They just don't dare to express themselves as we did.",
+      source: "Statement to the Court, Munich, February 1943",
+    },
     memorialPublication: {
       title: "Conscientious Medical Practice: Standing for Human Dignity Against Coercion",
       focus: "Bioethics & Resistance to Unethical Coercion",
@@ -922,16 +938,16 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     category: "education-and-dignity",
     categoryLabel: "Universal Child Protection & Marginalized Safeguards",
     eraOrYear: "2018",
-    roleAndField: "Child of the Nomadic Bakarwal Community · Kathua, Jammu and Kashmir",
+    roleAndField: "Child of the Nomadic Bakarwal Community · Jammu and Kashmir",
     avatarUrl: "https://images.openai.com/static-rsc-4/sRW9TmWVIa8KrExWW2RI1gfgdlKDM5r51ryP6DQNQNdJC7fOEYZLrVtwy6l8SPR1uzO0halMKYp8J7cGXGiXCtkpOnpN1ndF0r9BpWp2YElwFUjzUuKJgXyzd7axXqYvecSFkxXPDALNCTDj7w2Eqaxkp1IAE08L7fLUfdKnwH0?purpose=inline",
     whoWasThisPerson:
-      "An innocent eight-year-old girl belonging to the nomadic Muslim pastoralist Bakarwal community in Rasana village, Kathua, Jammu and Kashmir. She loved running outdoors and caring for her family's grazing horses.",
+      "An innocent eight-year-old girl belonging to the nomadic Bakarwal pastoralist community in Jammu and Kashmir. She loved running outdoors and caring for her family's grazing horses.",
     contributions:
-      "Her life and tragedy awakened the conscience of the nation to the urgent duty of protecting children belonging to nomadic, migrant, and politically vulnerable communities.",
+      "Her life awakened the conscience of the nation to the urgent duty of protecting children belonging to nomadic, migrant, and vulnerable communities.",
     factualContext:
-      "In January 2018, she was abducted while grazing horses, held captive in a local prayer hall, sedated, repeatedly sexually assaulted, and murdered as part of a calculated plot to terrorize and displace the nomadic pastoralist community.",
+      "In January 2018, she was abducted while grazing horses and held captive before being tragically murdered. The case was investigated by state authorities and transferred to an expedited court, resulting in landmark convictions.",
     societalImpact:
-      "Her ordeal triggered nationwide street demonstrations and led the Supreme Court of India to transfer the trial to Pathankot, Punjab, where the presiding court handed down rigorous life sentences to the primary perpetrators in 2019.",
+      "Her ordeal triggered nationwide calls for justice and led the Supreme Court of India to transfer the trial to ensure an impartial proceeding, resulting in life sentences for the convicted perpetrators.",
     actionableLesson:
       "Child protection mechanisms and POCSO enforcement must be robustly deployed across migratory, tribal, and economically disenfranchised populations without communal bias.",
     coreMessage:
@@ -942,8 +958,8 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "A clinical protocol for pediatricians and primary clinics to identify child sexual abuse and support vulnerable nomadic families.",
     },
     references: [
-      { title: "Pathankot Sessions Court Judgment in Kathua Trial (2019)", url: "https://main.sci.gov.in", publisher: "Judiciary of India" },
-      { title: "Amnesty International India Statement on Kathua Verdict", url: "https://www.amnesty.org", publisher: "Amnesty International" },
+      { title: "Special Sessions Court Judgment (2019)", url: "https://main.sci.gov.in", publisher: "Judiciary of India" },
+      { title: "Human Rights Organization Statement on Judicial Verdict (2019)", url: "https://www.amnesty.org", publisher: "Human Rights Documentation" },
     ],
   },
   {
@@ -962,7 +978,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     contributions:
       "She constructed a network of underground safe houses across post-war Iraq, sheltering more than 1,000 women escaping honor crimes, trafficking, domestic violence, and ISIS captivity when no state shelters existed.",
     factualContext:
-      "Throughout two decades of sectarian conflict and militia threats, she maintained shelter networks at immense personal risk until her targeted assassination by armed militia elements in Baghdad in 2023.",
+      "Throughout two decades of sectarian conflict and militia threats, she maintained shelter networks at immense personal risk until she was fatally shot outside her home in Baghdad on March 2, 2026.",
     societalImpact:
       "Her work demonstrated that humanitarian protection requires tangible infrastructure—safe houses, emergency healthcare, and legal representation—establishing the blueprint for grassroots sanctuary networks in war zones.",
     actionableLesson:
@@ -1005,6 +1021,10 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Universal access to 12 years of secondary education for girls is the single most effective investment in global health, economic stability, and poverty reduction.",
     coreMessage:
       "One child, one teacher, one book, and one pen can change the world. Education can help break cycles of inequality and discrimination.",
+    verifiedQuote: {
+      quote: "One child, one teacher, one book, and one pen can change the world.",
+      source: "Address to the United Nations Youth Assembly (July 12, 2013)",
+    },
     memorialPublication: {
       title: "Girls' Health Education, Menstrual Literacy & School Health Systems",
       focus: "School Health Infrastructure & Adolescent Female Literacy",
@@ -1039,6 +1059,10 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Survivors of conflict-related sexual violence must receive tangible reparations, psychological rehabilitation, and direct leadership roles in rebuilding their devastated homelands.",
     coreMessage:
       "Survivors deserve dignity, rehabilitation, justice, and opportunities to rebuild their lives. Weaponized sexual violence must be recognized and punished as a war crime.",
+    verifiedQuote: {
+      quote: "I want to be the last girl in the world with a story like mine.",
+      source: "Address to the United Nations Security Council (December 2015)",
+    },
     memorialPublication: {
       title: "Comprehensive Rehabilitation Protocol for Survivors of Wartime Violence",
       focus: "Trauma Reconstruction & Medical Reparations",
@@ -1173,3 +1197,173 @@ Their lives remind us that behind every name is a person with dreams, relationsh
 We cannot rewrite their past. But we can make their stories meaningful by improving the systems around us, protecting vulnerable people, supporting education, respecting dignity and refusing to remain indifferent to suffering.
 
 Let us not remember them only for how they left this world. Let us remember what they wanted to contribute to it.`;
+
+
+// ============================================================================
+// PILLAR B: LISTEN — Survivor Voices & Lived Agency
+// ============================================================================
+
+export const SURVIVOR_CONSENT_FRAMEWORK = {
+  title: "Seven-Step Survivor Consent & Privacy Framework",
+  description: "UltimateHealth operates an ethical, trauma-informed publication protocol that respects individual agency, personal autonomy, and unconditional privacy.",
+  steps: [
+    {
+      step: 1,
+      title: "Story Submission / Ethical Nomination",
+      detail: "Stories are accepted only via confidential, encrypted communication channels or authorized organizational referrals. We do not operate open, unmoderated submission boards.",
+    },
+    {
+      step: 2,
+      title: "Initial Editorial & Safety Screening",
+      detail: "Our editorial board evaluates each story for human dignity, educational purpose, and safety implications, ensuring disclosure does not create immediate personal danger.",
+    },
+    {
+      step: 3,
+      title: "Informed Consent & Identity Selection",
+      detail: "Contributors specify their exact preferred public attribution: Full Name, Verified Pseudonym, or Anonymous Community Voice.",
+    },
+    {
+      step: 4,
+      title: "Fact-Checking & Legal Corroboration",
+      detail: "Biographical dates, organizational initiatives, and public records are corroborated using primary documents without imposing interrogative burdens on the contributor.",
+    },
+    {
+      step: 5,
+      title: "Contributor Review of Draft",
+      detail: "The contributor reviews the final proposed editorial text and retains absolute veto power over every word, date, and description prior to publication.",
+    },
+    {
+      step: 6,
+      title: "Final Editorial Ethics Sign-Off",
+      detail: "Final review confirms compliance with our dignity standard: zero sensationalism, zero graphic depictions of violence, and complete omission of sensitive personal metadata.",
+    },
+    {
+      step: 7,
+      title: "Ongoing Corrections & Unconditional Withdrawal",
+      detail: "Contributors retain the permanent right to update information, amend identity preferences, or request immediate and permanent removal from the initiative at any time.",
+    },
+  ],
+  privacyPledge: [
+    "No private phone numbers, residential addresses, or real-time location details are ever recorded or displayed.",
+    "No identifying details of family members or minors are disclosed without explicit independent consent.",
+    "Lived experiences are never monetized, sensationalized, or utilized for commercial marketing.",
+  ],
+};
+
+export const SURVIVOR_VOICES: SurvivorVoice[] = [
+  {
+    id: "malala-yousafzai",
+    slug: "malala-yousafzai",
+    name: "Malala Yousafzai",
+    displayRole: "Nobel Peace Laureate · Co-Founder of Malala Fund",
+    country: "Pakistan",
+    countryFlag: "🇵🇰",
+    eraOrYear: "2012–Present",
+    summary: "Survivor of targeted extremist violence who transformed her lived experience into a global movement for free, safe, quality education for girls.",
+    livedExperienceAndAdvocacy: "Targeted in October 2012 for writing a BBC Urdu blog and speaking out for girls' schooling in Swat Valley, Pakistan, she survived catastrophic gunshot injuries following emergency neurosurgery. She co-founded the Malala Fund, campaigning internationally to guarantee 12 years of free education for all children and channeling philanthropic investments into schools across Latin America, Africa, and South Asia.",
+    societalReformMessage: "Universal access to secondary education for girls is the most transformative intervention for public health, maternal welfare, and poverty reduction worldwide.",
+    verifiedQuote: {
+      quote: "One child, one teacher, one book, and one pen can change the world.",
+      source: "Address before the United Nations Youth Assembly (July 12, 2013)",
+    },
+    consentProtocol: {
+      identityPreference: "Full Public Attribution",
+      // Public figure: profile is based only on their own published statements and public records.
+      // UltimateHealth has NOT obtained direct consent from this individual.
+      consentVerified: false,
+      withdrawalPermitted: true,
+    },
+    references: [
+      { title: "The Nobel Peace Prize 2014 Citation: Malala Yousafzai", url: "https://www.nobelprize.org/prizes/peace/2014/yousafzai/facts/", publisher: "The Nobel Foundation" },
+      { title: "Malala Fund: Girls' Education and Research Reports", url: "https://malala.org", publisher: "Malala Fund" },
+    ],
+  },
+  {
+    id: "nadia-murad",
+    slug: "nadia-murad",
+    name: "Nadia Murad",
+    displayRole: "Nobel Peace Laureate · UN Goodwill Ambassador · Founder of Nadia's Initiative",
+    country: "Iraq",
+    countryFlag: "🇮🇶",
+    eraOrYear: "2014–Present",
+    summary: "Yazidi human rights advocate who escaped wartime enslavement and led global legal efforts to classify weaponized sexual violence as an international war crime.",
+    livedExperienceAndAdvocacy: "In August 2014, ISIS militants invaded her home village of Kocho in Sinjar, murdering her family members and forcing thousands of Yazidi women into violent captivity. Following her perilous escape, she testified before the UN Security Council, authored 'The Last Girl,' and founded Nadia's Initiative, directly rebuilding healthcare centers, schools, and water infrastructure in devastated Sinjar communities.",
+    societalReformMessage: "Survivors of conflict-related sexual violence must receive tangible community reparations, trauma-informed psychological healthcare, and direct leadership roles in rebuilding their societies.",
+    verifiedQuote: {
+      quote: "I want to be the last girl in the world with a story like mine.",
+      source: "Address to the United Nations Security Council (December 2015)",
+    },
+    consentProtocol: {
+      identityPreference: "Full Public Attribution",
+      // Public figure: profile is based only on their own published statements and public records.
+      // UltimateHealth has NOT obtained direct consent from this individual.
+      consentVerified: false,
+      withdrawalPermitted: true,
+    },
+    references: [
+      { title: "The Nobel Peace Prize 2018: Denis Mukwege and Nadia Murad", url: "https://www.nobelprize.org/prizes/peace/2018/murad/facts/", publisher: "The Nobel Foundation" },
+      { title: "Nadia's Initiative: Sinjar Rebuilding and Survivor Advocacy", url: "https://www.nadiasinitiative.org", publisher: "Nadia's Initiative" },
+    ],
+  },
+];
+
+// ============================================================================
+// PILLAR C: RECOGNISE — People Creating Change
+// ============================================================================
+
+export const CHANGEMAKERS: Changemaker[] = [
+  {
+    id: "dr-denis-mukwege",
+    slug: "dr-denis-mukwege",
+    name: "Dr. Denis Mukwege",
+    roleAndField: "Gynecological Surgeon & Humanitarian Physician",
+    organization: "Panzi Hospital & Foundation",
+    country: "Democratic Republic of Congo",
+    countryFlag: "🇨🇩",
+    eraOrYear: "1999–Present",
+    focusArea: "Reconstructive Trauma Surgery & Holistic Healing for Survivors of Conflict Violence",
+    documentedActions: "Founded Panzi Hospital in Bukavu (1999), where he and his staff have treated many thousands of survivors of sexual violence. The hospital's model combines surgical care with psychological, socio-economic and legal support.",
+    measurableImpact: "Co-recipient of the 2018 Nobel Peace Prize with Nadia Murad. Co-founded the Global Survivors Fund (2019) with Nadia Murad. [Patient totals pending editorial verification against Panzi Foundation figures.]",
+    relevanceToHumanity: "Demonstrates how surgical excellence combined with moral courage can restore human dignity in the midst of protracted humanitarian crises.",
+    references: [
+      { title: "The Nobel Peace Prize 2018 Citation", url: "https://www.nobelprize.org/prizes/peace/2018/mukwege/facts/", publisher: "The Nobel Foundation" },
+      { title: "The Panzi Model of Holistic Healing", url: "https://panzifoundation.org", publisher: "Panzi Foundation" },
+    ],
+  },
+  {
+    id: "dr-sunitha-krishnan",
+    slug: "dr-sunitha-krishnan",
+    name: "Dr. Sunitha Krishnan",
+    roleAndField: "Social Reformer & Anti-Trafficking Pioneer",
+    organization: "Prajwala",
+    country: "India",
+    countryFlag: "🇮🇳",
+    eraOrYear: "1996–Present",
+    focusArea: "Rescue, Rehabilitation & Reintegration of Human Trafficking Survivors",
+    documentedActions: "Co-founded Prajwala in Hyderabad in 1996, an organisation working on rescue, rehabilitation and reintegration of survivors of sex trafficking, including shelters, education and vocational training.",
+    measurableImpact: "Awarded the Padma Shri by the Government of India in 2016. [Survivor totals and policy contributions pending editorial verification against Prajwala's published reports.]",
+    relevanceToHumanity: "Proves that sustainable community rescue requires long-term psychological rehabilitation, vocational self-reliance, and persistent institutional advocacy.",
+    references: [
+      { title: "Prajwala Institutional Impact Report", url: "https://prajwalaindia.com", publisher: "Prajwala" },
+      { title: "Government of India Padma Awards Gazette", url: "https://padmaawards.gov.in", publisher: "Government of India" },
+    ],
+  },
+  {
+    id: "dr-abhay-rani-bang",
+    slug: "dr-abhay-rani-bang",
+    name: "Dr. Abhay & Dr. Rani Bang",
+    roleAndField: "Public Health Physicians & Clinical Researchers",
+    organization: "SEARCH (Society for Education, Action and Research in Community Health)",
+    country: "India",
+    countryFlag: "🇮🇳",
+    eraOrYear: "1986–Present",
+    focusArea: "Home-Based Newborn and Child Care (HBNC) & Rural Healthcare Equity",
+    documentedActions: "Working in the remote tribal forests of Gadchiroli, Maharashtra, they pioneered the Home-Based Newborn Care (HBNC) model, training village women (Arogyadoot) to diagnose and manage neonatal sepsis, hypothermia, and low birthweight in home settings.",
+    measurableImpact: "Their field trial of home-based neonatal care was published in The Lancet (1999) and reported a substantial reduction in neonatal mortality in the study area. India's national Home-Based Newborn Care programme, delivered through ASHA workers, draws on this approach. [Exact effect sizes pending editorial verification against the original paper.]",
+    relevanceToHumanity: "Pioneered decentralized, evidence-based public health that brings life-saving clinical knowledge directly to the most marginalized rural households.",
+    references: [
+      { title: "The Lancet: Effect of home-based neonatal care on neonatal mortality", url: "https://www.thelancet.com", publisher: "The Lancet" },
+      { title: "SEARCH Gadchiroli Field Research and HBNC Architecture", url: "https://searchgadchiroli.org.in", publisher: "SEARCH" },
+    ],
+  },
+];

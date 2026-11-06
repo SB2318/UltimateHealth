@@ -1,17 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Users, Shield, Lightbulb, ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Users, HeartHandshake, Award, Lightbulb, ShieldCheck } from "lucide-react";
 import TributeHero from "./TributeHero";
 import TributeExplorer from "./TributeExplorer";
-import TributeMemorialSeries from "./TributeMemorialSeries";
+import SurvivorVoicesSection from "./SurvivorVoicesSection";
+import ChangemakersSection from "./ChangemakersSection";
 import SocietalLessonsMatrix from "./SocietalLessonsMatrix";
 import EditorialCharter from "./EditorialCharter";
 
-export type TributeTab = "stories" | "memorial" | "lessons" | "charter";
+export type TributeTab = "remember" | "listen" | "recognise" | "learn" | "charter";
 
 export default function TributeHubClient() {
-  const [activeTab, setActiveTab] = useState<TributeTab>("stories");
+  const t = useTranslations("tribute");
+  const [activeTab, setActiveTab] = useState<TributeTab>("remember");
 
   const handleTabChange = (tab: TributeTab) => {
     setActiveTab(tab);
@@ -25,11 +28,11 @@ export default function TributeHubClient() {
     <div style={{ width: "100%", boxSizing: "border-box" }}>
       {/* Hero Section */}
       <TributeHero
-        onExploreClick={() => handleTabChange("stories")}
-        onMemorialSeriesClick={() => handleTabChange("memorial")}
+        onExploreClick={() => handleTabChange("remember")}
+        onMemorialSeriesClick={() => handleTabChange("learn")}
       />
 
-      {/* ── Accessible Primary Content Navigation / Tab Switcher ── */}
+      {/* ── Four-Pillar Primary Content Navigation ── */}
       <section
         id="tribute-content-nav"
         style={{
@@ -41,21 +44,21 @@ export default function TributeHubClient() {
       >
         <div
           style={{
-            maxWidth: "1100px",
+            maxWidth: "1160px",
             margin: "0 auto",
             width: "100%",
             boxSizing: "border-box",
           }}
         >
-          {/* Accessible Tabs Bar */}
+          {/* 4 Pillars Tablist */}
           <div
             role="tablist"
-            aria-label="Tribute Sections"
+            aria-label="Humanitarian Initiative Pillars"
             style={{
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "center",
-              gap: "10px",
+              gap: "8px",
               background: "var(--explorer-surface, #ffffff)",
               border: "1px solid var(--explorer-border, #e2e8f0)",
               borderRadius: "18px",
@@ -65,10 +68,46 @@ export default function TributeHubClient() {
             }}
           >
             {[
-              { id: "stories", label: "Human Stories", count: "30 Profiles", icon: Users },
-              { id: "memorial", label: "Living Memorial Toolkits", count: "30 Guides · Coming Soon", icon: Shield },
-              { id: "lessons", label: "10 Societal Lessons", count: "Actionable Reforms", icon: Lightbulb },
-              { id: "charter", label: "Editorial Charter", count: "Ethics & Manifesto", icon: ShieldCheck },
+              {
+                id: "remember",
+                label: "REMEMBER",
+                subLabel: "Lives & Contributions",
+                count: "28 Profiles",
+                icon: Users,
+                activeColor: "#e11d48",
+              },
+              {
+                id: "listen",
+                label: "LISTEN",
+                subLabel: "Survivor Voices & Agency",
+                count: "Public Testimony",
+                icon: HeartHandshake,
+                activeColor: "#0d9488",
+              },
+              {
+                id: "recognise",
+                label: "RECOGNISE",
+                subLabel: "People Creating Change",
+                count: "Living Changemakers",
+                icon: Award,
+                activeColor: "#2563eb",
+              },
+              {
+                id: "learn",
+                label: "LEARN",
+                subLabel: "Knowledge & Awareness",
+                count: "10 Societal Reforms",
+                icon: Lightbulb,
+                activeColor: "#d97706",
+              },
+              {
+                id: "charter",
+                label: "CHARTER",
+                subLabel: "Ethics & Governance",
+                count: "Source & Privacy Policy",
+                icon: ShieldCheck,
+                activeColor: "#4f46e5",
+              },
             ].map((tab) => {
               const Icon = tab.icon;
               const isSelected = activeTab === tab.id;
@@ -81,34 +120,34 @@ export default function TributeHubClient() {
                   aria-controls={`panel-${tab.id}`}
                   onClick={() => setActiveTab(tab.id as TributeTab)}
                   style={{
-                    flex: "1 1 200px",
+                    flex: "1 1 180px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     gap: "10px",
-                    padding: "12px 18px",
+                    padding: "10px 14px",
                     borderRadius: "12px",
-                    fontSize: "0.88rem",
+                    fontSize: "0.86rem",
                     fontWeight: 700,
                     cursor: "pointer",
                     transition: "all 0.2s ease",
                     border: isSelected ? "none" : "1px solid transparent",
-                    background: isSelected ? "#e11d48" : "transparent",
+                    background: isSelected ? tab.activeColor : "transparent",
                     color: isSelected ? "#ffffff" : "var(--explorer-text-secondary, #475569)",
-                    boxShadow: isSelected ? "0 4px 14px rgba(225, 29, 72, 0.25)" : "none",
+                    boxShadow: isSelected ? "0 4px 14px rgba(0, 0, 0, 0.15)" : "none",
                   }}
                 >
-                  <Icon size={18} style={{ color: isSelected ? "#ffffff" : "#e11d48" }} />
+                  <Icon size={18} style={{ color: isSelected ? "#ffffff" : tab.activeColor }} />
                   <div style={{ textAlign: "left" }}>
-                    <div>{tab.label}</div>
+                    <div style={{ fontWeight: 800, letterSpacing: "0.04em" }}>{tab.label}</div>
                     <div
                       style={{
-                        fontSize: "0.72rem",
+                        fontSize: "0.7rem",
                         fontWeight: 600,
                         opacity: isSelected ? 0.9 : 0.65,
                       }}
                     >
-                      {tab.count}
+                      {tab.subLabel}
                     </div>
                   </div>
                 </button>
@@ -121,15 +160,12 @@ export default function TributeHubClient() {
             id={`panel-${activeTab}`}
             role="tabpanel"
             aria-labelledby={`tab-${activeTab}`}
-            style={{
-              paddingBottom: "80px",
-              minHeight: "450px",
-              boxSizing: "border-box",
-            }}
+            style={{ width: "100%", paddingBottom: "70px", boxSizing: "border-box" }}
           >
-            {activeTab === "stories" && <TributeExplorer />}
-            {activeTab === "memorial" && <TributeMemorialSeries />}
-            {activeTab === "lessons" && <SocietalLessonsMatrix />}
+            {activeTab === "remember" && <TributeExplorer initialCategory="all" />}
+            {activeTab === "listen" && <SurvivorVoicesSection />}
+            {activeTab === "recognise" && <ChangemakersSection />}
+            {activeTab === "learn" && <SocietalLessonsMatrix />}
             {activeTab === "charter" && <EditorialCharter />}
           </div>
         </div>

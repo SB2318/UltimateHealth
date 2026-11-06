@@ -292,5 +292,43 @@
         "tag3": "Zero Data Resale or Ad Tracking"
       }
     }
+  },
+  "tribute": {
+    "badgeTribute": "An International Human-Stories Tribute",
+    "badgeNations": "30 Documented Lives · 19 Nations & Territories",
+    "badgeCurriculum": "Living Memorial Curriculum",
+    "heroTitlePrefix": "Lives Beyond",
+    "heroTitleHighlight": "the Headlines",
+    "heroCoreMessage": "A person's life must be remembered for what they contributed to the world, not only for the tragedy that ended or changed their life.",
+    "heroSubtitle": "This is not a political campaign or a collection of incidents. It is a human-centred project about dreams, contributions, courage, lost possibilities, and what society must learn and build today.",
+    "startingPointBadge": "The Starting Point of Our Tribute",
+    "startingPointMoumita1": "Dr. Moumita Debnath was a postgraduate medical trainee in chest medicine in Kolkata. Her loss in August 2024 brought renewed attention to the safety of healthcare professionals and the dignity of people working in medical institutions.",
+    "startingPointMoumita2": "This tribute remembers her as an individual whose life and professional aspirations deserved the opportunity to continue. Her story encourages us to examine how hospitals, institutions, and communities can create safer environments for healthcare workers.",
+    "startingPointCommitment": "UltimateHealth honours her memory through responsible healthcare education, patient dignity, and awareness of workplace safety.",
+    "tabStories": "Human Stories",
+    "tabStoriesCount": "30 Profiles",
+    "tabMemorial": "Memorial Guides",
+    "tabMemorialCount": "30 Guides · In Development",
+    "tabLessons": "10 Societal Lessons",
+    "tabLessonsCount": "Actionable Reforms",
+    "tabCharter": "Editorial Charter",
+    "tabCharterCount": "Ethics & Governance",
+    "contributionLabel": "Contribution to Remember:",
+    "editorialLessonLabel": "UltimateHealth Editorial Lesson:",
+    "verifiedQuoteLabel": "Verified Historical Words:",
+    "readStory": "Read Story",
+    "searchPlaceholder": "Search by name, country, role, or keyword...",
+    "categoryAll": "All 30 Lives",
+    "categoryHealthcare": "Healthcare Professionals",
+    "categorySafety": "Safety & Justice",
+    "categoryJournalism": "Truth & Journalism",
+    "categoryEnvironment": "Defenders of Earth & Community",
+    "categoryEducation": "Education, Resistance & Dignity",
+    "categorySurvivors": "Survivors of Resilience",
+    "pillarRemember": "Remember",
+    "pillarListen": "Listen",
+    "pillarRecognise": "Recognise",
+    "pillarLearn": "Learn",
+    "fourPillarsSubtitle": "Remembering lives, listening to survivors, recognising changemakers, and sharing verified knowledge."
   }
 }

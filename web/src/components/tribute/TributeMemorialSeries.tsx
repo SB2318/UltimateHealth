@@ -100,7 +100,7 @@ export default function TributeMemorialSeries({ onSelectProfile }: TributeMemori
               margin: 0,
             }}
           >
-            In memory of Dr. Moumita Debnath&apos;s training in Pulmonary & Chest Medicine, this upcoming peer-reviewed 30-guide clinical respiratory series is being prepared as separate, article-based educational guides in our articles library, alongside the <em>Respect Giver Protocol</em> for clinical healthcare safety across 9 international languages.
+            In memory of Dr. Moumita Debnath&apos;s medical training in Pulmonary & Chest Medicine, this upcoming 30-guide clinical respiratory awareness series is being prepared as educational health-literacy guides in our articles library, focusing on respiratory health education and healthcare worker safety awareness across 9 international languages.
           </p>
         </div>
 

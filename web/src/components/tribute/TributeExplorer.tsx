@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Search, X, ChevronLeft, ChevronRight, User } from "lucide-react";
 import { TRIBUTE_CATEGORIES, TRIBUTE_PROFILES } from "@/data/tribute-profiles";
 import { TributeCategory, TributeProfile } from "@/types/tribute";
@@ -14,6 +15,7 @@ interface TributeExplorerProps {
 }
 
 export default function TributeExplorer({ initialCategory = "all" }: TributeExplorerProps) {
+  const t = useTranslations("tribute");
   const [activeCategory, setActiveCategory] = useState<TributeCategory>(initialCategory);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProfile, setSelectedProfile] = useState<TributeProfile | null>(null);
@@ -156,7 +158,7 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
           />
           <input
             type="text"
-            placeholder="Search profiles by name, country..."
+            placeholder={t("searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{

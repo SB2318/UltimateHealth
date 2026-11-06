@@ -48,17 +48,27 @@ export function LanguageSwitcher() {
 
   const handleLocaleChange = (newLocale: string) => {
     setIsOpen(false);
+
+    // Persist locale choice in NEXT_LOCALE cookie so next-intl respects it across all routes
+    if (typeof document !== "undefined") {
+      document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000; SameSite=Lax`;
+    }
+
     if (newLocale === currentLocale) return;
 
     // Sanitize pathname to extract only content segments (removing any duplicate /web or locale prefixes)
-    const segments = pathname.split("/").filter(Boolean);
+    const rawPath = pathname || (typeof window !== "undefined" ? window.location.pathname : "/");
+    const segments = rawPath.split("/").filter(Boolean);
     const knownCodes = new Set(locales.map((l) => l.code));
     const nonContent = new Set([...knownCodes, "web"]);
     const rest = segments.filter((s) => !nonContent.has(s)).join("/");
     const finalClean = `/${newLocale}${rest ? `/${rest}` : ""}`;
 
+    const search = typeof window !== "undefined" ? window.location.search : "";
+    const hash = typeof window !== "undefined" ? window.location.hash : "";
+
     // Direct page transition with single prepended basePath
-    window.location.href = withBasePath(finalClean);
+    window.location.href = `${withBasePath(finalClean)}${search}${hash}`;
   };
 
   return (
