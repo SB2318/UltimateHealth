@@ -33,16 +33,16 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
   const glossaryHref = `/${locale}/medical-glossary`;
   const contributeHref = `/${locale}/contribute`;
   const appsHref = `/${locale}/apps`;
-
+  
   const isArticles = pathname.includes("/articles");
   const isPodcasts = pathname.includes("/podcasts");
   const isGlossary = pathname.includes("/medical-glossary");
   const isApps = pathname.includes("/apps");
-  const isContribute =
+    const isContribute =
     pathname.includes("/contribute") ||
     pathname.includes("/our-contributors") ||
     pathname.includes("/contributors");
-  const isHome = !isArticles && !isPodcasts && !isGlossary && !isContribute && !isApps;
+  const isHome = !isArticles && !isPodcasts && !isGlossary && !isContribute && !isApps ;
 
   // ── Scroll listener ──
   useEffect(() => {
@@ -116,7 +116,16 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
         </Link>
 
         {/* Desktop Navigation Links */}
-        <ul className="nav-links">
+        <ul
+          className="nav-links"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+            marginLeft: "clamp(24px, 3.8vw, 60px)",
+            gap: "clamp(12px, 1.8vw, 30px)",
+          }}
+        >
           <li>
             <Link
               href={`/${locale}#purpose`}
@@ -191,52 +200,9 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
           </li>
 
           {/* Tools & CTA */}
-          <li style={{ display: "flex", alignItems: "center", gap: "8px", marginLeft: "6px" }}>
+          <li style={{ display: "flex", alignItems: "center", gap: "10px", marginLeft: "auto" }}>
             <LanguageSwitcher />
             <ModeToggle />
-          </li>
-          <li className="hidden lg:flex items-center ml-1">
-            <button
-              type="button"
-              onClick={openTour}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                height: "34px",
-                padding: "0 16px 0 10px",
-                borderRadius: "9999px",
-                fontSize: "11px",
-                fontWeight: 700,
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-                cursor: "pointer",
-                boxSizing: "border-box",
-                whiteSpace: "nowrap",
-                lineHeight: "1",
-                outline: "none",
-              }}
-              className="transition-all border bg-teal-50 dark:bg-cyan-950/40 border-teal-500/40 dark:border-cyan-400/40 text-teal-700 dark:text-cyan-300 hover:bg-teal-600 hover:text-white dark:hover:bg-cyan-400 dark:hover:text-black shadow-xs hover:scale-[1.02] active:scale-95"
-              title="Explore Platform Storyboard & Contributor Journey"
-              aria-label="Explore Platform"
-            >
-              <span
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  borderRadius: "50%",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "rgba(13, 148, 136, 0.15)",
-                  flexShrink: 0,
-                }}
-                className="dark:bg-cyan-400/20"
-              >
-                <Play style={{ width: 10, height: 10, fill: "currentColor", marginLeft: 1 }} />
-              </span>
-              <span>{tNav("startTour")}</span>
-            </button>
           </li>
         </ul>
 
@@ -253,31 +219,6 @@ export default function SiteHeader({ tracking_id }: { tracking_id?: string[] }) 
 
       {/* Mobile Menu Drawer */}
       <nav className={`mobile-nav${mobileMenuOpen ? " open" : ""}`}>
-        <button
-          type="button"
-          onClick={openTour}
-          style={{
-            display: "none",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "8px",
-            padding: "12px",
-            borderRadius: "10px",
-            background: "rgba(0, 229, 255, 0.12)",
-            border: "1px solid rgba(0, 229, 255, 0.4)",
-            color: "#00e5ff",
-            fontSize: "0.8125rem",
-            fontWeight: 700,
-            letterSpacing: "0.05em",
-            textTransform: "uppercase",
-            cursor: "pointer",
-            width: "100%",
-            marginBottom: "8px",
-          }}
-        >
-          <Play style={{ width: 14, height: 14, fill: "currentColor" }} />
-          <span>{tNav("startTour")}</span>
-        </button>
         <Link href={`/${locale}#purpose`} onClick={(e) => handleScrollTo("purpose", e)}>
           {tNav("purpose")}
         </Link>

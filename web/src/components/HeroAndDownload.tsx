@@ -95,7 +95,6 @@ export default function HeroAndDownload() {
               </div>
 
               <div className="uh-hero-buttons" style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
-                <StartTourHeroBtn />
                 <a
                   href="https://play.google.com/store/apps/details?id=com.anonymous.UltimateHealth"
                   target="_blank"

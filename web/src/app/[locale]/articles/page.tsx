@@ -6,7 +6,7 @@ import { headers } from "next/headers";
 import type { ApiArticle, ApiArticlesResponse } from "@/types/api-article";
 import SiteHeader from "@/components/home/SiteHeader";
 import { Footer } from "@/components/ui/footer";
-import { Sparkles, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import ArticlesExplorer from "@/components/articles/ArticlesExplorer";
 import {
   BRAND_NAME,
@@ -28,8 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: "Health Articles & Clinical Guides",
-    description:
-      "Explore evidence-based health guides and the upcoming 30-guide respiratory series honoring Dr. Moumita Debnath's clinical patient dignity ethos.",
+    description: "Explore community-reviewed health and wellness guides translated across 9 languages, accessible to everyone without paywalls.",
     alternates: {
       canonical,
       languages: alternates,
@@ -233,71 +232,7 @@ export default async function ArticlesPage({ params }: PageProps) {
               {t("description")}
             </p>
 
-            {/* ── Moumita Debnath Research Dedication Banner ── */}
-            <div
-              style={{
-                background: "var(--explorer-surface, #ffffff)",
-                border: "1px solid var(--explorer-border, #e2e8f0)",
-                borderRadius: "20px",
-                padding: "24px 28px",
-                maxWidth: "720px",
-                margin: "32px auto 0",
-                textAlign: "left",
-                boxShadow:
-                  "var(--explorer-card-shadow, 0 4px 20px rgba(0,0,0,0.05))",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  marginBottom: "10px",
-                  flexWrap: "wrap",
-                }}
-              >
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "6px",
-                    padding: "4px 12px",
-                    borderRadius: "50px",
-                    background: "rgba(240, 0, 106, 0.12)",
-                    border: "1px solid rgba(240, 0, 106, 0.3)",
-                    color: "#f0006a",
-                    fontSize: "0.72rem",
-                    fontWeight: 800,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  <Sparkles size={12} />
-                  {t("memorialBadge")}
-                </span>
-                <span
-                  style={{
-                    fontSize: "0.82rem",
-                    fontWeight: 700,
-                    color: "var(--explorer-text-primary, #0f172a)",
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  {t("memorialTitle")}
-                </span>
-              </div>
-              <p
-                style={{
-                  fontSize: "0.92rem",
-                  color: "var(--explorer-text-secondary, #475569)",
-                  lineHeight: 1.65,
-                  margin: 0,
-                }}
-              >
-                {t("memorialDesc")}
-              </p>
             </div>
-          </div>
         </section>
 
         {/* ── Articles Directory with Instant Search, Language Filter & Pagination ── */}

@@ -45,7 +45,8 @@
     "joinUs": "Rejoignez-nous",
     "startTour": "Explorer la plateforme",
     "podcasts": "Podcasts",
-    "apps": "Applications"
+    "apps": "Applications",
+    "tribute": "Hommage (Tribute)"
   },
   "hero": {
     "badge": "Open Source · Porté par la Communauté · Toujours Gratuit",
@@ -83,7 +84,7 @@
     "title": "Ce que nous faisons",
     "description": "Des articles communautaires et termes médicaux clairs aux relectures bénévoles et assistance IA.",
     "item1Title": "Bibliothèque d'articles",
-    "item1Tag": "30+ Articles Sélectionnés",
+    "item1Tag": "100+ Articles Sélectionnés",
     "item1Desc": "Guides de santé en plusieurs langues accessibles gratuitement à tous.",
     "item1Action": "Voir les articles",
     "item2Title": "Glossaire médical",

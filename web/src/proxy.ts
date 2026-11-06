@@ -38,7 +38,7 @@ export default function proxy(request: NextRequest) {
       : `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://cdn.tailwindcss.com`,
     "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com",
     "font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com",
-    "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com https://avatars.githubusercontent.com https://ultimatehealth.blog https://picsum.photos https://encrypted-tbn0.gstatic.com https://images.unsplash.com",
+    "img-src 'self' blob: data: https://raw.githubusercontent.com https://github.com https://user-images.githubusercontent.com https://avatars.githubusercontent.com https://ultimatehealth.blog https://picsum.photos https://encrypted-tbn0.gstatic.com https://images.unsplash.com https://images.openai.com",
     "media-src 'self' blob: data: https://ultimatehealth.blog https://uhsocial.in",
     "connect-src 'self' https://ultimatehealth.blog https://uhsocial.in https://api.github.com" + (isDev ? " http: ws:" : ""),
     "object-src 'none'",

@@ -45,7 +45,8 @@
     "joinUs": "Pridruži se",
     "startTour": "Istražite platformu",
     "podcasts": "Podcasti",
-    "apps": "Aplikacije"
+    "apps": "Aplikacije",
+    "tribute": "Posveta (Tribute)"
   },
   "hero": {
     "badge": "Otvoreni Kod · Vođeno Zajednicom · Uvijek Besplatno",
@@ -83,7 +84,7 @@
     "title": "Što Radimo",
     "description": "Od članaka zajednice i jednostavnih medicinskih pojmova do dobrovoljnih liječničkih pregleda i AI pomoći.",
     "item1Title": "Baza Članaka",
-    "item1Tag": "30+ Odabranih Članaka",
+    "item1Tag": "100+ Odabranih Članaka",
     "item1Desc": "Vodiči za zdravlje na više jezika dostupni svima besplatno.",
     "item1Action": "Pregledaj članke",
     "item2Title": "Medicinski Rječnik",

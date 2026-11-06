@@ -48,7 +48,7 @@ const FAQS: FaqItem[] = [
     id: 'current-release',
     question: 'What can I use on UltimateHealth today in the current release?',
     answer:
-      'In the current release, visitors can explore 30+ curated health and wellness guides, query an interactive medical glossary for plain-language clinical definitions, stream health podcasts, view contributor profiles, and read verified medical guides completely free without paywalls or advertisements.',
+      'In the current release, visitors can explore 100+ curated health and wellness guides, query an interactive medical glossary for plain-language clinical definitions, stream health podcasts, view contributor profiles, and read verified medical guides completely free without paywalls or advertisements.',
     tag: 'Current Features',
     icon: Layers,
   },

@@ -594,9 +594,10 @@ html.dark .nav-links a.active {
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 3px;
-  min-width: clamp(56px, 5.2vw, 84px);
-  padding: 4px 2px;
+  gap: 4px;
+  min-width: clamp(62px, 5.5vw, 90px);
+  padding: 6px 10px;
+  border-radius: 10px;
 }
 
 .nav-item-icon {

@@ -45,7 +45,8 @@
     "joinUs": "Mitmachen",
     "startTour": "Plattform Erkunden",
     "podcasts": "Podcasts",
-    "apps": "Apps"
+    "apps": "Apps",
+    "tribute": "Gedenken (Tribute)"
   },
   "hero": {
     "badge": "Open Source · Community-Getrieben · Dauerhaft Kostenlos",
@@ -83,7 +84,7 @@
     "title": "Was wir bieten",
     "description": "Von Artikeln und medizinischen Begriffen bis hin zu freiwilligen ärztlichen Reviews und KI-Unterstützung.",
     "item1Title": "Gesundheitsartikel",
-    "item1Tag": "30+ Kuratierte Artikel",
+    "item1Tag": "100+ Kuratierte Artikel",
     "item1Desc": "Leitfäden für Gesundheit und Wohlbefinden in mehreren Sprachen, für jeden frei zugänglich.",
     "item1Action": "Artikel lesen",
     "item2Title": "Medizinisches Glossar",

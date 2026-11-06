@@ -46,7 +46,8 @@
     "joinUs": "Join Us",
     "startTour": "Explore Platform",
     "podcasts": "Podcasts",
-    "apps": "Apps"
+    "apps": "Apps",
+    "tribute": "Tribute"
   },
   "hero": {
     "badge": "Open Source · Community-Driven · Free Forever",
@@ -59,7 +60,7 @@
     "startTour": "Explore Platform",
     "readArticles": "Read Articles",
     "androidApp": "Android App",
-    "statArticles": "30+ Guides",
+    "statArticles": "100+ Guides",
     "statLanguages": "7+ Languages",
     "statFree": "100% Free",
     "statAi": "App & Web"
@@ -73,7 +74,7 @@
     "moumitaQuote": "Healthcare begins with seeing the whole human being — body, mind, and dignity. Dedicated to uncompromised medical care and genuine respect.",
     "readVision": "Read Life Work & Memorial",
     "pillar1Title": "Multilingual Guides",
-    "pillar1Body": "30+ community-reviewed health guides translated into 7+ regional languages, freely accessible without paywalls.",
+    "pillar1Body": "100+ community-reviewed health guides translated into 7+ regional languages, freely accessible without paywalls.",
     "pillar2Title": "Medical Term Clarification",
     "pillar2Body": "Plain-language explanations for complex clinical terms, with instant search and inline reading tooltips across all articles.",
     "pillar3Title": "Reviewed by Our Admin & Collaboration",
@@ -84,7 +85,7 @@
     "title": "What You Can Use Today",
     "description": "Explore community health articles, look up terms in plain language, access voluntary doctor reviews, and use non-diagnostic AI triage.",
     "item1Title": "Health Article Library",
-    "item1Tag": "30+ Curated Articles",
+    "item1Tag": "100+ Curated Articles",
     "item1Desc": "Community-reviewed health and wellness guides translated across 7+ languages, accessible to everyone without paywalls.",
     "item1Action": "Browse articles",
     "item2Title": "Medical Glossary",

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { BookOpen, Download, Play } from 'lucide-react';
+import { BookOpen, Download, Play, Heart } from 'lucide-react';
 
 export default function Hero() {
   const tHero = useTranslations('hero');
@@ -119,10 +119,9 @@ export default function Hero() {
           animation: 'hero-cta-in 0.6s cubic-bezier(0.22,1,0.36,1) both',
           animationDelay: '0.68s',
         }}>
-          {/* Primary CTA: Explore Platform (Modal Dialogue) */}
-          <button
-            onClick={triggerTour}
-            type="button"
+          {/* Primary CTA: Read Articles */}
+          <Link
+            href="/articles"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -134,9 +133,7 @@ export default function Hero() {
               fontWeight: 700,
               fontSize: '0.875rem',
               letterSpacing: '0.04em',
-              textTransform: 'uppercase',
-              border: 'none',
-              cursor: 'pointer',
+              textDecoration: 'none',
               boxShadow: '0 4px 18px rgba(13, 148, 136, 0.35)',
               transition: 'all 0.2s ease',
             }}
@@ -150,31 +147,43 @@ export default function Hero() {
               (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
               (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 18px rgba(13, 148, 136, 0.35)';
             }}
-            title="Explore UltimateHealth Storyboard & Contributor Journey"
-            aria-label="Explore Platform Storyboard"
           >
-            <Play style={{ width: 13, height: 13, fill: '#ffffff' }} />
-            <span>{tHero('startTour')}</span>
-          </button>
+            <BookOpen style={{ width: 14, height: 14 }} />
+            <span>{tHero('readArticles')}</span>
+          </Link>
 
-          {/* Secondary CTA */}
-          <Link
-            href="/articles"
+          {/* Secondary CTA: Our Purpose */}
+          <a
+            href="#purpose"
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: '8px',
-              padding: '13px 24px', borderRadius: '10px',
-              background: 'var(--explorer-surface, #ffffff)', color: 'var(--site-heading, #0f172a)',
-              fontWeight: 600, fontSize: '0.875rem',
-              border: '1px solid var(--explorer-border, #e2e8f0)', textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '13px 24px',
+              borderRadius: '10px',
+              background: 'var(--explorer-surface, #ffffff)',
+              color: 'var(--site-heading, #0f172a)',
+              fontWeight: 600,
+              fontSize: '0.875rem',
+              border: '1px solid var(--explorer-border, #e2e8f0)',
+              textDecoration: 'none',
               boxShadow: 'var(--explorer-card-shadow, 0 2px 6px rgba(0,0,0,0.04))',
               transition: 'border-color 0.15s ease, color 0.15s ease',
             }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = '#0d9488'; (e.currentTarget as HTMLElement).style.color = '#0d9488'; }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--explorer-border, #e2e8f0)'; (e.currentTarget as HTMLElement).style.color = 'var(--site-heading, #0f172a)'; }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.borderColor = '#0d9488';
+              (e.currentTarget as HTMLElement).style.color = '#0d9488';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.borderColor = 'var(--explorer-border, #e2e8f0)';
+              (e.currentTarget as HTMLElement).style.color = 'var(--site-heading, #0f172a)';
+            }}
           >
-            <BookOpen style={{ width: 14, height: 14 }} />
-            {tHero('readArticles')}
-          </Link>
+            <Heart style={{ width: 14, height: 14, color: '#e11d48' }} />
+            <span>Our Mission &amp; Tribute</span>
+          </a>
+
+          
 
           {/* Ghost CTA: Android Apps on Google Play */}
           <a
@@ -209,7 +218,7 @@ export default function Hero() {
           boxShadow: 'var(--explorer-card-shadow, 0 4px 16px rgba(0,0,0,0.04))',
         }}>
           {[
-            { val: '30+',   label: tHero('statArticles') },
+            { val: '100+', label: tHero('statArticles') },
             { val: '7+',    label: tHero('statLanguages') },
             { val: '100%',  label: tHero('statFree') },
             { val: 'App/Web', label: tHero('statAi') },

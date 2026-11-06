@@ -1,3 +1,5 @@
+import { getApiUrl } from "@/lib/api";
+import { safeFetch } from "@/lib/safe-fetch";
 import type { MetadataRoute } from "next";
 import { articles as localArticles } from "@/lib/article-data";
 import {
@@ -72,6 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/contribute", changeFrequency: "monthly" as const, priority: 0.6 },
     { path: "/access-control", changeFrequency: "monthly" as const, priority: 0.7 },
     { path: "/apps", changeFrequency: "weekly" as const, priority: 0.8 },
+    { path: "/tribute", changeFrequency: "weekly" as const, priority: 0.9 },
   ];
 
   const sitemapEntries: MetadataRoute.Sitemap = [];

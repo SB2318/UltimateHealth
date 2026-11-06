@@ -128,7 +128,7 @@ export default function Navbar() {
   <Link href="/login" className="nav-btn-sm">
     <i className="fas fa-user" aria-hidden="true"></i>
     <span>Login</span>
-  </a>
+  </Link>
 </li>
         </ul>
 

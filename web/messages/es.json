@@ -45,7 +45,8 @@
     "joinUs": "Únete",
     "startTour": "Explorar Plataforma",
     "podcasts": "Pódcasts",
-    "apps": "Aplicaciones"
+    "apps": "Aplicaciones",
+    "tribute": "Homenaje (Tribute)"
   },
   "hero": {
     "badge": "Código Abierto · Impulsado por la Comunidad · Gratis Siempre",
@@ -83,7 +84,7 @@
     "title": "Qué Hacemos",
     "description": "Desde artículos de salud comunitaria y términos clínicos hasta revisión médica voluntaria y asistencia con IA.",
     "item1Title": "Biblioteca de Artículos",
-    "item1Tag": "30+ Artículos Seleccionados",
+    "item1Tag": "100+ Artículos Seleccionados",
     "item1Desc": "Guías de salud comunitaria en múltiples idiomas accesibles sin costo.",
     "item1Action": "Ver artículos",
     "item2Title": "Glosario Médico",
