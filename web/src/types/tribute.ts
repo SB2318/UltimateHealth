@@ -9,10 +9,17 @@ export type TributeCategory =
 
 export type HumanitarianPillar = "remember" | "listen" | "recognise" | "learn" | "charter";
 
+export type VerificationStatus =
+  | "Verified"
+  | "Partially Verified"
+  | "Under Review"
+  | "Disputed";
+
 export interface TributeReference {
   title: string;
   url: string;
   publisher?: string;
+  isPrimary?: boolean;
 }
 
 export interface MemorialPublication {
@@ -41,8 +48,8 @@ export interface TributeProfile {
   avatarUrl?: string;
 
   // Editorial Anatomy
-  whoWasThisPerson: string;      // Childhood, education, personal aspirations
-  contributions: string;         // Professional, artistic, scientific, or social contributions
+  whoWasThisPerson: string;      // Documented biography: childhood, education, vocation
+  contributions: string;         // Documented professional, scientific, artistic, or civic work
   factualContext: string;        // Documented sensitively, non-graphic, objective legal/historical record
   societalImpact: string;        // Reforms, movements, and discussions triggered
   actionableLesson: string;      // Concrete societal lesson (Duty room security, press freedom, etc.)
@@ -53,11 +60,21 @@ export interface TributeProfile {
     context?: string;
   };
 
+  // Editorial Verification Layer (Audit & Fact-Checking) – added 2026-11-06
+  verificationStatus?: VerificationStatus;  // "Verified" | "Partially Verified" | "Under Review" | "Disputed"
+  lastVerifiedAt?: string;                  // ISO date of last editorial review, e.g. "2026-11-06"
+  verifiedFacts?: string[];                 // Claims confirmed against primary/secondary sources
+  disputedFacts?: string[];                 // Claims with conflicting accounts or unresolved investigations
+  editorialNotes?: string;                  // Sensitivity, privacy, legal caveats, chronology notes
+  primarySources?: TributeReference[];      // Court judgments, official records, UN/HR reports
+  secondarySources?: TributeReference[];    // Reputable independent journalism
+
   // Memorial Publication brought out by UltimateHealth
   memorialPublication: {
     title: string;
     focus: string;
     deliverable: string;
+    initiativeStatus?: "Proposed Initiative" | "Planned Resource" | "In Editorial Review" | "Published Resource";
   };
 
   references: TributeReference[];

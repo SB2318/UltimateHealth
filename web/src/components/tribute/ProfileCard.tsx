@@ -44,20 +44,42 @@ export default function ProfileCard({ profile, onOpenModal }: ProfileCardProps) 
     >
       <div>
         {/* Top Badges */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-          <span
-            style={{
-              fontSize: "0.72rem",
-              fontWeight: 800,
-              color: "#e11d48",
-              background: "rgba(244, 63, 94, 0.1)",
-              padding: "3px 8px",
-              borderRadius: "6px",
-              border: "1px solid rgba(244, 63, 94, 0.25)",
-            }}
-          >
-            #{profile.id} · {profile.categoryLabel}
-          </span>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", gap: "8px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <span
+              style={{
+                fontSize: "0.72rem",
+                fontWeight: 800,
+                color: "#e11d48",
+                background: "rgba(244, 63, 94, 0.1)",
+                padding: "3px 8px",
+                borderRadius: "6px",
+                border: "1px solid rgba(244, 63, 94, 0.25)",
+              }}
+            >
+              #{profile.id} · {profile.categoryLabel}
+            </span>
+            {profile.verificationStatus && (
+              <span
+                style={{
+                  fontSize: "0.68rem",
+                  fontWeight: 700,
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  background:
+                    profile.verificationStatus === "Verified"
+                      ? "rgba(16, 185, 129, 0.12)"
+                      : "rgba(245, 158, 11, 0.12)",
+                  color:
+                    profile.verificationStatus === "Verified"
+                      ? "#059669"
+                      : "#d97706",
+                }}
+              >
+                {profile.verificationStatus === "Verified" ? "✓ Verified" : "⚠ Qualified"}
+              </span>
+            )}
+          </div>
           <span style={{ fontSize: "0.78rem", color: "var(--explorer-text-secondary, #64748b)" }}>
             {profile.countryFlag} {profile.country}
           </span>
@@ -227,7 +249,9 @@ export default function ProfileCard({ profile, onOpenModal }: ProfileCardProps) 
         >
           <BookOpen size={13} style={{ color: "#e11d48", flexShrink: 0 }} />
           <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{profile.memorialPublication.title}</span>
-          <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#d97706", background: "rgba(217, 119, 6, 0.12)", padding: "1px 5px", borderRadius: "4px", flexShrink: 0 }}>Coming Soon</span>
+          <span style={{ fontSize: "0.68rem", fontWeight: 700, color: "#d97706", background: "rgba(217, 119, 6, 0.12)", padding: "1px 5px", borderRadius: "4px", flexShrink: 0 }}>
+            {profile.memorialPublication.initiativeStatus || "Proposed"}
+          </span>
         </span>
 
         <button

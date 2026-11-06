@@ -201,6 +201,40 @@ export default function ProfileDetailModal({
                     Survivor · Living Leader
                   </span>
                 )}
+                {profile.verificationStatus && (
+                  <span
+                    style={{
+                      fontSize: "0.7rem",
+                      fontWeight: 800,
+                      padding: "2px 8px",
+                      borderRadius: "4px",
+                      background:
+                        profile.verificationStatus === "Verified"
+                          ? "rgba(16, 185, 129, 0.12)"
+                          : profile.verificationStatus === "Partially Verified"
+                          ? "rgba(245, 158, 11, 0.12)"
+                          : "rgba(59, 130, 246, 0.12)",
+                      color:
+                        profile.verificationStatus === "Verified"
+                          ? "#059669"
+                          : profile.verificationStatus === "Partially Verified"
+                          ? "#d97706"
+                          : "#2563eb",
+                      border:
+                        profile.verificationStatus === "Verified"
+                          ? "1px solid rgba(16, 185, 129, 0.3)"
+                          : profile.verificationStatus === "Partially Verified"
+                          ? "1px solid rgba(245, 158, 11, 0.3)"
+                          : "1px solid rgba(59, 130, 246, 0.3)",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    <CheckCircle2 size={11} />
+                    {profile.verificationStatus}
+                  </span>
+                )}
               </div>
 
               <h2
@@ -308,6 +342,37 @@ export default function ProfileDetailModal({
               }}
             >
               {profile.factualContext}
+
+              {profile.editorialNotes && (
+                <div style={{ marginTop: "12px", padding: "10px 12px", background: "rgba(244, 63, 94, 0.06)", borderLeft: "3px solid #e11d48", borderRadius: "0 6px 6px 0", fontSize: "0.82rem", color: "#475569" }}>
+                  <strong style={{ color: "#be123c" }}>Editorial Audit Note:</strong> {profile.editorialNotes}
+                </div>
+              )}
+
+              {profile.disputedFacts && profile.disputedFacts.length > 0 && (
+                <div style={{ marginTop: "12px", padding: "10px 12px", background: "rgba(245, 158, 11, 0.08)", borderLeft: "3px solid #d97706", borderRadius: "0 6px 6px 0", fontSize: "0.82rem", color: "#92400e" }}>
+                  <strong>Unresolved / Disputed Circumstances:</strong>
+                  <ul style={{ margin: "4px 0 0", paddingLeft: "18px" }}>
+                    {profile.disputedFacts.map((fact, idx) => (
+                      <li key={idx}>{fact}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {profile.verifiedFacts && profile.verifiedFacts.length > 0 && (
+                <div style={{ marginTop: "14px", paddingTop: "12px", borderTop: "1px dashed var(--explorer-border, #cbd5e1)" }}>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", color: "#059669", marginBottom: "6px", display: "flex", alignItems: "center", gap: "5px" }}>
+                    <CheckCircle2 size={13} />
+                    Verified Facts {profile.lastVerifiedAt && `(Audited ${profile.lastVerifiedAt})`}
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "0.82rem", color: "var(--explorer-text-secondary, #475569)", lineHeight: 1.6 }}>
+                    {profile.verifiedFacts.map((fact, idx) => (
+                      <li key={idx}>{fact}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 
@@ -356,11 +421,11 @@ export default function ProfileDetailModal({
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
               <span style={{ fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase", color: "#e11d48", display: "flex", alignItems: "center", gap: "6px" }}>
                 <BookOpen size={14} />
-                UltimateHealth Living Memorial Deliverable
+                UltimateHealth Living Memorial Initiative
               </span>
               <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#d97706", display: "flex", alignItems: "center", gap: "4px" }}>
                 <Clock size={12} />
-                Upcoming Toolkit · Coming Soon
+                {profile.memorialPublication.initiativeStatus || "Proposed Initiative"}
               </span>
             </div>
 
@@ -393,6 +458,11 @@ export default function ProfileDetailModal({
                     style={{ color: "#e11d48", fontWeight: 600, textDecoration: "underline", wordBreak: "break-all" }}
                   >
                     {ref.title}
+                    {ref.isPrimary && (
+                      <span style={{ marginLeft: "6px", fontSize: "0.68rem", fontWeight: 800, padding: "1px 5px", borderRadius: "3px", background: "rgba(16, 185, 129, 0.12)", color: "#059669" }}>
+                        Primary Record
+                      </span>
+                    )}
                     {ref.publisher && (
                       <span style={{ color: "var(--explorer-text-secondary, #94a3b8)", fontWeight: 400, marginLeft: "4px" }}>
                         ({ref.publisher})

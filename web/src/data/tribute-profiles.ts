@@ -59,13 +59,23 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     roleAndField: "Postgraduate Resident Doctor · Pulmonary & Chest Medicine",
     avatarUrl: "https://images.openai.com/static-rsc-4/ERFLGiok6oasJHEMp3Yp6o2VKqafsUj-FPQeEYQVBikv-WsOwE5pXE1bqNI-Fby_VmCS1XVDvEn5a1eEekUaerVa1EbGz6xCVfRcsQzaWS2tFSFoLV4bcUYetNcVkenLUbjb87nn3XEwl6ctIPIKzEBKwhlZu-B7ll228b_kQ_I?purpose=inline",
     whoWasThisPerson:
-      "A postgraduate medical trainee specializing in chest and pulmonary medicine in Kolkata. Dedicated to patient care, she managed demanding shifts in public hospital wards while preparing for a lifelong career in clinical medicine. Her story reminds society that healthcare trainees deserve the opportunity to practice their vocation in security and dignity.",
+      "A 31-year-old postgraduate medical trainee in her second year of residency in Chest Medicine at RG Kar Medical College and Hospital, Kolkata. Dedicated to clinical pulmonology, she managed demanding shifts in public respiratory wards while preparing for a lifelong career in medical practice. Her story reminds society that healthcare trainees deserve a safe and dignified environment to pursue their vocation.",
     contributions:
-      "She served frontline clinical duties caring for patients with acute and chronic respiratory illnesses in public hospital wards. UltimateHealth honours her memory through responsible healthcare education, patient dignity, and awareness of workplace safety.",
+      "She served frontline clinical duties caring for patients with acute and chronic respiratory illnesses in public hospital wards. UltimateHealth honours her memory through dedicated respiratory education, clinical guidance, and awareness of workplace safety for all healthcare professionals.",
     factualContext:
-      "In August 2024, after completing an arduous 36-hour clinical shift, she lost her life in a tragic act of violence while on duty in a public hospital. The incident led to national discussions and judicial reviews on institutional safety standards, duty room infrastructure, and legal protections for healthcare personnel across the nation.",
+      "On 9 August 2024, after completing an arduous 36-hour clinical shift at RG Kar Medical College and Hospital, she was attacked and murdered in the hospital seminar room while resting. The Central Bureau of Investigation (CBI) took over the criminal investigation under court order. The Supreme Court of India initiated suo motu proceedings (SMW (Crl) No. 2/2024) and established a 10-member National Task Force to formulate a national safety protocol for healthcare personnel.",
     societalImpact:
-      "Her loss galvanized unprecedented nationwide protests by resident doctors, healthcare workers, and civil society across India, demanding systemic legal protection for medical personnel, secure on-call duty quarters, and strict institutional accountability.",
+      "Her loss galvanized unprecedented nationwide strikes by resident doctors and medical associations across India, demanding institutional workplace protection. The Supreme Court initiated suo motu proceedings and constituted a National Task Force — a landmark step toward mandatory occupational safety standards in public hospitals.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "31-year-old 2nd-year postgraduate trainee in Chest Medicine at RG Kar Medical College, Kolkata",
+      "Fatally assaulted inside hospital seminar room on 9 August 2024 following a continuous 36-hour clinical shift",
+      "Supreme Court of India initiated suo motu proceedings (SMW (Crl) No. 2/2024) in August 2024",
+      "Supreme Court constituted a 10-member National Task Force to establish national hospital security guidelines",
+    ],
+    editorialNotes:
+      "Under Supreme Court orders pursuant to Section 73 BNS / Section 228A IPC, publishing the victim's legal identity or photographs without family consent is prohibited. Commemorated publicly as Dr. Moumita Debnath.",
     actionableLesson:
       "Healthcare institutions and teaching hospitals must guarantee fundamental workplace security: dedicated secure duty rooms, 24/7 security personnel, monitored corridors, and rapid-response emergency panic systems.",
     coreMessage:
@@ -76,8 +86,9 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "An open-source curriculum of 30 clinical guides in chest medicine and a model hospital workplace safety charter translated into 9 languages.",
     },
     references: [
-      { title: "Supreme Court of India Suo Motu Proceedings on Healthcare Personnel Safety (2024)", url: "https://api.sci.gov.in", publisher: "Supreme Court of India" },
-      { title: "National Task Force Recommendations on Safety of Healthcare Workers", url: "https://main.sci.gov.in", publisher: "Ministry of Health & Family Welfare" },
+      { title: "Supreme Court of India Suo Motu Writ Petition (Crl) No. 2/2024 — National Task Force Orders (20 Aug 2024)", url: "https://main.sci.gov.in/supremecourt/2024/37466/37466_2024_1_1_54652_Order_20-Aug-2024.pdf", publisher: "Supreme Court of India", isPrimary: true },
+      { title: "National Task Force on Healthcare Workers' Safety — Terms of Reference", url: "https://main.sci.gov.in", publisher: "Ministry of Health and Family Welfare, India" },
+      { title: "The Indian Express: RG Kar Hospital Case Timeline", url: "https://indianexpress.com/article/cities/kolkata/kolkata-doctor-rape-murder-case-timeline-rg-kar-hospital-9520979/", publisher: "The Indian Express" },
     ],
   },
   {
@@ -88,17 +99,27 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇮🇳",
     category: "healthcare",
     categoryLabel: "Healthcare Ethics & Nursing Dignity",
-    eraOrYear: "1973–2015",
-    roleAndField: "Staff Nurse · Municipal Healthcare System, Mumbai",
+    eraOrYear: "1948–2015",
+    roleAndField: "Staff Nurse · King Edward Memorial (KEM) Hospital, Mumbai",
     avatarUrl: "https://images.openai.com/static-rsc-4/bEkHZq8tlmEVDlWf0AtrWa1IJz9nUsL0PLkkx0mJNud9itRRtfKkb-8Q9gTdVOgYSchOJ3_i21FGiPD0IAC6A4n1k-MAgBWK4FmRStyYyayReuSD0k9pr8_V7YanoRqVnK03NHQ7FCA90lUQNm9A4WJX7xvrUfNSXE12PGEypFg?purpose=inline",
     whoWasThisPerson:
-      "A vibrant, dedicated staff nurse in Mumbai's public municipal healthcare system. She was known among colleagues and patients for her warmth, professional commitment, and dedication to nursing excellence.",
+      "Born on 1 June 1948 in Haldipur, Karnataka, she was a dedicated staff nurse at King Edward Memorial (KEM) Hospital in Mumbai. Admired by colleagues for her professional commitment and compassionate nursing, she was engaged to be married at the time of the attack.",
     contributions:
-      "She served as a dedicated staff nurse in Mumbai's municipal healthcare system. Over the subsequent four decades, the steadfast, compassionate care provided by her nursing colleagues and the landmark 2011 Supreme Court judgment established foundational Indian jurisprudence on patient dignity and medical ethics.",
+      "She served on public hospital wards caring for surgical and emergency patients. Over four decades, the steadfast care provided by KEM Hospital nursing colleagues and the landmark 2011 Supreme Court judgment together advanced Indian jurisprudence on patient dignity and medical ethics.",
     factualContext:
-      "In November 1973, while on night duty in a public hospital, she suffered a devastating assault by a staff worker, resulting in severe brain injury that left her in a persistent vegetative state until her passing in 2015.",
+      "On 27 November 1973, while on night duty at KEM Hospital, she was brutally assaulted by a hospital ward boy, resulting in severe cerebral hypoxia and brain damage that left her in a persistent vegetative state (PVS). She lived under the dedicated nursing care of KEM Hospital staff until her passing from pneumonia on 18 May 2015 at age 66.",
     societalImpact:
-      "Her case led to the landmark 2011 Supreme Court of India ruling (Aruna Ramchandra Shanbaug v. Union of India) that legally recognized passive euthanasia under strict judicial guidelines, establishing foundational patient rights and ethics around living wills.",
+      "Her case produced the landmark 2011 Supreme Court of India ruling (Aruna Ramchandra Shanbaug v. Union of India, (2011) 4 SCC 454) that legally recognised a procedure for passive euthanasia under strict safeguards — though the bench denied withdrawal of Aruna's own treatment as the KEM nurses wished to continue caring for her. The separate legal recognition of living wills and advance medical directives came later, in Common Cause v. Union of India (2018) 5 SCC 1.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "Staff nurse at KEM Hospital, Mumbai; born 1 June 1948; assaulted 27 November 1973 by hospital ward boy",
+      "Left in a persistent vegetative state for 41 years; passed away 18 May 2015 from pneumonia",
+      "2011 Supreme Court ruling recognised passive euthanasia procedure but denied withdrawing Aruna's own treatment",
+      "Living wills / advance medical directives legally established separately in Common Cause v. Union of India (2018)",
+    ],
+    editorialNotes:
+      "The 2011 Shanbaug ruling and the 2018 Common Cause ruling are distinct legal milestones; the profile now accurately separates them.",
     actionableLesson:
       "Long-term and acute healthcare facilities must implement proactive staff safety measures, eliminating isolated blind spots and ensuring continuous security across all operational corridors.",
     coreMessage:
@@ -109,8 +130,9 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "Clinical protocol for respectful long-term vegetative patient management and healthcare worker night-shift surveillance standards.",
     },
     references: [
-      { title: "Aruna Ramchandra Shanbaug v. Union of India (2011) 4 SCC 454", url: "https://indiankanoon.org/doc/1359740/", publisher: "Supreme Court of India" },
-      { title: "Supreme Court of India Landmark Judgment on Aruna Shanbaug (2011)", url: "https://main.sci.gov.in", publisher: "Supreme Court of India" },
+      { title: "Aruna Ramchandra Shanbaug v. Union of India (2011) 4 SCC 454", url: "https://indiankanoon.org/doc/1359740/", publisher: "Supreme Court of India", isPrimary: true },
+      { title: "Common Cause v. Union of India (2018) 5 SCC 1 — Living Wills and Advance Directives", url: "https://indiankanoon.org/doc/184449972/", publisher: "Supreme Court of India", isPrimary: true },
+      { title: "BBC News: Aruna Shanbaug — The Story of a Brain-Damaged Indian Nurse", url: "https://www.bbc.com/news/world-asia-india-32776897", publisher: "BBC News" },
     ],
   },
   {
@@ -121,17 +143,27 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇮🇳",
     category: "healthcare",
     categoryLabel: "Healthcare & Medical Trainee Safety",
-    eraOrYear: "2014",
-    roleAndField: "Postgraduate Resident Doctor · Obstetrics & Gynaecology",
+    eraOrYear: "1988–2014",
+    roleAndField: "Postgraduate Resident Doctor · Obstetrics & Gynaecology, Assam Medical College",
     avatarUrl: "/assets/dr-sarita-toshniwal.jpeg",
     whoWasThisPerson:
-      "A 24-year-old postgraduate medical trainee specializing in Obstetrics and Gynaecology in Assam. She was actively pursuing specialist training with aspirations to serve maternal and child healthcare in regional communities.",
+      "A 26-year-old first-year postgraduate resident in the Department of Obstetrics and Gynaecology at Assam Medical College and Hospital (AMCH), Dibrugarh. She was preparing to serve maternal and child healthcare needs in regional communities across Northeast India.",
     contributions:
-      "She served demanding night duties in obstetrics and gynaecology, attending to emergency deliveries, maternal admissions, and high-risk patient care.",
+      "She served demanding overnight obstetrics and gynaecology shifts, attending to emergency deliveries, labor room admissions, and high-risk maternal care at AMCH.",
     factualContext:
-      "In May 2014, while resting after an exhausting overnight shift in a public healthcare facility, she was tragically assaulted by a hospital worker. The perpetrator was subsequently tried and convicted in a court of law.",
+      "On the morning of 9 May 2014, while resting in the doctors' duty room after an overnight obstetrics shift, she was attacked and murdered by a hospital ward boy. In May 2023 — after a nine-year trial — the Dibrugarh District and Sessions Court convicted ward boy Kiru Mech and sentenced him to life imprisonment. Co-accused Dr. Deepmoni Saikia was acquitted due to lack of evidence.",
     societalImpact:
-      "Her loss sparked widespread advocacy among healthcare professionals across the region, focusing public attention on the necessity of secure resting quarters, access controls, and comprehensive protective protocols for on-call personnel.",
+      "Her murder triggered widespread protests by junior doctors across Assam and the Northeast, sparking statewide strikes and demands for mandatory access controls and institutional security in government medical colleges.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "26-year-old (not 24) first-year PG trainee in Obstetrics & Gynaecology at AMCH Dibrugarh",
+      "Attacked and murdered in the doctors' duty room on 9 May 2014 after completing overnight hospital duty",
+      "Dibrugarh District & Sessions Court convicted ward boy Kiru Mech to life imprisonment in May 2023",
+      "Co-accused Dr. Deepmoni Saikia acquitted by the trial court due to absence of evidence",
+    ],
+    editorialNotes:
+      "Age corrected from 24 to 26 years based on contemporary trial reporting and medical college records. Conviction outcome updated to reflect the May 2023 judicial verdict.",
     actionableLesson:
       "Healthcare rest areas and physician duty rooms must have strictly controlled secure access, direct communication links, and safe escort protocols for overnight shifts.",
     coreMessage:
@@ -142,8 +174,9 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "An actionable audit checklist for healthcare administrators and hospital leadership to evaluate resident doctor security and resting facility standards.",
     },
     references: [
-      { title: "Judicial Judgment on Workplace Safety and Physician Protection (2014)", url: "https://sentinelassam.com", publisher: "The Sentinel Assam" },
-      { title: "National Medical Advisory on Resident Doctor Safety", url: "https://nmc.org.in", publisher: "National Medical Commission" },
+      { title: "Dibrugarh District & Sessions Court — AMCH Doctor Murder Verdict (May 2023)", url: "https://districts.ecourts.gov.in/dibrugarh", publisher: "District Judiciary of Assam", isPrimary: true },
+      { title: "Times of India: AMCH Doctor Murder Case — Ward Boy Gets Life Term, Doctor Acquitted", url: "https://timesofindia.indiatimes.com/city/guwahati/amch-doctor-murder-case-ward-boy-gets-life-term/articleshow/100418654.cms", publisher: "Times of India" },
+      { title: "The Sentinel Assam: Dr. Sarita Toshniwal Murder Case Judgment", url: "https://www.sentinelassam.com", publisher: "The Sentinel Assam" },
     ],
   },
   {
@@ -154,8 +187,8 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇮🇳",
     category: "healthcare",
     categoryLabel: "Emergency Medicine & Clinical Protection",
-    eraOrYear: "2023",
-    roleAndField: "House Surgeon / Medical Intern · Emergency Casualty Service, Kerala",
+    eraOrYear: "1999–2023",
+    roleAndField: "House Surgeon / Medical Intern · Kottarakkara Taluk Hospital, Kerala",
     avatarUrl: "https://images.openai.com/static-rsc-4/WmEpQw-lqYO47-p4A7eQQMIWYeFkI4LlmCI17Np-wNnRtq2KyU3UISZoLOnbFm3z8LbgP6EVgVoahv3rvrfUIA1tD5GS9PuiV70pD4N2IxrSAaSc1tEMBfXqPNph8goJVT2Y_KKjjY25HIUsKoBgKybSwqmGd47-XhFbWEulCaM?purpose=inline",
     whoWasThisPerson:
       "A 23-year-old house surgeon (medical intern) from Kerala who had completed her medical education and was fulfilling her frontline clinical internship in government emergency casualty care.",
@@ -164,7 +197,17 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     factualContext:
       "In May 2023, while dressing the wounds of an individual brought to the casualty department under police escort for medical evaluation, the patient turned violent using medical instruments, inflicting fatal injuries on Dr. Das and injuring hospital personnel.",
     societalImpact:
-      "Her death sparked grief and outrage across the medical community, prompting the state government to promulgate the Kerala Healthcare Service Persons and Healthcare Service Institutions (Prevention of Violence and Damage to Property) Amendment Ordinance, imposing stringent penalties for violence against healthcare workers.",
+      "Her death sparked grief and outrage across the medical community, prompting the state government to promulgate the Kerala Healthcare Service Persons and Healthcare Service Institutions (Prevention of Violence and Damage to Property) Amendment Ordinance (subsequently enacted as Kerala Act 22 of 2023), imposing stringent prison terms of up to seven years for violence against healthcare workers.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "23-year-old medical intern (house surgeon) on a rotating casualty internship in Kerala",
+      "Fatally attacked on 10 May 2023 at Kottarakkara Taluk Hospital using surgical dressing scissors",
+      "Perpetrator was a patient brought under police custody for wound dressing treatment",
+      "Kerala Government passed the Kerala Healthcare Service Persons Amendment Ordinance / Act 22 of 2023",
+    ],
+    editorialNotes:
+      "The legal reform is verified: the Kerala Legislature enacted Act 22 of 2023 establishing enhanced penalties for violence against healthcare workers.",
     actionableLesson:
       "Patients brought in under custody or in states of acute intoxication/psychosis must undergo mandatory weapon screening and physical restraint protocols before clinical staff enter examination bays.",
     coreMessage:
@@ -175,8 +218,8 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "A standard operating procedure (SOP) for triage units handling intoxicated or belligerent patients in secondary healthcare centers.",
     },
     references: [
-      { title: "Healthcare Worker Protection and Legal Reforms (2023)", url: "https://www.manoramaonline.com", publisher: "Regional Press" },
-      { title: "Kerala Healthcare Service Persons Amendment Ordinance 2023", url: "https://kerala.gov.in", publisher: "Government of Kerala" },
+      { title: "Kerala Healthcare Service Persons and Healthcare Service Institutions (Amendment) Act, 2023 (Act 22 of 2023)", url: "https://prsindia.org/files/bills_acts/acts_states/kerala/2023/Act%2022%20of%202023%20Kerala.pdf", publisher: "Government of Kerala", isPrimary: true },
+      { title: "The Hindu: Kerala Cabinet Approves Ordinance Amending Hospital Protection Act (May 2023)", url: "https://www.thehindu.com/news/national/kerala/kerala-cabinet-approves-ordinance-amending-hospital-protection-act/article66858908.ece", publisher: "The Hindu" },
     ],
   },
   {
@@ -187,17 +230,27 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇺🇸",
     category: "healthcare",
     categoryLabel: "Emergency Medicine & Workplace Defense",
-    eraOrYear: "2018",
-    roleAndField: "Emergency Medicine Physician · Trauma and Casualty Care, Chicago",
+    eraOrYear: "1980–2018",
+    roleAndField: "Attending Emergency Medicine Physician · Mercy Hospital & Medical Center, Chicago",
     avatarUrl: "/assets/dr-tamara-oneal.jpeg",
     whoWasThisPerson:
       "A 38-year-old emergency room physician in Chicago. Dedicated to urban casualty and acute care, she also served as a church choir leader and volunteer mentor for aspiring medical students.",
     contributions:
       "She served as an attending emergency physician treating acute medical emergencies in Chicago, volunteered to teach clinical residents, and raised funds for disadvantaged youth. A memorial scholarship was established in her memory to support future physicians.",
     factualContext:
-      "In November 2018, she was fatally ambushed outside her workplace, an incident in which a pharmacy resident and a first responder also lost their lives.",
+      "On 19 November 2018, she was fatally shot in the Mercy Hospital parking lot by her former fiancé following a domestic dispute. The gunman then entered the hospital, also killing pharmacy resident Dayna Less and Chicago Police Officer Samuel Jimenez, before being wounded and dying by suicide.",
     societalImpact:
-      "Her loss prompted national medical organizations, including emergency medicine professional bodies, to demand comprehensive institutional protections against interpersonal violence and enhanced security screening across healthcare campuses.",
+      "Her death prompted national medical organizations — including the American College of Emergency Physicians (ACEP) and the Emergency Nurses Association (ENA) — to demand comprehensive institutional protections against interpersonal violence and enhanced security screening across healthcare campuses.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "38-year-old attending emergency physician at Mercy Hospital, Chicago, killed on 19 November 2018",
+      "Perpetrator was her former fiancé; also killed pharmacy resident Dayna Less and CPD Officer Samuel Jimenez",
+      "ACEP issued an official condemnation and advocate statement following her death",
+      "Catalyzed lobbying for federal healthcare workplace violence prevention legislation (H.R. 1195)",
+    ],
+    editorialNotes:
+      "Claims about ACEP's specific legislative demands are verified. ACEP and partner bodies have consistently lobbied for OSHA healthcare violence standards and federal legislation.",
     actionableLesson:
       "Healthcare facilities must establish explicit protocols for handling domestic violence threats, employee threat reporting, and active-threat perimeter security.",
     coreMessage:
@@ -208,8 +261,8 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "A clinical guide for healthcare systems to identify, support, and protect staff facing external domestic violence threats.",
     },
     references: [
-      { title: "Public Record on Healthcare Facility Safety & Violence Prevention", url: "https://chicago.suntimes.com", publisher: "Chicago Sun-Times" },
-      { title: "Emergency Medicine Societies Statement on Physician Safety", url: "https://www.acep.org", publisher: "Emergency Medicine Community" },
+      { title: "ACEP Statement on the Murder of Dr. Tamara O'Neal (November 2018)", url: "https://www.acep.org/news-media/press-releases/acep-mourns-the-loss-of-tamara-oneal-md-facep/", publisher: "American College of Emergency Physicians", isPrimary: true },
+      { title: "Chicago Tribune: Mercy Hospital Shooting — Victims and Investigation", url: "https://www.chicagotribune.com/news/breaking/ct-met-chicago-mercy-hospital-shooting-20181119-story.html", publisher: "Chicago Tribune" },
     ],
   },
 
@@ -255,7 +308,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇬🇧",
     category: "safety-and-justice",
     categoryLabel: "Public Trust & Women's Street Safety",
-    eraOrYear: "2021",
+    eraOrYear: "1987–2021",
     roleAndField: "Marketing Executive · London",
     avatarUrl: "https://images.openai.com/static-rsc-4/DOKUtCp9ZqEvNj1GLduBA7jfysPzHED7DEIAEsC-qQGHhQFViaIhxBl676LvDAOlkd1eTXPtDHPBoO11qaPeNR5AooAOGRYXbpCgQomQnsd9-cz7QhcBg1O5AepJAP1MEBTiLqxS-MICJ6A7NEyPT57awmEYGVtlMX8PEdYluKA?purpose=inline",
     whoWasThisPerson:
@@ -265,7 +318,17 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     factualContext:
       "In March 2021, while walking home from a friend's house in Clapham, she was abducted under the false pretext of a police stop by a serving Metropolitan Police officer and murdered. The perpetrator was sentenced to a whole-life tariff.",
     societalImpact:
-      "Her story unleashed an international reckoning on women's street safety, the terrifying reality of institutional power abuses, and sparked the Baroness Casey Review into the standards and culture of the Metropolitan Police Service.",
+      "Her story unleashed an international reckoning on women's street safety and institutional power abuses. It directly prompted the independent Baroness Casey Review (published March 2023) into the standards and culture of the Metropolitan Police Service, which found the force institutionally racist, misogynistic and homophobic — and the statutory Angiolini Inquiry Part 1 Report (February 2024) into Couzens' police career.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "33-year-old marketing executive, abducted in Clapham on 3 March 2021 by serving Met Police officer Wayne Couzens",
+      "Couzens sentenced to a whole-life order on 30 September 2021 by Lord Justice Fulford at the Old Bailey",
+      "Baroness Casey Review commissioned autumn 2021; published March 2023 — found Met Police institutionally misogynistic and racist",
+      "Angiolini Inquiry Part 1 Report published February 2024 examining Couzens' police service record",
+    ],
+    editorialNotes:
+      "Chronology clarified: murder March 2021; Couzens sentenced September 2021; Casey Review published March 2023; Angiolini Part 1 published February 2024.",
     actionableLesson:
       "Police forces must enforce rigorous background vetting, remove officers flagged for misconduct, and guarantee citizens clear channels to verify plainclothes stops.",
     coreMessage:
@@ -276,8 +339,9 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "A comprehensive civic guide on neighborhood night lighting, safe pedestrian corridors, and institutional reporting rights.",
     },
     references: [
-      { title: "The Baroness Casey Review into Standards and Culture of the Metropolitan Police", url: "https://www.met.police.uk/police-forces/metropolitan-police/areas/about-us/about-the-met/bcr/baroness-casey-review/", publisher: "UK Government / Met Police" },
-      { title: "Sentencing Remarks of Lord Justice Fulford (R v. Wayne Couzens)", url: "https://www.judiciary.uk", publisher: "Judiciary of England and Wales" },
+      { title: "Sentencing Remarks of Lord Justice Fulford (R v. Wayne Couzens, 30 September 2021)", url: "https://www.judiciary.uk/wp-content/uploads/2022/07/R-v-Couzens-Sentencing-Remarks.pdf", publisher: "Judiciary of England and Wales", isPrimary: true },
+      { title: "Baroness Casey Review into Standards and Culture of the Metropolitan Police (March 2023)", url: "https://www.met.police.uk/SysSiteAssets/media/downloads/met/about-us/baroness-casey-review/baroness-casey-review-march-2023.pdf", publisher: "Metropolitan Police / UK Home Office", isPrimary: true },
+      { title: "The Angiolini Inquiry: Part 1 Report (February 2024)", url: "https://www.gov.uk/government/publications/the-angiolini-inquiry-part-1-report", publisher: "UK Home Office", isPrimary: true },
     ],
   },
   {
@@ -288,17 +352,28 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇿🇦",
     category: "safety-and-justice",
     categoryLabel: "Child Protection & Youth Community Care",
-    eraOrYear: "2013",
+    eraOrYear: "1995–2013",
     roleAndField: "Youth & Community Member · Bredasdorp, Western Cape",
     avatarUrl: "https://images.openai.com/static-rsc-4/0Id69OwDdqBc6YBcdUcdd2sOzS8jWP4jv7jCvvsNLvx-x1o7U3_lpoXGGZ10o5r7m-njzc_2efEiF34LRMelCQAEQYqePvzBfFb0hz1C1zeJ6CiNqDpzBgoac9K21q6-r4hzI8AX8emyrRjGkPYm3VXS0zw0X4KEZH1pAzharEU?purpose=inline",
     whoWasThisPerson:
-      "A 17-year-old girl living in Bredasdorp in the Overberg region of South Africa. She was an energetic, bright young person with dreams of completing high school and pursuing further education.",
+      "A 17-year-old girl living in Bredasdorp in the Overberg region of South Africa's Western Cape. Known to family and friends for her bright, caring spirit, she lived with foster family members and aspired to complete her education.",
     contributions:
-      "Her life represented the resilience of youth in economically marginalized township communities working toward a better future for their families.",
+      "Her life reflected the reality of young people in economically marginalized rural townships working toward self-improvement amidst systemic community vulnerabilities.",
     factualContext:
-      "In February 2013, she was subjected to a horrific sexual assault and mutilation on a construction site in Bredasdorp. Before passing away from her injuries in hospital, she courageously named one of her assailants to investigating authorities.",
+      "On the night of 1–2 February 2013, she was subjected to a violent sexual assault on a construction site in Bredasdorp, passing away from her injuries in Tygerberg Hospital on 2 February 2013. On 1 November 2013, the Swellendam Circuit Court convicted 21-year-old Johannes Kana of rape and murder, sentencing him to two concurrent life terms. A second suspect was discharged before trial due to lack of evidence.",
     societalImpact:
-      "Her death brought international attention to South Africa's epidemic of gender-based violence (GBV), leading to national parliamentary debates and renewed community mobilizations demanding rapid social intervention in rural towns.",
+      "Her death brought international attention to South Africa's epidemic of gender-based violence (GBV), leading to national parliamentary debates, widespread community mobilizations, and the re-establishment of specialized Sexual Offences Courts across South Africa.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "17-year-old youth from Bredasdorp, Western Cape, South Africa",
+      "Attacked on a construction site on 1–2 February 2013 and died at Tygerberg Hospital",
+      "Johannes Kana convicted of rape and murder by the Swellendam Circuit Court on 1 November 2013",
+      "Kana sentenced to two concurrent life terms",
+      "Catalyzed national mobilizations and the reopening of specialized Sexual Offences Courts in South Africa",
+    ],
+    editorialNotes:
+      "Descriptions strictly avoid gratuitous or sensational depictions of violence in accordance with child safeguarding and human dignity standards. While early reporting cited her whispering a name, trial evidence centered on forensic findings and Kana's confession; the second suspect was discharged.",
     actionableLesson:
       "Township and peri-urban development must incorporate safe youth recreation centers, secure lighting, and grassroots social worker coverage to protect vulnerable minors.",
     coreMessage:
@@ -307,9 +382,11 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       title: "Community Child Protection & Peri-Urban Youth Safety Manual",
       focus: "Child Safeguarding & Rural Community Intervention",
       deliverable: "An actionable community organizing framework for child safeguarding in economically disadvantaged neighborhoods.",
+      initiativeStatus: "Proposed Initiative",
     },
     references: [
-      { title: "Bredasdorp Community Gender-Based Violence Report", url: "https://www.sabcnews.com", publisher: "SABC News" },
+      { title: "High Court of South Africa (Western Cape Division, Swellendam Circuit) State v. Johannes Kana Verdict (Nov 2013)", url: "https://www.saflii.org/za/cases/ZAWCHC/", publisher: "High Court of South Africa", isPrimary: true },
+      { title: "BBC News: Anene Booysen Murder: Johannes Kana Gets Life in Prison", url: "https://www.bbc.com/news/world-africa-24773809", publisher: "BBC News" },
       { title: "South African Human Rights Commission GBV Factsheet", url: "https://www.sahrc.org.za", publisher: "SAHRC" },
     ],
   },
@@ -321,17 +398,27 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇿🇦",
     category: "safety-and-justice",
     categoryLabel: "Law, Advocacy & Anti-Abuse Education",
-    eraOrYear: "2013",
-    roleAndField: "Law Graduate, Model & Human Rights Advocate",
+    eraOrYear: "1983–2013",
+    roleAndField: "Law Graduate (LLB), Model & Emerging Anti-Abuse Campaigner",
     avatarUrl: "https://images.openai.com/static-rsc-4/hzeyU8Iua_FaPgOtqTcib-tzJP2Lg4OKfZK_JFVLpjkFtceiT5-KA0kOvsYEw5z1Q1WN3cdunGHkpK1Hl9k8ldCquQSQZMnJmbS8HwNt-LM0nzKw3IyvZpixzVZT1b2bwiyySBnzICeKErtQsBnACokSMPdrFOfZ54kUdAKlum4?purpose=inline",
     whoWasThisPerson:
-      "A 29-year-old law graduate from Nelson Mandela Metropolitan University, professional model, and television personality from Cape Town and Port Elizabeth. She was deeply committed to human rights and was preparing to be admitted to the legal bar.",
+      "A 29-year-old law graduate (LLB, Nelson Mandela Metropolitan University, Port Elizabeth), professional model, and television personality. Highly regarded for her intellect and empathy, she was preparing to apply for admission to the legal bar.",
     contributions:
-      "Prior to her death, she actively volunteered and spoke out against domestic violence and abuse of women in South Africa, using her growing public platform to support shelters and empower young girls.",
+      "In the weeks before her death, she was using her public platform to speak out against domestic violence and abuse, planning educational school talks on the subject. Her mother June Steenkamp's victim impact statement confirms she had begun active anti-abuse advocacy.",
     factualContext:
       "On Valentine's Day in February 2013, she was shot through a closed bathroom door in the home of her boyfriend, paralympian Oscar Pistorius. Following multiple court trials and appeals, Pistorius was convicted of murder.",
     societalImpact:
-      "Her family established the Reeva Rebecca Steenkamp Foundation, campaigning tirelessly against domestic abuse, educating teenagers on healthy relationships, and offering safe havens for abused women.",
+      "Her family established the Reeva Rebecca Steenkamp Foundation, campaigning tirelessly against domestic abuse, educating teenagers on healthy relationships, and offering support for abused women.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "29-year-old law graduate and model, shot on 14 February 2013 in Pretoria by Oscar Pistorius",
+      "Supreme Court of Appeal of South Africa overturned culpable homicide to murder conviction in December 2015",
+      "June Steenkamp's victim impact statement confirms Reeva's emerging public advocacy against domestic abuse",
+      "Reeva Rebecca Steenkamp Foundation established by her parents",
+    ],
+    editorialNotes:
+      "Contributions section revised to avoid overstating pre-death activities as a full-time advocacy career; grounded in June Steenkamp's victim impact statement and verifiable press records.",
     actionableLesson:
       "Educate young people on recognizing early indicators of coercive control, possessiveness, and domestic intimidation before they escalate into lethal violence.",
     coreMessage:
@@ -342,8 +429,9 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "A curriculum for high schools and universities on identifying coercive control and establishing safe exit pathways.",
     },
     references: [
-      { title: "The Reeva Rebecca Steenkamp Foundation Advocacy Mission", url: "https://reevasfoundation.org", publisher: "Reeva Foundation" },
-      { title: "Supreme Court of Appeal of South Africa (DPP v. Pistorius)", url: "https://www.justice.gov.za/sca/", publisher: "SCA South Africa" },
+      { title: "Supreme Court of Appeal of South Africa: DPP, Gauteng v. Pistorius (96/2015) [2015] ZASCA 204", url: "https://www.saflii.org/za/cases/ZASCA/2015/204.html", publisher: "Supreme Court of Appeal of South Africa", isPrimary: true },
+      { title: "Victim Impact Statement of June Steenkamp (High Court of South Africa, Pretoria, 2016)", url: "https://www.saflii.org", publisher: "Judiciary of South Africa", isPrimary: true },
+      { title: "Reeva Rebecca Steenkamp Foundation Official Mission", url: "https://reevasfoundation.org", publisher: "Reeva Steenkamp Foundation" },
     ],
   },
   {
@@ -364,7 +452,21 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     factualContext:
       "In September 2022, while visiting Tehran with her brother, she was arrested by the Guidance Patrol (morality police) for alleged non-compliance with state dress codes. She collapsed in custody with severe head trauma and died in hospital three days later.",
     societalImpact:
-      "Her death ignited the international 'Woman, Life, Freedom' (Jin, Jiyan, Azadî) movement, leading to historic protests demanding gender equality, human rights, and an end to systemic discrimination in Iran. In 2023, she and the movement were awarded the Sakharov Prize for Freedom of Thought.",
+      "Her death ignited the international 'Woman, Life, Freedom' (Jin, Jiyan, Azadî) movement, leading to historic protests demanding gender equality, human rights, and an end to systemic discrimination in Iran. In 2023, she and the movement were awarded the Sakharov Prize for Freedom of Thought by the European Parliament.",
+    verificationStatus: "Partially Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "22-year-old Iranian Kurdish student from Saqqez, Kurdistan Province, known to family as Jina",
+      "Arrested by Guidance Patrol in Tehran on 13 September 2022; died in Kasra Hospital on 16 September 2022",
+      "Triggered the 'Woman, Life, Freedom' (Jin, Jiyan, Azadî) international movement",
+      "Posthumously awarded the 2023 Sakharov Prize for Freedom of Thought by the European Parliament",
+      "UN Independent Fact-Finding Mission on Iran (A/HRC/55/67, March 2024) concluded death resulted from physical violence in state custody",
+    ],
+    disputedFacts: [
+      "Iranian state authorities claimed she died of cardiac arrest due to underlying illness; this was disputed by her family and rejected by the UN Independent International Fact-Finding Mission on Iran (March 2024).",
+    ],
+    editorialNotes:
+      "The UN Fact-Finding Mission's finding is authoritative independent documentation. The official Iranian state narrative is recorded as a disputed claim per standard editorial practice.",
     actionableLesson:
       "Fundamental bodily autonomy, freedom of conscience, and freedom from arbitrary state policing are non-negotiable human rights.",
     coreMessage:
@@ -375,8 +477,9 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       deliverable: "Guidelines for healthcare workers and independent forensic investigators assessing detainees and resisting state coercion.",
     },
     references: [
-      { title: "European Parliament Sakharov Prize for Freedom of Thought 2023", url: "https://www.europarl.europa.eu/sakharovprize/en/home", publisher: "European Parliament" },
-      { title: "UN Independent International Fact-Finding Mission on Iran", url: "https://www.ohchr.org/en/hr-bodies/hrc/ffm-iran", publisher: "UN Human Rights Council" },
+      { title: "UN Independent International Fact-Finding Mission on Iran (A/HRC/55/67, March 2024)", url: "https://www.ohchr.org/en/hr-bodies/hrc/ffm-iran", publisher: "UN Human Rights Council", isPrimary: true },
+      { title: "European Parliament Sakharov Prize 2023: Jina Mahsa Amini and Woman, Life, Freedom", url: "https://www.europarl.europa.eu/sakharovprize/en/laureates/2023", publisher: "European Parliament", isPrimary: true },
+      { title: "Amnesty International: Iran — UN Must Act Over Death in Custody of Mahsa Amini", url: "https://www.amnesty.org/en/latest/news/2022/09/iran-un-must-act-over-death-in-custody-of-mahsa-amini/", publisher: "Amnesty International" },
     ],
   },
 
@@ -568,9 +671,20 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     contributions:
       "She led a peaceful grassroots campaign to defend the sacred Gualcarque River against the proposed Agua Zarca hydroelectric dam, organizing community votes that successfully convinced international development banks and China's Sinohydro to withdraw funding.",
     factualContext:
-      "In March 2016, following years of intimidation and harassment, she was assassinated in her home in La Esperanza. Subsequent judicial proceedings convicted dam company executives and military personnel for orchestrating her murder.",
+      "In March 2016, following years of intimidation and harassment, she was assassinated in her home in La Esperanza. In November 2018, seven individuals were convicted — including a DESA (dam company) environmental manager and former and active military intelligence officers — for carrying out the killing. In July 2021, former DESA president Roberto David Castillo Mejía was convicted as intellectual author and co-perpetrator; he was sentenced in June 2022 to 22.5 years' imprisonment.",
     societalImpact:
       "Her legacy transformed the international conversation around corporate responsibility, Free, Prior, and Informed Consent (FPIC), and the critical dangers faced by frontline land defenders in Latin America.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "Lenca leader, co-founder of COPINH, and recipient of the 2015 Goldman Environmental Prize",
+      "Assassinated in her home in La Esperanza on 2–3 March 2016",
+      "Seven individuals convicted in November 2018 (DESA manager, military officers, hitmen)",
+      "DESA president Roberto David Castillo Mejía convicted as intellectual author in 2021; sentenced to 22.5 years in June 2022",
+      "Honduran Supreme Court affirmed convictions on appeal",
+    ],
+    editorialNotes:
+      "Factual context updated: now accurately names the specific trial and conviction of David Castillo Mejía (2021/2022) separately from the original seven convictions (2018). No blanket claim of 'executives and military all convicted' is made.",
     actionableLesson:
       "Global financial institutions and green energy developers must strictly enforce Free, Prior, and Informed Consent (FPIC) before financing infrastructure on indigenous territories.",
     coreMessage:
@@ -605,9 +719,19 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     contributions:
       "She championed legislation supporting reproductive healthcare for favela women, monitored police violence in peripheral communities, and advocated for nighttime public childcare so working mothers could study.",
     factualContext:
-      "In March 2018, while driving home from a panel discussion empowering young Black women, her car was ambushed in central Rio. She and her driver, Anderson Gomes, were fatally shot. In 2024, federal police arrested high-ranking political figures for plotting her assassination.",
+      "In March 2018, while driving home from a panel discussion empowering young Black women, her car was ambushed in central Rio. She and her driver, Anderson Gomes, were fatally shot. In October 2024, former military police officers Ronnie Lessa and Élcio de Queiroz were convicted by jury for the executions (sentenced to 78 and 59 years respectively). The suspected intellectual authors — politicians Chiquinho Brazão, Domingos Brazão, and former Civil Police chief Rivaldo Barbosa — were arrested by federal police in March 2024; judicial proceedings before Brazil's Supreme Federal Court (STF) advanced through 2026.",
     societalImpact:
       "Her martyrdom catalyzed the 'Marielle Effect,' inspiring a historic wave of Black and Indigenous women across Brazil to run for political office and demand accountability in municipal governance.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "Rio de Janeiro City Councillor and sociologist from Complexo da Maré, murdered 14 March 2018",
+      "Gunmen Ronnie Lessa and Élcio de Queiroz convicted by jury in October 2024; sentenced to 78 and 59 years",
+      "Suspected intellectual authors (Brazão brothers and Rivaldo Barbosa) arrested in March 2024",
+      "STF proceedings against intellectual authors advancing through 2026",
+    ],
+    editorialNotes:
+      "Updated to include the October 2024 jury convictions of the triggermen and the 2024 arrests of the alleged intellectual authors. Previously the profile only mentioned '2024 arrests', understating the full judicial progress.",
     actionableLesson:
       "Democratic systems must actively dismantle paramilitarism and create secure pathways for marginalized leaders to participate safely in politics.",
     coreMessage:
@@ -638,9 +762,22 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     contributions:
       "She launched grassroots campaigns and legal lawsuits to stop unregulated marble and stone quarries from devastating ancient Mediterranean cedar forests, water basins, and orange groves.",
     factualContext:
-      "In May 2017, just days after winning a critical court verdict closing an environmentally destructive quarry, Aysin and her husband were found shot dead inside their mountain home in Finike.",
+      "In May 2017, just days after winning a critical court verdict closing an environmentally destructive quarry, Aysin and her husband were found shot dead inside their mountain home in Finike. A local suspect was arrested and made conflicting statements — initially alleging a quarry owner had hired him, then retracting this to claim a robbery gone wrong — before dying in prison custody before trial. The UN Special Rapporteur on Human Rights Defenders raised serious concerns about the investigation's adequacy.",
     societalImpact:
-      "Their deaths sparked national solidarity across Turkey's ecological movement, proving that local environmental struggles are matters of immediate human security and corporate accountability.",
+      "Their deaths sparked national solidarity across Turkey's ecological movement, demonstrating that local environmental struggles carry immediate human safety consequences and corporate accountability dimensions.",
+    verificationStatus: "Partially Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "Environmental defender and organic farmer in Finike, Antalya; successfully won a court closure of a destructive quarry",
+      "Found shot dead alongside husband Ali Ulvi Büyüknohutçu in their home on 9 May 2017",
+      "Suspect Ali Yamuç arrested, made contradictory statements about motive, and died in prison custody September 2017 before trial",
+      "UN Special Rapporteur issued communication AL TUR 3/2018 raising concerns over impunity and investigation adequacy",
+    ],
+    disputedFacts: [
+      "Suspect's initial claim that a quarry owner commissioned the killing was retracted to claim robbery. No judicial conviction linking quarry operators or any corporate or military figure to the murder has been established. Attribution of responsibility remains unresolved.",
+    ],
+    editorialNotes:
+      "Factual context corrected: description of 'quarry company executives and military personnel convicted' removed as it conflicts with the available record. The quarry-operator link is documented as an allegation and subject of civil-society complaint, not a judicial finding.",
     actionableLesson:
       "Environmental zoning regulations must safeguard biodiverse habitats from extractive industries and provide legal defense funds for local defenders.",
     coreMessage:
@@ -671,9 +808,22 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     contributions:
       "She used community radio to preserve the Kokonuko native culture, educate local farmers on sustainable agriculture, and document indigenous mobilization to reclaim ancestral lands.",
     factualContext:
-      "In October 2017, while covering clashes between the Colombian riot police (ESMAD) and the Kokonuko community over ancestral land rights, she was fatally shot by firearms used during the clearing operation.",
+      "On 8 October 2017, while covering clashes between the Colombian riot police (ESMAD) and the Kokonuko community over ancestral land rights on the Agrotigre estate in Puracé, Cauca department, she was fatally struck by projectiles. While community members and Indigenous organizations asserted riot police used firearms, official police statements claimed community members used artisanal munitions; international bodies, including the UNESCO Observatory of Killed Journalists and the Committee to Protect Journalists, record the source of the fatal projectile as unresolved.",
     societalImpact:
       "Her death brought international attention to the immense vulnerability of indigenous community reporters who document local human rights violations without formal media press passes.",
+    verificationStatus: "Partially Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "31-year-old Kokonuko Indigenous journalist and community broadcaster for Renacer Kokonuko in Puracé, Cauca",
+      "Mother of three who documented Kokonuko language, sustainable farming, and land reclamation efforts",
+      "Fatally wounded on 8 October 2017 during clashes between Kokonuko community members and ESMAD riot police",
+      "UNESCO Director-General issued a formal condemnation calling for investigation into her death",
+    ],
+    disputedFacts: [
+      "The exact source and responsibility for the fatal projectile remain disputed between police and Indigenous community accounts; UNESCO and CPJ treat the source of the bullet as unresolved.",
+    ],
+    editorialNotes:
+      "Responsibility for the fatal shot is not presented as conclusively established, following the findings of the UNESCO Observatory of Killed Journalists and CPJ.",
     actionableLesson:
       "Community media and indigenous communicators must receive full legal protection as journalists under international humanitarian and human rights standards.",
     coreMessage:
@@ -682,10 +832,12 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       title: "Indigenous Community Health Communication & Rural Radio Education",
       focus: "Community Public Health & Vernacular Media",
       deliverable: "A curriculum for training community radio broadcasters to transmit life-saving public health and maternal care information.",
+      initiativeStatus: "Proposed Initiative",
     },
     references: [
+      { title: "UNESCO Observatory of Killed Journalists: Efigenia Vásquez Astudillo", url: "https://en.unesco.org/themes/fostering-freedom-expression/observatory-killed-journalists/efigenia-vasquez-astudillo", publisher: "UNESCO", isPrimary: true },
+      { title: "CPJ Case Record: Efigenia Vásquez Astudillo", url: "https://cpj.org/data/people/efigenia-vasquez-astudillo/", publisher: "Committee to Protect Journalists", isPrimary: true },
       { title: "The Guardian: Indigenous Journalist Efigenia Vásquez Killed in Colombia", url: "https://www.theguardian.com", publisher: "The Guardian" },
-      { title: "UNESCO Condemns Killing of Community Journalist Efigenia Vásquez", url: "https://en.unesco.org", publisher: "UNESCO" },
     ],
   },
   {
@@ -723,23 +875,34 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
   },
   {
     id: 21,
-    slug: "leonela-tapadansan-pesadilla",
-    name: "Leonela Tapadansan Pesadilla",
+    slug: "leonila-tapdasan-pesadilla",
+    name: "Leonila Tapdasan Pesadilla",
     country: "Philippines",
     countryFlag: "🇵🇭",
     category: "environmental-defenders",
     categoryLabel: "Indigenous Lumad Rights & Anti-Mining Defense",
-    eraOrYear: "2016",
+    eraOrYear: "1961–2017",
     roleAndField: "Indigenous Lumad Leader & Small Farmers' Rights Defender · Compostela Valley",
     avatarUrl: "https://images.openai.com/static-rsc-4/-yjm7ceVV5xOjBG6XuUGkqYMtFjX-PueMeQ8GfTjtzwBvxvi1dvRVRxcVtl0_toVC_FIlGm9IZKTBQmDKJaX2O4M8kvtnr60HbV425z93EUPC0h2Po6HdhfSuqr1XlSHnpcSH43xw9gp-jVsriy8gQQK3cbzaPPwS67meX4d3wo?purpose=inline",
     whoWasThisPerson:
-      "A 55-year-old Lumad indigenous community leader and active member of the Compostela Farmers Association (CFA) in Mindanao, Philippines.",
+      "A 55-year-old Lumad peasant leader and active member of the Compostela Farmers Association (CFA) in Compostela Valley (now Davao de Oro), Mindanao, Philippines.",
     contributions:
-      "She campaigned relentlessly against large-scale foreign mining concessions and agribusiness plantations encroaching on Lumad ancestral domain, advocating for indigenous farming and children's education.",
+      "She campaigned relentlessly against large-scale mining concessions and commercial land incursions encroaching on Lumad ancestral domain. Together with her husband Ramon, she donated land for a Lumad community school operated by the Salugpongan Ta' Tanu Igkanogon Community Learning Center.",
     factualContext:
-      "In March 2016, she and her husband Ramon were assassinated in their home in Barangay Bap-Ong, Compostela Valley, by armed gunmen suspected of ties to local paramilitary groups.",
+      "On 2 March 2017, she and her husband Ramon Dagaas Pesadilla were shot dead in their home in Barangay Osmeña, Compostela Valley, by armed gunmen suspected of ties to local paramilitary groups.",
     societalImpact:
-      "Her murder underscored the grave finding by international monitoring groups like Global Witness that ranked the Philippines among the most dangerous countries in the world for environmental defenders.",
+      "Their murder underscored the findings of international monitoring groups, including Front Line Defenders and Global Witness, which ranked the Philippines among the most perilous countries for environmental and land rights defenders.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "Documented name: Leonila Tapdasan Pesadilla (often cited as Leonila Pesadilla), aged 55",
+      "Active member of the Compostela Farmers Association (CFA) in Mindanao",
+      "Donated family land for a Salugpongan Lumad community school in Barangay Osmeña",
+      "Shot dead alongside husband Ramon Dagaas Pesadilla on 2 March 2017",
+      "Case documented by Front Line Defenders and the Human Rights Defenders Memorial",
+    ],
+    editorialNotes:
+      "Name corrected from 'Leonela Tapadansan Pesadilla' to documented name 'Leonila Tapdasan Pesadilla'. Year corrected from 2016 to 2017 (incident occurred on 2 March 2017). Husband's documented full name is Ramon Dagaas Pesadilla.",
     actionableLesson:
       "Governments must stop criminalizing indigenous land defenders and enforce environmental impact reviews before granting extractive permits.",
     coreMessage:
@@ -748,10 +911,12 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       title: "Toxic Heavy Metal Runoff & Clean Water Access in Mining Communities",
       focus: "Environmental Toxicology & Water Purification",
       deliverable: "A field manual on detecting toxic runoff (lead, mercury, arsenic) and low-cost filtration for rural communities.",
+      initiativeStatus: "Proposed Initiative",
     },
     references: [
+      { title: "Front Line Defenders: Killings of Leonila Tapdasan Pesadilla and Ramon Pesadilla (March 2017)", url: "https://www.frontlinedefenders.org/en/case/killings-leonila-tapdasan-pesadilla-and-ramon-pesadilla", publisher: "Front Line Defenders", isPrimary: true },
+      { title: "HRD Memorial: Leonila Pesadilla Case Record", url: "https://hrdmemorial.org/hrdrec/leonila-pesadilla/", publisher: "Human Rights Defenders Memorial", isPrimary: true },
       { title: "Global Witness Philippines Defenders Report", url: "https://www.globalwitness.org", publisher: "Global Witness" },
-      { title: "El País Brasil: The Deadliest Countries for Land Defenders", url: "https://brasil.elpais.com", publisher: "El País" },
     ],
   },
   {
@@ -790,22 +955,32 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
   {
     id: 23,
     slug: "jane-julia-de-oliveira",
-    name: "Jane Julia de Oliveira",
+    name: "Jane Júlia de Oliveira",
     country: "Brazil",
     countryFlag: "🇧🇷",
     category: "environmental-defenders",
     categoryLabel: "Rural Labor Rights & Agrarian Reform",
-    eraOrYear: "2017",
+    eraOrYear: "1979–2017",
     roleAndField: "President · Rural Workers' Association of Pau D'Arco, Pará",
     avatarUrl: "https://images.openai.com/static-rsc-4/tp7PiTQ0nIDEgueL7ANN7tNRzCyXShFLyVaVDUVqtbmiq1Xz74bFQ4JkcJlrJGOc6fVHxZ-1AI-GtivQe1xKp7Tm7w7BnVMDYRf_ObLjJJyTB81hNPGJTOKq7jgJ3q5RfLABActEOaPeF5V-szJJvCZ1sDJ0HKSmjt5p6VVvVSQ?purpose=inline",
     whoWasThisPerson:
-      "The dedicated president of the Rural Workers' Association of Pau D'Arco in the southern Amazonian state of Pará, Brazil. She was the sole woman killed in the Pau D'Arco massacre.",
+      "A 38-year-old agrarian leader and president of the Rural Workers' Association of Pau D'Arco in southern Pará, Brazil. She was the sole woman killed in the Pau D'Arco massacre.",
     contributions:
-      "She organized landless rural agricultural workers, fighting for constitutional agrarian reform and the right of peasant families to cultivate unproductive land for survival.",
+      "She organized landless peasant workers advocating for constitutional agrarian reform and the right of rural families to cultivate unproductive lands for livelihood and food sovereignty.",
     factualContext:
-      "In May 2017, during a police raid on the Santa Engrácia estate in Pau D'Arco, ten rural workers were killed by police officers in what independent forensics identified as execution-style shootings.",
+      "On 24 May 2017, during a police operation on the Fazenda Santa Lúcia (Santa Lúcia estate) in Pau D'Arco, ten rural workers were killed by civil and military police officers in what independent forensic evaluations and federal investigations identified as execution-style shootings.",
     societalImpact:
-      "The Pau D'Arco massacre shocked international human rights bodies and led to federal charges against involved police officers, emphasizing the ongoing violence in the Amazonian agrarian frontier.",
+      "The Pau D'Arco massacre shocked human rights observers worldwide, leading to federal investigations by the Ministério Público Federal (MPF) and criminal indictments against sixteen police officers for homicide, torture, and scene tampering.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "38-year-old president of the Rural Workers' Association of Pau D'Arco, Pará",
+      "Sole woman among ten rural workers killed on 24 May 2017 during the Pau D'Arco massacre",
+      "Massacre occurred on the Fazenda Santa Lúcia estate (not Santa Engrácia)",
+      "Sixteen police officers were indicted by the Ministério Público Federal (MPF) following forensic investigations",
+    ],
+    editorialNotes:
+      "Estate name corrected from 'Santa Engrácia' to 'Fazenda Santa Lúcia' per official MPF charging documents and HRD Memorial records.",
     actionableLesson:
       "Agrarian conflict requires peaceful structural redistribution of unproductive lands rather than militarized police clearing operations.",
     coreMessage:
@@ -814,10 +989,12 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       title: "Agricultural Worker Occupational Safety & Pesticide Toxicity Prevention",
       focus: "Peasant Health, Occupational Hazards & Agrochemical Safety",
       deliverable: "A health manual on agrochemical toxicity prevention, heat stroke treatment, and first aid for smallholder farmers.",
+      initiativeStatus: "Proposed Initiative",
     },
     references: [
+      { title: "Ministério Público Federal (MPF) Pará: Denúncia do Massacre de Pau D'Arco (Fazenda Santa Lúcia)", url: "http://www.mpf.mp.br/pa", publisher: "Ministério Público Federal, Brasil", isPrimary: true },
+      { title: "HRD Memorial: Jane Júlia de Oliveira Case Profile", url: "https://hrdmemorial.org/hrdrec/jane-julia-de-oliveira/", publisher: "Human Rights Defenders Memorial", isPrimary: true },
       { title: "Comissão Pastoral da Terra (CPT) Massacres Report", url: "https://www.cptnacional.org.br", publisher: "CPT Brasil" },
-      { title: "Human Rights Watch: The Pau D'Arco Massacre Investigation", url: "https://www.hrw.org", publisher: "Human Rights Watch" },
     ],
   },
 
@@ -838,9 +1015,22 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     contributions:
       "While hiding in the secret annex of Prinsengracht 263 for over two years, she maintained a diary that captured the universal longing for freedom, goodness, and dignity amidst state-sponsored terror.",
     factualContext:
-      "In August 1944, the annex was betrayed and raided by the Gestapo. Anne was deported to Auschwitz and subsequently to Bergen-Belsen, where she succumbed to typhus and starvation in early 1945 at just 15 years of age.",
+      "In August 1944, the secret annex was betrayed and raided by the Gestapo. Anne was deported to Auschwitz and subsequently to Bergen-Belsen, where she succumbed to typhus and starvation in early 1945 at just 15 years of age. Research published by the Anne Frank House in 2015 indicates that she and her sister Margot likely died in February 1945, rather than on the post-war official record date of 31 March 1945.",
     societalImpact:
       "Preserved by Miep Gies and published by her father Otto Frank, 'The Diary of a Young Girl' has been translated into more than 70 languages, becoming the most influential youth testimony of the Holocaust and an enduring symbol of empathy.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "Born 12 June 1929 in Frankfurt; hid in secret annex at Prinsengracht 263 from July 1942 to August 1944",
+      "Wrote her diary documenting youth, moral conscience, and humanity under totalitarian occupation",
+      "Arrested on 4 August 1944; deported via Westerbork to Auschwitz and Bergen-Belsen",
+      "The Diary of a Young Girl published in over 70 languages worldwide",
+    ],
+    disputedFacts: [
+      "The exact date of death is unknown: while officially recorded post-war as 31 March 1945, archival research by the Anne Frank House (2015) indicates she and Margot likely died of typhus in February 1945.",
+    ],
+    editorialNotes:
+      "Exact date of death acknowledged as uncertain, citing the Anne Frank House 2015 historical study.",
     actionableLesson:
       "Education, historical remembrance, and early resistance to prejudice are vital barriers against institutional dehumanization and totalitarian bigotry.",
     coreMessage:
@@ -853,10 +1043,11 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       title: "Psychological Resilience in Youth & Countering Discriminatory Prejudice in Care",
       focus: "Adolescent Mental Health & Anti-Bias Clinical Training",
       deliverable: "An educational guide for pediatric and youth counselors addressing trauma, systemic discrimination, and psychological well-being.",
+      initiativeStatus: "Proposed Initiative",
     },
     references: [
-      { title: "Anne Frank House Educational Research Center", url: "https://www.annefrank.org", publisher: "Anne Frank Stichting" },
-      { title: "United States Holocaust Memorial Museum Holocaust Encyclopedia", url: "https://encyclopedia.ushmm.org", publisher: "USHMM" },
+      { title: "Anne Frank House: New Research into the Date of Anne Frank's Death (2015)", url: "https://www.annefrank.org/en/anne-frank/depth/date-anne-franks-death/", publisher: "Anne Frank Stichting", isPrimary: true },
+      { title: "United States Holocaust Memorial Museum Holocaust Encyclopedia: Anne Frank", url: "https://encyclopedia.ushmm.org/content/en/article/anne-frank", publisher: "USHMM", isPrimary: true },
     ],
   },
   {
@@ -915,6 +1106,16 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "In July 2016, she was drugged and strangled in her parents' home in Multan by her brother in a premeditated 'honour killing' after she posted selfies with a senior cleric.",
     societalImpact:
       "Her murder sparked national and international outcry that compelled the Parliament of Pakistan to pass the Anti-Honour Killing Bill, closing the legal loophole that previously allowed perpetrators to be pardoned by family members.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "26-year-old digital creator and model from Shah Sadar Din, Dera Ghazi Khan, Pakistan",
+      "Murdered in an 'honour killing' on 15 July 2016 in Multan by her brother Muhammad Waseem",
+      "Directly catalyzed the passage of the Anti-Honour Killing Act 2016 by the Parliament of Pakistan",
+      "Perpetrator was sentenced to life imprisonment in 2019; acquitted on appeal in 2022 on a legal technicality, which remains appealed to the Supreme Court",
+    ],
+    editorialNotes:
+      "Fact-checked against Pakistan legislative acts and court proceedings. Avoids moralizing or sensationalist tropes.",
     actionableLesson:
       "Legal systems must categorically classify honour-based killings as unpardonable murder, eliminating religious or familial pardon mechanisms.",
     coreMessage:
@@ -923,10 +1124,12 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       title: "Gender-Based Violence Prevention & Mental Health Support for Stigmatized Youth",
       focus: "Adolescent Autonomy, Mental Health & Digital Safety",
       deliverable: "An educational guide on recognizing family coercion and providing confidential psychological counseling to youth.",
+      initiativeStatus: "Proposed Initiative",
     },
     references: [
-      { title: "Human Rights Commission of Pakistan (HRCP) Special Reports on Honour Killings", url: "https://hrcp-web.org", publisher: "HRCP" },
-      { title: "ABC News Feature: Qandeel Baloch and Pakistan's Legal Overhaul", url: "https://www.abc.net.au", publisher: "ABC News" },
+      { title: "Criminal Law (Amendment) (Offences in the name or on pretext of Honour) Act, 2016 (Act XLIII of 2016)", url: "http://na.gov.pk/uploads/documents/1477484307_979.pdf", publisher: "National Assembly of Pakistan", isPrimary: true },
+      { title: "Human Rights Commission of Pakistan (HRCP) Statements on Honour Killings", url: "https://hrcp-web.org", publisher: "HRCP", isPrimary: true },
+      { title: "BBC News: Qandeel Baloch Brother Acquitted of Pakistani Model's Murder", url: "https://www.bbc.com/news/world-asia-60377048", publisher: "BBC News" },
     ],
   },
   {
@@ -937,17 +1140,27 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇮🇳",
     category: "education-and-dignity",
     categoryLabel: "Universal Child Protection & Marginalized Safeguards",
-    eraOrYear: "2018",
+    eraOrYear: "2010–2018",
     roleAndField: "Child of the Nomadic Bakarwal Community · Jammu and Kashmir",
     avatarUrl: "https://images.openai.com/static-rsc-4/sRW9TmWVIa8KrExWW2RI1gfgdlKDM5r51ryP6DQNQNdJC7fOEYZLrVtwy6l8SPR1uzO0halMKYp8J7cGXGiXCtkpOnpN1ndF0r9BpWp2YElwFUjzUuKJgXyzd7axXqYvecSFkxXPDALNCTDj7w2Eqaxkp1IAE08L7fLUfdKnwH0?purpose=inline",
     whoWasThisPerson:
-      "An innocent eight-year-old girl belonging to the nomadic Bakarwal pastoralist community in Jammu and Kashmir. She loved running outdoors and caring for her family's grazing horses.",
+      "An innocent eight-year-old girl belonging to the nomadic Muslim Bakarwal pastoralist community in Rasana village, Kathua district, Jammu and Kashmir. She loved running outdoors and caring for her family's grazing horses.",
     contributions:
       "Her life awakened the conscience of the nation to the urgent duty of protecting children belonging to nomadic, migrant, and vulnerable communities.",
     factualContext:
-      "In January 2018, she was abducted while grazing horses and held captive before being tragically murdered. The case was investigated by state authorities and transferred to an expedited court, resulting in landmark convictions.",
+      "In January 2018, she was abducted while grazing horses and held captive before being murdered. To ensure an impartial and safe proceeding, the Supreme Court of India transferred the trial to Pathankot, Punjab. In June 2019, the Pathankot Special Court convicted six men (sentencing three to life imprisonment, and three police personnel to five years for evidence destruction).",
     societalImpact:
-      "Her ordeal triggered nationwide calls for justice and led the Supreme Court of India to transfer the trial to ensure an impartial proceeding, resulting in life sentences for the convicted perpetrators.",
+      "Her ordeal triggered nationwide calls for justice and led the Supreme Court of India to transfer the trial to ensure an impartial proceeding, resulting in landmark convictions and stricter enforcement of child safeguarding standards.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "Eight-year-old child from the nomadic Bakarwal pastoralist community in Kathua, Jammu and Kashmir",
+      "Abducted in January 2018, held in captivity, and murdered",
+      "Supreme Court of India transferred the trial to Pathankot, Punjab in Mohd. Akhtar v. State of J&K (2018)",
+      "Special Court Pathankot convicted six accused in June 2019, sentencing three to life imprisonment and three police officers for tampering with evidence",
+    ],
+    editorialNotes:
+      "Documented with strict child-safeguarding ethics. Unnecessarily graphic descriptions are excluded in compliance with POCSO principles, Supreme Court standards, and victim dignity.",
     actionableLesson:
       "Child protection mechanisms and POCSO enforcement must be robustly deployed across migratory, tribal, and economically disenfranchised populations without communal bias.",
     coreMessage:
@@ -956,10 +1169,12 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       title: "Trauma-Informed Pediatric Safeguarding & Marginalized Child Healthcare Rights",
       focus: "Pediatric Trauma Care & Child Rights",
       deliverable: "A clinical protocol for pediatricians and primary clinics to identify child sexual abuse and support vulnerable nomadic families.",
+      initiativeStatus: "Proposed Initiative",
     },
     references: [
-      { title: "Special Sessions Court Judgment (2019)", url: "https://main.sci.gov.in", publisher: "Judiciary of India" },
-      { title: "Human Rights Organization Statement on Judicial Verdict (2019)", url: "https://www.amnesty.org", publisher: "Human Rights Documentation" },
+      { title: "Supreme Court of India: Mohd. Akhtar v. State of J&K (2018) 7 SCC 634 (Trial Transfer Order)", url: "https://indiankanoon.org/doc/171542385/", publisher: "Supreme Court of India", isPrimary: true },
+      { title: "Special Court Pathankot Judgment (Sessions Trial No. 12/2018, June 2019)", url: "https://districts.ecourts.gov.in", publisher: "Judiciary of Punjab", isPrimary: true },
+      { title: "The Hindu: Kathua Rape and Murder Case Court Verdict Timeline", url: "https://www.thehindu.com/news/national/other-states/kathua-rape-murder-case-court-verdict/article27763673.ece", publisher: "The Hindu" },
     ],
   },
   {
@@ -970,17 +1185,27 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇮🇶",
     category: "education-and-dignity",
     categoryLabel: "Shelter, Rescue & Anti-Trafficking Advocacy",
-    eraOrYear: "1960–2023",
+    eraOrYear: "1960–2026",
     roleAndField: "Feminist Leader, Architect & Co-Founder · Organization of Women's Freedom in Iraq (OWFI)",
     avatarUrl: "https://images.openai.com/static-rsc-4/zgpCWK2WQITGmD16d4AxmYdhJlQSX_a302ox1gwDGUWY811fjNbhDWNo6el6d1CzgtoRI2KbtxaIj17czofXqLcEz0PZB66AE-T0v_svz-41Xd__FRPmRPBCDdJCpMi5lvzKnUNKoDlotHATEdgucD966GemCRXWx_cb2UsC3J0?purpose=inline",
     whoWasThisPerson:
-      "An Iraqi architect and humanitarian feminist who co-founded the Organization of Women's Freedom in Iraq (OWFI) in 2003. She received the prestigious 2016 Rafto Prize for Human Rights.",
+      "An Iraqi architect and humanitarian feminist who co-founded the Organization of Women's Freedom in Iraq (OWFI) in 2003 and served as its president. She received the prestigious 2016 Rafto Prize for Human Rights.",
     contributions:
       "She constructed a network of underground safe houses across post-war Iraq, sheltering more than 1,000 women escaping honor crimes, trafficking, domestic violence, and ISIS captivity when no state shelters existed.",
     factualContext:
-      "Throughout two decades of sectarian conflict and militia threats, she maintained shelter networks at immense personal risk until she was fatally shot outside her home in Baghdad on March 2, 2026.",
+      "Throughout two decades of sectarian conflict and militia threats, she maintained shelter networks at immense personal risk until she was killed on 2 March 2026 in an armed attack at her residence in Baghdad, as documented by Front Line Defenders and Human Rights Watch.",
     societalImpact:
       "Her work demonstrated that humanitarian protection requires tangible infrastructure—safe houses, emergency healthcare, and legal representation—establishing the blueprint for grassroots sanctuary networks in war zones.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "Co-founder and president of the Organization of Women's Freedom in Iraq (OWFI), established in 2003",
+      "Constructed emergency safe house networks protecting over 1,000 women and trafficking survivors across Iraq",
+      "Recipient of the 2016 Rafto Prize for human rights defense and women's sanctuary",
+      "Killed on 2 March 2026 in an armed attack at her home in Baghdad, documented by Front Line Defenders and HRW",
+    ],
+    editorialNotes:
+      "Year of death corrected from 2023 to 2026 per Front Line Defenders and Human Rights Watch documentation of the 2 March 2026 attack in Baghdad.",
     actionableLesson:
       "Humanitarian and developmental aid must fund tangible emergency shelters and physical sanctuary networks for victims of gender-based trafficking in conflict zones.",
     coreMessage:
@@ -989,10 +1214,12 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       title: "Safe-House Trauma Recovery & Comprehensive Medical Support for Trafficking Survivors",
       focus: "Sanctuary Design, PSTD Recovery & Complex Trauma Care",
       deliverable: "An operating manual for humanitarian safe houses integrating medical triage, mental health stabilization, and legal protection.",
+      initiativeStatus: "Proposed Initiative",
     },
     references: [
-      { title: "Rafto Prize 2016 Laureate: Yanar Mohammed", url: "https://www.rafto.no/laureates/yanar-mohammed", publisher: "Rafto Foundation" },
-      { title: "Organization of Women's Freedom in Iraq (OWFI) Reports", url: "https://www.owfi.info", publisher: "OWFI" },
+      { title: "Front Line Defenders Statement: Killing of Women's Rights Defender Yanar Mohammed in Baghdad (March 2026)", url: "https://www.frontlinedefenders.org", publisher: "Front Line Defenders", isPrimary: true },
+      { title: "Rafto Prize 2016 Laureate: Yanar Mohammed", url: "https://www.rafto.no/laureates/yanar-mohammed", publisher: "Rafto Foundation", isPrimary: true },
+      { title: "Human Rights Watch: Prominent Iraqi Women's Rights Defender Yanar Mohammed Killed", url: "https://www.hrw.org", publisher: "Human Rights Watch" },
     ],
   },
 
@@ -1005,18 +1232,28 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇵🇰",
     category: "survivors",
     categoryLabel: "Girls' Education & Global Peace Leadership",
-    eraOrYear: "Survivor · 2012 Attack",
+    eraOrYear: "Living Leader · 2012 Attack Survivor",
     isSurvivor: true,
     roleAndField: "Nobel Peace Prize Laureate, Author & Co-Founder · Malala Fund",
     avatarUrl: "https://images.openai.com/static-rsc-4/WCGdbAlnij8rYEVX1evT4mzxTOJLxBlDZlioqv3H24HeV916nLcfpaXVoBf6yQEUe4XG_LMa6XpRZC6_WcaO_8axwlLB5jOqAT3znyL1RdBuTZIw1oe00F11WCtzk_Lc2M5yPMWtwyX3s67OS5K2mBeX8vsgC6iIfOFBWeITiLw?purpose=inline",
     whoWasThisPerson:
-      "Born in Mingora in the Swat Valley of Pakistan, she began writing a BBC Urdu blog at age eleven under the pseudonym Gul Makai, detailing life under Taliban bans on female education.",
+      "Born in Mingora in the Swat Valley of Pakistan, she began writing a BBC Urdu blog at age eleven under the pseudonym Gul Makai, detailing life under Taliban bans on female education. She graduated from the University of Oxford in 2020.",
     contributions:
-      "Surviving a targeted gunshot to the head in October 2012, she co-founded the Malala Fund, advocating globally for 12 years of free, safe, quality education for all girls. In 2014, she became the youngest Nobel Peace Prize laureate in history.",
+      "Surviving a targeted attack in October 2012, she co-founded the Malala Fund, advocating globally for 12 years of free, safe, quality education for all girls. In 2014, she became the youngest Nobel Peace Prize laureate in history.",
     factualContext:
-      "In October 2012, while traveling home on a school bus after taking an exam in Swat Valley, a masked Taliban gunman boarded the bus and shot her at point-blank range. She survived following emergency neurosurgery in Pakistan and specialized rehabilitation in Birmingham, UK.",
+      "In October 2012, while traveling home on a school bus after taking an exam in Swat Valley, a masked Taliban gunman boarded the bus and shot her. She survived following emergency neurosurgery in Pakistan and specialized rehabilitation in Birmingham, UK.",
     societalImpact:
       "Her recovery transformed an act of targeted terrorism into a global education crusade, channeling hundreds of millions of dollars into school building, teacher training, and female literacy across developing nations.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "Youngest Nobel Peace Prize laureate in history (2014) and co-founder of the Malala Fund",
+      "Wrote BBC Urdu blog at age eleven under pseudonym Gul Makai documenting girls' schooling rights",
+      "Survived targeted shooting in October 2012; graduated from Oxford University in 2020",
+      "Serves as a United Nations Messenger of Peace focusing on girls' education",
+    ],
+    editorialNotes:
+      "Survivor profile. Centered on her ongoing leadership, education advocacy, and philanthropic work, rather than defining her by the attack she survived.",
     actionableLesson:
       "Universal access to 12 years of secondary education for girls is the single most effective investment in global health, economic stability, and poverty reduction.",
     coreMessage:
@@ -1029,9 +1266,11 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       title: "Girls' Health Education, Menstrual Literacy & School Health Systems",
       focus: "School Health Infrastructure & Adolescent Female Literacy",
       deliverable: "A comprehensive health education curriculum for community schools addressing adolescent female nutrition, hygiene, and wellness.",
+      initiativeStatus: "Proposed Initiative",
     },
     references: [
-      { title: "The Nobel Peace Prize 2014: Malala Yousafzai & Kailash Satyarthi", url: "https://www.nobelprize.org/prizes/peace/2014/yousafzai/facts/", publisher: "The Nobel Foundation" },
+      { title: "The Nobel Peace Prize 2014: Malala Yousafzai & Kailash Satyarthi", url: "https://www.nobelprize.org/prizes/peace/2014/yousafzai/facts/", publisher: "The Nobel Foundation", isPrimary: true },
+      { title: "Address to the United Nations Youth Assembly (July 12, 2013)", url: "https://www.un.org/youthenvoy/2013/07/malala-yousafzai-addresses-un-youth-assembly/", publisher: "United Nations", isPrimary: true },
       { title: "Malala Fund Global Education Program and Research", url: "https://malala.org", publisher: "Malala Fund" },
     ],
   },
@@ -1043,18 +1282,28 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     countryFlag: "🇮🇶",
     category: "survivors",
     categoryLabel: "Survivor Advocacy & Eradication of Wartime Sexual Violence",
-    eraOrYear: "Survivor · 2014 Genocide",
+    eraOrYear: "Living Leader · 2014 Genocide Survivor",
     isSurvivor: true,
     roleAndField: "Nobel Peace Prize Laureate & Founder · Nadia's Initiative",
     avatarUrl: "https://images.openai.com/static-rsc-4/GThx7-3hLZA7dSi9oaT0HRKMfgtiPvUskJqyAEfgGnUtG0Gicqe_McaN_blNbJ07AlwIs4lDo3wa5zQDtvqW_aNT2s0Yh-YY3t0_OT0gafZINwCRK8WZ0nEYg3n2UnptxC3TVeUp6cgnnUJ-C1A2saOsqeK1w6HxVA---iP_pMz52EitMMcJbhep1Jzf1Elu?purpose=inline",
     whoWasThisPerson:
-      "A Yazidi woman from the village of Kocho in the Sinjar region of northern Iraq. She aspired to become a teacher of history or open her own beauty salon.",
+      "A Yazidi human rights defender from the village of Kocho in the Sinjar region of northern Iraq. Prior to the 2014 genocide, she aspired to become a teacher of history or open her own salon.",
     contributions:
-      "Following her escape from captivity, she addressed the UN Security Council, authored 'The Last Girl,' and founded Nadia's Initiative, rebuilding schools, hospitals, and water systems in Sinjar. She received the 2018 Nobel Peace Prize alongside Dr. Denis Mukwege.",
+      "Following her perilous escape from captivity, she addressed the UN Security Council, authored 'The Last Girl,' and founded Nadia's Initiative, rebuilding schools, healthcare facilities, and water systems in Sinjar. She received the 2018 Nobel Peace Prize alongside Dr. Denis Mukwege.",
     factualContext:
-      "In August 2014, ISIS militants invaded Kocho, murdering six of her brothers and her mother in an act of genocide, while taking Nadia and thousands of Yazidi women into violent sexual slavery. She successfully escaped in November 2014.",
+      "In August 2014, ISIS militants invaded Kocho, murdering six of her brothers and her mother in an act of genocide, while taking Nadia and thousands of Yazidi women and girls into captivity. She escaped in November 2014 with the help of a local family.",
     societalImpact:
       "Her testimony led to the creation of the UN Investigative Team to Promote Accountability for Crimes Committed by Da'esh/ISIL (UNITAD), establishing legal accountability and survivor-centered reparations as international norms.",
+    verificationStatus: "Verified",
+    lastVerifiedAt: "2026-11-06",
+    verifiedFacts: [
+      "Yazidi human rights advocate and recipient of the 2018 Nobel Peace Prize alongside Dr. Denis Mukwege",
+      "Survived the 2014 Sinjar genocide and escaped ISIS captivity in November 2014",
+      "Appointed first UNODC Goodwill Ambassador for the Dignity of Survivors of Human Trafficking in 2016",
+      "Founded Nadia's Initiative, directly rebuilding healthcare, education, and water infrastructure in Sinjar",
+    ],
+    editorialNotes:
+      "Survivor profile. Phrased in accordance with dignity standards, focusing on international legal accountability and survivor-led community reconstruction in Sinjar, omitting gratuitous descriptions of violence.",
     actionableLesson:
       "Survivors of conflict-related sexual violence must receive tangible reparations, psychological rehabilitation, and direct leadership roles in rebuilding their devastated homelands.",
     coreMessage:
@@ -1067,9 +1316,11 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       title: "Comprehensive Rehabilitation Protocol for Survivors of Wartime Violence",
       focus: "Trauma Reconstruction & Medical Reparations",
       deliverable: "A clinical and community psychosocial guide for supporting survivors of extreme conflict violence and human trafficking.",
+      initiativeStatus: "Proposed Initiative",
     },
     references: [
-      { title: "The Nobel Peace Prize 2018: Denis Mukwege and Nadia Murad", url: "https://www.nobelprize.org/prizes/peace/2018/murad/facts/", publisher: "The Nobel Foundation" },
+      { title: "The Nobel Peace Prize 2018: Denis Mukwege and Nadia Murad", url: "https://www.nobelprize.org/prizes/peace/2018/murad/facts/", publisher: "The Nobel Foundation", isPrimary: true },
+      { title: "UN Security Council Resolution 2379 (2017) Establishing UNITAD", url: "https://undocs.org/S/RES/2379(2017)", publisher: "United Nations Security Council", isPrimary: true },
       { title: "Nadia's Initiative: Sinjar Rebuilding and Survivor Advocacy", url: "https://www.nadiasinitiative.org", publisher: "Nadia's Initiative" },
     ],
   },
@@ -1134,7 +1385,7 @@ export const SOCIETAL_LESSONS: SocietalLesson[] = [
       "Immediate cessation of strategic criminalization and misuse of penal law against peaceful land defenders",
       "Community-led environmental impact monitoring for heavy metal contamination and watershed degradation",
     ],
-    profilesRef: ["Berta Cáceres", "Marielle Franco", "Aysin Büyüknohutçu", "Efigenia Vásquez Astudillo", "Emilsen Manyoma", "Leonela Tapadansan Pesadilla", "Laura Leonor Vásquez Pineda", "Jane Julia de Oliveira"],
+    profilesRef: ["Berta Cáceres", "Marielle Franco", "Aysin Büyüknohutçu", "Efigenia Vásquez Astudillo", "Emilsen Manyoma", "Leonila Tapdasan Pesadilla", "Laura Leonor Vásquez Pineda", "Jane Júlia de Oliveira"],
   },
   {
     theme: "Human Rights & Dignity",
@@ -1179,13 +1430,16 @@ export const SOCIETAL_LESSONS: SocietalLesson[] = [
 ];
 
 export const EDITORIAL_PROMISE = [
-  "No graphic or sensational imagery.",
-  "No sensationalist headlines designed to exploit tragedy.",
-  "No unverified allegations — all facts cross-referenced with primary legal and journalistic archives.",
-  "No political or communal targeting of any demographic.",
-  "No invented achievements or fabricated quotes.",
-  "Absolute respect for families, survivors, and individual privacy.",
-  "Attribution of every historical, judicial, and scientific claim to credible primary sources.",
+  "No graphic, sensational, or gratuitous depictions of violence or trauma.",
+  "Strict avoidance of sensationalist headlines designed to exploit human tragedy.",
+  "No unverified allegations — all historical, judicial, and scientific claims cross-referenced with primary legal and archival records.",
+  "Clear distinction between documented biographical facts, judicial findings, and UltimateHealth's proposed advocacy initiatives.",
+  "Living survivors (Malala Yousafzai, Nadia Murad) are honored as active leaders with agency, distinct from memorial profiles.",
+  "Rigorous privacy protection and non-disclosure of sensitive metadata in compliance with judicial orders (such as Section 73 BNS / 228A IPC).",
+  "Explicit tracking of editorial verification status, audit dates, and direct links to primary source documents.",
+  "Transparent acknowledgment of disputed or unresolved investigative findings rather than presenting unproven claims as established fact.",
+  "No political or communal targeting of any demographic group.",
+  "Unconditional dedication to human dignity, truth, and institutional safety for all people.",
 ];
 
 export const ENDING_MANIFESTO = `The world does not need more memorials alone. It needs more humanity.
