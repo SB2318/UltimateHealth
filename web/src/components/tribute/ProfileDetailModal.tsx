@@ -187,53 +187,59 @@ export default function ProfileDetailModal({
                   {profile.eraOrYear}
                 </span>
                 {profile.isSurvivor && (
-                  <span
-                    style={{
-                      fontSize: "0.7rem",
-                      fontWeight: 800,
-                      padding: "2px 8px",
-                      borderRadius: "4px",
-                      background: "rgba(13, 148, 136, 0.12)",
-                      color: "#0d9488",
-                      border: "1px solid rgba(13, 148, 136, 0.3)",
-                    }}
-                  >
-                    Survivor · Living Leader
-                  </span>
+                  <>
+                    <span style={{ color: "#cbd5e1" }}>·</span>
+                    <span
+                      style={{
+                        fontSize: "0.7rem",
+                        fontWeight: 800,
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                        background: "rgba(13, 148, 136, 0.12)",
+                        color: "#0d9488",
+                        border: "1px solid rgba(13, 148, 136, 0.3)",
+                      }}
+                    >
+                      Survivor · Living Leader
+                    </span>
+                  </>
                 )}
                 {profile.verificationStatus && (
-                  <span
-                    style={{
-                      fontSize: "0.7rem",
-                      fontWeight: 800,
-                      padding: "2px 8px",
-                      borderRadius: "4px",
-                      background:
-                        profile.verificationStatus === "Verified"
-                          ? "rgba(16, 185, 129, 0.12)"
-                          : profile.verificationStatus === "Partially Verified"
-                          ? "rgba(245, 158, 11, 0.12)"
-                          : "rgba(59, 130, 246, 0.12)",
-                      color:
-                        profile.verificationStatus === "Verified"
-                          ? "#059669"
-                          : profile.verificationStatus === "Partially Verified"
-                          ? "#d97706"
-                          : "#2563eb",
-                      border:
-                        profile.verificationStatus === "Verified"
-                          ? "1px solid rgba(16, 185, 129, 0.3)"
-                          : profile.verificationStatus === "Partially Verified"
-                          ? "1px solid rgba(245, 158, 11, 0.3)"
-                          : "1px solid rgba(59, 130, 246, 0.3)",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "4px",
-                    }}
-                  >
-                    <CheckCircle2 size={11} />
-                    {profile.verificationStatus}
-                  </span>
+                  <>
+                    <span style={{ color: "#cbd5e1" }}>·</span>
+                    <span
+                      style={{
+                        fontSize: "0.7rem",
+                        fontWeight: 800,
+                        padding: "2px 8px",
+                        borderRadius: "4px",
+                        background:
+                          profile.verificationStatus === "Verified"
+                            ? "rgba(16, 185, 129, 0.12)"
+                            : profile.verificationStatus === "Partially Verified"
+                            ? "rgba(245, 158, 11, 0.12)"
+                            : "rgba(59, 130, 246, 0.12)",
+                        color:
+                          profile.verificationStatus === "Verified"
+                            ? "#059669"
+                            : profile.verificationStatus === "Partially Verified"
+                            ? "#d97706"
+                            : "#2563eb",
+                        border:
+                          profile.verificationStatus === "Verified"
+                            ? "1px solid rgba(16, 185, 129, 0.3)"
+                            : profile.verificationStatus === "Partially Verified"
+                            ? "1px solid rgba(245, 158, 11, 0.3)"
+                            : "1px solid rgba(59, 130, 246, 0.3)",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "4px",
+                      }}
+                    >
+                      <CheckCircle2 size={11} />
+                      {profile.verificationStatus}
+                    </span>
+                  </>
                 )}
               </div>
 
@@ -345,7 +351,7 @@ export default function ProfileDetailModal({
 
               {profile.editorialNotes && (
                 <div style={{ marginTop: "12px", padding: "10px 12px", background: "rgba(244, 63, 94, 0.06)", borderLeft: "3px solid #e11d48", borderRadius: "0 6px 6px 0", fontSize: "0.82rem", color: "#475569" }}>
-                  <strong style={{ color: "#be123c" }}>Editorial Audit Note:</strong> {profile.editorialNotes}
+                  <strong style={{ color: "#be123c" }}>Editorial & Legal Notice:</strong> {profile.editorialNotes}
                 </div>
               )}
 
@@ -418,12 +424,25 @@ export default function ProfileDetailModal({
               padding: "20px",
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-              <span style={{ fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase", color: "#e11d48", display: "flex", alignItems: "center", gap: "6px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", flexWrap: "wrap", gap: "8px" }}>
+              <span style={{ fontSize: "0.78rem", fontWeight: 800, textTransform: "uppercase", color: "#e11d48", display: "flex", alignItems: "center", gap: "6px" }}>
                 <BookOpen size={14} />
-                UltimateHealth Living Memorial Initiative
+                6. UltimateHealth Living Memorial Initiative
               </span>
-              <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#d97706", display: "flex", alignItems: "center", gap: "4px" }}>
+              <span
+                style={{
+                  fontSize: "0.72rem",
+                  fontWeight: 700,
+                  padding: "3px 8px",
+                  borderRadius: "6px",
+                  background: "rgba(217, 119, 6, 0.12)",
+                  color: "#d97706",
+                  border: "1px solid rgba(217, 119, 6, 0.25)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+              >
                 <Clock size={12} />
                 {profile.memorialPublication.initiativeStatus || "Proposed Initiative"}
               </span>
@@ -447,28 +466,41 @@ export default function ProfileDetailModal({
             <h3 style={{ fontSize: "0.75rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--explorer-text-secondary, #94a3b8)", margin: "0 0 10px" }}>
               7. Verified Primary Sources & Court / Human Rights Archives
             </h3>
-            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
               {profile.references.map((ref, idx) => (
-                <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "0.82rem" }}>
-                  <ExternalLink size={13} style={{ color: "#94a3b8", flexShrink: 0, marginTop: "2px" }} />
-                  <a
-                    href={ref.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: "#e11d48", fontWeight: 600, textDecoration: "underline", wordBreak: "break-all" }}
-                  >
-                    {ref.title}
+                <li key={idx} style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "0.84rem" }}>
+                  <ExternalLink size={14} style={{ color: "#94a3b8", flexShrink: 0, marginTop: "3px" }} />
+                  <div style={{ display: "flex", alignItems: "baseline", flexWrap: "wrap", gap: "6px", minWidth: 0 }}>
+                    <a
+                      href={ref.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "#e11d48", fontWeight: 600, textDecoration: "underline" }}
+                    >
+                      {ref.title}
+                    </a>
                     {ref.isPrimary && (
-                      <span style={{ marginLeft: "6px", fontSize: "0.68rem", fontWeight: 800, padding: "1px 5px", borderRadius: "3px", background: "rgba(16, 185, 129, 0.12)", color: "#059669" }}>
+                      <span
+                        style={{
+                          fontSize: "0.68rem",
+                          fontWeight: 800,
+                          padding: "1px 6px",
+                          borderRadius: "4px",
+                          background: "rgba(16, 185, 129, 0.12)",
+                          color: "#059669",
+                          border: "1px solid rgba(16, 185, 129, 0.3)",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
                         Primary Record
                       </span>
                     )}
                     {ref.publisher && (
-                      <span style={{ color: "var(--explorer-text-secondary, #94a3b8)", fontWeight: 400, marginLeft: "4px" }}>
+                      <span style={{ color: "var(--explorer-text-secondary, #64748b)", fontSize: "0.78rem", fontWeight: 500, whiteSpace: "nowrap" }}>
                         ({ref.publisher})
                       </span>
                     )}
-                  </a>
+                  </div>
                 </li>
               ))}
             </ul>

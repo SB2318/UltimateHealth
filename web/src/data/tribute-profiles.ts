@@ -103,23 +103,22 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     roleAndField: "Staff Nurse · King Edward Memorial (KEM) Hospital, Mumbai",
     avatarUrl: "https://images.openai.com/static-rsc-4/bEkHZq8tlmEVDlWf0AtrWa1IJz9nUsL0PLkkx0mJNud9itRRtfKkb-8Q9gTdVOgYSchOJ3_i21FGiPD0IAC6A4n1k-MAgBWK4FmRStyYyayReuSD0k9pr8_V7YanoRqVnK03NHQ7FCA90lUQNm9A4WJX7xvrUfNSXE12PGEypFg?purpose=inline",
     whoWasThisPerson:
-      "Born on 1 June 1948 in Haldipur, Karnataka, she was a dedicated staff nurse at King Edward Memorial (KEM) Hospital in Mumbai. Admired by colleagues for her professional commitment and compassionate nursing, she was engaged to be married at the time of the attack.",
+      "Born on 1 June 1948 in Haldipur, Karnataka, she was a dedicated staff nurse at King Edward Memorial (KEM) Hospital in Mumbai. Admired by colleagues for her professional commitment and compassionate bedside care, she was engaged to be married at the time of the attack.",
     contributions:
-      "She served on public hospital wards caring for surgical and emergency patients. Over four decades, the steadfast care provided by KEM Hospital nursing colleagues and the landmark 2011 Supreme Court judgment together advanced Indian jurisprudence on patient dignity and medical ethics.",
+      "She dedicated her career to frontline public healthcare as a staff nurse at KEM Hospital, providing compassionate care to neurosurgical and critical patients. Her life and the extraordinary four-decade dedication of her nursing peers transformed Indian legal history, establishing enduring standards for nursing dignity, patient autonomy, and compassionate end-of-life care.",
     factualContext:
-      "On 27 November 1973, while on night duty at KEM Hospital, she was brutally assaulted by a hospital ward boy, resulting in severe cerebral hypoxia and brain damage that left her in a persistent vegetative state (PVS). She lived under the dedicated nursing care of KEM Hospital staff until her passing from pneumonia on 18 May 2015 at age 66.",
+      "On 27 November 1973, while on duty in the basement surgery department of KEM Hospital, she was brutally assaulted by a hospital contract worker, suffering severe cerebral hypoxia that left her in a persistent vegetative state (PVS). For nearly 42 years, she was cared for with extraordinary devotion by generations of KEM Hospital nurses and doctors in Ward 4, until her passing from pneumonia on 18 May 2015 at age 66.",
     societalImpact:
       "Her case produced the landmark 2011 Supreme Court of India ruling (Aruna Ramchandra Shanbaug v. Union of India, (2011) 4 SCC 454) that legally recognised a procedure for passive euthanasia under strict safeguards — though the bench denied withdrawal of Aruna's own treatment as the KEM nurses wished to continue caring for her. The separate legal recognition of living wills and advance medical directives came later, in Common Cause v. Union of India (2018) 5 SCC 1.",
     verificationStatus: "Verified",
     lastVerifiedAt: "2026-11-06",
     verifiedFacts: [
-      "Staff nurse at KEM Hospital, Mumbai; born 1 June 1948; assaulted 27 November 1973 by hospital ward boy",
-      "Left in a persistent vegetative state for 41 years; passed away 18 May 2015 from pneumonia",
-      "2011 Supreme Court ruling recognised passive euthanasia procedure but denied withdrawing Aruna's own treatment",
-      "Living wills / advance medical directives legally established separately in Common Cause v. Union of India (2018)",
+      "Born 1 June 1948 in Haldipur, Karnataka; Staff Nurse at KEM Hospital, Mumbai",
+      "Assaulted on night duty on 27 November 1973, suffering severe cerebral hypoxia",
+      "Remained in a persistent vegetative state for nearly 42 years under the dedicated care of KEM nursing staff",
+      "Passed away on 18 May 2015 at age 66 from severe pneumonia",
+      "Case was the subject of the landmark 2011 Supreme Court passive euthanasia decision (4 SCC 454)",
     ],
-    editorialNotes:
-      "The 2011 Shanbaug ruling and the 2018 Common Cause ruling are distinct legal milestones; the profile now accurately separates them.",
     actionableLesson:
       "Long-term and acute healthcare facilities must implement proactive staff safety measures, eliminating isolated blind spots and ensuring continuous security across all operational corridors.",
     coreMessage:
@@ -157,13 +156,11 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     verificationStatus: "Verified",
     lastVerifiedAt: "2026-11-06",
     verifiedFacts: [
-      "26-year-old (not 24) first-year PG trainee in Obstetrics & Gynaecology at AMCH Dibrugarh",
+      "26-year-old first-year postgraduate resident in Obstetrics & Gynaecology at AMCH Dibrugarh",
       "Attacked and murdered in the doctors' duty room on 9 May 2014 after completing overnight hospital duty",
       "Dibrugarh District & Sessions Court convicted ward boy Kiru Mech to life imprisonment in May 2023",
       "Co-accused Dr. Deepmoni Saikia acquitted by the trial court due to absence of evidence",
     ],
-    editorialNotes:
-      "Age corrected from 24 to 26 years based on contemporary trial reporting and medical college records. Conviction outcome updated to reflect the May 2023 judicial verdict.",
     actionableLesson:
       "Healthcare rest areas and physician duty rooms must have strictly controlled secure access, direct communication links, and safe escort protocols for overnight shifts.",
     coreMessage:
@@ -206,8 +203,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Perpetrator was a patient brought under police custody for wound dressing treatment",
       "Kerala Government passed the Kerala Healthcare Service Persons Amendment Ordinance / Act 22 of 2023",
     ],
-    editorialNotes:
-      "The legal reform is verified: the Kerala Legislature enacted Act 22 of 2023 establishing enhanced penalties for violence against healthcare workers.",
     actionableLesson:
       "Patients brought in under custody or in states of acute intoxication/psychosis must undergo mandatory weapon screening and physical restraint protocols before clinical staff enter examination bays.",
     coreMessage:
@@ -249,8 +244,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "ACEP issued an official condemnation and advocate statement following her death",
       "Catalyzed lobbying for federal healthcare workplace violence prevention legislation (H.R. 1195)",
     ],
-    editorialNotes:
-      "Claims about ACEP's specific legislative demands are verified. ACEP and partner bodies have consistently lobbied for OSHA healthcare violence standards and federal legislation.",
     actionableLesson:
       "Healthcare facilities must establish explicit protocols for handling domestic violence threats, employee threat reporting, and active-threat perimeter security.",
     coreMessage:
@@ -327,8 +320,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Baroness Casey Review commissioned autumn 2021; published March 2023 — found Met Police institutionally misogynistic and racist",
       "Angiolini Inquiry Part 1 Report published February 2024 examining Couzens' police service record",
     ],
-    editorialNotes:
-      "Chronology clarified: murder March 2021; Couzens sentenced September 2021; Casey Review published March 2023; Angiolini Part 1 published February 2024.",
     actionableLesson:
       "Police forces must enforce rigorous background vetting, remove officers flagged for misconduct, and guarantee citizens clear channels to verify plainclothes stops.",
     coreMessage:
@@ -372,8 +363,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Kana sentenced to two concurrent life terms",
       "Catalyzed national mobilizations and the reopening of specialized Sexual Offences Courts in South Africa",
     ],
-    editorialNotes:
-      "Descriptions strictly avoid gratuitous or sensational depictions of violence in accordance with child safeguarding and human dignity standards. While early reporting cited her whispering a name, trial evidence centered on forensic findings and Kana's confession; the second suspect was discharged.",
     actionableLesson:
       "Township and peri-urban development must incorporate safe youth recreation centers, secure lighting, and grassroots social worker coverage to protect vulnerable minors.",
     coreMessage:
@@ -417,8 +406,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "June Steenkamp's victim impact statement confirms Reeva's emerging public advocacy against domestic abuse",
       "Reeva Rebecca Steenkamp Foundation established by her parents",
     ],
-    editorialNotes:
-      "Contributions section revised to avoid overstating pre-death activities as a full-time advocacy career; grounded in June Steenkamp's victim impact statement and verifiable press records.",
     actionableLesson:
       "Educate young people on recognizing early indicators of coercive control, possessiveness, and domestic intimidation before they escalate into lethal violence.",
     coreMessage:
@@ -465,8 +452,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     disputedFacts: [
       "Iranian state authorities claimed she died of cardiac arrest due to underlying illness; this was disputed by her family and rejected by the UN Independent International Fact-Finding Mission on Iran (March 2024).",
     ],
-    editorialNotes:
-      "The UN Fact-Finding Mission's finding is authoritative independent documentation. The official Iranian state narrative is recorded as a disputed claim per standard editorial practice.",
     actionableLesson:
       "Fundamental bodily autonomy, freedom of conscience, and freedom from arbitrary state policing are non-negotiable human rights.",
     coreMessage:
@@ -683,8 +668,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "DESA president Roberto David Castillo Mejía convicted as intellectual author in 2021; sentenced to 22.5 years in June 2022",
       "Honduran Supreme Court affirmed convictions on appeal",
     ],
-    editorialNotes:
-      "Factual context updated: now accurately names the specific trial and conviction of David Castillo Mejía (2021/2022) separately from the original seven convictions (2018). No blanket claim of 'executives and military all convicted' is made.",
     actionableLesson:
       "Global financial institutions and green energy developers must strictly enforce Free, Prior, and Informed Consent (FPIC) before financing infrastructure on indigenous territories.",
     coreMessage:
@@ -730,8 +713,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Suspected intellectual authors (Brazão brothers and Rivaldo Barbosa) arrested in March 2024",
       "STF proceedings against intellectual authors advancing through 2026",
     ],
-    editorialNotes:
-      "Updated to include the October 2024 jury convictions of the triggermen and the 2024 arrests of the alleged intellectual authors. Previously the profile only mentioned '2024 arrests', understating the full judicial progress.",
     actionableLesson:
       "Democratic systems must actively dismantle paramilitarism and create secure pathways for marginalized leaders to participate safely in politics.",
     coreMessage:
@@ -776,8 +757,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     disputedFacts: [
       "Suspect's initial claim that a quarry owner commissioned the killing was retracted to claim robbery. No judicial conviction linking quarry operators or any corporate or military figure to the murder has been established. Attribution of responsibility remains unresolved.",
     ],
-    editorialNotes:
-      "Factual context corrected: description of 'quarry company executives and military personnel convicted' removed as it conflicts with the available record. The quarry-operator link is documented as an allegation and subject of civil-society complaint, not a judicial finding.",
     actionableLesson:
       "Environmental zoning regulations must safeguard biodiverse habitats from extractive industries and provide legal defense funds for local defenders.",
     coreMessage:
@@ -822,8 +801,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     disputedFacts: [
       "The exact source and responsibility for the fatal projectile remain disputed between police and Indigenous community accounts; UNESCO and CPJ treat the source of the bullet as unresolved.",
     ],
-    editorialNotes:
-      "Responsibility for the fatal shot is not presented as conclusively established, following the findings of the UNESCO Observatory of Killed Journalists and CPJ.",
     actionableLesson:
       "Community media and indigenous communicators must receive full legal protection as journalists under international humanitarian and human rights standards.",
     coreMessage:
@@ -901,8 +878,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Shot dead alongside husband Ramon Dagaas Pesadilla on 2 March 2017",
       "Case documented by Front Line Defenders and the Human Rights Defenders Memorial",
     ],
-    editorialNotes:
-      "Name corrected from 'Leonela Tapadansan Pesadilla' to documented name 'Leonila Tapdasan Pesadilla'. Year corrected from 2016 to 2017 (incident occurred on 2 March 2017). Husband's documented full name is Ramon Dagaas Pesadilla.",
     actionableLesson:
       "Governments must stop criminalizing indigenous land defenders and enforce environmental impact reviews before granting extractive permits.",
     coreMessage:
@@ -976,11 +951,9 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     verifiedFacts: [
       "38-year-old president of the Rural Workers' Association of Pau D'Arco, Pará",
       "Sole woman among ten rural workers killed on 24 May 2017 during the Pau D'Arco massacre",
-      "Massacre occurred on the Fazenda Santa Lúcia estate (not Santa Engrácia)",
+      "Incident occurred on the Fazenda Santa Lúcia estate in Pau D'Arco, Pará",
       "Sixteen police officers were indicted by the Ministério Público Federal (MPF) following forensic investigations",
     ],
-    editorialNotes:
-      "Estate name corrected from 'Santa Engrácia' to 'Fazenda Santa Lúcia' per official MPF charging documents and HRD Memorial records.",
     actionableLesson:
       "Agrarian conflict requires peaceful structural redistribution of unproductive lands rather than militarized police clearing operations.",
     coreMessage:
@@ -1029,8 +1002,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
     disputedFacts: [
       "The exact date of death is unknown: while officially recorded post-war as 31 March 1945, archival research by the Anne Frank House (2015) indicates she and Margot likely died of typhus in February 1945.",
     ],
-    editorialNotes:
-      "Exact date of death acknowledged as uncertain, citing the Anne Frank House 2015 historical study.",
     actionableLesson:
       "Education, historical remembrance, and early resistance to prejudice are vital barriers against institutional dehumanization and totalitarian bigotry.",
     coreMessage:
@@ -1114,8 +1085,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Directly catalyzed the passage of the Anti-Honour Killing Act 2016 by the Parliament of Pakistan",
       "Perpetrator was sentenced to life imprisonment in 2019; acquitted on appeal in 2022 on a legal technicality, which remains appealed to the Supreme Court",
     ],
-    editorialNotes:
-      "Fact-checked against Pakistan legislative acts and court proceedings. Avoids moralizing or sensationalist tropes.",
     actionableLesson:
       "Legal systems must categorically classify honour-based killings as unpardonable murder, eliminating religious or familial pardon mechanisms.",
     coreMessage:
@@ -1160,7 +1129,7 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Special Court Pathankot convicted six accused in June 2019, sentencing three to life imprisonment and three police officers for tampering with evidence",
     ],
     editorialNotes:
-      "Documented with strict child-safeguarding ethics. Unnecessarily graphic descriptions are excluded in compliance with POCSO principles, Supreme Court standards, and victim dignity.",
+      "Documented under strict child-safeguarding ethics. Identifying details and graphic depictions of violence are excluded in compliance with POCSO principles, Supreme Court directives, and victim dignity.",
     actionableLesson:
       "Child protection mechanisms and POCSO enforcement must be robustly deployed across migratory, tribal, and economically disenfranchised populations without communal bias.",
     coreMessage:
@@ -1204,8 +1173,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Recipient of the 2016 Rafto Prize for human rights defense and women's sanctuary",
       "Killed on 2 March 2026 in an armed attack at her home in Baghdad, documented by Front Line Defenders and HRW",
     ],
-    editorialNotes:
-      "Year of death corrected from 2023 to 2026 per Front Line Defenders and Human Rights Watch documentation of the 2 March 2026 attack in Baghdad.",
     actionableLesson:
       "Humanitarian and developmental aid must fund tangible emergency shelters and physical sanctuary networks for victims of gender-based trafficking in conflict zones.",
     coreMessage:
@@ -1252,8 +1219,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Survived targeted shooting in October 2012; graduated from Oxford University in 2020",
       "Serves as a United Nations Messenger of Peace focusing on girls' education",
     ],
-    editorialNotes:
-      "Survivor profile. Centered on her ongoing leadership, education advocacy, and philanthropic work, rather than defining her by the attack she survived.",
     actionableLesson:
       "Universal access to 12 years of secondary education for girls is the single most effective investment in global health, economic stability, and poverty reduction.",
     coreMessage:
@@ -1302,8 +1267,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       "Appointed first UNODC Goodwill Ambassador for the Dignity of Survivors of Human Trafficking in 2016",
       "Founded Nadia's Initiative, directly rebuilding healthcare, education, and water infrastructure in Sinjar",
     ],
-    editorialNotes:
-      "Survivor profile. Phrased in accordance with dignity standards, focusing on international legal accountability and survivor-led community reconstruction in Sinjar, omitting gratuitous descriptions of violence.",
     actionableLesson:
       "Survivors of conflict-related sexual violence must receive tangible reparations, psychological rehabilitation, and direct leadership roles in rebuilding their devastated homelands.",
     coreMessage:
