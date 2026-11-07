@@ -313,8 +313,275 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
           }
       }
   },
+    {
+      "id": 2,
+      "slug": "dr-sarita-toshniwal",
+      "name": "Dr. Sarita Toshniwal",
+      "country": "India",
+      "countryFlag": "🇮🇳",
+      "category": "healthcare",
+      "categoryLabel": "Healthcare & Medical Trainee Safety",
+      "eraOrYear": "1988–2014",
+      "roleAndField": "First-Year Postgraduate Medical Student · Obstetrics & Gynaecology · Assam Medical College and Hospital, Dibrugarh, Assam, India",
+      "avatarUrl": "/assets/dr-sarita-toshniwal.jpeg",
+      "verificationStatus": "Historically Verified",
+      "lastVerifiedAt": "2026-11-07",
+      "coreMessage": "Healthcare workers must be protected not only in public hospital areas but also in ICU rest rooms, doctors' duty rooms and other restricted spaces where medical professionals rest between demanding shifts.",
+      "whoWasThisPerson": "Dr. Sarita Toshniwal was a first-year postgraduate medical student in the Department of Obstetrics and Gynaecology at Assam Medical College and Hospital (AMCH), Dibrugarh, Assam.\nOriginally from Sivasagar district, she had completed her MBBS at Assam Medical College and was pursuing postgraduate medical training.\nShe was working towards a career in a medical speciality central to maternal and reproductive healthcare.",
+      "contributions": "Dr. Sarita Toshniwal was undertaking postgraduate medical training in a demanding hospital environment.\nContemporary reports confirm that she had been assigned overnight hospital duty in the gynaecology department before the incident.\nHer individual clinical achievements and specific patient-care contributions have not been independently established in the historical sources consulted. Accordingly, this profile does not attribute undocumented professional accomplishments to her.",
+      "factualContext": "On the morning of 9 May 2014, Dr. Sarita Toshniwal was found murdered in the doctors' resting room inside the ICU of the gynaecology department at Assam Medical College and Hospital.\nShe had been working the previous night shift and had gone to the doctors' resting room after her duties.\nHospital ward boy Kiru Mech was arrested and prosecuted in connection with her murder.\nIn May 2023, following a nine-year trial, the Dibrugarh District and Sessions Court convicted Kiru Mech of murder under Section 302 of the Indian Penal Code and sentenced him to life imprisonment, along with a fine of ₹5,000.\nAnother accused, Dr. Deepmoni Saikia, was acquitted by the trial court due to insufficient evidence.\nThe judgment was delivered by District and Sessions Judge Aparna Ajitsaria. According to contemporary reporting, the 152-page judgment followed the examination of 61 witnesses.",
+      "verifiedFacts": [
+          "First-year postgraduate student in Obstetrics & Gynaecology at AMCH Dibrugarh.",
+          "Originally from Sivasagar, Assam; completed MBBS at Assam Medical College.",
+          "Assigned overnight hospital duty in the gynaecology department prior to the attack.",
+          "Found murdered on the morning of 9 May 2014 in the doctors' resting room inside the ICU.",
+          "Dibrugarh District and Sessions Court convicted ward boy Kiru Mech under Section 302 IPC in May 2023 (life imprisonment, ₹5,000 fine).",
+          "Co-accused Dr. Deepmoni Saikia acquitted due to insufficient evidence.",
+          "152-page judgment delivered by District and Sessions Judge Aparna Ajitsaria following examination of 61 witnesses."
+      ],
+      "societalImpact": "Her murder triggered protests by junior doctors and medical students across Assam.\nHealthcare professionals demanded stronger institutional security, particularly for women working overnight shifts.\n\nTheir demands included:\n• Improved security arrangements within hospital premises.\n• CCTV surveillance in ICU areas.\n• Verification of ward boys and other lower-grade hospital employees.\n• Better protection for medical professionals working alone during night shifts.\n• Institutional accountability for failures in workplace security.\n\nThe protests highlighted a critical concern: healthcare professionals must be able to perform their responsibilities without compromising their personal safety.\nThese demands are documented historical responses; this profile does not claim that all the requested reforms were subsequently implemented.",
+      "actionableLesson": "Hospital security must extend beyond entrances, reception areas and public corridors.\n\nHealthcare institutions should evaluate and implement:\n1. Restricted access: Secure entry systems for doctors' duty rooms and staff resting facilities.\n2. Privacy-conscious surveillance: Appropriate monitoring of common access corridors without compromising the privacy of resting or clinical spaces.\n3. Emergency communication: Accessible emergency alarms and communication systems in isolated duty areas.\n4. Night-shift staffing: Adequate security personnel and appropriate staffing arrangements during overnight shifts.\n5. Safe movement: Escort arrangements for healthcare workers where necessary.\n6. Background verification: Documented identity and background verification procedures for hospital employees and contractual personnel.\n7. Incident accountability: Clear reporting procedures, escalation channels and independent investigation mechanisms.\n\nThese are proposed institutional safety standards, not claims about reforms already introduced following the incident.",
+      "memorialPublication": {
+          "title": "Hospital Duty Room & Night-Shift Physical Security Standards",
+          "focus": "Clinical Architecture, Access Control & Staff Safety",
+          "initiativeStatus": "Proposed Initiative",
+          "deliverable": "A proposed actionable audit checklist for hospital administrators, medical college leadership and healthcare safety committees.\n\nObjective:\nTo evaluate whether doctors, nurses, postgraduate residents and other healthcare workers can safely perform their duties and access secure resting facilities during overnight shifts.\n\nThe initiative aims to translate historical lessons into practical institutional safety recommendations."
+      },
+      "references": [
+          {
+              "title": "The Indian Express, 10 May 2014 — In Dibrugarh hospital, ward boy kills medical student inside ICU",
+              "url": "https://indianexpress.com/article/india/india-others/in-assam-hospital-ward-boy-kills-medical-student-inside-icu/",
+              "publisher": "The Indian Express"
+          },
+          {
+              "title": "Times of India, 10 May 2014 — Doctor murdered in Assam ICU, ward boy arrested",
+              "url": "https://timesofindia.indiatimes.com/city/guwahati/doctor-murdered-in-assam-icu-ward-boy-arrested/articleshow/34896412.cms",
+              "publisher": "Times of India"
+          },
+          {
+              "title": "The Indian Express, 11 May 2014 — Medico's murder: No police verification of accused",
+              "url": "https://indianexpress.com/article/india/india-others/medicos-murder-no-police-verification-of-accused/",
+              "publisher": "The Indian Express"
+          },
+          {
+              "title": "Press Trust of India / Business Standard, 11 May 2014 — Health minister meets striking doctors",
+              "url": "https://www.business-standard.com/article/pti-stories/health-minister-meets-striking-doctors-114051100556_1.html",
+              "publisher": "Press Trust of India / Business Standard"
+          },
+          {
+              "title": "Times of India, 18 May 2023 — 9 yrs later, AMCH ward boy convicted in Sarita Toshniwal's murder case",
+              "url": "https://timesofindia.indiatimes.com/city/guwahati/9-yrs-later-amch-ward-boy-convicted-in-sarita-toshniwals-murder-case/articleshow/100317631.cms",
+              "publisher": "Times of India",
+              "isPrimary": true
+          },
+          {
+              "title": "Times of India, 19 May 2023 — Sarita Toshniwal's killer gets life imprisonment",
+              "url": "https://timesofindia.indiatimes.com/city/guwahati/sarita-toshniwals-killer-gets-life-imprisonment/articleshow/100343775.cms",
+              "publisher": "Times of India",
+              "isPrimary": true
+          },
+          {
+              "title": "The Sentinel Assam, 19 May 2023 — Ward boy Kiru Mech awarded life sentence",
+              "url": "https://www.sentinelassam.com/amp/north-east-india-news/assam-news/ward-boy-kiru-mech-awarded-life-sentence-650134",
+              "publisher": "The Sentinel Assam",
+              "isPrimary": true
+          },
+          {
+              "title": "Dibrugarh District Judiciary — Official eCourts portal",
+              "url": "https://dibrugarh.dcourts.gov.in/",
+              "publisher": "District Judiciary of Assam"
+          }
+      ],
+      "translations": {
+          "hi": {
+              "name": "डॉ. सरिता तोशनीवाल",
+              "roleAndField": "प्रथम वर्ष की स्नातकोत्तर मेडिकल छात्रा · प्रसूति एवं स्त्री रोग विभाग · असम मेडिकल कॉलेज एवं अस्पताल, डिब्रूगढ़, असम, भारत",
+              "categoryLabel": "स्वास्थ्य सेवा एवं मेडिकल प्रशिक्षु सुरक्षा",
+              "coreMessage": "स्वास्थ्य कर्मियों की सुरक्षा न केवल सार्वजनिक अस्पताल क्षेत्रों में बल्कि आईसीयू विश्राम कक्षों, डॉक्टरों के ड्यूटी रूम और अन्य प्रतिबंधित स्थानों में भी की जानी चाहिए जहाँ चिकित्सा पेशेवर व्यस्त पाली के बीच आराम करते हैं।",
+              "whoWasThisPerson": "डॉ. सरिता तोशनीवाल असम मेडिकल कॉलेज एवं अस्पताल (AMCH), डिब्रूगढ़, असम में प्रसूति एवं स्त्री रोग विभाग में प्रथम वर्ष की स्नातकोत्तर मेडिकल छात्रा थीं।\nमूल रूप से शिवसागर जिले की रहने वाली, उन्होंने असम मेडिकल कॉलेज से अपना एमबीबीएस पूरा किया था और स्नातकोत्तर चिकित्सा प्रशिक्षण ले रही थीं।\nवे मातृ एवं प्रजनन स्वास्थ्य सेवा के लिए अत्यंत महत्वपूर्ण चिकित्सा विशेषज्ञता में अपना करियर बना रही थीं।",
+              "contributions": "डॉ. सरिता तोशनीवाल एक चुनौतीपूर्ण अस्पताल परिवेश में स्नातकोत्तर चिकित्सा प्रशिक्षण प्राप्त कर रही थीं।\nसमकालीन रिपोर्टों से पुष्टि होती है कि घटना से पहले उन्हें स्त्री रोग विभाग में रात की ड्यूटी सौंपी गई थी।\nपरामर्श किए गए ऐतिहासिक स्रोतों में उनकी व्यक्तिगत नैदानिक उपलब्धियों और विशिष्ट रोगी-देखभाल योगदानों की स्वतंत्र रूप से पुष्टि नहीं हुई है। तदनुसार, यह प्रोफ़ाइल उन्हें अप्रमाणित व्यावसायिक उपलब्धियों का श्रेय नहीं देती है।",
+              "factualContext": "9 मई 2014 की सुबह, डॉ. सरिता तोशनीवाल असम मेडिकल कॉलेज एवं अस्पताल के स्त्री रोग विभाग के आईसीयू के अंदर डॉक्टरों के विश्राम कक्ष में मृत पाई गईं।\nवे पिछली रात की पाली में काम कर रही थीं और अपनी ड्यूटी पूरी करने के बाद डॉक्टरों के विश्राम कक्ष में गई थीं।\nअस्पताल के वार्ड बॉय किरू मेच को उनकी हत्या के सिलसिले में गिरफ्तार किया गया और उन पर मुकदमा चलाया गया।\nमई 2023 में, नौ साल के लंबे मुकदमे के बाद, डिब्रूगढ़ जिला एवं सत्र न्यायालय ने किरू मेच को भारतीय दंड संहिता की धारा 302 के तहत हत्या का दोषी ठहराया और ₹5,000 के जुर्माने के साथ आजीवन कारावास की सजा सुनाई।\nएक अन्य आरोपी डॉ. दीपमोनी सैकिया को पर्याप्त सबूतों के अभाव में अदालत ने बरी कर दिया।\nयह फैसला जिला एवं सत्र न्यायाधीश अपर्णा अजितसारिया द्वारा सुनाया गया। समकालीन रिपोर्टिंग के अनुसार, 152 पन्नों का यह फैसला 61 गवाहों की गवाही के बाद आया।",
+              "verifiedFacts": [
+                  "एएमसीएच डिब्रूगढ़ में प्रसूति एवं स्त्री रोग विभाग में प्रथम वर्ष की पीजी छात्रा।",
+                  "मूल रूप से शिवसागर, असम से; असम मेडिकल कॉलेज से एमबीबीएस पूरा किया।",
+                  "हमले से पहले स्त्री रोग विभाग में रात की अस्पताल ड्यूटी सौंपी गई थी।",
+                  "9 मई 2014 की सुबह आईसीयू के अंदर डॉक्टरों के विश्राम कक्ष में मृत पाई गईं।",
+                  "डिब्रूगढ़ जिला एवं सत्र न्यायालय ने मई 2023 में वार्ड बॉय किरू मेच को धारा 302 आईपीसी के तहत दोषी ठहराया (आजीवन कारावास, ₹5,000 जुर्माना)।",
+                  "सह-आरोपी डॉ. दीपमोनी सैकिया सबूतों के अभाव में बरी।",
+                  "61 गवाहों की जांच के बाद जिला एवं सत्र न्यायाधीश अपर्णा अजितसारिया द्वारा 152 पन्नों का फैसला सुनाया गया।"
+              ],
+              "societalImpact": "उनकी हत्या ने पूरे असम में रेजिडेंट डॉक्टरों और मेडिकल छात्रों के व्यापक विरोध प्रदर्शनों को जन्म दिया।\nस्वास्थ्य पेशेवरों ने विशेष रूप से रात की पाली में काम करने वाली महिलाओं के लिए मजबूत संस्थागत सुरक्षा की मांग की।\n\nउनकी मांगों में शामिल थे:\n• अस्पताल परिसर में सुरक्षा व्यवस्था में सुधार।\n• आईसीयू क्षेत्रों में सीसीटीवी निगरानी।\n• वार्ड बॉय और अन्य निचले स्तर के अस्पताल कर्मचारियों का पुलिस सत्यापन।\n• रात की पाली में अकेले काम करने वाले पेशेवरों के लिए बेहतर सुरक्षा।\n• कार्यस्थल सुरक्षा में विफलताओं के लिए संस्थागत जवाबदेही।",
+              "actionableLesson": "अस्पताल की सुरक्षा केवल प्रवेश द्वारों, स्वागत क्षेत्रों और सार्वजनिक गलियारों तक ही सीमित नहीं होनी चाहिए।\n\nसंस्थानों को लागू करना चाहिए:\n1. डॉक्टरों के ड्यूटी रूम के लिए सुरक्षित प्रवेश प्रणाली।\n2. गोपनीयता का ध्यान रखते हुए कॉमन कॉरिडोर की उचित निगरानी।\n3. एकांत कार्य क्षेत्रों में सुलभ आपातकालीन अलार्म।\n4. रात की पाली के दौरान पर्याप्त सुरक्षा कर्मी।\n5. महिला कर्मियों के लिए आवश्यकता पड़ने पर सुरक्षित एस्कॉर्ट व्यवस्था।\n6. अस्पताल कर्मियों और संविदा कर्मचारियों का दस्तावेजीकृत पृष्ठभूमि सत्यापन।\n7. स्पष्ट रिपोर्टिंग और स्वतंत्र जांच तंत्र।",
+              "memorialPublication": {
+                  "title": "अस्पताल ड्यूटी रूम एवं रात्रि-पाली भौतिक सुरक्षा मानक",
+                  "focus": "क्लिनिकल आर्किटेक्चर, एक्सेस कंट्रोल एवं स्टाफ सुरक्षा",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "अस्पताल प्रशासकों, मेडिकल कॉलेज नेतृत्व और स्वास्थ्य सेवा सुरक्षा समितियों के लिए एक प्रस्तावित ऑडिट चेकलिस्ट।"
+              }
+          },
+          "bn": {
+              "name": "ডা. সরিতা তোশনিওয়াল",
+              "roleAndField": "প্রথম বর্ষের স্নাতকোত্তর মেডিকেল শিক্ষার্থী · স্ত্রীরোগ ও প্রসূতিবিদ্যা বিভাগ · আসাম মেডিকেল কলেজ ও হাসপাতাল, ডিব্রুগড়, আসাম, ভারত",
+              "categoryLabel": "স্বাস্থ্যসেবা ও মেডিকেল প্রশিক্ষণার্থী নিরাপত্তা",
+              "coreMessage": "স্বাস্থ্যসেবা কর্মীদের কেবল সর্বজনীন অঞ্চলেই নয়, আইসিইউ বিশ্রামাগার, ডাক্তারদের ডিউটি রুম এবং দায়িত্বের মাঝে বিশ্রামের সুরক্ষিত স্থানগুলোতেও কঠোর নিরাপত্তা দিতে হবে।",
+              "whoWasThisPerson": "ডা. সরিতা তোশনিওয়াল ছিলেন আসাম মেডিকেল কলেজ ও হাসপাতালের স্ত্রীরোগ ও প্রসূতিবিদ্যা বিভাগের প্রথম বর্ষের স্নাতকোত্তর ছাত্রী।\nমূলত শিবসাগর জেলার বাসিন্দা, তিনি আসাম মেডিকেল কলেজ থেকে এমবিবিএস সম্পন্ন করে বিশেষজ্ঞ প্রশিক্ষণ নিচ্ছিলেন।",
+              "contributions": "তিনি একটি ব্যস্ত সরকারি হাসপাতালে প্রসূতি ও জরুরি সেবায় প্রশিক্ষণ নিচ্ছিলেন। ঘটনার আগের রাতে তিনি স্ত্রীরোগ বিভাগে দায়িত্ব পালন করছিলেন।",
+              "factualContext": "২০১৪ সালের ৯ মে সকালে আসাম মেডিকেল কলেজের স্ত্রীরোগ আইসিইউ-এর ডাক্তারদের বিশ্রাম কক্ষে ডা. সরিতা তোশনিওয়ালের মরদেহ উদ্ধার করা হয়।\nহাসপাতালের ওয়ার্ড বয় কিরু মেচকে গ্রেপ্তার করা হয়। দীর্ঘ নয় বছর বিচার চলার পর ২০২৩ সালের মে মাসে ডিব্রুগড় জেলা ও দায়রা আদালত কিরু মেচকে ভারতীয় দণ্ডবিধির ৩০২ ধারায় যাবজ্জীবন কারাদণ্ড এবং ₹৫,০০০ জরিমানা প্রদান করে। অপর অভিযুক্ত ডা. দীপমণি শইকীয়া প্রমাণের অভাবে খালাস পান।",
+              "verifiedFacts": [
+                  "আসাম মেডিকেল কলেজে স্ত্রীরোগ বিভাগের প্রথম বর্ষের স্নাতকোত্তর ছাত্রী।",
+                  "আসাম মেডিকেল কলেজ থেকেই এমবিবিএস সম্পন্ন করেন।",
+                  "২০১৪ সালের ৯ মে সকালে আইসিইউ ডাক্তারদের রেস্টরুমে হত্যাকাণ্ডের শিকার হন।",
+                  "২০২৩ সালের মে মাসে জেলা ও দায়রা আদালত অভিযুক্ত কিরু মেচকে যাবজ্জীবন কারাদণ্ড দেয়।"
+              ],
+              "societalImpact": "তার মৃত্যু পুরো আসাম জুড়ে জুনিয়র ডাক্তারদের আন্দোলনে রূপান্তরিত হয়, যা হাসপাতালের সংরক্ষিত স্থানে নজরদারি এবং কর্মীদের নিরাপত্তার কঠোর দাবি তোলে।",
+              "actionableLesson": "হাসপাতালগুলোর ডিউটি রুমে সুরক্ষিত অ্যাক্সেস কন্ট্রোল, জরুরি অ্যালার্ম এবং কর্মীদের পূর্ণাঙ্গ পুলিশ ভেরিফিকেশন নিশ্চিত করতে হবে।",
+              "memorialPublication": {
+                  "title": "হাসপাতাল ডিউটি রুম ও নাইট শিফট শারীরিক নিরাপত্তা মানদণ্ড",
+                  "focus": "ক্লিনিক্যাল স্থাপত্য, অ্যাক্সেস কন্ট্রোল ও কর্মী সুরক্ষা",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "মেডিকেল কলেজ এবং হাসপাতালের রাতের নিরাপত্তা নিশ্চিত করার প্রস্তাবিত প্রাতিষ্ঠানিক নির্দেশিকা।"
+              }
+          },
+          "ta": {
+              "name": "டாக்டர் சரிதா தோஷ்னிவால்",
+              "roleAndField": "முதலாம் ஆண்டு முதுகலை மருத்துவ மாணவி · மகப்பேறியல் மற்றும் மகளிர் நலம் · அசாம் மருத்துவக் கல்லூரி, திப்ருகர், அசாம், இந்தியா",
+              "categoryLabel": "சுகாதாரம் & மருத்துவப் பயிற்சிப் பாதுகாப்பு",
+              "coreMessage": "சுகாதாரப் பணியாளர்களுக்கு பொது இடங்களில் மட்டுமல்லாது, மருத்துவர்கள் ஓய்வெடுக்கும் பணி அறைகளிலும் பாதுகாப்பு உறுதி செய்யப்பட வேண்டும்.",
+              "whoWasThisPerson": "டாக்டர் சரிதா தோஷ்னிவால் அசாம் மருத்துவக் கல்லூரியின் மகளிர் நலப் பிரிவில் முதலாம் ஆண்டு முதுகலை மாணவியாகப் பயின்று வந்தார்.",
+              "contributions": "கடினமான மருத்துவச் சூழலில் இரவுப் பணியில் இருந்து நோயாளிகளைக் கவனித்து வந்த இளம் மருத்துவர்.",
+              "factualContext": "மே 9, 2014 அன்று காலை, ஐசியூ பிரிவின் மருத்துவர்கள் ஓய்வறையில் அவர் கொல்லப்பட்டுக் கிடந்தார். வார்டு பாய் கிரு மெச் கைது செய்யப்பட்டு, மே 2023 இல் அவருக்கு ஆயுள் தண்டனை விதிக்கப்பட்டது.",
+              "verifiedFacts": [
+                  "அசாம் மருத்துவக் கல்லூரியின் முதுகலை மருத்துவ மாணவி.",
+                  "மே 9, 2014 அன்று மருத்துவமனை பணி அறையில் உயிரிழந்தார்.",
+                  "மே 2023 இல் குற்றவாளி கிரு மெச்சிற்கு ஆயுள் தண்டனை வழங்கப்பட்டது."
+              ],
+              "societalImpact": "இச்சம்பவம் அசாம் முழுவதும் மருத்துவர்களின் வேலைநிறுத்தத்தைத் தூண்டி, இரவுப் பணி பெண்களுக்கான நிறுவனப் பாதுகாப்பை வலியுறுத்தியது.",
+              "actionableLesson": "மருத்துவமனைகளில் தடைசெய்யப்பட்ட பகுதிகளில் தானியங்கி அணுகல் முறை மற்றும் அவசர எச்சரிக்கை அமைப்புகள் நிறுவப்பட வேண்டும்.",
+              "memorialPublication": {
+                  "title": "மருத்துவமனை பணி அறை மற்றும் இரவுப் பாதுகாப்பு வழிகாட்டுதல்கள்",
+                  "focus": "மருத்துவமனை வடிவமைப்பு மற்றும் பணியாளர் பாதுகாப்பு",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "மருத்துவப் பணியாளர்களின் இரவு நேரப் பாதுகாப்பை உறுதி செய்யும் தணிக்கைப் பட்டியல்."
+              }
+          },
+          "or": {
+              "name": "ଡା. ସରିତା ତୋଷନିୱାଲ",
+              "roleAndField": "ପ୍ରଥମ ବର୍ଷ ସ୍ନାତକୋତ୍ତର ମେଡିକାଲ ଛାତ୍ରୀ · ପ୍ରସୂତି ଓ ସ୍ତ୍ରୀରୋଗ ବିଭାଗ · ଆସାମ ମେଡିକାଲ କଲେଜ, ଡିବ୍ରୁଗଡ଼, ଭାରତ",
+              "categoryLabel": "ସ୍ୱାସ୍ଥ୍ୟସେବା ଓ ଡାକ୍ତରୀ ଶିକ୍ଷାର୍ଥୀ ସୁରକ୍ଷା",
+              "coreMessage": "ଡାକ୍ତରଖାନାର ସାଧାରଣ ସ୍ଥାନ ସହିତ ଡାକ୍ତରଙ୍କ ଡ୍ୟୁଟି ରୁମ ଓ ବିଶ୍ରାମ କକ୍ଷରେ ସୁରକ୍ଷା ବାଧ୍ୟତାମୂଳକ ହେବା ଆବଶ୍ୟକ।",
+              "whoWasThisPerson": "ଡା. ସରିତା ତୋଷନିୱାଲ ଆସାମ ମେଡିକାଲ କଲେଜରେ ପ୍ରସୂତି ଓ ସ୍ତ୍ରୀରୋଗ ବିଭାଗରେ ସ୍ନାତକୋତ୍ତର ପ୍ରଶିକ୍ଷଣ ନେଉଥିଲେ।",
+              "contributions": "ସେ ଡାକ୍ତରଖାନାରେ ରାତ୍ରିକାଳୀନ ଡ୍ୟୁଟିରେ ରହି ରୋଗୀସେବା ପ୍ରଦାନ କରୁଥିଲେ।",
+              "factualContext": "୯ ମଇ ୨୦୧୪ ସକାଳେ ଆସାମ ମେଡିକାଲ କଲେଜର ଡାକ୍ତର ବିଶ୍ରାମ କକ୍ଷରେ ତାଙ୍କର ହତ୍ୟା ହୋଇଥିଲା। ୨୦୨୩ ମସିହା ମଇ ମାସରେ ଅଦାଲତ ଦୋଷୀ କିରୁ ମେଚକୁ ଆଜୀବନ କାରାଦଣ୍ଡ ପ୍ରଦାନ କରିଥିଲେ।",
+              "verifiedFacts": [
+                  "ଆସାମ ମେଡିକାଲ କଲେଜର ପିଜି ଛାତ୍ରୀ।",
+                  "୯ ମଇ ୨୦୧୪ ରେ ଡ୍ୟୁଟି ରୁମରେ ହତ୍ୟାକାଣ୍ଡର ଶିକାର।",
+                  "ମଇ ୨୦୨୩ ରେ ଦୋଷୀକୁ ଆଜୀବନ କାରାଦଣ୍ଡ।"
+              ],
+              "societalImpact": "ଏହି ଘଟଣା ସାରା ଆସାମରେ ଡାକ୍ତରୀ ଛାତ୍ରମାନଙ୍କ ମଧ୍ୟରେ ତୀବ୍ର ଆନ୍ଦୋଳନ ସୃଷ୍ଟି କରିଥିଲା।",
+              "actionableLesson": "ହସ୍ପିଟାଲ ଡ୍ୟୁଟି ରୁମଗୁଡ଼ିକରେ ବାୟୋମେଟ୍ରିକ ପ୍ରବେଶ ଓ କର୍ମଚାରୀଙ୍କ ପୋଲିସ ଯାଞ୍ଚ ଅପରିହାର୍ଯ୍ୟ।",
+              "memorialPublication": {
+                  "title": "ଡାକ୍ତରଖାନା ଡ୍ୟୁଟି ରୁମ ଓ ରାତ୍ରିକାଳୀନ ସୁରକ୍ଷା ନିୟମାବଳୀ",
+                  "focus": "ଡାକ୍ତରଖାନା ସୁରକ୍ଷା ଓ ପ୍ରବେଶ ନିୟନ୍ତ୍ରଣ",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "ସ୍ୱାସ୍ଥ୍ୟକର୍ମୀଙ୍କ ରାତ୍ରିକାଳୀନ ସୁରକ୍ଷା ପାଇଁ ପ୍ରସ୍ତାବିତ ଅଡିଟ୍ ଚେକଲିଷ୍ଟ।"
+              }
+          },
+          "es": {
+              "name": "Dra. Sarita Toshniwal",
+              "roleAndField": "Estudiante de Posgrado de Primer Año · Obstetricia y Ginecología · Hospital y Facultad de Medicina de Assam (AMCH), Dibrugarh, Assam, India",
+              "categoryLabel": "Seguridad Sanitaria y de Médicos Residentes",
+              "coreMessage": "Los trabajadores de la salud deben estar protegidos no solo en las áreas públicas del hospital, sino también en las salas de descanso de la UCI y en las salas de guardia médica donde descansan entre turnos agotadores.",
+              "whoWasThisPerson": "La Dra. Sarita Toshniwal cursaba el primer año de posgrado en Obstetricia y Ginecología en el AMCH de Dibrugarh, Assam.\nOriginaria de Sivasagar, completó su MBBS en Assam Medical College y se preparaba para una carrera dedicada a la salud materna y reproductiva.",
+              "contributions": "La Dra. Toshniwal realizaba guardias médicas nocturnas en un entorno hospitalario de alta demanda.\nLos informes de la época confirman su asignación al turno de noche del departamento de ginecología previo al suceso.",
+              "factualContext": "La mañana del 9 de mayo de 2014, la Dra. Sarita Toshniwal fue hallada asesinada en la sala de descanso de los médicos dentro de la UCI de ginecología del AMCH.\nHabía cumplido su turno nocturno de guardia. El celador Kiru Mech fue detenido y juzgado.\nEn mayo de 2023, tras nueve años de proceso judicial, el Tribunal de Distrito de Dibrugarh condenó a Kiru Mech a cadena perpetua y multa por asesinato (artículo 302 del Código Penal indio). El otro acusado fue absuelto por falta de pruebas.",
+              "verifiedFacts": [
+                  "Estudiante de posgrado de 1.er año en Obstetricia y Ginecología en AMCH Dibrugarh.",
+                  "Originaria de Sivasagar, Assam; graduada MBBS en Assam Medical College.",
+                  "Asesinada la mañana del 9 de mayo de 2014 en la sala de guardia médica de la UCI.",
+                  "Kiru Mech condenado a cadena perpetua en mayo de 2023 tras 9 años de juicio oral."
+              ],
+              "societalImpact": "El crimen desencadenó huelgas masivas de médicos residentes en todo Assam exigiendo seguridad reforzada para el personal femenino de guardia.",
+              "actionableLesson": "Control de acceso estricto a las salas de descanso médico, verificación de antecedentes del personal subalterno y protocolos de alarma en áreas aisladas.",
+              "memorialPublication": {
+                  "title": "Estándares de Seguridad Física en Salas de Guardia y Turnos Nocturnos",
+                  "focus": "Arquitectura Clínica, Control de Acceso y Protección del Personal",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Una lista de verificación para auditorías hospitalarias sobre la seguridad del personal sanitario durante los turnos de noche."
+              }
+          },
+          "fr": {
+              "name": "Dre Sarita Toshniwal",
+              "roleAndField": "Interne de Première Année · Gynécologie et Obstétrique · Faculté et Hôpital de Médecine d'Assam (AMCH), Dibrugarh, Assam, Inde",
+              "categoryLabel": "Sécurité Hospitalière et des Internes en Médecine",
+              "coreMessage": "Les soignants doivent être protégés non seulement dans les halls d'hôpitaux, mais également dans les salles de garde, les salles de repos des soins intensifs et les locaux réservés.",
+              "whoWasThisPerson": "La Dre Sarita Toshniwal était interne de première année en gynécologie-obstétrique au centre hospitalier AMCH de Dibrugarh.\nOriginaire du district de Sivasagar, elle avait brillamment obtenu son diplôme de médecine et se destinait aux soins maternels.",
+              "contributions": "Elle effectuait des gardes de nuit exigeantes au chevet des patientes du service de gynécologie.",
+              "factualContext": "Le matin du 9 mai 2014, elle fut retrouvée assassinée dans la salle de repos des médecins située au sein des soins intensifs de gynécologie de l'AMCH.\nEn mai 2023, après neuf ans de procédure, le tribunal de Dibrugarh a condamné l'aide-soignant Kiru Mech à la réclusion criminelle à perpétuité pour meurtre.",
+              "verifiedFacts": [
+                  "Interne en gynécologie et obstétrique à l'AMCH de Dibrugarh.",
+                  "Diplômée de l'Assam Medical College.",
+                  "Assassinée le 9 mai 2014 dans la salle de repos des médecins en réanimation.",
+                  "Kiru Mech condamné à la prison à perpétuité en mai 2023."
+              ],
+              "societalImpact": "Ce drame a provoqué un mouvement de grève historique des jeunes médecins en Assam pour exiger la sécurisation des services hospitaliers de nuit.",
+              "actionableLesson": "Contrôle d'accès biométrique aux salles de garde, vérification systématique des antécédents des employés contractuels et alarmes d'urgence.",
+              "memorialPublication": {
+                  "title": "Normes de Sécurité Physique des Salles de Garde et Services de Nuit",
+                  "focus": "Architecture Hospitalière, Sécurisation des Accès et Protection du Personnel",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Un protocole d'audit institutionnel pour garantir la sécurité et le repos des internes et soignants de garde."
+              }
+          },
+          "de": {
+              "name": "Dr. Sarita Toshniwal",
+              "roleAndField": "Assistenzärztin im ersten Weiterbildungsjahr · Gynäkologie und Geburtshilfe · Assam Medical College and Hospital, Dibrugarh, Assam, Indien",
+              "categoryLabel": "Sicherheit im Gesundheitswesen und Schutz von Ärzten in Weiterbildung",
+              "coreMessage": "Medizinisches Personal muss nicht nur in öffentlichen Klinikbereichen geschützt werden, sondern insbesondere in Bereitschaftszimmern, Ruheräumen der Intensivstation und Personalbereichen.",
+              "whoWasThisPerson": "Dr. Sarita Toshniwal war Assistenzärztin für Frauenheilkunde und Geburtshilfe am AMCH in Dibrugarh, Assam.\nSie stammte aus Sivasagar und hatte ihr Medizinstudium am Assam Medical College abgeschlossen.",
+              "contributions": "Sie absolvierte anspruchsvolle Nachtdienste in der gynäkologischen Notfall- und Krankenversorgung.",
+              "factualContext": "Am Morgen des 9. Mai 2014 wurde Dr. Toshniwal im Ruheraum der Intensivstation ermordet aufgefunden.\nIm Mai 2023 wurde der Stationshelfer Kiru Mech nach neunjährigem Verfahren zu lebenslanger Haft verurteilt.",
+              "verifiedFacts": [
+                  "Assistenzärztin für Gynäkologie am AMCH Dibrugarh.",
+                  "Absolventin des Assam Medical College.",
+                  "Am 9. Mai 2014 im Arztruheraum ermordet aufgefunden.",
+                  "Täter Kiru Mech im Mai 2023 zu lebenslanger Haft verurteilt."
+              ],
+              "societalImpact": "Der Mord führte zu landesweiten Protesten von Assistenzärzten in Assam mit der Forderung nach lückenloser Sicherheit im Nachtdienst.",
+              "actionableLesson": "Zutrittskontrollen für Arztzimmer, Zuverlässigkeitsüberprüfungen von Hilfskräften und Notrufsysteme.",
+              "memorialPublication": {
+                  "title": "Sicherheitsstandards für Bereitschaftsräume und Nachtdienste",
+                  "focus": "Klinikarchitektur, Zugangskontrolle und Personalschutz",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Ein Audit-Katalog zur Überprüfung von Sicherheitsvorkehrungen in Bereitschaftsräumen von Krankenhäusern."
+              }
+          },
+          "hr": {
+              "name": "Dr. Sarita Toshniwal",
+              "roleAndField": "Liječnica na prvoj godini specijalizacije · Ginekologija i opstetricija · Assam Medical College and Hospital, Dibrugarh, Assam, Indija",
+              "categoryLabel": "Sigurnost zdravstvenog osoblja i specijalizanata",
+              "coreMessage": "Zdravstveni radnici moraju biti zaštićeni ne samo u javnim bolničkim prostorima, već i u dežurnim sobama intenzivne njege i prostorijama za odmor osoblja.",
+              "whoWasThisPerson": "Dr. Sarita Toshniwal bila je specijalizantica prve godine ginekologije i opstetricije u bolnici AMCH u Dibrugarhu, Assam.",
+              "contributions": "Pružala je skrb pacijenticama tijekom zahtjevnih noćnih dežurstava u ginekološkom odjelu.",
+              "factualContext": "Ujutro 9. svibnja 2014. pronađena je ubijena u sobi za odmor liječnika na odjelu intenzivne njege. U svibnju 2023. bolnički djelatnik Kiru Mech osuđen je na doživotni zatvor.",
+              "verifiedFacts": [
+                  "Specijalizantica ginekologije i opstetricije u AMCH Dibrugarh.",
+                  "Diplomirala medicinu na Assam Medical Collegeu.",
+                  "Ubijena 9. svibnja 2014. u dežurnoj sobi liječnika.",
+                  "Počinitelj Kiru Mech osuđen na doživotni zatvor u svibnju 2023."
+              ],
+              "societalImpact": "Ubojstvo je potaknulo masovne prosvjede mladih liječnika širom Assama sa zahtjevima za bolničku sigurnost.",
+              "actionableLesson": "Elektronička kontrola ulaza u dežurne sobe, provjera osoblja i hitni alarmni sustavi u izoliranim odjelima.",
+              "memorialPublication": {
+                  "title": "Standardi fizičke sigurnosti dežurnih soba i noćnih smjena",
+                  "focus": "Sigurnost osoblja i kontrola pristupa",
+                  "initiativeStatus": "Proposed Initiative",
+                  "deliverable": "Kontrolni popis za reviziju sigurnosnih standarda u bolničkim dežurnim sobama."
+              }
+          }
+      }
+  },
   {
-    id: 2,
+    id: 3,
     slug: "dr-moumita-debnath",
     name: "Dr. Moumita Debnath",
     country: "India",
@@ -355,48 +622,6 @@ export const TRIBUTE_PROFILES: TributeProfile[] = [
       { title: "Supreme Court of India Suo Motu Writ Petition (Crl) No. 2/2024 — National Task Force Orders (20 Aug 2024)", url: "https://main.sci.gov.in/supremecourt/2024/37466/37466_2024_1_1_54652_Order_20-Aug-2024.pdf", publisher: "Supreme Court of India", isPrimary: true },
       { title: "National Task Force on Healthcare Workers' Safety — Terms of Reference", url: "https://main.sci.gov.in", publisher: "Ministry of Health and Family Welfare, India" },
       { title: "The Indian Express: RG Kar Hospital Case Timeline", url: "https://indianexpress.com/article/cities/kolkata/kolkata-doctor-rape-murder-case-timeline-rg-kar-hospital-9520979/", publisher: "The Indian Express" },
-    ],
-  },
-  {
-    id: 3,
-    slug: "dr-sarita-toshniwal",
-    name: "Dr. Sarita Toshniwal",
-    country: "India",
-    countryFlag: "🇮🇳",
-    category: "healthcare",
-    categoryLabel: "Healthcare & Medical Trainee Safety",
-    eraOrYear: "1988–2014",
-    roleAndField: "Postgraduate Resident Doctor · Obstetrics & Gynaecology, Assam Medical College",
-    avatarUrl: "/assets/dr-sarita-toshniwal.jpeg",
-    whoWasThisPerson:
-      "A 26-year-old first-year postgraduate resident in the Department of Obstetrics and Gynaecology at Assam Medical College and Hospital (AMCH), Dibrugarh. She was preparing to serve maternal and child healthcare needs in regional communities across Northeast India.",
-    contributions:
-      "She served demanding overnight obstetrics and gynaecology shifts, attending to emergency deliveries, labor room admissions, and high-risk maternal care at AMCH.",
-    factualContext:
-      "On the morning of 9 May 2014, while resting in the doctors' duty room after an overnight obstetrics shift, she was attacked and murdered by a hospital ward boy. In May 2023 — after a nine-year trial — the Dibrugarh District and Sessions Court convicted ward boy Kiru Mech and sentenced him to life imprisonment. Co-accused Dr. Deepmoni Saikia was acquitted due to lack of evidence.",
-    societalImpact:
-      "Her murder triggered widespread protests by junior doctors across Assam and the Northeast, sparking statewide strikes and demands for mandatory access controls and institutional security in government medical colleges.",
-    verificationStatus: "Verified",
-    lastVerifiedAt: "2026-11-06",
-    verifiedFacts: [
-      "26-year-old first-year postgraduate resident in Obstetrics & Gynaecology at AMCH Dibrugarh",
-      "Attacked and murdered in the doctors' duty room on 9 May 2014 after completing overnight hospital duty",
-      "Dibrugarh District & Sessions Court convicted ward boy Kiru Mech to life imprisonment in May 2023",
-      "Co-accused Dr. Deepmoni Saikia acquitted by the trial court due to absence of evidence",
-    ],
-    actionableLesson:
-      "Healthcare rest areas and physician duty rooms must have strictly controlled secure access, direct communication links, and safe escort protocols for overnight shifts.",
-    coreMessage:
-      "Security arrangements must extend beyond public hospital lobbies into duty rooms, ICUs, and on-call residential quarters.",
-    memorialPublication: {
-      title: "Hospital Duty Room & Night-Shift Physical Security Standards",
-      focus: "Clinical Architecture & Access Control",
-      deliverable: "An actionable audit checklist for healthcare administrators and hospital leadership to evaluate resident doctor security and resting facility standards.",
-    },
-    references: [
-      { title: "Dibrugarh District & Sessions Court — AMCH Doctor Murder Verdict (May 2023)", url: "https://districts.ecourts.gov.in/dibrugarh", publisher: "District Judiciary of Assam", isPrimary: true },
-      { title: "Times of India: AMCH Doctor Murder Case — Ward Boy Gets Life Term, Doctor Acquitted", url: "https://timesofindia.indiatimes.com/city/guwahati/amch-doctor-murder-case-ward-boy-gets-life-term/articleshow/100418654.cms", publisher: "Times of India" },
-      { title: "The Sentinel Assam: Dr. Sarita Toshniwal Murder Case Judgment", url: "https://www.sentinelassam.com", publisher: "The Sentinel Assam" },
     ],
   },
   {
