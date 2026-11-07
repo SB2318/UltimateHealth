@@ -1,9 +1,15 @@
 "use client";
 
+import { useTranslations, useLocale } from "next-intl";
 import { CheckCircle2, Lightbulb, Users } from "lucide-react";
-import { SOCIETAL_LESSONS } from "@/data/tribute-profiles";
+import { getLocalizedSocietalLessons } from "@/data/tribute-pillars-i18n";
 
 export default function SocietalLessonsMatrix() {
+  const t = useTranslations("tribute");
+  const locale = useLocale();
+
+  const lessons = getLocalizedSocietalLessons(locale);
+
   return (
     <div style={{ width: "100%", boxSizing: "border-box" }}>
       {/* Section Header */}
@@ -26,7 +32,7 @@ export default function SocietalLessonsMatrix() {
           }}
         >
           <Lightbulb size={14} />
-          Beyond Generic Quotes
+          {t("learnPillarBadge")}
         </div>
 
         <h2
@@ -38,7 +44,7 @@ export default function SocietalLessonsMatrix() {
             margin: "0 0 14px",
           }}
         >
-          What Society Must Learn from These 30 Lives
+          {t("learnTitle")}
         </h2>
 
         <p
@@ -49,7 +55,7 @@ export default function SocietalLessonsMatrix() {
             margin: 0,
           }}
         >
-          We avoid ending each profile with a generic platitude. Instead, every human story must lead to an actionable, systemic reform that prevents future tragedy.
+          {t("learnSubtitle")}
         </p>
       </div>
 
@@ -61,9 +67,10 @@ export default function SocietalLessonsMatrix() {
           gap: "24px",
           width: "100%",
           boxSizing: "border-box",
+          marginBottom: "40px",
         }}
       >
-        {SOCIETAL_LESSONS.map((lesson, idx) => (
+        {lessons.map((lesson, idx) => (
           <div
             key={idx}
             style={{
@@ -137,9 +144,18 @@ export default function SocietalLessonsMatrix() {
                     marginBottom: "8px",
                   }}
                 >
-                  Actionable Improvements to Implement:
+                  {t("actionableReformsLabel")}
                 </div>
-                <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
+                <ul
+                  style={{
+                    listStyle: "none",
+                    padding: 0,
+                    margin: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "8px",
+                  }}
+                >
                   {lesson.actionableInitiatives.map((item, i) => (
                     <li
                       key={i}
@@ -173,11 +189,32 @@ export default function SocietalLessonsMatrix() {
               }}
             >
               <Users size={13} style={{ color: "#94a3b8" }} />
-              <strong style={{ color: "var(--site-heading, #1e293b)" }}>Informed by:</strong>
+              <strong style={{ color: "var(--site-heading, #1e293b)" }}>{t("informedByLabel")}</strong>
               <span>{lesson.profilesRef.join(", ")}</span>
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Curriculum Callout Box */}
+      <div
+        style={{
+          maxWidth: "880px",
+          margin: "0 auto",
+          background: "var(--explorer-surface, #ffffff)",
+          border: "1px solid var(--explorer-border, #e2e8f0)",
+          borderRadius: "18px",
+          padding: "24px 28px",
+          boxSizing: "border-box",
+          textAlign: "center",
+        }}
+      >
+        <h4 style={{ fontSize: "1rem", fontWeight: 800, color: "var(--site-heading, #0f172a)", margin: "0 0 8px" }}>
+          {t("curriculumBoxTitle")}
+        </h4>
+        <p style={{ fontSize: "0.84rem", lineHeight: 1.6, color: "var(--explorer-text-secondary, #64748b)", margin: 0 }}>
+          {t("curriculumBoxText")}
+        </p>
       </div>
     </div>
   );

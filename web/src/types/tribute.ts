@@ -76,7 +76,7 @@ export interface TributeProfile {
     title: string;
     focus: string;
     deliverable: string;
-    initiativeStatus?: "Proposed Initiative" | "Planned Resource" | "In Editorial Review" | "Published Resource";
+    initiativeStatus?: "Proposed Initiative" | "Planned Resource" | "In Editorial Review" | "Published Resource" | "Proposed Educational Framework";
   };
 
   references: TributeReference[];
@@ -100,7 +100,7 @@ export interface TributeProfileTranslation {
     title?: string;
     focus?: string;
     deliverable?: string;
-    initiativeStatus?: "Proposed Initiative" | "Planned Resource" | "In Editorial Review" | "Published Resource";
+    initiativeStatus?: "Proposed Initiative" | "Planned Resource" | "In Editorial Review" | "Published Resource" | "Proposed Educational Framework";
   };
 }
 

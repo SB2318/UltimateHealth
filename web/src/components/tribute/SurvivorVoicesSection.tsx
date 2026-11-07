@@ -1,9 +1,20 @@
 "use client";
 
-import { HeartHandshake, Shield, ExternalLink, CheckCircle, FileText, Lock } from "lucide-react";
-import { SURVIVOR_VOICES, SURVIVOR_CONSENT_FRAMEWORK } from "@/data/tribute-profiles";
+import { useTranslations, useLocale } from "next-intl";
+import Link from "next/link";
+import { HeartHandshake, Shield, ExternalLink, CheckCircle, Lock } from "lucide-react";
+import {
+  getLocalizedSurvivorVoices,
+  getLocalizedConsentFramework,
+} from "@/data/tribute-pillars-i18n";
 
 export default function SurvivorVoicesSection() {
+  const t = useTranslations("tribute");
+  const locale = useLocale();
+
+  const survivorVoices = getLocalizedSurvivorVoices(locale);
+  const consentFramework = getLocalizedConsentFramework(locale);
+
   return (
     <div style={{ width: "100%", boxSizing: "border-box" }}>
       {/* Pillar Introduction Banner */}
@@ -33,7 +44,7 @@ export default function SurvivorVoicesSection() {
           }}
         >
           <HeartHandshake size={14} />
-          Pillar B · Survivor Voices & Agency
+          {t("listenPillarBadge")}
         </div>
 
         <h2
@@ -45,7 +56,7 @@ export default function SurvivorVoicesSection() {
             margin: "0 0 12px",
           }}
         >
-          Listen with Dignity & Respect
+          {t("listenTitle")}
         </h2>
 
         <p
@@ -56,7 +67,7 @@ export default function SurvivorVoicesSection() {
             margin: 0,
           }}
         >
-          Survivors are not passive victims. They are individuals with autonomy, leadership, and moral agency who choose to share their lived experiences to transform health, protect vulnerable communities, and dismantle cycles of violence.
+          {t("listenSubtitle")}
         </p>
       </div>
 
@@ -72,7 +83,7 @@ export default function SurvivorVoicesSection() {
           boxSizing: "border-box",
         }}
       >
-        {SURVIVOR_VOICES.map((survivor) => (
+        {survivorVoices.map((survivor) => (
           <div
             key={survivor.id}
             style={{
@@ -89,7 +100,14 @@ export default function SurvivorVoicesSection() {
           >
             <div>
               {/* Header Badge & Country */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "14px",
+                }}
+              >
                 <span
                   style={{
                     fontSize: "0.72rem",
@@ -101,7 +119,7 @@ export default function SurvivorVoicesSection() {
                     border: "1px solid rgba(13, 148, 136, 0.25)",
                   }}
                 >
-                  Public Testimony
+                  {t("publicTestimonyBadge")}
                 </span>
                 <span style={{ fontSize: "0.78rem", color: "var(--explorer-text-secondary, #64748b)" }}>
                   {survivor.countryFlag} {survivor.country} · {survivor.eraOrYear}
@@ -141,10 +159,27 @@ export default function SurvivorVoicesSection() {
                     marginBottom: "16px",
                   }}
                 >
-                  <div style={{ fontSize: "0.68rem", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", color: "#0d9488", marginBottom: "3px" }}>
-                    Verified Historical Words:
+                  <div
+                    style={{
+                      fontSize: "0.68rem",
+                      fontWeight: 800,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      color: "#0d9488",
+                      marginBottom: "3px",
+                    }}
+                  >
+                    {t("verifiedQuoteLabel")}
                   </div>
-                  <div style={{ fontSize: "0.86rem", fontStyle: "italic", lineHeight: 1.5, color: "var(--site-heading, #1e293b)", marginBottom: "3px" }}>
+                  <div
+                    style={{
+                      fontSize: "0.86rem",
+                      fontStyle: "italic",
+                      lineHeight: 1.5,
+                      color: "var(--site-heading, #1e293b)",
+                      marginBottom: "3px",
+                    }}
+                  >
                     &ldquo;{survivor.verifiedQuote.quote}&rdquo;
                   </div>
                   <div style={{ fontSize: "0.7rem", color: "#64748b" }}>
@@ -165,7 +200,7 @@ export default function SurvivorVoicesSection() {
                     marginBottom: "6px",
                   }}
                 >
-                  Lived Experience & Action:
+                  {t("livedExperienceActionLabel")}
                 </div>
                 <p
                   style={{
@@ -184,8 +219,8 @@ export default function SurvivorVoicesSection() {
                 style={{
                   background: "rgba(244, 63, 94, 0.05)",
                   borderLeft: "3px solid #e11d48",
-                  borderRadius: "0 8px 8px 0",
                   padding: "10px 14px",
+                  borderRadius: "0 8px 8px 0",
                   marginBottom: "18px",
                 }}
               >
@@ -199,7 +234,7 @@ export default function SurvivorVoicesSection() {
                     marginBottom: "4px",
                   }}
                 >
-                  Societal Reform Message:
+                  {t("societalReformMessageLabel")}
                 </div>
                 <p
                   style={{
@@ -212,21 +247,46 @@ export default function SurvivorVoicesSection() {
                   {survivor.societalReformMessage}
                 </p>
               </div>
+
+              {/* Link to Full Profile */}
+              <div style={{ marginBottom: "16px" }}>
+                <Link
+                  href={`/${locale}/tribute/${survivor.slug}`}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    fontSize: "0.82rem",
+                    fontWeight: 700,
+                    color: "#0d9488",
+                    textDecoration: "none",
+                  }}
+                >
+                  {t("readFullTributeBio")}
+                </Link>
+              </div>
             </div>
 
-            {/* References Footer */}
+            {/* References & Consent Status Footer */}
             <div
               style={{
                 paddingTop: "14px",
                 borderTop: "1px solid var(--explorer-border, #e2e8f0)",
                 display: "flex",
-                flexWrap: "wrap",
-                gap: "10px",
-                alignItems: "center",
-                justifyContent: "space-between",
+                flexDirection: "column",
+                gap: "8px",
               }}
             >
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+                <span
+                  style={{
+                    fontSize: "0.7rem",
+                    fontWeight: 700,
+                    color: "var(--site-heading, #1e293b)",
+                  }}
+                >
+                  {t("verifiedPrimaryRecordsLabel")}
+                </span>
                 {survivor.references.map((ref, idx) => (
                   <a
                     key={idx}
@@ -260,8 +320,8 @@ export default function SurvivorVoicesSection() {
               >
                 <CheckCircle size={12} style={{ color: "#0d9488" }} />
                 {survivor.consentProtocol.consentVerified
-                  ? "Informed Consent Verified"
-                  : "Based on own published statements"}
+                  ? t("informedConsentVerifiedBadge")
+                  : t("basedOnPublishedStatementsBadge")}
               </span>
             </div>
           </div>
@@ -291,7 +351,7 @@ export default function SurvivorVoicesSection() {
               margin: 0,
             }}
           >
-            {SURVIVOR_CONSENT_FRAMEWORK.title}
+            {consentFramework.title}
           </h3>
         </div>
 
@@ -303,7 +363,7 @@ export default function SurvivorVoicesSection() {
             marginBottom: "24px",
           }}
         >
-          {SURVIVOR_CONSENT_FRAMEWORK.description}
+          {consentFramework.description}
         </p>
 
         <p
@@ -318,7 +378,7 @@ export default function SurvivorVoicesSection() {
             marginBottom: "24px",
           }}
         >
-          The two profiles above are internationally known public figures. They are summarised only from their own published testimony and public records; they have not gone through this consent workflow. The workflow below applies to all future personal stories submitted to UltimateHealth.
+          {t("publicFigureTestimonyNote")}
         </p>
 
         {/* 7 Steps Grid */}
@@ -330,7 +390,7 @@ export default function SurvivorVoicesSection() {
             marginBottom: "24px",
           }}
         >
-          {SURVIVOR_CONSENT_FRAMEWORK.steps.map((item) => (
+          {consentFramework.steps.map((item) => (
             <div
               key={item.step}
               style={{
@@ -352,7 +412,7 @@ export default function SurvivorVoicesSection() {
                   marginBottom: "4px",
                 }}
               >
-                Step {item.step}: {item.title}
+                {t("stepLabel")} {item.step}: {item.title}
               </div>
               <p style={{ margin: 0, lineHeight: 1.5, color: "var(--explorer-text-secondary, #334155)" }}>
                 {item.detail}
@@ -384,10 +444,18 @@ export default function SurvivorVoicesSection() {
             }}
           >
             <Lock size={14} />
-            Unconditional Privacy Pledge:
+            {t("unconditionalPrivacyPledgeLabel")}
           </div>
-          <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "0.82rem", lineHeight: 1.6, color: "var(--explorer-text-secondary, #334155)" }}>
-            {SURVIVOR_CONSENT_FRAMEWORK.privacyPledge.map((pledge, idx) => (
+          <ul
+            style={{
+              margin: 0,
+              paddingLeft: "18px",
+              fontSize: "0.82rem",
+              lineHeight: 1.6,
+              color: "var(--explorer-text-secondary, #334155)",
+            }}
+          >
+            {consentFramework.privacyPledge.map((pledge, idx) => (
               <li key={idx}>{pledge}</li>
             ))}
           </ul>

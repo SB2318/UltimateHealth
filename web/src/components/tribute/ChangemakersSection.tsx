@@ -1,9 +1,15 @@
 "use client";
 
-import { Award, ExternalLink, Activity, Users, Globe, Building } from "lucide-react";
-import { CHANGEMAKERS } from "@/data/tribute-profiles";
+import { useTranslations, useLocale } from "next-intl";
+import { Award, ExternalLink, Building } from "lucide-react";
+import { getLocalizedChangemakers } from "@/data/tribute-pillars-i18n";
 
 export default function ChangemakersSection() {
+  const t = useTranslations("tribute");
+  const locale = useLocale();
+
+  const changemakers = getLocalizedChangemakers(locale);
+
   return (
     <div style={{ width: "100%", boxSizing: "border-box" }}>
       {/* Pillar Introduction Banner */}
@@ -33,7 +39,7 @@ export default function ChangemakersSection() {
           }}
         >
           <Award size={14} />
-          Pillar C · People Creating Change
+          {t("recognisePillarBadge")}
         </div>
 
         <h2
@@ -45,7 +51,7 @@ export default function ChangemakersSection() {
             margin: "0 0 12px",
           }}
         >
-          Recognise Documented Humanitarian Action
+          {t("recogniseTitle")}
         </h2>
 
         <p
@@ -56,7 +62,7 @@ export default function ChangemakersSection() {
             margin: 0,
           }}
         >
-          We recognise living doctors, researchers, advocates, and volunteers whose verifiable work is actively transforming public health, clinical safety, community welfare, and human dignity.
+          {t("recogniseSubtitle")}
         </p>
       </div>
 
@@ -72,7 +78,7 @@ export default function ChangemakersSection() {
           boxSizing: "border-box",
         }}
       >
-        {CHANGEMAKERS.map((changemaker) => (
+        {changemakers.map((changemaker) => (
           <div
             key={changemaker.id}
             style={{
@@ -89,7 +95,14 @@ export default function ChangemakersSection() {
           >
             <div>
               {/* Header Badge */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "14px",
+                }}
+              >
                 <span
                   style={{
                     fontSize: "0.72rem",
@@ -101,7 +114,7 @@ export default function ChangemakersSection() {
                     border: "1px solid rgba(59, 130, 246, 0.25)",
                   }}
                 >
-                  Documented Changemaker
+                  {t("changemakerBadge")}
                 </span>
                 <span style={{ fontSize: "0.78rem", color: "var(--explorer-text-secondary, #64748b)" }}>
                   {changemaker.countryFlag} {changemaker.country} · {changemaker.eraOrYear}
@@ -156,7 +169,7 @@ export default function ChangemakersSection() {
                 }}
               >
                 <strong style={{ color: "var(--site-heading, #0f172a)", display: "block", marginBottom: "3px" }}>
-                  Clinical & Humanitarian Focus:
+                  {t("primaryFocusDomainLabel")}
                 </strong>
                 <span style={{ color: "var(--explorer-text-secondary, #475569)" }}>
                   {changemaker.focusArea}
@@ -175,7 +188,7 @@ export default function ChangemakersSection() {
                     marginBottom: "4px",
                   }}
                 >
-                  Documented Actions:
+                  {t("documentedClinicalActionsLabel")}
                 </div>
                 <p
                   style={{
@@ -209,7 +222,7 @@ export default function ChangemakersSection() {
                     marginBottom: "4px",
                   }}
                 >
-                  Measurable Societal Impact:
+                  {t("documentedImpactMilestoneLabel")}
                 </div>
                 <p
                   style={{
@@ -220,6 +233,40 @@ export default function ChangemakersSection() {
                   }}
                 >
                   {changemaker.measurableImpact}
+                </p>
+              </div>
+
+              {/* Relevance to Humanity */}
+              <div
+                style={{
+                  background: "rgba(13, 148, 136, 0.05)",
+                  borderLeft: "3px solid #0d9488",
+                  borderRadius: "0 8px 8px 0",
+                  padding: "10px 14px",
+                  marginBottom: "18px",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "0.68rem",
+                    fontWeight: 800,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    color: "#0d9488",
+                    marginBottom: "4px",
+                  }}
+                >
+                  {t("relevanceGlobalHumanityLabel")}
+                </div>
+                <p
+                  style={{
+                    fontSize: "0.82rem",
+                    lineHeight: 1.55,
+                    color: "var(--explorer-text-secondary, #334155)",
+                    margin: 0,
+                  }}
+                >
+                  {changemaker.relevanceToHumanity}
                 </p>
               </div>
             </div>
@@ -260,7 +307,7 @@ export default function ChangemakersSection() {
               </div>
 
               <span style={{ fontSize: "0.7rem", color: "#64748b" }}>
-                Sources listed · editorial review ongoing
+                {t("sourcesListedNote")}
               </span>
             </div>
           </div>
@@ -281,10 +328,10 @@ export default function ChangemakersSection() {
         }}
       >
         <h4 style={{ fontSize: "1rem", fontWeight: 800, color: "var(--site-heading, #0f172a)", margin: "0 0 8px" }}>
-          How Changemakers Are Selected
+          {t("howSelectedTitle")}
         </h4>
         <p style={{ fontSize: "0.84rem", lineHeight: 1.6, color: "var(--explorer-text-secondary, #64748b)", margin: 0 }}>
-          Inclusion in Pillar C is grounded strictly in peer-reviewed clinical innovations, verified non-profit audits, and measurable community health outcomes—never social-media visibility or commercial sponsorship.
+          {t("howSelectedText")}
         </p>
       </div>
     </div>

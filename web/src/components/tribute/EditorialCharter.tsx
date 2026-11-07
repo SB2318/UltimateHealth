@@ -1,9 +1,19 @@
 "use client";
 
+import { useTranslations, useLocale } from "next-intl";
 import { ShieldCheck, Heart } from "lucide-react";
-import { EDITORIAL_PROMISE } from "@/data/tribute-profiles";
+import {
+  getLocalizedEditorialPromise,
+  getLocalizedEndingManifesto,
+} from "@/data/tribute-pillars-i18n";
 
 export default function EditorialCharter() {
+  const t = useTranslations("tribute");
+  const locale = useLocale();
+
+  const editorialPromise = getLocalizedEditorialPromise(locale);
+  const manifesto = getLocalizedEndingManifesto(locale);
+
   return (
     <div
       style={{
@@ -37,7 +47,7 @@ export default function EditorialCharter() {
               margin: 0,
             }}
           >
-            UltimateHealth Editorial Promise
+            {t("charterPromiseTitle")}
           </h3>
         </div>
 
@@ -49,7 +59,7 @@ export default function EditorialCharter() {
             marginBottom: "20px",
           }}
         >
-          We hold this tribute to rigorous ethical, fact-checking, and human dignity standards to prevent sensationalism and honor every life with truth:
+          {t("charterPromiseSubtitle")}
         </p>
 
         <div
@@ -60,7 +70,7 @@ export default function EditorialCharter() {
             marginBottom: "24px",
           }}
         >
-          {EDITORIAL_PROMISE.map((promise, idx) => (
+          {editorialPromise.map((promise, idx) => (
             <div
               key={idx}
               style={{
@@ -104,9 +114,9 @@ export default function EditorialCharter() {
           }}
         >
           <strong style={{ color: "#d97706", display: "block", marginBottom: "4px" }}>
-            Research-Quality Sourcing & Legal Attribution:
+            {t("sourcingStandardTitle")}
           </strong>
-          Biographical entries are grounded in primary evidence: Supreme Court judicial records, gazette notifications, university records, recognized human rights monitoring bodies (Amnesty, CPJ, Front Line Defenders, Goldman Foundation), Nobel Foundation records, and reputable journalistic archives. Allegations are never presented as convictions, and quotations are only attributed when verifiable primary sources exist.
+          {t("sourcingStandardText")}
         </div>
 
         <div
@@ -121,9 +131,9 @@ export default function EditorialCharter() {
           }}
         >
           <strong style={{ color: "#0d9488", display: "block", marginBottom: "4px" }}>
-            Editorial Corrections Policy & Public Feedback:
+            {t("correctionsPolicyTitle")}
           </strong>
-          We adhere to the non-negotiable principle: <em>&ldquo;Never make an individual&apos;s life more inspirational by making their biography less factual.&rdquo;</em> If you identify a factual error, misattribution, or have documented primary records to contribute, please report it to our editorial desk at <a href="mailto:ultimate.health25@gmail.com" style={{ color: "#0d9488", fontWeight: 700, textDecoration: "underline" }}>ultimate.health25@gmail.com</a> or via GitHub Issues. Verified corrections are updated promptly.
+          {t("correctionsPolicyText", { email: "ultimate.health25@gmail.com" })}
         </div>
       </div>
 
@@ -154,8 +164,8 @@ export default function EditorialCharter() {
             margin: "0 0 20px",
           }}
         >
-          The world does not need more memorials alone. <br />
-          <span style={{ color: "#e11d48" }}>It needs more humanity.</span>
+          {t("manifestoHeadline")} <br />
+          <span style={{ color: "#e11d48" }}>{t("manifestoHighlight")}</span>
         </h3>
 
         <div
@@ -170,15 +180,11 @@ export default function EditorialCharter() {
             fontStyle: "italic",
           }}
         >
-          <p style={{ margin: 0 }}>
-            Some people wanted to become doctors. Some wanted to educate children. Some wanted to protect forests, report the truth, or give a voice to people who were ignored.
-          </p>
-          <p style={{ margin: 0 }}>
-            Their lives remind us that behind every name is a person with dreams, relationships, responsibilities and possibilities.
-          </p>
-          <p style={{ margin: 0 }}>
-            We cannot rewrite their past. But we can make their stories meaningful by improving the systems around us, protecting vulnerable people, supporting education, respecting dignity and refusing to remain indifferent to suffering.
-          </p>
+          {manifesto.paragraphs.map((para, idx) => (
+            <p key={idx} style={{ margin: 0 }}>
+              {para}
+            </p>
+          ))}
           <p
             style={{
               margin: "6px 0 0",
@@ -189,7 +195,7 @@ export default function EditorialCharter() {
               fontStyle: "normal",
             }}
           >
-            Let us not remember them only for how they left this world. Let us remember what they wanted to contribute to it.
+            {manifesto.finalCallout}
           </p>
         </div>
       </div>

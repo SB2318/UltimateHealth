@@ -8236,3 +8236,12 @@ export function getLocalizedProfile(profile: TributeProfile, locale?: string): T
       : profile.memorialPublication,
   };
 }
+
+export {
+  getLocalizedSurvivorVoices,
+  getLocalizedConsentFramework,
+  getLocalizedChangemakers,
+  getLocalizedSocietalLessons,
+  getLocalizedEditorialPromise,
+  getLocalizedEndingManifesto,
+} from "./tribute-pillars-i18n";

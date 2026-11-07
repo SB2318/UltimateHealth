@@ -30,10 +30,10 @@ export default function TributeExplorer({ initialCategory = "all" }: TributeExpl
   const categoryLabelMap: Record<TributeCategory, string> = {
     all: t("categoryAll"),
     healthcare: t("categoryHealthcare"),
-    "safety-justice": t("categorySafety"),
+    "safety-and-justice": t("categorySafety"),
     journalism: t("categoryJournalism"),
-    "environment-community": t("categoryEnvironment"),
-    "education-dignity": t("categoryEducation"),
+    "environmental-defenders": t("categoryEnvironment"),
+    "education-and-dignity": t("categoryEducation"),
     survivors: t("categorySurvivors"),
   };
 
